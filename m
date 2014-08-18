@@ -1,169 +1,78 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Gateworks GW5520 support (i.MX6)
-Date: Mon, 18 Aug 2014 14:35:11 +0800
-Message-ID: <20140818063510.GD2114@dragon>
-References: <1407572602-14017-1-git-send-email-tharvey@gateworks.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v3 5/7] net: cpsw: Add am33xx MACID readout
+Date: Mon, 18 Aug 2014 08:58:40 +0200
+Message-ID: <20140818065840.GA12930@pengutronix.de>
+References: <1408202315-20006-1-git-send-email-mpa@pengutronix.de>
+ <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
+ <20140816164647.GA2858@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1407572602-14017-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20140816164647.GA2858@katana>
+Sender: linux-omap-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: "David S. Miller" <davem@davemloft.net>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Steven Rostedt <rostedt@goodmis.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 09, 2014 at 01:23:22AM -0700, Tim Harvey wrote:
-> +&iomuxc {
 
-If you do not mind, I would ask you to put iomuxc node at the bottom of
-the file.  Doing so makes the file a bit easier to read.
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hog>;
-> +
-> +	imx6qdl-gw552x {
-> +		pinctrl_hog: hoggrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_9__GPIO1_IO09     0x80000000 /* USBHUB_RST# */
-> +				MX6QDL_PAD_GPIO_17__GPIO7_IO12    0x80000000 /* PCIESKT_WDIS# */
+Hi,
 
-Please use a proper pad configuration value instead of 0x80000000, which
-will rely on the hardware reset state or what bootloader configures.
+On Sat, Aug 16, 2014 at 11:46:48AM -0500, Wolfram Sang wrote:
+>=20
+> > diff --git a/drivers/net/ethernet/ti/Makefile b/drivers/net/ethernet/ti=
+/Makefile
+> > index 9cfaab8152be..5a31c2b322ee 100644
+> > --- a/drivers/net/ethernet/ti/Makefile
+> > +++ b/drivers/net/ethernet/ti/Makefile
+> > @@ -8,5 +8,6 @@ obj-$(CONFIG_TI_DAVINCI_EMAC) +=3D davinci_emac.o
+> >  obj-$(CONFIG_TI_DAVINCI_MDIO) +=3D davinci_mdio.o
+> >  obj-$(CONFIG_TI_DAVINCI_CPDMA) +=3D davinci_cpdma.o
+> >  obj-$(CONFIG_TI_CPSW_PHY_SEL) +=3D cpsw-phy-sel.o
+> > +obj-$(CONFIG_TI_CPSW_CTRL_MACID) +=3D cpsw-ctrl-macid.o
+> >  obj-$(CONFIG_TI_CPSW) +=3D ti_cpsw.o
+> >  ti_cpsw-y :=3D cpsw_ale.o cpsw.o cpts.o
+>=20
+> Leftover from your last series?
 
-Also, can these two pins be moved to some pinctrl entries used by
-particular client device?
+Yes thanks, will remove it for the next version.
 
-> +			>;
-> +		};
-> +
-> +		pinctrl_gpmi_nand: gpminandgrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
-> +				MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
-> +				MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
-> +				MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
-> +				MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
-> +				MX6QDL_PAD_NANDF_CS1__NAND_CE1_B	0xb0b1
-> +				MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
-> +				MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
-> +				MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
-> +				MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
-> +				MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
-> +				MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
-> +				MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
-> +				MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
-> +				MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
-> +				MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
-> +				MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c2: i2c2grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-> +				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c3: i2c3grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
-> +				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_pcie: pciegrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29  0x80000000 /* PCIE_RST# */
+Best regards,
 
-Fix 0x80000000.
+Markus
 
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart3: uart3grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart5: uart5grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-> +			>;
-> +		};
-> +	};
-> +
-> +        gpio_leds {
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-This node can just be saved by putting gpioledsgrp into imx6qdl-gw552x.
-> +                pinctrl_gpio_leds: gpioledsgrp {
-> +                        fsl,pins = <
+--5vNYLRcllDrimb99
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Use tab for indentation.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> +				MX6QDL_PAD_KEY_COL0__GPIO4_IO06   0x80000000 /* user1 led */
-> +				MX6QDL_PAD_KEY_ROW0__GPIO4_IO07   0x80000000 /* user2 led */
-> +				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15   0x80000000 /* user3 led */
+iQIcBAEBAgAGBQJT8aQgAAoJEEpcgKtcEGQQE5kP/2eUExjlf/6CYkX6em+e4VdG
+SIjpmXKU8yM9wCaVSNE06v5F02QN+eXp1UxFgXGwe2+mqj5C4sblk4ZW+HtUwZ+f
+c7Cq9mJAta8eHSKLv0f9JWM3Zq8KLuDikbnPZ4EdB8+rBGoXNi9C+heQT08Llnrr
+bmS1vB/X6c0VXF5BsPbB8wX7ClosZ2wa1L8ZoZTcCkCOn+6i5F0Jo76XNhc04cAf
+lTMA1O2lb9TSn9GS2gz0JK/v1UWQGnkwNl+4ZmnwWgiN8w/Bn13AFlRPWd4h6tm3
+ujhJMH/xzxvivcxkNHqG48l29GnPhngysG2+27gTmnmAMfEUbNsAjY7TZ0MAK8Mm
+09IFmAFRtb/pUQG0bkFidm7es0S+r9RlSp/T+NNDS0ri+QG99jVJddIlqLlnKJqf
+5fOtrJdkwKEHK5Bgo4wpVuPRWHHqRvn8W+MdwwvvBgRstW3LGEJOXPd09hEFCx2G
+Qb7NrXiTlWrGE0gbSLY9kHgT91+ExRhhIURgJ9bscaczzMEoeCZGMDFGRKeKtxG1
+FNilMBmFINleC2bWWpTz9IfmAJ9J7/YODxzN94BEsAIJRZ3KC4Ax/xY8t2SBxKYt
++GgSwWBDrtz/nD5f6ybeM/7c7eUscp/eB4K2Ru+r20S3NSpFJukbf1zvpauRRLes
+HbyEbLgyQIHn3jorOgNl
+=tdMW
+-----END PGP SIGNATURE-----
 
-Fix 0x80000000.
-
-Shawn
-
-> +                        >;
-> +                };
-> +        };
-> +
-> +};
-> +
-> +&pcie {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pcie>;
-> +	reset-gpio = <&gpio1 29 0>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart2>;
-> +	status = "okay";
-> +};
-> +
-> +&uart3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart3>;
-> +	status = "okay";
-> +};
-> +
-> +&uart5 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart5>;
-> +	status = "okay";
-> +};
-> +
-> +&usbh1 {
-> +	status = "okay";
-> +};
-> -- 
-> 1.8.3.2
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5vNYLRcllDrimb99--
