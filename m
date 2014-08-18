@@ -1,108 +1,267 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v2 4/4] ARM: dts: Enable pwm backlight on rk3288-EVB
-Date: Mon, 18 Aug 2014 10:29:42 -0700
-Message-ID: <1408382982-2077-5-git-send-email-dianders@chromium.org>
-References: <1408382982-2077-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408382982-2077-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [RFC PATCH 8/9] Input: gpio_keys_polled - Make use of device
+ property API
+Date: Mon, 18 Aug 2014 10:55:12 -0700
+Message-ID: <20140818105512.7889980b@ultegra>
+References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+	<1408172039-32513-9-git-send-email-mika.westerberg@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1408172039-32513-9-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>Rob
 List-Id: devicetree@vger.kernel.org
 
-The pwm0 is the PWM associated with the LCD backlight.  Enable it.
+On Sat, 16 Aug 2014 09:53:58 +0300
+Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
-Changes in v2: None
+> From: Aaron Lu <aaron.lu@intel.com>
+> 
+> Make use of device property API in this driver so that both OF based
+> system and ACPI based system can use this driver.
+> 
+Do we always assume OF and ACPI _DSD will have the same property name
+strings? i.e. in this patch "gpios"
+> +	if (device_property_get(dev, "gpios", NULL)) {
+> -		if (!of_find_property(pp, "gpios", NULL)) {
 
- arch/arm/boot/dts/rk3288-evb.dtsi | 53 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+Maybe i missed something, but I don't think we can make that assumption
+in BIOS. If not, what is the point of having unified interface?
 
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 2964370..242e1a9 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -10,6 +10,7 @@
-  * GNU General Public License for more details.
-  */
- 
-+#include <dt-bindings/pwm/pwm.h>
- #include "rk3288.dtsi"
- 
- / {
-@@ -17,6 +18,48 @@
- 		reg = <0x0 0x80000000>;
- 	};
- 
-+        backlight {
-+		compatible = "pwm-backlight";
-+		brightness-levels = <
-+			  0   1   2   3   4   5   6   7
-+			  8   9  10  11  12  13  14  15
-+			 16  17  18  19  20  21  22  23
-+			 24  25  26  27  28  29  30  31
-+			 32  33  34  35  36  37  38  39
-+			 40  41  42  43  44  45  46  47
-+			 48  49  50  51  52  53  54  55
-+			 56  57  58  59  60  61  62  63
-+			 64  65  66  67  68  69  70  71
-+			 72  73  74  75  76  77  78  79
-+			 80  81  82  83  84  85  86  87
-+			 88  89  90  91  92  93  94  95
-+			 96  97  98  99 100 101 102 103
-+			104 105 106 107 108 109 110 111
-+			112 113 114 115 116 117 118 119
-+			120 121 122 123 124 125 126 127
-+			128 129 130 131 132 133 134 135
-+			136 137 138 139 140 141 142 143
-+			144 145 146 147 148 149 150 151
-+			152 153 154 155 156 157 158 159
-+			160 161 162 163 164 165 166 167
-+			168 169 170 171 172 173 174 175
-+			176 177 178 179 180 181 182 183
-+			184 185 186 187 188 189 190 191
-+			192 193 194 195 196 197 198 199
-+			200 201 202 203 204 205 206 207
-+			208 209 210 211 212 213 214 215
-+			216 217 218 219 220 221 222 223
-+			224 225 226 227 228 229 230 231
-+			232 233 234 235 236 237 238 239
-+			240 241 242 243 244 245 246 247
-+			248 249 250 251 252 253 254 255>;
-+		default-brightness-level = <128>;
-+		enable-gpios = <&gpio7 2 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bl_en>;
-+		pwms = <&pwm0 0 1000000 PWM_POLARITY_INVERTED>;
-+        };
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		#address-cells = <1>;
-@@ -81,6 +124,10 @@
- 	status = "okay";
- };
- 
-+&pwm0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-@@ -102,6 +149,12 @@
- };
- 
- &pinctrl {
-+	backlight {
-+		bl_en: bl-en {
-+			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	buttons {
- 		pwrbtn: pwrbtn {
- 			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
--- 
-2.1.0.rc2.206.gedb03e5
+> The driver isn't converted to descriptor based gpio API due to there
+> are a lot of existing users of struct gpio_keys_button that expects
+> the gpio integer field. Though this can be solved by adding a new
+> field of type struct gpio_desc but then there is another problem: the
+> devm_gpiod_get needs to operate on the button device instead of its
+> parent device that has the driver binded, so when the driver is
+> unloaded, the resources for the gpio will not get freed
+> automatically. Alternatively, we can introduce a new API, something
+> like gpiod_find_index that does almost the same thing as
+> gpiod_get_index but doesn't do the gpiod_request call and use it
+> during finding button resources in gpio_keys_polled_get_button
+> function. But then this may seem too complicated and not desirable.
+> So in the end, a simple dev_get_gpiod_flags which is introduced in
+> the last patch gets used and the gpio field of the struct
+> gpio_keys_button can be got from the desc_to_gpio.
+> 
+> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+> Signed-off-by: Max Eliaser <max@meliaserlow.dyndns.tv>
+> Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/input/keyboard/gpio_keys_polled.c | 139
+> ++++++++++++++++++------------ 1 file changed, 84 insertions(+), 55
+> deletions(-)
+> 
+> diff --git a/drivers/input/keyboard/gpio_keys_polled.c
+> b/drivers/input/keyboard/gpio_keys_polled.c index
+> 432d36395f35..49895d75aaff 100644 ---
+> a/drivers/input/keyboard/gpio_keys_polled.c +++
+> b/drivers/input/keyboard/gpio_keys_polled.c @@ -27,6 +27,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/of_gpio.h>
+> +#include <linux/property.h>
+>  
+>  #define DRV_NAME	"gpio-keys-polled"
+>  
+> @@ -102,78 +103,95 @@ static void gpio_keys_polled_close(struct
+> input_polled_dev *dev) pdata->disable(bdev->dev);
+>  }
+>  
+> -#ifdef CONFIG_OF
+> -static struct gpio_keys_platform_data
+> *gpio_keys_polled_get_devtree_pdata(struct device *dev) -{
+> -	struct device_node *node, *pp;
+> +#if defined(CONFIG_OF) || defined(CONFIG_ACPI)
+> +
+> +struct button_proc_context {
+>  	struct gpio_keys_platform_data *pdata;
+> -	struct gpio_keys_button *button;
+> -	int error;
+> -	int nbuttons;
+>  	int i;
+> +};
+>  
+> -	node = dev->of_node;
+> -	if (!node)
+> -		return NULL;
+> +static int gpio_keys_polled_get_button(struct device *dev, void
+> *data) +{
+> +	struct button_proc_context *c = data;
+> +	struct gpio_keys_platform_data *pdata = c->pdata;
+> +	struct gpio_keys_button *button = &pdata->buttons[c->i];
+> +	struct gpio_desc *desc;
+> +	enum gpio_lookup_flags flags;
+> +	void *val;
+> +
+> +	if (device_property_get(dev, "gpios", NULL)) {
+> +		pdata->nbuttons--;
+> +		dev_warn(dev, "Found button without gpios\n");
+> +		return 0;
+> +	}
+>  
+> -	nbuttons = of_get_child_count(node);
+> -	if (nbuttons == 0)
+> -		return NULL;
+> +	desc = dev_get_gpiod_flags(dev, 0, &flags);
+> +	if (IS_ERR(desc)) {
+> +		int error = PTR_ERR(desc);
+>  
+> -	pdata = devm_kzalloc(dev, sizeof(*pdata) + nbuttons *
+> sizeof(*button),
+> -			     GFP_KERNEL);
+> -	if (!pdata)
+> -		return ERR_PTR(-ENOMEM);
+> +		if (error != -EPROBE_DEFER)
+> +			dev_err(dev, "Failed to get gpio flags,
+> error: %d\n",
+> +				error);
+> +		return error;
+> +	}
+>  
+> -	pdata->buttons = (struct gpio_keys_button *)(pdata + 1);
+> -	pdata->nbuttons = nbuttons;
+> +	button->gpio = desc_to_gpio(desc);
+> +	button->active_low = flags & GPIO_ACTIVE_LOW;
+>  
+> -	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
+> -	of_property_read_u32(node, "poll-interval",
+> &pdata->poll_interval);
+> +	if (device_property_read(dev, "linux,code", DEV_PROP_U32,
+> +				 &button->code)) {
+> +		dev_err(dev, "Button without keycode: 0x%x\n",
+> +				button->gpio);
+> +		return -EINVAL;
+> +	}
+>  
+> -	i = 0;
+> -	for_each_child_of_node(node, pp) {
+> -		int gpio;
+> -		enum of_gpio_flags flags;
+> +	if (!device_property_get(dev, "label", &val))
+> +		button->desc = val;
+>  
+> -		if (!of_find_property(pp, "gpios", NULL)) {
+> -			pdata->nbuttons--;
+> -			dev_warn(dev, "Found button without
+> gpios\n");
+> -			continue;
+> -		}
+> +	if (device_property_read(dev, "linux,input-type",
+> DEV_PROP_U32,
+> +				 &button->type))
+> +		button->type = EV_KEY;
+>  
+> -		gpio = of_get_gpio_flags(pp, 0, &flags);
+> -		if (gpio < 0) {
+> -			error = gpio;
+> -			if (error != -EPROBE_DEFER)
+> -				dev_err(dev,
+> -					"Failed to get gpio flags,
+> error: %d\n",
+> -					error);
+> -			return ERR_PTR(error);
+> -		}
+> +	button->wakeup = !device_property_get(dev,
+> "gpio-key,wakeup", NULL); 
+> -		button = &pdata->buttons[i++];
+> +	if (device_property_read(dev, "debounce-interval",
+> DEV_PROP_U32,
+> +				 &button->debounce_interval))
+> +		button->debounce_interval = 5;
+>  
+> -		button->gpio = gpio;
+> -		button->active_low = flags & OF_GPIO_ACTIVE_LOW;
+> +	c->i++;
+> +	return 0;
+> +}
+>  
+> -		if (of_property_read_u32(pp, "linux,code",
+> &button->code)) {
+> -			dev_err(dev, "Button without keycode:
+> 0x%x\n",
+> -				button->gpio);
+> -			return ERR_PTR(-EINVAL);
+> -		}
+> +static struct gpio_keys_platform_data *
+> +gpio_keys_polled_get_devtree_pdata(struct device *dev)
+> +{
+> +	struct gpio_keys_platform_data *pdata;
+> +	int size;
+> +	struct button_proc_context c;
+> +	int error;
+> +	int nbuttons;
+>  
+> -		button->desc = of_get_property(pp, "label", NULL);
+> +	nbuttons = device_property_child_count(dev);
+> +	if (nbuttons <= 0)
+> +		return NULL;
+>  
+> -		if (of_property_read_u32(pp, "linux,input-type",
+> &button->type))
+> -			button->type = EV_KEY;
+> +	size = sizeof(*pdata) + nbuttons * sizeof(struct
+> gpio_keys_button);
+> +	pdata = devm_kzalloc(dev, size, GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+>  
+> -		button->wakeup = !!of_get_property(pp,
+> "gpio-key,wakeup", NULL);
+> +	pdata->buttons = (struct gpio_keys_button *)(pdata + 1);
+> +	pdata->nbuttons = nbuttons;
+>  
+> -		if (of_property_read_u32(pp, "debounce-interval",
+> -					 &button->debounce_interval))
+> -			button->debounce_interval = 5;
+> -	}
+> +	pdata->rep = !device_property_get(dev, "autorepeat", NULL);
+> +	device_property_read(dev, "poll-interval", DEV_PROP_U32,
+> +			     &pdata->poll_interval);
+> +
+> +	c.pdata = pdata;
+> +	c.i = 0;
+> +	error = device_for_each_child(dev, &c,
+> gpio_keys_polled_get_button);
+> +	if (error)
+> +		return ERR_PTR(error);
+>  
+>  	if (pdata->nbuttons == 0)
+>  		return ERR_PTR(-EINVAL);
+> @@ -181,11 +199,21 @@ static struct gpio_keys_platform_data
+> *gpio_keys_polled_get_devtree_pdata(struct return pdata;
+>  }
+>  
+> +#ifdef CONFIG_OF
+>  static const struct of_device_id gpio_keys_polled_of_match[] = {
+>  	{ .compatible = "gpio-keys-polled", },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
+> +#endif
+> +
+> +#ifdef CONFIG_ACPI
+> +static struct acpi_device_id gpio_keys_polled_acpi_match[] = {
+> +	{ "MNW0002" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(acpi, gpio_keys_polled_acpi_match);
+> +#endif
+>  
+>  #else
+>  
+> @@ -309,6 +337,7 @@ static struct platform_driver
+> gpio_keys_polled_driver = { .name	= DRV_NAME,
+>  		.owner	= THIS_MODULE,
+>  		.of_match_table =
+> of_match_ptr(gpio_keys_polled_of_match),
+> +		.acpi_match_table =
+> ACPI_PTR(gpio_keys_polled_acpi_match), },
+>  };
+>  module_platform_driver(gpio_keys_polled_driver);
+
+[Jacob Pan]
