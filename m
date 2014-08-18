@@ -1,106 +1,87 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH 4/4] ARM: dts: Enable pwm backlight on rk3288-EVB
-Date: Mon, 18 Aug 2014 10:09:09 -0700
-Message-ID: <1408381749-14156-5-git-send-email-dianders@chromium.org>
-References: <1408381749-14156-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408381749-14156-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/2] mtd: nand: add sunxi NAND flash
+ controller support
+Date: Mon, 18 Aug 2014 19:26:26 +0200
+Message-ID: <1408382788-32153-1-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBSHOZCPQKGQEMCF2EKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Dmitriy B." <rzk333-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Meyer <quitte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The pwm0 is the PWM associated with the LCD backlight.  Enable it.
+Hi,
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
- arch/arm/boot/dts/rk3288-evb.dtsi | 53 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+This patch series adds support for the sunxi NAND Flash Controller (NFC)
+block.
 
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index 2964370..242e1a9 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -10,6 +10,7 @@
-  * GNU General Public License for more details.
-  */
- 
-+#include <dt-bindings/pwm/pwm.h>
- #include "rk3288.dtsi"
- 
- / {
-@@ -17,6 +18,48 @@
- 		reg = <0x0 0x80000000>;
- 	};
- 
-+        backlight {
-+		compatible = "pwm-backlight";
-+		brightness-levels = <
-+			  0   1   2   3   4   5   6   7
-+			  8   9  10  11  12  13  14  15
-+			 16  17  18  19  20  21  22  23
-+			 24  25  26  27  28  29  30  31
-+			 32  33  34  35  36  37  38  39
-+			 40  41  42  43  44  45  46  47
-+			 48  49  50  51  52  53  54  55
-+			 56  57  58  59  60  61  62  63
-+			 64  65  66  67  68  69  70  71
-+			 72  73  74  75  76  77  78  79
-+			 80  81  82  83  84  85  86  87
-+			 88  89  90  91  92  93  94  95
-+			 96  97  98  99 100 101 102 103
-+			104 105 106 107 108 109 110 111
-+			112 113 114 115 116 117 118 119
-+			120 121 122 123 124 125 126 127
-+			128 129 130 131 132 133 134 135
-+			136 137 138 139 140 141 142 143
-+			144 145 146 147 148 149 150 151
-+			152 153 154 155 156 157 158 159
-+			160 161 162 163 164 165 166 167
-+			168 169 170 171 172 173 174 175
-+			176 177 178 179 180 181 182 183
-+			184 185 186 187 188 189 190 191
-+			192 193 194 195 196 197 198 199
-+			200 201 202 203 204 205 206 207
-+			208 209 210 211 212 213 214 215
-+			216 217 218 219 220 221 222 223
-+			224 225 226 227 228 229 230 231
-+			232 233 234 235 236 237 238 239
-+			240 241 242 243 244 245 246 247
-+			248 249 250 251 252 253 254 255>;
-+		default-brightness-level = <128>;
-+		enable-gpios = <&gpio7 2 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&bl_en>;
-+		pwms = <&pwm0 0 1000000 PWM_POLARITY_INVERTED>;
-+        };
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		#address-cells = <1>;
-@@ -81,6 +124,10 @@
- 	status = "okay";
- };
- 
-+&pwm0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-@@ -102,6 +149,12 @@
- };
- 
- &pinctrl {
-+	backlight {
-+		bl_en: bl-en {
-+			rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	buttons {
- 		pwrbtn: pwrbtn {
- 			rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
+These two patches only add support for the basic NAND stuff:
+ - NAND controller operations
+ - SW and HW ECC handling (with both syndrome and normal ECC scheme)
+
+If you want support for advanced features you can find it on my github
+repo [1]:
+ - HW randomization support
+ - per partition ECC/Randomizer to handle bootloader partitions
+
+DMA transfers are not supported yet, but I have reworked the OOB layout
+when using the HW ECC scheme to match the one used when accessing the NAND
+with DMA transfers (the available OOB bytes are placed at the end of the
+OOB area).
+
+This patch series depends on this other one [2] which adds support for ONFI
+timing mode retrieval on non-ONFI NANDs.
+
+Best Regards,
+
+Boris
+
+[1]https://github.com/bbrezillon/linux-sunxi/tree/sunxi-nand-v4
+[2]https://lkml.org/lkml/2014/7/28/156
+
+Changes since v3:
+ - removed nand core code modifications from the patch series (submitted
+   separately)
+ - added documentation to the code
+ - forced timeout (a default timeout is used when none is provided by the
+   caller) on controller operations
+ - fixed coding style issues
+ - removed unneeded irq field from the sunxi_nfc struct
+ - fixed several memory leaks
+ - reworked the NFC reset code (to avoid potential garbage config from the
+   bootloader)
+ - made use of ECC_EXCEPTION flag to prevent erased page from generating
+   ECC errors
+ - changed the OOB layout for HW ECC scheme
+
+Changes since v2:
+ - merge HW ECC implementation in base implementation patch
+ - fix timing config when interfacing with an ONFI compatible chip
+
+Changes since v1:
+ - add HW ECC support
+ - rework NAND timings retrieval (use ONFI timing mode instead of raw timings)
+ - add nand-ecc-level property to specify NAND ECC requirements from DT
+
+Boris BREZILLON (2):
+  mtd: nand: add sunxi NAND flash controller support
+  mtd: nand: add sunxi NFC dt bindings doc
+
+ .../devicetree/bindings/mtd/sunxi-nand.txt         |   45 +
+ drivers/mtd/nand/Kconfig                           |    6 +
+ drivers/mtd/nand/Makefile                          |    1 +
+ drivers/mtd/nand/sunxi_nand.c                      | 1362 ++++++++++++++++++++
+ 4 files changed, 1414 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
+ create mode 100644 drivers/mtd/nand/sunxi_nand.c
+
 -- 
-2.1.0.rc2.206.gedb03e5
+1.9.1
