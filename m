@@ -1,43 +1,88 @@
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH][resend] mtd: atmel_nand: make PMECC lookup table and
- offset property optional
-Date: Mon, 18 Aug 2014 15:09:58 +0800
-Message-ID: <53F1A6C6.5010002@atmel.com>
-References: <1407490110-16735-1-git-send-email-josh.wu@atmel.com> <20140814224625.GF18411@ld-irv-0074>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v3 1/6] pinctrl: Device tree bindings for Qualcomm
+ pm8xxx gpio block
+Date: Mon, 18 Aug 2014 10:16:02 +0300
+Message-ID: <1408346162.2695.33.camel@iivanov-dev>
+References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
+	 <1407771634-14946-2-git-send-email-iivanov@mm-sol.com>
+	 <ED4952FE-A292-4724-9283-B5226AB20E3E@me.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140814224625.GF18411@ld-irv-0074>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <ED4952FE-A292-4724-9283-B5226AB20E3E@me.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Daniel <delta.tatham@me.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Brian
+On Sat, 2014-08-16 at 16:24 +0100, Daniel wrote:
+> @Ivan: sorry about the double post.
+> 
+> Am 11.08.2014 um 16:40 schrieb Ivan T. Ivanov <iivanov@mm-sol.com>:
+> > diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+> > new file mode 100644
+> > index 0000000..994e748
+> > --- /dev/null
+> > +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+> > @@ -0,0 +1,107 @@
+> > +/*
+> > + * This header provides constants for the Qualcomm PMIC gpio binding.
+> > + */
+> > +
+> > +#ifndef _DT_BINDINGS_PINCTRL_QCOM_PMIC_GPIO_H
+> > +#define _DT_BINDINGS_PINCTRL_QCOM_PMIC_GPIO_H
+> > +
+> > +#define PMIC_GPIO_PULL_UP_30		1
+> > +#define PMIC_GPIO_PULL_UP_1P5		2
+> > +#define PMIC_GPIO_PULL_UP_31P5		3
+> > +#define PMIC_GPIO_PULL_UP_1P5_30	4
+> 
+> Looking at drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c, shouldn't these defines start at 0?
+> e.g. #define PMIC_GPIO_PULL_UP_30 	0
+> 
 
-On 8/15/2014 6:46 AM, Brian Norris wrote:
-> On Fri, Aug 08, 2014 at 05:28:30PM +0800, Josh Wu wrote:
->> If there is no PMECC lookup table stored in ROM, or lookup table offset is
->> not specified, PMECC driver should build it in DDR by itself.
->>
->> That make the PMECC driver work for some board which doesn't has PMECC
->> lookup table in ROM.
->>
->> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> drivers/mtd/nand/atmel_nand.c:1204:11: warning: no previous prototype for 'create_lookup_table' [-Wmissing-prototypes]
->
-> You probably should make create_lookup_table() static.
+Initially "bias-pull-up" was used to set this parameter. 
+Zero value for "bias-pull-up" has special meaning "...the 
+pin is connected to VDD...". So values in DTS have to have
+offset by one. Micro Amps are non-standard for pull-ups, 
+thats why I have changed this to "qcom,pull-up-strength", but I 
+have made mistake in config_set function. Following patch should 
+fix the issue. I will send updated version soon.
 
-Thank you to catch that.
-I'll send a v2 version for make the function static.
+> However, I still cannot get any data from those 2 pins if I export them through /sys/class/gpio...
 
->
-> Brian
-Best Regards,
-Josh Wu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ensure that you are exporting the right gpio number. 
+
+# cat /sys/kernel/debug/gpio
+
+Will tell you correct gpio range for registered gpio chips.
+
+> 
+> Device: Nexus 7 2013 WiFi
+> Board: APQ8064
+
+Thanks for testing this.
+
+Regards,
+Ivan
+
+---
+ drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c
+b/drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c
+index 9a1b443..dd424f4 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c
+@@ -446,7 +446,7 @@ static int pm8xxx_gpio_config_set(struct pinctrl_dev
+*pctldev,
+ 				dev_err(pctrl->dev, "invalid pull-up level\n");
+ 				return -EINVAL;
+ 			}
+-			pin->bias = arg - PM8XXX_GPIO_BIAS_PU_30;
++			pin->bias = arg - PMIC_GPIO_PULL_UP_30;
+ 			banks |= BIT(2);
+ 			pin->disable = 0;
+ 			banks |= BIT(3);
