@@ -1,267 +1,667 @@
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [RFC PATCH 8/9] Input: gpio_keys_polled - Make use of device
- property API
-Date: Mon, 18 Aug 2014 10:55:12 -0700
-Message-ID: <20140818105512.7889980b@ultegra>
-References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
-	<1408172039-32513-9-git-send-email-mika.westerberg@linux.intel.com>
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] RTC: rk808: add RTC driver for RK808 PMIC RTC
+Date: Mon, 18 Aug 2014 20:17:03 +0200
+Message-ID: <53F2431F.3090802@collabora.co.uk>
+References: <1408240979-29555-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1408172039-32513-9-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>Rob
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408240979-29555-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 16 Aug 2014 09:53:58 +0300
-Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
+adding Mike Turquette to cc since this is also a clock driver.
 
-> From: Aaron Lu <aaron.lu@intel.com>
-> 
-> Make use of device property API in this driver so that both OF based
-> system and ACPI based system can use this driver.
-> 
-Do we always assume OF and ACPI _DSD will have the same property name
-strings? i.e. in this patch "gpios"
-> +	if (device_property_get(dev, "gpios", NULL)) {
-> -		if (!of_find_property(pp, "gpios", NULL)) {
+Hello Chris,
 
-Maybe i missed something, but I don't think we can make that assumption
-in BIOS. If not, what is the point of having unified interface?
+Overall it looks good to me, I've just a comment about the driver structure.
 
-> The driver isn't converted to descriptor based gpio API due to there
-> are a lot of existing users of struct gpio_keys_button that expects
-> the gpio integer field. Though this can be solved by adding a new
-> field of type struct gpio_desc but then there is another problem: the
-> devm_gpiod_get needs to operate on the button device instead of its
-> parent device that has the driver binded, so when the driver is
-> unloaded, the resources for the gpio will not get freed
-> automatically. Alternatively, we can introduce a new API, something
-> like gpiod_find_index that does almost the same thing as
-> gpiod_get_index but doesn't do the gpiod_request call and use it
-> during finding button resources in gpio_keys_polled_get_button
-> function. But then this may seem too complicated and not desirable.
-> So in the end, a simple dev_get_gpiod_flags which is introduced in
-> the last patch gets used and the gpio field of the struct
-> gpio_keys_button can be got from the desc_to_gpio.
+On 08/17/2014 04:02 AM, Chris Zhong wrote:
+> RK808 PMIC is a MFD with RTC as one of the device. Adding RTC driver
+> for supporting RTC device present inside RK808 PMIC.
 > 
-> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-> Signed-off-by: Max Eliaser <max@meliaserlow.dyndns.tv>
-> Reviewed-by: Darren Hart <dvhart@linux.intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  drivers/input/keyboard/gpio_keys_polled.c | 139
-> ++++++++++++++++++------------ 1 file changed, 84 insertions(+), 55
-> deletions(-)
+>  drivers/rtc/Kconfig     |   11 +
+>  drivers/rtc/Makefile    |    1 +
+>  drivers/rtc/rtc-rk808.c |  564 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 576 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-rk808.c
 > 
-> diff --git a/drivers/input/keyboard/gpio_keys_polled.c
-> b/drivers/input/keyboard/gpio_keys_polled.c index
-> 432d36395f35..49895d75aaff 100644 ---
-> a/drivers/input/keyboard/gpio_keys_polled.c +++
-> b/drivers/input/keyboard/gpio_keys_polled.c @@ -27,6 +27,7 @@
->  #include <linux/of.h>
->  #include <linux/of_platform.h>
->  #include <linux/of_gpio.h>
-> +#include <linux/property.h>
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index a168e96..48f61b2 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -288,6 +288,17 @@ config RTC_DRV_MAX77686
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called rtc-max77686.
 >  
->  #define DRV_NAME	"gpio-keys-polled"
->  
-> @@ -102,78 +103,95 @@ static void gpio_keys_polled_close(struct
-> input_polled_dev *dev) pdata->disable(bdev->dev);
->  }
->  
-> -#ifdef CONFIG_OF
-> -static struct gpio_keys_platform_data
-> *gpio_keys_polled_get_devtree_pdata(struct device *dev) -{
-> -	struct device_node *node, *pp;
-> +#if defined(CONFIG_OF) || defined(CONFIG_ACPI)
+> +config RTC_DRV_RK808
+> +	tristate "Rockchip RK808 RTC"
+> +	depends on MFD_RK808
+> +	help
+> +	  If you say yes here you will get support for the
+> +	  RTC of Rk808 PMIC.
 > +
-> +struct button_proc_context {
->  	struct gpio_keys_platform_data *pdata;
-> -	struct gpio_keys_button *button;
-> -	int error;
-> -	int nbuttons;
->  	int i;
+> +	  This driver can also be built as a module. If so, the module
+> +	  will be called rtc-rk808.
+> +
+> +
+>  config RTC_DRV_RS5C372
+>  	tristate "Ricoh R2025S/D, RS5C372A/B, RV5C386, RV5C387A"
+>  	help
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> index 56f061c..91fe4647 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -109,6 +109,7 @@ obj-$(CONFIG_RTC_DRV_PUV3)	+= rtc-puv3.o
+>  obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
+>  obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
+>  obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
+> +obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
+>  obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
+>  obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
+>  obj-$(CONFIG_RTC_DRV_RS5C348)	+= rtc-rs5c348.o
+> diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
+> new file mode 100644
+> index 0000000..0abb919
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-rk808.c
+> @@ -0,0 +1,564 @@
+> +/*
+> + * RTC driver for Rockchip RK808
+> + *
+> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> + * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/time.h>
+> +#include <linux/rtc.h>
+> +#include <linux/slab.h>
+> +#include <linux/bcd.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/ioctl.h>
+> +#include <linux/completion.h>
+> +#include <linux/mfd/rk808.h>
+> +#include <linux/delay.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/i2c.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/clk-provider.h>
+> +
+> +/* RTC_CTRL_REG bitfields */
+> +#define BIT_RTC_CTRL_REG_STOP_RTC_M		0x01
+> +#define BIT_RTC_CTRL_REG_ROUND_30S_M		0x02
+> +#define BIT_RTC_CTRL_REG_AUTO_COMP_M		0x04
+> +#define BIT_RTC_CTRL_REG_MODE_12_24_M		0x08
+> +#define BIT_RTC_CTRL_REG_TEST_MODE_M		0x10
+> +#define BIT_RTC_CTRL_REG_SET_32_COUNTER_M	0x20
+> +#define BIT_RTC_CTRL_REG_GET_TIME_M		0x40
+> +#define BIT_RTC_CTRL_REG_RTC_V_OPT_M		0x80
+> +
+> +/* RTC_STATUS_REG bitfields */
+> +#define BIT_RTC_STATUS_REG_RUN_M		0x02
+> +#define BIT_RTC_STATUS_REG_1S_EVENT_M		0x04
+> +#define BIT_RTC_STATUS_REG_1M_EVENT_M		0x08
+> +#define BIT_RTC_STATUS_REG_1H_EVENT_M		0x10
+> +#define BIT_RTC_STATUS_REG_1D_EVENT_M		0x20
+> +#define BIT_RTC_STATUS_REG_ALARM_M		0x40
+> +#define BIT_RTC_STATUS_REG_POWER_UP_M		0x80
+> +
+> +/* RTC_INTERRUPTS_REG bitfields */
+> +#define BIT_RTC_INTERRUPTS_REG_EVERY_M		0x03
+> +#define BIT_RTC_INTERRUPTS_REG_IT_TIMER_M	0x04
+> +#define BIT_RTC_INTERRUPTS_REG_IT_ALARM_M	0x08
+> +
+> +/* DEVCTRL bitfields */
+> +#define BIT_RTC_PWDN				0x40
+> +
+> +/* REG_SECONDS_REG through REG_YEARS_REG is how many registers? */
+> +#define ALL_TIME_REGS				7
+> +#define ALL_ALM_REGS				6
+> +
+> +#define RTC_SET_TIME_RETRIES	5
+> +#define RTC_GET_TIME_RETRIES	5
+> +
+> +struct rk808_rtc {
+> +	struct rk808 *rk808;
+> +	struct rtc_device *rtc;
+> +	unsigned int alarm_enabled:1;
+> +#ifdef CONFIG_COMMON_CLK
+> +	struct clk_onecell_data clk_data;
+> +	struct clk_hw		clkout1_hw;
+> +	struct clk_hw		clkout2_hw;
+> +#endif
+
+As I mentioned on a previous review I really think these clocks should be
+managed on a separate clock driver. It's not uncommon for PMIC chips to
+have a bunch of regulators, a RTC and some clock ouputs and usually each
+of these components have their own driver.
+
+You are already adding a mult-function device driver for this PMIC so is
+just a matter of adding another mfd cell for the clock driver.
+
+I know that drivers/rtc/rtc-hym8563.c does the same thing and manage both
+a RTC and a clock output but in this case it appears that chip is a plain
+RTC chip with a clock. So I guess in that case it was not worth the
+complexity of adding three drivers (mfd, rtc and clock) for just a simple
+RTC? Arguably even that chip should be seen as a multi-function device
+though but I'll let Mike to judge that. What I really think is that there
+is a reason why we have both drivers/rtc and drivers/clk so we should try
+to keep the needed support in the right place to avoid adding unnecessary
+cross subsystem maintenance burden.
+
 > +};
->  
-> -	node = dev->of_node;
-> -	if (!node)
-> -		return NULL;
-> +static int gpio_keys_polled_get_button(struct device *dev, void
-> *data) +{
-> +	struct button_proc_context *c = data;
-> +	struct gpio_keys_platform_data *pdata = c->pdata;
-> +	struct gpio_keys_button *button = &pdata->buttons[c->i];
-> +	struct gpio_desc *desc;
-> +	enum gpio_lookup_flags flags;
-> +	void *val;
 > +
-> +	if (device_property_get(dev, "gpios", NULL)) {
-> +		pdata->nbuttons--;
-> +		dev_warn(dev, "Found button without gpios\n");
-> +		return 0;
+> +/*
+> + * Read current time and date in RTC
+> + */
+> +static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
+> +{
+> +	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +	int ret;
+> +	u8 rtc_data[ALL_TIME_REGS + 1];
+> +
+> +	/* Has the RTC been programmed? */
+> +	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
+> +				 BIT_RTC_CTRL_REG_RTC_V_OPT_M, 0);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to update RTC control: %d\n", ret);
+> +		return ret;
 > +	}
->  
-> -	nbuttons = of_get_child_count(node);
-> -	if (nbuttons == 0)
-> -		return NULL;
-> +	desc = dev_get_gpiod_flags(dev, 0, &flags);
-> +	if (IS_ERR(desc)) {
-> +		int error = PTR_ERR(desc);
->  
-> -	pdata = devm_kzalloc(dev, sizeof(*pdata) + nbuttons *
-> sizeof(*button),
-> -			     GFP_KERNEL);
-> -	if (!pdata)
-> -		return ERR_PTR(-ENOMEM);
-> +		if (error != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get gpio flags,
-> error: %d\n",
-> +				error);
-> +		return error;
+> +
+> +	ret = regmap_bulk_read(rk808->regmap, RK808_SECONDS_REG, rtc_data, 6);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to bulk read rtc_data: %d\n", ret);
+> +		return ret;
 > +	}
->  
-> -	pdata->buttons = (struct gpio_keys_button *)(pdata + 1);
-> -	pdata->nbuttons = nbuttons;
-> +	button->gpio = desc_to_gpio(desc);
-> +	button->active_low = flags & GPIO_ACTIVE_LOW;
->  
-> -	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
-> -	of_property_read_u32(node, "poll-interval",
-> &pdata->poll_interval);
-> +	if (device_property_read(dev, "linux,code", DEV_PROP_U32,
-> +				 &button->code)) {
-> +		dev_err(dev, "Button without keycode: 0x%x\n",
-> +				button->gpio);
-> +		return -EINVAL;
-> +	}
->  
-> -	i = 0;
-> -	for_each_child_of_node(node, pp) {
-> -		int gpio;
-> -		enum of_gpio_flags flags;
-> +	if (!device_property_get(dev, "label", &val))
-> +		button->desc = val;
->  
-> -		if (!of_find_property(pp, "gpios", NULL)) {
-> -			pdata->nbuttons--;
-> -			dev_warn(dev, "Found button without
-> gpios\n");
-> -			continue;
-> -		}
-> +	if (device_property_read(dev, "linux,input-type",
-> DEV_PROP_U32,
-> +				 &button->type))
-> +		button->type = EV_KEY;
->  
-> -		gpio = of_get_gpio_flags(pp, 0, &flags);
-> -		if (gpio < 0) {
-> -			error = gpio;
-> -			if (error != -EPROBE_DEFER)
-> -				dev_err(dev,
-> -					"Failed to get gpio flags,
-> error: %d\n",
-> -					error);
-> -			return ERR_PTR(error);
-> -		}
-> +	button->wakeup = !device_property_get(dev,
-> "gpio-key,wakeup", NULL); 
-> -		button = &pdata->buttons[i++];
-> +	if (device_property_read(dev, "debounce-interval",
-> DEV_PROP_U32,
-> +				 &button->debounce_interval))
-> +		button->debounce_interval = 5;
->  
-> -		button->gpio = gpio;
-> -		button->active_low = flags & OF_GPIO_ACTIVE_LOW;
-> +	c->i++;
+> +	tm->tm_sec = bcd2bin(rtc_data[0]);
+> +	tm->tm_min = bcd2bin(rtc_data[1]);
+> +	tm->tm_hour = bcd2bin(rtc_data[2]);
+> +	tm->tm_mday = bcd2bin(rtc_data[3]);
+> +	tm->tm_mon = bcd2bin(rtc_data[4]) - 1;
+> +	tm->tm_year = bcd2bin(rtc_data[5]) + 100;
+> +	tm->tm_wday = bcd2bin(rtc_data[6]);
+> +	dev_dbg(dev, "RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
+> +		1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
+> +		tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
+> +
 > +	return 0;
 > +}
->  
-> -		if (of_property_read_u32(pp, "linux,code",
-> &button->code)) {
-> -			dev_err(dev, "Button without keycode:
-> 0x%x\n",
-> -				button->gpio);
-> -			return ERR_PTR(-EINVAL);
-> -		}
-> +static struct gpio_keys_platform_data *
-> +gpio_keys_polled_get_devtree_pdata(struct device *dev)
+> +
+> +/*
+> + * Set current time and date in RTC
+> + */
+> +static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
 > +{
-> +	struct gpio_keys_platform_data *pdata;
-> +	int size;
-> +	struct button_proc_context c;
-> +	int error;
-> +	int nbuttons;
->  
-> -		button->desc = of_get_property(pp, "label", NULL);
-> +	nbuttons = device_property_child_count(dev);
-> +	if (nbuttons <= 0)
-> +		return NULL;
->  
-> -		if (of_property_read_u32(pp, "linux,input-type",
-> &button->type))
-> -			button->type = EV_KEY;
-> +	size = sizeof(*pdata) + nbuttons * sizeof(struct
-> gpio_keys_button);
-> +	pdata = devm_kzalloc(dev, size, GFP_KERNEL);
-> +	if (!pdata)
-> +		return ERR_PTR(-ENOMEM);
->  
-> -		button->wakeup = !!of_get_property(pp,
-> "gpio-key,wakeup", NULL);
-> +	pdata->buttons = (struct gpio_keys_button *)(pdata + 1);
-> +	pdata->nbuttons = nbuttons;
->  
-> -		if (of_property_read_u32(pp, "debounce-interval",
-> -					 &button->debounce_interval))
-> -			button->debounce_interval = 5;
-> -	}
-> +	pdata->rep = !device_property_get(dev, "autorepeat", NULL);
-> +	device_property_read(dev, "poll-interval", DEV_PROP_U32,
-> +			     &pdata->poll_interval);
+> +	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +	int ret;
+> +	uint32_t rtc_data[ALL_TIME_REGS + 1];
 > +
-> +	c.pdata = pdata;
-> +	c.i = 0;
-> +	error = device_for_each_child(dev, &c,
-> gpio_keys_polled_get_button);
-> +	if (error)
-> +		return ERR_PTR(error);
->  
->  	if (pdata->nbuttons == 0)
->  		return ERR_PTR(-EINVAL);
-> @@ -181,11 +199,21 @@ static struct gpio_keys_platform_data
-> *gpio_keys_polled_get_devtree_pdata(struct return pdata;
->  }
->  
-> +#ifdef CONFIG_OF
->  static const struct of_device_id gpio_keys_polled_of_match[] = {
->  	{ .compatible = "gpio-keys-polled", },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
-> +#endif
+> +	rtc_data[0] = bin2bcd(tm->tm_sec);
+> +	rtc_data[1] = bin2bcd(tm->tm_min);
+> +	rtc_data[2] = bin2bcd(tm->tm_hour);
+> +	rtc_data[3] = bin2bcd(tm->tm_mday);
+> +	rtc_data[4] = bin2bcd(tm->tm_mon + 1);
+> +	rtc_data[5] = bin2bcd(tm->tm_year - 100);
+> +	rtc_data[6] = bin2bcd(tm->tm_wday);
+> +	dev_dbg(dev, "set RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
+> +		1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
+> +		tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
 > +
-> +#ifdef CONFIG_ACPI
-> +static struct acpi_device_id gpio_keys_polled_acpi_match[] = {
-> +	{ "MNW0002" },
-> +	{ },
+> +	/* Stop RTC while updating the RTC registers */
+> +	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
+> +				 BIT_RTC_CTRL_REG_STOP_RTC_M,
+> +				 BIT_RTC_CTRL_REG_STOP_RTC_M);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to update RTC control: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_bulk_write(rk808->regmap, RK808_SECONDS_REG, rtc_data, 6);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to bull write rtc_data: %d\n", ret);
+> +		return ret;
+> +	}
+> +	/* Start RTC again */
+> +	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
+> +				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to update RTC control: %d\n", ret);
+> +		return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Read alarm time and date in RTC
+> + */
+> +static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
+> +{
+> +	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +	int ret;
+> +	uint32_t int_reg;
+> +	u8 alrm_data[ALL_ALM_REGS + 1];
+> +
+> +	ret = regmap_bulk_read(rk808->regmap,
+> +			       RK808_ALARM_SECONDS_REG, alrm_data, 6);
+> +
+> +	/* some of these fields may be wildcard/"match all" */
+> +	alrm->time.tm_sec = bcd2bin(alrm_data[0]);
+> +	alrm->time.tm_min = bcd2bin(alrm_data[1]);
+> +	alrm->time.tm_hour = bcd2bin(alrm_data[2]);
+> +	alrm->time.tm_mday = bcd2bin(alrm_data[3]);
+> +	alrm->time.tm_mon = bcd2bin(alrm_data[4]) - 1;
+> +	alrm->time.tm_year = bcd2bin(alrm_data[5]) + 100;
+> +
+> +	ret = regmap_read(rk808->regmap, RK808_RTC_INT_REG, &int_reg);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to read RTC INT REG: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dev_dbg(dev, "alrm read RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
+> +		1900 + alrm->time.tm_year, alrm->time.tm_mon + 1,
+> +		alrm->time.tm_mday, alrm->time.tm_wday, alrm->time.tm_hour,
+> +		alrm->time.tm_min, alrm->time.tm_sec);
+> +
+> +	alrm->enabled = (int_reg & BIT_RTC_INTERRUPTS_REG_IT_ALARM_M) ? 1 : 0;
+> +
+> +	return 0;
+> +}
+> +
+> +static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
+> +{
+> +	int ret = 0;
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +
+> +	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
+> +				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M, 0);
+> +	if (!ret)
+> +		rk808_rtc->alarm_enabled = 0;
+> +
+> +	return ret;
+> +}
+> +
+> +static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
+> +{
+> +	int ret = 0;
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +
+> +	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
+> +				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M,
+> +				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
+> +	if (!ret)
+> +		rk808_rtc->alarm_enabled = 1;
+> +
+> +	return ret;
+> +}
+> +
+> +static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
+> +{
+> +	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +	int ret;
+> +	unsigned char alrm_data[ALL_TIME_REGS + 1];
+> +
+> +	ret = rk808_rtc_stop_alarm(rk808_rtc);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to stop alarm: %d\n", ret);
+> +		return ret;
+> +	}
+> +	dev_dbg(dev, "alrm set RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
+> +		1900 + alrm->time.tm_year, alrm->time.tm_mon + 1,
+> +		alrm->time.tm_mday, alrm->time.tm_wday, alrm->time.tm_hour,
+> +		alrm->time.tm_min, alrm->time.tm_sec);
+> +
+> +	alrm_data[0] = bin2bcd(alrm->time.tm_sec);
+> +	alrm_data[1] = bin2bcd(alrm->time.tm_min);
+> +	alrm_data[2] = bin2bcd(alrm->time.tm_hour);
+> +	alrm_data[3] = bin2bcd(alrm->time.tm_mday);
+> +	alrm_data[4] = bin2bcd(alrm->time.tm_mon + 1);
+> +	alrm_data[5] = bin2bcd(alrm->time.tm_year - 100);
+> +
+> +	ret = regmap_bulk_write(rk808->regmap,
+> +				RK808_ALARM_SECONDS_REG, alrm_data, 6);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to bulk write: %d\n", ret);
+> +		return ret;
+> +	}
+> +	if (alrm->enabled) {
+> +		ret = rk808_rtc_start_alarm(rk808_rtc);
+> +		if (ret < 0) {
+> +			dev_err(dev, "Failed to start alarm: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int rk808_rtc_alarm_irq_enable(struct device *dev,
+> +				      unsigned int enabled)
+> +{
+> +	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
+> +
+> +	if (enabled)
+> +		return rk808_rtc_start_alarm(rk808_rtc);
+> +
+> +	return rk808_rtc_stop_alarm(rk808_rtc);
+> +}
+> +
+> +/*
+> + * We will just handle setting the frequency and make use the framework for
+> + * reading the periodic interupts.
+> + *
+> + * @freq: Current periodic IRQ freq:
+> + * bit 0: every second
+> + * bit 1: every minute
+> + * bit 2: every hour
+> + * bit 3: every day
+> + */
+> +static irqreturn_t rk808_alm_irq(int irq, void *data)
+> +{
+> +	struct rk808_rtc *rk808_rtc = data;
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +	int ret;
+> +	uint32_t rtc_ctl;
+> +
+> +	ret = regmap_update_bits(rk808->regmap, RK808_RTC_STATUS_REG,
+> +				 0, 0);
+> +	if (ret < 0) {
+> +		dev_err(rk808_rtc->rk808->dev,
+> +			"%s:Failed to update RTC status: %d\n", __func__, ret);
+> +		return ret;
+> +	}
+> +
+> +	rtc_update_irq(rk808_rtc->rtc, 1, RTC_IRQF | RTC_AF);
+> +	dev_info(rk808_rtc->rk808->dev,
+> +		 "%s:irq=%d,rtc_ctl=0x%x\n", __func__, irq, rtc_ctl);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const struct rtc_class_ops rk808_rtc_ops = {
+> +	.read_time = rk808_rtc_readtime,
+> +	.set_time = rk808_rtc_set_time,
+> +	.read_alarm = rk808_rtc_readalarm,
+> +	.set_alarm = rk808_rtc_setalarm,
+> +	.alarm_irq_enable = rk808_rtc_alarm_irq_enable,
 > +};
-> +MODULE_DEVICE_TABLE(acpi, gpio_keys_polled_acpi_match);
+> +
+> +#ifdef CONFIG_PM
+> +/* Turn off the alarm if it should not be a wake source. */
+> +static int rk808_rtc_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct rk808_rtc *rk808_rtc = dev_get_drvdata(&pdev->dev);
+> +	int ret;
+> +
+> +	if (rk808_rtc->alarm_enabled && device_may_wakeup(&pdev->dev))
+> +		ret = rk808_rtc_start_alarm(rk808_rtc);
+> +	else
+> +		ret = rk808_rtc_stop_alarm(rk808_rtc);
+> +
+> +	if (ret != 0)
+> +		dev_err(&pdev->dev, "Failed to update RTC alarm: %d\n", ret);
+> +
+> +	return 0;
+> +}
+> +
+> +/* Enable the alarm if it should be enabled (in case it was disabled to
+> + * prevent use as a wake source).
+> + */
+> +static int rk808_rtc_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct rk808_rtc *rk808_rtc = dev_get_drvdata(&pdev->dev);
+> +	int ret;
+> +
+> +	if (rk808_rtc->alarm_enabled) {
+> +		ret = rk808_rtc_start_alarm(rk808_rtc);
+> +		if (ret)
+> +			dev_err(&pdev->dev,
+> +				"Failed to restart RTC alarm: %d\n", ret);
+> +	}
+> +
+> +	return 0;
+> +}
+> +#else
+> +#define rk808_rtc_suspend NULL
+> +#define rk808_rtc_resume NULL
 > +#endif
->  
->  #else
->  
-> @@ -309,6 +337,7 @@ static struct platform_driver
-> gpio_keys_polled_driver = { .name	= DRV_NAME,
->  		.owner	= THIS_MODULE,
->  		.of_match_table =
-> of_match_ptr(gpio_keys_polled_of_match),
-> +		.acpi_match_table =
-> ACPI_PTR(gpio_keys_polled_acpi_match), },
->  };
->  module_platform_driver(gpio_keys_polled_driver);
+> +
+> +static const struct dev_pm_ops rk808_rtc_pm_ops = {
+> +	.suspend = rk808_rtc_suspend,
+> +	.resume = rk808_rtc_resume,
+> +	.poweroff = rk808_rtc_suspend,
+> +};
+> +
+> +#ifdef CONFIG_COMMON_CLK
+> +static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
+> +					      unsigned long parent_rate)
+> +{
+> +	return 32768;
+> +}
+> +
+> +static int rk808_clkout1_is_prepared(struct clk_hw *hw)
+> +{
+> +	return 1;
+> +}
+> +
+> +static int rk808_clkout2_control(struct clk_hw *hw, bool enable)
+> +{
+> +	struct rk808_rtc *rk808_rtc = container_of(hw, struct rk808_rtc,
+> +						   clkout2_hw);
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +
+> +	return regmap_update_bits(rk808->regmap, RK808_CLK32OUT_REG,
+> +				  CLK32KOUT2_EN, enable ? CLK32KOUT2_EN : 0);
+> +}
+> +
+> +static int rk808_clkout2_prepare(struct clk_hw *hw)
+> +{
+> +	return rk808_clkout2_control(hw, 1);
+> +}
+> +
+> +static void rk808_clkout2_unprepare(struct clk_hw *hw)
+> +{
+> +	rk808_clkout2_control(hw, 0);
+> +}
+> +
+> +static int rk808_clkout2_is_prepared(struct clk_hw *hw)
+> +{
+> +	struct rk808_rtc *rk808_rtc = container_of(hw, struct rk808_rtc,
+> +						   clkout2_hw);
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +	uint32_t val;
+> +
+> +	int ret = regmap_read(rk808->regmap, RK808_CLK32OUT_REG, &val);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return (val & CLK32KOUT2_EN) ? 1 : 0;
+> +}
+> +
+> +static const struct clk_ops rk808_clkout1_ops = {
+> +	.recalc_rate = rk808_clkout_recalc_rate,
+> +	.is_prepared = rk808_clkout1_is_prepared,
+> +};
+> +
+> +static const struct clk_ops rk808_clkout2_ops = {
+> +	.prepare = rk808_clkout2_prepare,
+> +	.unprepare = rk808_clkout2_unprepare,
+> +	.is_prepared = rk808_clkout2_is_prepared,
+> +	.recalc_rate = rk808_clkout_recalc_rate,
+> +};
+> +
+> +static int register_clocks(struct rk808_rtc *rk808_rtc)
+> +{
+> +	struct clk **clk_table;
+> +	struct clk_init_data init;
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +	struct i2c_client *client = rk808->i2c;
+> +	struct device_node *node = client->dev.of_node;
+> +
+> +	clk_table = devm_kzalloc(&client->dev,
+> +				 2*sizeof(struct clk *), GFP_KERNEL);
+> +	if (!clk_table)
+> +		return -ENOMEM;
+> +
+> +	init.flags = CLK_IS_ROOT;
+> +	init.parent_names = NULL;
+> +	init.num_parents = 0;
+> +	init.name = "rk808-clkout1";
+> +	init.ops = &rk808_clkout1_ops;
+> +	rk808_rtc->clkout1_hw.init = &init;
+> +	clk_table[0] = clk_register(&client->dev, &rk808_rtc->clkout1_hw);
 
-[Jacob Pan]
+Maybe using devm_clk_register() instead?
+
+> +
+> +	init.name = "rk808-clkout2";
+> +	init.ops = &rk808_clkout2_ops;
+> +	rk808_rtc->clkout2_hw.init = &init;
+> +	clk_table[1] = clk_register(&client->dev, &rk808_rtc->clkout2_hw);
+> +
+> +	rk808_rtc->clk_data.clks = clk_table;
+> +	rk808_rtc->clk_data.clk_num = 2;
+> +	of_clk_add_provider(node, of_clk_src_onecell_get, clk_table);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +/*2012.1.1 12:00:00 Saturday*/
+> +struct rtc_time tm_def = {
+> +			.tm_wday = 6,
+> +			.tm_year = 112,
+> +			.tm_mon = 0,
+> +			.tm_mday = 1,
+> +			.tm_hour = 12,
+> +			.tm_min = 0,
+> +			.tm_sec = 0,
+> +};
+> +
+> +static int rk808_rtc_probe(struct platform_device *pdev)
+> +{
+> +	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+> +	struct rk808_rtc *rk808_rtc;
+> +	struct rtc_time tm;
+> +	int alm_irq;
+> +	int ret;
+> +
+> +	rk808_rtc = devm_kzalloc(&pdev->dev, sizeof(*rk808_rtc), GFP_KERNEL);
+> +	if (rk808_rtc == NULL)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, rk808_rtc);
+> +	rk808_rtc->rk808 = rk808;
+> +
+> +	/* start rtc default */
+> +	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
+> +				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to read RTC control: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG, 0xfe);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to write RTC control: %d\n", ret);
+> +			return ret;
+> +	}
+> +
+> +	/* set init time */
+> +	ret = rk808_rtc_readtime(&pdev->dev, &tm);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to read RTC time\n");
+> +		return ret;
+> +	}
+> +	ret = rtc_valid_tm(&tm);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "invalid date/time and init time\n");
+> +		rk808_rtc_set_time(&pdev->dev, &tm_def);
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, 1);
+> +
+> +	rk808_rtc->rtc = devm_rtc_device_register(&pdev->dev,
+> +		"rk808", &rk808_rtc_ops, THIS_MODULE);
+> +	if (IS_ERR(rk808_rtc->rtc)) {
+> +		ret = PTR_ERR(rk808_rtc->rtc);
+> +		return ret;
+> +	}
+> +
+> +	alm_irq  = platform_get_irq(pdev, 0);
+> +	if (alm_irq <= 0) {
+> +		dev_warn(&pdev->dev, "Wake up is not possible as irq = %d\n",
+> +			 alm_irq);
+> +		return -ENXIO;
+> +	}
+> +
+> +	/* request alarm irq of rk808 */
+> +	ret = devm_request_threaded_irq(&pdev->dev, alm_irq, NULL,
+> +					rk808_alm_irq,
+> +					IRQF_TRIGGER_LOW | IRQF_EARLY_RESUME,
+> +					"RTC alarm", rk808_rtc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to request alarm IRQ %d: %d\n",
+> +			alm_irq, ret);
+> +	}
+> +	device_set_wakeup_capable(&pdev->dev, 1);
+> +
+> +#ifdef CONFIG_COMMON_CLK
+> +	ret = register_clocks(rk808_rtc);
+> +#endif
+> +
+> +	dev_info(rk808->dev, "%s:ok\n", __func__);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver rk808_rtc_driver = {
+> +	.probe = rk808_rtc_probe,
+> +	.driver = {
+> +		.name = "rk808-rtc",
+> +		.pm = &rk808_rtc_pm_ops,
+> +	},
+> +};
+> +
+> +module_platform_driver(rk808_rtc_driver);
+> +
+> +MODULE_DESCRIPTION("RTC driver for the rk808 series PMICs");
+> +MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+> +MODULE_AUTHOR("Zhang Qing <zhanqging-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:rk808-rtc");
+> 
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
