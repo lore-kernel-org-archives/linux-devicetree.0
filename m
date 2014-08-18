@@ -1,67 +1,77 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 2/5] drm/exynos: fimd: add Exynos3 SoC support
-Date: Mon, 18 Aug 2014 11:22:44 +0200
-Message-ID: <53F1C5E4.2030804@samsung.com>
-References: <1408350093-26220-1-git-send-email-inki.dae@samsung.com>
- <1408350093-26220-3-git-send-email-inki.dae@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] arm64: Add new cpu-return-addr device tree binding
+Date: Mon, 18 Aug 2014 10:21:56 +0100
+Message-ID: <20140818092156.GA14559@leverpostej>
+References: <1408132130.22761.64.camel@smoke>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1408350093-26220-3-git-send-email-inki.dae@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org
-Cc: airlied@linux.ie, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408132130.22761.64.camel@smoke>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/18/2014 10:21 AM, Inki Dae wrote:
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
---
-Regards
-Andrzej
+Hi Geoff,
+
+On Fri, Aug 15, 2014 at 08:48:50PM +0100, Geoff Levand wrote:
+> Add a new device tree binding cpu-return-addr.  This binding is required for
+> all ARM v8 CPUs that have an "enable-method" property value of "spin-table". The
+> value is a 64 bit read-only physical address that secondary CPU execution will
+> transfer to upon CPU shutdown.
+
+As we already have implementations of spin-table which won't necessarily
+be able to implement cpu-return-addr I do not think this can be required
+for all spin-table implementations.
+
+Given that it's probably not worth updating the topology documentation.
+
+> Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/video/samsung-fimd.txt     |    1 +
->  drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   10 ++++++++++
->  2 files changed, 11 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> index ecc899b..4e6c77c 100644
-> --- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> @@ -9,6 +9,7 @@ Required properties:
->  		"samsung,s3c2443-fimd"; /* for S3C24XX SoCs */
->  		"samsung,s3c6400-fimd"; /* for S3C64XX SoCs */
->  		"samsung,s5pv210-fimd"; /* for S5PV210 SoC */
-> +		"samsung,exynos3250-fimd"; /* for Exynos3250/3472 SoCs */
->  		"samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
->  		"samsung,exynos5250-fimd"; /* for Exynos5 SoCs */
+> Hi All,
+> 
+> We currently have no way for arm64 spin-table CPUs to re-enter the spin
+> table code, and some way to do so is needed to implement a hot-plug
+> cpu_die() for these CPUs.  
+> 
+> I just wanted to get this binding patch out for review now.  I have other
+> patches that implement the spin-table hot-plug in my kexec repo [1].
+> 
+> Please consider.
+> 
+> -Geoff
+> 
+> [1] https://git.linaro.org/people/geoff.levand/linux-kexec.git
+> 
+>  Documentation/devicetree/bindings/arm/cpus.txt     | 26 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/arm/topology.txt | 16 +++++++++++++
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 1fe72a0..24b98a9 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -201,6 +201,16 @@ nodes to be present and contain the properties described below.
+>  			  property identifying a 64-bit zero-initialised
+>  			  memory location.
 >  
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> index 5d09e33..909e647 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> @@ -104,6 +104,14 @@ static struct fimd_driver_data s3c64xx_fimd_driver_data = {
->  	.has_limited_fmt = 1,
->  };
->  
-> +static struct fimd_driver_data exynos3_fimd_driver_data = {
-> +	.timing_base = 0x20000,
-> +	.lcdblk_offset = 0x210,
-> +	.lcdblk_bypass_shift = 1,
-> +	.has_shadowcon = 1,
-> +	.has_vidoutcon = 1,
-> +};
-> +
->  static struct fimd_driver_data exynos4_fimd_driver_data = {
->  	.timing_base = 0x0,
->  	.lcdblk_offset = 0x210,
-> @@ -168,6 +176,8 @@ struct fimd_context {
->  static const struct of_device_id fimd_driver_dt_match[] = {
->  	{ .compatible = "samsung,s3c6400-fimd",
->  	  .data = &s3c64xx_fimd_driver_data },
-> +	{ .compatible = "samsung,exynos3250-fimd",
-> +	  .data = &exynos3_fimd_driver_data },
->  	{ .compatible = "samsung,exynos4210-fimd",
->  	  .data = &exynos4_fimd_driver_data },
->  	{ .compatible = "samsung,exynos5250-fimd",
+> +	- cpu-return-addr
+> +		Usage: required for all ARM v8 CPUs that have an "enable-method"
+> +		       property value of "spin-table".
+> +		Value type: <prop-encoded-array>
+> +		Definition:
+> +			# On ARM v8 64-bit systems must be a two cell property.
+> +			The value is a 64 bit read-only physical address that
+> +			secondary CPU execution will transfer to upon CPU
+> +			shutdown.
+
+I'm not sure what's meant by read-only here. We're never likely to read
+anything from that physical address, just branch the CPU there.
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
