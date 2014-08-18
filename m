@@ -1,144 +1,99 @@
-From: Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [RFC PATCH 4/9] of: Add property_ops callback for devices with
- of_node
-Date: Mon, 18 Aug 2014 07:44:45 -0500
-Message-ID: <D0175E0D.A1C9E%dvhart@linux.intel.com>
-References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
- <1408255459-17625-5-git-send-email-mika.westerberg@linux.intel.com>
- <20140817125416.348C0C41368@trevor.secretlab.ca>
- <20140818092937.GT2462@lahna.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v6 0/6] Add MFD and regulator drivers for Hi6421 PMIC SoC
+Date: Mon, 18 Aug 2014 21:09:10 +0800
+Message-ID: <1408367356-2628-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140818092937.GT2462-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Max Eliaser <max.eliaser-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, zhangnian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/18/14, 4:29, "Mika Westerberg" <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-wrote:
+This patchset adds an MFD core driver and a regulator driver for Hi6421 PMIC
+SoC.
 
->On Sun, Aug 17, 2014 at 01:54:16PM +0100, Grant Likely wrote:
->> On Sun, 17 Aug 2014 09:04:14 +0300, Mika Westerberg
->><mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->> > From: Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->> > 
->> > With the unified device properties interface in place, add device
->>tree support.
->> > By adding the dev_prop_ops for of_node devices, drivers can access
->>properties
->> > from ACPI or Device Tree in a generic way.
->> > 
->> > Signed-off-by: Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->> > Reviewed-by: Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> > Signed-off-by: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> 
->> Hi Mika,
->> 
->> As commented on patch 3, the new API currently throws away type
->> information so the compiler won't warn on an error. That needs to be
->> fixed and this patch reworked accordingly.
->
->The compiler should warn when we add static inline property accessor
->functions for each type.
->
->> 
->> g.
->> 
->> ---
->> >  drivers/of/base.c        | 194
->>++++++++++++++++++++++++++++++++++++++++++++++-
->> >  drivers/of/platform.c    |   4 +-
->> >  include/linux/property.h |   4 +
->> >  3 files changed, 200 insertions(+), 2 deletions(-)
->> > 
->> > diff --git a/drivers/of/base.c b/drivers/of/base.c
->> > index b9864806e9b8..527004d01423 100644
->> > --- a/drivers/of/base.c
->> > +++ b/drivers/of/base.c
->> > @@ -20,7 +20,7 @@
->> >  #include <linux/ctype.h>
->> >  #include <linux/cpu.h>
->> >  #include <linux/module.h>
->> > -#include <linux/of.h>
->> > +#include <linux/property.h>
->> >  #include <linux/of_graph.h>
->> >  #include <linux/spinlock.h>
->> >  #include <linux/slab.h>
->> > @@ -1343,6 +1343,39 @@ int of_property_read_u64(const struct
->>device_node *np, const char *propname,
->> >  EXPORT_SYMBOL_GPL(of_property_read_u64);
->> >  
->> >  /**
->> > + * of_property_read_u64_array - Find and read an array of 64 bit
->>integers
->> > + * from a property.
->> > + *
->> > + * @np:		device node from which the property value is to be read.
->> > + * @propname:	name of the property to be searched.
->> > + * @out_values:	pointer to return value, modified only if return
->>value is 0.
->> > + * @sz:		number of array elements to read
->> > + *
->> > + * Search for a property in a device node and read 64-bit value(s)
->>from
->> > + * it. Returns 0 on success, -EINVAL if the property does not exist,
->> > + * -ENODATA if property does not have a value, and -EOVERFLOW if the
->> > + * property data isn't large enough.
->> > + *
->> > + * The out_values is modified only if a valid u64 value can be
->>decoded.
->> > + */
->> > +int of_property_read_u64_array(const struct device_node *np,
->> > +			       const char *propname, u64 *out_values,
->> > +			       size_t sz)
->> > +{
->> > +	const __be32 *val = of_find_property_value_of_size(np, propname,
->> > +						(sz * sizeof(*out_values)));
->> > +
->> > +	if (IS_ERR(val))
->> > +		return PTR_ERR(val);
->> > +
->> > +	while (sz--) {
->> > +		*out_values++ = of_read_number(val, 2);
->> > +		val += 2;
->> > +	};
->> > +	return 0;
->> > +}
->> 
->> Considering we don't even have a user of u64 arrays in all of the DT
->> drivers, do we even need this type hook in the generic API?
->
->Indeed, I think we can remove it for now.
->
+Hi6421 is a PMIC SoC designed and manufactured by HiSilicon Ltd. It includes
+multi-functions, such as regulators, codec, ADCs, Coulomb counter, etc.
+Hi6421 can be used in various Hi3620 SoC based boards. Registers in Hi6421 are
+memory bus mapped, so in this design they are accessed by regmap-mmio APIs.
 
-Keep in mind that existing DT drivers are not the only user of this
-interface.
+Hi6421 has a requirement to keep a guard delay between its regulator's
+disable and next enable. Implement this requirement in regulator core,
+per Mark Brown's suggestion.
 
-This series enables ACPI systems to make use of such drivers (or lays the
-groundwork, each driver does need an update to the new API), but there are
-also new drivers being developed today that are ACPI first. While the
-DT-space may not need this interface now, I don't see the value in
-preventing it from being used in the future by removing it from the
-generic interface.
+---
+changes in v6:
+ * rebase to v3.17-rc1:
+  - use devm_ioremap_resource in hi6421 mfd driver
+  - add 'const' before var regulator_ops in new funcs in regulator core
+ * fix build error in drivers/regulator/mc13892-regulator.c
+     due to 'const' in regulator_desc.ops
+ * remove patch to hi3xxx_defconfig
 
-Adding it later, if needed, isn't as trivial as it sounds as we first have
-to put developers through the pain of finding the interface doesn't exist
-for a valid type, many of whom will decide to work around the limitation
-rather than take the discussion to the infamous LKML - resulting in
-suboptimal firmware descriptions.
+changes in v5:
+ * rename _regulator_delay to _regulator_enable_delay
+ * clean up hi6421_regulator_enable(), add 100us protective gap into
+     regulator_desc's .enable_time
+ * code clean up, fixes for style checking
 
-I'd much rather see us enable them to help themselves and then get out of
-their way by supporting all the valid types initially.
+changes in v4:
+ * regulator: core:
+  - add const qualifier to ops in struct regulator_desc
+  - factor out _regulator_delay from _regulator_do_enable
+  - add guard delay between calling regulator_disable and _enable
+ * hi6421 regulator:
+  - bug fix: missing min_uV for linear regualtor BUCK0~2
+  - bug fix: wrong volt values in buck_3_voltages table
+  - add const to hi6421 regulator_ops
+  - use ldo_linear and ldo_linear_range in applicable LDOs.
+  - rename regulator-name to conform to names in board schematics.
+
+changes in v3:
+ * hi6421: regulator: remove setting of constraints on board-specific
+     capabilities
+ * delete unecessary compatible property "hisilicon,hi6421-regulators"
+ * change regulator enable/disable callback APIs to support protection
+gaps, as
+     required by hi6421 spec
+ * split regulator set_mode/get_mode callback APIs to LDOs and BUCKs
+ * delete hi6421.dtsi, mfd and regulator nodes are now in board config .dts
+
+changes in v2:
+ * use MFD APIs to manage sub-devices of Hi6421
+ * use regmap-mmio for register access
+ * use only generic regulator device tree property
+ * rewrite regulator driver using helper APIs from both regulator and regmap
+
+v1: first drop
+
+Guodong Xu (6):
+  regulator: core: add const qualifier to ops in struct regulator_desc
+  regulator: core: factor out delay function from _regulator_do_enable
+  regulator: core: add guard delay between calling regulator_disable and
+    _enable
+  mfd: Add hi6421 PMIC core driver
+  regulator: add driver for hi6421 voltage regulator
+  ARM: dts: hi3620-hi4511: Add HI6421 MFD and regulator nodes
+
+ Documentation/devicetree/bindings/mfd/hi6421.txt |  37 ++
+ arch/arm/boot/dts/hi3620-hi4511.dts              | 233 ++++++++
+ drivers/mfd/Kconfig                              |  13 +
+ drivers/mfd/Makefile                             |   1 +
+ drivers/mfd/hi6421-pmic-core.c                   | 117 ++++
+ drivers/regulator/Kconfig                        |  10 +
+ drivers/regulator/Makefile                       |   1 +
+ drivers/regulator/core.c                         | 137 +++--
+ drivers/regulator/hi6421-regulator.c             | 657 +++++++++++++++++++++++
+ drivers/regulator/mc13892-regulator.c            |  11 +-
+ include/linux/mfd/hi6421-pmic.h                  |  39 ++
+ include/linux/regulator/driver.h                 |   8 +-
+ 12 files changed, 1209 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/hi6421.txt
+ create mode 100644 drivers/mfd/hi6421-pmic-core.c
+ create mode 100644 drivers/regulator/hi6421-regulator.c
+ create mode 100644 include/linux/mfd/hi6421-pmic.h
 
 -- 
-Darren Hart					Open Source Technology Center
-darren.hart-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org				            Intel Corporation
-
-
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
