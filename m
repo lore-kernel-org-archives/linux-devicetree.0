@@ -1,44 +1,34 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v2 2/9] arm: multi_v7_defconfig: Enable Mediatek platform
-Date: Mon, 18 Aug 2014 16:58:30 +0200
-Message-ID: <1408373917-10002-3-git-send-email-matthias.bgg@gmail.com>
+Subject: [PATCH v2 3/9] arm: dts: mt6589: Fix typo in GIC unit address
+Date: Mon, 18 Aug 2014 16:58:31 +0200
+Message-ID: <1408373917-10002-4-git-send-email-matthias.bgg@gmail.com>
 References: <1408373917-10002-1-git-send-email-matthias.bgg@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1408373917-10002-1-git-send-email-matthias.bgg@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, heiko@sntech.de, anders.berg@lsi.com, linus.walleij@linaro.org, stefan@agner.ch, lee.jones@linaro.org, linux@arm.linux.org.uk, pawel.moll@arm.com, srv_yingjoe.chen@mediatek.com, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, jason@lakedaemon.net, arnd@arndb.de, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, matthias.bgg@gmail.com, swarren@nvidia.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, galak@codeaurora.org, olof@lixom.net, maxime.ripard@free-electrons.com
+Cc: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, olof@lixom.net, arnd@arndb.de, jason@lakedaemon.net, thomas.petazzoni@free-electrons.com, swarren@nvidia.com, sebastian.hesselbarth@gmail.com, stefan@agner.ch, maxime.ripard@free-electrons.com, matthias.bgg@gmail.com, anders.berg@lsi.com, linus.walleij@linaro.org, lee.jones@linaro.org, heiko@sntech.de, srv_yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable Mediatek platform support for multi_v7_defconfig.
+This changes the unit address of the gic node to it's first register area.
 
 Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- arch/arm/configs/multi_v7_defconfig |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/mt6589.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 5fb95fb..4c08101 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -42,6 +42,7 @@ CONFIG_SOC_AM33XX=y
- CONFIG_SOC_AM43XX=y
- CONFIG_SOC_DRA7XX=y
- CONFIG_ARCH_QCOM=y
-+CONFIG_ARCH_MEDIATEK=y
- CONFIG_ARCH_MSM8X60=y
- CONFIG_ARCH_MSM8960=y
- CONFIG_ARCH_MSM8974=y
+diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
+index d0297a0..742c9bd 100644
+--- a/arch/arm/boot/dts/mt6589.dtsi
++++ b/arch/arm/boot/dts/mt6589.dtsi
+@@ -81,7 +81,7 @@
+ 			clock-names = "system-clk", "rtc-clk";
+ 		};
+ 
+-		gic: interrupt-controller@10212000 {
++		gic: interrupt-controller@10211000 {
+ 			compatible = "arm,cortex-a15-gic";
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
 -- 
 1.7.9.5
