@@ -1,7 +1,7 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v6 3/6] regulator: core: add guard delay between calling regulator_disable and _enable
-Date: Mon, 18 Aug 2014 21:09:13 +0800
-Message-ID: <1408367356-2628-4-git-send-email-guodong.xu@linaro.org>
+Subject: [PATCH v6 1/6] regulator: core: add const qualifier to ops in struct regulator_desc
+Date: Mon, 18 Aug 2014 21:09:11 +0800
+Message-ID: <1408367356-2628-2-git-send-email-guodong.xu@linaro.org>
 References: <1408367356-2628-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1408367356-2628-1-git-send-email-guodong.xu@linaro.org>
@@ -10,101 +10,158 @@ To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree
 Cc: Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Some regulator require a minimum delay between its disable and next enable.
-This is to avoid damages when out-of-range frequent disable/enable of a
-single regulator can bring to the regulator chip.
-
-Add @off_on_delay to struct regulator_desc. Device drivers' can use this field
-to set this guard time.
-
-Add @last_off_jiffy to struct regulator_dev. When @off_on_delay is set by
-driver, regulator core can store its last off (disable) time into this field.
+struct regulator_ops *ops is a member in struct regulator_desc, which gets
+its value from individual regulator driver upon regulator_register() and
+is used by regulator core APIs. It's not allowed for regulator core to
+modify any of these callbacks in *ops. Add 'const' qualifier to enforce that.
 
 Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- drivers/regulator/core.c         | 31 +++++++++++++++++++++++++++++++
- include/linux/regulator/driver.h |  6 ++++++
- 2 files changed, 37 insertions(+)
+ drivers/regulator/core.c              | 32 ++++++++++++++++----------------
+ drivers/regulator/mc13892-regulator.c | 11 +++++++----
+ include/linux/regulator/driver.h      |  2 +-
+ 3 files changed, 24 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 4976451..7bce715 100644
+index a3c3785..c4a13db 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -1813,6 +1813,31 @@ static int _regulator_do_enable(struct regulator_dev *rdev)
+@@ -839,7 +839,7 @@ static void print_constraints(struct regulator_dev *rdev)
+ static int machine_constraints_voltage(struct regulator_dev *rdev,
+ 	struct regulation_constraints *constraints)
+ {
+-	struct regulator_ops *ops = rdev->desc->ops;
++	const struct regulator_ops *ops = rdev->desc->ops;
+ 	int ret;
  
- 	trace_regulator_enable(rdev_get_name(rdev));
+ 	/* do we need to apply the constraint voltage */
+@@ -938,7 +938,7 @@ static int machine_constraints_voltage(struct regulator_dev *rdev,
+ static int machine_constraints_current(struct regulator_dev *rdev,
+ 	struct regulation_constraints *constraints)
+ {
+-	struct regulator_ops *ops = rdev->desc->ops;
++	const struct regulator_ops *ops = rdev->desc->ops;
+ 	int ret;
  
-+	if (rdev->desc->off_on_delay) {
-+		/* if needed, keep a distance of off_on_delay from last time
-+		 * this regulator was disabled.
-+		 */
-+		unsigned long start_jiffy = jiffies;
-+		unsigned long intended, max_delay, remaining;
-+
-+		max_delay = usecs_to_jiffies(rdev->desc->off_on_delay);
-+		intended = rdev->last_off_jiffy + max_delay;
-+
-+		if (time_before(start_jiffy, intended)) {
-+			/* calc remaining jiffies to deal with one-time
-+			 * timer wrapping.
-+			 * in case of multiple timer wrapping, either it can be
-+			 * detected by out-of-range remaining, or it cannot be
-+			 * detected and we gets a panelty of
-+			 * _regulator_enable_delay().
-+			 */
-+			remaining = intended - start_jiffy;
-+			if (remaining <= max_delay)
-+				_regulator_enable_delay(
-+						jiffies_to_usecs(remaining));
-+		}
-+	}
-+
- 	if (rdev->ena_pin) {
- 		ret = regulator_ena_gpio_ctrl(rdev, true);
- 		if (ret < 0)
-@@ -1925,6 +1950,12 @@ static int _regulator_do_disable(struct regulator_dev *rdev)
- 			return ret;
+ 	if (!constraints->min_uA && !constraints->max_uA)
+@@ -982,7 +982,7 @@ static int set_machine_constraints(struct regulator_dev *rdev,
+ 	const struct regulation_constraints *constraints)
+ {
+ 	int ret = 0;
+-	struct regulator_ops *ops = rdev->desc->ops;
++	const struct regulator_ops *ops = rdev->desc->ops;
+ 
+ 	if (constraints)
+ 		rdev->constraints = kmemdup(constraints, sizeof(*constraints),
+@@ -2208,9 +2208,9 @@ EXPORT_SYMBOL_GPL(regulator_count_voltages);
+  */
+ int regulator_list_voltage(struct regulator *regulator, unsigned selector)
+ {
+-	struct regulator_dev	*rdev = regulator->rdev;
+-	struct regulator_ops	*ops = rdev->desc->ops;
+-	int			ret;
++	struct regulator_dev *rdev = regulator->rdev;
++	const struct regulator_ops *ops = rdev->desc->ops;
++	int ret;
+ 
+ 	if (rdev->desc->fixed_uV && rdev->desc->n_voltages == 1 && !selector)
+ 		return rdev->desc->fixed_uV;
+@@ -2270,8 +2270,8 @@ int regulator_get_hardware_vsel_register(struct regulator *regulator,
+ 					 unsigned *vsel_reg,
+ 					 unsigned *vsel_mask)
+ {
+-	struct regulator_dev	*rdev = regulator->rdev;
+-	struct regulator_ops	*ops = rdev->desc->ops;
++	struct regulator_dev *rdev = regulator->rdev;
++	const struct regulator_ops *ops = rdev->desc->ops;
+ 
+ 	if (ops->set_voltage_sel != regulator_set_voltage_sel_regmap)
+ 		return -EOPNOTSUPP;
+@@ -2297,8 +2297,8 @@ EXPORT_SYMBOL_GPL(regulator_get_hardware_vsel_register);
+ int regulator_list_hardware_vsel(struct regulator *regulator,
+ 				 unsigned selector)
+ {
+-	struct regulator_dev	*rdev = regulator->rdev;
+-	struct regulator_ops	*ops = rdev->desc->ops;
++	struct regulator_dev *rdev = regulator->rdev;
++	const struct regulator_ops *ops = rdev->desc->ops;
+ 
+ 	if (selector >= rdev->desc->n_voltages)
+ 		return -EINVAL;
+@@ -2572,8 +2572,8 @@ EXPORT_SYMBOL_GPL(regulator_set_voltage);
+ int regulator_set_voltage_time(struct regulator *regulator,
+ 			       int old_uV, int new_uV)
+ {
+-	struct regulator_dev	*rdev = regulator->rdev;
+-	struct regulator_ops	*ops = rdev->desc->ops;
++	struct regulator_dev *rdev = regulator->rdev;
++	const struct regulator_ops *ops = rdev->desc->ops;
+ 	int old_sel = -1;
+ 	int new_sel = -1;
+ 	int voltage;
+@@ -3336,9 +3336,9 @@ EXPORT_SYMBOL_GPL(regulator_mode_to_status);
+  */
+ static int add_regulator_attributes(struct regulator_dev *rdev)
+ {
+-	struct device		*dev = &rdev->dev;
+-	struct regulator_ops	*ops = rdev->desc->ops;
+-	int			status = 0;
++	struct device *dev = &rdev->dev;
++	const struct regulator_ops *ops = rdev->desc->ops;
++	int status = 0;
+ 
+ 	/* some attributes need specific methods to be displayed */
+ 	if ((ops->get_voltage && ops->get_voltage(rdev) >= 0) ||
+@@ -3905,7 +3905,7 @@ core_initcall(regulator_init);
+ static int __init regulator_init_complete(void)
+ {
+ 	struct regulator_dev *rdev;
+-	struct regulator_ops *ops;
++	const struct regulator_ops *ops;
+ 	struct regulation_constraints *c;
+ 	int enabled, ret;
+ 
+diff --git a/drivers/regulator/mc13892-regulator.c b/drivers/regulator/mc13892-regulator.c
+index f374fa5..793b662 100644
+--- a/drivers/regulator/mc13892-regulator.c
++++ b/drivers/regulator/mc13892-regulator.c
+@@ -526,6 +526,7 @@ static unsigned int mc13892_vcam_get_mode(struct regulator_dev *rdev)
+ 	return REGULATOR_MODE_NORMAL;
+ }
+ 
++static struct regulator_ops mc13892_vcam_ops;
+ 
+ static int mc13892_regulator_probe(struct platform_device *pdev)
+ {
+@@ -582,10 +583,12 @@ static int mc13892_regulator_probe(struct platform_device *pdev)
  	}
+ 	mc13xxx_unlock(mc13892);
  
-+	/* cares about last_off_jiffy only if off_on_delay is required by
-+	 * device.
-+	 */
-+	if (rdev->desc->off_on_delay)
-+		rdev->last_off_jiffy = jiffies;
-+
- 	trace_regulator_disable_complete(rdev_get_name(rdev));
+-	mc13892_regulators[MC13892_VCAM].desc.ops->set_mode
+-		= mc13892_vcam_set_mode;
+-	mc13892_regulators[MC13892_VCAM].desc.ops->get_mode
+-		= mc13892_vcam_get_mode;
++	/* update mc13892_vcam ops */
++	memcpy(&mc13892_vcam_ops, mc13892_regulators[MC13892_VCAM].desc.ops,
++						sizeof(struct regulator_ops));
++	mc13892_vcam_ops.set_mode = mc13892_vcam_set_mode,
++	mc13892_vcam_ops.get_mode = mc13892_vcam_get_mode,
++	mc13892_regulators[MC13892_VCAM].desc.ops = &mc13892_vcam_ops;
  
- 	return 0;
+ 	mc13xxx_data = mc13xxx_parse_regulators_dt(pdev, mc13892_regulators,
+ 					ARRAY_SIZE(mc13892_regulators));
 diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 4b62813..efe058f 100644
+index bbe03a1..4b62813 100644
 --- a/include/linux/regulator/driver.h
 +++ b/include/linux/regulator/driver.h
-@@ -238,6 +238,7 @@ enum regulator_type {
-  * @bypass_val_off: Disabling value for control when using regmap set_bypass
-  *
-  * @enable_time: Time taken for initial enable of regulator (in uS).
-+ * @off_on_delay: guard time (in uS), before re-enabling a regulator
-  */
- struct regulator_desc {
- 	const char *name;
-@@ -276,6 +277,8 @@ struct regulator_desc {
- 	unsigned int bypass_val_off;
- 
- 	unsigned int enable_time;
-+
-+	unsigned int off_on_delay;
- };
- 
- /**
-@@ -348,6 +351,9 @@ struct regulator_dev {
- 
- 	struct regulator_enable_gpio *ena_pin;
- 	unsigned int ena_gpio_state:1;
-+
-+	/* time when this regulator was disabled last time */
-+	unsigned long last_off_jiffy;
- };
- 
- struct regulator_dev *
+@@ -245,7 +245,7 @@ struct regulator_desc {
+ 	int id;
+ 	bool continuous_voltage_range;
+ 	unsigned n_voltages;
+-	struct regulator_ops *ops;
++	const struct regulator_ops *ops;
+ 	int irq;
+ 	enum regulator_type type;
+ 	struct module *owner;
 -- 
 1.9.1
