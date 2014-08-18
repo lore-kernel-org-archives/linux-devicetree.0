@@ -1,39 +1,63 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 0/2] dmaengine: qcom_bam_dma: Add support for v1.3.0
-Date: Mon, 18 Aug 2014 07:23:35 +0100
-Message-ID: <53F19BE7.6070300@linaro.org>
-References: <1397684719-30065-1-git-send-email-agross@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397684719-30065-1-git-send-email-agross@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>
-Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCHv4 0/2] regulator: of: Add support for pasing regulator suspend
+ state
+Date: Mon, 18 Aug 2014 15:27:01 +0900
+Message-ID: <1408343223-4043-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-Any plans to respin these patches with Stanimir's comments?
+The regulators would set different state/mode according to the kind of suspend
+state. So regulation_constraints structure has already regulator suspend state filed.
+This patch parse regulator suspend state from devicetree file.
 
-thanks,
-srini
+For example:
 
+	ldoX_reg: LDOx {
+		regulator-name = "VAP_XXX_1.2V";
+		regulator-min-microvolt = <1200000>;
+		regulator-max-microvolt = <1200000>;
+		regulator-always-on;
 
-On 16/04/14 22:45, Andy Gross wrote:
-> This set of patches adds support for the v1.3.0 version of the QCOM BAM
-> dmaengine driver.  The older version of the BAM is present in the MSM8x64,
-> APQ8064, and IPQ8064 processors.
->
-> Due to register address space changes between versions, all of the register
-> accesses have to be calculated using different offsets and multipliers that are
-> specific to that version of the IP block.
->
-> Andy Gross (2):
->    dmaengine: qcom_bam_dma: Add v1.3.0 driver support
->    dmaengine: qcom_bam_dma: Add binding for v1.3.0
->
->   .../devicetree/bindings/dma/qcom_bam_dma.txt       |    4 +-
->   drivers/dma/qcom_bam_dma.c                         |  177 +++++++++++++-------
->   2 files changed, 117 insertions(+), 64 deletions(-)
->
+		regulator-initial-state = <3>;	/* PM_SUSPEND_MEM */
+		regulator-state-mem {
+			regulator-off-in-suspend;
+		};
+
+		regulator-state-disk {
+			regulator-volt = <1200000>;
+			regulator-on-in-suspend;
+		};
+	};
+
+Changes from v3:
+- Don't support 'regulator-state-standby' mode
+- Remove 'regulator-mode' property
+
+Changes from v2:
+- Fix over 80 lines by using checkpatch script
+- Rebase this patchset on latest for-next branch of regulator.git
+
+Changes from v1:
+- Check whether regulator-initial-state and regulator-mode is correct or not
+- Add more detailed description about regulator-initial-state, regulator-mode
+  and regulator-state-[standby/mem/disk] for devicetree bindings
+- Modify example of regulator suspend state in bindings documentation
+
+Chanwoo Choi (2):
+  regulator: of: Add support for parsing regulator_state for suspend state
+  dt-bindings: regulator: Add regulator suspend state for PM state
+
+ .../devicetree/bindings/regulator/regulator.txt    | 22 ++++++++
+ drivers/regulator/of_regulator.c                   | 65 +++++++++++++++++++++-
+ 2 files changed, 85 insertions(+), 2 deletions(-)
+
+-- 
+1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
