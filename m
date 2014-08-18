@@ -1,168 +1,121 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 6/7] ARM: meson: update defconfigs
-Date: Mon, 18 Aug 2014 12:31:22 +0200
-Message-ID: <53F1D5FA.1040803@gmail.com>
-References: <1408272594-10814-1-git-send-email-carlo@caione.org>
- <1408272594-10814-7-git-send-email-carlo@caione.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 5/8] mtd: nand: stm_nand_bch: provide Device Tree documentation
+Date: Mon, 18 Aug 2014 11:31:56 +0100
+Message-ID: <1408357919-19793-6-git-send-email-lee.jones@linaro.org>
+References: <1408357919-19793-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1408272594-10814-7-git-send-email-carlo@caione.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1408357919-19793-1-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, pekon@pek-sem.com, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+This is where we describe the different new and generic options used by
+the ST BCH driver.
+
+Cc: devicetree@vger.kernel.org
+Reviewed-By: Pekon Gupta <pekon@pek-sem.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ Documentation/devicetree/bindings/mtd/stm-nand.txt | 74 ++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/stm-nand.txt
+
+diff --git a/Documentation/devicetree/bindings/mtd/stm-nand.txt b/Documentation/devicetree/bindings/mtd/stm-nand.txt
+new file mode 100644
+index 0000000..5872a39
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/stm-nand.txt
+@@ -0,0 +1,74 @@
++STM BCH NAND Support
++--------------------
++
++Required properties:
++
++- compatible		: Should be "st,nand-bch"
++- reg			: Should contain register's location and length
++- reg-names		: "emi_nand" - NAND Controller register map
++			  "emiss" - External Memory Interface Subsystem base
++- interrupts		: Interrupt number
++- interrupt-names	: "nand_irq" - NAND Controller IRQ
++- st,nand-banks		: Subnode representing one or more "banks" of NAND
++			  Flash, connected to an STM NAND Controller (see
++			  description below).
++- nand-ecc-strength	: Generic NAND property (See mtd/nand.txt)
++			  Options are; 0, 18 or 30. If not present, the driver
++			  will choose the strongest scheme compatible if the
++			  OOB size.
++
++Properties describing Bank of NAND Flash ("st,nand-banks"):
++
++- st,nand-csn		: Chip select associated with the Bank.
++
++- st,nand-timing-relax	: [Optional] Number of IP clock cycles by which to
++			  "relax" timing configuration.  Required on some boards
++			  to accommodate board-level limitations. Applies to
++			  ONFI timing mode configuration.
++
++- nand-on-flash-bbt	: Generic NAND property (See mtd/nand.txt)
++
++- partitions		: [Optional] Subnode describing MTD partition map
++			  (see mtd/partition.txt)
++
++Note, during initialisation, the NAND Controller timing registers are configured
++according to one of the following methods, in order of precedence:
++
++	   1. Configuration based on ONFI timing mode, as advertised by the
++	      device during ONFI-probing (ONFI-compliant NAND only).
++
++	   2. Use reset/safe timing values
++
++Example:
++
++	nand@fe901000 {
++		compatible = "st,nand-bch";
++		reg = <0xfe901000 0x1000>, <0xfef00800 0x0800>;
++		reg-names = "emi_nand", "emiss";
++		interrupts = <0 139 0x0>;
++		interrupt-names = "nand_irq";
++		nand-ecc-strength = <30>;
++
++		status = "okay";
++
++		bank0 {
++			/* NAND_BBT_USE_FLASH */
++			nand-on-flash-bbt;
++			st,nand-csn		= <0>;
++
++			partitions {
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				partition@0{
++					label = "NANDFlash1";
++					reg = <0x00000000 0x00800000>;
++				};
++
++				partition@800000{
++					label = "NANDFlash2";
++					reg = <0x00800000 0x0f800000>;
++				};
++			};
++		};
++	};
+-- 
+1.9.1
 
 
-On 17/08/14 12:49, Carlo Caione wrote:
-> This patch updates the multi_v7_defconfig with the CONFIG_* needed by
-> the just added Meson anch. It also adds a new defconfig specifically for
-> the Meson SoCs.
->
-> Signed-off-by: Carlo Caione <carlo@caione.org>
-> ---
->   arch/arm/configs/meson_defconfig    | 99 +++++++++++++++++++++++++++++++++++++
->   arch/arm/configs/multi_v7_defconfig |  3 ++
->   2 files changed, 102 insertions(+)
->   create mode 100644 arch/arm/configs/meson_defconfig
->
-> diff --git a/arch/arm/configs/meson_defconfig b/arch/arm/configs/meson_defconfig
-> new file mode 100644
-> index 0000000..3c9d976
-> --- /dev/null
-> +++ b/arch/arm/configs/meson_defconfig
-
-I doubt that we need a meson_defconfig when we can get the SoC up and 
-running using multi_v7_defconfig.
-
-> @@ -0,0 +1,99 @@
-> +CONFIG_NO_HZ=y
-> +CONFIG_HIGH_RES_TIMERS=y
-> +CONFIG_BLK_DEV_INITRD=y
-> +CONFIG_PERF_EVENTS=y
-> +CONFIG_ARCH_MESON=y
-> +CONFIG_SMP=y
-> +CONFIG_HAVE_ARM_ARCH_TIMER=y
-> +CONFIG_ARM_PSCI=y
-> +CONFIG_AEABI=y
-> +CONFIG_HIGHMEM=y
-> +CONFIG_HIGHPTE=y
-> +CONFIG_ARM_APPENDED_DTB=y
-> +CONFIG_ARM_ATAG_DTB_COMPAT=y
-> +CONFIG_VFP=y
-> +CONFIG_NEON=y
-> +CONFIG_PM_RUNTIME=y
-> +CONFIG_NET=y
-> +CONFIG_PACKET=y
-> +CONFIG_UNIX=y
-> +CONFIG_INET=y
-> +CONFIG_IP_PNP=y
-> +CONFIG_IP_PNP_DHCP=y
-> +CONFIG_IP_PNP_BOOTP=y
-> +# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
-> +# CONFIG_INET_XFRM_MODE_TUNNEL is not set
-> +# CONFIG_INET_XFRM_MODE_BEET is not set
-> +# CONFIG_INET_LRO is not set
-> +# CONFIG_INET_DIAG is not set
-> +# CONFIG_IPV6 is not set
-> +# CONFIG_WIRELESS is not set
-> +CONFIG_DEVTMPFS=y
-> +CONFIG_DEVTMPFS_MOUNT=y
-> +CONFIG_BLK_DEV_SD=y
-> +CONFIG_ATA=y
-> +CONFIG_NETDEVICES=y
-> +# CONFIG_NET_VENDOR_ARC is not set
-> +# CONFIG_NET_CADENCE is not set
-> +# CONFIG_NET_VENDOR_BROADCOM is not set
-> +# CONFIG_NET_VENDOR_CIRRUS is not set
-> +# CONFIG_NET_VENDOR_FARADAY is not set
-> +# CONFIG_NET_VENDOR_INTEL is not set
-> +# CONFIG_NET_VENDOR_MARVELL is not set
-> +# CONFIG_NET_VENDOR_MICREL is not set
-> +# CONFIG_NET_VENDOR_MICROCHIP is not set
-> +# CONFIG_NET_VENDOR_NATSEMI is not set
-> +# CONFIG_NET_VENDOR_SAMSUNG is not set
-> +# CONFIG_NET_VENDOR_SEEQ is not set
-> +# CONFIG_NET_VENDOR_SMSC is not set
-> +CONFIG_STMMAC_ETH=y
-> +# CONFIG_NET_VENDOR_VIA is not set
-> +# CONFIG_NET_VENDOR_WIZNET is not set
-> +# CONFIG_WLAN is not set
-> +# CONFIG_INPUT_MOUSEDEV is not set
-> +# CONFIG_INPUT_KEYBOARD is not set
-> +# CONFIG_INPUT_MOUSE is not set
-> +CONFIG_SERIAL_MESON=y
-> +CONFIG_SERIAL_MESON_CONSOLE=y
-> +# CONFIG_HW_RANDOM is not set
-> +CONFIG_I2C=y
-> +CONFIG_I2C_CHARDEV=y
-> +CONFIG_SPI=y
-> +CONFIG_GPIOLIB=y
-> +CONFIG_GPIO_SYSFS=y
-> +CONFIG_POWER_SUPPLY=y
-> +CONFIG_POWER_RESET=y
-> +# CONFIG_HWMON is not set
-> +CONFIG_WATCHDOG=y
-> +CONFIG_WATCHDOG_CORE=y
-> +CONFIG_MFD_AXP20X=y
-> +CONFIG_REGULATOR=y
-> +CONFIG_REGULATOR_FIXED_VOLTAGE=y
-> +CONFIG_REGULATOR_VIRTUAL_CONSUMER=y
-> +CONFIG_REGULATOR_GPIO=y
-> +CONFIG_USB=y
-> +CONFIG_USB_EHCI_HCD=y
-> +CONFIG_USB_EHCI_HCD_PLATFORM=y
-> +CONFIG_USB_OHCI_HCD=y
-> +CONFIG_USB_OHCI_HCD_PLATFORM=y
-> +CONFIG_MMC=y
-> +CONFIG_NEW_LEDS=y
-> +CONFIG_LEDS_CLASS=y
-> +CONFIG_LEDS_GPIO=y
-> +CONFIG_LEDS_TRIGGERS=y
-> +CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-> +CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
-> +CONFIG_RTC_CLASS=y
-> +# CONFIG_RTC_INTF_SYSFS is not set
-> +# CONFIG_RTC_INTF_PROC is not set
-> +# CONFIG_IOMMU_SUPPORT is not set
-> +CONFIG_GENERIC_PHY=y
-> +CONFIG_EXT4_FS=y
-> +CONFIG_VFAT_FS=y
-> +CONFIG_TMPFS=y
-> +CONFIG_NFS_FS=y
-> +CONFIG_NFS_V3_ACL=y
-> +CONFIG_NFS_V4=y
-> +CONFIG_ROOT_NFS=y
-> +CONFIG_PRINTK_TIME=y
-> +CONFIG_DEBUG_FS=y
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 5fb95fb..5b44796 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -29,6 +29,7 @@ CONFIG_ARCH_HISI=y
->   CONFIG_ARCH_HI3xxx=y
->   CONFIG_ARCH_HIX5HD2=y
->   CONFIG_ARCH_KEYSTONE=y
-> +CONFIG_ARCH_MESON=y
->   CONFIG_ARCH_MXC=y
->   CONFIG_SOC_IMX51=y
->   CONFIG_SOC_IMX53=y
-> @@ -173,6 +174,8 @@ CONFIG_SERIAL_8250_CONSOLE=y
->   CONFIG_SERIAL_8250_DW=y
->   CONFIG_SERIAL_AMBA_PL011=y
->   CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
-> +CONFIG_SERIAL_MESON=y
-> +CONFIG_SERIAL_MESON_CONSOLE=y
->   CONFIG_SERIAL_SAMSUNG=y
->   CONFIG_SERIAL_SAMSUNG_CONSOLE=y
->   CONFIG_SERIAL_SIRFSOC=y
->
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
