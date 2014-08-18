@@ -1,49 +1,55 @@
-From: Darren Hart <dvhart@linux.intel.com>
-Subject: Re: [RFC PATCH 1/9] ACPI: Add support for device specific properties
-Date: Mon, 18 Aug 2014 07:37:18 -0500
-Message-ID: <D0175D3C.A1C92%dvhart@linux.intel.com>
-References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
- <1408255459-17625-2-git-send-email-mika.westerberg@linux.intel.com>
- <53F1B5A9.8060307@linaro.org>
- <20140818082656.GR2462@lahna.fi.intel.com>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] ASoC: fsl-asrc: Convert to use regmap framework's
+ endianness method.
+Date: Mon, 18 Aug 2014 12:43:43 +0000
+Message-ID: <18ffec9378de4e47ba641df5d21eb62a@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1408352215-12014-1-git-send-email-Li.Xiubo@freescale.com>
+ <20140818095155.GD14559@leverpostej>
+ <e2a8e001e3d945a9ba9fafc1cfebe0a8@BY2PR0301MB0613.namprd03.prod.outlook.com>,<20140818122141.GG14559@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20140818082656.GR2462@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>, Hanjun Guo <hanjun.guo@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140818122141.GG14559@leverpostej>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 8/18/14, 3:27, "Mika Westerberg" <mika.westerberg@linux.intel.com>
-wrote:
-
->On Mon, Aug 18, 2014 at 04:13:29PM +0800, Hanjun Guo wrote:
-
-Hi Hanjun,
-
-Thanks for reviewing!
-
+[...]
+>> >Why does this have to change the semantics of the DT binding?
+>> >
 >>
->> > +/* ACPI _DSD device properties UUID:
->>daffd814-6eba-4d8c-8a91-bc9bbf4aa301 */
->> > +static const u8 prp_uuid[16] = {
->> 
->> s/prp_uuid/dsd_uuid ?
+>> I'm thinking that maybe in the late fulture, this device will be
+>> applied to some PowerPC SoC, from the regmap framework code, we can
+>> see that the 'big-endian' property could be ignored.
+>>
+>> So,in this case,  if it is absent, the default endian mode should be
+>> used as defualt or native as the regmap framework said.
 >
->Well, it is actually the _DSD UUID that implements ACPI device
->properties (hence the prp_) but I have no problems in changing that to
->dsd_uuid instead.
+> As I have mentioned in the past w.r.t. endianness bindings, there is no
+> such thing as a "default endianness" or "native endianness".
+>
+> PowerPC and ARM can be Bi-endian, configured by the kernel.
+>
+> The hardware's registers have a fixed endianness regardless of this
+> runtime configuration.
+>
+> So describe that fixed property, as that does not vary with kernel
+> configuration (and is therefore a property of the HW rather than the
+> combination of HW + kernel).
+>
 
-The distinction is important. DSD does not define a format, the UUID does,
-and there can be many - although we are adding support specifically for
-one. The PRP name here also pairs with the PRP0000 HID.
+Yeah, okay.
 
--- 
-Darren Hart					Open Source Technology Center
-darren.hart@intel.com				            Intel Corporation
+I'll remove the document binding's modification.
 
 
 
+> Thanks,
+> Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
