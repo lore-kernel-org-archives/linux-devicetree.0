@@ -1,48 +1,52 @@
-From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ASoC: fsl-asrc: Convert to use regmap framework's endianness
- method.
-Date: Mon, 18 Aug 2014 20:54:13 +0530
-Message-ID: <53F21A9D.4010507@gmail.com>
-References: <1408352215-12014-1-git-send-email-Li.Xiubo@freescale.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 2/2] regulator: Add DT bindings for max77802 PMIC
+ regulators
+Date: Mon, 18 Aug 2014 10:23:44 -0500
+Message-ID: <20140818152344.GH14537@sirena.org.uk>
+References: <1408350762-15520-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1408350762-15520-3-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408352215-12014-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fTrra2YUagINO7SV"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408350762-15520-3-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Monday 18 August 2014 02:26 PM, Xiubo Li wrote:
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->
-> This is depended on the following regmap framework patches, which have
-> just been merged into linux-next tree:
->
-> https://lkml.org/lkml/2014/7/15/6
-> https://lkml.org/lkml/2014/7/15/5
-> https://lkml.org/lkml/2014/7/15/7
->
->
->
->
->
->
->   Documentation/devicetree/bindings/sound/fsl,asrc.txt | 10 +++++++---
->   sound/soc/fsl/fsl_asrc.c                             |  6 +-----
->   2 files changed, 8 insertions(+), 8 deletions(-)
->
-Reviewed-by: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--fTrra2YUagINO7SV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Mon, Aug 18, 2014 at 10:32:42AM +0200, Javier Martinez Canillas wrote:
+> Add Device Tree binding documentation for the regulators
+> present in the Maxim 77802 Power Management IC.
 
---
-Regards,
-Varka Bhadram.
+Applied, thanks.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--fTrra2YUagINO7SV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT8hp9AAoJELSic+t+oim9irIP/jv2oGdo0m018nIkafGwdaR7
+okUFtgEKDAx+XSvw4arAMk0lSdzuET+GzYLJlgSgErvgLQtM1AwaS49lQFCBfNZZ
+ej0skz9oZ/AGzmnoLNr3t+syUzyVp7jw46rvxbbGspiwJo/KJVFQnKr5Hl69/o+V
+oPx918ir3W7/0KYYUpDlujITcpYoktGnI+Fs3HIh1krjR1caBemKPdRMiBmhopPA
+9+G98RBBV5AiICRx1utngpHNPlynQUvStlDQAZb+zE+61WLptd5tnOAvdggakbMg
+O0ZeJI/wNvG5is35j7mg/jvJ41QAfPjGBFWlt9rzL+yXmZHs5LeVZ9KwuIb2hEMB
+ImXTFl8jlHJ/+3qHTVY3Q7w5zBjqDyTVhKA+DD/QBSDbxMse63/8rA1xnWUHnigx
+XAlbn4R0SupxoPoRdinlQApv/5EktDp7QiA5jUMmcOdghm07ImZszt1LzRoartyu
+NgPFSqcWrahpu/PeFSm+AqKH18uZNiFNPBX4MxjAz4erQu5IACQ30pa/IJDGhDmH
++8ePmugK5qrbPOYsKZEhnb2lnaSfMbu693o5WFSCBMC3jm39V9H/CorZX8hWKpMu
+E5tsc5LnpheEP6+QvMee58pOagAY61U3Woj6htOe6koajPfVvjWE3ftqzT8SEG9+
+OmuCmTpTdSB/aASreU2d
+=WXsm
+-----END PGP SIGNATURE-----
+
+--fTrra2YUagINO7SV--
