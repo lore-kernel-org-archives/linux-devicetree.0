@@ -1,88 +1,51 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v3 1/6] pinctrl: Device tree bindings for Qualcomm
- pm8xxx gpio block
-Date: Mon, 18 Aug 2014 10:16:02 +0300
-Message-ID: <1408346162.2695.33.camel@iivanov-dev>
-References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
-	 <1407771634-14946-2-git-send-email-iivanov@mm-sol.com>
-	 <ED4952FE-A292-4724-9283-B5226AB20E3E@me.com>
+From: Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 6/9] gpiolib: add API to get gpio desc and flags
+Date: Mon, 18 Aug 2014 15:16:01 +0800
+Message-ID: <53F1A831.4090309@intel.com>
+References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com> <20140817130004.4B9FDC4137F@trevor.secretlab.ca> <D016516D.A1AFA%dvhart@linux.intel.com> <1927766.GeLld99ozq@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <ED4952FE-A292-4724-9283-B5226AB20E3E@me.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Daniel <delta.tatham@me.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1927766.GeLld99ozq-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Max Eliaser <max.eliaser-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2014-08-16 at 16:24 +0100, Daniel wrote:
-> @Ivan: sorry about the double post.
+On 08/18/2014 12:57 PM, Rafael J. Wysocki wrote:
+> On Sunday, August 17, 2014 12:43:38 PM Darren Hart wrote:
+>> On 8/17/14, 6:00, "Grant Likely" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>>
+>>>>
+>>>> +	/* Using device tree? */
+>>>> +	if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+>>>> +		desc = of_find_gpio(dev, NULL, idx, flags);
+>>>
+>>> of_find_gpio() doesn't exist.
+>>
+>> Hrm... As of 3.16.0 (e64df3ebe8262c8203d1fe4f541e0241c3112c01)
+>>
+>> $ git blame -L1455,1456 drivers/gpio/gpiolib.c
+>> bae48da2 (Alexandre Courbot 2013-10-17 10:21:38 -0700 1455) static struct
+>> gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+>>
+>> Have we removed this in -next or something? (on the plane, will verify
+>> upon landing)
 > 
-> Am 11.08.2014 um 16:40 schrieb Ivan T. Ivanov <iivanov@mm-sol.com>:
-> > diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> > new file mode 100644
-> > index 0000000..994e748
-> > --- /dev/null
-> > +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> > @@ -0,0 +1,107 @@
-> > +/*
-> > + * This header provides constants for the Qualcomm PMIC gpio binding.
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_PINCTRL_QCOM_PMIC_GPIO_H
-> > +#define _DT_BINDINGS_PINCTRL_QCOM_PMIC_GPIO_H
-> > +
-> > +#define PMIC_GPIO_PULL_UP_30		1
-> > +#define PMIC_GPIO_PULL_UP_1P5		2
-> > +#define PMIC_GPIO_PULL_UP_31P5		3
-> > +#define PMIC_GPIO_PULL_UP_1P5_30	4
+> In 3.17-rc1:
 > 
-> Looking at drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c, shouldn't these defines start at 0?
-> e.g. #define PMIC_GPIO_PULL_UP_30 	0
-> 
+> rafael@vostro:~/src/linux-pm> grep -r of_find_gpio *
+> drivers/gpio/gpiolib.c:static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+> drivers/gpio/gpiolib.c:         desc = of_find_gpio(dev, con_id, idx, &lookupflags);
 
-Initially "bias-pull-up" was used to set this parameter. 
-Zero value for "bias-pull-up" has special meaning "...the 
-pin is connected to VDD...". So values in DTS have to have
-offset by one. Micro Amps are non-standard for pull-ups, 
-thats why I have changed this to "qcom,pull-up-strength", but I 
-have made mistake in config_set function. Following patch should 
-fix the issue. I will send updated version soon.
-
-> However, I still cannot get any data from those 2 pins if I export them through /sys/class/gpio...
-
-Ensure that you are exporting the right gpio number. 
-
-# cat /sys/kernel/debug/gpio
-
-Will tell you correct gpio range for registered gpio chips.
-
-> 
-> Device: Nexus 7 2013 WiFi
-> Board: APQ8064
-
-Thanks for testing this.
+I also verified the following branch:
+git://git.secretlab.ca/git/linux devicetree/next
+And of_find_gpio is there.
 
 Regards,
-Ivan
-
----
- drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c
-b/drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c
-index 9a1b443..dd424f4 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-pmic.c
-@@ -446,7 +446,7 @@ static int pm8xxx_gpio_config_set(struct pinctrl_dev
-*pctldev,
- 				dev_err(pctrl->dev, "invalid pull-up level\n");
- 				return -EINVAL;
- 			}
--			pin->bias = arg - PM8XXX_GPIO_BIAS_PU_30;
-+			pin->bias = arg - PMIC_GPIO_PULL_UP_30;
- 			banks |= BIT(2);
- 			pin->disable = 0;
- 			banks |= BIT(3);
+Aaron
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
