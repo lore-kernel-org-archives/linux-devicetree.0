@@ -1,121 +1,32 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v2 3/4] ARM: dts: Add main PWM info to rk3288
-Date: Mon, 18 Aug 2014 10:29:41 -0700
-Message-ID: <1408382982-2077-4-git-send-email-dianders@chromium.org>
-References: <1408382982-2077-1-git-send-email-dianders@chromium.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] Tegra xHCI support
+Date: Mon, 18 Aug 2014 11:30:03 -0600
+Message-ID: <53F2381B.8020801@wwwdotorg.org>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1408382982-2077-1-git-send-email-dianders@chromium.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Eddie Cai <eddie.cai@rock-chips.com>, galak@codeaurora.org, olof@lixom.net, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408381705-3623-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the PWM info (other than the VOP PWM) to the main rk3288
-dtsi file.
+On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
+> This series adds support for xHCI on NVIDIA Tegra SoCs.  This includes:
+>   - adding a driver for the mailbox used to communicate with the xHCI
+>     controller's firmware,
+>   - extending the XUSB pad controller driver to support the USB PHY
+>     types (UTMI, HSIC, and USB3), and
+>   - adding a xHCI host-controller driver.
 
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
-Changes in v2: None
-
- arch/arm/boot/dts/rk3288.dtsi | 68 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 36be7bb..9c9d9c5 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -261,6 +261,50 @@
- 		status = "disabled";
- 	};
- 
-+	pwm0: pwm@ff680000 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680000 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm0_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		status = "disabled";
-+	};
-+
-+	pwm1: pwm@ff680010 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680010 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm1_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		status = "disabled";
-+	};
-+
-+	pwm2: pwm@ff680020 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680020 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm2_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		status = "disabled";
-+	};
-+
-+	pwm3: pwm@ff680030 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680030 0x10>;
-+		#pwm-cells = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm3_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		status = "disabled";
-+	};
-+
- 	pmu: power-management@ff730000 {
- 		compatible = "rockchip,rk3288-pmu", "syscon";
- 		reg = <0xff730000 0x100>;
-@@ -611,5 +655,29 @@
- 				rockchip,pins = <5 15 3 &pcfg_pull_none>;
- 			};
- 		};
-+
-+		pwm0 {
-+			pwm0_pin: pwm0-pin {
-+				rockchip,pins = <7 0 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm1 {
-+			pwm1_pin: pwm1-pin {
-+				rockchip,pins = <7 1 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm2 {
-+			pwm2_pin: pwm2-pin {
-+				rockchip,pins = <7 22 RK_FUNC_3 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm3 {
-+			pwm3_pin: pwm3-pin {
-+				rockchip,pins = <7 23 RK_FUNC_3 &pcfg_pull_none>;
-+			};
-+		};
- 	};
- };
--- 
-2.1.0.rc2.206.gedb03e5
+Can you please remind us what dependencies exist between the patches? In 
+other words, is it possible to apply parts of the series to their usual 
+subsystem branches, or does the whole thing need to go into a single 
+topic branch in order to avoid compile-time problems, or run-time 
+problems in features unrelated to the new functionality? Thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
