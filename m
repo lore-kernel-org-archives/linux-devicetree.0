@@ -1,36 +1,49 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH v3 5/7] net: cpsw: Add am33xx MACID readout
-Date: Mon, 18 Aug 2014 23:54:26 +0530
-Message-ID: <53F244DA.3070803@ti.com>
-References: <1408202315-20006-1-git-send-email-mpa@pengutronix.de> <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [RESEND PATCH 1/2] ARM: dts: Improve Peach Pit and Pi power scheme
+Date: Mon, 18 Aug 2014 13:27:48 -0500
+Message-ID: <53F245A4.5010106@samsung.com>
+References: <1407757091-18730-1-git-send-email-javier.martinez@collabora.co.uk> <CAD=FV=UbckfwGucuPjEtHixVgF5K2fD5N3EPS2BH96DRDACuqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>, "David S. Miller" <davem@davemloft.net>
-Cc: =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Rostedt <rostedt@goodmis.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=UbckfwGucuPjEtHixVgF5K2fD5N3EPS2BH96DRDACuqw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Yuvaraj Kumar C D <yuvaraj.cd@gmail.com>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 16 August 2014 08:48 PM, Markus Pargmann wrote:
-> +	mac_addr[5] = (macid_lo >> 8) & 0xff;
-> +	mac_addr[4] = macid_lo & 0xff;
-> +	mac_addr[3] = (macid_hi >> 24) & 0xff;
-> +	mac_addr[2] = (macid_hi >> 16) & 0xff;
-> +	mac_addr[1] = (macid_hi >> 8) & 0xff;
-> +	mac_addr[0] = macid_hi & 0xff;
-> +
-This will fail incase of DRA74x and DRA72x platforms, please check for
-u-boot src for parsing logic as TRM is not out yet. Below is the actual
-code for DRA7 platforms for MAC address parsing
+On 08/11/14 10:46, Doug Anderson wrote:
+> Javier,
+>
+> On Mon, Aug 11, 2014 at 4:38 AM, Javier Martinez Canillas
+> <javier.martinez@collabora.co.uk>  wrote:
+>> The DeviceTree files for the Peach Pit and Pi machines have
+>> a simplistic model of the connections between the different
+>> regulators since not all the tps65090 regulators get their
+>> input supply voltage from the VDC. DCDC1-3, LD0-1 and fet7
+>> parent supply is indded VDC but the fet1-6 get their input
+>> supply from the DCDC1 and DCDC2 output voltage rails.
+>>
+>> Update the DeviceTree to better reflect the real connections
+>> between tps65090 regulators. Having this information in the
+>> DTS is useful since FETs are switches that don't provide an
+>> output voltage so the regulator core needs to fetch the FET
+>> parent output voltage if the child voltage is queried.
+>>
+>> Signed-off-by: Javier Martinez Canillas<javier.martinez@collabora.co.uk>
+>> Acked-by: Mark Brown<broonie@linaro.org>
+>> ---
+>>   arch/arm/boot/dts/exynos5420-peach-pit.dts | 12 ++++++------
+>>   arch/arm/boot/dts/exynos5800-peach-pi.dts  | 12 ++++++------
+>>   2 files changed, 12 insertions(+), 12 deletions(-)
+>
+> Matches my schematics.  Kukjin: I think this could be applied to
+> for-next whenever it's convenient.
+>
+OK, I've applied this but 2nd in this series...
 
-mac_addr[0] = (mac_hi & 0xFF0000) >> 16;
-mac_addr[1] = (mac_hi & 0xFF00) >> 8;
-mac_addr[2] = mac_hi & 0xFF;
-mac_addr[3] = (mac_lo & 0xFF0000) >> 16;
-mac_addr[4] = (mac_lo & 0xFF00) >> 8;
-mac_addr[5] = mac_lo & 0xFF;
-
-Regards
-Mugunthan V N
+> Acked-by: Doug Anderson<dianders@chromium.org>
+>
+Thanks,
+Kukjin
