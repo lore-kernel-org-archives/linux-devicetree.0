@@ -1,572 +1,539 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCHv10 3/5] ARM: dts: exynos: unuse the slot-node and deprecate
- the supports-highspeed for dw-mmc
-Date: Mon, 18 Aug 2014 21:23:03 +0900
-Message-ID: <53F1F027.7060609@samsung.com>
-References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com>
- <1407397082-32495-4-git-send-email-jh80.chung@samsung.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 3/4 V3] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+Date: Sun, 17 Aug 2014 19:41:45 -0500
+Message-ID: <53F14BC9.8090407@gmail.com>
+References: <1404947104-21345-1-git-send-email-suravee.suthikulpanit@amd.com> <1404947104-21345-4-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1407397082-32495-4-git-send-email-jh80.chung@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1404947104-21345-4-git-send-email-suravee.suthikulpanit@amd.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: suravee.suthikulpanit@amd.com, marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
+Cc: devicetree@vger.kernel.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, Catalin.Marinas@arm.com, Harish.Kasiviswanathan@amd.com, linux-kernel@vger.kernel.org, Will.Deacon@arm.com, linux-pci@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Kukjin.
-
-Socfpga and Rockchip were queued into each SoC tree.
-I want to know whether this patch is queued or not into Samsung-Soc tree.
-Do you have any other plan for this patch?
-
-Best Regards,
-Jaehoon Chung
-
-On 08/07/2014 04:38 PM, Jaehoon Chung wrote:
-> dw-mmc controller can support multiple slots.
-> But, there are no use-cases anywhere. So we don't need to support the
-> slot-node for dw-mmc controller.
-> And "supports-highspeed" property in dw-mmc is deprecated.
-> "supports-highspeed" property can be replaced with "cap-sd/mmc-highspeed".
+On 07/09/2014 06:05 PM, suravee.suthikulpanit@amd.com wrote:
+> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 > 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Reviewed-by: Tushar Behera <trblinux@gmail.com>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Tested-by: Sachin Kamat <sachin.kamat@samsung.com>
+> ARM GICv2m specification extends GICv2 to support MSI(-X) with
+> a new set of register frames. This patch introduces support for
+> the non-secure GICv2m register frame.
+> 
+> The driver currently matchs "arm,gic-400-plus" in device tree binding,
+> which implements GICv2m.
+> 
+> The "msi-controller" keyword in ARM GIC devicetree binding is used to indentify
+> GIC driver that it should enable MSI(-X) support, The region of GICv2m MSI
+> register frame is specified using the register frame index 4 in the device tree.
+> MSI support is optional.
+> 
+> Each GIC maintains an "msi_chip" structure. To discover the msi_chip,
+> PCI host driver can do the following:
+> 
+>     struct device_node *gic_node = of_irq_find_parent(pdev->dev.of_node);
+>     pcie_bus->msi_chip = of_pci_find_msi_chip_by_node(gic_node);
+> 
+> Cc: Mark Rutland <Mark.Rutland@arm.com>
+> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Catalin Marinas <Catalin.Marinas@arm.com>
+> Cc: Will Deacon <Will.Deacon@arm.com>
+> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 > ---
->  arch/arm/boot/dts/exynos4412-odroid-common.dtsi |    8 ++------
->  arch/arm/boot/dts/exynos4412-origen.dts         |    8 ++------
->  arch/arm/boot/dts/exynos4412-trats2.dts         |    8 ++------
->  arch/arm/boot/dts/exynos5250-arndale.dts        |   18 +++++-----------
->  arch/arm/boot/dts/exynos5250-cros-common.dtsi   |   25 +++++++----------------
->  arch/arm/boot/dts/exynos5250-smdk5250.dts       |   18 +++++-----------
->  arch/arm/boot/dts/exynos5250-snow.dts           |    6 ++----
->  arch/arm/boot/dts/exynos5260-xyref5260.dts      |   18 +++++-----------
->  arch/arm/boot/dts/exynos5410-smdk5410.dts       |   18 +++++-----------
->  arch/arm/boot/dts/exynos5420-arndale-octa.dts   |   16 ++++-----------
->  arch/arm/boot/dts/exynos5420-peach-pit.dts      |   16 ++++-----------
->  arch/arm/boot/dts/exynos5420-smdk5420.dts       |   16 ++++-----------
->  arch/arm/boot/dts/exynos5800-peach-pi.dts       |   16 ++++-----------
->  13 files changed, 51 insertions(+), 140 deletions(-)
+>  Documentation/devicetree/bindings/arm/gic.txt |  20 +-
+>  arch/arm64/Kconfig                            |   1 +
+>  drivers/irqchip/Kconfig                       |   7 +
+>  drivers/irqchip/Makefile                      |   1 +
+>  drivers/irqchip/irq-gic-v2m.c                 | 251 ++++++++++++++++++++++++++
+>  drivers/irqchip/irq-gic-v2m.h                 |  13 ++
+>  drivers/irqchip/irq-gic.c                     |  23 ++-
+>  drivers/irqchip/irq-gic.h                     |  31 +++-
+>  8 files changed, 334 insertions(+), 13 deletions(-)
+>  create mode 100644 drivers/irqchip/irq-gic-v2m.c
+>  create mode 100644 drivers/irqchip/irq-gic-v2m.h
 > 
-> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> index 6d6d23c..f5c0f81 100644
-> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-> @@ -54,17 +54,13 @@
->  		status = "okay";
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 5573c08..d2eea0b 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -12,11 +12,14 @@ Main node required properties:
 >  
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <2 3>;
->  		samsung,dw-mshc-ddr-timing = <1 2>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -		};
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
->  	};
+>  - compatible : should be one of:
+>  	"arm,gic-400"
+> +	"arm,gic-400-v2m"
+
+There is no such hardware. There is a gic-400 from ARM and then there
+are gic-400 plus extra logic from each Si vendor. So this should have a
+vendor specific compatible string in case there are quirks in your h/w.
+
+>  	"arm,cortex-a15-gic"
+>  	"arm,cortex-a9-gic"
+>  	"arm,cortex-a7-gic"
+>  	"arm,arm11mp-gic"
+> +
+>  - interrupt-controller : Identifies the node as an interrupt controller
+> +
+>  - #interrupt-cells : Specifies the number of cells needed to encode an
+>    interrupt source.  The type shall be a <u32> and the value shall be 3.
 >  
->  	watchdog@10060000 {
-> diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
-> index e925c9f..de15114 100644
-> --- a/arch/arm/boot/dts/exynos4412-origen.dts
-> +++ b/arch/arm/boot/dts/exynos4412-origen.dts
-> @@ -137,17 +137,13 @@
->  		status = "okay";
+> @@ -37,9 +40,16 @@ Main node required properties:
+>  	the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
+>  	the interrupt is wired to that CPU.  Only valid for PPI interrupts.
 >  
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <2 3>;
->  		samsung,dw-mshc-ddr-timing = <1 2>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -		};
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
->  	};
+> -- reg : Specifies base physical address(s) and size of the GIC registers. The
+> -  first region is the GIC distributor register base and size. The 2nd region is
+> -  the GIC cpu interface register base and size.
+> +- reg : Specifies base physical address(s) and size of the GIC register frames.
+> +
+> +  Region | Description
+> +  Index  |
+> +  -------------------------------------------------------------------
+> +     0   | GIC distributor register base and size
+> +     1   | GIC cpu interface register base and size
+> +     2   | VGIC interface control register base and size (Optional)
+> +     3   | VGIC CPU interface register base and size (Optional)
+> +     4   | GICv2m MSI interface register base and size (Optional)
 >  
->  	codec@13400000 {
-> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-> index 11967f4..5e066cd 100644
-> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> @@ -520,7 +520,6 @@
+>  Optional
+>  - interrupts	: Interrupt source of the parent interrupt controller on
+> @@ -55,6 +65,10 @@ Optional
+>  		  by a crossbar/multiplexer preceding the GIC. The GIC irq
+>  		  input line is assigned dynamically when the corresponding
+>  		  peripheral's crossbar line is mapped.
+> +
+> +- msi-controller : Identifies the node as an MSI controller.
+> +                   (Required for GICv2m)
+> +
+>  Example:
 >  
->  	mmc@12550000 {
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		non-removable;
->  		card-detect-delay = <200>;
-> @@ -532,11 +531,8 @@
->  		pinctrl-0 = <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>;
->  		pinctrl-names = "default";
->  		status = "okay";
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -		};
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
->  	};
+>  	intc: interrupt-controller@fff11000 {
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index be52492..0f9b11d 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -9,6 +9,7 @@ config ARM64
+>  	select ARM_AMBA
+>  	select ARM_ARCH_TIMER
+>  	select ARM_GIC
+> +	select ARM_GIC_V2M if (PCI && PCI_MSI)
+>  	select ARM_GIC_V3
+>  	select BUILDTIME_EXTABLE_SORT
+>  	select CLONE_BACKWARDS
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 7f0c2a3..274910d 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -7,6 +7,13 @@ config ARM_GIC
+>  	select IRQ_DOMAIN
+>  	select MULTI_IRQ_HANDLER
 >  
->  	serial@13800000 {
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-> index d0de1f5..42a3590 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -401,7 +401,6 @@
->  	mmc_0: mmc@12200000 {
->  		status = "okay";
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
-> @@ -410,17 +409,13 @@
->  		vmmc-supply = <&mmc_reg>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -		};
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
->  	};
+> +config ARM_GIC_V2M
+> +	bool
+> +	select IRQ_DOMAIN
+> +	select MULTI_IRQ_HANDLER
+> +	depends on ARM_GIC
+> +	depends on PCI && PCI_MSI
+> +
+>  config GIC_NON_BANKED
+>  	bool
 >  
->  	mmc_2: mmc@12220000 {
->  		status = "okay";
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <2 3>;
-> @@ -428,12 +423,9 @@
->  		vmmc-supply = <&mmc_reg>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <4>;
-> -			disable-wp;
-> -		};
-> +		bus-width = <4>;
-> +		disable-wp;
-> +		cap-sd-highspeed;
->  	};
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index c57e642..09c035a 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -16,6 +16,7 @@ obj-$(CONFIG_ARCH_SUNXI)		+= irq-sun4i.o
+>  obj-$(CONFIG_ARCH_SUNXI)		+= irq-sunxi-nmi.o
+>  obj-$(CONFIG_ARCH_SPEAR3XX)		+= spear-shirq.o
+>  obj-$(CONFIG_ARM_GIC)			+= irq-gic.o irq-gic-common.o
+> +obj-$(CONFIG_ARM_GIC_V2M)		+= irq-gic-v2m.o
+>  obj-$(CONFIG_ARM_GIC_V3)		+= irq-gic-v3.o irq-gic-common.o
+>  obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
+>  obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
+> diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
+> new file mode 100644
+> index 0000000..e54ca1d
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-gic-v2m.c
+> @@ -0,0 +1,251 @@
+> +/*
+> + * ARM GIC v2m MSI(-X) support
+> + * Support for Message Signalelled Interrupts for systems that
+> + * implement ARM Generic Interrupt Controller: GICv2m.
+> + *
+> + * Copyright (C) 2014 Advanced Micro Devices, Inc.
+> + * Authors: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> + *          Harish Kasiviswanathan <harish.kasiviswanathan@amd.com>
+> + *          Brandon Anderson <brandon.anderson@amd.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published
+> + * by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pci.h>
+> +#include <linux/irq.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/slab.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/bitmap.h>
+> +
+> +#include "irqchip.h"
+> +#include "irq-gic.h"
+> +
+> +/*
+> +* MSI_TYPER:
+> +*     [31:26] Reserved
+> +*     [25:16] lowest SPI assigned to MSI
+> +*     [15:10] Reserved
+> +*     [9:0]   Numer of SPIs assigned to MSI
+> +*/
+> +#define V2M_MSI_TYPER			0x008
+> +#define V2M_MSI_TYPER_BASE_SHIFT	(16)
+> +#define V2M_MSI_TYPER_BASE_MASK		(0x3FF)
+> +#define V2M_MSI_TYPER_NUM_MASK		(0x3FF)
+> +#define V2M_MSI_SETSPI_NS		0x040
+> +#define V2M_MIN_SPI			32
+> +#define V2M_MAX_SPI			1019
+> +
+> +#define GIC_OF_MSIV2M_RANGE_INDEX	4
+> +
+> +/*
+> + * alloc_msi_irq - Allocate MSIs from avaialbe MSI bitmap.
+> + * @data: Pointer to v2m_data
+> + * @nvec: Number of interrupts to allocate
+> + * @irq: Pointer to the allocated irq
+> + *
+> + * Allocates interrupts only if the contiguous range of MSIs
+> + * with specified nvec are available. Otherwise return the number
+> + * of available interrupts. If none are available, then returns -ENOENT.
+> + */
+> +static int alloc_msi_irq(struct v2m_data *data, int nvec, int *irq)
+> +{
+> +	int size = data->nr_spis;
+> +	int next = size, i = nvec, ret;
+> +
+> +	/* We should never allocate more than available nr_spis */
+> +	if (i >= size)
+> +		i = size;
+> +
+> +	spin_lock(&data->msi_cnt_lock);
+> +
+> +	for (; i > 0; i--) {
+> +		next = bitmap_find_next_zero_area(data->bm,
+> +					size, 0, i, 0);
+> +		if (next < size)
+> +			break;
+> +	}
+> +
+> +	if (i != nvec) {
+> +		ret = i ? : -ENOENT;
+> +	} else {
+> +		bitmap_set(data->bm, next, nvec);
+> +		*irq = data->spi_start + next;
+> +		ret = 0;
+> +	}
+> +
+> +	spin_unlock(&data->msi_cnt_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct v2m_data *to_v2m_data(struct msi_chip *chip)
+> +{
+> +	struct gic_chip_data *gic = container_of(chip, struct gic_chip_data,
+> +						 msi_chip);
+> +	return &gic->v2m_data;
+> +}
+> +
+> +static void gicv2m_teardown_msi_irq(struct msi_chip *chip, unsigned int irq)
+> +{
+> +	int pos;
+> +	struct v2m_data *data = to_v2m_data(chip);
+> +
+> +	spin_lock(&data->msi_cnt_lock);
+> +
+> +	pos = irq - data->spi_start;
+> +	if (pos >= 0 && pos < data->nr_spis)
+> +		bitmap_clear(data->bm, pos, 1);
+> +
+> +	spin_unlock(&data->msi_cnt_lock);
+> +}
+> +
+> +static int gicv2m_setup_msi_irq(struct msi_chip *chip, struct pci_dev *pdev,
+> +		      struct msi_desc *desc)
+> +{
+> +	int avail, irq = 0;
+> +	struct msi_msg msg;
+> +	phys_addr_t addr;
+> +	struct v2m_data *data = to_v2m_data(chip);
+> +
+> +	if (!desc) {
+> +		dev_err(&pdev->dev,
+> +			"GICv2m: MSI setup failed. Invalid msi descriptor\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	avail = alloc_msi_irq(data, 1, &irq);
+> +	if (avail != 0) {
+> +		dev_err(&pdev->dev,
+> +			"GICv2m: MSI setup failed. Cannnot allocate IRQ\n");
+> +		return -ENOSPC;
+> +	}
+> +
+> +	irq_set_chip_data(irq, chip);
+> +	irq_set_msi_desc(irq, desc);
+> +	irq_set_irq_type(irq, IRQ_TYPE_EDGE_RISING);
+> +
+> +	addr = data->res.start + V2M_MSI_SETSPI_NS;
+> +
+> +	msg.address_hi = (u32)(addr >> 32);
+> +	msg.address_lo = (u32)(addr);
+> +	msg.data = irq;
+> +	write_msi_msg(irq, &msg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init
+> +gicv2m_msi_init(struct device_node *node, struct v2m_data *v2m)
+> +{
+> +	unsigned int val;
+> +
+> +	if (of_address_to_resource(node, GIC_OF_MSIV2M_RANGE_INDEX,
+> +				   &v2m->res)) {
+> +		pr_err("GICv2m: Failed locate GICv2m MSI register frame\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	v2m->base = of_iomap(node, GIC_OF_MSIV2M_RANGE_INDEX);
+> +	if (!v2m->base) {
+> +		pr_err("GICv2m: Failed to map GIC MSI registers\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	val = readl_relaxed(v2m->base + V2M_MSI_TYPER);
+> +	if (!val) {
+> +		pr_warn("GICv2m: Failed to read V2M_MSI_TYPER register\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	v2m->spi_start = (val >> V2M_MSI_TYPER_BASE_SHIFT) &
+> +				V2M_MSI_TYPER_BASE_MASK;
+> +	v2m->nr_spis = val & V2M_MSI_TYPER_NUM_MASK;
+> +	if ((v2m->spi_start < V2M_MIN_SPI) || (v2m->nr_spis >= V2M_MAX_SPI)) {
+> +			pr_err("GICv2m: Invalid MSI_TYPER (%#x)\n", val);
+> +			return -EINVAL;
+> +	}
+> +
+> +	v2m->bm = kzalloc(sizeof(long) * BITS_TO_LONGS(v2m->nr_spis),
+> +			  GFP_KERNEL);
+> +	if (!v2m->bm) {
+> +		pr_err("GICv2m: Failed to allocate MSI bitmap\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	spin_lock_init(&v2m->msi_cnt_lock);
+> +
+> +	pr_info("GICv2m: SPI range [%d:%d]\n",
+> +		v2m->spi_start, (v2m->spi_start + v2m->nr_spis));
+> +
+> +	return 0;
+> +}
+> +
+> +static void gicv2m_mask_irq(struct irq_data *d)
+> +{
+> +	gic_mask_irq(d);
+> +	if (d->msi_desc)
+> +		mask_msi_irq(d);
+> +}
+> +
+> +static void gicv2m_unmask_irq(struct irq_data *d)
+> +{
+> +	gic_unmask_irq(d);
+> +	if (d->msi_desc)
+> +		unmask_msi_irq(d);
+> +}
+> +
+> +static struct irq_chip gicv2m_chip = {
+> +	.name			= "GICv2m",
+> +	.irq_mask		= gicv2m_mask_irq,
+> +	.irq_unmask		= gicv2m_unmask_irq,
+> +	.irq_eoi		= gic_eoi_irq,
+> +	.irq_set_type		= gic_set_type,
+> +	.irq_retrigger		= gic_retrigger,
+> +#ifdef CONFIG_SMP
+> +	.irq_set_affinity	= gic_set_affinity,
+> +#endif
+> +#ifdef CONFIG_PM
+> +	.irq_set_wake		= gic_set_wake,
+> +#endif
+> +};
+> +
+> +#ifdef CONFIG_OF
+> +static int __init
+> +gicv2m_of_init(struct device_node *node, struct device_node *parent)
+> +{
+> +	struct gic_chip_data *gic;
+> +	int ret;
+> +
+> +	ret = _gic_of_init(node, parent, &gicv2m_chip, &gic);
+> +	if (ret) {
+> +		pr_err("GICv2m: Failed to initialize GIC\n");
+> +		return ret;
+> +	}
+> +
+> +	gic->msi_chip.owner = THIS_MODULE;
+> +	gic->msi_chip.of_node = node;
+> +	gic->msi_chip.setup_irq = gicv2m_setup_msi_irq;
+> +	gic->msi_chip.teardown_irq = gicv2m_teardown_msi_irq;
+> +	ret = of_pci_msi_chip_add(&gic->msi_chip);
+> +	if (ret) {
+> +		/* MSI is optional and not supported here */
+> +		pr_info("GICv2m: MSI is not supported.\n");
+> +		return 0;
+> +	}
+> +
+> +	ret = gicv2m_msi_init(node, &gic->v2m_data);
+> +	if (ret)
+> +		return ret;
+> +	return ret;
+> +}
+> +
+> +IRQCHIP_DECLARE(arm_gic_400_v2m, "arm,gic-400-v2m", gicv2m_of_init);
+> +
+> +#endif /* CONFIG_OF */
+> diff --git a/drivers/irqchip/irq-gic-v2m.h b/drivers/irqchip/irq-gic-v2m.h
+> new file mode 100644
+> index 0000000..2d93a87
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-gic-v2m.h
+> @@ -0,0 +1,13 @@
+> +#ifndef _IRQ_GIC_V2M_H_
+> +#define _IRQ_GIC_V2M_H_
+> +
+> +struct v2m_data {
+> +	spinlock_t msi_cnt_lock;
+> +	struct resource res;      /* GICv2m resource */
+> +	void __iomem *base;       /* GICv2m virt address */
+> +	unsigned int spi_start;   /* The SPI number that MSIs start */
+> +	unsigned int nr_spis;     /* The number of SPIs for MSIs */
+> +	unsigned long *bm;        /* MSI vector bitmap */
+> +};
+> +
+> +#endif /*_IRQ_GIC_V2M_H_*/
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 966e1d5..a054e0d 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -111,15 +111,34 @@ static inline void gic_set_base_accessor(struct gic_chip_data *data,
+>  #define gic_set_base_accessor(d, f)
+>  #endif
 >  
->  	i2s0: i2s@03830000 {
-> diff --git a/arch/arm/boot/dts/exynos5250-cros-common.dtsi b/arch/arm/boot/dts/exynos5250-cros-common.dtsi
-> index e603e9c..89034fd 100644
-> --- a/arch/arm/boot/dts/exynos5250-cros-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250-cros-common.dtsi
-> @@ -89,7 +89,6 @@
+> +static inline
+> +struct gic_chip_data *irq_data_get_gic_chip_data(struct irq_data *d)
+> +{
+> +	struct gic_chip_data *gic_data;
+> +	struct msi_chip *mchip;
+> +
+> +	/*
+> +	 * For MSI, irq_data.chip_data points to struct msi_chip.
+> +	 * For non-MSI, irq_data.chip_data points to struct gic_chip_data.
+> +	 */
+> +	if (d->msi_desc) {
+> +		mchip = irq_data_get_irq_chip_data(d);
+> +		gic_data = container_of(mchip, struct gic_chip_data, msi_chip);
+> +	} else {
+> +		gic_data = irq_data_get_irq_chip_data(d);
+> +	}
+> +	return gic_data;
+> +}
+> +
+>  static inline void __iomem *gic_dist_base(struct irq_data *d)
+>  {
+> -	struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
+> +	struct gic_chip_data *gic_data = irq_data_get_gic_chip_data(d);
+>  	return gic_data_dist_base(gic_data);
+>  }
 >  
->  	mmc@12200000 {
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
-> @@ -97,33 +96,25 @@
->  		samsung,dw-mshc-ddr-timing = <1 2>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_cd &sd0_bus4 &sd0_bus8>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -		};
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
->  	};
+>  static inline void __iomem *gic_cpu_base(struct irq_data *d)
+>  {
+> -	struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
+> +	struct gic_chip_data *gic_data = irq_data_get_gic_chip_data(d);
+>  	return gic_data_cpu_base(gic_data);
+>  }
 >  
->  	mmc@12220000 {
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <2 3>;
->  		samsung,dw-mshc-ddr-timing = <1 2>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <4>;
-> -			wp-gpios = <&gpc2 1 0>;
-> -		};
-> +		bus-width = <4>;
-> +		wp-gpios = <&gpc2 1 0>;
-> +		cap-sd-highspeed;
->  	};
->  
->  	mmc@12230000 {
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
-> @@ -131,10 +122,8 @@
->  		samsung,dw-mshc-ddr-timing = <1 2>;
->  		/* See board-specific dts files for pin setup */
->  
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <4>;
-> -		};
-> +		bus-width = <4>;
-> +		cap-sd-highspeed;
->  	};
->  
->  	spi_1: spi@12d30000 {
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index b4b35ad..6a0f4c0 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -284,7 +284,6 @@
->  	mmc@12200000 {
->  		status = "okay";
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		broken-cd;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
-> @@ -292,29 +291,22 @@
->  		samsung,dw-mshc-ddr-timing = <1 2>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -		};
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
->  	};
->  
->  	mmc@12220000 {
->  		status = "okay";
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <2 3>;
->  		samsung,dw-mshc-ddr-timing = <1 2>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <4>;
-> -			disable-wp;
-> -		};
-> +		bus-width = <4>;
-> +		disable-wp;
-> +		cap-sd-highspeed;
->  	};
->  
->  	spi_1: spi@12d30000 {
-> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-> index f2b8c41..eb437f6 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -240,10 +240,8 @@
->  	 */
->  	mmc@12230000 {
->  		status = "okay";
-> -		slot@0 {
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4>;
-> -		};
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4>;
->  	};
->  
->  	i2c@12CD0000 {
-> diff --git a/arch/arm/boot/dts/exynos5260-xyref5260.dts b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-> index 8c84ab2..a803b60 100644
-> --- a/arch/arm/boot/dts/exynos5260-xyref5260.dts
-> +++ b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-> @@ -69,7 +69,7 @@
->  	num-slots = <1>;
->  	broken-cd;
->  	bypass-smu;
-> -	supports-highspeed;
-> +	cap-mmc-highspeed;
->  	supports-hs200-mode; /* 200 Mhz */
->  	card-detect-delay = <200>;
->  	samsung,dw-mshc-ciu-div = <3>;
-> @@ -77,27 +77,19 @@
->  	samsung,dw-mshc-ddr-timing = <0 2>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sd0_rdqs &sd0_clk &sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
-> -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <8>;
-> -	};
-> +	bus-width = <8>;
+> diff --git a/drivers/irqchip/irq-gic.h b/drivers/irqchip/irq-gic.h
+> index a4beb4a..1c6547d 100644
+> --- a/drivers/irqchip/irq-gic.h
+> +++ b/drivers/irqchip/irq-gic.h
+> @@ -8,6 +8,17 @@ union gic_base {
+>  	void __percpu * __iomem *percpu_base;
 >  };
 >  
->  &mmc_2 {
->  	status = "okay";
->  	num-slots = <1>;
-> -	supports-highspeed;
-> +	cap-sd-highspeed;
->  	card-detect-delay = <200>;
->  	samsung,dw-mshc-ciu-div = <3>;
->  	samsung,dw-mshc-sdr-timing = <2 3>;
->  	samsung,dw-mshc-ddr-timing = <1 2>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
-> -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <4>;
-> -		disable-wp;
-> -	};
-> +	bus-width = <4>;
-> +	disable-wp;
->  };
-> diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-> index 7275bbd..be3e025 100644
-> --- a/arch/arm/boot/dts/exynos5410-smdk5410.dts
-> +++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-> @@ -40,33 +40,25 @@
->  &mmc_0 {
->  	status = "okay";
->  	num-slots = <1>;
-> -	supports-highspeed;
-> +	cap-mmc-highspeed;
->  	broken-cd;
->  	card-detect-delay = <200>;
->  	samsung,dw-mshc-ciu-div = <3>;
->  	samsung,dw-mshc-sdr-timing = <2 3>;
->  	samsung,dw-mshc-ddr-timing = <1 2>;
-> -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <8>;
-> -	};
-> +	bus-width = <8>;
+> +#ifdef CONFIG_ARM_GIC_V2M
+> +struct v2m_data {
+> +	spinlock_t msi_cnt_lock;
+> +	struct resource res;      /* GICv2m resource */
+> +	void __iomem *base;       /* GICv2m virt address */
+> +	unsigned int spi_start;   /* The SPI number that MSIs start */
+> +	unsigned int nr_spis;     /* The number of SPIs for MSIs */
+> +	unsigned long *bm;        /* MSI vector bitmap */
+> +};
+> +#endif
+
+This doesn't need ifdef.
+
+> +
+>  struct gic_chip_data {
+>  	union gic_base dist_base;
+>  	union gic_base cpu_base;
+> @@ -20,12 +31,23 @@ struct gic_chip_data {
+>  #endif
+>  	struct irq_domain *domain;
+>  	unsigned int gic_irqs;
+> -	struct irq_chip *irq_chip;
+>  #ifdef CONFIG_GIC_NON_BANKED
+>  	void __iomem *(*get_base)(union gic_base *);
+>  #endif
+> +	struct irq_chip *irq_chip;
+> +	struct msi_chip msi_chip;
+> +#ifdef CONFIG_ARM_GIC_V2M
+> +	struct v2m_data v2m_data;
+> +#endif
+
+Making this a ptr would mean you only use space when the h/w supports
+v2m. It appears that would require a pointer in msi_chip to get access
+to gic_chip_data.
+
 >  };
 >  
->  &mmc_2 {
->  	status = "okay";
->  	num-slots = <1>;
-> -	supports-highspeed;
-> +	cap-sd-highspeed;
->  	card-detect-delay = <200>;
->  	samsung,dw-mshc-ciu-div = <3>;
->  	samsung,dw-mshc-sdr-timing = <2 3>;
->  	samsung,dw-mshc-ddr-timing = <1 2>;
+> +#ifdef CONFIG_OF
+> +int _gic_of_init(struct device_node *node,
+> +		 struct device_node *parent,
+> +		 struct irq_chip *chip,
+> +		 struct gic_chip_data **gic) __init;
+> +#endif
+> +
+>  void gic_mask_irq(struct irq_data *d);
+>  void gic_unmask_irq(struct irq_data *d);
+>  void gic_eoi_irq(struct irq_data *d);
+> @@ -42,11 +64,4 @@ int gic_set_affinity(struct irq_data *d,
+>  int gic_set_wake(struct irq_data *d, unsigned int on);
+>  #endif
+>  
+> -#ifdef CONFIG_OF
+> -int _gic_of_init(struct device_node *node,
+> -		 struct device_node *parent,
+> -		 struct irq_chip *chip,
+> -		 struct gic_chip_data **gic) __init;
+> -#endif
 > -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <4>;
-> -		disable-wp;
-> -	};
-> +	bus-width = <4>;
-> +	disable-wp;
->  };
->  
->  &uart0 {
-> diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-> index 434fd9d..70a559c 100644
-> --- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-> +++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
-> @@ -50,7 +50,6 @@
->  	mmc@12200000 {
->  		status = "okay";
->  		broken-cd;
-> -		supports-highspeed;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <0 4>;
-> @@ -58,16 +57,12 @@
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
->  		vmmc-supply = <&ldo10_reg>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -		};
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
->  	};
->  
->  	mmc@12220000 {
->  		status = "okay";
-> -		supports-highspeed;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <2 3>;
-> @@ -75,11 +70,8 @@
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
->  		vmmc-supply = <&ldo10_reg>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <4>;
-> -		};
-> +		bus-width = <4>;
-> +		cap-sd-highspeed;
->  	};
->  
->  	hsi2c_4: i2c@12CA0000 {
-> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> index 228a6b1..7b1ed2c 100644
-> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> @@ -187,7 +187,7 @@
->  	num-slots = <1>;
->  	broken-cd;
->  	caps2-mmc-hs200-1_8v;
-> -	supports-highspeed;
-> +	cap-mmc-highspeed;
->  	non-removable;
->  	card-detect-delay = <200>;
->  	clock-frequency = <400000000>;
-> @@ -196,17 +196,13 @@
->  	samsung,dw-mshc-ddr-timing = <0 2>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-> -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <8>;
-> -	};
-> +	bus-width = <8>;
->  };
->  
->  &mmc_2 {
->  	status = "okay";
->  	num-slots = <1>;
-> -	supports-highspeed;
-> +	cap-sd-highspeed;
->  	card-detect-delay = <200>;
->  	clock-frequency = <400000000>;
->  	samsung,dw-mshc-ciu-div = <3>;
-> @@ -214,11 +210,7 @@
->  	samsung,dw-mshc-ddr-timing = <1 2>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-> -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <4>;
-> -	};
-> +	bus-width = <4>;
->  };
->  
->  
-> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> index 6052aa9..8be3d7b 100644
-> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> @@ -76,34 +76,26 @@
->  	mmc@12200000 {
->  		status = "okay";
->  		broken-cd;
-> -		supports-highspeed;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <0 4>;
->  		samsung,dw-mshc-ddr-timing = <0 2>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -		};
-> +		bus-width = <8>;
-> +		cap-mmc-highspeed;
->  	};
->  
->  	mmc@12220000 {
->  		status = "okay";
-> -		supports-highspeed;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <2 3>;
->  		samsung,dw-mshc-ddr-timing = <1 2>;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <4>;
-> -		};
-> +		bus-width = <4>;
-> +		cap-sd-highspeed;
->  	};
->  
->  	dp-controller@145B0000 {
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> index f3ee48b..a587dd6 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -185,7 +185,7 @@
->  	num-slots = <1>;
->  	broken-cd;
->  	caps2-mmc-hs200-1_8v;
-> -	supports-highspeed;
-> +	cap-mmc-highspeed;
->  	non-removable;
->  	card-detect-delay = <200>;
->  	clock-frequency = <400000000>;
-> @@ -194,17 +194,13 @@
->  	samsung,dw-mshc-ddr-timing = <0 2>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-> -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <8>;
-> -	};
-> +	bus-width = <8>;
->  };
->  
->  &mmc_2 {
->  	status = "okay";
->  	num-slots = <1>;
-> -	supports-highspeed;
-> +	cap-sd-highspeed;
->  	card-detect-delay = <200>;
->  	clock-frequency = <400000000>;
->  	samsung,dw-mshc-ciu-div = <3>;
-> @@ -212,11 +208,7 @@
->  	samsung,dw-mshc-ddr-timing = <1 2>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-> -
-> -	slot@0 {
-> -		reg = <0>;
-> -		bus-width = <4>;
-> -	};
-> +	bus-width = <4>;
->  };
->  
->  
-> 
+
+This change looks unnecessary.
+
+Rob
