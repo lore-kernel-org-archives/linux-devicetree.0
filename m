@@ -1,85 +1,49 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCHv9 3/3] arm: dts: Add Altera SDRAM controller bindings
-Date: Sun, 17 Aug 2014 19:50:10 -0500
-Message-ID: <53F14DC2.70000@gmail.com>
-References: <1406744573-609-1-git-send-email-tthayer@opensource.altera.com> <1406744573-609-4-git-send-email-tthayer@opensource.altera.com>
+From: Darren Hart <dvhart@linux.intel.com>
+Subject: Re: [RFC PATCH 1/9] ACPI: Add support for device specific properties
+Date: Mon, 18 Aug 2014 07:37:18 -0500
+Message-ID: <D0175D3C.A1C92%dvhart@linux.intel.com>
+References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
+ <1408255459-17625-2-git-send-email-mika.westerberg@linux.intel.com>
+ <53F1B5A9.8060307@linaro.org>
+ <20140818082656.GR2462@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain;
+	charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406744573-609-4-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tthayer@opensource.altera.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@altera.com, delicious.quinoa@gmail.com, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140818082656.GR2462@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, Hanjun Guo <hanjun.guo@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/30/2014 01:22 PM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> Add the Altera SDRAM controller bindings and device tree changes to the Altera SoC project.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
-> v2: Changes to SoC SDRAM EDAC code.
-> 
-> v3: Implement code suggestions for SDRAM EDAC code.
-> 
-> v4: Remove syscon from SDRAM controller bindings.
-> 
-> v5: No Change, bump version for consistency.
-> 
-> v6: Only map the ctrlcfg register as syscon.
-> 
-> v7: No change. Bump for consistency.
-> 
-> v8: No change. Bump for consistency.
-> 
-> v9: Changes to support a MFD SDRAM controller with nested EDAC.
-> ---
->  .../devicetree/bindings/arm/altera/socfpga-sdr.txt |   13 +++++++++++++
->  arch/arm/boot/dts/socfpga.dtsi                     |   10 ++++++++++
->  2 files changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
-> new file mode 100644
-> index 0000000..2bb1ddf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdr.txt
-> @@ -0,0 +1,13 @@
-> +Altera SOCFPGA SDRAM Controller
-> +The SDRAM controller is implemented as a MFD so various drivers may
-> +nest under this main SDRAM controller binding.
-> +
-> +Required properties:
-> +- compatible : "altr,sdr";
-> +- reg : Should contain 1 register range(address and length)
-> +
-> +Example:
-> +	sdr@0xffc25000 {
-> +		compatible = "altr,sdr";
-> +		reg = <0xffc25000 0x1000>;
-> +	};
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index 4676f25..ecb306d 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -603,6 +603,16 @@
->  			};
->  		};
->  
-> +		sdr@0xffc25000 {
-> +			compatible = "altr,sdr";
-> +			reg = <0xffc25000 0x1000>;
-> +
-> +			sdramedac@0 {
-> +				compatible = "altr,sdram-edac";
-> +				interrupts = <0 39 4>;
-> +			};
+On 8/18/14, 3:27, "Mika Westerberg" <mika.westerberg@linux.intel.com>
+wrote:
 
-This doesn't match the documentation, but I don't think this is a move
-in the right direction anyway. Because Linux has/wants an MFD driver is
-not a reason to add a sub node. It is a single h/w block and DT should
-reflect that.
+>On Mon, Aug 18, 2014 at 04:13:29PM +0800, Hanjun Guo wrote:
 
-Rob
+Hi Hanjun,
+
+Thanks for reviewing!
+
+>>
+>> > +/* ACPI _DSD device properties UUID:
+>>daffd814-6eba-4d8c-8a91-bc9bbf4aa301 */
+>> > +static const u8 prp_uuid[16] = {
+>> 
+>> s/prp_uuid/dsd_uuid ?
+>
+>Well, it is actually the _DSD UUID that implements ACPI device
+>properties (hence the prp_) but I have no problems in changing that to
+>dsd_uuid instead.
+
+The distinction is important. DSD does not define a format, the UUID does,
+and there can be many - although we are adding support specifically for
+one. The PRP name here also pairs with the PRP0000 HID.
+
+-- 
+Darren Hart					Open Source Technology Center
+darren.hart@intel.com				            Intel Corporation
+
+
+
