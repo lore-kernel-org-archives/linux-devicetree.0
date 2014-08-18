@@ -1,52 +1,52 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 5/5] ARM: dts: add mipi dsi device node to exynos3250.dtsi
-Date: Mon, 18 Aug 2014 11:23:40 +0200
-Message-ID: <53F1C61C.2070805@samsung.com>
-References: <1408350093-26220-1-git-send-email-inki.dae@samsung.com>
- <1408350093-26220-6-git-send-email-inki.dae@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] arm64: Add cpu-return-addr to dts files
+Date: Mon, 18 Aug 2014 10:23:58 +0100
+Message-ID: <20140818092357.GB14559@leverpostej>
+References: <1408132130.22761.64.camel@smoke>
+ <1408132229.22761.66.camel@smoke>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1408350093-26220-6-git-send-email-inki.dae@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, dri-devel@lists.freedesktop.org
-Cc: airlied@linux.ie, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408132229.22761.66.camel@smoke>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/18/2014 10:21 AM, Inki Dae wrote:
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
---
-Regards
-Andrzej
+On Fri, Aug 15, 2014 at 08:50:29PM +0100, Geoff Levand wrote:
+> Add entries for the new device tree property cpu-return-addr to the
+> existing arm64 dts files.
+> 
+> Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/exynos3250.dtsi |   15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index 2bab12f..480dedf 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -234,6 +234,21 @@
->  			status = "disabled";
->  		};
->  
-> +		dsi_0: dsi@11C80000 {
-> +			compatible = "samsung,exynos3250-mipi-dsi";
-> +			reg = <0x11C80000 0x10000>;
-> +			interrupts = <0 83 0>;
-> +			samsung,phy-type = <0>;
-> +			samsung,power-domain = <&pd_lcd0>;
-> +			phys = <&mipi_phy 1>;
-> +			phy-names = "dsim";
-> +			clocks = <&cmu CLK_DSIM0>, <&cmu CLK_SCLK_MIPI0>;
-> +			clock-names = "bus_clk", "pll_clk";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
-> +		};
-> +
->  		mshc_0: mshc@12510000 {
->  			compatible = "samsung,exynos5250-dw-mshc";
->  			reg = <0x12510000 0x1000>;
+> 
+> Just FYI.
+> 
+>  arch/arm64/boot/dts/apm-storm.dtsi     | 8 ++++++++
+>  arch/arm64/boot/dts/foundation-v8.dts  | 4 ++++
+>  arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 4 ++++
+>  3 files changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+> index 40aa96c..c40e25f 100644
+> --- a/arch/arm64/boot/dts/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+> @@ -25,6 +25,7 @@
+>  			reg = <0x0 0x000>;
+>  			enable-method = "spin-table";
+>  			cpu-release-addr = <0x1 0x0000fff8>;
+> +			cpu-return-addr = <0x0 0x0>; /* Updated by bootloader */
+
+Following from the way we handle PSCI in the bootwrapper, if we were to
+support these I expect we'd inject the proeprties entirely. So there's
+no need to have a property with an invalid value here -- the property
+should be valid if present (consider that zero could be a valid PA to
+jump back to).
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
