@@ -1,102 +1,148 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [PATCHv3 0/3] ftm-pwm: Convert to direct regmap API usage
-Date: Mon, 18 Aug 2014 08:55:40 +0000
-Message-ID: <3aee225156664fdbaa3642a8a94e7427@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1408332755-35102-1-git-send-email-Li.Xiubo@freescale.com>
- <20140818083134.GB31171@ulmo>
- <d8843f498fa64ea9b45fc04e9bb5589d@BY2PR0301MB0613.namprd03.prod.outlook.com>
- <20140818084911.GD31171@ulmo>
+From: Hanjun Guo <hanjun.guo@linaro.org>
+Subject: Re: [RFC PATCH 1/9] ACPI: Add support for device specific properties
+Date: Mon, 18 Aug 2014 16:57:38 +0800
+Message-ID: <53F1C002.3050503@linaro.org>
+References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com> <1408255459-17625-2-git-send-email-mika.westerberg@linux.intel.com> <53F1B5A9.8060307@linaro.org> <20140818082656.GR2462@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140818084911.GD31171@ulmo>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140818082656.GR2462@lahna.fi.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Thierry Reding [mailto:thierry.reding@gmail.com]
-> Sent: Monday, August 18, 2014 4:49 PM
-> To: Xiubo Li-B47053
-> Cc: linux-pwm@vger.kernel.org; robh+dt@kernel.org; pawel.moll@arm.com;
-> rdunlap@infradead.org; devicetree@vger.kernel.org; linux-doc@vger.kernel.org
-> Subject: Re: [PATCHv3 0/3] ftm-pwm: Convert to direct regmap API usage
+On 2014-8-18 16:27, Mika Westerberg wrote:
+> On Mon, Aug 18, 2014 at 04:13:29PM +0800, Hanjun Guo wrote:
+>> Hi,
+>>
+>> Some minor comments below.
+>>
+>> On 2014-8-17 14:04, Mika Westerberg wrote:
+>>> Device Tree is used in many embedded systems to describe the system
+>>> configuration to the OS. It supports attaching properties or name-value
+>>> pairs to the devices it describe. With these properties one can pass
+>>> additional information to the drivers that would not be available
+>>> otherwise.
+>>>
+>>> ACPI is another configuration mechanism (among other things) typically
+>>> seen, but not limited to, x86 machines. ACPI allows passing arbitrary
+>>> data from methods but there has not been mechanism equivalent to Device
+>>> Tree until the introduction of _DSD in the recent publication of the
+>>> ACPI 5.1 specification.
+>>>
+>>> In order to facilitate ACPI usage in systems where Device Tree is
+>>> typically used, it would be beneficial to standardize a way to retrieve
+>>> Device Tree style properties from ACPI devices, which is what we do in
+>>> this patch.
+>>>
+>>> If a given device described in ACPI namespace wants to export properties it
+>>> must implement _DSD method (Device Specific Data, introduced with ACPI 5.1)
+>>> that returns the properties in a package of packages. For example:
+>>>
+>>> 	Name (_DSD, Package () {
+>>> 		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>>> 		Package () {
+>>> 			Package () {"name1", <VALUE1>},
+>>> 			Package () {"name2", <VALUE2>},
+>>> 			...
+>>> 		}
+>>> 	})
+>>>
+>>> The UUID reserved for properties is daffd814-6eba-4d8c-8a91-bc9bbf4aa301
+>>> and is documented in the ACPI 5.1 companion document called "_DSD
+>>> Implementation Guide" [1], [2].
+>>>
+>>> We add several helper functions that can be used to extract these
+>>> properties and convert them to different Linux data types.
+>>>
+>>> The ultimate goal is that we only have one device property API that
+>>> retrieves the requested properties from Device Tree or from ACPI
+>>> transparent to the caller.
+>>>
+>>> [1] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
+>>> [2] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+>>>
+>>> Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+>>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>> ---
+>>>  drivers/acpi/Makefile   |   1 +
+>>>  drivers/acpi/internal.h |   6 +
+>>>  drivers/acpi/property.c | 365 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>>  drivers/acpi/scan.c     |   2 +
+>>>  include/acpi/acpi_bus.h |   7 +
+>>>  include/linux/acpi.h    |  40 ++++++
+>>>  6 files changed, 421 insertions(+)
+>>>  create mode 100644 drivers/acpi/property.c
+>>>
+>>> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+>>> index ea55e0179f81..6e8269a111db 100644
+>>> --- a/drivers/acpi/Makefile
+>>> +++ b/drivers/acpi/Makefile
+>>> @@ -45,6 +45,7 @@ acpi-y				+= acpi_pnp.o
+>>>  acpi-y				+= power.o
+>>>  acpi-y				+= event.o
+>>>  acpi-y				+= sysfs.o
+>>> +acpi-y				+= property.o
+>>>  acpi-$(CONFIG_X86)		+= acpi_cmos_rtc.o
+>>>  acpi-$(CONFIG_DEBUG_FS)		+= debugfs.o
+>>>  acpi-$(CONFIG_ACPI_NUMA)	+= numa.o
+>>> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+>>> index 7de5b603f272..35001e2a8769 100644
+>>> --- a/drivers/acpi/internal.h
+>>> +++ b/drivers/acpi/internal.h
+>>> @@ -178,4 +178,10 @@ struct platform_device *acpi_create_platform_device(struct acpi_device *adev);
+>>>  bool acpi_osi_is_win8(void);
+>>>  #endif
+>>>  
+>>> +/*--------------------------------------------------------------------------
+>>> +				Device properties
+>>> +  -------------------------------------------------------------------------- */
+>>> +void acpi_init_properties(struct acpi_device *adev);
+>>> +void acpi_free_properties(struct acpi_device *adev);
+>>> +
+>>>  #endif /* _ACPI_INTERNAL_H_ */
+>>> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+>>> new file mode 100644
+>>> index 000000000000..093e834c35db
+>>> --- /dev/null
+>>> +++ b/drivers/acpi/property.c
+>>> @@ -0,0 +1,365 @@
+>>> +/*
+>>> + * ACPI device specific properties support.
+>>> + *
+>>> + * Copyright (C) 2014, Intel Corporation
+>>> + * All rights reserved.
+>>> + *
+>>> + * Authors: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>> + *          Darren Hart <dvhart@linux.intel.com>
+>>> + *          Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#include <linux/acpi.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/export.h>
+>>> +
+>>> +#include "internal.h"
+>>> +
+>>> +/* ACPI _DSD device properties UUID: daffd814-6eba-4d8c-8a91-bc9bbf4aa301 */
+>>> +static const u8 prp_uuid[16] = {
+>>
+>> s/prp_uuid/dsd_uuid ?
 > 
-> On Mon, Aug 18, 2014 at 08:43:56AM +0000, Li.Xiubo@freescale.com wrote:
-> > > -----Original Message-----
-> > > From: Thierry Reding [mailto:thierry.reding@gmail.com]
-> > > Sent: Monday, August 18, 2014 4:32 PM
-> > > To: Xiubo Li-B47053
-> > > Cc: linux-pwm@vger.kernel.org; robh+dt@kernel.org; pawel.moll@arm.com;
-> > > rdunlap@infradead.org; devicetree@vger.kernel.org; linux-
-> doc@vger.kernel.org
-> > > Subject: Re: [PATCHv3 0/3] ftm-pwm: Convert to direct regmap API usage
-> > >
-> > > On Mon, Aug 18, 2014 at 11:32:32AM +0800, Xiubo Li wrote:
-> > > >
-> > > > This is depended on the following patches, which has been applied by
-> > > > Mark into his Regmap-Tree:
-> > > > https://lkml.org/lkml/2014/7/15/6
-> > > > https://lkml.org/lkml/2014/7/15/5
-> > > > https://lkml.org/lkml/2014/7/15/7
-> > >
-> > > This doesn't seem to have any build dependencies on the above patches.
-> >
-> > Yes, you are right.
-> >
-> >
-> > > So with only this applied to the PWM tree at worst the registers will be
-> > > accessed in the wrong endianess and the PWM won't work as expected. Does
-> > > that matter?
-> >
-> > No, I think it's okay, we'll only test our drivers in the Linus's stable
-> branch.
-> >
-> >
-> >
-> > > Or should I request a stable branch from Mark to pull into
-> > > the PWM tree so that this doesn't happen?
-> > >
-> > > In linux-next things should be fine since both branches will be merged.
-> > > I guess there could still be an issue depending on the order in which
-> > > Linus merges the trees for 3.18, in which case there could be a brief
-> > > period where Linus' tree runtime-breaks on platforms requiring this. But
-> > > I'm not sure if that's really an issue.
-> > >
-> >
-> > The depended patches has been merged into the Linux-next tree just now
-> already
-> > today.
-> >
-> > And then could we guarantee that these ftm-pwm patches to be in order after
-> the
-> > depended ones ?
-> 
-> I could merge Mark's regmap tree into the PWM tree to guarantee that.
-> I'm just wondering if it's worth the trouble since there's no compile-
-> time dependency so the issue will only show up when running a kernel
-> built directly from the PWM tree (or some tree that has the PWM tree
-> merged but not regmap). And even then it will only happen if there's a
-> device tree for a device that requires special endianess handling.
-> 
-> But it's really your call. If you think it's safer to merge them in the
-> correct order then I'll ask Mark for a stable regmap branch that I can
-> pull.
-> 
+> Well, it is actually the _DSD UUID that implements ACPI device
+> properties (hence the prp_) but I have no problems in changing that to
+> dsd_uuid instead.
 
-I think it okay, since the LS1 platform driver patches are still in process,
-and only in LS1 SoC will depend this.
+Oh, I missed that part, since this UUID is only for ACPI device
+properties, I agree with you that prp_ is better here.
 
-You can just merge this to PWM tree if everything is okay.
+Thanks
+Hanjun
 
-Thanks,
-
-BRs
-Xiubo
-
-
-
-> Thierry
