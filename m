@@ -1,126 +1,47 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA7: fix interrupt-cells for GPIO
-Date: Mon, 18 Aug 2014 13:46:11 -0500
-Message-ID: <53F249F3.9070402@ti.com>
-References: <1406748032-19417-1-git-send-email-nm@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v5 01/10] ARM: dts: Fix MMC pinctrl for exynos5250-snow
+Date: Mon, 18 Aug 2014 20:48:32 +0200
+Message-ID: <53F24A80.4000607@gmail.com>
+References: <1406868897-26874-1-git-send-email-afaerber@suse.de>	<1406868897-26874-2-git-send-email-afaerber@suse.de> <CAD=FV=VBa5rs_woj0mshFFbA69Nhyi3hXK_XX7-54T3vFyKYHA@mail.gmail.com> <53F247E2.2070007@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406748032-19417-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53F247E2.2070007@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>
+Cc: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/30/2014 02:20 PM, Nishanth Menon wrote:
-> GPIO modules are also interrupt sources. However, they require both the
-> GPIO number and IRQ type to function properly.
-> 
-> By declaring that GPIO uses interrupt-cells=<1>, we essentially do not
-> allow users of the nodes to use the interrupt property appropritely.
-> 
-> With this change, the following now works:
-> 
-> interrupt-parent = <&gpio6>;
-> interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-> 
-> Fixes: 6e58b8f1daaf ('ARM: dts: DRA7: Add the dts files for dra7 SoC and dra7-evm board')
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
-> Based on v3.16-rc7
-> 
->  arch/arm/boot/dts/dra7.dtsi |   16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+Hi Kukjin,
 
-Tony,
-Gentle ping. we still have this issue on 3.17-rc1. any suggestions on
-if we can pick this up during RC?
+On 18.08.2014 20:37, Kukjin Kim wrote:
+> On 08/01/14 11:26, Doug Anderson wrote:
+>> Hi,
+>>
+> Hi,
+>=20
+>> On Thu, Jul 31, 2014 at 9:54 PM, Andreas F=C3=A4rber<afaerber@suse.d=
+e>  wrote:
+>>> The pinctrl properties should be on the device directly and not on =
+the
+>>> slot sub-node.
+>>>
+>>> Reported-by: Doug Anderson<dianders@chromium.org>
+>>> Cc: Jaehoon Chung<jh80.chung@samsung.com>
+>>> Reviewed-by: Tomasz Figa<t.figa@samsung.com>
+>>> Signed-off-by: Andreas F=C3=A4rber<afaerber@suse.de>
+>>
+>> Let's land this one before Jaehoon's, since it was a hidden
+>> functionality change in his patch.  It will be an easy conflict to
+>> resolve when his patch is applied.
+>>
+> Sounds good to me, I've applied this before Jaehoon's change.
+>=20
+>> Reviewed-by: Doug Anderson<dianders@chromium.org>
 
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 8012763..f21ef39 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -172,7 +172,7 @@
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> +			#interrupt-cells = <2>;
->  		};
->  
->  		gpio2: gpio@48055000 {
-> @@ -183,7 +183,7 @@
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> +			#interrupt-cells = <2>;
->  		};
->  
->  		gpio3: gpio@48057000 {
-> @@ -194,7 +194,7 @@
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> +			#interrupt-cells = <2>;
->  		};
->  
->  		gpio4: gpio@48059000 {
-> @@ -205,7 +205,7 @@
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> +			#interrupt-cells = <2>;
->  		};
->  
->  		gpio5: gpio@4805b000 {
-> @@ -216,7 +216,7 @@
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> +			#interrupt-cells = <2>;
->  		};
->  
->  		gpio6: gpio@4805d000 {
-> @@ -227,7 +227,7 @@
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> +			#interrupt-cells = <2>;
->  		};
->  
->  		gpio7: gpio@48051000 {
-> @@ -238,7 +238,7 @@
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> +			#interrupt-cells = <2>;
->  		};
->  
->  		gpio8: gpio@48053000 {
-> @@ -249,7 +249,7 @@
->  			gpio-controller;
->  			#gpio-cells = <2>;
->  			interrupt-controller;
-> -			#interrupt-cells = <1>;
-> +			#interrupt-cells = <2>;
->  		};
->  
->  		uart1: serial@4806a000 {
-> 
+Version 6 of this series has been already posted. However this
+particular patch has not changed, so it's fine.
 
-
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
