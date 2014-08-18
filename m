@@ -1,71 +1,76 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv3 1/3] pwm: ftm-pwm: Clean up the code.
-Date: Mon, 18 Aug 2014 11:32:33 +0800
-Message-ID: <1408332755-35102-2-git-send-email-Li.Xiubo@freescale.com>
-References: <1408332755-35102-1-git-send-email-Li.Xiubo@freescale.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC PATCH 3/9] Driver core: Unified device properties interface for platform firmware
+Date: Mon, 18 Aug 2014 06:46:42 +0200
+Message-ID: <2012139.h82pgQUHg7@vostro.rjw.lan>
+References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com> <1408255459-17625-4-git-send-email-mika.westerberg@linux.intel.com> <20140817124913.A597FC40F4B@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1408332755-35102-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, linux-pwm@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140817124913.A597FC40F4B@trevor.secretlab.ca>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch intends to prepare for converting to direct regmap
-API usage.
+On Sunday, August 17, 2014 01:49:13 PM Grant Likely wrote:
+> 
+> Hi Mika and Rafael,
+> 
+> Comments below...
 
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
----
- drivers/pwm/pwm-fsl-ftm.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+[cut]
 
-diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
-index a18bc8f..96982da 100644
---- a/drivers/pwm/pwm-fsl-ftm.c
-+++ b/drivers/pwm/pwm-fsl-ftm.c
-@@ -21,11 +21,10 @@
- #include <linux/slab.h>
- 
- #define FTM_SC		0x00
--#define FTM_SC_CLK_MASK	0x3
--#define FTM_SC_CLK_SHIFT	3
--#define FTM_SC_CLK(c)	(((c) + 1) << FTM_SC_CLK_SHIFT)
-+#define FTM_SC_CLK_MASK_SHIFT	3
-+#define FTM_SC_CLK_MASK	(3 << FTM_SC_CLK_MASK_SHIFT)
-+#define FTM_SC_CLK(c)	(((c) + 1) << FTM_SC_CLK_MASK_SHIFT)
- #define FTM_SC_PS_MASK	0x7
--#define FTM_SC_PS_SHIFT	0
- 
- #define FTM_CNT		0x04
- #define FTM_MOD		0x08
-@@ -258,7 +257,7 @@ static int fsl_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		}
- 
- 		val = readl(fpc->base + FTM_SC);
--		val &= ~(FTM_SC_PS_MASK << FTM_SC_PS_SHIFT);
-+		val &= ~FTM_SC_PS_MASK;
- 		val |= fpc->clk_ps;
- 		writel(val, fpc->base + FTM_SC);
- 		writel(period - 1, fpc->base + FTM_MOD);
-@@ -305,7 +304,7 @@ static int fsl_counter_clock_enable(struct fsl_pwm_chip *fpc)
- 
- 	/* select counter clock source */
- 	val = readl(fpc->base + FTM_SC);
--	val &= ~(FTM_SC_CLK_MASK << FTM_SC_CLK_SHIFT);
-+	val &= ~FTM_SC_CLK_MASK;
- 	val |= FTM_SC_CLK(fpc->cnt_select);
- 	writel(val, fpc->base + FTM_SC);
- 
-@@ -357,7 +356,7 @@ static void fsl_counter_clock_disable(struct fsl_pwm_chip *fpc)
- 
- 	/* no users left, disable PWM counter clock */
- 	val = readl(fpc->base + FTM_SC);
--	val &= ~(FTM_SC_CLK_MASK << FTM_SC_CLK_SHIFT);
-+	val &= ~FTM_SC_CLK_MASK;
- 	writel(val, fpc->base + FTM_SC);
- 
- 	clk_disable_unprepare(fpc->clk[FSL_PWM_CLK_CNTEN]);
--- 
-1.8.5
+> > +enum dev_prop_type {
+> > +	DEV_PROP_U8,
+> > +	DEV_PROP_U16,
+> > +	DEV_PROP_U32,
+> > +	DEV_PROP_U64,
+> > +	DEV_PROP_STRING,
+> > +	DEV_PROP_MAX,
+> > +};
+> > +
+> > +struct dev_prop_ops {
+> > +	int (*get)(struct device *dev, const char *propname, void **valptr);
+> > +	int (*read)(struct device *dev, const char *propname,
+> > +		    enum dev_prop_type proptype, void *val);
+> > +	int (*read_array)(struct device *dev, const char *propname,
+> > +			  enum dev_prop_type proptype, void *val, size_t nval);
+> 
+> The associated DT functions that implement property reads
+> (of_property_read_*) were created in part to provide some type safety
+> when reading properties. This proposed API throws that away by accepting
+> a void* for the data field, which I don't want to do. This API either
+> needs to have a separate accessor for each data type, or it needs some
+> other mechanism (accessor macros?) to ensure the right type is passed
+> in.
+
+The intention is to add static inline functions like:
+
+int device_property_read_u64(struct device *dev, const char *propname, u64 *val)
+{
+	return device_property_read(dev, propname, DEV_PROP_U64, val);
+}
+
+and so on for the other property types.  They just have not been implemented in
+this version of the patch.
+
+> 
+> > +	int (*child_count)(struct device *dev);
+> > +};
+> > +
+> > +#ifdef CONFIG_ACPI
+> > +extern struct dev_prop_ops acpi_property_ops;
+> > +#endif
+> 
+> Rendered moot by my comment about eliminating the ops structure, but the
+> above shouldn't appear here. acpi_property_ops shouldn't ever be visible
+> outside ACPI core code, so it shouldn't be in this header.
+
+It doesn't look like this has to be present here.  At least this particular
+patch should compile just fine after removing the 3 lines above.
+
+That seems to be a leftover from one of the previous versions of it.
+
+Rafael
 
