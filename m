@@ -1,38 +1,64 @@
-From: "Karim Wattara" <kent-NE04ltcrSdpBDgjK7y7TUQ@public.gmane.org>
-Subject: Are You interested?
-Date: Mon, 18 Aug 2014 08:15:46 +0800
-Message-ID: <20140818001431.M16747@kentind.com>
-Reply-To: karimwatara-7V4A5QgKqXk@public.gmane.org
+From: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] spi: fsl-dspi: Convert to use regmap framework's
+ endianness method.
+Date: Mon, 18 Aug 2014 08:06:17 +0000
+Message-ID: <2a6a678a69de44f4bce5cf1045389756@BL2PR03MB163.namprd03.prod.outlook.com>
+References: <1408348100-28819-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset=iso-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408348100-28819-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Greetings,
-
-I am Mr.Karim Wattara. a banker, i know that this mail will come to you as a 
-surprise as we have never met before, but need not to worry as I am contacting 
-you independently of my investigation and no one is informed of this 
-communication. I need your urgent Cooperation in transferring the sum of $11.3 
-Million dollars immediately to your private account.The money has been here in 
-our Bank lying dormant for years now without anybody coming for the claim of it.
-
-The fund belong to our deceased Customer Mrs.Joy Lake who perished along with 
-her family since January 31 2000. The Banking laws here does not allow such 
-money to stay more than 15 years,that is the reason why i need your Cooperation 
-in transferring the money to your bank account so that we can use it to secure 
-the future of our both families because i don't want the money to be recalled to 
-the bank treasury as unclaimed fund.
-
-By indicating your interest I will send you the full details on how the business 
-will be executed. Please keep this proposal as a top secret and delete if you 
-are not interested.
-
-Best Regards,
-Karim Wattara.
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFhpdWJvIExpIFttYWlsdG86
+TGkuWGl1Ym9AZnJlZXNjYWxlLmNvbV0NCj4gU2VudDogMjAxNMTqONTCMTjI1SAxNTo0OA0KPiBU
+bzogYnJvb25pZUBrZXJuZWwub3JnOyBGdSBDaGFvLUI0NDU0OA0KPiBDYzogZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNwaUB2Z2VyLmtlcm5lbC5vcmc7IFhpdWJvIExpLQ0KPiBC
+NDcwNTMNCj4gU3ViamVjdDogW1BBVENIXSBzcGk6IGZzbC1kc3BpOiBDb252ZXJ0IHRvIHVzZSBy
+ZWdtYXAgZnJhbWV3b3JrJ3MNCj4gZW5kaWFubmVzcyBtZXRob2QuDQo+IA0KPiBTaWduZWQtb2Zm
+LWJ5OiBYaXVibyBMaSA8TGkuWGl1Ym9AZnJlZXNjYWxlLmNvbT4NCj4gQ2M6IENoYW8gRnUgPGI0
+NDU0OEBmcmVlc2NhbGUuY29tPg0KPiAtLS0NCj4gDQoNCkFja2VkLWJ5OiBDaGFvIEZ1IDxCNDQ1
+NDhAZnJlZXNjYWxlLmNvbT4NClRoYW5rIHlvdSENCg0KIA0KPiBUaGlzIGlzIGRlcGVuZGVkIG9u
+IHRoZSBmb2xsb3dpbmcgcGF0Y2hlcywgd2hpY2ggaGFzIGJlZW4gYXBwbGllZCBpbnRvDQo+IFJl
+Z21hcC1UcmVlOg0KPiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNC83LzE1LzYNCj4gaHR0cHM6
+Ly9sa21sLm9yZy9sa21sLzIwMTQvNy8xNS81DQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0
+LzcvMTUvNw0KPiANCj4gDQo+IA0KPiANCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9zcGkvc3BpLWZzbC1kc3BpLnR4dCB8IDcgKysrKysrLQ0KPiAgZHJpdmVycy9zcGkvc3Bp
+LWZzbC1kc3BpLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMyAtLS0NCj4gIDIgZmls
+ZXMgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1kc3Bp
+LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1k
+c3BpLnR4dA0KPiBpbmRleCA1Mzc2ZGU0Li5jYmJlMTZlIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1mc2wtZHNwaS50eHQNCj4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktZnNsLWRzcGkudHh0DQo+
+IEBAIC0xMCw3ICsxMCwxMiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgLSBwaW5jdHJsLW5h
+bWVzOiBtdXN0IGNvbnRhaW4gYSAiZGVmYXVsdCIgZW50cnkuDQo+ICAtIHNwaS1udW0tY2hpcHNl
+bGVjdHMgOiB0aGUgbnVtYmVyIG9mIHRoZSBjaGlwc2VsZWN0IHNpZ25hbHMuDQo+ICAtIGJ1cy1u
+dW0gOiB0aGUgc2xhdmUgY2hpcCBjaGlwc2VsZWN0IHNpZ25hbCBudW1iZXIuDQo+IC0tIGJpZy1l
+bmRpYW4gOiBpZiBEU1BJIG1vZHVkbGUgaXMgYmlnIGVuZGlhbiwgdGhlIGJvb2wgd2lsbCBiZSBz
+ZXQgaW4NCj4gbm9kZS4NCj4gKw0KPiArT3B0aW9uYWwgcHJvcGVydHk6DQo+ICstIGJpZy1lbmRp
+YW46IElmIHByZXNlbnQgdGhlIGRzcGkgZGV2aWNlJ3MgcmVnaXN0ZXJzIGFyZSBpbXBsZW1lbnRl
+ZA0KPiArICBpbiBiaWcgZW5kaWFuIG1vZGUsIG90aGVyd2lzZSBpbiBuYXRpdmUgbW9kZShzYW1l
+IHdpdGggQ1BVKSwgZm9yIG1vcmUNCj4gKyAgZGV0YWlsIHBsZWFzZSBzZWU6IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWdtYXAvcmVnbWFwLnR4dC4NCj4gKw0KPiAgRXhhbXBs
+ZToNCj4gDQo+ICBkc3BpMEA0MDAyYzAwMCB7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NwaS9z
+cGktZnNsLWRzcGkuYyBiL2RyaXZlcnMvc3BpL3NwaS1mc2wtZHNwaS5jDQo+IGluZGV4IDUwMjFk
+ZGYuLmViYzRkMWYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc3BpL3NwaS1mc2wtZHNwaS5jDQo+
+ICsrKyBiL2RyaXZlcnMvc3BpL3NwaS1mc2wtZHNwaS5jDQo+IEBAIC00OTMsOSArNDkzLDYgQEAg
+c3RhdGljIGludCBkc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJ
+fQ0KPiANCj4gIAlkc3BpX3JlZ21hcF9jb25maWcubG9ja19hcmcgPSBkc3BpOw0KPiAtCWRzcGlf
+cmVnbWFwX2NvbmZpZy52YWxfZm9ybWF0X2VuZGlhbiA9DQo+IC0JCW9mX3Byb3BlcnR5X3JlYWRf
+Ym9vbChucCwgImJpZy1lbmRpYW4iKQ0KPiAtCQkJPyBSRUdNQVBfRU5ESUFOX0JJRyA6IFJFR01B
+UF9FTkRJQU5fREVGQVVMVDsNCj4gIAlkc3BpLT5yZWdtYXAgPSBkZXZtX3JlZ21hcF9pbml0X21t
+aW9fY2xrKCZwZGV2LT5kZXYsICJkc3BpIiwgYmFzZSwNCj4gIAkJCQkJCSZkc3BpX3JlZ21hcF9j
+b25maWcpOw0KPiAgCWlmIChJU19FUlIoZHNwaS0+cmVnbWFwKSkgew0KPiAtLQ0KPiAxLjguNQ0K
+DQo=
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
