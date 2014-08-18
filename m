@@ -1,64 +1,203 @@
-From: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] spi: fsl-dspi: Convert to use regmap framework's
- endianness method.
-Date: Mon, 18 Aug 2014 08:06:17 +0000
-Message-ID: <2a6a678a69de44f4bce5cf1045389756@BL2PR03MB163.namprd03.prod.outlook.com>
-References: <1408348100-28819-1-git-send-email-Li.Xiubo@freescale.com>
+From: Hanjun Guo <hanjun.guo@linaro.org>
+Subject: Re: [RFC PATCH 1/9] ACPI: Add support for device specific properties
+Date: Mon, 18 Aug 2014 16:13:29 +0800
+Message-ID: <53F1B5A9.8060307@linaro.org>
+References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com> <1408255459-17625-2-git-send-email-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408348100-28819-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1408255459-17625-2-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFhpdWJvIExpIFttYWlsdG86
-TGkuWGl1Ym9AZnJlZXNjYWxlLmNvbV0NCj4gU2VudDogMjAxNMTqONTCMTjI1SAxNTo0OA0KPiBU
-bzogYnJvb25pZUBrZXJuZWwub3JnOyBGdSBDaGFvLUI0NDU0OA0KPiBDYzogZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXNwaUB2Z2VyLmtlcm5lbC5vcmc7IFhpdWJvIExpLQ0KPiBC
-NDcwNTMNCj4gU3ViamVjdDogW1BBVENIXSBzcGk6IGZzbC1kc3BpOiBDb252ZXJ0IHRvIHVzZSBy
-ZWdtYXAgZnJhbWV3b3JrJ3MNCj4gZW5kaWFubmVzcyBtZXRob2QuDQo+IA0KPiBTaWduZWQtb2Zm
-LWJ5OiBYaXVibyBMaSA8TGkuWGl1Ym9AZnJlZXNjYWxlLmNvbT4NCj4gQ2M6IENoYW8gRnUgPGI0
-NDU0OEBmcmVlc2NhbGUuY29tPg0KPiAtLS0NCj4gDQoNCkFja2VkLWJ5OiBDaGFvIEZ1IDxCNDQ1
-NDhAZnJlZXNjYWxlLmNvbT4NClRoYW5rIHlvdSENCg0KIA0KPiBUaGlzIGlzIGRlcGVuZGVkIG9u
-IHRoZSBmb2xsb3dpbmcgcGF0Y2hlcywgd2hpY2ggaGFzIGJlZW4gYXBwbGllZCBpbnRvDQo+IFJl
-Z21hcC1UcmVlOg0KPiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNC83LzE1LzYNCj4gaHR0cHM6
-Ly9sa21sLm9yZy9sa21sLzIwMTQvNy8xNS81DQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0
-LzcvMTUvNw0KPiANCj4gDQo+IA0KPiANCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zcGkvc3BpLWZzbC1kc3BpLnR4dCB8IDcgKysrKysrLQ0KPiAgZHJpdmVycy9zcGkvc3Bp
-LWZzbC1kc3BpLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMyAtLS0NCj4gIDIgZmls
-ZXMgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1kc3Bp
-LnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3BpLWZzbC1k
-c3BpLnR4dA0KPiBpbmRleCA1Mzc2ZGU0Li5jYmJlMTZlIDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1mc2wtZHNwaS50eHQNCj4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktZnNsLWRzcGkudHh0DQo+
-IEBAIC0xMCw3ICsxMCwxMiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgLSBwaW5jdHJsLW5h
-bWVzOiBtdXN0IGNvbnRhaW4gYSAiZGVmYXVsdCIgZW50cnkuDQo+ICAtIHNwaS1udW0tY2hpcHNl
-bGVjdHMgOiB0aGUgbnVtYmVyIG9mIHRoZSBjaGlwc2VsZWN0IHNpZ25hbHMuDQo+ICAtIGJ1cy1u
-dW0gOiB0aGUgc2xhdmUgY2hpcCBjaGlwc2VsZWN0IHNpZ25hbCBudW1iZXIuDQo+IC0tIGJpZy1l
-bmRpYW4gOiBpZiBEU1BJIG1vZHVkbGUgaXMgYmlnIGVuZGlhbiwgdGhlIGJvb2wgd2lsbCBiZSBz
-ZXQgaW4NCj4gbm9kZS4NCj4gKw0KPiArT3B0aW9uYWwgcHJvcGVydHk6DQo+ICstIGJpZy1lbmRp
-YW46IElmIHByZXNlbnQgdGhlIGRzcGkgZGV2aWNlJ3MgcmVnaXN0ZXJzIGFyZSBpbXBsZW1lbnRl
-ZA0KPiArICBpbiBiaWcgZW5kaWFuIG1vZGUsIG90aGVyd2lzZSBpbiBuYXRpdmUgbW9kZShzYW1l
-IHdpdGggQ1BVKSwgZm9yIG1vcmUNCj4gKyAgZGV0YWlsIHBsZWFzZSBzZWU6IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWdtYXAvcmVnbWFwLnR4dC4NCj4gKw0KPiAgRXhhbXBs
-ZToNCj4gDQo+ICBkc3BpMEA0MDAyYzAwMCB7DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NwaS9z
-cGktZnNsLWRzcGkuYyBiL2RyaXZlcnMvc3BpL3NwaS1mc2wtZHNwaS5jDQo+IGluZGV4IDUwMjFk
-ZGYuLmViYzRkMWYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvc3BpL3NwaS1mc2wtZHNwaS5jDQo+
-ICsrKyBiL2RyaXZlcnMvc3BpL3NwaS1mc2wtZHNwaS5jDQo+IEBAIC00OTMsOSArNDkzLDYgQEAg
-c3RhdGljIGludCBkc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJ
-fQ0KPiANCj4gIAlkc3BpX3JlZ21hcF9jb25maWcubG9ja19hcmcgPSBkc3BpOw0KPiAtCWRzcGlf
-cmVnbWFwX2NvbmZpZy52YWxfZm9ybWF0X2VuZGlhbiA9DQo+IC0JCW9mX3Byb3BlcnR5X3JlYWRf
-Ym9vbChucCwgImJpZy1lbmRpYW4iKQ0KPiAtCQkJPyBSRUdNQVBfRU5ESUFOX0JJRyA6IFJFR01B
-UF9FTkRJQU5fREVGQVVMVDsNCj4gIAlkc3BpLT5yZWdtYXAgPSBkZXZtX3JlZ21hcF9pbml0X21t
-aW9fY2xrKCZwZGV2LT5kZXYsICJkc3BpIiwgYmFzZSwNCj4gIAkJCQkJCSZkc3BpX3JlZ21hcF9j
-b25maWcpOw0KPiAgCWlmIChJU19FUlIoZHNwaS0+cmVnbWFwKSkgew0KPiAtLQ0KPiAxLjguNQ0K
-DQo=
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+
+Some minor comments below.
+
+On 2014-8-17 14:04, Mika Westerberg wrote:
+> Device Tree is used in many embedded systems to describe the system
+> configuration to the OS. It supports attaching properties or name-value
+> pairs to the devices it describe. With these properties one can pass
+> additional information to the drivers that would not be available
+> otherwise.
+> 
+> ACPI is another configuration mechanism (among other things) typically
+> seen, but not limited to, x86 machines. ACPI allows passing arbitrary
+> data from methods but there has not been mechanism equivalent to Device
+> Tree until the introduction of _DSD in the recent publication of the
+> ACPI 5.1 specification.
+> 
+> In order to facilitate ACPI usage in systems where Device Tree is
+> typically used, it would be beneficial to standardize a way to retrieve
+> Device Tree style properties from ACPI devices, which is what we do in
+> this patch.
+> 
+> If a given device described in ACPI namespace wants to export properties it
+> must implement _DSD method (Device Specific Data, introduced with ACPI 5.1)
+> that returns the properties in a package of packages. For example:
+> 
+> 	Name (_DSD, Package () {
+> 		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+> 		Package () {
+> 			Package () {"name1", <VALUE1>},
+> 			Package () {"name2", <VALUE2>},
+> 			...
+> 		}
+> 	})
+> 
+> The UUID reserved for properties is daffd814-6eba-4d8c-8a91-bc9bbf4aa301
+> and is documented in the ACPI 5.1 companion document called "_DSD
+> Implementation Guide" [1], [2].
+> 
+> We add several helper functions that can be used to extract these
+> properties and convert them to different Linux data types.
+> 
+> The ultimate goal is that we only have one device property API that
+> retrieves the requested properties from Device Tree or from ACPI
+> transparent to the caller.
+> 
+> [1] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
+> [2] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+> 
+> Signed-off-by: Darren Hart <dvhart@linux.intel.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/acpi/Makefile   |   1 +
+>  drivers/acpi/internal.h |   6 +
+>  drivers/acpi/property.c | 365 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/acpi/scan.c     |   2 +
+>  include/acpi/acpi_bus.h |   7 +
+>  include/linux/acpi.h    |  40 ++++++
+>  6 files changed, 421 insertions(+)
+>  create mode 100644 drivers/acpi/property.c
+> 
+> diff --git a/drivers/acpi/Makefile b/drivers/acpi/Makefile
+> index ea55e0179f81..6e8269a111db 100644
+> --- a/drivers/acpi/Makefile
+> +++ b/drivers/acpi/Makefile
+> @@ -45,6 +45,7 @@ acpi-y				+= acpi_pnp.o
+>  acpi-y				+= power.o
+>  acpi-y				+= event.o
+>  acpi-y				+= sysfs.o
+> +acpi-y				+= property.o
+>  acpi-$(CONFIG_X86)		+= acpi_cmos_rtc.o
+>  acpi-$(CONFIG_DEBUG_FS)		+= debugfs.o
+>  acpi-$(CONFIG_ACPI_NUMA)	+= numa.o
+> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+> index 7de5b603f272..35001e2a8769 100644
+> --- a/drivers/acpi/internal.h
+> +++ b/drivers/acpi/internal.h
+> @@ -178,4 +178,10 @@ struct platform_device *acpi_create_platform_device(struct acpi_device *adev);
+>  bool acpi_osi_is_win8(void);
+>  #endif
+>  
+> +/*--------------------------------------------------------------------------
+> +				Device properties
+> +  -------------------------------------------------------------------------- */
+> +void acpi_init_properties(struct acpi_device *adev);
+> +void acpi_free_properties(struct acpi_device *adev);
+> +
+>  #endif /* _ACPI_INTERNAL_H_ */
+> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+> new file mode 100644
+> index 000000000000..093e834c35db
+> --- /dev/null
+> +++ b/drivers/acpi/property.c
+> @@ -0,0 +1,365 @@
+> +/*
+> + * ACPI device specific properties support.
+> + *
+> + * Copyright (C) 2014, Intel Corporation
+> + * All rights reserved.
+> + *
+> + * Authors: Mika Westerberg <mika.westerberg@linux.intel.com>
+> + *          Darren Hart <dvhart@linux.intel.com>
+> + *          Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/device.h>
+> +#include <linux/export.h>
+> +
+> +#include "internal.h"
+> +
+> +/* ACPI _DSD device properties UUID: daffd814-6eba-4d8c-8a91-bc9bbf4aa301 */
+> +static const u8 prp_uuid[16] = {
+
+s/prp_uuid/dsd_uuid ?
+
+> +	0x14, 0xd8, 0xff, 0xda, 0xba, 0x6e, 0x8c, 0x4d,
+> +	0x8a, 0x91, 0xbc, 0x9b, 0xbf, 0x4a, 0xa3, 0x01
+> +};
+> +
+> +static bool acpi_property_value_ok(const union acpi_object *value)
+> +{
+> +	int j;
+> +
+> +	/*
+> +	 * The value must be an integer, a string, a reference, or a package
+> +	 * whose every element must be an integer, a string, or a reference.
+> +	 */
+> +	switch (value->type) {
+> +	case ACPI_TYPE_INTEGER:
+> +	case ACPI_TYPE_STRING:
+> +	case ACPI_TYPE_LOCAL_REFERENCE:
+> +		return true;
+> +
+> +	case ACPI_TYPE_PACKAGE:
+> +		for (j = 0; j < value->package.count; j++)
+> +			switch (value->package.elements[j].type) {
+> +			case ACPI_TYPE_INTEGER:
+> +			case ACPI_TYPE_STRING:
+> +			case ACPI_TYPE_LOCAL_REFERENCE:
+> +				continue;
+> +
+> +			default:
+> +				return false;
+> +			}
+> +
+> +		return true;
+> +	}
+> +	return false;
+> +}
+> +
+> +static bool acpi_properties_format_valid(const union acpi_object *properties)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < properties->package.count; i++) {
+> +		const union acpi_object *property;
+> +
+> +		property = &properties->package.elements[i];
+> +		/*
+> +		 * Only two elements allowed, the first one must be a string and
+> +		 * the second one has to satisfy certain conditions.
+> +		 */
+> +		if (property->package.count != 2
+> +		    || property->package.elements[0].type != ACPI_TYPE_STRING
+> +		    || !acpi_property_value_ok(&property->package.elements[1]))
+> +			return false;
+> +	}
+> +	return true;
+> +}
+> +
+> +void acpi_init_properties(struct acpi_device *adev)
+> +{
+> +
+
+I think the above line is not needed.
+
+With that fixed,
+
+Reviewed-by: Hanjun Guo <hanjun.guo@linaro.org>
+
+Thanks
+Hanjun
