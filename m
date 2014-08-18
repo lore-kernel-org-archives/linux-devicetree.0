@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 1/5] ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
-Date: Mon, 18 Aug 2014 12:24:55 -0700
-Message-ID: <1408389899-1022-2-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH v3 4/5] ARM: BCM63XX: add BCM963138DVT Reference platform DTS
+Date: Mon, 18 Aug 2014 12:24:58 -0700
+Message-ID: <1408389899-1022-5-git-send-email-f.fainelli@gmail.com>
 References: <1408389899-1022-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1408389899-1022-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,119 +10,71 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic support for the Broadcom BCM63138 DSL SoC which is
-using a dual-core Cortex A9 system. Add the very minimum required code
-boot Linux on this SoC.
+Add a DTS file for the Broadcom BCM963138DVT reference platform board
+which leverages the bcm63138.dtsi SoC DTSi file.
 
 Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
 Changes in v3:
-- removed custom init function and use machine descriptor members for
-  L2C initialization
+- added stdout-path and bootargs property to get sane defaults
 
 Changes in v2:
-- removed custom map_io() function since it is not necessary
-- removed custom PL310 cache controller initialization, this has
-  been submitted as part of more general patch
+- consistently use the prefix 963138 since this is a reference board
+- enable UARTs for that reference board so we get to a prompt
 
- .../devicetree/bindings/arm/bcm/bcm63138.txt       |  9 ++++++++
- arch/arm/mach-bcm/Kconfig                          | 17 ++++++++++++++
- arch/arm/mach-bcm/Makefile                         |  3 +++
- arch/arm/mach-bcm/bcm63xx.c                        | 27 ++++++++++++++++++++++
- 4 files changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
- create mode 100644 arch/arm/mach-bcm/bcm63xx.c
+ arch/arm/boot/dts/Makefile         |  1 +
+ arch/arm/boot/dts/bcm963138dvt.dts | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm963138dvt.dts
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm63138.txt b/Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b8c5cd3ddeb9..7ffe736abcf8 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -53,6 +53,7 @@ dtb-$(CONFIG_ARCH_ATLAS6) += atlas6-evb.dtb
+ dtb-$(CONFIG_ARCH_AXXIA) += axm5516-amarillo.dtb
+ dtb-$(CONFIG_ARCH_BCM2835) += bcm2835-rpi-b.dtb
+ dtb-$(CONFIG_ARCH_BCM_5301X) += bcm4708-netgear-r6250.dtb
++dtb-$(CONFIG_ARCH_BCM_63XX) += bcm963138dvt.dtb
+ dtb-$(CONFIG_ARCH_BCM_MOBILE) += bcm28155-ap.dtb \
+ 	bcm21664-garnet.dtb
+ dtb-$(CONFIG_ARCH_BERLIN) += \
+diff --git a/arch/arm/boot/dts/bcm963138dvt.dts b/arch/arm/boot/dts/bcm963138dvt.dts
 new file mode 100644
-index 000000000000..bd49987a8812
+index 000000000000..69c93395ecd2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
-@@ -0,0 +1,9 @@
-+Broadcom BCM63138 DSL System-on-a-Chip device tree bindings
-+-----------------------------------------------------------
-+
-+Boards compatible with the BCM63138 DSL System-on-a-Chip should have the
-+following properties:
-+
-+Required root node property:
-+
-+compatible: should be "brcm,bcm63138"
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index fc938005ad39..2abad742516d 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -99,6 +99,23 @@ config ARCH_BCM_5301X
- 	  different SoC or with the older BCM47XX and BCM53XX based
- 	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
- 
-+config ARCH_BCM_63XX
-+	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
-+	depends on MMU
-+	select ARM_ERRATA_754322
-+	select ARM_ERRATA_764369 if SMP
-+	select ARM_GIC
-+	select ARM_GLOBAL_TIMER
-+	select CACHE_L2X0
-+	select HAVE_ARM_ARCH_TIMER
-+	select HAVE_ARM_TWD if SMP
-+	select HAVE_ARM_SCU if SMP
-+	select HAVE_SMP
-+	help
-+	  This enables support for systems based on Broadcom DSL SoCs.
-+	  It currently supports the 'BCM63XX' ARM-based family, which includes
-+	  the BCM63138 variant.
-+
- config ARCH_BRCMSTB
- 	bool "Broadcom BCM7XXX based boards" if ARCH_MULTI_V7
- 	depends on MMU
-diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-index 67c492aabf4d..cbbb0be54554 100644
---- a/arch/arm/mach-bcm/Makefile
-+++ b/arch/arm/mach-bcm/Makefile
-@@ -34,6 +34,9 @@ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
- # BCM5301X
- obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
- 
-+# BCM63XXx
-+obj-$(CONFIG_ARCH_BCM_63XX)	:= bcm63xx.o
-+
- ifeq ($(CONFIG_ARCH_BRCMSTB),y)
- obj-y				+= brcmstb.o
- obj-$(CONFIG_SMP)		+= headsmp-brcmstb.o platsmp-brcmstb.o
-diff --git a/arch/arm/mach-bcm/bcm63xx.c b/arch/arm/mach-bcm/bcm63xx.c
-new file mode 100644
-index 000000000000..c4c66ae51308
---- /dev/null
-+++ b/arch/arm/mach-bcm/bcm63xx.c
-@@ -0,0 +1,27 @@
++++ b/arch/arm/boot/dts/bcm963138dvt.dts
+@@ -0,0 +1,30 @@
 +/*
-+ * Copyright (C) 2014 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * Broadcom BCM63138 Reference Board DTS
 + */
 +
-+#include <linux/of_platform.h>
++/dts-v1/;
 +
-+#include <asm/mach/arch.h>
++#include "bcm63138.dtsi"
 +
-+static const char * const bcm63xx_dt_compat[] = {
-+	"brcm,bcm63138",
-+	NULL
++/ {
++	compatible = "brcm,BCM963138DVT", "brcm,bcm63138";
++	model = "Broadcom BCM963138DVT";
++
++	chosen {
++		bootargs = "console=ttyS0,115200";
++		stdout-path = &serial0;
++	};
++
++	memory {
++		reg = <0x0 0x08000000>;
++	};
++
 +};
 +
-+DT_MACHINE_START(BCM63XXX_DT, "BCM63xx DSL SoC")
-+	.dt_compat	= bcm63xx_dt_compat,
-+	.l2c_aux_val	= 0,
-+	.l2c_aux_mask	= ~0,
-+MACHINE_END
++&serial0 {
++	status = "okay";
++};
++
++&serial1 {
++	status = "okay";
++};
 -- 
 1.9.1
 
