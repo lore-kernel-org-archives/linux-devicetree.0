@@ -1,54 +1,51 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: Specifying the console device using an alias
-Date: Mon, 18 Aug 2014 21:19:09 +0200
-Message-ID: <20140818191909.GA5352@pengutronix.de>
-References: <CAPnjgZ2A=DkGSnFLy1En8bH0pZAUAEWCWz_jQ941g3QQEUN9NQ@mail.gmail.com>
- <CAPnjgZ1S-HVZJ7kzt=YKT+jjZEtLdmZSnr6kmNVf+paGKdrgoQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/5] ARM: add Broadcom BCM63138 support
+Date: Mon, 18 Aug 2014 12:24:54 -0700
+Message-ID: <1408389899-1022-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPnjgZ1S-HVZJ7kzt=YKT+jjZEtLdmZSnr6kmNVf+paGKdrgoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, elder-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
-Simon,
+This patchset adds very minimal support for the BCM63138 SoC which is
+a xDSL SoC using a dual Cortex A9 CPU complex.
 
-On Thu, Aug 14, 2014 at 10:02:10PM -0600, Simon Glass wrote:
-> (correct list)
-> 
-> On 14 August 2014 21:42, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> > Hi,
-> >
-> > In U-Boot we currently specify the console device (typically serial)
-> > using something like:
-> >
-> > aliases {
-> >    console = "/serial@1234";
-> > }
-> >
-> > But the question has come up as to whether this should be done another
-> > way. I see the "linux.stdout" property in the /chosen node.
-> >
-> > I am concerned that making use of the /chosen node in U-Boot might
-> > confuse a lot of people, since this node is normally used to provide
-> > selections for the OS to use when booting. If we did use /chosen, then
-> > linux,stdout seems plain wrong but perhaps u-boot,stdout could be used
-> > instead.
+Future work will focus on:
 
-See ePAPR. There's a stdout-path property specified, without linux,
-prefix.
+- clock device/driver/providers
+- SMP support
+- enabling more existing bcm63xx drivers to be DT enabled
 
-Sascha
+Florian Fainelli (5):
+  ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
+  ARM: BCM63XX: add low-level UART debug support
+  ARM: BCM63XX: add BCM63138 minimal Device Tree
+  ARM: BCM63XX: add BCM963138DVT Reference platform DTS
+  MAINTAINERS: add entry for the Broadcom BCM63xx ARM SoCs
+
+ .../devicetree/bindings/arm/bcm/bcm63138.txt       |   9 ++
+ MAINTAINERS                                        |   8 ++
+ arch/arm/Kconfig.debug                             |  18 ++-
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/bcm63138.dtsi                    | 134 +++++++++++++++++++++
+ arch/arm/boot/dts/bcm963138dvt.dts                 |  30 +++++
+ arch/arm/include/debug/bcm63xx.S                   |  33 +++++
+ arch/arm/mach-bcm/Kconfig                          |  17 +++
+ arch/arm/mach-bcm/Makefile                         |   3 +
+ arch/arm/mach-bcm/bcm63xx.c                        |  27 +++++
+ 10 files changed, 278 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
+ create mode 100644 arch/arm/boot/dts/bcm63138.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm963138dvt.dts
+ create mode 100644 arch/arm/include/debug/bcm63xx.S
+ create mode 100644 arch/arm/mach-bcm/bcm63xx.c
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
