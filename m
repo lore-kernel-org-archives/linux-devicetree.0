@@ -1,234 +1,77 @@
-Return-Path: <westeri@linux.intel.com>
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [RFC PATCH 8/9] Input: gpio_keys_polled - Make use of device property API
-Date: Sat, 16 Aug 2014 09:53:58 +0300
-Message-Id: <1408172039-32513-9-git-send-email-mika.westerberg@linux.intel.com>
-In-Reply-To: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+Return-Path: <gnurou@gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <1408172039-32513-7-git-send-email-mika.westerberg@linux.intel.com>
 References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
-To: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+ <1408172039-32513-7-git-send-email-mika.westerberg@linux.intel.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Date: Mon, 18 Aug 2014 09:24:48 -0700
+Message-ID: <CAAVeFu+LRxcJkPRpQMYhyz-TTY1HB7qCEv44a8vTU=g1iKCsfA@mail.gmail.com>
+Subject: Re: [RFC PATCH 6/9] gpiolib: add API to get gpio desc and flags
+Content-Type: text/plain; charset=UTF-8
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Aaron Lu <aaron.lu@intel.com>
+On Fri, Aug 15, 2014 at 11:53 PM, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 2ebc9071e354..e6c2413a6fbf 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2644,6 +2644,24 @@ static struct gpio_desc *acpi_find_gpio(struct device *dev, const char *con_id,
+>         return desc;
+>  }
+>
+> +struct gpio_desc *dev_get_gpiod_flags(struct device *dev, unsigned int idx,
+> +                                     enum gpio_lookup_flags *flags)
+> +{
+> +       struct gpio_desc *desc = ERR_PTR(-ENOENT);
+> +
+> +       if (!dev || !flags)
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       /* Using device tree? */
+> +       if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+> +               desc = of_find_gpio(dev, NULL, idx, flags);
+> +       else if (IS_ENABLED(CONFIG_ACPI) && ACPI_COMPANION(dev))
+> +               desc = acpi_get_gpiod_flags(dev, idx, flags);
+> +
+> +       return desc;
+> +}
+> +EXPORT_SYMBOL(dev_get_gpiod_flags);
 
-Make use of device property API in this driver so that both OF based
-system and ACPI based system can use this driver.
+Putting aside the fact that this function is clearly ACPI-centric (no
+con_id parameter and no handling of the platform interface), I have
+two big problems with it and it ending up in the consumer interface:
 
-The driver isn't converted to descriptor based gpio API due to there are
-a lot of existing users of struct gpio_keys_button that expects the gpio
-integer field. Though this can be solved by adding a new field of type
+1) The returned descriptor is not requested by gpiolib, which means no
+check is made about whether the GPIO has already been requested by
+someone else, and another driver can very well request the same GPIO
+later and obtain it. Any descriptor returned by a function in
+consumer.h *must* be properly requested. Furthermore the 1:1 mapping
+between GPIO descriptors and GPIO numbers is not something we can take
+for granted (since it will likely change soon), so this practice is
+definitely to ban.
+
+2) It exposes the GPIO flags, while they are supposed to be opaque to consumers.
+
+These two points would somehow be acceptable if this function was
+gpiolib-private, but here it is clearly not the case and this allows
+pretty nasty thing to happen. Basically you are using it to take
+advantage of the gpiod lookup mechanism and then quickly fall back to
+the legacy integer interface. That's really not something to encourage
+- these drivers should be converted to use gpiod internally (while
+preserving integer-based lookup for compatiblity, if needed).
+
+In patch 8 you say:
+
+"this can be solved by adding a new field of type
 struct gpio_desc but then there is another problem: the devm_gpiod_get
 needs to operate on the button device instead of its parent device that
 has the driver binded, so when the driver is unloaded, the resources for
-the gpio will not get freed automatically. Alternatively, we can
-introduce a new API, something like gpiod_find_index that does almost
-the same thing as gpiod_get_index but doesn't do the gpiod_request call
-and use it during finding button resources in gpio_keys_polled_get_button
-function. But then this may seem too complicated and not desirable. So
-in the end, a simple dev_get_gpiod_flags which is introduced in the last
-patch gets used and the gpio field of the struct gpio_keys_button can be
-got from the desc_to_gpio.
+the gpio will not get freed automatically."
 
-Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-Signed-off-by: Max Eliaser <max@meliaserlow.dyndns.tv>
-Reviewed-by: Darren Hart <dvhart@linux.intel.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/input/keyboard/gpio_keys_polled.c | 139 ++++++++++++++++++------------
- 1 file changed, 84 insertions(+), 55 deletions(-)
-
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index 432d36395f35..49895d75aaff 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -27,6 +27,7 @@
- #include <linux/of.h>
- #include <linux/of_platform.h>
- #include <linux/of_gpio.h>
-+#include <linux/property.h>
- 
- #define DRV_NAME	"gpio-keys-polled"
- 
-@@ -102,78 +103,95 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
- 		pdata->disable(bdev->dev);
- }
- 
--#ifdef CONFIG_OF
--static struct gpio_keys_platform_data *gpio_keys_polled_get_devtree_pdata(struct device *dev)
--{
--	struct device_node *node, *pp;
-+#if defined(CONFIG_OF) || defined(CONFIG_ACPI)
-+
-+struct button_proc_context {
- 	struct gpio_keys_platform_data *pdata;
--	struct gpio_keys_button *button;
--	int error;
--	int nbuttons;
- 	int i;
-+};
- 
--	node = dev->of_node;
--	if (!node)
--		return NULL;
-+static int gpio_keys_polled_get_button(struct device *dev, void *data)
-+{
-+	struct button_proc_context *c = data;
-+	struct gpio_keys_platform_data *pdata = c->pdata;
-+	struct gpio_keys_button *button = &pdata->buttons[c->i];
-+	struct gpio_desc *desc;
-+	enum gpio_lookup_flags flags;
-+	void *val;
-+
-+	if (device_property_get(dev, "gpios", NULL)) {
-+		pdata->nbuttons--;
-+		dev_warn(dev, "Found button without gpios\n");
-+		return 0;
-+	}
- 
--	nbuttons = of_get_child_count(node);
--	if (nbuttons == 0)
--		return NULL;
-+	desc = dev_get_gpiod_flags(dev, 0, &flags);
-+	if (IS_ERR(desc)) {
-+		int error = PTR_ERR(desc);
- 
--	pdata = devm_kzalloc(dev, sizeof(*pdata) + nbuttons * sizeof(*button),
--			     GFP_KERNEL);
--	if (!pdata)
--		return ERR_PTR(-ENOMEM);
-+		if (error != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get gpio flags, error: %d\n",
-+				error);
-+		return error;
-+	}
- 
--	pdata->buttons = (struct gpio_keys_button *)(pdata + 1);
--	pdata->nbuttons = nbuttons;
-+	button->gpio = desc_to_gpio(desc);
-+	button->active_low = flags & GPIO_ACTIVE_LOW;
- 
--	pdata->rep = !!of_get_property(node, "autorepeat", NULL);
--	of_property_read_u32(node, "poll-interval", &pdata->poll_interval);
-+	if (device_property_read(dev, "linux,code", DEV_PROP_U32,
-+				 &button->code)) {
-+		dev_err(dev, "Button without keycode: 0x%x\n",
-+				button->gpio);
-+		return -EINVAL;
-+	}
- 
--	i = 0;
--	for_each_child_of_node(node, pp) {
--		int gpio;
--		enum of_gpio_flags flags;
-+	if (!device_property_get(dev, "label", &val))
-+		button->desc = val;
- 
--		if (!of_find_property(pp, "gpios", NULL)) {
--			pdata->nbuttons--;
--			dev_warn(dev, "Found button without gpios\n");
--			continue;
--		}
-+	if (device_property_read(dev, "linux,input-type", DEV_PROP_U32,
-+				 &button->type))
-+		button->type = EV_KEY;
- 
--		gpio = of_get_gpio_flags(pp, 0, &flags);
--		if (gpio < 0) {
--			error = gpio;
--			if (error != -EPROBE_DEFER)
--				dev_err(dev,
--					"Failed to get gpio flags, error: %d\n",
--					error);
--			return ERR_PTR(error);
--		}
-+	button->wakeup = !device_property_get(dev, "gpio-key,wakeup", NULL);
- 
--		button = &pdata->buttons[i++];
-+	if (device_property_read(dev, "debounce-interval", DEV_PROP_U32,
-+				 &button->debounce_interval))
-+		button->debounce_interval = 5;
- 
--		button->gpio = gpio;
--		button->active_low = flags & OF_GPIO_ACTIVE_LOW;
-+	c->i++;
-+	return 0;
-+}
- 
--		if (of_property_read_u32(pp, "linux,code", &button->code)) {
--			dev_err(dev, "Button without keycode: 0x%x\n",
--				button->gpio);
--			return ERR_PTR(-EINVAL);
--		}
-+static struct gpio_keys_platform_data *
-+gpio_keys_polled_get_devtree_pdata(struct device *dev)
-+{
-+	struct gpio_keys_platform_data *pdata;
-+	int size;
-+	struct button_proc_context c;
-+	int error;
-+	int nbuttons;
- 
--		button->desc = of_get_property(pp, "label", NULL);
-+	nbuttons = device_property_child_count(dev);
-+	if (nbuttons <= 0)
-+		return NULL;
- 
--		if (of_property_read_u32(pp, "linux,input-type", &button->type))
--			button->type = EV_KEY;
-+	size = sizeof(*pdata) + nbuttons * sizeof(struct gpio_keys_button);
-+	pdata = devm_kzalloc(dev, size, GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
- 
--		button->wakeup = !!of_get_property(pp, "gpio-key,wakeup", NULL);
-+	pdata->buttons = (struct gpio_keys_button *)(pdata + 1);
-+	pdata->nbuttons = nbuttons;
- 
--		if (of_property_read_u32(pp, "debounce-interval",
--					 &button->debounce_interval))
--			button->debounce_interval = 5;
--	}
-+	pdata->rep = !device_property_get(dev, "autorepeat", NULL);
-+	device_property_read(dev, "poll-interval", DEV_PROP_U32,
-+			     &pdata->poll_interval);
-+
-+	c.pdata = pdata;
-+	c.i = 0;
-+	error = device_for_each_child(dev, &c, gpio_keys_polled_get_button);
-+	if (error)
-+		return ERR_PTR(error);
- 
- 	if (pdata->nbuttons == 0)
- 		return ERR_PTR(-EINVAL);
-@@ -181,11 +199,21 @@ static struct gpio_keys_platform_data *gpio_keys_polled_get_devtree_pdata(struct
- 	return pdata;
- }
- 
-+#ifdef CONFIG_OF
- static const struct of_device_id gpio_keys_polled_of_match[] = {
- 	{ .compatible = "gpio-keys-polled", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
-+#endif
-+
-+#ifdef CONFIG_ACPI
-+static struct acpi_device_id gpio_keys_polled_acpi_match[] = {
-+	{ "MNW0002" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(acpi, gpio_keys_polled_acpi_match);
-+#endif
- 
- #else
- 
-@@ -309,6 +337,7 @@ static struct platform_driver gpio_keys_polled_driver = {
- 		.name	= DRV_NAME,
- 		.owner	= THIS_MODULE,
- 		.of_match_table = of_match_ptr(gpio_keys_polled_of_match),
-+		.acpi_match_table = ACPI_PTR(gpio_keys_polled_acpi_match),
- 	},
- };
- module_platform_driver(gpio_keys_polled_driver);
--- 
-2.1.0.rc1
+I'd very much prefer that you use the non-devm variant of gpiod_get()
+and free the resources manually when the driver is unloaded than this
+workaround that introduces an loophole in the gpiod consumer lookup
+functions.
