@@ -1,83 +1,77 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 3/6] irqchip: irq-st: Add documentation for STi based
- syscfg IRQs
-Date: Mon, 18 Aug 2014 08:05:45 -0400
-Message-ID: <20140818120545.GQ12769@titan.lakedaemon.net>
-References: <1406642744-22589-1-git-send-email-lee.jones@linaro.org>
- <1406642744-22589-4-git-send-email-lee.jones@linaro.org>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv3 3/3] pwm: documentation: Add 'big-endian' property for
+ FTM PWM.
+Date: Mon, 18 Aug 2014 12:11:44 +0000
+Message-ID: <63b1d7b52fda42e0b9bf09dac3f918aa@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1408332755-35102-1-git-send-email-Li.Xiubo@freescale.com>
+ <1408332755-35102-4-git-send-email-Li.Xiubo@freescale.com>,<20140818095939.GE14559@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406642744-22589-4-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, tglx@linutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20140818095939.GE14559@leverpostej>
+Content-Language: en-US
+Sender: linux-pwm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Lee,
+[...]
+>>  Freescale FlexTimer Module (FTM) PWM controller
+>>
+>> +For the same FTM PWM device, which on different SoCs will in
+>> +differrent endian mode, using the same linux device driver need
+>> +one boolean properties to distingush this.
+>
+> There is absolutely no need to mention Linux if this is truly a HW
+> property.
 
-Rob, Grant, question for you below:
+Okay.
 
-On Tue, Jul 29, 2014 at 03:05:41PM +0100, Lee Jones wrote:
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  .../interrupt-controller/st,sti-irq-syscfg.txt     | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt b/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
-> new file mode 100644
-> index 0000000..ced6014
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,sti-irq-syscfg.txt
-> @@ -0,0 +1,35 @@
-> +STMicroelectronics STi System Configuration Controlled IRQs
-> +-----------------------------------------------------------
-> +
-> +On STi based systems; External, CTI (Core Sight), PMU (Performance Management),
-> +and PL310 L2 Cache IRQs are controlled using System Configuration registers.
-> +This driver is used to unmask them prior to use.
+[...]
+>> +
+>> +For now the FTM PWM is only applied to the ARM SoCs which are all
+>> +in LE mode.
+>> +
+>> +So the DT binding for FTM PWM device endian:
+>> +SoC     |  FTM-PWM | 'big-endian' property is needed?
+>> +--------|----------|---------------------------------
+>> +Vybird  |    LE    |     No
+>> +LS1     |    BE    |     Yes
+>> +LS2     |    LE    |     No
+>> +
+>> +Please see "Documentation/devicetree/bindings/regmap/regmap.txt" for more
+>> +detail about the endianness.
+>
+> Surely all we need is:
+>
+> The FTM PWM device can be integrated as little-endian or big-endian.
+> This endianness differs per SoC:
+>
+> SoC     | FTM-PWM endianness
+> --------+-------------------
+> Vybrid  | LE
+> LS1     | BE
+> LS2     | LE
 
-We don't usually refer to the driver in binding docs as they are
-supposed to be OS-agnostic.
+I'll follow your advice.
 
-> +
-> +Required properties:
-> +- compatible	: Should be set to one of:
-> +			"st,stih415-irq-syscfg"
-> +			"st,stih416-irq-syscfg"
-> +			"st,stih407-irq-syscfg"
-> +			"st,stid127-irq-syscfg"
-> +- st,syscfg	: Phandle to Cortex-A9 IRQ system config registers
-> +- st,irq-device	: Array of IRQs to enable - should be 2 in length
-> +- st,fiq-device	: Array of FIQs to enable - should be 2 in length
-> +
-> +Optional properties:
-> +- st,invert-ext	: External IRQs can be inverted at will.  This property inverts
-> +		  these IRQs using bitwise logic.  A number of defines have been
-> +		  provided for convenience:
-> +			ST_IRQ_SYSCFG_EXT_1_INV
-> +			ST_IRQ_SYSCFG_EXT_2_INV
-> +			ST_IRQ_SYSCFG_EXT_3_INV
-> +Example:
+[...]
+>> +- big-endian: One boolean property, for all the device registers, the BE mode
+>> +  will be in use if it's present, or the LE mode will be in use.
+>
+>- big-endian: Boolean property, required if all the FTM_PWM registers
+>  are big-endian rather than little-endian.
+>
 
-Rob, Grant, should we be mingling implementation details (macros from
-include files) with the binding documentation?  It just _seems_ wrong
-too me.  But if we agree that the binding docs, the dts files, and their
-includes are always kept together, I also don't see the harm...
+See the next version.
 
-> +
-> +irq-syscfg {
-> +	compatible    = "st,stih416-irq-syscfg";
-> +	st,syscfg     = <&syscfg_cpu>;
-> +	st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
-> +			<ST_IRQ_SYSCFG_PMU_1>;
-> +	st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
-> +			<ST_IRQ_SYSCFG_DISABLED>;
-> +	st,invert-ext = <(ST_IRQ_SYSCFG_EXT_1_INV | ST_IRQ_SYSCFG_EXT_3_INV)>;
-> +};
+Thanks very much for you comment and advice.
 
-thx,
+BRs
+XIubo
 
-Jason.
+
+
+> Cheers,
+> Mark.
