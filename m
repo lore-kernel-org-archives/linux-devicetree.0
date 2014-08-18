@@ -1,60 +1,36 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCHv10 3/5] ARM: dts: exynos: unuse the slot-node and deprecate
- the supports-highspeed for dw-mmc
-Date: Mon, 18 Aug 2014 12:40:12 -0500
-Message-ID: <53F23A7C.3060404@samsung.com>
-References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com> <1407397082-32495-4-git-send-email-jh80.chung@samsung.com> <53F1F027.7060609@samsung.com> <53F20955.2050806@suse.de> <53F22FBB.4010801@samsung.com> <53F23283.8040303@suse.de>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v3 5/7] net: cpsw: Add am33xx MACID readout
+Date: Mon, 18 Aug 2014 23:54:26 +0530
+Message-ID: <53F244DA.3070803@ti.com>
+References: <1408202315-20006-1-git-send-email-mpa@pengutronix.de> <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <53F23283.8040303@suse.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>, "David S. Miller" <davem@davemloft.net>
+Cc: =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Rostedt <rostedt@goodmis.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 08/18/14 12:06, Andreas F=E4rber wrote:
-> Am 18.08.2014 18:54, schrieb Kukjin Kim:
->> On 08/18/14 09:10, Andreas F=E4rber wrote:
->>> Hi Jaehoon,
->>>
->>> Am 18.08.2014 14:23, schrieb Jaehoon Chung:
->>>> Socfpga and Rockchip were queued into each SoC tree.
->>>> I want to know whether this patch is queued or not into Samsung-So=
-c
->>>> tree.
->>>> Do you have any other plan for this patch?
->>>
->>> It isn't applied in his tree:
->>>
->>> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git=
-/
->>>
->>> In fact Kukjin has not applied any patches for 3 weeks now, which l=
-ikely
->>> means he's on vacation. I am hoping he will review this and the oth=
-er
->>> pending conflicting patches to decide on a merge order and fix any
->>> trivial conflicts himself. ;)
->>>
->> Oh, I thought it has been queued in previous merge window with my ac=
-k.
->>
->> OK, I've applied this in my tree for 3.18.
->
-> So, are you dropping the snow mmc pinctrl patch Doug asked you to que=
-ue
-> before this one, and are you merging this with my exynos5250
-> cros-common/style cleanups yourself or do I need yet another respin?
->
-Hi Andreas,
+On Saturday 16 August 2014 08:48 PM, Markus Pargmann wrote:
+> +	mac_addr[5] = (macid_lo >> 8) & 0xff;
+> +	mac_addr[4] = macid_lo & 0xff;
+> +	mac_addr[3] = (macid_hi >> 24) & 0xff;
+> +	mac_addr[2] = (macid_hi >> 16) & 0xff;
+> +	mac_addr[1] = (macid_hi >> 8) & 0xff;
+> +	mac_addr[0] = macid_hi & 0xff;
+> +
+This will fail incase of DRA74x and DRA72x platforms, please check for
+u-boot src for parsing logic as TRM is not out yet. Below is the actual
+code for DRA7 platforms for MAC address parsing
 
-Thanks for your gentle reminder and I think I can handle it when I appl=
-y=20
-it in my tree :)
+mac_addr[0] = (mac_hi & 0xFF0000) >> 16;
+mac_addr[1] = (mac_hi & 0xFF00) >> 8;
+mac_addr[2] = mac_hi & 0xFF;
+mac_addr[3] = (mac_lo & 0xFF0000) >> 16;
+mac_addr[4] = (mac_lo & 0xFF00) >> 8;
+mac_addr[5] = mac_lo & 0xFF;
 
-Note I will check them today and if any problems, I'll let you know.
-
-- Kukjin
+Regards
+Mugunthan V N
