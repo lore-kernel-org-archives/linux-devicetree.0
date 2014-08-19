@@ -1,44 +1,113 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v2 0/5] ARM: shmobile: r8a7740: add clocks to DT
-Date: Tue, 19 Aug 2014 15:48:35 +0900
-Message-ID: <CANqRtoSS91FxVZnt7_pkfXtG3LvO=n=m0FaXQvX9F+8goEEWSg@mail.gmail.com>
-References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/4] pwm: rockchip: Allow polarity invert on rk3288
+Date: Tue, 19 Aug 2014 09:18:58 +0200
+Message-ID: <20140819071857.GD12859@ulmo>
+References: <1408381749-14156-1-git-send-email-dianders@chromium.org>
+ <1408381749-14156-3-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1sNVjLsmu1MXqwQ/"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408381749-14156-3-git-send-email-dianders@chromium.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
 
-On Fri, Aug 8, 2014 at 11:23 PM, Ulrich Hecht
-<ulrich.hecht+renesas@gmail.com> wrote:
-> Hi!
->
-> Here's the r8a7740 DT clock patch(es) with the changes requested by Simon
-> and Magnus as specified below.  Enjoy!
->
-> changes since v1:
-> - split up into separate patches
-> - added MSTP clock assignments
+--1sNVjLsmu1MXqwQ/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looking great, very easy to review IMO! I guess some people may prefer
-to have the patches merged into fewer ones somehow, but if it is up to
-me then I take over-splitted patches over overly-complex ones any day!
+On Mon, Aug 18, 2014 at 10:09:07AM -0700, Doug Anderson wrote:
+[...]
+> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+>  #define PWM_LP_DISABLE		(0 << 8)
+> =20
+> @@ -32,6 +34,7 @@ struct rockchip_pwm_chip {
+>  	struct pwm_chip chip;
+>  	struct clk *clk;
+>  	const struct rockchip_pwm_data *data;
+> +	enum pwm_polarity polarity;
 
-> Ulrich Hecht (5):
->   ARM: shmobile: r8a7740: document MSTP clock support
->   ARM: shmobile: r8a7740: clock register bits
->   ARM: shmobile: r8a7740: add SoC clocks to DTS
->   ARM: shmobile: r8a7740: add MSTP clock assignments to DT
->   ARM: shmobile: armadillo800eva-reference: add clock overrides to DTS
+Why do you need this field? struct pwm_device already has a copy of it.
 
-For patch 1-5 above:
-Acked-by: Magnus Damm <damm+renesas@opensource.se>
+> @@ -74,10 +78,14 @@ static void rockchip_pwm_set_enable_v2(struct pwm_chi=
+p *chip, bool enable)
+>  {
+>  	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
+>  	u32 enable_conf =3D PWM_OUTPUT_LEFT | PWM_LP_DISABLE | PWM_ENABLE |
+> -			  PWM_CONTINUOUS | PWM_DUTY_POSITIVE |
+> -			  PWM_INACTIVE_NEGATIVE;
+> +			  PWM_CONTINUOUS;
+>  	u32 val;
+> =20
+> +	if (pc->polarity =3D=3D PWM_POLARITY_INVERSED)
+> +		enable_conf |=3D PWM_DUTY_NEGATIVE | PWM_INACTIVE_POSITIVE;
+> +	else
+> +		enable_conf |=3D PWM_DUTY_POSITIVE | PWM_INACTIVE_NEGATIVE;
 
-Cheers,
+I have a feeling you're going to answer the above question with: "Because
+it's needed here". If so, my reply would be: "Then this function should
+take a struct pwm_device instead of struct pwm_chip."
 
-/ magnus
+> @@ -173,6 +195,7 @@ static const struct rockchip_pwm_data pwm_data_v2 =3D=
+ {
+>  		.ctrl =3D 0x0c,
+>  	},
+>  	.prescaler =3D 1,
+> +	.has_invert =3D 1,
+
+Since has_invert is a boolean, the proper value here would be "true".
+
+> @@ -228,6 +252,10 @@ static int rockchip_pwm_probe(struct platform_device=
+ *pdev)
+>  	pc->data =3D id->data;
+>  	pc->chip.dev =3D &pdev->dev;
+>  	pc->chip.ops =3D &rockchip_pwm_ops;
+> +	if (pc->data->has_invert) {
+> +		pc->chip.of_xlate =3D of_pwm_xlate_with_flags;
+> +		pc->chip.of_pwm_n_cells =3D 3;
+> +	}
+>  	pc->chip.base =3D -1;
+>  	pc->chip.npwm =3D 1;
+
+I suggest to rewrite the above as follows for readability:
+
+ 	pc->data =3D id->data;
+ 	pc->chip.dev =3D &pdev->dev;
+ 	pc->chip.ops =3D &rockchip_pwm_ops;
+ 	pc->chip.base =3D -1;
+ 	pc->chip.npwm =3D 1;
++
++	if (pc->data->has_invert) {
++		pc->chip.of_xlate =3D of_pwm_xlate_with_flags;
++		pc->chip.of_pwm_n_cells =3D 3;
++	}
+
+Thierry
+
+--1sNVjLsmu1MXqwQ/
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT8vphAAoJEN0jrNd/PrOhNqAQAKjhdIO0mRKBlcuqjV+55gGa
+ZjSeGG/zLHhxCjn9OP9HEqEnPqT8q46beRO7LfpewQLqX7avnirGHHcx4bTV7Myf
+RyvPqtwEIwz7Z4/NCrbqI/EDTDnyue+wEzkIdsvOa4YRjqWHSA5rI1BLjo2lFYAo
+l1ism4Bl3XDnr1PhTWsZztOkivCTUkMkGuLaLoDEIzDD7Dw5ul+U4mQP7POACFfm
+NObvxsFn3yUFexeAIB1pib7hWL2NI8oOPUfnBiLg1hdRR9vVFeDbqQoM5yGBpKJU
+yGipps4fyxsoqpfTsD9k4WNwcfY+34jF6vTfUSHkUv2qSOBp7viWWcXLUKsK7Izx
+VWz6G3cWrpPK9gQO/w1awRVVEhbIb1CsK889YIl9Ak9WQFSvYSxYsqtSLQAJloEW
+j+zxg8Gzsrib2nfqzUsrqjRYqoY1oS89u4/xOYqNvECkEeMCDQhLvGl+R1XdCoYK
+p3aXb16F+GdZpmmlrwP0CJNUr4wRKWqnMjqDjC0b7VbqHdlSWDpH5Xu0OPNv8XSB
+HYiDMx94tTc2KWNLIQbEqnM1Txjj+EPnJbiBuwVDiHO/f2yvqyVZNB5RNbUaEUN9
+ATpZg3jE0j2B9iUmkGew95S8DQmT8lTpd+6J+JgkPpijjKTwfGMMHNxMJvdTq0Zx
+sgyZA5HIusA8oEMXFQ4L
+=FxyI
+-----END PGP SIGNATURE-----
+
+--1sNVjLsmu1MXqwQ/--
