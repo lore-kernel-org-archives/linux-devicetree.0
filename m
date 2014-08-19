@@ -1,89 +1,55 @@
-From: Carlo Caione <carlo@caione.org>
-Subject: Re: [PATCH 5/7] ARM: meson: dts: add basic
- Meson/Meson6/Meson6-atv1200 DTSI/DTS
-Date: Tue, 19 Aug 2014 18:16:52 +0200
-Message-ID: <20140819161652.GB869@carlo-MacBookPro>
-References: <1408272594-10814-1-git-send-email-carlo@caione.org>
- <1408272594-10814-6-git-send-email-carlo@caione.org>
- <20140818161744.GD3302@leverpostej>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v3 5/7] net: cpsw: Add am33xx MACID readout
+Date: Tue, 19 Aug 2014 22:07:06 +0530
+Message-ID: <53F37D32.3080301@ti.com>
+References: <1408202315-20006-1-git-send-email-mpa@pengutronix.de>
+ <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
+ <53F244DA.3070803@ti.com> <20140818154112.6601cbff@gandalf.local.home>
+ <53F25AD1.8040504@ti.com>
+ <CABxcv=npv6bRq=VF8RT5trNxUzDj3bAm-PkvDEhcLVJ+uf8hCg@mail.gmail.com>
+ <20140819085002.GE12930@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140818161744.GD3302@leverpostej>
-Sender: linux-serial-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jslaby@suse.cz" <jslaby@suse.cz>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "b.galvani@gmail.com" <b.galvani@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140819085002.GE12930@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Pargmann <mpa@pengutronix.de>, Javier Martinez Canillas <javier@dowhile0.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@pengutronix.de, Wolfram Sang <wsa@the-dreams.de>, Tony Lindgren <tony@atomide.com>, Steven Rostedt <rostedt@goodmis.org>, =?UTF-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 18, 2014 at 05:17:44PM +0100, Mark Rutland wrote:
-> On Sun, Aug 17, 2014 at 11:49:52AM +0100, Carlo Caione wrote:
+On Tuesday 19 August 2014 02:20 PM, Markus Pargmann wrote:
+> Hi,
+>
+> On Tue, Aug 19, 2014 at 12:50:59AM +0200, Javier Martinez Canillas wrote:
+>> Hello Mugunthan,
+>>
+>> On Mon, Aug 18, 2014 at 9:58 PM, Mugunthan V N <mugunthanvnm@ti.com> wrote:
+>>>> Thus, for this patchset, as is:
+>>>>
+>>>> Tested-by: Steven Rostedt <rostedt@goodmis.org>
+>>> This will fail for DRA7xx not in AM33xx
+>>>
+>> cpsw_am33xx_cm_get_macid() checks for
+>> of_machine_is_compatible("ti,am33xx") and returns 0 if the machine is
+>> not an am33xx. cpsw_probe_dt() only propagates the return value if is
+>> not 0 so this patch does not change the semantics for other SoCs
+>> besides am33xx.
+> Yes, this patch is only about the am33xx. I don't have the DRA7xx
+> hardware so I am not able to test on that hardware. Mugunthan, perhaps
+> you can supply some followup patches for DRA7xx.
+>
+>
 
-<cut>
+I will check on this thursday and update.
 
-> > +	soc@c8100000 {
-> 
-> What's the unit-address for? This node doesn't have a reg or compatible.
-
-I used it to indicate the starting address of the memory mapped region.
-
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges;
-> > +
-> > +		uart_AO: serial@c81004c0 {
-> > +			compatible = "amlogic,meson-uart";
-> > +			reg = <0xc81004c0 0x14>;
-> > +			interrupts = <0 90 1>;
-> > +			clocks = <&clk81>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		uart_A: serial@c81084c0 {
-> > +			compatible = "amlogic,meson-uart";
-> > +			reg = <0xc81084c0 0x14>;
-> > +			interrupts = <0 90 1>;
-> > +			clocks = <&clk81>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		uart_B: serial@c81084dc {
-> > +			compatible = "amlogic,meson-uart";
-> > +			reg = <0xc81084dc 0x14>;
-> > +			interrupts = <0 90 1>;
-> > +			clocks = <&clk81>;
-> > +			status = "disabled";
-> > +		};
-> > +
-> > +		uart_C: serial@c8108700 {
-> > +			compatible = "amlogic,meson-uart";
-> > +			reg = <0xc8108700 0x14>;
-> > +			interrupts = <0 90 1>;
-> > +			clocks = <&clk81>;
-> > +			status = "disabled";
-> 
-> I guess these are disabled because they aren't always wired up?
-
-Yes
-
-<cut>
-
-> > +	clocks {
-> > +		#address-cells = <1>;
-> > +
-> > +		clk81: clk@0 {
-> > +			#clock-cells = <0>;
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <200000000>;
-> > +		};
-> > +	};
-> 
-> There is really no need to put clocks in a container.
-> 
-> Just put them under the root, and drop the unit-address.
-
-I'll do, thanks.
-
--- 
-Carlo Caione
+Regards
+Mugunthan V N
