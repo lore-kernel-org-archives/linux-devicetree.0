@@ -1,56 +1,40 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCHv10 3/5] ARM: dts: exynos: unuse the slot-node and deprecate
- the supports-highspeed for dw-mmc
-Date: Tue, 19 Aug 2014 12:52:47 +0900
-Message-ID: <53F2CA0F.1070800@samsung.com>
-References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com>
- <1407397082-32495-4-git-send-email-jh80.chung@samsung.com>
- <53F1F027.7060609@samsung.com> <53F20955.2050806@suse.de>
- <53F22FBB.4010801@samsung.com>
+From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 0/5] Convert to use regmap framework's endianness method.
+Date: Tue, 19 Aug 2014 12:12:39 +0800
+Message-ID: <1408421564-9863-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <53F22FBB.4010801@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Kukjin
+Changes in V2:
+- Modified the regmap config to const type.
+- Added ASRC patch.
+- Followed Rutland's advice.
 
-On 08/19/2014 01:54 AM, Kukjin Kim wrote:
-> On 08/18/14 09:10, Andreas F=E4rber wrote:
->> Hi Jaehoon,
->>
->> Am 18.08.2014 14:23, schrieb Jaehoon Chung:
->>> Socfpga and Rockchip were queued into each SoC tree.
->>> I want to know whether this patch is queued or not into Samsung-Soc=
- tree.
->>> Do you have any other plan for this patch?
->>
->> It isn't applied in his tree:
->>
->> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/
->>
->> In fact Kukjin has not applied any patches for 3 weeks now, which li=
-kely
->> means he's on vacation. I am hoping he will review this and the othe=
-r
->> pending conflicting patches to decide on a merge order and fix any
->> trivial conflicts himself. ;)
->>
-> Oh, I thought it has been queued in previous merge window with my ack=
-=2E
->=20
-> OK, I've applied this in my tree for 3.18.
 
-Thanks!
+Xiubo Li (5):
+  ASoC: fsl-asrc: Convert to use regmap framework's endianness method.
+  ASoC: fsl-esai: Convert to use regmap framework's endianness method.
+  ASoC: fsl-spdif: Convert to use regmap framework's endianness method.
+  ASoC: fsl-sai: Convert to use regmap framework's endianness method.
+  ASoC: fsl-sai: rename big_endian_data to is_msb_first.
 
-Best Regards,
-Jaehoon Chung
->=20
-> Thanks,
-> Kukjin
->=20
+ Documentation/devicetree/bindings/sound/fsl-sai.txt | 15 +++++++--------
+ sound/soc/fsl/fsl_asrc.c                            |  6 +-----
+ sound/soc/fsl/fsl_esai.c                            |  5 +----
+ sound/soc/fsl/fsl_sai.c                             | 12 ++++--------
+ sound/soc/fsl/fsl_sai.h                             |  3 +--
+ sound/soc/fsl/fsl_spdif.c                           |  5 +----
+ 6 files changed, 15 insertions(+), 31 deletions(-)
 
+-- 
+1.8.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
