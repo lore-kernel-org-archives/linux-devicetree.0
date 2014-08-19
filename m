@@ -1,90 +1,59 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 01/11] ARM: brcmstb: add infrastructure for ARM-based
- Broadcom STB SoCs
-Date: Mon, 18 Aug 2014 17:02:34 -0700
-Message-ID: <20140819000234.GM18411@ld-irv-0074>
-References: <1405976886-27807-1-git-send-email-computersforpeace@gmail.com>
- <1405976886-27807-2-git-send-email-computersforpeace@gmail.com>
- <CAL_Jsq+Nbk7m9KXhG+Chdpvurp75RrvhFR2oE_LGxV444GSe9Q@mail.gmail.com>
- <20140731022320.GM3711@ld-irv-0074>
- <20140731084315.GJ30282@n2100.arm.linux.org.uk>
- <20140731220642.GQ3711@ld-irv-0074>
- <20140802092756.GZ30282@n2100.arm.linux.org.uk>
- <20140813234706.GC18411@ld-irv-0074>
+From: Wei Yang <weiyang@linux.vnet.ibm.com>
+Subject: Re: [PATCH v9 02/12] PCI: OF: Parse and map the IRQ when adding the
+ PCI device.
+Date: Tue, 19 Aug 2014 09:44:01 +0800
+Message-ID: <20140819014401.GB9558@richard>
+References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
+ <1407860725-25202-3-git-send-email-Liviu.Dudau@arm.com>
+ <20140814145804.GA5586@richard>
+ <20140814154959.GG25761@e106497-lin.cambridge.arm.com>
+ <20140815085632.GA4954@richard>
+ <20140815103052.GD27553@e106497-lin.cambridge.arm.com>
+ <20140818142550.GN20043@localhost>
+Reply-To: Wei Yang <weiyang@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140813234706.GC18411@ld-irv-0074>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20140818142550.GN20043@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Wei Yang <weiyang@linux.vnet.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+On Mon, Aug 18, 2014 at 03:25:50PM +0100, Catalin Marinas wrote:
+>...
+>> Well, it will become necessary as old code gets dismantled and converted towards
+>> this patchset. To give you an example that I'm familiar with, for arch/arm the
+>> host bridge drivers have moved into drivers/pci/host, but they still depend/use
+>> the bios32 infrastructure that takes care of setting up the irq. When they switch
+>> to my version they would have to go and debug the "irq not being assigned" issue
+>> and it is quite likely that some of the people doing the conversion will complain
+>> about my code rather than understanding the issue. What I'm trying to do is to
+>> make switching to my patchset as painless as possible, with a cleanup to remove
+>> redundant operations coming after the switchover.
+>
+>While the goal is fine, until we see a common pattern for what needs to
+>go into pcibios_add_device() I think we should have an arm64-specific
+>implementation (and probably an arm32 specific one as well). I can see
+>powerpc uses it for setting the DMA ops. Would we have a similar need on
+>arm64 to choose between coherent and non-coherent dma_ops?
 
-On Wed, Aug 13, 2014 at 04:47:06PM -0700, Brian Norris wrote:
-> Picking up this thread again, as things are now set for dropping this
-> patch and resubmitting SMP support for 3.18.
+Liviu,
 
-Any further comment on this? I'd like to submit v10 of this patch soon.
-As of now, my patch will still look essentially the same (with only
-minor changes for some of the review comments), since I'm convinced
-neither that my current per-cpu flag-based solution is unsound nor that
-a delayed work queue can solve all of the same problems.
+I have the same feeling with Catalin. An arm64-specific implementation of
+pcibios_add_device() would be better.
 
-> On Sat, Aug 02, 2014 at 10:27:56AM +0100, Russell King wrote:
-> > On Thu, Jul 31, 2014 at 03:06:42PM -0700, Brian Norris wrote:
-> > > Yes, I noticed this. What I meant is that smp_ops.cpu_die() and
-> > > smp_ops.cpu_kill() are not synchronized.
-> > ...
-> > > We're not relying on the L1 cache, though. Don't sync_cache_{r,w}()
-> > > ensure all reads/writes reach at least the L2?
-> > 
-> > What exactly are you trying to achieve here?
-> 
-> Synchronization between v7_exit_coherency_flush() (on the dying CPU) and
-> yanking the power (brcmstb_cpu_kill(), on the murderous CPU). The core
-> completion-based synchronization is not sufficient, since it allows
-> brcmstb_smp_ops.smp_kill and brcmstb_smp_ops.smp_die to race.
-> 
-> Am I somehow not achieving what I intend here?
-> 
-> > > How does that ensure that the CPU is down by the time the work is
-> > > scheduled? It seems like this would just defer the work long enough that
-> > > it *most likely* has quiesced, but I don't see how this gives us a
-> > > better guarantee. Or maybe I'm missing something. (If so, please do
-> > > enlighten!)
-> > 
-> > Note that I said a delayed work queue.  The dying CPU runs a predictable
-> > sequence once cpu_die() has been entered - interrupts at the GIC have
-> > been programmed to be routed to other CPUs, interrupts at the CPU are
-> > masked, so the CPU isn't going to be doing anything else except executing
-> > that code path.  So, it's going to be a predictable number of CPU cycles.
-> > 
-> > That allows you to arrange a delayed workqueue (or a timer) to fire
-> > after a period of time that you can guarantee that the dying CPU has
-> > reached that wfi().
-> 
-> OK, that sounds workable for the active hotplug case.
-> 
-> But what about for the suspend case? CPUs are hot-unplugged during
-> disable_nonboot_cpus(), and I don't see that this would guarantee the
-> workqueue will complete before we enter suspend.
-> 
-> > Another point which raises itself in your patch is this:
-> > 
-> > +       /* Settle-time from Broadcom-internal DVT reference code */
-> > +       udelay(7);
-> > 
-[...]
-> I'm looking into this specific delay. [...]
+No more other concerns from my side.
 
-BTW, I think this delay can be dropped. It was retained from an early
-non-production release of this CPU.
+>
+>Also at some point we'll get ACPI support, so I'm not sure what we do
+>with assigning the dev->irq here but definitely of_* functions won't
+>work.
+>
+>-- 
+>Catalin
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Richard Yang
+Help you, Help me
