@@ -1,71 +1,74 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v2 3/8] ASoC: davinci-evm: HDMI audio support for TDA998x
- trough McASP I2S bus
-Date: Tue, 19 Aug 2014 22:40:51 +0300
-Message-ID: <53F3A843.4010409@ti.com>
-References: <cover.1408397864.git.jsarha@ti.com> <a92cd9257efb58711b2d5d3de2abff9c8a1052d2.1408397864.git.jsarha@ti.com> <20140819131621.GL3302@leverpostej>
+From: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 13/15] cpufreq: Add cpufreq driver for Tegra124
+Date: Tue, 19 Aug 2014 22:44:00 +0300
+Message-ID: <53F3A900.8010805@nvidia.com>
+References: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi>	<1408419205-10048-14-git-send-email-tuomas.tynkkynen@iki.fi> <CAKohpokQOALPH13Ykz4nTBOby8J1X6_F30LNKz=gsC4wN3=3vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140819131621.GL3302@leverpostej>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "tony@atomide.com" <tony@atomide.com>, "broonie@kernel.org" <broonie@kernel.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "detheridge@ti.com" <detheridge@ti.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "t-kristo@ti.com" <t-kristo@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKohpokQOALPH13Ykz4nTBOby8J1X6_F30LNKz=gsC4wN3=3vg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tuomas Tynkkynen <tuomas.tynkkynen-X3B1VOXEql0@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2014 04:16 PM, Mark Rutland wrote:
-> On Mon, Aug 18, 2014 at 10:46:41PM +0100, Jyri Sarha wrote:
->> Add machine driver support for BeagleBone-Black HDMI audio. BBB has
->> NXP TDA998X HDMI transmitter connected to McASP port in I2S mode. The
->> 44100 Hz sample-rate and it's multiples can not be accurately produced
->> on BBB. The only supported sample format is SNDRV_PCM_FORMAT_S32_LE.
->> The 8 least significant bits are ignored.
->>
->> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+On 19/08/14 08:55, Viresh Kumar wrote:
+> On 19 August 2014 09:03, Tuomas Tynkkynen <tuomas.tynkkynen-X3B1VOXEql0@public.gmane.org> wrote:
+>>  - use 'select GENERIC_CPUFREQ_CPU0', not depends
+> 
+> Bad :(
+> 
+> It *has* to be a depends here, its not optional. That was outcome of the
+> chat we had last time, if I remember it well..
+
+Okay, I misread that conversation then.
+
 >> ---
->>   .../bindings/sound/davinci-evm-audio.txt           |    4 +-
->>   sound/soc/davinci/davinci-evm.c                    |   82 +++++++++++++++++++-
->>   2 files changed, 83 insertions(+), 3 deletions(-)
+> 
+> You don't need to add these --- here, just add a blank line and git
+> will take care of things for you :)
+
+There's actually a (mis-?)feature in git format-patch: a literal '---'
+line in a commit message won't be escaped, so the patch notes can be
+written in the commit message directly so the patch files don't need
+to be modified by hand.
+
+>>  drivers/cpufreq/Kconfig.arm        |   8 ++
+>>  drivers/cpufreq/Makefile           |   1 +
+>>  drivers/cpufreq/tegra124-cpufreq.c | 206 +++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 215 insertions(+)
+>>  create mode 100644 drivers/cpufreq/tegra124-cpufreq.c
 >>
->> diff --git a/Documentation/devicetree/bindings/sound/davinci-evm-audio.txt b/Documentation/devicetree/bindings/sound/davinci-evm-audio.txt
->> index 963e100..c137436 100644
->> --- a/Documentation/devicetree/bindings/sound/davinci-evm-audio.txt
->> +++ b/Documentation/devicetree/bindings/sound/davinci-evm-audio.txt
->> @@ -1,7 +1,9 @@
->>   * Texas Instruments SoC audio setups with TLV320AIC3X Codec
->>
->>   Required properties:
->> -- compatible : "ti,da830-evm-audio" : forDM365/DA8xx/OMAPL1x/AM33xx
->> +- compatible : "ti,da830-evm-audio" : for DM365/DA8xx/OMAPL1x/AM33xx
->> +               "ti,am335x-beaglebone-black-audio" : for Beaglebone-black HDMI
->> +                                                    audio
->
-> To keep this legible I'd recommend reorganising this like:
->
-> - compatible: should contain one of:
->     * "ti,da830-evm-audio" for DM365/DA8xx/OMAPL1x/AM33xx
->     * "ti,am335x-beaglebone-black-audio" for Beaglebone-black HDMI audio
->
+[...]
+>> +static int tegra124_cpufreq_probe(struct platform_device *pdev)
+>> +{
+> 
+>> +       priv->vdd_cpu_reg = regulator_get(get_cpu_device(0), "vdd-cpu");
+> 
+> get_cpu_device() can fail as well, and so you may want to check its return
+> value as well..
+> 
 
-The above looks indeed better. I'll make the change. Oh, and I probably 
-should change the first line to something like:
+Oh, right.
 
-* TI SoC audio using McASP to connect to TLV320AIC3X or HDMI endcoder
-
-> For the BBB case, do you expect both strings or just the BBB-specific
-> string?
+>> +static int __init tegra_cpufreq_init(void)
+>> +{
+>> +       int ret;
+>> +       struct platform_device *pdev;
+>> +
+>> +       if (!of_match_machine(soc_of_matches))
+>> +               return -ENODEV;
+> 
+> You may want to add a comment here on why you chose to add another layer
+> of platform device/driver.. i.e. to catch -EPROBE_DEFER from clk-APIs..
 >
 
-Normally just the one. In theory a BBB with an audio-cape on top could 
-utilize another sound node with "ti,da830-evm-audio" compatible property.
+Yes, a good idea.
 
-> Is the 'x' in the BBB string a wildcard? If we know the particular
-> number for BBB we should use that.
->
-
-Yes, its a wild card. BBBs have been made at least with AM3358 and 
-AM3359 SoCs.
-
-Thanks,
-Jyri
+-- 
+nvpublic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
