@@ -1,154 +1,158 @@
-From: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 3/6] iommu/arm-smmu: add support for iova_to_phys through
-	ATS1PR
-Date: Tue, 19 Aug 2014 11:12:41 -0700
-Message-ID: <vnkwa970qrfq.fsf@mitchelh-linux.qualcomm.com>
-References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
-	<1407891099-24641-4-git-send-email-mitchelh@codeaurora.org>
-	<20140819124431.GL23128@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140819124431.GL23128-5wv7dgnIgG8@public.gmane.org> (Will Deacon's message of "Tue,
-	19 Aug 2014 13:44:32 +0100")
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3] ARM: dts: Add sdio0 and sdio1 to the rk3288
+Date: Tue, 19 Aug 2014 16:15:26 +0800
+Message-ID: <1408436126-23390-1-git-send-email-addy.ke@rock-chips.com>
+References: <1408415512-17275-1-git-send-email-addy.ke@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408415512-17275-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 19 2014 at 05:44:32 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Aug 13, 2014 at 01:51:36AM +0100, Mitchel Humpherys wrote:
->> Currently, we provide the iommu_ops.iova_to_phys service by doing a
->> table walk in software to translate IO virtual addresses to physical
->> addresses. On SMMUs that support it, it can be useful to ask the SMMU
->> itself to do the translation. This can be used to warm the TLBs for an
->> SMMU. It can also be useful for testing and hardware validation.
->
-> I'm not really sold on the usefulness of this feature. If you want hardware
-> validation features, I'd rather do something through debugfs, but your
-> use-case for warming the TLBs is intriguing. Do you have an example use-case
-> with performance figures?
+This patch requires that <https://patchwork.kernel.org/patch/4701721/>
+land in order to compile.
 
-I'm afraid I don't have an example use case or performance numbers at
-the moment...
+Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+Changes in v2:
+- repost patch to match what's in Heiko's "wip/v3.18-next/dts" tree
+  for the other dwmmc controllers
+- add "cd" and "int" line, suggested by Doug Anderson
+- fix up sdio1 configuration error
 
->> Since the address translation registers are optional on SMMUv2, only
->> enable hardware translations when using SMMUv1 or when SMMU_IDR0.S1TS=1
->> and SMMU_IDR0.ATOSNS=0, as described in the ARM SMMU v1-v2 spec.
->
-> [...]
->
->> +static phys_addr_t arm_smmu_iova_to_phys_hard(struct iommu_domain *domain,
->> +					dma_addr_t iova)
->> +{
->> +	struct arm_smmu_domain *smmu_domain = domain->priv;
->> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
->> +	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
->> +	struct device *dev = smmu->dev;
->> +	void __iomem *cb_base;
->> +	int count = 0;
->> +	u64 phys;
->> +
->> +	arm_smmu_enable_clocks(smmu);
->> +
->> +	cb_base = ARM_SMMU_CB_BASE(smmu) + ARM_SMMU_CB(smmu, cfg->cbndx);
->> +
->> +	if (smmu->version == 1) {
->> +		u32 reg = iova & 0xFFFFF000;
->> +		writel_relaxed(reg, cb_base + ARM_SMMU_CB_ATS1PR_LO);
->> +	} else {
->> +		u64 reg = iova & 0xfffffffffffff000;
->> +		writeq_relaxed(reg, cb_base + ARM_SMMU_CB_ATS1PR_LO);
->
-> We don't have writeq for arch/arm/.
+Changes in v3:
+- sort sdio0 and sdio1 by pin number, suggested by Doug Anderson
+- add "ro" and "bkpwr" line, suggested by Doug Anderson
 
-Ah yes looks like this is an MSM-ism that never made it upstream since
-it wouldn't be guaranteed to be atomic. I'll make sure to do arm32
-compiles on upstream kernels for future patches, sorry!
+ arch/arm/boot/dts/rk3288.dtsi | 102 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-I guess we could use <asm-generic/io-64-nonatomic-lo-hi.h> but I can
-also re-work this to be two separate writel's.
-
->> +	}
->> +
->> +	mb();
->
-> Why?
-
-My thought was that if we start polling ATSR_ACTIVE prematurely (before
-the write to ATS1PR actually finishes) all heck could break loose? Not
-sure if that's a bogus assumption due to device memory being strongly
-ordered?
-
->> +	while (readl_relaxed(cb_base + ARM_SMMU_CB_ATSR) & ATSR_ACTIVE) {
->> +		if (++count == ATSR_LOOP_TIMEOUT) {
->> +			dev_err(dev,
->> +				"iova to phys timed out on 0x%pa for %s. Falling back to software table walk.\n",
->> +				&iova, dev_name(dev));
->> +			arm_smmu_disable_clocks(smmu);
->> +			return arm_smmu_iova_to_phys_soft(domain, iova);
->> +		}
->> +		cpu_relax();
->> +	}
->
-> Do you know what happened to Olav's patches to make this sort of code
-> generic?
-
-I assume you're talking about this, right?
-
-    http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/267943.html
-
-Yeah looks like he never sent an update since it was part of a series
-that wasn't going to make it in (the qsmmu driver). I can always bring
-that patch (actually Matt Wagantall's patch) in here and rework this to
-use that.
-
->
->> @@ -2005,6 +2073,11 @@ int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
->>  		return -ENODEV;
->>  	}
->>  
->> +	if (smmu->version == 1 || (!(id & ID0_ATOSNS) && (id & ID0_S1TS))) {
->
-> Are you sure about this? The v2 spec says that is ATOSNS is clear then S1TS
-> is also clear.
-
-I was looking at Section 4.1.1 of ARM IHI 0062C ID091613 which states:
-
-    In SMMUv2, the address translation registers are OPTIONAL. The
-    address translation registers are implemented only when both:
-
-        o The SMMU_IDR0.S1TS bit is set to 1.
-        o The SMMU_IDR0.ATOSNS bit is set to 0.
-
-I assume you're referring to section 9.6.1 of the same document:
-
-    ATOSNS, bit[26]
-    Address Translation Operations Not Supported. The possible values of
-    this bit are:
-
-        0 Address translation operations are supported. Stage 1
-          translation is not supported, that is, the S1TS bit is set to 0.
-
-        1 Address translation operations are not supported. Stage 1
-          translation is supported, that is, the S1TS bit is set to 1.
-
-If that really means that S1TS and ATOSNS always have the same value
-then Section 4.1.1 doesn't make any sense. Or am I missing something?
-
-
-
--Mitch
-
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 36be7bb..12c0297 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -88,6 +88,26 @@
+ 		status = "disabled";
+ 	};
+ 
++	sdio0: dwmmc@ff0d0000 {
++		compatible = "rockchip,rk3288-dw-mshc";
++		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>;
++		clock-names = "biu", "ciu";
++		fifo-depth = <0x100>;
++		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++		reg = <0xff0d0000 0x4000>;
++		status = "disabled";
++	};
++
++	sdio1: dwmmc@ff0e0000 {
++		compatible = "rockchip,rk3288-dw-mshc";
++		clocks = <&cru HCLK_SDIO1>, <&cru SCLK_SDIO1>;
++		clock-names = "biu", "ciu";
++		fifo-depth = <0x100>;
++		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++		reg = <0xff0e0000 0x4000>;
++		status = "disabled";
++	};
++
+ 	emmc: dwmmc@ff0f0000 {
+ 		compatible = "rockchip,rk3288-dw-mshc";
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
+@@ -508,6 +528,88 @@
+ 			};
+ 		};
+ 
++		sdio0 {
++			sdio0_bus1: sdio0-bus1 {
++				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_bus4: sdio0-bus4 {
++				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>,
++						<4 21 RK_FUNC_1 &pcfg_pull_up>,
++						<4 22 RK_FUNC_1 &pcfg_pull_up>,
++						<4 23 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_cmd: sdio0-cmd {
++				rockchip,pins = <4 24 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_clk: sdio0-clk {
++				rockchip,pins = <4 25 RK_FUNC_1 &pcfg_pull_none>;
++			};
++
++			sdio0_cd: sdio0-cd {
++				rockchip,pins = <4 26 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_ro: sdio0-ro {
++				rockchip,pins = <4 27 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_pwr: sdio0-pwr {
++				rockchip,pins = <4 28 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_bkpwr: sdio0-bkpwr {
++				rockchip,pins = <4 29 RK_FUNC_1 &pcfg_pull_up>;
++			};
++
++			sdio0_int: sdio0-int {
++				rockchip,pins = <4 30 RK_FUNC_1 &pcfg_pull_up>;
++			};
++		};
++
++		sdio1 {
++			sdio1_bus1: sdio1-bus1 {
++				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_bus4: sdio1-bus4 {
++				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>,
++						<3 25 RK_FUNC_4 &pcfg_pull_up>,
++						<3 26 RK_FUNC_4 &pcfg_pull_up>,
++						<3 27 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_cd: sdio1-cd {
++				rockchip,pins = <3 28 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_ro: sdio1-ro {
++				rockchip,pins = <3 29 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_bkpwr: sdio1-bkpwr {
++				rockchip,pins = <3 30 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_int: sdio1-int {
++				rockchip,pins = <3 31 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_cmd: sdio1-cmd {
++				rockchip,pins = <4 6 RK_FUNC_4 &pcfg_pull_up>;
++			};
++
++			sdio1_clk: sdio1-clk {
++				rockchip,pins = <4 7 RK_FUNC_4 &pcfg_pull_none>;
++			};
++
++			sdio1_pwr: sdio1-pwr {
++				rockchip,pins = <4 9 RK_FUNC_4 &pcfg_pull_up>;
++			};
++		};
++
+ 		emmc {
+ 			emmc_clk: emmc-clk {
+ 				rockchip,pins = <3 18 RK_FUNC_2 &pcfg_pull_none>;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.8.3.2
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
