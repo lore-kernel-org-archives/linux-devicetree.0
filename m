@@ -1,92 +1,162 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 2/2] drm/panel: Add HannStar HSD070PWW1 7.0" WXGA TFT LCD panel
-Date: Tue, 19 Aug 2014 17:52:12 +0200
-Message-ID: <1408463532-14903-2-git-send-email-p.zabel@pengutronix.de>
-References: <1408463532-14903-1-git-send-email-p.zabel@pengutronix.de>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 4/6] iommu/arm-smmu: implement generic DT bindings
+Date: Tue, 19 Aug 2014 18:54:52 +0300
+Message-ID: <87tx58h3ub.fsf@nvidia.com>
+References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
+	<1407891099-24641-5-git-send-email-mitchelh@codeaurora.org>
+	<20140819125449.GN23128@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1408463532-14903-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140819125449.GN23128-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the HannStar Display Corp. HSD070PWW1 7.0"
-WXGA TFT LCD panel to the simple-panel driver. The binding documentation
-is included.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- .../bindings/panel/hannstar,hsd070pww1.txt         |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 25 ++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/hannstar,hsd070pww1.txt
+Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> writes:
 
-diff --git a/Documentation/devicetree/bindings/panel/hannstar,hsd070pww1.txt b/Documentation/devicetree/bindings/panel/hannstar,hsd070pww1.txt
-new file mode 100644
-index 0000000..211c226
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/hannstar,hsd070pww1.txt
-@@ -0,0 +1,7 @@
-+HannStar Display Corp. HSD070PWW1 7.0" WXGA TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "hannstar,hsd070pww1"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 4ce1db0..ddd651d 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -518,6 +518,28 @@ static const struct panel_desc foxlink_fl500wvr00_a0t = {
- 	},
- };
- 
-+static const struct drm_display_mode hannstar_hsd070pww1_mode = {
-+	.clock = 71100,
-+	.hdisplay = 1280,
-+	.hsync_start = 1280 + 0,
-+	.hsync_end = 1280 + 0 + 160,
-+	.htotal = 1280 + 0 + 160 + 0,
-+	.vdisplay = 800,
-+	.vsync_start = 800 + 0,
-+	.vsync_end = 800 + 0 + 23,
-+	.vtotal = 800 + 0 + 23 + 0,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc hannstar_hsd070pww1 = {
-+	.modes = &hannstar_hsd070pww1_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 151,
-+		.height = 94,
-+	},
-+};
-+
- static const struct drm_display_mode innolux_n116bge_mode = {
- 	.clock = 71000,
- 	.hdisplay = 1366,
-@@ -640,6 +662,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "foxlink,fl500wvr00-a0t",
- 		.data = &foxlink_fl500wvr00_a0t,
- 	}, {
-+		.compatible = "hannstar,hsd070pww1",
-+		.data = &hannstar_hsd070pww1,
-+	}, {
- 		.compatible = "innolux,n116bge",
- 		.data = &innolux_n116bge,
- 	}, {
--- 
-2.1.0.rc1
+> [adding Rob, Mark, Arnd, Thierry and Hiroshi]
+>
+> On Wed, Aug 13, 2014 at 01:51:37AM +0100, Mitchel Humpherys wrote:
+>> Generic IOMMU device tree bindings were recently added in
+>> ["devicetree: Add generic IOMMU device tree bindings"]. Implement the
+>> bindings in the ARM SMMU driver.
+>> 
+>> See Documentation/devicetree/bindings/iommu/iommu.txt for the bindings
+>> themselves.
+>
+> Could you look at moving the parsing code into a separate file please (maybe
+> under lib/ ?). That way, other IOMMUs can use the same binding without the
+> boilerplate having to be rewritten each time.
+>
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 63c6707fad..22e25f3172 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -538,25 +538,32 @@ static int insert_smmu_master(struct arm_smmu_device *smmu,
+>>  	return 0;
+>>  }
+>>  
+>> +struct iommus_entry {
+>> +	struct list_head list;
+>> +	struct device_node *node;
+>> +	u16 streamids[MAX_MASTER_STREAMIDS];
+>> +	int num_sids;
+>> +};
+>> +
+>>  static int register_smmu_master(struct arm_smmu_device *smmu,
+>> -				struct device *dev,
+>> -				struct of_phandle_args *masterspec)
+>> +				struct iommus_entry *entry)
+>>  {
+>>  	int i;
+>>  	struct arm_smmu_master *master;
+>> +	struct device *dev = smmu->dev;
+>>  
+>> -	master = find_smmu_master(smmu, masterspec->np);
+>> +	master = find_smmu_master(smmu, entry->node);
+>>  	if (master) {
+>>  		dev_err(dev,
+>>  			"rejecting multiple registrations for master device %s\n",
+>> -			masterspec->np->name);
+>> +			entry->node->name);
+>>  		return -EBUSY;
+>>  	}
+>>  
+>> -	if (masterspec->args_count > MAX_MASTER_STREAMIDS) {
+>> +	if (entry->num_sids > MAX_MASTER_STREAMIDS) {
+>>  		dev_err(dev,
+>>  			"reached maximum number (%d) of stream IDs for master device %s\n",
+>> -			MAX_MASTER_STREAMIDS, masterspec->np->name);
+>> +			MAX_MASTER_STREAMIDS, entry->node->name);
+>>  		return -ENOSPC;
+>>  	}
+>>  
+>> @@ -564,15 +571,58 @@ static int register_smmu_master(struct arm_smmu_device *smmu,
+>>  	if (!master)
+>>  		return -ENOMEM;
+>>  
+>> -	master->of_node			= masterspec->np;
+>> -	master->cfg.num_streamids	= masterspec->args_count;
+>> +	master->of_node			= entry->node;
+>> +	master->cfg.num_streamids	= entry->num_sids;
+>>  
+>>  	for (i = 0; i < master->cfg.num_streamids; ++i)
+>> -		master->cfg.streamids[i] = masterspec->args[i];
+>> +		master->cfg.streamids[i] = entry->streamids[i];
+>>  
+>>  	return insert_smmu_master(smmu, master);
+>>  }
+>>  
+>> +static int arm_smmu_parse_iommus_properties(struct arm_smmu_device *smmu,
+>> +					int *num_masters)
+>> +{
+>> +	struct of_phandle_args iommuspec;
+>> +	struct device_node *dn;
+>> +
+>> +	for_each_node_with_property(dn, "iommus") {
+>> +		int arg_ind = 0;
+>> +		struct iommus_entry *entry, *n;
+>> +		LIST_HEAD(iommus);
+
+You may want to use the macro, "of_property_for_each_phandle_with_args()"
+to parse "iommus=".
+
+  https://patchwork.ozlabs.org/patch/354073/
+
+>> +
+>> +		while (!of_parse_phandle_with_args(dn, "iommus", "#iommu-cells",
+>> +							arg_ind, &iommuspec)) {
+>
+> We need to check that the phandle does indeed point at one of our SMMUs
+> here, in case we have a system with multiple IOMMU types, all using the
+> generic binding.
+>
+>> +			int i;
+>> +
+>> +			list_for_each_entry(entry, &iommus, list)
+>> +				if (entry->node == dn)
+>> +					break;
+>
+> Oh, yuck, this is really nasty to parse...
+>
+>> +			if (&entry->list == &iommus) {
+>
+> Where is entry initialised the first time around?
+>
+>> +				entry = devm_kzalloc(smmu->dev, sizeof(*entry),
+>> +						GFP_KERNEL);
+>> +				if (!entry)
+>> +					return -ENOMEM;
+>
+> You need to of_node_put the guys you've got back from the phandle parsing
+> code.
+>
+>> +				entry->node = dn;
+>> +				list_add(&entry->list, &iommus);
+>> +			}
+>> +			entry->num_sids = iommuspec.args_count;
+>> +			for (i = 0; i < entry->num_sids; ++i)
+>> +				entry->streamids[i] = iommuspec.args[i];
+>> +			arg_ind++;
+>
+> Isn't this defined by #iommu-cells?
+>
+>> +		}
+>> +
+>> +		list_for_each_entry_safe(entry, n, &iommus, list) {
+>
+> Why the _safe variant? This is a local list, right?
+>
+> Will
