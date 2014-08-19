@@ -1,156 +1,50 @@
-From: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: Add sdio0 and sdio1 to the rk3288
-Date: Tue, 19 Aug 2014 16:15:26 +0800
-Message-ID: <1408436126-23390-1-git-send-email-addy.ke@rock-chips.com>
-References: <1408415512-17275-1-git-send-email-addy.ke@rock-chips.com>
+From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH 1/2] i2c: designware: device tree bindings for i2c speed mode
+Date: Tue, 19 Aug 2014 13:34:35 -0500
+Message-ID: <1408473276-10847-1-git-send-email-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408415512-17275-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch requires that <https://patchwork.kernel.org/patch/4701721/>
-land in order to compile.
+From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Add "speed-mode" Device Tree property to select between
+standard and fast i2c mode.  Previously, driver was hardwired
+as fast mode.  Default to fast mode if property is not
+present.
+
+Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
-Changes in v2:
-- repost patch to match what's in Heiko's "wip/v3.18-next/dts" tree
-  for the other dwmmc controllers
-- add "cd" and "int" line, suggested by Doug Anderson
-- fix up sdio1 configuration error
+ .../devicetree/bindings/i2c/i2c-designware.txt     |    3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes in v3:
-- sort sdio0 and sdio1 by pin number, suggested by Doug Anderson
-- add "ro" and "bkpwr" line, suggested by Doug Anderson
-
- arch/arm/boot/dts/rk3288.dtsi | 102 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 36be7bb..12c0297 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -88,6 +88,26 @@
- 		status = "disabled";
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+index 5199b0c..0e4cd21 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+@@ -9,6 +9,8 @@ Required properties :
+ Recommended properties :
+ 
+  - clock-frequency : desired I2C bus clock frequency in Hz.
++ - speed-mode      : 0 = standard (0 - 100Kb/s)
++                   : 1 = fast (<= 400Kb/s) <== default
+ 
+ Optional properties :
+  - i2c-sda-hold-time-ns : should contain the SDA hold time in nanoseconds.
+@@ -29,6 +31,7 @@ Example :
+ 		reg = <0xf0000 0x1000>;
+ 		interrupts = <11>;
+ 		clock-frequency = <400000>;
++		speed-mode = <0>;
  	};
  
-+	sdio0: dwmmc@ff0d0000 {
-+		compatible = "rockchip,rk3288-dw-mshc";
-+		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x100>;
-+		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0xff0d0000 0x4000>;
-+		status = "disabled";
-+	};
-+
-+	sdio1: dwmmc@ff0e0000 {
-+		compatible = "rockchip,rk3288-dw-mshc";
-+		clocks = <&cru HCLK_SDIO1>, <&cru SCLK_SDIO1>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x100>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0xff0e0000 0x4000>;
-+		status = "disabled";
-+	};
-+
- 	emmc: dwmmc@ff0f0000 {
- 		compatible = "rockchip,rk3288-dw-mshc";
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
-@@ -508,6 +528,88 @@
- 			};
- 		};
- 
-+		sdio0 {
-+			sdio0_bus1: sdio0-bus1 {
-+				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_bus4: sdio0-bus4 {
-+				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>,
-+						<4 21 RK_FUNC_1 &pcfg_pull_up>,
-+						<4 22 RK_FUNC_1 &pcfg_pull_up>,
-+						<4 23 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_cmd: sdio0-cmd {
-+				rockchip,pins = <4 24 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_clk: sdio0-clk {
-+				rockchip,pins = <4 25 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			sdio0_cd: sdio0-cd {
-+				rockchip,pins = <4 26 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_ro: sdio0-ro {
-+				rockchip,pins = <4 27 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_pwr: sdio0-pwr {
-+				rockchip,pins = <4 28 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_bkpwr: sdio0-bkpwr {
-+				rockchip,pins = <4 29 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_int: sdio0-int {
-+				rockchip,pins = <4 30 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+		};
-+
-+		sdio1 {
-+			sdio1_bus1: sdio1-bus1 {
-+				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_bus4: sdio1-bus4 {
-+				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>,
-+						<3 25 RK_FUNC_4 &pcfg_pull_up>,
-+						<3 26 RK_FUNC_4 &pcfg_pull_up>,
-+						<3 27 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_cd: sdio1-cd {
-+				rockchip,pins = <3 28 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_ro: sdio1-ro {
-+				rockchip,pins = <3 29 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_bkpwr: sdio1-bkpwr {
-+				rockchip,pins = <3 30 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_int: sdio1-int {
-+				rockchip,pins = <3 31 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_cmd: sdio1-cmd {
-+				rockchip,pins = <4 6 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_clk: sdio1-clk {
-+				rockchip,pins = <4 7 RK_FUNC_4 &pcfg_pull_none>;
-+			};
-+
-+			sdio1_pwr: sdio1-pwr {
-+				rockchip,pins = <4 9 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+		};
-+
- 		emmc {
- 			emmc_clk: emmc-clk {
- 				rockchip,pins = <3 18 RK_FUNC_2 &pcfg_pull_none>;
+ 	i2c@1120000 {
 -- 
-1.8.3.2
-
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
