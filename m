@@ -1,32 +1,56 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 12/15] cpufreq: tegra: Rename tegra-cpufreq to tegra20-cpufreq
-Date: Tue, 19 Aug 2014 09:17:58 +0530
-Message-ID: <CAKohponqx8hKKXE7dc03h_tZNeEZabX6SWmHh9-RYGy7RzbRfA@mail.gmail.com>
-References: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi>
-	<1408419205-10048-13-git-send-email-tuomas.tynkkynen@iki.fi>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCHv10 3/5] ARM: dts: exynos: unuse the slot-node and deprecate
+ the supports-highspeed for dw-mmc
+Date: Tue, 19 Aug 2014 12:52:47 +0900
+Message-ID: <53F2CA0F.1070800@samsung.com>
+References: <1407397082-32495-1-git-send-email-jh80.chung@samsung.com>
+ <1407397082-32495-4-git-send-email-jh80.chung@samsung.com>
+ <53F1F027.7060609@samsung.com> <53F20955.2050806@suse.de>
+ <53F22FBB.4010801@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1408419205-10048-13-git-send-email-tuomas.tynkkynen@iki.fi>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, Vince Hsu <vinceh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <53F22FBB.4010801@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19 August 2014 09:03, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi> wrote:
-> From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
->
-> The Tegra124 will use a different driver for frequency scaling, so
-> rename the old driver (which handles only Tegra20) appropriately.
->
-> Signed-off-by: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-> ---
-> v3: New patch
-> ---
->  drivers/cpufreq/Kconfig.arm                            | 6 +++---
->  drivers/cpufreq/Makefile                               | 2 +-
->  drivers/cpufreq/{tegra-cpufreq.c => tegra20-cpufreq.c} | 0
->  3 files changed, 4 insertions(+), 4 deletions(-)
->  rename drivers/cpufreq/{tegra-cpufreq.c => tegra20-cpufreq.c} (100%)
+Hi, Kukjin
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+On 08/19/2014 01:54 AM, Kukjin Kim wrote:
+> On 08/18/14 09:10, Andreas F=E4rber wrote:
+>> Hi Jaehoon,
+>>
+>> Am 18.08.2014 14:23, schrieb Jaehoon Chung:
+>>> Socfpga and Rockchip were queued into each SoC tree.
+>>> I want to know whether this patch is queued or not into Samsung-Soc=
+ tree.
+>>> Do you have any other plan for this patch?
+>>
+>> It isn't applied in his tree:
+>>
+>> http://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/
+>>
+>> In fact Kukjin has not applied any patches for 3 weeks now, which li=
+kely
+>> means he's on vacation. I am hoping he will review this and the othe=
+r
+>> pending conflicting patches to decide on a merge order and fix any
+>> trivial conflicts himself. ;)
+>>
+> Oh, I thought it has been queued in previous merge window with my ack=
+=2E
+>=20
+> OK, I've applied this in my tree for 3.18.
+
+Thanks!
+
+Best Regards,
+Jaehoon Chung
+>=20
+> Thanks,
+> Kukjin
+>=20
+
