@@ -1,113 +1,127 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/4] pwm: rockchip: Allow polarity invert on rk3288
-Date: Tue, 19 Aug 2014 09:18:58 +0200
-Message-ID: <20140819071857.GD12859@ulmo>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: Enable pwm backlight on rk3288-EVB
+Date: Tue, 19 Aug 2014 09:22:21 +0200
+Message-ID: <20140819072220.GE12859@ulmo>
 References: <1408381749-14156-1-git-send-email-dianders@chromium.org>
- <1408381749-14156-3-git-send-email-dianders@chromium.org>
+ <1408381749-14156-5-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1sNVjLsmu1MXqwQ/"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="EXKGNeO8l0xGFBjy"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1408381749-14156-3-git-send-email-dianders@chromium.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1408381749-14156-5-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---1sNVjLsmu1MXqwQ/
+--EXKGNeO8l0xGFBjy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 18, 2014 at 10:09:07AM -0700, Doug Anderson wrote:
-[...]
-> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
->  #define PWM_LP_DISABLE		(0 << 8)
+On Mon, Aug 18, 2014 at 10:09:09AM -0700, Doug Anderson wrote:
+> The pwm0 is the PWM associated with the LCD backlight.  Enable it.
+
+In the subject, s/pwm/PWM/.
+
+>=20
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3288-evb.dtsi | 53 +++++++++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 53 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288=
+-evb.dtsi
+> index 2964370..242e1a9 100644
+> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+> @@ -10,6 +10,7 @@
+>   * GNU General Public License for more details.
+>   */
 > =20
-> @@ -32,6 +34,7 @@ struct rockchip_pwm_chip {
->  	struct pwm_chip chip;
->  	struct clk *clk;
->  	const struct rockchip_pwm_data *data;
-> +	enum pwm_polarity polarity;
-
-Why do you need this field? struct pwm_device already has a copy of it.
-
-> @@ -74,10 +78,14 @@ static void rockchip_pwm_set_enable_v2(struct pwm_chi=
-p *chip, bool enable)
->  {
->  	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
->  	u32 enable_conf =3D PWM_OUTPUT_LEFT | PWM_LP_DISABLE | PWM_ENABLE |
-> -			  PWM_CONTINUOUS | PWM_DUTY_POSITIVE |
-> -			  PWM_INACTIVE_NEGATIVE;
-> +			  PWM_CONTINUOUS;
->  	u32 val;
+> +#include <dt-bindings/pwm/pwm.h>
+>  #include "rk3288.dtsi"
 > =20
-> +	if (pc->polarity =3D=3D PWM_POLARITY_INVERSED)
-> +		enable_conf |=3D PWM_DUTY_NEGATIVE | PWM_INACTIVE_POSITIVE;
-> +	else
-> +		enable_conf |=3D PWM_DUTY_POSITIVE | PWM_INACTIVE_NEGATIVE;
+>  / {
+> @@ -17,6 +18,48 @@
+>  		reg =3D <0x0 0x80000000>;
+>  	};
+> =20
+> +        backlight {
 
-I have a feeling you're going to answer the above question with: "Because
-it's needed here". If so, my reply would be: "Then this function should
-take a struct pwm_device instead of struct pwm_chip."
+Indentation seems to be off here.
 
-> @@ -173,6 +195,7 @@ static const struct rockchip_pwm_data pwm_data_v2 =3D=
- {
->  		.ctrl =3D 0x0c,
->  	},
->  	.prescaler =3D 1,
-> +	.has_invert =3D 1,
+> +		compatible =3D "pwm-backlight";
+> +		brightness-levels =3D <
+> +			  0   1   2   3   4   5   6   7
+> +			  8   9  10  11  12  13  14  15
+> +			 16  17  18  19  20  21  22  23
+> +			 24  25  26  27  28  29  30  31
+> +			 32  33  34  35  36  37  38  39
+> +			 40  41  42  43  44  45  46  47
+> +			 48  49  50  51  52  53  54  55
+> +			 56  57  58  59  60  61  62  63
+> +			 64  65  66  67  68  69  70  71
+> +			 72  73  74  75  76  77  78  79
+> +			 80  81  82  83  84  85  86  87
+> +			 88  89  90  91  92  93  94  95
+> +			 96  97  98  99 100 101 102 103
+> +			104 105 106 107 108 109 110 111
+> +			112 113 114 115 116 117 118 119
+> +			120 121 122 123 124 125 126 127
+> +			128 129 130 131 132 133 134 135
+> +			136 137 138 139 140 141 142 143
+> +			144 145 146 147 148 149 150 151
+> +			152 153 154 155 156 157 158 159
+> +			160 161 162 163 164 165 166 167
+> +			168 169 170 171 172 173 174 175
+> +			176 177 178 179 180 181 182 183
+> +			184 185 186 187 188 189 190 191
+> +			192 193 194 195 196 197 198 199
+> +			200 201 202 203 204 205 206 207
+> +			208 209 210 211 212 213 214 215
+> +			216 217 218 219 220 221 222 223
+> +			224 225 226 227 228 229 230 231
+> +			232 233 234 235 236 237 238 239
+> +			240 241 242 243 244 245 246 247
+> +			248 249 250 251 252 253 254 255>;
+> +		default-brightness-level =3D <128>;
+> +		enable-gpios =3D <&gpio7 2 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&bl_en>;
+> +		pwms =3D <&pwm0 0 1000000 PWM_POLARITY_INVERTED>;
+> +        };
 
-Since has_invert is a boolean, the proper value here would be "true".
-
-> @@ -228,6 +252,10 @@ static int rockchip_pwm_probe(struct platform_device=
- *pdev)
->  	pc->data =3D id->data;
->  	pc->chip.dev =3D &pdev->dev;
->  	pc->chip.ops =3D &rockchip_pwm_ops;
-> +	if (pc->data->has_invert) {
-> +		pc->chip.of_xlate =3D of_pwm_xlate_with_flags;
-> +		pc->chip.of_pwm_n_cells =3D 3;
-> +	}
->  	pc->chip.base =3D -1;
->  	pc->chip.npwm =3D 1;
-
-I suggest to rewrite the above as follows for readability:
-
- 	pc->data =3D id->data;
- 	pc->chip.dev =3D &pdev->dev;
- 	pc->chip.ops =3D &rockchip_pwm_ops;
- 	pc->chip.base =3D -1;
- 	pc->chip.npwm =3D 1;
-+
-+	if (pc->data->has_invert) {
-+		pc->chip.of_xlate =3D of_pwm_xlate_with_flags;
-+		pc->chip.of_pwm_n_cells =3D 3;
-+	}
+And here.
 
 Thierry
 
---1sNVjLsmu1MXqwQ/
+--EXKGNeO8l0xGFBjy
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT8vphAAoJEN0jrNd/PrOhNqAQAKjhdIO0mRKBlcuqjV+55gGa
-ZjSeGG/zLHhxCjn9OP9HEqEnPqT8q46beRO7LfpewQLqX7avnirGHHcx4bTV7Myf
-RyvPqtwEIwz7Z4/NCrbqI/EDTDnyue+wEzkIdsvOa4YRjqWHSA5rI1BLjo2lFYAo
-l1ism4Bl3XDnr1PhTWsZztOkivCTUkMkGuLaLoDEIzDD7Dw5ul+U4mQP7POACFfm
-NObvxsFn3yUFexeAIB1pib7hWL2NI8oOPUfnBiLg1hdRR9vVFeDbqQoM5yGBpKJU
-yGipps4fyxsoqpfTsD9k4WNwcfY+34jF6vTfUSHkUv2qSOBp7viWWcXLUKsK7Izx
-VWz6G3cWrpPK9gQO/w1awRVVEhbIb1CsK889YIl9Ak9WQFSvYSxYsqtSLQAJloEW
-j+zxg8Gzsrib2nfqzUsrqjRYqoY1oS89u4/xOYqNvECkEeMCDQhLvGl+R1XdCoYK
-p3aXb16F+GdZpmmlrwP0CJNUr4wRKWqnMjqDjC0b7VbqHdlSWDpH5Xu0OPNv8XSB
-HYiDMx94tTc2KWNLIQbEqnM1Txjj+EPnJbiBuwVDiHO/f2yvqyVZNB5RNbUaEUN9
-ATpZg3jE0j2B9iUmkGew95S8DQmT8lTpd+6J+JgkPpijjKTwfGMMHNxMJvdTq0Zx
-sgyZA5HIusA8oEMXFQ4L
-=FxyI
+iQIcBAEBAgAGBQJT8vssAAoJEN0jrNd/PrOhov4P/iRvUow7yTTU4K+H6PWihLGd
+jeQLt5m11oFJJIZ1/e4rhIZEErfUSqxjF37tqXp9ro/NhNgd7LF7FuEowZguRLfP
+UrnB/xcgpJ8zVHhzIVcjTzaaxvHDBPvZzMm7BMBQeh8f/Hmg9qnMpY5Z/yP/waAs
+TjZ7Gj3uvjZozs9AX6QzLqYF56aUaoxSW8DdpFLTn0ceWQokOBsMBVw6U6emndH0
+qb/wujfNYErE1beAsl96U39PAd5cH+QMItBU54saCMCFbQEiBoNU4jORv1SHTQSk
+7ZxdlVB+eK4GS4cU8ZvDaIHt2dnhHN/K8BdLQjm0nNbKjEoMbe/V3P+ZjI8op2Zy
+fCJIqZOWEenYT+bmFrTP33jzddr64msW4y/mqlamIgO9ngHs070MCVC3/rJbIkHw
+RrH7pZ1p2Gw0Jp7MYQm+Ad6FqGEb7vL+KBclxznPaJ/arjSF2HgzlHSrIvSVxZry
+kJXWdgA0mlMb26qc3OgXJutPFTJdsxF/kl9CIxMlWaqJJlD/aglrHz1JHPyd21zL
+fY6gW34Io1kVnR19IoHKARCsm8+i/aucyAzLJOQP3Tb2PhfhUdVGddNtgzMcEoqg
+p4/KuDMC6BzIc1WNH55ipmirIvCC8CWfdW/rLqIu6VQ4QjQHUDPwfhVp4Un1XTeQ
+iI/4KJvsDs79WdDjg4p5
+=VMuO
 -----END PGP SIGNATURE-----
 
---1sNVjLsmu1MXqwQ/--
+--EXKGNeO8l0xGFBjy--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
