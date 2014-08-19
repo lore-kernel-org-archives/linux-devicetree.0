@@ -1,62 +1,76 @@
-From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
-Subject: Re: [PATCH v3 03/15] clk: tegra: Add closed loop support for the
- DFLL
-Date: Tue, 19 Aug 2014 22:52:59 +0300
-Message-ID: <53F3AB1B.70703@nvidia.com>
-References: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi> <1408419205-10048-4-git-send-email-tuomas.tynkkynen@iki.fi> <53F2D454.2020000@nvidia.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v6] input: drv260x: Add TI drv260x haptics driver
+Date: Tue, 19 Aug 2014 13:07:48 -0700
+Message-ID: <20140819200748.GB3626@core.coreip.homeip.net>
+References: <1408117670-19750-1-git-send-email-dmurphy@ti.com>
+ <20140819192401.GA32080@core.coreip.homeip.net>
+ <00FC9A978A94B7418C33AFAE8A35ED49DEC1EF@DFLE09.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <53F2D454.2020000@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Vince Hsu <vinceh@nvidia.com>, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, Paul Walmsley <pwalmsley@nvidia.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <00FC9A978A94B7418C33AFAE8A35ED49DEC1EF@DFLE09.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Murphy, Dan" <dmurphy@ti.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/08/14 07:36, Vince Hsu wrote:
-> Hi,
+On Tue, Aug 19, 2014 at 07:35:06PM +0000, Murphy, Dan wrote:
+> Dmitry
 > 
-> On 08/19/2014 11:33 AM, Tuomas Tynkkynen wrote:
-[...]
->> +    dfll_writel(td, val, DFLL_OUTPUT_CFG);
->> +    dfll_wmb(td);
-> Sorry that I forgot to mention this in v2's comment. Could you squash the change below in this patch? And actually it's pretty easy to misuse the dfll read/write/wmb functions. We might want to have some generic functions for these, and let the generic functions handle the offset to different register blocks.
+> On 08/19/2014 02:24 PM, Dmitry Torokhov wrote:
+> > Hi Dan,
+> > 
+> > On Fri, Aug 15, 2014 at 10:47:50AM -0500, Dan Murphy wrote:
+> >> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> >> index 2ff4425..99f6762 100644
+> >> --- a/drivers/input/misc/Kconfig
+> >> +++ b/drivers/input/misc/Kconfig
+> >> @@ -676,4 +676,13 @@ config INPUT_SOC_BUTTON_ARRAY
+> >>  	  To compile this driver as a module, choose M here: the
+> >>  	  module will be called soc_button_array.
+> >>  
+> >> +config INPUT_DRV260X_HAPTICS
+> >> +	tristate "TI DRV260X haptics support"
+> >> +	depends on INPUT && I2C
+> > 
+> > This also needs "select REGMAP_I2C"
+> > 
 > 
+> This one is OK
+> 
+> >> +	help
+> >> +	  Say Y to enable support for the TI DRV260X haptics driver.
+> >> +
+> >> +	  To compile this driver as a module, choose M here: the
+> >> +	  module will be called drv260x-haptics.
+> >> +
+> > 
+> > [...]
+> > 
+> >> +#ifndef _LINUX_DRV260X_PDATA_H
+> >> +#define _LINUX_DRV260X_PDATA_H
+> >> +
+> >> +struct drv260x_platform_data {
+> >> +	int enable_gpio;
+> > 
+> > I do not see this used anywhere.
+> 
+> But this is actually used here
+> 
+> haptics->enable_gpio = devm_gpiod_get(&client->dev, "enable");
+> 
+> for the non-dt case
 
-Indeed, having single readl/writel and handling the different register areas there
-sounds much better, I'll implement that.
+"haptics" is not instance of drv260x_platform_data but drv260x_data which
+defines:
 
-[...]
-> diff --git a/drivers/clk/tegra/clk-dfll.c b/drivers/clk/tegra/clk-dfll.c
-> index 9b3eded6b880..71e4b256ea0d 100644
-> --- a/drivers/clk/tegra/clk-dfll.c
-> +++ b/drivers/clk/tegra/clk-dfll.c
-> @@ -645,7 +645,7 @@ static void dfll_init_out_if(struct tegra_dfll *td)
->         val = (td->lut_safe << DFLL_OUTPUT_CFG_SAFE_SHIFT) |
->                 (td->lut_max << DFLL_OUTPUT_CFG_MAX_SHIFT) |
->                 (td->lut_min << DFLL_OUTPUT_CFG_MIN_SHIFT);
-> -       dfll_writel(td, val, DFLL_OUTPUT_CFG);
-> +       dfll_i2c_writel(td, val, DFLL_OUTPUT_CFG);
-> -        dfll_wmb(td);
-> +        dfll_i2c_wmb(td);
-> 
->         dfll_writel(td, 0, DFLL_OUTPUT_FORCE);
-> @@ -1146,7 +1146,8 @@ static int attr_registers_show(struct seq_file *s, void *data)
->         seq_puts(s, "CONTROL REGISTERS:\n");
->         for (offs = 0; offs <= DFLL_MONITOR_DATA; offs += 4)
->                 seq_printf(s, "[0x%02x] = 0x%08x\n", offs,
-> -                          dfll_readl(td, offs));
-> +                               offs == DFLL_OUTPUT_CFG ? dfll_i2c_readl(td, offs) :
-> +                                       dfll_readl(td, offs));
-> 
->         seq_puts(s, "\nI2C and INTR REGISTERS:\n");
->         for (offs = DFLL_I2C_CFG; offs <= DFLL_I2C_STS; offs += 4)
-> 
-> 
-> 
-> Thanks,
-> Vince
+struct drv260x_data {
+	...
+	struct gpio_desc *enable_gpio;
+	...
+
+That one I kept.
 
 -- 
-nvpublic
+Dmitry
