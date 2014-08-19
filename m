@@ -1,162 +1,68 @@
-From: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4] ARM: dts: Add sdio0 and sdio1 to the rk3288
-Date: Tue, 19 Aug 2014 18:21:08 +0800
-Message-ID: <1408443668-23933-1-git-send-email-addy.ke@rock-chips.com>
-References: <1408436126-23390-1-git-send-email-addy.ke@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408436126-23390-1-git-send-email-addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: "Murphy, Dan" <dmurphy@ti.com>
+Subject: Re: [PATCH v6] input: drv260x: Add TI drv260x haptics driver
+Date: Tue, 19 Aug 2014 20:55:14 +0000
+Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49DEC525@DFLE09.ent.ti.com>
+References: <1408117670-19750-1-git-send-email-dmurphy@ti.com>
+ <20140819192401.GA32080@core.coreip.homeip.net>
+ <00FC9A978A94B7418C33AFAE8A35ED49DEC1EF@DFLE09.ent.ti.com>
+ <20140819200748.GB3626@core.coreip.homeip.net>
+ <00FC9A978A94B7418C33AFAE8A35ED49DEC3E6@DFLE09.ent.ti.com>
+ <20140819202438.GD3626@core.coreip.homeip.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch requires that <https://patchwork.kernel.org/patch/4701721/>
-land in order to compile.
+Dmitry
 
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-Changes in v2:
-- repost patch to match what's in Heiko's "wip/v3.18-next/dts" tree
-  for the other dwmmc controllers
-- add "cd" and "int" line, suggested by Doug Anderson
-- fix up sdio1 configuration error
+On 08/19/2014 03:24 PM, Dmitry Torokhov wrote:
+> On Tue, Aug 19, 2014 at 08:13:32PM +0000, Murphy, Dan wrote:
+>> On 08/19/2014 03:07 PM, Dmitry Torokhov wrote:
+>>> On Tue, Aug 19, 2014 at 07:35:06PM +0000, Murphy, Dan wrote:
+>>>> Dmitry
+>>>>
 
-Changes in v3:
-- sort sdio0 and sdio1 by pin number, suggested by Doug Anderson
-- add "ro" and "bkpwr" line, suggested by Doug Anderson
+<snip>
 
-Changes in v4:
-- change "sdiox_ro" to "sdiox_wp", suggested by Doug Anderson
+>>> 	...
+>>>
+>>> That one I kept.
+>>>
+>>
+>> Yes that is correct but the enable_gpio for non-dt enabled devices this enable_gpio
+>> needs to come from the platform data structure.  Without the enable gpio in the platform data
+>> structure there is no way for non-dt enabled devices to set the gpio value.
+> 
+> What else uses the platform data structure? You are accessing gpio by name, not
+> by number, in the driver so I am not sure how non-dt case will use u32 defined
+> in platform data.
+> 
+>>
+>> The haptics instance just stores the gpio descriptor returned from this call.
+> 
+> Right.
+> 
+>>
+>> The devm_gpiod looks at the platform data is CONFIG_OF is not set.
+> 
+> Umm, how? You do not pass it anywhere...
 
- arch/arm/boot/dts/rk3288.dtsi | 102 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
+OK I drop my argument after drilling through gpio code.
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 36be7bb..1fcc20e 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -88,6 +88,26 @@
- 		status = "disabled";
- 	};
- 
-+	sdio0: dwmmc@ff0d0000 {
-+		compatible = "rockchip,rk3288-dw-mshc";
-+		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x100>;
-+		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0xff0d0000 0x4000>;
-+		status = "disabled";
-+	};
-+
-+	sdio1: dwmmc@ff0e0000 {
-+		compatible = "rockchip,rk3288-dw-mshc";
-+		clocks = <&cru HCLK_SDIO1>, <&cru SCLK_SDIO1>;
-+		clock-names = "biu", "ciu";
-+		fifo-depth = <0x100>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0xff0e0000 0x4000>;
-+		status = "disabled";
-+	};
-+
- 	emmc: dwmmc@ff0f0000 {
- 		compatible = "rockchip,rk3288-dw-mshc";
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
-@@ -508,6 +528,88 @@
- 			};
- 		};
- 
-+		sdio0 {
-+			sdio0_bus1: sdio0-bus1 {
-+				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_bus4: sdio0-bus4 {
-+				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>,
-+						<4 21 RK_FUNC_1 &pcfg_pull_up>,
-+						<4 22 RK_FUNC_1 &pcfg_pull_up>,
-+						<4 23 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_cmd: sdio0-cmd {
-+				rockchip,pins = <4 24 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_clk: sdio0-clk {
-+				rockchip,pins = <4 25 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+
-+			sdio0_cd: sdio0-cd {
-+				rockchip,pins = <4 26 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_wp: sdio0-wp {
-+				rockchip,pins = <4 27 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_pwr: sdio0-pwr {
-+				rockchip,pins = <4 28 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_bkpwr: sdio0-bkpwr {
-+				rockchip,pins = <4 29 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+
-+			sdio0_int: sdio0-int {
-+				rockchip,pins = <4 30 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+		};
-+
-+		sdio1 {
-+			sdio1_bus1: sdio1-bus1 {
-+				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_bus4: sdio1-bus4 {
-+				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>,
-+						<3 25 RK_FUNC_4 &pcfg_pull_up>,
-+						<3 26 RK_FUNC_4 &pcfg_pull_up>,
-+						<3 27 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_cd: sdio1-cd {
-+				rockchip,pins = <3 28 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_wp: sdio1-wp {
-+				rockchip,pins = <3 29 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_bkpwr: sdio1-bkpwr {
-+				rockchip,pins = <3 30 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_int: sdio1-int {
-+				rockchip,pins = <3 31 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_cmd: sdio1-cmd {
-+				rockchip,pins = <4 6 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+
-+			sdio1_clk: sdio1-clk {
-+				rockchip,pins = <4 7 RK_FUNC_4 &pcfg_pull_none>;
-+			};
-+
-+			sdio1_pwr: sdio1-pwr {
-+				rockchip,pins = <4 9 RK_FUNC_4 &pcfg_pull_up>;
-+			};
-+		};
-+
- 		emmc {
- 			emmc_clk: emmc-clk {
- 				rockchip,pins = <3 18 RK_FUNC_2 &pcfg_pull_none>;
+Removal of this is OK.
+
+Thanks
+
+> 
+> Thanks.
+> 
+
+
 -- 
-1.8.3.2
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------
+Dan Murphy
