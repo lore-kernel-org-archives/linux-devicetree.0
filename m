@@ -1,89 +1,58 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 6/6] iommu/arm-smmu: add .domain_{set,get}_attr for
-	coherent walk control
-Date: Tue, 19 Aug 2014 13:48:07 +0100
-Message-ID: <20140819124807.GM23128@arm.com>
-References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
-	<1407891099-24641-7-git-send-email-mitchelh@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1407891099-24641-7-git-send-email-mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+Subject: [PATCH 2/6] ARM: shmobile: r8a7790: Add JPU clock dt and CPG define.
+Date: Tue, 19 Aug 2014 16:50:49 +0400
+Message-ID: <1408452653-14067-3-git-send-email-mikhail.ulyanov@cogentembedded.com>
+References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: m.chehab@samsung.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com
+Cc: laurent.pinchart@ideasonboard.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2014 at 01:51:39AM +0100, Mitchel Humpherys wrote:
-> Under certain conditions coherent hardware translation table walks can
-> result in degraded performance. Add a new domain attribute to
-> disable/enable this feature in generic code along with the domain
-> attribute setter and getter to handle it in the ARM SMMU driver.
+Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+---
+ arch/arm/boot/dts/r8a7790.dtsi            | 6 +++---
+ include/dt-bindings/clock/r8a7790-clock.h | 1 +
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Again, it would be nice to have some information about these cases and the
-performance issues that you are seeing.
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index e2e40e5..61fd193 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -868,17 +868,17 @@
+ 		mstp1_clks: mstp1_clks@e6150134 {
+ 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0 0xe6150134 0 4>, <0 0xe6150038 0 4>;
+-			clocks = <&p_clk>, <&p_clk>, <&p_clk>, <&rclk_clk>,
++			clocks = <&m2_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&rclk_clk>,
+ 				 <&cp_clk>, <&zs_clk>, <&zs_clk>, <&zs_clk>,
+ 				 <&zs_clk>;
+ 			#clock-cells = <1>;
+ 			renesas,clock-indices = <
+-				R8A7790_CLK_TMU1 R8A7790_CLK_TMU3 R8A7790_CLK_TMU2
++				R8A7790_CLK_JPU R8A7790_CLK_TMU1 R8A7790_CLK_TMU3 R8A7790_CLK_TMU2
+ 				R8A7790_CLK_CMT0 R8A7790_CLK_TMU0 R8A7790_CLK_VSP1_DU1
+ 				R8A7790_CLK_VSP1_DU0 R8A7790_CLK_VSP1_R R8A7790_CLK_VSP1_S
+ 			>;
+ 			clock-output-names =
+-				"tmu1", "tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
++				"jpu", "tmu1", "tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
+ 				"vsp1-du0", "vsp1-rt", "vsp1-sy";
+ 		};
+ 		mstp2_clks: mstp2_clks@e6150138 {
+diff --git a/include/dt-bindings/clock/r8a7790-clock.h b/include/dt-bindings/clock/r8a7790-clock.h
+index f929a79e..8ea7ab0 100644
+--- a/include/dt-bindings/clock/r8a7790-clock.h
++++ b/include/dt-bindings/clock/r8a7790-clock.h
+@@ -26,6 +26,7 @@
+ #define R8A7790_CLK_MSIOF0		0
+ 
+ /* MSTP1 */
++#define R8A7790_CLK_JPU		6
+ #define R8A7790_CLK_TMU1		11
+ #define R8A7790_CLK_TMU3		21
+ #define R8A7790_CLK_TMU2		22
+-- 
+2.1.0.rc1
 
-> @@ -1908,11 +1917,15 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->  				    enum iommu_attr attr, void *data)
->  {
->  	struct arm_smmu_domain *smmu_domain = domain->priv;
-> +	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
->  
->  	switch (attr) {
->  	case DOMAIN_ATTR_NESTING:
->  		*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
->  		return 0;
-> +	case DOMAIN_ATTR_COHERENT_HTW_DISABLE:
-> +		*((bool *)data) = cfg->htw_disable;
-> +		return 0;
-
-I think I'd be more comfortable using int instead of bool for this, as it
-could well end up in the user ABI if vfio decides to make use of it. While
-we're here, let's also add an attributes bitmap to the arm_smmu_domain
-instead of having a bool in the arm_smmu_cfg.
-
->  	default:
->  		return -ENODEV;
->  	}
-> @@ -1922,6 +1935,7 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
->  				    enum iommu_attr attr, void *data)
->  {
->  	struct arm_smmu_domain *smmu_domain = domain->priv;
-> +	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
->  
->  	switch (attr) {
->  	case DOMAIN_ATTR_NESTING:
-> @@ -1933,6 +1947,9 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
->  			smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
->  
->  		return 0;
-> +	case DOMAIN_ATTR_COHERENT_HTW_DISABLE:
-> +		cfg->htw_disable = *((bool *)data);
-> +		return 0;
->  	default:
->  		return -ENODEV;
->  	}
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 0550286df4..8a6449857a 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -81,6 +81,7 @@ enum iommu_attr {
->  	DOMAIN_ATTR_FSL_PAMU_ENABLE,
->  	DOMAIN_ATTR_FSL_PAMUV1,
->  	DOMAIN_ATTR_NESTING,	/* two stages of translation */
-> +	DOMAIN_ATTR_COHERENT_HTW_DISABLE,
-
-I wonder whether we should make this ARM-specific. Can you take a quick look
-to see if any of the other IOMMUs can potentially benefit from this?
-
-Will
