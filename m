@@ -1,7 +1,7 @@
 From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/3] Document: fsl,spdif: Adjust the document making it read more comfortably.
-Date: Tue, 19 Aug 2014 12:38:56 +0800
-Message-ID: <1408423138-19880-2-git-send-email-Li.Xiubo@freescale.com>
+Subject: [PATCH 3/3] Document: fsl-sai: Adjust the document making it read more comfortably.
+Date: Tue, 19 Aug 2014 12:38:58 +0800
+Message-ID: <1408423138-19880-4-git-send-email-Li.Xiubo@freescale.com>
 References: <1408423138-19880-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -15,108 +15,85 @@ List-Id: devicetree@vger.kernel.org
 Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/sound/fsl,spdif.txt        | 82 +++++++++++-----------
- 1 file changed, 41 insertions(+), 41 deletions(-)
+ .../devicetree/bindings/sound/fsl-sai.txt          | 54 ++++++++++++----------
+ 1 file changed, 29 insertions(+), 25 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-index 3e9e82c8..d37bfc2 100644
---- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-@@ -6,54 +6,54 @@ a fibre cable.
+diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+index e25ef38..cd2930e 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+@@ -7,30 +7,34 @@ codec/DSP interfaces.
+ 
  
  Required properties:
- 
--  - compatible : Compatible list, must contain "fsl,imx35-spdif".
-+- compatible:	Compatible list, must contain "fsl,imx35-spdif".
- 
--  - reg : Offset and length of the register set for the device.
-+- reg:		Offset and length of the register set for the device.
- 
--  - interrupts : Contains the spdif interrupt.
-+- interrupts:	Contains the spdif interrupt.
- 
--  - dmas : Generic dma devicetree binding as described in
+-- compatible: Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
+-- reg: Offset and length of the register set for the device.
+-- clocks: Must contain an entry for each entry in clock-names.
++- compatible:	Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
++- reg: 		Offset and length of the register set for the device.
++- clocks: 	Must contain an entry for each entry in clock-names.
+ - clock-names : Must include the "bus" for register access and "mclk1" "mclk2"
+-  "mclk3" for bit clock and frame clock providing.
+-- dmas : Generic dma devicetree binding as described in
 -  Documentation/devicetree/bindings/dma/dma.txt.
-+- dmas:		Generic dma devicetree binding as described in
+-- dma-names : Two dmas have to be defined, "tx" and "rx".
+-- pinctrl-names: Must contain a "default" entry.
+-- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
+-  See ../pinctrl/pinctrl-bindings.txt for details of the property values.
+-- big-endian: Boolean property, required if all the SAI device registers
+-  are big-endian rather than little-endian.
+-- msb-first: Configures whether the LSB or the MSB is transmitted first for
+-  the fifo data. If this property is absent, the LSB is transmitted first as
+-  default, or the MSB is transmitted first.
+-- fsl,sai-synchronous-rx: This is a boolean property. If present, indicating
+-  that SAI will work in the synchronous mode (sync Tx with Rx) which means
+-  both the transimitter and receiver will send and receive data by following
+-  receiver's bit clocks and frame sync clocks.
+-- fsl,sai-asynchronous: This is a boolean property. If present, indicating
+-  that SAI will work in the asynchronous mode, which means both transimitter
+-  and receiver will send and receive data by following their own bit clocks
+-  and frame sync clocks separately.
++		"mclk3" for bit clock and frame clock providing.
++- dmas : 	Generic dma devicetree binding as described in
 +		Documentation/devicetree/bindings/dma/dma.txt.
++- dma-names :	Two dmas have to be defined, "tx" and "rx".
++- pinctrl-names:Must contain a "default" entry.
++- pinctrl-NNN: 	One property must exist for each entry in pinctrl-names.
++		See ../pinctrl/pinctrl-bindings.txt for details of the property
++		avalues.
++- big-endian: 	Boolean property, required if all the SAI device registers
++		are big-endian rather than little-endian.
++- msb-first: 	Configures whether the LSB or the MSB is transmitted first for
++		the fifo data. If this property is absent, the LSB is transmitted
++		first as default, or the MSB is transmitted first.
++- fsl,sai-synchronous-rx:
++		This is a boolean property. If present, indicating
++		that SAI will work in the synchronous mode (sync Tx with Rx)
++		which means both the transimitter and receiver will send and
++		receive data by following receiver's bit clocks and frame sync
++		clocks.
++- fsl,sai-asynchronous:
++		This is a boolean property. If present, indicating that SAI will
++		work in the asynchronous mode, which means both transimitter and
++		receiver will send and receive data by following their own bit
++		clocks and frame sync clocks separately.
  
--  - dma-names : Two dmas have to be defined, "tx" and "rx".
-+- dma-names:	Two dmas have to be defined, "tx" and "rx".
- 
--  - clocks : Contains an entry for each entry in clock-names.
-+- clocks:	Contains an entry for each entry in clock-names.
- 
--  - clock-names : Includes the following entries:
--	"core"		The core clock of spdif controller
--	"rxtx<0-7>"	Clock source list for tx and rx clock.
--			This clock list should be identical to
--			the source list connecting to the spdif
--			clock mux in "SPDIF Transceiver Clock
--			Diagram" of SoC reference manual. It
--			can also be referred to TxClk_Source
--			bit of register SPDIF_STC.
-+- clock-names:	Includes the following entries:
-+		"core" -- The core clock of spdif controller
-+		"rxtx<0-7>" -- Clock source list for tx and rx clock.
-+		This clock list should be identical to
-+		the source list connecting to the spdif
-+		clock mux in "SPDIF Transceiver Clock
-+		Diagram" of SoC reference manual. It
-+		can also be referred to TxClk_Source
-+		bit of register SPDIF_STC.
- 
--   - big-endian : If this property is absent, the native endian mode will
--   be in use as default, or the big endian mode will be in use for all the
--   device registers.
-+- big-endian:	If this property is absent, the native endian mode will
-+		be in use as default, or the big endian mode will be in
-+		use for all the device registers.
+ Note:
+ - If both fsl,sai-asynchronous and fsl,sai-synchronous-rx are absent, the
+@@ -40,7 +44,7 @@ Note:
+ - fsl,sai-asynchronous and fsl,sai-synchronous-rx are exclusive.
  
  Example:
- 
--spdif: spdif@02004000 {
--	compatible = "fsl,imx35-spdif";
--	reg = <0x02004000 0x4000>;
--	interrupts = <0 52 0x04>;
--	dmas = <&sdma 14 18 0>,
--	       <&sdma 15 18 0>;
--	dma-names = "rx", "tx";
--
--	clocks = <&clks 197>, <&clks 3>,
--	       <&clks 197>, <&clks 107>,
--	       <&clks 0>, <&clks 118>,
--	       <&clks 62>, <&clks 139>,
--	       <&clks 0>;
--	clock-names = "core", "rxtx0",
--		"rxtx1", "rxtx2",
--		"rxtx3", "rxtx4",
--		"rxtx5", "rxtx6",
--		"rxtx7";
--
--	big-endian;
--	status = "okay";
+-sai2: sai@40031000 {
++	sai2: sai@40031000 {
+ 	      compatible = "fsl,vf610-sai";
+ 	      reg = <0x40031000 0x1000>;
+ 	      pinctrl-names = "default";
+@@ -54,4 +58,4 @@ sai2: sai@40031000 {
+ 		   <&edma0 0 VF610_EDMA_MUXID0_SAI2_RX>;
+ 	      big-endian;
+ 	      msb-first;
 -};
-+	spdif: spdif@02004000 {
-+		compatible = "fsl,imx35-spdif";
-+		reg = <0x02004000 0x4000>;
-+		interrupts = <0 52 0x04>;
-+		dmas = <&sdma 14 18 0>,
-+			<&sdma 15 18 0>;
-+		dma-names = "rx", "tx";
-+
-+		clocks = <&clks 197>, <&clks 3>,
-+			<&clks 197>, <&clks 107>,
-+			<&clks 0>, <&clks 118>,
-+			<&clks 62>, <&clks 139>,
-+			<&clks 0>;
-+		clock-names = "core", "rxtx0",
-+			"rxtx1", "rxtx2",
-+			"rxtx3", "rxtx4",
-+			"rxtx5", "rxtx6",
-+			"rxtx7";
-+
-+		big-endian;
-+		status = "okay";
 +	};
 -- 
 1.8.5
