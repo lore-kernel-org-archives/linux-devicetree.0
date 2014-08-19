@@ -1,37 +1,189 @@
-From: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] usb: gadget: Add xilinx usb2 device support
-Date: Tue, 19 Aug 2014 12:08:11 +0200
-Message-ID: <53F3220B.9070302@zonque.org>
-References: <1406020130-20467-1-git-send-email-sbhatta@xilinx.com> <31c3ad1a-370a-4d0d-b392-8e7bb292f6aa@BN1AFFO11FD050.protection.gbl> <53F31F52.8060904@zonque.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 2/2] Input: misc: introduce palmas-pwrbutton
+Date: Tue, 19 Aug 2014 05:17:52 -0500
+Message-ID: <53F32450.5070809@ti.com>
+References: <1408392810-16011-1-git-send-email-nm@ti.com> <1408392810-16011-3-git-send-email-nm@ti.com> <20140819052344.GA21199@core.coreip.homeip.net>
+Reply-To: nm@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53F31F52.8060904-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140819052344.GA21199@core.coreip.homeip.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2014 11:56 AM, Daniel Mack wrote:
-> On 07/22/2014 11:08 AM, Subbaraya Sundeep Bhatta wrote:
+Hi Dmitry
+On 08/19/2014 12:23 AM, Dmitry Torokhov wrote:
+Thanks for the review.
 
->>  drivers/usb/gadget/Kconfig      |   14 +
->>  drivers/usb/gadget/Makefile     |    1 +
->>  drivers/usb/gadget/udc-xilinx.c | 2261 +++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 2276 insertions(+), 0 deletions(-)
->>  create mode 100644 drivers/usb/gadget/udc-xilinx.c
-> 
-> As your driver has a DT binding, you have to describe it in
-> Documentation/devicetree/bindings.
+[...]
+>> +
+>> +/**
+>> + * pwron_irq() - button press isr
+>> + * @irq:		irq
+>> + * @palmas_pwron:	pwron struct
+>> + */
+>> +static irqreturn_t pwron_irq(int irq, void *palmas_pwron)
+>> +{
+>> +	struct palmas_pwron *pwron = palmas_pwron;
+>> +	struct input_dev *input_dev = pwron->input_dev;
+>> +
+>> +	cancel_delayed_work_sync(&pwron->input_work);
+>> +
+>> +	pwron->current_state = PALMAS_PWR_KEY_PRESS;
+>> +
+>> +	input_report_key(input_dev, KEY_POWER, pwron->current_state);
+>> +	pm_wakeup_event(input_dev->dev.parent, 0);
+>> +	input_sync(input_dev);
+>> +
+>> +	schedule_delayed_work(&pwron->input_work, 0);
+>
+> Instead of cancel/schedule use mod_delayed_work. BTW, why do you need to
+> schedule immediately instead of waiting key_recheck_ms? Also, are there any
 
-Ah, sorry. I missed patch 1/2 which does that.
+Good point, I had missed these. Will fix.
+
+> concerns about need to debounce?
+
+I believe PMIC already takes care of debounce, let me see if there are 
+configuration registers possible. if yes, I think it might be nice to 
+add in.
+
+[...]
+
+>> +
+>> +	irq = platform_get_irq(pdev, 0);
+>> +
+>> +	device_init_wakeup(dev, 1);
+>> +
+>> +	ret = devm_request_threaded_irq(dev, irq, NULL, pwron_irq,
+>> +					IRQF_TRIGGER_HIGH |
+>> +					IRQF_TRIGGER_LOW,
+>> +					dev_name(dev),
+>> +					pwron);
+>
+> I am confused about this code sequence. Why do we get IRQ, then set up wakeup,
+> and then request irq? Normally you get irq number, and then you request it, and
+> then do other stuff.
+
+Uggh.. right.. will fix.
+
+>
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "Can't get IRQ for pwron: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	enable_irq_wake(irq);
+>
+> Shouldn't this be in suspend callback?
+
+yes, it should have been.. my bad.. :( thanks for catching it.
+
+>> +
+>> +	ret = input_register_device(input_dev);
+>> +	if (ret) {
+>> +		dev_dbg(dev, "Can't register power button: %d\n", ret);
+>> +		goto out_irq_wake;
+>> +	}
+>> +	pwron->irq = irq;
+>> +
+>> +	pwron->key_recheck_ms = PALMAS_PWR_KEY_Q_TIME_MS;
+>> +
+>> +	platform_set_drvdata(pdev, pwron);
+>> +
+>> +	return 0;
+>> +
+>> +out_irq_wake:
+>> +	disable_irq_wake(irq);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int palmas_pwron_remove(struct platform_device *pdev)
+>> +{
+>> +	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
+>> +
+>> +	disable_irq_wake(pwron->irq);
+>
+> Should be in resume callback().
+
+yep.
+
+>
+>> +	input_unregister_device(pwron->input_dev);
+>
+> With devm you do not need to unregister input device. However this has problem:
+> what will happen if interrupt arrives here and we schedule workqueue? You need
+> free interrupt then cancel work and then free input device. Similar needs to be
+> done in probe(). I'd recommend not use devm_* here as you need to manually
+> unwind anyway.
+
+True. I will fix these as well.
+
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM
+>> +/**
+>> + * palmas_pwron_suspend() - suspend handler
+>> + * @dev:	power button device
+>> + *
+>> + * Cancel all pending work items for the power button
+>> + */
+>> +static int palmas_pwron_suspend(struct device *dev)
+>> +{
+>> +	struct platform_device *pdev = to_platform_device(dev);
+>> +	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
+>> +
+>> +	cancel_delayed_work_sync(&pwron->input_work);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static UNIVERSAL_DEV_PM_OPS(palmas_pwron_pm, palmas_pwron_suspend, NULL, NULL);
+>
+> Why universal? Do they make sense for runtime pm?
+>
+>> +
+>> +#else
+>> +static UNIVERSAL_DEV_PM_OPS(palmas_pwron_pm, NULL, NULL, NULL);
+>> +#endif
+>
+> You do not need to protect these with #ifdef and have 2 versions, just pull
+> UNIVERSAL_DEV_PM_OPS (and change to SIMPLE_DEV_PM_OPS) out of #idef code.
+
+I will just switch over to SIMPLE_DEV_PM_OPS here.. it is better here. 
+Thanks for the suggestion.
+
+>> +
+>> +#ifdef CONFIG_OF
+>> +static struct of_device_id of_palmas_pwr_match[] = {
+>> +	{.compatible = "ti,palmas-pwrbutton"},
+>> +	{},
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, of_palmas_pwr_match);
+>> +#endif
+>> +
+>> +static struct platform_driver palmas_pwron_driver = {
+>> +	.probe = palmas_pwron_probe,
+>> +	.remove = palmas_pwron_remove,
+>> +	.driver = {
+>> +		   .name = "palmas_pwrbutton",
+>> +		   .owner = THIS_MODULE,
+>> +		   .of_match_table = of_match_ptr(of_palmas_pwr_match),
+>> +		   .pm = &palmas_pwron_pm,
+>> +		   },
+>
+> Weird indentation here.
+
+Ugggh.. Lindent.. :(
 
 
-Thanks,
-Daniel
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+Regards,
+Nishanth Menon
