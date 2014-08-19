@@ -1,81 +1,71 @@
-From: "Murphy, Dan" <dmurphy@ti.com>
-Subject: Re: [PATCH v6] input: drv260x: Add TI drv260x haptics driver
-Date: Tue, 19 Aug 2014 19:35:06 +0000
-Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49DEC1EF@DFLE09.ent.ti.com>
-References: <1408117670-19750-1-git-send-email-dmurphy@ti.com>
- <20140819192401.GA32080@core.coreip.homeip.net>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v2 3/8] ASoC: davinci-evm: HDMI audio support for TDA998x
+ trough McASP I2S bus
+Date: Tue, 19 Aug 2014 22:40:51 +0300
+Message-ID: <53F3A843.4010409@ti.com>
+References: <cover.1408397864.git.jsarha@ti.com> <a92cd9257efb58711b2d5d3de2abff9c8a1052d2.1408397864.git.jsarha@ti.com> <20140819131621.GL3302@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140819131621.GL3302@leverpostej>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "tony@atomide.com" <tony@atomide.com>, "broonie@kernel.org" <broonie@kernel.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "detheridge@ti.com" <detheridge@ti.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "t-kristo@ti.com" <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dmitry
+On 08/19/2014 04:16 PM, Mark Rutland wrote:
+> On Mon, Aug 18, 2014 at 10:46:41PM +0100, Jyri Sarha wrote:
+>> Add machine driver support for BeagleBone-Black HDMI audio. BBB has
+>> NXP TDA998X HDMI transmitter connected to McASP port in I2S mode. The
+>> 44100 Hz sample-rate and it's multiples can not be accurately produced
+>> on BBB. The only supported sample format is SNDRV_PCM_FORMAT_S32_LE.
+>> The 8 least significant bits are ignored.
+>>
+>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>> ---
+>>   .../bindings/sound/davinci-evm-audio.txt           |    4 +-
+>>   sound/soc/davinci/davinci-evm.c                    |   82 +++++++++++++++++++-
+>>   2 files changed, 83 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/davinci-evm-audio.txt b/Documentation/devicetree/bindings/sound/davinci-evm-audio.txt
+>> index 963e100..c137436 100644
+>> --- a/Documentation/devicetree/bindings/sound/davinci-evm-audio.txt
+>> +++ b/Documentation/devicetree/bindings/sound/davinci-evm-audio.txt
+>> @@ -1,7 +1,9 @@
+>>   * Texas Instruments SoC audio setups with TLV320AIC3X Codec
+>>
+>>   Required properties:
+>> -- compatible : "ti,da830-evm-audio" : forDM365/DA8xx/OMAPL1x/AM33xx
+>> +- compatible : "ti,da830-evm-audio" : for DM365/DA8xx/OMAPL1x/AM33xx
+>> +               "ti,am335x-beaglebone-black-audio" : for Beaglebone-black HDMI
+>> +                                                    audio
+>
+> To keep this legible I'd recommend reorganising this like:
+>
+> - compatible: should contain one of:
+>     * "ti,da830-evm-audio" for DM365/DA8xx/OMAPL1x/AM33xx
+>     * "ti,am335x-beaglebone-black-audio" for Beaglebone-black HDMI audio
+>
 
-On 08/19/2014 02:24 PM, Dmitry Torokhov wrote:
-> Hi Dan,
-> 
-> On Fri, Aug 15, 2014 at 10:47:50AM -0500, Dan Murphy wrote:
->> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
->> index 2ff4425..99f6762 100644
->> --- a/drivers/input/misc/Kconfig
->> +++ b/drivers/input/misc/Kconfig
->> @@ -676,4 +676,13 @@ config INPUT_SOC_BUTTON_ARRAY
->>  	  To compile this driver as a module, choose M here: the
->>  	  module will be called soc_button_array.
->>  
->> +config INPUT_DRV260X_HAPTICS
->> +	tristate "TI DRV260X haptics support"
->> +	depends on INPUT && I2C
-> 
-> This also needs "select REGMAP_I2C"
-> 
+The above looks indeed better. I'll make the change. Oh, and I probably 
+should change the first line to something like:
 
-This one is OK
+* TI SoC audio using McASP to connect to TLV320AIC3X or HDMI endcoder
 
->> +	help
->> +	  Say Y to enable support for the TI DRV260X haptics driver.
->> +
->> +	  To compile this driver as a module, choose M here: the
->> +	  module will be called drv260x-haptics.
->> +
-> 
-> [...]
-> 
->> +#ifndef _LINUX_DRV260X_PDATA_H
->> +#define _LINUX_DRV260X_PDATA_H
->> +
->> +struct drv260x_platform_data {
->> +	int enable_gpio;
-> 
-> I do not see this used anywhere.
+> For the BBB case, do you expect both strings or just the BBB-specific
+> string?
+>
 
-But this is actually used here
+Normally just the one. In theory a BBB with an audio-cape on top could 
+utilize another sound node with "ti,da830-evm-audio" compatible property.
 
-haptics->enable_gpio = devm_gpiod_get(&client->dev, "enable");
+> Is the 'x' in the BBB string a wildcard? If we know the particular
+> number for BBB we should use that.
+>
 
-for the non-dt case
+Yes, its a wild card. BBBs have been made at least with AM3358 and 
+AM3359 SoCs.
 
-> 
->> +	u32 library_selection;
->> +	u32 mode;
->> +	u32 vib_rated_voltage;
->> +	u32 vib_overdrive_voltage;
->> +};
->> +
->> +#endif
-> 
-> I fixed up the above issues and did a few more formatting changes and applied
-> to my 'next' branch. Please take a peek and holler if you see something wrong.
-> 
-> Thanks.
-> 
-
-
--- 
-------------------
-Dan Murphy
+Thanks,
+Jyri
