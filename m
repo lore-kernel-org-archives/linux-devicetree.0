@@ -1,101 +1,32 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v6] input: drv260x: Add TI drv260x haptics driver
-Date: Tue, 19 Aug 2014 13:24:38 -0700
-Message-ID: <20140819202438.GD3626@core.coreip.homeip.net>
-References: <1408117670-19750-1-git-send-email-dmurphy@ti.com>
- <20140819192401.GA32080@core.coreip.homeip.net>
- <00FC9A978A94B7418C33AFAE8A35ED49DEC1EF@DFLE09.ent.ti.com>
- <20140819200748.GB3626@core.coreip.homeip.net>
- <00FC9A978A94B7418C33AFAE8A35ED49DEC3E6@DFLE09.ent.ti.com>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c: designware: device tree bindings for i2c speed
+ mode
+Date: Tue, 19 Aug 2014 15:24:09 -0500
+Message-ID: <alpine.DEB.2.02.1408191519190.22837@atx-linux-37>
+References: <1408473276-10847-1-git-send-email-atull@opensource.altera.com> <20140819191521.GA7306@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <00FC9A978A94B7418C33AFAE8A35ED49DEC3E6@DFLE09.ent.ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "Murphy, Dan" <dmurphy@ti.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140819191521.GA7306@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 19, 2014 at 08:13:32PM +0000, Murphy, Dan wrote:
-> On 08/19/2014 03:07 PM, Dmitry Torokhov wrote:
-> > On Tue, Aug 19, 2014 at 07:35:06PM +0000, Murphy, Dan wrote:
-> >> Dmitry
-> >>
-> >> On 08/19/2014 02:24 PM, Dmitry Torokhov wrote:
-> >>> Hi Dan,
-> >>>
-> >>> On Fri, Aug 15, 2014 at 10:47:50AM -0500, Dan Murphy wrote:
-> >>>> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> >>>> index 2ff4425..99f6762 100644
-> >>>> --- a/drivers/input/misc/Kconfig
-> >>>> +++ b/drivers/input/misc/Kconfig
-> >>>> @@ -676,4 +676,13 @@ config INPUT_SOC_BUTTON_ARRAY
-> >>>>  	  To compile this driver as a module, choose M here: the
-> >>>>  	  module will be called soc_button_array.
-> >>>>  
-> >>>> +config INPUT_DRV260X_HAPTICS
-> >>>> +	tristate "TI DRV260X haptics support"
-> >>>> +	depends on INPUT && I2C
-> >>>
-> >>> This also needs "select REGMAP_I2C"
-> >>>
-> >>
-> >> This one is OK
-> >>
-> >>>> +	help
-> >>>> +	  Say Y to enable support for the TI DRV260X haptics driver.
-> >>>> +
-> >>>> +	  To compile this driver as a module, choose M here: the
-> >>>> +	  module will be called drv260x-haptics.
-> >>>> +
-> >>>
-> >>> [...]
-> >>>
-> >>>> +#ifndef _LINUX_DRV260X_PDATA_H
-> >>>> +#define _LINUX_DRV260X_PDATA_H
-> >>>> +
-> >>>> +struct drv260x_platform_data {
-> >>>> +	int enable_gpio;
-> >>>
-> >>> I do not see this used anywhere.
-> >>
-> >> But this is actually used here
-> >>
-> >> haptics->enable_gpio = devm_gpiod_get(&client->dev, "enable");
-> >>
-> >> for the non-dt case
+
+
+On Tue, 19 Aug 2014, Wolfram Sang wrote:
+
+> On Tue, Aug 19, 2014 at 01:34:35PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> > From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 > > 
-> > "haptics" is not instance of drv260x_platform_data but drv260x_data which
-> > defines:
-> > 
-> > struct drv260x_data {
-> > 	...
-> > 	struct gpio_desc *enable_gpio;
-> > 	...
-> > 
-> > That one I kept.
-> > 
+> > Add "speed-mode" Device Tree property to select between
+> > standard and fast i2c mode.  Previously, driver was hardwired
+> > as fast mode.  Default to fast mode if property is not
+> > present.
 > 
-> Yes that is correct but the enable_gpio for non-dt enabled devices this enable_gpio
-> needs to come from the platform data structure.  Without the enable gpio in the platform data
-> structure there is no way for non-dt enabled devices to set the gpio value.
+> NACK. This should be deduced from the clock-frequency setting...
 
-What else uses the platform data structure? You are accessing gpio by name, not
-by number, in the driver so I am not sure how non-dt case will use u32 defined
-in platform data.
+I just sent out a new patch that looks at the clock-frequency setting.
 
-> 
-> The haptics instance just stores the gpio descriptor returned from this call.
-
-Right.
-
-> 
-> The devm_gpiod looks at the platform data is CONFIG_OF is not set.
-
-Umm, how? You do not pass it anywhere...
-
-Thanks.
-
--- 
-Dmitry
+Alan
