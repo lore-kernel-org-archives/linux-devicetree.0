@@ -1,7 +1,7 @@
 From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 3/3] Document: fsl-sai: Adjust the document making it read more comfortably.
-Date: Tue, 19 Aug 2014 12:38:58 +0800
-Message-ID: <1408423138-19880-4-git-send-email-Li.Xiubo@freescale.com>
+Subject: [PATCH 2/3] Document: fsl,esai: Adjust the document making it read more comfortably.
+Date: Tue, 19 Aug 2014 12:38:57 +0800
+Message-ID: <1408423138-19880-3-git-send-email-Li.Xiubo@freescale.com>
 References: <1408423138-19880-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -15,85 +15,101 @@ List-Id: devicetree@vger.kernel.org
 Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/sound/fsl-sai.txt          | 54 ++++++++++++----------
- 1 file changed, 29 insertions(+), 25 deletions(-)
+ .../devicetree/bindings/sound/fsl,esai.txt         | 73 ++++++++++++----------
+ 1 file changed, 39 insertions(+), 34 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-index e25ef38..cd2930e 100644
---- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-+++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-@@ -7,30 +7,34 @@ codec/DSP interfaces.
- 
+diff --git a/Documentation/devicetree/bindings/sound/fsl,esai.txt b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+index aeb8c4a..4dce656 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,esai.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,esai.txt
+@@ -7,49 +7,54 @@ other DSPs. It has up to six transmitters and four receivers.
  
  Required properties:
--- compatible: Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
--- reg: Offset and length of the register set for the device.
--- clocks: Must contain an entry for each entry in clock-names.
-+- compatible:	Compatible list, contains "fsl,vf610-sai" or "fsl,imx6sx-sai".
-+- reg: 		Offset and length of the register set for the device.
-+- clocks: 	Must contain an entry for each entry in clock-names.
- - clock-names : Must include the "bus" for register access and "mclk1" "mclk2"
--  "mclk3" for bit clock and frame clock providing.
--- dmas : Generic dma devicetree binding as described in
--  Documentation/devicetree/bindings/dma/dma.txt.
--- dma-names : Two dmas have to be defined, "tx" and "rx".
--- pinctrl-names: Must contain a "default" entry.
--- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
--  See ../pinctrl/pinctrl-bindings.txt for details of the property values.
--- big-endian: Boolean property, required if all the SAI device registers
--  are big-endian rather than little-endian.
--- msb-first: Configures whether the LSB or the MSB is transmitted first for
--  the fifo data. If this property is absent, the LSB is transmitted first as
--  default, or the MSB is transmitted first.
--- fsl,sai-synchronous-rx: This is a boolean property. If present, indicating
--  that SAI will work in the synchronous mode (sync Tx with Rx) which means
--  both the transimitter and receiver will send and receive data by following
--  receiver's bit clocks and frame sync clocks.
--- fsl,sai-asynchronous: This is a boolean property. If present, indicating
--  that SAI will work in the asynchronous mode, which means both transimitter
--  and receiver will send and receive data by following their own bit clocks
--  and frame sync clocks separately.
-+		"mclk3" for bit clock and frame clock providing.
-+- dmas : 	Generic dma devicetree binding as described in
-+		Documentation/devicetree/bindings/dma/dma.txt.
-+- dma-names :	Two dmas have to be defined, "tx" and "rx".
-+- pinctrl-names:Must contain a "default" entry.
-+- pinctrl-NNN: 	One property must exist for each entry in pinctrl-names.
-+		See ../pinctrl/pinctrl-bindings.txt for details of the property
-+		avalues.
-+- big-endian: 	Boolean property, required if all the SAI device registers
-+		are big-endian rather than little-endian.
-+- msb-first: 	Configures whether the LSB or the MSB is transmitted first for
-+		the fifo data. If this property is absent, the LSB is transmitted
-+		first as default, or the MSB is transmitted first.
-+- fsl,sai-synchronous-rx:
-+		This is a boolean property. If present, indicating
-+		that SAI will work in the synchronous mode (sync Tx with Rx)
-+		which means both the transimitter and receiver will send and
-+		receive data by following receiver's bit clocks and frame sync
-+		clocks.
-+- fsl,sai-asynchronous:
-+		This is a boolean property. If present, indicating that SAI will
-+		work in the asynchronous mode, which means both transimitter and
-+		receiver will send and receive data by following their own bit
-+		clocks and frame sync clocks separately.
  
- Note:
- - If both fsl,sai-asynchronous and fsl,sai-synchronous-rx are absent, the
-@@ -40,7 +44,7 @@ Note:
- - fsl,sai-asynchronous and fsl,sai-synchronous-rx are exclusive.
+-  - compatible : Compatible list, must contain "fsl,imx35-esai".
++- compatible:	Compatible list, must contain "fsl,imx35-esai".
+ 
+-  - reg : Offset and length of the register set for the device.
++- reg:		Offset and length of the register set for the device.
+ 
+-  - interrupts : Contains the spdif interrupt.
++- interrupts:	Contains the spdif interrupt.
+ 
+-  - dmas : Generic dma devicetree binding as described in
+-  Documentation/devicetree/bindings/dma/dma.txt.
++- dmas:		Generic dma devicetree binding as described in
++		Documentation/devicetree/bindings/dma/dma.txt.
+ 
+-  - dma-names : Two dmas have to be defined, "tx" and "rx".
++- dma-names:	Two dmas have to be defined, "tx" and "rx".
+ 
+-  - clocks: Contains an entry for each entry in clock-names.
++- clocks:	Contains an entry for each entry in clock-names.
+ 
+-  - clock-names : Includes the following entries:
+-	"core"		The core clock used to access registers
+-	"extal"		The esai baud clock for esai controller used to derive
+-			HCK, SCK and FS.
+-	"fsys"		The system clock derived from ahb clock used to derive
+-			HCK, SCK and FS.
++- clock-names:	Includes the following entries:
++		"core" -- The core clock used to access registers
++		"extal"-- The esai baud clock for esai controller used to
++		derive HCK, SCK and FS.
++		"fsys" -- The system clock derived from ahb clock used to
++		derive HCK, SCK and FS.
+ 
+-  - fsl,fifo-depth: The number of elements in the transmit and receive FIFOs.
+-    This number is the maximum allowed value for TFCR[TFWM] or RFCR[RFWM].
++- fsl,fifo-depth:
++		The number of elements in the transmit and receive FIFOs.
++		This number is the maximum allowed value for TFCR[TFWM] or
++		RFCR[RFWM].
+ 
+-  - fsl,esai-synchronous: This is a boolean property. If present, indicating
+-    that ESAI would work in the synchronous mode, which means all the settings
+-    for Receiving would be duplicated from Transmition related registers.
++- fsl,esai-synchronous:
++		This is a boolean property. If present, indicating that ESAI
++		would work in the synchronous mode, which means all the settings
++		for Receiving would be duplicated from Transmition related
++		registers.
+ 
+-  - big-endian : If this property is absent, the native endian mode will
+-    be in use as default, or the big endian mode will be in use for all the
+-    device registers.
++- big-endian:
++		If this property is absent, the native endian mode will be in
++		use as default, or the big endian mode will be in use for all the
++		device registers.
  
  Example:
--sai2: sai@40031000 {
-+	sai2: sai@40031000 {
- 	      compatible = "fsl,vf610-sai";
- 	      reg = <0x40031000 0x1000>;
- 	      pinctrl-names = "default";
-@@ -54,4 +58,4 @@ sai2: sai@40031000 {
- 		   <&edma0 0 VF610_EDMA_MUXID0_SAI2_RX>;
- 	      big-endian;
- 	      msb-first;
+ 
+-esai: esai@02024000 {
+-	compatible = "fsl,imx35-esai";
+-	reg = <0x02024000 0x4000>;
+-	interrupts = <0 51 0x04>;
+-	clocks = <&clks 208>, <&clks 118>, <&clks 208>;
+-	clock-names = "core", "extal", "fsys";
+-	dmas = <&sdma 23 21 0>, <&sdma 24 21 0>;
+-	dma-names = "rx", "tx";
+-	fsl,fifo-depth = <128>;
+-	fsl,esai-synchronous;
+-	big-endian;
+-	status = "disabled";
 -};
++	esai: esai@02024000 {
++		compatible = "fsl,imx35-esai";
++		reg = <0x02024000 0x4000>;
++		interrupts = <0 51 0x04>;
++		clocks = <&clks 208>, <&clks 118>, <&clks 208>;
++		clock-names = "core", "extal", "fsys";
++		dmas = <&sdma 23 21 0>, <&sdma 24 21 0>;
++		dma-names = "rx", "tx";
++		fsl,fifo-depth = <128>;
++		fsl,esai-synchronous;
++		big-endian;
++		status = "disabled";
 +	};
 -- 
 1.8.5
