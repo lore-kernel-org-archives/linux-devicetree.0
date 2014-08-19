@@ -1,51 +1,37 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/8] clk: ti: add gpio controlled clock
-Date: Tue, 19 Aug 2014 13:37:11 +0100
-Message-ID: <20140819123711.GK3302@leverpostej>
-References: <cover.1408397864.git.jsarha@ti.com>
- <f080a02691e0f1b45607d7a1afe89698b7f911da.1408397864.git.jsarha@ti.com>
- <20140819113200.GJ3302@leverpostej>
- <53F341B0.3090904@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 02/12] PCI: OF: Parse and map the IRQ when adding the PCI device.
+Date: Tue, 19 Aug 2014 14:39:56 +0200
+Message-ID: <201408191439.56493.arnd@arndb.de>
+References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com> <20140818213054.GB13147@bart.dudau.co.uk> <20140818220906.GJ24600@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53F341B0.3090904@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>, mturquette@linaro.org
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "tony@atomide.com" <tony@atomide.com>, "broonie@kernel.org" <broonie@kernel.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "detheridge@ti.com" <detheridge@ti.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "t-kristo@ti.com" <t-kristo@ti.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140818220906.GJ24600@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Liviu Dudau <liviu@dudau.co.uk>, Liviu Dudau <Liviu.Dudau@arm.com>, Wei Yang <weiyang@linux.vnet.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 19, 2014 at 01:23:12PM +0100, Jyri Sarha wrote:
-> On 08/19/2014 02:32 PM, Mark Rutland wrote:
-> > On Mon, Aug 18, 2014 at 10:46:39PM +0100, Jyri Sarha wrote:
-> >> The added ti,gpio-clock is a basic clock that can be enabled and
-> >> disabled trough a gpio output. The DT binding document for the clock
-> >> is also added. For EPROBE_DEFER handling the registering of the clock
-> >> has to be delayed until of_clk_get() call time.
-> >
-> > I guess this is basically an AND gate with the GPIO and parent clock as
-> > inputs? Or is this something more complex that we might want to do more
-> > things with later?
-> >
-> > If it's the former it sounds like this could be a completely generic
-> > "gpio-gate-clock".
-> >
+On Tuesday 19 August 2014, Catalin Marinas wrote:
+> On Mon, Aug 18, 2014 at 10:30:54PM +0100, Liviu Dudau wrote:
+> > At this point I would like to hear more from people doing the conversion of
+> > the drivers. I cannot answer fully for all arm or arm64 drivers.
 > 
-> Yes, its completely generic. However, since there has been no response 
-> to my several earlier attempts to get this patch in I finally gave up 
-> and moved it under clk/ti.
+> As I read the description of pcibios_add_device(), it is meant as an
+> architecture hook. While it's nice to generalise this, I'm not sure we
+> we can find a common denominator. For example, we may want to call
+> set_dma_ops() as powerpc does but the ops would be arm64 specific (so
+> even the __weak implementation may not be used by any architecture).
 
-Ah. Apolgoies for that having happened.
+Right. I'm a strong advocate of the idea of having no architecture specific
+parts in the PCI support, but I can see the set_dma_ops() call as a
+good reason to make an exception here.
 
-> "gpio-gate-clock" sound like more accurate name for ti. I'll change that.
-> 
-> Do you think I should give this one more try to get it in as generic 
-> basic clock?
+We could add another layer of indirection for the purpose of API purity
+here, to call an architecture specific DMA setup function, but it doesn't
+really add that much benefits, in particular when the DMA setup is currently
+in flux as well.
 
-I'd certainly be happy with a generic gpio-gate-clock.
-
-Mike, thoughts?
-
-Thanks,
-Mark.
+	Arnd
