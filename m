@@ -1,51 +1,44 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5] phy: Renesas R-Car Gen2 PHY driver
-Date: Tue, 19 Aug 2014 12:17:18 +0530
-Message-ID: <53F2F2F6.8050908@ti.com>
-References: <201407222327.15179.sergei.shtylyov@cogentembedded.com> <53F27D23.3040002@cogentembedded.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v2 0/5] ARM: shmobile: r8a7740: add clocks to DT
+Date: Tue, 19 Aug 2014 15:48:35 +0900
+Message-ID: <CANqRtoSS91FxVZnt7_pkfXtG3LvO=n=m0FaXQvX9F+8goEEWSg@mail.gmail.com>
+References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53F27D23.3040002@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ulrich,
 
+On Fri, Aug 8, 2014 at 11:23 PM, Ulrich Hecht
+<ulrich.hecht+renesas@gmail.com> wrote:
+> Hi!
+>
+> Here's the r8a7740 DT clock patch(es) with the changes requested by Simon
+> and Magnus as specified below.  Enjoy!
+>
+> changes since v1:
+> - split up into separate patches
+> - added MSTP clock assignments
 
-On Tuesday 19 August 2014 03:54 AM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 07/22/2014 11:27 PM, Sergei Shtylyov wrote:
-> 
->> This PHY, though formally being a part of Renesas USBHS controller, contains the
->> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls them
->> channels) to the different USB controllers: channel 0 can be connected to either
->> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
->> or xHCI controllers.
-> 
->> This is a new driver for this USB PHY currently already supported under drivers/
->> usb/phy/. The reason for writing the new driver was the requirement that the
->> multiplexing  of USB channels to the controller be dynamic, depending on what
->> USB drivers  are loaded,  rather than static as provided by the old driver. The
->> infrastructure provided by drivers/phy/phy-core.c  seems to fit that purpose
->> ideally. The new driver only  supports device tree probing  for now.
-> 
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
->> ---
->> The patch is against the 'next' branch of Kishon's 'linux-phy.git' repo.
-> 
->    Kishon, may I ask what was the problem with this patch? I don't see it in
-> 3.17-rc1 and you've never replied though nearly a month has passed...
+Looking great, very easy to review IMO! I guess some people may prefer
+to have the patches merged into fewer ones somehow, but if it is up to
+me then I take over-splitted patches over overly-complex ones any day!
 
-It was too late to make it to 3.17.
-Overall this patch looks much better. will take a closer look in a day.
+> Ulrich Hecht (5):
+>   ARM: shmobile: r8a7740: document MSTP clock support
+>   ARM: shmobile: r8a7740: clock register bits
+>   ARM: shmobile: r8a7740: add SoC clocks to DTS
+>   ARM: shmobile: r8a7740: add MSTP clock assignments to DT
+>   ARM: shmobile: armadillo800eva-reference: add clock overrides to DTS
 
-Thanks
-Kishon
-> 
-> WBR, Sergei
-> 
+For patch 1-5 above:
+Acked-by: Magnus Damm <damm+renesas@opensource.se>
+
+Cheers,
+
+/ magnus
