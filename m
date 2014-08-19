@@ -1,111 +1,68 @@
-From: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] iommu/arm-smmu: add .domain_{set,
-	get}_attr for coherent walk control
-Date: Tue, 19 Aug 2014 12:19:35 -0700
-Message-ID: <vnkw4mx8p9rs.fsf@mitchelh-linux.qualcomm.com>
-References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
-	<1407891099-24641-7-git-send-email-mitchelh@codeaurora.org>
-	<20140819124807.GM23128@arm.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6] input: drv260x: Add TI drv260x haptics driver
+Date: Tue, 19 Aug 2014 12:24:01 -0700
+Message-ID: <20140819192401.GA32080@core.coreip.homeip.net>
+References: <1408117670-19750-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140819124807.GM23128-5wv7dgnIgG8@public.gmane.org> (Will Deacon's message of "Tue,
-	19 Aug 2014 13:48:07 +0100")
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408117670-19750-1-git-send-email-dmurphy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 19 2014 at 05:48:07 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Aug 13, 2014 at 01:51:39AM +0100, Mitchel Humpherys wrote:
->> Under certain conditions coherent hardware translation table walks can
->> result in degraded performance. Add a new domain attribute to
->> disable/enable this feature in generic code along with the domain
->> attribute setter and getter to handle it in the ARM SMMU driver.
->
-> Again, it would be nice to have some information about these cases and the
-> performance issues that you are seeing.
+Hi Dan,
 
-Basically, the data I'm basing these statements on is: that's what the
-HW folks tell me :). I believe it's specific to our hardware, not ARM
-IP. Unfortunately, I don't think I could share the specifics even if I
-had them, but I can try to press the issue if you want me to.
+On Fri, Aug 15, 2014 at 10:47:50AM -0500, Dan Murphy wrote:
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 2ff4425..99f6762 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -676,4 +676,13 @@ config INPUT_SOC_BUTTON_ARRAY
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called soc_button_array.
+>  
+> +config INPUT_DRV260X_HAPTICS
+> +	tristate "TI DRV260X haptics support"
+> +	depends on INPUT && I2C
 
->
->> @@ -1908,11 +1917,15 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
->>  				    enum iommu_attr attr, void *data)
->>  {
->>  	struct arm_smmu_domain *smmu_domain = domain->priv;
->> +	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
->>  
->>  	switch (attr) {
->>  	case DOMAIN_ATTR_NESTING:
->>  		*(int *)data = (smmu_domain->stage == ARM_SMMU_DOMAIN_NESTED);
->>  		return 0;
->> +	case DOMAIN_ATTR_COHERENT_HTW_DISABLE:
->> +		*((bool *)data) = cfg->htw_disable;
->> +		return 0;
->
-> I think I'd be more comfortable using int instead of bool for this, as it
-> could well end up in the user ABI if vfio decides to make use of it. While
-> we're here, let's also add an attributes bitmap to the arm_smmu_domain
-> instead of having a bool in the arm_smmu_cfg.
+This also needs "select REGMAP_I2C"
 
-Sounds good. I'll make these changes in v2.
+> +	help
+> +	  Say Y to enable support for the TI DRV260X haptics driver.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called drv260x-haptics.
+> +
 
->
->>  	default:
->>  		return -ENODEV;
->>  	}
->> @@ -1922,6 +1935,7 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
->>  				    enum iommu_attr attr, void *data)
->>  {
->>  	struct arm_smmu_domain *smmu_domain = domain->priv;
->> +	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
->>  
->>  	switch (attr) {
->>  	case DOMAIN_ATTR_NESTING:
->> @@ -1933,6 +1947,9 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
->>  			smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
->>  
->>  		return 0;
->> +	case DOMAIN_ATTR_COHERENT_HTW_DISABLE:
->> +		cfg->htw_disable = *((bool *)data);
->> +		return 0;
->>  	default:
->>  		return -ENODEV;
->>  	}
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index 0550286df4..8a6449857a 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -81,6 +81,7 @@ enum iommu_attr {
->>  	DOMAIN_ATTR_FSL_PAMU_ENABLE,
->>  	DOMAIN_ATTR_FSL_PAMUV1,
->>  	DOMAIN_ATTR_NESTING,	/* two stages of translation */
->> +	DOMAIN_ATTR_COHERENT_HTW_DISABLE,
->
-> I wonder whether we should make this ARM-specific. Can you take a quick look
-> to see if any of the other IOMMUs can potentially benefit from this?
+[...]
 
-Yeah looks like amd_iommu.c and intel-iommu.c are using
-IOMMU_CAP_CACHE_COHERENCY which seems to be the same thing (at least
-that's how we're treating it in arm-smmu.c). AMD's doesn't look
-configurable but Intel's does, so perhaps they would benefit from this.
+> +#ifndef _LINUX_DRV260X_PDATA_H
+> +#define _LINUX_DRV260X_PDATA_H
+> +
+> +struct drv260x_platform_data {
+> +	int enable_gpio;
 
+I do not see this used anywhere.
 
+> +	u32 library_selection;
+> +	u32 mode;
+> +	u32 vib_rated_voltage;
+> +	u32 vib_overdrive_voltage;
+> +};
+> +
+> +#endif
 
--Mitch
+I fixed up the above issues and did a few more formatting changes and applied
+to my 'next' branch. Please take a peek and holler if you see something wrong.
+
+Thanks.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
