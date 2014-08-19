@@ -1,59 +1,77 @@
-From: Wei Yang <weiyang@linux.vnet.ibm.com>
-Subject: Re: [PATCH v9 02/12] PCI: OF: Parse and map the IRQ when adding the
- PCI device.
-Date: Tue, 19 Aug 2014 09:44:01 +0800
-Message-ID: <20140819014401.GB9558@richard>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
- <1407860725-25202-3-git-send-email-Liviu.Dudau@arm.com>
- <20140814145804.GA5586@richard>
- <20140814154959.GG25761@e106497-lin.cambridge.arm.com>
- <20140815085632.GA4954@richard>
- <20140815103052.GD27553@e106497-lin.cambridge.arm.com>
- <20140818142550.GN20043@localhost>
-Reply-To: Wei Yang <weiyang@linux.vnet.ibm.com>
+From: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v3 2/2] mfd: arizona: Update DT binding to
+ support INn_MODE init_data
+Date: Tue, 19 Aug 2014 10:46:11 +0900
+Message-ID: <20140819104611.121c283b@songinha-Samsung-DeskTop-System>
+References: <20140818200009.12a52dfa@songinha-Samsung-DeskTop-System>
+ <20140818142945.GD7556@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140818142550.GN20043@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Wei Yang <weiyang@linux.vnet.ibm.com>, Bjorn Helgaas <bhelgaas@google.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20140818142945.GD7556-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 18, 2014 at 03:25:50PM +0100, Catalin Marinas wrote:
->...
->> Well, it will become necessary as old code gets dismantled and converted towards
->> this patchset. To give you an example that I'm familiar with, for arch/arm the
->> host bridge drivers have moved into drivers/pci/host, but they still depend/use
->> the bios32 infrastructure that takes care of setting up the irq. When they switch
->> to my version they would have to go and debug the "irq not being assigned" issue
->> and it is quite likely that some of the people doing the conversion will complain
->> about my code rather than understanding the issue. What I'm trying to do is to
->> make switching to my patchset as painless as possible, with a cleanup to remove
->> redundant operations coming after the switchover.
->
->While the goal is fine, until we see a common pattern for what needs to
->go into pcibios_add_device() I think we should have an arm64-specific
->implementation (and probably an arm32 specific one as well). I can see
->powerpc uses it for setting the DMA ops. Would we have a similar need on
->arm64 to choose between coherent and non-coherent dma_ops?
+Hi, Charles.
+Thanks for your review.
 
-Liviu,
+On Mon, 18 Aug 2014 15:29:45 +0100
+Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
 
-I have the same feeling with Catalin. An arm64-specific implementation of
-pcibios_add_device() would be better.
+> On Mon, Aug 18, 2014 at 08:00:09PM +0900, Inha Song wrote:
+> > This patch update DT binding to support INn_MODE init_data. Each
+> > input signal path can be configurated either as a Analogue or
+> > Digital using the INn_MODE registers.
+> > 
+> > Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/arizona.txt | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > index 5c7e723..0064b21 100644
+> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> > @@ -42,6 +42,14 @@ Optional properties:
+> >      the chip default will be used.  If present exactly five values must
+> >      be specified.
+> >  
+> > +  - wlf,inmode : A list of INn_MODE register values, where n is the number
+> > +    of input signals. Each input signal path can be configurated either as a
+> > +    Analogue or Digital using the INn_MODE registers. If absent, INn_MODE
+> 
+> I would replace the second sentence here with something like
+> "Valid values are 0 (Differential), 1 (Single-ended) and 2 (Digital
+> Microphone)."
+> 
 
-No more other concerns from my side.
+OK, I will fix it like this:
 
->
->Also at some point we'll get ACPI support, so I'm not sure what we do
->with assigning the dev->irq here but definitely of_* functions won't
->work.
->
->-- 
->Catalin
+- wlf,inmode : A list of INn_MODE register values, where n is the number
+  of input signals. Valid values are 0 (Differential), 1 (Single-ended) and
+  2 (Digital Microphone). If absent, INn_MODE registers.........
 
--- 
-Richard Yang
-Help you, Help me
+Best regards,
+Inha Song.
+
+> Thanks,
+> Charles
+> 
+> > +    registers set to 0 by default. If present, values must be specified less
+> > +    than or equal to the number of input singals. If values less than the
+> > +    number of input signals, elements that has not been specifed are set to 0
+> > +    by default.
+> > +
+> >    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
+> >      they are being externally supplied. As covered in
+> >      Documentation/devicetree/bindings/regulator/regulator.txt
+> > -- 
+> > 2.0.0.390.gcb682f8
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
