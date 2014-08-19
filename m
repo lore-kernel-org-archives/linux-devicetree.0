@@ -1,221 +1,198 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v3 2/4] pwm: rockchip: Allow polarity invert on rk3288
-Date: Wed, 20 Aug 2014 06:15:13 +0800
-Message-ID: <53F3CC71.8090005@rock-chips.com>
-References: <1408464476-28316-1-git-send-email-dianders@chromium.org> <1408464476-28316-3-git-send-email-dianders@chromium.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] RTC: rk808: add RTC driver for RK808 PMIC RTC
+Date: Wed, 20 Aug 2014 00:28:42 +0200
+Message-ID: <1517709.ClbTUIzhrF@phil>
+References: <1408240979-29555-1-git-send-email-zyw@rock-chips.com> <53F2431F.3090802@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1408464476-28316-3-git-send-email-dianders@chromium.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53F2431F.3090802-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+Hi Javier,
 
-I reviewed it, the change is need.
+Am Montag, 18. August 2014, 20:17:03 schrieb Javier Martinez Canillas:
+> adding Mike Turquette to cc since this is also a clock driver.
+> 
+> Hello Chris,
+> 
+> Overall it looks good to me, I've just a comment about the driver structure.
+> On 08/17/2014 04:02 AM, Chris Zhong wrote:
+> > RK808 PMIC is a MFD with RTC as one of the device. Adding RTC driver
+> > for supporting RTC device present inside RK808 PMIC.
+> > 
+> > Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > ---
+> > 
+> >  drivers/rtc/Kconfig     |   11 +
+> >  drivers/rtc/Makefile    |    1 +
+> >  drivers/rtc/rtc-rk808.c |  564
+> >  +++++++++++++++++++++++++++++++++++++++++++++++ 3 files changed, 576
+> >  insertions(+)
+> >  create mode 100644 drivers/rtc/rtc-rk808.c
+> > 
+> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > index a168e96..48f61b2 100644
+> > --- a/drivers/rtc/Kconfig
+> > +++ b/drivers/rtc/Kconfig
+> > @@ -288,6 +288,17 @@ config RTC_DRV_MAX77686
+> > 
+> >  	  This driver can also be built as a module. If so, the module
+> >  	  will be called rtc-max77686.
+> > 
+> > +config RTC_DRV_RK808
+> > +	tristate "Rockchip RK808 RTC"
+> > +	depends on MFD_RK808
+> > +	help
+> > +	  If you say yes here you will get support for the
+> > +	  RTC of Rk808 PMIC.
+> > +
+> > +	  This driver can also be built as a module. If so, the module
+> > +	  will be called rtc-rk808.
+> > +
+> > +
+> > 
+> >  config RTC_DRV_RS5C372
+> >  
+> >  	tristate "Ricoh R2025S/D, RS5C372A/B, RV5C386, RV5C387A"
+> >  	help
+> > 
+> > diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+> > index 56f061c..91fe4647 100644
+> > --- a/drivers/rtc/Makefile
+> > +++ b/drivers/rtc/Makefile
+> > @@ -109,6 +109,7 @@ obj-$(CONFIG_RTC_DRV_PUV3)	+= rtc-puv3.o
+> > 
+> >  obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
+> >  obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
+> >  obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
+> > 
+> > +obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
+> > 
+> >  obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
+> >  obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
+> >  obj-$(CONFIG_RTC_DRV_RS5C348)	+= rtc-rs5c348.o
+> > 
+> > diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
+> > new file mode 100644
+> > index 0000000..0abb919
+> > --- /dev/null
+> > +++ b/drivers/rtc/rtc-rk808.c
+> > @@ -0,0 +1,564 @@
+> > +/*
+> > + * RTC driver for Rockchip RK808
+> > + *
+> > + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+> > + *
+> > + * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > + * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > it
+> > + * under the terms and conditions of the GNU General Public License,
+> > + * version 2, as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope it will be useful, but WITHOUT
+> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+> > for + * more details.
+> > + *
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/time.h>
+> > +#include <linux/rtc.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/bcd.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/ioctl.h>
+> > +#include <linux/completion.h>
+> > +#include <linux/mfd/rk808.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/miscdevice.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/irqdomain.h>
+> > +#include <linux/clk-provider.h>
+> > +
+> > +/* RTC_CTRL_REG bitfields */
+> > +#define BIT_RTC_CTRL_REG_STOP_RTC_M		0x01
+> > +#define BIT_RTC_CTRL_REG_ROUND_30S_M		0x02
+> > +#define BIT_RTC_CTRL_REG_AUTO_COMP_M		0x04
+> > +#define BIT_RTC_CTRL_REG_MODE_12_24_M		0x08
+> > +#define BIT_RTC_CTRL_REG_TEST_MODE_M		0x10
+> > +#define BIT_RTC_CTRL_REG_SET_32_COUNTER_M	0x20
+> > +#define BIT_RTC_CTRL_REG_GET_TIME_M		0x40
+> > +#define BIT_RTC_CTRL_REG_RTC_V_OPT_M		0x80
+> > +
+> > +/* RTC_STATUS_REG bitfields */
+> > +#define BIT_RTC_STATUS_REG_RUN_M		0x02
+> > +#define BIT_RTC_STATUS_REG_1S_EVENT_M		0x04
+> > +#define BIT_RTC_STATUS_REG_1M_EVENT_M		0x08
+> > +#define BIT_RTC_STATUS_REG_1H_EVENT_M		0x10
+> > +#define BIT_RTC_STATUS_REG_1D_EVENT_M		0x20
+> > +#define BIT_RTC_STATUS_REG_ALARM_M		0x40
+> > +#define BIT_RTC_STATUS_REG_POWER_UP_M		0x80
+> > +
+> > +/* RTC_INTERRUPTS_REG bitfields */
+> > +#define BIT_RTC_INTERRUPTS_REG_EVERY_M		0x03
+> > +#define BIT_RTC_INTERRUPTS_REG_IT_TIMER_M	0x04
+> > +#define BIT_RTC_INTERRUPTS_REG_IT_ALARM_M	0x08
+> > +
+> > +/* DEVCTRL bitfields */
+> > +#define BIT_RTC_PWDN				0x40
+> > +
+> > +/* REG_SECONDS_REG through REG_YEARS_REG is how many registers? */
+> > +#define ALL_TIME_REGS				7
+> > +#define ALL_ALM_REGS				6
+> > +
+> > +#define RTC_SET_TIME_RETRIES	5
+> > +#define RTC_GET_TIME_RETRIES	5
+> > +
+> > +struct rk808_rtc {
+> > +	struct rk808 *rk808;
+> > +	struct rtc_device *rtc;
+> > +	unsigned int alarm_enabled:1;
+> > +#ifdef CONFIG_COMMON_CLK
+> > +	struct clk_onecell_data clk_data;
+> > +	struct clk_hw		clkout1_hw;
+> > +	struct clk_hw		clkout2_hw;
+> > +#endif
+> 
+> As I mentioned on a previous review I really think these clocks should be
+> managed on a separate clock driver. It's not uncommon for PMIC chips to
+> have a bunch of regulators, a RTC and some clock ouputs and usually each
+> of these components have their own driver.
+> 
+> You are already adding a mult-function device driver for this PMIC so is
+> just a matter of adding another mfd cell for the clock driver.
+> 
+> I know that drivers/rtc/rtc-hym8563.c does the same thing and manage both
+> a RTC and a clock output but in this case it appears that chip is a plain
+> RTC chip with a clock. So I guess in that case it was not worth the
+> complexity of adding three drivers (mfd, rtc and clock) for just a simple
+> RTC? Arguably even that chip should be seen as a multi-function device
+> though but I'll let Mike to judge that. What I really think is that there
+> is a reason why we have both drivers/rtc and drivers/clk so we should try
+> to keep the needed support in the right place to avoid adding unnecessary
+> cross subsystem maintenance burden.
 
-Reviewed-on: https://github.com/rkchrome/kernel.git
-Reviewed-by: Caesar Wang <caesar.wang@rock-chips.com>
+Mike said in the past, that he doesn't require everything that provides a 
+clock to be sitting in drivers/clk. This (and the minimal size of the clkout 
+of hy8563) let me to decide to put the clkout into the rtc.
 
-=D4=DA 2014=C4=EA08=D4=C220=C8=D5 00:07, Doug Anderson =D0=B4=B5=C0:
-> The rk3288 has the ability to invert the polarity of the PWM.  Let's
-> enable that ability.
->
-> To do this we increase the number of pwm_cells to 3 to allow using th=
-e
-> PWM_POLARITY_INVERTED flag.  Since the PWM driver on rk3288 is very
-> new, I thought this was OK.
->
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> ---
-> Changes in v3:
-> - Don't store a private copy of polarity.
-> - Use true instead of 1.
-> - Cleanup init order with "has_invert".
->
-> Changes in v2: None
->
->   .../devicetree/bindings/pwm/pwm-rockchip.txt       |  4 +-
->   drivers/pwm/pwm-rockchip.c                         | 48 +++++++++++=
-+++++++----
->   2 files changed, 43 insertions(+), 9 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt b=
-/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
-> index d47d15a..b8be3d0 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
-> @@ -7,8 +7,8 @@ Required properties:
->      "rockchip,vop-pwm": found integrated in VOP on RK3288 SoC
->    - reg: physical base address and length of the controller's regist=
-ers
->    - clocks: phandle and clock specifier of the PWM reference clock
-> - - #pwm-cells: should be 2. See pwm.txt in this directory for a
-> -   description of the cell format.
-> + - #pwm-cells: must be 2 (rk2928) or 3 (rk3288). See pwm.txt in this=
- directory
-> +   for a description of the cell format.
->  =20
->   Example:
->  =20
-> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-> index bdd8644..646aed2 100644
-> --- a/drivers/pwm/pwm-rockchip.c
-> +++ b/drivers/pwm/pwm-rockchip.c
-> @@ -24,7 +24,9 @@
->   #define PWM_ENABLE		(1 << 0)
->   #define PWM_CONTINUOUS		(1 << 1)
->   #define PWM_DUTY_POSITIVE	(1 << 3)
-> +#define PWM_DUTY_NEGATIVE	(0 << 3)
->   #define PWM_INACTIVE_NEGATIVE	(0 << 4)
-> +#define PWM_INACTIVE_POSITIVE	(1 << 4)
->   #define PWM_OUTPUT_LEFT		(0 << 5)
->   #define PWM_LP_DISABLE		(0 << 8)
->  =20
-> @@ -45,8 +47,10 @@ struct rockchip_pwm_regs {
->   struct rockchip_pwm_data {
->   	struct rockchip_pwm_regs regs;
->   	unsigned int prescaler;
-> +	bool has_invert;
->  =20
-> -	void (*set_enable)(struct pwm_chip *chip, bool enable);
-> +	void (*set_enable)(struct pwm_chip *chip,
-> +			   struct pwm_device *pwm, bool enable);
->   };
->  =20
->   static inline struct rockchip_pwm_chip *to_rockchip_pwm_chip(struct=
- pwm_chip *c)
-> @@ -54,7 +58,8 @@ static inline struct rockchip_pwm_chip *to_rockchip=
-_pwm_chip(struct pwm_chip *c)
->   	return container_of(c, struct rockchip_pwm_chip, chip);
->   }
->  =20
-> -static void rockchip_pwm_set_enable_v1(struct pwm_chip *chip, bool e=
-nable)
-> +static void rockchip_pwm_set_enable_v1(struct pwm_chip *chip,
-> +				       struct pwm_device *pwm, bool enable)
->   {
->   	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
->   	u32 enable_conf =3D PWM_CTRL_OUTPUT_EN | PWM_CTRL_TIMER_EN;
-> @@ -70,14 +75,19 @@ static void rockchip_pwm_set_enable_v1(struct pwm=
-_chip *chip, bool enable)
->   	writel_relaxed(val, pc->base + pc->data->regs.ctrl);
->   }
->  =20
-> -static void rockchip_pwm_set_enable_v2(struct pwm_chip *chip, bool e=
-nable)
-> +static void rockchip_pwm_set_enable_v2(struct pwm_chip *chip,
-> +				       struct pwm_device *pwm, bool enable)
->   {
->   	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
->   	u32 enable_conf =3D PWM_OUTPUT_LEFT | PWM_LP_DISABLE | PWM_ENABLE =
-|
-> -			  PWM_CONTINUOUS | PWM_DUTY_POSITIVE |
-> -			  PWM_INACTIVE_NEGATIVE;
-> +			  PWM_CONTINUOUS;
->   	u32 val;
->  =20
-> +	if (pwm->polarity =3D=3D PWM_POLARITY_INVERSED)
-> +		enable_conf |=3D PWM_DUTY_NEGATIVE | PWM_INACTIVE_POSITIVE;
-> +	else
-> +		enable_conf |=3D PWM_DUTY_POSITIVE | PWM_INACTIVE_NEGATIVE;
-> +
->   	val =3D readl_relaxed(pc->base + pc->data->regs.ctrl);
->  =20
->   	if (enable)
-> @@ -124,6 +134,23 @@ static int rockchip_pwm_config(struct pwm_chip *=
-chip, struct pwm_device *pwm,
->   	return 0;
->   }
->  =20
-> +int rockchip_pwm_set_polarity(struct pwm_chip *chip, struct pwm_devi=
-ce *pwm,
-> +			      enum pwm_polarity polarity)
-> +{
-> +	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
-> +
-> +	if (!pc->data->has_invert)
-> +		return -ENOSYS;
-> +
-> +	/*
-> +	 * No action needed here because pwm->polarity will be set by the c=
-ore
-> +	 * and the core will only change polarity when the PWM is not enabl=
-ed.
-> +	 * We'll handle things in set_enable().
-> +	 */
-> +
-> +	return 0;
-> +}
-> +
->   static int rockchip_pwm_enable(struct pwm_chip *chip, struct pwm_de=
-vice *pwm)
->   {
->   	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
-> @@ -133,7 +160,7 @@ static int rockchip_pwm_enable(struct pwm_chip *c=
-hip, struct pwm_device *pwm)
->   	if (ret)
->   		return ret;
->  =20
-> -	pc->data->set_enable(chip, true);
-> +	pc->data->set_enable(chip, pwm, true);
->  =20
->   	return 0;
->   }
-> @@ -142,13 +169,14 @@ static void rockchip_pwm_disable(struct pwm_chi=
-p *chip, struct pwm_device *pwm)
->   {
->   	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
->  =20
-> -	pc->data->set_enable(chip, false);
-> +	pc->data->set_enable(chip, pwm, false);
->  =20
->   	clk_disable(pc->clk);
->   }
->  =20
->   static const struct pwm_ops rockchip_pwm_ops =3D {
->   	.config =3D rockchip_pwm_config,
-> +	.set_polarity =3D rockchip_pwm_set_polarity,
->   	.enable =3D rockchip_pwm_enable,
->   	.disable =3D rockchip_pwm_disable,
->   	.owner =3D THIS_MODULE,
-> @@ -173,6 +201,7 @@ static const struct rockchip_pwm_data pwm_data_v2=
- =3D {
->   		.ctrl =3D 0x0c,
->   	},
->   	.prescaler =3D 1,
-> +	.has_invert =3D true,
->   	.set_enable =3D rockchip_pwm_set_enable_v2,
->   };
->  =20
-> @@ -184,6 +213,7 @@ static const struct rockchip_pwm_data pwm_data_vo=
-p =3D {
->   		.ctrl =3D 0x00,
->   	},
->   	.prescaler =3D 1,
-> +	.has_invert =3D true,
->   	.set_enable =3D rockchip_pwm_set_enable_v2,
->   };
->  =20
-> @@ -230,6 +260,10 @@ static int rockchip_pwm_probe(struct platform_de=
-vice *pdev)
->   	pc->chip.ops =3D &rockchip_pwm_ops;
->   	pc->chip.base =3D -1;
->   	pc->chip.npwm =3D 1;
-> +	if (pc->data->has_invert) {
-> +		pc->chip.of_xlate =3D of_pwm_xlate_with_flags;
-> +		pc->chip.of_pwm_n_cells =3D 3;
-> +	}
->  =20
->   	ret =3D pwmchip_add(&pc->chip);
->   	if (ret < 0) {
-
---=20
-Best regards,
-Caesar
+For the rk808, I guess it should either be a separate mfd-cell or part of the 
+core mfd driver - but not the rtc cell.
 
 
+Heiko
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
