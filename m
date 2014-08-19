@@ -1,145 +1,115 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: nand: stm_nand_bch: add new driver
-Date: Mon, 18 Aug 2014 19:42:44 -0700
-Message-ID: <20140819024244.GS18411@ld-irv-0074>
-References: <1401268805-26043-1-git-send-email-lee.jones@linaro.org>
- <20140703002237.GM3599@ld-irv-0074>
- <20140731164709.GK9030@lee--X1>
- <20140731175427.GO3711@ld-irv-0074>
- <20140801092725.GN9030@lee--X1>
+From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+Subject: [PATCH v3 00/15] Tegra124 CL-DVFS / DFLL clocksource, plus cpufreq
+Date: Tue, 19 Aug 2014 06:33:10 +0300
+Message-ID: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140801092725.GN9030@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, "Gupta, Pekon\"" <pekon-l0cyMroinI0@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Vince Hsu <vinceh@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, Viresh Kumar <viresh.kumar@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Thierry Reding <thierry.reding@gmail.com>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, Paul Walmsley <pwalmsley@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 01, 2014 at 10:27:25AM +0100, Lee Jones wrote:
-> On Thu, 31 Jul 2014, Brian Norris wrote:
-> > On Thu, Jul 31, 2014 at 05:47:09PM +0100, Lee Jones wrote:
-> > > > >  arch/arm/boot/dts/stih41x-b2020.dtsi               |   40 +
-> > > > 
-> > > > This will need refreshed and sent as a separate patch, to go through the
-> > > > appropriate ARM tree.
-> > > 
-> > > As above.
-> > 
-> > OK, if you're really planning to send a final git pull request, you'll
-> > need to have this in a separate branch for them to take, then.
-> 
-> Of course.  Same goes with the DTS(I) changes.
+From: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
 
-PSA: make sure your patches will bisect if you're going to send so many.
-I don't want to have to copy-and-paste my build results again.
+v3 changes:
+- Fix incorrect order of arguments to dfll_scale_dvco_rate
+- Fix accidental commas at end-of-statement to semicolons
+- Some cpufreq changes:
+    - rename cpufreq-tegra to cpufreq-tegra20
+    - have separate Kconfig entries for Tegra20/Tegra124 support
+    - use 'select GENERIC_CPUFREQ_CPU0', not depends
+    - support unbinding of the platform device
+        - requires adding the vdd_cpu regulator to the DT so
+          the old voltage can be restored when switching to PLLX
+    - allocate a state structure instead of globals
+    - use of_match_machine()
+    - various style nits fixed
 
-> > > > (Related: Coverity caught a whole bunch of these type of bugs in the MTD
-> > > > test modules. I have fixes queued up that I meant to test and submit
-> > > > soon.)
-> > > 
-> > > I will attempt to play around with Coverity.
-> > 
-> > Good luck :) Coverity isn't always the easiest to get running
-> > individually. You might have better luck (once your stuff is merged)
-> 
-> Sorry merged where?
+The cpufreq part is dependant on the of_match_machine() series.
 
-To Linus's tree. Presumably that's what you're sending your patches to
-me for? :)
+Original cover letter:
 
-Dave Jones runs a Coverity instance against mainline.
+This series implements the DFLL/CL-DVFS clock source for the fast CPU
+cluster on Tegra124, and a cpufreq driver that uses the DFLL for
+clocking the CPU. Most of this is based on Paul Walmsley's public patch
+set from December 2013, which is available at
+http://comments.gmane.org/gmane.linux.ports.tegra/15273
 
-> > checking out the free service offered for open source projects through
-> > github. There's a project instance set up for mainline:
-> > 
-> >   https://scan.coverity.com/projects/128?tab=overview
-> 
-> Thanks.  I'll have a play.
-> 
-> > > > > +/*
-> > > > > + * Detect an erased page, tolerating and correcting up to a specified number of
-> > > > > + * bits at '0'.  (For many devices, it is now deemed within spec for an erased
-> > > > > + * page to include a number of bits at '0', either as a result of read-disturb
-> > > > > + * behaviour or 'stuck-at-zero' failures.)  Returns the number of corrected
-> > > > > + * bits, or a '-1' if we have exceeded the maximum number of bits at '0' (likely
-> > > > > + * to be a genuine uncorrectable ECC error).  In the latter case, the data must
-> > > > > + * be returned unmodified, in accordance with the MTD API.
-> > > > > + */
-> > > > > +static int check_erased_page(uint8_t *data, uint32_t page_size, int max_zeros)
-> > > > 
-> > > > Another "check erased page" implementation? Sigh... it would be nice if
-> > > > we could agree on a common implementation to share. My last attempt was
-> > > > unsuccessful, since some drivers have some very odd requirements.
-> > > > 
-> > > > > +{
-> > > > > +	uint8_t *b = data;
-> > > > > +	int zeros = 0;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	for (i = 0; i < page_size; i++) {
-> > > > > +		zeros += hweight8(~*b++);
-> > > > > +		if (zeros > max_zeros)
-> > > > > +			return -1;
-> > > > > +	}
-> > > > > +
-> > > > > +	if (zeros)
-> > > > > +		memset(data, 0xff, page_size);
-> > > > 
-> > > > It seems like you're not considering the spare area at all. What if this
-> > > > is a mostly-blank page, with ECC data, but most of the bitflips are in
-> > > > the spare area? Then you will "correct" this page to all 0xFF, not
-> > > > noticing that this was really not a blank page at all.
-> > > 
-> > > I could really use Angus' advice on this one.  Although, I fear he may
-> > > have disappeared into the cosmos.  If I remember correctly (I'm
-> > > getting rusty on this now), this controller doesn't allow access to
-> > > the spare area easily.  I think it's all handled automatically
-> > > i.e. without intervention.
-> > 
-> > That's tough. It's pretty hard to support NAND without *any* access to
-> > spare area.
-> 
-> I think we _can_ do it, via the second (Flex) interface, but it appears
-> to be readonly and we only do so when initially scanning/building the
-> BBTs.
+The DFLL clock hardware is a voltage-controlled oscillator plus
+control logic that compares the generated output clock with a
+51 MHz reference clock, and can make decisions to either lower
+or raise the DFLL voltage to keep the output rate close to the
+software-requested rate. The voltage changes are done by
+communicating with an off-chip PMIC via either I2C or PWM.
+As the DFLL oscillator is powered via the CPU rail, using
+the DFLL as the CPU clocksource also gives us dynamic CPU
+voltage scaling.
 
-Does your driver pass the MTD tests? (drivers/mtd/tests/)
+This series has been tested on the Jetson TK1 (Rev C). Porting this to
+the Venice2 should be simple, though do note that it does not have
+active cooling.
 
-> I'm not sure I follow your example precisely.  When you say that most
-> of the bitflips are in the spare area, do you mean that there's usable
-> data in there?
+Thanks,
+Tuomas
 
-What I mean is that because ALL [*] data (in- and out-of-band) is used
-by the error correction algorithm, then you need to use all of that data
-when determining that a page is erased, not just the data that you see
-in-band.
 
-Consider this: you program a page with all 0xFF data, except for a
-single byte of data. Then suppose your page experiences too many
-bitflips in the spare area. When you try to read this page back, you
-will experience an ECC error, and fall back to "checking for an erased
-page." But if this algorithm only looks at the in-band data, it may see
-mostly-0xFF, with fewer than 8 bits that are low. Because it ignored all
-of the ECC parity data stored OOB, then your algorithm might falsely
-declare your page "erased," when in fact it held data and is instead
-truly uncorrectable.
+Paul Walmsley (1):
+  clk: tegra: Add DFLL DVCO reset control for Tegra124
 
-This kind of subtle error might lead to silent corruption.
+Tuomas Tynkkynen (14):
+  clk: tegra: Add binding for the Tegra124 DFLL clocksource
+  clk: tegra: Add library for the DFLL clock source (open-loop mode)
+  clk: tegra: Add closed loop support for the DFLL
+  clk: tegra: Add functions for parsing CVB tables
+  clk: tegra: Add Tegra124 DFLL clocksource platform driver
+  clk: tegra: Save/restore CCLKG_BURST_POLICY on suspend
+  clk: tegra: Add the DFLL as a possible parent of the cclk_g clock
+  ARM: tegra: Add the DFLL to Tegra124 device tree
+  ARM: tegra: Enable the DFLL on the Jetson TK1
+  cpufreq: tegra124: Add device tree bindings
+  cpufreq: tegra: Rename tegra-cpufreq to tegra20-cpufreq
+  cpufreq: Add cpufreq driver for Tegra124
+  ARM: tegra: Add entries for cpufreq on Tegra124
+  ARM: tegra: Add CPU regulator to the Jetson TK1 device tree
 
-I haven't exactly seen this in practice, since most MTD users will
-be programming significant amounts of non-0xFF data to pages, but it's
-really not a guarantee. And power cuts, for instance, provide a big
-source of uncertainty, where you can't expect that an unsound algorithm
-like this will work properly.
+ .../bindings/clock/nvidia,tegra124-dfll.txt        |   69 +
+ .../bindings/cpufreq/tegra124-cpufreq.txt          |   44 +
+ arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   12 +-
+ arch/arm/boot/dts/tegra124.dtsi                    |   33 +-
+ arch/arm/mach-tegra/Kconfig                        |    1 +
+ drivers/clk/tegra/Makefile                         |    3 +
+ drivers/clk/tegra/clk-dfll.c                       | 1735 ++++++++++++++++++++
+ drivers/clk/tegra/clk-dfll.h                       |   55 +
+ drivers/clk/tegra/clk-tegra-super-gen4.c           |    4 +-
+ drivers/clk/tegra/clk-tegra124-dfll-fcpu.c         |  165 ++
+ drivers/clk/tegra/clk-tegra124.c                   |   61 +
+ drivers/clk/tegra/clk.h                            |    3 +
+ drivers/clk/tegra/cvb.c                            |  133 ++
+ drivers/clk/tegra/cvb.h                            |   67 +
+ drivers/cpufreq/Kconfig.arm                        |   14 +-
+ drivers/cpufreq/Makefile                           |    3 +-
+ drivers/cpufreq/tegra124-cpufreq.c                 |  206 +++
+ .../cpufreq/{tegra-cpufreq.c => tegra20-cpufreq.c} |    0
+ 18 files changed, 2601 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/tegra124-cpufreq.txt
+ create mode 100644 drivers/clk/tegra/clk-dfll.c
+ create mode 100644 drivers/clk/tegra/clk-dfll.h
+ create mode 100644 drivers/clk/tegra/clk-tegra124-dfll-fcpu.c
+ create mode 100644 drivers/clk/tegra/cvb.c
+ create mode 100644 drivers/clk/tegra/cvb.h
+ create mode 100644 drivers/cpufreq/tegra124-cpufreq.c
+ rename drivers/cpufreq/{tegra-cpufreq.c => tegra20-cpufreq.c} (100%)
 
-Note on [*]: some ECC algorithms may ignore parts of the spare area, in
-order to provide ability to program special markers independently from
-the rest of the spare area.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.8.1.5
