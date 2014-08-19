@@ -1,311 +1,437 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v2] mmc: dw_mmc: move rockchip related code to a separate
- file
-Date: Tue, 19 Aug 2014 14:08:02 +0900
-Message-ID: <53F2DBB2.1000701@samsung.com>
-References: <1408003293-27375-1-git-send-email-addy.ke@rock-chips.com>
- <1408422974-22301-1-git-send-email-addy.ke@rock-chips.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] Input: misc: introduce palmas-pwrbutton
+Date: Mon, 18 Aug 2014 22:23:44 -0700
+Message-ID: <20140819052344.GA21199@core.coreip.homeip.net>
+References: <1408392810-16011-1-git-send-email-nm@ti.com>
+ <1408392810-16011-3-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1408422974-22301-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, tgih.jun@samsung.com, chris@printf.net, ulf.hansson@linaro.org, dinguyen@altera.com, heiko@sntech.de, olof@lixom.net, dianders@chromium.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, zhenfu.fang@rock-chips.com, cf@rock-chips.com, lintao@rock-chips.com, chenfen@rock-chips.com, zyf@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, hj@rock-chips.com, kever.yang@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408392810-16011-3-git-send-email-nm@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
+Hi NIshanth,
 
-Best Regards,
-Jaehoon Chung
-
-On 08/19/2014 01:36 PM, Addy Ke wrote:
-> To support HS200 and UHS-1, we need add a big hunk of code,
-> as shown in the following patches. So a separate file for
-> rockchip SOCs is suitable.
->=20
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+On Mon, Aug 18, 2014 at 03:13:30PM -0500, Nishanth Menon wrote:
+> Many palmas family of PMICs have support for interrupt based power
+> button. This allows the device to notify the processor of external
+> push button events over the shared palmas interrupt. However, this
+> event is generated only during a "press" operation. Software is
+> supposed to poll(sigh!) for detecting a release event.
+> 
+> The PMIC also supports ability to power off independent of the
+> software decisions when the button is pressed for a long duration if
+> the PMIC is appropriately configured on the platform.
+> 
+> Even though the function is similar to twl4030_pwrbutton, it is
+> substantially different in operation to belong to a new driver of it's
+> own.
+> 
+> Based on original work done by Girish S Ghongdemath <girishsg@ti.com>
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 > ---
-> Changes in v2:
-> - Kconfig: depend on ARCH_ROCKCHIP, suggested by Bartlomiej Zolnierki=
-ewicz
-> - Kconfig: depend on OF, suggested by Doug Anderson
-> - Not change suspend/resume code, suggested by Doug Anderson
-> - If pdev->dev.of_node is NULL, then return -ENODEV, suggested by Hei=
-ko St=C3=BCbner
->=20
->  drivers/mmc/host/Kconfig           |   9 +++
->  drivers/mmc/host/Makefile          |   1 +
->  drivers/mmc/host/dw_mmc-pltfm.c    |  57 ----------------
->  drivers/mmc/host/dw_mmc-rockchip.c | 136 +++++++++++++++++++++++++++=
-++++++++++
->  4 files changed, 146 insertions(+), 57 deletions(-)
->  create mode 100644 drivers/mmc/host/dw_mmc-rockchip.c
->=20
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index a565254..f6095f6 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -621,6 +621,15 @@ config MMC_DW_PCI
-> =20
->  	  If unsure, say N.
-> =20
-> +config MMC_DW_ROCKCHIP
-> +	tristate "Rockchip specific extensions for Synopsys DW Memory Card =
-Interface"
-> +	depends on MMC_DW && ARCH_ROCKCHIP && OF
-> +	select MMC_DW_PLTFM
+>  drivers/input/misc/Kconfig            |   10 ++
+>  drivers/input/misc/Makefile           |    1 +
+>  drivers/input/misc/palmas-pwrbutton.c |  314 +++++++++++++++++++++++++++++++++
+>  3 files changed, 325 insertions(+)
+>  create mode 100644 drivers/input/misc/palmas-pwrbutton.c
+> 
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 2ff4425..0224dcf 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -451,6 +451,16 @@ config HP_SDC_RTC
+>  	  Say Y here if you want to support the built-in real time clock
+>  	  of the HP SDC controller.
+>  
+> +config INPUT_PALMAS_PWRBUTTON
+> +	tristate "Palmas Power button Driver"
+> +	depends on MFD_PALMAS
 > +	help
-> +	  This selects support for Rockchip SoC specific extensions to the
-> +	  Synopsys DesignWare Memory Card Interface driver. Select this opt=
-ion
-> +	  for platforms based on RK3066, RK3188 and RK3288 SoC's.
+> +	  Say Y here if you want to enable power key reporting via the
+> +	  Palmas family of PMICs.
 > +
->  config MMC_SH_MMCIF
->  	tristate "SuperH Internal MMCIF support"
->  	depends on MMC_BLOCK
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index 7f81ddf..5fce465 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -45,6 +45,7 @@ obj-$(CONFIG_MMC_DW_PLTFM)	+=3D dw_mmc-pltfm.o
->  obj-$(CONFIG_MMC_DW_EXYNOS)	+=3D dw_mmc-exynos.o
->  obj-$(CONFIG_MMC_DW_K3)		+=3D dw_mmc-k3.o
->  obj-$(CONFIG_MMC_DW_PCI)	+=3D dw_mmc-pci.o
-> +obj-$(CONFIG_MMC_DW_ROCKCHIP)	+=3D dw_mmc-rockchip.o
->  obj-$(CONFIG_MMC_SH_MMCIF)	+=3D sh_mmcif.o
->  obj-$(CONFIG_MMC_JZ4740)	+=3D jz4740_mmc.o
->  obj-$(CONFIG_MMC_VUB300)	+=3D vub300.o
-> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mm=
-c-pltfm.c
-> index b547f7a..0c56c41 100644
-> --- a/drivers/mmc/host/dw_mmc-pltfm.c
-> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
-> @@ -26,64 +26,11 @@
->  #include "dw_mmc.h"
->  #include "dw_mmc-pltfm.h"
-> =20
-> -#define RK3288_CLKGEN_DIV	2
-> -
->  static void dw_mci_pltfm_prepare_command(struct dw_mci *host, u32 *c=
-mdr)
->  {
->  	*cmdr |=3D SDMMC_CMD_USE_HOLD_REG;
->  }
-> =20
-> -static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
-> -{
-> -	host->bus_hz /=3D RK3288_CLKGEN_DIV;
-> -
-> -	return 0;
-> -}
-> -
-> -static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_io=
-s *ios)
-> -{
-> -	int ret;
-> -	unsigned int cclkin;
-> -	u32 bus_hz;
-> -
-> -	/*
-> -	 * cclkin: source clock of mmc controller.
-> -	 * bus_hz: card interface clock generated by CLKGEN.
-> -	 * bus_hz =3D cclkin / RK3288_CLKGEN_DIV;
-> -	 * ios->clock =3D (div =3D=3D 0) ? bus_hz : (bus_hz / (2 * div))
-> -	 *
-> -	 * Note: div can only be 0 or 1
-> -	 *       if DDR50 8bit mode(only emmc work in 8bit mode),
-> -	 *       div must be set 1
-> -	 */
-> -	if ((ios->bus_width =3D=3D MMC_BUS_WIDTH_8) &&
-> -	    (ios->timing =3D=3D MMC_TIMING_MMC_DDR52))
-> -		cclkin =3D 2 * ios->clock * RK3288_CLKGEN_DIV;
-> -	else
-> -		cclkin =3D ios->clock * RK3288_CLKGEN_DIV;
-> -
-> -	ret =3D clk_set_rate(host->ciu_clk, cclkin);
-> -	if (ret)
-> -		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
-> -
-> -	bus_hz =3D clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-> -	if (bus_hz !=3D host->bus_hz) {
-> -		host->bus_hz =3D bus_hz;
-> -		/* force dw_mci_setup_bus() */
-> -		host->current_speed =3D 0;
-> -	}
-> -}
-> -
-> -static const struct dw_mci_drv_data rk2928_drv_data =3D {
-> -	.prepare_command	=3D dw_mci_pltfm_prepare_command,
-> -};
-> -
-> -static const struct dw_mci_drv_data rk3288_drv_data =3D {
-> -	.prepare_command	=3D dw_mci_pltfm_prepare_command,
-> -	.set_ios	=3D dw_mci_rk3288_set_ios,
-> -	.setup_clock	=3D dw_mci_rk3288_setup_clock,
-> -};
-> -
->  static const struct dw_mci_drv_data socfpga_drv_data =3D {
->  	.prepare_command	=3D dw_mci_pltfm_prepare_command,
->  };
-> @@ -144,10 +91,6 @@ EXPORT_SYMBOL_GPL(dw_mci_pltfm_pmops);
-> =20
->  static const struct of_device_id dw_mci_pltfm_match[] =3D {
->  	{ .compatible =3D "snps,dw-mshc", },
-> -	{ .compatible =3D "rockchip,rk2928-dw-mshc",
-> -		.data =3D &rk2928_drv_data },
-> -	{ .compatible =3D "rockchip,rk3288-dw-mshc",
-> -		.data =3D &rk3288_drv_data },
->  	{ .compatible =3D "altr,socfpga-dw-mshc",
->  		.data =3D &socfpga_drv_data },
->  	{},
-> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw=
-_mmc-rockchip.c
+> +	  To compile this driver as a module, choose M here. The module will
+> +	  be called palmas_pwrbutton.
+> +
+>  config INPUT_PCF50633_PMU
+>  	tristate "PCF50633 PMU events"
+>  	depends on MFD_PCF50633
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index 4955ad3..e3d5efb 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -40,6 +40,7 @@ obj-$(CONFIG_INPUT_MAX8997_HAPTIC)	+= max8997_haptic.o
+>  obj-$(CONFIG_INPUT_MC13783_PWRBUTTON)	+= mc13783-pwrbutton.o
+>  obj-$(CONFIG_INPUT_MMA8450)		+= mma8450.o
+>  obj-$(CONFIG_INPUT_MPU3050)		+= mpu3050.o
+> +obj-$(CONFIG_INPUT_PALMAS_PWRBUTTON)	+= palmas-pwrbutton.o
+>  obj-$(CONFIG_INPUT_PCAP)		+= pcap_keys.o
+>  obj-$(CONFIG_INPUT_PCF50633_PMU)	+= pcf50633-input.o
+>  obj-$(CONFIG_INPUT_PCF8574)		+= pcf8574_keypad.o
+> diff --git a/drivers/input/misc/palmas-pwrbutton.c b/drivers/input/misc/palmas-pwrbutton.c
 > new file mode 100644
-> index 0000000..f0c2cb1
+> index 0000000..35f3d68
 > --- /dev/null
-> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
-> @@ -0,0 +1,136 @@
+> +++ b/drivers/input/misc/palmas-pwrbutton.c
+> @@ -0,0 +1,314 @@
 > +/*
-> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+> + * Texas Instruments' Palmas Power Button Input Driver
 > + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License as published=
- by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
+> + * Copyright (C) 2012-2014 Texas Instruments Incorporated - http://www.ti.com/
+> + *	Girish S Ghongdemath
+> + *	Nishanth Menon
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 > + */
-> +
+> +#include <linux/init.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/palmas.h>
 > +#include <linux/module.h>
+> +#include <linux/of.h>
 > +#include <linux/platform_device.h>
-> +#include <linux/clk.h>
-> +#include <linux/mmc/host.h>
-> +#include <linux/mmc/dw_mmc.h>
-> +#include <linux/of_address.h>
+> +#include <linux/reboot.h>
+> +#include <linux/slab.h>
 > +
-> +#include "dw_mmc.h"
-> +#include "dw_mmc-pltfm.h"
+> +#define PALMAS_LPK_TIME_MASK		0x0c
+> +#define PALMAS_PWR_KEY_PRESS		0x01
+> +#define PALMAS_PWR_KEY_Q_TIME_MS	20
 > +
-> +#define RK3288_CLKGEN_DIV       2
+> +/**
+> + * struct palmas_pwron - Palmas power on data
+> + * @palmas:		pointer to palmas device
+> + * @input_dev:		pointer to input device
+> + * @irq:		irq that we are hooked on to
+> + * @input_work:		work for detecting release of key
+> + * @current_state:	key current state
+> + * @key_recheck_ms:	duration for recheck of key (in milli-seconds)
+> + */
+> +struct palmas_pwron {
+> +	struct palmas *palmas;
+> +	struct input_dev *input_dev;
+> +	int irq;
+> +	struct delayed_work input_work;
+> +	int current_state;
+> +	u32 key_recheck_ms;
+> +};
 > +
-> +static void dw_mci_rockchip_prepare_command(struct dw_mci *host, u32=
- *cmdr)
+> +/**
+> + * struct palmas_pwron_config - configuration of palmas power on
+> + * @long_press_time_val:	value for long press h/w shutdown event
+> + */
+> +struct palmas_pwron_config {
+> +	u8 long_press_time_val;
+> +};
+> +
+> +/**
+> + * palmas_get_pwr_state() - read button state
+> + * @pwron: pointer to pwron struct
+> + */
+> +static int palmas_get_pwr_state(struct palmas_pwron *pwron)
 > +{
-> +	*cmdr |=3D SDMMC_CMD_USE_HOLD_REG;
+> +	struct input_dev *input_dev = pwron->input_dev;
+> +	struct device *dev = input_dev->dev.parent;
+> +	unsigned int reg = 0;
+> +	int ret;
+> +
+> +	ret = palmas_read(pwron->palmas, PALMAS_INTERRUPT_BASE,
+> +			  PALMAS_INT1_LINE_STATE, &reg);
+> +	if (ret) {
+> +		dev_err(dev, "%s:Cannot read palmas PWRON status(%d)\n",
+> +			__func__, ret);
+> +		return ret;
+> +	}
+> +
+> +	/* PWRON line state is BIT(1) of the register */
+> +	return reg & BIT(1) ? 0 : PALMAS_PWR_KEY_PRESS;
 > +}
 > +
-> +static int dw_mci_rk3288_setup_clock(struct dw_mci *host)
+> +/**
+> + * palmas_power_button_work() - Detects the button release event
+> + * @work:	work item to detect button release
+> + */
+> +static void palmas_power_button_work(struct work_struct *work)
 > +{
-> +	host->bus_hz /=3D RK3288_CLKGEN_DIV;
+> +	struct palmas_pwron *pwron = container_of((struct delayed_work *)work,
+> +						  struct palmas_pwron,
+> +						  input_work);
+> +	struct input_dev *input_dev = pwron->input_dev;
+> +	int next_state;
+> +
+> +	next_state = palmas_get_pwr_state(pwron);
+> +	if (next_state < 0)
+> +		return;
+> +
+> +	/*
+> +	 * If the state did not change then schedule a work item to check the
+> +	 * status of the power button line
+> +	 */
+> +	if (next_state == pwron->current_state) {
+> +		schedule_delayed_work(&pwron->input_work,
+> +				      msecs_to_jiffies(pwron->key_recheck_ms));
+> +		return;
+> +	}
+> +
+> +	pwron->current_state = next_state;
+> +	input_report_key(input_dev, KEY_POWER, pwron->current_state);
+> +	input_sync(input_dev);
+> +}
+> +
+> +/**
+> + * pwron_irq() - button press isr
+> + * @irq:		irq
+> + * @palmas_pwron:	pwron struct
+> + */
+> +static irqreturn_t pwron_irq(int irq, void *palmas_pwron)
+> +{
+> +	struct palmas_pwron *pwron = palmas_pwron;
+> +	struct input_dev *input_dev = pwron->input_dev;
+> +
+> +	cancel_delayed_work_sync(&pwron->input_work);
+> +
+> +	pwron->current_state = PALMAS_PWR_KEY_PRESS;
+> +
+> +	input_report_key(input_dev, KEY_POWER, pwron->current_state);
+> +	pm_wakeup_event(input_dev->dev.parent, 0);
+> +	input_sync(input_dev);
+> +
+> +	schedule_delayed_work(&pwron->input_work, 0);
+
+Instead of cancel/schedule use mod_delayed_work. BTW, why do you need to
+schedule immediately instead of waiting key_recheck_ms? Also, are there any
+concerns about need to debounce?
+
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * palmas_pwron_params_ofinit() - device tree parameter parser
+> + * @dev:	palmas button device
+> + * @config:	configuration params that this fills up
+> + */
+> +static int palmas_pwron_params_ofinit(struct device *dev,
+> +				      struct palmas_pwron_config *config)
+> +{
+> +	struct device_node *np;
+> +	u32 val;
+> +	int i;
+> +	u8 lpk_times[] = { 6, 8, 10, 12 };
+> +
+> +	/* Legacy boot? */
+> +	if (!of_have_populated_dt())
+> +		return 0;
+> +
+> +	np = of_node_get(dev->of_node);
+> +	/* Mixed boot? */
+> +	if (!np)
+> +		return 0;
+> +
+> +	val = 0;
+> +	of_property_read_u32(np, "ti,palmas-long-press-seconds", &val);
+> +	config->long_press_time_val = ARRAY_SIZE(lpk_times) - 1;
+> +	for (i = 0; i < ARRAY_SIZE(lpk_times); i++) {
+> +		if (val <= lpk_times[i]) {
+> +			config->long_press_time_val = i;
+> +			break;
+> +		}
+> +	}
+> +	dev_info(dev, "h/w controlled shutdown duration=%d seconds\n",
+> +		 lpk_times[config->long_press_time_val]);
+> +
+> +	of_node_put(np);
 > +
 > +	return 0;
 > +}
 > +
-> +static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_io=
-s *ios)
+> +/**
+> + * palmas_pwron_probe() - probe
+> + * @pdev:	platform device for the button
+> + */
+> +static int palmas_pwron_probe(struct platform_device *pdev)
 > +{
-> +	int ret;
-> +	unsigned int cclkin;
-> +	u32 bus_hz;
+> +	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
+> +	struct device *dev = &pdev->dev;
+> +	struct input_dev *input_dev;
+> +	struct palmas_pwron *pwron;
+> +	int irq, ret;
+> +	struct palmas_pwron_config config = { 0 };
 > +
-> +	/*
-> +	 * cclkin: source clock of mmc controller
-> +	 * bus_hz: card interface clock generated by CLKGEN
-> +	 * bus_hz =3D cclkin / RK3288_CLKGEN_DIV
-> +	 * ios->clock =3D (div =3D=3D 0) ? bus_hz : (bus_hz / (2 * div))
-> +	 *
-> +	 * Note: div can only be 0 or 1
-> +	 *       if DDR50 8bit mode(only emmc work in 8bit mode),
-> +	 *       div must be set 1
-> +	 */
-> +	if (ios->bus_width =3D=3D MMC_BUS_WIDTH_8 &&
-> +	    ios->timing =3D=3D MMC_TIMING_MMC_DDR52)
-> +		cclkin =3D 2 * ios->clock * RK3288_CLKGEN_DIV;
-> +	else
-> +		cclkin =3D ios->clock * RK3288_CLKGEN_DIV;
-> +
-> +	ret =3D clk_set_rate(host->ciu_clk, cclkin);
+> +	ret = palmas_pwron_params_ofinit(dev, &config);
 > +	if (ret)
-> +		dev_warn(host->dev, "failed to set rate %uHz\n", ios->clock);
+> +		return ret;
 > +
-> +	bus_hz =3D clk_get_rate(host->ciu_clk) / RK3288_CLKGEN_DIV;
-> +	if (bus_hz !=3D host->bus_hz) {
-> +		host->bus_hz =3D bus_hz;
-> +		/* force dw_mci_setup_bus() */
-> +		host->current_speed =3D 0;
+> +	pwron = devm_kzalloc(dev, sizeof(*pwron), GFP_KERNEL);
+> +	if (!pwron)
+> +		return -ENOMEM;
+> +
+> +	input_dev = devm_input_allocate_device(dev);
+> +	if (!input_dev) {
+> +		dev_err(dev, "Can't allocate power button\n");
+> +		return -ENOMEM;
 > +	}
+> +
+> +	/* Setup default hardware shutdown option (long key press) */
+> +	ret = palmas_update_bits(palmas, PALMAS_PMU_CONTROL_BASE,
+> +				 PALMAS_LONG_PRESS_KEY,
+> +				 PALMAS_LPK_TIME_MASK,
+> +				 config.long_press_time_val);
+> +	if (ret < 0) {
+> +		dev_err(dev, "LONG_PRESS_KEY_UPDATE failed!\n");
+> +		return ret;
+> +	}
+> +
+> +	input_dev->evbit[0] = BIT_MASK(EV_KEY);
+> +	input_dev->keybit[BIT_WORD(KEY_POWER)] = BIT_MASK(KEY_POWER);
+> +	input_dev->name = "palmas_pwron";
+> +	input_dev->phys = "palmas_pwron/input0";
+> +	input_dev->dev.parent = dev;
+> +
+> +	pwron->palmas = palmas;
+> +	pwron->input_dev = input_dev;
+> +
+> +	INIT_DELAYED_WORK(&pwron->input_work, palmas_power_button_work);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +
+> +	device_init_wakeup(dev, 1);
+> +
+> +	ret = devm_request_threaded_irq(dev, irq, NULL, pwron_irq,
+> +					IRQF_TRIGGER_HIGH |
+> +					IRQF_TRIGGER_LOW,
+> +					dev_name(dev),
+> +					pwron);
+
+I am confused about this code sequence. Why do we get IRQ, then set up wakeup,
+and then request irq? Normally you get irq number, and then you request it, and
+then do other stuff.
+
+> +	if (ret < 0) {
+> +		dev_err(dev, "Can't get IRQ for pwron: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	enable_irq_wake(irq);
+
+Shouldn't this be in suspend callback?
+
+> +
+> +	ret = input_register_device(input_dev);
+> +	if (ret) {
+> +		dev_dbg(dev, "Can't register power button: %d\n", ret);
+> +		goto out_irq_wake;
+> +	}
+> +	pwron->irq = irq;
+> +
+> +	pwron->key_recheck_ms = PALMAS_PWR_KEY_Q_TIME_MS;
+> +
+> +	platform_set_drvdata(pdev, pwron);
+> +
+> +	return 0;
+> +
+> +out_irq_wake:
+> +	disable_irq_wake(irq);
+> +
+> +	return ret;
 > +}
 > +
-> +static const struct dw_mci_drv_data rk2928_drv_data =3D {
-> +	.prepare_command        =3D dw_mci_rockchip_prepare_command,
-> +};
+> +static int palmas_pwron_remove(struct platform_device *pdev)
+> +{
+> +	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
 > +
-> +static const struct dw_mci_drv_data rk3288_drv_data =3D {
-> +	.prepare_command        =3D dw_mci_rockchip_prepare_command,
-> +	.set_ios		=3D dw_mci_rk3288_set_ios,
-> +	.setup_clock    =3D dw_mci_rk3288_setup_clock,
-> +};
+> +	disable_irq_wake(pwron->irq);
+
+Should be in resume callback().
+
+> +	input_unregister_device(pwron->input_dev);
+
+With devm you do not need to unregister input device. However this has problem:
+what will happen if interrupt arrives here and we schedule workqueue? You need
+free interrupt then cancel work and then free input device. Similar needs to be
+done in probe(). I'd recommend not use devm_* here as you need to manually
+unwind anyway.
+
 > +
-> +static const struct of_device_id dw_mci_rockchip_match[] =3D {
-> +	{ .compatible =3D "rockchip,rk2928-dw-mshc",
-> +		.data =3D &rk2928_drv_data },
-> +	{ .compatible =3D "rockchip,rk3288-dw-mshc",
-> +		.data =3D &rk3288_drv_data },
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +/**
+> + * palmas_pwron_suspend() - suspend handler
+> + * @dev:	power button device
+> + *
+> + * Cancel all pending work items for the power button
+> + */
+> +static int palmas_pwron_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
+> +
+> +	cancel_delayed_work_sync(&pwron->input_work);
+> +
+> +	return 0;
+> +}
+> +
+> +static UNIVERSAL_DEV_PM_OPS(palmas_pwron_pm, palmas_pwron_suspend, NULL, NULL);
+
+Why universal? Do they make sense for runtime pm?
+
+> +
+> +#else
+> +static UNIVERSAL_DEV_PM_OPS(palmas_pwron_pm, NULL, NULL, NULL);
+> +#endif
+
+You do not need to protect these with #ifdef and have 2 versions, just pull
+UNIVERSAL_DEV_PM_OPS (and change to SIMPLE_DEV_PM_OPS) out of #idef code.
+
+> +
+> +#ifdef CONFIG_OF
+> +static struct of_device_id of_palmas_pwr_match[] = {
+> +	{.compatible = "ti,palmas-pwrbutton"},
 > +	{},
 > +};
-> +MODULE_DEVICE_TABLE(of, dw_mci_rockchip_match);
 > +
-> +static int dw_mci_rockchip_probe(struct platform_device *pdev)
-> +{
-> +	const struct dw_mci_drv_data *drv_data;
-> +	const struct of_device_id *match;
+> +MODULE_DEVICE_TABLE(of, of_palmas_pwr_match);
+> +#endif
 > +
-> +	if (!pdev->dev.of_node)
-> +		return -ENODEV;
-> +
-> +	match =3D of_match_node(dw_mci_rockchip_match, pdev->dev.of_node);
-> +	drv_data =3D match->data;
-> +
-> +	return dw_mci_pltfm_register(pdev, drv_data);
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int dw_mci_rockchip_suspend(struct device *dev)
-> +{
-> +	struct dw_mci *host =3D dev_get_drvdata(dev);
-> +
-> +	return dw_mci_suspend(host);
-> +}
-> +
-> +static int dw_mci_rockchip_resume(struct device *dev)
-> +{
-> +	struct dw_mci *host =3D dev_get_drvdata(dev);
-> +
-> +	return dw_mci_resume(host);
-> +}
-> +#endif /* CONFIG_PM_SLEEP */
-> +
-> +static SIMPLE_DEV_PM_OPS(dw_mci_rockchip_pmops,
-> +			 dw_mci_rockchip_suspend,
-> +			 dw_mci_rockchip_resume);
-> +
-> +static struct platform_driver dw_mci_rockchip_pltfm_driver =3D {
-> +	.probe		=3D dw_mci_rockchip_probe,
-> +	.remove		=3D __exit_p(dw_mci_pltfm_remove),
-> +	.driver		=3D {
-> +		.name		=3D "dwmmc_rockchip",
-> +		.of_match_table	=3D dw_mci_rockchip_match,
-> +		.pm		=3D &dw_mci_rockchip_pmops,
-> +	},
-> +};
-> +
-> +module_platform_driver(dw_mci_rockchip_pltfm_driver);
-> +
-> +MODULE_AUTHOR("Addy Ke <addy.ke@rock-chips.com>");
-> +MODULE_DESCRIPTION("Rockchip Specific DW-MSHC Driver Extension");
-> +MODULE_ALIAS("platform:dwmmc-rockchip");
-> +MODULE_LICENSE("GPL v2");
->=20
+> +static struct platform_driver palmas_pwron_driver = {
+> +	.probe = palmas_pwron_probe,
+> +	.remove = palmas_pwron_remove,
+> +	.driver = {
+> +		   .name = "palmas_pwrbutton",
+> +		   .owner = THIS_MODULE,
+> +		   .of_match_table = of_match_ptr(of_palmas_pwr_match),
+> +		   .pm = &palmas_pwron_pm,
+> +		   },
 
+Weird indentation here.
+
+> +};
+> +module_platform_driver(palmas_pwron_driver);
+> +
+> +MODULE_ALIAS("platform:palmas-pwrbutton");
+> +MODULE_DESCRIPTION("Palmas Power Button");
+> +MODULE_LICENSE("GPL V2");
+> +MODULE_AUTHOR("Texas Instruments Inc.");
+> -- 
+> 1.7.9.5
+> 
+
+Thanks.
+
+-- 
+Dmitry
