@@ -1,76 +1,122 @@
-From: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v3 2/2] mfd: arizona: Update DT binding to
- support INn_MODE init_data
-Date: Tue, 19 Aug 2014 10:46:11 +0900
-Message-ID: <20140819104611.121c283b@songinha-Samsung-DeskTop-System>
-References: <20140818200009.12a52dfa@songinha-Samsung-DeskTop-System>
- <20140818142945.GD7556@opensource.wolfsonmicro.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: nand: stm_nand_bch: add new driver
+Date: Mon, 18 Aug 2014 19:12:48 -0700
+Message-ID: <20140819021248.GR18411@ld-irv-0074>
+References: <1401268805-26043-1-git-send-email-lee.jones@linaro.org>
+ <20140703002237.GM3599@ld-irv-0074>
+ <20980858CB6D3A4BAE95CA194937D5E73EAFAFF1@DBDE04.ent.ti.com>
+ <20140805142324.GA10136@lee--X1>
+ <d4ba973a22bd71eaff94be1f479c5334@pek-sem.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140818142945.GD7556-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d4ba973a22bd71eaff94be1f479c5334-+F4LgK8oP1VBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: pekon-+F4LgK8oP1VBDgjK7y7TUQ@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Charles.
-Thanks for your review.
+On Wed, Aug 06, 2014 at 02:32:18AM +0530, pekon-+F4LgK8oP1VBDgjK7y7TUQ@public.gmane.org wrote:
+> On Tuesday 05 August 2014 07:53 PM, Lee Jones wrote:
+> >On Thu, 03 Jul 2014, Gupta, Pekon wrote:
+> >>>>+	/* Load last page of block */
+> >>>>+	offs = (loff_t)block << chip->phys_erase_shift;
+> >>>>+	offs += mtd->erasesize - mtd->writesize;
+> >>>>+	if (bch_read_page(nandi, offs, buf) < 0) {
+> >>
+> >>*Important*: You shouldn't call internal functions directly here..
+> >>Instead use chip->_read() OR mtd-read() that will:
 
-On Mon, 18 Aug 2014 15:29:45 +0100
-Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+I'm not sure exactly what you're saying in the above line (chip->_read()
+is not a function, and and mtd-read() is syntactically incorrect),
+but...
 
-> On Mon, Aug 18, 2014 at 08:00:09PM +0900, Inha Song wrote:
-> > This patch update DT binding to support INn_MODE init_data. Each
-> > input signal path can be configurated either as a Analogue or
-> > Digital using the INn_MODE registers.
-> > 
-> > Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/arizona.txt | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > index 5c7e723..0064b21 100644
-> > --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> > @@ -42,6 +42,14 @@ Optional properties:
-> >      the chip default will be used.  If present exactly five values must
-> >      be specified.
-> >  
-> > +  - wlf,inmode : A list of INn_MODE register values, where n is the number
-> > +    of input signals. Each input signal path can be configurated either as a
-> > +    Analogue or Digital using the INn_MODE registers. If absent, INn_MODE
-> 
-> I would replace the second sentence here with something like
-> "Valid values are 0 (Differential), 1 (Single-ended) and 2 (Digital
-> Microphone)."
-> 
+You most certainly do *not* want to call mtd->_read() directly (or any
+of the callbacks prefixed with underscores). That is one of the main
+purposes of:
 
-OK, I will fix it like this:
+    commit 3c3c10bba1e4ccb75b41442e45c1a072f6cded19
+    Author: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+    Date:   Mon Jan 30 14:58:32 2012 +0200
 
-- wlf,inmode : A list of INn_MODE register values, where n is the number
-  of input signals. Valid values are 0 (Differential), 1 (Single-ended) and
-  2 (Digital Microphone). If absent, INn_MODE registers.........
+        mtd: add leading underscore to all mtd functions
 
-Best regards,
-Inha Song.
+> >>- keep this code independent of ECC modes added in your driver
+> >>in future.
+> >>- implicitly handle updating mtd->ecc_stat (like ecc_failed,
+> >>bits_corrected).
+> >>- implicitly take care of address alignments checks and offset
+> >>calculations.
+> >>
+> >><Same applies to other places where you have directly used
+> >>bch_read_page())
+> >
+> >Yourself and Brian seem to disagree on this point.  Which is correct?
 
-> Thanks,
-> Charles
-> 
-> > +    registers set to 0 by default. If present, values must be specified less
-> > +    than or equal to the number of input singals. If values less than the
-> > +    number of input signals, elements that has not been specifed are set to 0
-> > +    by default.
-> > +
-> >    - DCVDD-supply, MICVDD-supply : Power supplies, only need to be specified if
-> >      they are being externally supplied. As covered in
-> >      Documentation/devicetree/bindings/regulator/regulator.txt
-> > -- 
-> > 2.0.0.390.gcb682f8
-> > 
+I think you've worked out a decent solution in your latest series, but
+a few of the guiding principles:
+
+ * BBT code can rely on generic NAND implementation details (e.g.,
+   chip->options), but it can also act as an MTD user (i.e., use the
+   mtd_*() APIs)
+
+ * It should not rely on details of the particular NAND driver (e.g.,
+   calling your ST bch_read_page())
+
+ * Look at similar code and try to follow its pattern where it makes
+   sense. So while nand_bbt.c is not a shining example in all regards, I
+   think it does OK in terms of some of the key points of layering.
+
+> >>>>+	/* Is block already considered bad? (will also catch
+> >>>>invalid offsets) */
+> >>>>+	ret = mtd_block_isbad(mtd, offs);
+> >>>
+> >>>You're violating some of the layering here; the low-level driver
+> >>>probably shouldn't be calling the high-level mtd_*() APIs. On
+> >>>a similar
+> >>>note, I'm not 100% confident that the nand_base/nand_bbt
+> >>>separation is
+> >>>written cleanly enough for easy maintenance of your nand_base
+> >>>+ ST BBT
+> >>>code in parallel. I might need a second look at that, and I think
+> >>>modularizing your BBT code to a separate file could help ease
+> >>>this a
+> >>>little.
+> >
+> >... here is the converse argument.
+
+I think I clarified this one; I misspoke about the mtd_*() APIs.
+
+> I think somewhere in earlier comments, Brian also supported
+> to use high-level function like mtd_read(). Also, nand_bbt.c
+> itself uses 'mtd_read(), mtd_read_oob() and mtd_write_oob()
+> at many places. So I'll let Brain decide here.
+> But having low-level function will add redundant code for
+> re-checking and aligning the addresses boundaries to block
+> and page/sector sizes.
+
+Not all checks are redundant. It's redundant to have the direct
+descendant doing the same checks that the parent does, like:
+
+  mtd_read() (checks boundaries)
+  |_ mtd->_read() (e.g., nand_read())
+
+So nand_read() and nand_do_read_ops() don't need the checking.
+
+But for a BBT implementation, it can help to make sure that its
+page/block/etc. arithmetic fits the right bounds when it ends up
+deciding to scan a block.
+
+Now, it still may be easy to prove that the checks are
+redundant/unnecessary for correctly-written code, but if the layering
+makes sense, then it still may be a better choice to simply use the
+high-level, self-checking API than to try to dig deeper. For instance,
+I'm pretty sure UBI does some checks to make sure it's not reading off
+the end of an MTD, but it still calls mtd_read() because it's The Right
+Thing (TM).
+
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
