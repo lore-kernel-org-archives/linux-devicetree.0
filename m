@@ -1,21 +1,40 @@
-From: MADAM SAFIA HASSAN <lequintero-Ee+0m2wX10fNQoyDCgyGBg@public.gmane.org>
-Subject: For Partnership
-Date: Mon, 18 Aug 2014 19:45:47 -0430 (VET)
-Message-ID: <4614874.4771408407347075.JavaMail.root__26826.1831407019$1408457658$gmane$org@mail.mij.gov.ve>
-Reply-To: MADAM SAFIA HASSAN <hsafia11-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v7 2/3] ahci_xgene: Skip the PHY and clock initialization
+ if already configured by the firmware.
+Date: Tue, 19 Aug 2014 11:14:17 -0400
+Message-ID: <20140819151417.GA16480@htj.dyndns.org>
+References: <1408429911-1406-1-git-send-email-stripathi@apm.com>
+ <1408429911-1406-3-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408429911-1406-3-git-send-email-stripathi@apm.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Aug 19, 2014 at 12:01:50PM +0530, Suman Tripathi wrote:
+> This patch implements the feature to skip the PHY and clock
+> initialization if it is already configured by the firmware.
+> 
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+...
+> +static int xgene_ahci_is_memram_inited(struct xgene_ahci_context *ctx)
+> +{
+> +	void __iomem *diagcsr = ctx->csr_diag;
+> +
+> +	if (readl(diagcsr + CFG_MEM_RAM_SHUTDOWN) == 0 &&
+> +	    readl(diagcsr + BLOCK_MEM_RDY) == 0xFFFFFFFF)
+> +		return 1;
+> +	return 0;
+> +}
 
+Please make it return bool.
 
-I am from syria mother of two kids I have a proposal to present to you for the benefit of both of us kindly reply me back for details. kindly 
-reply for more details
-hsafia11-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks.
+
+-- 
+tejun
