@@ -1,159 +1,99 @@
-From: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/6] iommu/arm-smmu: add support for specifying clocks
-Date: Tue, 19 Aug 2014 12:03:09 -0700
-Message-ID: <53F39F6D.1040205@codeaurora.org>
-References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>	<1407891099-24641-2-git-send-email-mitchelh@codeaurora.org>
-	<20140819125833.GO23128@arm.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c: designware: device tree bindings for i2c speed
+ mode
+Date: Tue, 19 Aug 2014 14:15:21 -0500
+Message-ID: <20140819191521.GA7306@katana>
+References: <1408473276-10847-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140819125833.GO23128-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408473276-10847-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
 
-On 8/19/2014 5:58 AM, Will Deacon wrote:
-> On Wed, Aug 13, 2014 at 01:51:34AM +0100, Mitchel Humpherys wrote:
->> On some platforms with tight power constraints it is polite to only
->> leave your clocks on for as long as you absolutely need them. Currently
->> we assume that all clocks necessary for SMMU register access are always
->> on.
->>
->> Add some optional device tree properties to specify any clocks that are
->> necessary for SMMU register access and turn them on and off as needed.
->>
->> If no clocks are specified in the device tree things continue to work
->> the way they always have: we assume all necessary clocks are always
->> turned on.
-> 
-> How does this interact with an SMMU in bypass mode?
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Do you mean if you have a platform that requires clock and power
-management but we leave the SMMU in bypass (i.e. no one calls into the
-SMMU driver) how are the clock/power managed?
+On Tue, Aug 19, 2014 at 01:34:35PM -0500, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+>=20
+> Add "speed-mode" Device Tree property to select between
+> standard and fast i2c mode.  Previously, driver was hardwired
+> as fast mode.  Default to fast mode if property is not
+> present.
 
-Clients of the SMMU driver are required to vote for clocks and power
-when they know they need to use the SMMU. However, the clock and power
-needed to be on for the SMMU to service bus masters aren't necessarily
-the same as the ones needed to read/write registers...See below.
+NACK. This should be deduced from the clock-frequency setting...
 
-> 
-> [...]
-> 
->> +static int arm_smmu_enable_clocks(struct arm_smmu_device *smmu)
->> +{
->> +	int i, ret = 0;
->> +
->> +	for (i = 0; i < smmu->num_clocks; ++i) {
->> +		ret = clk_prepare_enable(smmu->clocks[i]);
->> +		if (ret) {
->> +			dev_err(smmu->dev, "Couldn't enable clock #%d\n", i);
->> +			while (i--)
->> +				clk_disable_unprepare(smmu->clocks[i]);
->> +			break;
->> +		}
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static void arm_smmu_disable_clocks(struct arm_smmu_device *smmu)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < smmu->num_clocks; ++i)
->> +		clk_disable_unprepare(smmu->clocks[i]);
->> +}
-> 
-> What stops theses from racing with each other when there are multiple
-> clocks? I also assume that the clk API ignores calls to clk_enable_prepare
-> for a clk that's already enabled? I couldn't find that code...
+>=20
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+>  .../devicetree/bindings/i2c/i2c-designware.txt     |    3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/D=
+ocumentation/devicetree/bindings/i2c/i2c-designware.txt
+> index 5199b0c..0e4cd21 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -9,6 +9,8 @@ Required properties :
+>  Recommended properties :
+> =20
+>   - clock-frequency : desired I2C bus clock frequency in Hz.
 
-All the clock APIs are reference counted yes. Not sure what you mean by
-racing with each other? When you call to enable a clock the call does
-not return until the clock is already ON (or OFF).
+=2E.. which is described here, but surprisingly not supported in the
+driver yet :(
 
->>  /* Wait for any pending TLB invalidations to complete */
->>  static void arm_smmu_tlb_sync(struct arm_smmu_device *smmu)
->>  {
->> @@ -644,11 +672,15 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
->>  	struct arm_smmu_device *smmu = smmu_domain->smmu;
->>  	void __iomem *cb_base;
->>  
->> +	arm_smmu_enable_clocks(smmu);
-> 
-> How can I get a context interrupt from an SMMU without its clocks enabled?
+Check i2c-riic for an example.
 
-Good question. At least in our SoC we usually have at least 1 "core"
-clock and 1 "programming" clock. Both clocks are needed to read/write
-registers but only 1 of the clocks is needed for the SMMU to service bus
-master requests.
+> + - speed-mode      : 0 =3D standard (0 - 100Kb/s)
+> +                   : 1 =3D fast (<=3D 400Kb/s) <=3D=3D default
+> =20
+>  Optional properties :
+>   - i2c-sda-hold-time-ns : should contain the SDA hold time in nanosecond=
+s.
+> @@ -29,6 +31,7 @@ Example :
+>  		reg =3D <0xf0000 0x1000>;
+>  		interrupts =3D <11>;
+>  		clock-frequency =3D <400000>;
+> +		speed-mode =3D <0>;
+>  	};
+> =20
+>  	i2c@1120000 {
+> --=20
+> 1.7.9.5
+>=20
 
-> 
-> [...]
-> 
->> +int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
->>  {
->>  	unsigned long size;
->>  	void __iomem *gr0_base = ARM_SMMU_GR0(smmu);
->> @@ -2027,10 +2124,16 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->>  	}
->>  	dev_notice(dev, "registered %d master devices\n", i);
->>  
->> -	err = arm_smmu_device_cfg_probe(smmu);
->> +	err = arm_smmu_init_clocks(smmu);
->>  	if (err)
->>  		goto out_put_masters;
->>  
->> +	arm_smmu_enable_clocks(smmu);
->> +
->> +	err = arm_smmu_device_cfg_probe(smmu);
->> +	if (err)
->> +		goto out_disable_clocks;
->> +
->>  	parse_driver_options(smmu);
->>  
->>  	if (smmu->version > 1 &&
->> @@ -2039,7 +2142,7 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->>  			"found only %d context interrupt(s) but %d required\n",
->>  			smmu->num_context_irqs, smmu->num_context_banks);
->>  		err = -ENODEV;
->> -		goto out_put_masters;
->> +		goto out_disable_clocks;
->>  	}
->>  
->>  	for (i = 0; i < smmu->num_global_irqs; ++i) {
->> @@ -2061,12 +2164,16 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->>  	spin_unlock(&arm_smmu_devices_lock);
->>  
->>  	arm_smmu_device_reset(smmu);
->> +	arm_smmu_disable_clocks(smmu);
-> 
-> I wonder if this is really the right thing to do. Rather than the
-> fine-grained clock enable/disable you have, why don't we just enable in
-> domain_init and disable in domain_destroy, with refcounting for the clocks?
-> 
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-So the whole point of all of this is that we try to save power. As Mitch
-wrote in the commit text we want to only leave the clock and power on
-for as short period of time as possible.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Thanks,
+iQIcBAEBAgAGBQJT86JJAAoJEBQN5MwUoCm2J1sP/3+Y/hrvVBddzW/1to/LO57V
+Ym+0fB4XobbMWLYnnX+I2ow3RfKBT4u/Vovmc1D2mvEXnh7f7bq2Cb1wIndhJz2x
+EvR0Ife/+ynIy2wdkiLujtfPIIYXvDQs5cEEU5MKRH2FfMpg0C0H4R5x+qYztPgC
+aLuOCpevp3oj4EJubhf0AKhvpGSBgf4D3RtTMbgPGFCUSSdlHuiXUA0Ux9hqU0cE
+A0Wkz9aQ7hJg5uh31hrFBTCnuUGgZuiQVL+9vWSCINpypFIDq1GUaknYr9YEYx8f
+2EXQ8Rj4Pnd/58zp7xoKkduL9Mvv+STba/UUyyvdkzeXHrThVX0Ul+mvdv24gWob
+5grlwiNb95NnPjJOLpkQH9qp5pB/BnW104iC/RBQ7RokTKCM8QNGA1UT6Iepk0p6
+/rqJu2qGmWuaMlJDKyiRtTjLpE9uLNhg+iAJnFhWK1XSgig7GrUKo3kfpoax7DvO
+yoxswfT3B4BumsBwAWIqERpobR5boiUq/y3LV/zez+Vna8VmFVtxXKoW140gFGI7
+Bgk882mKUjplvKfugzEODY2hHSpqiDWSBX/qOablxbYBhbTuVsBGjalucsxu6AqY
+7ipdXovlqOd5xIoeypdFrMpHeeBGc1NNVfGA9AtwwclZnsTHbaQr5YYtPnYTNdHx
+LUFUkF2x2m0vYGEpOA5r
+=I12S
+-----END PGP SIGNATURE-----
 
-Olav
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+--bp/iNruPH9dso1Pn--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
