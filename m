@@ -1,127 +1,102 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH] thermal: exynos: Add support for TRIM_RELOAD feature at
- Exynos3250
-Date: Tue, 19 Aug 2014 20:57:43 +0900
-Message-ID: <1408449463-3987-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rui.zhang@intel.com, eduardo.valentin@ti.com
-Cc: kgene.kim@samsung.com, b.zolnierkie@samsung.com, amit.daniel@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, ch.naveen@samsung.com, kyungmin.park@samsung.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Eduardo Valentin <edubezval@gmail.com>
+From: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
+Date: Tue, 19 Aug 2014 12:01:34 +0000
+Message-ID: <1d843c14ed0d49cc916abcfa2d3e0553@BL2PR03MB468.namprd03.prod.outlook.com>
+References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
+	<87a9774lf5.fsf@nvidia.com>
+	<cfb1d2ff66004685b7ead3f5e6321681@BL2PR03MB468.namprd03.prod.outlook.com>
+	<87y4ur2h23.fsf@nvidia.com>
+	<d9fb045d54244f26a773ba45ad3caa2d@BL2PR03MB468.namprd03.prod.outlook.com>
+	<87zjf0hk3b.fsf@nvidia.com>
+	<a0244b6befa9407fb6c2c35cc29f92f7@BL2PR03MB468.namprd03.prod.outlook.com>
+	<87wqa4hhcr.fsf@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <87wqa4hhcr.fsf-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add support for TRIM_RELOAD feature at Exynos3250. The TMU of
-Exynos3250 has two TRIMINFO_CON register.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
----
- drivers/thermal/samsung/exynos_tmu.c      | 7 +++++--
- drivers/thermal/samsung/exynos_tmu.h      | 5 +++--
- drivers/thermal/samsung/exynos_tmu_data.c | 9 ++++++++-
- drivers/thermal/samsung/exynos_tmu_data.h | 7 +++++--
- 4 files changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index acbff14..ed01606 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -164,8 +164,11 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
- 		}
- 	}
- 
--	if (TMU_SUPPORTS(pdata, TRIM_RELOAD))
--		__raw_writel(1, data->base + reg->triminfo_ctrl);
-+	if (TMU_SUPPORTS(pdata, TRIM_RELOAD)) {
-+		for (i = 0; i < pdata->triminfo_reload_count; i++)
-+			__raw_writel(pdata->triminfo_reload[i],
-+					data->base + reg->triminfo_ctrl[i]);
-+	}
- 
- 	if (pdata->cal_mode == HW_MODE)
- 		goto skip_calib_data;
-diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
-index 1b4a644..72cb54e 100644
---- a/drivers/thermal/samsung/exynos_tmu.h
-+++ b/drivers/thermal/samsung/exynos_tmu.h
-@@ -151,8 +151,7 @@ struct exynos_tmu_registers {
- 	u32	triminfo_25_shift;
- 	u32	triminfo_85_shift;
- 
--	u32	triminfo_ctrl;
--	u32	triminfo_ctrl1;
-+	u32	triminfo_ctrl[2];
- 	u32	triminfo_reload_shift;
- 
- 	u32	tmu_ctrl;
-@@ -295,6 +294,8 @@ struct exynos_tmu_platform_data {
- 	u8 second_point_trim;
- 	u8 default_temp_offset;
- 	u8 test_mux;
-+	u8 triminfo_reload[2];
-+	u8 triminfo_reload_count;
- 
- 	enum calibration_type cal_type;
- 	enum calibration_mode cal_mode;
-diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
-index aa8e0de..25f9890 100644
---- a/drivers/thermal/samsung/exynos_tmu_data.c
-+++ b/drivers/thermal/samsung/exynos_tmu_data.c
-@@ -95,6 +95,8 @@ static const struct exynos_tmu_registers exynos3250_tmu_registers = {
- 	.triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
- 	.triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
- 	.triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
-+	.triminfo_ctrl[0] = EXYNOS_TMU_TRIMINFO_CON1,
-+	.triminfo_ctrl[1] = EXYNOS_TMU_TRIMINFO_CON2,
- 	.tmu_ctrl = EXYNOS_TMU_REG_CONTROL,
- 	.test_mux_addr_shift = EXYNOS4412_MUX_ADDR_SHIFT,
- 	.buf_vref_sel_shift = EXYNOS_TMU_REF_VOLTAGE_SHIFT,
-@@ -160,6 +162,9 @@ static const struct exynos_tmu_registers exynos3250_tmu_registers = {
- 		.temp_level = 95, \
- 	}, \
- 	.freq_tab_count = 2, \
-+	.triminfo_reload[0] = 0x1, \
-+	.triminfo_reload[1] = 0x11, \
-+	.triminfo_reload_count = 2, \
- 	.registers = &exynos3250_tmu_registers, \
- 	.features = (TMU_SUPPORT_EMULATION | \
- 			TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
-@@ -184,7 +189,7 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
- 	.triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
- 	.triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
- 	.triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
--	.triminfo_ctrl = EXYNOS_TMU_TRIMINFO_CON,
-+	.triminfo_ctrl[0] = EXYNOS_TMU_TRIMINFO_CON2,
- 	.triminfo_reload_shift = EXYNOS_TRIMINFO_RELOAD_SHIFT,
- 	.tmu_ctrl = EXYNOS_TMU_REG_CONTROL,
- 	.test_mux_addr_shift = EXYNOS4412_MUX_ADDR_SHIFT,
-@@ -252,6 +257,8 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
- 		.temp_level = 95, \
- 	}, \
- 	.freq_tab_count = 2, \
-+	.triminfo_reload[0] = 0x1, \
-+	.triminfo_reload_count = 1, \
- 	.registers = &exynos4412_tmu_registers, \
- 	.features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
- 			TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
-diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
-index f0979e5..e0536c3 100644
---- a/drivers/thermal/samsung/exynos_tmu_data.h
-+++ b/drivers/thermal/samsung/exynos_tmu_data.h
-@@ -57,8 +57,11 @@
- #define EXYNOS4210_TMU_TRIG_LEVEL_MASK	0x1111
- #define EXYNOS4210_TMU_INTCLEAR_VAL	0x1111
- 
--/* Exynos5250 and Exynos4412 specific registers */
--#define EXYNOS_TMU_TRIMINFO_CON	0x14
-+/* Exynos3250 specific registers */
-+#define EXYNOS_TMU_TRIMINFO_CON1	0x10
-+
-+/* Exynos5250, Exynos4412 and Exynos3250 specific registers */
-+#define EXYNOS_TMU_TRIMINFO_CON2	0x14
- #define EXYNOS_THD_TEMP_RISE		0x50
- #define EXYNOS_THD_TEMP_FALL		0x54
- #define EXYNOS_EMUL_CON		0x80
--- 
-1.8.0
+> -----Original Message-----
+> From: Hiroshi Doyu [mailto:hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org]
+> Sent: Tuesday, August 19, 2014 4:33 PM
+> To: Sethi Varun-B16395; Will Deacon
+> Cc: Hiroshi Doyu; Thierry Reding; Stephen Warren; Arnd Bergmann; Mark
+> Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Olof Johansson; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
+> foundation.org; Rob Herring; linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Yoder Stuart-B08248
+> Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
+> 
+> 
+> Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> 
+> >> >> > Also, for dynamic stream ID allocation we would need to
+> >> >> > represent the specific master register (to store the stream ID) in the
+> device tree.
+> >> >>
+> >> >> I assmue that the above means that iMX has such configuration
+> >> >> register to map steramID and a device dynamically.
+> >> >
+> >> > We have per master registers for setting the stream ID on the
+> >> > Layerscape platforms. My point was that we would need the iommu
+> >> > master node to include a reference to the master id register.
+> >> >
+> >> > master@1 {
+> >> >                /* device has master ID 42 in the IOMMU */
+> >> >              iommus = <&{/iommu} 42>;
+> >> >              master-id-reg = <phandle offset> };
+> >>
+> >> In the above, for "iommus=" bindings, you wouldn't need to break
+> >> ARM,SMMU compatibility at all if you set "streamID" exactly as below.
+> >>
+> >>   master@1 {
+> >>                  /* device has master ID 42 in the IOMMU */
+> >>                iommus = <&{/iommu} 'any given streamID'>;
+> >>                master-id-reg = <phandle offset>
+> >>   };
+> >>
+> >> And your SoC needs to register bus_notifier and ADD_DEVICE should
+> >> configure to map 'any given streamID' to a device via the above
+> >> register. This wouldn't need any modification from ARM,SMMU driver
+> >> and keep the iommus bindings as it is.
+> >>
+> >> IOW, SoC only needs to register ADD_DEVICE in bus_notifier to map
+> >> StreamID to a device. This needs to be executed earlier than IOMMU
+> >> bus's ADD_DEVICE, though.
+> >>
+> >> Is my understanding right?
+> >
+> > I don't think that SOC specific code needs a bus notifier for setting
+> > the stream ID. It can be done as a part of SOC specific
+> > initialization. The device tree can be updated to reflect the correct
+> > stream ID (SMMU driver can get the updated stream ID from device
+> > tree).
+> 
+> That's possible.
+> 
+> > I was thinking more on the lines of updating the device stream id
+> > while attaching a device to the domain.
+> 
+> I thought the same but this would break the ARM,SMMU /compatibility/ since
+> the 1st param of "iommus=" is always expected as "streamID".
+> 
+> If streamID can be assigned dynamically like PCIe, not like streamID statically
+> set in DT, how should we describe this dynmaic steramID shifting/assignment in
+> DT?
+ Can you dynamically program the stream ID for the device? If yes, then you require a unique numberspace for allocating a streamID. I am not clear on the stream ID translation requirement.
+
+-Varun
