@@ -1,328 +1,148 @@
-From: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] usb: gadget: Add xilinx usb2 device support
-Date: Tue, 19 Aug 2014 11:38:28 +0530
-Message-ID: <CALHRZurfZ7fcByw12DC07PK6EfGtAzR__yL6Uu09DehP6Mxu5Q@mail.gmail.com>
-References: <1406020130-20467-1-git-send-email-sbhatta@xilinx.com>
-	<31c3ad1a-370a-4d0d-b392-8e7bb292f6aa@BN1AFFO11FD050.protection.gbl>
-	<53CE36C2.50307@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v2] serial: clps711x: Use mctrl_gpio helpers for handling modem signals
+Date: Tue, 19 Aug 2014 10:14:22 +0400
+Message-ID: <1408428862-29573-1-git-send-email-shc_work@mail.ru>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53CE36C2.50307-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+CLPS711X serial driver uses the system wide registers to control the
+modem signals. Now gpio-syscon driver can be used for this purposes.
+mctrl_gpio helpers allow us to create GPIO bindings for any of modem/tty
+control signals that extends the functionality of the driver.
+This patch makes such change.
 
-On Tue, Jul 22, 2014 at 3:32 PM, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 07/22/2014 02:38 PM, Subbaraya Sundeep Bhatta wrote:
->>
->> +#include <linux/delay.h>
->> +#include <linux/device.h>
->> +#include <linux/dma-mapping.h>
->> +#include "gadget_chips.h"
->> +#include <linux/interrupt.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/prefetch.h>
->> +#include <linux/usb/ch9.h>
->> +#include <linux/usb/gadget.h>
->> +
->
->
-> Normally we will put the includes in alphabetical because it looks good
-> and readable.
->
-> But we have to include the local headers separately after all the main
-> includes...
-> #include <linux/delay.h>
-> #include <linux/device.h>
-> ....
-> #include <linux/usb/gadget.h>
->
-> #include "gadget_chips.h"
->
-> (...)
->
-Ok
->
->>
->> +       switch (udc->setupseqtx) {
->> +       case STATUS_PHASE:
->> +               switch (udc->setup.bRequest) {
->> +               case USB_REQ_SET_ADDRESS:
->> +                       /* Set the address of the device.*/
->> +                       udc->write_fn(udc->base_address,
->> +                                       XUSB_ADDRESS_OFFSET,
->> +                                       udc->setup.wValue);
->
->
-> Should match open parenthesis
-not necessary, as per coding style spaces should not be used --
-Outside of comments, documentation and except in Kconfig, spaces are never
-used for indentation.
+This change does not break any current DT bindings, since DT support
+for this platform is not introduced yet.
 
->
-> udc->write_fn(udc->base_address,
->               XUSB_ADDRESS_OFFSET,
->
->               udc->setup.wValue);
->
->
->> +                       break;
->> +               case USB_REQ_SET_FEATURE:
->> +                       if (udc->setup.bRequestType ==
->> +                                       USB_RECIP_DEVICE) {
->> +                               if (udc->setup.wValue ==
->> +                                               USB_DEVICE_TEST_MODE)
->> +                                       udc->write_fn(udc->base_address,
->> +
->> XUSB_TESTMODE_OFFSET,
->> +                                                       test_mode);
->
->
-> Dto
-not necessary
->
->
->> +                       }
->> +                       break;
->> +               }
->> +               req->usb_req.actual = req->usb_req.length;
->> +               xudc_done(ep0, req, 0);
->> +               break;
->> +       case DATA_PHASE:
->> +               if (!bytes_to_tx) {
->> +                       /*
->> +                        * We're done with data transfer, next
->> +                        * will be zero length OUT with data toggle of
->> +                        * 1. Setup data_toggle.
->> +                        */
->> +                       epcfgreg = udc->read_fn(udc->base_address +
->> +                                       ep0->offset);
->> +                       epcfgreg |= XUSB_EP_CFG_DATA_TOGGLE_MASK;
->> +                       udc->write_fn(udc->base_address, ep0->offset,
->> epcfgreg);
->> +                       udc->setupseqtx = STATUS_PHASE;
->> +               } else {
->> +                       length = count = min_t(u32, bytes_to_tx,
->> +                                               EP0_MAX_PACKET);
->> +                       /* Copy the data to be transmitted into the DPRAM.
->> */
->> +                       ep0rambase = (u8 __force *) (udc->base_address +
->> +                                       (ep0->rambase << 2));
->> +
->> +                       buffer = req->usb_req.buf + req->usb_req.actual;
->> +                       req->usb_req.actual = req->usb_req.actual +
->> length;
->> +                       memcpy((void *)ep0rambase, buffer, length);
->> +               }
->> +               udc->write_fn(udc->base_address, XUSB_EP_BUF0COUNT_OFFSET,
->> +                               count);
->> +               udc->write_fn(udc->base_address, XUSB_BUFFREADY_OFFSET,
->> 1);
->> +               break;
->> +       default:
->> +               break;
->> +       }
->> +}
->> +
->> +/**
->> + * xudc_ctrl_ep_handler - Endpoint 0 interrupt handler.
->> + * @udc: pointer to the udc structure.
->> + * @intrstatus:        It's the mask value for the interrupt sources on
->> endpoint 0.
->> + *
->> + * Processes the commands received during enumeration phase.
->> + */
->> +static void xudc_ctrl_ep_handler(struct xusb_udc *udc, u32 intrstatus)
->> +{
->> +
->> +       if (intrstatus & XUSB_STATUS_SETUP_PACKET_MASK) {
->> +               xudc_handle_setup(udc);
->> +       } else {
->> +               if (intrstatus & XUSB_STATUS_FIFO_BUFF_RDY_MASK)
->> +                       xudc_ep0_out(udc);
->> +               else if (intrstatus & XUSB_STATUS_FIFO_BUFF_FREE_MASK)
->> +                       xudc_ep0_in(udc);
->> +       }
->> +}
->> +
->> +/**
->> + * xudc_nonctrl_ep_handler - Non control endpoint interrupt handler.
->> + * @udc: pointer to the udc structure.
->> + * @epnum: End point number for which the interrupt is to be processed
->> + * @intrstatus:        mask value for interrupt sources of endpoints
->> other
->> + *             than endpoint 0.
->> + *
->> + * Processes the buffer completion interrupts.
->> + */
->> +static void xudc_nonctrl_ep_handler(struct xusb_udc *udc, u8 epnum,
->> +               u32 intrstatus)
->
->
-> Should match open parenthesis:
-not necessary
->
->
-> static void xudc_nonctrl_ep_handler(struct xusb_udc *udc, u8 epnum,
->                                     u32 intrstatus)
->
->> +{
->> +
->> +       struct xusb_req *req;
->> +       struct xusb_ep *ep;
->> +
->> +       ep = &udc->ep[epnum];
->> +       /* Process the End point interrupts.*/
->> +       if (intrstatus & (XUSB_STATUS_EP0_BUFF1_COMP_MASK << epnum))
->> +               ep->buffer0ready = 0;
->> +       if (intrstatus & (XUSB_STATUS_EP0_BUFF2_COMP_MASK << epnum))
->> +               ep->buffer1ready = 0;
->> +
->> +       if (list_empty(&ep->queue))
->> +               return;
->> +
->> +       req = list_first_entry(&ep->queue, struct xusb_req, queue);
->> +
->> +       if (ep->is_in)
->> +               xudc_write_fifo(ep, req);
->> +       else
->> +               xudc_read_fifo(ep, req);
->> +}
->> +
->
->
-> (...)
->
->
->> +
->> +       /* buffer for data of get_status request */
->> +       buff = kzalloc(2, GFP_KERNEL);
->
->
-> define proper macro for '2'. Also we can use devm_kzalloc().
-Ok
->
-> Also one more thing: if we use kzalloc for allocating the 2 bytes
-> no where i found that releasing the buffer on error path.
->
->
->> +       if (buff == NULL) {
->> +               ret = -ENOMEM;
->> +               goto fail;
->> +       }
->> +       /* Dummy request ready, free this in remove */
->> +       udc->req->usb_req.buf = buff;
->> +
->> +       /* Set device address to 0.*/
->> +       udc->write_fn(udc->base_address, XUSB_ADDRESS_OFFSET, 0);
->> +
->> +       ret = usb_add_gadget_udc(&pdev->dev, &udc->gadget);
->> +       if (ret)
->> +               goto fail;
->
->
-> If it fails we have to free the buff. see above..
-Yeah will change.
->
->
->> +
->> +       udc->dev = &udc->gadget.dev;
->> +
->> +       /* Enable the interrupts.*/
->> +       ier = XUSB_STATUS_GLOBAL_INTR_MASK | XUSB_STATUS_INTR_EVENT_MASK |
->> +               XUSB_STATUS_FIFO_BUFF_RDY_MASK |
->> +               XUSB_STATUS_FIFO_BUFF_FREE_MASK |
->> +               XUSB_STATUS_SETUP_PACKET_MASK |
->> +               XUSB_STATUS_INTR_BUFF_COMP_ALL_MASK;
->> +
->> +       udc->write_fn(udc->base_address, XUSB_IER_OFFSET, ier);
->> +
->> +       platform_set_drvdata(pdev, udc);
->> +
->> +       dev_dbg(&pdev->dev, "%s at 0x%08X mapped to 0x%08X %s\n",
->> +               driver_name, (u32)res->start,
->> +               (u32 __force)udc->base_address,
->> +               udc->dma_enabled ? "with DMA" : "without DMA");
->> +
->> +       return 0;
->> +fail:
->> +       dev_err(&pdev->dev, "probe failed, %d\n", ret);
->> +       return ret;
->> +}
->> +
->> +/**
->> + * xudc_remove - Releases the resources allocated during the
->> initialization.
->> + * @pdev: pointer to the platform device structure.
->> + *
->> + * Return: 0 always
->> + */
->> +static int xudc_remove(struct platform_device *pdev)
->> +{
->> +       struct xusb_udc *udc = platform_get_drvdata(pdev);
->> +       void *buf = udc->req->usb_req.buf;
->
->
-> No need of creating another "void *". We can directly free it. (It is u8 *)
-Ofcourse but as per Felipe's comments declared local variables for readability
->
->
->> +
->> +       usb_del_gadget_udc(&udc->gadget);
->> +
->> +       /* free memory allocated for dummy request buffer */
->> +       kfree(buf);
->> +       /* free memory allocated for dummy request */
->> +       kfree(udc->req);
->> +
->> +       return 0;
->> +}
->> +
->> +/* Match table for of_platform binding */
->> +static const struct of_device_id usb_of_match[] = {
->> +       { .compatible = "xlnx,usb2-device-4.00.a", },
->> +       { /* end of list */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, usb_of_match);
->> +
->> +static struct platform_driver xudc_driver = {
->> +       .driver = {
->> +               .name = driver_name,
->> +               .owner = THIS_MODULE,
->
->
-> We can drop the owner field update... It updated automatically
-> by module_platform_driver().
-Ok
->
->
-> Please run checkpatch.pl on this patch. You may get more warnings and
-> errors.
-Yes ran before sending this out. 0 errors and 0 warnings.
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ .../bindings/serial/cirrus,clps711x-uart.txt       |  7 +++--
+ drivers/tty/serial/Kconfig                         |  1 +
+ drivers/tty/serial/clps711x.c                      | 32 +++++++---------------
+ 3 files changed, 16 insertions(+), 24 deletions(-)
 
-Thanks,
-Sundeep.B.S.
->
->
-> --
-> Regards,
-> Varka Bhadram.
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+diff --git a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+index 12f3cf8..caaeb25 100644
+--- a/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
++++ b/Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt
+@@ -8,7 +8,8 @@ Required properties:
+ - syscon: Phandle to SYSCON node, which contain UART control bits.
+ 
+ Optional properties:
+-- uart-use-ms: Indicate the UART has modem signal (DCD, DSR, CTS).
++- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
++  line respectively.
+ 
+ Note: Each UART port should have an alias correctly numbered
+ in "aliases" node.
+@@ -24,5 +25,7 @@ Example:
+ 		interrupts = <12 13>;
+ 		clocks = <&clks 11>;
+ 		syscon = <&syscon1>;
+-		uart-use-ms;
++		cts-gpios = <&sysgpio 0 GPIO_ACTIVE_LOW>;
++		dsr-gpios = <&sysgpio 1 GPIO_ACTIVE_LOW>;
++		dcd-gpios = <&sysgpio 2 GPIO_ACTIVE_LOW>;
+ 	};
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 26cec64..75cc59f 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -204,6 +204,7 @@ config SERIAL_CLPS711X
+ 	tristate "CLPS711X serial port support"
+ 	depends on ARCH_CLPS711X || COMPILE_TEST
+ 	select SERIAL_CORE
++	select SERIAL_MCTRL_GPIO
+ 	help
+ 	  This enables the driver for the on-chip UARTs of the Cirrus
+ 	  Logic EP711x/EP721x/EP731x processors.
+diff --git a/drivers/tty/serial/clps711x.c b/drivers/tty/serial/clps711x.c
+index f5b4c3d..acfe317 100644
+--- a/drivers/tty/serial/clps711x.c
++++ b/drivers/tty/serial/clps711x.c
+@@ -33,6 +33,8 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/mfd/syscon/clps711x.h>
+ 
++#include "serial_mctrl_gpio.h"
++
+ #define UART_CLPS711X_DEVNAME	"ttyCL"
+ #define UART_CLPS711X_NR	2
+ #define UART_CLPS711X_MAJOR	204
+@@ -62,7 +64,7 @@ struct clps711x_port {
+ 	unsigned int		tx_enabled;
+ 	int			rx_irq;
+ 	struct regmap		*syscon;
+-	bool			use_ms;
++	struct mctrl_gpios	*gpios;
+ };
+ 
+ static struct uart_driver clps711x_uart = {
+@@ -198,28 +200,17 @@ static unsigned int uart_clps711x_tx_empty(struct uart_port *port)
+ 
+ static unsigned int uart_clps711x_get_mctrl(struct uart_port *port)
+ {
++	unsigned int result = TIOCM_DSR | TIOCM_CTS | TIOCM_CAR;
+ 	struct clps711x_port *s = dev_get_drvdata(port->dev);
+-	unsigned int result = 0;
+-
+-	if (s->use_ms) {
+-		u32 sysflg = 0;
+-
+-		regmap_read(s->syscon, SYSFLG_OFFSET, &sysflg);
+-		if (sysflg & SYSFLG1_DCD)
+-			result |= TIOCM_CAR;
+-		if (sysflg & SYSFLG1_DSR)
+-			result |= TIOCM_DSR;
+-		if (sysflg & SYSFLG1_CTS)
+-			result |= TIOCM_CTS;
+-	} else
+-		result = TIOCM_DSR | TIOCM_CTS | TIOCM_CAR;
+ 
+-	return result;
++	return mctrl_gpio_get(s->gpios, &result);
+ }
+ 
+ static void uart_clps711x_set_mctrl(struct uart_port *port, unsigned int mctrl)
+ {
+-	/* Do nothing */
++	struct clps711x_port *s = dev_get_drvdata(port->dev);
++
++	mctrl_gpio_set(s->gpios, mctrl);
+ }
+ 
+ static void uart_clps711x_break_ctl(struct uart_port *port, int break_state)
+@@ -490,15 +481,10 @@ static int uart_clps711x_probe(struct platform_device *pdev)
+ 		s->syscon = syscon_regmap_lookup_by_pdevname(syscon_name);
+ 		if (IS_ERR(s->syscon))
+ 			return PTR_ERR(s->syscon);
+-
+-		s->use_ms = !index;
+ 	} else {
+ 		s->syscon = syscon_regmap_lookup_by_phandle(np, "syscon");
+ 		if (IS_ERR(s->syscon))
+ 			return PTR_ERR(s->syscon);
+-
+-		if (!index)
+-			s->use_ms = of_property_read_bool(np, "uart-use-ms");
+ 	}
+ 
+ 	s->port.line		= index;
+@@ -513,6 +499,8 @@ static int uart_clps711x_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, s);
+ 
++	s->gpios = mctrl_gpio_init(&pdev->dev, 0);
++
+ 	ret = uart_add_one_port(&clps711x_uart, &s->port);
+ 	if (ret)
+ 		return ret;
+-- 
+1.8.5.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
