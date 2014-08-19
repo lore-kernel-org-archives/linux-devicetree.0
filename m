@@ -1,198 +1,163 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] RTC: rk808: add RTC driver for RK808 PMIC RTC
-Date: Wed, 20 Aug 2014 00:28:42 +0200
-Message-ID: <1517709.ClbTUIzhrF@phil>
-References: <1408240979-29555-1-git-send-email-zyw@rock-chips.com> <53F2431F.3090802@collabora.co.uk>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv2] thermal: exynos: Add support for TRIM_RELOAD feature at
+ Exynos3250
+Date: Wed, 20 Aug 2014 08:47:32 +0900
+Message-ID: <53F3E214.4000409@samsung.com>
+References: <1408449463-3987-1-git-send-email-cw00.choi@samsung.com>
+ <1408450078-6296-1-git-send-email-cw00.choi@samsung.com>
+ <CAC-25o9ExZVTczq3ttkc5XX9ozXUCby2m7hAkUe=LAQakjzVWA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53F2431F.3090802-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAC-25o9ExZVTczq3ttkc5XX9ozXUCby2m7hAkUe=LAQakjzVWA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "edubezval@gmail.com" <edubezval@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, "Valentin, Eduardo" <eduardo.valentin@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Amit Kachhap <amit.daniel@samsung.com>, Tomasz Figa <t.figa@samsung.com>, l.majewski@samsung.com, naveen krishna <ch.naveen@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+Dear Eduardo,
 
-Am Montag, 18. August 2014, 20:17:03 schrieb Javier Martinez Canillas:
-> adding Mike Turquette to cc since this is also a clock driver.
+I'm so sorry. This patch has build break as following:
+It is my mistake about missing 'or' operation when adding TMU_SUPPORT_TRIM_RELOAD.
+
++	.features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD\
+
+I'll send new patch to fix it right now.
+
+Best Regards,
+Chanwoo Choi
+
+On 08/19/2014 09:28 PM, edubezval@gmail.com wrote:
+> Amit,
 > 
-> Hello Chris,
+> On Tue, Aug 19, 2014 at 8:07 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>> This patch add support for TRIM_RELOAD feature at Exynos3250. The TMU of
+>> Exynos3250 has two TRIMINFO_CON register.
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Zhang Rui <rui.zhang@intel.com>
+>> Cc: Eduardo Valentin <edubezval@gmail.com>
 > 
-> Overall it looks good to me, I've just a comment about the driver structure.
-> On 08/17/2014 04:02 AM, Chris Zhong wrote:
-> > RK808 PMIC is a MFD with RTC as one of the device. Adding RTC driver
-> > for supporting RTC device present inside RK808 PMIC.
-> > 
-> > Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
-> > 
-> >  drivers/rtc/Kconfig     |   11 +
-> >  drivers/rtc/Makefile    |    1 +
-> >  drivers/rtc/rtc-rk808.c |  564
-> >  +++++++++++++++++++++++++++++++++++++++++++++++ 3 files changed, 576
-> >  insertions(+)
-> >  create mode 100644 drivers/rtc/rtc-rk808.c
-> > 
-> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> > index a168e96..48f61b2 100644
-> > --- a/drivers/rtc/Kconfig
-> > +++ b/drivers/rtc/Kconfig
-> > @@ -288,6 +288,17 @@ config RTC_DRV_MAX77686
-> > 
-> >  	  This driver can also be built as a module. If so, the module
-> >  	  will be called rtc-max77686.
-> > 
-> > +config RTC_DRV_RK808
-> > +	tristate "Rockchip RK808 RTC"
-> > +	depends on MFD_RK808
-> > +	help
-> > +	  If you say yes here you will get support for the
-> > +	  RTC of Rk808 PMIC.
-> > +
-> > +	  This driver can also be built as a module. If so, the module
-> > +	  will be called rtc-rk808.
-> > +
-> > +
-> > 
-> >  config RTC_DRV_RS5C372
-> >  
-> >  	tristate "Ricoh R2025S/D, RS5C372A/B, RV5C386, RV5C387A"
-> >  	help
-> > 
-> > diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> > index 56f061c..91fe4647 100644
-> > --- a/drivers/rtc/Makefile
-> > +++ b/drivers/rtc/Makefile
-> > @@ -109,6 +109,7 @@ obj-$(CONFIG_RTC_DRV_PUV3)	+= rtc-puv3.o
-> > 
-> >  obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
-> >  obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
-> >  obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
-> > 
-> > +obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
-> > 
-> >  obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
-> >  obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
-> >  obj-$(CONFIG_RTC_DRV_RS5C348)	+= rtc-rs5c348.o
-> > 
-> > diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
-> > new file mode 100644
-> > index 0000000..0abb919
-> > --- /dev/null
-> > +++ b/drivers/rtc/rtc-rk808.c
-> > @@ -0,0 +1,564 @@
-> > +/*
-> > + * RTC driver for Rockchip RK808
-> > + *
-> > + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-> > + *
-> > + * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > + * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > it
-> > + * under the terms and conditions of the GNU General Public License,
-> > + * version 2, as published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope it will be useful, but WITHOUT
-> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-> > for + * more details.
-> > + *
-> > + */
-> > +
-> > +#include <linux/module.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/time.h>
-> > +#include <linux/rtc.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/bcd.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/ioctl.h>
-> > +#include <linux/completion.h>
-> > +#include <linux/mfd/rk808.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/miscdevice.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/irqdomain.h>
-> > +#include <linux/clk-provider.h>
-> > +
-> > +/* RTC_CTRL_REG bitfields */
-> > +#define BIT_RTC_CTRL_REG_STOP_RTC_M		0x01
-> > +#define BIT_RTC_CTRL_REG_ROUND_30S_M		0x02
-> > +#define BIT_RTC_CTRL_REG_AUTO_COMP_M		0x04
-> > +#define BIT_RTC_CTRL_REG_MODE_12_24_M		0x08
-> > +#define BIT_RTC_CTRL_REG_TEST_MODE_M		0x10
-> > +#define BIT_RTC_CTRL_REG_SET_32_COUNTER_M	0x20
-> > +#define BIT_RTC_CTRL_REG_GET_TIME_M		0x40
-> > +#define BIT_RTC_CTRL_REG_RTC_V_OPT_M		0x80
-> > +
-> > +/* RTC_STATUS_REG bitfields */
-> > +#define BIT_RTC_STATUS_REG_RUN_M		0x02
-> > +#define BIT_RTC_STATUS_REG_1S_EVENT_M		0x04
-> > +#define BIT_RTC_STATUS_REG_1M_EVENT_M		0x08
-> > +#define BIT_RTC_STATUS_REG_1H_EVENT_M		0x10
-> > +#define BIT_RTC_STATUS_REG_1D_EVENT_M		0x20
-> > +#define BIT_RTC_STATUS_REG_ALARM_M		0x40
-> > +#define BIT_RTC_STATUS_REG_POWER_UP_M		0x80
-> > +
-> > +/* RTC_INTERRUPTS_REG bitfields */
-> > +#define BIT_RTC_INTERRUPTS_REG_EVERY_M		0x03
-> > +#define BIT_RTC_INTERRUPTS_REG_IT_TIMER_M	0x04
-> > +#define BIT_RTC_INTERRUPTS_REG_IT_ALARM_M	0x08
-> > +
-> > +/* DEVCTRL bitfields */
-> > +#define BIT_RTC_PWDN				0x40
-> > +
-> > +/* REG_SECONDS_REG through REG_YEARS_REG is how many registers? */
-> > +#define ALL_TIME_REGS				7
-> > +#define ALL_ALM_REGS				6
-> > +
-> > +#define RTC_SET_TIME_RETRIES	5
-> > +#define RTC_GET_TIME_RETRIES	5
-> > +
-> > +struct rk808_rtc {
-> > +	struct rk808 *rk808;
-> > +	struct rtc_device *rtc;
-> > +	unsigned int alarm_enabled:1;
-> > +#ifdef CONFIG_COMMON_CLK
-> > +	struct clk_onecell_data clk_data;
-> > +	struct clk_hw		clkout1_hw;
-> > +	struct clk_hw		clkout2_hw;
-> > +#endif
+> What do you think about this patch?
 > 
-> As I mentioned on a previous review I really think these clocks should be
-> managed on a separate clock driver. It's not uncommon for PMIC chips to
-> have a bunch of regulators, a RTC and some clock ouputs and usually each
-> of these components have their own driver.
+>> ---
+>> Changes from v1:
+>> - Add missing 'TMU_SUPPORT_TRIM_RELOAD' features
+>>
+>>  drivers/thermal/samsung/exynos_tmu.c      |  7 +++++--
+>>  drivers/thermal/samsung/exynos_tmu.h      |  5 +++--
+>>  drivers/thermal/samsung/exynos_tmu_data.c | 11 +++++++++--
+>>  drivers/thermal/samsung/exynos_tmu_data.h |  7 +++++--
+>>  4 files changed, 22 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+>> index acbff14..ed01606 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu.c
+>> +++ b/drivers/thermal/samsung/exynos_tmu.c
+>> @@ -164,8 +164,11 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+>>                 }
+>>         }
+>>
+>> -       if (TMU_SUPPORTS(pdata, TRIM_RELOAD))
+>> -               __raw_writel(1, data->base + reg->triminfo_ctrl);
+>> +       if (TMU_SUPPORTS(pdata, TRIM_RELOAD)) {
+>> +               for (i = 0; i < pdata->triminfo_reload_count; i++)
+>> +                       __raw_writel(pdata->triminfo_reload[i],
+>> +                                       data->base + reg->triminfo_ctrl[i]);
+>> +       }
+>>
+>>         if (pdata->cal_mode == HW_MODE)
+>>                 goto skip_calib_data;
+>> diff --git a/drivers/thermal/samsung/exynos_tmu.h b/drivers/thermal/samsung/exynos_tmu.h
+>> index 1b4a644..72cb54e 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu.h
+>> +++ b/drivers/thermal/samsung/exynos_tmu.h
+>> @@ -151,8 +151,7 @@ struct exynos_tmu_registers {
+>>         u32     triminfo_25_shift;
+>>         u32     triminfo_85_shift;
+>>
+>> -       u32     triminfo_ctrl;
+>> -       u32     triminfo_ctrl1;
+>> +       u32     triminfo_ctrl[2];
+>>         u32     triminfo_reload_shift;
+>>
+>>         u32     tmu_ctrl;
+>> @@ -295,6 +294,8 @@ struct exynos_tmu_platform_data {
+>>         u8 second_point_trim;
+>>         u8 default_temp_offset;
+>>         u8 test_mux;
+>> +       u8 triminfo_reload[2];
+>> +       u8 triminfo_reload_count;
+>>
+>>         enum calibration_type cal_type;
+>>         enum calibration_mode cal_mode;
+>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/thermal/samsung/exynos_tmu_data.c
+>> index aa8e0de..b45aa90 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+>> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+>> @@ -95,6 +95,8 @@ static const struct exynos_tmu_registers exynos3250_tmu_registers = {
+>>         .triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
+>>         .triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
+>>         .triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
+>> +       .triminfo_ctrl[0] = EXYNOS_TMU_TRIMINFO_CON1,
+>> +       .triminfo_ctrl[1] = EXYNOS_TMU_TRIMINFO_CON2,
+>>         .tmu_ctrl = EXYNOS_TMU_REG_CONTROL,
+>>         .test_mux_addr_shift = EXYNOS4412_MUX_ADDR_SHIFT,
+>>         .buf_vref_sel_shift = EXYNOS_TMU_REF_VOLTAGE_SHIFT,
+>> @@ -160,8 +162,11 @@ static const struct exynos_tmu_registers exynos3250_tmu_registers = {
+>>                 .temp_level = 95, \
+>>         }, \
+>>         .freq_tab_count = 2, \
+>> +       .triminfo_reload[0] = 0x1, \
+>> +       .triminfo_reload[1] = 0x11, \
+>> +       .triminfo_reload_count = 2, \
+>>         .registers = &exynos3250_tmu_registers, \
+>> -       .features = (TMU_SUPPORT_EMULATION | \
+>> +       .features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD\
+>>                         TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
+>>                         TMU_SUPPORT_EMUL_TIME)
+>>  #endif
+>> @@ -184,7 +189,7 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
+>>         .triminfo_data = EXYNOS_TMU_REG_TRIMINFO,
+>>         .triminfo_25_shift = EXYNOS_TRIMINFO_25_SHIFT,
+>>         .triminfo_85_shift = EXYNOS_TRIMINFO_85_SHIFT,
+>> -       .triminfo_ctrl = EXYNOS_TMU_TRIMINFO_CON,
+>> +       .triminfo_ctrl[0] = EXYNOS_TMU_TRIMINFO_CON2,
+>>         .triminfo_reload_shift = EXYNOS_TRIMINFO_RELOAD_SHIFT,
+>>         .tmu_ctrl = EXYNOS_TMU_REG_CONTROL,
+>>         .test_mux_addr_shift = EXYNOS4412_MUX_ADDR_SHIFT,
+>> @@ -252,6 +257,8 @@ static const struct exynos_tmu_registers exynos4412_tmu_registers = {
+>>                 .temp_level = 95, \
+>>         }, \
+>>         .freq_tab_count = 2, \
+>> +       .triminfo_reload[0] = 0x1, \
+>> +       .triminfo_reload_count = 1, \
+>>         .registers = &exynos4412_tmu_registers, \
+>>         .features = (TMU_SUPPORT_EMULATION | TMU_SUPPORT_TRIM_RELOAD | \
+>>                         TMU_SUPPORT_FALLING_TRIP | TMU_SUPPORT_READY_STATUS | \
+>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.h b/drivers/thermal/samsung/exynos_tmu_data.h
+>> index f0979e5..e0536c3 100644
+>> --- a/drivers/thermal/samsung/exynos_tmu_data.h
+>> +++ b/drivers/thermal/samsung/exynos_tmu_data.h
+>> @@ -57,8 +57,11 @@
+>>  #define EXYNOS4210_TMU_TRIG_LEVEL_MASK 0x1111
+>>  #define EXYNOS4210_TMU_INTCLEAR_VAL    0x1111
+>>
+>> -/* Exynos5250 and Exynos4412 specific registers */
+>> -#define EXYNOS_TMU_TRIMINFO_CON        0x14
+>> +/* Exynos3250 specific registers */
+>> +#define EXYNOS_TMU_TRIMINFO_CON1       0x10
+>> +
+>> +/* Exynos5250, Exynos4412 and Exynos3250 specific registers */
+>> +#define EXYNOS_TMU_TRIMINFO_CON2       0x14
+>>  #define EXYNOS_THD_TEMP_RISE           0x50
+>>  #define EXYNOS_THD_TEMP_FALL           0x54
+>>  #define EXYNOS_EMUL_CON                0x80
+>> --
+>> 1.8.0
+>>
 > 
-> You are already adding a mult-function device driver for this PMIC so is
-> just a matter of adding another mfd cell for the clock driver.
 > 
-> I know that drivers/rtc/rtc-hym8563.c does the same thing and manage both
-> a RTC and a clock output but in this case it appears that chip is a plain
-> RTC chip with a clock. So I guess in that case it was not worth the
-> complexity of adding three drivers (mfd, rtc and clock) for just a simple
-> RTC? Arguably even that chip should be seen as a multi-function device
-> though but I'll let Mike to judge that. What I really think is that there
-> is a reason why we have both drivers/rtc and drivers/clk so we should try
-> to keep the needed support in the right place to avoid adding unnecessary
-> cross subsystem maintenance burden.
-
-Mike said in the past, that he doesn't require everything that provides a 
-clock to be sitting in drivers/clk. This (and the minimal size of the clkout 
-of hy8563) let me to decide to put the clkout into the rtc.
-
-For the rk808, I guess it should either be a separate mfd-cell or part of the 
-core mfd driver - but not the rtc cell.
-
-
-Heiko
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
