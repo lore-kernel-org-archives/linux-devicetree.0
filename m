@@ -1,85 +1,91 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v3 5/7] net: cpsw: Add am33xx MACID readout
-Date: Tue, 19 Aug 2014 10:50:02 +0200
-Message-ID: <20140819085002.GE12930@pengutronix.de>
-References: <1408202315-20006-1-git-send-email-mpa@pengutronix.de>
- <1408202315-20006-6-git-send-email-mpa@pengutronix.de>
- <53F244DA.3070803@ti.com>
- <20140818154112.6601cbff@gandalf.local.home>
- <53F25AD1.8040504@ti.com>
- <CABxcv=npv6bRq=VF8RT5trNxUzDj3bAm-PkvDEhcLVJ+uf8hCg@mail.gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [RFC PATCH 6/9] gpiolib: add API to get gpio desc and flags
+Date: Tue, 19 Aug 2014 11:56:31 +0300
+Message-ID: <20140819085631.GG1660@lahna.fi.intel.com>
+References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+ <1408172039-32513-7-git-send-email-mika.westerberg@linux.intel.com>
+ <CAAVeFu+LRxcJkPRpQMYhyz-TTY1HB7qCEv44a8vTU=g1iKCsfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VdOwlNaOFKGAtAAV"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CABxcv=npv6bRq=VF8RT5trNxUzDj3bAm-PkvDEhcLVJ+uf8hCg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Mugunthan V N <mugunthanvnm@ti.com>, Steven Rostedt <rostedt@goodmis.org>, "David S. Miller" <davem@davemloft.net>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kernel@pengutronix.de
+In-Reply-To: <CAAVeFu+LRxcJkPRpQMYhyz-TTY1HB7qCEv44a8vTU=g1iKCsfA@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>Rob
 List-Id: devicetree@vger.kernel.org
 
-
---VdOwlNaOFKGAtAAV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Aug 19, 2014 at 12:50:59AM +0200, Javier Martinez Canillas wrote:
-> Hello Mugunthan,
->=20
-> On Mon, Aug 18, 2014 at 9:58 PM, Mugunthan V N <mugunthanvnm@ti.com> wrot=
-e:
-> >>
-> >> Thus, for this patchset, as is:
-> >>
-> >> Tested-by: Steven Rostedt <rostedt@goodmis.org>
+On Mon, Aug 18, 2014 at 09:24:48AM -0700, Alexandre Courbot wrote:
+> On Fri, Aug 15, 2014 at 11:53 PM, Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index 2ebc9071e354..e6c2413a6fbf 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -2644,6 +2644,24 @@ static struct gpio_desc *acpi_find_gpio(struct device *dev, const char *con_id,
+> >         return desc;
+> >  }
 > >
-> > This will fail for DRA7xx not in AM33xx
-> >
->=20
-> cpsw_am33xx_cm_get_macid() checks for
-> of_machine_is_compatible("ti,am33xx") and returns 0 if the machine is
-> not an am33xx. cpsw_probe_dt() only propagates the return value if is
-> not 0 so this patch does not change the semantics for other SoCs
-> besides am33xx.
+> > +struct gpio_desc *dev_get_gpiod_flags(struct device *dev, unsigned int idx,
+> > +                                     enum gpio_lookup_flags *flags)
+> > +{
+> > +       struct gpio_desc *desc = ERR_PTR(-ENOENT);
+> > +
+> > +       if (!dev || !flags)
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       /* Using device tree? */
+> > +       if (IS_ENABLED(CONFIG_OF) && dev->of_node)
+> > +               desc = of_find_gpio(dev, NULL, idx, flags);
+> > +       else if (IS_ENABLED(CONFIG_ACPI) && ACPI_COMPANION(dev))
+> > +               desc = acpi_get_gpiod_flags(dev, idx, flags);
+> > +
+> > +       return desc;
+> > +}
+> > +EXPORT_SYMBOL(dev_get_gpiod_flags);
+> 
+> Putting aside the fact that this function is clearly ACPI-centric (no
+> con_id parameter and no handling of the platform interface), I have
+> two big problems with it and it ending up in the consumer interface:
+> 
+> 1) The returned descriptor is not requested by gpiolib, which means no
+> check is made about whether the GPIO has already been requested by
+> someone else, and another driver can very well request the same GPIO
+> later and obtain it. Any descriptor returned by a function in
+> consumer.h *must* be properly requested. Furthermore the 1:1 mapping
+> between GPIO descriptors and GPIO numbers is not something we can take
+> for granted (since it will likely change soon), so this practice is
+> definitely to ban.
 
-Yes, this patch is only about the am33xx. I don't have the DRA7xx
-hardware so I am not able to test on that hardware. Mugunthan, perhaps
-you can supply some followup patches for DRA7xx.
+My bad, somehow I missed the part that it never requested the GPIO.
+Thanks for pointing it out.
 
-Best regards,
+> 2) It exposes the GPIO flags, while they are supposed to be opaque to consumers.
 
-Markus
+And this, of course we should be using gpiod_is_active_low() and similar
+functions that work with descriptors.
 
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> These two points would somehow be acceptable if this function was
+> gpiolib-private, but here it is clearly not the case and this allows
+> pretty nasty thing to happen. Basically you are using it to take
+> advantage of the gpiod lookup mechanism and then quickly fall back to
+> the legacy integer interface. That's really not something to encourage
+> - these drivers should be converted to use gpiod internally (while
+> preserving integer-based lookup for compatiblity, if needed).
+> 
+> In patch 8 you say:
+> 
+> "this can be solved by adding a new field of type
+> struct gpio_desc but then there is another problem: the devm_gpiod_get
+> needs to operate on the button device instead of its parent device that
+> has the driver binded, so when the driver is unloaded, the resources for
+> the gpio will not get freed automatically."
+> 
+> I'd very much prefer that you use the non-devm variant of gpiod_get()
+> and free the resources manually when the driver is unloaded than this
+> workaround that introduces an loophole in the gpiod consumer lookup
+> functions.
 
---VdOwlNaOFKGAtAAV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I agree and we are going to rework this and the consumer patches to do
+exactly what you say.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJT8w+5AAoJEEpcgKtcEGQQjCcP/0hoofAuP32DcnajtPwClKLz
-mXUDwGG4mysydUB6XV3q/DjEUwRZS5AxpTU15UyHM/vKEX5A4eVP99YhaUh4dQlg
-IPGjLNxOYqWg+ZOSIsSYjXV7I8+zf0QaleN3Hq/zKCMQoFJwM2RyWeryGGXFAfEv
-O3NApJmWqdQe2TyH70NYm61d/KSGhanMmbdX2dHEtBHpEJ9Vx7Mjc1tNlZfqcbdD
-XbD52OhYM0MwDxo30bl33Q/D4MsJrbsfr+3/UPiGUNQiWG93ZTYVjsfsVgfEvM9I
-PEGqm4ueHX1bqU9cV8G267egI9UAwvnhN4QRelk26SRdgkYdTYZ49HS8c6HcCamh
-g4vM7zFBPJha9V/lZC550+NyyKzLojglREYNVzfmnDJGP+Mki3E/8sYsFPuKl1xY
-NKwD+d2oSHrh4wU/0/SeMTaLfGBCJDoyw5k1yd+hVPsaQlbB7hgRrZjSufz7nwSx
-m8ZLFCal1wk3VnUSaEHtoPoVKwkaM3+LQq7JzJFuW/nJYmiZu3KJwktQ49mWFijK
-R4k/LSYMMeGLd8OaDJUp37vKkY7u0Ivo47QwxCS6lXmLtFxQ1jwp8bV2zwMejEQh
-PkfCtCNBgqJMON3Zv1tnOZqKgKIrEjuS4FbojmqWfR2tl12icMWq4hdII67BSB/5
-RFvpS5h9vXfvFDxY1q0N
-=1F8K
------END PGP SIGNATURE-----
-
---VdOwlNaOFKGAtAAV--
