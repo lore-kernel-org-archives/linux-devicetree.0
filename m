@@ -1,71 +1,127 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv4 1/3] pwm: ftm-pwm: Clean up the code.
-Date: Tue, 19 Aug 2014 12:38:01 +0800
-Message-ID: <1408423083-19827-2-git-send-email-Li.Xiubo@freescale.com>
-References: <1408423083-19827-1-git-send-email-Li.Xiubo@freescale.com>
+From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/3] Document: fsl,spdif: Adjust the document making it read more comfortably.
+Date: Tue, 19 Aug 2014 12:38:56 +0800
+Message-ID: <1408423138-19880-2-git-send-email-Li.Xiubo@freescale.com>
+References: <1408423138-19880-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1408423083-19827-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: thierry.reding@gmail.com, mark.rutland@arm.com, linux-pwm@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, rdunlap@infradead.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, Xiubo Li <Li.Xiubo@freescale.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408423138-19880-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch intends to prepare for converting to direct regmap
-API usage.
-
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/pwm/pwm-fsl-ftm.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/sound/fsl,spdif.txt        | 82 +++++++++++-----------
+ 1 file changed, 41 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/pwm/pwm-fsl-ftm.c b/drivers/pwm/pwm-fsl-ftm.c
-index a18bc8f..96982da 100644
---- a/drivers/pwm/pwm-fsl-ftm.c
-+++ b/drivers/pwm/pwm-fsl-ftm.c
-@@ -21,11 +21,10 @@
- #include <linux/slab.h>
+diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
+index 3e9e82c8..d37bfc2 100644
+--- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
++++ b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
+@@ -6,54 +6,54 @@ a fibre cable.
  
- #define FTM_SC		0x00
--#define FTM_SC_CLK_MASK	0x3
--#define FTM_SC_CLK_SHIFT	3
--#define FTM_SC_CLK(c)	(((c) + 1) << FTM_SC_CLK_SHIFT)
-+#define FTM_SC_CLK_MASK_SHIFT	3
-+#define FTM_SC_CLK_MASK	(3 << FTM_SC_CLK_MASK_SHIFT)
-+#define FTM_SC_CLK(c)	(((c) + 1) << FTM_SC_CLK_MASK_SHIFT)
- #define FTM_SC_PS_MASK	0x7
--#define FTM_SC_PS_SHIFT	0
+ Required properties:
  
- #define FTM_CNT		0x04
- #define FTM_MOD		0x08
-@@ -258,7 +257,7 @@ static int fsl_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		}
+-  - compatible : Compatible list, must contain "fsl,imx35-spdif".
++- compatible:	Compatible list, must contain "fsl,imx35-spdif".
  
- 		val = readl(fpc->base + FTM_SC);
--		val &= ~(FTM_SC_PS_MASK << FTM_SC_PS_SHIFT);
-+		val &= ~FTM_SC_PS_MASK;
- 		val |= fpc->clk_ps;
- 		writel(val, fpc->base + FTM_SC);
- 		writel(period - 1, fpc->base + FTM_MOD);
-@@ -305,7 +304,7 @@ static int fsl_counter_clock_enable(struct fsl_pwm_chip *fpc)
+-  - reg : Offset and length of the register set for the device.
++- reg:		Offset and length of the register set for the device.
  
- 	/* select counter clock source */
- 	val = readl(fpc->base + FTM_SC);
--	val &= ~(FTM_SC_CLK_MASK << FTM_SC_CLK_SHIFT);
-+	val &= ~FTM_SC_CLK_MASK;
- 	val |= FTM_SC_CLK(fpc->cnt_select);
- 	writel(val, fpc->base + FTM_SC);
+-  - interrupts : Contains the spdif interrupt.
++- interrupts:	Contains the spdif interrupt.
  
-@@ -357,7 +356,7 @@ static void fsl_counter_clock_disable(struct fsl_pwm_chip *fpc)
+-  - dmas : Generic dma devicetree binding as described in
+-  Documentation/devicetree/bindings/dma/dma.txt.
++- dmas:		Generic dma devicetree binding as described in
++		Documentation/devicetree/bindings/dma/dma.txt.
  
- 	/* no users left, disable PWM counter clock */
- 	val = readl(fpc->base + FTM_SC);
--	val &= ~(FTM_SC_CLK_MASK << FTM_SC_CLK_SHIFT);
-+	val &= ~FTM_SC_CLK_MASK;
- 	writel(val, fpc->base + FTM_SC);
+-  - dma-names : Two dmas have to be defined, "tx" and "rx".
++- dma-names:	Two dmas have to be defined, "tx" and "rx".
  
- 	clk_disable_unprepare(fpc->clk[FSL_PWM_CLK_CNTEN]);
+-  - clocks : Contains an entry for each entry in clock-names.
++- clocks:	Contains an entry for each entry in clock-names.
+ 
+-  - clock-names : Includes the following entries:
+-	"core"		The core clock of spdif controller
+-	"rxtx<0-7>"	Clock source list for tx and rx clock.
+-			This clock list should be identical to
+-			the source list connecting to the spdif
+-			clock mux in "SPDIF Transceiver Clock
+-			Diagram" of SoC reference manual. It
+-			can also be referred to TxClk_Source
+-			bit of register SPDIF_STC.
++- clock-names:	Includes the following entries:
++		"core" -- The core clock of spdif controller
++		"rxtx<0-7>" -- Clock source list for tx and rx clock.
++		This clock list should be identical to
++		the source list connecting to the spdif
++		clock mux in "SPDIF Transceiver Clock
++		Diagram" of SoC reference manual. It
++		can also be referred to TxClk_Source
++		bit of register SPDIF_STC.
+ 
+-   - big-endian : If this property is absent, the native endian mode will
+-   be in use as default, or the big endian mode will be in use for all the
+-   device registers.
++- big-endian:	If this property is absent, the native endian mode will
++		be in use as default, or the big endian mode will be in
++		use for all the device registers.
+ 
+ Example:
+ 
+-spdif: spdif@02004000 {
+-	compatible = "fsl,imx35-spdif";
+-	reg = <0x02004000 0x4000>;
+-	interrupts = <0 52 0x04>;
+-	dmas = <&sdma 14 18 0>,
+-	       <&sdma 15 18 0>;
+-	dma-names = "rx", "tx";
+-
+-	clocks = <&clks 197>, <&clks 3>,
+-	       <&clks 197>, <&clks 107>,
+-	       <&clks 0>, <&clks 118>,
+-	       <&clks 62>, <&clks 139>,
+-	       <&clks 0>;
+-	clock-names = "core", "rxtx0",
+-		"rxtx1", "rxtx2",
+-		"rxtx3", "rxtx4",
+-		"rxtx5", "rxtx6",
+-		"rxtx7";
+-
+-	big-endian;
+-	status = "okay";
+-};
++	spdif: spdif@02004000 {
++		compatible = "fsl,imx35-spdif";
++		reg = <0x02004000 0x4000>;
++		interrupts = <0 52 0x04>;
++		dmas = <&sdma 14 18 0>,
++			<&sdma 15 18 0>;
++		dma-names = "rx", "tx";
++
++		clocks = <&clks 197>, <&clks 3>,
++			<&clks 197>, <&clks 107>,
++			<&clks 0>, <&clks 118>,
++			<&clks 62>, <&clks 139>,
++			<&clks 0>;
++		clock-names = "core", "rxtx0",
++			"rxtx1", "rxtx2",
++			"rxtx3", "rxtx4",
++			"rxtx5", "rxtx6",
++			"rxtx7";
++
++		big-endian;
++		status = "okay";
++	};
 -- 
 1.8.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
