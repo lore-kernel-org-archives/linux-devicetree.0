@@ -1,158 +1,246 @@
-From: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-Date: Tue, 19 Aug 2014 10:47:25 +0000
-Message-ID: <a0244b6befa9407fb6c2c35cc29f92f7@BL2PR03MB468.namprd03.prod.outlook.com>
-References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
-	<87a9774lf5.fsf@nvidia.com>
-	<cfb1d2ff66004685b7ead3f5e6321681@BL2PR03MB468.namprd03.prod.outlook.com>
-	<87y4ur2h23.fsf@nvidia.com>
-	<d9fb045d54244f26a773ba45ad3caa2d@BL2PR03MB468.namprd03.prod.outlook.com>
-	<87zjf0hk3b.fsf@nvidia.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v5] mmc: implement Driver Stage Register handling
+Date: Tue, 19 Aug 2014 13:00:51 +0200
+Message-ID: <CAPDyKFqf0Ci1C+1_qCpAMEtpH4dmVoxBZv=GHW-CFMpMEt=vog@mail.gmail.com>
+References: <1408437951-31477-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <87zjf0hk3b.fsf-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1408437951-31477-1-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Chris Ball <chris@printf.net>, linux-mmc <linux-mmc@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Markus Niebel <Markus.Niebel@tq-group.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On 19 August 2014 10:45, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> From: Sascha Hauer <s.hauer@pengutronix.de>
+>
+> Some eMMC and SD cards implement a DSR register that allows to tune
+> raise/fall times and drive strength of the CMD and DATA outputs.
+> The values to use depend on the card in use and the host.
+> It might be needed to reduce the drive strength to prevent voltage pe=
+aks
+> above the host's specification.
+>
+> Implement a 'dsr' devicetree property that allows to specify the valu=
+e
+> to set the DSR to. For non-dt setups the new members of mmc_host can =
+be
+> set by board code.
+>
+> This patch was initially authored by Sascha Hauer. It contains
+> improvements authored by Markus Niebel and Uwe Kleine-K=C3=B6nig.
+>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
+Thanks! Applied for next.
 
-> -----Original Message-----
-> From: Hiroshi Doyu [mailto:hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org]
-> Sent: Tuesday, August 19, 2014 3:34 PM
-> To: Sethi Varun-B16395; Will Deacon
-> Cc: Hiroshi Doyu; Thierry Reding; Stephen Warren; Arnd Bergmann; Mark
-> Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Olof Johansson; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> foundation.org; Rob Herring; linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Yoder Stuart-B08248
-> Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-> 
-> 
-> Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-> 
-> > Hi Hiroshi,
-> >
-> >> -----Original Message-----
-> >> From: Hiroshi Doyu [mailto:hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org]
-> >> Sent: Thursday, August 14, 2014 9:35 PM
-> >> To: Sethi Varun-B16395
-> >> Cc: Hiroshi Doyu; Thierry Reding; Stephen Warren; Arnd Bergmann; Will
-> >> Deacon; Mark Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Olof Johansson;
-> >> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; Rob Herring;
-> >> linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >> Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree
-> >> bindings
-> >>
-> >> Hi Varun,
-> >>
-> >> Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-> >>
-> >> >> -----Original Message-----
-> >> >> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
-> >> >> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Hiroshi Doyu
-> >> >> Sent: Thursday, August 14, 2014 12:18 PM
-> >> >> To: Thierry Reding; Stephen Warren; Arnd Bergmann; Will Deacon
-> >> >> Cc: Mark Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Olof Johansson;
-> >> >> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; Rob Herring;
-> >> >> linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >> >> Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree
-> >> >> bindings
-> >> >>
-> >> >>
-> >> >> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> >> >>
-> >> >> > +Multiple-master IOMMU:
-> >> >> > +----------------------
-> >> >> > +
-> >> >> > +       iommu {
-> >> >> > +               /* the specifier represents the ID of the master */
-> >> >> > +               #iommu-cells = <1>;
-> >> >> > +       };
-> >> >> > +
-> >> >> > +       master@1 {
-> >> >> > +               /* device has master ID 42 in the IOMMU */
-> >> >> > +               iommus = <&{/iommu} 42>;
-> >> >> > +       };
-> >> >> > +
-> >> >> > +       master@2 {
-> >> >> > +               /* device has master IDs 23 and 24 in the IOMMU */
-> >> >> > +               iommus = <&{/iommu} 23>, <&{/iommu} 24>;
-> >> >> > +       };
-> >> >>
-> >> >> I think that this "master ID" will be parsed in IOMMU driver. For
-> >> >> example, ARM,SMMU expects "streamID" as "master ID", right?
-> >> >>
-> >> >> If a SoC has a feature to configure to assign streamID to devices
-> >> >> at runtime, "streamID" is not equal to "master ID".
-> >> >>
-> >> >>   iommus = <&{/smmu} "soc specific master ID">;
-> >> >>
-> >> >> "soc master ID" needs to be translated into "streamID" by SoC SW.
-> >> >> It seems that ARM,SMMU kernel driver doesn't expect this kind of
-> >> >> ID translation. If ARM,SMMU kernel driver is used as is, "soc master ID"
-> >> >> would be incompatible? ARM,SMMU needs such translation before
-> >> >> parsing. Is this my understanding right?
-> >> >>
-> >> >> If so I think that this master ID configuration/translation may be
-> >> >> quite reasonable requirment for SoC using ARM,SMMU.
-> >> >>
-> >> >> Can we consider this ID translation within ARM,SMMU compatibility?
-> >> >>
-> >> >> IOW, is it possible to implement some SoC specific hook for ID
-> >> >> translation/configuration in ARM,SMMU kernel driver?
-> >> >
-> >> >
-> >> > Can the id translation be done using a SMR mask?
-> >>
-> >> No, "SoC master ID" is completely independenf of SMR.
-> >>
-> >> > Also, for dynamic stream ID allocation we would need to represent
-> >> > the specific master register (to store the stream ID) in the device tree.
-> >>
-> >> I assmue that the above means that iMX has such configuration
-> >> register to map steramID and a device dynamically.
-> >
-> > We have per master registers for setting the stream ID on the
-> > Layerscape platforms. My point was that we would need the iommu master
-> > node to include a reference to the master id register.
-> >
-> > master@1 {
-> >                /* device has master ID 42 in the IOMMU */
-> >              iommus = <&{/iommu} 42>;
-> >              master-id-reg = <phandle offset> };
-> 
-> In the above, for "iommus=" bindings, you wouldn't need to break
-> ARM,SMMU compatibility at all if you set "streamID" exactly as below.
-> 
->   master@1 {
->                  /* device has master ID 42 in the IOMMU */
->                iommus = <&{/iommu} 'any given streamID'>;
->                master-id-reg = <phandle offset>
->   };
-> 
-> And your SoC needs to register bus_notifier and ADD_DEVICE should configure
-> to map 'any given streamID' to a device via the above register. This wouldn't
-> need any modification from ARM,SMMU driver and keep the iommus bindings
-> as it is.
-> 
-> IOW, SoC only needs to register ADD_DEVICE in bus_notifier to map StreamID
-> to a device. This needs to be executed earlier than IOMMU bus's ADD_DEVICE,
-> though.
-> 
-> Is my understanding right?
-I don't think that SOC specific code needs a bus notifier for setting the stream ID. It can be done as a part of SOC specific initialization. The device tree can be updated to reflect the correct stream ID (SMMU driver can get the updated stream ID from device tree). 
-I was thinking more on the lines of updating the device stream id while attaching a device to the domain.  
+> ---
+>
+> Notes:
+>     Changes since v4, Message-Id: 1408091882-32123-1-git-send-email-u=
+=2Ekleine-koenig@pengutronix.de:
+>
+>      - fix logic to set dsr_req
+>      - make dsr_req an int as requested by Ulf Hansson and put it nea=
+r dsr in the
+>        struct
+>
+>  Documentation/devicetree/bindings/mmc/mmc.txt |  2 ++
+>  drivers/mmc/core/host.c                       |  8 ++++++++
+>  drivers/mmc/core/mmc.c                        |  8 ++++++++
+>  drivers/mmc/core/mmc_ops.c                    | 20 +++++++++++++++++=
++++
+>  drivers/mmc/core/mmc_ops.h                    |  1 +
+>  drivers/mmc/core/sd.c                         |  8 ++++++++
+>  include/linux/mmc/card.h                      |  3 ++-
+>  include/linux/mmc/host.h                      |  4 ++++
+>  8 files changed, 53 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Document=
+ation/devicetree/bindings/mmc/mmc.txt
+> index 3c18001dfd5d..a3fe21f2b709 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -40,6 +40,8 @@ Optional properties:
+>  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
+>  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
+>  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
+> +- dsr: Value the card's (optional) Driver Stage Register (DSR) shoul=
+d be
+> +  programmed with. Valid range: [0 .. 0xffff].
+>
+>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host cont=
+rollers line
+>  polarity properties, we have to fix the meaning of the "normal" and =
+"inverted"
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index 95cceae96944..d572b2beb65a 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -452,6 +452,14 @@ int mmc_of_parse(struct mmc_host *host)
+>         if (of_find_property(np, "mmc-hs400-1_2v", &len))
+>                 host->caps2 |=3D MMC_CAP2_HS400_1_2V | MMC_CAP2_HS200=
+_1_2V_SDR;
+>
+> +       host->dsr_req =3D !of_property_read_u32(np, "dsr", &host->dsr=
+);
+> +       if (host->dsr_req && (host->dsr & ~0xffff)) {
+> +               dev_err(host->parent,
+> +                       "device tree specified broken value for DSR: =
+0x%x, ignoring\n",
+> +                       host->dsr);
+> +               host->dsr_req =3D 0;
+> +       }
+> +
+>         return 0;
+>
+>  out:
+> diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+> index 793c6f7ddb04..fdc1ac1360c4 100644
+> --- a/drivers/mmc/core/mmc.c
+> +++ b/drivers/mmc/core/mmc.c
+> @@ -162,6 +162,7 @@ static int mmc_decode_csd(struct mmc_card *card)
+>         csd->read_partial =3D UNSTUFF_BITS(resp, 79, 1);
+>         csd->write_misalign =3D UNSTUFF_BITS(resp, 78, 1);
+>         csd->read_misalign =3D UNSTUFF_BITS(resp, 77, 1);
+> +       csd->dsr_imp =3D UNSTUFF_BITS(resp, 76, 1);
+>         csd->r2w_factor =3D UNSTUFF_BITS(resp, 26, 3);
+>         csd->write_blkbits =3D UNSTUFF_BITS(resp, 22, 4);
+>         csd->write_partial =3D UNSTUFF_BITS(resp, 21, 1);
+> @@ -1273,6 +1274,13 @@ static int mmc_init_card(struct mmc_host *host=
+, u32 ocr,
+>         }
+>
+>         /*
+> +        * handling only for cards supporting DSR and hosts requestin=
+g
+> +        * DSR configuration
+> +        */
+> +       if (card->csd.dsr_imp && host->dsr_req)
+> +               mmc_set_dsr(host);
+> +
+> +       /*
+>          * Select card, as all following commands rely on that.
+>          */
+>         if (!mmc_host_is_spi(host)) {
+> diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+> index f51b5ba3bbea..ba0275e90617 100644
+> --- a/drivers/mmc/core/mmc_ops.c
+> +++ b/drivers/mmc/core/mmc_ops.c
+> @@ -93,6 +93,26 @@ int mmc_deselect_cards(struct mmc_host *host)
+>         return _mmc_select_card(host, NULL);
+>  }
+>
+> +/*
+> + * Write the value specified in the device tree or board code into t=
+he optional
+> + * 16 bit Driver Stage Register. This can be used to tune raise/fall=
+ times and
+> + * drive strength of the DAT and CMD outputs. The actual meaning of =
+a given
+> + * value is hardware dependant.
+> + * The presence of the DSR register can be determined from the CSD r=
+egister,
+> + * bit 76.
+> + */
+> +int mmc_set_dsr(struct mmc_host *host)
+> +{
+> +       struct mmc_command cmd =3D {0};
+> +
+> +       cmd.opcode =3D MMC_SET_DSR;
+> +
+> +       cmd.arg =3D (host->dsr << 16) | 0xffff;
+> +       cmd.flags =3D MMC_RSP_NONE | MMC_CMD_AC;
+> +
+> +       return mmc_wait_for_cmd(host, &cmd, MMC_CMD_RETRIES);
+> +}
+> +
+>  int mmc_go_idle(struct mmc_host *host)
+>  {
+>         int err;
+> diff --git a/drivers/mmc/core/mmc_ops.h b/drivers/mmc/core/mmc_ops.h
+> index 80ae9f4e0293..390dac665b2a 100644
+> --- a/drivers/mmc/core/mmc_ops.h
+> +++ b/drivers/mmc/core/mmc_ops.h
+> @@ -14,6 +14,7 @@
+>
+>  int mmc_select_card(struct mmc_card *card);
+>  int mmc_deselect_cards(struct mmc_host *host);
+> +int mmc_set_dsr(struct mmc_host *host);
+>  int mmc_go_idle(struct mmc_host *host);
+>  int mmc_send_op_cond(struct mmc_host *host, u32 ocr, u32 *rocr);
+>  int mmc_all_send_cid(struct mmc_host *host, u32 *cid);
+> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+> index 0c44510bf717..25913889cbaa 100644
+> --- a/drivers/mmc/core/sd.c
+> +++ b/drivers/mmc/core/sd.c
+> @@ -127,6 +127,7 @@ static int mmc_decode_csd(struct mmc_card *card)
+>                 csd->read_partial =3D UNSTUFF_BITS(resp, 79, 1);
+>                 csd->write_misalign =3D UNSTUFF_BITS(resp, 78, 1);
+>                 csd->read_misalign =3D UNSTUFF_BITS(resp, 77, 1);
+> +               csd->dsr_imp =3D UNSTUFF_BITS(resp, 76, 1);
+>                 csd->r2w_factor =3D UNSTUFF_BITS(resp, 26, 3);
+>                 csd->write_blkbits =3D UNSTUFF_BITS(resp, 22, 4);
+>                 csd->write_partial =3D UNSTUFF_BITS(resp, 21, 1);
+> @@ -954,6 +955,13 @@ static int mmc_sd_init_card(struct mmc_host *hos=
+t, u32 ocr,
+>         }
+>
+>         /*
+> +        * handling only for cards supporting DSR and hosts requestin=
+g
+> +        * DSR configuration
+> +        */
+> +       if (card->csd.dsr_imp && host->dsr_req)
+> +               mmc_set_dsr(host);
+> +
+> +       /*
+>          * Select card, as all following commands rely on that.
+>          */
+>         if (!mmc_host_is_spi(host)) {
+> diff --git a/include/linux/mmc/card.h b/include/linux/mmc/card.h
+> index d424b9de3aff..680a7f0188bb 100644
+> --- a/include/linux/mmc/card.h
+> +++ b/include/linux/mmc/card.h
+> @@ -42,7 +42,8 @@ struct mmc_csd {
+>         unsigned int            read_partial:1,
+>                                 read_misalign:1,
+>                                 write_partial:1,
+> -                               write_misalign:1;
+> +                               write_misalign:1,
+> +                               dsr_imp:1;
+>  };
+>
+>  struct mmc_ext_csd {
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 7960424d0bc0..fd3d81e3fd8e 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -365,6 +365,10 @@ struct mmc_host {
+>
+>         unsigned int            slotno; /* used for sdio acpi binding=
+ */
+>
+> +       int                     dsr_req;        /* DSR value is valid=
+ */
+> +
 
--Varun
+I took the liberty to remove this empty line.
+
+> +       u32                     dsr;    /* optional driver stage (DSR=
+) value */
+> +
+>         unsigned long           private[0] ____cacheline_aligned;
+>  };
+>
+> --
+> 2.1.0.rc1
+>
+
+Kind regards
+Uffe
