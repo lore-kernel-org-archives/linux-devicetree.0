@@ -1,64 +1,101 @@
-From: <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH] i2c: designware: deduce speed mode from device tree setting
-Date: Tue, 19 Aug 2014 15:18:49 -0500
-Message-ID: <1408479529-24249-1-git-send-email-atull@opensource.altera.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v6] input: drv260x: Add TI drv260x haptics driver
+Date: Tue, 19 Aug 2014 13:24:38 -0700
+Message-ID: <20140819202438.GD3626@core.coreip.homeip.net>
+References: <1408117670-19750-1-git-send-email-dmurphy@ti.com>
+ <20140819192401.GA32080@core.coreip.homeip.net>
+ <00FC9A978A94B7418C33AFAE8A35ED49DEC1EF@DFLE09.ent.ti.com>
+ <20140819200748.GB3626@core.coreip.homeip.net>
+ <00FC9A978A94B7418C33AFAE8A35ED49DEC3E6@DFLE09.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <00FC9A978A94B7418C33AFAE8A35ED49DEC3E6@DFLE09.ent.ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "Murphy, Dan" <dmurphy@ti.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Tue, Aug 19, 2014 at 08:13:32PM +0000, Murphy, Dan wrote:
+> On 08/19/2014 03:07 PM, Dmitry Torokhov wrote:
+> > On Tue, Aug 19, 2014 at 07:35:06PM +0000, Murphy, Dan wrote:
+> >> Dmitry
+> >>
+> >> On 08/19/2014 02:24 PM, Dmitry Torokhov wrote:
+> >>> Hi Dan,
+> >>>
+> >>> On Fri, Aug 15, 2014 at 10:47:50AM -0500, Dan Murphy wrote:
+> >>>> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> >>>> index 2ff4425..99f6762 100644
+> >>>> --- a/drivers/input/misc/Kconfig
+> >>>> +++ b/drivers/input/misc/Kconfig
+> >>>> @@ -676,4 +676,13 @@ config INPUT_SOC_BUTTON_ARRAY
+> >>>>  	  To compile this driver as a module, choose M here: the
+> >>>>  	  module will be called soc_button_array.
+> >>>>  
+> >>>> +config INPUT_DRV260X_HAPTICS
+> >>>> +	tristate "TI DRV260X haptics support"
+> >>>> +	depends on INPUT && I2C
+> >>>
+> >>> This also needs "select REGMAP_I2C"
+> >>>
+> >>
+> >> This one is OK
+> >>
+> >>>> +	help
+> >>>> +	  Say Y to enable support for the TI DRV260X haptics driver.
+> >>>> +
+> >>>> +	  To compile this driver as a module, choose M here: the
+> >>>> +	  module will be called drv260x-haptics.
+> >>>> +
+> >>>
+> >>> [...]
+> >>>
+> >>>> +#ifndef _LINUX_DRV260X_PDATA_H
+> >>>> +#define _LINUX_DRV260X_PDATA_H
+> >>>> +
+> >>>> +struct drv260x_platform_data {
+> >>>> +	int enable_gpio;
+> >>>
+> >>> I do not see this used anywhere.
+> >>
+> >> But this is actually used here
+> >>
+> >> haptics->enable_gpio = devm_gpiod_get(&client->dev, "enable");
+> >>
+> >> for the non-dt case
+> > 
+> > "haptics" is not instance of drv260x_platform_data but drv260x_data which
+> > defines:
+> > 
+> > struct drv260x_data {
+> > 	...
+> > 	struct gpio_desc *enable_gpio;
+> > 	...
+> > 
+> > That one I kept.
+> > 
+> 
+> Yes that is correct but the enable_gpio for non-dt enabled devices this enable_gpio
+> needs to come from the platform data structure.  Without the enable gpio in the platform data
+> structure there is no way for non-dt enabled devices to set the gpio value.
 
-Use the documented, but unimplemented "clock-frequency"
-Device Tree setting as a guide on whether to set the speed
-mode bits in DW_IC_CON to standard or fast i2c mode.
+What else uses the platform data structure? You are accessing gpio by name, not
+by number, in the driver so I am not sure how non-dt case will use u32 defined
+in platform data.
 
-Previously, the driver was hardwired to fast mode.  Default
-to fast mode if the "clock-frequency" property is not present
-for backwards compatiblity.
+> 
+> The haptics instance just stores the gpio descriptor returned from this call.
 
-Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- drivers/i2c/busses/i2c-designware-platdrv.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Right.
 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index bc87733..18cd3d9 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -122,7 +122,8 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 	struct dw_i2c_dev *dev;
- 	struct i2c_adapter *adap;
- 	struct resource *mem;
--	int irq, r;
-+	int irq, r, ret, speed = DW_IC_CON_SPEED_FAST;
-+	u32 bus_rate;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
-@@ -167,6 +168,11 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		of_property_read_u32(pdev->dev.of_node,
- 				     "i2c-scl-falling-time-ns",
- 				     &dev->scl_falling_time);
-+
-+		ret = of_property_read_u32(pdev->dev.of_node,
-+					   "clock-frequency", &bus_rate);
-+		if (!ret && (bus_rate <= 100000))
-+			speed = DW_IC_CON_SPEED_STD;
- 	}
- 
- 	dev->functionality =
-@@ -177,7 +183,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 		I2C_FUNC_SMBUS_WORD_DATA |
- 		I2C_FUNC_SMBUS_I2C_BLOCK;
- 	dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
--		DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
-+		DW_IC_CON_RESTART_EN | speed;
- 
- 	/* Try first if we can configure the device from ACPI */
- 	r = dw_i2c_acpi_configure(pdev);
+> 
+> The devm_gpiod looks at the platform data is CONFIG_OF is not set.
+
+Umm, how? You do not pass it anywhere...
+
+Thanks.
+
 -- 
-1.7.9.5
+Dmitry
