@@ -1,56 +1,44 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: [PATCH/RFC v5 00/10] LED / flash API integration - documentation
-Date: Wed, 20 Aug 2014 15:44:09 +0200
-Message-ID: <1408542259-415-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Jacek Anaszewski <j.anaszewski@samsung.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/4] ARM: shmobile: dtsi: interrupt-parent cleanups
+Date: Wed, 20 Aug 2014 16:28:30 +0200
+Message-ID: <1408544914-21742-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is the follow-up of the LED / flash API integration
-series [1]. For clarity reasons the patchset has been split into
-five subsets:
+	Hi Simon, Magnus,
 
-- LED Flash Class
-- Flash Manager
-- V4L2 Flash
-- LED Flash Class drivers
-- Documentation
+This series cleans up interrupt-parent use, to match common use.
+It makes sure there's an "interrupt-parent = <&gic>;" at the top, which is
+thus inherited by all child nodes, and removes superflous "interrupt-parent"
+properties from the individual child nodes.
 
-The series is based on linux-next-20140820.
+This was tested on r8a7791/koelsch only.
 
-Thanks,
-Jacek Anaszewski
+Geert Uytterhoeven (4):
+  ARM: shmobile: r8a7779 dtsi: Remove superfluous interrupt-parent
+  ARM: shmobile: r8a7790 dtsi: Remove superfluous interrupt-parent
+  ARM: shmobile: r8a7790 dtsi: Remove superfluous interrupt-parent
+  ARM: shmobile: sh73a0 dtsi: Move interrupt-parent to the top
 
-[1] https://lkml.org/lkml/2014/7/11/914
-
-Jacek Anaszewski (10):
-  Documentation: leds: Add description of LED Flash Class extension
-  Documentation: leds: Add description of Flash Manager
-  Documentation: leds: add exemplary asynchronous mux driver
-  DT: leds: Add flash led devices related properties
-  DT: Add documentation for LED Class Flash Manger
-  DT: Add documentation for exynos4-is 'flashes' property
-  DT: Add documentation for the mfd Maxim max77693
-  of: Add Skyworks Solutions, Inc. vendor prefix
-  DT: Add documentation for the Skyworks AAT1290
-  ARM: dts: add aat1290 current regulator device node
-
- Documentation/devicetree/bindings/leds/common.txt  |   16 ++
- .../devicetree/bindings/leds/leds-aat1290.txt      |   17 ++
- .../bindings/leds/leds-flash-manager.txt           |  163 ++++++++++++++++++++
- .../devicetree/bindings/media/samsung-fimc.txt     |    5 +
- Documentation/devicetree/bindings/mfd/max77693.txt |   62 ++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- Documentation/leds/leds-async-mux.c                |   65 ++++++++
- Documentation/leds/leds-class-flash.txt            |  118 ++++++++++++++
- arch/arm/boot/dts/exynos4412-trats2.dts            |   24 +++
- 9 files changed, 471 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-aat1290.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-flash-manager.txt
- create mode 100644 Documentation/leds/leds-async-mux.c
- create mode 100644 Documentation/leds/leds-class-flash.txt
+ arch/arm/boot/dts/r8a7779.dtsi |  6 ------
+ arch/arm/boot/dts/r8a7790.dtsi |  1 -
+ arch/arm/boot/dts/r8a7791.dtsi |  1 -
+ arch/arm/boot/dts/sh73a0.dtsi  | 24 +-----------------------
+ 4 files changed, 1 insertion(+), 31 deletions(-)
 
 -- 
-1.7.9.5
+1.9.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
