@@ -1,72 +1,54 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 6/6] devicetree: bindings: Document Renesas JPEG Processing Unit.
-Date: Thu, 21 Aug 2014 01:01:43 +0200
-Message-ID: <3694359.xqEjcGBlOG@avalon>
-References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com> <1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v3 6/6] ARM: dts: qcom: Add APQ8074 Dragonboard PMIC GPIO
+ bindings
+Date: Wed, 20 Aug 2014 16:06:13 -0700
+Message-ID: <20140820230612.GE16274@sonymobile.com>
+References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
+ <1407771634-14946-7-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-Cc: m.chehab@samsung.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1407771634-14946-7-git-send-email-iivanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mikhail,
-
-Thank you for the patch.
-
-On Tuesday 19 August 2014 16:50:53 Mikhail Ulyanov wrote:
-> Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-> ---
->  .../devicetree/bindings/media/renesas,jpu.txt      | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/renesas,jpu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> b/Documentation/devicetree/bindings/media/renesas,jpu.txt new file mode
-> 100644
-> index 0000000..44b07df
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> @@ -0,0 +1,23 @@
-> +* Renesas VSP1 Video Processing Engine
-
-Copy & paste ? :-)
-
+On Mon 11 Aug 08:40 PDT 2014, Ivan T. Ivanov wrote:
+> diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard-pmics-pins.dtsi b/arch/arm/boot/dts/qcom-apq8074-dragonboard-pmics-pins.dtsi
+[...]
 > +
-> +The JPEG processing unit (JPU) incorporates the JPEG codec with an encoding
-> +and decoding function conforming to the JPEG baseline process, so that the
-> JPU
-> +can encode image data and decode JPEG data quickly.
-> +It can be found in the Renesas R-Car first and second generation SoCs.
-
-Is there a difference between the first and second generation JPUs ?
-
+> +&pm8941_gpios {
 > +
-> +Required properties:
-> +  - compatible: should containg one of the following:
-> +			- "renesas,jpu-r8a7790" for R-Car H2
-> +			- "renesas,jpu-r8a7791" for R-Car M2
-
-How about adding a "renesas,jpu" generic compatible, and listing both the SoC-
-specific and the generic values (in that order) in the compatible property ?
-
-> +  - reg: Base address and length of the registers block for the JPU.
-> +  - interrupts: JPU interrupt specifier.
-> +  - clocks: A phandle + clock-specifier pair for the JPU functional clock.
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pm8941_gpios_default>;
 > +
-> +Example: R8A7790 (R-Car H2) JPU node
-> +	jpeg-codec@fe980000 {
-> +		compatible = "renesas,jpu-r8a7790";
-> +		reg = <0 0xfe980000 0 0x10300>;
-> +		interrupts = <0 272 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp1_clks R8A7790_CLK_JPU>;
-> +	};
+> +	pm8941_gpios_default: default {
+> +		group-1 {
+> +			pins = "gpio1", "gpio2", "gpio5", "gpio29";
+> +			function = PMIC_GPIO_FUNC_NORMAL;
 
--- 
+This looks really strange, I can't get myself to stop thinking that you forgot
+the <> around this (I know it's a string). I don't like these defines.
+
+> +			input-enable;
+> +			power-source = <PM8941_GPIO_S3>;
+> +			qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_30>;
+> +		};
+> +		group-6 {	/* TUSB3_HUB-RESET */
+
+Why not name the nodes something useful?
+If you name it tusb3-hub-reset you can skip the comment.
+
+> +			pins = "gpio6";
+> +			function = PMIC_GPIO_FUNC_NORMAL;
+> +			output-high;
+> +			drive-push-pull;
+> +			power-source = <PM8941_GPIO_VPH>;
+> +			qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_30>;
+> +			qcom,drive-strength = <PMIC_GPIO_STRENGTH_MED>;
+> +		};
+
 Regards,
-
-Laurent Pinchart
-
+Bjorn
