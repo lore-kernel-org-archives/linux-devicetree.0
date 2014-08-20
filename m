@@ -1,94 +1,72 @@
-From: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCHv2 4/6] dt-bindings: arm: add Freescale LS1021A SoC device
- tree binding
-Date: Wed, 20 Aug 2014 15:34:57 +0300
-Message-ID: <53F495F1.60800@freescale.com>
-References: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
- <1407145148-29217-5-git-send-email-jingchang.lu@freescale.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree
+ setting
+Date: Wed, 20 Aug 2014 07:36:18 -0500
+Message-ID: <20140820123617.GB1373@katana>
+References: <1408479529-24249-1-git-send-email-atull@opensource.altera.com>
+ <20140820092257.GA21174@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407145148-29217-5-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140820092257.GA21174@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "atull@opensource.altera.com" <atull@opensource.altera.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "skuribay@pobox.com" <skuribay@pobox.com>, "Romain.Baeriswyl@abilis.com" <Romain.Baeriswyl@abilis.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "alan@linux.intel.com" <alan@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/04/2014 12:39 PM, Jingchang Lu wrote:
-> Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/arm/fsl.txt | 37 +++++++++++++++++++++++++++
->   1 file changed, 37 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index e935d7d..c962124 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -74,3 +74,40 @@ Required root node properties:
->   i.MX6q generic board
->   Required root node properties:
->       - compatible = "fsl,imx6q";
-> +
-> +
-> +Freescale LS1021A Platform Device Tree Bindings
-> +------------------------------------------------
-> +
-> +Required root node compatible properties:
-> +  - compatible = "fsl,ls1021a";
-> +
-> +SoC-specific device tree bindings for system configuration
-> +-------------------------------------------
-> +
-> +Required device node compatible properties:
-> +
-> +  - compatible = "fsl,ls1021a-scfg":
-> +	scfg is the supplemental configuration unit, provides SoC specific
-> +	configuration and status registers for the chip. There is no dedicate
-> +	driver for it, but for device whose configuration and status register
-> +	locates in this space should operate on it. Such as getting PEX port
-> +	status.
-> +
-> +  - compatible = "fsl,ls1021a-dcfg":
-> +	dcfg is the device configuration unit that provides general purpose
-> +	configuration and status for the device, there is no dedicate driver
-> +	for it, but for device whose configuration and status register locates
-> +	in this space should operate on it. Such as setting the secondary core
-> +	start address and release the secondary core from holdoff and startup.
 
-Is it that important to be mentioned in the binding that there is no 
-driver for it? It seems to be just an implementation detail, the device 
-tree describes the hardware not any particular implementation.
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +Example:
-> +	scfg: scfg@1570000 {
-> +		compatible = "fsl,ls1021a-scfg";
-> +		reg = <0x0 0x1570000 0x0 0x10000>;
+> > +
+> > +		ret =3D of_property_read_u32(pdev->dev.of_node,
+> > +					   "clock-frequency", &bus_rate);
+> > +		if (!ret && (bus_rate <=3D 100000))
+> > +			speed =3D DW_IC_CON_SPEED_STD;
+>=20
+> This looks a bit odd.
+>=20
+> If the device only supports two particular speeds why do we accept any
+> other speed in the clock-frequency property?
 
-The reg is not part of the description above. I think that each of these 
-nodes should be described separate, maybe something like this:
+"clock-frequency" is the default binding for specifying i2c bus speeds
+today. Some controllers can be programmed to do various speeds, some can
+only do a set of fixed values.
 
-Freescale SCFG
+> Surely we should at least warn that something was off?
 
-scfg is the supplemental configuration unit, provides SoC specific 
-configuration and status registers for the chip. There is no dedicate 
-driver for it, but for device whose configuration and status register 
-locates in this space should operate on it. Such as getting PEX port status.
+Yes, I was going to say the same until Romain's old patch showed up
+which does that.
 
-Required properties:
-- compatible: Should be "fsl,ls1021a-scfg"
-- reg: should contain.....
+Thanks,
 
-> +	};
-> +
-> +	dcfg: dcfg@1ee0000 {
-> +		compatible = "fsl,ls1021a-dcfg";
-> +		reg = <0x0 0x1ee0000 0x0 0x10000>;
-> +	};
+   Wolfram
 
-Diana
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJT9JZBAAoJEBQN5MwUoCm22TsQAISfSofiMFAxoAXGsj+R5SPI
+3NPq6TSgjwv/VrrB5PjiSE+qt3qbcaHLxAA1UU33mMA5Zj9QT+1LCFZ0v3Kv6TBl
+XIcUp7JVIQJ343V/XgLiYKPV99uRCM+BulRE5zurF+p2QRjOcV66rUAjdqCYmASW
+ItRNxxEIcvrM4vBGzhWHRDe4iPl4D6J2QNxZaUE9gmdkbUIiTYF3vasf/5+eBaNx
+3YodLSng+HSirXkVKNAi5vCYvaNu3Rc6dTsOHLlI5Bn0xtkiTVI8zvQ49tR+3uJQ
+Ad8VBZuPhzyaALwdqiqM+kDJQW3uYoQtFeQsZJVEZz9SwX/Oo8xRKdB+zP4Pgu67
+HQKo8HmwzazlnfNfQs4LxsiR12RvnmGIlmS+3S3l55dK0J1Jex1qHZH23YT5Cseo
+rO9Jc356lsZK/E2gCgAigw9CuSvuHgg1vgtqMjTBj+64LfphnWFrsUzlrAsza+35
+KfdkROGypxkCMXtjHrOsCWMZ2XY6Of/Qxa76iofV+7bTc5SD5MT56d9o1CJiSkCB
+QrDqDcDwaq0alzJWwNLIHe/OLJolSZi2jyNkYqhH1Xkf+K8JplmkxQe3bHBj++DU
+YS3hfPAe3+XZ6sNrIJaC8vQWCMNkc0rOTztJNLszVIBPoyVCqom0+VqXt4nY39D7
+Z8LLOaVtvFzCoWdSiJe3
+=iqcS
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
