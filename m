@@ -1,45 +1,69 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [RFC PATCH 6/6] rtc: rtc-isl12057: Change vendor prefix for Intersil Corporation to isil
-Date: Wed, 20 Aug 2014 10:43:04 +0200
-Message-ID: <1408524184-31928-7-git-send-email-p.zabel@pengutronix.de>
-References: <1408524184-31928-1-git-send-email-p.zabel@pengutronix.de>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv6 2/2] dt/bindings: Add the DT binding documentation for
+ endianness
+Date: Wed, 20 Aug 2014 09:14:02 +0000
+Message-ID: <10ad24319e6a486db77c31a5a911140e@BN1PR0301MB0609.namprd03.prod.outlook.com>
+References: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
+ <1405398183-31345-3-git-send-email-Li.Xiubo@freescale.com>
+ <20140820080549.GA15414@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408524184-31928-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20140820080549.GA15414@ulmo>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently there is a wild mixture of isl, isil, and intersil
-compatibles in the kernel. At this point, changing the vendor
-symbol to the most often used variant, which is equal to the
-NASDAQ symbol, isil, should not hurt, since the isl1208 driver
-doesn't care either way.
-Patch 70e123373c05 added this driver with device tree support
-using the then documented isl vendor prefix, so we keep that
-around for backwards compatibility.
+> Subject: Re: [PATCHv6 2/2] dt/bindings: Add the DT binding documentation for
+> endianness
+> 
+> On Tue, Jul 15, 2014 at 12:23:03PM +0800, Xiubo Li wrote:
+> > Device-Tree binding for device endianness
+> > Index     Device     Endianness properties
+> > ---------------------------------------------------
+> > 1         BE         'big-endian'
+> > 2         LE         'little-endian'
+> >
+> > For one device driver, which will run in different scenarios above
+> > on different SoCs using the devicetree, we need one way to simplify
+> > this.
+> >
+> > Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/regmap/regmap.txt          | 47
+> ++++++++++++++++++++++
+> >  1 file changed, 47 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/regmap/regmap.txt
+> 
+> Sorry for jumping in so late. I think this binding documentation needs
+> to be moved somewhere else. regmap is a Linux kernel specific
+> implementation detail and therefore has no place in device tree binding
+> descriptions. Furthermore the endianness properties described herein do
+> apply to drivers that don't use regmap.
+> 
+> Perhaps we need some top-level file that describes generic properties
+> such as this?
+> 
+> Thierry
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/rtc/rtc-isl12057.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yes, I do agree.
+And there are many devices that have the endian issue without using the
+Regmap in our LS* SoCs.
 
-diff --git a/drivers/rtc/rtc-isl12057.c b/drivers/rtc/rtc-isl12057.c
-index 455b601..8276bd6 100644
---- a/drivers/rtc/rtc-isl12057.c
-+++ b/drivers/rtc/rtc-isl12057.c
-@@ -279,7 +279,8 @@ static int isl12057_probe(struct i2c_client *client,
- 
- #ifdef CONFIG_OF
- static const struct of_device_id isl12057_dt_match[] = {
--	{ .compatible = "isl,isl12057" },
-+	{ .compatible = "isil,isl12057" },
-+	{ .compatible = "isl,isl12057" }, /* for backwards compatibility */
- 	{ },
- };
- #endif
--- 
-2.1.0.rc1
+And I also think one generic binding description of this will be much
+better.
+
+Where should we place it? In Documentation/devicetree/bindings/, or...?
+
+
+Thanks,
+
+BRs
+Xiubo
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
