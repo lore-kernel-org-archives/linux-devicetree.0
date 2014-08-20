@@ -1,38 +1,54 @@
-From: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 16/16] ARM: tegra: enable Tegra124 cpufreq driver by default
-Date: Thu, 21 Aug 2014 00:04:44 +0300
-Message-ID: <1408568684-11016-17-git-send-email-ttynkkynen@nvidia.com>
-References: <1408568684-11016-1-git-send-email-ttynkkynen@nvidia.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v3 2/6] pinctrl: Introduce pinctrl driver for Qualcomm
+ SSBI PMIC's
+Date: Wed, 20 Aug 2014 14:28:44 -0700
+Message-ID: <20140820212843.GB16274@sonymobile.com>
+References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
+ <1407771634-14946-3-git-send-email-iivanov@mm-sol.com>
+ <53F456F3.3000309@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408568684-11016-1-git-send-email-ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53F456F3.3000309@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra124 cpufreq driver depends on CONFIG_GENERIC_CPUFREQ_CPU0, so
-enable it to get the Tegra driver to build by default.
+On Wed 20 Aug 01:06 PDT 2014, Srinivas Kandagatla wrote:
 
-Signed-off-by: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-v4: New patch
----
- arch/arm/configs/tegra_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+> Hi Bjorn,
+> 
 
-diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
-index 285c433..afaa97c 100644
---- a/arch/arm/configs/tegra_defconfig
-+++ b/arch/arm/configs/tegra_defconfig
-@@ -43,6 +43,7 @@ CONFIG_KEXEC=y
- CONFIG_CPU_FREQ=y
- CONFIG_CPU_FREQ_STAT_DETAILS=y
- CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
-+CONFIG_GENERIC_CPUFREQ_CPU0=y
- CONFIG_CPU_IDLE=y
- CONFIG_VFP=y
- CONFIG_NEON=y
--- 
-1.8.1.5
+Hi Srinivas,
+
+Thanks for the testing. I'm reworking the driver to incorporate yours, Linus'
+and Ivans feedback.
+
+> Two things which I noticed while trying out this driver to drive a reset
+> line.
+> 
+> 1> gpio numbering for pinconf vs gpio are not consistent, they differ by
+> an offset of 1.
+> 
+
+After scratching my head regarding this I now see that there's a off by one in
+most of the gpio functions. I've rewroked this to make more sense now.
+
+The gpio numbers has to start at 1, as all documentation is based on that.
+
+[...]
+> 
+> 2> Looking back at v3.4 kernel, for gpio modes, BIT(0) of bank 0 is set
+> to enable gpio mode. without this bit driver does not work for output pins.
+> 
+
+Thanks, I missed that.
+
+Unfortunately, setting that bit results in input not working - the interrupt
+bits are never set for gpios that have that bit set. I'm trying to figure out
+why this is the case before sending out the new version...
+
+Regards,
+Bjorn
