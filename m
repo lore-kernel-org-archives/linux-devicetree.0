@@ -1,38 +1,74 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 2/4] pwm: rockchip: Allow polarity invert on rk3288
-Date: Wed, 20 Aug 2014 12:31:15 -0700
-Message-ID: <CAD=FV=VeGv5xMC3NTBuSZowxUY2h03CyY8my4-sfSzOn5ij7sw@mail.gmail.com>
-References: <1408464476-28316-1-git-send-email-dianders@chromium.org>
-	<1408464476-28316-3-git-send-email-dianders@chromium.org>
-	<20140820100447.GG15414@ulmo>
-	<CAD=FV=U9gOiY=4s7WmAQcm0n9s67nWdqQ3A0L2B7Dg83dNotjQ@mail.gmail.com>
-	<387c82a0-efeb-431d-b8a5-200f24bc47ff@email.android.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Handling commit change logs (was: [PATCH v3 13/15] cpufreq: Add cpufreq
+ driver for Tegra124)
+Date: Wed, 20 Aug 2014 22:02:28 +0200
+Message-ID: <53F4FED4.7060408@suse.de>
+References: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi>	<1408419205-10048-14-git-send-email-tuomas.tynkkynen@iki.fi>	<CAKohpokQOALPH13Ykz4nTBOby8J1X6_F30LNKz=gsC4wN3=3vg@mail.gmail.com>	<53F3A900.8010805@nvidia.com>	<CAKohponcZv9-MFNUQFxC_49-+P6QOhdjxsnYAyL3i4sXdCBYrw@mail.gmail.com> <CABxcv=ncm3Y7Ecfymro6TOuP=d10OV5--8n=dYmHyj6zi8hwEw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <387c82a0-efeb-431d-b8a5-200f24bc47ff@email.android.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Heiko Stuebner <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, Olof Johansson <olof@lixom.net>, Eddie Cai <eddie.cai@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, hpa@zytor.com
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=ncm3Y7Ecfymro6TOuP=d10OV5--8n=dYmHyj6zi8hwEw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, Vince Hsu <vinceh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dmitry,
+Hi Javier,
 
-On Wed, Aug 20, 2014 at 12:29 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On August 20, 2014 1:54:11 PM CDT, Doug Anderson <dianders@chromium.org> wrote:
->>On Wed, Aug 20, 2014 at 3:04 AM, Thierry Reding
->><thierry.reding@gmail.com> wrote:
->>> On Tue, Aug 19, 2014 at 09:07:54AM -0700, Doug Anderson wrote:
->>>> The rk3288 has the ability to invert
->>>> +     struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
->>>> +
->>>> +     if (!pc->data->has_invert)
->>>> +             return -ENOSYS;
->>>> +
->
-> At the kernel summit hpa also mentioned that ENOSYS should only be used for missing syscalls. Not sure what error code would suit better here though...
+Am 20.08.2014 17:39, schrieb Javier Martinez Canillas:
+> As you already know when you apply a patch with git am, everything
+> that is between a line with 3 dashes line (---) and the actual diff i=
+s
+> omitted since that is where the generated diffstat is placed by git
+> format-patch.
+>=20
+> We usually rely on that behavior to put there the history of a patch
+> or any information that we think that is useful for reviewers but is
+> not suitable to end in the commit message. Now that means that you
+> have to generate the patch and then manually edit it to add the
+> history there.
+>=20
+> But since git am omits any text between the first "---" and the diff,
+> it means that you can add a "---" on your actual commit message and
+> anything that follows will be discarded by git am, that way you can
+> maintain your history on your commit message which is way less tediou=
+s
+> than manually editing patches.
+>=20
+> So the second "---" from Tuomas patch is actually the one generated b=
+y
+> git format-patch but that gets discarded by git am just like any othe=
+r
+> text so it causes no harm when other apply the patches.
+>=20
+> If this not the correct workflow and you have a better way to manage
+> this, I would love to know about it.
 
-Luckily this code is gone now.  See v4 of the series.  ;)
+One drawback of having --- in the commit message is that you can't
+cherry-pick but really need to use git-am for it to be stripped.
 
--Doug
+I resorted to a scripted way of handling change logs: Per patch series =
+I
+maintain a shell script that after git-format-patch essentially runs
+sed -i "/---/ r /dev/stdin" $OUTDIR/0001-*.patch <<EOCL
+=2E..
+EOCL
+to insert my text after ---. (sed syntax is not POSIX-compliant FWIW.)
+Similarly I fill in the blurbs for the cover letter.
+
+Another way I've heard of is git-notes, which lets you associate text
+with a given commit id.
+But in my tests that data did not survive a git-rebase -i, it stayed
+attached to the original commit when editing the commit message or
+fixing up a patch. It could still be accessed through the list of
+git-notes but not be comfortably extracted from the updated branch via
+git-rev-list or the likes.
+
+Cheers,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
