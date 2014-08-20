@@ -1,47 +1,33 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH] thermal: exynos: Remove duplicate code when reading triminfo
- register of Exynos5440
-Date: Wed, 20 Aug 2014 13:24:33 +0900
-Message-ID: <1408508673-3173-1-git-send-email-cw00.choi@samsung.com>
-References: <1408450078-6296-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1408450078-6296-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rui.zhang@intel.com, eduardo.valentin@ti.com, amit.daniel@samsung.com
-Cc: kgene.kim@samsung.com, b.zolnierkie@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, ch.naveen@samsung.com, kyungmin.park@samsung.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Eduardo Valentin <edubezval@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v1 1/3] pinctrl: qcom: Add APQ8084 pinctrl support
+Date: Tue, 19 Aug 2014 21:39:30 -0700
+Message-ID: <20140820043929.GH7070@sonymobile.com>
+References: <1408468936-12252-1-git-send-email-gdjakov@mm-sol.com>
+ <1408468936-12252-2-git-send-email-gdjakov@mm-sol.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408468936-12252-2-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "iivanov@mm-sol.com" <iivanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch remove simply duplicate code when reading triminfo register of Exynos5440.
+On Tue 19 Aug 10:22 PDT 2014, Georgi Djakov wrote:
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Amit Daniel Kachhap <amit.daniel@samsung.com>
----
- drivers/thermal/samsung/exynos_tmu.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> This patch adds support for the TLMM (Top-Level Mode Mux) block found
+> in the APQ8084 platform.
+> 
+[...]
+> +
+> +#define NUM_GPIO_PINGROUPS 143
+> +
 
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index ed01606..13c2e01 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -181,15 +181,13 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
- 		 */
- 		switch (data->id) {
- 		case 0:
-+		case 2:
- 			trim_info = readl(data->base +
- 			EXYNOS5440_EFUSE_SWAP_OFFSET + reg->triminfo_data);
- 			break;
- 		case 1:
- 			trim_info = readl(data->base + reg->triminfo_data);
- 			break;
--		case 2:
--			trim_info = readl(data->base -
--			EXYNOS5440_EFUSE_SWAP_OFFSET + reg->triminfo_data);
- 		}
- 	} else {
- 		/* On exynos5420 the triminfo register is in the shared space */
--- 
-1.8.0
+I think this looks good overall, but in my APQ8084 documentation
+(80-NG550-2X Rev. B) there are 147 (0..146) gpio pins in the TLMM block.
+
+Any suggestion to why there's a discrepancy?
+
+Regards,
+Bjorn
