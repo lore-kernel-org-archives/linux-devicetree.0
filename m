@@ -1,108 +1,123 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 2/4] pwm: rockchip: Allow polarity invert on rk3288
-Date: Wed, 20 Aug 2014 11:54:11 -0700
-Message-ID: <CAD=FV=U9gOiY=4s7WmAQcm0n9s67nWdqQ3A0L2B7Dg83dNotjQ@mail.gmail.com>
-References: <1408464476-28316-1-git-send-email-dianders@chromium.org>
-	<1408464476-28316-3-git-send-email-dianders@chromium.org>
-	<20140820100447.GG15414@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140820100447.GG15414@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, Olof Johansson <olof@lixom.net>, Eddie Cai <eddie.cai@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v4 3/4] ARM: dts: Add main PWM info to rk3288
+Date: Wed, 20 Aug 2014 11:54:01 -0700
+Message-ID: <1408560842-3746-4-git-send-email-dianders@chromium.org>
+References: <1408560842-3746-1-git-send-email-dianders@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408560842-3746-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thierry,
+This adds the PWM info (other than the VOP PWM) to the main rk3288
+dtsi file.
 
-On Wed, Aug 20, 2014 at 3:04 AM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Tue, Aug 19, 2014 at 09:07:54AM -0700, Doug Anderson wrote:
->> The rk3288 has the ability to invert the polarity of the PWM.  Let's
->> enable that ability.
->>
->> To do this we increase the number of pwm_cells to 3 to allow using the
->> PWM_POLARITY_INVERTED flag.  Since the PWM driver on rk3288 is very
->> new, I thought this was OK.
->
-> I don't see any files in arch/arm/boot/dts using either of the
-> rockchip,vop-pwm or rockchip,rk3288-pwm compatible strings, so there's
-> no reason to consider this stable ABI yet. As far as I'm concerned the
-> last sentence can just as well be dropped.
->
-> Besides, patches have been posted to support #pwm-cells = <2> and
-> #pwm-cells = <3> at the same time which should give you backwards-
-> compatibility for free.
+Signed-off-by: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes in v4:
+- Add rockchip,grf to pwm nodes.
 
-Done.  I'm happy that the subsystem is being improved to handle
-pwm-cells more dynamically, too!  That's a nice improvement.
+Changes in v3: None
+Changes in v2: None
 
+ arch/arm/boot/dts/rk3288.dtsi | 72 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
-> A couple more comments inline.
->
->> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-> [...]
->> +int rockchip_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
->> +                           enum pwm_polarity polarity)
->
-> This should be static.
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 36be7bb..9074205 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -261,6 +261,54 @@
+ 		status = "disabled";
+ 	};
+ 
++	pwm0: pwm@ff680000 {
++		compatible = "rockchip,rk3288-pwm";
++		reg = <0xff680000 0x10>;
++		#pwm-cells = <3>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm0_pin>;
++		clocks = <&cru PCLK_PWM>;
++		clock-names = "pwm";
++		rockchip,grf = <&grf>;
++		status = "disabled";
++	};
++
++	pwm1: pwm@ff680010 {
++		compatible = "rockchip,rk3288-pwm";
++		reg = <0xff680010 0x10>;
++		#pwm-cells = <3>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm1_pin>;
++		clocks = <&cru PCLK_PWM>;
++		clock-names = "pwm";
++		rockchip,grf = <&grf>;
++		status = "disabled";
++	};
++
++	pwm2: pwm@ff680020 {
++		compatible = "rockchip,rk3288-pwm";
++		reg = <0xff680020 0x10>;
++		#pwm-cells = <3>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm2_pin>;
++		clocks = <&cru PCLK_PWM>;
++		clock-names = "pwm";
++		rockchip,grf = <&grf>;
++		status = "disabled";
++	};
++
++	pwm3: pwm@ff680030 {
++		compatible = "rockchip,rk3288-pwm";
++		reg = <0xff680030 0x10>;
++		#pwm-cells = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pwm3_pin>;
++		clocks = <&cru PCLK_PWM>;
++		clock-names = "pwm";
++		rockchip,grf = <&grf>;
++		status = "disabled";
++	};
++
+ 	pmu: power-management@ff730000 {
+ 		compatible = "rockchip,rk3288-pmu", "syscon";
+ 		reg = <0xff730000 0x100>;
+@@ -611,5 +659,29 @@
+ 				rockchip,pins = <5 15 3 &pcfg_pull_none>;
+ 			};
+ 		};
++
++		pwm0 {
++			pwm0_pin: pwm0-pin {
++				rockchip,pins = <7 0 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
++
++		pwm1 {
++			pwm1_pin: pwm1-pin {
++				rockchip,pins = <7 1 RK_FUNC_1 &pcfg_pull_none>;
++			};
++		};
++
++		pwm2 {
++			pwm2_pin: pwm2-pin {
++				rockchip,pins = <7 22 RK_FUNC_3 &pcfg_pull_none>;
++			};
++		};
++
++		pwm3 {
++			pwm3_pin: pwm3-pin {
++				rockchip,pins = <7 23 RK_FUNC_3 &pcfg_pull_none>;
++			};
++		};
+ 	};
+ };
+-- 
+2.1.0.rc2.206.gedb03e5
 
-Done.
-
-
->> +{
->> +     struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
->> +
->> +     if (!pc->data->has_invert)
->> +             return -ENOSYS;
->> +
->> +     /*
->> +      * No action needed here because pwm->polarity will be set by the core
->> +      * and the core will only change polarity when the PWM is not enabled.
->> +      * We'll handle things in set_enable().
->> +      */
->> +
->> +     return 0;
->> +}
->
-> An alternative here would be to provide a separate pwm_ops with
-> .set_polarity = NULL for the versions of the IP block that don't support
-> polarity inversion yet, but this works for me too.
-
-Good point.  I'll make the change since it paves the way for other
-pwm_ops that are different.
-
-
->> @@ -173,6 +201,7 @@ static const struct rockchip_pwm_data pwm_data_v2 = {
->>               .ctrl = 0x0c,
->>       },
->>       .prescaler = 1,
->> +     .has_invert = true,
->>       .set_enable = rockchip_pwm_set_enable_v2,
->>  };
->>
->> @@ -184,6 +213,7 @@ static const struct rockchip_pwm_data pwm_data_vop = {
->>               .ctrl = 0x00,
->>       },
->>       .prescaler = 1,
->> +     .has_invert = true,
->>       .set_enable = rockchip_pwm_set_enable_v2,
->>  };
->
-> Can you please add a '.has_invert = false,' line to pwm_data_v1? I know
-> it's not strictly necessary but I like it when things are explicitly
-> stated.
-
-No longer relevant with different pwm_ops.
-
-
->> @@ -230,6 +260,10 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
->>       pc->chip.ops = &rockchip_pwm_ops;
->>       pc->chip.base = -1;
->>       pc->chip.npwm = 1;
->> +     if (pc->data->has_invert) {
->
-> There should be a blank line between the above two.
-
-Done.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
