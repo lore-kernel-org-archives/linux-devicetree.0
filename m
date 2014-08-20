@@ -1,64 +1,84 @@
-From: amit daniel kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] thermal: exynos: Remove duplicate code when reading
- triminfo register of Exynos5440
-Date: Wed, 20 Aug 2014 10:33:07 +0530
-Message-ID: <CADGdYn7rfS8fa-iCw_gu-sEQEHaUV_ZOPc03SEdv0qEqLQa10Q@mail.gmail.com>
-References: <1408450078-6296-1-git-send-email-cw00.choi@samsung.com>
-	<1408508673-3173-1-git-send-email-cw00.choi@samsung.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/4] pwm: rockchip: Allow polarity invert on rk3288
+Date: Wed, 20 Aug 2014 08:09:04 +0200
+Message-ID: <20140820060903.GE13793@ulmo>
+References: <1408381749-14156-1-git-send-email-dianders@chromium.org>
+ <1408381749-14156-3-git-send-email-dianders@chromium.org>
+ <20140819071857.GD12859@ulmo>
+ <CAD=FV=Uvx3PMJRdnm4FKWWx4h3sN0Mn1yG6v245HnKur_3vgqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408508673-3173-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Valentin, Eduardo" <eduardo.valentin-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, naveen krishna <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Yb+qhiCg54lqZFXW"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Uvx3PMJRdnm4FKWWx4h3sN0Mn1yG6v245HnKur_3vgqQ@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, Olof Johansson <olof@lixom.net>, Eddie Cai <eddie.cai@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 20, 2014 at 9:54 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch remove simply duplicate code when reading triminfo register of Exynos5440.
->
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Amit Daniel Kachhap <amit.daniel-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Thanks,
-Amit
-> ---
->  drivers/thermal/samsung/exynos_tmu.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-> index ed01606..13c2e01 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -181,15 +181,13 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
->                  */
->                 switch (data->id) {
->                 case 0:
-> +               case 2:
->                         trim_info = readl(data->base +
->                         EXYNOS5440_EFUSE_SWAP_OFFSET + reg->triminfo_data);
->                         break;
->                 case 1:
->                         trim_info = readl(data->base + reg->triminfo_data);
->                         break;
-> -               case 2:
-> -                       trim_info = readl(data->base -
-> -                       EXYNOS5440_EFUSE_SWAP_OFFSET + reg->triminfo_data);
->                 }
->         } else {
->                 /* On exynos5420 the triminfo register is in the shared space */
-> --
-> 1.8.0
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Yb+qhiCg54lqZFXW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Aug 19, 2014 at 09:05:20AM -0700, Doug Anderson wrote:
+> On Tue, Aug 19, 2014 at 12:18 AM, Thierry Reding <thierry.reding@gmail.co=
+m> wrote:
+> > On Mon, Aug 18, 2014 at 10:09:07AM -0700, Doug Anderson wrote:
+[...]
+> >> @@ -74,10 +78,14 @@ static void rockchip_pwm_set_enable_v2(struct pwm_=
+chip *chip, bool enable)
+> >>  {
+> >>       struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
+> >>       u32 enable_conf =3D PWM_OUTPUT_LEFT | PWM_LP_DISABLE | PWM_ENABL=
+E |
+> >> -                       PWM_CONTINUOUS | PWM_DUTY_POSITIVE |
+> >> -                       PWM_INACTIVE_NEGATIVE;
+> >> +                       PWM_CONTINUOUS;
+> >>       u32 val;
+> >>
+> >> +     if (pc->polarity =3D=3D PWM_POLARITY_INVERSED)
+> >> +             enable_conf |=3D PWM_DUTY_NEGATIVE | PWM_INACTIVE_POSITI=
+VE;
+> >> +     else
+> >> +             enable_conf |=3D PWM_DUTY_POSITIVE | PWM_INACTIVE_NEGATI=
+VE;
+> >
+> > I have a feeling you're going to answer the above question with: "Becau=
+se
+> > it's needed here". If so, my reply would be: "Then this function should
+> > take a struct pwm_device instead of struct pwm_chip."
+>=20
+> OK.  I've chosen to have it take a pwm_device AND a pwm_chip.  It is a
+> little redundant because a pwm_device has a pointer to its pwm_chip,
+> but it follows the lead of all of the callbacks in "struct pwm_ops".
+> If you'd like me to spin it to take only a pwm_device I'm happy to.
+
+No, that's fine.
+
+Thierry
+
+--Yb+qhiCg54lqZFXW
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT9Dt/AAoJEN0jrNd/PrOhWtMP/1F8/L5PlM9ONIGPDRuQEE36
+zrTO06BfTklEeFc7PULQGoIkvG+MNEy08qZrY+erWGEMSBIM7SnVKl8UfaZ5F9xe
+s4y0nz7thY9hkF9ltB7n/tjmJlAEzgkwvLH0MoqQUKtPgzOjMP+9gOx4g3//4dA3
+exg+yjTi85+KEjd9JEzTRdN1D0eF+p1jBgFR3Cx+I8GURETZtIHc25Ay0zPcwv3H
+5Z9QnSlXLaJHBFxuCyWhlGSdYn511cOcjb54oisixMAnsT/9lhd5GDjmzkuKFFRZ
+ZKwm/BjgsCQpdcBf8FSUkKd+HqdA0qi7hn1GfbaG8AGRYF6CCiKWky+JDUPKVb6K
+Mc+mD7AvYiyojsZzocmfH/eoMD/mpakPsqwyZSUoc/YaVwyPOdO/z3SjC+NTYhjM
+1plJipdC6oFC2DKZE/A5YCo7MIjtUB94W9kZ2p7tjrP0Rihn6JvWi9xdohZiOUR0
+WxrFAP9zN82w6Q570cH5f8ji1yMj9GLHkrNjdJbvW2qZzteUlI2/v5+pTHpaS1H9
+PbFtL2Ae0zmQVQXptcwtDRdPaMLy0+wcZTw0cZFRFjJedk/e305Q0mHhUFlMbE9O
+ZzQi9uhvtk3XTwSlHdWiWL8os35UqhkjsJd/IFtkm+aAVj83TXAGQSlrmdJRkEal
+Z6X814UYdzk+mWaw3a0d
+=JJEc
+-----END PGP SIGNATURE-----
+
+--Yb+qhiCg54lqZFXW--
