@@ -1,47 +1,79 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree
- setting
-Date: Wed, 20 Aug 2014 13:42:31 +0100
-Message-ID: <20140820124231.GD21734@leverpostej>
-References: <1408479529-24249-1-git-send-email-atull@opensource.altera.com>
- <20140820092257.GA21174@leverpostej>
- <20140820123617.GB1373@katana>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH v6 10/10] ARM: dts: Add exynos5250-spring device tree
+Date: Wed, 20 Aug 2014 14:50:30 +0200
+Message-ID: <53F49996.30007@suse.de>
+References: <1406940750-15880-1-git-send-email-afaerber@suse.de>	<1406940750-15880-11-git-send-email-afaerber@suse.de> <CAD=FV=WFP53bZAks7t9xybUxpna89Nz=KG+PQwAcxFEH0D+3mw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140820123617.GB1373@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: "atull@opensource.altera.com" <atull@opensource.altera.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "skuribay@pobox.com" <skuribay@pobox.com>, "Romain.Baeriswyl@abilis.com" <Romain.Baeriswyl@abilis.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "alan@linux.intel.com" <alan@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WFP53bZAks7t9xybUxpna89Nz=KG+PQwAcxFEH0D+3mw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, LKML <linux-kernel@vger.kernel.org>, Julius Werner <jwerner@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 20, 2014 at 01:36:18PM +0100, Wolfram Sang wrote:
-> > > +
-> > > +		ret = of_property_read_u32(pdev->dev.of_node,
-> > > +					   "clock-frequency", &bus_rate);
-> > > +		if (!ret && (bus_rate <= 100000))
-> > > +			speed = DW_IC_CON_SPEED_STD;
-> > 
-> > This looks a bit odd.
-> > 
-> > If the device only supports two particular speeds why do we accept any
-> > other speed in the clock-frequency property?
-> 
-> "clock-frequency" is the default binding for specifying i2c bus speeds
-> today. Some controllers can be programmed to do various speeds, some can
-> only do a set of fixed values.
+Kukjin,
 
-Sure. My complaint was that the driver would accept invalid values.
-That wasn't meant to be suggestion to use a property other than the
-standard clock-freqeuncy.
+Am 04.08.2014 17:22, schrieb Doug Anderson:
+> On Fri, Aug 1, 2014 at 5:52 PM, Andreas F=C3=A4rber <afaerber@suse.de=
+> wrote:
+>> diff --git a/arch/arm/boot/dts/exynos5250-spring.dts b/arch/arm/boot=
+/dts/exynos5250-spring.dts
+>> new file mode 100644
+>> index 000000000000..f5566f84d885
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/exynos5250-spring.dts
+[...]
+>> +       usb-hub {
+>> +               compatible =3D "smsc,usb3503a";
+>> +               reset-gpios =3D <&gpe1 0 GPIO_ACTIVE_LOW>;
+>> +       };
+>=20
+> Last I remember hearing about this, Julius said that the generic
+> usb-hub driver didn't work right for asserting the reset line.
+> Something about needing the reset at a very specific time in the USB
+> enumeration, I think.  Maybe it's somehow been fixed since then and
+> that's why it's working?
+>=20
+> Also: you technically should have a pinctrl-0 and pinctrl-names
+> referencing "hsic_reset" below to make sure the pin gets initted
+> properly.
+[...]
+> Technically the missing pinctrl for hsic-reset is something that out
+> to be fixed and we should figure out whether the reset line is
+> actually working properly anyway.  ...but I think this has been
+> through enough spins and any additional fixup can happen later, so yo=
+u
+> can add my:
+>=20
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
 
-> > Surely we should at least warn that something was off?
-> 
-> Yes, I was going to say the same until Romain's old patch showed up
-> which does that.
+I wonder how to proceed now... Are you planning to continue inserting m=
+y
+remaining snow/smdk/arndale refactoring patches [1,2,3,4] before the mm=
+c
+slot node refactoring on v3.18-next/dt-samsung branch?
+I.e., should I send out a v7 rebasing either the remainder or just
+Spring on top of your for-next, or should I just post new follow-up
+patches to this series and wait?
 
-Cool. Sounds like we can use Romain's patch to handle this then.
+I've prepared and successfully tested a patch adding the pinctrl Doug
+requested above. Additionally, I have another follow-up ready, adding a
+gmt,g781 temperature sensor (with v3.17-rc1 that actually works).
 
-Cheers,
-Mark.
+Also I understood that Javier is waiting for my remaining Snow bits to
+be applied before sending out further Snow DT cleanups/fixes of his.
+
+Thanks,
+Andreas
+
+[1] https://patchwork.kernel.org/patch/4664881/
+[2] https://patchwork.kernel.org/patch/4664801/
+[3] https://patchwork.kernel.org/patch/4664731/
+[4] https://patchwork.kernel.org/patch/4664751/
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
