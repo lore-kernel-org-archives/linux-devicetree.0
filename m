@@ -1,36 +1,80 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/4] ARM: shmobile: r8a7790 dtsi: Remove superfluous interrupt-parent
-Date: Wed, 20 Aug 2014 16:28:32 +0200
-Message-ID: <1408544914-21742-3-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/4] ARM: shmobile: r8a7779 dtsi: Remove superfluous interrupt-parent
+Date: Wed, 20 Aug 2014 16:28:31 +0200
+Message-ID: <1408544914-21742-2-git-send-email-geert+renesas@glider.be>
 References: <1408544914-21742-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1408544914-21742-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408544914-21742-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 There's already an "interrupt-parent = <&gic>;" at the top, which is
-inherited by all child nodes, so the "interrupt-parent" property in
-the sound node can be removed.
+inherited by all child nodes, so the "interrupt-parent" properties in
+the serial nodes can be removed.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index e2e40e5bbe5c..cf1ba907cad9 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -1158,7 +1158,6 @@
- 	rcar_sound: rcar_sound@0xec500000 {
- 		#sound-dai-cells = <1>;
- 		compatible =  "renesas,rcar_sound-r8a7790", "renesas,rcar_sound-gen2", "renesas,rcar_sound";
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index f9dbb7645333..ddc89000854c 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -199,7 +199,6 @@
+ 	scif0: serial@ffe40000 {
+ 		compatible = "renesas,scif-r8a7779", "renesas,scif";
+ 		reg = <0xffe40000 0x100>;
 -		interrupt-parent = <&gic>;
- 		reg =	<0 0xec500000 0 0x1000>, /* SCU */
- 			<0 0xec5a0000 0 0x100>,  /* ADG */
- 			<0 0xec540000 0 0x1000>, /* SSIU */
+ 		interrupts = <0 88 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg_clocks R8A7779_CLK_P>;
+ 		clock-names = "sci_ick";
+@@ -209,7 +208,6 @@
+ 	scif1: serial@ffe41000 {
+ 		compatible = "renesas,scif-r8a7779", "renesas,scif";
+ 		reg = <0xffe41000 0x100>;
+-		interrupt-parent = <&gic>;
+ 		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg_clocks R8A7779_CLK_P>;
+ 		clock-names = "sci_ick";
+@@ -219,7 +217,6 @@
+ 	scif2: serial@ffe42000 {
+ 		compatible = "renesas,scif-r8a7779", "renesas,scif";
+ 		reg = <0xffe42000 0x100>;
+-		interrupt-parent = <&gic>;
+ 		interrupts = <0 90 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg_clocks R8A7779_CLK_P>;
+ 		clock-names = "sci_ick";
+@@ -229,7 +226,6 @@
+ 	scif3: serial@ffe43000 {
+ 		compatible = "renesas,scif-r8a7779", "renesas,scif";
+ 		reg = <0xffe43000 0x100>;
+-		interrupt-parent = <&gic>;
+ 		interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg_clocks R8A7779_CLK_P>;
+ 		clock-names = "sci_ick";
+@@ -239,7 +235,6 @@
+ 	scif4: serial@ffe44000 {
+ 		compatible = "renesas,scif-r8a7779", "renesas,scif";
+ 		reg = <0xffe44000 0x100>;
+-		interrupt-parent = <&gic>;
+ 		interrupts = <0 92 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg_clocks R8A7779_CLK_P>;
+ 		clock-names = "sci_ick";
+@@ -249,7 +244,6 @@
+ 	scif5: serial@ffe45000 {
+ 		compatible = "renesas,scif-r8a7779", "renesas,scif";
+ 		reg = <0xffe45000 0x100>;
+-		interrupt-parent = <&gic>;
+ 		interrupts = <0 93 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg_clocks R8A7779_CLK_P>;
+ 		clock-names = "sci_ick";
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
