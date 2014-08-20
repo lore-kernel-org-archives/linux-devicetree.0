@@ -1,72 +1,108 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 1/3] usb: dwc3: add ST dwc3 glue layer to manage dwc3
- HC
-Date: Wed, 20 Aug 2014 13:24:06 -0500
-Message-ID: <20140820182405.GD6023@saruman.home>
-References: <1404541530-27856-1-git-send-email-peter.griffin@linaro.org>
- <1404541530-27856-2-git-send-email-peter.griffin@linaro.org>
- <20140707124627.GG6407@lee--X1>
- <20140722091800.GB8233@griffinp-ThinkPad-X1-Carbon-2nd>
- <20140722145711.GC20588@saruman.home>
- <20140723143323.GA26565@griffinp-ThinkPad-X1-Carbon-2nd>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UfEAyuTBtIjiZzX6"
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH v4 2/4] ARM: rockchip: rk3288: Switch to use the proper PWM IP
+Date: Wed, 20 Aug 2014 11:54:00 -0700
+Message-ID: <1408560842-3746-3-git-send-email-dianders@chromium.org>
+References: <1408560842-3746-1-git-send-email-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140723143323.GA26565@griffinp-ThinkPad-X1-Carbon-2nd>
+In-Reply-To: <1408560842-3746-1-git-send-email-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Felipe Balbi <balbi@ti.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
+To: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>
+Cc: Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---UfEAyuTBtIjiZzX6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The rk3288 SoC has an option to switch all of the PWMs in the system
+between the old IP block and the new IP block.  The rk3288 PWM driver
+is written for the new block, so make sure that we enable the new
+block in the GRF (general register file) when the PWM driver probes.
 
-On Wed, Jul 23, 2014 at 03:33:23PM +0100, Peter Griffin wrote:
-> > > > > +	reset_control_assert(dwc3_data->rstc_pwrdn);
-> > > > > +
-> > > > > +	pinctrl_pm_select_sleep_state(dev);
-> >=20
-> > pinctrl will select sleep and default states automatically for you.
->=20
-> I've left this in v3, as greping around I couldn't see how that could
-> happen automatically.
->=20
-> Also I just double checked with linusw on irc who confirmed that the
-> only state which is ever auto-selected is "default". All other states,
-> as well as going back to default state need to be explicitly called.
->=20
-> Hope thats ok.
+We emulate the solution to this problem used in i2c-rk3x.c.  One
+difference for the PWM is that there's a single "enable new IP" that's
+used for all 4 PWMs.  That means we set this bit 4 times if we've got
+all 4 PWMs enabled.  That shouldn't hurt.
 
-yeah, that's fine. Thanks :-)
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+---
+Changes in v4:
+- Totally rewrote to go in the PWM driver.
+- Reordered IP switch to be atop invert patch.
 
---=20
-balbi
+Changes in v3: None
+Changes in v2:
+- Check for failed ioremap()
 
---UfEAyuTBtIjiZzX6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ .../devicetree/bindings/pwm/pwm-rockchip.txt       |  4 +++
+ drivers/pwm/pwm-rockchip.c                         | 29 ++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT9OfFAAoJEIaOsuA1yqRE7ZMP+QFujkPZLmG7pVG6EUWoixnW
-83+89d+QhI7lUlofX9cKV51O+xpsk/8bn28KyGwBfpYeKsv29ViSlDP29kBYLSQt
-DH1E3v4jgbGhgoHqqJGC+r1CIxGMtfWXo9onIPzpEJublS1tir+YdoGrHWd7nHW4
-lQvwLZ5k8MWKmPCjcJQCVBZU8C8SP9sZdf8CXqDsY/aTdnZETX2tvfve3IfMYper
-Ap5X4q3HYtSyrPWvbn+abpUWllJWv4yy2exMhKMR1IYD8gFcpEEoHZxK7mmwsdAV
-Yx0Gq//MC0lSFTQJvGzewEfNqmIhMWDLGcg/oJOYLnl32u0kuQva/xd67TAZTnAt
-QS64OKUoux/gkxhXrggHym+NTXZ9O/s4OQh5m9Y6pe1tLeB+grS23U8eYQBVmYo8
-xO96rVPkemgCJB+SR2PPOwvmO23WszkcJvdqtbzyXQ/6SLx2qd2RxTz8DnExfsd7
-xcmzduFXEofoM83kIaa4yOQSXGVH1UL+ijqFssK7UVxYe2hWvjxHS4CpxG7BQy9v
-N13Ia4mVgfyj76TTldGAiN2fUCuBxI1aW0+U0GX/aexZCyy7h/Bvzn49sjpfMU0h
-L++iNPeIsWwKUDjwYq5slEgSF5h7dZmz7Fp4xqfcjO4FVJY1m8+IQQAO3TZzwMQx
-r9bPL5oyUM5l9qWnW7Sz
-=bvi4
------END PGP SIGNATURE-----
-
---UfEAyuTBtIjiZzX6--
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt b/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
+index b8be3d0..39190ec 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
+@@ -10,6 +10,10 @@ Required properties:
+  - #pwm-cells: must be 2 (rk2928) or 3 (rk3288). See pwm.txt in this directory
+    for a description of the cell format.
+ 
++Required for "rockchip,rk3288-pwm":
++ - rockchip,grf : the phandle of the syscon node for the general register
++		  file (GRF)
++
+ Example:
+ 
+ 	pwm0: pwm@20030000 {
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index 9442df2..08cbde6 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -16,7 +16,12 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
++#include <linux/regmap.h>
+ #include <linux/time.h>
++#include <linux/mfd/syscon.h>
++
++#define RK3288_GRF_PWM_ENABLE_OFFSET	0x024c
++#define RK3288_GRF_PWM_ENABLE_BIT	0
+ 
+ #define PWM_CTRL_TIMER_EN	(1 << 0)
+ #define PWM_CTRL_OUTPUT_EN	(1 << 3)
+@@ -231,6 +236,7 @@ MODULE_DEVICE_TABLE(of, rockchip_pwm_dt_ids);
+ 
+ static int rockchip_pwm_probe(struct platform_device *pdev)
+ {
++	struct device_node *np = pdev->dev.of_node;
+ 	const struct of_device_id *id;
+ 	struct rockchip_pwm_chip *pc;
+ 	struct resource *r;
+@@ -240,6 +246,29 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
+ 	if (!id)
+ 		return -EINVAL;
+ 
++	/*
++	 * Switch to new interface on rk3288.
++	 * The control bit is located in the GRF register space.
++	 */
++	if (of_device_is_compatible(np, "rockchip,rk3288-pwm")) {
++		struct regmap *grf;
++
++		grf = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
++		if (IS_ERR(grf)) {
++			dev_err(&pdev->dev, "Missing rockchip,grf property\n");
++			return PTR_ERR(grf);
++		}
++
++		/* Set bit 16 for write mask, 0 for switch to new IP */
++		ret = regmap_write(grf, RK3288_GRF_PWM_ENABLE_OFFSET,
++				   BIT(RK3288_GRF_PWM_ENABLE_BIT + 16) |
++				   BIT(RK3288_GRF_PWM_ENABLE_BIT));
++		if (ret != 0) {
++			dev_err(&pdev->dev, "Could not access GRF: %d\n", ret);
++			return ret;
++		}
++	}
++
+ 	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+ 	if (!pc)
+ 		return -ENOMEM;
+-- 
+2.1.0.rc2.206.gedb03e5
