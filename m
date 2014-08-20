@@ -1,53 +1,96 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c: designware: device tree bindings for i2c speed
- mode
-Date: Wed, 20 Aug 2014 10:36:21 +0100
-Message-ID: <20140820093621.GC21174@leverpostej>
-References: <1408473276-10847-1-git-send-email-atull@opensource.altera.com>
- <20140820093459.GB21174@leverpostej>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCHv6 2/2] dt/bindings: Add the DT binding documentation for
+ endianness
+Date: Wed, 20 Aug 2014 11:43:41 +0200
+Message-ID: <20140820094340.GC15414@ulmo>
+References: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
+ <1405398183-31345-3-git-send-email-Li.Xiubo@freescale.com>
+ <20140820080549.GA15414@ulmo>
+ <10ad24319e6a486db77c31a5a911140e@BN1PR0301MB0609.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140820093459.GB21174@leverpostej>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org" <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, "mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org" <skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org>, "Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org" <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, "rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+In-Reply-To: <10ad24319e6a486db77c31a5a911140e@BN1PR0301MB0609.namprd03.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 20, 2014 at 10:34:59AM +0100, Mark Rutland wrote:
-> On Tue, Aug 19, 2014 at 07:34:35PM +0100, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> > From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > 
-> > Add "speed-mode" Device Tree property to select between
-> > standard and fast i2c mode.  Previously, driver was hardwired
-> > as fast mode.  Default to fast mode if property is not
-> > present.
-> > 
-> > Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/i2c/i2c-designware.txt     |    3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > index 5199b0c..0e4cd21 100644
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > @@ -9,6 +9,8 @@ Required properties :
-> >  Recommended properties :
-> >  
-> >   - clock-frequency : desired I2C bus clock frequency in Hz.
-> > + - speed-mode      : 0 = standard (0 - 100Kb/s)
-> > +                   : 1 = fast (<= 400Kb/s) <== default
-> 
-> This is a bit opaque.
-> 
-> Is this a limit on the max bit-rate the device should operate at?
-> 
-> Why not just have an optional boolean property to limit to standard
-> speed?
 
-I see there's a new patch doing this based on clock-frequency, so feel
-free to ignore this.
+--H8ygTp4AXg6deix2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Mark.
+On Wed, Aug 20, 2014 at 09:14:02AM +0000, Li.Xiubo@freescale.com wrote:
+> > Subject: Re: [PATCHv6 2/2] dt/bindings: Add the DT binding documentatio=
+n for
+> > endianness
+> >=20
+> > On Tue, Jul 15, 2014 at 12:23:03PM +0800, Xiubo Li wrote:
+> > > Device-Tree binding for device endianness
+> > > Index     Device     Endianness properties
+> > > ---------------------------------------------------
+> > > 1         BE         'big-endian'
+> > > 2         LE         'little-endian'
+> > >
+> > > For one device driver, which will run in different scenarios above
+> > > on different SoCs using the devicetree, we need one way to simplify
+> > > this.
+> > >
+> > > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> > > ---
+> > >  .../devicetree/bindings/regmap/regmap.txt          | 47
+> > ++++++++++++++++++++++
+> > >  1 file changed, 47 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/regmap/regmap.t=
+xt
+> >=20
+> > Sorry for jumping in so late. I think this binding documentation needs
+> > to be moved somewhere else. regmap is a Linux kernel specific
+> > implementation detail and therefore has no place in device tree binding
+> > descriptions. Furthermore the endianness properties described herein do
+> > apply to drivers that don't use regmap.
+> >=20
+> > Perhaps we need some top-level file that describes generic properties
+> > such as this?
+> >=20
+> > Thierry
+>=20
+> Yes, I do agree.
+> And there are many devices that have the endian issue without using the
+> Regmap in our LS* SoCs.
+>=20
+> And I also think one generic binding description of this will be much
+> better.
+>=20
+> Where should we place it? In Documentation/devicetree/bindings/, or...?
+
+Documentation/devicetree/bindings/standard-properties.txt perhaps?
+
+Thierry
+
+--H8ygTp4AXg6deix2
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT9G3MAAoJEN0jrNd/PrOhxHwP/1hfjJvDNoaUHLP2xKokiiq9
+OXpL4zgiI/uWdUkrI/28zrbu9G8oiwobpIBWgqTfn8++YUmKlmLFzz22x0WWxq9p
+DPt/ED5QBfeiwYISSNvfJUGhqoLZg4WhB8Au8ek3IX+yBzwfe0tVcliNmz9h8ySO
+mJ/kOh4eGfvcqkfrXI8DKq6oac/+yvxWU55zobABoQj+SneeEjLcsWnH3ryesf45
+e3WHkptPIWj9ibVN8ddXzcHsLF/eIewKcPBtARFsQ9QZRrGQWVqSFaAEjU64hbsj
+4rYh0OovYfHe6v8XZCQHxxY256Z2kcq4XPJNMgI4WpNZ/VLbwyZsm8eCN+rF81To
+/MgKlcPLdenpPWmmFnMfcNROBeAZCcRQnAUDsuIdILvV4GrCYiW+TEukr371yaMg
+GMlafEzKXOBuKcCfwAjBLqtUJAut4O+S4E48hxQsAKqXsJy3WHTHl1s7c5zr/Eqf
+j44mELZNJiOGiI7V9dXs731NYXj/M7STHsRKcnS0YZsT7w2WXNJE9AfDsBRDEHvO
+IwyCrVIm6jSo/BT/rNfHB5qoncRtM4vHU02+J8CqisgtwcwB1fRdw+1rHs4K7qLo
+kfZlsN9CRntMYH8DHHaH9H48fuGdc2hmFUP52W/VuAAWAIcPgXk3j96y55FLykrI
+ulOtmhdIowAfkcArNtVz
+=Q89J
+-----END PGP SIGNATURE-----
+
+--H8ygTp4AXg6deix2--
