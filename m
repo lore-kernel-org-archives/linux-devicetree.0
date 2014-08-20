@@ -1,46 +1,60 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH 0/4] ARM: shmobile: dtsi: interrupt-parent cleanups
-Date: Wed, 20 Aug 2014 23:53:05 +0900
-Message-ID: <CANqRtoTDdrR-VJ4dh96BJBmw5b-fHPRELNTrHTZK7jEXYasmJQ@mail.gmail.com>
-References: <1408544914-21742-1-git-send-email-geert+renesas@glider.be>
-	<CAMuHMdWFhqv5j8g8wGnaXBOZ7r7vBpOnW4K_KY7WAs04OYxQQg@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/5] phy: miphy28lp: Add MiPHY28lp header file for DT
+ x Driver defines
+Date: Wed, 20 Aug 2014 20:23:23 +0530
+Message-ID: <53F4B663.90400@ti.com>
+References: <1407944075-8093-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1407944075-8093-3-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWFhqv5j8g8wGnaXBOZ7r7vBpOnW4K_KY7WAs04OYxQQg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1407944075-8093-3-git-send-email-gabriel.fernandez@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, alexandre torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 20, 2014 at 11:32 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> On Wed, Aug 20, 2014 at 4:28 PM, Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->> This series cleans up interrupt-parent use, to match common use.
->> It makes sure there's an "interrupt-parent = <&gic>;" at the top, which is
->> thus inherited by all child nodes, and removes superflous "interrupt-parent"
->> properties from the individual child nodes.
->>
->> This was tested on r8a7791/koelsch only.
->>
->> Geert Uytterhoeven (4):
->>   ARM: shmobile: r8a7779 dtsi: Remove superfluous interrupt-parent
->>   ARM: shmobile: r8a7790 dtsi: Remove superfluous interrupt-parent
->>   ARM: shmobile: r8a7790 dtsi: Remove superfluous interrupt-parent
->
-> Oops, that should have been "r8a7791". I've sent a fixed version of that patch.
->
->>   ARM: shmobile: sh73a0 dtsi: Move interrupt-parent to the top
+Hi,
 
-Thanks, those look like fine cleanups to me!
+On Wednesday 13 August 2014 09:04 PM, Gabriel FERNANDEZ wrote:
+> This provides the shared header file which will be reference from both
+> the MiPHY28lp driver and its associated Device Tree node(s).
+> 
+> Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> ---
+>  include/dt-bindings/phy/phy-miphy28lp.h | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 include/dt-bindings/phy/phy-miphy28lp.h
+> 
+> diff --git a/include/dt-bindings/phy/phy-miphy28lp.h b/include/dt-bindings/phy/phy-miphy28lp.h
+> new file mode 100644
+> index 0000000..7cf9bce
+> --- /dev/null
+> +++ b/include/dt-bindings/phy/phy-miphy28lp.h
+> @@ -0,0 +1,12 @@
+> +/*
+> + * This header provides constants for the phy framework
+> + * based on the STMicroelectronics miph28lp.
+> + */
+> +#ifndef _DT_BINDINGS_PHY_MIPHY28LP
+> +#define _DT_BINDINGS_PHY_MIPHY28LP
+> +
+> +#define MIPHY_TYPE_SATA		1
+> +#define MIPHY_TYPE_PCIE		2
+> +#define MIPHY_TYPE_USB		3
 
-Acked-by: Magnus Damm <damm+renesas@opensource.se>
+I think we should create a common file for phy so that all user's need not
+create a separate copy of the same thing.
 
-I suppose both your and my recent patches need a bit of testing, so I
-guess it may make sense for Simon to merge one series at a time to
-avoid introducing multiple potential issues simultaneously... Combine
-early delay issues with Kconfig errors and potential interrupt parent
-error and you have something fun to debug. =)
-
-/ magnus
+Thanks
+Kishon
