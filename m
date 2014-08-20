@@ -1,237 +1,57 @@
-From: mathieu.poirier@linaro.org
-Subject: [PATCH v4] coresight: bindings for coresight drivers
-Date: Wed, 20 Aug 2014 11:11:38 -0600
-Message-ID: <1408554698-24459-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: Specifying the console device using an alias
+Date: Wed, 20 Aug 2014 11:25:21 -0600
+Message-ID: <CAPnjgZ3YU8zy48UrxByZjY5rkK3mK7Quvi6O3kWtBfW6ttG6VA@mail.gmail.com>
+References: <CAPnjgZ2A=DkGSnFLy1En8bH0pZAUAEWCWz_jQ941g3QQEUN9NQ@mail.gmail.com>
+	<CAPnjgZ1S-HVZJ7kzt=YKT+jjZEtLdmZSnr6kmNVf+paGKdrgoQ@mail.gmail.com>
+	<20140818191909.GA5352@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140818191909.GA5352-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pratik Patel <pratikp@codeaurora.org>
+Hi Sascha,
 
-Coresight IP blocks allow for the support of HW assisted tracing
-on ARM SoCs.  Bindings for the currently available blocks are
-presented herein.
+On 18 August 2014 13:19, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>
+> Simon,
+>
+> On Thu, Aug 14, 2014 at 10:02:10PM -0600, Simon Glass wrote:
+>> (correct list)
+>>
+>> On 14 August 2014 21:42, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> > Hi,
+>> >
+>> > In U-Boot we currently specify the console device (typically serial)
+>> > using something like:
+>> >
+>> > aliases {
+>> >    console = "/serial@1234";
+>> > }
+>> >
+>> > But the question has come up as to whether this should be done another
+>> > way. I see the "linux.stdout" property in the /chosen node.
+>> >
+>> > I am concerned that making use of the /chosen node in U-Boot might
+>> > confuse a lot of people, since this node is normally used to provide
+>> > selections for the OS to use when booting. If we did use /chosen, then
+>> > linux,stdout seems plain wrong but perhaps u-boot,stdout could be used
+>> > instead.
+>
+> See ePAPR. There's a stdout-path property specified, without linux,
+> prefix.
 
-Signed-off-by: Pratik Patel <pratikp@codeaurora.org>
-Signed-off-by: Panchaxari Prasannamurthy <panchaxari.prasannamurthy@linaro.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- .../devicetree/bindings/arm/coresight.txt          | 205 +++++++++++++++++++++
- 1 file changed, 205 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+Yes, I see that, but linux doesn't use it AFAICT. Are you suggesting
+that U-Boot should? Or should we use 'u-boot,stdout-path' in /chosen?
+See my question immediately above about /chosen.
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-new file mode 100644
-index 0000000..2ee594d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -0,0 +1,205 @@
-+* CoreSight Components
-+
-+CoreSight components are compliant with the ARM CoreSight architecture
-+specification and can be connected in various topologies to suit a particular
-+SoCs tracing needs. These trace components can generally be classified as sinks,
-+links and sources. Trace data produced by one or more sources flows through the
-+intermediate links connecting the source to the currently selected sink. Each
-+CoreSight component device should use these properties to describe its hardware
-+characteristcs.
-+
-+Required properties for all components *except* non-configurable replicators:
-+
-+- compatible : name of the component used for driver matching.  Possible values
-+include: "arm,coresight-etb10", "arm,coresight-tpiu", "arm,coresight-tmc",
-+"arm,coresight-funnel", and "arm,coresight-etm3x".  All of these have to
-+be supplemented with "arm,primecell" as drivers are using the AMBA bus
-+interface.  Since non-configurable replicators don't show up on the AMBA
-+bus they don't need to be post-fixed with "arm,primecell".
-+
-+- reg : physical base address and length of the register set(s) of the component.
-+
-+- clocks : the clock associated to this component.
-+
-+- clock-names: the name of the clock as referenced by the code.  Since we are
-+using the AMBA framework, the name should be "apb_pclk".
-+
-+- ports or port: The representation of the component's port layout using the
-+generic DT graph presentation found in "bindings/graph.txt".
-+
-+Non-configurable replicators:
-+
-+- compatible: currently supported value is "arm-replicator".  Since non-configurable
-+replicators don't show up on the AMBA hey don't need to be post-fixed with
-+"arm,primecell".
-+
-+- id: a unique number that will identify this replicator.
-+
-+- ports or port: same as above.
-+
-+Optional properties for Sinks:
-+
-+- coresight-default-sink: must be specified for one of the sink devices that is
-+intended to be made the default sink. Other sink devices must not have this
-+specified. Not specifying this property on any of the sinks is invalid.
-+
-+Optional properties for ETM/PTMs:
-+
-+- arm,cp14: must be present if the system accesses ETM/PTM management registers
-+via co-processor 14.
-+
-+- arm,cp14: access to ETM/PTM management registers is made via cp14.
-+
-+- cpu: the cpu phandle this ETM/PTM is affined to. When omitted the source is
-+considered to belong to CPU0.
-+
-+Optional property for TMC:
-+
-+- arm,buffer-size: size of contiguous buffer space for TMC ETR (embedded trace router)
-+
-+
-+Example:
-+
-+1. Sinks
-+	etb: etb@20010000 {
-+		compatible = "arm,coresight-etb10", "arm,primecell";
-+		reg = <0 0x20010000 0 0x1000>;
-+
-+		coresight-default-sink;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			etb_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port0>;
-+			};
-+		};
-+	};
-+
-+	tpiu: tpiu@20030000 {
-+		compatible = "arm,coresight-tpiu", "arm,primecell";
-+		reg = <0 0x20030000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			tpiu_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port1>;
-+			};
-+		};
-+	};
-+
-+2. Links
-+	replicator {
-+		/* non-configurable replicators don't show up on the
-+		 * AMBA bus.  As such no need to add "arm,primecell".
-+		 */
-+		compatible = "arm,coresight-replicator";
-+		/* this will show up in debugfs as "0.replicator" */
-+		id = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* replicator output ports */
-+			port@0 {
-+				reg = <0>;
-+				replicator_out_port0: endpoint {
-+					remote-endpoint = <&etb_in_port>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				replicator_out_port1: endpoint {
-+					remote-endpoint = <&tpiu_in_port>;
-+				};
-+			};
-+
-+			/* replicator input port */
-+			port@2 {
-+				reg = <0>;
-+				replicator_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&funnel_out_port0>;
-+				};
-+			};
-+		};
-+	};
-+
-+	funnel@20040000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x20040000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* funnel output port */
-+			port@0 {
-+				reg = <0>;
-+				funnel_out_port0: endpoint {
-+					remote-endpoint = <&replicator_in_port0>;
-+				};
-+			};
-+
-+			/* funnel input ports */
-+			port@1 {
-+				reg = <0>;
-+				funnel_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm0_out_port>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <1>;
-+				funnel_in_port1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm1_out_port>;
-+				};
-+			};
-+
-+			port@3 {
-+				reg = <2>;
-+				funnel_in_port2: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm0_out_port>;
-+				};
-+			};
-+
-+		};
-+	};
-+
-+3. Sources
-+	ptm0: ptm@2201c000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201c000 0 0x1000>;
-+
-+		cpu = <&cpu0>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm0_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port0>;
-+			};
-+		};
-+	};
-+
-+	ptm1: ptm@2201d000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201d000 0 0x1000>;
-+
-+		cpu = <&cpu1>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm1_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port1>;
-+			};
-+		};
-+	};
--- 
-1.9.1
+Regards,
+Simon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
