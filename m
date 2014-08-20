@@ -1,42 +1,36 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] spi/rockchip: fixup incorrect dma direction setting
-Date: Wed, 20 Aug 2014 10:09:56 +0200
-Message-ID: <3440626.YssIeyfVzZ@phil>
-References: <1408506462-3686-1-git-send-email-addy.ke@rock-chips.com>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] Document: fsl,spdif: Adjust the document making it
+ read more comfortably.
+Date: Wed, 20 Aug 2014 13:45:56 +0530
+Message-ID: <53F4593C.5060701@gmail.com>
+References: <1408423138-19880-1-git-send-email-Li.Xiubo@freescale.com> <1408423138-19880-2-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408506462-3686-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>
-Cc: broonie@kernel.org, dianders@chromium.org, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com, wei.luo@rock-chips.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408423138-19880-2-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Addy,
 
-please always remember to add a real commit message, something similar to:
-
-"Fix typo that caused the tx direction to be set twice and left out the rx 
-direction."
-
-for example.
-
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
+On Tuesday 19 August 2014 10:08 AM, Xiubo Li wrote:
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/spi/spi-rockchip.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-> index cb8fd6f..4ef3fd3 100644
-> --- a/drivers/spi/spi-rockchip.c
-> +++ b/drivers/spi/spi-rockchip.c
-> @@ -679,7 +679,7 @@ static int rockchip_spi_probe(struct platform_device
-> *pdev) rs->dma_tx.addr = (dma_addr_t)(mem->start + ROCKCHIP_SPI_TXDR);
-> rs->dma_rx.addr = (dma_addr_t)(mem->start + ROCKCHIP_SPI_RXDR);
-> rs->dma_tx.direction = DMA_MEM_TO_DEV;
-> -		rs->dma_tx.direction = DMA_DEV_TO_MEM;
-> +		rs->dma_rx.direction = DMA_DEV_TO_MEM;
-> 
->  		master->can_dma = rockchip_spi_can_dma;
->  		master->dma_tx = rs->dma_tx.ch;
+>   .../devicetree/bindings/sound/fsl,spdif.txt        | 82 +++++++++++-----------
+>   1 file changed, 41 insertions(+), 41 deletions(-)
+>
+Looks good...
+
+Reviewed-by: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+--
+Regards,
+Varka Bhadram.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
