@@ -1,155 +1,173 @@
-From: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree
- setting
-Date: Wed, 20 Aug 2014 16:38:33 +0200 (CEST)
-Message-ID: <1791089693.2989.1408545513401.JavaMail.root@abilis.com>
-References: <alpine.DEB.2.02.1408200922590.11079@atx-linux-37>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC v4 15/21] media: Add registration helpers for V4L2
+ flash
+Date: Wed, 20 Aug 2014 17:41:10 +0300
+Message-ID: <20140820144110.GT16460@valkosipuli.retiisi.org.uk>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <1405087464-13762-16-git-send-email-j.anaszewski@samsung.com>
+ <53CCF59E.3070200@iki.fi>
+ <53DF9C2A.8060403@samsung.com>
+ <20140811122628.GG16460@valkosipuli.retiisi.org.uk>
+ <53E8C4BA.6050805@samsung.com>
+ <20140814043436.GM16460@valkosipuli.retiisi.org.uk>
+ <53EC7278.6040101@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1408200922590.11079@atx-linux-37>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, mika westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, grant likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, rafael j wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53EC7278.6040101@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+Hi Jacek,
 
-We got board issue using I2C and they were solved by changing the i2c timing.
+On Thu, Aug 14, 2014 at 10:25:28AM +0200, Jacek Anaszewski wrote:
+> On 08/14/2014 06:34 AM, Sakari Ailus wrote:
+> >Hi Jacek,
+> >
+> >On Mon, Aug 11, 2014 at 03:27:22PM +0200, Jacek Anaszewski wrote:
+> >
+> >...
+> >
+> >>>>>>diff --git a/include/media/v4l2-flash.h b/include/media/v4l2-flash.h
+> >>>>>>new file mode 100644
+> >>>>>>index 0000000..effa46b
+> >>>>>>--- /dev/null
+> >>>>>>+++ b/include/media/v4l2-flash.h
+> >>>>>>@@ -0,0 +1,137 @@
+> >>>>>>+/*
+> >>>>>>+ * V4L2 Flash LED sub-device registration helpers.
+> >>>>>>+ *
+> >>>>>>+ *	Copyright (C) 2014 Samsung Electronics Co., Ltd
+> >>>>>>+ *	Author: Jacek Anaszewski <j.anaszewski@samsung.com>
+> >>>>>>+ *
+> >>>>>>+ * This program is free software; you can redistribute it and/or modify
+> >>>>>>+ * it under the terms of the GNU General Public License version 2 as
+> >>>>>>+ * published by the Free Software Foundation."
+> >>>>>>+ */
+> >>>>>>+
+> >>>>>>+#ifndef _V4L2_FLASH_H
+> >>>>>>+#define _V4L2_FLASH_H
+> >>>>>>+
+> >>>>>>+#include <media/v4l2-ctrls.h>
+> >>>>>>+#include <media/v4l2-device.h>
+> >>>>>>+#include <media/v4l2-dev.h>le
+> >>>>>>+#include <media/v4l2-event.h>
+> >>>>>>+#include <media/v4l2-ioctl.h>
+> >>>>>>+
+> >>>>>>+struct led_classdev_flash;
+> >>>>>>+struct led_classdev;
+> >>>>>>+enum led_brightness;
+> >>>>>>+
+> >>>>>>+struct v4l2_flash_ops {
+> >>>>>>+	int (*torch_brightness_set)(struct led_classdev *led_cdev,
+> >>>>>>+					enum led_brightness brightness);
+> >>>>>>+	int (*torch_brightness_update)(struct led_classdev *led_cdev);
+> >>>>>>+	int (*flash_brightness_set)(struct led_classdev_flash *flash,
+> >>>>>>+					u32 brightness);
+> >>>>>>+	int (*flash_brightness_update)(struct led_classdev_flash *flash);
+> >>>>>>+	int (*strobe_set)(struct led_classdev_flash *flash, bool state);
+> >>>>>>+	int (*strobe_get)(struct led_classdev_flash *flash, bool *state);
+> >>>>>>+	int (*timeout_set)(struct led_classdev_flash *flash, u32 timeout);
+> >>>>>>+	int (*indicator_brightness_set)(struct led_classdev_flash *flash,
+> >>>>>>+					u32 brightness);
+> >>>>>>+	int (*indicator_brightness_update)(struct led_classdev_flash *flash);
+> >>>>>>+	int (*external_strobe_set)(struct led_classdev_flash *flash,
+> >>>>>>+					bool enable);
+> >>>>>>+	int (*fault_get)(struct led_classdev_flash *flash, u32 *fault);
+> >>>>>>+	void (*sysfs_lock)(struct led_classdev *led_cdev);
+> >>>>>>+	void (*sysfs_unlock)(struct led_classdev *led_cdev);
+> >>>>>
+> >>>>>These functions are not driver specific and there's going to be just one
+> >>>>>implementation (I suppose). Could you refresh my memory regarding why
+> >>>>>the LED framework functions aren't called directly?
+> >>>>
+> >>>>These ops are required to make possible building led-class-flash as
+> >>>>a kernel module.
+> >>>
+> >>>Assuming you'd use the actual implementation directly, what would be the
+> >>>dependencies? I don't think the LED flash framework has any callbacks
+> >>>towards the V4L2 (LED) flash framework, does it? Please correct my
+> >>>understanding if I'm missing something. In Makefile format, assume all
+> >>>targets are .PHONY:
+> >>>
+> >>>led-flash-api: led-api
+> >>>
+> >>>v4l2-flash: led-flash-api
+> >>>
+> >>>driver: led-flash-api v4l2-flash
+> >>
+> >>LED Class Flash driver gains V4L2 Flash API when
+> >>CONFIG_V4L2_FLASH_LED_CLASS is defined. This is accomplished in
+> >>the probe function by either calling v4l2_flash_init function
+> >>or the macro of this name, when the CONFIG_V4L2_FLASH_LED_CLASS
+> >>macro isn't defined.
+> >>
+> >>If the v4l2-flash.c was to call the LED API directly, then the
+> >>led-class-flash module symbols would have to be available at
+> >>v4l2-flash.o linking time.
+> >
+> >Is this an issue? EXPORT_SYMBOL_GPL() for the relevant symbols should be
+> >enough.
+> 
+> It isn't enough. If I call e.g. led_set_flash_brightness
+> directly from v4l2-flash.c and configure led-class-flash to be built as
+> a module then I am getting "undefined reference to
+> led_set_flash_brightness" error during linking phase.
 
-It is possible to change the tLOW and tHIGH period with the following parameters:
-  i2c-sda-hold-time-ns
-  i2c-sda-falling-time-ns
-  i2c-scl-falling-time-ns
+You should not. You also should change the check as (unless you've changed
+it already):
 
-Romain
+#if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
 
------ Original Message -----
-From: "atull" <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-To: "Romain Baeriswyl" <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Cc: "Mark Rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, "mika westerberg" <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "grant likely" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, "rafael j wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "delicious quinoa" <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Sent: Wednesday, August 20, 2014 4:24:45 PM
-Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree setting
+This will evaluate to non-zero if the macro arguent or the argument
+postfixed with "_MODULE" is defined.
 
+> It happens because the linker doesn't take into account
+> led-flash-class.ko symbols. It is reasonable because initially
+> the kernel boots up without led-flash-class.ko module and
+> the processor wouldn't know the address to jump to in the
+> result of calling a led API function.
+> The led-class-flash.ko binary code is loaded into memory not
+> sooner than after executing "insmod led-class-flash.ko".
+> 
+> After linking dynamically with kernel the LED API function
+> addresses are relocated, and the LED Flash Class core can
+> initialize the v4l2_flash_ops structure. Then every LED Flash Class
+> driver can obtain the address of this structure with
+> led_get_v4l2_flash_ops and pass it to the v4l2_flash_init.
+> 
+> >>This requirement cannot be met if the led-class-flash is built
+> >>as a module.
+> >>
+> >>Use of function pointers in the v4l2-flash.c allows to compile it
+> >>into the kernel and enables the possibility of adding the V4L2 Flash
+> >>support conditionally, during driver probing.
+> >
+> >I'd simply decide this during kernel compilation time. If you want
+> >something, just enable it. v4l2_flash_init() is called directly by the
+> >driver in any case, so unless that is also called through a wrapper the
+> >driver is still directly dependent on it.
+> 
+> The problem is that v4l2-flash.o would have to depend on
+> led-class-flash.o, which when built as a module isn't available
+> during v4l2-flash.o linking time. In order to avoid v4l2-flash.o linking
+> problem, it would have to be built as a module.
 
+Modules can depend on other modules, that's not an issue. All dependencies
+will themselves be modules as well, i.e. if led-class-flash.o is a module,
+so will be v4l2-flash.o as well --- as the former depends on the latter.
 
-On Wed, 20 Aug 2014, Romain Baeriswyl wrote:
+> Nevertheless, in this arrangement, the CONFIG_V4L2_FLASH_LED_CLASS
+> macro would be defined only in v4l2-flash.ko module, and
+> a LED Flash Class driver couldn't check whether V4L2 Flash support
+> is enabled. Its dependence on v4l2-flash.o would have to be fixed,
+> which is not what we want.
 
-> Hi,
-> 
-> With the patch "i2c designware add support of I2C standard mode" I already proposed:
-> - I2C standard mode is selected with 100kHz clock frequency.
-> - I2C fast mode is selected with 400kHy clock frequency.
-> - EINVAL error is returned if clock frequency is not 100000 and not 400000.
-> 
-> but this patch seems not available yet.
-> What about the other patch "i2c designware make SCL and SDA falling time configurable" ?
-> 
-> In i2c-designware_platdrv.c the flag DW_IC_CON_SPEED_xxx is well set
-> depending on the mode:
-> 
->   if (clk_freq == 100000)
+-- 
+Kind regards,
 
-Romain,
-
-I'm really happy if your patches get accepted.  Can this be <= 100000?
-It is really common to run I2C at a lower speed if you have some
-board issues with the i2c bus.
-
-Alan
-
->      dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
->        DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_STD;
->    else
->      dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
->        DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
-> 
-> 
-> So for me everything should be fine if there patches are applied.
-> 
-> Regards,
-> 
-> Romain
-> 
-> ----- Original Message -----
-> From: "Mark Rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-> Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, "mika westerberg" <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "grant likely" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, "Romain Baeriswyl" <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, "rafael j wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "delicious quinoa" <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-> Sent: Wednesday, August 20, 2014 11:22:57 AM
-> Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree setting
-> 
-> On Tue, Aug 19, 2014 at 09:18:49PM +0100, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> > From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > 
-> > Use the documented, but unimplemented "clock-frequency"
-> > Device Tree setting as a guide on whether to set the speed
-> > mode bits in DW_IC_CON to standard or fast i2c mode.
-> > 
-> > Previously, the driver was hardwired to fast mode.  Default
-> > to fast mode if the "clock-frequency" property is not present
-> > for backwards compatiblity.
-> > 
-> > Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> > ---
-> >  drivers/i2c/busses/i2c-designware-platdrv.c |   10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> > index bc87733..18cd3d9 100644
-> > --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> > +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> > @@ -122,7 +122,8 @@ static int dw_i2c_probe(struct platform_device *pdev)
-> >  	struct dw_i2c_dev *dev;
-> >  	struct i2c_adapter *adap;
-> >  	struct resource *mem;
-> > -	int irq, r;
-> > +	int irq, r, ret, speed = DW_IC_CON_SPEED_FAST;
-> > +	u32 bus_rate;
-> >  
-> >  	irq = platform_get_irq(pdev, 0);
-> >  	if (irq < 0) {
-> > @@ -167,6 +168,11 @@ static int dw_i2c_probe(struct platform_device *pdev)
-> >  		of_property_read_u32(pdev->dev.of_node,
-> >  				     "i2c-scl-falling-time-ns",
-> >  				     &dev->scl_falling_time);
-> > +
-> > +		ret = of_property_read_u32(pdev->dev.of_node,
-> > +					   "clock-frequency", &bus_rate);
-> > +		if (!ret && (bus_rate <= 100000))
-> > +			speed = DW_IC_CON_SPEED_STD;
-> 
-> This looks a bit odd.
-> 
-> If the device only supports two particular speeds why do we accept any
-> other speed in the clock-frequency property? Surely we should at least
-> warn that something was off?
-> 
-> Thanks,
-> Mark
-> 
-> >  	}
-> >  
-> >  	dev->functionality =
-> > @@ -177,7 +183,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
-> >  		I2C_FUNC_SMBUS_WORD_DATA |
-> >  		I2C_FUNC_SMBUS_I2C_BLOCK;
-> >  	dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-> > -		DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
-> > +		DW_IC_CON_RESTART_EN | speed;
-> >  
-> >  	/* Try first if we can configure the device from ACPI */
-> >  	r = dw_i2c_acpi_configure(pdev);
-> > -- 
-> > 1.7.9.5
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
