@@ -1,139 +1,269 @@
-From: Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
-Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree
- setting
-Date: Wed, 20 Aug 2014 14:07:57 +0200 (CEST)
-Message-ID: <1757614617.2144.1408536477693.JavaMail.root@abilis.com>
-References: <944257148.1724.1408528177642.JavaMail.root@abilis.com>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v5] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Wed, 20 Aug 2014 17:43:39 +0530
+Message-ID: <CA+mB=1+vy-9bM6gOBekU4V4id187gjstXq5frOQFjRqnAig4JQ@mail.gmail.com>
+References: <1406131381-25577-1-git-send-email-sthokal@xilinx.com>
+ <CA+mB=1JhDF=BBXcyTbgVB8S7qH=Mb1JH78HLL4pA9OBH19hQvA@mail.gmail.com>
+ <8258903.Rn4s07GKGV@wuerfel>
+ <CA+mB=1LeZn1k2VHNby2TRBcb1xuFFTQio=C845_xe2A=ZciYqg@mail.gmail.com>
+ <53E9E052.3070308@monstr.eu>
+ <CA+mB=1LX=yOqkx1xNoCBQLbYna76qAeRTqiW6SDpb1MYco7ZVQ@mail.gmail.com>
+ <20140818184933.GA2028@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <944257148.1724.1408528177642.JavaMail.root@abilis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, atull@opensource.altera.com
-Cc: wsa@the-dreams.de, baruch@tkos.co.il, mika westerberg <mika.westerberg@linux.intel.com>, grant likely <grant.likely@linaro.org>, robh+dt@kernel.org, skuribay@pobox.com, rafael j wysocki <rafael.j.wysocki@intel.com>, alan@linux.intel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, delicious quinoa <delicious.quinoa@gmail.com>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140818184933.GA2028@google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: devicetree@vger.kernel.org, Michal Simek <monstr@monstr.eu>, Arnd Bergmann <arnd@arndb.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, svemula@xilinx.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Srikanth Thokala <sthokal@xilinx.com>, Rob Herring <robh+dt@kernel.org>, anirudh@xilinx.com, Grant Likely <grant.likely@linaro.org>, Michal Simek <michal.simek@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
-Please find below link to these patches:
+On Tue, Aug 19, 2014 at 12:19 AM, Bjorn Helgaas <bhelgaas@google.com> wrote:
+> On Mon, Aug 18, 2014 at 02:47:23PM +0530, Srikanth Thokala wrote:
+>> Hi Michal,
+>>
+>> On Tue, Aug 12, 2014 at 3:07 PM, Michal Simek <monstr@monstr.eu> wrote:
+>> > Hi Bjorn,
+>> >
+>> > On 07/30/2014 01:24 PM, Srikanth Thokala wrote:
+>> >> Hi Arnd,
+>> >>
+>> >> On Mon, Jul 28, 2014 at 6:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> >>> On Monday 28 July 2014 18:04:34 Srikanth Thokala wrote:
+>> >>>> Hi Arnd and Rob,
+>> >>>>
+>> >>>> I discussed with Bjorn and we believe this patch is in good shape to
+>> >>>> apply.  And Bjorn requires ACKs to apply this patch.  So, could you
+>> >>>> guys please review this patch and provided your ACKs to this patch.
+>> >>>
+>> >>> Looks great for the most part. I've looked through the whole driver
+>> >>> again, and I have two small issues remaining:
+>> >>>
+>> >>> a) Please clarify in the changeset description why there is no support
+>> >>>    for PCI I/O space.
+>> >>
+>> >> Sure, I will add to my changeset.
+>> >>
+>> >>>
+>> >>> b) I think you should use the 'msi-parent' property, and the
+>> >>>    of_pci_find_msi_chip_by_node() to find the msi_chip for the
+>> >>>    PCI controller. This will make it possible to forward MSIs
+>> >>>    to the main interrupt controller in the system, which is more
+>> >>>    efficient. See the pcie-mvebu driver for an example of this.
+>> >>
+>> >> Ok, I need to look into this and I will plan to implement on top of this patch.
+>> >>
+>> >>>
+>> >>> Other than these:
+>> >>>
+>> >>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>> >>
+>> >> Thanks Arnd for the Ack.
+>> >
+>> > What's the status on this one?
+>>
+>> It looks like Bjorn is on vacation.  I have sent v6 patch by adding
+>> Ack from Arnd, which
+>> I feel is in good shape to be applied.
+>
+> I actually started applying this last night (see [1]), but got some
+> errors from the build-bot (attached).  I haven't looked into them,
+> but my guess is that you're missing a Kconfig dependency or something
+> equally minor.
 
-[PATCH 1/2] i2c designware make SCL and SDA falling time configurable
-https://lkml.org/lkml/2013/10/8/443
-
-[PATCH V3 2/2] i2c designware add support of I2C standard mode
-https://lkml.org/lkml/2014/3/25/135
-
-Are they fine to be included in the mainline ?
-
-Romain
-
------ Original Message -----
-From: "Romain Baeriswyl" <Romain.Baeriswyl@abilis.com>
-To: "Mark Rutland" <mark.rutland@arm.com>, atull@opensource.altera.com
-Cc: wsa@the-dreams.de, baruch@tkos.co.il, "mika westerberg" <mika.westerberg@linux.intel.com>, "grant likely" <grant.likely@linaro.org>, robh+dt@kernel.org, skuribay@pobox.com, "rafael j wysocki" <rafael.j.wysocki@intel.com>, alan@linux.intel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "delicious quinoa" <delicious.quinoa@gmail.com>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
-Sent: Wednesday, August 20, 2014 11:49:37 AM
-Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree setting
-
-Hi,
-
-With the patch "i2c designware add support of I2C standard mode" I already proposed:
-- I2C standard mode is selected with 100kHz clock frequency.
-- I2C fast mode is selected with 400kHy clock frequency.
-- EINVAL error is returned if clock frequency is not 100000 and not 400000.
-
-but this patch seems not available yet.
-What about the other patch "i2c designware make SCL and SDA falling time configurable" ?
-
-In i2c-designware_platdrv.c the flag DW_IC_CON_SPEED_xxx is well set
-depending on the mode:
-
-  if (clk_freq == 100000)
-     dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-       DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_STD;
-   else
-     dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-       DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
-
-
-So for me everything should be fine if there patches are applied.
-
-Regards,
-
-Romain
-
------ Original Message -----
-From: "Mark Rutland" <mark.rutland@arm.com>
-To: atull@opensource.altera.com
-Cc: wsa@the-dreams.de, baruch@tkos.co.il, "mika westerberg" <mika.westerberg@linux.intel.com>, "grant likely" <grant.likely@linaro.org>, robh+dt@kernel.org, skuribay@pobox.com, "Romain Baeriswyl" <Romain.Baeriswyl@abilis.com>, "rafael j wysocki" <rafael.j.wysocki@intel.com>, alan@linux.intel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "delicious quinoa" <delicious.quinoa@gmail.com>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
-Sent: Wednesday, August 20, 2014 11:22:57 AM
-Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree setting
-
-On Tue, Aug 19, 2014 at 09:18:49PM +0100, atull@opensource.altera.com wrote:
-> From: Alan Tull <atull@opensource.altera.com>
-> 
-> Use the documented, but unimplemented "clock-frequency"
-> Device Tree setting as a guide on whether to set the speed
-> mode bits in DW_IC_CON to standard or fast i2c mode.
-> 
-> Previously, the driver was hardwired to fast mode.  Default
-> to fast mode if the "clock-frequency" property is not present
-> for backwards compatiblity.
-> 
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> ---
->  drivers/i2c/busses/i2c-designware-platdrv.c |   10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index bc87733..18cd3d9 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -122,7 +122,8 @@ static int dw_i2c_probe(struct platform_device *pdev)
->  	struct dw_i2c_dev *dev;
->  	struct i2c_adapter *adap;
->  	struct resource *mem;
-> -	int irq, r;
-> +	int irq, r, ret, speed = DW_IC_CON_SPEED_FAST;
-> +	u32 bus_rate;
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
-> @@ -167,6 +168,11 @@ static int dw_i2c_probe(struct platform_device *pdev)
->  		of_property_read_u32(pdev->dev.of_node,
->  				     "i2c-scl-falling-time-ns",
->  				     &dev->scl_falling_time);
-> +
-> +		ret = of_property_read_u32(pdev->dev.of_node,
-> +					   "clock-frequency", &bus_rate);
-> +		if (!ret && (bus_rate <= 100000))
-> +			speed = DW_IC_CON_SPEED_STD;
-
-This looks a bit odd.
-
-If the device only supports two particular speeds why do we accept any
-other speed in the clock-frequency property? Surely we should at least
-warn that something was off?
+These are due to the same config flag name (CONFIG_PCI_XILINX) being used
+for Microblaze and Zynq platforms.  I will fix it and send you next
+version of patch.
 
 Thanks,
-Mark
+Srikanth
 
->  	}
->  
->  	dev->functionality =
-> @@ -177,7 +183,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
->  		I2C_FUNC_SMBUS_WORD_DATA |
->  		I2C_FUNC_SMBUS_I2C_BLOCK;
->  	dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-> -		DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
-> +		DW_IC_CON_RESTART_EN | speed;
->  
->  	/* Try first if we can configure the device from ACPI */
->  	r = dw_i2c_acpi_configure(pdev);
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+>
+> Bjorn
+>
+> [1] http://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/commit/?h=pci/host-xilinx&id=a58f3d0c3b1c4a71a2418c3306fba86c26a49781
+>
+>
+> ---------- Forwarded message ----------
+> From: kbuild test robot <fengguang.wu@intel.com>
+> To: Bjorn Helgaas <bhelgaas@google.com>
+> Cc:
+> Date: Mon, 18 Aug 2014 12:40:06 +0800
+> Subject: [pci:pci/host-xilinx] a58f3d0c3b1c4a71a2418c3306fba86c26a49781 BUILD DONE
+> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git  pci/host-xilinx
+> a58f3d0c3b1c4a71a2418c3306fba86c26a49781  PCI: xilinx: Add Xilinx PCIe Host Bridge IP driver
+>
+> drivers/pci/host/pci-xilinx.c:470:21: error: 'IRQF_VALID' undeclared (first use in this function)
+> drivers/pci/host/pci-xilinx.c:742:14: error: dereferencing pointer to incomplete type
+> drivers/pci/host/pci-xilinx.c:939:2: error: implicit declaration of function 'pci_common_init_dev' [-Werror=implicit-function-declaration]
+> drivers/pci/host/pci-xilinx.c:417:2: error: implicit declaration of function 'set_irq_flags' [-Werror=implicit-function-declaration]
+> drivers/pci/host/pci-xilinx.c:938:2: error: invalid use of undefined type 'struct hw_pci'
+> drivers/pci/host/pci-xilinx.c:888:16: error: storage size of 'hw' isn't known
+> drivers/pci/host/pci-xilinx.c:935:3: error: unknown field 'add_bus' specified in initializer
+> drivers/pci/host/pci-xilinx.c:934:3: error: unknown field 'map_irq' specified in initializer
+> drivers/pci/host/pci-xilinx.c:931:3: error: unknown field 'nr_controllers' specified in initializer
+> drivers/pci/host/pci-xilinx.c:937:3: error: unknown field 'ops' specified in initializer
+> drivers/pci/host/pci-xilinx.c:932:3: error: unknown field 'private_data' specified in initializer
+> drivers/pci/host/pci-xilinx.c:936:3: error: unknown field 'scan' specified in initializer
+> drivers/pci/host/pci-xilinx.c:933:3: error: unknown field 'setup' specified in initializer
+> drivers/pci/host/pci-xilinx.c:937:3: warning: (near initialization for '(anonymous)')
+> drivers/pci/host/pci-xilinx.c:937:3: warning: excess elements in struct initializer
+> drivers/pci/host/pci-xilinx.c:124:59: warning: its scope is only this definition or declaration, which is probably not what you want
+> drivers/pci/host/pci-xilinx.c:737:34: warning: passing argument 1 of 'sys_to_pcie' from incompatible pointer type
+> drivers/pci/host/pci-xilinx.c:735:17: warning: 'struct pci_sys_data' declared inside parameter list
+>
+> elapsed time: 25m
+>
+> configs tested: 112
+>
+> parisc                        c3000_defconfig
+> parisc                         b180_defconfig
+> parisc                              defconfig
+> alpha                               defconfig
+> parisc                            allnoconfig
+> i386                              allnoconfig
+> i386                                defconfig
+> i386                             allmodconfig
+> i386                             alldefconfig
+> sh                            titan_defconfig
+> sh                          rsk7269_defconfig
+> sh                  sh7785lcr_32bit_defconfig
+> sh                                allnoconfig
+> x86_64                     randconfig-c3-0818
+> x86_64                     randconfig-c1-0818
+> x86_64                     randconfig-c0-0818
+> x86_64                     randconfig-c2-0818
+> ia64                             allmodconfig
+> ia64                              allnoconfig
+> ia64                                defconfig
+> ia64                             alldefconfig
+> x86_64                                    lkp
+> x86_64                                   rhel
+> powerpc                      chroma_defconfig
+> powerpc                 linkstation_defconfig
+> powerpc                               powerpc
+> powerpc                         wii_defconfig
+> powerpc                    gamecube_defconfig
+> powerpc               corenet64_smp_defconfig
+> powerpc                               mpc512x
+> powerpc                                ppc44x
+> x86_64                     randconfig-j0-0818
+> x86_64                     randconfig-j1-0818
+> i386                      randconfig-ha2-0818
+> i386                      randconfig-ha5-0818
+> i386                      randconfig-ha4-0818
+> i386                      randconfig-ha3-0818
+> i386                      randconfig-ha0-0818
+> i386                      randconfig-ha1-0818
+> sparc                               defconfig
+> sparc64                           allnoconfig
+> sparc64                             defconfig
+> x86_64                           allmodconfig
+> xtensa                       common_defconfig
+> m32r                       m32104ut_defconfig
+> xtensa                          iss_defconfig
+> m32r                         opsput_defconfig
+> m32r                           usrv_defconfig
+> m32r                     mappi3.smp_defconfig
+> i386                          randconfig-i002
+> i386                          randconfig-i003
+> i386                          randconfig-i000
+> i386                          randconfig-i001
+> i386                          randconfig-i006
+> i386                          randconfig-i007
+> i386                          randconfig-i004
+> i386                          randconfig-i005
+> i386                          randconfig-i008
+> i386                          randconfig-i009
+> x86_64                        randconfig-i009
+> x86_64                        randconfig-i008
+> x86_64                        randconfig-i003
+> x86_64                        randconfig-i002
+> x86_64                        randconfig-i001
+> x86_64                        randconfig-i000
+> x86_64                        randconfig-i007
+> x86_64                        randconfig-i006
+> x86_64                        randconfig-i005
+> x86_64                        randconfig-i004
+> microblaze                      mmu_defconfig
+> microblaze                    nommu_defconfig
+> i386                             allyesconfig
+> cris                 etrax-100lx_v2_defconfig
+> blackfin                  TCM-BF537_defconfig
+> blackfin            BF561-EZKIT-SMP_defconfig
+> blackfin                BF533-EZKIT_defconfig
+> blackfin                BF526-EZBRD_defconfig
+> i386                       randconfig-r2-0818
+> i386                       randconfig-r1-0818
+> i386                       randconfig-r0-0818
+> i386                       randconfig-r3-0818
+> mn10300                     asb2364_defconfig
+> openrisc                    or1ksim_defconfig
+> um                           x86_64_defconfig
+> um                             i386_defconfig
+> avr32                      atngw100_defconfig
+> frv                                 defconfig
+> avr32                     atstk1006_defconfig
+> tile                         tilegx_defconfig
+> x86_64                   randconfig-x004-0817
+> i386                     randconfig-x000-0817
+> x86_64                   randconfig-x007-0817
+> i386                     randconfig-x001-0817
+> i386                     randconfig-x002-0817
+> i386                     randconfig-x005-0817
+> i386                     randconfig-x007-0817
+> x86_64                   randconfig-x003-0817
+> i386                     randconfig-x003-0817
+> x86_64                   randconfig-x008-0817
+> i386                     randconfig-x006-0817
+> x86_64                   randconfig-x000-0817
+> i386                     randconfig-x004-0817
+> x86_64                   randconfig-x002-0817
+> i386                     randconfig-x008-0817
+> i386                     randconfig-x009-0817
+> x86_64                   randconfig-x006-0817
+> x86_64                   randconfig-x009-0817
+> x86_64                   randconfig-x005-0817
+> x86_64                   randconfig-x001-0817
+> x86_64                             acpi-redef
+> x86_64                           allyesdebian
+> x86_64                                nfsroot
+>
+> Thanks,
+> Fengguang
+>
+>
+> ---------- Forwarded message ----------
+> From: kbuild test robot <fengguang.wu@intel.com>
+> To: Srikanth Thokala <sthokal@xilinx.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>, kbuild-all@01.org
+> Date: Mon, 18 Aug 2014 15:16:51 +0800
+> Subject: [pci:pci/host-xilinx 1/1] WARNING: drivers/built-in.o(.text+0x64acc): Section mismatch in reference from the function xilinx_pcie_probe() to the function .init.text:xilinx_pcie_scan_bus()
+> tree:   git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/host-xilinx
+> head:   a58f3d0c3b1c4a71a2418c3306fba86c26a49781
+> commit: a58f3d0c3b1c4a71a2418c3306fba86c26a49781 [1/1] PCI: xilinx: Add Xilinx PCIe Host Bridge IP driver
+> config: make ARCH=arm allmodconfig
+>
+> All warnings:
+>
+>>> WARNING: drivers/built-in.o(.text+0x64acc): Section mismatch in reference from the function xilinx_pcie_probe() to the function .init.text:xilinx_pcie_scan_bus()
+>    The function xilinx_pcie_probe() references
+>    the function __init xilinx_pcie_scan_bus().
+>    This is often because xilinx_pcie_probe lacks a __init
+>    annotation or the annotation of xilinx_pcie_scan_bus is wrong.
+>
+> ---
+> 0-DAY kernel build testing backend              Open Source Technology Center
+> http://lists.01.org/mailman/listinfo/kbuild                 Intel Corporation
+>
