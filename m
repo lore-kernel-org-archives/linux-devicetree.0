@@ -1,121 +1,64 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v4 3/4] ARM: dts: Add main PWM info to rk3288
-Date: Wed, 20 Aug 2014 11:54:01 -0700
-Message-ID: <1408560842-3746-4-git-send-email-dianders@chromium.org>
-References: <1408560842-3746-1-git-send-email-dianders@chromium.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: rockchip: add hym8563 rtc to Radxa Rock board
+Date: Wed, 20 Aug 2014 21:07:22 +0200
+Message-ID: <2306550.nl6CA81PdX@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408560842-3746-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the PWM info (other than the VOP PWM) to the main rk3288
-dtsi file.
+The Radxa Rock uses a hym8563 as rtc. Add the i2c device and necessary
+pinconfig for the interrupt pin - labeled rtc_int in the schematics.
 
-Signed-off-by: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
-Changes in v4:
-- Add rockchip,grf to pwm nodes.
+if nobody complains I'll queue this into my v3.18-next/dts branch
 
-Changes in v3: None
-Changes in v2: None
+ arch/arm/boot/dts/rk3188-radxarock.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
- arch/arm/boot/dts/rk3288.dtsi | 72 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 36be7bb..9074205 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -261,6 +261,54 @@
- 		status = "disabled";
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index ef72faf..ff35acfa 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -80,6 +80,17 @@
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+ 
++	rtc@51 {
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&rtc_int>;
++		#clock-cells = <0>;
++		clock-output-names = "xin32k";
++	};
++
+ 	act8846: act8846@5a {
+ 		compatible = "active-semi,act8846";
+ 		reg = <0x5a>;
+@@ -196,6 +207,12 @@
+ 		};
  	};
  
-+	pwm0: pwm@ff680000 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680000 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm0_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
++	hym8563 {
++		rtc_int: rtc-int {
++			rockchip,pins = <RK_GPIO0 0 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
 +	};
 +
-+	pwm1: pwm@ff680010 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680010 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm1_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
-+	};
-+
-+	pwm2: pwm@ff680020 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680020 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm2_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
-+	};
-+
-+	pwm3: pwm@ff680030 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680030 0x10>;
-+		#pwm-cells = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm3_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		rockchip,grf = <&grf>;
-+		status = "disabled";
-+	};
-+
- 	pmu: power-management@ff730000 {
- 		compatible = "rockchip,rk3288-pmu", "syscon";
- 		reg = <0xff730000 0x100>;
-@@ -611,5 +659,29 @@
- 				rockchip,pins = <5 15 3 &pcfg_pull_none>;
- 			};
- 		};
-+
-+		pwm0 {
-+			pwm0_pin: pwm0-pin {
-+				rockchip,pins = <7 0 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm1 {
-+			pwm1_pin: pwm1-pin {
-+				rockchip,pins = <7 1 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm2 {
-+			pwm2_pin: pwm2-pin {
-+				rockchip,pins = <7 22 RK_FUNC_3 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm3 {
-+			pwm3_pin: pwm3-pin {
-+				rockchip,pins = <7 23 RK_FUNC_3 &pcfg_pull_none>;
-+			};
-+		};
- 	};
- };
+ 	ir-receiver {
+ 		ir_recv_pin: ir-recv-pin {
+ 			rockchip,pins = <RK_GPIO0 10 RK_FUNC_GPIO &pcfg_pull_none>;
 -- 
-2.1.0.rc2.206.gedb03e5
+1.9.0
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
