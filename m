@@ -1,96 +1,139 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCHv6 2/2] dt/bindings: Add the DT binding documentation for
- endianness
-Date: Wed, 20 Aug 2014 11:43:41 +0200
-Message-ID: <20140820094340.GC15414@ulmo>
-References: <1405398183-31345-1-git-send-email-Li.Xiubo@freescale.com>
- <1405398183-31345-3-git-send-email-Li.Xiubo@freescale.com>
- <20140820080549.GA15414@ulmo>
- <10ad24319e6a486db77c31a5a911140e@BN1PR0301MB0609.namprd03.prod.outlook.com>
+Subject: Re: [PATCH 2/2] drm/panel: Add HannStar HSD070PWW1 7.0" WXGA TFT LCD
+ panel
+Date: Wed, 20 Aug 2014 11:51:52 +0200
+Message-ID: <20140820095151.GF15414@ulmo>
+References: <1408463532-14903-1-git-send-email-p.zabel@pengutronix.de>
+ <1408463532-14903-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="H8ygTp4AXg6deix2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <10ad24319e6a486db77c31a5a911140e@BN1PR0301MB0609.namprd03.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0388473564=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1408463532-14903-2-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
 
---H8ygTp4AXg6deix2
+--===============0388473564==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
+Content-Disposition: inline
+
+
+--Zi0sgQQBxRFxMTsj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 20, 2014 at 09:14:02AM +0000, Li.Xiubo@freescale.com wrote:
-> > Subject: Re: [PATCHv6 2/2] dt/bindings: Add the DT binding documentatio=
-n for
-> > endianness
-> >=20
-> > On Tue, Jul 15, 2014 at 12:23:03PM +0800, Xiubo Li wrote:
-> > > Device-Tree binding for device endianness
-> > > Index     Device     Endianness properties
-> > > ---------------------------------------------------
-> > > 1         BE         'big-endian'
-> > > 2         LE         'little-endian'
-> > >
-> > > For one device driver, which will run in different scenarios above
-> > > on different SoCs using the devicetree, we need one way to simplify
-> > > this.
-> > >
-> > > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> > > ---
-> > >  .../devicetree/bindings/regmap/regmap.txt          | 47
-> > ++++++++++++++++++++++
-> > >  1 file changed, 47 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/regmap/regmap.t=
-xt
-> >=20
-> > Sorry for jumping in so late. I think this binding documentation needs
-> > to be moved somewhere else. regmap is a Linux kernel specific
-> > implementation detail and therefore has no place in device tree binding
-> > descriptions. Furthermore the endianness properties described herein do
-> > apply to drivers that don't use regmap.
-> >=20
-> > Perhaps we need some top-level file that describes generic properties
-> > such as this?
-> >=20
-> > Thierry
+On Tue, Aug 19, 2014 at 05:52:12PM +0200, Philipp Zabel wrote:
+> This patch adds support for the HannStar Display Corp. HSD070PWW1 7.0"
+> WXGA TFT LCD panel to the simple-panel driver. The binding documentation
+> is included.
 >=20
-> Yes, I do agree.
-> And there are many devices that have the endian issue without using the
-> Regmap in our LS* SoCs.
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  .../bindings/panel/hannstar,hsd070pww1.txt         |  7 ++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 25 ++++++++++++++++=
+++++++
+>  2 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/hannstar,hsd0=
+70pww1.txt
 >=20
-> And I also think one generic binding description of this will be much
-> better.
->=20
-> Where should we place it? In Documentation/devicetree/bindings/, or...?
+> diff --git a/Documentation/devicetree/bindings/panel/hannstar,hsd070pww1.=
+txt b/Documentation/devicetree/bindings/panel/hannstar,hsd070pww1.txt
+> new file mode 100644
+> index 0000000..211c226
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/hannstar,hsd070pww1.txt
+> @@ -0,0 +1,7 @@
+> +HannStar Display Corp. HSD070PWW1 7.0" WXGA TFT LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "hannstar,hsd070pww1"
+> +
+> +This binding is compatible with the simple-panel binding, which is speci=
+fied
+> +in simple-panel.txt in this directory.
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
+/panel-simple.c
+> index 4ce1db0..ddd651d 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -518,6 +518,28 @@ static const struct panel_desc foxlink_fl500wvr00_a0=
+t =3D {
+>  	},
+>  };
+> =20
+> +static const struct drm_display_mode hannstar_hsd070pww1_mode =3D {
+> +	.clock =3D 71100,
+> +	.hdisplay =3D 1280,
+> +	.hsync_start =3D 1280 + 0,
+> +	.hsync_end =3D 1280 + 0 + 160,
+> +	.htotal =3D 1280 + 0 + 160 + 0,
+> +	.vdisplay =3D 800,
+> +	.vsync_start =3D 800 + 0,
+> +	.vsync_end =3D 800 + 0 + 23,
+> +	.vtotal =3D 800 + 0 + 23 + 0,
 
-Documentation/devicetree/bindings/standard-properties.txt perhaps?
+Horizontal and vertical porches are 0, that doesn't look right.
+
+> +	.vrefresh =3D 60,
+> +};
+> +
+> +static const struct panel_desc hannstar_hsd070pww1 =3D {
+> +	.modes =3D &hannstar_hsd070pww1_mode,
+> +	.num_modes =3D 1,
+> +	.size =3D {
+> +		.width =3D 151,
+> +		.height =3D 94,
+> +	},
+> +};
+
+This is missing a value for the .bpc field.
 
 Thierry
 
---H8ygTp4AXg6deix2
+--Zi0sgQQBxRFxMTsj
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT9G3MAAoJEN0jrNd/PrOhxHwP/1hfjJvDNoaUHLP2xKokiiq9
-OXpL4zgiI/uWdUkrI/28zrbu9G8oiwobpIBWgqTfn8++YUmKlmLFzz22x0WWxq9p
-DPt/ED5QBfeiwYISSNvfJUGhqoLZg4WhB8Au8ek3IX+yBzwfe0tVcliNmz9h8ySO
-mJ/kOh4eGfvcqkfrXI8DKq6oac/+yvxWU55zobABoQj+SneeEjLcsWnH3ryesf45
-e3WHkptPIWj9ibVN8ddXzcHsLF/eIewKcPBtARFsQ9QZRrGQWVqSFaAEjU64hbsj
-4rYh0OovYfHe6v8XZCQHxxY256Z2kcq4XPJNMgI4WpNZ/VLbwyZsm8eCN+rF81To
-/MgKlcPLdenpPWmmFnMfcNROBeAZCcRQnAUDsuIdILvV4GrCYiW+TEukr371yaMg
-GMlafEzKXOBuKcCfwAjBLqtUJAut4O+S4E48hxQsAKqXsJy3WHTHl1s7c5zr/Eqf
-j44mELZNJiOGiI7V9dXs731NYXj/M7STHsRKcnS0YZsT7w2WXNJE9AfDsBRDEHvO
-IwyCrVIm6jSo/BT/rNfHB5qoncRtM4vHU02+J8CqisgtwcwB1fRdw+1rHs4K7qLo
-kfZlsN9CRntMYH8DHHaH9H48fuGdc2hmFUP52W/VuAAWAIcPgXk3j96y55FLykrI
-ulOtmhdIowAfkcArNtVz
-=Q89J
+iQIcBAEBAgAGBQJT9G+3AAoJEN0jrNd/PrOhKiEP/2CkzsKw1HDSA2e3ugG9h3Cw
+oLiVJGEK/9Oprxm96G3ynBgkyVIaA/xtLE+94Psf5FAzugH+gTzzKZp6p9HtW5FS
+nRBGmQM4j3oRCGgEBE3Zi0qtT7VasStqN63yG0Iwqqf12jCEn7hgJ2DCWkEuUvN5
+qp4qA1bcMd4jPQcTXBCphHTHEs6lTEauFFpKML1W/hzynLhEyFJVLJpgkV86o8wO
+2BIHbdjzeZsad/6fpXbySkxjvQb8QpGFbRDPKP8svorLBJrcC6VlcSdJ5uYpvq+9
+M6F1vtrYTpA7zf3R4myYRyjgUU+ucdJpWm6tN/Tz4tZzAALgcKwxy7ki73RLAkTZ
+dNhOISdti4dGnA//7zX8NKlbvO+9cBqXaNwo5DLG27cvvGC11kPe3fM32h2TOTEW
+A5gJ/MRyK7iXIRidb31TD3B16Sg2z8cWyPlvnd3agMd/x/n9PPJVswi0AJHdbegp
+ZWPAl51BZjzn4Ct8AT5OofkKrfDWHHf6/1NvRpR1iH7XXYokxl1OrDjsc6saO/WT
+MwD7itE3vaZVCaIoUIHYxh0OpGgGdzAyt3ehR1+VExTFyTFxYBoLaw+UJ0IZ78Zr
+0X4vULKaxw30NjrNYzl8F8cFrY+lSHnykLUanL/HOlR7MKDjuUfco0w587Bcz1BL
+vzB6wJ8WodzsIgY+IE9i
+=drsx
 -----END PGP SIGNATURE-----
 
---H8ygTp4AXg6deix2--
+--Zi0sgQQBxRFxMTsj--
+
+--===============0388473564==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0388473564==--
