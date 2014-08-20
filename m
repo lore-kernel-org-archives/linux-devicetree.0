@@ -1,125 +1,46 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5] phy: Renesas R-Car Gen2 PHY driver
-Date: Wed, 20 Aug 2014 20:12:47 +0530
-Message-ID: <53F4B3E7.3030700@ti.com>
-References: <201407222327.15179.sergei.shtylyov@cogentembedded.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH 0/4] ARM: shmobile: dtsi: interrupt-parent cleanups
+Date: Wed, 20 Aug 2014 23:53:05 +0900
+Message-ID: <CANqRtoTDdrR-VJ4dh96BJBmw5b-fHPRELNTrHTZK7jEXYasmJQ@mail.gmail.com>
+References: <1408544914-21742-1-git-send-email-geert+renesas@glider.be>
+	<CAMuHMdWFhqv5j8g8wGnaXBOZ7r7vBpOnW4K_KY7WAs04OYxQQg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201407222327.15179.sergei.shtylyov@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWFhqv5j8g8wGnaXBOZ7r7vBpOnW4K_KY7WAs04OYxQQg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Aug 20, 2014 at 11:32 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Wed, Aug 20, 2014 at 4:28 PM, Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+>> This series cleans up interrupt-parent use, to match common use.
+>> It makes sure there's an "interrupt-parent = <&gic>;" at the top, which is
+>> thus inherited by all child nodes, and removes superflous "interrupt-parent"
+>> properties from the individual child nodes.
+>>
+>> This was tested on r8a7791/koelsch only.
+>>
+>> Geert Uytterhoeven (4):
+>>   ARM: shmobile: r8a7779 dtsi: Remove superfluous interrupt-parent
+>>   ARM: shmobile: r8a7790 dtsi: Remove superfluous interrupt-parent
+>>   ARM: shmobile: r8a7790 dtsi: Remove superfluous interrupt-parent
+>
+> Oops, that should have been "r8a7791". I've sent a fixed version of that patch.
+>
+>>   ARM: shmobile: sh73a0 dtsi: Move interrupt-parent to the top
 
-On Wednesday 23 July 2014 12:57 AM, Sergei Shtylyov wrote:
-.
-.
-<snip>
-.
-.
+Thanks, those look like fine cleanups to me!
 
-> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
-> ===================================================================
-> --- /dev/null
-> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
-> @@ -0,0 +1,341 @@
-> +/*
-> + * Renesas R-Car Gen2 PHY driver
-> + *
-> + * Copyright (C) 2014 Renesas Solutions Corp.
-> + * Copyright (C) 2014 Cogent Embedded, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +
-> +#include <asm/cmpxchg.h>
-> +
-> +#define USBHS_LPSTS			0x02
-> +#define USBHS_UGCTRL			0x80
-> +#define USBHS_UGCTRL2			0x84
-> +#define USBHS_UGSTS			0x88	/* The manuals have 0x90 */
-> +
-> +/* Low Power Status register (LPSTS) */
-> +#define USBHS_LPSTS_SUSPM		0x4000
-> +
-> +/* USB General control register (UGCTRL) */
-> +#define USBHS_UGCTRL_CONNECT		0x00000004
-> +#define USBHS_UGCTRL_PLLRESET		0x00000001
-> +
-> +/* USB General control register 2 (UGCTRL2) */
-> +#define USBHS_UGCTRL2_USB2SEL		0x80000000
-> +#define USBHS_UGCTRL2_USB2SEL_PCI	0x00000000
-> +#define USBHS_UGCTRL2_USB2SEL_USB30	0x80000000
-> +#define USBHS_UGCTRL2_USB0SEL		0x00000030
-> +#define USBHS_UGCTRL2_USB0SEL_PCI	0x00000010
-> +#define USBHS_UGCTRL2_USB0SEL_HS_USB	0x00000030
-> +
-> +/* USB General status register (UGSTS) */
-> +#define USBHS_UGSTS_LOCK		0x00000300 /* The manuals have 0x3 */
-> +
-> +#define PHYS_PER_CHANNEL	2
-> +
-> +struct rcar_gen2_phy {
-> +	struct phy *phy;
-> +	struct rcar_gen2_channel *channel;
-> +	int number;
-> +	u32 select_value;
-> +};
-> +
-> +struct rcar_gen2_channel {
-> +	struct device_node *of_node;
-> +	struct rcar_gen2_phy_driver *drv;
-> +	struct rcar_gen2_phy phys[PHYS_PER_CHANNEL];
-> +	int selected_phy;
-> +	u32 select_mask;
-> +};
-> +
-> +struct rcar_gen2_phy_driver {
-> +	void __iomem *base;
-> +	struct clk *clk;
-> +	spinlock_t lock;
-> +	int num_channels;
-> +	struct rcar_gen2_channel *channels;
-> +};
-> +
-> +static int rcar_gen2_phy_init(struct phy *p)
-> +{
-> +	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
-> +	struct rcar_gen2_channel *channel = phy->channel;
-> +	struct rcar_gen2_phy_driver *drv = channel->drv;
-> +	unsigned long flags;
-> +	u32 ugctrl2;
-> +
-> +	/*
-> +	 * Try to acquire exclusive access to PHY.  The first driver calling
-> +	 * phy_init()  on a given channel wins, and all attempts  to use another
-> +	 * PHY on this channel will fail until phy_exit() is called by the first
-> +	 * driver.   Achieving this with cmpxcgh() should be SMP-safe.
-> +	 */
-> +	if (cmpxchg(&channel->selected_phy, -1, phy->number) != -1)
-> +		return -EBUSY;
+Acked-by: Magnus Damm <damm+renesas@opensource.se>
 
-This should be done in phy_get no?
+I suppose both your and my recent patches need a bit of testing, so I
+guess it may make sense for Simon to merge one series at a time to
+avoid introducing multiple potential issues simultaneously... Combine
+early delay issues with Kconfig errors and potential interrupt parent
+error and you have something fun to debug. =)
 
-Can we add this in phy-core? There might be other users who want to have
-exclusive access within the same phy provider.
-
-Rest of it looks fine to me.
-
-Thanks
-Kishon
+/ magnus
