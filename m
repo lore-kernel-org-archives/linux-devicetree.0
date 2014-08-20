@@ -1,162 +1,139 @@
-From: Kiran Padwal <kiran.padwal@smartplayin.com>
-Subject: [PATCH v2] ARM: apq8064: Add pinmux and i2c pinctrl nodes
-Date: Wed, 20 Aug 2014 17:32:13 +0530
-Message-ID: <1408536133-13824-1-git-send-email-kiran.padwal@smartplayin.com>
+From: Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
+Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree
+ setting
+Date: Wed, 20 Aug 2014 14:07:57 +0200 (CEST)
+Message-ID: <1757614617.2144.1408536477693.JavaMail.root@abilis.com>
+References: <944257148.1724.1408528177642.JavaMail.root@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davidb@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kiran Padwal <kiran.padwal@smartplayin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <944257148.1724.1408528177642.JavaMail.root@abilis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, atull@opensource.altera.com
+Cc: wsa@the-dreams.de, baruch@tkos.co.il, mika westerberg <mika.westerberg@linux.intel.com>, grant likely <grant.likely@linaro.org>, robh+dt@kernel.org, skuribay@pobox.com, rafael j wysocki <rafael.j.wysocki@intel.com>, alan@linux.intel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, delicious quinoa <delicious.quinoa@gmail.com>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pinmux and i2c pinctrl DT node for IFC6410 board.
-It also adds necessary DT support for i2c eeprom which is present on
-IFC6410.
 
-Tested on IFC6410 board.
+Please find below link to these patches:
 
-Signed-off-by: Kiran Padwal <kiran.padwal@smartplayin.com>
----
-Chages since v1:
-	- Renamed pinmux phandle "qcom_pinmux" to "tlmm_pinmux".
-	- Updated pinmux interrupt.
+[PATCH 1/2] i2c designware make SCL and SDA falling time configurable
+https://lkml.org/lkml/2013/10/8/443
 
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |   29 ++++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi        |   59 ++++++++++++++++++++++++++++
- 2 files changed, 88 insertions(+)
+[PATCH V3 2/2] i2c designware add support of I2C standard mode
+https://lkml.org/lkml/2014/3/25/135
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 7c2441d..d52ac3c 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -5,6 +5,15 @@
- 	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
- 
- 	soc {
-+		pinmux@800000 {
-+			i2c1_pins: i2c1_pinmux {
-+				mux {
-+					pins = "gpio20", "gpio21";
-+					function = "gsbi1";
-+				};
-+			};
-+		};
-+
- 		gsbi@16600000 {
- 			status = "ok";
- 			qcom,mode = <GSBI_PROT_I2C_UART>;
-@@ -12,5 +21,25 @@
- 				status = "ok";
- 			};
- 		};
-+
-+		gsbi1: gsbi@12440000 {
-+			qcom,mode = <GSBI_PROT_I2C>;
-+			status = "ok";
-+
-+			i2c1: i2c@12460000 {
-+				status = "ok";
-+
-+				clock-frequency = <200000>;
-+
-+				pinctrl-0 = <&i2c1_pins>;
-+				pinctrl-names = "default";
-+
-+				eeprom: eeprom@52 {
-+					compatible = "atmel,24c128";
-+					reg = <0x52>;
-+					pagesize = <32>;
-+				};
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 92bf793..bb2ccde 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -70,6 +70,17 @@
- 		ranges;
- 		compatible = "simple-bus";
- 
-+		tlmm_pinmux: pinmux@800000 {
-+			compatible = "qcom,apq8064-pinctrl";
-+			reg = <0x800000 0x4000>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupts = <0 16 0x4>;
-+		};
-+
- 		intc: interrupt-controller@2000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
-@@ -133,6 +144,54 @@
- 			regulator;
- 		};
- 
-+		gsbi1: gsbi@12440000 {
-+			compatible = "qcom,gsbi-v1.0.0";
-+			reg = <0x12440000 0x100>;
-+			clocks = <&gcc GSBI1_H_CLK>;
-+			clock-names = "iface";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			status = "disabled";
-+
-+			i2c@12460000 {
-+				compatible = "qcom,i2c-qup-v1.1.1";
-+				reg = <0x12460000 0x1000>;
-+				interrupts = <0 194 0>;
-+
-+				clocks = <&gcc GSBI1_QUP_CLK>, <&gcc GSBI1_H_CLK>;
-+				clock-names = "core", "iface";
-+				status = "disabled";
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
-+		gsbi2: gsbi@12480000 {
-+			compatible = "qcom,gsbi-v1.0.0";
-+			reg = <0x12480000 0x100>;
-+			clocks = <&gcc GSBI2_H_CLK>;
-+			clock-names = "iface";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			status = "disabled";
-+
-+			i2c@124a0000 {
-+				compatible = "qcom,i2c-qup-v1.1.1";
-+				reg = <0x124a0000 0x1000>;
-+				interrupts = <0 196 0>;
-+
-+				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
-+				clock-names = "core", "iface";
-+				status = "disabled";
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
- 		gsbi7: gsbi@16600000 {
- 			status = "disabled";
- 			compatible = "qcom,gsbi-v1.0.0";
--- 
-1.7.9.5
+Are they fine to be included in the mainline ?
+
+Romain
+
+----- Original Message -----
+From: "Romain Baeriswyl" <Romain.Baeriswyl@abilis.com>
+To: "Mark Rutland" <mark.rutland@arm.com>, atull@opensource.altera.com
+Cc: wsa@the-dreams.de, baruch@tkos.co.il, "mika westerberg" <mika.westerberg@linux.intel.com>, "grant likely" <grant.likely@linaro.org>, robh+dt@kernel.org, skuribay@pobox.com, "rafael j wysocki" <rafael.j.wysocki@intel.com>, alan@linux.intel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "delicious quinoa" <delicious.quinoa@gmail.com>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Sent: Wednesday, August 20, 2014 11:49:37 AM
+Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree setting
+
+Hi,
+
+With the patch "i2c designware add support of I2C standard mode" I already proposed:
+- I2C standard mode is selected with 100kHz clock frequency.
+- I2C fast mode is selected with 400kHy clock frequency.
+- EINVAL error is returned if clock frequency is not 100000 and not 400000.
+
+but this patch seems not available yet.
+What about the other patch "i2c designware make SCL and SDA falling time configurable" ?
+
+In i2c-designware_platdrv.c the flag DW_IC_CON_SPEED_xxx is well set
+depending on the mode:
+
+  if (clk_freq == 100000)
+     dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+       DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_STD;
+   else
+     dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+       DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
+
+
+So for me everything should be fine if there patches are applied.
+
+Regards,
+
+Romain
+
+----- Original Message -----
+From: "Mark Rutland" <mark.rutland@arm.com>
+To: atull@opensource.altera.com
+Cc: wsa@the-dreams.de, baruch@tkos.co.il, "mika westerberg" <mika.westerberg@linux.intel.com>, "grant likely" <grant.likely@linaro.org>, robh+dt@kernel.org, skuribay@pobox.com, "Romain Baeriswyl" <Romain.Baeriswyl@abilis.com>, "rafael j wysocki" <rafael.j.wysocki@intel.com>, alan@linux.intel.com, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "delicious quinoa" <delicious.quinoa@gmail.com>, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Sent: Wednesday, August 20, 2014 11:22:57 AM
+Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree setting
+
+On Tue, Aug 19, 2014 at 09:18:49PM +0100, atull@opensource.altera.com wrote:
+> From: Alan Tull <atull@opensource.altera.com>
+> 
+> Use the documented, but unimplemented "clock-frequency"
+> Device Tree setting as a guide on whether to set the speed
+> mode bits in DW_IC_CON to standard or fast i2c mode.
+> 
+> Previously, the driver was hardwired to fast mode.  Default
+> to fast mode if the "clock-frequency" property is not present
+> for backwards compatiblity.
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> ---
+>  drivers/i2c/busses/i2c-designware-platdrv.c |   10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index bc87733..18cd3d9 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -122,7 +122,8 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  	struct dw_i2c_dev *dev;
+>  	struct i2c_adapter *adap;
+>  	struct resource *mem;
+> -	int irq, r;
+> +	int irq, r, ret, speed = DW_IC_CON_SPEED_FAST;
+> +	u32 bus_rate;
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+> @@ -167,6 +168,11 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  		of_property_read_u32(pdev->dev.of_node,
+>  				     "i2c-scl-falling-time-ns",
+>  				     &dev->scl_falling_time);
+> +
+> +		ret = of_property_read_u32(pdev->dev.of_node,
+> +					   "clock-frequency", &bus_rate);
+> +		if (!ret && (bus_rate <= 100000))
+> +			speed = DW_IC_CON_SPEED_STD;
+
+This looks a bit odd.
+
+If the device only supports two particular speeds why do we accept any
+other speed in the clock-frequency property? Surely we should at least
+warn that something was off?
+
+Thanks,
+Mark
+
+>  	}
+>  
+>  	dev->functionality =
+> @@ -177,7 +183,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  		I2C_FUNC_SMBUS_WORD_DATA |
+>  		I2C_FUNC_SMBUS_I2C_BLOCK;
+>  	dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+> -		DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
+> +		DW_IC_CON_RESTART_EN | speed;
+>  
+>  	/* Try first if we can configure the device from ACPI */
+>  	r = dw_i2c_acpi_configure(pdev);
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
