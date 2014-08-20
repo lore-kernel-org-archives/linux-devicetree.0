@@ -1,74 +1,34 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: rockchip: add saradc nodes
-Date: Wed, 20 Aug 2014 21:09:24 +0200
-Message-ID: <2291940.YGoWa0tBhA@phil>
-References: <2306550.nl6CA81PdX@phil>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3 2/4] pwm: rockchip: Allow polarity invert on rk3288
+Date: Wed, 20 Aug 2014 14:29:17 -0500
+Message-ID: <387c82a0-efeb-431d-b8a5-200f24bc47ff@email.android.com>
+References: <1408464476-28316-1-git-send-email-dianders@chromium.org> <1408464476-28316-3-git-send-email-dianders@chromium.org> <20140820100447.GG15414@ulmo> <CAD=FV=U9gOiY=4s7WmAQcm0n9s67nWdqQ3A0L2B7Dg83dNotjQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2306550.nl6CA81PdX@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=U9gOiY=4s7WmAQcm0n9s67nWdqQ3A0L2B7Dg83dNotjQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, Olof Johansson <olof@lixom.net>, Eddie Cai <eddie.cai@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, hpa@zytor.com
 List-Id: devicetree@vger.kernel.org
 
-Add the core device nodes for the SARADC found on both the Cortex-A9 series
-(rk3066 and rk3188) as well as the newer rk3288.
+On August 20, 2014 1:54:11 PM CDT, Doug Anderson <dianders@chromium.org> wrote:
+>On Wed, Aug 20, 2014 at 3:04 AM, Thierry Reding
+><thierry.reding@gmail.com> wrote:
+>> On Tue, Aug 19, 2014 at 09:07:54AM -0700, Doug Anderson wrote:
+>>> The rk3288 has the ability to invert 
+>>> +     struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
+>>> +
+>>> +     if (!pc->data->has_invert)
+>>> +             return -ENOSYS;
+>>> +
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
-if nobody complains I'll queue this into my v3.18-next/dts branch
+At the kernel summit hpa also mentioned that ENOSYS should only be used for missing syscalls. Not sure what error code would suit better here though...
 
- arch/arm/boot/dts/rk3288.dtsi | 10 ++++++++++
- arch/arm/boot/dts/rk3xxx.dtsi | 10 ++++++++++
- 2 files changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 36be7bb..431f384 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -98,6 +98,16 @@
- 		status = "disabled";
- 	};
- 
-+	saradc: saradc@ff100000 {
-+		compatible = "rockchip,saradc";
-+		reg = <0xff100000 0x100>;
-+		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+		#io-channel-cells = <1>;
-+		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-+		clock-names = "saradc", "apb_pclk";
-+		status = "disabled";
-+	};
-+
- 	i2c1: i2c@ff140000 {
- 		compatible = "rockchip,rk3288-i2c";
- 		reg = <0xff140000 0x1000>;
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 8caf85d..cce4a07 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -264,4 +264,14 @@
- 		clocks = <&cru SCLK_UART3>, <&cru PCLK_UART3>;
- 		status = "disabled";
- 	};
-+
-+	saradc: saradc@2006c000 {
-+		compatible = "rockchip,saradc";
-+		reg = <0x2006c000 0x100>;
-+		interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+		#io-channel-cells = <1>;
-+		clocks = <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-+		clock-names = "saradc", "apb_pclk";
-+		status = "disabled";
-+	};
- };
+Thanks.
+
 -- 
-1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dmitry
