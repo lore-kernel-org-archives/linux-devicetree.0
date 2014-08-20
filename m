@@ -1,54 +1,79 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v3 6/6] ARM: dts: qcom: Add APQ8074 Dragonboard PMIC GPIO
- bindings
-Date: Wed, 20 Aug 2014 16:06:13 -0700
-Message-ID: <20140820230612.GE16274@sonymobile.com>
-References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
- <1407771634-14946-7-git-send-email-iivanov@mm-sol.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/6] ARM: shmobile: r8a7790: Add JPU clock dt and CPG define.
+Date: Thu, 21 Aug 2014 01:07:23 +0200
+Message-ID: <2193234.fL02BJsSMl@avalon>
+References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com> <1408452653-14067-3-git-send-email-mikhail.ulyanov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1407771634-14946-7-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1408452653-14067-3-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+Cc: m.chehab@samsung.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 11 Aug 08:40 PDT 2014, Ivan T. Ivanov wrote:
-> diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard-pmics-pins.dtsi b/arch/arm/boot/dts/qcom-apq8074-dragonboard-pmics-pins.dtsi
-[...]
-> +
-> +&pm8941_gpios {
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pm8941_gpios_default>;
-> +
-> +	pm8941_gpios_default: default {
-> +		group-1 {
-> +			pins = "gpio1", "gpio2", "gpio5", "gpio29";
-> +			function = PMIC_GPIO_FUNC_NORMAL;
+Hi Mikhail,
 
-This looks really strange, I can't get myself to stop thinking that you forgot
-the <> around this (I know it's a string). I don't like these defines.
+Thank you for the patch.
 
-> +			input-enable;
-> +			power-source = <PM8941_GPIO_S3>;
-> +			qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_30>;
-> +		};
-> +		group-6 {	/* TUSB3_HUB-RESET */
+On Tuesday 19 August 2014 16:50:49 Mikhail Ulyanov wrote:
 
-Why not name the nodes something useful?
-If you name it tusb3-hub-reset you can skip the comment.
+A commit message would be nice.
 
-> +			pins = "gpio6";
-> +			function = PMIC_GPIO_FUNC_NORMAL;
-> +			output-high;
-> +			drive-push-pull;
-> +			power-source = <PM8941_GPIO_VPH>;
-> +			qcom,pull-up-strength = <PMIC_GPIO_PULL_UP_30>;
-> +			qcom,drive-strength = <PMIC_GPIO_STRENGTH_MED>;
-> +		};
+> Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
 
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  arch/arm/boot/dts/r8a7790.dtsi            | 6 +++---
+>  include/dt-bindings/clock/r8a7790-clock.h | 1 +
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+> index e2e40e5..61fd193 100644
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -868,17 +868,17 @@
+>  		mstp1_clks: mstp1_clks@e6150134 {
+>  			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-
+clocks";
+>  			reg = <0 0xe6150134 0 4>, <0 0xe6150038 0 4>;
+> -			clocks = <&p_clk>, <&p_clk>, <&p_clk>, <&rclk_clk>,
+> +			clocks = <&m2_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&rclk_clk>,
+>  				 <&cp_clk>, <&zs_clk>, <&zs_clk>, <&zs_clk>,
+>  				 <&zs_clk>;
+>  			#clock-cells = <1>;
+>  			renesas,clock-indices = <
+> -				R8A7790_CLK_TMU1 R8A7790_CLK_TMU3 R8A7790_CLK_TMU2
+> +				R8A7790_CLK_JPU R8A7790_CLK_TMU1 R8A7790_CLK_TMU3 
+R8A7790_CLK_TMU2
+>  				R8A7790_CLK_CMT0 R8A7790_CLK_TMU0 R8A7790_CLK_VSP1_DU1
+>  				R8A7790_CLK_VSP1_DU0 R8A7790_CLK_VSP1_R R8A7790_CLK_VSP1_S
+> 
+>  			>;
+> 
+>  			clock-output-names =
+> -				"tmu1", "tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
+> +				"jpu", "tmu1", "tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
+>  				"vsp1-du0", "vsp1-rt", "vsp1-sy";
+>  		};
+>  		mstp2_clks: mstp2_clks@e6150138 {
+> diff --git a/include/dt-bindings/clock/r8a7790-clock.h
+> b/include/dt-bindings/clock/r8a7790-clock.h index f929a79e..8ea7ab0 100644
+> --- a/include/dt-bindings/clock/r8a7790-clock.h
+> +++ b/include/dt-bindings/clock/r8a7790-clock.h
+> @@ -26,6 +26,7 @@
+>  #define R8A7790_CLK_MSIOF0		0
+> 
+>  /* MSTP1 */
+> +#define R8A7790_CLK_JPU		6
+>  #define R8A7790_CLK_TMU1		11
+>  #define R8A7790_CLK_TMU3		21
+>  #define R8A7790_CLK_TMU2		22
+
+-- 
 Regards,
-Bjorn
+
+Laurent Pinchart
+
