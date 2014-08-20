@@ -1,59 +1,115 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] MFD: Add rk808 device tree bindings documentation
-Date: Wed, 20 Aug 2014 10:26:33 -0500
-Message-ID: <20140820152633.GX24407@sirena.org.uk>
-References: <1408505248-23995-1-git-send-email-zyw@rock-chips.com>
+From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: Re: [PATCH] i2c designware add support of I2C standard mode
+Date: Wed, 20 Aug 2014 10:25:40 -0500
+Message-ID: <alpine.DEB.2.02.1408201021440.11079@atx-linux-37>
+References: <20140820124231.GD21734@leverpostej> <1408544948-22339-1-git-send-email-romainba@abilis.com> <alpine.DEB.2.02.1408200928130.11079@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uN3tURjgVTLfI0kr"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408505248-23995-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1408200928130.11079@atx-linux-37>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, Romain Baeriswyl <romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 20 Aug 2014, atull wrote:
 
---uN3tURjgVTLfI0kr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> 
+> 
+> On Wed, 20 Aug 2014, Romain Baeriswyl wrote:
+> 
+> > From: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+> > 
+> > Some legacy devices support ony I2C standard mode at 100kHz.
+> > This patch allows to select the standard mode through the DTS
+> > with the use of the existing clock-frequency parameter.
+> > 
+> > When clock-frequency parameter is not set, the fast mode is selected.
+> > Only when the parameter is set at 100000, the standard mode is selected.
+> > 
+> > Signed-off-by: Romain Baeriswyl <romainba-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+> > Reviewed-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  drivers/i2c/busses/i2c-designware-platdrv.c |   23 +++++++++++++++++++++--
+> >  1 files changed, 21 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> > index 402ec39..b543fe1 100644
+> > --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> > +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> > @@ -122,6 +122,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
+> >  	struct i2c_adapter *adap;
+> >  	struct resource *mem;
+> >  	int irq, r;
+> > +	u32 clk_freq;
+> >  
+> >  	irq = platform_get_irq(pdev, 0);
+> >  	if (irq < 0) {
+> > @@ -151,6 +152,9 @@ static int dw_i2c_probe(struct platform_device *pdev)
+> >  		return PTR_ERR(dev->clk);
+> >  	clk_prepare_enable(dev->clk);
+> >  
+> > +	/* fast mode by default because of legacy reasons */
+> > +	clk_freq = 400000;
+> > +
+> >  	if (pdev->dev.of_node) {
+> >  		u32 ht = 0;
+> >  		u32 ic_clk = dev->get_clk_rate_khz(dev);
+> > @@ -166,6 +170,17 @@ static int dw_i2c_probe(struct platform_device *pdev)
+> >  		of_property_read_u32(pdev->dev.of_node,
+> >  				     "i2c-scl-falling-time-ns",
+> >  				     &dev->scl_falling_time);
+> > +
+> > +		of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+> > +				     &clk_freq);
+> > +
+> > +		/* Only standard mode at 100kHz and fast mode at 400kHz
+> > +		 * are supported.
+> > +		 */
+> > +		if (clk_freq != 100000 && clk_freq != 400000) {
+> > +			dev_err(&pdev->dev, "Only 100kHz and 400kHz supported");
+> > +			return -EINVAL;
+> > +		}
+> 
+> Hi Romain,
+> 
+> It is common to operate i2c at <100KHz on boards that have i2c 
+> issues.  I am using this driver at 50KHz because I have a LCD module 
+> that just doesn't work at a full 100KHz.  Please remove the check for 
+> these two frequency points.
+> 
+> >  	}
+> >  
+> >  	dev->functionality =
+> > @@ -175,8 +190,12 @@ static int dw_i2c_probe(struct platform_device *pdev)
+> >  		I2C_FUNC_SMBUS_BYTE_DATA |
+> >  		I2C_FUNC_SMBUS_WORD_DATA |
+> >  		I2C_FUNC_SMBUS_I2C_BLOCK;
+> > -	dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+> > -		DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
+> > +	if (clk_freq == 100000)
+> 
+> Please change to <=
+> 
 
-On Wed, Aug 20, 2014 at 11:27:28AM +0800, Chris Zhong wrote:
+Hi Romain,
 
-> +- regulators: This is the list of child nodes that specify the regulator
-> +  initialization data for defined regulators. Not all regulators for the given
-> +  device need to be present. The definition for each of these nodes is defined
-> +  using the standard binding for regulators found at
-> +  Documentation/devicetree/bindings/regulator/regulator.txt.
+This looks fine to me, my "<= issues" are not important as this isn't 
+really setting a frequency, but just setting a bit that controls speed.
 
-You need to identify all the valid names for regulators on the device so
-people know which string to use for which regulator.
+Acked-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
---uN3tURjgVTLfI0kr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT9L4mAAoJELSic+t+oim9GTsP/jk9EGBnzzpqSNfJauIs4spT
-oJXe+1MF8NggWdZg0HN75RZyf9v1qsssJmc946w5yjUI4ppbdbdyUn2BPSMY6oKk
-Zdi/gXdWE5nK1XiH7TbleLq9yteVbpVDQljbQ2zhNaMfku+R950wd5KdWBtIk4zn
-S9BYWUwh2JkI9dNie7l+ao8kL8/gx9/Bcv71tA6Y87YEkDVSmHfxND48rLTU5k3v
-076ym04gyi9fzQVfMviIkn1BklLZ/xYstK0cfF7NRgdWDzrC1DKubTdGqYilaPYf
-PIc57m1kF6fuARYR7zmyOSWfD41jwCTBSFkzcU7Fu57wq+vJxGKM1vFi0xXnt1FJ
-u91NB7auha+DzVGqG0u0gxX1BagQc0r0e4AQASUvhNnOdhi+LN3NKzdtpHgK0b12
-TBY1zoFTz+j4dgyrdARUyqkH2WC8VSTZxINDSfkdbZsc/JSWCE5TePkx73ECNF6/
-iOwrHGQFyuj3snkusMPbFYkqCiPQ5je7Es1iOmpDbw0i+D4IH7quJTJwbTFcvnVe
-z8QHQVaUEdYsoWMFeOm1bXo2I6X1BnMbhUwEhMwNUSv4mCmO1Pao3mJC7lUprAuB
-5gKODGhT/w2I+ZcmB+XGPJigGSVQewegTke3q+0ZabAHG07crubuz9XD2pGw7rFG
-DblZ7zpQ9qNWc1OGVNfe
-=/UKv
------END PGP SIGNATURE-----
-
---uN3tURjgVTLfI0kr--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +		dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+> > +			DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_STD;
+> > +	else
+> > +		dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+> > +			DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
+> >  
+> >  	/* Try first if we can configure the device from ACPI */
+> >  	r = dw_i2c_acpi_configure(pdev);
+> > -- 
+> > 1.7.1
+> > 
+> > 
+> 
