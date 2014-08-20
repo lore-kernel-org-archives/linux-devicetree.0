@@ -1,125 +1,119 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 2/4] pwm: rockchip: Allow polarity invert on rk3288
-Date: Wed, 20 Aug 2014 12:04:49 +0200
-Message-ID: <20140820100447.GG15414@ulmo>
-References: <1408464476-28316-1-git-send-email-dianders@chromium.org>
- <1408464476-28316-3-git-send-email-dianders@chromium.org>
+From: Romain Baeriswyl <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree
+ setting
+Date: Wed, 20 Aug 2014 11:49:37 +0200 (CEST)
+Message-ID: <944257148.1724.1408528177642.JavaMail.root@abilis.com>
+References: <20140820092257.GA21174@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Zrag5V6pnZGjLKiw"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408464476-28316-3-git-send-email-dianders@chromium.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140820092257.GA21174@leverpostej>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, mika westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, grant likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, rafael j wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---Zrag5V6pnZGjLKiw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With the patch "i2c designware add support of I2C standard mode" I already proposed:
+- I2C standard mode is selected with 100kHz clock frequency.
+- I2C fast mode is selected with 400kHy clock frequency.
+- EINVAL error is returned if clock frequency is not 100000 and not 400000.
 
-On Tue, Aug 19, 2014 at 09:07:54AM -0700, Doug Anderson wrote:
-> The rk3288 has the ability to invert the polarity of the PWM.  Let's
-> enable that ability.
->=20
-> To do this we increase the number of pwm_cells to 3 to allow using the
-> PWM_POLARITY_INVERTED flag.  Since the PWM driver on rk3288 is very
-> new, I thought this was OK.
+but this patch seems not available yet.
+What about the other patch "i2c designware make SCL and SDA falling time configurable" ?
 
-I don't see any files in arch/arm/boot/dts using either of the
-rockchip,vop-pwm or rockchip,rk3288-pwm compatible strings, so there's
-no reason to consider this stable ABI yet. As far as I'm concerned the
-last sentence can just as well be dropped.
+In i2c-designware_platdrv.c the flag DW_IC_CON_SPEED_xxx is well set
+depending on the mode:
 
-Besides, patches have been posted to support #pwm-cells =3D <2> and
-#pwm-cells =3D <3> at the same time which should give you backwards-
-compatibility for free.
+  if (clk_freq == 100000)
+     dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+       DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_STD;
+   else
+     dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+       DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
 
-A couple more comments inline.
 
-> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-[...]
-> +int rockchip_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> +			      enum pwm_polarity polarity)
+So for me everything should be fine if there patches are applied.
 
-This should be static.
+Regards,
 
-> +{
-> +	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
+Romain
+
+----- Original Message -----
+From: "Mark Rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org, "mika westerberg" <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "grant likely" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, skuribay-e+AXbWqSrlAAvxtiuMwx3w@public.gmane.org, "Romain Baeriswyl" <Romain.Baeriswyl-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, "rafael j wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "delicious quinoa" <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Sent: Wednesday, August 20, 2014 11:22:57 AM
+Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree setting
+
+On Tue, Aug 19, 2014 at 09:18:49PM +0100, atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+> From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> 
+> Use the documented, but unimplemented "clock-frequency"
+> Device Tree setting as a guide on whether to set the speed
+> mode bits in DW_IC_CON to standard or fast i2c mode.
+> 
+> Previously, the driver was hardwired to fast mode.  Default
+> to fast mode if the "clock-frequency" property is not present
+> for backwards compatiblity.
+> 
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+>  drivers/i2c/busses/i2c-designware-platdrv.c |   10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index bc87733..18cd3d9 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -122,7 +122,8 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  	struct dw_i2c_dev *dev;
+>  	struct i2c_adapter *adap;
+>  	struct resource *mem;
+> -	int irq, r;
+> +	int irq, r, ret, speed = DW_IC_CON_SPEED_FAST;
+> +	u32 bus_rate;
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+> @@ -167,6 +168,11 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  		of_property_read_u32(pdev->dev.of_node,
+>  				     "i2c-scl-falling-time-ns",
+>  				     &dev->scl_falling_time);
 > +
-> +	if (!pc->data->has_invert)
-> +		return -ENOSYS;
-> +
-> +	/*
-> +	 * No action needed here because pwm->polarity will be set by the core
-> +	 * and the core will only change polarity when the PWM is not enabled.
-> +	 * We'll handle things in set_enable().
-> +	 */
-> +
-> +	return 0;
-> +}
+> +		ret = of_property_read_u32(pdev->dev.of_node,
+> +					   "clock-frequency", &bus_rate);
+> +		if (!ret && (bus_rate <= 100000))
+> +			speed = DW_IC_CON_SPEED_STD;
 
-An alternative here would be to provide a separate pwm_ops with
-=2Eset_polarity =3D NULL for the versions of the IP block that don't support
-polarity inversion yet, but this works for me too.
+This looks a bit odd.
 
-> @@ -173,6 +201,7 @@ static const struct rockchip_pwm_data pwm_data_v2 =3D=
- {
->  		.ctrl =3D 0x0c,
->  	},
->  	.prescaler =3D 1,
-> +	.has_invert =3D true,
->  	.set_enable =3D rockchip_pwm_set_enable_v2,
->  };
-> =20
-> @@ -184,6 +213,7 @@ static const struct rockchip_pwm_data pwm_data_vop =
-=3D {
->  		.ctrl =3D 0x00,
->  	},
->  	.prescaler =3D 1,
-> +	.has_invert =3D true,
->  	.set_enable =3D rockchip_pwm_set_enable_v2,
->  };
+If the device only supports two particular speeds why do we accept any
+other speed in the clock-frequency property? Surely we should at least
+warn that something was off?
 
-Can you please add a '.has_invert =3D false,' line to pwm_data_v1? I know
-it's not strictly necessary but I like it when things are explicitly
-stated.
+Thanks,
+Mark
 
-> =20
-> @@ -230,6 +260,10 @@ static int rockchip_pwm_probe(struct platform_device=
- *pdev)
->  	pc->chip.ops =3D &rockchip_pwm_ops;
->  	pc->chip.base =3D -1;
->  	pc->chip.npwm =3D 1;
-> +	if (pc->data->has_invert) {
-
-There should be a blank line between the above two.
-
-Thierry
-
---Zrag5V6pnZGjLKiw
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT9HK/AAoJEN0jrNd/PrOhuccP/31Ez0el2Hd68TZzS86HnJWv
-T8YRQFdLPF6J0fokJzpY8GswxrJRrlJsM0qWtqiEzIWJahiEoeTjHOcDSujknXME
-02fqbtJEdshgfiMYm4lrbhLtHVU0EOcnJeOWb5U2FFx8vOhvLrhtnp7ggNum954k
-yPplJK2j5po6ECJdGL9jiL7Vy3RIfFBP2rwP3YT8ZqeRAiKZLBrCUGxxYjPUL92C
-Bhu4slC8PFjmv33tFKcZWCDjEuRHIG8I4hldvcPEfD9CrLNGf/p+hDY0RtbCpp2U
-pBF+xQYvTy9vZCZ7eZKExZ24F1M81dfqX2odFK8b8vXi0Bm1jHsovqp87UIGSmTw
-lHdzNVpQC5rTF4Niw/ayLlYg6lj4LqAXSQ4ynloKwLsaXD60O0TZQ2ouukPU8M12
-Ayzy76cq7wkBBRiT6FlzDzulmy29UUY0OE1PHcSIY+xF1K6d2/HHY8t+bmSaFjdk
-EN/KxDS24N6rRMyAEWmmA2aUNhhV1rddr7PSrqHhvwKk099aSowNeQckHDEj97Qy
-Tc/tWDNyiui5FoFlkXGW3ZXaU8l3VA6a9Ax4Ekt33b0OHyiIttRdXcv7bXnolqxy
-o3HyTDRTJjmyuuXfaB/+7bh3d4fPjf5ubveupa+lTtT0iJP6LDfwXQpqQNFWYLSw
-Dnyx69rwEhtA+LJ/q5LH
-=qZJI
------END PGP SIGNATURE-----
-
---Zrag5V6pnZGjLKiw--
+>  	}
+>  
+>  	dev->functionality =
+> @@ -177,7 +183,7 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  		I2C_FUNC_SMBUS_WORD_DATA |
+>  		I2C_FUNC_SMBUS_I2C_BLOCK;
+>  	dev->master_cfg =  DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
+> -		DW_IC_CON_RESTART_EN | DW_IC_CON_SPEED_FAST;
+> +		DW_IC_CON_RESTART_EN | speed;
+>  
+>  	/* Try first if we can configure the device from ACPI */
+>  	r = dw_i2c_acpi_configure(pdev);
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
