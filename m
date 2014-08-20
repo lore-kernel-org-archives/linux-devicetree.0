@@ -1,63 +1,44 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: Handling commit change logs
-Date: Wed, 20 Aug 2014 14:30:12 -0600
-Message-ID: <53F50554.3050505@wwwdotorg.org>
-References: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi>	<1408419205-10048-14-git-send-email-tuomas.tynkkynen@iki.fi>	<CAKohpokQOALPH13Ykz4nTBOby8J1X6_F30LNKz=gsC4wN3=3vg@mail.gmail.com>	<53F3A900.8010805@nvidia.com>	<CAKohponcZv9-MFNUQFxC_49-+P6QOhdjxsnYAyL3i4sXdCBYrw@mail.gmail.com> <CABxcv=ncm3Y7Ecfymro6TOuP=d10OV5--8n=dYmHyj6zi8hwEw@mail.gmail.com> <53F4FED4.7060408@suse.de>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v1 1/3] pinctrl: qcom: Add APQ8084 pinctrl support
+Date: Wed, 20 Aug 2014 23:30:15 +0300
+Message-ID: <53F50557.5070109@mm-sol.com>
+References: <1408468936-12252-1-git-send-email-gdjakov@mm-sol.com> <1408468936-12252-2-git-send-email-gdjakov@mm-sol.com> <20140820043929.GH7070@sonymobile.com> <20140820154200.GA14731@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <53F4FED4.7060408@suse.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Javier Martinez Canillas <javier@dowhile0.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Vince Hsu <vinceh@nvidia.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>, Thierry Reding <thierry.reding@gmail.com>, Tuomas Tynkkynen <ttynkkynen@nvidia.com>, Paul Walmsley <pwalmsley@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140820154200.GA14731@qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "iivanov@mm-sol.com" <iivanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/20/2014 02:02 PM, Andreas F=C3=A4rber wrote:
-> Hi Javier,
->
-> Am 20.08.2014 17:39, schrieb Javier Martinez Canillas:
->> As you already know when you apply a patch with git am, everything
->> that is between a line with 3 dashes line (---) and the actual diff =
-is
->> omitted since that is where the generated diffstat is placed by git
->> format-patch.
+On 20.08.14 18:42, Andy Gross wrote:
+> On Tue, Aug 19, 2014 at 09:39:30PM -0700, Bjorn Andersson wrote:
+>> On Tue 19 Aug 10:22 PDT 2014, Georgi Djakov wrote:
 >>
->> We usually rely on that behavior to put there the history of a patch
->> or any information that we think that is useful for reviewers but is
->> not suitable to end in the commit message. Now that means that you
->> have to generate the patch and then manually edit it to add the
->> history there.
+>>> This patch adds support for the TLMM (Top-Level Mode Mux) block found
+>>> in the APQ8084 platform.
+>>>
+>> [...]
+>>> +
+>>> +#define NUM_GPIO_PINGROUPS 143
+>>> +
 >>
->> But since git am omits any text between the first "---" and the diff=
-,
->> it means that you can add a "---" on your actual commit message and
->> anything that follows will be discarded by git am, that way you can
->> maintain your history on your commit message which is way less tedio=
-us
->> than manually editing patches.
+>> I think this looks good overall, but in my APQ8084 documentation
+>> (80-NG550-2X Rev. B) there are 147 (0..146) gpio pins in the TLMM block.
 >>
->> So the second "---" from Tuomas patch is actually the one generated =
-by
->> git format-patch but that gets discarded by git am just like any oth=
-er
->> text so it causes no harm when other apply the patches.
+>> Any suggestion to why there's a discrepancy?
 >>
->> If this not the correct workflow and you have a better way to manage
->> this, I would love to know about it.
->
-> One drawback of having --- in the commit message is that you can't
-> cherry-pick but really need to use git-am for it to be stripped.
+> 
+> We have some discrepancies internally on the documentation.  However, in this
+> case I'd expect the OEM documentation to be correct.  So this needs to change to
+> bjorn's version, as it appears to be the correct version.
+> 
+> I have no idea why some pins are missing.
+> 
 
-You can, you just have to either:
+Thank you for reviewing, Bjorn and Andy. I'll update and submit v2.
 
-* Pass -e to git cherry-pick so you get to edit the patch description,
-
-* Run "git commit --amend" right afterwards,
-
-=2E.. and then delete everything starting at ---.
-
-I do this reasonably often on my own patches; I send them to the list,=20
-get them reviewed, and then cherry-pick them into the Tegra maintainer=20
-tree rather than saving them from the email client and running git am.
+BR,
+Georgi
