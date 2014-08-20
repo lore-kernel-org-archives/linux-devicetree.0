@@ -1,72 +1,40 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: designware: deduce speed mode from device tree
- setting
-Date: Wed, 20 Aug 2014 07:36:18 -0500
-Message-ID: <20140820123617.GB1373@katana>
-References: <1408479529-24249-1-git-send-email-atull@opensource.altera.com>
- <20140820092257.GA21174@leverpostej>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [RFC PATCH 6/6] rtc: rtc-isl12057: Change vendor prefix for
+ Intersil Corporation to isil
+Date: Wed, 20 Aug 2014 16:40:01 +0400
+Message-ID: <53F49721.1000407@cogentembedded.com>
+References: <1408524184-31928-1-git-send-email-p.zabel@pengutronix.de>
+ <1408524184-31928-7-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140820092257.GA21174@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "atull@opensource.altera.com" <atull@opensource.altera.com>, "baruch@tkos.co.il" <baruch@tkos.co.il>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "skuribay@pobox.com" <skuribay@pobox.com>, "Romain.Baeriswyl@abilis.com" <Romain.Baeriswyl@abilis.com>, "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>, "alan@linux.intel.com" <alan@linux.intel.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "delicious.quinoa@gmail.com" <delicious.quinoa@gmail.com>, "dinguyen@opensource.altera.com" <dinguyen@opensource.altera.com>, "yvanderv@opensource.altera.com" <yvanderv@opensource.altera.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1408524184-31928-7-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Alessandro Zummo <a.zummo@towertech.it>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---hQiwHBbRI9kgIhsi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-> > +
-> > +		ret =3D of_property_read_u32(pdev->dev.of_node,
-> > +					   "clock-frequency", &bus_rate);
-> > +		if (!ret && (bus_rate <=3D 100000))
-> > +			speed =3D DW_IC_CON_SPEED_STD;
->=20
-> This looks a bit odd.
->=20
-> If the device only supports two particular speeds why do we accept any
-> other speed in the clock-frequency property?
-
-"clock-frequency" is the default binding for specifying i2c bus speeds
-today. Some controllers can be programmed to do various speeds, some can
-only do a set of fixed values.
-
-> Surely we should at least warn that something was off?
-
-Yes, I was going to say the same until Romain's old patch showed up
-which does that.
-
-Thanks,
-
-   Wolfram
-
-
---hQiwHBbRI9kgIhsi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT9JZBAAoJEBQN5MwUoCm22TsQAISfSofiMFAxoAXGsj+R5SPI
-3NPq6TSgjwv/VrrB5PjiSE+qt3qbcaHLxAA1UU33mMA5Zj9QT+1LCFZ0v3Kv6TBl
-XIcUp7JVIQJ343V/XgLiYKPV99uRCM+BulRE5zurF+p2QRjOcV66rUAjdqCYmASW
-ItRNxxEIcvrM4vBGzhWHRDe4iPl4D6J2QNxZaUE9gmdkbUIiTYF3vasf/5+eBaNx
-3YodLSng+HSirXkVKNAi5vCYvaNu3Rc6dTsOHLlI5Bn0xtkiTVI8zvQ49tR+3uJQ
-Ad8VBZuPhzyaALwdqiqM+kDJQW3uYoQtFeQsZJVEZz9SwX/Oo8xRKdB+zP4Pgu67
-HQKo8HmwzazlnfNfQs4LxsiR12RvnmGIlmS+3S3l55dK0J1Jex1qHZH23YT5Cseo
-rO9Jc356lsZK/E2gCgAigw9CuSvuHgg1vgtqMjTBj+64LfphnWFrsUzlrAsza+35
-KfdkROGypxkCMXtjHrOsCWMZ2XY6Of/Qxa76iofV+7bTc5SD5MT56d9o1CJiSkCB
-QrDqDcDwaq0alzJWwNLIHe/OLJolSZi2jyNkYqhH1Xkf+K8JplmkxQe3bHBj++DU
-YS3hfPAe3+XZ6sNrIJaC8vQWCMNkc0rOTztJNLszVIBPoyVCqom0+VqXt4nY39D7
-Z8LLOaVtvFzCoWdSiJe3
-=iqcS
------END PGP SIGNATURE-----
-
---hQiwHBbRI9kgIhsi--
+SGVsbG8uCgpPbiA4LzIwLzIwMTQgMTI6NDMgUE0sIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cgo+IEN1
+cnJlbnRseSB0aGVyZSBpcyBhIHdpbGQgbWl4dHVyZSBvZiBpc2wsIGlzaWwsIGFuZCBpbnRlcnNp
+bAo+IGNvbXBhdGlibGVzIGluIHRoZSBrZXJuZWwuIEF0IHRoaXMgcG9pbnQsIGNoYW5naW5nIHRo
+ZSB2ZW5kb3IKPiBzeW1ib2wgdG8gdGhlIG1vc3Qgb2Z0ZW4gdXNlZCB2YXJpYW50LCB3aGljaCBp
+cyBlcXVhbCB0byB0aGUKPiBOQVNEQVEgc3ltYm9sLCBpc2lsLCBzaG91bGQgbm90IGh1cnQsIHNp
+bmNlIHRoZSBpc2wxMjA4IGRyaXZlcgo+IGRvZXNuJ3QgY2FyZSBlaXRoZXIgd2F5Lgo+IFBhdGNo
+IDcwZTEyMzM3M2MwNSBhZGRlZCB0aGlzIGRyaXZlciB3aXRoIGRldmljZSB0cmVlIHN1cHBvcnQK
+CiAgICBQbGVhc2UgYWxzbyBzcGVjaWZ5IHRoYXQgY29tbWl0J3Mgc3VtbWFyeSBsaW5lIGluIHBh
+cmVucy4KCj4gdXNpbmcgdGhlIHRoZW4gZG9jdW1lbnRlZCBpc2wgdmVuZG9yIHByZWZpeCwgc28g
+d2Uga2VlcCB0aGF0Cj4gYXJvdW5kIGZvciBiYWNrd2FyZHMgY29tcGF0aWJpbGl0eS4KCj4gU2ln
+bmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KCldCUiwg
+U2VyZ2VpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpM
+aW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0
+dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
