@@ -1,62 +1,74 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: Handling commit change logs
-Date: Thu, 21 Aug 2014 12:49:55 +0200
-Message-ID: <53F5CED3.2040107@denx.de>
-References: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi> <1408419205-10048-14-git-send-email-tuomas.tynkkynen@iki.fi> <CAKohpokQOALPH13Ykz4nTBOby8J1X6_F30LNKz=gsC4wN3=3vg@mail.gmail.com> <53F3A900.8010805@nvidia.com> <CAKohponcZv9-MFNUQFxC_49-+P6QOhdjxsnYAyL3i4sXdCBYrw@mail.gmail.com> <CABxcv=ncm3Y7Ecfymro6TOuP=d10OV5--8n=dYmHyj6zi8hwEw@mail.gmail.com> <53F4FED4.7060408@suse.de> <53F50554.3050505@wwwdotorg.org> <CAOh2x=mO1r76fkvruvBLaL144G8fHgDPMwhKVCxv4HW8FRUE_Q@mail.gmail.com> <53F58DFD.900@denx.de> <CABxcv=kJixq0WW5YEX-LvBfU-e9_0pkPw5JeHFOWz8h-_eSjyg@mail.gmail.com>
-Reply-To: hs-ynQEQJNshbs@public.gmane.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 6/9] arm: mediatek: enable gpt6 on boot up to make
+ arch timer working
+Date: Thu, 21 Aug 2014 11:56:08 +0100
+Message-ID: <20140821105608.GK21734@leverpostej>
+References: <1408373917-10002-1-git-send-email-matthias.bgg@gmail.com>
+ <1408373917-10002-7-git-send-email-matthias.bgg@gmail.com>
+ <20140818154548.GA3302@leverpostej>
+ <CABuKBe+oVzQ9_Q__sULLQt8OvJ1Za_uA5x2aXSSQ6r8myvFqnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=kJixq0WW5YEX-LvBfU-e9_0pkPw5JeHFOWz8h-_eSjyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tuomas Tynkkynen <tuomas.tynkkynen-X3B1VOXEql0@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABuKBe+oVzQ9_Q__sULLQt8OvJ1Za_uA5x2aXSSQ6r8myvFqnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "stefan-XLVq0VzYD2Y@public.gmane.org" <stefan-XLVq0VzYD2Y@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "anders.berg-M7mHMAq9Yzo@public.gmane.org" <anders.berg-M7mHMAq9Yzo@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Javier,
+On Thu, Aug 21, 2014 at 11:38:20AM +0100, Matthias Brugger wrote:
+> 2014-08-18 17:45 GMT+02:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
+> > Hi Matthias,
+> >
+> > On Mon, Aug 18, 2014 at 03:58:34PM +0100, Matthias Brugger wrote:
+> >> We enable GTP6 which ungates the arch timer clock. Apart we write the
+> >> frequency with which the timer is running in the CNTFREQ register.
+> >
+> > We don't seem to set CNTFRQ below. Does it happen to have a consistent
+> > value on current versions of the bootloader?
+> 
+> Oh sorry, my fault. In v2 I moved the frequency to the dts, as this
+> will make the driver write CNTFRQ.
+> I forgot to update the commit message.
 
-Am 21.08.2014 12:35, schrieb Javier Martinez Canillas:
-> Hello Heiko,
->
-> On Thu, Aug 21, 2014 at 8:13 AM, Heiko Schocher<hs-ynQEQJNshbs@public.gmane.org>  wrote:
->> Hello Viresh,
->>
->> Am 21.08.2014 06:26, schrieb Viresh Kumar:
->>
->>> On Thu, Aug 21, 2014 at 2:00 AM, Stephen Warren<swarren@wwwdotorg.o=
-rg>
->>> wrote:
->>>>
->>>> On 08/20/2014 02:02 PM, Andreas F=C3=A4rber wrote:
->>>>>
->>>>> Am 20.08.2014 17:39, schrieb Javier Martinez Canillas:
->>>>>>
->>>>>> If this not the correct workflow and you have a better way to ma=
-nage
->>>>>> this, I would love to know about it.
->>>
->>>
->>> Oh yes, this was certainly useful. I was missing this (mis)feature =
-:)
->>
->>
->> maybe patman from u-boot is also interesting for you, see:
->>
->> http://git.denx.de/?p=3Du-boot.git;a=3Dblob;f=3Dtools/patman/README;=
-h=3D5fb508b80df10d3b11d95eea95a141ce3d0ef578;hb=3D67ee22b0681305ba1099c=
-508eecade996abc1c65
->>
->
-> Very interesting and seems to match my workflow as well so I'll take =
-a
-> look, thanks for sharing!
+The arch timer driver does not write CNTFRQ as this can only be done
+from the secure side. It simply uses the value provided internally. This
+isn't sufficient for virtualization guests (which need to have CNTFRQ
+programmed correctly).
 
-You are welcome!
+For the moment as we're not booting at Hyp that's not necessarily a big
+problem, but it is a shame.
 
-bye,
-Heiko
---=20
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> >> In the future this should be done in the bootloader.
+> >
+> > Do we know how far in the future that's likely to be?
+> 
+> AFAIK no one right now is working on an open source bootloader for the
+> mediatek devices.
+> So I think we won't see an open source bootloader in a reasonable time.
+ 
+Ok. :(
+
+> > What's the plan for this code when such a bootloader becomes available?
+> 
+> I think when a bootloader becomes available, this code should be
+> removed. I know that this will lead to a not working ARM arch timer in
+> devices which don't migrate to the new bootloader, but I think it's
+> not too critical. Apart from the ARM arch timer, the devices have the
+> mediatek global porpose timer (drivers/clocksource/mtk_timer.c), which
+> implement a clock source and a clock event timer. So the system won't
+> hang.
+
+I fear that's never going to happen, either because such a bootloader
+never becomes available or because there will be hold-outs sticking to
+the old loader.
+
+If that's not critical, why not for the moment use the global timer?
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
