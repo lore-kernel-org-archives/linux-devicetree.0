@@ -1,61 +1,67 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v4 15/21] media: Add registration helpers for V4L2 flash
-Date: Thu, 21 Aug 2014 10:38:34 +0200
-Message-ID: <53F5B00A.8020909@samsung.com>
-References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
- <1405087464-13762-16-git-send-email-j.anaszewski@samsung.com>
- <53CCF59E.3070200@iki.fi> <53DF9C2A.8060403@samsung.com>
- <20140811122628.GG16460@valkosipuli.retiisi.org.uk>
- <53E8C4BA.6050805@samsung.com>
- <20140814043436.GM16460@valkosipuli.retiisi.org.uk>
- <53EC7278.6040101@samsung.com>
- <20140820144110.GT16460@valkosipuli.retiisi.org.uk>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
+Date: Thu, 21 Aug 2014 10:41:39 +0200
+Message-ID: <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
+References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20140820144110.GT16460@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="fElvA5BxDOSshuQRRn6I8hh453RfkE42V"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+--fElvA5BxDOSshuQRRn6I8hh453RfkE42V
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On 08/20/2014 04:41 PM, Sakari Ailus wrote:
-> Hi Jacek,
+On 08/20/2014 05:56 PM, Soren Brinkmann wrote:
+> Add missing Ethernet phys to Zynq DTs.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> ---
+>  arch/arm/boot/dts/zynq-zc702.dts | 6 ++++++
+>  arch/arm/boot/dts/zynq-zc706.dts | 6 ++++++
+>  arch/arm/boot/dts/zynq-zed.dts   | 6 ++++++
+>  3 files changed, 18 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-=
+zc702.dts
+> index 30bcfe20f0bc..fa810505ab8f 100644
+> --- a/arch/arm/boot/dts/zynq-zc702.dts
+> +++ b/arch/arm/boot/dts/zynq-zc702.dts
+> @@ -36,6 +36,12 @@
+>  &gem0 {
+>  	status =3D "okay";
+>  	phy-mode =3D "rgmii-id";
+> +	phy-handle =3D <&ethernet_phy>;
+> +
+> +	ethernet_phy: ethernet-phy@7 {
+> +		compatible =3D "marvell,88e1116r", "ethernet-phy-ieee802.3-c22";
 
-[...]
->>>>
->>>> LED Class Flash driver gains V4L2 Flash API when
->>>> CONFIG_V4L2_FLASH_LED_CLASS is defined. This is accomplished in
->>>> the probe function by either calling v4l2_flash_init function
->>>> or the macro of this name, when the CONFIG_V4L2_FLASH_LED_CLASS
->>>> macro isn't defined.
->>>>
->>>> If the v4l2-flash.c was to call the LED API directly, then the
->>>> led-class-flash module symbols would have to be available at
->>>> v4l2-flash.o linking time.
->>>
->>> Is this an issue? EXPORT_SYMBOL_GPL() for the relevant symbols should be
->>> enough.
->>
->> It isn't enough. If I call e.g. led_set_flash_brightness
->> directly from v4l2-flash.c and configure led-class-flash to be built as
->> a module then I am getting "undefined reference to
->> led_set_flash_brightness" error during linking phase.
->
-> You should not. You also should change the check as (unless you've changed
-> it already):
->
-> #if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
->
-> This will evaluate to non-zero if the macro arguent or the argument
-> postfixed with "_MODULE" is defined.
+c22 is completely unused by the kernel and also c22 is default option any=
+way.
+Any advantage to have c22 specified here?
 
-I've missed this macro. Indeed, it is possible to avoid the need
-for ops with it. I will fix it in the next version of the patch set.
-Thanks for the hint.
+Thanks,
+Michal
 
-Best Regards,
-Jacek Anaszewski
+
+--fElvA5BxDOSshuQRRn6I8hh453RfkE42V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlP1sMMACgkQykllyylKDCF3IACfd/zsWcNWPUnjV+zg+J+/VNur
+YFAAn33FvNW/ccOeahyZOOaNyIxENRQl
+=OvCF
+-----END PGP SIGNATURE-----
+
+--fElvA5BxDOSshuQRRn6I8hh453RfkE42V--
