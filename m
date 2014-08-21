@@ -1,64 +1,61 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v4 00/11] drm: add support for Atmel HLCDC Display
- Controller
-Date: Thu, 21 Aug 2014 10:37:06 +0200
-Message-ID: <20140821103706.2349915d@bbrezillon>
-References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com>
- <20140821081619.GZ2452@ldesroches-Latitude-E6320>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v4 15/21] media: Add registration helpers for V4L2 flash
+Date: Thu, 21 Aug 2014 10:38:34 +0200
+Message-ID: <53F5B00A.8020909@samsung.com>
+References: <1405087464-13762-1-git-send-email-j.anaszewski@samsung.com>
+ <1405087464-13762-16-git-send-email-j.anaszewski@samsung.com>
+ <53CCF59E.3070200@iki.fi> <53DF9C2A.8060403@samsung.com>
+ <20140811122628.GG16460@valkosipuli.retiisi.org.uk>
+ <53E8C4BA.6050805@samsung.com>
+ <20140814043436.GM16460@valkosipuli.retiisi.org.uk>
+ <53EC7278.6040101@samsung.com>
+ <20140820144110.GT16460@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140821081619.GZ2452@ldesroches-Latitude-E6320>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ludovic Desroches <ludovic.desroches@atmel.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20140820144110.GT16460@valkosipuli.retiisi.org.uk>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ludovic,
+Hi Sakari,
 
-On Thu, 21 Aug 2014 10:16:19 +0200
-Ludovic Desroches <ludovic.desroches@atmel.com> wrote:
+On 08/20/2014 04:41 PM, Sakari Ailus wrote:
+> Hi Jacek,
 
-> Hi Boris,
-> 
-> You can add
-> 
-> Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+[...]
+>>>>
+>>>> LED Class Flash driver gains V4L2 Flash API when
+>>>> CONFIG_V4L2_FLASH_LED_CLASS is defined. This is accomplished in
+>>>> the probe function by either calling v4l2_flash_init function
+>>>> or the macro of this name, when the CONFIG_V4L2_FLASH_LED_CLASS
+>>>> macro isn't defined.
+>>>>
+>>>> If the v4l2-flash.c was to call the LED API directly, then the
+>>>> led-class-flash module symbols would have to be available at
+>>>> v4l2-flash.o linking time.
+>>>
+>>> Is this an issue? EXPORT_SYMBOL_GPL() for the relevant symbols should be
+>>> enough.
+>>
+>> It isn't enough. If I call e.g. led_set_flash_brightness
+>> directly from v4l2-flash.c and configure led-class-flash to be built as
+>> a module then I am getting "undefined reference to
+>> led_set_flash_brightness" error during linking phase.
+>
+> You should not. You also should change the check as (unless you've changed
+> it already):
+>
+> #if IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS)
+>
+> This will evaluate to non-zero if the macro arguent or the argument
+> postfixed with "_MODULE" is defined.
 
-Thanks for testing this driver.
-
-> 
-> Only one issue but not related to your patches, you can't display
-> quickly the bootup logo since the panel detection takes too much
-> time.
-
-Yes, actually this is related to the device probe order: the
-hlcdc-display-controller device is probed before the simple-panel, thus
-nothing is detected on the RGB connector (I use of_drm_find_panel to
-check for panel availability) when the display controller is
-instantiated. I rely on the default polling infrastructure provided by
-the DRM/KMS framework which polls for a new connector every 10s, and
-this is far more than you kernel boot time.
-
-Do anyone see a solution to reduce this delay (without changing the
-polling interval). I thought we could add a notifier infrastructure to
-the DRM panel framework, but I'm not sure this is how you want things
-done...
+I've missed this macro. Indeed, it is possible to avoid the need
+for ops with it. I will fix it in the next version of the patch set.
+Thanks for the hint.
 
 Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Jacek Anaszewski
