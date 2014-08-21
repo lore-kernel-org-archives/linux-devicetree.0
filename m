@@ -1,76 +1,113 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v2 1/2] mfd: arizona: Add support for
- INn_Mode register control
-Date: Thu, 21 Aug 2014 13:12:19 +0100
-Message-ID: <20140821121219.GF4266@lee--X1>
-References: <20140813205313.65bbe343@songinha-Samsung-DeskTop-System>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: zynq: PM: Enable A9 internal clock gating feature
+Date: Thu, 21 Aug 2014 14:19:51 +0200
+Message-ID: <26994133-6c3c-45c0-af09-3cb55ad35b13@BY2FFO11FD028.protection.gbl>
+References: <1408567315-28479-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1408567315-28479-2-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140813205313.65bbe343@songinha-Samsung-DeskTop-System>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com, lgirdwood@gmail.com, sameo@linux.intel.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="u9B6IdofbnURCF0hptOP8LLwkN7nPivIW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408567315-28479-2-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Aug 2014, Inha Song wrote:
+--u9B6IdofbnURCF0hptOP8LLwkN7nPivIW
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-> Some boards need to set the INn_MODE[1:0] register to change
-> the input signal patch. This wlf,inmode property is optional.
-> If present values must be specified by the number of
-> ARIZONA_MAX_INPUT.
->=20
-> Example:
->    - wlf,inmode =3D <2 0 2 0>;	/* IN1, IN3 use DMIC */
->=20
-> Signed-off-by: Inha Song <ideal.song@samsung.com>
+On 08/20/2014 10:41 PM, Soren Brinkmann wrote:
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/mfd/arizona-core.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-
-This is going to require a DT Ack.
-
-Is [2/2] adding the documentation?  I can't easily go and look because
-you send the patch-set unthreaded.  Please thread patch-sets.  See
-the man page for `git send-email` for more information.
-
-> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-> index 10a0cb9..2b68ccd 100644
-> --- a/drivers/mfd/arizona-core.c
-> +++ b/drivers/mfd/arizona-core.c
-> @@ -534,7 +534,7 @@ EXPORT_SYMBOL_GPL(arizona_of_get_named_gpio);
->  static int arizona_of_get_core_pdata(struct arizona *arizona)
->  {
->  	struct arizona_pdata *pdata =3D &arizona->pdata;
-> -	int ret, i;
-> +	int ret, i, proplen;
-> =20
->  	pdata->reset =3D arizona_of_get_named_gpio(arizona, "wlf,reset", tr=
-ue);
-> =20
-> @@ -560,6 +560,15 @@ static int arizona_of_get_core_pdata(struct ariz=
-ona *arizona)
->  			ret);
->  	}
-> =20
-> +	proplen =3D of_property_count_u32_elems(arizona->dev->of_node,
-> +					      "wlf,inmode");
-> +	if (proplen > 0 && proplen <=3D ARRAY_SIZE(arizona->pdata.inmode)) =
-{
-> +		for (i =3D 0; i < proplen; i++)
-> +			of_property_read_u32_index(arizona->dev->of_node,
-> +						   "wlf,inmode", i,
-> +						    &arizona->pdata.inmode[i]);
-> +	}
-> +
->  	return 0;
+>  arch/arm/mach-zynq/common.c  |  6 ++++++
+>  arch/arm/mach-zynq/common.h  | 11 +++++++++++
+>  arch/arm/mach-zynq/platsmp.c |  9 +++++++++
+>  3 files changed, 26 insertions(+)
+>=20
+> diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
+> index 31a6fa40ba37..3cb7c198615a 100644
+> --- a/arch/arm/mach-zynq/common.c
+> +++ b/arch/arm/mach-zynq/common.c
+> @@ -98,6 +98,11 @@ static int __init zynq_get_revision(void)
+>  	return revision;
 >  }
 > =20
+> +static void __init zynq_init_late(void)
+> +{
+> +	zynq_core_pm_init();
+> +}
+> +
+>  /**
+>   * zynq_init_machine - System specific initialization, intended to be
+>   *		       called from board specific initialization.
+> @@ -204,6 +209,7 @@ DT_MACHINE_START(XILINX_EP107, "Xilinx Zynq Platfor=
+m")
+>  	.map_io		=3D zynq_map_io,
+>  	.init_irq	=3D zynq_irq_init,
+>  	.init_machine	=3D zynq_init_machine,
+> +	.init_late	=3D zynq_init_late,
+>  	.init_time	=3D zynq_timer_init,
+>  	.dt_compat	=3D zynq_dt_match,
+>  	.reserve	=3D zynq_memory_init,
+> diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common.h
+> index f652f0a884a6..596ef0b5067c 100644
+> --- a/arch/arm/mach-zynq/common.h
+> +++ b/arch/arm/mach-zynq/common.h
+> @@ -40,4 +40,15 @@ extern void __iomem *zynq_scu_base;
+>  /* Hotplug */
+>  extern void zynq_platform_cpu_die(unsigned int cpu);
+> =20
+> +static inline void zynq_core_pm_init(void)
+> +{
+> +	/* A9 clock gating */
+> +	asm volatile ("mrc  p15, 0, r12, c15, c0, 0\n"
+> +		      "orr  r12, r12, #1\n"
+> +		      "mcr  p15, 0, r12, c15, c0, 0\n"
+> +		      : /* no outputs */
+> +		      : /* no inputs */
+> +		      : "r12");
+> +}
+> +
+>  #endif
+> diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsmp.=
+c
+> index abc82ef085c1..616b99e07c60 100644
+> --- a/arch/arm/mach-zynq/platsmp.c
+> +++ b/arch/arm/mach-zynq/platsmp.c
+> @@ -112,6 +112,14 @@ static void __init zynq_smp_prepare_cpus(unsigned =
+int max_cpus)
+>  	scu_enable(zynq_scu_base);
+>  }
+> =20
+> +/*
+> + * This function is in the hotplug path. Don't move it into the init s=
+ection!!
+> + */
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Worth to use kernel-doc format here.
+
+Thanks,
+Michal
+
+
+--u9B6IdofbnURCF0hptOP8LLwkN7nPivIW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlP14+cACgkQykllyylKDCF06wCaAxSiK5U5pSBIg7xsHPvP+Epq
+OykAoJETtPKdaaopxOSH4si8TSQ/Hkid
+=7ib3
+-----END PGP SIGNATURE-----
+
+--u9B6IdofbnURCF0hptOP8LLwkN7nPivIW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
