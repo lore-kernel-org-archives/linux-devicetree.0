@@ -1,7 +1,7 @@
 From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH 3/7] MIPS: Octeon: Move device-trees to arch/mips/boot/dts/
-Date: Thu, 21 Aug 2014 13:04:22 -0700
-Message-ID: <1408651466-8334-4-git-send-email-abrestic@chromium.org>
+Subject: [PATCH 7/7] MIPS: ralink: Move device-trees to arch/mips/boot/dts/
+Date: Thu, 21 Aug 2014 13:04:26 -0700
+Message-ID: <1408651466-8334-8-git-send-email-abrestic@chromium.org>
 References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
@@ -10,78 +10,128 @@ To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel 
 Cc: James Hogan <james.hogan@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, David Daney <david.daney@cavium.com>, John Crispin <blogic@openwrt.org>, Jayachandran C <jchandra@broadcom.com>, Qais Yousef <qais.yousef@imgtec.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Move the Octeon device-trees to arch/mips/boot/dts/ and update the
-Makefiles accordingly.  Since Octeon requires the device-tree to be
-built into the kernel, select BUILTIN_DTB as well.
+Move the Ralink device-trees to arch/mips/boot/dts/ and update the
+Makefiles accordingly.  A built-in device-tree is optional, so select
+BUILTIN_DTB when it is requested.
 
 Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 ---
- arch/mips/Kconfig                                     |  1 +
- arch/mips/boot/dts/Makefile                           |  2 ++
- arch/mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts |  0
- arch/mips/{cavium-octeon => boot/dts}/octeon_68xx.dts |  0
- arch/mips/cavium-octeon/.gitignore                    |  2 --
- arch/mips/cavium-octeon/Makefile                      | 10 ----------
- 6 files changed, 3 insertions(+), 12 deletions(-)
- rename arch/mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts (100%)
- rename arch/mips/{cavium-octeon => boot/dts}/octeon_68xx.dts (100%)
- delete mode 100644 arch/mips/cavium-octeon/.gitignore
+ arch/mips/boot/dts/Makefile                     | 4 ++++
+ arch/mips/{ralink => boot}/dts/mt7620a.dtsi     | 0
+ arch/mips/{ralink => boot}/dts/mt7620a_eval.dts | 0
+ arch/mips/{ralink => boot}/dts/rt2880.dtsi      | 0
+ arch/mips/{ralink => boot}/dts/rt2880_eval.dts  | 0
+ arch/mips/{ralink => boot}/dts/rt3050.dtsi      | 0
+ arch/mips/{ralink => boot}/dts/rt3052_eval.dts  | 0
+ arch/mips/{ralink => boot}/dts/rt3883.dtsi      | 0
+ arch/mips/{ralink => boot}/dts/rt3883_eval.dts  | 0
+ arch/mips/ralink/Kconfig                        | 4 ++++
+ arch/mips/ralink/Makefile                       | 2 --
+ arch/mips/ralink/dts/Makefile                   | 4 ----
+ 12 files changed, 8 insertions(+), 6 deletions(-)
+ rename arch/mips/{ralink => boot}/dts/mt7620a.dtsi (100%)
+ rename arch/mips/{ralink => boot}/dts/mt7620a_eval.dts (100%)
+ rename arch/mips/{ralink => boot}/dts/rt2880.dtsi (100%)
+ rename arch/mips/{ralink => boot}/dts/rt2880_eval.dts (100%)
+ rename arch/mips/{ralink => boot}/dts/rt3050.dtsi (100%)
+ rename arch/mips/{ralink => boot}/dts/rt3052_eval.dts (100%)
+ rename arch/mips/{ralink => boot}/dts/rt3883.dtsi (100%)
+ rename arch/mips/{ralink => boot}/dts/rt3883_eval.dts (100%)
+ delete mode 100644 arch/mips/ralink/dts/Makefile
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 19b8aac..dbfcf35 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -741,6 +741,7 @@ config CAVIUM_OCTEON_SOC
- 	select ARCH_SPARSEMEM_ENABLE
- 	select SYS_SUPPORTS_SMP
- 	select NR_CPUS_DEFAULT_16
-+	select BUILTIN_DTB
- 	help
- 	  This option supports all of the Octeon reference boards from Cavium
- 	  Networks. It builds a kernel that dynamically determines the Octeon
 diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index 9b3da1f..51acad6 100644
+index 1638a38..ca9c90e 100644
 --- a/arch/mips/boot/dts/Makefile
 +++ b/arch/mips/boot/dts/Makefile
-@@ -1,3 +1,5 @@
-+dtb-$(CONFIG_CAVIUM_OCTEON_SOC)		+= octeon_3xxx.dtb octeon_68xx.dtb
-+
- obj-y		+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+@@ -4,6 +4,10 @@ dtb-$(CONFIG_DT_XLP_EVP)		+= xlp_evp.dtb
+ dtb-$(CONFIG_DT_XLP_SVP)		+= xlp_svp.dtb
+ dtb-$(CONFIG_DT_XLP_FVP)		+= xlp_fvp.dtb
+ dtb-$(CONFIG_DT_XLP_GVP)		+= xlp_gvp.dtb
++dtb-$(CONFIG_DTB_RT2880_EVAL)		+= rt2880_eval.dtb
++dtb-$(CONFIG_DTB_RT305X_EVAL)		+= rt3052_eval.dtb
++dtb-$(CONFIG_DTB_RT3883_EVAL)		+= rt3883_eval.dtb
++dtb-$(CONFIG_DTB_MT7620A_EVAL)		+= mt7620a_eval.dtb
+ dtb-$(CONFIG_MIPS_SEAD3)		+= sead3.dtb
  
- targets		+= dtbs
-diff --git a/arch/mips/cavium-octeon/octeon_3xxx.dts b/arch/mips/boot/dts/octeon_3xxx.dts
+ obj-y		+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+diff --git a/arch/mips/ralink/dts/mt7620a.dtsi b/arch/mips/boot/dts/mt7620a.dtsi
 similarity index 100%
-rename from arch/mips/cavium-octeon/octeon_3xxx.dts
-rename to arch/mips/boot/dts/octeon_3xxx.dts
-diff --git a/arch/mips/cavium-octeon/octeon_68xx.dts b/arch/mips/boot/dts/octeon_68xx.dts
+rename from arch/mips/ralink/dts/mt7620a.dtsi
+rename to arch/mips/boot/dts/mt7620a.dtsi
+diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/boot/dts/mt7620a_eval.dts
 similarity index 100%
-rename from arch/mips/cavium-octeon/octeon_68xx.dts
-rename to arch/mips/boot/dts/octeon_68xx.dts
-diff --git a/arch/mips/cavium-octeon/.gitignore b/arch/mips/cavium-octeon/.gitignore
+rename from arch/mips/ralink/dts/mt7620a_eval.dts
+rename to arch/mips/boot/dts/mt7620a_eval.dts
+diff --git a/arch/mips/ralink/dts/rt2880.dtsi b/arch/mips/boot/dts/rt2880.dtsi
+similarity index 100%
+rename from arch/mips/ralink/dts/rt2880.dtsi
+rename to arch/mips/boot/dts/rt2880.dtsi
+diff --git a/arch/mips/ralink/dts/rt2880_eval.dts b/arch/mips/boot/dts/rt2880_eval.dts
+similarity index 100%
+rename from arch/mips/ralink/dts/rt2880_eval.dts
+rename to arch/mips/boot/dts/rt2880_eval.dts
+diff --git a/arch/mips/ralink/dts/rt3050.dtsi b/arch/mips/boot/dts/rt3050.dtsi
+similarity index 100%
+rename from arch/mips/ralink/dts/rt3050.dtsi
+rename to arch/mips/boot/dts/rt3050.dtsi
+diff --git a/arch/mips/ralink/dts/rt3052_eval.dts b/arch/mips/boot/dts/rt3052_eval.dts
+similarity index 100%
+rename from arch/mips/ralink/dts/rt3052_eval.dts
+rename to arch/mips/boot/dts/rt3052_eval.dts
+diff --git a/arch/mips/ralink/dts/rt3883.dtsi b/arch/mips/boot/dts/rt3883.dtsi
+similarity index 100%
+rename from arch/mips/ralink/dts/rt3883.dtsi
+rename to arch/mips/boot/dts/rt3883.dtsi
+diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/boot/dts/rt3883_eval.dts
+similarity index 100%
+rename from arch/mips/ralink/dts/rt3883_eval.dts
+rename to arch/mips/boot/dts/rt3883_eval.dts
+diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
+index 4a29665..77e8a96 100644
+--- a/arch/mips/ralink/Kconfig
++++ b/arch/mips/ralink/Kconfig
+@@ -42,18 +42,22 @@ choice
+ 	config DTB_RT2880_EVAL
+ 		bool "RT2880 eval kit"
+ 		depends on SOC_RT288X
++		select BUILTIN_DTB
+ 
+ 	config DTB_RT305X_EVAL
+ 		bool "RT305x eval kit"
+ 		depends on SOC_RT305X
++		select BUILTIN_DTB
+ 
+ 	config DTB_RT3883_EVAL
+ 		bool "RT3883 eval kit"
+ 		depends on SOC_RT3883
++		select BUILTIN_DTB
+ 
+ 	config DTB_MT7620A_EVAL
+ 		bool "MT7620A eval kit"
+ 		depends on SOC_MT7620
++		select BUILTIN_DTB
+ 
+ endchoice
+ 
+diff --git a/arch/mips/ralink/Makefile b/arch/mips/ralink/Makefile
+index 98ae349..2c09c8a 100644
+--- a/arch/mips/ralink/Makefile
++++ b/arch/mips/ralink/Makefile
+@@ -16,5 +16,3 @@ obj-$(CONFIG_SOC_RT3883) += rt3883.o
+ obj-$(CONFIG_SOC_MT7620) += mt7620.o
+ 
+ obj-$(CONFIG_EARLY_PRINTK) += early_printk.o
+-
+-obj-y += dts/
+diff --git a/arch/mips/ralink/dts/Makefile b/arch/mips/ralink/dts/Makefile
 deleted file mode 100644
-index 39c9686..0000000
---- a/arch/mips/cavium-octeon/.gitignore
+index 18194fa..0000000
+--- a/arch/mips/ralink/dts/Makefile
 +++ /dev/null
-@@ -1,2 +0,0 @@
--*.dtb.S
--*.dtb
-diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
-index 4e95204..42f5f1a 100644
---- a/arch/mips/cavium-octeon/Makefile
-+++ b/arch/mips/cavium-octeon/Makefile
-@@ -20,13 +20,3 @@ obj-y += executive/
- obj-$(CONFIG_MTD)		      += flash_setup.o
- obj-$(CONFIG_SMP)		      += smp.o
- obj-$(CONFIG_OCTEON_ILM)	      += oct_ilm.o
--
--DTS_FILES = octeon_3xxx.dts octeon_68xx.dts
--DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
--
--obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))
--
--# Let's keep the .dtb files around in case we want to look at them.
--.SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
--
--clean-files += $(DTB_FILES) $(patsubst %.dtb, %.dtb.S, $(DTB_FILES))
+@@ -1,4 +0,0 @@
+-obj-$(CONFIG_DTB_RT2880_EVAL) := rt2880_eval.dtb.o
+-obj-$(CONFIG_DTB_RT305X_EVAL) := rt3052_eval.dtb.o
+-obj-$(CONFIG_DTB_RT3883_EVAL) := rt3883_eval.dtb.o
+-obj-$(CONFIG_DTB_MT7620A_EVAL) := mt7620a_eval.dtb.o
 -- 
 2.1.0.rc2.206.gedb03e5
