@@ -1,89 +1,38 @@
-From: "Murphy, Dan" <dmurphy@ti.com>
-Subject: Re: [PATCH 1/2] doc: dt/bindings: input: introduce TI DRV2667
- haptic driver description
-Date: Thu, 21 Aug 2014 19:14:40 +0000
-Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49DF0ABE@DFLE09.ent.ti.com>
-References: <1408645143-25690-1-git-send-email-dmurphy@ti.com>
- <1408645143-25690-2-git-send-email-dmurphy@ti.com>
- <53F642AF.3070200@cogentembedded.com>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Thu, 21 Aug 2014 21:19:00 +0200
+Message-ID: <53F64624.5000403@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de> <20140514141914.446F7C4153D@trevor.secretlab.ca> <20140821140211.GD19293@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140821140211.GD19293-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sergei
-Thanks for the additional comments
+Am 21.08.2014 16:02, schrieb Thierry Reding:
 
-On 08/21/2014 02:04 PM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 08/21/2014 10:19 PM, Dan Murphy wrote:
-> 
->> DRV2667 is a haptic/vibrator driver for Linear Resonant Actuators.
->> Adding dt binding for this part
-> 
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../devicetree/bindings/input/ti,drv2667.txt       |   18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/input/ti,drv2667.txt
-> 
->> diff --git a/Documentation/devicetree/bindings/input/ti,drv2667.txt b/Documentation/devicetree/bindings/input/ti,drv2667.txt
->> new file mode 100644
->> index 0000000..525216d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/input/ti,drv2667.txt
->> @@ -0,0 +1,18 @@
->> +Texas Instruments - drv2667 Haptics driver
->> +
->> +The drv2667 uses serial control bus communicates through I2C protocols
->> +
->> +Required properties:
->> +	- compatible - "ti,drv2667" - DRV2667
->> +	- reg -  I2C slave address
->> +	- vbat-supply - Required supply regulator
->> +
->> +Example:
->> +
->> +drv2667: drv2667@59 {
-> 
->     The ePAPR standard [1] has something to say on this matter:
+> Anyway, those are all fairly standard reasons for where deferred probe
+> triggers, and since I do like deferred probe for it's simplicity and
+> reliability I'd rather not try to work around it if boot time is all
+> that people are concerned about.
 
-What is this reference?  Did not know this existed so wanted to read up on it.
+It's neither simple nor reliable. It's non deterministic brutforcing 
+while making it almost impossible to identify real errors.
 
-I can change it to haptics or vibrator
+In my humble opinion the worst way to solve something. I'm pretty sure 
+if I would have suggest such a solution, the maintainer crowd would have 
+eaten me without cooking.
 
-> 
-> "The name of a node should be somewhat generic, reflecting the function of the 
-> device and not its precise programming model."
-> 
->> +		compatible = "ti,drv2667";
-> 
->     Indented too much to the right.
+Regards,
 
-One tab to many.  Got it
+Alexander Holler
 
-> 
->> +		reg = <0x59>;
-> 
->     Still no "vbat-supply"... :-/
-> 
-
-Still have not sent in v2 of the patch yet.  Waiting on other comments.
-
->> +};
-> [...]
-> 
-> WBR, Sergei
-> 
-> 
-
-
--- 
-------------------
-Dan Murphy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
