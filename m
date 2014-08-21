@@ -1,118 +1,86 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 6/9] arm: mediatek: enable gpt6 on boot up to make arch
- timer working
-Date: Thu, 21 Aug 2014 12:38:20 +0200
-Message-ID: <CABuKBe+oVzQ9_Q__sULLQt8OvJ1Za_uA5x2aXSSQ6r8myvFqnA@mail.gmail.com>
-References: <1408373917-10002-1-git-send-email-matthias.bgg@gmail.com>
-	<1408373917-10002-7-git-send-email-matthias.bgg@gmail.com>
-	<20140818154548.GA3302@leverpostej>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: Handling commit change logs
+Date: Thu, 21 Aug 2014 12:43:31 +0200
+Message-ID: <53F5CD53.8060209@suse.de>
+References: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi>	<1408419205-10048-14-git-send-email-tuomas.tynkkynen@iki.fi>	<CAKohpokQOALPH13Ykz4nTBOby8J1X6_F30LNKz=gsC4wN3=3vg@mail.gmail.com>	<53F3A900.8010805@nvidia.com>	<CAKohponcZv9-MFNUQFxC_49-+P6QOhdjxsnYAyL3i4sXdCBYrw@mail.gmail.com> <CABxcv=ncm3Y7Ecfymro6TOuP=d10OV5--8n=dYmHyj6zi8hwEw@mail.gmail.com> <53F4FED4.7060408@suse.de> <53F50554.3050505@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140818154548.GA3302@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "stefan-XLVq0VzYD2Y@public.gmane.org" <stefan-XLVq0VzYD2Y@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "anders.berg-M7mHMAq9Yzo@public.gmane.org" <anders.berg-M7mHMAq9Yzo@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53F50554.3050505-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tuomas Tynkkynen <tuomas.tynkkynen-X3B1VOXEql0@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-08-18 17:45 GMT+02:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> Hi Matthias,
->
-> On Mon, Aug 18, 2014 at 03:58:34PM +0100, Matthias Brugger wrote:
->> We enable GTP6 which ungates the arch timer clock. Apart we write the
->> frequency with which the timer is running in the CNTFREQ register.
->
-> We don't seem to set CNTFRQ below. Does it happen to have a consistent
-> value on current versions of the bootloader?
+Am 20.08.2014 22:30, schrieb Stephen Warren:
+> On 08/20/2014 02:02 PM, Andreas F=C3=A4rber wrote:
+>> Am 20.08.2014 17:39, schrieb Javier Martinez Canillas:
+>>> As you already know when you apply a patch with git am, everything
+>>> that is between a line with 3 dashes line (---) and the actual diff=
+ is
+>>> omitted since that is where the generated diffstat is placed by git
+>>> format-patch.
+>>>
+>>> We usually rely on that behavior to put there the history of a patc=
+h
+>>> or any information that we think that is useful for reviewers but i=
+s
+>>> not suitable to end in the commit message. Now that means that you
+>>> have to generate the patch and then manually edit it to add the
+>>> history there.
+>>>
+>>> But since git am omits any text between the first "---" and the dif=
+f,
+>>> it means that you can add a "---" on your actual commit message and
+>>> anything that follows will be discarded by git am, that way you can
+>>> maintain your history on your commit message which is way less tedi=
+ous
+>>> than manually editing patches.
+>>>
+>>> So the second "---" from Tuomas patch is actually the one generated=
+ by
+>>> git format-patch but that gets discarded by git am just like any ot=
+her
+>>> text so it causes no harm when other apply the patches.
+>>>
+>>> If this not the correct workflow and you have a better way to manag=
+e
+>>> this, I would love to know about it.
+>>
+>> One drawback of having --- in the commit message is that you can't
+>> cherry-pick but really need to use git-am for it to be stripped.
+>=20
+> You can, you just have to either:
+>=20
+> * Pass -e to git cherry-pick so you get to edit the patch description=
+,
+>=20
+> * Run "git commit --amend" right afterwards,
+>=20
+> ... and then delete everything starting at ---.
+>=20
+> I do this reasonably often on my own patches; I send them to the list=
+,
+> get them reviewed, and then cherry-pick them into the Tegra maintaine=
+r
+> tree rather than saving them from the email client and running git am=
+=2E
 
-Oh sorry, my fault. In v2 I moved the frequency to the dts, as this
-will make the driver write CNTFRQ.
-I forgot to update the commit message.
+Sure. My point was more that the person doing the cherry-pick needs to
+be aware of and correct such misuse, and in QEMU I did see people
+cherry-picking from each other and committing with Signed-off-by *below=
+*
+the change log. ;)
 
->
->> In the future this should be done in the bootloader.
->
-> Do we know how far in the future that's likely to be?
-
-AFAIK no one right now is working on an open source bootloader for the
-mediatek devices.
-So I think we won't see an open source bootloader in a reasonable time.
-
->
-> What's the plan for this code when such a bootloader becomes available?
-
-I think when a bootloader becomes available, this code should be
-removed. I know that this will lead to a not working ARM arch timer in
-devices which don't migrate to the new bootloader, but I think it's
-not too critical. Apart from the ARM arch timer, the devices have the
-mediatek global porpose timer (drivers/clocksource/mtk_timer.c), which
-implement a clock source and a clock event timer. So the system won't
-hang.
+Also, keeping commits and change log separate allows me to work on them
+concurrently. As with editors, everyone will have their own preferences=
+=2E
 
 Cheers,
-Matthias
+Andreas
 
->
-> Thanks,
-> Mark.
->
->> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/mach-mediatek/mediatek.c |   26 ++++++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>
->> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
->> index f2acf07..2989f18 100644
->> --- a/arch/arm/mach-mediatek/mediatek.c
->> +++ b/arch/arm/mach-mediatek/mediatek.c
->> @@ -16,6 +16,31 @@
->>   */
->>  #include <linux/init.h>
->>  #include <asm/mach/arch.h>
->> +#include <linux/of.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/clocksource.h>
->> +
->> +#define TIMER_CTRL_OP_FREERUN        0x30
->> +#define TIMER_CTRL_ENABLE    0x01
->> +
->> +#define GPT6_CON_MT65xx 0x10008060
->> +
->> +static void __init mediatek_timer_init(void)
->> +{
->> +     static void __iomem *gpt_base;
->> +
->> +     if (of_machine_is_compatible("mediatek,mt6589")) {
->> +             /* turn on GPT6 which ungates arch timer clocks */
->> +             gpt_base = ioremap(GPT6_CON_MT65xx, 0x04);
->> +     }
->> +
->> +     /* enabel clock and set to free-run */
->> +     if (gpt_base)
->> +             writel(TIMER_CTRL_OP_FREERUN | TIMER_CTRL_ENABLE, gpt_base);
->> +
->> +     of_clk_init(NULL);
->> +     clocksource_of_init();
->> +};
->>
->>  static const char * const mediatek_board_dt_compat[] = {
->>       "mediatek,mt6589",
->> @@ -24,4 +49,5 @@ static const char * const mediatek_board_dt_compat[] = {
->>
->>  DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
->>       .dt_compat      = mediatek_board_dt_compat,
->> +     .init_time      = mediatek_timer_init,
->>  MACHINE_END
->> --
->> 1.7.9.5
->>
->>
-
-
-
--- 
-motzblog.wordpress.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
+=BCrnberg
