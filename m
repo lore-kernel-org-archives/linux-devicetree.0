@@ -1,67 +1,82 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH 1/7] MIPS: Create common infrastructure for building built-in device-trees
-Date: Thu, 21 Aug 2014 13:04:20 -0700
-Message-ID: <1408651466-8334-2-git-send-email-abrestic@chromium.org>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: James Hogan <james.hogan@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, David Daney <david.daney@cavium.com>, John Crispin <blogic@openwrt.org>, Jayachandran C <jchandra@broadcom.com>, Qais Yousef <qais.yousef@imgtec.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: Re: [RFC PATCH 3/4] tty: omap-serial: use threaded interrupt handler
+Date: Thu, 21 Aug 2014 23:41:17 +0200
+Message-ID: <20140821214117.GA7076@ci00147.xsens-tech.local>
+References: <1406645577-18620-1-git-send-email-frans.klaver@xsens.com>
+ <1408450488-4083-1-git-send-email-frans.klaver@xsens.com>
+ <1408450488-4083-4-git-send-email-frans.klaver@xsens.com>
+ <20140819185701.GC22003@saruman.home>
+ <20140820064028.GC9319@ci00147.xsens-tech.local>
+ <20140820160604.GH24500@saruman.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140820160604.GH24500@saruman.home>
+Sender: linux-serial-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Pelykh <alexey.pelykh@gmail.com>, Jiri Slaby <jslaby@suse.cz>, Frans Klaver <fransklaver@gmail.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation for moving the device-trees to a common location,
-introduce the config option BUILTIN_DTB, which can be selected by
-platforms that use a device-tree built into the kernel image, and
-create a Makefile to build the device-trees in arch/mips/boot/dts/.
+On Wed, Aug 20, 2014 at 11:06:05AM -0500, Felipe Balbi wrote:
+> On Wed, Aug 20, 2014 at 08:40:28AM +0200, Frans Klaver wrote:
+> > On Tue, Aug 19, 2014 at 01:57:02PM -0500, Felipe Balbi wrote:
+> > > On Tue, Aug 19, 2014 at 02:14:47PM +0200, Frans Klaver wrote:
+> > > > At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we see 1600 uart
+> > > > rx buffer overflows within 30 seconds. Threading the interrupt handling reduces
+> > > > this to about 170 overflows in 10 minutes.
+> > > 
+> > > Can you try Sebastian Siewior's patches for 8250_omap and 8250 dma
+> > > support ? That should help you a lot.
+> > 
+> > I'll have a look at that series. Thanks for pointing it out.
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
- arch/mips/Kconfig           | 3 +++
- arch/mips/Makefile          | 6 ++++++
- arch/mips/boot/dts/Makefile | 3 +++
- 3 files changed, 12 insertions(+)
- create mode 100644 arch/mips/boot/dts/Makefile
+I have had a look at Sebastian's series, but I'm not convinced
+yet that we should use it. So far the serial console seems to be
+missing data every now and then. I haven't gotten around to testing our
+high traffic application yet.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index df51e78..19b8aac 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2481,6 +2481,9 @@ config USE_OF
- 	select OF_EARLY_FLATTREE
- 	select IRQ_DOMAIN
- 
-+config BUILTIN_DTB
-+	bool
-+
- endmenu
- 
- config LOCKDEP_SUPPORT
-diff --git a/arch/mips/Makefile b/arch/mips/Makefile
-index 9336509..72cdd6a 100644
---- a/arch/mips/Makefile
-+++ b/arch/mips/Makefile
-@@ -324,6 +324,12 @@ endif
- 
- CLEAN_FILES += vmlinux.32 vmlinux.64
- 
-+# device-trees
-+core-$(CONFIG_BUILTIN_DTB) += arch/mips/boot/dts/
-+
-+%.dtb %.dtb.S %.dtb.o: | scripts
-+	$(Q)$(MAKE) $(build)=arch/mips/boot/dts arch/mips/boot/dts/$@
-+
- archprepare:
- ifdef CONFIG_MIPS32_N32
- 	@echo '  Checking missing-syscalls for N32'
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-new file mode 100644
-index 0000000..6bb41df
---- /dev/null
-+++ b/arch/mips/boot/dts/Makefile
-@@ -0,0 +1,3 @@
-+obj-y		+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
-+
-+clean-files	+= *.dtb.S
--- 
-2.1.0.rc2.206.gedb03e5
+
+> > > >  drivers/tty/serial/omap-serial.c | 31 ++++++++++++++++++++++++-------
+> > > >  1 file changed, 24 insertions(+), 7 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+> > > > index 14a0167..57664b9 100644
+> > > > --- a/drivers/tty/serial/omap-serial.c
+> > > > +++ b/drivers/tty/serial/omap-serial.c
+> > > > @@ -575,6 +575,21 @@ static void serial_omap_rdi(struct uart_omap_port *up, unsigned int lsr)
+> > > >  }
+> > > >  
+> > > >  /**
+> > > > + * serial_omap_fast_irq() - schedule interrupt handling
+> > > > + */
+> > > > +static irqreturn_t serial_omap_fast_irq(int irq, void *dev_id)
+> > > > +{
+> > > > +	struct uart_omap_port *up = dev_id;
+> > > > +	unsigned int iir = serial_in(up, UART_IIR);
+> > > > +
+> > > > +	if (iir & UART_IIR_NO_INT)
+> > > > +		return IRQ_NONE;
+> > > > +
+> > > > +	disable_irq_nosync(up->port.irq);
+> > > 
+> > > NAK. Either use IRQF_ONESHOT or actually mask the IRQs at the device's
+> > > registers (basically clearing IER).
+> > 
+> > Given the work that's been done on the 8250 based driver, what are the
+> > short-term chances omap-serial will be dropped? I'd be happy to improve
+> > here if it makes sense to do so. If the 8250 based driver is going to
+> > replace omap-serial anyway on the short term, I don't see the point of
+> > further developing this patch. The others would still make sense in my
+> > opinion.
+> 
+> if we find a way to maintain the same ttyO* naming scheme and make it
+> coexist with ttyS* naming, then we could drop as soon as 8250_omap is
+> ready for prime time.
+
+With that in mind, for now I'll be betting on two horses.
+
+I'll cook up a new version using oneshot.
+
+Thanks,
+Frans
