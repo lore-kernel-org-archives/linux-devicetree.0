@@ -1,46 +1,92 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Thu, 21 Aug 2014 08:41:23 -0700
-Message-ID: <CAD=FV=VYy5sgLmjUfUGe0ai=wMBFHROLK6yKvMzfmundWSMiCA@mail.gmail.com>
-References: <1408627817-16171-1-git-send-email-zyw@rock-chips.com>
-	<20140821153836.GO4266@lee--X1>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
+Date: Thu, 21 Aug 2014 08:49:19 -0700
+Message-ID: <f166a186-301c-4288-97cf-71f8173c07e7@BN1AFFO11FD010.protection.gbl>
+References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
+ <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
+ <53F5D8D9.7040604@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140821153836.GO4266@lee--X1>
+Content-Disposition: inline
+In-Reply-To: <53F5D8D9.7040604@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chr>
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Michal Simek <michal.simek@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Lee,
+On Thu, 2014-08-21 at 01:32PM +0200, Andreas F=C3=A4rber wrote:
+> Am 21.08.2014 10:41, schrieb Michal Simek:
+> > On 08/20/2014 05:56 PM, Soren Brinkmann wrote:
+> >> Add missing Ethernet phys to Zynq DTs.
+> >>
+> >> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> >> ---
+> >>  arch/arm/boot/dts/zynq-zc702.dts | 6 ++++++
+> >>  arch/arm/boot/dts/zynq-zc706.dts | 6 ++++++
+> >>  arch/arm/boot/dts/zynq-zed.dts   | 6 ++++++
+> >>  3 files changed, 18 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/=
+zynq-zc702.dts
+> >> index 30bcfe20f0bc..fa810505ab8f 100644
+> >> --- a/arch/arm/boot/dts/zynq-zc702.dts
+> >> +++ b/arch/arm/boot/dts/zynq-zc702.dts
+> >> @@ -36,6 +36,12 @@
+> >>  &gem0 {
+> >>  	status =3D "okay";
+> >>  	phy-mode =3D "rgmii-id";
+> >> +	phy-handle =3D <&ethernet_phy>;
+> >> +
+> >> +	ethernet_phy: ethernet-phy@7 {
+> >> +		compatible =3D "marvell,88e1116r", "ethernet-phy-ieee802.3-c22"=
+;
+> >=20
+> > c22 is completely unused by the kernel and also c22 is default opti=
+on anyway.
+> > Any advantage to have c22 specified here?
+>=20
+> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/D=
+ocumentation/devicetree/bindings/net/phy.txt
+>=20
+> S=C3=B6ren's marvell,* entries do not seem documented, therefore I us=
+ed the
+> documented "ethernet-phy-idAAAA.BBBB" based syntax. The documented
+> example specifically uses -c22, too.
+>=20
+> Either it's okay to prepend unrecognized model strings, then you shou=
+ld
+> update zynq-parallella.dts as well (I put the model in a comment ther=
+e)
+> or use the official strings like I used and keep the readable models =
+as
+> comments. Documenting all those "marvell,88e1116r", "marvell,88e1518"=
+,
+> "marvell,88e1318" PHY bindings and possibly prepending them to the ID
+> based strings would be another option, of course.
 
-On Thu, Aug 21, 2014 at 8:38 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Thu, 21 Aug 2014, Chris Zhong wrote:
->> The RK808 chip is a power management IC for multimedia and handheld
->> devices. It contains the following components:
->>
->> - Regulators
->> - RTC
->>
->> The rk808 core driver is registered as a platform driver and provides
->> communication through I2C with the host device for the different
->> components.
->>
->> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->>
->> ---
->>
->> Changes in v3: None
->
-> Why haven't you fixed up my review comments?
+These phy-bindings are everything than obvious to me. It seems the docs
+are spread across a couple of different files and not fully up to date
+either. I basically tried to get something working out of the docs, the
+parallela and our vendor DT files.
 
-I saw in a private message from Chris that his v2 was actually the
-wrong version (an old branch from his tree) by mistake.  His v3 is
-what v2 was supposed to be.  He didn't have time to fixup review
-comments yet (he just wanted to send the correct v2), so expect a v4.
+So my thinkings:
+ - the compatible string with the -c22 is used and documented in the ph=
+y
+   bindings, it should be there.
+ - the ID based strings seem to be not needed since, IIUC, the core
+   reads the ID from the PHY and uses it, so I just left it out not
+   trying to figure out how to obtain the correct ID
+ - the marvell compatible strings are used in our vendor tree. They
+   aren't used anywhere but in our vendor tree. I though keeping them i=
+s
+   nice since it identifies the PHY fully. And in case that level of
+   detail is needed at some point it is already there.
 
-Chris: you probably should have included that somewhere in your email
-on the lists so people weren't confused.
+Assuming that we wanna keep things this way, I'm happy to re-spin this
+patch and also add a similar compatible string to the parallela DT.
 
--Doug
+	Thanks,
+	S=C3=B6ren
