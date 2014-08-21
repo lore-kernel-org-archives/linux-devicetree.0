@@ -1,57 +1,87 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
-Date: Thu, 21 Aug 2014 10:41:39 +0200
-Message-ID: <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: zynq: DT: Fix Ethernet phy modes
+Date: Thu, 21 Aug 2014 10:42:37 +0200
+Message-ID: <9d406f69-6022-4e61-84df-20eee5d9cd1b@BL2FFO11FD024.protection.gbl>
 References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com>
- <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
 	protocol="application/pgp-signature";
-	boundary="fElvA5BxDOSshuQRRn6I8hh453RfkE42V"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+	boundary="meCTC0GEiCeAGG3Pll6VifOgPRkHWi5Of"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408550219-19825-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---fElvA5BxDOSshuQRRn6I8hh453RfkE42V
+--meCTC0GEiCeAGG3Pll6VifOgPRkHWi5Of
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: quoted-printable
 
 On 08/20/2014 05:56 PM, Soren Brinkmann wrote:
-> Add missing Ethernet phys to Zynq DTs.
+> The used PHYs should be qualified as 'rgmii-id' instead of just 'rgmii'=
+=2E
+> For the Zed board this seems to make a difference between working and
+> broken Ethernet.
 >=20
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
->  arch/arm/boot/dts/zynq-zc702.dts | 6 ++++++
->  arch/arm/boot/dts/zynq-zc706.dts | 6 ++++++
->  arch/arm/boot/dts/zynq-zed.dts   | 6 ++++++
->  3 files changed, 18 insertions(+)
+>  arch/arm/boot/dts/zynq-zc702.dts | 2 +-
+>  arch/arm/boot/dts/zynq-zc706.dts | 2 +-
+>  arch/arm/boot/dts/zynq-zed.dts   | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 >=20
 > diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-=
 zc702.dts
-> index 30bcfe20f0bc..fa810505ab8f 100644
+> index 835c3089c61c..30bcfe20f0bc 100644
 > --- a/arch/arm/boot/dts/zynq-zc702.dts
 > +++ b/arch/arm/boot/dts/zynq-zc702.dts
-> @@ -36,6 +36,12 @@
+> @@ -35,7 +35,7 @@
+> =20
 >  &gem0 {
 >  	status =3D "okay";
->  	phy-mode =3D "rgmii-id";
-> +	phy-handle =3D <&ethernet_phy>;
-> +
-> +	ethernet_phy: ethernet-phy@7 {
-> +		compatible =3D "marvell,88e1116r", "ethernet-phy-ieee802.3-c22";
+> -	phy-mode =3D "rgmii";
+> +	phy-mode =3D "rgmii-id";
+>  };
+> =20
+>  &i2c0 {
+> diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-=
+zc706.dts
+> index 4cc9913078cd..3d9cb023e158 100644
+> --- a/arch/arm/boot/dts/zynq-zc706.dts
+> +++ b/arch/arm/boot/dts/zynq-zc706.dts
+> @@ -32,7 +32,7 @@
+> =20
+>  &gem0 {
+>  	status =3D "okay";
+> -	phy-mode =3D "rgmii";
+> +	phy-mode =3D "rgmii-id";
+>  };
+> =20
+>  &i2c0 {
+> diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-ze=
+d.dts
+> index 82d7ef1a9a9c..42deb1b7dbc8 100644
+> --- a/arch/arm/boot/dts/zynq-zed.dts
+> +++ b/arch/arm/boot/dts/zynq-zed.dts
+> @@ -32,7 +32,7 @@
+> =20
+>  &gem0 {
+>  	status =3D "okay";
+> -	phy-mode =3D "rgmii";
+> +	phy-mode =3D "rgmii-id";
+>  };
+> =20
+>  &sdhci0 {
+>=20
 
-c22 is completely unused by the kernel and also c22 is default option any=
-way.
-Any advantage to have c22 specified here?
+Applied.
 
-Thanks,
-Michal
+M
 
 
---fElvA5BxDOSshuQRRn6I8hh453RfkE42V
+
+--meCTC0GEiCeAGG3Pll6VifOgPRkHWi5Of
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -59,9 +89,13 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iEYEARECAAYFAlP1sMMACgkQykllyylKDCF3IACfd/zsWcNWPUnjV+zg+J+/VNur
-YFAAn33FvNW/ccOeahyZOOaNyIxENRQl
-=OvCF
+iEYEARECAAYFAlP1sP0ACgkQykllyylKDCEVFwCfewhmCF5o3PzWZaObGPDBCGJD
+REAAn3wq/tDiPGpfgBKSb26keh5jMT39
+=4SmW
 -----END PGP SIGNATURE-----
 
---fElvA5BxDOSshuQRRn6I8hh453RfkE42V--
+--meCTC0GEiCeAGG3Pll6VifOgPRkHWi5Of--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
