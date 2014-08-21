@@ -1,52 +1,38 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH/RFC v5 1/3] mfd: max77693: Fix register enum name
-Date: Thu, 21 Aug 2014 17:02:32 +0100
-Message-ID: <20140821160232.GR4266@lee--X1>
-References: <1408542221-375-1-git-send-email-j.anaszewski@samsung.com>
- <1408542221-375-2-git-send-email-j.anaszewski@samsung.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2 0/2] Input: palmas: add support for palmas power button
+Date: Thu, 21 Aug 2014 11:02:13 -0500
+Message-ID: <1408636935-29515-1-git-send-email-nm@ti.com>
+References: <1408392810-16011-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408542221-375-2-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, b.zolnierkie@samsung.com, SangYoung Son <hello.son@smasung.com>, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408392810-16011-1-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dtor@mail.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Aug 2014, Jacek Anaszewski wrote:
-> According to the MAX77693 documentation the name of
-> the register is FLASH_STATUS.
->=20
-> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: SangYoung Son <hello.son@smasung.com>
-> Cc: Samuel Ortiz <sameo@linux.intel.com>
-> ---
->  include/linux/mfd/max77693-private.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Many Palmas PMIC variants have support for power button feature. This
+feature depends on certain One Time Program (OTP) and board pull
+configurations (POWERHOLD signal). However, on many platforms such
+as DRA72-evm, OMAP5-uevm, this may be used to generate input events
+similar to twl4030-pwrbutton.c
 
-Applied, thanks.
+Series is based on v3.17-rc1
 
-> diff --git a/include/linux/mfd/max77693-private.h b/include/linux/mfd=
-/max77693-private.h
-> index c466ff3..615f121 100644
-> --- a/include/linux/mfd/max77693-private.h
-> +++ b/include/linux/mfd/max77693-private.h
-> @@ -46,7 +46,7 @@ enum max77693_pmic_reg {
->  	MAX77693_LED_REG_VOUT_FLASH2			=3D 0x0C,
->  	MAX77693_LED_REG_FLASH_INT			=3D 0x0E,
->  	MAX77693_LED_REG_FLASH_INT_MASK			=3D 0x0F,
-> -	MAX77693_LED_REG_FLASH_INT_STATUS		=3D 0x10,
-> +	MAX77693_LED_REG_FLASH_STATUS			=3D 0x10,
-> =20
->  	MAX77693_PMIC_REG_PMIC_ID1			=3D 0x20,
->  	MAX77693_PMIC_REG_PMIC_ID2			=3D 0x21,
+V2 of the series incorporating comments from http://marc.info/?l=linux-input&m=140839287431882&w=2
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Nishanth Menon (2):
+  doc: dt/bindings: input: introduce palmas power button description
+  Input: misc: introduce palmas-pwrbutton
+
+ .../bindings/input/ti,palmas-pwrbutton.txt         |   36 ++
+ drivers/input/misc/Kconfig                         |   10 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/palmas-pwrbutton.c              |  356 ++++++++++++++++++++
+ 4 files changed, 403 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/ti,palmas-pwrbutton.txt
+ create mode 100644 drivers/input/misc/palmas-pwrbutton.c
+
+-- 
+1.7.9.5
