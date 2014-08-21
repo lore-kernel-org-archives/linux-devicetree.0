@@ -1,81 +1,60 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: davinci: support adding delay between
- transmission
-Date: Thu, 21 Aug 2014 13:20:35 -0500
-Message-ID: <20140821182035.GM24407@sirena.org.uk>
-References: <1408634706-5762-1-git-send-email-grygorii.strashko@ti.com>
- <1408634706-5762-3-git-send-email-grygorii.strashko@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 3/8] ASoC: davinci-evm: HDMI audio support for TDA998x
+ trough McASP I2S bus
+Date: Thu, 21 Aug 2014 13:24:11 -0500
+Message-ID: <20140821182411.GN24407@sirena.org.uk>
+References: <cover.1408397864.git.jsarha@ti.com>
+ <a92cd9257efb58711b2d5d3de2abff9c8a1052d2.1408397864.git.jsarha@ti.com>
+ <20140819131621.GL3302@leverpostej>
+ <53F3A843.4010409@ti.com>
+ <20140820123434.GC21734@leverpostej>
+ <53F49CB2.5020801@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1f1tNaDgxoBnXskx"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="I2DZnI03i1DS0lOz"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1408634706-5762-3-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+In-Reply-To: <53F49CB2.5020801@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "tony@atomide.com" <tony@atomide.com>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "detheridge@ti.com" <detheridge@ti.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "t-kristo@ti.com" <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 
---1f1tNaDgxoBnXskx
+--I2DZnI03i1DS0lOz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Aug 21, 2014 at 06:25:06PM +0300, Grygorii Strashko wrote:
+On Wed, Aug 20, 2014 at 04:03:46PM +0300, Jyri Sarha wrote:
 
-> +- ti,davinci-spi-wdelay : delay between transmissions.
+> Could we drop the SoC id completely and make it just
+> "beaglebone-black-audio"?
 
-I don't understand why this is here - there is already standard support
-in the SPI core for client drivers specifying inter-transfer delays.  If
-there is a need to provide platform configuration for this in addition
-to that then it should also be a standard property, there is nothing
-device specific about these.
+> The board design is the unique factor here, not the SoC. McASP block can be
+> found from several TI SoCs.
 
-> +- ti,davinci-spi-odd-parity : odd partity enabled
-> +   OR
-> +  ti,davinci-spi-even-parity : even parity enabled
+That's a lot more sensible, yes.
 
-What do these mean?
-
-> +- ti,davinci-spi-io-type: io type (check platform_data/spi-davinci.h)
-
-The bindings should be independent of the kernel, the values need to be
-included here (and the defines moved to include/dt-bindings so they can
-be used when writing DTs).
-
-> +- ti,davinci-spi-disable-timer: disable CS timer (SPIFMTn)
-> +- ti,davinci-spi-c2t-delay: c2t delay
-> +- ti,davinci-spi-t2c-delay: t2c delay
-> +- ti,davinci-spi-t2e-delay: t2e delay
-> +- ti,davinci-spi-c2e-delay: c2e delay
-
-What are all these timers/delays - at least some reference to the
-datasheet please?
-
---1f1tNaDgxoBnXskx
+--I2DZnI03i1DS0lOz
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT9jhwAAoJELSic+t+oim96wkP/ReX0hFwObinVqEhKGscQhAT
-/US3zqZPHGxVIOclnYISiHfbSCaQ5z/wyt9bMYzyZmDrS+gdx1iXW8U2s1PcRGh9
-cF9MaoQwk2LbeHSkwJOSTIOX+bPL49mlebqBBj4xuQoOsEmxjogZdgUcUG3qpb5Q
-8bMAkIiV87xBaJCMsfjD96XZjB81isfRWEe+mp3B1Kk0OGbEculR/K1PNLq1CDSJ
-2RISS+nkFgDwikES6pwSc4+jKKx8ubm1Yt7x66jETbJ1J7kkoN9qaAiHMcRthJor
-IxeDEKVF754n1lRWk6W4FGrdomAJv+Sz4AflIB7drRvjko6eIa/+JVqtYBtuBDHC
-HgRqGIaKaOjvQNBF0kO/SpA4e8Tj2EAq+l0DWcAmApg0W8kI8LZQsmZ/atxLpMwO
-1FUexpQV1OO2h4g2nFe06dNCwxJ83XaUA/rWhuOl4DHWGRDZOKOtK8S5WPFY1pxo
-hns11eIT8l8ht0DFsxVGLOrL9L9NMYG7MJj7snwbNp0/aWMnkYAiuCPAQVBufKrC
-mlN6LmuYO01pCvyTwPhZQI4DJ5zslucQFc6iHR36BI+K0OTMMv/K4siyl/G+n7oA
-kItRqnGgAlFJHlC059GLjhEVz3zPEIXXJk6tkLeL+Fy1Xuhp8SqT2ou1PscOS5vW
-zHMp+1iUHbMhaeaApa6U
-=5BGf
+iQIcBAEBAgAGBQJT9jlIAAoJELSic+t+oim9ktkP/2vCpG97GqH4UKrT1FxmfSPx
+iPLsTr6tWD9vsN0Jq50uNfNXMPKu6NsOmWhgaBLPuDEGefbUHjGi0F0jl6q3248n
+5qymail4p9B/chB1aDaMS4R61DHs+41xyQ1kF4p3k9SQv7XmROYjs3n1bLbIy0VM
+gb6YDF5rUVoCrx9xUi27BN1UXRM303WjVcbySZ9cS+vfrXXOL/FxTntqdMdPxaE2
+5TqAOMS3ea086BpkIuWKSXkqpIDPQztIndVXU89VLQ+YMCZsIq8NmCEd8+lG1Goi
+yXV7o0X5XLXkzplCTt/AhKRU1V8ugNQ4pLGK4Q2AhR5ABzhN5L2m1vFIRTHDx9AG
+UTBGV7KaIbtUUlBYrH6Dbe/S/8P4u7JzpegAJmoX1FNCo04PIxYDJDEQg6TjHzGA
+Xwq+LwKZQsnKf20RKIsCd64B6zwMw98aABZhkzIWIfmIMX4mfJcwfNLnmDWzxma+
+c16pG1ONwMjUQ+y0lrvH8KDNeTpHjc83xbT49x4yOVbwgk/BJudb4HsFot6uj1J8
+mYhGeAHOU/OQRQKZ9aQKXTetRlfevkt6+Ky5L1xTlvwOv3gIsfyqvkJjxZFJwnQA
+gnlQM+pla83ALYKUshgYzCNo6FIqtq629eAflZV1wa3T/F7hR378L1JCa7jzvQPv
+WZ+9JoTIKrWt8XTzrkHh
+=PPWp
 -----END PGP SIGNATURE-----
 
---1f1tNaDgxoBnXskx--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--I2DZnI03i1DS0lOz--
