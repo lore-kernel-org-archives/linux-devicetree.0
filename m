@@ -1,47 +1,95 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] Tegra xHCI support
-Date: Thu, 21 Aug 2014 10:26:16 -0700
-Message-ID: <CAL1qeaH=8Fgw6Zia3DuBL8wrrYMjZ8pqC2NanYtb5-YVJwmtsg@mail.gmail.com>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
-	<CAAObsKDT4BV=fGAFkMxieQnC3HX=zm8G_qJ44yay4qG8inxoPQ@mail.gmail.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 00/11] drm: add support for Atmel HLCDC Display
+ Controller
+Date: Thu, 21 Aug 2014 19:26:33 +0200
+Message-ID: <20140821192633.69f6b21b@bbrezillon>
+References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20140821095202.GA21848@ulmo>
+	<20140821150600.37788d82@bbrezillon>
+	<2138720.5GSxsvjVxS@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAObsKDT4BV=fGAFkMxieQnC3HX=zm8G_qJ44yay4qG8inxoPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <2138720.5GSxsvjVxS@avalon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Clark <robdclark@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 21, 2014 at 6:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
-> On 18 August 2014 19:08, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>
->> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
->> USB3.0 memory sticks and ethernet dongles using controller firmware from
->> the ChromiumOS tree [2].
->
-> Hi Andrew,
->
-> do you have any information regarding the port assignments for the
-> Blaze board? Would like to test this there.
+Hi Laurent,
 
-Sure:
-- USB3 port 0 (using PCIe lane 0) and UTMI port 0 are connected to the
-USB A connector on the left side,
-- UTMI port 1 is connected to an internal hub, which is in turn
-connected to the camera, the LTE modem (if present), and one of the
-USB A connectors on the right side, and
-- UTMI port 2 is connected to the other USB A connector on the right side.
-The mapping of ports on the right side varies by SKU (i.e. the one on
-the internal hub may be the front or rear USB A port).
+On Thu, 21 Aug 2014 19:08:53 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
-The USB3 device tree bits for Venice2 should work just fine for Blaze;
-the only real difference is that USB3 port 1/PCIe lane 1 are unused.
+[...]
 
-Also, because of the board design on Blaze, the fused HS_CURR_LEVEL
-values need to be adjusted before being programmed into
-USB2_OTG_PAD*_CTL0.  This only affects UTMI ports 0 and 2, so ports
-connected to the internal hub should still work.  I'll add a pinconfig
-property to address this in the likely event I need to re-spin this
-series.  Or, if you like, I can send a follow-on patch to this set to
-add the property.
+> > >> 
+> > >> While this could be acceptable when all drivers are statically linked
+> > >> in the kernel, it might be problematic when you're using modules,
+> > >> meaning that you won't be able to display anything on your LCD panel
+> > >> until your HDMI bridge module has been loaded.
+> > > 
+> > > No. HDMI should be using proper hotplugging anyway, hence it should be
+> > > always be loaded anyway. You're in for a world of pain if you think you
+> > > can run DRM with a driver that's composed of separate kernel modules.
+> > 
+> > I was talking about the external RGB to HDMI encoder, should the driver
+> > for this encoder (which is not on On Chip block) be compiled
+> > statically too ?
+> 
+> Given the move to multiplatform kernels we need to aim for as few modules 
+> compiled in as possible. I'd say this includes HDMI encoders, panels and 
+> display controllers.
+> 
+> > > Also if you don't want to use deferred probe, then you're in for the
+> > > full hotplugging panel dance and that implies that you need to fix a
+> > > bunch of things in DRM (one being the framebuffer console instantiation
+> > > that I referred to in the other thread).
+> > 
+> > For now, I wait until there is a device connected on the RGB connector
+> > (connector status set to connector_status_connected) before creating an
+> > fbdev. It might not be the cleanest way to solve this issue, but it
+> > works :-).
+> 
+> Do you create a new drm_encoder at runtime for the HDMI encoder when it 
+> appears ? I thought the DRM core and API were not able to correctly cope with 
+> that.
+
+I haven't started to work on the HDMI encoder yet, and ATM I only have
+a single connector (which is true from an HW POV), which is then bound
+to an LCD panel (the only type of remote endpoint I currently support).
+
+BTW, I wonder how my use case should be represented in the DRM
+subsystem. As I said, from an HW POV I only have one RGB (or whatever
+name you choose for it) connector. But on such kind of connectors you
+can connect several output devices (panels, encoders, ...).
+And in my case I have 2 devices on the same RGB connector: a panel and
+an RGB to HDMI converter.
+
+> 
+> > > You also can't be using the current device tree bindings because they all
+> > > assume a dependency from the display controller/output to the panel. For
+> > > hotplugging you'd need the dependency the other way around (the panel
+> > > needs to refer to the output by phandle).
+> > 
+> > Here [1] is a proposal for notification support in the drm_panel
+> > infrastructure (which is not that complicated), and here [2] is how
+> > I use it in my atmel-hlcdc driver to generate hotplug events.
+> 
+> Is there a way we could use the component framework for that ? I know that 
+> partial notification isn't supported at the moment, but Russell agreed it was 
+> a real use case that should be implemented at some point.
+
+I'll give it a try.
+
+Best Regards,
+
+Boris
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
