@@ -1,34 +1,99 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] Input: misc: introduce palmas-pwrbutton
-Date: Thu, 21 Aug 2014 12:19:39 -0500
-Message-ID: <53F62A2B.6010208@ti.com>
-References: <1408392810-16011-1-git-send-email-nm@ti.com> <1408636935-29515-1-git-send-email-nm@ti.com> <1408636935-29515-3-git-send-email-nm@ti.com> <00FC9A978A94B7418C33AFAE8A35ED49DF0662@DFLE09.ent.ti.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 1/9] ARM: zynq: PM: Enable A9 internal clock gating
+ feature
+Date: Thu, 21 Aug 2014 10:20:17 -0700
+Message-ID: <7df25bc3-d1ea-405c-a880-b22b53225ec6@BN1BFFO11FD018.protection.gbl>
+References: <1408567315-28479-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1408567315-28479-2-git-send-email-soren.brinkmann@xilinx.com>
+ <26994133-6c3c-45c0-af09-3cb55ad35b13@BY2FFO11FD028.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <00FC9A978A94B7418C33AFAE8A35ED49DF0662-l8PMxShYob2IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Murphy, Dan" <dmurphy-l0cyMroinI0@public.gmane.org>, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <26994133-6c3c-45c0-af09-3cb55ad35b13@BY2FFO11FD028.protection.gbl>
+Sender: linux-pm-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Russell King <linux@arm.linux.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/21/2014 11:59 AM, Murphy, Dan wrote:
-[...]
-Ooops.. missed answering one addition statement:
+On Thu, 2014-08-21 at 02:19PM +0200, Michal Simek wrote:
+> On 08/20/2014 10:41 PM, Soren Brinkmann wrote:
+> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> > ---
+> >  arch/arm/mach-zynq/common.c  |  6 ++++++
+> >  arch/arm/mach-zynq/common.h  | 11 +++++++++++
+> >  arch/arm/mach-zynq/platsmp.c |  9 +++++++++
+> >  3 files changed, 26 insertions(+)
+> >=20
+> > diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/commo=
+n.c
+> > index 31a6fa40ba37..3cb7c198615a 100644
+> > --- a/arch/arm/mach-zynq/common.c
+> > +++ b/arch/arm/mach-zynq/common.c
+> > @@ -98,6 +98,11 @@ static int __init zynq_get_revision(void)
+> >  	return revision;
+> >  }
+> > =20
+> > +static void __init zynq_init_late(void)
+> > +{
+> > +	zynq_core_pm_init();
+> > +}
+> > +
+> >  /**
+> >   * zynq_init_machine - System specific initialization, intended to=
+ be
+> >   *		       called from board specific initialization.
+> > @@ -204,6 +209,7 @@ DT_MACHINE_START(XILINX_EP107, "Xilinx Zynq Pla=
+tform")
+> >  	.map_io		=3D zynq_map_io,
+> >  	.init_irq	=3D zynq_irq_init,
+> >  	.init_machine	=3D zynq_init_machine,
+> > +	.init_late	=3D zynq_init_late,
+> >  	.init_time	=3D zynq_timer_init,
+> >  	.dt_compat	=3D zynq_dt_match,
+> >  	.reserve	=3D zynq_memory_init,
+> > diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/commo=
+n.h
+> > index f652f0a884a6..596ef0b5067c 100644
+> > --- a/arch/arm/mach-zynq/common.h
+> > +++ b/arch/arm/mach-zynq/common.h
+> > @@ -40,4 +40,15 @@ extern void __iomem *zynq_scu_base;
+> >  /* Hotplug */
+> >  extern void zynq_platform_cpu_die(unsigned int cpu);
+> > =20
+> > +static inline void zynq_core_pm_init(void)
+> > +{
+> > +	/* A9 clock gating */
+> > +	asm volatile ("mrc  p15, 0, r12, c15, c0, 0\n"
+> > +		      "orr  r12, r12, #1\n"
+> > +		      "mcr  p15, 0, r12, c15, c0, 0\n"
+> > +		      : /* no outputs */
+> > +		      : /* no inputs */
+> > +		      : "r12");
+> > +}
+> > +
+> >  #endif
+> > diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/plat=
+smp.c
+> > index abc82ef085c1..616b99e07c60 100644
+> > --- a/arch/arm/mach-zynq/platsmp.c
+> > +++ b/arch/arm/mach-zynq/platsmp.c
+> > @@ -112,6 +112,14 @@ static void __init zynq_smp_prepare_cpus(unsig=
+ned int max_cpus)
+> >  	scu_enable(zynq_scu_base);
+> >  }
+> > =20
+> > +/*
+> > + * This function is in the hotplug path. Don't move it into the in=
+it section!!
+> > + */
+>=20
+> Worth to use kernel-doc format here.
 
->> +	of_property_read_u32(np, "ti,palmas-long-press-seconds", &val);
-> 
-> Probably should check the return to make sure the value exists and that is is
-> within an expected range.
-It is an optional parameter and may not exist in dt. when it does
-exist, the logic tries to do a best match (this is the for loop in the
-logic just below).
+The secondary init function is kind of documented in
+arch/arm/include/asm/smp.h as part of the smp_operations struct. Do you
+want more documentation here?
+=09
+	S=C3=B6ren
 
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
