@@ -1,87 +1,47 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: zynq: DT: Fix Ethernet phy modes
-Date: Thu, 21 Aug 2014 10:42:37 +0200
-Message-ID: <9d406f69-6022-4e61-84df-20eee5d9cd1b@BL2FFO11FD024.protection.gbl>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH 2/3] ARM: zynq: DT: Move size/address properties to dtsi
+Date: Thu, 21 Aug 2014 10:42:52 +0200
+Message-ID: <19edc7a7-15e8-486f-87da-04c7625b661a@BL2FFO11FD024.protection.gbl>
 References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1408550219-19825-2-git-send-email-soren.brinkmann@xilinx.com>
+ <53F4C615.9060908@suse.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
 	protocol="application/pgp-signature";
-	boundary="meCTC0GEiCeAGG3Pll6VifOgPRkHWi5Of"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408550219-19825-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+	boundary="5FaQuXaMtfLtwmoNnsjfE7VhggI2N7NPf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53F4C615.9060908@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
---meCTC0GEiCeAGG3Pll6VifOgPRkHWi5Of
-Content-Type: text/plain; charset=windows-1252
+--5FaQuXaMtfLtwmoNnsjfE7VhggI2N7NPf
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On 08/20/2014 05:56 PM, Soren Brinkmann wrote:
-> The used PHYs should be qualified as 'rgmii-id' instead of just 'rgmii'=
-=2E
-> For the Zed board this seems to make a difference between working and
-> broken Ethernet.
+On 08/20/2014 06:00 PM, Andreas F=C3=A4rber wrote:
+> Am 20.08.2014 17:56, schrieb Soren Brinkmann:
+>> Move the GEM's size and address cells properties to the common
+>> dtsi file.
+>>
+>> Cc: Andreas F=C3=A4rber <afaerber@suse.de>
+>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>> ---
+>>  arch/arm/boot/dts/zynq-7000.dtsi      | 4 ++++
+>>  arch/arm/boot/dts/zynq-parallella.dts | 2 --
+>>  2 files changed, 4 insertions(+), 2 deletions(-)
 >=20
-> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/zynq-zc702.dts | 2 +-
->  arch/arm/boot/dts/zynq-zc706.dts | 2 +-
->  arch/arm/boot/dts/zynq-zed.dts   | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-=
-zc702.dts
-> index 835c3089c61c..30bcfe20f0bc 100644
-> --- a/arch/arm/boot/dts/zynq-zc702.dts
-> +++ b/arch/arm/boot/dts/zynq-zc702.dts
-> @@ -35,7 +35,7 @@
-> =20
->  &gem0 {
->  	status =3D "okay";
-> -	phy-mode =3D "rgmii";
-> +	phy-mode =3D "rgmii-id";
->  };
-> =20
->  &i2c0 {
-> diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-=
-zc706.dts
-> index 4cc9913078cd..3d9cb023e158 100644
-> --- a/arch/arm/boot/dts/zynq-zc706.dts
-> +++ b/arch/arm/boot/dts/zynq-zc706.dts
-> @@ -32,7 +32,7 @@
-> =20
->  &gem0 {
->  	status =3D "okay";
-> -	phy-mode =3D "rgmii";
-> +	phy-mode =3D "rgmii-id";
->  };
-> =20
->  &i2c0 {
-> diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-ze=
-d.dts
-> index 82d7ef1a9a9c..42deb1b7dbc8 100644
-> --- a/arch/arm/boot/dts/zynq-zed.dts
-> +++ b/arch/arm/boot/dts/zynq-zed.dts
-> @@ -32,7 +32,7 @@
-> =20
->  &gem0 {
->  	status =3D "okay";
-> -	phy-mode =3D "rgmii";
-> +	phy-mode =3D "rgmii-id";
->  };
-> =20
->  &sdhci0 {
->=20
+> Reviewed-by: Andreas F=C3=A4rber <afaerber@suse.de>
 
 Applied.
 
-M
+Thanks,
+Michal
 
 
 
---meCTC0GEiCeAGG3Pll6VifOgPRkHWi5Of
+--5FaQuXaMtfLtwmoNnsjfE7VhggI2N7NPf
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -89,13 +49,9 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iEYEARECAAYFAlP1sP0ACgkQykllyylKDCEVFwCfewhmCF5o3PzWZaObGPDBCGJD
-REAAn3wq/tDiPGpfgBKSb26keh5jMT39
-=4SmW
+iEYEARECAAYFAlP1sQwACgkQykllyylKDCFT5wCfRlxMDuk+bvPQryPdOiSbYMFQ
+QFgAni0blUUknfS1F0fDeXZqcGtbVFyn
+=x7T+
 -----END PGP SIGNATURE-----
 
---meCTC0GEiCeAGG3Pll6VifOgPRkHWi5Of--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5FaQuXaMtfLtwmoNnsjfE7VhggI2N7NPf--
