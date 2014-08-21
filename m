@@ -1,444 +1,81 @@
-Return-Path: <westeri@linux.intel.com>
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [RFC PATCH 7/9] gpio: sch: Consolidate core and resume banks
-Date: Sat, 16 Aug 2014 09:53:57 +0300
-Message-Id: <1408172039-32513-8-git-send-email-mika.westerberg@linux.intel.com>
-In-Reply-To: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
-References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
-To: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAwLzNdIGdwaW86IHN5c2NvbjogcmV1c2UgZm9yIGtl?=
+ =?UTF-8?B?eXN0b25lIDIgc29jcw==?=
+Mime-Version: 1.0
+Date: Thu, 21 Aug 2014 20:51:14 +0400
+Message-ID: <1408639874.873856101@f420.i.mail.ru>
+In-Reply-To: <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
+References: <53ECE9B1.4060303@ti.com>
+ <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org
+To: =?UTF-8?B?R3J5Z29yaWkgU3RyYXNoa28=?= <grygorii.strashko@ti.com>
+Cc: =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou@gmail.com>, devicetree@vger.kernel.org, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-This is actually a single device with two sets of identical registers,
-which just happen to start from a different offset. Instead of having
-separate GPIO chips created we consolidate them to be single GPIO chip.
-
-In addition having a single GPIO chip allows us to handle ACPI GPIO
-translation in the core in a more generic way, since the two GPIO chips
-share the same parent ACPI device.
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Tested-by: Max Eliaser <max.eliaser@intel.com>
----
- drivers/gpio/gpio-sch.c | 303 ++++++++++++++++++------------------------------
- 1 file changed, 112 insertions(+), 191 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sch.c b/drivers/gpio/gpio-sch.c
-index a9b1cd16c848..99720c8bc8ed 100644
---- a/drivers/gpio/gpio-sch.c
-+++ b/drivers/gpio/gpio-sch.c
-@@ -29,300 +29,221 @@
- 
- #include <linux/gpio.h>
- 
--static DEFINE_SPINLOCK(gpio_lock);
--
--#define CGEN	(0x00)
--#define CGIO	(0x04)
--#define CGLV	(0x08)
--
--#define RGEN	(0x20)
--#define RGIO	(0x24)
--#define RGLV	(0x28)
-+#define GEN	0x00
-+#define GIO	0x04
-+#define GLV	0x08
-+
-+struct sch_gpio {
-+	struct gpio_chip chip;
-+	spinlock_t lock;
-+	unsigned short iobase;
-+	unsigned short core_base;
-+	unsigned short resume_base;
-+};
- 
--static unsigned short gpio_ba;
-+#define to_sch_gpio(c)	container_of(c, struct sch_gpio, chip)
- 
--static int sch_gpio_core_direction_in(struct gpio_chip *gc, unsigned  gpio_num)
-+static unsigned sch_gpio_offset(struct sch_gpio *sch, unsigned gpio,
-+				unsigned reg)
- {
--	u8 curr_dirs;
--	unsigned short offset, bit;
-+	unsigned base = 0;
- 
--	spin_lock(&gpio_lock);
--
--	offset = CGIO + gpio_num / 8;
--	bit = gpio_num % 8;
--
--	curr_dirs = inb(gpio_ba + offset);
--
--	if (!(curr_dirs & (1 << bit)))
--		outb(curr_dirs | (1 << bit), gpio_ba + offset);
-+	if (gpio >= sch->resume_base) {
-+		gpio -= sch->resume_base;
-+		base += 0x20;
-+	}
- 
--	spin_unlock(&gpio_lock);
--	return 0;
-+	return base + reg + gpio / 8;
- }
- 
--static int sch_gpio_core_get(struct gpio_chip *gc, unsigned gpio_num)
-+static unsigned sch_gpio_bit(struct sch_gpio *sch, unsigned gpio)
- {
--	int res;
--	unsigned short offset, bit;
--
--	offset = CGLV + gpio_num / 8;
--	bit = gpio_num % 8;
--
--	res = !!(inb(gpio_ba + offset) & (1 << bit));
--	return res;
-+	if (gpio >= sch->resume_base)
-+		gpio -= sch->resume_base;
-+	return gpio % 8;
- }
- 
--static void sch_gpio_core_set(struct gpio_chip *gc, unsigned gpio_num, int val)
-+static void sch_gpio_enable(struct sch_gpio *sch, unsigned gpio)
- {
--	u8 curr_vals;
- 	unsigned short offset, bit;
-+	u8 enable;
- 
--	spin_lock(&gpio_lock);
-+	spin_lock(&sch->lock);
- 
--	offset = CGLV + gpio_num / 8;
--	bit = gpio_num % 8;
-+	offset = sch_gpio_offset(sch, gpio, GEN);
-+	bit = sch_gpio_bit(sch, gpio);
- 
--	curr_vals = inb(gpio_ba + offset);
-+	enable = inb(sch->iobase + offset);
-+	if (!(enable & (1 << bit)))
-+		outb(enable | (1 << bit), sch->iobase + offset);
- 
--	if (val)
--		outb(curr_vals | (1 << bit), gpio_ba + offset);
--	else
--		outb((curr_vals & ~(1 << bit)), gpio_ba + offset);
--	spin_unlock(&gpio_lock);
-+	spin_unlock(&sch->lock);
- }
- 
--static int sch_gpio_core_direction_out(struct gpio_chip *gc,
--					unsigned gpio_num, int val)
-+static int sch_gpio_direction_in(struct gpio_chip *gc, unsigned  gpio_num)
- {
-+	struct sch_gpio *sch = to_sch_gpio(gc);
- 	u8 curr_dirs;
- 	unsigned short offset, bit;
- 
--	spin_lock(&gpio_lock);
--
--	offset = CGIO + gpio_num / 8;
--	bit = gpio_num % 8;
-+	spin_lock(&sch->lock);
- 
--	curr_dirs = inb(gpio_ba + offset);
--	if (curr_dirs & (1 << bit))
--		outb(curr_dirs & ~(1 << bit), gpio_ba + offset);
-+	offset = sch_gpio_offset(sch, gpio_num, GIO);
-+	bit = sch_gpio_bit(sch, gpio_num);
- 
--	spin_unlock(&gpio_lock);
--
--	/*
--	 * according to the datasheet, writing to the level register has no
--	 * effect when GPIO is programmed as input.
--	 * Actually the the level register is read-only when configured as input.
--	 * Thus presetting the output level before switching to output is _NOT_ possible.
--	 * Hence we set the level after configuring the GPIO as output.
--	 * But we cannot prevent a short low pulse if direction is set to high
--	 * and an external pull-up is connected.
--	 */
--	sch_gpio_core_set(gc, gpio_num, val);
--	return 0;
--}
--
--static struct gpio_chip sch_gpio_core = {
--	.label			= "sch_gpio_core",
--	.owner			= THIS_MODULE,
--	.direction_input	= sch_gpio_core_direction_in,
--	.get			= sch_gpio_core_get,
--	.direction_output	= sch_gpio_core_direction_out,
--	.set			= sch_gpio_core_set,
--};
--
--static int sch_gpio_resume_direction_in(struct gpio_chip *gc,
--					unsigned gpio_num)
--{
--	u8 curr_dirs;
--	unsigned short offset, bit;
--
--	spin_lock(&gpio_lock);
--
--	offset = RGIO + gpio_num / 8;
--	bit = gpio_num % 8;
--
--	curr_dirs = inb(gpio_ba + offset);
-+	curr_dirs = inb(sch->iobase + offset);
- 
- 	if (!(curr_dirs & (1 << bit)))
--		outb(curr_dirs | (1 << bit), gpio_ba + offset);
-+		outb(curr_dirs | (1 << bit), sch->iobase + offset);
- 
--	spin_unlock(&gpio_lock);
-+	spin_unlock(&sch->lock);
- 	return 0;
- }
- 
--static int sch_gpio_resume_get(struct gpio_chip *gc, unsigned gpio_num)
-+static int sch_gpio_get(struct gpio_chip *gc, unsigned gpio_num)
- {
-+	struct sch_gpio *sch = to_sch_gpio(gc);
-+	int res;
- 	unsigned short offset, bit;
- 
--	offset = RGLV + gpio_num / 8;
--	bit = gpio_num % 8;
-+	offset = sch_gpio_offset(sch, gpio_num, GLV);
-+	bit = sch_gpio_bit(sch, gpio_num);
- 
--	return !!(inb(gpio_ba + offset) & (1 << bit));
-+	res = !!(inb(sch->iobase + offset) & (1 << bit));
-+
-+	return res;
- }
- 
--static void sch_gpio_resume_set(struct gpio_chip *gc,
--				unsigned gpio_num, int val)
-+static void sch_gpio_set(struct gpio_chip *gc, unsigned gpio_num, int val)
- {
-+	struct sch_gpio *sch = to_sch_gpio(gc);
- 	u8 curr_vals;
- 	unsigned short offset, bit;
- 
--	spin_lock(&gpio_lock);
-+	spin_lock(&sch->lock);
- 
--	offset = RGLV + gpio_num / 8;
--	bit = gpio_num % 8;
-+	offset = sch_gpio_offset(sch, gpio_num, GLV);
-+	bit = sch_gpio_bit(sch, gpio_num);
- 
--	curr_vals = inb(gpio_ba + offset);
-+	curr_vals = inb(sch->iobase + offset);
- 
- 	if (val)
--		outb(curr_vals | (1 << bit), gpio_ba + offset);
-+		outb(curr_vals | (1 << bit), sch->iobase + offset);
- 	else
--		outb((curr_vals & ~(1 << bit)), gpio_ba + offset);
-+		outb((curr_vals & ~(1 << bit)), sch->iobase + offset);
- 
--	spin_unlock(&gpio_lock);
-+	spin_unlock(&sch->lock);
- }
- 
--static int sch_gpio_resume_direction_out(struct gpio_chip *gc,
--					unsigned gpio_num, int val)
-+static int sch_gpio_direction_out(struct gpio_chip *gc, unsigned gpio_num,
-+				  int val)
- {
-+	struct sch_gpio *sch = to_sch_gpio(gc);
- 	u8 curr_dirs;
- 	unsigned short offset, bit;
- 
--	offset = RGIO + gpio_num / 8;
--	bit = gpio_num % 8;
-+	spin_lock(&sch->lock);
- 
--	spin_lock(&gpio_lock);
-+	offset = sch_gpio_offset(sch, gpio_num, GIO);
-+	bit = sch_gpio_bit(sch, gpio_num);
- 
--	curr_dirs = inb(gpio_ba + offset);
-+	curr_dirs = inb(sch->iobase + offset);
- 	if (curr_dirs & (1 << bit))
--		outb(curr_dirs & ~(1 << bit), gpio_ba + offset);
-+		outb(curr_dirs & ~(1 << bit), sch->iobase + offset);
- 
--	spin_unlock(&gpio_lock);
-+	spin_unlock(&sch->lock);
- 
- 	/*
--	* according to the datasheet, writing to the level register has no
--	* effect when GPIO is programmed as input.
--	* Actually the the level register is read-only when configured as input.
--	* Thus presetting the output level before switching to output is _NOT_ possible.
--	* Hence we set the level after configuring the GPIO as output.
--	* But we cannot prevent a short low pulse if direction is set to high
--	* and an external pull-up is connected.
--	*/
--	sch_gpio_resume_set(gc, gpio_num, val);
-+	 * according to the datasheet, writing to the level register has no
-+	 * effect when GPIO is programmed as input.
-+	 * Actually the the level register is read-only when configured as input.
-+	 * Thus presetting the output level before switching to output is _NOT_ possible.
-+	 * Hence we set the level after configuring the GPIO as output.
-+	 * But we cannot prevent a short low pulse if direction is set to high
-+	 * and an external pull-up is connected.
-+	 */
-+	sch_gpio_set(gc, gpio_num, val);
- 	return 0;
- }
- 
--static struct gpio_chip sch_gpio_resume = {
--	.label			= "sch_gpio_resume",
-+static struct gpio_chip sch_gpio_chip = {
-+	.label			= "sch_gpio",
- 	.owner			= THIS_MODULE,
--	.direction_input	= sch_gpio_resume_direction_in,
--	.get			= sch_gpio_resume_get,
--	.direction_output	= sch_gpio_resume_direction_out,
--	.set			= sch_gpio_resume_set,
-+	.direction_input	= sch_gpio_direction_in,
-+	.get			= sch_gpio_get,
-+	.direction_output	= sch_gpio_direction_out,
-+	.set			= sch_gpio_set,
- };
- 
- static int sch_gpio_probe(struct platform_device *pdev)
- {
-+	struct sch_gpio *sch;
- 	struct resource *res;
--	int err, id;
- 
--	id = pdev->id;
--	if (!id)
--		return -ENODEV;
-+	sch = devm_kzalloc(&pdev->dev, sizeof(*sch), GFP_KERNEL);
-+	if (!sch)
-+		return -ENOMEM;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_IO, 0);
- 	if (!res)
- 		return -EBUSY;
- 
--	if (!request_region(res->start, resource_size(res), pdev->name))
-+	if (!devm_request_region(&pdev->dev, res->start, resource_size(res),
-+				 pdev->name))
- 		return -EBUSY;
- 
--	gpio_ba = res->start;
-+	spin_lock_init(&sch->lock);
-+	sch->iobase = res->start;
-+	sch->chip = sch_gpio_chip;
-+	sch->chip.label = dev_name(&pdev->dev);
-+	sch->chip.dev = &pdev->dev;
- 
--	switch (id) {
-+	switch (pdev->id) {
- 	case PCI_DEVICE_ID_INTEL_SCH_LPC:
--		sch_gpio_core.base = 0;
--		sch_gpio_core.ngpio = 10;
--		sch_gpio_resume.base = 10;
--		sch_gpio_resume.ngpio = 4;
-+		sch->core_base = 0;
-+		sch->resume_base = 10;
-+		sch->chip.ngpio = 14;
-+
- 		/*
- 		 * GPIO[6:0] enabled by default
- 		 * GPIO7 is configured by the CMC as SLPIOVR
- 		 * Enable GPIO[9:8] core powered gpios explicitly
- 		 */
--		outb(0x3, gpio_ba + CGEN + 1);
-+		sch_gpio_enable(sch, 8);
-+		sch_gpio_enable(sch, 9);
- 		/*
- 		 * SUS_GPIO[2:0] enabled by default
- 		 * Enable SUS_GPIO3 resume powered gpio explicitly
- 		 */
--		outb(0x8, gpio_ba + RGEN);
-+		sch_gpio_enable(sch, 13);
- 		break;
- 
- 	case PCI_DEVICE_ID_INTEL_ITC_LPC:
--		sch_gpio_core.base = 0;
--		sch_gpio_core.ngpio = 5;
--		sch_gpio_resume.base = 5;
--		sch_gpio_resume.ngpio = 9;
-+		sch->core_base = 0;
-+		sch->resume_base = 5;
-+		sch->chip.ngpio = 14;
- 		break;
- 
- 	case PCI_DEVICE_ID_INTEL_CENTERTON_ILB:
--		sch_gpio_core.base = 0;
--		sch_gpio_core.ngpio = 21;
--		sch_gpio_resume.base = 21;
--		sch_gpio_resume.ngpio = 9;
-+		sch->core_base = 0;
-+		sch->resume_base = 21;
-+		sch->chip.ngpio = 30;
- 		break;
- 
- 	default:
--		err = -ENODEV;
--		goto err_sch_gpio_core;
-+		return -ENODEV;
- 	}
- 
--	sch_gpio_core.dev = &pdev->dev;
--	sch_gpio_resume.dev = &pdev->dev;
--
--	err = gpiochip_add(&sch_gpio_core);
--	if (err < 0)
--		goto err_sch_gpio_core;
--
--	err = gpiochip_add(&sch_gpio_resume);
--	if (err < 0)
--		goto err_sch_gpio_resume;
--
--	return 0;
-+	platform_set_drvdata(pdev, sch);
- 
--err_sch_gpio_resume:
--	if (gpiochip_remove(&sch_gpio_core))
--		dev_err(&pdev->dev, "%s gpiochip_remove failed\n", __func__);
--
--err_sch_gpio_core:
--	release_region(res->start, resource_size(res));
--	gpio_ba = 0;
--
--	return err;
-+	return gpiochip_add(&sch->chip);
- }
- 
- static int sch_gpio_remove(struct platform_device *pdev)
- {
--	struct resource *res;
--	if (gpio_ba) {
--		int err;
--
--		err  = gpiochip_remove(&sch_gpio_core);
--		if (err)
--			dev_err(&pdev->dev, "%s failed, %d\n",
--				"gpiochip_remove()", err);
--		err = gpiochip_remove(&sch_gpio_resume);
--		if (err)
--			dev_err(&pdev->dev, "%s failed, %d\n",
--				"gpiochip_remove()", err);
--
--		res = platform_get_resource(pdev, IORESOURCE_IO, 0);
--
--		release_region(res->start, resource_size(res));
--		gpio_ba = 0;
--
--		return err;
--	}
-+	struct sch_gpio *sch = platform_get_drvdata(pdev);
- 
-+	gpiochip_remove(&sch->chip);
- 	return 0;
- }
- 
--- 
-2.1.0.rc1
+VGh1LCAyMSBBdWcgMjAxNCAxOToyMzoyMCArMDMwMCDQvtGCIEdyeWdvcmlpIFN0cmFzaGtvIDxn
+cnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Ogo+IEhpIEFsbCwKPiAKPiBBbGV4YW5kZXIsCj4gCj4g
+SSd2ZSB1cGRhdGVkIGdwaW8tc3lzY29uIGFzIHJlcXVlc3RlZCBpbiBbM10uCj4gSSBzdGlsbCBk
+b24ndCBsaWtlIGl0LCBidXQgYW55IHdheSBJIGRpZCBpdCA6KAo+IAo+IExpbnVzLAo+IAo+IEkn
+ZCB2ZXJ5IGFwcHJlY2lhdGVkIGlmIHlvdSBjYW4gY29tbWVudCBvbiB0aGVzZSBzZXJpZXMuCj4g
+UGVyc29uYWxseSwgSSBsaWtlIHYxIFszXSwgYmVjYXVzZSB0aGlzIHYyIGlzIG5vdCBlbGVnYW50
+IGFuZCB3aWxsCj4gcmVxdWlyZSBjb25zdGFudCBjb2RlIHBhdGNoaW5nIGluIGNhc2Ugb2YgYWRk
+aW5nIG5ldyBTb0NzIG9yIG5ldyBTb0MncyB2ZXJzaW9ucy4KPiAKPiBUaGlzIHNlcmllcyBpbnRl
+bmRlZCB0byBpbnRlZ3JhdGUgS2V5c3RvbmUgMiBEU1AgR1BJTyBjb250cm9sbGVyIGZ1bmN0aW9u
+YWxpdHkKPiBpbnRvIGdwaW8tc3lzY29uIGRyaXZlciAoZHJpdmVycy9ncGlvL2dwaW8tc3lzY29u
+LmMpIGFzIHJlcXVlc3RlZAo+IGJ5IExpbnVzIFdhbGxlaWogaW4gWzFdLgo+IAo+IE9uIEtleXN0
+b25lIFNPQ3MsIEFSTSBob3N0IGNhbiBzZW5kIGludGVycnVwdHMgdG8gRFNQIGNvcmVzIHVzaW5n
+IHRoZQo+IERTUCBHUElPIGNvbnRyb2xsZXIgSVAuIEVhY2ggRFNQIEdQSU8gY29udHJvbGxlciBw
+cm92aWRlcyAyOCBJUlEgc2lnbmFscyBmb3IKPiBlYWNoIERTUCBjb3JlLiBUaGlzIGlzIG9uZSBv
+ZiB0aGUgY29tcG9uZW50IHVzZWQgYnkgdGhlIElQQyBtZWNoYW5pc20gdXNlZAo+IG9uIEtleXN0
+b25lIFNPQ3MuCj4gCj4gS2V5c3RvbmUgMiBEU1AgR1BJTyBjb250cm9sbGVyIGhhcyBzcGVjaWZp
+YyBmZWF0dXJlczoKPiAtIGVhY2ggR1BJTyBjYW4gYmUgY29uZmlndXJlZCBvbmx5IGFzIG91dHB1
+dCBwaW47Cj4gLSBzZXR0aW5nIEdQSU8gdmFsdWUgdG8gMSBjYXVzZXMgSVJRIGdlbmVyYXRpb24g
+b24gdGFyZ2V0IERTUCBjb3JlOwo+IC0gcmVhZGluZyBwaW4gdmFsdWUgcmV0dXJucyAwIC0gaWYg
+SVJRIHdhcyBoYW5kbGVkIG9yIDEgLSBJUlEgaXMgc3RpbGwKPiAgIHBlbmRpbmcuCj4gCj4gVGhl
+IGdwaW8tc3lzY29uIGRyaXZlciB3YXMgbmVlZCB0byBiZSB1cGRhdGVkIHRvIHNhdGlzZnkgS2V5
+c3RvbmUgMiBTb0MKPiByZXF1aXJlbWVudHM6Cj4gLSBzcGVjaWFsIHNlcXVlbmNlIG9mIG9wZXJh
+dGlvbnMgbmVlZCB0byBiZSB1c2VkIHRvIGFzc2lnbiBvdXRwdXQgR1BJTyB2YWx1ZS4KPiAgICBB
+cyByZXN1bHQsIGZpcnN0IHBhdGNoIGludHJvZHVjZXMgU29DIHNwZWNpZmljIGNhbGxiYWNrIC5z
+ZXQoKSB0byBjb25maWd1cmUKPiAgICBvdXRwdXQgR1BJTyB2YWx1ZS4KPiAKPiBBbHNvLCBwYXRj
+aCAzIHdhcyBhZGRlZCB0byBpbGx1c3RyYXRlIERTUCBHUElPIGNvbmZpZ3VyYXRpb24gaW4gRFQg
+dXNlZCBieSBLZXlzdG9uZSAyLgo+IAo+IFJlbGF0ZWQgc2ljdXNzaW9uczoKPiAgWzFdIGh0dHBz
+Oi8vbGttbC5vcmcvbGttbC8yMDE0LzcvMTYvMTcwCj4gIFsyXSBodHRwczovL2xrbWwub3JnL2xr
+bWwvMjAxNC83LzIzLzM1Mgo+ICBbM10gaHR0cHM6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9kZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZy9tc2czNzg2My5odG1sCj4gCj4gR3J5Z29yaWkgU3RyYXNo
+a28gKDMpOgo+ICAgZ3Bpbzogc3lzY29uOiBhZGQgc29jIHNwZWNpZmljIGNhbGxiYWNrIHRvIGFz
+c2lnbiBvdXRwdXQgdmFsdWUKPiAgIGdwaW86IHN5c2NvbjogcmV1c2UgZm9yIGtleXN0b25lIDIg
+c29jcwo+ICAgQVJNOiBkdHM6IGtleXN0b25lLWsyaGs6IGFkZCBkc3AgZ3BpbyBjb250cm9sbGVy
+cyBub2Rlcwo+IAo+ICAuLi4vYmluZGluZ3MvZ3Bpby9ncGlvLW1jdHJsLWtleXN0b25lLnR4dCAg
+ICAgICAgICB8ICAgNDIgKysrKysrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaSAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICA0OCArKysrKysrCj4gIGRyaXZlcnMvZ3Bpby9ncGlvLXN5
+c2Nvbi5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE0MCArKysrKysrKysrKysrKysrKysr
+Kwo+ICAzIGZpbGVzIGNoYW5nZWQsIDIzMCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLW1jdHJsLWtl
+eXN0b25lLnR4dAoKMS4gbWN0cmwgLT4gZHNwIGluIGZpbGVuYW1lcwoyLiBtY3RybCAtPiBkc3Ag
+aW4gZG9jdW1lbnRhdGlvbi4KMy4gSGVyZSBpcyBhIG1vcmUgZWxlZ2FudCBzb2x1dGlvbiBmb3Ig
+Zmlyc3QgcGFydC4KCi0tLSBncGlvLXN5c2Nvbi5jLm9sZAkyMDE0LTA4LTE5IDA5OjQ2OjA5LjAw
+MDAwMDAwMCArMDQwMAorKysgZ3Bpby1zeXNjb24uYwkyMDE0LTA4LTIxIDIwOjQ1OjQ5LjM1NzUy
+OTMyMyArMDQwMApAQCAtMTExLDcgKzExMSw3IEBACiAJCQkJICAgQklUKG9mZnMgJSBTWVNDT05f
+UkVHX0JJVFMpKTsKIAl9CiAKLQlzeXNjb25fZ3Bpb19zZXQoY2hpcCwgb2Zmc2V0LCB2YWwpOwor
+CXByaXYtPmRhdGEtPnNldChjaGlwLCBvZmZzZXQsIHZhbCk7CiAKIAlyZXR1cm4gMDsKIH0KQEAg
+LTE1OSw3ICsxNTksNyBAQAogCWlmIChwcml2LT5kYXRhLT5mbGFncyAmIEdQSU9fU1lTQ09OX0ZF
+QVRfSU4pCiAJCXByaXYtPmNoaXAuZGlyZWN0aW9uX2lucHV0ID0gc3lzY29uX2dwaW9fZGlyX2lu
+OwogCWlmIChwcml2LT5kYXRhLT5mbGFncyAmIEdQSU9fU1lTQ09OX0ZFQVRfT1VUKSB7Ci0JCXBy
+aXYtPmNoaXAuc2V0ID0gc3lzY29uX2dwaW9fc2V0OworCQlwcml2LT5jaGlwLnNldCA9IHByaXYt
+PmRhdGEtPnNldCA/IDogc3lzY29uX2dwaW9fc2V0OwogCQlwcml2LT5jaGlwLmRpcmVjdGlvbl9v
+dXRwdXQgPSBzeXNjb25fZ3Bpb19kaXJfb3V0OwogCX0KIAoKLS0tCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
