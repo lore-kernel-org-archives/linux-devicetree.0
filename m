@@ -1,79 +1,122 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 9/9] ARM: zynq: Rename 'zynq_platform_cpu_die'
-Date: Thu, 21 Aug 2014 14:28:48 +0200
-Message-ID: <4ac42f4d-72bf-4a8d-a997-094f129d7c74@BN1AFFO11FD020.protection.gbl>
-References: <1408567315-28479-1-git-send-email-soren.brinkmann@xilinx.com>
- <1408567315-28479-10-git-send-email-soren.brinkmann@xilinx.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 00/11] drm: add support for Atmel HLCDC Display
+ Controller
+Date: Thu, 21 Aug 2014 15:06:00 +0200
+Message-ID: <20140821150600.37788d82@bbrezillon>
+References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20140821081619.GZ2452@ldesroches-Latitude-E6320>
+	<20140821103706.2349915d@bbrezillon>
+	<20140821090406.GA13733@ulmo>
+	<20140821114159.319e741b@bbrezillon>
+	<20140821095202.GA21848@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="E6jSFPjdRpPTIqJGfiSoF9FRNNWJctKVP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408567315-28479-10-git-send-email-soren.brinkmann@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Russell King <linux@arm.linux.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20140821095202.GA21848@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Clark <robdclark@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---E6jSFPjdRpPTIqJGfiSoF9FRNNWJctKVP
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Thu, 21 Aug 2014 11:52:03 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-On 08/20/2014 10:41 PM, Soren Brinkmann wrote:
-> Match the naming pattern of all other SMP ops and rename
-> zynq_platform_cpu_die --> zynq_cpu_die.
->=20
-> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> ---
->  arch/arm/mach-zynq/platsmp.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsmp.=
-c
-> index 04e578718aa2..95933c5e70e1 100644
-> --- a/arch/arm/mach-zynq/platsmp.c
-> +++ b/arch/arm/mach-zynq/platsmp.c
-> @@ -138,7 +138,7 @@ static int zynq_cpu_kill(unsigned cpu)
->   *
->   * Called with IRQs disabled
->   */
-> -static void zynq_platform_cpu_die(unsigned int cpu)
-> +static void zynq_cpu_die(unsigned int cpu)
->  {
->  	zynq_slcr_cpu_state_write(cpu, true);
-> =20
-> @@ -158,7 +158,7 @@ struct smp_operations zynq_smp_ops __initdata =3D {=
+> On Thu, Aug 21, 2014 at 11:41:59AM +0200, Boris BREZILLON wrote:
+> > On Thu, 21 Aug 2014 11:04:07 +0200
+> > Thierry Reding <thierry.reding@gmail.com> wrote:
+> > 
+> > > On Thu, Aug 21, 2014 at 10:37:06AM +0200, Boris BREZILLON wrote:
+> > > > Hi Ludovic,
+> > > > 
+> > > > On Thu, 21 Aug 2014 10:16:19 +0200
+> > > > Ludovic Desroches <ludovic.desroches@atmel.com> wrote:
+> > > > 
+> > > > > Hi Boris,
+> > > > > 
+> > > > > You can add
+> > > > > 
+> > > > > Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> > > > 
+> > > > Thanks for testing this driver.
+> > > > 
+> > > > > 
+> > > > > Only one issue but not related to your patches, you can't display
+> > > > > quickly the bootup logo since the panel detection takes too much
+> > > > > time.
+> > > > 
+> > > > Yes, actually this is related to the device probe order: the
+> > > > hlcdc-display-controller device is probed before the simple-panel, thus
+> > > > nothing is detected on the RGB connector (I use of_drm_find_panel to
+> > > > check for panel availability) when the display controller is
+> > > > instantiated. I rely on the default polling infrastructure provided by
+> > > > the DRM/KMS framework which polls for a new connector every 10s, and
+> > > > this is far more than you kernel boot time.
+> > > > 
+> > > > Do anyone see a solution to reduce this delay (without changing the
+> > > > polling interval). I thought we could add a notifier infrastructure to
+> > > > the DRM panel framework, but I'm not sure this is how you want things
+> > > > done...
+> > > 
+> > > Other drivers return -EPROBE_DEFER when a panel hasn't been registered
+> > > yet. This will automatically take care of ordering things in a way that
+> > > DRM/KMS will only be initialized after the panel has been probed.
+> > 
+> > Actually I'd like to avoid doing this with a deferred probe, because,
+> > AFAIU, the remote endpoint is not tightly linked with the display
+> > controller driver (I mean the display controller can still be
+> > initialized without having a display connected on it).
+> > Moreover the atmel dev kit I'm using has an HDMI bridge connected on
+> > the same RGB connector and I'd like to use it in a near future.
+> > Returning -EPROBE_DEFER in case of several devices connected on the
+> > same connector implies that I'll have to wait for all the remote
+> > end-points to be available before my display controller could be
+> > instantiated.
+> > 
+> > While this could be acceptable when all drivers are statically linked
+> > in the kernel, it might be problematic when you're using modules,
+> > meaning that you won't be able to display anything on your LCD panel
+> > until your HDMI bridge module has been loaded.
+> 
+> No. HDMI should be using proper hotplugging anyway, hence it should be
+> always be loaded anyway. You're in for a world of pain if you think you
+> can run DRM with a driver that's composed of separate kernel modules.
 
->  	.smp_boot_secondary	=3D zynq_boot_secondary,
->  	.smp_secondary_init	=3D zynq_secondary_init,
->  #ifdef CONFIG_HOTPLUG_CPU
-> -	.cpu_die		=3D zynq_platform_cpu_die,
-> +	.cpu_die		=3D zynq_cpu_die,
->  	.cpu_kill		=3D zynq_cpu_kill,
->  #endif
->  };
+I was talking about the external RGB to HDMI encoder, should the driver
+for this encoder (which is not on On Chip block) be compiled
+statically too ?
 
-Will be good if you can move fix that kernel-doc format for this function=
+> 
+> Also if you don't want to use deferred probe, then you're in for the
+> full hotplugging panel dance and that implies that you need to fix a
+> bunch of things in DRM (one being the framebuffer console instantiation
+> that I referred to in the other thread).
 
-too. It is just nice to have thing.
+For now, I wait until there is a device connected on the RGB connector
+(connector status set to connector_status_connected) before creating an
+fbdev. It might not be the cleanest way to solve this issue, but it
+works :-).
 
-Thanks,
-Michal
+> You also can't be using the
+> current device tree bindings because they all assume a dependency from
+> the display controller/output to the panel. For hotplugging you'd need
+> the dependency the other way around (the panel needs to refer to the
+> output by phandle).
 
+Here [1] is a proposal for notification support in the drm_panel
+infrastructure (which is not that complicated), and here [2] is how
+I use it in my atmel-hlcdc driver to generate hotplug events.
 
+Let me know if you want me to submit a proper patch series...
 
+Best Regards,
 
---E6jSFPjdRpPTIqJGfiSoF9FRNNWJctKVP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Boris
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+[1]http://code.bulix.org/scq4g3-86804
+[2]http://code.bulix.org/7dg501-86805
 
-iEYEARECAAYFAlP15gAACgkQykllyylKDCHSegCdEgP2AzxXjeYe4Yx1hOz3GR5R
-RgkAmgPR5Ybaub07soh0+psJHObiejM9
-=cmxL
------END PGP SIGNATURE-----
-
---E6jSFPjdRpPTIqJGfiSoF9FRNNWJctKVP--
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
