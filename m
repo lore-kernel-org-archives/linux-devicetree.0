@@ -1,165 +1,88 @@
-From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v4] coresight: bindings for coresight drivers
-Date: Thu, 21 Aug 2014 13:15:05 +0200
-Message-ID: <53F5D4B9.5060305@suse.de>
-References: <1408554698-24459-1-git-send-email-mathieu.poirier@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] Adding Skyworks SKY81452 MFD driver
+Date: Thu, 21 Aug 2014 12:19:40 +0100
+Message-ID: <20140821111940.GX4266@lee--X1>
+References: <1407488899-31065-1-git-send-email-jack.yoo@skyworksinc.com>
+ <20140821094502.GV4266@lee--X1>
+ <20140821095935.GB21848@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408554698-24459-1-git-send-email-mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140821095935.GB21848@ulmo>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, heiko.stuebner-HCpLIkUQxWGakBO8gow8eQ@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 21 Aug 2014, Thierry Reding wrote:
 
-Am 20.08.2014 19:11, schrieb mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org:
-> From: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> On Thu, Aug 21, 2014 at 10:45:02AM +0100, Lee Jones wrote:
+> [...]
+> > > diff --git a/drivers/mfd/sky81452.c b/drivers/mfd/sky81452.c
+> [...]
+> > > + * This program is free software; you can redistribute it and/or=
+ modify it
+> > > + * under the terms of the GNU General Public License as publishe=
+d by the
+> > > + * Free Software Foundation; either version 2, or (at your optio=
+n) any
+> > > + * later version.
+> [...]
+> > > +	{ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(i2c, sky81452_ids);
+> > > +
+> > > +#ifdef CONFIG_OF
+> > > +static const struct of_device_id sky81452_of_match[] =3D {
+> > > +	{ .compatible =3D "skyworks,sky81452", },
+> > > +	{ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, sky81452_of_match);
+> > > +#endif
+> >=20
+> > You can drop the #differy the compiler should sort that out on the
+> > back of of_match_ptr().
 >=20
-> Coresight IP blocks allow for the support of HW assisted tracing
-> on ARM SoCs.  Bindings for the currently available blocks are
-> presented herein.
+> It won't, unfortunately. If !OF, then of_match_ptr(x) will evaluate t=
+o
+> NULL, therefore sky81452_of_match will become unreferenced and cause =
+the
+> compiler to output a warning. I guess it could be made __maybe_unused=
+,
+> but I don't see that as much of an advantage over the #ifdef.
+
+Yes, I suppose it would.  That's sad.
+
+> > > +static struct i2c_driver sky81452_driver =3D {
+> > > +	.driver =3D {
+> > > +		.name =3D "sky81452",
+> > > +		.of_match_table =3D of_match_ptr(sky81452_of_match),
+> > > +	},
+> > > +	.probe =3D sky81452_probe,
+> > > +	.remove =3D sky81452_remove,
+> > > +	.id_table =3D sky81452_ids,
+> > > +};
+> > > +
+> > > +module_i2c_driver(sky81452_driver);
+> > > +
+> > > +MODULE_DESCRIPTION("Skyworks SKY81452 MFD driver");
+> > > +MODULE_AUTHOR("Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>");
+> > > +MODULE_LICENSE("GPL");
+> >=20
+> > I think you want v2.
 >=20
-> Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Panchaxari Prasannamurthy <panchaxari.prasannamurthy@l=
-inaro.org>
-> Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/coresight.txt          | 205 +++++++++++=
-++++++++++
->  1 file changed, 205 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/coresight.t=
-xt
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Do=
-cumentation/devicetree/bindings/arm/coresight.txt
-> new file mode 100644
-> index 0000000..2ee594d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -0,0 +1,205 @@
-> +* CoreSight Components
-> +
-> +CoreSight components are compliant with the ARM CoreSight architectu=
-re
-> +specification and can be connected in various topologies to suit a p=
-articular
-> +SoCs tracing needs. These trace components can generally be classifi=
-ed as sinks,
-> +links and sources. Trace data produced by one or more sources flows =
-through the
-> +intermediate links connecting the source to the currently selected s=
-ink. Each
-> +CoreSight component device should use these properties to describe i=
-ts hardware
-> +characteristcs.
-> +
-> +Required properties for all components *except* non-configurable rep=
-licators:
-> +
-> +- compatible : name of the component used for driver matching.  Poss=
-ible values
-> +include: "arm,coresight-etb10", "arm,coresight-tpiu", "arm,coresight=
--tmc",
-> +"arm,coresight-funnel", and "arm,coresight-etm3x".  All of these hav=
-e to
-> +be supplemented with "arm,primecell" as drivers are using the AMBA b=
-us
-> +interface.  Since non-configurable replicators don't show up on the =
-AMBA
-> +bus they don't need to be post-fixed with "arm,primecell".
+> The header comment says "... version 2, or (at your option) any later
+> version.", so I think "GPL" is the right one here.
 
-I think this document would be much easier to read if you indented thes=
-e
-paragraphs below "name" here. That way the actual property names would
-stand out more when looking up a particular property.
-
-> +
-> +- reg : physical base address and length of the register set(s) of t=
-he component.
-> +
-> +- clocks : the clock associated to this component.
-> +
-> +- clock-names: the name of the clock as referenced by the code.  Sin=
-ce we are
-> +using the AMBA framework, the name should be "apb_pclk".
-> +
-> +- ports or port: The representation of the component's port layout u=
-sing the
-> +generic DT graph presentation found in "bindings/graph.txt".
-> +
-> +Non-configurable replicators:
-> +
-> +- compatible: currently supported value is "arm-replicator".  Since =
-non-configurable
-> +replicators don't show up on the AMBA hey don't need to be post-fixe=
-d with
-> +"arm,primecell".
-> +
-> +- id: a unique number that will identify this replicator.
-> +
-> +- ports or port: same as above.
-> +
-> +Optional properties for Sinks:
-> +
-> +- coresight-default-sink: must be specified for one of the sink devi=
-ces that is
-> +intended to be made the default sink. Other sink devices must not ha=
-ve this
-> +specified. Not specifying this property on any of the sinks is inval=
-id.
-> +
-> +Optional properties for ETM/PTMs:
-> +
-> +- arm,cp14: must be present if the system accesses ETM/PTM managemen=
-t registers
-> +via co-processor 14.
-> +
-> +- arm,cp14: access to ETM/PTM management registers is made via cp14.
-> +
-> +- cpu: the cpu phandle this ETM/PTM is affined to. When omitted the =
-source is
-> +considered to belong to CPU0.
-> +
-> +Optional property for TMC:
-> +
-> +- arm,buffer-size: size of contiguous buffer space for TMC ETR (embe=
-dded trace router)
-> +
-> +
-> +Example:
-> +
-> +1. Sinks
-> +	etb: etb@20010000 {
-> +		compatible =3D "arm,coresight-etb10", "arm,primecell";
-> +		reg =3D <0 0x20010000 0 0x1000>;
-
-You seem to be using two address cells (and two size cells). In that
-case, I believe I read it were convention to use etb@0,20010000?
-
-Regards,
-Andreas
-
-> +
-> +		coresight-default-sink;
-> +		clocks =3D <&oscclk6a>;
-> +		clock-names =3D "apb_pclk";
-> +		port {
-> +			etb_in_port: endpoint@0 {
-> +				slave-mode;
-> +				remote-endpoint =3D <&replicator_out_port0>;
-> +			};
-> +		};
-> +	};
-[snip]
-
+=46air enough.  Withdrawn.
 
 --=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
