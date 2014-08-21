@@ -1,195 +1,146 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [RFC PATCH 5/9] mfd: Add ACPI support
-Date: Thu, 21 Aug 2014 12:05:31 +0300
-Message-ID: <20140821090508.GK1660@lahna.fi.intel.com>
-References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
- <1408172039-32513-6-git-send-email-mika.westerberg@linux.intel.com>
- <20140820155459.GM4266@lee--X1>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v4 5/7] net: cpsw: Add am33xx MACID readout
+Date: Thu, 21 Aug 2014 14:51:53 +0530
+Message-ID: <53F5BA31.6030703@ti.com>
+References: <1408600314-19824-1-git-send-email-mpa@pengutronix.de> <1408600314-19824-6-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140820155459.GM4266@lee--X1>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@linaro.org>R
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1408600314-19824-6-git-send-email-mpa@pengutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>, "David S. Miller" <davem@davemloft.net>
+Cc: =?windows-1252?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Rostedt <rostedt@goodmis.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 20, 2014 at 04:54:59PM +0100, Lee Jones wrote:
-> On Sat, 16 Aug 2014, Mika Westerberg wrote:
-> > If an MFD device is backed by ACPI namespace, we should allow subde=
-vice
-> > drivers to access their corresponding ACPI companion devices throug=
-h normal
-> > means (e.g using ACPI_COMPANION()).
-> >=20
-> > This patch adds such support to the MFD core. If the MFD parent dev=
-ice
-> > doesn't specify any ACPI _HID/_CID for the child device, the child =
-device
-> > will share the parent ACPI companion device. Otherwise the child de=
-vice
-> > will be assigned with the corresponding ACPI companion, if found in=
- the
-> > namespace below the parent.
-> >=20
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Reviewed-by: Darren Hart <dvhart@linux.intel.com>
-> > ---
-> >  Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++
-> >  drivers/mfd/mfd-core.c             | 41 ++++++++++++++++++++++++++=
-++++++++++++
-> >  include/linux/mfd/core.h           |  3 +++
-> >  3 files changed, 71 insertions(+)
-> >=20
-> > diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acp=
-i/enumeration.txt
-> > index e182be5e3c83..74e35c54febf 100644
-> > --- a/Documentation/acpi/enumeration.txt
-> > +++ b/Documentation/acpi/enumeration.txt
-> > @@ -312,3 +312,30 @@ a code like this:
-> > =20
-> >  There are also devm_* versions of these functions which release th=
-e
-> >  descriptors once the device is released.
-> > +
-> > +MFD devices
-> > +~~~~~~~~~~~
-> > +The MFD devices create platform devices from their children. For t=
-he
->=20
-> What does this mean?  MFD drivers register their children _as_
-> platform devices.
+On Thursday 21 August 2014 11:21 AM, Markus Pargmann wrote:
+> This patch adds a function to get the MACIDs from the am33xx SoC
+> control module registers which hold unique vendor MACIDs. This is only
+> used if of_get_mac_address() fails to get a valid mac address.
+>
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> Reviewed-by: Wolfram Sang <wsa@the-dreams.de>
+> Tested-by: Steven Rostedt <rostedt@goodmis.org>
+> ---
+>  Documentation/devicetree/bindings/net/cpsw.txt |  4 +++
+>  drivers/net/ethernet/ti/Kconfig                |  2 ++
+>  drivers/net/ethernet/ti/cpsw.c                 | 46 ++++++++++++++++++++++++--
+>  3 files changed, 50 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+> index 107caf174a0e..33fe8462edf4 100644
+> --- a/Documentation/devicetree/bindings/net/cpsw.txt
+> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
+> @@ -24,6 +24,8 @@ Optional properties:
+>  - ti,hwmods		: Must be "cpgmac0"
+>  - no_bd_ram		: Must be 0 or 1
+>  - dual_emac		: Specifies Switch to act as Dual EMAC
+> +- syscon		: Phandle to the system control device node, which is
+> +			  the control module device of the am33x
+>  
+>  Slave Properties:
+>  Required properties:
+> @@ -57,6 +59,7 @@ Examples:
+>  		active_slave = <0>;
+>  		cpts_clock_mult = <0x80000000>;
+>  		cpts_clock_shift = <29>;
+> +		syscon = <&cm>;
+>  		cpsw_emac0: slave@0 {
+>  			phy_id = <&davinci_mdio>, <0>;
+>  			phy-mode = "rgmii-txid";
+> @@ -85,6 +88,7 @@ Examples:
+>  		active_slave = <0>;
+>  		cpts_clock_mult = <0x80000000>;
+>  		cpts_clock_shift = <29>;
+> +		syscon = <&cm>;
+>  		cpsw_emac0: slave@0 {
+>  			phy_id = <&davinci_mdio>, <0>;
+>  			phy-mode = "rgmii-txid";
+> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+> index 1769700a6070..5d8cb7956113 100644
+> --- a/drivers/net/ethernet/ti/Kconfig
+> +++ b/drivers/net/ethernet/ti/Kconfig
+> @@ -62,6 +62,8 @@ config TI_CPSW
+>  	select TI_DAVINCI_CPDMA
+>  	select TI_DAVINCI_MDIO
+>  	select TI_CPSW_PHY_SEL
+> +	select MFD_SYSCON
+> +	select REGMAP
+>  	---help---
+>  	  This driver supports TI's CPSW Ethernet Switch.
+>  
+> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+> index 0bc2c2a2c236..aaf8a42f9633 100644
+> --- a/drivers/net/ethernet/ti/cpsw.c
+> +++ b/drivers/net/ethernet/ti/cpsw.c
+> @@ -33,6 +33,8 @@
+>  #include <linux/of_net.h>
+>  #include <linux/of_device.h>
+>  #include <linux/if_vlan.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+>  
+>  #include <linux/pinctrl/consumer.h>
+>  
+> @@ -1816,6 +1818,39 @@ static void cpsw_slave_init(struct cpsw_slave *slave, struct cpsw_priv *priv,
+>  	slave->port_vlan = data->dual_emac_res_vlan;
+>  }
+>  
+> +#define AM33XX_CTRL_MAC_LO_REG(id) (0x630 + 0x8 * id)
+> +#define AM33XX_CTRL_MAC_HI_REG(id) (0x630 + 0x8 * id + 0x4)
+> +
+> +static int cpsw_am33xx_cm_get_macid(struct device *dev, int slave,
+> +		u8 *mac_addr)
+> +{
+> +	u32 macid_lo;
+> +	u32 macid_hi;
+> +	struct regmap *syscon;
+> +
+> +	if (!of_machine_is_compatible("ti,am33xx"))
+> +		return 0;
+> +
+> +	syscon = syscon_regmap_lookup_by_phandle(dev->of_node, "syscon");
+> +	if (IS_ERR(syscon)) {
+> +		if (PTR_ERR(syscon) == -ENODEV)
+> +			return 0;
+> +		return PTR_ERR(syscon);
+> +	}
+> +
+> +	regmap_read(syscon, AM33XX_CTRL_MAC_LO_REG(slave), &macid_lo);
+> +	regmap_read(syscon, AM33XX_CTRL_MAC_HI_REG(slave), &macid_hi);
+> +
+> +	mac_addr[5] = (macid_lo >> 8) & 0xff;
+> +	mac_addr[4] = macid_lo & 0xff;
+> +	mac_addr[3] = (macid_hi >> 24) & 0xff;
+> +	mac_addr[2] = (macid_hi >> 16) & 0xff;
+> +	mac_addr[1] = (macid_hi >> 8) & 0xff;
+> +	mac_addr[0] = macid_hi & 0xff;
+> +
+> +	return 0;
+> +}
+> +
+>  static int cpsw_probe_dt(struct cpsw_platform_data *data,
+>  			 struct platform_device *pdev)
+>  {
+> @@ -1928,8 +1963,15 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
+>  			 PHY_ID_FMT, mdio->name, phyid);
+>  
+>  		mac_addr = of_get_mac_address(slave_node);
+> -		if (mac_addr)
+> -			memcpy(slave_data->mac_addr, mac_addr, ETH_ALEN);
+> +		if (mac_addr) {
+> +			memcpy(slave_data->mac_addr, mac_addr,
+> +					ETH_ALEN);
 
-Right, will fix.
+Alignment should match open parenthesis
 
-> > +child devices there needs to be an ACPI handle that they can use t=
-o
-> > +reference parts of the ACPI namespace that relate to them. In the =
-Linux
-> > +MFD subsystem we provide two ways:
-> > +
-> > +	o The children share the parent ACPI handle.
-> > +	o The MFD cell can specify the ACPI id of the device.
-> > +
-> > +For the first case, the MFD drivers do not need to do anything. Th=
-e
-> > +resulting child platform device will have its ACPI_COMPANION() set=
- to point
-> > +to the parent device.
-> > +
-> > +If the ACPI namespace has a device that we can match using an ACPI=
- id,
-> > +the id should be set like:
-> > +
-> > +	static struct mfd_cell my_subdevice_cell =3D {
-> > +		.name =3D "my_subdevice",
-> > +		/* set the resources relative to the parent */
-> > +		.acpi_pnpid =3D "XYZ0001",
-> > +	};
-> > +
-> > +The ACPI id "XYZ0001" is then used to lookup an ACPI device direct=
-ly under
-> > +the MFD device and if found, that ACPI companion device is bound t=
-o the
-> > +resulting child platform device.
-> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > index 892d343193ad..bb466b28b3b6 100644
-> > --- a/drivers/mfd/mfd-core.c
-> > +++ b/drivers/mfd/mfd-core.c
-> > @@ -78,6 +78,45 @@ static int mfd_platform_add_cell(struct platform=
-_device *pdev,
-> >  	return 0;
-> >  }
-> > =20
-> > +#if IS_ENABLED(CONFIG_ACPI)
-> > +static void mfd_acpi_add_device(const struct mfd_cell *cell,
-> > +				struct platform_device *pdev)
-> > +{
-> > +	struct acpi_device *parent_adev;
-> > +	struct acpi_device *adev =3D NULL;
-> > +
-> > +	parent_adev =3D ACPI_COMPANION(pdev->dev.parent);
-> > +	if (!parent_adev)
-> > +		return;
-> > +
-> > +	/*
-> > +	 * MFD child device gets its ACPI handle either from the ACPI
-> > +	 * device directly under the parent that matches the acpi_pnpid o=
-r
-> > +	 * it will use the parent handle if is no acpi_pnpid is given.
-> > +	 */
-> > +	if (cell->acpi_pnpid) {
-> > +		struct acpi_device_id ids[2] =3D {};
-> > +		struct acpi_device *child_adev;
-> > +
-> > +		strlcpy(ids[0].id, cell->acpi_pnpid, sizeof(ids[0].id));
-> > +		list_for_each_entry(child_adev, &parent_adev->children, node)
-> > +			if (acpi_match_device_ids(child_adev, ids)) {
-> > +				adev =3D child_adev;
-> > +				break;
-> > +			}
-> > +	} else {
-> > +		adev =3D parent_adev;
-> > +	}
-> > +
-> > +	ACPI_COMPANION_SET(&pdev->dev, adev);
-> > +}
-> > +#else
-> > +static inline void mfd_acpi_add_device(const struct mfd_cell *cell=
-,
-> > +				       struct platform_device *pdev)
-> > +{
-> > +}
-> > +#endif
-> > +
->=20
-> I'm not keen on polluting the MFD core driver with #differy.  Can't y=
-ou
-> think of another way to do it?
+> +		} else {
+> +			ret = cpsw_am33xx_cm_get_macid(&pdev->dev, i,
+> +					slave_data->mac_addr);
+> +			if (ret)
+> +				return ret;
+> +		}
+>  
+>  		slave_data->phy_if = of_get_phy_mode(slave_node);
+>  		if (slave_data->phy_if < 0) {
 
-It may be possible to do that since we only use few ACPI functions that
-have dummy stubs already.
-
->=20
-> >  static int mfd_add_device(struct device *parent, int id,
-> >  			  const struct mfd_cell *cell, atomic_t *usage_count,
-> >  			  struct resource *mem_base,
-> > @@ -118,6 +157,8 @@ static int mfd_add_device(struct device *parent=
-, int id,
-> >  		}
-> >  	}
-> > =20
-> > +	mfd_acpi_add_device(cell, pdev);
-> > +
-> >  	if (cell->pdata_size) {
-> >  		ret =3D platform_device_add_data(pdev,
-> >  					cell->platform_data, cell->pdata_size);
-> > diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> > index f543de91ce19..73e1709d4c09 100644
-> > --- a/include/linux/mfd/core.h
-> > +++ b/include/linux/mfd/core.h
-> > @@ -44,6 +44,9 @@ struct mfd_cell {
-> >  	 */
-> >  	const char		*of_compatible;
-> > =20
-> > +	/* Matches ACPI PNP id, either _HID or _CID */
-> > +	const char		*acpi_pnpid;
-> > +
-> >  	/*
-> >  	 * These resources can be specified relative to the parent device=
-=2E
-> >  	 * For accessing hardware you should use resources from the platf=
-orm dev
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
