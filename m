@@ -1,7 +1,7 @@
 From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH 5/7] MIPS: sead3: Move device-trees to arch/mips/boot/dts/
-Date: Thu, 21 Aug 2014 13:04:24 -0700
-Message-ID: <1408651466-8334-6-git-send-email-abrestic@chromium.org>
+Subject: [PATCH 6/7] MIPS: Netlogic: Move device-trees to arch/mips/boot/dts/
+Date: Thu, 21 Aug 2014 13:04:25 -0700
+Message-ID: <1408651466-8334-7-git-send-email-abrestic@chromium.org>
 References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
@@ -10,59 +10,111 @@ To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel 
 Cc: James Hogan <james.hogan@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, David Daney <david.daney@cavium.com>, John Crispin <blogic@openwrt.org>, Jayachandran C <jchandra@broadcom.com>, Qais Yousef <qais.yousef@imgtec.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Move the SEAD-3 device-tree to arch/mips/boot/dts/ and update the
-Makefiles accordingly.  Since SEAD-3 requires the device-tree to be
-built into the kernel, select BUILTIN_DTB when building for SEAD-3.
+Move the Netlogic XLP device-trees to arch/mips/boot/dts/ and update the
+Makefiles accordingly.  A built-in device-tree is optional, so select
+BUILTIN_DTB when it is requested.
 
 Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 ---
- arch/mips/Kconfig                           | 1 +
- arch/mips/boot/dts/Makefile                 | 1 +
- arch/mips/{mti-sead3 => boot/dts}/sead3.dts | 0
- arch/mips/mti-sead3/Makefile                | 4 ----
- 4 files changed, 2 insertions(+), 4 deletions(-)
- rename arch/mips/{mti-sead3 => boot/dts}/sead3.dts (100%)
+ arch/mips/boot/dts/Makefile                  | 4 ++++
+ arch/mips/{netlogic => boot}/dts/xlp_evp.dts | 0
+ arch/mips/{netlogic => boot}/dts/xlp_fvp.dts | 0
+ arch/mips/{netlogic => boot}/dts/xlp_gvp.dts | 0
+ arch/mips/{netlogic => boot}/dts/xlp_svp.dts | 0
+ arch/mips/netlogic/Kconfig                   | 4 ++++
+ arch/mips/netlogic/Makefile                  | 1 -
+ arch/mips/netlogic/dts/Makefile              | 4 ----
+ 8 files changed, 8 insertions(+), 5 deletions(-)
+ rename arch/mips/{netlogic => boot}/dts/xlp_evp.dts (100%)
+ rename arch/mips/{netlogic => boot}/dts/xlp_fvp.dts (100%)
+ rename arch/mips/{netlogic => boot}/dts/xlp_gvp.dts (100%)
+ rename arch/mips/{netlogic => boot}/dts/xlp_svp.dts (100%)
+ delete mode 100644 arch/mips/netlogic/dts/Makefile
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index dbfcf35..a72c7c9 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -353,6 +353,7 @@ config MIPS_SEAD3
- 	bool "MIPS SEAD3 board"
- 	select BOOT_ELF32
- 	select BOOT_RAW
-+	select BUILTIN_DTB
- 	select CEVT_R4K
- 	select CSRC_R4K
- 	select CSRC_GIC
 diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index 4f265ec..8df3d3e 100644
+index 8df3d3e..1638a38 100644
 --- a/arch/mips/boot/dts/Makefile
 +++ b/arch/mips/boot/dts/Makefile
-@@ -1,5 +1,6 @@
+@@ -1,5 +1,9 @@
  dtb-$(CONFIG_CAVIUM_OCTEON_SOC)		+= octeon_3xxx.dtb octeon_68xx.dtb
  dtb-$(CONFIG_DT_EASY50712)		+= easy50712.dtb
-+dtb-$(CONFIG_MIPS_SEAD3)		+= sead3.dtb
++dtb-$(CONFIG_DT_XLP_EVP)		+= xlp_evp.dtb
++dtb-$(CONFIG_DT_XLP_SVP)		+= xlp_svp.dtb
++dtb-$(CONFIG_DT_XLP_FVP)		+= xlp_fvp.dtb
++dtb-$(CONFIG_DT_XLP_GVP)		+= xlp_gvp.dtb
+ dtb-$(CONFIG_MIPS_SEAD3)		+= sead3.dtb
  
  obj-y		+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
- 
-diff --git a/arch/mips/mti-sead3/sead3.dts b/arch/mips/boot/dts/sead3.dts
+diff --git a/arch/mips/netlogic/dts/xlp_evp.dts b/arch/mips/boot/dts/xlp_evp.dts
 similarity index 100%
-rename from arch/mips/mti-sead3/sead3.dts
-rename to arch/mips/boot/dts/sead3.dts
-diff --git a/arch/mips/mti-sead3/Makefile b/arch/mips/mti-sead3/Makefile
-index 071786f..febf433 100644
---- a/arch/mips/mti-sead3/Makefile
-+++ b/arch/mips/mti-sead3/Makefile
-@@ -19,9 +19,5 @@ obj-y				+= sead3-i2c-dev.o sead3-i2c.o \
- 
- obj-$(CONFIG_EARLY_PRINTK)	+= sead3-console.o
- obj-$(CONFIG_USB_EHCI_HCD)	+= sead3-ehci.o
--obj-$(CONFIG_OF)		+= sead3.dtb.o
- 
- CFLAGS_sead3-setup.o = -I$(src)/../../../scripts/dtc/libfdt
--
--$(obj)/%.dtb: $(obj)/%.dts
--	$(call if_changed,dtc)
+rename from arch/mips/netlogic/dts/xlp_evp.dts
+rename to arch/mips/boot/dts/xlp_evp.dts
+diff --git a/arch/mips/netlogic/dts/xlp_fvp.dts b/arch/mips/boot/dts/xlp_fvp.dts
+similarity index 100%
+rename from arch/mips/netlogic/dts/xlp_fvp.dts
+rename to arch/mips/boot/dts/xlp_fvp.dts
+diff --git a/arch/mips/netlogic/dts/xlp_gvp.dts b/arch/mips/boot/dts/xlp_gvp.dts
+similarity index 100%
+rename from arch/mips/netlogic/dts/xlp_gvp.dts
+rename to arch/mips/boot/dts/xlp_gvp.dts
+diff --git a/arch/mips/netlogic/dts/xlp_svp.dts b/arch/mips/boot/dts/xlp_svp.dts
+similarity index 100%
+rename from arch/mips/netlogic/dts/xlp_svp.dts
+rename to arch/mips/boot/dts/xlp_svp.dts
+diff --git a/arch/mips/netlogic/Kconfig b/arch/mips/netlogic/Kconfig
+index 4eb683a..0823321 100644
+--- a/arch/mips/netlogic/Kconfig
++++ b/arch/mips/netlogic/Kconfig
+@@ -4,6 +4,7 @@ if NLM_XLP_BOARD
+ config DT_XLP_EVP
+ 	bool "Built-in device tree for XLP EVP boards"
+ 	default y
++	select BUILTIN_DTB
+ 	help
+ 	  Add an FDT blob for XLP EVP boards into the kernel.
+ 	  This DTB will be used if the firmware does not pass in a DTB
+@@ -13,6 +14,7 @@ config DT_XLP_EVP
+ config DT_XLP_SVP
+ 	bool "Built-in device tree for XLP SVP boards"
+ 	default y
++	select BUILTIN_DTB
+ 	help
+ 	  Add an FDT blob for XLP VP boards into the kernel.
+ 	  This DTB will be used if the firmware does not pass in a DTB
+@@ -22,6 +24,7 @@ config DT_XLP_SVP
+ config DT_XLP_FVP
+ 	bool "Built-in device tree for XLP FVP boards"
+ 	default y
++	select BUILTIN_DTB
+ 	help
+ 	  Add an FDT blob for XLP FVP board into the kernel.
+ 	  This DTB will be used if the firmware does not pass in a DTB
+@@ -31,6 +34,7 @@ config DT_XLP_FVP
+ config DT_XLP_GVP
+ 	bool "Built-in device tree for XLP GVP boards"
+ 	default y
++	select BUILTIN_DTB
+ 	help
+ 	  Add an FDT blob for XLP GVP board into the kernel.
+ 	  This DTB will be used if the firmware does not pass in a DTB
+diff --git a/arch/mips/netlogic/Makefile b/arch/mips/netlogic/Makefile
+index 7602d13..36d169b 100644
+--- a/arch/mips/netlogic/Makefile
++++ b/arch/mips/netlogic/Makefile
+@@ -1,4 +1,3 @@
+ obj-$(CONFIG_NLM_COMMON)	+=	common/
+ obj-$(CONFIG_CPU_XLR)		+=	xlr/
+ obj-$(CONFIG_CPU_XLP)		+=	xlp/
+-obj-$(CONFIG_CPU_XLP)		+=	dts/
+diff --git a/arch/mips/netlogic/dts/Makefile b/arch/mips/netlogic/dts/Makefile
+deleted file mode 100644
+index 25c8e87..0000000
+--- a/arch/mips/netlogic/dts/Makefile
++++ /dev/null
+@@ -1,4 +0,0 @@
+-obj-$(CONFIG_DT_XLP_EVP) := xlp_evp.dtb.o
+-obj-$(CONFIG_DT_XLP_SVP) += xlp_svp.dtb.o
+-obj-$(CONFIG_DT_XLP_FVP) += xlp_fvp.dtb.o
+-obj-$(CONFIG_DT_XLP_GVP) += xlp_gvp.dtb.o
 -- 
 2.1.0.rc2.206.gedb03e5
