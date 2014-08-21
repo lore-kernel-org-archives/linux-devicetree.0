@@ -1,97 +1,320 @@
-From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
-Date: Thu, 21 Aug 2014 13:32:41 +0200
-Message-ID: <53F5D8D9.7040604@suse.de>
-References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com> <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com> <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
+From: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCHv2 2/6] ARM: dts: Add initial LS1021A QDS board dts support
+Date: Thu, 21 Aug 2014 14:44:36 +0300
+Message-ID: <53F5DBA4.5010002@freescale.com>
+References: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
+ <1407145148-29217-3-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="9L4BX1wv9299NkAcIqCCEtLo4B9b36p8A"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>, Soren Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407145148-29217-3-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jason Jin <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaiprakash Singh <b44839-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---9L4BX1wv9299NkAcIqCCEtLo4B9b36p8A
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On 08/04/2014 12:39 PM, Jingchang Lu wrote:
+> From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>
+> Signed-off-by: Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Jason Jin <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Jaiprakash Singh <b44839-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/Makefile        |   3 +-
+>   arch/arm/boot/dts/ls1021a-qds.dts | 349 ++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 351 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 82f498b..af0d999 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -239,7 +239,8 @@ dtb-$(CONFIG_ARCH_MXC) += \
+>   	imx6sx-sdb.dtb \
+>   	vf610-colibri.dtb \
+>   	vf610-cosmic.dtb \
+> -	vf610-twr.dtb
+> +	vf610-twr.dtb \
+> +	ls1021a-qds.dtb
+>   dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+>   	imx23-olinuxino.dtb \
+>   	imx23-stmp378x_devb.dtb \
+> diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
+> new file mode 100644
+> index 0000000..d107edd
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/ls1021a-qds.dts
+> @@ -0,0 +1,349 @@
+> +/*
+> + * Copyright 2013-2014 Freescale Semiconductor, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +/dts-v1/;
+> +#include "ls1021a.dtsi"
+> +
+> +/ {
+> +	model = "LS1021A QDS Board";
+> +
+> +	aliases {
+> +		enet0_rgmii_phy = &rgmii_phy1;
+> +		enet1_rgmii_phy = &rgmii_phy2;
+> +		enet2_rgmii_phy = &rgmii_phy3;
+> +		enet0_sgmii_phy = &sgmii_phy1c;
+> +		enet1_sgmii_phy = &sgmii_phy1d;
+> +	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		reg_3p3v: regulator@0 {
+> +			compatible = "regulator-fixed";
+> +			reg = <0>;
+> +			regulator-name = "3P3V";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-always-on;
+> +		};
+> +	};
+> +
+> +	sound {
+> +		compatible = "fsl,vf610-sgtl5000";
+> +		simple-audio-card,name = "FSL-VF610-TWR-BOARD";
+> +		simple-audio-card,routing =
+> +			"MIC_IN", "Microphone Jack",
+> +			"Microphone Jack", "Mic Bias",
+> +			"LINE_IN", "Line In Jack",
+> +			"Headphone Jack", "HP_OUT",
+> +			"Speaker Ext", "LINE_OUT";
+> +
+> +		simple-audio-card,cpu = <&sai2>;
+> +
+> +		simple-audio-card,codec = <&codec>;
+> +	};
+> +
+> +	soc {
+> +		leds {
+> +			compatible = "pwm-leds";
+> +			led0 {
+> +				label = "led0";
+> +				pwms = <&pwm3 0 150000 0>;
+> +				max-brightness = <100>;
+> +			};
+> +			led1 {
+> +				label = "led1";
+> +				pwms = <&pwm3 1 150000 0>;
+> +				max-brightness = <100>;
+> +			};
+> +			led2 {
+> +				label = "led2";
+> +				pwms = <&pwm3 2 150000 0>;
+> +				max-brightness = <100>;
+> +			};
+> +			led3 {
+> +				label = "led3";
+> +				pwms = <&pwm3 3 150000 0>;
+> +				max-brightness = <100>;
+> +			};
+> +			led4 {
+> +				label = "led4";
+> +				pwms = <&pwm3 4 150000 0>;
+> +				max-brightness = <100>;
+> +			};
+> +			led5 {
+> +				label = "led5";
+> +				pwms = <&pwm3 5 150000 0>;
+> +				max-brightness = <100>;
+> +			};
+> +			led6 {
+> +				label = "led6";
+> +				pwms = <&pwm3 6 150000 0>;
+> +				max-brightness = <100>;
+> +			};
+> +			led7 {
+> +				label = "led7";
+> +				pwms = <&pwm3 7 150000 0>;
+> +				max-brightness = <100>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&dspi0 {
+> +	bus-num = <0>;
+> +	status = "okay";
+> +
+> +	dspiflash: at45db021d@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "atmel,at45db021d", "atmel,at45", "atmel,dataflash";
+> +		spi-max-frequency = <16000000>;
+> +		spi-cpol;
+> +		spi-cpha;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+> +&enet0 {
+> +	tbi-handle = <&tbi0>;
+> +	phy-handle = <&sgmii_phy1c>;
+> +	phy-connection-type = "sgmii";
+> +	status = "okay";
+> +};
+> +
+> +&enet1 {
+> +	tbi-handle = <&tbi0>;
+> +	phy-handle = <&sgmii_phy1d>;
+> +	phy-connection-type = "sgmii";
+> +	status = "okay";
+> +};
+> +
+> +&enet2 {
+> +	phy-handle = <&rgmii_phy3>;
+> +	phy-connection-type = "rgmii-id";
+> +	status = "okay";
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	pca9547@77 {
+> +		compatible = "philips,pca9547";
+> +		reg = <0x77>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x0>;
+> +
+> +			rtc@68 {
+> +				compatible = "dallas,ds3232";
+> +				reg = <0x68>;
+> +				interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +		};
+> +
+> +		i2c@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x2>;
+> +
+> +			ina220@40 {
+> +				compatible = "ti,ina220";
+> +				reg = <0x40>;
+> +				shunt-resistor = <1000>;
+> +			};
+> +
+> +			ina220@41 {
+> +				compatible = "ti,ina220";
+> +				reg = <0x41>;
+> +				shunt-resistor = <1000>;
+> +			};
+> +		};
+> +
+> +		i2c@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x3>;
+> +
+> +			eeprom@56 {
+> +				compatible = "at24,24c512";
+> +				reg = <0x56>;
+> +			};
+> +
+> +			eeprom@57 {
+> +				compatible = "at24,24c512";
+> +				reg = <0x57>;
+> +			};
+> +
+> +			adt7461a@4c {
+> +				compatible = "adt7461a";
+> +				reg = <0x4c>;
+> +			};
+> +		};
+> +
+> +		i2c@4 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0x4>;
+> +
+> +			codec: sgtl5000@0a {
+> +				compatible = "fsl,sgtl5000";
+> +				reg = <0x0a>;
+> +				VDDA-supply = <&reg_3p3v>;
+> +				VDDIO-supply = <&reg_3p3v>;
+> +				clocks = <&platform_clk 1>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&ifc {
+> +	status = "okay";
+> +	#address-cells = <2>;
+> +	#size-cells = <1>;
+> +	/* NOR, NAND Flashes and FPGA on board */
+> +	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
+> +		0x2 0x0 0x0 0x7e800000 0x00010000
+> +		0x3 0x0 0x0 0x7fb00000 0x00000100>;
+> +
+> +		nor@0,0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			compatible = "cfi-flash";
+> +			reg = <0x0 0x0 0x8000000>;
+> +			bank-width = <2>;
+> +			device-width = <1>;
+> +		};
+> +
+> +		nand@2,0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			compatible = "fsl,ifc-nand";
+> +			reg = <0x2 0x0 0x10000>;
+> +
+> +			partition@0 {
+> +				/* This location must not be altered  */
+> +				/* 1MB for u-boot Bootloader Image */
+> +				reg = <0x0 0x00100000>;
+> +				label = "NAND U-Boot Image";
+> +				read-only;
+> +			};
+> +
+> +			partition@100000 {
+> +				/* 1MB for DTB Image */
+> +				reg = <0x00100000 0x00100000>;
+> +				label = "NAND DTB Image";
+> +			};
+> +
+> +			partition@200000 {
+> +				/* 10MB for Linux Kernel Image */
+> +				reg = <0x00200000 0x00a00000>;
+> +				label = "NAND Linux Kernel Image";
+> +			};
+> +
+> +			partition@c00000 {
+> +				/* 500MB for Root file System Image */
+> +				reg = <0x00c00000 0x1f400000>;
+> +				label = "NAND Compressed RFS Image";
+> +			};
 
-Am 21.08.2014 10:41, schrieb Michal Simek:
-> On 08/20/2014 05:56 PM, Soren Brinkmann wrote:
->> Add missing Ethernet phys to Zynq DTs.
->>
->> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
->> ---
->>  arch/arm/boot/dts/zynq-zc702.dts | 6 ++++++
->>  arch/arm/boot/dts/zynq-zc706.dts | 6 ++++++
->>  arch/arm/boot/dts/zynq-zed.dts   | 6 ++++++
->>  3 files changed, 18 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq=
--zc702.dts
->> index 30bcfe20f0bc..fa810505ab8f 100644
->> --- a/arch/arm/boot/dts/zynq-zc702.dts
->> +++ b/arch/arm/boot/dts/zynq-zc702.dts
->> @@ -36,6 +36,12 @@
->>  &gem0 {
->>  	status =3D "okay";
->>  	phy-mode =3D "rgmii-id";
->> +	phy-handle =3D <&ethernet_phy>;
->> +
->> +	ethernet_phy: ethernet-phy@7 {
->> +		compatible =3D "marvell,88e1116r", "ethernet-phy-ieee802.3-c22";
->=20
-> c22 is completely unused by the kernel and also c22 is default option a=
-nyway.
-> Any advantage to have c22 specified here?
+I do not think that partitions should be put in the dts file. They are a 
+convention, not a description of the hardware.
 
-http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Docum=
-entation/devicetree/bindings/net/phy.txt
-
-S=F6ren's marvell,* entries do not seem documented, therefore I used the
-documented "ethernet-phy-idAAAA.BBBB" based syntax. The documented
-example specifically uses -c22, too.
-
-Either it's okay to prepend unrecognized model strings, then you should
-update zynq-parallella.dts as well (I put the model in a comment there)
-or use the official strings like I used and keep the readable models as
-comments. Documenting all those "marvell,88e1116r", "marvell,88e1518",
-"marvell,88e1318" PHY bindings and possibly prepending them to the ID
-based strings would be another option, of course.
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrnbe=
-rg
-
-
---9L4BX1wv9299NkAcIqCCEtLo4B9b36p8A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJT9djeAAoJEPou0S0+fgE/oPgP+gKuEs4L/+0fPvg1CLi0Jsde
-rzU48qAHU7/sohFePKyITvpV601dapl7Lc0TtMek8dvC6kjUvtFzHnZEEX+5r4yh
-ERW0xqPFQ+SJJyAAGg/0+olpjEx4ARazly49bazll//4iOOuhPCW3Pd0okBtbP32
-KN9ynzSHEbXSUwUKQyx15alPAa6CF8C9Du4FXaF0mVGE3Ys4Rucoe15y+EWbPtb8
-r3PIwccste+A1vFpUOWljfczJnfhW4wfdTidLUw2+mXAl3GH3yu9fo/jdEI1o00W
-gUD+0xnBygLP187ryqXGCvpmGgJPDcnd4h06LMJL3EylLeka2A/nIentdVXTXssl
-aEOkbIsSm1mdkY2k3JEaBlUgYxG4K/WxZ1VxIjFFFpFAArr+BNCilRV+kWUMHPbB
-9a291A1WBazhnOMf4Yv+DTQ1qb7O0QdSBaHxnyTpvNXzFJJKwQDQ9WgQdx6hds23
-mxjXbynfuCp5+DW2ljmnYzhd4mozLiHddcIh0qD4Bs1R5ErJ48GTCzDM3lvhRf9v
-nQMzcoNMQmtE135LBSwXOXA2JdVW3gb0d7nMiv0Gk13n7kkhZsJBWPYWtPvGTHgR
-Vii+OkehQtQZdMNDJqGs/EWP32oSsxUk666I+4kjv+RLYzfAVHdlDWr5kGKB8rSX
-UdNbh3VbvTdBxpdH17E4
-=2rWN
------END PGP SIGNATURE-----
-
---9L4BX1wv9299NkAcIqCCEtLo4B9b36p8A--
+Diana
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
