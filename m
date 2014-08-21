@@ -1,216 +1,191 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 5/5] Clk: RK808: Add clkout driver for RK808
-Date: Thu, 21 Aug 2014 21:37:31 +0800
-Message-ID: <1408628251-18399-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 1/1] clk: ti: add support for external clock provider
+Date: Thu, 21 Aug 2014 16:42:26 +0300
+Message-ID: <53F5F742.6080506@ti.com>
+References: <1406898948-26113-1-git-send-email-t-kristo@ti.com> <1406898948-26113-2-git-send-email-t-kristo@ti.com> <20140819132232.GM3302@leverpostej> <53F450A2.2030609@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53F450A2.2030609@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "sassmann@kpanic.de" <sassmann@kpanic.de>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "jsarha@ti.com" <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On 08/20/2014 10:39 AM, Tero Kristo wrote:
+> On 08/19/2014 04:22 PM, Mark Rutland wrote:
+>> Hi Tero,
+>>
+>> On Fri, Aug 01, 2014 at 02:15:48PM +0100, Tero Kristo wrote:
+>>> External clock provider can now be used to register external clocks
+>>> under
+>>> it. This is needed as the TI clock driver only registers clocks
+>>> hierarchically under clock providers, and external clocks do not belong
+>>> under any of the current ones.
+>>
+>> I must admit that I don't understand the justification for this binding.
+>>
+>> Why can't these clocks be descrbied elsewhere and wired up as usual? Why
+>> must they be under the TI clock provide node?
+>>
+>>  From the limited description above it sounds like the only reason this
+>> exists is to work around a deficiency in the TI clock driver. That does
+>> not sound like a very good reason for having this.
+>
+> I wouldn't call it a deficiency, but its by design due to need for
+> registering clocks and clock providers hierarchically.
+>
+> I guess it might be possible to re-work the TI clock init to check for
+> the parent node, and if it is a clock provider, see if it has been
+> initialized or not. The clock provider maps the IO range so it must be
+> initialized before any clocks under it are initialized. I'll experiment
+> with this a bit and see how it works out.
 
----
+I have an alternative approach for this now, posting a patch in a bit.
 
-Changes in v3: None
-Changes in v2: None
+-Tero
 
- drivers/clk/Kconfig     |    9 +++
- drivers/clk/Makefile    |    1 +
- drivers/clk/clk-rk808.c |  147 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 157 insertions(+)
- create mode 100644 drivers/clk/clk-rk808.c
+>
+>>
+>> Thanks,
+>> Mark.
+>>
+>>>
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>> ---
+>>>   .../devicetree/bindings/arm/omap/ext-clocks.txt    |   32
+>>> ++++++++++++++++++++
+>>>   arch/arm/mach-omap2/io.c                           |   12 ++++++--
+>>>   drivers/clk/ti/clk.c                               |   23
+>>> ++++++++++++++
+>>>   include/linux/clk/ti.h                             |    2 ++
+>>>   4 files changed, 67 insertions(+), 2 deletions(-)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/arm/omap/ext-clocks.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/arm/omap/ext-clocks.txt
+>>> b/Documentation/devicetree/bindings/arm/omap/ext-clocks.txt
+>>> new file mode 100644
+>>> index 0000000..8e784bb
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/arm/omap/ext-clocks.txt
+>>> @@ -0,0 +1,32 @@
+>>> +TI external clock provider properties
+>>> +
+>>> +External clock provider is used to group SoC external board specific
+>>> +clock nodes. A separate provider node is required as the TI clock
+>>> +driver registers clocks hierarchically.
+>>> +
+>>> +Required properties:
+>>> +- compatible:        Shall be: "ti,external-clocks"
+>>> +- clocks:        Contains the external clocks for the board
+>>> +- clockdomains:        Contains the external clockdomains for the board
+>>> +
+>>> +Example:
+>>> +
+>>> +ext_clocks {
+>>> +    compatible = "ti,external-clocks";
+>>> +
+>>> +    ext_clocks: clocks {
+>>> +    };
+>>> +
+>>> +    ext_clockdomains: clockdomains {
+>>> +    };
+>>> +};
+>>> +
+>>> +...
+>>> +
+>>> +&ext_clocks {
+>>> +    gpio_test_clock {
+>>> +        compatible = "gpio-clock";
+>>> +        #clock-cells = <0>;
+>>> +        enable-gpios = <&gpio5 25 GPIO_ACTIVE_HIGH>;
+>>> +    };
+>>> +};
+>>> diff --git a/arch/arm/mach-omap2/io.c b/arch/arm/mach-omap2/io.c
+>>> index 8f55945..77be18b 100644
+>>> --- a/arch/arm/mach-omap2/io.c
+>>> +++ b/arch/arm/mach-omap2/io.c
+>>> @@ -21,6 +21,8 @@
+>>>   #include <linux/init.h>
+>>>   #include <linux/io.h>
+>>>   #include <linux/clk.h>
+>>> +#include <linux/clk-provider.h>
+>>> +#include <linux/clk/ti.h>
+>>>
+>>>   #include <asm/tlb.h>
+>>>   #include <asm/mach/map.h>
+>>> @@ -729,8 +731,14 @@ int __init omap_clk_init(void)
+>>>           return 0;
+>>>
+>>>       ret = of_prcm_init();
+>>> -    if (!ret)
+>>> -        ret = omap_clk_soc_init();
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    ret = ti_dt_clk_ext_init();
+>>> +    if (ret)
+>>> +        return ret;
+>>> +
+>>> +    ret = omap_clk_soc_init();
+>>>
+>>>       return ret;
+>>>   }
+>>> diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
+>>> index b1a6f71..c84ce4d 100644
+>>> --- a/drivers/clk/ti/clk.c
+>>> +++ b/drivers/clk/ti/clk.c
+>>> @@ -165,3 +165,26 @@ void ti_dt_clk_init_provider(struct device_node
+>>> *parent, int index)
+>>>           kfree(retry);
+>>>       }
+>>>   }
+>>> +
+>>> +static struct of_device_id ti_ext_clk_match_table[] = {
+>>> +    { .compatible = "ti,external-clocks" },
+>>> +    { }
+>>> +};
+>>> +
+>>> +/**
+>>> + * ti_dt_clk_ext_init - initialize external clocks from DT
+>>> + *
+>>> + * Some clocks are provided from external chips outside the main SoC.
+>>> + * The details for these are given under a special DT node, which will
+>>> + * be parsed by this function.
+>>> + */
+>>> +int ti_dt_clk_ext_init(void)
+>>> +{
+>>> +    struct device_node *np;
+>>> +
+>>> +    for_each_matching_node(np, ti_ext_clk_match_table) {
+>>> +        ti_dt_clk_init_provider(np, -1);
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +}
+>>> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
+>>> index e8d8a35..188270c 100644
+>>> --- a/include/linux/clk/ti.h
+>>> +++ b/include/linux/clk/ti.h
+>>> @@ -310,6 +310,8 @@ int am43xx_dt_clk_init(void);
+>>>   int omap2420_dt_clk_init(void);
+>>>   int omap2430_dt_clk_init(void);
+>>>
+>>> +int ti_dt_clk_ext_init(void);
+>>> +
+>>>   #ifdef CONFIG_OF
+>>>   void of_ti_clk_allow_autoidle_all(void);
+>>>   void of_ti_clk_deny_autoidle_all(void);
+>>> --
+>>> 1.7.9.5
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>
+>
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index cfd3af7..84e0590 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -38,6 +38,15 @@ config COMMON_CLK_MAX77686
- 	---help---
- 	  This driver supports Maxim 77686 crystal oscillator clock. 
- 
-+config COMMON_CLK_RK808
-+	tristate "Clock driver for RK808"
-+	depends on MFD_RK808
-+	---help---
-+	  This driver supports RK808 crystal oscillator clock. These
-+	  multi-function devices have two fixed-rate oscillators,
-+	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
-+	  by control register.
-+
- config COMMON_CLK_SI5351
- 	tristate "Clock driver for SiLabs 5351A/B/C"
- 	depends on I2C
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index f537a0b..99f53d5 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_ARCH_NOMADIK)		+= clk-nomadik.o
- obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
- obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
- obj-$(CONFIG_CLK_PPC_CORENET)		+= clk-ppc-corenet.o
-+obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
- obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
- obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
- obj-$(CONFIG_COMMON_CLK_SI570)		+= clk-si570.o
-diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-new file mode 100644
-index 0000000..14176bc
---- /dev/null
-+++ b/drivers/clk/clk-rk808.c
-@@ -0,0 +1,147 @@
-+/*
-+ * Clkout driver for Rockchip RK808
-+ *
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/rk808.h>
-+#include <linux/i2c.h>
-+
-+struct rk808_clk {
-+	struct rk808 *rk808;
-+	struct clk_onecell_data clk_data;
-+	struct clk_hw		clkout1_hw;
-+	struct clk_hw		clkout2_hw;
-+};
-+
-+static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
-+					      unsigned long parent_rate)
-+{
-+	return 32768;
-+}
-+
-+static int rk808_clkout1_is_prepared(struct clk_hw *hw)
-+{
-+	return 1;
-+}
-+
-+static int rk808_clkout2_control(struct clk_hw *hw, bool enable)
-+{
-+	struct rk808_clk *rk808_clk = container_of(hw, struct rk808_clk,
-+						   clkout2_hw);
-+	struct rk808 *rk808 = rk808_clk->rk808;
-+
-+	return regmap_update_bits(rk808->regmap, RK808_CLK32OUT_REG,
-+				  CLK32KOUT2_EN, enable ? CLK32KOUT2_EN : 0);
-+}
-+
-+static int rk808_clkout2_prepare(struct clk_hw *hw)
-+{
-+	return rk808_clkout2_control(hw, 1);
-+}
-+
-+static void rk808_clkout2_unprepare(struct clk_hw *hw)
-+{
-+	rk808_clkout2_control(hw, 0);
-+}
-+
-+static int rk808_clkout2_is_prepared(struct clk_hw *hw)
-+{
-+	struct rk808_clk *rk808_clk = container_of(hw, struct rk808_clk,
-+						   clkout2_hw);
-+	struct rk808 *rk808 = rk808_clk->rk808;
-+	uint32_t val;
-+
-+	int ret = regmap_read(rk808->regmap, RK808_CLK32OUT_REG, &val);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return (val & CLK32KOUT2_EN) ? 1 : 0;
-+}
-+
-+static const struct clk_ops rk808_clkout1_ops = {
-+	.is_prepared = rk808_clkout1_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static const struct clk_ops rk808_clkout2_ops = {
-+	.prepare = rk808_clkout2_prepare,
-+	.unprepare = rk808_clkout2_unprepare,
-+	.is_prepared = rk808_clkout2_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static int rk808_clk_probe(struct platform_device *pdev)
-+{
-+	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-+	struct i2c_client *client = rk808->i2c;
-+	struct device_node *node = client->dev.of_node;
-+	struct clk_init_data init;
-+	struct clk **clk_table;
-+	struct rk808_clk *rk808_clk;
-+
-+	rk808_clk = devm_kzalloc(&pdev->dev, sizeof(*rk808_clk), GFP_KERNEL);
-+	if (!rk808_clk)
-+		return -ENOMEM;
-+
-+	rk808_clk->rk808 = rk808;
-+
-+	clk_table = devm_kzalloc(&client->dev,
-+				 2*sizeof(struct clk *), GFP_KERNEL);
-+	if (!clk_table)
-+		return -ENOMEM;
-+
-+	init.flags = CLK_IS_ROOT;
-+	init.parent_names = NULL;
-+	init.num_parents = 0;
-+	init.name = "rk808-clkout1";
-+	init.ops = &rk808_clkout1_ops;
-+	rk808_clk->clkout1_hw.init = &init;
-+	clk_table[0] = devm_clk_register(&pdev->dev, &rk808_clk->clkout1_hw);
-+
-+	init.name = "rk808-clkout2";
-+	init.ops = &rk808_clkout2_ops;
-+	rk808_clk->clkout2_hw.init = &init;
-+	clk_table[1] = devm_clk_register(&pdev->dev, &rk808_clk->clkout2_hw);
-+
-+	rk808_clk->clk_data.clks = clk_table;
-+	rk808_clk->clk_data.clk_num = 2;
-+	of_clk_add_provider(node, of_clk_src_onecell_get, clk_table);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver rk808_clk_driver = {
-+	.probe = rk808_clk_probe,
-+	.driver		= {
-+		.name	= "rk808-clkout",
-+		.owner	= THIS_MODULE,
-+	},
-+};
-+
-+module_platform_driver(rk808_clk_driver);
-+
-+MODULE_DESCRIPTION("Clkout driver for the rk808 series PMICs");
-+MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_AUTHOR("Zhang Qing <zhanqging-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:rk808-clk");
--- 
-1.7.9.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
