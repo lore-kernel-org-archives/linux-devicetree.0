@@ -1,236 +1,67 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2 2/3] gpio: syscon: reuse for keystone 2 socs
-Date: Thu, 21 Aug 2014 19:23:22 +0300
-Message-ID: <1408638203-8246-3-git-send-email-grygorii.strashko@ti.com>
-References: <53ECE9B1.4060303@ti.com>
- <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCHv3] thermal: exynos: Add support for TRIM_RELOAD feature at Exynos3250
+Date: Fri, 22 Aug 2014 01:24:10 +0900
+Message-ID: <CAGTfZH2r2hbn9d+3oENDZrSRtyHwUJXt8vjVKk0v=CKNQmLMQQ@mail.gmail.com>
+References: <1408450078-6296-1-git-send-email-cw00.choi@samsung.com>
+	<1408492364-8012-1-git-send-email-cw00.choi@samsung.com>
+	<CAC-25o9LjKwjBwwxcOvV75bXEHGdUh2vU=ae1STsXxD6q4YsiA@mail.gmail.com>
+	<53F54D86.9070601@samsung.com>
+	<53F5CACF.4050600@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, santosh.shilimkar@ti.com, Alexander Shiyan <shc_work@mail.ru>, linux-gpio@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <53F5CACF.4050600@suse.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, "edubezval@gmail.com" <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, "Valentin, Eduardo" <eduardo.valentin@ti.com>, Amit Kachhap <amit.daniel@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, l.majewski@samsung.com, naveen krishna <ch.naveen@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Keystone SOCs, ARM host can send interrupts to DSP cores using the
-DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
-each DSP core. This is one of the component used by the IPC mechanism used
-on Keystone SOCs.
+Dear Andreas,
 
-Keystone 2 DSP GPIO controller has specific features:
-- each GPIO can be configured only as output pin;
-- setting GPIO value to 1 causes IRQ generation on target DSP core;
-- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
-  pending.
+On Thu, Aug 21, 2014 at 7:32 PM, Andreas F=C3=A4rber <afaerber@suse.de>=
+ wrote:
+> Hello,
+>
+> Am 21.08.2014 03:38, schrieb Chanwoo Choi:
+>> On 08/20/2014 10:38 PM, edubezval@gmail.com wrote:
+>>> On Tue, Aug 19, 2014 at 7:52 PM, Chanwoo Choi <cw00.choi@samsung.co=
+m> wrote:
+>>>> diff --git a/drivers/thermal/samsung/exynos_tmu_data.c b/drivers/t=
+hermal/samsung/exynos_tmu_data.c
+>>>> index aa8e0de..8cd609c 100644
+>>>> --- a/drivers/thermal/samsung/exynos_tmu_data.c
+>>>> +++ b/drivers/thermal/samsung/exynos_tmu_data.c
+>>>> @@ -95,6 +95,8 @@ static const struct exynos_tmu_registers exynos3=
+250_tmu_registers =3D {
+>>>>         .triminfo_data =3D EXYNOS_TMU_REG_TRIMINFO,
+>>>>         .triminfo_25_shift =3D EXYNOS_TRIMINFO_25_SHIFT,
+>>>>         .triminfo_85_shift =3D EXYNOS_TRIMINFO_85_SHIFT,
+>>>> +       .triminfo_ctrl[0] =3D EXYNOS_TMU_TRIMINFO_CON1,
+>>>> +       .triminfo_ctrl[1] =3D EXYNOS_TMU_TRIMINFO_CON2,
+>>>>         .tmu_ctrl =3D EXYNOS_TMU_REG_CONTROL,
+>>>>         .test_mux_addr_shift =3D EXYNOS4412_MUX_ADDR_SHIFT,
+>>>>         .buf_vref_sel_shift =3D EXYNOS_TMU_REF_VOLTAGE_SHIFT,
+>>>> @@ -160,8 +162,11 @@ static const struct exynos_tmu_registers exyn=
+os3250_tmu_registers =3D {
+>>>>                 .temp_level =3D 95, \
+>>>>         }, \
+>>>>         .freq_tab_count =3D 2, \
+>>>> +       .triminfo_reload[0] =3D 0x1, \
+>>>> +       .triminfo_reload[1] =3D 0x11, \
+>>>
+>>> What does 0x1 mean? How about 0x11?
+>>
+>> The bit of 'RELOAD' field in TRIMINFO_CONTROL register is [0].
+>> and The bit of 'AC Time' field in TRIMINFO_CONTROL register is [5:4]=
+=2E
+>>
+>> 0x1 means that set RELOAD field.
+>> 0x11 means that set RELOAD field and ACTIME field.
+>
+> Might be a good idea to use #defines for 0x1 and 0x10 then?
 
-This patch updates gpio-syscon driver to be reused by Keystone 2 SoCs,
-because the Keystone 2 DSP GPIO controller is controlled through Syscon
-devices and, as requested by Linus Walleij, such kind of GPIO controllers
-should be integrated with drivers/gpio/gpio-syscon.c driver.
+I agree. I'm implementing it to use 'define' keyword.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- .../bindings/gpio/gpio-mctrl-keystone.txt          |   42 +++++++
- drivers/gpio/gpio-syscon.c                         |  131 ++++++++++++++++++++
- 2 files changed, 173 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mctrl-keystone.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mctrl-keystone.txt b/Documentation/devicetree/bindings/gpio/gpio-mctrl-keystone.txt
-new file mode 100644
-index 0000000..d3858aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mctrl-keystone.txt
-@@ -0,0 +1,42 @@
-+Keystone 2 DSP GPIO controller bindings
-+
-+HOST OS userland running on ARM can send interrupts to DSP cores using
-+the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
-+This is one of the component used by the IPC mechanism used on Keystone SOCs.
-+
-+For example TCI6638K2K SoC has 8 DSP GPIO controllers:
-+ - 8 for C66x CorePacx CPUs 0-7
-+
-+Keystone 2 DSP GPIO controller has specific features:
-+- each GPIO can be configured only as output pin;
-+- setting GPIO value to 1 causes IRQ generation on target DSP core;
-+- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
-+  pending.
-+
-+Required Properties:
-+- compatible: should be "ti,keystone-dsp-gpio0" or
-+			"ti,keystone-dsp-gpio1" or
-+			"ti,keystone-dsp-gpio2" or
-+			"ti,keystone-dsp-gpio3" or
-+			"ti,keystone-dsp-gpio4" or
-+			"ti,keystone-dsp-gpio5" or
-+			"ti,keystone-dsp-gpio6" or
-+			"ti,keystone-dsp-gpio7" or
-+- gpio-controller: Marks the device node as a gpio controller.
-+- #gpio-cells: Should be 2.
-+
-+Please refer to gpio.txt in this directory for details of the common GPIO
-+bindings used by client devices.
-+
-+Example:
-+	dspgpio0: keystone_dsp_gpio@02620240 {
-+		compatible = "ti,keystone-mctrl-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	dsp0: dsp0 {
-+		compatible = "linux,rproc-user";
-+		...
-+		kick-gpio = <&dspgpio0 27>;
-+	};
-diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 03b4699..0b5f998 100644
---- a/drivers/gpio/gpio-syscon.c
-+++ b/drivers/gpio/gpio-syscon.c
-@@ -133,11 +133,142 @@ static const struct syscon_gpio_data clps711x_mctrl_gpio = {
- 	.dat_bit_offset	= 0x40 * 8 + 8,
- };
- 
-+#ifdef CONFIG_ARCH_KEYSTONE
-+#define KEYSTONE_LOCK_BIT BIT(0)
-+
-+static void keystone_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
-+	unsigned int offs;
-+	int ret;
-+
-+	offs = priv->data->dat_bit_offset + offset;
-+
-+	if (!val)
-+		return;
-+
-+	ret = regmap_update_bits(
-+			priv->syscon,
-+			(offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-+			BIT(offs % SYSCON_REG_BITS) | KEYSTONE_LOCK_BIT,
-+			BIT(offs % SYSCON_REG_BITS) | KEYSTONE_LOCK_BIT);
-+	if (ret < 0)
-+		dev_err(chip->dev, "gpio write failed ret(%d)\n", ret);
-+}
-+
-+static const struct syscon_gpio_data keystone_dsp_gpio0 = {
-+	/* ARM Keystone 2 */
-+	.compatible	= "ti,keystone-devctrl",
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 0x240 * 8 + 4,
-+	.set		= keystone_gpio_set,
-+};
-+
-+static const struct syscon_gpio_data keystone_dsp_gpio1 = {
-+	/* ARM Keystone 2 */
-+	.compatible	= "ti,keystone-devctrl",
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 0x244 * 8 + 4,
-+	.set		= keystone_gpio_set,
-+};
-+
-+static const struct syscon_gpio_data keystone_dsp_gpio2 = {
-+	/* ARM Keystone 2 */
-+	.compatible	= "ti,keystone-devctrl",
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 0x248 * 8 + 4,
-+	.set		= keystone_gpio_set,
-+};
-+
-+static const struct syscon_gpio_data keystone_dsp_gpio3 = {
-+	/* ARM Keystone 2 */
-+	.compatible	= "ti,keystone-devctrl",
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 0x24c * 8 + 4,
-+	.set		= keystone_gpio_set,
-+};
-+
-+static const struct syscon_gpio_data keystone_dsp_gpio4 = {
-+	/* ARM Keystone 2 */
-+	.compatible	= "ti,keystone-devctrl",
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 0x250 * 8 + 4,
-+	.set		= keystone_gpio_set,
-+};
-+
-+static const struct syscon_gpio_data keystone_dsp_gpio5 = {
-+	/* ARM Keystone 2 */
-+	.compatible	= "ti,keystone-devctrl",
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 0x254 * 8 + 4,
-+	.set		= keystone_gpio_set,
-+};
-+
-+static const struct syscon_gpio_data keystone_dsp_gpio6 = {
-+	/* ARM Keystone 2 */
-+	.compatible	= "ti,keystone-devctrl",
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 0x258 * 8 + 4,
-+	.set		= keystone_gpio_set,
-+};
-+
-+static const struct syscon_gpio_data keystone_dsp_gpio7 = {
-+	/* ARM Keystone 2 */
-+	.compatible	= "ti,keystone-devctrl",
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 0x25c * 8 + 4,
-+	.set		= keystone_gpio_set,
-+};
-+
-+#endif
-+
- static const struct of_device_id syscon_gpio_ids[] = {
- 	{
- 		.compatible	= "cirrus,clps711x-mctrl-gpio",
- 		.data		= &clps711x_mctrl_gpio,
- 	},
-+#ifdef CONFIG_ARCH_KEYSTONE
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio0",
-+		.data		= &keystone_dsp_gpio0,
-+	},
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio1",
-+		.data		= &keystone_dsp_gpio1,
-+	},
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio2",
-+		.data		= &keystone_dsp_gpio2,
-+	},
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio3",
-+		.data		= &keystone_dsp_gpio3,
-+	},
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio4",
-+		.data		= &keystone_dsp_gpio5,
-+	},
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio5",
-+		.data		= &keystone_dsp_gpio6,
-+	},
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio6",
-+		.data		= &keystone_dsp_gpio6,
-+	},
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio7",
-+		.data		= &keystone_dsp_gpio7,
-+	},
-+#endif
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
--- 
-1.7.9.5
-
+Thanks,
+Chanwoo Choi
