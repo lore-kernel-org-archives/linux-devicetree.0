@@ -1,31 +1,74 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Handling commit change logs
-Date: Thu, 21 Aug 2014 09:56:43 +0530
-Message-ID: <CAOh2x=mO1r76fkvruvBLaL144G8fHgDPMwhKVCxv4HW8FRUE_Q@mail.gmail.com>
-References: <1408419205-10048-1-git-send-email-tuomas.tynkkynen@iki.fi>
-	<1408419205-10048-14-git-send-email-tuomas.tynkkynen@iki.fi>
-	<CAKohpokQOALPH13Ykz4nTBOby8J1X6_F30LNKz=gsC4wN3=3vg@mail.gmail.com>
-	<53F3A900.8010805@nvidia.com>
-	<CAKohponcZv9-MFNUQFxC_49-+P6QOhdjxsnYAyL3i4sXdCBYrw@mail.gmail.com>
-	<CABxcv=ncm3Y7Ecfymro6TOuP=d10OV5--8n=dYmHyj6zi8hwEw@mail.gmail.com>
-	<53F4FED4.7060408@suse.de>
-	<53F50554.3050505@wwwdotorg.org>
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/7] usb-phy: samsung: Cleanup the unused drivers
+Date: Thu, 21 Aug 2014 10:07:30 +0530
+Message-ID: <CAFp+6iHJeZsOY-FuamUacrM4yX47LRO8EwiZcUz_ojSmx2kAxg@mail.gmail.com>
+References: <1408026240-28365-1-git-send-email-gautam.vivek@samsung.com>
+	<20140820181406.GA6023@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53F50554.3050505-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tuomas Tynkkynen <tuomas.tynkkynen-X3B1VOXEql0@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140820181406.GA6023-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 21, 2014 at 2:00 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>=
- wrote:
-> On 08/20/2014 02:02 PM, Andreas F=E4rber wrote:
->> Am 20.08.2014 17:39, schrieb Javier Martinez Canillas:
->>> If this not the correct workflow and you have a better way to manag=
-e
->>> this, I would love to know about it.
+Hi Felipe,
 
-Oh yes, this was certainly useful. I was missing this (mis)feature :)
+
+On Wed, Aug 20, 2014 at 11:44 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
+>
+> On Thu, Aug 14, 2014 at 07:53:53PM +0530, Vivek Gautam wrote:
+>> - This series is based on 'usb-next' branch.
+>>
+>> Now that we have support for USB PHY controllers for Exynos SoC series,
+>> we are free to remove the older usb-phy support.
+>> In the process, we are removing the entire phy-samsung-usb3 driver, and
+>> besides that all support for Exynos4x and Exynos5 from phy-samsung-usb2
+>> driver.
+>>
+>> We have also removed the older USB-PHY support from ehci-exynos and ohci-exynos
+>> since those drivers now can use newer GENERIC-PHYs, and don't need the older
+>> USB-PHYs and related code anymore. These patches for ohci-exynos and ehci-exynos
+>> now replaces the older sent patch for phy sequence cleanup for them.[1]
+>>
+>> I have build-tested this series for exynos_defconfig and s3c64xx_defconfig,
+>> and have tested the EHCI and OHCI operations on smdk5250 board, but
+>> have not tested the actual working due to unavailability of S3C64XX
+>> board. So can someone please help me testing this series.
+>>
+>> [1] https://lkml.org/lkml/2014/8/5/142
+>>
+>> Vivek Gautam (7):
+>>   usb-phy: samsung-usb3: Remove older phy-samsung-usb3 driver
+>>   usb-phy: samsung-usb2: Remove support for Exynos5250
+>>   usb-phy: samsung-usb2: Remove support for Exynos4X12
+>>   usb-phy: samsung-usb2: Remove support for Exynos4210
+>>   usb-phy: samsung-usb2: Clean up to leave only S3C64XX support
+>>   usb: host: ehci-exynos: Remove unnecessary usb-phy support
+>>   usb: host: ohci-exynos: Remove unnecessary usb-phy support
+>
+> some of these patches are still RFC, can you resend without RFC and all
+> proper Acks in place ? Also rebased on top of v3.17-rc1.
+
+As per the discussion in thread [1], i am dropping the [Patch 1/7]
+till [Patch 5/7] since
+these are part of the cleanup series by Bart: [PATCH 0/5] usb: phy:
+samsung: remove old USB PHY code;
+and will send out the rebased remaining two patches with Alan's Ack.
+
+
+[1] https://lkml.org/lkml/2014/8/21/11
+
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
