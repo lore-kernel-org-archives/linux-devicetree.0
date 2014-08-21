@@ -1,27 +1,27 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 2/2] devicetree: Add Cadence WDT devicetree bindings
- documentation
-Date: Thu, 21 Aug 2014 12:00:40 -0700
-Message-ID: <20140821190040.GB17481@roeck-us.net>
-References: <1406788855-19074-1-git-send-email-harinik@xilinx.com>
- <1406788855-19074-2-git-send-email-harinik@xilinx.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V2 2/2] Input: misc: introduce palmas-pwrbutton
+Date: Thu, 21 Aug 2014 14:01:43 -0500
+Message-ID: <53F64217.5020303@ti.com>
+References: <1408392810-16011-1-git-send-email-nm@ti.com> <1408636935-29515-1-git-send-email-nm@ti.com> <1408636935-29515-3-git-send-email-nm@ti.com> <00FC9A978A94B7418C33AFAE8A35ED49DF0662@DFLE09.ent.ti.com> <53F62A2B.6010208@ti.com> <00FC9A978A94B7418C33AFAE8A35ED49DF07A2@DFLE09.ent.ti.com> <20140821173715.GA23419@kahuna> <20140821180300.GA5854@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406788855-19074-2-git-send-email-harinik@xilinx.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>
-Cc: wim@iguana.be, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michals@xilinx.com, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, harinikatakamlinux@gmail.com, svemula@xilinx.com, anirudh@xilinx.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140821180300.GA5854@core.coreip.homeip.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Murphy, Dan" <dmurphy@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 31, 2014 at 12:10:55PM +0530, Harini Katakam wrote:
-> Add cadence-wdt bindings documentation.
-> 
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+On 08/21/2014 01:03 PM, Dmitry Torokhov wrote:
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+I believe I have taken care of other concerns on v2, but..Arrgh.. I
+did not reply to this comment..
+> BTW, I do not think you need to use of_node_get/put here, it's not going anywhere.
+It has been mentioned as a good practice to ensure we use get_put in
+to ensure reference count is appropriately maintained. So, I have'nt
+changed that in v3.
 
-I assume this will require an Ack from a DT maintainer.
-
-Guenter
+-- 
+Regards,
+Nishanth Menon
