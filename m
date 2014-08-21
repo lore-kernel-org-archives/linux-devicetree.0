@@ -1,54 +1,97 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 3/3] [media] rc: remove change_protocol in rc-ir-raw.c
-Date: Thu, 21 Aug 2014 17:24:45 +0800
-Message-ID: <1408613086-12538-4-git-send-email-zhangfei.gao@linaro.org>
-References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408613086-12538-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?David=20H=C3=A4rdeman?= <david-0WFrdVpeebksCylrc8G9yg@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 00/11] drm: add support for Atmel HLCDC Display
+ Controller
+Date: Thu, 21 Aug 2014 11:41:59 +0200
+Message-ID: <20140821114159.319e741b@bbrezillon>
+References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20140821081619.GZ2452@ldesroches-Latitude-E6320>
+ <20140821103706.2349915d@bbrezillon> <20140821090406.GA13733@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140821090406.GA13733@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-With commit 4924a311a62f ("[media] rc-core: rename ir-raw.c"),
-empty change_protocol was introduced.
-As a result, rc_register_device will set dev->enabled_protocols
-addording to rc_map->rc_type, which prevent using all protocols.
+On Thu, 21 Aug 2014 11:04:07 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/media/rc/rc-ir-raw.c |    7 -------
- 1 file changed, 7 deletions(-)
+> On Thu, Aug 21, 2014 at 10:37:06AM +0200, Boris BREZILLON wrote:
+> > Hi Ludovic,
+> > 
+> > On Thu, 21 Aug 2014 10:16:19 +0200
+> > Ludovic Desroches <ludovic.desroches@atmel.com> wrote:
+> > 
+> > > Hi Boris,
+> > > 
+> > > You can add
+> > > 
+> > > Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+> > 
+> > Thanks for testing this driver.
+> > 
+> > > 
+> > > Only one issue but not related to your patches, you can't display
+> > > quickly the bootup logo since the panel detection takes too much
+> > > time.
+> > 
+> > Yes, actually this is related to the device probe order: the
+> > hlcdc-display-controller device is probed before the simple-panel, thus
+> > nothing is detected on the RGB connector (I use of_drm_find_panel to
+> > check for panel availability) when the display controller is
+> > instantiated. I rely on the default polling infrastructure provided by
+> > the DRM/KMS framework which polls for a new connector every 10s, and
+> > this is far more than you kernel boot time.
+> > 
+> > Do anyone see a solution to reduce this delay (without changing the
+> > polling interval). I thought we could add a notifier infrastructure to
+> > the DRM panel framework, but I'm not sure this is how you want things
+> > done...
+> 
+> Other drivers return -EPROBE_DEFER when a panel hasn't been registered
+> yet. This will automatically take care of ordering things in a way that
+> DRM/KMS will only be initialized after the panel has been probed.
 
-diff --git a/drivers/media/rc/rc-ir-raw.c b/drivers/media/rc/rc-ir-raw.c
-index e8fff2a..a118539 100644
---- a/drivers/media/rc/rc-ir-raw.c
-+++ b/drivers/media/rc/rc-ir-raw.c
-@@ -240,12 +240,6 @@ ir_raw_get_allowed_protocols(void)
- 	return protocols;
- }
- 
--static int change_protocol(struct rc_dev *dev, u64 *rc_type)
--{
--	/* the caller will update dev->enabled_protocols */
--	return 0;
--}
--
- /*
-  * Used to (un)register raw event clients
-  */
-@@ -263,7 +257,6 @@ int ir_raw_event_register(struct rc_dev *dev)
- 
- 	dev->raw->dev = dev;
- 	dev->enabled_protocols = ~0;
--	dev->change_protocol = change_protocol;
- 	rc = kfifo_alloc(&dev->raw->kfifo,
- 			 sizeof(struct ir_raw_event) * MAX_IR_EVENT_SIZE,
- 			 GFP_KERNEL);
+Actually I'd like to avoid doing this with a deferred probe, because,
+AFAIU, the remote endpoint is not tightly linked with the display
+controller driver (I mean the display controller can still be
+initialized without having a display connected on it).
+Moreover the atmel dev kit I'm using has an HDMI bridge connected on
+the same RGB connector and I'd like to use it in a near future.
+Returning -EPROBE_DEFER in case of several devices connected on the
+same connector implies that I'll have to wait for all the remote
+end-points to be available before my display controller could be
+instantiated.
+
+While this could be acceptable when all drivers are statically linked
+in the kernel, it might be problematic when you're using modules,
+meaning that you won't be able to display anything on your LCD panel
+until your HDMI bridge module has been loaded.
+
+> That
+> will still cause some delay before everything gets set up, but hopefully
+> less than what you're seeing now. There's also another thread where this
+> is being discussed because deferred probing is causing "unacceptable"
+> delays as well.
+
+Could you point this thread out to me please ?
+
+Best Regards,
+
+Boris
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
