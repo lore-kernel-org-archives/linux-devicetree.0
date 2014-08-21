@@ -1,191 +1,99 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 1/1] clk: ti: add support for external clock provider
-Date: Thu, 21 Aug 2014 16:42:26 +0300
-Message-ID: <53F5F742.6080506@ti.com>
-References: <1406898948-26113-1-git-send-email-t-kristo@ti.com> <1406898948-26113-2-git-send-email-t-kristo@ti.com> <20140819132232.GM3302@leverpostej> <53F450A2.2030609@ti.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] usb: dwc3: dwc3-st: Add st-dwc3 devicetree
+ bindings documentation
+Date: Thu, 21 Aug 2014 08:56:21 -0500
+Message-ID: <20140821135620.GD9608@saruman.home>
+References: <1406734091-16202-1-git-send-email-peter.griffin@linaro.org>
+ <1406734091-16202-3-git-send-email-peter.griffin@linaro.org>
+ <20140820180005.GU24500@saruman.home>
+ <20140821133340.GC17487@griffinp-ThinkPad-X1-Carbon-2nd>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53F450A2.2030609@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "sassmann@kpanic.de" <sassmann@kpanic.de>, "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "jsarha@ti.com" <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jCrbxBqMcLqd4mOl"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140821133340.GC17487@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/20/2014 10:39 AM, Tero Kristo wrote:
-> On 08/19/2014 04:22 PM, Mark Rutland wrote:
->> Hi Tero,
->>
->> On Fri, Aug 01, 2014 at 02:15:48PM +0100, Tero Kristo wrote:
->>> External clock provider can now be used to register external clocks
->>> under
->>> it. This is needed as the TI clock driver only registers clocks
->>> hierarchically under clock providers, and external clocks do not belong
->>> under any of the current ones.
->>
->> I must admit that I don't understand the justification for this binding.
->>
->> Why can't these clocks be descrbied elsewhere and wired up as usual? Why
->> must they be under the TI clock provide node?
->>
->>  From the limited description above it sounds like the only reason this
->> exists is to work around a deficiency in the TI clock driver. That does
->> not sound like a very good reason for having this.
->
-> I wouldn't call it a deficiency, but its by design due to need for
-> registering clocks and clock providers hierarchically.
->
-> I guess it might be possible to re-work the TI clock init to check for
-> the parent node, and if it is a clock provider, see if it has been
-> initialized or not. The clock provider maps the IO range so it must be
-> initialized before any clocks under it are initialized. I'll experiment
-> with this a bit and see how it works out.
+--jCrbxBqMcLqd4mOl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have an alternative approach for this now, posting a patch in a bit.
+On Thu, Aug 21, 2014 at 02:33:40PM +0100, Peter Griffin wrote:
+> Hi Felipe,
+>=20
+> Thanks for reviewing, see my comments below: -
+>=20
+> On Wed, 20 Aug 2014, Felipe Balbi wrote:
+>=20
+> > > +	dwc3: dwc3@9900000 {
+> > > +		compatible	=3D "snps,dwc3";
+> > > +		reg		=3D <0x09900000 0x100000>;
+> > > +		interrupts	=3D <GIC_SPI 155 IRQ_TYPE_NONE>;
+> > > +		dr_mode		=3D "host"
+> > > +		usb-phy		=3D <&usb3_phy>;
+> > > +		phy-names	=3D "usb2-phy";
+> > > +		phys		=3D <&usb2_picophy2>;
+> >=20
+> > why are you using different binding for usb2 and usb3 phys ? Why can't
+> > you just:
+> >=20
+> > 	phys-names	=3D "usb2-phy", "usb3-phy";
+> > 	phys		=3D <&usb2_picophy2>, <&usb3_phy>;
+> >=20
+> > ??
+>=20
+> Currently (in the vendor tree) one of the phys lives in
+> drivers/usb/phy and the other in drivers/phy.
+> I believe that is because one is only a usb phy and the other is a
+> multi function phy which can drive PCI-E or USB3.
 
--Tero
+right, but for mainline, we can have both PHYs in drivers/phy only.
 
->
->>
->> Thanks,
->> Mark.
->>
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> ---
->>>   .../devicetree/bindings/arm/omap/ext-clocks.txt    |   32
->>> ++++++++++++++++++++
->>>   arch/arm/mach-omap2/io.c                           |   12 ++++++--
->>>   drivers/clk/ti/clk.c                               |   23
->>> ++++++++++++++
->>>   include/linux/clk/ti.h                             |    2 ++
->>>   4 files changed, 67 insertions(+), 2 deletions(-)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/arm/omap/ext-clocks.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/arm/omap/ext-clocks.txt
->>> b/Documentation/devicetree/bindings/arm/omap/ext-clocks.txt
->>> new file mode 100644
->>> index 0000000..8e784bb
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/omap/ext-clocks.txt
->>> @@ -0,0 +1,32 @@
->>> +TI external clock provider properties
->>> +
->>> +External clock provider is used to group SoC external board specific
->>> +clock nodes. A separate provider node is required as the TI clock
->>> +driver registers clocks hierarchically.
->>> +
->>> +Required properties:
->>> +- compatible:        Shall be: "ti,external-clocks"
->>> +- clocks:        Contains the external clocks for the board
->>> +- clockdomains:        Contains the external clockdomains for the board
->>> +
->>> +Example:
->>> +
->>> +ext_clocks {
->>> +    compatible = "ti,external-clocks";
->>> +
->>> +    ext_clocks: clocks {
->>> +    };
->>> +
->>> +    ext_clockdomains: clockdomains {
->>> +    };
->>> +};
->>> +
->>> +...
->>> +
->>> +&ext_clocks {
->>> +    gpio_test_clock {
->>> +        compatible = "gpio-clock";
->>> +        #clock-cells = <0>;
->>> +        enable-gpios = <&gpio5 25 GPIO_ACTIVE_HIGH>;
->>> +    };
->>> +};
->>> diff --git a/arch/arm/mach-omap2/io.c b/arch/arm/mach-omap2/io.c
->>> index 8f55945..77be18b 100644
->>> --- a/arch/arm/mach-omap2/io.c
->>> +++ b/arch/arm/mach-omap2/io.c
->>> @@ -21,6 +21,8 @@
->>>   #include <linux/init.h>
->>>   #include <linux/io.h>
->>>   #include <linux/clk.h>
->>> +#include <linux/clk-provider.h>
->>> +#include <linux/clk/ti.h>
->>>
->>>   #include <asm/tlb.h>
->>>   #include <asm/mach/map.h>
->>> @@ -729,8 +731,14 @@ int __init omap_clk_init(void)
->>>           return 0;
->>>
->>>       ret = of_prcm_init();
->>> -    if (!ret)
->>> -        ret = omap_clk_soc_init();
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    ret = ti_dt_clk_ext_init();
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    ret = omap_clk_soc_init();
->>>
->>>       return ret;
->>>   }
->>> diff --git a/drivers/clk/ti/clk.c b/drivers/clk/ti/clk.c
->>> index b1a6f71..c84ce4d 100644
->>> --- a/drivers/clk/ti/clk.c
->>> +++ b/drivers/clk/ti/clk.c
->>> @@ -165,3 +165,26 @@ void ti_dt_clk_init_provider(struct device_node
->>> *parent, int index)
->>>           kfree(retry);
->>>       }
->>>   }
->>> +
->>> +static struct of_device_id ti_ext_clk_match_table[] = {
->>> +    { .compatible = "ti,external-clocks" },
->>> +    { }
->>> +};
->>> +
->>> +/**
->>> + * ti_dt_clk_ext_init - initialize external clocks from DT
->>> + *
->>> + * Some clocks are provided from external chips outside the main SoC.
->>> + * The details for these are given under a special DT node, which will
->>> + * be parsed by this function.
->>> + */
->>> +int ti_dt_clk_ext_init(void)
->>> +{
->>> +    struct device_node *np;
->>> +
->>> +    for_each_matching_node(np, ti_ext_clk_match_table) {
->>> +        ti_dt_clk_init_provider(np, -1);
->>> +    }
->>> +
->>> +    return 0;
->>> +}
->>> diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
->>> index e8d8a35..188270c 100644
->>> --- a/include/linux/clk/ti.h
->>> +++ b/include/linux/clk/ti.h
->>> @@ -310,6 +310,8 @@ int am43xx_dt_clk_init(void);
->>>   int omap2420_dt_clk_init(void);
->>>   int omap2430_dt_clk_init(void);
->>>
->>> +int ti_dt_clk_ext_init(void);
->>> +
->>>   #ifdef CONFIG_OF
->>>   void of_ti_clk_allow_autoidle_all(void);
->>>   void of_ti_clk_deny_autoidle_all(void);
->>> --
->>> 1.7.9.5
->>>
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->>> the body of a message to majordomo@vger.kernel.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>>
->
+> So to make that work, when dwc3/core.c gets the PHYS in
+> dwc3_core_get_phy() we need to use the different bindings.
+>=20
+> I think we are the only platform using "one of each", but luckily
+> dwc3_core_get_phy() has been written generically enough that it "just
+> works" :-).
 
+true, but I want to drop support for the legacy drivers/usb/phy layer
+=66rom dwc3. I'll try to move all PHYs to drivers/phy for v3.18.
+
+cheers
+
+--=20
+balbi
+
+--jCrbxBqMcLqd4mOl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJT9fqEAAoJEIaOsuA1yqREOKQP/0KFTFCvTtlcv5iiMGx5d+Wz
+LK4xUha5vJ1khKD7OYkHj3IvNsllwwBUp8zU+Qek25V+3CCrMn9kYJFTsaYDInrm
+/6PxMhy9iXmIUW5pk4gIUGmBc+kLKZeqZxuYr2u/uSC2OQ+ANpI/fA865kFr6o6k
+Rl0sWvEV78xC1e1uWvh7nPSKWIxGDwIQfqjji5BbnvCXuih9MER8MiUaVKVJO8J9
+voj1xGsxRbKAil6AnbUAGzVOgoYJwCztLEonNLc5cwsm+WcoNgnSqNI2sZGJJxUV
+w922WkTn3Da/ZU9b/BXNm33SaXRISYrZtLHQGO7tAlIP/Bax00EF79MOpb8aEFQ3
+iS06mwWDLEWRrh/9Jthay1lxSNauTDy3Lc04AFv/oPILyfX9qdsCcpeXVoE3UbiT
+7vfAmfAY2NfRJ84W27R5DERa93inzrTCzWP+BzNQZiCWgA74vHvYhEMLGYZThLTY
+1CmN30grdJNTk8qTWrv4Q5AsXs+52kBTO407Liy3vMtn2eKryULghSx9ttiHn4VR
+dOWFSGEclrsBOhbKNgSXP1vpM6ZyJZ0e3b8NTbFiZcySsjH2vWo0acPRAYvkrbK6
+kyE1+vjNtETeVvbIIOmAc5NMqISXyEgBibyrg8fHIJLwsJmEucBANjZNAsmW92EA
+OHl0lAflys3AAS/AYDb3
+=QkHf
+-----END PGP SIGNATURE-----
+
+--jCrbxBqMcLqd4mOl--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
