@@ -1,450 +1,171 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 2/2] Input: misc: introduce palmas-pwrbutton
-Date: Thu, 21 Aug 2014 11:02:15 -0500
-Message-ID: <1408636935-29515-3-git-send-email-nm@ti.com>
-References: <1408392810-16011-1-git-send-email-nm@ti.com>
- <1408636935-29515-1-git-send-email-nm@ti.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v4 00/11] drm: add support for Atmel HLCDC Display
+ Controller
+Date: Thu, 21 Aug 2014 18:10:54 +0200
+Message-ID: <53F61A0E.5030104@samsung.com>
+References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20140821081619.GZ2452@ldesroches-Latitude-E6320>
+ <20140821103706.2349915d@bbrezillon> <20140821090406.GA13733@ulmo>
+ <20140821114159.319e741b@bbrezillon> <20140821095202.GA21848@ulmo>
+ <53F5CACB.5010706@samsung.com> <20140821132124.GB19293@ulmo.nvidia.com>
+ <53F60A82.8090903@samsung.com> <20140821173040.4faa933d@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1408636935-29515-1-git-send-email-nm@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Torokhov <dtor@mail.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140821173040.4faa933d@bbrezillon>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@atmel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Lee Jones <lee.jones@linaro.org>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Many palmas family of PMICs have support for interrupt based power
-button. This allows the device to notify the processor of external
-push button events over the shared palmas interrupt. However, this
-event is generated only during a "press" operation. Software is
-supposed to poll(sigh!) for detecting a release event.
+On 08/21/2014 05:30 PM, Boris BREZILLON wrote:
+> On Thu, 21 Aug 2014 17:04:34 +0200
+> Andrzej Hajda <a.hajda@samsung.com> wrote:
+>
+>> On 08/21/2014 03:21 PM, Thierry Reding wrote:
+>>> On Thu, Aug 21, 2014 at 12:32:43PM +0200, Andrzej Hajda wrote:
+>>>> On 08/21/2014 11:52 AM, Thierry Reding wrote:
+>>>>> On Thu, Aug 21, 2014 at 11:41:59AM +0200, Boris BREZILLON wrote:
+>>>>>> On Thu, 21 Aug 2014 11:04:07 +0200
+>>>>>> Thierry Reding <thierry.reding@gmail.com> wrote:
+>>>>>>
+>>>>>>> On Thu, Aug 21, 2014 at 10:37:06AM +0200, Boris BREZILLON wrote:
+>>>>>>>> Hi Ludovic,
+>>>>>>>>
+>>>>>>>> On Thu, 21 Aug 2014 10:16:19 +0200
+>>>>>>>> Ludovic Desroches <ludovic.desroches@atmel.com> wrote:
+>>>>>>>>
+>>>>>>>>> Hi Boris,
+>>>>>>>>>
+>>>>>>>>> You can add
+>>>>>>>>>
+>>>>>>>>> Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+>>>>>>>> Thanks for testing this driver.
+>>>>>>>>
+>>>>>>>>> Only one issue but not related to your patches, you can't display
+>>>>>>>>> quickly the bootup logo since the panel detection takes too much
+>>>>>>>>> time.
+>>>>>>>> Yes, actually this is related to the device probe order: the
+>>>>>>>> hlcdc-display-controller device is probed before the simple-panel, thus
+>>>>>>>> nothing is detected on the RGB connector (I use of_drm_find_panel to
+>>>>>>>> check for panel availability) when the display controller is
+>>>>>>>> instantiated. I rely on the default polling infrastructure provided by
+>>>>>>>> the DRM/KMS framework which polls for a new connector every 10s, and
+>>>>>>>> this is far more than you kernel boot time.
+>>>>>>>>
+>>>>>>>> Do anyone see a solution to reduce this delay (without changing the
+>>>>>>>> polling interval). I thought we could add a notifier infrastructure to
+>>>>>>>> the DRM panel framework, but I'm not sure this is how you want things
+>>>>>>>> done...
+>>>>>>> Other drivers return -EPROBE_DEFER when a panel hasn't been registered
+>>>>>>> yet. This will automatically take care of ordering things in a way that
+>>>>>>> DRM/KMS will only be initialized after the panel has been probed.
+>>>>>> Actually I'd like to avoid doing this with a deferred probe, because,
+>>>>>> AFAIU, the remote endpoint is not tightly linked with the display
+>>>>>> controller driver (I mean the display controller can still be
+>>>>>> initialized without having a display connected on it).
+>>>>>> Moreover the atmel dev kit I'm using has an HDMI bridge connected on
+>>>>>> the same RGB connector and I'd like to use it in a near future.
+>>>>>> Returning -EPROBE_DEFER in case of several devices connected on the
+>>>>>> same connector implies that I'll have to wait for all the remote
+>>>>>> end-points to be available before my display controller could be
+>>>>>> instantiated.
+>>>>>>
+>>>>>> While this could be acceptable when all drivers are statically linked
+>>>>>> in the kernel, it might be problematic when you're using modules,
+>>>>>> meaning that you won't be able to display anything on your LCD panel
+>>>>>> until your HDMI bridge module has been loaded.
+>>>>> No. HDMI should be using proper hotplugging anyway, hence it should be
+>>>>> always be loaded anyway. You're in for a world of pain if you think you
+>>>>> can run DRM with a driver that's composed of separate kernel modules.
+>>>>>
+>>>>> Also if you don't want to use deferred probe, then you're in for the
+>>>>> full hotplugging panel dance and that implies that you need to fix a
+>>>>> bunch of things in DRM (one being the framebuffer console instantiation
+>>>>> that I referred to in the other thread). You also can't be using the
+>>>>> current device tree bindings because they all assume a dependency from
+>>>>> the display controller/output to the panel. For hotplugging you'd need
+>>>>> the dependency the other way around (the panel needs to refer to the
+>>>>> output by phandle).
+>>>> I have tested panel as a module in exynos-dsi + panel-s6e8aa0
+>>>> configuration, everything works. There is a workaround for fb console
+>>>> not being reconfigurable, but it does not make thing worse than before.
+>>>> And I do not see a problem with phandles, ie in DT they point both ways,
+>>>> according to binding advices at the time, but in the code it is display
+>>>> controller/encoder which is looking for the panel.
+>>> That works because it's DSI. And we have attach/detach callbacks for
+>>> DSI. We don't have those for regular panels, so we'd need to find a way
+>>> to add that.
+>> Maybe I have misread your answer, but you showed it as very
+>> difficult/painful
+>> process: "hotplugging panel dance", "fix a bunch of things in DRM". In fact
+>> we are missing here only good notifications about panel appearance.
+>>
+>>> The way that this currently works is that an encoder/connector driver
+>>> looks up the panel and attaches it to itself. If you allow panels to be
+>>> hotpluggable, then they have no knowledge about what they are connected
+>>> to, so there needs to be a way to inject that knowledge so that they can
+>>> attach to a connector.
+>> I do not understand that. Currently it is the connector who looks for
+>> the panel
+>> and attaches it.
+>> So the scenario, after adding panel tracking, could be:
+>>  - encoder parses its phandle to panel, and start tracking appearance of
+>> the panel
+>> identified by this phandle,
+>>  - when panel appears encoder callback is called, and encoder attaches
+>> the panel,
+>>  - when panel wants to disappear encoder callback is called, encoder
+>> detaches the panel.
+>>
+>> All this I have already presented together with generic interface
+>> tracker [1].
+> Well, your attempt at doing a generic tracker framework sounds
+> interesting, but given the answer you've got from greg-kh and Russel,
+> I'd say this patch series is in a dead-end (unless there are other
+> versions I haven't seen yet).
 
-The PMIC also supports ability to power off independent of the
-software decisions when the button is pressed for a long duration if
-the PMIC is appropriately configured on the platform.
+As I remember I have positively answered Russel's concerns.
+Greg had only concern in style 'why another framework'.
 
-Even though the function is similar to twl4030_pwrbutton, it is
-substantially different in operation to belong to a new driver of it's
-own.
+>
+> How about implementing a specific notifier interface for the drm_panel
+> framework first, and move to your generic implementation if it gets
+> accepted.
 
-Based on original work done by Girish S Ghongdemath <girishsg@ti.com>
+The interface tracker can be also used for that as well, ie it can be
+added to
+drm_panel framework, until it wont be accepted for wider set of clients.
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-Changes in v2:
- - review comments incorporated
- - debounce programming for TWL variants that actually support it.
-V1: https://patchwork.kernel.org/patch/4739041/
+>
+> These are the two proposal I sent to Thierry:
+>
+> http://code.bulix.org/scq4g3-86804 (v1)
+>
+> and
+>
+> http://code.bulix.org/7urh8v-86806 (v2)
+>
+> Feel free to propose any alternative to those implementations.
+>
+> Best Regards,
+>
+> Boris
+>
+>
+After quick look at the patches I guess they will not work correctly
+if panel will be added before the observer registration.
+Btw in case of other proposals could you include them in the mail,
+my company firewall does not like http://code.bulix.org/.
 
- drivers/input/misc/Kconfig            |   10 +
- drivers/input/misc/Makefile           |    1 +
- drivers/input/misc/palmas-pwrbutton.c |  356 +++++++++++++++++++++++++++++++++
- 3 files changed, 367 insertions(+)
- create mode 100644 drivers/input/misc/palmas-pwrbutton.c
-
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 2ff4425..0224dcf 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -451,6 +451,16 @@ config HP_SDC_RTC
- 	  Say Y here if you want to support the built-in real time clock
- 	  of the HP SDC controller.
- 
-+config INPUT_PALMAS_PWRBUTTON
-+	tristate "Palmas Power button Driver"
-+	depends on MFD_PALMAS
-+	help
-+	  Say Y here if you want to enable power key reporting via the
-+	  Palmas family of PMICs.
-+
-+	  To compile this driver as a module, choose M here. The module will
-+	  be called palmas_pwrbutton.
-+
- config INPUT_PCF50633_PMU
- 	tristate "PCF50633 PMU events"
- 	depends on MFD_PCF50633
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 4955ad3..e3d5efb 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_INPUT_MAX8997_HAPTIC)	+= max8997_haptic.o
- obj-$(CONFIG_INPUT_MC13783_PWRBUTTON)	+= mc13783-pwrbutton.o
- obj-$(CONFIG_INPUT_MMA8450)		+= mma8450.o
- obj-$(CONFIG_INPUT_MPU3050)		+= mpu3050.o
-+obj-$(CONFIG_INPUT_PALMAS_PWRBUTTON)	+= palmas-pwrbutton.o
- obj-$(CONFIG_INPUT_PCAP)		+= pcap_keys.o
- obj-$(CONFIG_INPUT_PCF50633_PMU)	+= pcf50633-input.o
- obj-$(CONFIG_INPUT_PCF8574)		+= pcf8574_keypad.o
-diff --git a/drivers/input/misc/palmas-pwrbutton.c b/drivers/input/misc/palmas-pwrbutton.c
-new file mode 100644
-index 0000000..fb8bfc5
---- /dev/null
-+++ b/drivers/input/misc/palmas-pwrbutton.c
-@@ -0,0 +1,356 @@
-+/*
-+ * Texas Instruments' Palmas Power Button Input Driver
-+ *
-+ * Copyright (C) 2012-2014 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Girish S Ghongdemath
-+ *	Nishanth Menon
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/palmas.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/slab.h>
-+
-+#define PALMAS_LPK_TIME_MASK		0x0c
-+#define PALMAS_PWRON_DEBOUNCE_MASK	0x03
-+#define PALMAS_PWR_KEY_PRESS		0x01
-+#define PALMAS_PWR_KEY_Q_TIME_MS	20
-+
-+/**
-+ * struct palmas_pwron - Palmas power on data
-+ * @palmas:		pointer to palmas device
-+ * @input_dev:		pointer to input device
-+ * @irq:		irq that we are hooked on to
-+ * @input_work:		work for detecting release of key
-+ * @current_state:	key current state
-+ * @key_recheck_ms:	duration for recheck of key (in milli-seconds)
-+ */
-+struct palmas_pwron {
-+	struct palmas *palmas;
-+	struct input_dev *input_dev;
-+	int irq;
-+	struct delayed_work input_work;
-+	int current_state;
-+	u32 key_recheck_ms;
-+};
-+
-+/**
-+ * struct palmas_pwron_config - configuration of palmas power on
-+ * @long_press_time_val:	value for long press h/w shutdown event
-+ * @pwron_debounce_val:		value for debounce of power button
-+ */
-+struct palmas_pwron_config {
-+	u8 long_press_time_val;
-+	u8 pwron_debounce_val;
-+};
-+
-+/**
-+ * palmas_get_pwr_state() - read button state
-+ * @pwron: pointer to pwron struct
-+ *
-+ * Return: 0 for no press, PALMAS_PWR_KEY_PRESS for keypress
-+ * and on error, appropriate error value.
-+ */
-+static int palmas_get_pwr_state(struct palmas_pwron *pwron)
-+{
-+	struct input_dev *input_dev = pwron->input_dev;
-+	struct device *dev = input_dev->dev.parent;
-+	unsigned int reg = 0;
-+	int ret;
-+
-+	ret = palmas_read(pwron->palmas, PALMAS_INTERRUPT_BASE,
-+			  PALMAS_INT1_LINE_STATE, &reg);
-+	if (ret) {
-+		dev_err(dev, "%s:Cannot read palmas PWRON status(%d)\n",
-+			__func__, ret);
-+		return ret;
-+	}
-+
-+	/* PWRON line state is BIT(1) of the register */
-+	return reg & BIT(1) ? 0 : PALMAS_PWR_KEY_PRESS;
-+}
-+
-+/**
-+ * palmas_power_button_work() - Detects the button release event
-+ * @work:	work item to detect button release
-+ */
-+static void palmas_power_button_work(struct work_struct *work)
-+{
-+	struct palmas_pwron *pwron = container_of((struct delayed_work *)work,
-+						  struct palmas_pwron,
-+						  input_work);
-+	struct input_dev *input_dev = pwron->input_dev;
-+	int next_state;
-+
-+	next_state = palmas_get_pwr_state(pwron);
-+	if (next_state < 0)
-+		return;
-+
-+	/*
-+	 * If the state did not change then schedule a work item to check the
-+	 * status of the power button line
-+	 */
-+	if (next_state == pwron->current_state) {
-+		schedule_delayed_work(&pwron->input_work,
-+				      msecs_to_jiffies(pwron->key_recheck_ms));
-+		return;
-+	}
-+
-+	pwron->current_state = next_state;
-+	input_report_key(input_dev, KEY_POWER, pwron->current_state);
-+	input_sync(input_dev);
-+}
-+
-+/**
-+ * pwron_irq() - button press isr
-+ * @irq:		irq
-+ * @palmas_pwron:	pwron struct
-+ *
-+ * Return: IRQ_HANDLED
-+ */
-+static irqreturn_t pwron_irq(int irq, void *palmas_pwron)
-+{
-+	struct palmas_pwron *pwron = palmas_pwron;
-+	struct input_dev *input_dev = pwron->input_dev;
-+
-+	pwron->current_state = PALMAS_PWR_KEY_PRESS;
-+
-+	input_report_key(input_dev, KEY_POWER, pwron->current_state);
-+	pm_wakeup_event(input_dev->dev.parent, 0);
-+	input_sync(input_dev);
-+
-+	mod_delayed_work(system_wq, &pwron->input_work,
-+			 msecs_to_jiffies(pwron->key_recheck_ms));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/**
-+ * palmas_pwron_params_ofinit() - device tree parameter parser
-+ * @dev:	palmas button device
-+ * @config:	configuration params that this fills up
-+ */
-+static void palmas_pwron_params_ofinit(struct device *dev,
-+				       struct palmas_pwron_config *config)
-+{
-+	struct device_node *np;
-+	u32 val;
-+	int i;
-+	u8 lpk_times[] = { 6, 8, 10, 12 };
-+	int pwr_on_deb_ms[] = { 15, 100, 500, 1000 };
-+
-+	/* Legacy boot? */
-+	if (!of_have_populated_dt())
-+		return;
-+
-+	np = of_node_get(dev->of_node);
-+	/* Mixed boot? */
-+	if (!np)
-+		return;
-+
-+	val = 0;
-+	of_property_read_u32(np, "ti,palmas-long-press-seconds", &val);
-+	config->long_press_time_val = ARRAY_SIZE(lpk_times) - 1;
-+	for (i = 0; i < ARRAY_SIZE(lpk_times); i++) {
-+		if (val <= lpk_times[i]) {
-+			config->long_press_time_val = i;
-+			break;
-+		}
-+	}
-+
-+	val = 0;
-+	of_property_read_u32(np, "ti,palmas-pwron-debounce-milli-seconds",
-+			     &val);
-+	config->pwron_debounce_val = 0;
-+	for (i = 0; i < ARRAY_SIZE(pwr_on_deb_ms); i++) {
-+		if (val <= pwr_on_deb_ms[i]) {
-+			config->pwron_debounce_val = i;
-+			break;
-+		}
-+	}
-+
-+	dev_info(dev, "h/w controlled shutdown duration=%d seconds\n",
-+		 lpk_times[config->long_press_time_val]);
-+
-+	of_node_put(np);
-+}
-+
-+/**
-+ * palmas_pwron_probe() - probe
-+ * @pdev:	platform device for the button
-+ *
-+ * Return: 0 for successful probe else appropriate error
-+ */
-+static int palmas_pwron_probe(struct platform_device *pdev)
-+{
-+	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
-+	struct device *dev = &pdev->dev;
-+	struct input_dev *input_dev;
-+	struct palmas_pwron *pwron;
-+	int irq, ret, val;
-+	struct palmas_pwron_config config = { 0 };
-+
-+	palmas_pwron_params_ofinit(dev, &config);
-+
-+	pwron = devm_kzalloc(dev, sizeof(*pwron), GFP_KERNEL);
-+	if (!pwron)
-+		return -ENOMEM;
-+
-+	input_dev = devm_input_allocate_device(dev);
-+	if (!input_dev) {
-+		dev_err(dev, "Can't allocate power button\n");
-+		return -ENOMEM;
-+	}
-+
-+	/*
-+	 * Setup default hardware shutdown option (long key press)
-+	 * and debounce.
-+	 */
-+	val = config.long_press_time_val << __ffs(PALMAS_LPK_TIME_MASK);
-+	val |= config.pwron_debounce_val << __ffs(PALMAS_PWRON_DEBOUNCE_MASK);
-+	ret = palmas_update_bits(palmas, PALMAS_PMU_CONTROL_BASE,
-+				 PALMAS_LONG_PRESS_KEY,
-+				 PALMAS_LPK_TIME_MASK |
-+				 PALMAS_PWRON_DEBOUNCE_MASK, val);
-+	if (ret < 0) {
-+		dev_err(dev, "LONG_PRESS_KEY_UPDATE failed!\n");
-+		return ret;
-+	}
-+
-+	input_dev->evbit[0] = BIT_MASK(EV_KEY);
-+	input_dev->keybit[BIT_WORD(KEY_POWER)] = BIT_MASK(KEY_POWER);
-+	input_dev->name = "palmas_pwron";
-+	input_dev->phys = "palmas_pwron/input0";
-+	input_dev->dev.parent = dev;
-+
-+	pwron->palmas = palmas;
-+	pwron->input_dev = input_dev;
-+
-+	INIT_DELAYED_WORK(&pwron->input_work, palmas_power_button_work);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	ret = request_threaded_irq(irq, NULL, pwron_irq,
-+				   IRQF_TRIGGER_HIGH |
-+				   IRQF_TRIGGER_LOW, dev_name(dev), pwron);
-+	if (ret < 0) {
-+		dev_err(dev, "Can't get IRQ for pwron: %d\n", ret);
-+		return ret;
-+	}
-+
-+	device_init_wakeup(dev, true);
-+
-+	ret = input_register_device(input_dev);
-+	if (ret) {
-+		free_irq(irq, pwron);
-+		cancel_delayed_work_sync(&pwron->input_work);
-+		dev_dbg(dev, "Can't register power button: %d\n", ret);
-+		return ret;
-+	}
-+	pwron->irq = irq;
-+
-+	pwron->key_recheck_ms = PALMAS_PWR_KEY_Q_TIME_MS;
-+
-+	platform_set_drvdata(pdev, pwron);
-+
-+	return 0;
-+}
-+
-+/**
-+ * palmas_pwron_remove() - Cleanup on removal
-+ * @pdev:	platform device for the button
-+ *
-+ * Return: 0
-+ */
-+static int palmas_pwron_remove(struct platform_device *pdev)
-+{
-+	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
-+
-+	free_irq(pwron->irq, pwron);
-+	cancel_delayed_work_sync(&pwron->input_work);
-+	input_unregister_device(pwron->input_dev);
-+
-+	return 0;
-+}
-+
-+/**
-+ * palmas_pwron_suspend() - suspend handler
-+ * @dev:	power button device
-+ *
-+ * Cancel all pending work items for the power button, setup irq for wakeup
-+ *
-+ * Return: 0
-+ */
-+static int palmas_pwron_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
-+
-+	cancel_delayed_work_sync(&pwron->input_work);
-+
-+	if (device_may_wakeup(dev))
-+		enable_irq_wake(pwron->irq);
-+
-+	return 0;
-+}
-+
-+/**
-+ * palmas_pwron_resume() - resume handler
-+ * @dev:	power button device
-+ *
-+ * Just disable the wakeup capability of irq here.
-+ *
-+ * Return: 0
-+ */
-+static int palmas_pwron_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct palmas_pwron *pwron = platform_get_drvdata(pdev);
-+
-+	if (device_may_wakeup(dev))
-+		disable_irq_wake(pwron->irq);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(palmas_pwron_pm,
-+			 palmas_pwron_suspend, palmas_pwron_resume);
-+
-+#ifdef CONFIG_OF
-+static struct of_device_id of_palmas_pwr_match[] = {
-+	{.compatible = "ti,palmas-pwrbutton"},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_palmas_pwr_match);
-+#endif
-+
-+static struct platform_driver palmas_pwron_driver = {
-+	.probe = palmas_pwron_probe,
-+	.remove = palmas_pwron_remove,
-+	.driver = {
-+		   .name = "palmas_pwrbutton",
-+		   .owner = THIS_MODULE,
-+		   .of_match_table = of_match_ptr(of_palmas_pwr_match),
-+		   .pm = &palmas_pwron_pm,
-+	},
-+};
-+module_platform_driver(palmas_pwron_driver);
-+
-+MODULE_ALIAS("platform:palmas-pwrbutton");
-+MODULE_DESCRIPTION("Palmas Power Button");
-+MODULE_LICENSE("GPL V2");
-+MODULE_AUTHOR("Texas Instruments Inc.");
--- 
-1.7.9.5
+Regards
+Andrzej
