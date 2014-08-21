@@ -1,56 +1,61 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] Regulator: RK808: Add regulator driver for RK808
-Date: Thu, 21 Aug 2014 09:47:43 -0500
-Message-ID: <20140821144743.GG24407@sirena.org.uk>
-References: <1408628104-16314-1-git-send-email-zyw@rock-chips.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [RESEND PATCH v2 4/4] dt-bindings: add bindings for mediatek intpol
+Date: Thu, 21 Aug 2014 17:02:18 +0200
+Message-ID: <CABuKBeJ0OsaBex_5D9tazTVZX1T8pnUjG7v0nVay-jzqL2nuqQ@mail.gmail.com>
+References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
+	<1407895884-18131-5-git-send-email-srv_yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+Pu8h6CsJtbukPM9"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408628104-16314-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1407895884-18131-5-git-send-email-srv_yingjoe.chen@mediatek.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Joe.C" <srv_yingjoe.chen@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Olof Johansson <olof@lixom.net>, Jonas Jensen <jonas.jensen@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Yingjoe Chen <yingjoe.chen@gmail.com>, Hsien-Chun Yen <hc.yen@mediatek.com>, =?UTF-8?B?RWRkaWU
 List-Id: devicetree@vger.kernel.org
 
+2014-08-13 4:11 GMT+02:00 Joe.C <srv_yingjoe.chen@mediatek.com>:
+> From: "Joe.C" <yingjoe.chen@mediatek.com>
+>
+> Add binding documentation for Mediatek SoC GIC interrupt polarity extension.
+>
+> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+> ---
+>  .../bindings/interrupt-controller/mediatek,intpol.txt    | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt
 
---+Pu8h6CsJtbukPM9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think the place for the file should be in
+Documentation/devicetree/bindings/arm/mediatek/mediatek,intpol.txt as
+it is a interrupt-controller extension of the mediatek architecture.
 
-On Thu, Aug 21, 2014 at 09:35:04PM +0800, Chris Zhong wrote:
-> The regulator module consists of 4 DCDCs, 8 LDOs and 2 switches.
-> The output voltages are configurable and are meant to supply power
-> to the main processor and other components
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt
+> new file mode 100644
+> index 0000000..16ea372
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt
+> @@ -0,0 +1,16 @@
+> +Mediatek 65xx/81xx GIC interrupt polarity extension
+> +
+> +Mediatek SOCs contain controllable inverter for each GIC SPI interrupt,
+> +these can be used as GIC interrupt polarity extension.
+> +
+> +Required properties:
+> +- compatible: Compatible property value should be "mediatek,mt6577-intpol"
+> +
+> +- reg: Physical base address of the int pol registers and length of memory
+> +  mapped region.
+> +
+> +Example:
+> +       intpol: intpol@10200100 {
+> +               compatible = "mediatek,mt6577-intpol";
+> +               reg = <0x10200100 0x1c>;
+> +       };
+> --
+> 1.8.1.1.dirty
+>
 
-I've already applied this, please send an incremental patch against the
-current regulator tree with any fixes.
 
---+Pu8h6CsJtbukPM9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT9gaHAAoJELSic+t+oim9U3EP/ibS1dvB262ySQoGhfaSpUsN
-CnaeYGmrMeLcZp/eQ2G6Pvz4IQQSHFd7QSWxGbp8y42OhuTjmm6sqJysKikfrp4i
-o4trMw8iQyMW1tP85cb/LdtEVdX2JySpes2tWRUCeWJ49Pu2cIXGuLi9rdwAO5H7
-FATnBkhY6aN9iOWeS4DUL/9eMxoII5BwcFYenFYhOdD+5GZvNTfS2BXGlBkMUpLG
-Bzq/VXUusEPlb4OLo/R5lB9My8IuMx/lFkW4asNHwb/y1P9/rt0UYwirtsTjx8CY
-VPE6GuBKAWUkhR8XUOr8AASPlysZVPizJcU5xmEqPUIs+Dw/M2v1Y4MOq4uq+7qP
-OP1lody6+pd6+5Oi4nGVBnXk1oVaJupvuwZI5j+p4AaYR5m7sWpyxDq0g70u8N/f
-uqt+I7+Jv5gx28RoKy9ADTwnLOs0j/+RhNVCss/Usx7Un/CpVIdaiEfadzjU/tK/
-xJjqEx5NXBtZV9vnJHtvGKBakv20CWKlVZszl7pabUoFtIlzHPcek+004IF8huPM
-sgAgeGnZxDRsYj7LK+F/OvZaBKslDyOzudYAWQu+dPA0O7W4BA2ud0n4kUM8K0Fc
-ely9g1on+mbCjspcC+AQExe798dSJpFz/J74NyRBUnvvsOw+8I4J7ZI+tcPL/vuS
-IAvskd/VJcSVhaeczcHm
-=6ZWY
------END PGP SIGNATURE-----
-
---+Pu8h6CsJtbukPM9--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+motzblog.wordpress.com
