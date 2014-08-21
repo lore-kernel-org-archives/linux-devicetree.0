@@ -1,51 +1,91 @@
-From: Frans Klaver <fransklaver@gmail.com>
-Subject: Re: [RFC PATCH 3/4] tty: omap-serial: use threaded interrupt handler
-Date: Fri, 22 Aug 2014 00:07:22 +0200
-Message-ID: <c5a0e820-cd57-43d0-85db-1297a83861c5@email.android.com>
-References: <1406645577-18620-1-git-send-email-frans.klaver@xsens.com> <1408450488-4083-1-git-send-email-frans.klaver@xsens.com> <1408450488-4083-4-git-send-email-frans.klaver@xsens.com> <20140819185701.GC22003@saruman.home> <20140820064028.GC9319@ci00147.xsens-tech.local> <20140820160604.GH24500@saruman.home> <20140821214117.GA7076@ci00147.xsens-tech.local> <20140821214840.GU11146@saruman.home>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dts: fsl-usb: Document USB node
+ compatible string for IP version
+Date: Thu, 21 Aug 2014 17:22:54 -0500
+Message-ID: <1408659774.2395.21.camel@snotra.buserror.net>
+References: <1408612727-6774-1-git-send-email-nikhil.badola@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140821214840.GU11146@saruman.home>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com, Frans Klaver <frans.klaver@xsens.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Pelykh <alexey.pelykh@gmail.com>, Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408612727-6774-1-git-send-email-nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On August 21, 2014 11:48:40 PM CEST, Felipe Balbi <balbi@ti.com> wrote:
->Hi,
->
->On Thu, Aug 21, 2014 at 11:41:17PM +0200, Frans Klaver wrote:
->> On Wed, Aug 20, 2014 at 11:06:05AM -0500, Felipe Balbi wrote:
->> > On Wed, Aug 20, 2014 at 08:40:28AM +0200, Frans Klaver wrote:
->> > > On Tue, Aug 19, 2014 at 01:57:02PM -0500, Felipe Balbi wrote:
->> > > > On Tue, Aug 19, 2014 at 02:14:47PM +0200, Frans Klaver wrote:
->> > > > > At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we
->see 1600 uart
->> > > > > rx buffer overflows within 30 seconds. Threading the
->interrupt handling reduces
->> > > > > this to about 170 overflows in 10 minutes.
->> > > > 
->> > > > Can you try Sebastian Siewior's patches for 8250_omap and 8250
->dma
->> > > > support ? That should help you a lot.
->> > > 
->> > > I'll have a look at that series. Thanks for pointing it out.
->> 
->> I have had a look at Sebastian's series, but I'm not convinced
->> yet that we should use it. So far the serial console seems to be
->> missing data every now and then. I haven't gotten around to testing
->our
->> high traffic application yet.
->
->as any new driver, there are bugs to be fixed. How about reporting the
->ones you found together with a way of reproducing them so they can be
->fixed ?
+On Thu, 2014-08-21 at 14:48 +0530, Nikhil Badola wrote:
+> Document compatible string containing IP version in USB device tree node
+> 
+> Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/fsl-usb.txt | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
 
-Yes, definitely.
+Please CC devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org on all device tree patches (in
+addition to linuxppc-dev).
 
-Cheers, 
-Frans
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.txt b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> index 4779c02..5a3a0a8 100644
+> --- a/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> @@ -10,7 +10,10 @@ Required properties :
+>     controllers, or "fsl-usb2-dr" for dual role USB controllers
+>     or "fsl,mpc5121-usb2-dr" for dual role USB controllers of MPC5121.
+>     Wherever applicable, the IP version of the USB controller should
+> -   also be mentioned (for eg. fsl-usb2-dr-v2.2 for bsc9132).
+> +   also be mentioned in another string.
+> +   For multi port host USB controller with IP version <IP_Ver>, it should be
+> +   "fsl-usb2-mph-<IP_Ver>". For dual role USB controller with IP version
+> +   <IP_Ver>, it should be "fsl-usb2-dr-<IP_Ver>".
 
+It was documented before -- this is just making it more explicit, right?
+
+FWIW, the version number can be read out of a USB register, so I'd
+rather remove the suggestion to specify the version number and replace
+it with a reference to the ID register.
+
+>   - phy_type : For multi port host USB controllers, should be one of
+>     "ulpi", or "serial". For dual role USB controllers, should be
+>     one of "ulpi", "utmi", "utmi_wide", or "serial".
+> @@ -42,9 +45,9 @@ Optional properties :
+>   - fsl,invert-pwr-fault : boolean; for MPC5121 USB0 only. Indicates
+>     the PWR_FAULT signal polarity is inverted.
+>  
+> -Example multi port host USB controller device node :
+> +Example multi port host USB controller version 2.5 device node :
+>  	usb@22000 {
+> -		compatible = "fsl-usb2-mph";
+> +		compatible = "fsl-usb2-mph-v2.5", "fsl-usb2-mph";
+>  		reg = <22000 1000>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> @@ -55,9 +58,9 @@ Example multi port host USB controller device node :
+>  		port1;
+>  	};
+>  
+> -Example dual role USB controller device node :
+> +Example dual role USB controller version 2.5 device node :
+>  	usb@23000 {
+> -		compatible = "fsl-usb2-dr";
+> +		compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
+>  		reg = <23000 1000>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+
+This example doesn't correspond to any device tree I see.  Even after
+your next patch that sets t2080's USB to v2.5, the addresses are
+different.
+
+Also, if you're going to update the example, please also update it to be
+modern in other respects, such as using 0x for hex numbers (outside the
+unit address).
+
+-Scott
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
