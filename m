@@ -1,74 +1,34 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/7] usb-phy: samsung: Cleanup the unused drivers
-Date: Thu, 21 Aug 2014 10:07:30 +0530
-Message-ID: <CAFp+6iHJeZsOY-FuamUacrM4yX47LRO8EwiZcUz_ojSmx2kAxg@mail.gmail.com>
-References: <1408026240-28365-1-git-send-email-gautam.vivek@samsung.com>
-	<20140820181406.GA6023@saruman.home>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 13/16] cpufreq: Add cpufreq driver for Tegra124
+Date: Thu, 21 Aug 2014 10:39:41 +0530
+Message-ID: <CAKohpo=rwM7Gju83heSzhw02J+FP1Jv2zdABZGsXFTF8KH=oEw@mail.gmail.com>
+References: <1408568684-11016-1-git-send-email-ttynkkynen@nvidia.com>
+	<1408568684-11016-14-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140820181406.GA6023-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1408568684-11016-14-git-send-email-ttynkkynen@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Paul Walmsley <pwalmsley@nvidia.com>, Vince Hsu <vinceh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
-
-
-On Wed, Aug 20, 2014 at 11:44 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
-> Hi,
+On 21 August 2014 02:34, Tuomas Tynkkynen <ttynkkynen@nvidia.com> wrote:
+> Add a new cpufreq driver for Tegra124. Instead of using the PLLX as
+> the CPU clocksource, switch immediately to the DFLL. It allows the use
+> of higher clock rates, and will automatically scale the CPU voltage as
+> well. Besides the CPU clocksource switch, we let the cpufreq-cpu0 driver
+> for all the cpufreq operations.
 >
-> On Thu, Aug 14, 2014 at 07:53:53PM +0530, Vivek Gautam wrote:
->> - This series is based on 'usb-next' branch.
->>
->> Now that we have support for USB PHY controllers for Exynos SoC series,
->> we are free to remove the older usb-phy support.
->> In the process, we are removing the entire phy-samsung-usb3 driver, and
->> besides that all support for Exynos4x and Exynos5 from phy-samsung-usb2
->> driver.
->>
->> We have also removed the older USB-PHY support from ehci-exynos and ohci-exynos
->> since those drivers now can use newer GENERIC-PHYs, and don't need the older
->> USB-PHYs and related code anymore. These patches for ohci-exynos and ehci-exynos
->> now replaces the older sent patch for phy sequence cleanup for them.[1]
->>
->> I have build-tested this series for exynos_defconfig and s3c64xx_defconfig,
->> and have tested the EHCI and OHCI operations on smdk5250 board, but
->> have not tested the actual working due to unavailability of S3C64XX
->> board. So can someone please help me testing this series.
->>
->> [1] https://lkml.org/lkml/2014/8/5/142
->>
->> Vivek Gautam (7):
->>   usb-phy: samsung-usb3: Remove older phy-samsung-usb3 driver
->>   usb-phy: samsung-usb2: Remove support for Exynos5250
->>   usb-phy: samsung-usb2: Remove support for Exynos4X12
->>   usb-phy: samsung-usb2: Remove support for Exynos4210
->>   usb-phy: samsung-usb2: Clean up to leave only S3C64XX support
->>   usb: host: ehci-exynos: Remove unnecessary usb-phy support
->>   usb: host: ohci-exynos: Remove unnecessary usb-phy support
+> This driver also relies on the DFLL driver to fill the OPP table for the
+> CPU0 device, so that the cpufreq-cpu0 driver knows what frequencies to
+> use.
 >
-> some of these patches are still RFC, can you resend without RFC and all
-> proper Acks in place ? Also rebased on top of v3.17-rc1.
+> Signed-off-by: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+> ---
+> v4:
+>  - check for get_cpu_device() return value
+>  - add comment why an extra platform driver+device is required
+>  - back to 'depends on GENERIC_CPUFREQ_CPU0'
 
-As per the discussion in thread [1], i am dropping the [Patch 1/7]
-till [Patch 5/7] since
-these are part of the cleanup series by Bart: [PATCH 0/5] usb: phy:
-samsung: remove old USB PHY code;
-and will send out the rebased remaining two patches with Alan's Ack.
-
-
-[1] https://lkml.org/lkml/2014/8/21/11
-
-
-
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
