@@ -1,74 +1,47 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAwLzNdIGdwaW86IHN5c2NvbjogcmV1c2UgZm9yIGtl?=
- =?UTF-8?B?eXN0b25lIDIgc29jcw==?=
-Date: Thu, 21 Aug 2014 20:51:14 +0400
-Message-ID: <1408639874.873856101__34822.9136587635$1408641759$gmane$org@f420.i.mail.ru>
-References: <53ECE9B1.4060303@ti.com>
- <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] Tegra xHCI support
+Date: Thu, 21 Aug 2014 10:26:16 -0700
+Message-ID: <CAL1qeaH=8Fgw6Zia3DuBL8wrrYMjZ8pqC2NanYtb5-YVJwmtsg@mail.gmail.com>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
+	<CAAObsKDT4BV=fGAFkMxieQnC3HX=zm8G_qJ44yay4qG8inxoPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408638203-8246-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?R3J5Z29yaWkgU3RyYXNoa28=?= <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKDT4BV=fGAFkMxieQnC3HX=zm8G_qJ44yay4qG8inxoPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGh1LCAyMSBBdWcgMjAxNCAxOToyMzoyMCArMDMwMCDQvtGCIEdyeWdvcmlpIFN0cmFzaGtvIDxn
-cnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Ogo+IEhpIEFsbCwKPiAKPiBBbGV4YW5kZXIsCj4gCj4g
-SSd2ZSB1cGRhdGVkIGdwaW8tc3lzY29uIGFzIHJlcXVlc3RlZCBpbiBbM10uCj4gSSBzdGlsbCBk
-b24ndCBsaWtlIGl0LCBidXQgYW55IHdheSBJIGRpZCBpdCA6KAo+IAo+IExpbnVzLAo+IAo+IEkn
-ZCB2ZXJ5IGFwcHJlY2lhdGVkIGlmIHlvdSBjYW4gY29tbWVudCBvbiB0aGVzZSBzZXJpZXMuCj4g
-UGVyc29uYWxseSwgSSBsaWtlIHYxIFszXSwgYmVjYXVzZSB0aGlzIHYyIGlzIG5vdCBlbGVnYW50
-IGFuZCB3aWxsCj4gcmVxdWlyZSBjb25zdGFudCBjb2RlIHBhdGNoaW5nIGluIGNhc2Ugb2YgYWRk
-aW5nIG5ldyBTb0NzIG9yIG5ldyBTb0MncyB2ZXJzaW9ucy4KPiAKPiBUaGlzIHNlcmllcyBpbnRl
-bmRlZCB0byBpbnRlZ3JhdGUgS2V5c3RvbmUgMiBEU1AgR1BJTyBjb250cm9sbGVyIGZ1bmN0aW9u
-YWxpdHkKPiBpbnRvIGdwaW8tc3lzY29uIGRyaXZlciAoZHJpdmVycy9ncGlvL2dwaW8tc3lzY29u
-LmMpIGFzIHJlcXVlc3RlZAo+IGJ5IExpbnVzIFdhbGxlaWogaW4gWzFdLgo+IAo+IE9uIEtleXN0
-b25lIFNPQ3MsIEFSTSBob3N0IGNhbiBzZW5kIGludGVycnVwdHMgdG8gRFNQIGNvcmVzIHVzaW5n
-IHRoZQo+IERTUCBHUElPIGNvbnRyb2xsZXIgSVAuIEVhY2ggRFNQIEdQSU8gY29udHJvbGxlciBw
-cm92aWRlcyAyOCBJUlEgc2lnbmFscyBmb3IKPiBlYWNoIERTUCBjb3JlLiBUaGlzIGlzIG9uZSBv
-ZiB0aGUgY29tcG9uZW50IHVzZWQgYnkgdGhlIElQQyBtZWNoYW5pc20gdXNlZAo+IG9uIEtleXN0
-b25lIFNPQ3MuCj4gCj4gS2V5c3RvbmUgMiBEU1AgR1BJTyBjb250cm9sbGVyIGhhcyBzcGVjaWZp
-YyBmZWF0dXJlczoKPiAtIGVhY2ggR1BJTyBjYW4gYmUgY29uZmlndXJlZCBvbmx5IGFzIG91dHB1
-dCBwaW47Cj4gLSBzZXR0aW5nIEdQSU8gdmFsdWUgdG8gMSBjYXVzZXMgSVJRIGdlbmVyYXRpb24g
-b24gdGFyZ2V0IERTUCBjb3JlOwo+IC0gcmVhZGluZyBwaW4gdmFsdWUgcmV0dXJucyAwIC0gaWYg
-SVJRIHdhcyBoYW5kbGVkIG9yIDEgLSBJUlEgaXMgc3RpbGwKPiAgIHBlbmRpbmcuCj4gCj4gVGhl
-IGdwaW8tc3lzY29uIGRyaXZlciB3YXMgbmVlZCB0byBiZSB1cGRhdGVkIHRvIHNhdGlzZnkgS2V5
-c3RvbmUgMiBTb0MKPiByZXF1aXJlbWVudHM6Cj4gLSBzcGVjaWFsIHNlcXVlbmNlIG9mIG9wZXJh
-dGlvbnMgbmVlZCB0byBiZSB1c2VkIHRvIGFzc2lnbiBvdXRwdXQgR1BJTyB2YWx1ZS4KPiAgICBB
-cyByZXN1bHQsIGZpcnN0IHBhdGNoIGludHJvZHVjZXMgU29DIHNwZWNpZmljIGNhbGxiYWNrIC5z
-ZXQoKSB0byBjb25maWd1cmUKPiAgICBvdXRwdXQgR1BJTyB2YWx1ZS4KPiAKPiBBbHNvLCBwYXRj
-aCAzIHdhcyBhZGRlZCB0byBpbGx1c3RyYXRlIERTUCBHUElPIGNvbmZpZ3VyYXRpb24gaW4gRFQg
-dXNlZCBieSBLZXlzdG9uZSAyLgo+IAo+IFJlbGF0ZWQgc2ljdXNzaW9uczoKPiAgWzFdIGh0dHBz
-Oi8vbGttbC5vcmcvbGttbC8yMDE0LzcvMTYvMTcwCj4gIFsyXSBodHRwczovL2xrbWwub3JnL2xr
-bWwvMjAxNC83LzIzLzM1Mgo+ICBbM10gaHR0cHM6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9kZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZy9tc2czNzg2My5odG1sCj4gCj4gR3J5Z29yaWkgU3RyYXNo
-a28gKDMpOgo+ICAgZ3Bpbzogc3lzY29uOiBhZGQgc29jIHNwZWNpZmljIGNhbGxiYWNrIHRvIGFz
-c2lnbiBvdXRwdXQgdmFsdWUKPiAgIGdwaW86IHN5c2NvbjogcmV1c2UgZm9yIGtleXN0b25lIDIg
-c29jcwo+ICAgQVJNOiBkdHM6IGtleXN0b25lLWsyaGs6IGFkZCBkc3AgZ3BpbyBjb250cm9sbGVy
-cyBub2Rlcwo+IAo+ICAuLi4vYmluZGluZ3MvZ3Bpby9ncGlvLW1jdHJsLWtleXN0b25lLnR4dCAg
-ICAgICAgICB8ICAgNDIgKysrKysrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaSAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICA0OCArKysrKysrCj4gIGRyaXZlcnMvZ3Bpby9ncGlvLXN5
-c2Nvbi5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE0MCArKysrKysrKysrKysrKysrKysr
-Kwo+ICAzIGZpbGVzIGNoYW5nZWQsIDIzMCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLW1jdHJsLWtl
-eXN0b25lLnR4dAoKMS4gbWN0cmwgLT4gZHNwIGluIGZpbGVuYW1lcwoyLiBtY3RybCAtPiBkc3Ag
-aW4gZG9jdW1lbnRhdGlvbi4KMy4gSGVyZSBpcyBhIG1vcmUgZWxlZ2FudCBzb2x1dGlvbiBmb3Ig
-Zmlyc3QgcGFydC4KCi0tLSBncGlvLXN5c2Nvbi5jLm9sZAkyMDE0LTA4LTE5IDA5OjQ2OjA5LjAw
-MDAwMDAwMCArMDQwMAorKysgZ3Bpby1zeXNjb24uYwkyMDE0LTA4LTIxIDIwOjQ1OjQ5LjM1NzUy
-OTMyMyArMDQwMApAQCAtMTExLDcgKzExMSw3IEBACiAJCQkJICAgQklUKG9mZnMgJSBTWVNDT05f
-UkVHX0JJVFMpKTsKIAl9CiAKLQlzeXNjb25fZ3Bpb19zZXQoY2hpcCwgb2Zmc2V0LCB2YWwpOwor
-CXByaXYtPmRhdGEtPnNldChjaGlwLCBvZmZzZXQsIHZhbCk7CiAKIAlyZXR1cm4gMDsKIH0KQEAg
-LTE1OSw3ICsxNTksNyBAQAogCWlmIChwcml2LT5kYXRhLT5mbGFncyAmIEdQSU9fU1lTQ09OX0ZF
-QVRfSU4pCiAJCXByaXYtPmNoaXAuZGlyZWN0aW9uX2lucHV0ID0gc3lzY29uX2dwaW9fZGlyX2lu
-OwogCWlmIChwcml2LT5kYXRhLT5mbGFncyAmIEdQSU9fU1lTQ09OX0ZFQVRfT1VUKSB7Ci0JCXBy
-aXYtPmNoaXAuc2V0ID0gc3lzY29uX2dwaW9fc2V0OworCQlwcml2LT5jaGlwLnNldCA9IHByaXYt
-PmRhdGEtPnNldCA/IDogc3lzY29uX2dwaW9fc2V0OwogCQlwcml2LT5jaGlwLmRpcmVjdGlvbl9v
-dXRwdXQgPSBzeXNjb25fZ3Bpb19kaXJfb3V0OwogCX0KIAoKLS0tCgo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Aug 21, 2014 at 6:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
+> On 18 August 2014 19:08, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>
+>> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
+>> USB3.0 memory sticks and ethernet dongles using controller firmware from
+>> the ChromiumOS tree [2].
+>
+> Hi Andrew,
+>
+> do you have any information regarding the port assignments for the
+> Blaze board? Would like to test this there.
+
+Sure:
+- USB3 port 0 (using PCIe lane 0) and UTMI port 0 are connected to the
+USB A connector on the left side,
+- UTMI port 1 is connected to an internal hub, which is in turn
+connected to the camera, the LTE modem (if present), and one of the
+USB A connectors on the right side, and
+- UTMI port 2 is connected to the other USB A connector on the right side.
+The mapping of ports on the right side varies by SKU (i.e. the one on
+the internal hub may be the front or rear USB A port).
+
+The USB3 device tree bits for Venice2 should work just fine for Blaze;
+the only real difference is that USB3 port 1/PCIe lane 1 are unused.
+
+Also, because of the board design on Blaze, the fused HS_CURR_LEVEL
+values need to be adjusted before being programmed into
+USB2_OTG_PAD*_CTL0.  This only affects UTMI ports 0 and 2, so ports
+connected to the internal hub should still work.  I'll add a pinconfig
+property to address this in the likely event I need to re-spin this
+series.  Or, if you like, I can send a follow-on patch to this set to
+add the property.
