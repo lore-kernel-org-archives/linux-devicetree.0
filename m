@@ -1,103 +1,87 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Thu, 21 Aug 2014 13:04:19 -0700
-Message-ID: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH 3/7] MIPS: Octeon: Move device-trees to arch/mips/boot/dts/
+Date: Thu, 21 Aug 2014 13:04:22 -0700
+Message-ID: <1408651466-8334-4-git-send-email-abrestic@chromium.org>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: James Hogan <james.hogan@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, David Daney <david.daney@cavium.com>, John Crispin <blogic@openwrt.org>, Jayachandran C <jchandra@broadcom.com>, Qais Yousef <qais.yousef@imgtec.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-To be consistent with other architectures and to avoid unnecessary
-makefile duplication, move all MIPS device-trees to arch/mips/boot/dts
-and build them with a common makefile.
+Move the Octeon device-trees to arch/mips/boot/dts/ and update the
+Makefiles accordingly.  Since Octeon requires the device-tree to be
+built into the kernel, select BUILTIN_DTB as well.
 
-Patch 1 sets up the makefiles for building the DTs in arch/mips/boot/dts
-and introduces the config option BUILTIN_DTB for platforms that require
-it.
-
-Patch 2 introduces the 'dtbs' makefile target to allow building of just
-the DT binaries.
-
-Patches 3-7 move the DTs out of the platform directores.
-
-I've build tested this on all affected platforms (Octeon, Lantiq, SEAD3,
-Netlogic, and Ralink) as well as Malta.  For platforms where builtin DTBs
-are optional (Netlogic and Ralink), I built with and without the builtin
-DTBs.
-
-Based on 3.17-rc1.
-
-Andrew Bresticker (7):
-  MIPS: Create common infrastructure for building built-in device-trees
-  MIPS: Add support for building device-tree binaries
-  MIPS: Octeon: Move device-trees to arch/mips/boot/dts/
-  MIPS: Lantiq: Move device-trees to arch/mips/boot/dts/
-  MIPS: sead3: Move device-trees to arch/mips/boot/dts/
-  MIPS: Netlogic: Move device-trees to arch/mips/boot/dts/
-  MIPS: ralink: Move device-trees to arch/mips/boot/dts/
-
- arch/mips/Kconfig                                    |  5 +++++
- arch/mips/Makefile                                   | 11 +++++++++++
- arch/mips/boot/.gitignore                            |  1 +
- arch/mips/boot/dts/Makefile                          | 20 ++++++++++++++++++++
- arch/mips/{lantiq => boot}/dts/danube.dtsi           |  0
- arch/mips/{lantiq => boot}/dts/easy50712.dts         |  0
- arch/mips/{ralink => boot}/dts/mt7620a.dtsi          |  0
- arch/mips/{ralink => boot}/dts/mt7620a_eval.dts      |  0
- .../mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts |  0
- .../mips/{cavium-octeon => boot/dts}/octeon_68xx.dts |  0
- arch/mips/{ralink => boot}/dts/rt2880.dtsi           |  0
- arch/mips/{ralink => boot}/dts/rt2880_eval.dts       |  0
- arch/mips/{ralink => boot}/dts/rt3050.dtsi           |  0
- arch/mips/{ralink => boot}/dts/rt3052_eval.dts       |  0
- arch/mips/{ralink => boot}/dts/rt3883.dtsi           |  0
- arch/mips/{ralink => boot}/dts/rt3883_eval.dts       |  0
- arch/mips/{mti-sead3 => boot/dts}/sead3.dts          |  0
- arch/mips/{netlogic => boot}/dts/xlp_evp.dts         |  0
- arch/mips/{netlogic => boot}/dts/xlp_fvp.dts         |  0
- arch/mips/{netlogic => boot}/dts/xlp_gvp.dts         |  0
- arch/mips/{netlogic => boot}/dts/xlp_svp.dts         |  0
- arch/mips/cavium-octeon/.gitignore                   |  2 --
- arch/mips/cavium-octeon/Makefile                     | 10 ----------
- arch/mips/lantiq/Kconfig                             |  1 +
- arch/mips/lantiq/Makefile                            |  2 --
- arch/mips/lantiq/dts/Makefile                        |  1 -
- arch/mips/mti-sead3/Makefile                         |  4 ----
- arch/mips/netlogic/Kconfig                           |  4 ++++
- arch/mips/netlogic/Makefile                          |  1 -
- arch/mips/netlogic/dts/Makefile                      |  4 ----
- arch/mips/ralink/Kconfig                             |  4 ++++
- arch/mips/ralink/Makefile                            |  2 --
- arch/mips/ralink/dts/Makefile                        |  4 ----
- 33 files changed, 46 insertions(+), 30 deletions(-)
- create mode 100644 arch/mips/boot/dts/Makefile
- rename arch/mips/{lantiq => boot}/dts/danube.dtsi (100%)
- rename arch/mips/{lantiq => boot}/dts/easy50712.dts (100%)
- rename arch/mips/{ralink => boot}/dts/mt7620a.dtsi (100%)
- rename arch/mips/{ralink => boot}/dts/mt7620a_eval.dts (100%)
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+---
+ arch/mips/Kconfig                                     |  1 +
+ arch/mips/boot/dts/Makefile                           |  2 ++
+ arch/mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts |  0
+ arch/mips/{cavium-octeon => boot/dts}/octeon_68xx.dts |  0
+ arch/mips/cavium-octeon/.gitignore                    |  2 --
+ arch/mips/cavium-octeon/Makefile                      | 10 ----------
+ 6 files changed, 3 insertions(+), 12 deletions(-)
  rename arch/mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts (100%)
  rename arch/mips/{cavium-octeon => boot/dts}/octeon_68xx.dts (100%)
- rename arch/mips/{ralink => boot}/dts/rt2880.dtsi (100%)
- rename arch/mips/{ralink => boot}/dts/rt2880_eval.dts (100%)
- rename arch/mips/{ralink => boot}/dts/rt3050.dtsi (100%)
- rename arch/mips/{ralink => boot}/dts/rt3052_eval.dts (100%)
- rename arch/mips/{ralink => boot}/dts/rt3883.dtsi (100%)
- rename arch/mips/{ralink => boot}/dts/rt3883_eval.dts (100%)
- rename arch/mips/{mti-sead3 => boot/dts}/sead3.dts (100%)
- rename arch/mips/{netlogic => boot}/dts/xlp_evp.dts (100%)
- rename arch/mips/{netlogic => boot}/dts/xlp_fvp.dts (100%)
- rename arch/mips/{netlogic => boot}/dts/xlp_gvp.dts (100%)
- rename arch/mips/{netlogic => boot}/dts/xlp_svp.dts (100%)
  delete mode 100644 arch/mips/cavium-octeon/.gitignore
- delete mode 100644 arch/mips/lantiq/dts/Makefile
- delete mode 100644 arch/mips/netlogic/dts/Makefile
- delete mode 100644 arch/mips/ralink/dts/Makefile
 
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 19b8aac..dbfcf35 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -741,6 +741,7 @@ config CAVIUM_OCTEON_SOC
+ 	select ARCH_SPARSEMEM_ENABLE
+ 	select SYS_SUPPORTS_SMP
+ 	select NR_CPUS_DEFAULT_16
++	select BUILTIN_DTB
+ 	help
+ 	  This option supports all of the Octeon reference boards from Cavium
+ 	  Networks. It builds a kernel that dynamically determines the Octeon
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index 9b3da1f..51acad6 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -1,3 +1,5 @@
++dtb-$(CONFIG_CAVIUM_OCTEON_SOC)		+= octeon_3xxx.dtb octeon_68xx.dtb
++
+ obj-y		+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+ 
+ targets		+= dtbs
+diff --git a/arch/mips/cavium-octeon/octeon_3xxx.dts b/arch/mips/boot/dts/octeon_3xxx.dts
+similarity index 100%
+rename from arch/mips/cavium-octeon/octeon_3xxx.dts
+rename to arch/mips/boot/dts/octeon_3xxx.dts
+diff --git a/arch/mips/cavium-octeon/octeon_68xx.dts b/arch/mips/boot/dts/octeon_68xx.dts
+similarity index 100%
+rename from arch/mips/cavium-octeon/octeon_68xx.dts
+rename to arch/mips/boot/dts/octeon_68xx.dts
+diff --git a/arch/mips/cavium-octeon/.gitignore b/arch/mips/cavium-octeon/.gitignore
+deleted file mode 100644
+index 39c9686..0000000
+--- a/arch/mips/cavium-octeon/.gitignore
++++ /dev/null
+@@ -1,2 +0,0 @@
+-*.dtb.S
+-*.dtb
+diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
+index 4e95204..42f5f1a 100644
+--- a/arch/mips/cavium-octeon/Makefile
++++ b/arch/mips/cavium-octeon/Makefile
+@@ -20,13 +20,3 @@ obj-y += executive/
+ obj-$(CONFIG_MTD)		      += flash_setup.o
+ obj-$(CONFIG_SMP)		      += smp.o
+ obj-$(CONFIG_OCTEON_ILM)	      += oct_ilm.o
+-
+-DTS_FILES = octeon_3xxx.dts octeon_68xx.dts
+-DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
+-
+-obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))
+-
+-# Let's keep the .dtb files around in case we want to look at them.
+-.SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
+-
+-clean-files += $(DTB_FILES) $(patsubst %.dtb, %.dtb.S, $(DTB_FILES))
 -- 
 2.1.0.rc2.206.gedb03e5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
