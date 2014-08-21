@@ -1,99 +1,109 @@
 From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] usb: dwc3: dwc3-st: Add st-dwc3 devicetree
- bindings documentation
-Date: Thu, 21 Aug 2014 08:56:21 -0500
-Message-ID: <20140821135620.GD9608@saruman.home>
-References: <1406734091-16202-1-git-send-email-peter.griffin@linaro.org>
- <1406734091-16202-3-git-send-email-peter.griffin@linaro.org>
- <20140820180005.GU24500@saruman.home>
- <20140821133340.GC17487@griffinp-ThinkPad-X1-Carbon-2nd>
+Subject: Re: [PATCH v4 2/2] usb: gadget: Add xilinx usb2 device support
+Date: Thu, 21 Aug 2014 09:00:40 -0500
+Message-ID: <20140821140040.GE9608@saruman.home>
+References: <1406020130-20467-1-git-send-email-sbhatta@xilinx.com>
+ <31c3ad1a-370a-4d0d-b392-8e7bb292f6aa@BN1AFFO11FD050.protection.gbl>
+ <53F31F52.8060904@zonque.org>
+ <CALHRZur5BC8Q2WFghU8jAtXzt1=tm=8swxp2xEz3MV4z5CCE9A@mail.gmail.com>
 Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jCrbxBqMcLqd4mOl"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ytoMbUMiTKPMT3hY"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140821133340.GC17487@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <CALHRZur5BC8Q2WFghU8jAtXzt1=tm=8swxp2xEz3MV4z5CCE9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---jCrbxBqMcLqd4mOl
+--ytoMbUMiTKPMT3hY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 21, 2014 at 02:33:40PM +0100, Peter Griffin wrote:
-> Hi Felipe,
+On Thu, Aug 21, 2014 at 12:19:03PM +0530, sundeep subbaraya wrote:
+> Hi Daniel,
 >=20
-> Thanks for reviewing, see my comments below: -
+> On Tue, Aug 19, 2014 at 3:26 PM, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On 07/22/2014 11:08 AM, Subbaraya Sundeep Bhatta wrote:
+> >> This patch adds xilinx usb2 device driver support
+> >
+> > Add some more information here, please. Copying the text from the
+> > Kconfig option is already a good start.
+> >
+> >>  drivers/usb/gadget/Kconfig      |   14 +
+> >>  drivers/usb/gadget/Makefile     |    1 +
+> >>  drivers/usb/gadget/udc-xilinx.c | 2261 ++++++++++++++++++++++++++++++=
++++++++++
+> >>  3 files changed, 2276 insertions(+), 0 deletions(-)
+> >>  create mode 100644 drivers/usb/gadget/udc-xilinx.c
+> >
+> > As your driver has a DT binding, you have to describe it in
+> > Documentation/devicetree/bindings.
+> >
+> >> --- a/drivers/usb/gadget/Kconfig
+> >> +++ b/drivers/usb/gadget/Kconfig
+> >> @@ -459,6 +459,20 @@ config USB_EG20T
+> >>         ML7213/ML7831 is companion chip for Intel Atom E6xx series.
+> >>         ML7213/ML7831 is completely compatible for Intel EG20T PCH.
+> >>
+> >> +config USB_GADGET_XILINX
+> >> +     tristate "Xilinx USB Driver"
+> >> +     depends on COMPILE_TEST
+> >
+> > Why would you depend on that?
 >=20
-> On Wed, 20 Aug 2014, Felipe Balbi wrote:
->=20
-> > > +	dwc3: dwc3@9900000 {
-> > > +		compatible	=3D "snps,dwc3";
-> > > +		reg		=3D <0x09900000 0x100000>;
-> > > +		interrupts	=3D <GIC_SPI 155 IRQ_TYPE_NONE>;
-> > > +		dr_mode		=3D "host"
-> > > +		usb-phy		=3D <&usb3_phy>;
-> > > +		phy-names	=3D "usb2-phy";
-> > > +		phys		=3D <&usb2_picophy2>;
-> >=20
-> > why are you using different binding for usb2 and usb3 phys ? Why can't
-> > you just:
-> >=20
-> > 	phys-names	=3D "usb2-phy", "usb3-phy";
-> > 	phys		=3D <&usb2_picophy2>, <&usb3_phy>;
-> >=20
-> > ??
->=20
-> Currently (in the vendor tree) one of the phys lives in
-> drivers/usb/phy and the other in drivers/phy.
-> I believe that is because one is only a usb phy and the other is a
-> multi function phy which can drive PCI-E or USB3.
+> Felipe asked to make this since this is USB soft IP driver and its
+> dependencies have tendency to grow.
 
-right, but for mainline, we can have both PHYs in drivers/phy only.
+that's not exactly what I asked :-) Usually you only add COMPILE_TEST
+when you have an ARCH dependency. So something like:
 
-> So to make that work, when dwc3/core.c gets the PHYS in
-> dwc3_core_get_phy() we need to use the different bindings.
+	depends on ARCH_ARM || COMPILE_TEST
+
+would make it clear that this driver is only available on ARM, but when
+doing my build tests, I'd still be able to compile it on x86.
+
+> > Also, your code uses device tree functions unconditionally, which is
+> > fine, but it must hence depend on 'OF'.
 >=20
-> I think we are the only platform using "one of each", but luckily
-> dwc3_core_get_phy() has been written generically enough that it "just
-> works" :-).
+> Ok will add OF along with COMPILE_TEST
 
-true, but I want to drop support for the legacy drivers/usb/phy layer
-=66rom dwc3. I'll try to move all PHYs to drivers/phy for v3.18.
+so this would be:
 
-cheers
+	depends on OF || COMPILE_TEST
 
 --=20
 balbi
 
---jCrbxBqMcLqd4mOl
+--ytoMbUMiTKPMT3hY
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJT9fqEAAoJEIaOsuA1yqREOKQP/0KFTFCvTtlcv5iiMGx5d+Wz
-LK4xUha5vJ1khKD7OYkHj3IvNsllwwBUp8zU+Qek25V+3CCrMn9kYJFTsaYDInrm
-/6PxMhy9iXmIUW5pk4gIUGmBc+kLKZeqZxuYr2u/uSC2OQ+ANpI/fA865kFr6o6k
-Rl0sWvEV78xC1e1uWvh7nPSKWIxGDwIQfqjji5BbnvCXuih9MER8MiUaVKVJO8J9
-voj1xGsxRbKAil6AnbUAGzVOgoYJwCztLEonNLc5cwsm+WcoNgnSqNI2sZGJJxUV
-w922WkTn3Da/ZU9b/BXNm33SaXRISYrZtLHQGO7tAlIP/Bax00EF79MOpb8aEFQ3
-iS06mwWDLEWRrh/9Jthay1lxSNauTDy3Lc04AFv/oPILyfX9qdsCcpeXVoE3UbiT
-7vfAmfAY2NfRJ84W27R5DERa93inzrTCzWP+BzNQZiCWgA74vHvYhEMLGYZThLTY
-1CmN30grdJNTk8qTWrv4Q5AsXs+52kBTO407Liy3vMtn2eKryULghSx9ttiHn4VR
-dOWFSGEclrsBOhbKNgSXP1vpM6ZyJZ0e3b8NTbFiZcySsjH2vWo0acPRAYvkrbK6
-kyE1+vjNtETeVvbIIOmAc5NMqISXyEgBibyrg8fHIJLwsJmEucBANjZNAsmW92EA
-OHl0lAflys3AAS/AYDb3
-=QkHf
+iQIcBAEBAgAGBQJT9fuIAAoJEIaOsuA1yqREQIwP/juZaobbwYMGtM6taA5Vyazv
+KHjPzzxXb6YiA+oSFNOU7AkLS9dpt9dzsKWXFIS+AM/+oacI1C0VNOf27swJvy+4
+hRgm0KLL3M2QjMcwDhMnCJxOvdVJY1xxmhdYhRTAMTwPPiT/4pfPIst/vgoOyx30
+iWiCAjlihNrrlU6IEIeDjT7QY0mKvcoZuKe7ny7/4LnEmusZJ+Lzm3RgbrSKIp0B
+mZrO2v26HjcS/lq/e+iWcfkftwXHeb1Zrg7Cro4jd/UDIG6C7Bpa4eP3UXcA7Jhn
+tOzPDlT1xKtFjTJel/sJSFJ3a0vUyD4TBzgQvvmM6lyXHlU+1h1kkmspEPx9kQbD
+2vxREjV3J003JNQSgzaoFXt583QUNMwfuCmXolAycBfxmfl7RK1C1Yap5+V2/Q2A
+I9F6lH/r6eVLoRCa8YPuFkpC8faAGIFa6Z36+iE4xWt9ZeGwx2fpYJKFPA5AHQee
+nDVmALJ2AQXiqpHb+w6Tc160Jr6Ev+6FZ783VfAzwguCheaAcDq2/M4PvyF2PPVn
+y4AogoWhEvbhC50BSpGTKQ8so1+2tUUE9yjqDkCFygE+Ak50EC7mcNlYaL3gWTPM
+EpT9Q/Ret0YkecxHHJpOO1VdL13OlCgDTOiZGsYVREbpwQM0Mbliag+MohZHIxUp
+VOOW9pp8r4P3fRU+z189
+=YfJK
 -----END PGP SIGNATURE-----
 
---jCrbxBqMcLqd4mOl--
+--ytoMbUMiTKPMT3hY--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
