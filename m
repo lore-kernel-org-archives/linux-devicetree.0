@@ -1,78 +1,130 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 4/6] ARM: shmobile: r8a7791: Add JPU clock dt and CPG define.
-Date: Thu, 21 Aug 2014 01:07:25 +0200
-Message-ID: <1671726.SQHuEtA4A1@avalon>
-References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com> <1408452653-14067-5-git-send-email-mikhail.ulyanov@cogentembedded.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 8/9] ARM: zynq: Remove hotplug.c
+Date: Thu, 21 Aug 2014 03:32:22 +0200
+Message-ID: <53F54C26.5010000@linaro.org>
+References: <1408567315-28479-1-git-send-email-soren.brinkmann@xilinx.com> <1408567315-28479-9-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1408452653-14067-5-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-Cc: m.chehab@samsung.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408567315-28479-9-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Russell King <linux@arm.linux.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mikhail,
-
-Thank you for the patch.
-
-On Tuesday 19 August 2014 16:50:51 Mikhail Ulyanov wrote:
-
-A commit message would be nice.
-
-> Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+On 08/20/2014 10:41 PM, Soren Brinkmann wrote:
+> The hotplug code contains only a single function, which is an SMP
+> function. Move that to platsmp.c where all other SMP runctions reside=
+=2E
+> That allows removing hotplug.c and declaring the cpu_die function
+> static.
+>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
 > ---
->  arch/arm/boot/dts/r8a7791.dtsi            | 6 +++---
->  include/dt-bindings/clock/r8a7791-clock.h | 1 +
->  2 files changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-> index 152c75c..c2d0c6e 100644
-> --- a/arch/arm/boot/dts/r8a7791.dtsi
-> +++ b/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -889,16 +889,16 @@
->  		mstp1_clks: mstp1_clks@e6150134 {
->  			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-
-clocks";
->  			reg = <0 0xe6150134 0 4>, <0 0xe6150038 0 4>;
-> -			clocks = <&p_clk>, <&p_clk>, <&p_clk>, <&rclk_clk>,
-> +			clocks = <&m2_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&rclk_clk>,
->  				 <&cp_clk>, <&zs_clk>, <&zs_clk>, <&zs_clk>;
->  			#clock-cells = <1>;
->  			renesas,clock-indices = <
-> -				R8A7791_CLK_TMU1 R8A7791_CLK_TMU3 R8A7791_CLK_TMU2
-> +				R8A7791_CLK_JPU R8A7791_CLK_TMU1 R8A7791_CLK_TMU3 
-R8A7791_CLK_TMU2
->  				R8A7791_CLK_CMT0 R8A7791_CLK_TMU0 R8A7791_CLK_VSP1_DU1
->  				R8A7791_CLK_VSP1_DU0 R8A7791_CLK_VSP1_S
-> 
->  			>;
-> 
->  			clock-output-names =
-> -				"tmu1", "tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
-> +				"jpu", "tmu1", "tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
->  				"vsp1-du0", "vsp1-sy";
->  		};
->  		mstp2_clks: mstp2_clks@e6150138 {
-> diff --git a/include/dt-bindings/clock/r8a7791-clock.h
-> b/include/dt-bindings/clock/r8a7791-clock.h index f0d4d10..58c3f49 100644
-> --- a/include/dt-bindings/clock/r8a7791-clock.h
-> +++ b/include/dt-bindings/clock/r8a7791-clock.h
-> @@ -25,6 +25,7 @@
->  #define R8A7791_CLK_MSIOF0		0
-> 
->  /* MSTP1 */
-> +#define R8A7791_CLK_JPU		6
->  #define R8A7791_CLK_TMU1		11
->  #define R8A7791_CLK_TMU3		21
->  #define R8A7791_CLK_TMU2		22
+>   arch/arm/mach-zynq/Makefile  |  1 -
+>   arch/arm/mach-zynq/common.h  |  3 +--
+>   arch/arm/mach-zynq/hotplug.c | 17 -----------------
+>   arch/arm/mach-zynq/platsmp.c | 18 ++++++++++++++++++
+>   4 files changed, 19 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/arm/mach-zynq/Makefile b/arch/arm/mach-zynq/Makefil=
+e
+> index 820dff6e1eba..c85fb3f7d5cd 100644
+> --- a/arch/arm/mach-zynq/Makefile
+> +++ b/arch/arm/mach-zynq/Makefile
+> @@ -6,5 +6,4 @@
+>   obj-y				:=3D common.o slcr.o pm.o
+>   CFLAGS_REMOVE_hotplug.o		=3D-march=3Darmv6k
+>   CFLAGS_hotplug.o 		=3D-Wa,-march=3Darmv7-a -mcpu=3Dcortex-a9
+> -obj-$(CONFIG_HOTPLUG_CPU)	+=3D hotplug.o
+>   obj-$(CONFIG_SMP)		+=3D headsmp.o platsmp.o
+> diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common.=
+h
+> index c0773e87e83c..e6bb12c50a23 100644
+> --- a/arch/arm/mach-zynq/common.h
+> +++ b/arch/arm/mach-zynq/common.h
+> @@ -39,8 +39,7 @@ extern struct smp_operations zynq_smp_ops __initdat=
+a;
+>
+>   extern void __iomem *zynq_scu_base;
+>
+> -/* Hotplug */
+> -extern void zynq_platform_cpu_die(unsigned int cpu);
+> +int zynq_pm_late_init(void);
+>
+>   int zynq_pm_late_init(void);
+>
+> diff --git a/arch/arm/mach-zynq/hotplug.c b/arch/arm/mach-zynq/hotplu=
+g.c
+> index fe44a05677e2..b685c89f11e4 100644
+> --- a/arch/arm/mach-zynq/hotplug.c
+> +++ b/arch/arm/mach-zynq/hotplug.c
+> @@ -12,20 +12,3 @@
+>    */
+>   #include <asm/proc-fns.h>
+>
+> -/*
+> - * platform-specific code to shutdown a CPU
+> - *
+> - * Called with IRQs disabled
+> - */
+> -void zynq_platform_cpu_die(unsigned int cpu)
+> -{
+> -	zynq_slcr_cpu_state_write(cpu, true);
+> -
+> -	/*
+> -	 * there is no power-control hardware on this platform, so all
+> -	 * we can do is put the core into WFI; this is safe as the calling
+> -	 * code will have already disabled interrupts
+> -	 */
+> -	for (;;)
+> -		cpu_do_idle();
+> -}
+> diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsm=
+p.c
+> index f77f7ca4c45b..04e578718aa2 100644
+> --- a/arch/arm/mach-zynq/platsmp.c
+> +++ b/arch/arm/mach-zynq/platsmp.c
+> @@ -132,6 +132,24 @@ static int zynq_cpu_kill(unsigned cpu)
+>   	zynq_slcr_cpu_stop(cpu);
+>   	return 1;
+>   }
+> +
+> +/*
+> + * platform-specific code to shutdown a CPU
+> + *
+> + * Called with IRQs disabled
+> + */
+> +static void zynq_platform_cpu_die(unsigned int cpu)
+> +{
+> +	zynq_slcr_cpu_state_write(cpu, true);
+> +
+> +	/*
+> +	 * there is no power-control hardware on this platform, so all
+> +	 * we can do is put the core into WFI; this is safe as the calling
+> +	 * code will have already disabled interrupts
+> +	 */
+> +	for (;;)
+> +		cpu_do_idle();
 
--- 
-Regards,
+IIUC, the cpu_do_idle() will flush the L1 cache and then call the WFI.=20
+It makes sense if we are about to power down the core. So I am wonderin=
+g=20
+if we can just call wfi() instead.
 
-Laurent Pinchart
+> +}
+>   #endif
+>
+>   struct smp_operations zynq_smp_ops __initdata =3D {
+>
 
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
