@@ -1,107 +1,76 @@
-From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Subject: Re: [PATCH v2 3/3] [media] rc: remove change_protocol in rc-ir-raw.c
-Date: Thu, 21 Aug 2014 06:50:06 -0500
-Message-ID: <20140821065006.6d831ec4@concha.lan>
-References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org>
- <1408613086-12538-4-git-send-email-zhangfei.gao@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [alsa-devel] [PATCH v2 1/2] mfd: arizona: Add support for
+ INn_Mode register control
+Date: Thu, 21 Aug 2014 13:12:19 +0100
+Message-ID: <20140821121219.GF4266@lee--X1>
+References: <20140813205313.65bbe343@songinha-Samsung-DeskTop-System>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1408613086-12538-4-git-send-email-zhangfei.gao@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: devicetree@vger.kernel.org, arnd@arndb.de, haifeng.yan@linaro.org, David =?ISO-8859-1?B?SORyZGVtYW4=?= <david@hardeman.nu>, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140813205313.65bbe343@songinha-Samsung-DeskTop-System>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Inha Song <ideal.song@samsung.com>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com, lgirdwood@gmail.com, sameo@linux.intel.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Em Thu, 21 Aug 2014 17:24:45 +0800
-Zhangfei Gao <zhangfei.gao@linaro.org> escreveu:
+On Wed, 13 Aug 2014, Inha Song wrote:
 
-> With commit 4924a311a62f ("[media] rc-core: rename ir-raw.c"),
-> empty change_protocol was introduced.
-
-No. This was introduced on this changeset:
-
-commit da6e162d6a4607362f8478c715c797d84d449f8b
-Author: David H=E4rdeman <david@hardeman.nu>
-Date:   Thu Apr 3 20:32:16 2014 -0300
-
-    [media] rc-core: simplify sysfs code
-
-> As a result, rc_register_device will set dev->enabled_protocols
-> addording to rc_map->rc_type, which prevent using all protocols.
-
-I strongly suspect that this patch will break some things, as
-the new code seems to expect that this is always be set. =
-
-
-See the code at store_protocols(): if this callback is not set,
-then it won't allow to disable a protocol.
-
-Also, this doesn't prevent using all protocols. You can still use
-"ir-keytable -p all" to enable all protocols (the "all" protocol
-type were introduced recently at the userspace tool).
-
->From the way I see, setting the protocol when a table is loaded
-is not a bad thing, as:
-- if RC tables are loaded, the needed protocol to decode it is
-  already known;
-- by running just one IR decoder, the IR handling routine will
-  be faster and will consume less power;
-- on a real case scenario, it is a way more likely that just one
-  decoder will ever be needed by the end user.
-
-So, I think that this is just annoying for developers when are checking
-if all decoders are working, by sending keycodes from different IR types
-at the same time.
-
-> =
-
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Some boards need to set the INn_MODE[1:0] register to change
+> the input signal patch. This wlf,inmode property is optional.
+> If present values must be specified by the number of
+> ARIZONA_MAX_INPUT.
+>=20
+> Example:
+>    - wlf,inmode =3D <2 0 2 0>;	/* IN1, IN3 use DMIC */
+>=20
+> Signed-off-by: Inha Song <ideal.song@samsung.com>
 > ---
->  drivers/media/rc/rc-ir-raw.c |    7 -------
->  1 file changed, 7 deletions(-)
-> =
+>  drivers/mfd/arizona-core.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 
-> diff --git a/drivers/media/rc/rc-ir-raw.c b/drivers/media/rc/rc-ir-raw.c
-> index e8fff2a..a118539 100644
-> --- a/drivers/media/rc/rc-ir-raw.c
-> +++ b/drivers/media/rc/rc-ir-raw.c
-> @@ -240,12 +240,6 @@ ir_raw_get_allowed_protocols(void)
->  	return protocols;
+This is going to require a DT Ack.
+
+Is [2/2] adding the documentation?  I can't easily go and look because
+you send the patch-set unthreaded.  Please thread patch-sets.  See
+the man page for `git send-email` for more information.
+
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index 10a0cb9..2b68ccd 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -534,7 +534,7 @@ EXPORT_SYMBOL_GPL(arizona_of_get_named_gpio);
+>  static int arizona_of_get_core_pdata(struct arizona *arizona)
+>  {
+>  	struct arizona_pdata *pdata =3D &arizona->pdata;
+> -	int ret, i;
+> +	int ret, i, proplen;
+> =20
+>  	pdata->reset =3D arizona_of_get_named_gpio(arizona, "wlf,reset", tr=
+ue);
+> =20
+> @@ -560,6 +560,15 @@ static int arizona_of_get_core_pdata(struct ariz=
+ona *arizona)
+>  			ret);
+>  	}
+> =20
+> +	proplen =3D of_property_count_u32_elems(arizona->dev->of_node,
+> +					      "wlf,inmode");
+> +	if (proplen > 0 && proplen <=3D ARRAY_SIZE(arizona->pdata.inmode)) =
+{
+> +		for (i =3D 0; i < proplen; i++)
+> +			of_property_read_u32_index(arizona->dev->of_node,
+> +						   "wlf,inmode", i,
+> +						    &arizona->pdata.inmode[i]);
+> +	}
+> +
+>  	return 0;
 >  }
->  =
+> =20
 
-> -static int change_protocol(struct rc_dev *dev, u64 *rc_type)
-> -{
-> -	/* the caller will update dev->enabled_protocols */
-> -	return 0;
-> -}
-> -
->  /*
->   * Used to (un)register raw event clients
->   */
-> @@ -263,7 +257,6 @@ int ir_raw_event_register(struct rc_dev *dev)
->  =
-
->  	dev->raw->dev =3D dev;
->  	dev->enabled_protocols =3D ~0;
-> -	dev->change_protocol =3D change_protocol;
->  	rc =3D kfifo_alloc(&dev->raw->kfifo,
->  			 sizeof(struct ir_raw_event) * MAX_IR_EVENT_SIZE,
->  			 GFP_KERNEL);
-
-
--- =
-
-
-Cheers,
-Mauro
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
