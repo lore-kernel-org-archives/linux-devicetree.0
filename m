@@ -1,55 +1,53 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc: dts: t208x: Change T208x USB controller version
-Date: Thu, 21 Aug 2014 17:36:33 -0500
-Message-ID: <1408660593.6510.0.camel@snotra.buserror.net>
-References: <1408617090-29692-1-git-send-email-nikhil.badola@freescale.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/3] net: Add Keystone NetCP ethernet driver support
+Date: Thu, 21 Aug 2014 16:36:12 -0700 (PDT)
+Message-ID: <20140821.163612.282672926741753926.davem@davemloft.net>
+References: <1408115562-22487-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408617090-29692-1-git-send-email-nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408115562-22487-1-git-send-email-santosh.shilimkar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: santosh.shilimkar@ti.com
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, sandeep_n@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-08-21 at 16:01 +0530, Nikhil Badola wrote:
-> Change USB controller version to 2.5 in compatible string for T2080/T2081
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Date: Fri, 15 Aug 2014 11:12:39 -0400
+
+> Update version after incorporating David Miller's comment from earlier
+> posting [1]. I would like to get these merged for upcoming 3.18 merge
+> window if there are no concerns on this version.
 > 
-> Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
-> 	Checkpatch warnings handled by commit 61a8c2c6fe71082de3ea8629589dcdd0cc5c3f02
-
-That checkpatch warning is known to have false positives in cases where
-the binding says "<CHIPNAME>-device" or "device-<VERSION>".  If you want
-to update the binding to give an example with a version, that's fine,
-but checkpatch shouldn't be why.  We're not going to update the binding
-example again to match a different version the next time one is added to
-a device tree...
-
-> 	Documentation: dts: fsl-usb: Document USB node compatible string for IP version	
+> The network coprocessor (NetCP) is a hardware accelerator that processes
+> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+> switch sub-module to send and receive packets. NetCP also includes a packet
+> accelerator (PA) module to perform packet classification operations such as
+> header matching, and packet modification operations such as checksum
+> generation. NetCP can also optionally include a Security Accelerator(SA)
+> capable of performing IPSec operations on ingress/egress packets.
+>     
+> Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+> includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+> 1Gb/s rates per Ethernet port.
+>     
+> NetCP driver has a plug-in module architecture where each of the NetCP
+> sub-modules exist as a loadable kernel module which plug in to the netcp
+> core. These sub-modules are represented as "netcp-devices" in the dts
+> bindings. It is mandatory to have the ethernet switch sub-module for
+> the ethernet interface to be operational. Any other sub-module like the
+> PA is optional.
 > 
->  arch/powerpc/boot/dts/fsl/t2081si-post.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-> index 97479f0..aecee96 100644
-> --- a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-> @@ -410,7 +410,7 @@
->  /include/ "qoriq-gpio-3.dtsi"
->  /include/ "qoriq-usb2-mph-0.dtsi"
->  	usb0: usb@210000 {
-> -		compatible = "fsl-usb2-mph-v2.4", "fsl-usb2-mph";
-> +		compatible = "fsl-usb2-mph-v2.5", "fsl-usb2-mph";
+> Both GBE and XGBE network processors supported using common driver. It
+> is also designed to handle future variants of NetCP.
 
-This is an example of why it's better to rely on version registers when
-present.
+I don't want to see an offload driver that doesn't plug into the existing
+generic frameworks for configuration et al.
 
--Scott
+If no existing facility exists to support what you need, you must work
+with the upstream maintainers to design and create one.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It is absolutely no reasonable for every "switch on a chip" driver to
+export it's own configuration knob, we need a standard interface all
+such drivers will plug into and provide.
