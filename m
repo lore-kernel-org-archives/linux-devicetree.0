@@ -1,320 +1,107 @@
-From: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCHv2 2/6] ARM: dts: Add initial LS1021A QDS board dts support
-Date: Thu, 21 Aug 2014 14:44:36 +0300
-Message-ID: <53F5DBA4.5010002@freescale.com>
-References: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
- <1407145148-29217-3-git-send-email-jingchang.lu@freescale.com>
+From: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Subject: Re: [PATCH v2 3/3] [media] rc: remove change_protocol in rc-ir-raw.c
+Date: Thu, 21 Aug 2014 06:50:06 -0500
+Message-ID: <20140821065006.6d831ec4@concha.lan>
+References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org>
+ <1408613086-12538-4-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407145148-29217-3-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jason Jin <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaiprakash Singh <b44839-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1408613086-12538-4-git-send-email-zhangfei.gao@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: devicetree@vger.kernel.org, arnd@arndb.de, haifeng.yan@linaro.org, David =?ISO-8859-1?B?SORyZGVtYW4=?= <david@hardeman.nu>, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/04/2014 12:39 PM, Jingchang Lu wrote:
-> From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> Signed-off-by: Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Jason Jin <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Jaiprakash Singh <b44839-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Em Thu, 21 Aug 2014 17:24:45 +0800
+Zhangfei Gao <zhangfei.gao@linaro.org> escreveu:
+
+> With commit 4924a311a62f ("[media] rc-core: rename ir-raw.c"),
+> empty change_protocol was introduced.
+
+No. This was introduced on this changeset:
+
+commit da6e162d6a4607362f8478c715c797d84d449f8b
+Author: David H=E4rdeman <david@hardeman.nu>
+Date:   Thu Apr 3 20:32:16 2014 -0300
+
+    [media] rc-core: simplify sysfs code
+
+> As a result, rc_register_device will set dev->enabled_protocols
+> addording to rc_map->rc_type, which prevent using all protocols.
+
+I strongly suspect that this patch will break some things, as
+the new code seems to expect that this is always be set. =
+
+
+See the code at store_protocols(): if this callback is not set,
+then it won't allow to disable a protocol.
+
+Also, this doesn't prevent using all protocols. You can still use
+"ir-keytable -p all" to enable all protocols (the "all" protocol
+type were introduced recently at the userspace tool).
+
+>From the way I see, setting the protocol when a table is loaded
+is not a bad thing, as:
+- if RC tables are loaded, the needed protocol to decode it is
+  already known;
+- by running just one IR decoder, the IR handling routine will
+  be faster and will consume less power;
+- on a real case scenario, it is a way more likely that just one
+  decoder will ever be needed by the end user.
+
+So, I think that this is just annoying for developers when are checking
+if all decoders are working, by sending keycodes from different IR types
+at the same time.
+
+> =
+
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 > ---
->   arch/arm/boot/dts/Makefile        |   3 +-
->   arch/arm/boot/dts/ls1021a-qds.dts | 349 ++++++++++++++++++++++++++++++++++++++
->   2 files changed, 351 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 82f498b..af0d999 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -239,7 +239,8 @@ dtb-$(CONFIG_ARCH_MXC) += \
->   	imx6sx-sdb.dtb \
->   	vf610-colibri.dtb \
->   	vf610-cosmic.dtb \
-> -	vf610-twr.dtb
-> +	vf610-twr.dtb \
-> +	ls1021a-qds.dtb
->   dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
->   	imx23-olinuxino.dtb \
->   	imx23-stmp378x_devb.dtb \
-> diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
-> new file mode 100644
-> index 0000000..d107edd
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/ls1021a-qds.dts
-> @@ -0,0 +1,349 @@
-> +/*
-> + * Copyright 2013-2014 Freescale Semiconductor, Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +/dts-v1/;
-> +#include "ls1021a.dtsi"
-> +
-> +/ {
-> +	model = "LS1021A QDS Board";
-> +
-> +	aliases {
-> +		enet0_rgmii_phy = &rgmii_phy1;
-> +		enet1_rgmii_phy = &rgmii_phy2;
-> +		enet2_rgmii_phy = &rgmii_phy3;
-> +		enet0_sgmii_phy = &sgmii_phy1c;
-> +		enet1_sgmii_phy = &sgmii_phy1d;
-> +	};
-> +
-> +	regulators {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg_3p3v: regulator@0 {
-> +			compatible = "regulator-fixed";
-> +			reg = <0>;
-> +			regulator-name = "3P3V";
-> +			regulator-min-microvolt = <3300000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-always-on;
-> +		};
-> +	};
-> +
-> +	sound {
-> +		compatible = "fsl,vf610-sgtl5000";
-> +		simple-audio-card,name = "FSL-VF610-TWR-BOARD";
-> +		simple-audio-card,routing =
-> +			"MIC_IN", "Microphone Jack",
-> +			"Microphone Jack", "Mic Bias",
-> +			"LINE_IN", "Line In Jack",
-> +			"Headphone Jack", "HP_OUT",
-> +			"Speaker Ext", "LINE_OUT";
-> +
-> +		simple-audio-card,cpu = <&sai2>;
-> +
-> +		simple-audio-card,codec = <&codec>;
-> +	};
-> +
-> +	soc {
-> +		leds {
-> +			compatible = "pwm-leds";
-> +			led0 {
-> +				label = "led0";
-> +				pwms = <&pwm3 0 150000 0>;
-> +				max-brightness = <100>;
-> +			};
-> +			led1 {
-> +				label = "led1";
-> +				pwms = <&pwm3 1 150000 0>;
-> +				max-brightness = <100>;
-> +			};
-> +			led2 {
-> +				label = "led2";
-> +				pwms = <&pwm3 2 150000 0>;
-> +				max-brightness = <100>;
-> +			};
-> +			led3 {
-> +				label = "led3";
-> +				pwms = <&pwm3 3 150000 0>;
-> +				max-brightness = <100>;
-> +			};
-> +			led4 {
-> +				label = "led4";
-> +				pwms = <&pwm3 4 150000 0>;
-> +				max-brightness = <100>;
-> +			};
-> +			led5 {
-> +				label = "led5";
-> +				pwms = <&pwm3 5 150000 0>;
-> +				max-brightness = <100>;
-> +			};
-> +			led6 {
-> +				label = "led6";
-> +				pwms = <&pwm3 6 150000 0>;
-> +				max-brightness = <100>;
-> +			};
-> +			led7 {
-> +				label = "led7";
-> +				pwms = <&pwm3 7 150000 0>;
-> +				max-brightness = <100>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&dspi0 {
-> +	bus-num = <0>;
-> +	status = "okay";
-> +
-> +	dspiflash: at45db021d@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "atmel,at45db021d", "atmel,at45", "atmel,dataflash";
-> +		spi-max-frequency = <16000000>;
-> +		spi-cpol;
-> +		spi-cpha;
-> +		reg = <0>;
-> +	};
-> +};
-> +
-> +&enet0 {
-> +	tbi-handle = <&tbi0>;
-> +	phy-handle = <&sgmii_phy1c>;
-> +	phy-connection-type = "sgmii";
-> +	status = "okay";
-> +};
-> +
-> +&enet1 {
-> +	tbi-handle = <&tbi0>;
-> +	phy-handle = <&sgmii_phy1d>;
-> +	phy-connection-type = "sgmii";
-> +	status = "okay";
-> +};
-> +
-> +&enet2 {
-> +	phy-handle = <&rgmii_phy3>;
-> +	phy-connection-type = "rgmii-id";
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +	pca9547@77 {
-> +		compatible = "philips,pca9547";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0>;
-> +
-> +			rtc@68 {
-> +				compatible = "dallas,ds3232";
-> +				reg = <0x68>;
-> +				interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-> +			};
-> +		};
-> +
-> +		i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x2>;
-> +
-> +			ina220@40 {
-> +				compatible = "ti,ina220";
-> +				reg = <0x40>;
-> +				shunt-resistor = <1000>;
-> +			};
-> +
-> +			ina220@41 {
-> +				compatible = "ti,ina220";
-> +				reg = <0x41>;
-> +				shunt-resistor = <1000>;
-> +			};
-> +		};
-> +
-> +		i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x3>;
-> +
-> +			eeprom@56 {
-> +				compatible = "at24,24c512";
-> +				reg = <0x56>;
-> +			};
-> +
-> +			eeprom@57 {
-> +				compatible = "at24,24c512";
-> +				reg = <0x57>;
-> +			};
-> +
-> +			adt7461a@4c {
-> +				compatible = "adt7461a";
-> +				reg = <0x4c>;
-> +			};
-> +		};
-> +
-> +		i2c@4 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x4>;
-> +
-> +			codec: sgtl5000@0a {
-> +				compatible = "fsl,sgtl5000";
-> +				reg = <0x0a>;
-> +				VDDA-supply = <&reg_3p3v>;
-> +				VDDIO-supply = <&reg_3p3v>;
-> +				clocks = <&platform_clk 1>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&ifc {
-> +	status = "okay";
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	/* NOR, NAND Flashes and FPGA on board */
-> +	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
-> +		0x2 0x0 0x0 0x7e800000 0x00010000
-> +		0x3 0x0 0x0 0x7fb00000 0x00000100>;
-> +
-> +		nor@0,0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			compatible = "cfi-flash";
-> +			reg = <0x0 0x0 0x8000000>;
-> +			bank-width = <2>;
-> +			device-width = <1>;
-> +		};
-> +
-> +		nand@2,0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			compatible = "fsl,ifc-nand";
-> +			reg = <0x2 0x0 0x10000>;
-> +
-> +			partition@0 {
-> +				/* This location must not be altered  */
-> +				/* 1MB for u-boot Bootloader Image */
-> +				reg = <0x0 0x00100000>;
-> +				label = "NAND U-Boot Image";
-> +				read-only;
-> +			};
-> +
-> +			partition@100000 {
-> +				/* 1MB for DTB Image */
-> +				reg = <0x00100000 0x00100000>;
-> +				label = "NAND DTB Image";
-> +			};
-> +
-> +			partition@200000 {
-> +				/* 10MB for Linux Kernel Image */
-> +				reg = <0x00200000 0x00a00000>;
-> +				label = "NAND Linux Kernel Image";
-> +			};
-> +
-> +			partition@c00000 {
-> +				/* 500MB for Root file System Image */
-> +				reg = <0x00c00000 0x1f400000>;
-> +				label = "NAND Compressed RFS Image";
-> +			};
+>  drivers/media/rc/rc-ir-raw.c |    7 -------
+>  1 file changed, 7 deletions(-)
+> =
 
-I do not think that partitions should be put in the dts file. They are a 
-convention, not a description of the hardware.
+> diff --git a/drivers/media/rc/rc-ir-raw.c b/drivers/media/rc/rc-ir-raw.c
+> index e8fff2a..a118539 100644
+> --- a/drivers/media/rc/rc-ir-raw.c
+> +++ b/drivers/media/rc/rc-ir-raw.c
+> @@ -240,12 +240,6 @@ ir_raw_get_allowed_protocols(void)
+>  	return protocols;
+>  }
+>  =
 
-Diana
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -static int change_protocol(struct rc_dev *dev, u64 *rc_type)
+> -{
+> -	/* the caller will update dev->enabled_protocols */
+> -	return 0;
+> -}
+> -
+>  /*
+>   * Used to (un)register raw event clients
+>   */
+> @@ -263,7 +257,6 @@ int ir_raw_event_register(struct rc_dev *dev)
+>  =
+
+>  	dev->raw->dev =3D dev;
+>  	dev->enabled_protocols =3D ~0;
+> -	dev->change_protocol =3D change_protocol;
+>  	rc =3D kfifo_alloc(&dev->raw->kfifo,
+>  			 sizeof(struct ir_raw_event) * MAX_IR_EVENT_SIZE,
+>  			 GFP_KERNEL);
+
+
+-- =
+
+
+Cheers,
+Mauro
