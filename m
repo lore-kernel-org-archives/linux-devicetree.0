@@ -1,99 +1,70 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCH 1/9] ARM: zynq: PM: Enable A9 internal clock gating
- feature
-Date: Thu, 21 Aug 2014 10:20:17 -0700
-Message-ID: <7df25bc3-d1ea-405c-a880-b22b53225ec6@BN1BFFO11FD018.protection.gbl>
-References: <1408567315-28479-1-git-send-email-soren.brinkmann@xilinx.com>
- <1408567315-28479-2-git-send-email-soren.brinkmann@xilinx.com>
- <26994133-6c3c-45c0-af09-3cb55ad35b13@BY2FFO11FD028.protection.gbl>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAwLzNdIGdwaW86IHN5c2NvbjogcmV1c2UgZm9yIGtl?=
+ =?UTF-8?B?eXN0b25lIDIgc29jcw==?=
+Date: Thu, 21 Aug 2014 20:51:14 +0400
+Message-ID: <1408639874.873856101__5599.32197579673$1408641754$gmane$org@f420.i.mail.ru>
+References: <53ECE9B1.4060303@ti.com>
+ <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <26994133-6c3c-45c0-af09-3cb55ad35b13@BY2FFO11FD028.protection.gbl>
-Sender: linux-pm-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Russell King <linux@arm.linux.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?B?R3J5Z29yaWkgU3RyYXNoa28=?= <grygorii.strashko@ti.com>
+Cc: =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>, santosh.shilimkar@ti.com, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-08-21 at 02:19PM +0200, Michal Simek wrote:
-> On 08/20/2014 10:41 PM, Soren Brinkmann wrote:
-> > Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
-> > ---
-> >  arch/arm/mach-zynq/common.c  |  6 ++++++
-> >  arch/arm/mach-zynq/common.h  | 11 +++++++++++
-> >  arch/arm/mach-zynq/platsmp.c |  9 +++++++++
-> >  3 files changed, 26 insertions(+)
-> >=20
-> > diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/commo=
-n.c
-> > index 31a6fa40ba37..3cb7c198615a 100644
-> > --- a/arch/arm/mach-zynq/common.c
-> > +++ b/arch/arm/mach-zynq/common.c
-> > @@ -98,6 +98,11 @@ static int __init zynq_get_revision(void)
-> >  	return revision;
-> >  }
-> > =20
-> > +static void __init zynq_init_late(void)
-> > +{
-> > +	zynq_core_pm_init();
-> > +}
-> > +
-> >  /**
-> >   * zynq_init_machine - System specific initialization, intended to=
- be
-> >   *		       called from board specific initialization.
-> > @@ -204,6 +209,7 @@ DT_MACHINE_START(XILINX_EP107, "Xilinx Zynq Pla=
-tform")
-> >  	.map_io		=3D zynq_map_io,
-> >  	.init_irq	=3D zynq_irq_init,
-> >  	.init_machine	=3D zynq_init_machine,
-> > +	.init_late	=3D zynq_init_late,
-> >  	.init_time	=3D zynq_timer_init,
-> >  	.dt_compat	=3D zynq_dt_match,
-> >  	.reserve	=3D zynq_memory_init,
-> > diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/commo=
-n.h
-> > index f652f0a884a6..596ef0b5067c 100644
-> > --- a/arch/arm/mach-zynq/common.h
-> > +++ b/arch/arm/mach-zynq/common.h
-> > @@ -40,4 +40,15 @@ extern void __iomem *zynq_scu_base;
-> >  /* Hotplug */
-> >  extern void zynq_platform_cpu_die(unsigned int cpu);
-> > =20
-> > +static inline void zynq_core_pm_init(void)
-> > +{
-> > +	/* A9 clock gating */
-> > +	asm volatile ("mrc  p15, 0, r12, c15, c0, 0\n"
-> > +		      "orr  r12, r12, #1\n"
-> > +		      "mcr  p15, 0, r12, c15, c0, 0\n"
-> > +		      : /* no outputs */
-> > +		      : /* no inputs */
-> > +		      : "r12");
-> > +}
-> > +
-> >  #endif
-> > diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/plat=
-smp.c
-> > index abc82ef085c1..616b99e07c60 100644
-> > --- a/arch/arm/mach-zynq/platsmp.c
-> > +++ b/arch/arm/mach-zynq/platsmp.c
-> > @@ -112,6 +112,14 @@ static void __init zynq_smp_prepare_cpus(unsig=
-ned int max_cpus)
-> >  	scu_enable(zynq_scu_base);
-> >  }
-> > =20
-> > +/*
-> > + * This function is in the hotplug path. Don't move it into the in=
-it section!!
-> > + */
->=20
-> Worth to use kernel-doc format here.
-
-The secondary init function is kind of documented in
-arch/arm/include/asm/smp.h as part of the smp_operations struct. Do you
-want more documentation here?
-=09
-	S=C3=B6ren
-
+VGh1LCAyMSBBdWcgMjAxNCAxOToyMzoyMCArMDMwMCDQvtGCIEdyeWdvcmlpIFN0cmFzaGtvIDxn
+cnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Ogo+IEhpIEFsbCwKPiAKPiBBbGV4YW5kZXIsCj4gCj4g
+SSd2ZSB1cGRhdGVkIGdwaW8tc3lzY29uIGFzIHJlcXVlc3RlZCBpbiBbM10uCj4gSSBzdGlsbCBk
+b24ndCBsaWtlIGl0LCBidXQgYW55IHdheSBJIGRpZCBpdCA6KAo+IAo+IExpbnVzLAo+IAo+IEkn
+ZCB2ZXJ5IGFwcHJlY2lhdGVkIGlmIHlvdSBjYW4gY29tbWVudCBvbiB0aGVzZSBzZXJpZXMuCj4g
+UGVyc29uYWxseSwgSSBsaWtlIHYxIFszXSwgYmVjYXVzZSB0aGlzIHYyIGlzIG5vdCBlbGVnYW50
+IGFuZCB3aWxsCj4gcmVxdWlyZSBjb25zdGFudCBjb2RlIHBhdGNoaW5nIGluIGNhc2Ugb2YgYWRk
+aW5nIG5ldyBTb0NzIG9yIG5ldyBTb0MncyB2ZXJzaW9ucy4KPiAKPiBUaGlzIHNlcmllcyBpbnRl
+bmRlZCB0byBpbnRlZ3JhdGUgS2V5c3RvbmUgMiBEU1AgR1BJTyBjb250cm9sbGVyIGZ1bmN0aW9u
+YWxpdHkKPiBpbnRvIGdwaW8tc3lzY29uIGRyaXZlciAoZHJpdmVycy9ncGlvL2dwaW8tc3lzY29u
+LmMpIGFzIHJlcXVlc3RlZAo+IGJ5IExpbnVzIFdhbGxlaWogaW4gWzFdLgo+IAo+IE9uIEtleXN0
+b25lIFNPQ3MsIEFSTSBob3N0IGNhbiBzZW5kIGludGVycnVwdHMgdG8gRFNQIGNvcmVzIHVzaW5n
+IHRoZQo+IERTUCBHUElPIGNvbnRyb2xsZXIgSVAuIEVhY2ggRFNQIEdQSU8gY29udHJvbGxlciBw
+cm92aWRlcyAyOCBJUlEgc2lnbmFscyBmb3IKPiBlYWNoIERTUCBjb3JlLiBUaGlzIGlzIG9uZSBv
+ZiB0aGUgY29tcG9uZW50IHVzZWQgYnkgdGhlIElQQyBtZWNoYW5pc20gdXNlZAo+IG9uIEtleXN0
+b25lIFNPQ3MuCj4gCj4gS2V5c3RvbmUgMiBEU1AgR1BJTyBjb250cm9sbGVyIGhhcyBzcGVjaWZp
+YyBmZWF0dXJlczoKPiAtIGVhY2ggR1BJTyBjYW4gYmUgY29uZmlndXJlZCBvbmx5IGFzIG91dHB1
+dCBwaW47Cj4gLSBzZXR0aW5nIEdQSU8gdmFsdWUgdG8gMSBjYXVzZXMgSVJRIGdlbmVyYXRpb24g
+b24gdGFyZ2V0IERTUCBjb3JlOwo+IC0gcmVhZGluZyBwaW4gdmFsdWUgcmV0dXJucyAwIC0gaWYg
+SVJRIHdhcyBoYW5kbGVkIG9yIDEgLSBJUlEgaXMgc3RpbGwKPiAgIHBlbmRpbmcuCj4gCj4gVGhl
+IGdwaW8tc3lzY29uIGRyaXZlciB3YXMgbmVlZCB0byBiZSB1cGRhdGVkIHRvIHNhdGlzZnkgS2V5
+c3RvbmUgMiBTb0MKPiByZXF1aXJlbWVudHM6Cj4gLSBzcGVjaWFsIHNlcXVlbmNlIG9mIG9wZXJh
+dGlvbnMgbmVlZCB0byBiZSB1c2VkIHRvIGFzc2lnbiBvdXRwdXQgR1BJTyB2YWx1ZS4KPiAgICBB
+cyByZXN1bHQsIGZpcnN0IHBhdGNoIGludHJvZHVjZXMgU29DIHNwZWNpZmljIGNhbGxiYWNrIC5z
+ZXQoKSB0byBjb25maWd1cmUKPiAgICBvdXRwdXQgR1BJTyB2YWx1ZS4KPiAKPiBBbHNvLCBwYXRj
+aCAzIHdhcyBhZGRlZCB0byBpbGx1c3RyYXRlIERTUCBHUElPIGNvbmZpZ3VyYXRpb24gaW4gRFQg
+dXNlZCBieSBLZXlzdG9uZSAyLgo+IAo+IFJlbGF0ZWQgc2ljdXNzaW9uczoKPiAgWzFdIGh0dHBz
+Oi8vbGttbC5vcmcvbGttbC8yMDE0LzcvMTYvMTcwCj4gIFsyXSBodHRwczovL2xrbWwub3JnL2xr
+bWwvMjAxNC83LzIzLzM1Mgo+ICBbM10gaHR0cHM6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9kZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZy9tc2czNzg2My5odG1sCj4gCj4gR3J5Z29yaWkgU3RyYXNo
+a28gKDMpOgo+ICAgZ3Bpbzogc3lzY29uOiBhZGQgc29jIHNwZWNpZmljIGNhbGxiYWNrIHRvIGFz
+c2lnbiBvdXRwdXQgdmFsdWUKPiAgIGdwaW86IHN5c2NvbjogcmV1c2UgZm9yIGtleXN0b25lIDIg
+c29jcwo+ICAgQVJNOiBkdHM6IGtleXN0b25lLWsyaGs6IGFkZCBkc3AgZ3BpbyBjb250cm9sbGVy
+cyBub2Rlcwo+IAo+ICAuLi4vYmluZGluZ3MvZ3Bpby9ncGlvLW1jdHJsLWtleXN0b25lLnR4dCAg
+ICAgICAgICB8ICAgNDIgKysrKysrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaSAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICA0OCArKysrKysrCj4gIGRyaXZlcnMvZ3Bpby9ncGlvLXN5
+c2Nvbi5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE0MCArKysrKysrKysrKysrKysrKysr
+Kwo+ICAzIGZpbGVzIGNoYW5nZWQsIDIzMCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLW1jdHJsLWtl
+eXN0b25lLnR4dAoKMS4gbWN0cmwgLT4gZHNwIGluIGZpbGVuYW1lcwoyLiBtY3RybCAtPiBkc3Ag
+aW4gZG9jdW1lbnRhdGlvbi4KMy4gSGVyZSBpcyBhIG1vcmUgZWxlZ2FudCBzb2x1dGlvbiBmb3Ig
+Zmlyc3QgcGFydC4KCi0tLSBncGlvLXN5c2Nvbi5jLm9sZAkyMDE0LTA4LTE5IDA5OjQ2OjA5LjAw
+MDAwMDAwMCArMDQwMAorKysgZ3Bpby1zeXNjb24uYwkyMDE0LTA4LTIxIDIwOjQ1OjQ5LjM1NzUy
+OTMyMyArMDQwMApAQCAtMTExLDcgKzExMSw3IEBACiAJCQkJICAgQklUKG9mZnMgJSBTWVNDT05f
+UkVHX0JJVFMpKTsKIAl9CiAKLQlzeXNjb25fZ3Bpb19zZXQoY2hpcCwgb2Zmc2V0LCB2YWwpOwor
+CXByaXYtPmRhdGEtPnNldChjaGlwLCBvZmZzZXQsIHZhbCk7CiAKIAlyZXR1cm4gMDsKIH0KQEAg
+LTE1OSw3ICsxNTksNyBAQAogCWlmIChwcml2LT5kYXRhLT5mbGFncyAmIEdQSU9fU1lTQ09OX0ZF
+QVRfSU4pCiAJCXByaXYtPmNoaXAuZGlyZWN0aW9uX2lucHV0ID0gc3lzY29uX2dwaW9fZGlyX2lu
+OwogCWlmIChwcml2LT5kYXRhLT5mbGFncyAmIEdQSU9fU1lTQ09OX0ZFQVRfT1VUKSB7Ci0JCXBy
+aXYtPmNoaXAuc2V0ID0gc3lzY29uX2dwaW9fc2V0OworCQlwcml2LT5jaGlwLnNldCA9IHByaXYt
+PmRhdGEtPnNldCA/IDogc3lzY29uX2dwaW9fc2V0OwogCQlwcml2LT5jaGlwLmRpcmVjdGlvbl9v
+dXRwdXQgPSBzeXNjb25fZ3Bpb19kaXJfb3V0OwogCX0KIAoKLS0tCgo=
