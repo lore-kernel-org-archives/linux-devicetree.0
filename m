@@ -1,56 +1,71 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 5/6] rtc: rtc-isl12022: Change vendor prefix for
- Intersil Corporation to isil
-Date: Fri, 22 Aug 2014 10:57:09 +0200
-Message-ID: <1408697829.3118.28.camel@paszta.hi.pengutronix.de>
-References: <1408524184-31928-1-git-send-email-p.zabel@pengutronix.de>
-	 <1408524184-31928-6-git-send-email-p.zabel@pengutronix.de>
+From: Joe.C <srv_yingjoe.chen@mediatek.com>
+Subject: Re: [RESEND PATCH v2 0/4] arm: mediatek: Add support for GIC
+ interrupt polarity extension.
+Date: Fri, 22 Aug 2014 17:23:50 +0800
+Message-ID: <1408699430.27728.92.camel@mtksdaap41>
+References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408524184-31928-6-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, yingjoe.chen@gmail.com, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, yh.chen@mediatek.com, nathan.chung@mediatek.com, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, hc.yen@mediatek.com, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Jonas Jensen <jonas.jensen@gmail.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 20.08.2014, 10:43 +0200 schrieb Philipp Zabel:
-> Currently there is a wild mixture of isl, isil, and intersil
-> compatibles in the kernel. At this point, changing the vendor
-> symbol to the most often used variant, which is equal to the
-> NASDAQ symbol, isil, should not hurt, since the isl1208 driver
-> doesn't care either way.
-> Patch db04d6284e2a added device tree support using the then
-> documented isl vendor prefix, so we keep that around for
-> backwards compatibility.
+
+Hi, ARM soc maintainers,
+
+Please help to review this series, I think this should go through 
+ARM soc tree.
+
+We plan to upstream drivers for MT8135. MT8135 is a big/little soc
+featuring 2 CA7 + 2 CA15, and sharing many similar IP components with
+mt65xx. Many components of 65xx series & 8135 require this support.
+
+Joe.C
+
+
+On Wed, 2014-08-13 at 10:11 +0800, Joe.C wrote:
+> [Sorry, resend to include all maintainers.]
 > 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/rtc/rtc-isl12022.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> This series add support for mediatek GIC interrupt polarity extension.
+> Several components in mediatek SoC have low level triggered interrupt and
+> require this support.
 > 
-> diff --git a/drivers/rtc/rtc-isl12022.c b/drivers/rtc/rtc-isl12022.c
-> index aa55f08..df20f18 100644
-> --- a/drivers/rtc/rtc-isl12022.c
-> +++ b/drivers/rtc/rtc-isl12022.c
-> @@ -275,7 +275,8 @@ static int isl12022_probe(struct i2c_client *client,
->  
->  #ifdef CONFIG_OF
->  static struct of_device_id isl12022_dt_match[] = {
-> -	{ .compatible = "isl,isl12022" },
-> +	{ .compatible = "isil,isl12022" },
-> +	{ .compatible = "isl,isl12022" }, /* for backwards compatibility */
-
-Actually, is it even necessary to keep this around in here?
-If of_driver_match_device fails, i2c_device_match will continue to try
-i2c_match_id if driver->id_table is set, which matches against the
-result of of_modalias_node (dropping the vendor prefix altogether).
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This also correct 6589 timer irq polarity. Previous version works because
+> 6589 boot loader already set correct polarity for timer interrupt.
+> 
+> The patch set is based on Matthias's Mediatek basic support for v3.17 [1].
+> 
+> v2:
+> - Make mt6589.dtsi changes as a separate commit as Matthias suggest.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/272561.html
+> 
+> Joe.C (4):
+>   irqchip: gic: Change irq type check when extension is
+>   arm: mediatek: Add support for GIC interrupt polarity
+>   arm: mediatek: Add intpol in mt6589.dtsi
+>   dt-bindings: add bindings for mediatek intpol
+> 
+>  Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt |   16 ++
+>  arch/arm/boot/dts/mt6589.dtsi                                              |    7 -
+>  arch/arm/mach-mediatek/Makefile                                            |    2
+>  arch/arm/mach-mediatek/common.h                                            |   19 +++
+>  arch/arm/mach-mediatek/intpol.c                                            |   61 ++++++++++
+>  arch/arm/mach-mediatek/mediatek.c                                          |   10 +
+>  drivers/irqchip/irq-gic.c                                                  |   27 ++--
+>  7 files changed, 131 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,intpol.txt
+>  create mode 100644 arch/arm/mach-mediatek/common.h
+>  create mode 100644 arch/arm/mach-mediatek/intpol.c
