@@ -1,94 +1,64 @@
-From: Mikhail Ulianov <mikhail.ulyanov@cogentembedded.com>
-Subject: Re: [PATCH 6/6] devicetree: bindings: Document Renesas JPEG
- Processing Unit.
-Date: Fri, 22 Aug 2014 18:20:53 +0400
-Message-ID: <20140822182053.62667c32@bones>
-References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-	<1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
-	<3694359.xqEjcGBlOG@avalon>
+From: "Murphy, Dan" <dmurphy@ti.com>
+Subject: Re: [PATCH] doc: dt/bindings: input: Fix drv260x binding document
+Date: Fri, 22 Aug 2014 14:25:13 +0000
+Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49DF1F66@DFLE09.ent.ti.com>
+References: <1408716741-1163-1-git-send-email-dmurphy@ti.com>
+ <20140822141532.GC22707@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <3694359.xqEjcGBlOG@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: m.chehab@samsung.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Balbi, Felipe" <balbi@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Felipe
 
-Thanks for your comments.
-
-On Thu, 21 Aug 2014 01:01:43 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-
-> Hi Mikhail,
+On 08/22/2014 09:15 AM, Balbi, Felipe wrote:
+> On Fri, Aug 22, 2014 at 09:12:21AM -0500, Dan Murphy wrote:
+>> Update the drv260x dt binding document:
+>> - Change the node name to the devices function not the
+>> device name.
+>> - Add vbat-supply to the example.
+>> - Fix indentation of the example.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>  .../devicetree/bindings/input/ti,drv260x.txt       |   19 ++++++++++---------
+>>  1 file changed, 10 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/Documentation/devicetree/bindings/input/ti,drv260x.txt
+>> index a9c8519..214e25d 100644
+>> --- a/Documentation/devicetree/bindings/input/ti,drv260x.txt
+>> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
+>> @@ -37,15 +37,16 @@ Optional properties:
+>>  			  3.2 v.
+>>  Example:
+>>  
+>> -drv2605l: drv2605l@5a {
+>> -		compatible = "ti,drv2605l";
+>> -		reg = <0x5a>;
+>> -		enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>> -		mode = <DRV260X_LRA_MODE>;
+>> -		library-sel = <DRV260X_LIB_LRA>;
+>> -		vib-rated-mv = <3200>;
+>> -		vib-overdriver-mv = <3200>;
+>> -};
+>> +haptics:@5a {
 > 
-> Thank you for the patch.
+> haptics: haptics@5a ??
 > 
-> On Tuesday 19 August 2014 16:50:53 Mikhail Ulyanov wrote:  
-> > Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-> > ---
-> >  .../devicetree/bindings/media/renesas,jpu.txt      | 23
-> > +++++++++++++++++++ 1 file changed, 23 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/media/renesas,jpu.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> > b/Documentation/devicetree/bindings/media/renesas,jpu.txt new file
-> > mode 100644
-> > index 0000000..44b07df
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> > @@ -0,0 +1,23 @@
-> > +* Renesas VSP1 Video Processing Engine  
-> 
-> Copy & paste ? :-)
->   
-Yeah. Will fix it.
 
-> > +
-> > +The JPEG processing unit (JPU) incorporates the JPEG codec with an
-> > encoding +and decoding function conforming to the JPEG baseline
-> > process, so that the JPU
-> > +can encode image data and decode JPEG data quickly.
-> > +It can be found in the Renesas R-Car first and second generation
-> > SoCs.  
-> 
-> Is there a difference between the first and second generation JPUs ?
->   
-There should be no difference because in practice maximum supported
-resolution for Gen2 is 4096x4096 (not 8000x8000 as in overview section
-of documentation). And in Gen1 documentation(overview section) maximum
-supported resolution is also 4096x4096. 
+I found both types of entries in the bindings docs.
 
+There is no consistency within the input bindings documentation.
 
-> > +
-> > +Required properties:
-> > +  - compatible: should containg one of the following:
-> > +			- "renesas,jpu-r8a7790" for R-Car H2
-> > +			- "renesas,jpu-r8a7791" for R-Car M2  
-> 
-> How about adding a "renesas,jpu" generic compatible, and listing both
-> the SoC- specific and the generic values (in that order) in the
-> compatible property ?
->   
-Could be a good idea, but there is no JPU in some R-Car Gen1 SoCs
-e.g. E1. Plus we don't have full documentation on JPU in Gen1 SoCs.
-So for now Gen1 is not supported. Or this doesn't matter in that case?
+I have no issue doing it either way.
 
+Dan
 
-> > +  - reg: Base address and length of the registers block for the
-> > JPU.
-> > +  - interrupts: JPU interrupt specifier.
-> > +  - clocks: A phandle + clock-specifier pair for the JPU
-> > functional clock. +
-> > +Example: R8A7790 (R-Car H2) JPU node
-> > +	jpeg-codec@fe980000 {
-> > +		compatible = "renesas,jpu-r8a7790";
-> > +		reg = <0 0xfe980000 0 0x10300>;
-> > +		interrupts = <0 272 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks = <&mstp1_clks R8A7790_CLK_JPU>;
-> > +	};  
->   
+-- 
+------------------
+Dan Murphy
