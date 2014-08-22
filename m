@@ -1,56 +1,56 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 1/2] I2C: EMMA Mobile I2C master driver
-Date: Thu, 21 Aug 2014 21:57:58 -0500
-Message-ID: <20140822025758.GA1266@katana>
-References: <1377688911-10911-1-git-send-email-ian.molton@codethink.co.uk>
- <1378226969-18722-1-git-send-email-ian.molton@codethink.co.uk>
- <1378226969-18722-2-git-send-email-ian.molton@codethink.co.uk>
- <20140218173843.GB18768@katana>
- <20140617095724.GJ2638@katana>
- <20140718154549.GC2731@katana>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 4/6] powerpc/85xx: Change vendor prefix for Intersil
+ Corporation to isil
+Date: Thu, 21 Aug 2014 22:12:47 -0500
+Message-ID: <CAL_JsqK3Wi9b=7w=Npu3HN8SSkyFgVT0Qoc48LUyoiEaBjSCTA@mail.gmail.com>
+References: <1408524184-31928-1-git-send-email-p.zabel@pengutronix.de> <1408524184-31928-5-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140718154549.GC2731@katana>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ian Molton <ian.molton@codethink.co.uk>
-Cc: magnus.damm@gmail.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, ben.dooks@codethink.co.uk
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408524184-31928-5-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 20, 2014 at 3:43 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Currently there is a wild mixture of isl, isil, and intersil
+> compatibles in the kernel. At this point, changing the vendor
+> symbol to the most often used variant, which is equal to the
+> NASDAQ symbol, isil, should not hurt, since the isl1208 driver
+> doesn't care either way.
+>
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/powerpc/boot/dts/ppa8548.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/boot/dts/ppa8548.dts b/arch/powerpc/boot/dts/ppa8548.dts
+> index 27b0699..000262b 100644
+> --- a/arch/powerpc/boot/dts/ppa8548.dts
+> +++ b/arch/powerpc/boot/dts/ppa8548.dts
+> @@ -89,7 +89,7 @@
+>  &soc {
+>         i2c@3000 {
+>                 rtc@6f {
+> -                       compatible = "intersil,isl1208";
+> +                       compatible = "isil,isl1208";
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is a mature platform. You cannot change it. You can add the new
+string, but the dts and kernel need both strings.
 
+I would just leave it all alone and add the new prefix and mark the
+others deprecated.
 
-> I happen to have access to a kzm9d board meanwhile. Do you have the
-> board enablement patches still somewhere?
+Rob
 
-Ping. Did you get this one?
-
-
---gBBFr7Ir9EOA20Yy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT9rG1AAoJEBQN5MwUoCm2ca4QAId1h7xqglrtvMiIfGoKc+ia
-+tXjN5cPL6r7DoINUIDXdSwkzbgZL/iL+JQ6wqUqBgbftBvlBVBOWhdf7tQZfwAk
-j7yVVdYSUDHLl0dhwF87Y6eZpYb4aDiMlP9SaZvf84ez9E+9fRMfhl++ZUnRHySK
-9lBEgZljEnjiQZIgJPYQuwPfPloJ5OxjLcktegn8fT5K2Y3opj1HPHb5xrjL7/tG
-v/fMxSha9MPbgfmMD/NJUh6tRmdl1rMe4NUD5jIks/tIcCE6ngIpybt2sVF2O/g0
-tMjBiiA83ULnNUgzPihAQCnAGX3Q5BsYwsSowt3wZMLwpKltiU4bZDSuFWaw3f/N
-edkdZfHPZjCouJkcWDt+Tyyr3wkDvM6Yd1xvO63Qe1DDfEu7cXqYINdiVTE8kmtq
-oaXgL4K1KzmbfVnzUnpyJs2/WbtriuFcKgVuFlbJ5xCmDcqTPgou7vzEJ3OMBy/W
-v6hvMOHMyzZMd8XV3X8qKj2p5vej+PXS0mcgS3+g4lX7uz0SfFdcGOOzAoyeLfKO
-ZHtoXEqKhvA0cy8D5ndJL8MKAz9tfWhJitsQSbq3pnm04Sd8rKUbw9jmDC/M7iRC
-Pu74QH1HRYTKxbobR0jWuNEjAGrJysDOP2g4rBFd160ezrTRHQ5Z1f4vYd8eM1eA
-BghRLT+uhaeUN7+ttIRT
-=Usf3
------END PGP SIGNATURE-----
-
---gBBFr7Ir9EOA20Yy--
+>                         reg = <0x6f>;
+>                 };
+>         };
+> --
+> 2.1.0.rc1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
