@@ -1,45 +1,52 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Gateworks GW5520 support (i.MX6)
-Date: Fri, 22 Aug 2014 15:43:45 +0800
-Message-ID: <20140822074341.GA2540@dragon>
-References: <1407572602-14017-1-git-send-email-tharvey@gateworks.com>
- <20140818063510.GD2114@dragon>
- <CAJ+vNU0qJrNtZMcPGWkGOPuHmyiV+3d-OM71PGDNRmnJZCS8SQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/5] ARM: shmobile: r8a7740: document MSTP clock support
+Date: Fri, 22 Aug 2014 09:44:09 +0200
+Message-ID: <CAMuHMdXxgYYyZz_M2975W-bPv6EEsoXp6r8QxfrvgP-Ya4q13w@mail.gmail.com>
+References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<1407507792-8121-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<20140811011214.GI26570@verge.net.au>
+	<20140822010400.GC2783@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU0qJrNtZMcPGWkGOPuHmyiV+3d-OM71PGDNRmnJZCS8SQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140822010400.GC2783@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 19, 2014 at 08:17:03AM -0700, Tim Harvey wrote:
-> Do you know of any appropriate bindings for a USB hub reset signal?
-> This does get configured and used properly in the bootloader but I
-> thought the common belief was that GPIO's should get configured in the
-> kernel as well (and of course I will use a value other than 0x8000000
-> so that its pinmuxed and padconf'd).
-> 
-> The PCISKT_WDIS# is a gpio that routes to the miniPCIe socket(s) WDIS#
-> signal. While no kernel driver uses it I think its valuable to
-> document to users such that they can export it and use it for rfkill
-> of wireless devices that may be placed in those sockets. I'm not aware
-> of a proper binding for an rfkill pin either.
-> 
-> If no bindings exist, are you saying these should be dropped and thus
-> functionality hidden from a user possibly trying to use them from
-> userspace through gpio-sysfs or are you saying they should be moved
-> into pinctrl groups for logical grouping?
+Hi Simon,
 
-Oh, I was wondering if these GPIOs can be put into USB and PCIe
-pingroup.  But if you think it doesn't make sense to do so, I'm fine
-with them being in hoggrp, after all it seems we do not have a proper
-binding existing for them.
+On Fri, Aug 22, 2014 at 3:04 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Mon, Aug 11, 2014 at 10:12:14AM +0900, Simon Horman wrote:
+>> On Fri, Aug 08, 2014 at 04:23:08PM +0200, Ulrich Hecht wrote:
+>> > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+>>
+>> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+>>
+>> Mike, could you consider taking this?
+>
+> Hi Mike,
+>
+> I'm wondering if you could take moment to consider this patch.
+> It is a dependency for enabling ccf and in turn multiplatform on
+> the r8a7740 SoC.
 
-Shawn
+Sidenote: as this patch only updates the documentation, and the driver
+won't use the newly added value (for now), there's no hard dependency.
+Furthermore, adding this value is done following the spirit of the existing
+values, and thus I think you can just continue going forward with the parts
+that fall under the shmobile jurisdiction.
+
+Thanks.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
