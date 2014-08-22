@@ -1,61 +1,149 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/5] ARM: shmobile: r8a7740: document MSTP clock
- support
-Date: Fri, 22 Aug 2014 10:04:00 +0900
-Message-ID: <20140822010400.GC2783@verge.net.au>
-References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1407507792-8121-2-git-send-email-ulrich.hecht+renesas@gmail.com>
- <20140811011214.GI26570@verge.net.au>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v5 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
+Date: Thu, 21 Aug 2014 18:27:49 -0700
+Message-ID: <20140822012748.GB12494@sonymobile.com>
+References: <1407796988-25872-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1407796988-25872-3-git-send-email-bjorn.andersson@sonymobile.com>
+ <20140821132204.GH4266@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140811011214.GI26570@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: linux-sh@vger.kernel.org, mturquette@linaro.org, devicetree@vger.kernel.org, magnus.damm@gmail.com
+In-Reply-To: <20140821132204.GH4266@lee--X1>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 11, 2014 at 10:12:14AM +0900, Simon Horman wrote:
-> On Fri, Aug 08, 2014 at 04:23:08PM +0200, Ulrich Hecht wrote:
-> > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+On Thu 21 Aug 06:22 PDT 2014, Lee Jones wrote:
+> > diff --git a/drivers/mfd/qcom_rpm.c b/drivers/mfd/qcom_rpm.c
+> > +static const struct qcom_rpm_data msm8660_template = {
+> > +	.version = -1,
 > 
-> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> -1?
 > 
-> Mike, could you consider taking this?
 
-Hi Mike,
+2 would be a better number...
 
-I'm wondering if you could take moment to consider this patch.
-It is a dependency for enabling ccf and in turn multiplatform on
-the r8a7740 SoC.
-
-> > ---
-> >  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > index 8a92b5f..b3c0617 100644
-> > --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> > @@ -11,6 +11,7 @@ Required Properties:
-> >  
-> >    - compatible: Must be one of the following
-> >      - "renesas,r7s72100-mstp-clocks" for R7S72100 (RZ) MSTP gate clocks
-> > +    - "renesas,r8a7740-mstp-clocks" for R8A7740 (R-Mobile A1) MSTP gate clocks
-> >      - "renesas,r8a7779-mstp-clocks" for R8A7779 (R-Car H1) MSTP gate clocks
-> >      - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
-> >      - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
-> > -- 
-> > 1.8.4.5
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +	.resource_table = msm8660_rpm_resource_table,
+> > +	.n_resources = ARRAY_SIZE(msm8660_rpm_resource_table),
+> > +};
 > 
+> [...]
+> 
+> > +struct qcom_rpm *dev_get_qcom_rpm(struct device *dev)
+> > +{
+> > +	return dev_get_drvdata(dev);
+> > +}
+> > +EXPORT_SYMBOL(dev_get_qcom_rpm);
+> 
+> No need for this at all.  Use dev_get_drvdata() direct instead.
+> 
+
+I see that others have put this as static inline in the header file, so I will
+follow that. I don't want to expose this directly in the implementation of the
+clients.
+
+Let me know if you object.
+
+> [...]
+> 
+> > +static int qcom_rpm_probe(struct platform_device *pdev)
+> > +{
+[...]
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	rpm->status_regs = devm_ioremap_resource(&pdev->dev, res);
+> > +	rpm->ctrl_regs = rpm->status_regs + 0x400;
+> > +	rpm->req_regs = rpm->status_regs + 0x600;
+> > +	if (IS_ERR(rpm->status_regs))
+> > +		return PTR_ERR(rpm->status_regs);
+> 
+> You should probably do this _before_ using it above.
+> 
+
+There's no difference in behaviour, but it just feels cleaner than:
+
+res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+rpm->status_regs = devm_ioremap_resource(&pdev->dev, res);
+if (IS_ERR(rpm->status_regs))
+	return PTR_ERR(rpm->status_regs);
+rpm->ctrl_regs = rpm->status_regs + 0x400;
+rpm->req_regs = rpm->status_regs + 0x600;
+
+If you don't like it, I'll change it.
+
+[...]
+> > +
+> > +	writel(fw_version[0], RPM_CTRL_REG(rpm, 0));
+> > +	writel(fw_version[1], RPM_CTRL_REG(rpm, 1));
+> > +	writel(fw_version[2], RPM_CTRL_REG(rpm, 2));
+> 
+> A comment documenting what this is doing would be helpful here.
+> 
+
+Sounds reasonable, this seems to be incorrect now that I had to investigate
+what's really happening. So I'll update it.
+
+[...]
+> > +}
+> > +
+> > +static int qcom_rpm_remove_child(struct device *dev, void *unused)
+> > +{
+> > +	platform_device_unregister(to_platform_device(dev));
+> > +	return 0;
+> > +}
+> > +
+> > +static int qcom_rpm_remove(struct platform_device *pdev)
+> > +{
+> > +	device_for_each_child(&pdev->dev, NULL, qcom_rpm_remove_child);
+> 
+> of_platform_depopulate()?
+> 
+
+Forgot that we had that now, will update.
+
+> > +	return 0;
+> > +}
+> > +
+> > +static struct platform_driver qcom_rpm_driver = {
+> > +	.probe = qcom_rpm_probe,
+> > +	.remove = qcom_rpm_remove,
+> > +	.driver  = {
+> > +		.name  = "qcom_rpm",
+> > +		.owner = THIS_MODULE,
+> 
+> Remove this line, it's taken care of for you.
+> 
+
+OK
+
+> > +		.of_match_table = qcom_rpm_of_match,
+> > +	},
+> > +};
+> > +
+> > +static int __init qcom_rpm_init(void)
+> > +{
+> > +	return platform_driver_register(&qcom_rpm_driver);
+> > +}
+> > +arch_initcall(qcom_rpm_init);
+> > +
+> > +static void __exit qcom_rpm_exit(void)
+> > +{
+> > +	platform_driver_unregister(&qcom_rpm_driver);
+> > +}
+> > +module_exit(qcom_rpm_exit)
+> > +
+> > +MODULE_DESCRIPTION("Qualcomm Resource Power Manager driver");
+> > +MODULE_LICENSE("GPL v2");
+> 
+> No one authored this driver?
+> 
+
+Thought that was optional, will update.
+
+
+Thanks for the review!
+
+Regards,
+Bjorn
