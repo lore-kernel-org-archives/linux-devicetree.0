@@ -1,54 +1,86 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Fri, 22 Aug 2014 17:45:01 +0200
-Message-ID: <53F7657D.2060304@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de> <20140514141914.446F7C4153D@trevor.secretlab.ca> <20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 00/24] PM / Domains: Generic OF-based support and cleanups
+Date: Fri, 22 Aug 2014 17:56:25 +0200
+Message-ID: <CAPDyKFpXPO+BZu4g0uDwmS7h+QjpiXYVpSz2Yt1F4Ro6UBTJTg@mail.gmail.com>
+References: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
+	<CAMuHMdWLLcWvgvY_nC4doEGnHxNJEQfx5RYbJqZfjm0UT=J47Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140822131919.GX21734@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWLLcWvgvY_nC4doEGnHxNJEQfx5RYbJqZfjm0UT=J47Q@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 22.08.2014 15:19, schrieb Mark Rutland:
-> On Thu, Aug 21, 2014 at 08:19:00PM +0100, Alexander Holler wrote:
->> Am 21.08.2014 16:02, schrieb Thierry Reding:
+On 22 August 2014 14:15, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Hi Ulf, Tomasz,
+>
+> On Tue, Jun 10, 2014 at 12:51 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> Parts of this patchset has been posted earlier. To be able to smoothly continue
+>> my work in re-factoring genpd I have collected patches into this patchset.
 >>
->>> Anyway, those are all fairly standard reasons for where deferred probe
->>> triggers, and since I do like deferred probe for it's simplicity and
->>> reliability I'd rather not try to work around it if boot time is all
->>> that people are concerned about.
+>> The complete patchset is available at the linux-pm_linux-next_genpd branch at:
+>> git.linaro.org/people/ulf.hansson/linux-2.6.git
+>> This branch is based upon Rafael's linux-pm tree's linux-next branch.
 >>
->> It's neither simple nor reliable. It's non deterministic brutforcing
->> while making it almost impossible to identify real errors.
+>> And important note. There are dependencies througout this patchset, which means
+>> the all need to go together. I suggest we use Rafael's tree, thus I seek for
+>> acks from the affected ARM SoC maintainers.
+>>
+>> Tomasz Figa (3):
+>>   base: power: Add generic OF-based power domain look-up
+>>   drivercore: Bind/unbind power domain on probe/remove
+>>   ARM: exynos: Move to generic power domain bindings
+>>
+>> Ulf Hansson (21):
+>>   PM / Domains: Ignore callbacks for subsys generic_pm_domain_data
+>>   PM / Domains: Remove the pm_genpd_add|remove_callbacks APIs
+>>   PM / Domains: Remove system PM callbacks from gpd_dev_ops
+>>   ARM: shmobile: Drop dev_irq_safe from r8a7779 genpd config
+>>   ARM: shmobile: Drop dev_irq_safe from R-mobile genpd config
+>>   PM / Domains: Remove dev_irq_safe from genpd config
+>>   PM / Domains: Remove redundant check for CONFIG_PM
+>>   PM / Domains: Remove legacy API for adding devices through DT
+>>   PM / Domains: Remove pm_genpd_syscore_switch() API
+>>   PM / Domains: Remove genpd_queue_power_off_work() API
+>>   PM / Domains: Add late_initcall to disable unused domains
+>>   ARM: exynos: Leave disabling of unused pm domains to genpd
+>>   ARM: s3c64xx: Leave disabling of unused pm domains to genpd
+>>   drivers: sh: Leave disabling of unused pm domains to genpd
+>>   PM / Domains: Remove default_stop_ok() API
+>>   dt: bindings: ux500: Add documentation for power domains
+>>   dt: bindings: ux500: Add header for power domains specifiers
+>>   ARM: ux500: Initial support for power domains
+>>   ARM: ux500: Enable Kconfig for the generic power domain
+>>   ARM: ux500: Add DT node for ux500 power domains
+>>   ARM: ux500: Add sdi[n] devices to VAPE power domain
 >
-> It's horrible, yes.
+> What are your plans with this patch series?
 >
->> In my humble opinion the worst way to solve something. I'm pretty sure
->> if I would have suggest such a solution, the maintainer crowd would have
->> eaten me without cooking.
+> Thanks!
+
+I have been working on the generic power domain DT parts. It needs
+some more tests, but will for sure post and new patchset early next
+week.
+
+Then there are two more separate series:
+1.. "The genpd cleanup/small-fixes" - I will also post this soon,
+re-based and separate from the other series.
+2. "Genpd support for ux500" - I will keep this one on hold, until the
+generic power domain DT patchset has been accepted.
+
+Kind regards
+Uffe
+
 >
-> We didn't have a better workable solution at the time. Having a hack
-> that got boards booting was considered better than not having them boot.
-> I don't remember people being particularly enthralled by the idea.
-
-Agreed. And usually I don't flame about workarounds. They are needed 
-practice usually born out of a time limited background or similiar 
-constraints.
-
-Only Linux kernel maintainers do demand perfect stuff from others as the 
-kernel seems to have to be a perfect school project. I for myself 
-already think checkpatch is a ridiculous tool, only invented to drive 
-people crazy. Of course, it's better a tool drives people crazy than a 
-maintainer who make decisions based on the phase of the moon, but ... ;)
-
-And I haven't flamed much about deferred probe before, but if I read 
-it's simple and reliable I couldn't stand still.
-
-Sorry,
-
-Alexander Holler
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
