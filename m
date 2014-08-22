@@ -1,76 +1,56 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 1/6] ARM: dts: OMAP3+: Add PRM interrupt
-Date: Fri, 22 Aug 2014 09:03:50 -0500
-Message-ID: <1408716235-26164-2-git-send-email-nm@ti.com>
-References: <1408716235-26164-1-git-send-email-nm@ti.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] doc: dt/bindings: input: Fix drv260x binding document
+Date: Fri, 22 Aug 2014 09:12:21 -0500
+Message-ID: <1408716741-1163-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408716235-26164-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, Paul Walmsley <paul@pwsan.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
-Cc: Kevin Hilman <khilman@deeprootsystems.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, linux-arm-kernel@lists.infradead.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Provide OMAP3, 4 and OMAP5 with interrupt number for PRM
+Update the drv260x dt binding document:
+- Change the node name to the devices function not the
+device name.
+- Add vbat-supply to the example.
+- Fix indentation of the example.
 
-And for DRA7, provide crossbar number for prm interrupt.
-
-Signed-off-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- arch/arm/boot/dts/dra7.dtsi  |    1 +
- arch/arm/boot/dts/omap3.dtsi |    1 +
- arch/arm/boot/dts/omap4.dtsi |    1 +
- arch/arm/boot/dts/omap5.dtsi |    1 +
- 4 files changed, 4 insertions(+)
+ .../devicetree/bindings/input/ti,drv260x.txt       |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 97f603c..7a3e011 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -89,6 +89,7 @@
- 		prm: prm@4ae06000 {
- 			compatible = "ti,dra7-prm";
- 			reg = <0x4ae06000 0x3000>;
-+			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/Documentation/devicetree/bindings/input/ti,drv260x.txt
+index a9c8519..214e25d 100644
+--- a/Documentation/devicetree/bindings/input/ti,drv260x.txt
++++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
+@@ -37,15 +37,16 @@ Optional properties:
+ 			  3.2 v.
+ Example:
  
- 			prm_clocks: clocks {
- 				#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 575a49b..3136ed1 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -97,6 +97,7 @@
- 		prm: prm@48306000 {
- 			compatible = "ti,omap3-prm";
- 			reg = <0x48306000 0x4000>;
-+			interrupts = <11>;
+-drv2605l: drv2605l@5a {
+-		compatible = "ti,drv2605l";
+-		reg = <0x5a>;
+-		enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+-		mode = <DRV260X_LRA_MODE>;
+-		library-sel = <DRV260X_LIB_LRA>;
+-		vib-rated-mv = <3200>;
+-		vib-overdriver-mv = <3200>;
+-};
++haptics:@5a {
++	compatible = "ti,drv2605l";
++	reg = <0x5a>;
++	vbat-supply = <&vbat>;
++	enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	mode = <DRV260X_LRA_MODE>;
++	library-sel = <DRV260X_LIB_LRA>;
++	vib-rated-mv = <3200>;
++	vib-overdriver-mv = <3200>;
++}
  
- 			prm_clocks: clocks {
- 				#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 69408b5..7375d44 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -129,6 +129,7 @@
- 		prm: prm@4a306000 {
- 			compatible = "ti,omap4-prm";
- 			reg = <0x4a306000 0x3000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			prm_clocks: clocks {
- 				#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index fc8df17..df0a09b 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -131,6 +131,7 @@
- 		prm: prm@4ae06000 {
- 			compatible = "ti,omap5-prm";
- 			reg = <0x4ae06000 0x3000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			prm_clocks: clocks {
- 				#address-cells = <1>;
+ For more product information please see the link below:
+ http://www.ti.com/product/drv2605
 -- 
 1.7.9.5
+
