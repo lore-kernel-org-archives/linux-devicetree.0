@@ -1,50 +1,54 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5] devicetree: Add generic IOMMU device tree bindings
-Date: Fri, 22 Aug 2014 16:33:42 +0100
-Message-ID: <20140822153342.GD17255@arm.com>
-References: <1406803383-11601-1-git-send-email-thierry.reding@gmail.com>
-	<87a9774lf5.fsf@nvidia.com> <20140815115110.GO27466@arm.com>
-	<6a3d4048ddb84bd19c847adf7f02fc52@BL2PR03MB468.namprd03.prod.outlook.com>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Fri, 22 Aug 2014 17:45:01 +0200
+Message-ID: <53F7657D.2060304@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de> <20140514141914.446F7C4153D@trevor.secretlab.ca> <20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6a3d4048ddb84bd19c847adf7f02fc52-AZ66ij2kwaacCcN9WK45f+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140822131919.GX21734@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Varun,
+Am 22.08.2014 15:19, schrieb Mark Rutland:
+> On Thu, Aug 21, 2014 at 08:19:00PM +0100, Alexander Holler wrote:
+>> Am 21.08.2014 16:02, schrieb Thierry Reding:
+>>
+>>> Anyway, those are all fairly standard reasons for where deferred probe
+>>> triggers, and since I do like deferred probe for it's simplicity and
+>>> reliability I'd rather not try to work around it if boot time is all
+>>> that people are concerned about.
+>>
+>> It's neither simple nor reliable. It's non deterministic brutforcing
+>> while making it almost impossible to identify real errors.
+>
+> It's horrible, yes.
+>
+>> In my humble opinion the worst way to solve something. I'm pretty sure
+>> if I would have suggest such a solution, the maintainer crowd would have
+>> eaten me without cooking.
+>
+> We didn't have a better workable solution at the time. Having a hack
+> that got boards booting was considered better than not having them boot.
+> I don't remember people being particularly enthralled by the idea.
 
-On Tue, Aug 19, 2014 at 01:11:43PM +0100, Varun Sethi wrote:
-> > I think there's some confusion here. The ARM architected SMMU does not
-> > perform any StreamID translation -- it sees an incoming ID and uses that to
-> > lookup a set of translation tables. 
-> 
-> I don't completely agree with this. In case of MMU-500  don't we have the
-> "TBUID + device assigned stream ID" representing the stream ID for
-> matching at the TCU? In case of our platform, we have hot pluggable device
-> objects comprising of devices connected to different TBUs. We have a
-> requirement to use a single stream ID for all the distributed objects. We
-> will have to use the stream ID masking capability to mask out the TBU ID.
+Agreed. And usually I don't flame about workarounds. They are needed 
+practice usually born out of a time limited background or similiar 
+constraints.
 
-Please try to avoid mixing up micro-architectural details (i.e. how the
-MMU-500 is integrated) with the software view defined by the architecture.
+Only Linux kernel maintainers do demand perfect stuff from others as the 
+kernel seems to have to be a perfect school project. I for myself 
+already think checkpatch is a ridiculous tool, only invented to drive 
+people crazy. Of course, it's better a tool drives people crazy than a 
+maintainer who make decisions based on the phase of the moon, but ... ;)
 
-The point was that we don't need to over-engineer Linux to perform things
-like StreamID (re)assignment, because that isn't the way the architecture is
-designed. Your hotplug architecture may require the notion of masks, but
-we can treat that as a fixed property of the hardware as opposed to something
-we have to manage in the OS.
+And I haven't flamed much about deferred probe before, but if I read 
+it's simple and reliable I couldn't stand still.
 
-Will
+Sorry,
+
+Alexander Holler
