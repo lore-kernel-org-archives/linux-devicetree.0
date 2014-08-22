@@ -1,39 +1,45 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 1/2] watchdog: Add Cadence WDT driver
-Date: Fri, 22 Aug 2014 00:33:44 -0700
-Message-ID: <20140822073344.GA23635@roeck-us.net>
-References: <1406788855-19074-1-git-send-email-harinik@xilinx.com>
- <20140821185722.GA17481@roeck-us.net>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Gateworks GW5520 support (i.MX6)
+Date: Fri, 22 Aug 2014 15:43:45 +0800
+Message-ID: <20140822074341.GA2540@dragon>
+References: <1407572602-14017-1-git-send-email-tharvey@gateworks.com>
+ <20140818063510.GD2114@dragon>
+ <CAJ+vNU0qJrNtZMcPGWkGOPuHmyiV+3d-OM71PGDNRmnJZCS8SQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140821185722.GA17481@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>
-Cc: wim@iguana.be, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michals@xilinx.com, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, harinikatakamlinux@gmail.com, svemula@xilinx.com, anirudh@xilinx.com
+In-Reply-To: <CAJ+vNU0qJrNtZMcPGWkGOPuHmyiV+3d-OM71PGDNRmnJZCS8SQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 21, 2014 at 11:57:22AM -0700, Guenter Roeck wrote:
-> On Thu, Jul 31, 2014 at 12:10:54PM +0530, Harini Katakam wrote:
-> > Add Cadence WDT driver. This is used by Xilinx Zynq.
-> > 
-> > Signed-off-by: Harini Katakam <harinik@xilinx.com>
+On Tue, Aug 19, 2014 at 08:17:03AM -0700, Tim Harvey wrote:
+> Do you know of any appropriate bindings for a USB hub reset signal?
+> This does get configured and used properly in the bootloader but I
+> thought the common belief was that GPIO's should get configured in the
+> kernel as well (and of course I will use a value other than 0x8000000
+> so that its pinmuxed and padconf'd).
 > 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> The PCISKT_WDIS# is a gpio that routes to the miniPCIe socket(s) WDIS#
+> signal. While no kernel driver uses it I think its valuable to
+> document to users such that they can export it and use it for rfkill
+> of wireless devices that may be placed in those sockets. I'm not aware
+> of a proper binding for an rfkill pin either.
+> 
+> If no bindings exist, are you saying these should be dropped and thus
+> functionality hidden from a user possibly trying to use them from
+> userspace through gpio-sysfs or are you saying they should be moved
+> into pinctrl groups for logical grouping?
 
-Hah, that was too fast. The driver causes build errors for a number or
-architectures, including x86_64.
+Oh, I was wondering if these GPIOs can be put into USB and PCIe
+pingroup.  But if you think it doesn't make sense to do so, I'm fine
+with them being in hoggrp, after all it seems we do not have a proper
+binding existing for them.
 
-drivers/watchdog/cadence_wdt.c: In function 'cdns_wdt_writereg':
-drivers/watchdog/cadence_wdt.c:93:2: error: implicit declaration of function
-'writel_relaxed' [-Werror=implicit-function-declaration]
-cc1: some warnings being treated as errors
-make[2]: *** [drivers/watchdog/cadence_wdt.o] Error 1
-make[1]: *** [drivers/watchdog] Error 2
-
-Please make sure that the driver is only configurable for architectures
-supporting writel_relaxed.
-
-Thanks,,
-Guenter
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
