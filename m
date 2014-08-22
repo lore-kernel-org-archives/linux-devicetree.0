@@ -1,57 +1,47 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC regulators
-Date: Fri, 22 Aug 2014 15:15:04 -0700
-Message-ID: <CAD=FV=WC0h7fYm2QFqu3Zka7CsU4BtG-oyPpJav+ygC+gmCR+A@mail.gmail.com>
-References: <1408350762-15520-1-git-send-email-javier.martinez@collabora.co.uk>
-	<1408350762-15520-2-git-send-email-javier.martinez@collabora.co.uk>
-	<CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>
-	<53F73472.8010609@collabora.co.uk>
-	<20140822144531.GV24407@sirena.org.uk>
-	<53F7838F.8060906@collabora.co.uk>
-	<20140822183054.GY24407@sirena.org.uk>
-	<53F7BDD8.7060500@collabora.co.uk>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: DRA7: fix interrupt-cells for GPIO
+Date: Fri, 22 Aug 2014 16:02:54 -0700
+Message-ID: <20140822230253.GJ10066@atomide.com>
+References: <1406748032-19417-1-git-send-email-nm@ti.com>
+ <53F249F3.9070402@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53F7BDD8.7060500-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53F249F3.9070402-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yuvaraj Cd <yuvaraj.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prashanth G <prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [140818 11:49]:
+> On 07/30/2014 02:20 PM, Nishanth Menon wrote:
+> > GPIO modules are also interrupt sources. However, they require both the
+> > GPIO number and IRQ type to function properly.
+> > 
+> > By declaring that GPIO uses interrupt-cells=<1>, we essentially do not
+> > allow users of the nodes to use the interrupt property appropritely.
+> > 
+> > With this change, the following now works:
+> > 
+> > interrupt-parent = <&gpio6>;
+> > interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
+> > 
+> > Fixes: 6e58b8f1daaf ('ARM: dts: DRA7: Add the dts files for dra7 SoC and dra7-evm board')
+> > Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> > ---
+> > Based on v3.16-rc7
+> > 
+> >  arch/arm/boot/dts/dra7.dtsi |   16 ++++++++--------
+> >  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> Tony,
+> Gentle ping. we still have this issue on 3.17-rc1. any suggestions on
+> if we can pick this up during RC?
 
-On Fri, Aug 22, 2014 at 3:02 PM, Javier Martinez Canillas
-<javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
-> Hello Mark,
->
-> On 08/22/2014 08:30 PM, Mark Brown wrote:
->>
->>> The problem is that one of these regulators is used as the vqmmc-supply
->>> (VCCQ/VDD_IO) so the mmc host controller driver disables it on
->>> MMC_POWER_OFF. Now AFAIK (Yuvaraj can correct me what I got wrong) this
->>> shouldn't be an issue since on card detection, the vqmmc supply should be
->>> enabled again but on Exynos the built-in card detect line is on the same
->>> power rail as vqmmc. That means that disabling the regulator prevents card
->>> insertions to be detected.
->>
->> If the MMC host controller needs a supply enabling in order to do card
->> detection and it's supposed to be doing card detection I'd expect it to
->> be enabling that supply.  Why is it not doing that?
->>
->
-> Good question. I'm not that familiar with the dw_mmc host controller nor
-> its driver implementation so I'll let Yuvaraj or Doug to answer that.
+Yes thanks applying into omap-for-v3.17/fixes.
 
-I haven't seen the issue that Yuvaraj is reporting (but I also haven't
-picked up all of the relevant patches and tried to reproduce), so I'm
-going to have to leave it to Yuvaraj to answer.
-
-As far as I know the dw_mmc driver ought to be enabling vqmmc when it
-needs it.  Perhaps there's a bug in your patch series that adds vqmmc
-support to dw_mmc?
-
--Doug
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
