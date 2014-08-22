@@ -1,72 +1,78 @@
-From: Harini Katakam <harinik@xilinx.com>
-Subject: [PATCH v5 2/2] devicetree: Add Cadence WDT devicetree bindings documentation
-Date: Fri, 22 Aug 2014 14:58:02 +0530
-Message-ID: <1408699682-21845-2-git-send-email-harinik@xilinx.com>
-References: <1408699682-21845-1-git-send-email-harinik@xilinx.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1408699682-21845-1-git-send-email-harinik@xilinx.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: wim@iguana.be, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
-Cc: michals@xilinx.com, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, harinikatakamlinux@gmail.com, linux@roeck-us.net, svemula@xilinx.com, anirudh@xilinx.com, Harini Katakam <harinik@xilinx.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv2 4/6] dt-bindings: arm: add Freescale LS1021A SoC device
+ tree binding
+Date: Fri, 22 Aug 2014 10:21:18 +0000
+Message-ID: <1473bddb7bc142d086d529e755c741d8@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
+ <1407145148-29217-5-git-send-email-jingchang.lu@freescale.com>
+ <53F495F1.60800@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53F495F1.60800-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add cadence-wdt bindings documentation.
-
-Signed-off-by: Harini Katakam <harinik@xilinx.com>
----
-
-v5 changes:
-No changes
-
-v4 changes:
-- Change name of property "reset" to "reset-on-timeout".
-- Use cdns compatible string in example.
-- Improve description of clocks and interrupts.
-
-v3 changes:
-- Change reset property type and improve description.
-- Improve description of clocks and interrupts.
-- Use watchdog@ in the example.
-- Use only cdns compatible string for now.
-
-v2:
-No changes
-
----
- .../devicetree/bindings/watchdog/cadence-wdt.txt   |   24 ++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-
-diff --git a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-new file mode 100644
-index 0000000..c3a36ee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-@@ -0,0 +1,24 @@
-+Zynq Watchdog Device Tree Bindings
-+-------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "cdns,wdt-r1p2".
-+- clocks		: This is pclk (APB clock).
-+- interrupts		: This is wd_irq - watchdog timeout interrupt.
-+- interrupt-parent	: Must be core interrupt controller.
-+
-+Optional properties
-+- reset-on-timeout	: If this property exists, then a reset is done
-+			  when watchdog times out.
-+- timeout-sec		: Watchdog timeout value (in seconds).
-+
-+Example:
-+	watchdog@f8005000 {
-+		compatible = "cdns,wdt-r1p2";
-+		clocks = <&clkc 45>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 9 1>;
-+		reg = <0xf8005000 0x1000>;
-+		reset-on-timeout;
-+		timeout-sec = <10>;
-+	};
--- 
-1.7.9.5
-
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IERpYW5hIENyYWNpdW4gW21h
+aWx0bzpkaWFuYS5jcmFjaXVuQGZyZWVzY2FsZS5jb21dDQo+U2VudDogV2VkbmVzZGF5LCBBdWd1
+c3QgMjAsIDIwMTQgODozNSBQTQ0KPlRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+Q2M6IEd1byBT
+aGF3bi1SNjUwNzM7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZzsNCj5saW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj5TdWJqZWN0OiBS
+ZTogW1BBVENIdjIgNC82XSBkdC1iaW5kaW5nczogYXJtOiBhZGQgRnJlZXNjYWxlIExTMTAyMUEg
+U29DDQo+ZGV2aWNlIHRyZWUgYmluZGluZw0KPg0KPk9uIDA4LzA0LzIwMTQgMTI6MzkgUE0sIEpp
+bmdjaGFuZyBMdSB3cm90ZToNCj4+IFNpZ25lZC1vZmYtYnk6IEppbmdjaGFuZyBMdSA8amluZ2No
+YW5nLmx1QGZyZWVzY2FsZS5jb20+DQo+PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9mc2wudHh0IHwgMzcNCj4rKysrKysrKysrKysrKysrKysrKysrKysr
+KysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKykNCj4+DQo+PiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wudHh0DQo+PiBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnR4dA0KPj4gaW5kZXgg
+ZTkzNWQ3ZC4uYzk2MjEyNCAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9hcm0vZnNsLnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2FybS9mc2wudHh0DQo+PiBAQCAtNzQsMyArNzQsNDAgQEAgUmVxdWlyZWQgcm9v
+dCBub2RlIHByb3BlcnRpZXM6DQo+PiAgIGkuTVg2cSBnZW5lcmljIGJvYXJkDQo+PiAgIFJlcXVp
+cmVkIHJvb3Qgbm9kZSBwcm9wZXJ0aWVzOg0KPj4gICAgICAgLSBjb21wYXRpYmxlID0gImZzbCxp
+bXg2cSI7DQo+PiArDQo+PiArDQo+PiArRnJlZXNjYWxlIExTMTAyMUEgUGxhdGZvcm0gRGV2aWNl
+IFRyZWUgQmluZGluZ3MNCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0NCj4+ICsNCj4+ICtSZXF1aXJlZCByb290IG5vZGUgY29tcGF0aWJsZSBwcm9w
+ZXJ0aWVzOg0KPj4gKyAgLSBjb21wYXRpYmxlID0gImZzbCxsczEwMjFhIjsNCj4+ICsNCj4+ICtT
+b0Mtc3BlY2lmaWMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHN5c3RlbSBjb25maWd1cmF0aW9u
+DQo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gKw0K
+Pj4gK1JlcXVpcmVkIGRldmljZSBub2RlIGNvbXBhdGlibGUgcHJvcGVydGllczoNCj4+ICsNCj4+
+ICsgIC0gY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1zY2ZnIjoNCj4+ICsJc2NmZyBpcyB0aGUg
+c3VwcGxlbWVudGFsIGNvbmZpZ3VyYXRpb24gdW5pdCwgcHJvdmlkZXMgU29DIHNwZWNpZmljDQo+
+PiArCWNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cyByZWdpc3RlcnMgZm9yIHRoZSBjaGlwLiBUaGVy
+ZSBpcyBubw0KPmRlZGljYXRlDQo+PiArCWRyaXZlciBmb3IgaXQsIGJ1dCBmb3IgZGV2aWNlIHdo
+b3NlIGNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cw0KPnJlZ2lzdGVyDQo+PiArCWxvY2F0ZXMgaW4g
+dGhpcyBzcGFjZSBzaG91bGQgb3BlcmF0ZSBvbiBpdC4gU3VjaCBhcyBnZXR0aW5nIFBFWCBwb3J0
+DQo+PiArCXN0YXR1cy4NCj4+ICsNCj4+ICsgIC0gY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1k
+Y2ZnIjoNCj4+ICsJZGNmZyBpcyB0aGUgZGV2aWNlIGNvbmZpZ3VyYXRpb24gdW5pdCB0aGF0IHBy
+b3ZpZGVzIGdlbmVyYWwgcHVycG9zZQ0KPj4gKwljb25maWd1cmF0aW9uIGFuZCBzdGF0dXMgZm9y
+IHRoZSBkZXZpY2UsIHRoZXJlIGlzIG5vIGRlZGljYXRlIGRyaXZlcg0KPj4gKwlmb3IgaXQsIGJ1
+dCBmb3IgZGV2aWNlIHdob3NlIGNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cyByZWdpc3Rlcg0KPmxv
+Y2F0ZXMNCj4+ICsJaW4gdGhpcyBzcGFjZSBzaG91bGQgb3BlcmF0ZSBvbiBpdC4gU3VjaCBhcyBz
+ZXR0aW5nIHRoZSBzZWNvbmRhcnkNCj5jb3JlDQo+PiArCXN0YXJ0IGFkZHJlc3MgYW5kIHJlbGVh
+c2UgdGhlIHNlY29uZGFyeSBjb3JlIGZyb20gaG9sZG9mZiBhbmQNCj5zdGFydHVwLg0KPg0KPklz
+IGl0IHRoYXQgaW1wb3J0YW50IHRvIGJlIG1lbnRpb25lZCBpbiB0aGUgYmluZGluZyB0aGF0IHRo
+ZXJlIGlzIG5vDQo+ZHJpdmVyIGZvciBpdD8gSXQgc2VlbXMgdG8gYmUganVzdCBhbiBpbXBsZW1l
+bnRhdGlvbiBkZXRhaWwsIHRoZSBkZXZpY2UNCj50cmVlIGRlc2NyaWJlcyB0aGUgaGFyZHdhcmUg
+bm90IGFueSBwYXJ0aWN1bGFyIGltcGxlbWVudGF0aW9uLg0KPg0KPj4gKw0KPj4gK0V4YW1wbGU6
+DQo+PiArCXNjZmc6IHNjZmdAMTU3MDAwMCB7DQo+PiArCQljb21wYXRpYmxlID0gImZzbCxsczEw
+MjFhLXNjZmciOw0KPj4gKwkJcmVnID0gPDB4MCAweDE1NzAwMDAgMHgwIDB4MTAwMDA+Ow0KPg0K
+PlRoZSByZWcgaXMgbm90IHBhcnQgb2YgdGhlIGRlc2NyaXB0aW9uIGFib3ZlLiBJIHRoaW5rIHRo
+YXQgZWFjaCBvZiB0aGVzZQ0KPm5vZGVzIHNob3VsZCBiZSBkZXNjcmliZWQgc2VwYXJhdGUsIG1h
+eWJlIHNvbWV0aGluZyBsaWtlIHRoaXM6DQo+DQo+RnJlZXNjYWxlIFNDRkcNCj4NCj5zY2ZnIGlz
+IHRoZSBzdXBwbGVtZW50YWwgY29uZmlndXJhdGlvbiB1bml0LCBwcm92aWRlcyBTb0Mgc3BlY2lm
+aWMNCj5jb25maWd1cmF0aW9uIGFuZCBzdGF0dXMgcmVnaXN0ZXJzIGZvciB0aGUgY2hpcC4gVGhl
+cmUgaXMgbm8gZGVkaWNhdGUNCj5kcml2ZXIgZm9yIGl0LCBidXQgZm9yIGRldmljZSB3aG9zZSBj
+b25maWd1cmF0aW9uIGFuZCBzdGF0dXMgcmVnaXN0ZXINCj5sb2NhdGVzIGluIHRoaXMgc3BhY2Ug
+c2hvdWxkIG9wZXJhdGUgb24gaXQuIFN1Y2ggYXMgZ2V0dGluZyBQRVggcG9ydA0KPnN0YXR1cy4N
+ClRoYW5rcywgSSB3aWxsIHJlZGVzY3JpYmUgdGhlbS4NCg0KDQoNCkJlc3QgUmVnYXJkcywNCkpp
+bmdjaGFuZw0KDQoNCg0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
