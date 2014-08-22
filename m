@@ -1,79 +1,75 @@
-From: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: [PATCH] of: Fix constantness of of_n_size_cells
-Date: Fri, 22 Aug 2014 17:43:36 +0000
-Message-ID: <cover.1408729200.git.geoff@infradead.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC
+ regulators
+Date: Fri, 22 Aug 2014 13:30:54 -0500
+Message-ID: <20140822183054.GY24407@sirena.org.uk>
+References: <1408350762-15520-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1408350762-15520-2-git-send-email-javier.martinez@collabora.co.uk>
+ <CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>
+ <53F73472.8010609@collabora.co.uk>
+ <20140822144531.GV24407@sirena.org.uk>
+ <53F7838F.8060906@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2+XEzv9QEhmMrrEN"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53F7838F.8060906@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The of_n_size_cells() routine only does a read-only operation on the device tree
-passed in, so add the const keyword to that argument so that of_n_size_cells()
-can be called with read-only data without casting.
 
-Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
----
-The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
+--2+XEzv9QEhmMrrEN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
+On Fri, Aug 22, 2014 at 07:53:19PM +0200, Javier Martinez Canillas wrote:
+> On 08/22/2014 04:45 PM, Mark Brown wrote:
+> > On Fri, Aug 22, 2014 at 02:15:46PM +0200, Javier Martinez Canillas wrote:
 
-are available in the git repository at:
+> >> Mark, any opinions on how this should be solved will be highly appreciated.
 
-  git://git.linaro.org/people/geoff.levand/linux-kexec.git for-of
+> > If someone could tell me what "this" is that'd help...
 
-for you to fetch changes up to e7667576c053daedba1da0b14d4476bc25a86a11:
+> Sorry for not being clear on that regard. By "this" I meant the problem
+> reported by Yuvaraj.
 
-  of: Fix constantness of of_n_size_cells (2014-08-22 10:33:59 -0700)
+That mail was rather lengthy and seemed to be discussing several issues.
 
-----------------------------------------------------------------
-Geoff Levand (1):
-      of: Fix constantness of of_n_size_cells
- drivers/of/base.c  | 4 ++--
- include/linux/of.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+> The problem is that one of these regulators is used as the vqmmc-supply
+> (VCCQ/VDD_IO) so the mmc host controller driver disables it on
+> MMC_POWER_OFF. Now AFAIK (Yuvaraj can correct me what I got wrong) this
+> shouldn't be an issue since on card detection, the vqmmc supply should be
+> enabled again but on Exynos the built-in card detect line is on the same
+> power rail as vqmmc. That means that disabling the regulator prevents card
+> insertions to be detected.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d8574ad..f773679 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -53,7 +53,7 @@ DEFINE_MUTEX(of_mutex);
-  */
- DEFINE_RAW_SPINLOCK(devtree_lock);
- 
--int of_n_addr_cells(struct device_node *np)
-+int of_n_addr_cells(const struct device_node *np)
- {
- 	const __be32 *ip;
- 
-@@ -69,7 +69,7 @@ int of_n_addr_cells(struct device_node *np)
- }
- EXPORT_SYMBOL(of_n_addr_cells);
- 
--int of_n_size_cells(struct device_node *np)
-+int of_n_size_cells(const struct device_node *np)
- {
- 	const __be32 *ip;
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 6c4363b..6eebcf6 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -285,8 +285,8 @@ extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
- #define for_each_property_of_node(dn, pp) \
- 	for (pp = dn->properties; pp != NULL; pp = pp->next)
- 
--extern int of_n_addr_cells(struct device_node *np);
--extern int of_n_size_cells(struct device_node *np);
-+extern int of_n_addr_cells(const struct device_node *np);
-+extern int of_n_size_cells(const struct device_node *np);
- extern const struct of_device_id *of_match_node(
- 	const struct of_device_id *matches, const struct device_node *node);
- extern int of_modalias_node(struct device_node *node, char *modalias, int len);
--- 
-1.9.1
+If the MMC host controller needs a supply enabling in order to do card
+detection and it's supposed to be doing card detection I'd expect it to
+be enabling that supply.  Why is it not doing that?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--2+XEzv9QEhmMrrEN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT94xVAAoJELSic+t+oim9+sAP/0cqgmmXXz6iRp17Yz50SEe8
+bmS8yZpJm8VkJ7Jc1qSX8UTWOO5GejWgFogjANm5zOqPCPDD0Sk7ZMn/O3Rep+kW
+ZhuvT6pWFXetx5/A8EpS9JrsUIrSJ1kjyzkNvSFscom41Xfo58UzYY99abMg9im1
+PpOAk32owkOogMzbWhH9r13UpdAcWP9AItIPNCuNV+VAOwfmcQS1bQtfbS4KwOxI
+MRm9mn75bvzF+1xm2b92rrRgyX+qOVFsSrwL7u59xjU5rnt0o4/XUWr+GxiGmm3y
+AgFZrFlBPDONZyxfqTZjtJhw281aQOS9R2YpAerGqHGRLvSxYKZAKdA9CstJ2bzP
+qaRVvmPmsy/FZCioV6u5/ES6tekmoO0PHzehjRdwV3t+b0Mt5z0Ttx058VUSnj/O
+z9Zae3HzOfuO3LFBHYaKWcErGK3VNbc9x9/E92pd+i0r/5zetEsifJjOZ8U2tigC
+Ayv6v4AOJKxhpRt3DLyQh0NnYLO+Doxrbo2PBV1yz7CPIBGDytB81FW43iw/BV+a
+GIZIXBDFMgMsP+G6SoMLoBAOS9NqbzsRG5FC9ZSDIM9hK77mfyj5DdGLHbDD1m2L
+TbO67IEjTGHQ/Qxcsh+go69yzJYh3vkgDWnKSqUFArvTtxqRQSIl95jhv1u2Q8QW
++yIUmY9hsMtj7gDyyDDX
+=0vDJ
+-----END PGP SIGNATURE-----
+
+--2+XEzv9QEhmMrrEN--
