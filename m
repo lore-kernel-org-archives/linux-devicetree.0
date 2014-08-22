@@ -1,119 +1,302 @@
-Return-Path: <rayj00@yahoo.com>
-Message-ID: <32490.78673.bm@smtp221.mail.bf1.yahoo.com>
+Return-Path: <f.fainelli@gmail.com>
 MIME-Version: 1.0
-From: Ray <rayj00@yahoo.com>
-Subject: RE: [PATCH v2 6/6] devicetree: bindings: Document Renesas
- JPEGProcessing Unit.
-Date: Mon, 25 Aug 2014 20:09:43 -0400
-Content-Type: multipart/alternative;
-	boundary="_971D57AF-294C-43A0-BCF7-8D07198398A3_"
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Fri, 22 Aug 2014 13:42:50 -0700
+Message-ID: <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Content-Type: multipart/alternative; boundary=089e013a0606d1081205013de392
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---_971D57AF-294C-43A0-BCF7-8D07198398A3_
+--089e013a0606d1081205013de392
+Content-Type: text/plain; charset=UTF-8
+
+On Aug 21, 2014 3:05 PM, "Andrew Bresticker" <abrestic@chromium.org> wrote:
+>
+> To be consistent with other architectures and to avoid unnecessary
+> makefile duplication, move all MIPS device-trees to arch/mips/boot/dts
+> and build them with a common makefile.
+
+I recall reading that the ARM organization for DTS files was a bit
+unfortunate and should have been something like:
+
+arch/arm/boot/dts/<vendor>/
+
+Is this something we should do for the MIPS and update the other
+architectures to follow that scheme?
+
+>
+> Patch 1 sets up the makefiles for building the DTs in arch/mips/boot/dts
+> and introduces the config option BUILTIN_DTB for platforms that require
+> it.
+>
+> Patch 2 introduces the 'dtbs' makefile target to allow building of just
+> the DT binaries.
+>
+> Patches 3-7 move the DTs out of the platform directores.
+>
+> I've build tested this on all affected platforms (Octeon, Lantiq, SEAD3,
+> Netlogic, and Ralink) as well as Malta.  For platforms where builtin DTBs
+> are optional (Netlogic and Ralink), I built with and without the builtin
+> DTBs.
+>
+> Based on 3.17-rc1.
+>
+> Andrew Bresticker (7):
+>   MIPS: Create common infrastructure for building built-in device-trees
+>   MIPS: Add support for building device-tree binaries
+>   MIPS: Octeon: Move device-trees to arch/mips/boot/dts/
+>   MIPS: Lantiq: Move device-trees to arch/mips/boot/dts/
+>   MIPS: sead3: Move device-trees to arch/mips/boot/dts/
+>   MIPS: Netlogic: Move device-trees to arch/mips/boot/dts/
+>   MIPS: ralink: Move device-trees to arch/mips/boot/dts/
+>
+>  arch/mips/Kconfig                                    |  5 +++++
+>  arch/mips/Makefile                                   | 11 +++++++++++
+>  arch/mips/boot/.gitignore                            |  1 +
+>  arch/mips/boot/dts/Makefile                          | 20
+++++++++++++++++++++
+>  arch/mips/{lantiq => boot}/dts/danube.dtsi           |  0
+>  arch/mips/{lantiq => boot}/dts/easy50712.dts         |  0
+>  arch/mips/{ralink => boot}/dts/mt7620a.dtsi          |  0
+>  arch/mips/{ralink => boot}/dts/mt7620a_eval.dts      |  0
+>  .../mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts |  0
+>  .../mips/{cavium-octeon => boot/dts}/octeon_68xx.dts |  0
+>  arch/mips/{ralink => boot}/dts/rt2880.dtsi           |  0
+>  arch/mips/{ralink => boot}/dts/rt2880_eval.dts       |  0
+>  arch/mips/{ralink => boot}/dts/rt3050.dtsi           |  0
+>  arch/mips/{ralink => boot}/dts/rt3052_eval.dts       |  0
+>  arch/mips/{ralink => boot}/dts/rt3883.dtsi           |  0
+>  arch/mips/{ralink => boot}/dts/rt3883_eval.dts       |  0
+>  arch/mips/{mti-sead3 => boot/dts}/sead3.dts          |  0
+>  arch/mips/{netlogic => boot}/dts/xlp_evp.dts         |  0
+>  arch/mips/{netlogic => boot}/dts/xlp_fvp.dts         |  0
+>  arch/mips/{netlogic => boot}/dts/xlp_gvp.dts         |  0
+>  arch/mips/{netlogic => boot}/dts/xlp_svp.dts         |  0
+>  arch/mips/cavium-octeon/.gitignore                   |  2 --
+>  arch/mips/cavium-octeon/Makefile                     | 10 ----------
+>  arch/mips/lantiq/Kconfig                             |  1 +
+>  arch/mips/lantiq/Makefile                            |  2 --
+>  arch/mips/lantiq/dts/Makefile                        |  1 -
+>  arch/mips/mti-sead3/Makefile                         |  4 ----
+>  arch/mips/netlogic/Kconfig                           |  4 ++++
+>  arch/mips/netlogic/Makefile                          |  1 -
+>  arch/mips/netlogic/dts/Makefile                      |  4 ----
+>  arch/mips/ralink/Kconfig                             |  4 ++++
+>  arch/mips/ralink/Makefile                            |  2 --
+>  arch/mips/ralink/dts/Makefile                        |  4 ----
+>  33 files changed, 46 insertions(+), 30 deletions(-)
+>  create mode 100644 arch/mips/boot/dts/Makefile
+>  rename arch/mips/{lantiq => boot}/dts/danube.dtsi (100%)
+>  rename arch/mips/{lantiq => boot}/dts/easy50712.dts (100%)
+>  rename arch/mips/{ralink => boot}/dts/mt7620a.dtsi (100%)
+>  rename arch/mips/{ralink => boot}/dts/mt7620a_eval.dts (100%)
+>  rename arch/mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts (100%)
+>  rename arch/mips/{cavium-octeon => boot/dts}/octeon_68xx.dts (100%)
+>  rename arch/mips/{ralink => boot}/dts/rt2880.dtsi (100%)
+>  rename arch/mips/{ralink => boot}/dts/rt2880_eval.dts (100%)
+>  rename arch/mips/{ralink => boot}/dts/rt3050.dtsi (100%)
+>  rename arch/mips/{ralink => boot}/dts/rt3052_eval.dts (100%)
+>  rename arch/mips/{ralink => boot}/dts/rt3883.dtsi (100%)
+>  rename arch/mips/{ralink => boot}/dts/rt3883_eval.dts (100%)
+>  rename arch/mips/{mti-sead3 => boot/dts}/sead3.dts (100%)
+>  rename arch/mips/{netlogic => boot}/dts/xlp_evp.dts (100%)
+>  rename arch/mips/{netlogic => boot}/dts/xlp_fvp.dts (100%)
+>  rename arch/mips/{netlogic => boot}/dts/xlp_gvp.dts (100%)
+>  rename arch/mips/{netlogic => boot}/dts/xlp_svp.dts (100%)
+>  delete mode 100644 arch/mips/cavium-octeon/.gitignore
+>  delete mode 100644 arch/mips/lantiq/dts/Makefile
+>  delete mode 100644 arch/mips/netlogic/dts/Makefile
+>  delete mode 100644 arch/mips/ralink/dts/Makefile
+>
+> --
+> 2.1.0.rc2.206.gedb03e5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--089e013a0606d1081205013de392
+Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
 
-Get me the fuck off this list!!! The unsubscribe email does not work!!!!!!
+<div dir=3D"ltr"><p dir=3D"ltr">On Aug 21, 2014 3:05 PM, &quot;Andrew Brest=
+icker&quot; &lt;<a href=3D"mailto:abrestic@chromium.org" target=3D"_blank">=
+abrestic@chromium.org</a>&gt; wrote:<br>
+&gt;<br>
+&gt; To be consistent with other architectures and to avoid unnecessary<br>
+&gt; makefile duplication, move all MIPS device-trees to arch/mips/boot/dts=
+<br>
+&gt; and build them with a common makefile.</p>
+<p dir=3D"ltr">I recall reading that the ARM organization for DTS files was=
+ a bit unfortunate and should have been something like:</p>
+<p dir=3D"ltr">arch/arm/boot/dts/&lt;vendor&gt;/</p>
+<p dir=3D"ltr">Is this something we should do for the MIPS and update the o=
+ther architectures to follow that scheme?<br></p>
+<p dir=3D"ltr">&gt;<br>
+&gt; Patch 1 sets up the makefiles for building the DTs in arch/mips/boot/d=
+ts<br>
+&gt; and introduces the config option BUILTIN_DTB for platforms that requir=
+e<br>
+&gt; it.<br>
+&gt;<br>
+&gt; Patch 2 introduces the &#39;dtbs&#39; makefile target to allow buildin=
+g of just<br>
+&gt; the DT binaries.<br>
+&gt;<br>
+&gt; Patches 3-7 move the DTs out of the platform directores.<br>
+&gt;<br>
+&gt; I&#39;ve build tested this on all affected platforms (Octeon, Lantiq, =
+SEAD3,<br>
+&gt; Netlogic, and Ralink) as well as Malta.=C2=A0 For platforms where buil=
+tin DTBs<br>
+&gt; are optional (Netlogic and Ralink), I built with and without the built=
+in<br>
+&gt; DTBs.<br>
+&gt;<br>
+&gt; Based on 3.17-rc1.<br>
+&gt;<br>
+&gt; Andrew Bresticker (7):<br>
+&gt; =C2=A0 MIPS: Create common infrastructure for building built-in device=
+-trees<br>
+&gt; =C2=A0 MIPS: Add support for building device-tree binaries<br>
+&gt; =C2=A0 MIPS: Octeon: Move device-trees to arch/mips/boot/dts/<br>
+&gt; =C2=A0 MIPS: Lantiq: Move device-trees to arch/mips/boot/dts/<br>
+&gt; =C2=A0 MIPS: sead3: Move device-trees to arch/mips/boot/dts/<br>
+&gt; =C2=A0 MIPS: Netlogic: Move device-trees to arch/mips/boot/dts/<br>
+&gt; =C2=A0 MIPS: ralink: Move device-trees to arch/mips/boot/dts/<br>
+&gt;<br>
+&gt; =C2=A0arch/mips/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 |=C2=A0 5 +++++<br>
+&gt; =C2=A0arch/mips/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0| 11 +++++++++++<br>
+&gt; =C2=A0arch/mips/boot/.gitignore=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 1 +<br>
+&gt; =C2=A0arch/mips/boot/dts/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 | 20 ++++++++++++++=
+++++++<br>
+&gt; =C2=A0arch/mips/{lantiq =3D&gt; boot}/dts/danube.dtsi=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{lantiq =3D&gt; boot}/dts/easy50712.dts=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{ralink =3D&gt; boot}/dts/mt7620a.dtsi=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 |=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{ralink =3D&gt; boot}/dts/mt7620a_eval.dts=C2=A0 =C2=
+=A0 =C2=A0 |=C2=A0 0<br>
+&gt; =C2=A0.../mips/{cavium-octeon =3D&gt; boot/dts}/octeon_3xxx.dts |=C2=
+=A0 0<br>
+&gt; =C2=A0.../mips/{cavium-octeon =3D&gt; boot/dts}/octeon_68xx.dts |=C2=
+=A0 0<br>
+&gt; =C2=A0arch/mips/{ralink =3D&gt; boot}/dts/rt2880.dtsi=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{ralink =3D&gt; boot}/dts/rt2880_eval.dts=C2=A0 =C2=A0=
+ =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{ralink =3D&gt; boot}/dts/rt3050.dtsi=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{ralink =3D&gt; boot}/dts/rt3052_eval.dts=C2=A0 =C2=A0=
+ =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{ralink =3D&gt; boot}/dts/rt3883.dtsi=C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{ralink =3D&gt; boot}/dts/rt3883_eval.dts=C2=A0 =C2=A0=
+ =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{mti-sead3 =3D&gt; boot/dts}/sead3.dts=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 |=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{netlogic =3D&gt; boot}/dts/xlp_evp.dts=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{netlogic =3D&gt; boot}/dts/xlp_fvp.dts=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{netlogic =3D&gt; boot}/dts/xlp_gvp.dts=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/{netlogic =3D&gt; boot}/dts/xlp_svp.dts=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0|=C2=A0 0<br>
+&gt; =C2=A0arch/mips/cavium-octeon/.gitignore=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 2 --<br>
+&gt; =C2=A0arch/mips/cavium-octeon/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 10 ----------<br>
+&gt; =C2=A0arch/mips/lantiq/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 1=
+ +<br>
+&gt; =C2=A0arch/mips/lantiq/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 2 --<br=
+>
+&gt; =C2=A0arch/mips/lantiq/dts/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 1 -<br>
+&gt; =C2=A0arch/mips/mti-sead3/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 4 ----<br>
+&gt; =C2=A0arch/mips/netlogic/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 4 ++++<b=
+r>
+&gt; =C2=A0arch/mips/netlogic/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 1 -<br>
+&gt; =C2=A0arch/mips/netlogic/dts/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 4 ----<br>
+&gt; =C2=A0arch/mips/ralink/Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 4=
+ ++++<br>
+&gt; =C2=A0arch/mips/ralink/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 2 --<br=
+>
+&gt; =C2=A0arch/mips/ralink/dts/Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 4 ----<br>
+&gt; =C2=A033 files changed, 46 insertions(+), 30 deletions(-)<br>
+&gt; =C2=A0create mode 100644 arch/mips/boot/dts/Makefile<br>
+&gt; =C2=A0rename arch/mips/{lantiq =3D&gt; boot}/dts/danube.dtsi (100%)<br=
+>
+&gt; =C2=A0rename arch/mips/{lantiq =3D&gt; boot}/dts/easy50712.dts (100%)<=
+br>
+&gt; =C2=A0rename arch/mips/{ralink =3D&gt; boot}/dts/mt7620a.dtsi (100%)<b=
+r>
+&gt; =C2=A0rename arch/mips/{ralink =3D&gt; boot}/dts/mt7620a_eval.dts (100=
+%)<br>
+&gt; =C2=A0rename arch/mips/{cavium-octeon =3D&gt; boot/dts}/octeon_3xxx.dt=
+s (100%)<br>
+&gt; =C2=A0rename arch/mips/{cavium-octeon =3D&gt; boot/dts}/octeon_68xx.dt=
+s (100%)<br>
+&gt; =C2=A0rename arch/mips/{ralink =3D&gt; boot}/dts/rt2880.dtsi (100%)<br=
+>
+&gt; =C2=A0rename arch/mips/{ralink =3D&gt; boot}/dts/rt2880_eval.dts (100%=
+)<br>
+&gt; =C2=A0rename arch/mips/{ralink =3D&gt; boot}/dts/rt3050.dtsi (100%)<br=
+>
+&gt; =C2=A0rename arch/mips/{ralink =3D&gt; boot}/dts/rt3052_eval.dts (100%=
+)<br>
+&gt; =C2=A0rename arch/mips/{ralink =3D&gt; boot}/dts/rt3883.dtsi (100%)<br=
+>
+&gt; =C2=A0rename arch/mips/{ralink =3D&gt; boot}/dts/rt3883_eval.dts (100%=
+)<br>
+&gt; =C2=A0rename arch/mips/{mti-sead3 =3D&gt; boot/dts}/sead3.dts (100%)<b=
+r>
+&gt; =C2=A0rename arch/mips/{netlogic =3D&gt; boot}/dts/xlp_evp.dts (100%)<=
+br>
+&gt; =C2=A0rename arch/mips/{netlogic =3D&gt; boot}/dts/xlp_fvp.dts (100%)<=
+br>
+&gt; =C2=A0rename arch/mips/{netlogic =3D&gt; boot}/dts/xlp_gvp.dts (100%)<=
+br>
+&gt; =C2=A0rename arch/mips/{netlogic =3D&gt; boot}/dts/xlp_svp.dts (100%)<=
+br>
+&gt; =C2=A0delete mode 100644 arch/mips/cavium-octeon/.gitignore<br>
+&gt; =C2=A0delete mode 100644 arch/mips/lantiq/dts/Makefile<br>
+&gt; =C2=A0delete mode 100644 arch/mips/netlogic/dts/Makefile<br>
+&gt; =C2=A0delete mode 100644 arch/mips/ralink/dts/Makefile<br>
+&gt;<br>
+&gt; --<br>
+&gt; 2.1.0.rc2.206.gedb03e5<br>
+&gt;<br>
+&gt; --<br>
+&gt; To unsubscribe from this list: send the line &quot;unsubscribe devicet=
+ree&quot; in<br>
+&gt; the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org" =
+target=3D"_blank">majordomo@vger.kernel.org</a><br>
+&gt; More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordo=
+mo-info.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html<=
+/a><br>
+</p>
+</div>
 
------Original Message-----
-From: "Simon Horman" <horms@verge.net.au>
-Sent: =E2=80=8E8/=E2=80=8E25/=E2=80=8E2014 7:57 PM
-To: "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc: "Mikhail Ulyanov" <mikhail.ulyanov@cogentembedded.com>; "Magnus Damm" <=
-magnus.damm@gmail.com>; "Mauro Carvalho Chehab" <m.chehab@samsung.com>; "Ro=
-b Herring" <robh+dt@kernel.org>; "Grant Likely" <grant.likely@linaro.org>; =
-"Mark Rutland" <mark.rutland@arm.com>; "Ian Campbell" <ijc+devicetree@helli=
-on.org.uk>; "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>; "Hans V=
-erkuil" <hans.verkuil@cisco.com>; "Linux-sh list" <linux-sh@vger.kernel.org=
->; "Linux Media Mailing List" <linux-media@vger.kernel.org>; "devicetree@vg=
-er.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEGProc=
-essing Unit.
-
-On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geert Uytterhoeven wrote:
-> Hi Mikhail,
->=20
-> On Mon, Aug 25, 2014 at 2:35 PM, Mikhail Ulyanov
-> <mikhail.ulyanov@cogentembedded.com> wrote:
-> > +  - compatible: should containg one of the following:
-> > +                       - "renesas,jpu-r8a7790" for R-Car H2
-> > +                       - "renesas,jpu-r8a7791" for R-Car M2
-> > +                       - "renesas,jpu-gen2" for R-Car second generatio=
-n
->=20
-> Isn't "renesas,jpu-gen2" meant as a fallback?
->=20
-> I.e. the DTS should have one of '7790 and '7791, AND the gen2 fallback,
-> so we can make the driver match against '7790 and '7791 is we find
-> out about an incompatibility.
-
-Is there a document that clearly states that there is such a thing
-as jpu-gen2 in hardware? If not I would prefer not to add a binding for it.
---
-To unsubscribe from this list: send the line "unsubscribe linux-media" in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
---_971D57AF-294C-43A0-BCF7-8D07198398A3_
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html; charset="utf-8"
-
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Dutf-8" http-equiv=3DContent-Type></HE=
-AD>
-<BODY>
-<DIV>
-<DIV style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif">Get me the =
-fuck off this list!!! The unsubscribe email does not work!!!!!!</DIV></DIV>
-<DIV dir=3Dltr>
-<HR>
-<SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEIGH=
-T: bold">From: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,=
-sans-serif"><A href=3D"mailto:horms@verge.net.au">Simon Horman</A></SPAN><B=
-R><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEI=
-GHT: bold">Sent: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibr=
-i,sans-serif">=E2=80=8E8/=E2=80=8E25/=E2=80=8E2014 7:57 PM</SPAN><BR><SPAN =
-style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEIGHT: bol=
-d">To: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-ser=
-if"><A href=3D"mailto:geert@linux-m68k.org">Geert Uytterhoeven</A></SPAN><B=
-R><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEI=
-GHT: bold">Cc: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,=
-sans-serif"><A href=3D"mailto:mikhail.ulyanov@cogentembedded.com">Mikhail U=
-lyanov</A>; <A href=3D"mailto:magnus.damm@gmail.com">Magnus Damm</A>; <A hr=
-ef=3D"mailto:m.chehab@samsung.com">Mauro Carvalho Chehab</A>; <A href=3D"ma=
-ilto:robh+dt@kernel.org">Rob Herring</A>; <A href=3D"mailto:grant.likely@li=
-naro.org">Grant Likely</A>; <A href=3D"mailto:mark.rutland@arm.com">Mark Ru=
-tland</A>; <A href=3D"mailto:ijc+devicetree@hellion.org.uk">Ian Campbell</A=
->; <A href=3D"mailto:laurent.pinchart@ideasonboard.com">Laurent Pinchart</A=
->; <A href=3D"mailto:hans.verkuil@cisco.com">Hans Verkuil</A>; <A href=3D"m=
-ailto:linux-sh@vger.kernel.org">Linux-sh list</A>; <A href=3D"mailto:linux-=
-media@vger.kernel.org">Linux Media Mailing List</A>; <A href=3D"mailto:devi=
-cetree@vger.kernel.org">devicetree@vger.kernel.org</A></SPAN><BR><SPAN styl=
-e=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEIGHT: bold">S=
-ubject: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-se=
-rif">Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEGProcessi=
-ng Unit.</SPAN><BR><BR></DIV>On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geer=
-t Uytterhoeven wrote:<BR>&gt; Hi Mikhail,<BR>&gt; <BR>&gt; On Mon, Aug 25, =
-2014 at 2:35 PM, Mikhail Ulyanov<BR>&gt; &lt;mikhail.ulyanov@cogentembedded=
-.com&gt; wrote:<BR>&gt; &gt; +&nbsp; - compatible: should containg one of t=
-he following:<BR>&gt; &gt; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp; - "renesas,jpu-r8a7790" for R-Car H2<BR>&gt; &gt; +&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - "renesas,jpu-r8a7791" for R-=
-Car M2<BR>&gt; &gt; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; - "renesas,jpu-gen2" for R-Car second generation<BR>&gt; <BR>&gt; Isn't=
- "renesas,jpu-gen2" meant as a fallback?<BR>&gt; <BR>&gt; I.e. the DTS shou=
-ld have one of '7790 and '7791, AND the gen2 fallback,<BR>&gt; so we can ma=
-ke the driver match against '7790 and '7791 is we find<BR>&gt; out about an=
- incompatibility.<BR><BR>Is there a document that clearly states that there=
- is such a thing<BR>as jpu-gen2 in hardware? If not I would prefer not to a=
-dd a binding for it.<BR>--<BR>To unsubscribe from this list: send the line =
-"unsubscribe linux-media" in<BR>the body of a message to majordomo@vger.ker=
-nel.org<BR>More majordomo info at&nbsp; http://vger.kernel.org/majordomo-in=
-fo.html<BR></BODY></HTML>=
-
---_971D57AF-294C-43A0-BCF7-8D07198398A3_--
+--089e013a0606d1081205013de392--
