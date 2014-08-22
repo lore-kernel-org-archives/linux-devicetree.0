@@ -1,123 +1,189 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: Gateworks GW5520 support (i.MX6)
-Date: Fri, 22 Aug 2014 15:46:05 +0800
-Message-ID: <20140822074604.GB2540@dragon>
-References: <1407572602-14017-1-git-send-email-tharvey@gateworks.com>
- <1408679706-18200-1-git-send-email-tharvey@gateworks.com>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/8] pinctrl: add driver for MB86S7x
+Date: Fri, 22 Aug 2014 13:16:33 +0530
+Message-ID: <CAJe_Zhe2VuzHtkojm9nxvDTjT4AL7Znvma+5T7JTadvFJ1vAJQ@mail.gmail.com>
+References: <1405233067-4725-1-git-send-email-mollie.wu@linaro.org>
+	<CACRpkdb_NC7j=XkbMPv8YYLSeEd1AOpFqmD8x+ohC7ds3cPCfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408679706-18200-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+In-Reply-To: <CACRpkdb_NC7j=XkbMPv8YYLSeEd1AOpFqmD8x+ohC7ds3cPCfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, fwu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 21, 2014 at 08:55:06PM -0700, Tim Harvey wrote:
-> +&iomuxc {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_hog>;
+On 22 July 2014 21:41, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Jul 13, 2014 at 8:31 AM, Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-  DTC     arch/arm/boot/dts/imx6dl-gw552x.dtb
-ERROR (phandle_references): Reference to non-existent node or label "pinctrl_hog"
+>
+>> +static int
+>> +mb86s70_pmx_enable(struct pinctrl_dev *pctl,
+>> +                  unsigned func_selector, unsigned group_selector)
+>> +{
+>> +       struct mb86s70_pmux_chip *pchip = pinctrl_dev_get_drvdata(pctl);
+>> +       unsigned long flags;
+>> +       const unsigned *pins;
+>> +       int i, j;
+>> +
+>> +       if (group_selector >= grp_count) {
+>> +               pr_err("%s:%d\n", __func__, __LINE__);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       j = mb86s7x_pgrps[group_selector].num_pins;
+>> +       pins = mb86s7x_pgrps[group_selector].pins;
+>> +
+>> +       spin_lock_irqsave(&pchip->lock, flags);
+>> +
+>> +       /* Busy if any pin in the same 'bunch' is taken */
+>> +       for (i = 0; i < j; i++) {
+>> +               u32 val;
+>> +               int p = pins[i] / 4 * 4;
+>> +
+>> +               if (pins[i] >= PINS_VIRT) /* Not for virtual pins */
+>> +                       continue;
+>> +
+>> +               val = readl(pchip->base + p);
+>> +               /* skip if no change needed */
+>> +               if (val == mb86s7x_pmx_funcs[func_selector].prog_val)
+>> +                       continue;
+>> +
+>> +               if (pchip->pin_busy[p]) {
+>> +                       pr_err("%s:%d:%d %d busy\n",
+>> +                              __func__, __LINE__, pins[i], p);
+>> +                       goto busy_exit;
+>> +               }
+>> +
+>> +               if (pchip->pin_busy[p + 1]) {
+>> +                       pr_err("%s:%d:%d %d busy\n",
+>> +                              __func__, __LINE__, pins[i], p+1);
+>> +                       goto busy_exit;
+>> +               }
+>
+> I don't see why you are doing this and keeping track of
+> pins as "busy" or not. One thing the pin control core does
+> is to make sure pins do not collide in different use cases,
+> it seems like you're re-implementing this check again.
+>
+>> +               if (p == 64)
+>> +                       continue;
+>
+> This if-clause seems dubious. At least add a comment as
+> to what is happening here and why.
+>
+>> +               if (pchip->pin_busy[p + 2]) {
+>> +                       pr_err("%s:%d:%d %d busy\n",
+>> +                              __func__, __LINE__, pins[i], p+2);
+>> +                       goto busy_exit;
+>> +               }
+>> +
+>> +               if (pchip->pin_busy[p + 3]) {
+>> +                       pr_err("%s:%d:%d %d busy\n",
+>> +                              __func__, __LINE__, pins[i], p+3);
+>> +                       goto busy_exit;
+>> +               }
+>
+> I don't understand this either.
+>
+> Why all this fuzz around the four pins from p ... p+3?
+>
+>> +               continue;
+>> +busy_exit:
+>> +               spin_unlock_irqrestore(&pchip->lock, flags);
+>> +               pr_err("%s:%d Take a look!\n", __func__, __LINE__);
+>> +               return -EBUSY;
+>> +       }
+>
+> You don't have to have the busy_exit: inside the for-loop right?
+>
+> Just push it below the return 0; in the end of this function
+> so you can get rid of the dangling continue;
+>
+>> +       pr_debug("Going to enable %s on pins -",
+>> +                mb86s7x_pmx_funcs[func_selector].name);
+>> +       for (i = 0; i < j; i++) {
+>> +               int p = pins[i];
+>> +
+>> +               pr_debug(" %d", p);
+>> +               pchip->pin_busy[p] = true;
+>
+> So I'm questioning this....
+>
+>> +               if (p < PINS_VIRT) /* Not for virtual pins */
+>
+> We need an explanation somewhere about what "virtual pins"
+> means in this driver, I have never seen that before.
+>
+>> +                       writel(mb86s7x_pmx_funcs[func_selector].prog_val,
+>> +                              pchip->base + p / 4 * 4);
+>
+> This may need some static inline like described above to simplify
+> the code and make it more readable, but I see what is going on.
+>
+>> +       }
+>> +
+>> +       spin_unlock_irqrestore(&pchip->lock, flags);
+>> +       pr_debug("\n");
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void
+>> +mb86s70_pmx_disable(struct pinctrl_dev *pctl,
+>> +                   unsigned func_selector, unsigned group_selector)
+>> +{
+>> +       struct mb86s70_pmux_chip *pchip = pinctrl_dev_get_drvdata(pctl);
+>> +       unsigned long flags;
+>> +       const unsigned *pins;
+>> +       int i, j;
+>> +
+>> +       if (group_selector >= grp_count) {
+>> +               pr_err("%s:%d\n", __func__, __LINE__);
+>> +               return;
+>> +       }
+>> +
+>> +       j = mb86s7x_pgrps[group_selector].num_pins;
+>> +       pins = mb86s7x_pgrps[group_selector].pins;
+>> +
+>> +       pr_debug("Going to disable %s on pins -",
+>> +                mb86s7x_pmx_funcs[func_selector].name);
+>> +       spin_lock_irqsave(&pchip->lock, flags);
+>> +       for (i = 0; i < j; i++) {
+>> +               pr_debug(" %d", pins[i]);
+>> +               pchip->pin_busy[pins[i]] = false;
+>> +       }
+>> +       spin_unlock_irqrestore(&pchip->lock, flags);
+>> +       pr_debug("\n");
+>> +}
+>
+> Remove this function. The .disable member is gone from
+> struct pinmux_ops, as it was ambiguous, see commit
+> 2243a87d90b42eb38bc281957df3e57c712b5e56
+> "pinctrl: avoid duplicated calling enable_pinmux_setting for a pin"
+>
+Hmm... I just got bitten by this while updating the patchset. Sorry I
+missed the patch review.
 
-> +
-> +	imx6qdl-gw552x {
-> +		pinctrl_gpio: gpiogrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_9__GPIO1_IO09	0x4001b0b0 /* USBHUB_RST# */
-> +				MX6QDL_PAD_GPIO_17__GPIO7_IO12	0x4001b0b0 /* PCIESKT_WDIS# */
-> +			>;
-> +		};
+The reasons given in changelog are
+  (1) 'Fix' desc->mux_usecount
+  (2) The .disable callback is not useful for any of the existing platforms.
 
-pinctrl_gpio is not referenced by any client device, so kernel will not
-set up these two pins.
+Well, for (2) I think it is only reasonable for the provider to need
+to know when some resource is released by a user just as when it was
+requested.
+   Even if the core ensures only one user is provided access to a pin,
+the controller driver may still need to know when a pin is no more in
+use. For ex, within consecutive 4 pins my controller can not enable a
+pin for some function if any in the bunch is already
+enabled/configured. So I need to know if the pin has been
+disabled/released, so I can go ahead enabling the 'neighbor' pin for
+some other role.
 
-Shawn
+For reason (1), there should be some way to fix within the core?
 
-> +
-> +		pinctrl_gpio_leds: gpioledsgrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
-> +				MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
-> +				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
-> +			>;
-> +		};
-> +
-> +		pinctrl_gpmi_nand: gpminandgrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
-> +				MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
-> +				MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
-> +				MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
-> +				MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
-> +				MX6QDL_PAD_NANDF_CS1__NAND_CE1_B	0xb0b1
-> +				MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
-> +				MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
-> +				MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
-> +				MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
-> +				MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
-> +				MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
-> +				MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
-> +				MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
-> +				MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
-> +				MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c1: i2c1grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
-> +				MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c2: i2c2grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
-> +				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_i2c3: i2c3grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
-> +				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_pcie: pciegrp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29	0x1b0b0
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart2: uart2grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart3: uart3grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
-> +			>;
-> +		};
-> +
-> +		pinctrl_uart5: uart5grp {
-> +			fsl,pins = <
-> +				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
-> +				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
-> +			>;
-> +                };
-> +	};
-> +};
-> -- 
-> 1.8.3.2
-> 
+Regards,
+Jassi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
