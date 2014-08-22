@@ -1,184 +1,54 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/5] MFD: Add rk808 device tree bindings documentation
-Date: Fri, 22 Aug 2014 10:23:03 -0700
-Message-ID: <CAD=FV=VKafGeurYc3OJk1tbdyCAKu6w2qDetgDQ0MRKEFquiAQ@mail.gmail.com>
-References: <1408627674-16130-1-git-send-email-zyw@rock-chips.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC regulators
+Date: Fri, 22 Aug 2014 19:53:19 +0200
+Message-ID: <53F7838F.8060906@collabora.co.uk>
+References: <1408350762-15520-1-git-send-email-javier.martinez@collabora.co.uk> <1408350762-15520-2-git-send-email-javier.martinez@collabora.co.uk> <CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com> <53F73472.8010609@collabora.co.uk> <20140822144531.GV24407@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408627674-16130-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chr>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140822144531.GV24407@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+Hello Mark,
 
-On Thu, Aug 21, 2014 at 6:27 AM, Chris Zhong <zyw@rock-chips.com> wrote:
-> rk808.txt: Add device tree bindings for rockchip's rk808 pmic.
->
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->
-> ---
->
-> Changes in v3:
-> - fix compile err
+On 08/22/2014 04:45 PM, Mark Brown wrote:
+> On Fri, Aug 22, 2014 at 02:15:46PM +0200, Javier Martinez Canillas wrote:
+> 
+>> Mark, any opinions on how this should be solved will be highly appreciated.
+> 
+> If someone could tell me what "this" is that'd help...
+> 
 
-Please make sure to address comments that were made against your v2
-version, too.
+Sorry for not being clear on that regard. By "this" I meant the problem
+reported by Yuvaraj.
 
->
-> Changes in v2:
-> Adviced by javier.martinez
-> - separated from rtc-rk808.c
->
->  Documentation/devicetree/bindings/mfd/rk808.txt |  128 +++++++++++++++++++++++
->  1 file changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-> new file mode 100644
-> index 0000000..876291d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-> @@ -0,0 +1,128 @@
-> +RK808 Power Management Integrated Circuit
-> +
-> +Required properties:
-> +- compatible: "rockchip,rk808"
-> +- reg: I2C slave address
-> +- interrupt-parent: The parent interrupt controller.
-> +- interrupts: the interrupt outputs of the controller.
-> +- pinctrl-names: Should contain only one value - "default".
-> +- pinctrl-0: Should specify pin control groups used for this controller.
-> +- regulators: This is the list of child nodes that specify the regulator
-> +  initialization data for defined regulators. Not all regulators for the given
-> +  device need to be present. The definition for each of these nodes is defined
-> +  using the standard binding for regulators found at
-> +  Documentation/devicetree/bindings/regulator/regulator.txt.
+The regulators operating mode is read from the hardware registers on probe
+as you suggested but that means that if the regulator is disabled and the
+machine rebooted (warm reset) the opmode reported by the hardware is
+MAX77802_OPMODE_OFF.
 
-I think you need a "#clock-cells = <1>;" in here.  You should also
-create a "include/dt-bindings/clock/rockchip,rk808.h" file that lists
-numbers for your two clocks.
+The problem is that one of these regulators is used as the vqmmc-supply
+(VCCQ/VDD_IO) so the mmc host controller driver disables it on
+MMC_POWER_OFF. Now AFAIK (Yuvaraj can correct me what I got wrong) this
+shouldn't be an issue since on card detection, the vqmmc supply should be
+enabled again but on Exynos the built-in card detect line is on the same
+power rail as vqmmc. That means that disabling the regulator prevents card
+insertions to be detected.
 
+This does not happen on the downstream Chrome OS kernel because the
+max77802 regulator driver has some ad-hoc DT bindings were you can define
+the operating mode to be set on probe. For this particular regulator is
+MAX77802_OPMODE_STANDBY.
 
-> +Optional properties:
-> +- rockchip,system-power-controller: Telling whether or not this pmic is controlling
-> +  the system power.
+Yuvaraj solution was to set the operating mode to MAX77802_OPMODE_NORMAL
+on probe() which was what I did on a previous version of the driver but
+you explained to me that it was not safe to do that.
 
-You should add "clock-output-names" as haoyu,hym8563.txt has.
+That's why I'm asking for suggestions.
 
-> +
-> +Example:
-> +rk808: pmic@1b {
-> +       compatible = "rockchip,rk808";
-> +       interrupt-parent = <&gpio0>;
-> +       interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pmic_int>;
-> +       reg = <0x1b>;
-> +       rockchip,system-power-controller;
-> +
-> +               regulators {
-> +                       rk808_dcdc1_reg: DCDC_REG1 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <1200000>;
-> +                               regulator-max-microvolt = <1200000>;
-> +                               regulator-name = "vdd_arm";
-> +                       };
-> +
-> +                       rk808_dcdc2_reg: DCDC_REG2 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <850000>;
-> +                               regulator-max-microvolt = <1250000>;
-> +                               regulator-name = "vdd_gpu";
-> +                       };
-> +
-> +                       rk808_dcdc3_reg: DCDC_REG3 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-name = "vdd_ddr";
-> +                       };
-> +
-> +                       rk808_dcdc4_reg: DCDC_REG4 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                               regulator-name = "vccio";
-> +                       };
-> +
-> +                       rk808_ldo1_reg: LDO_REG1 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                       };
-> +
-> +                       rk808_ldo2_reg: LDO_REG2 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                       };
-> +
-> +                       rk808_ldo3_reg: LDO_REG3 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <1000000>;
-> +                               regulator-max-microvolt = <1000000>;
-> +                               regulator-name = "LDO_REG3";
-> +                       };
-> +
-> +                       rk808_ldo4_reg: LDO_REG4 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <1800000>;
-> +                       };
-> +
-> +                       rk808_ldo5_reg: LDO_REG5 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                       };
-> +
-> +                       rk808_ldo6_reg: LDO_REG6 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <1000000>;
-> +                               regulator-max-microvolt = <1000000>;
-> +                       };
-> +
-> +                       rk808_ldo7_reg: LDO_REG7 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <1800000>;
-> +                               regulator-max-microvolt = <1800000>;
-> +                       };
-> +
-> +                       rk808_ldo8_reg: LDO_REG8 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <3300000>;
-> +                               regulator-max-microvolt = <3300000>;
-> +                       };
-> +
-> +                       rk808_switch1_reg: SWITCH_REG1 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                       };
-> +
-> +                       rk808_switch2_reg: SWITCH_REG2 {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                       };
-> +               };
-> +       };
-> --
-> 1.7.9.5
->
->
+Thanks a lot and best regards,
+Javier
