@@ -1,97 +1,53 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v7] ARM: dts: Prepare node labels for exynos5250
-Date: Fri, 22 Aug 2014 09:14:56 -0700
-Message-ID: <CAD=FV=VS8e4Fs-j4CFvGYtvj58QwOk52gWh7AfnZcpswVRnDKA@mail.gmail.com>
-References: <53DCD74B.8090400@gmail.com>
-	<1408539764-5835-1-git-send-email-afaerber@suse.de>
-	<080101cfbdf6$c8fd1f30$5af75d90$@samsung.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
+Date: Fri, 22 Aug 2014 10:20:48 -0600
+Message-ID: <20140822162048.GB8477@obsidianresearch.com>
+References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com>
+ <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
+ <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
+ <53F5D8D9.7040604@suse.de>
+ <f166a186-301c-4288-97cf-71f8173c07e7@BN1AFFO11FD010.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <080101cfbdf6$c8fd1f30$5af75d90$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, open list <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f166a186-301c-4288-97cf-71f8173c07e7-reflc3kr++N1NCgXcXAFu+hlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Kukjin,
+On Thu, Aug 21, 2014 at 08:49:19AM -0700, S=F6ren Brinkmann wrote:
 
-On Fri, Aug 22, 2014 at 3:49 AM, Kukjin Kim <kgene.kim@samsung.com> wro=
-te:
-> Andreas F=C3=A4rber wrote:
->>
->> Allows them to be extended by reference.
->>
->> Reviewed-by: Doug Anderson <dianders@chromium.org>
->> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
->> ---
->>  v6 -> v7:
->>  * Dropped uart* labels (Tomasz Figa)
->>
->>  v6: Split off from Snow/SMDK cleanups (Doug Anderson)
->>
->>  arch/arm/boot/dts/exynos5250.dtsi | 16 ++++++++--------
->>  1 file changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/e=
-xynos5250.dtsi
->> index 492e1eff37bd..42eafd19cfb2 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -218,7 +218,7 @@
->>               clock-names =3D "fimg2d";
->>       };
->>
->> -     codec@11000000 {
->> +     mfc: codec@11000000 {
->>               compatible =3D "samsung,mfc-v6";
->>               reg =3D <0x11000000 0x10000>;
->>               interrupts =3D <0 96 0>;
->> @@ -227,7 +227,7 @@
->>               clock-names =3D "mfc";
->>       };
->>
->> -     rtc@101E0000 {
->> +     rtc: rtc@101E0000 {
->>               clocks =3D <&clock CLK_RTC>;
->>               clock-names =3D "rtc";
->>               status =3D "disabled";
->> @@ -261,7 +261,7 @@
->>               clock-names =3D "uart", "clk_uart_baud0";
->>       };
->>
->> -     sata@122F0000 {
->> +     sata: sata@122F0000 {
->>               compatible =3D "snps,dwc-ahci";
->>               samsung,sata-freq =3D <66>;
->>               reg =3D <0x122F0000 0x1ff>;
->> @@ -573,7 +573,7 @@
->>               #phy-cells =3D <1>;
->>       };
->>
->> -     usb@12110000 {
->> +     ehci: usb@12110000 {
->
-> I'm not sure which one is recommended between above and "ehci: ehci@1=
-2110000 {"
+> So my thinkings:
+>  - the compatible string with the -c22 is used and documented in the =
+phy
+>    bindings, it should be there.
 
-My understanding is that more generic names should be used for node
-names.  AKA: "usb" and not "ehci".  "mmc" and not "dwmmc".
+Yes
 
-In another thread I was pointed at ePAPR
-<http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf=
->:
+>  - the ID based strings seem to be not needed since, IIUC, the core
+>    reads the ID from the PHY and uses it, so I just left it out not
+>    trying to figure out how to obtain the correct ID
 
-The name of a node should be somewhat generic, reflecting the function
-of the device and not its precise programming model.
+It is certainly optional, I added the property to solve some obscure
+problems with probing, but I've noticed people using it more broadly.
+I suspect it also speeds up booting a tiny bit.
 
+>  - the marvell compatible strings are used in our vendor tree. They
+>    aren't used anywhere but in our vendor tree. I though keeping them=
+ is
+>    nice since it identifies the PHY fully. And in case that level of
+>    detail is needed at some point it is already there.
 
->> -     hdmi {
->> +     hdmi: hdmi {
->
-> Should be
->
-> +       hdmi: hdmi@14530000 { ?
+DT is complex enough already, don't include useless compatible strings
+in mainline - people will see and tend to blindly copy. Ideally your
+vendor tree would use the standard property :|
 
-Seems like that should be a followon patch.
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
