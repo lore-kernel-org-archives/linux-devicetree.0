@@ -1,177 +1,36 @@
-From: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: [PATCH 9/9] arm64: Add new cpu-return-addr device tree binding
-Date: Fri, 22 Aug 2014 19:49:17 +0000
-Message-ID: <4192d403bb9703063c59a052293faa19d38d2f02.1408736066.git.geoff@infradead.org>
-References: <cover.1408736066.git.geoff@infradead.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1408736066.git.geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v2 2/3] net: Add Keystone NetCP ethernet driver
+Date: Fri, 22 Aug 2014 15:50:25 -0400
+Message-ID: <53F79F01.6090804@ti.com>
+References: <1408115562-22487-1-git-send-email-santosh.shilimkar@ti.com>	<1408115562-22487-3-git-send-email-santosh.shilimkar@ti.com> <20140821194838.32f2c3f1@uryu.home.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140821194838.32f2c3f1@uryu.home.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, sandeep_n@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add a new arm64 device tree binding cpu-return-addr.  This binding is recomended
-for all ARM v8 CPUs that have an "enable-method" property value of "spin-table".
-The value is a 64 bit physical address that secondary CPU execution will transfer
-to upon CPU shutdown.
+On Thursday 21 August 2014 10:48 PM, Stephen Hemminger wrote:
+> On Fri, 15 Aug 2014 11:12:41 -0400
+> Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
+> 
+>> NetCP driver has a plug-in module architecture where each of the NetCP
+>> sub-modules exist as a loadable kernel module which plug in to the netcp
+>> core. These sub-modules are represented as "netcp-devices" in the dts
+>> bindings. It is mandatory to have the ethernet switch sub-module for
+>> the ethernet interface to be operational. Any other sub-module like the
+>> PA is optional.
+> 
+> What are you doing to prevent/discourage proprietary binary only
+> sub-modules?
+> 
+Not sure if you mistook this infrastructure as a replacement for the
+kernel module. The sub modules are traditional kernel modules that
+just registers into the NetCP framework. Kernel module infrastructure
+already discourages the proprietary binary only sub-modules.
 
-Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 1fe72a0..42d5d5f 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -201,6 +201,15 @@ nodes to be present and contain the properties described below.
- 			  property identifying a 64-bit zero-initialised
- 			  memory location.
- 
-+	- cpu-return-addr
-+		Usage: recomended for all ARM v8 CPUs that have an
-+		       "enable-method" property value of "spin-table".
-+		Value type: <prop-encoded-array>
-+		Definition:
-+			# On ARM v8 64-bit systems must be a two cell property.
-+			The value is a 64 bit physical address that secondary
-+			CPU execution will transfer to upon CPU shutdown.
-+
- 	- qcom,saw
- 		Usage: required for systems that have an "enable-method"
- 		       property value of "qcom,kpss-acc-v1" or
-@@ -285,6 +294,7 @@ cpus {
- 		reg = <0x0 0x0>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@1 {
-@@ -293,6 +303,7 @@ cpus {
- 		reg = <0x0 0x1>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100 {
-@@ -301,6 +312,7 @@ cpus {
- 		reg = <0x0 0x100>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@101 {
-@@ -309,6 +321,7 @@ cpus {
- 		reg = <0x0 0x101>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@10000 {
-@@ -317,6 +330,7 @@ cpus {
- 		reg = <0x0 0x10000>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@10001 {
-@@ -325,6 +339,7 @@ cpus {
- 		reg = <0x0 0x10001>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@10100 {
-@@ -333,6 +348,7 @@ cpus {
- 		reg = <0x0 0x10100>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@10101 {
-@@ -341,6 +357,7 @@ cpus {
- 		reg = <0x0 0x10101>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100000000 {
-@@ -349,6 +366,7 @@ cpus {
- 		reg = <0x1 0x0>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100000001 {
-@@ -357,6 +375,7 @@ cpus {
- 		reg = <0x1 0x1>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100000100 {
-@@ -365,6 +384,7 @@ cpus {
- 		reg = <0x1 0x100>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100000101 {
-@@ -373,6 +393,7 @@ cpus {
- 		reg = <0x1 0x101>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100010000 {
-@@ -381,6 +402,7 @@ cpus {
- 		reg = <0x1 0x10000>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100010001 {
-@@ -389,6 +411,7 @@ cpus {
- 		reg = <0x1 0x10001>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100010100 {
-@@ -397,6 +420,7 @@ cpus {
- 		reg = <0x1 0x10100>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- 
- 	cpu@100010101 {
-@@ -405,6 +429,7 @@ cpus {
- 		reg = <0x1 0x10101>;
- 		enable-method = "spin-table";
- 		cpu-release-addr = <0 0x20000000>;
-+		cpu-return-addr = <0 0x20001000>
- 	};
- };
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Santosh
