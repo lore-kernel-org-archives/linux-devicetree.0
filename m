@@ -1,117 +1,184 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2] doc: dt/bindings: input: Fix drv260x binding document
-Date: Fri, 22 Aug 2014 12:16:41 -0500
-Message-ID: <20140822171641.GE27616@saruman.home>
-References: <1408727539-15996-1-git-send-email-dmurphy@ti.com>
-Reply-To: <balbi@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 1/5] MFD: Add rk808 device tree bindings documentation
+Date: Fri, 22 Aug 2014 10:23:03 -0700
+Message-ID: <CAD=FV=VKafGeurYc3OJk1tbdyCAKu6w2qDetgDQ0MRKEFquiAQ@mail.gmail.com>
+References: <1408627674-16130-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BQPnanjtCNWHyqYD"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408727539-15996-1-git-send-email-dmurphy@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408627674-16130-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chr>
 List-Id: devicetree@vger.kernel.org
 
---BQPnanjtCNWHyqYD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Chris,
 
-On Fri, Aug 22, 2014 at 12:12:19PM -0500, Dan Murphy wrote:
-> Update the drv260x dt binding document:
-> - Change the node name to the devices function not the
-> device name.
-> - Add vbat-supply to the example.
-> - Fix indentation of the example.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-
-Reviewed-by: Felipe Balbi <balbi@ti.com>
-
+On Thu, Aug 21, 2014 at 6:27 AM, Chris Zhong <zyw@rock-chips.com> wrote:
+> rk808.txt: Add device tree bindings for rockchip's rk808 pmic.
+>
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>
 > ---
->=20
-> v2 - Address comments on indentation, node declaration, add vbat-supply,
-> removed description as it did not make sense - https://patchwork.kernel.o=
-rg/patch/4765141/
->=20
->  .../devicetree/bindings/input/ti,drv260x.txt       |   23 ++++++++++----=
-------
->  1 file changed, 11 insertions(+), 12 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/Doc=
-umentation/devicetree/bindings/input/ti,drv260x.txt
-> index a9c8519..ee09c8f 100644
-> --- a/Documentation/devicetree/bindings/input/ti,drv260x.txt
-> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
-> @@ -1,6 +1,4 @@
-> -Texas Instruments - drv260x Haptics driver family
-> -
-> -The drv260x family serial control bus communicates through I2C protocols
-> +* Texas Instruments - drv260x Haptics driver family
-> =20
->  Required properties:
->  	- compatible - One of:
-> @@ -37,15 +35,16 @@ Optional properties:
->  			  3.2 v.
->  Example:
-> =20
-> -drv2605l: drv2605l@5a {
-> -		compatible =3D "ti,drv2605l";
-> -		reg =3D <0x5a>;
-> -		enable-gpio =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> -		mode =3D <DRV260X_LRA_MODE>;
-> -		library-sel =3D <DRV260X_LIB_LRA>;
-> -		vib-rated-mv =3D <3200>;
-> -		vib-overdriver-mv =3D <3200>;
-> -};
-> +haptics: haptics@5a {
-> +	compatible =3D "ti,drv2605l";
-> +	reg =3D <0x5a>;
-> +	vbat-supply =3D <&vbat>;
-> +	enable-gpio =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +	mode =3D <DRV260X_LRA_MODE>;
-> +	library-sel =3D <DRV260X_LIB_LRA>;
-> +	vib-rated-mv =3D <3200>;
-> +	vib-overdriver-mv =3D <3200>;
-> +}
-> =20
->  For more product information please see the link below:
->  http://www.ti.com/product/drv2605
-> --=20
-> 1.7.9.5
->=20
+>
+> Changes in v3:
+> - fix compile err
+
+Please make sure to address comments that were made against your v2
+version, too.
+
+>
+> Changes in v2:
+> Adviced by javier.martinez
+> - separated from rtc-rk808.c
+>
+>  Documentation/devicetree/bindings/mfd/rk808.txt |  128 +++++++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+> new file mode 100644
+> index 0000000..876291d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+> @@ -0,0 +1,128 @@
+> +RK808 Power Management Integrated Circuit
+> +
+> +Required properties:
+> +- compatible: "rockchip,rk808"
+> +- reg: I2C slave address
+> +- interrupt-parent: The parent interrupt controller.
+> +- interrupts: the interrupt outputs of the controller.
+> +- pinctrl-names: Should contain only one value - "default".
+> +- pinctrl-0: Should specify pin control groups used for this controller.
+> +- regulators: This is the list of child nodes that specify the regulator
+> +  initialization data for defined regulators. Not all regulators for the given
+> +  device need to be present. The definition for each of these nodes is defined
+> +  using the standard binding for regulators found at
+> +  Documentation/devicetree/bindings/regulator/regulator.txt.
+
+I think you need a "#clock-cells = <1>;" in here.  You should also
+create a "include/dt-bindings/clock/rockchip,rk808.h" file that lists
+numbers for your two clocks.
+
+
+> +Optional properties:
+> +- rockchip,system-power-controller: Telling whether or not this pmic is controlling
+> +  the system power.
+
+You should add "clock-output-names" as haoyu,hym8563.txt has.
+
+> +
+> +Example:
+> +rk808: pmic@1b {
+> +       compatible = "rockchip,rk808";
+> +       interrupt-parent = <&gpio0>;
+> +       interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pmic_int>;
+> +       reg = <0x1b>;
+> +       rockchip,system-power-controller;
+> +
+> +               regulators {
+> +                       rk808_dcdc1_reg: DCDC_REG1 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <1200000>;
+> +                               regulator-max-microvolt = <1200000>;
+> +                               regulator-name = "vdd_arm";
+> +                       };
+> +
+> +                       rk808_dcdc2_reg: DCDC_REG2 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <850000>;
+> +                               regulator-max-microvolt = <1250000>;
+> +                               regulator-name = "vdd_gpu";
+> +                       };
+> +
+> +                       rk808_dcdc3_reg: DCDC_REG3 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-name = "vdd_ddr";
+> +                       };
+> +
+> +                       rk808_dcdc4_reg: DCDC_REG4 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <3300000>;
+> +                               regulator-max-microvolt = <3300000>;
+> +                               regulator-name = "vccio";
+> +                       };
+> +
+> +                       rk808_ldo1_reg: LDO_REG1 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <3300000>;
+> +                               regulator-max-microvolt = <3300000>;
+> +                       };
+> +
+> +                       rk808_ldo2_reg: LDO_REG2 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <3300000>;
+> +                               regulator-max-microvolt = <3300000>;
+> +                       };
+> +
+> +                       rk808_ldo3_reg: LDO_REG3 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <1000000>;
+> +                               regulator-max-microvolt = <1000000>;
+> +                               regulator-name = "LDO_REG3";
+> +                       };
+> +
+> +                       rk808_ldo4_reg: LDO_REG4 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <1800000>;
+> +                               regulator-max-microvolt = <1800000>;
+> +                       };
+> +
+> +                       rk808_ldo5_reg: LDO_REG5 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <1800000>;
+> +                               regulator-max-microvolt = <3300000>;
+> +                       };
+> +
+> +                       rk808_ldo6_reg: LDO_REG6 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <1000000>;
+> +                               regulator-max-microvolt = <1000000>;
+> +                       };
+> +
+> +                       rk808_ldo7_reg: LDO_REG7 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <1800000>;
+> +                               regulator-max-microvolt = <1800000>;
+> +                       };
+> +
+> +                       rk808_ldo8_reg: LDO_REG8 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <3300000>;
+> +                               regulator-max-microvolt = <3300000>;
+> +                       };
+> +
+> +                       rk808_switch1_reg: SWITCH_REG1 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                       };
+> +
+> +                       rk808_switch2_reg: SWITCH_REG2 {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                       };
+> +               };
+> +       };
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
---=20
-balbi
-
---BQPnanjtCNWHyqYD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJT93r5AAoJEIaOsuA1yqREoboP/0qCml1IzbBPQvnhyOwo9bx0
-Pus2zWyA/NAHXKI65HC4nh+9bqvKpiB8HUAyjtMBm6PcpEiYzx/4ewXKB7RmSPAS
-bVRrgrRyrsR25Q43tm+u+mC1GhhfDAZ/5583XHhV/QHbtyf9nmgf5x34PvFGx3uO
-3KDMOpu5CTpmb0p+Awa/VL33Uk9GojtVx/68kVnEzk3gg9/IOp26KiOcWpvhXMmU
-wOAN8BlfGMcZHXAOwbxPeIa39qm+rYLU6A003uVZQj+YMISIUk8Z2s1QjjNkkUX7
-4EmXMBlnvVP9k5nrUApHXMNcpFT7Gcaj6FJMor2PV1z6y+W7CFiSVuq1KCc0svuy
-uYCJ7q0sBY1Dzl3WeoDqdxR/Lqa9nMl2+kZ/YHg4HbGXrWNZ3vARf3FonArXPRps
-4tX468FaLzDzJa+Hl5k1gwdzXNH6iH1gofcDCde2myl4MGhKSyiKspZlY7mVgEK+
-esgLZhI4FPTrrfZhdMBJz+hsJqXL8jo8rGG2QSK+hY2csg7HeTtvzg9pd8LKfiEZ
-A5fAEVScMD3BRX0wsbh52bKpeUvLBTdnGxyApzqO9Ej/VGmuOrzAJ3agPY/L+Mur
-hs3ITvhPHH2c+10vn46rZyE+PdOriL43TKOxnRzOMr7Ex77zn/kB91KaSPNPz7Z1
-nKf+V6na1P8HPUjMQM9T
-=P+xf
------END PGP SIGNATURE-----
-
---BQPnanjtCNWHyqYD--
+> 1.7.9.5
+>
+>
