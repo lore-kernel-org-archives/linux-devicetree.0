@@ -1,78 +1,122 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv2 4/6] dt-bindings: arm: add Freescale LS1021A SoC device
- tree binding
-Date: Fri, 22 Aug 2014 10:21:18 +0000
-Message-ID: <1473bddb7bc142d086d529e755c741d8@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1407145148-29217-1-git-send-email-jingchang.lu@freescale.com>
- <1407145148-29217-5-git-send-email-jingchang.lu@freescale.com>
- <53F495F1.60800@freescale.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v7] ARM: dts: Prepare node labels for exynos5250
+Date: Fri, 22 Aug 2014 19:49:44 +0900
+Message-ID: <080101cfbdf6$c8fd1f30$5af75d90$@samsung.com>
+References: <53DCD74B.8090400@gmail.com>
+ <1408539764-5835-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53F495F1.60800-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1408539764-5835-1-git-send-email-afaerber@suse.de>
+Content-language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?'Andreas_F=C3=A4rber'?= <afaerber@suse.de>, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 'Vincent Palatin' <vpalatin@chromium.org>, 'Doug Anderson' <dianders@chromium.org>, 'Javier Martinez Canillas' <javier.martinez@collabora.co.uk>, 'Tomasz Figa' <t.figa@samsung.com>, 'Ben Dooks' <ben-linux@fluff.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Russell King' <linux@arm.linux.org.uk>, 'open list' <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IERpYW5hIENyYWNpdW4gW21h
-aWx0bzpkaWFuYS5jcmFjaXVuQGZyZWVzY2FsZS5jb21dDQo+U2VudDogV2VkbmVzZGF5LCBBdWd1
-c3QgMjAsIDIwMTQgODozNSBQTQ0KPlRvOiBMdSBKaW5nY2hhbmctQjM1MDgzDQo+Q2M6IEd1byBT
-aGF3bi1SNjUwNzM7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZzsNCj5saW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj5TdWJqZWN0OiBS
-ZTogW1BBVENIdjIgNC82XSBkdC1iaW5kaW5nczogYXJtOiBhZGQgRnJlZXNjYWxlIExTMTAyMUEg
-U29DDQo+ZGV2aWNlIHRyZWUgYmluZGluZw0KPg0KPk9uIDA4LzA0LzIwMTQgMTI6MzkgUE0sIEpp
-bmdjaGFuZyBMdSB3cm90ZToNCj4+IFNpZ25lZC1vZmYtYnk6IEppbmdjaGFuZyBMdSA8amluZ2No
-YW5nLmx1QGZyZWVzY2FsZS5jb20+DQo+PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2FybS9mc2wudHh0IHwgMzcNCj4rKysrKysrKysrKysrKysrKysrKysrKysr
-KysNCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKykNCj4+DQo+PiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wudHh0DQo+PiBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnR4dA0KPj4gaW5kZXgg
-ZTkzNWQ3ZC4uYzk2MjEyNCAxMDA2NDQNCj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9hcm0vZnNsLnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2FybS9mc2wudHh0DQo+PiBAQCAtNzQsMyArNzQsNDAgQEAgUmVxdWlyZWQgcm9v
-dCBub2RlIHByb3BlcnRpZXM6DQo+PiAgIGkuTVg2cSBnZW5lcmljIGJvYXJkDQo+PiAgIFJlcXVp
-cmVkIHJvb3Qgbm9kZSBwcm9wZXJ0aWVzOg0KPj4gICAgICAgLSBjb21wYXRpYmxlID0gImZzbCxp
-bXg2cSI7DQo+PiArDQo+PiArDQo+PiArRnJlZXNjYWxlIExTMTAyMUEgUGxhdGZvcm0gRGV2aWNl
-IFRyZWUgQmluZGluZ3MNCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0NCj4+ICsNCj4+ICtSZXF1aXJlZCByb290IG5vZGUgY29tcGF0aWJsZSBwcm9w
-ZXJ0aWVzOg0KPj4gKyAgLSBjb21wYXRpYmxlID0gImZzbCxsczEwMjFhIjsNCj4+ICsNCj4+ICtT
-b0Mtc3BlY2lmaWMgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHN5c3RlbSBjb25maWd1cmF0aW9u
-DQo+PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gKw0K
-Pj4gK1JlcXVpcmVkIGRldmljZSBub2RlIGNvbXBhdGlibGUgcHJvcGVydGllczoNCj4+ICsNCj4+
-ICsgIC0gY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1zY2ZnIjoNCj4+ICsJc2NmZyBpcyB0aGUg
-c3VwcGxlbWVudGFsIGNvbmZpZ3VyYXRpb24gdW5pdCwgcHJvdmlkZXMgU29DIHNwZWNpZmljDQo+
-PiArCWNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cyByZWdpc3RlcnMgZm9yIHRoZSBjaGlwLiBUaGVy
-ZSBpcyBubw0KPmRlZGljYXRlDQo+PiArCWRyaXZlciBmb3IgaXQsIGJ1dCBmb3IgZGV2aWNlIHdo
-b3NlIGNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cw0KPnJlZ2lzdGVyDQo+PiArCWxvY2F0ZXMgaW4g
-dGhpcyBzcGFjZSBzaG91bGQgb3BlcmF0ZSBvbiBpdC4gU3VjaCBhcyBnZXR0aW5nIFBFWCBwb3J0
-DQo+PiArCXN0YXR1cy4NCj4+ICsNCj4+ICsgIC0gY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1k
-Y2ZnIjoNCj4+ICsJZGNmZyBpcyB0aGUgZGV2aWNlIGNvbmZpZ3VyYXRpb24gdW5pdCB0aGF0IHBy
-b3ZpZGVzIGdlbmVyYWwgcHVycG9zZQ0KPj4gKwljb25maWd1cmF0aW9uIGFuZCBzdGF0dXMgZm9y
-IHRoZSBkZXZpY2UsIHRoZXJlIGlzIG5vIGRlZGljYXRlIGRyaXZlcg0KPj4gKwlmb3IgaXQsIGJ1
-dCBmb3IgZGV2aWNlIHdob3NlIGNvbmZpZ3VyYXRpb24gYW5kIHN0YXR1cyByZWdpc3Rlcg0KPmxv
-Y2F0ZXMNCj4+ICsJaW4gdGhpcyBzcGFjZSBzaG91bGQgb3BlcmF0ZSBvbiBpdC4gU3VjaCBhcyBz
-ZXR0aW5nIHRoZSBzZWNvbmRhcnkNCj5jb3JlDQo+PiArCXN0YXJ0IGFkZHJlc3MgYW5kIHJlbGVh
-c2UgdGhlIHNlY29uZGFyeSBjb3JlIGZyb20gaG9sZG9mZiBhbmQNCj5zdGFydHVwLg0KPg0KPklz
-IGl0IHRoYXQgaW1wb3J0YW50IHRvIGJlIG1lbnRpb25lZCBpbiB0aGUgYmluZGluZyB0aGF0IHRo
-ZXJlIGlzIG5vDQo+ZHJpdmVyIGZvciBpdD8gSXQgc2VlbXMgdG8gYmUganVzdCBhbiBpbXBsZW1l
-bnRhdGlvbiBkZXRhaWwsIHRoZSBkZXZpY2UNCj50cmVlIGRlc2NyaWJlcyB0aGUgaGFyZHdhcmUg
-bm90IGFueSBwYXJ0aWN1bGFyIGltcGxlbWVudGF0aW9uLg0KPg0KPj4gKw0KPj4gK0V4YW1wbGU6
-DQo+PiArCXNjZmc6IHNjZmdAMTU3MDAwMCB7DQo+PiArCQljb21wYXRpYmxlID0gImZzbCxsczEw
-MjFhLXNjZmciOw0KPj4gKwkJcmVnID0gPDB4MCAweDE1NzAwMDAgMHgwIDB4MTAwMDA+Ow0KPg0K
-PlRoZSByZWcgaXMgbm90IHBhcnQgb2YgdGhlIGRlc2NyaXB0aW9uIGFib3ZlLiBJIHRoaW5rIHRo
-YXQgZWFjaCBvZiB0aGVzZQ0KPm5vZGVzIHNob3VsZCBiZSBkZXNjcmliZWQgc2VwYXJhdGUsIG1h
-eWJlIHNvbWV0aGluZyBsaWtlIHRoaXM6DQo+DQo+RnJlZXNjYWxlIFNDRkcNCj4NCj5zY2ZnIGlz
-IHRoZSBzdXBwbGVtZW50YWwgY29uZmlndXJhdGlvbiB1bml0LCBwcm92aWRlcyBTb0Mgc3BlY2lm
-aWMNCj5jb25maWd1cmF0aW9uIGFuZCBzdGF0dXMgcmVnaXN0ZXJzIGZvciB0aGUgY2hpcC4gVGhl
-cmUgaXMgbm8gZGVkaWNhdGUNCj5kcml2ZXIgZm9yIGl0LCBidXQgZm9yIGRldmljZSB3aG9zZSBj
-b25maWd1cmF0aW9uIGFuZCBzdGF0dXMgcmVnaXN0ZXINCj5sb2NhdGVzIGluIHRoaXMgc3BhY2Ug
-c2hvdWxkIG9wZXJhdGUgb24gaXQuIFN1Y2ggYXMgZ2V0dGluZyBQRVggcG9ydA0KPnN0YXR1cy4N
-ClRoYW5rcywgSSB3aWxsIHJlZGVzY3JpYmUgdGhlbS4NCg0KDQoNCkJlc3QgUmVnYXJkcywNCkpp
-bmdjaGFuZw0KDQoNCg0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andreas F=C3=A4rber wrote:
+>=20
+> Allows them to be extended by reference.
+>=20
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+>  v6 -> v7:
+>  * Dropped uart* labels (Tomasz Figa)
+>=20
+>  v6: Split off from Snow/SMDK cleanups (Doug Anderson)
+>=20
+>  arch/arm/boot/dts/exynos5250.dtsi | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/ex=
+ynos5250.dtsi
+> index 492e1eff37bd..42eafd19cfb2 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -218,7 +218,7 @@
+>  		clock-names =3D "fimg2d";
+>  	};
+>=20
+> -	codec@11000000 {
+> +	mfc: codec@11000000 {
+>  		compatible =3D "samsung,mfc-v6";
+>  		reg =3D <0x11000000 0x10000>;
+>  		interrupts =3D <0 96 0>;
+> @@ -227,7 +227,7 @@
+>  		clock-names =3D "mfc";
+>  	};
+>=20
+> -	rtc@101E0000 {
+> +	rtc: rtc@101E0000 {
+>  		clocks =3D <&clock CLK_RTC>;
+>  		clock-names =3D "rtc";
+>  		status =3D "disabled";
+> @@ -261,7 +261,7 @@
+>  		clock-names =3D "uart", "clk_uart_baud0";
+>  	};
+>=20
+> -	sata@122F0000 {
+> +	sata: sata@122F0000 {
+>  		compatible =3D "snps,dwc-ahci";
+>  		samsung,sata-freq =3D <66>;
+>  		reg =3D <0x122F0000 0x1ff>;
+> @@ -573,7 +573,7 @@
+>  		#phy-cells =3D <1>;
+>  	};
+>=20
+> -	usb@12110000 {
+> +	ehci: usb@12110000 {
+
+I'm not sure which one is recommended between above and "ehci: ehci@121=
+10000 {"
+
+>  		compatible =3D "samsung,exynos4210-ehci";
+>  		reg =3D <0x12110000 0x100>;
+>  		interrupts =3D <0 71 0>;
+> @@ -588,7 +588,7 @@
+>  		};
+>  	};
+>=20
+> -	usb@12120000 {
+> +	ohci: usb@12120000 {
+
+Same as above...
+
+>  		compatible =3D "samsung,exynos4210-ohci";
+>  		reg =3D <0x12120000 0x100>;
+>  		interrupts =3D <0 71 0>;
+> @@ -725,7 +725,7 @@
+>  		clock-names =3D "gscl";
+>  	};
+>=20
+> -	hdmi {
+> +	hdmi: hdmi {
+
+Should be
+
++	hdmi: hdmi@14530000 { ?
+
+>  		compatible =3D "samsung,exynos4212-hdmi";
+>  		reg =3D <0x14530000 0x70000>;
+>  		interrupts =3D <0 95 0>;
+> @@ -751,14 +751,14 @@
+>  		#phy-cells =3D <0>;
+>  	};
+>=20
+> -	dp-controller@145B0000 {
+> +	dp: dp-controller@145B0000 {
+>  		clocks =3D <&clock CLK_DP>;
+>  		clock-names =3D "dp";
+>  		phys =3D <&dp_phy>;
+>  		phy-names =3D "dp";
+>  	};
+>=20
+> -	fimd@14400000 {
+> +	fimd: fimd@14400000 {
+>  		clocks =3D <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
+>  		clock-names =3D "sclk_fimd", "fimd";
+>  	};
+> --
+> 2.0.4
