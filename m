@@ -1,113 +1,56 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
- extension is present
-Date: Fri, 22 Aug 2014 12:09:41 +0100
-Message-ID: <53F724F5.3040004@arm.com>
-References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com> <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
+From: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] Tegra xHCI support
+Date: Fri, 22 Aug 2014 13:23:27 +0200
+Message-ID: <CAAObsKCfKtZm5j9Ecze+3GwWCN3DFOjHUUACdYR4TmV+ExbC8A@mail.gmail.com>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
+ <CAAObsKDT4BV=fGAFkMxieQnC3HX=zm8G_qJ44yay4qG8inxoPQ@mail.gmail.com> <CAL1qeaH=8Fgw6Zia3DuBL8wrrYMjZ8pqC2NanYtb5-YVJwmtsg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Joe.C" <srv_yingjoe.chen@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, "Joe.C" <yingjoe.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Olof Johansson <olof@lixom.net>, Jonas Jensen <jonas.jensen@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>"yingjoe.chen@gmail.com" <yingjoe.che>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaH=8Fgw6Zia3DuBL8wrrYMjZ8pqC2NanYtb5-YVJwmtsg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+On 21 August 2014 19:26, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Thu, Aug 21, 2014 at 6:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
+>> On 18 August 2014 19:08, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>>
+>>> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
+>>> USB3.0 memory sticks and ethernet dongles using controller firmware from
+>>> the ChromiumOS tree [2].
+>>
+>> Hi Andrew,
+>>
+>> do you have any information regarding the port assignments for the
+>> Blaze board? Would like to test this there.
+>
+> Sure:
+> - USB3 port 0 (using PCIe lane 0) and UTMI port 0 are connected to the
+> USB A connector on the left side,
+> - UTMI port 1 is connected to an internal hub, which is in turn
+> connected to the camera, the LTE modem (if present), and one of the
+> USB A connectors on the right side, and
+> - UTMI port 2 is connected to the other USB A connector on the right side.
+> The mapping of ports on the right side varies by SKU (i.e. the one on
+> the internal hub may be the front or rear USB A port).
+>
+> The USB3 device tree bits for Venice2 should work just fine for Blaze;
+> the only real difference is that USB3 port 1/PCIe lane 1 are unused.
+>
+> Also, because of the board design on Blaze, the fused HS_CURR_LEVEL
+> values need to be adjusted before being programmed into
+> USB2_OTG_PAD*_CTL0.  This only affects UTMI ports 0 and 2, so ports
+> connected to the internal hub should still work.  I'll add a pinconfig
+> property to address this in the likely event I need to re-spin this
+> series.  Or, if you like, I can send a follow-on patch to this set to
+> add the property.
 
-On 13/08/14 03:11, Joe.C wrote:
-> From: "Joe.C" <yingjoe.chen@mediatek.com>
-> 
-> GIC supports the combination with external extensions. But this
-> is not reflected in the checks of the interrupt type flag.
-> This patch allows interrupt types other than the one supported by GIC,
-> if an architecture extension is present and supports them.
-> 
-> Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
-> ---
->  drivers/irqchip/irq-gic.c | 27 ++++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 57d165e..66485ab 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -194,23 +194,32 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
->  	u32 confoff = (gicirq / 16) * 4;
->  	bool enabled = false;
->  	u32 val;
-> +	int ret = 0;
->  
->  	/* Interrupt configuration for SGIs can't be changed */
->  	if (gicirq < 16)
->  		return -EINVAL;
->  
-> -	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
-> -		return -EINVAL;
-> -
->  	raw_spin_lock(&irq_controller_lock);
->  
-> -	if (gic_arch_extn.irq_set_type)
-> -		gic_arch_extn.irq_set_type(d, type);
-> +	if (gic_arch_extn.irq_set_type) {
-> +		ret = gic_arch_extn.irq_set_type(d, type);
-> +		if (ret)
-> +			goto out;
-> +	} else if (type != IRQ_TYPE_LEVEL_HIGH &&
-> +		type != IRQ_TYPE_EDGE_RISING) {
-> +			ret = -EINVAL;
-> +			goto out;
-> +	}
->  
->  	val = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
-> -	if (type == IRQ_TYPE_LEVEL_HIGH)
-> +	/* Check for both edge and level here, so we can support GIC irq
-> +	   polarity extension in gic_arch_extn.irq_set_type. If arch
-> +	   doesn't support polarity extension, the check above will reject
-> +	   improper type. */
-> +	if (type & IRQ_TYPE_LEVEL_MASK)
->  		val &= ~confmask;
-> -	else if (type == IRQ_TYPE_EDGE_RISING)
-> +	else if (type & IRQ_TYPE_EDGE_BOTH)
->  		val |= confmask;
->  
->  	/*
-> @@ -226,10 +235,10 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
->  
->  	if (enabled)
->  		writel_relaxed(enablemask, base + GIC_DIST_ENABLE_SET + enableoff);
-> -
-> +out:
->  	raw_spin_unlock(&irq_controller_lock);
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int gic_retrigger(struct irq_data *d)
-> 
-
-You're really abusing the gic_arch_extn feature. I know this is
-tempting, but this is pushing it a bit too far.
-
-This feature exist for one particular reason: if your GIC is in the same
-power-domain as the CPUs, it will go down as well when you suspend the
-system, hence being enable to wake the CPU up. You then need a shadow
-interrupt controller to take over. This is exactly why we call the hook
-on every GIC-related operation.
-
-Here, you're using it to program something that sits between the device
-and the GIC. This is a separate block, with its own hardware
-configuration, that modifies the interrupt signal. This should be
-reflected in the device-tree and the code paths.
-
-You can probably model this as a separate irqchip for the few interrupts
-that require this, or have it configured at boot time (assuming the
-configuration never changes).
+Yeah, that would be great, if it's not too much trouble for you. So
+far the internal camera is working so I'm able to do some
+experimenting with it already.
 
 Thanks,
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Tomeu
