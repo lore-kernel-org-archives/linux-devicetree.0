@@ -1,102 +1,61 @@
-From: Frans Klaver <frans.klaver@xsens.com>
-Subject: [RFC PATCH 3/4] tty: omap-serial: use threaded interrupt handler
-Date: Fri, 22 Aug 2014 16:02:50 +0200
-Message-ID: <1408716170-543-1-git-send-email-frans.klaver@xsens.com>
-References: <20140819185701.GC22003@saruman.home>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/6] ARM: dts: OMAP5: switch to compatible pinctrl
+Date: Fri, 22 Aug 2014 09:03:51 -0500
+Message-ID: <1408716235-26164-3-git-send-email-nm@ti.com>
+References: <1408716235-26164-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140819185701.GC22003@saruman.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Frans Klaver <frans.klaver@xsens.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Pelykh <alexey.pelykh@gmail.com>, Jiri Slaby <jslaby@suse.cz>, Frans Klaver <fransklaver@gmail.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408716235-26164-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we see 1600 uart
-rx buffer overflows within 30 seconds. Threading the interrupt handling reduces
-this to about 170 overflows in 10 minutes.
+Now that ti,omap5-padconf is available, switch over to that compatible
+property. Retain pinctrl-single for legacy support.
 
-In practice this therefore reduces the need for hardware flow control,
-meaning the sending side doesn't have to buffer as much either.
+While at it, mark pinctrl as interrupt controller so that it can be
+used with interrupts-extended property for wakeup events.
 
-Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 ---
- drivers/tty/serial/omap-serial.c | 30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/omap5.dtsi |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-index 14a0167..1671443a 100644
---- a/drivers/tty/serial/omap-serial.c
-+++ b/drivers/tty/serial/omap-serial.c
-@@ -575,6 +575,20 @@ static void serial_omap_rdi(struct uart_omap_port *up, unsigned int lsr)
- }
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index df0a09b..04acda6 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -188,18 +188,22 @@
+ 		};
  
- /**
-+ * serial_omap_fast_irq() - schedule interrupt handling
-+ */
-+static irqreturn_t serial_omap_fast_irq(int irq, void *dev_id)
-+{
-+	struct uart_omap_port *up = dev_id;
-+	unsigned int iir = serial_in(up, UART_IIR);
-+
-+	if (iir & UART_IIR_NO_INT)
-+		return IRQ_NONE;
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+/**
-  * serial_omap_irq() - This handles the interrupt from one port
-  * @irq: uart port irq number
-  * @dev_id: uart port info
-@@ -584,7 +598,6 @@ static irqreturn_t serial_omap_irq(int irq, void *dev_id)
- 	struct uart_omap_port *up = dev_id;
- 	unsigned int iir, lsr;
- 	unsigned int type;
--	irqreturn_t ret = IRQ_NONE;
- 	int max_count = 256;
- 
- 	spin_lock(&up->port.lock);
-@@ -595,7 +608,6 @@ static irqreturn_t serial_omap_irq(int irq, void *dev_id)
- 		if (iir & UART_IIR_NO_INT)
- 			break;
- 
--		ret = IRQ_HANDLED;
- 		lsr = serial_in(up, UART_LSR);
- 
- 		/* extract IRQ type from IIR register */
-@@ -634,7 +646,7 @@ static irqreturn_t serial_omap_irq(int irq, void *dev_id)
- 	pm_runtime_put_autosuspend(up->dev);
- 	up->port_activity = jiffies;
- 
--	return ret;
-+	return IRQ_HANDLED;
- }
- 
- static unsigned int serial_omap_tx_empty(struct uart_port *port)
-@@ -731,15 +743,19 @@ static int serial_omap_startup(struct uart_port *port)
- 	/*
- 	 * Allocate the IRQ
- 	 */
--	retval = request_irq(up->port.irq, serial_omap_irq, up->port.irqflags,
--				up->name, up);
-+	retval = request_threaded_irq(up->port.irq, serial_omap_fast_irq,
-+						serial_omap_irq,
-+						IRQF_ONESHOT | up->port.irqflags,
-+						up->name, up);
- 	if (retval)
- 		return retval;
- 
- 	/* Optional wake-up IRQ */
- 	if (up->wakeirq) {
--		retval = request_irq(up->wakeirq, serial_omap_irq,
--				     up->port.irqflags, up->name, up);
-+		retval = request_threaded_irq(up->wakeirq, serial_omap_fast_irq,
-+						serial_omap_irq,
-+						IRQF_ONESHOT | up->port.irqflags,
-+						up->name, up);
- 		if (retval) {
- 			free_irq(up->port.irq, up);
- 			return retval;
+ 		omap5_pmx_core: pinmux@4a002840 {
+-			compatible = "ti,omap4-padconf", "pinctrl-single";
++			compatible = "ti,omap5-padconf", "pinctrl-single";
+ 			reg = <0x4a002840 0x01b6>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
+ 			pinctrl-single,register-width = <16>;
+ 			pinctrl-single,function-mask = <0x7fff>;
+ 		};
+ 		omap5_pmx_wkup: pinmux@4ae0c840 {
+-			compatible = "ti,omap4-padconf", "pinctrl-single";
++			compatible = "ti,omap5-padconf", "pinctrl-single";
+ 			reg = <0x4ae0c840 0x0038>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			#interrupt-cells = <1>;
++			interrupt-controller;
+ 			pinctrl-single,register-width = <16>;
+ 			pinctrl-single,function-mask = <0x7fff>;
+ 		};
 -- 
-1.9.3
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
