@@ -1,98 +1,54 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] doc: dt/bindings: input: Fix drv260x binding document
-Date: Fri, 22 Aug 2014 09:45:24 -0500
-Message-ID: <20140822144524.GE22707@saruman.home>
-References: <1408716741-1163-1-git-send-email-dmurphy@ti.com>
- <20140822141532.GC22707@saruman.home>
- <00FC9A978A94B7418C33AFAE8A35ED49DF1F66@DFLE09.ent.ti.com>
-Reply-To: <balbi@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC
+ regulators
+Date: Fri, 22 Aug 2014 09:45:31 -0500
+Message-ID: <20140822144531.GV24407@sirena.org.uk>
+References: <1408350762-15520-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1408350762-15520-2-git-send-email-javier.martinez@collabora.co.uk>
+ <CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>
+ <53F73472.8010609@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tVmo9FyGdCe4F4YN"
+	protocol="application/pgp-signature"; boundary="AL7eZwq+s/JzqCJK"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <00FC9A978A94B7418C33AFAE8A35ED49DF1F66@DFLE09.ent.ti.com>
+In-Reply-To: <53F73472.8010609@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Murphy, Dan" <dmurphy@ti.com>
-Cc: "Balbi, Felipe" <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---tVmo9FyGdCe4F4YN
+
+--AL7eZwq+s/JzqCJK
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Aug 22, 2014 at 02:15:46PM +0200, Javier Martinez Canillas wrote:
 
-On Fri, Aug 22, 2014 at 09:25:13AM -0500, Murphy, Dan wrote:
-> Felipe
->=20
-> On 08/22/2014 09:15 AM, Balbi, Felipe wrote:
-> > On Fri, Aug 22, 2014 at 09:12:21AM -0500, Dan Murphy wrote:
-> >> Update the drv260x dt binding document:
-> >> - Change the node name to the devices function not the
-> >> device name.
-> >> - Add vbat-supply to the example.
-> >> - Fix indentation of the example.
-> >>
-> >> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> >> ---
-> >>  .../devicetree/bindings/input/ti,drv260x.txt       |   19 ++++++++++-=
---------
-> >>  1 file changed, 10 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/=
-Documentation/devicetree/bindings/input/ti,drv260x.txt
-> >> index a9c8519..214e25d 100644
-> >> --- a/Documentation/devicetree/bindings/input/ti,drv260x.txt
-> >> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
-> >> @@ -37,15 +37,16 @@ Optional properties:
-> >>  			  3.2 v.
-> >>  Example:
-> >> =20
-> >> -drv2605l: drv2605l@5a {
-> >> -		compatible =3D "ti,drv2605l";
-> >> -		reg =3D <0x5a>;
-> >> -		enable-gpio =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> >> -		mode =3D <DRV260X_LRA_MODE>;
-> >> -		library-sel =3D <DRV260X_LIB_LRA>;
-> >> -		vib-rated-mv =3D <3200>;
-> >> -		vib-overdriver-mv =3D <3200>;
-> >> -};
-> >> +haptics:@5a {
-> >=20
-> > haptics: haptics@5a ??
-> >=20
->=20
-> I found both types of entries in the bindings docs.
-> There is no consistency within the input bindings documentation.
+> Mark, any opinions on how this should be solved will be highly appreciated.
 
-I could swear neither two types have a colon character between node name
-and its base address.
+If someone could tell me what "this" is that'd help...
 
---=20
-balbi
-
---tVmo9FyGdCe4F4YN
+--AL7eZwq+s/JzqCJK
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT91eEAAoJEIaOsuA1yqREgTMP/2XZfPMVWzPigJNrDNaDlQQy
-Y1VSHx/Dzv9kEzh/mj2z1oeAMXdROz12bqzLBJ1DvWbQlq4dHv0Ya+oww0gbYo2g
-pvuCE1NDthHpmIXUZ0wIIsb2k2GRACutSmk9eOD4ZVQ0+TTv0EVJVe0NbTKRK2TV
-1dLENOTKC1e6l/oCXmRNSCgogqdzwDrA2uD4QqlmbcWXeMTjaxDObcwDn1h2mYlh
-n5+UPtFDPuJ30c3XfP7/qKue+mUSFf1/5GvnRyPI5QFxdy1r38U80VQLba2Sdi5g
-77IqjP4t/RDHyJfUWm6f04D6ZBV5QA9kwbKeFo+tI6pG/3b0mu37EVKVA7l/Xx+W
-s8VggWofFr5GdDZY/n2qfJcHUxAvIcIHhEjMpGtiq4Y9XK6lVKWeH+2tW8ksis+l
-jZFG2KRqZFk1qwImYWJ4BwcMiRIjVCuxN/k0k8S19RMx6t26weRrbmHmD6xBJPrX
-kqowW7CCwa9yeAO/SABWPvhvz0DCA3tFonG/rrmn+HVslkyfuGUCpDfABYsHQPG0
-Gn4Jdyrb+jgUnBCSJM/s20Uki38t7QAyx3x2pygxvw0wm+TPKtndHBsZ0DpX1BRG
-DxB1K4c9paruUQzLhrB/TlJjnjVzZ+eNHIBWv8pG7A5RF7cHbHw6YGBTxMIHAQ2A
-BdJX5qtbb0hAy9Pic+Rz
-=cAvk
+iQIcBAEBAgAGBQJT91eHAAoJELSic+t+oim9Y08P/inJTHbIl5hurxfQW7zpZ2U5
+EZOl488BF9i1lrIQNmuvX2jmzLqnp37zV2E7cljkABRmO1p16YF3ZDi1EXyjitRx
+PQF5akMRZT9VwJ3ZbJcMPiuL1w475DMg2DObMqMLcfNaMCv5Y6Am8crl1sjjc5M2
+pPJZ/0KpzBhjeleJ8b73CrRAZIiyNsETDC+ZH4IZz1lR5K34EuvQFsX6BnR3VPh3
+f4/rQvBfzIjDJ09dzitfT/QATb6kACGdh7xwCEekV5m9zVpMwuroT8zNl/GidmjH
+Lcq5KgD3LD4+ImmKvUW4ZGQZncS/ZY0wYBYQW36yv8wwXH/oX3Tou3Vuohm8b7UF
+hpx7Av367ih02ef9qJT+vh+/GbF3sds2Jt/0UhcYI8bp4Lc7H/VQOKVNOOq2jvbq
+7noH8si9lh42jfGjV6oOIJUwqlat6LjB/9ReTuSL43LbFCb9Q++r6pFuRoV7tc9J
+OsZci2j5stE36K8qkAtwBxW1P3A0Y27ItadjYR/VrrVIedhCxZofMfxyuWgr/WLB
+N8dDEHMB0s8vrEYvQ68RlFWYG3zT2U6ASW/PYXwhn/98vZlwFChqIPLTPqRl+JvE
+nzY3l5/9hsFYVIRgHMyNrNKDO2c58l8QRZlqbu85GZ0D5u66cJpMW2r9RkvTmqpE
+8G/QQrxoWPocvzn1i00o
+=Ama7
 -----END PGP SIGNATURE-----
 
---tVmo9FyGdCe4F4YN--
+--AL7eZwq+s/JzqCJK--
