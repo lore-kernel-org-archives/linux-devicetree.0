@@ -1,136 +1,135 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
-Date: Fri, 22 Aug 2014 13:47:09 -0700
-Message-ID: <CAGVrzcYWN83tznwvw1M9V_mwWgobs2kwtRvEj4stqE=XGC10fg@mail.gmail.com>
-References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com>
- <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
- <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
- <53F5D8D9.7040604@suse.de> <f166a186-301c-4288-97cf-71f8173c07e7@BN1AFFO11FD010.protection.gbl>
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Fri, 22 Aug 2014 13:57:16 -0700
+Message-ID: <53F7AEAC.90303@gmail.com>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org> <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f166a186-301c-4288-97cf-71f8173c07e7-reflc3kr++N1NCgXcXAFu+hlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Andrew Bresticker <abrestic@chromium.org>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-08-21 8:49 GMT-07:00 S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.=
-com>:
-> On Thu, 2014-08-21 at 01:32PM +0200, Andreas F=C3=A4rber wrote:
->> Am 21.08.2014 10:41, schrieb Michal Simek:
->> > On 08/20/2014 05:56 PM, Soren Brinkmann wrote:
->> >> Add missing Ethernet phys to Zynq DTs.
->> >>
->> >> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> >> ---
->> >>  arch/arm/boot/dts/zynq-zc702.dts | 6 ++++++
->> >>  arch/arm/boot/dts/zynq-zc706.dts | 6 ++++++
->> >>  arch/arm/boot/dts/zynq-zed.dts   | 6 ++++++
->> >>  3 files changed, 18 insertions(+)
->> >>
->> >> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts=
-/zynq-zc702.dts
->> >> index 30bcfe20f0bc..fa810505ab8f 100644
->> >> --- a/arch/arm/boot/dts/zynq-zc702.dts
->> >> +++ b/arch/arm/boot/dts/zynq-zc702.dts
->> >> @@ -36,6 +36,12 @@
->> >>  &gem0 {
->> >>    status =3D "okay";
->> >>    phy-mode =3D "rgmii-id";
->> >> +  phy-handle =3D <&ethernet_phy>;
->> >> +
->> >> +  ethernet_phy: ethernet-phy@7 {
->> >> +          compatible =3D "marvell,88e1116r", "ethernet-phy-ieee8=
-02.3-c22";
->> >
->> > c22 is completely unused by the kernel and also c22 is default opt=
-ion anyway.
->> > Any advantage to have c22 specified here?
->>
->> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/=
-Documentation/devicetree/bindings/net/phy.txt
->>
->> S=C3=B6ren's marvell,* entries do not seem documented, therefore I u=
-sed the
->> documented "ethernet-phy-idAAAA.BBBB" based syntax. The documented
->> example specifically uses -c22, too.
->>
->> Either it's okay to prepend unrecognized model strings, then you sho=
-uld
->> update zynq-parallella.dts as well (I put the model in a comment the=
-re)
->> or use the official strings like I used and keep the readable models=
- as
->> comments. Documenting all those "marvell,88e1116r", "marvell,88e1518=
-",
->> "marvell,88e1318" PHY bindings and possibly prepending them to the I=
-D
->> based strings would be another option, of course.
+On 08/22/2014 01:42 PM, Florian Fainelli wrote:
+> On Aug 21, 2014 3:05 PM, "Andrew Bresticker" <abrestic@chromium.org
+> <mailto:abrestic@chromium.org>> wrote:
+>  >
+>  > To be consistent with other architectures and to avoid unnecessary
+>  > makefile duplication, move all MIPS device-trees to arch/mips/boot/dts
+>  > and build them with a common makefile.
 >
-> These phy-bindings are everything than obvious to me. It seems the do=
-cs
-> are spread across a couple of different files and not fully up to dat=
-e
-> either. I basically tried to get something working out of the docs, t=
-he
-> parallela and our vendor DT files.
+> I recall reading that the ARM organization for DTS files was a bit
+> unfortunate and should have been something like:
+>
+> arch/arm/boot/dts/<vendor>/
+>
+> Is this something we should do for the MIPS and update the other
+> architectures to follow that scheme?
 
-There is one file that describes everything that is needed in
-Documentation/devicetree/bindings/net/phy.txt, if it is not clear,
-patches are welcome.
+If we choose not to intermingle .dts files from all the vendors in a 
+single directory, why do anything at all?  Currently the .dts files for 
+a vendor are nicely segregated with the rest of the vendors code under a 
+single directory.
+
+Personally I think things are fine as they are.  Any common code 
+remaining in the Makefiles could be moved to the scripts directory for a 
+smaller change.
+
 
 >
-> So my thinkings:
->  - the compatible string with the -c22 is used and documented in the =
-phy
->    bindings, it should be there.
-
-The clause 22 compatible string is not used, but we do need it to know
-it is not a clause 45 PHY, which implicitly makes the clause 22
-compatible string used.
-
->  - the ID based strings seem to be not needed since, IIUC, the core
->    reads the ID from the PHY and uses it, so I just left it out not
->    trying to figure out how to obtain the correct ID
-
-It is not needed, but it is one way to specify a PHY device if you do
-not know what compatible string to use instead.
-
->  - the marvell compatible strings are used in our vendor tree. They
->    aren't used anywhere but in our vendor tree. I though keeping them=
- is
->    nice since it identifies the PHY fully. And in case that level of
->    detail is needed at some point it is already there.
-
-And this is the recommended way to do it in case we ever need to key a
-software decision based on the hardware.
-
+>  >
+>  > Patch 1 sets up the makefiles for building the DTs in arch/mips/boot/dts
+>  > and introduces the config option BUILTIN_DTB for platforms that require
+>  > it.
+>  >
+>  > Patch 2 introduces the 'dtbs' makefile target to allow building of just
+>  > the DT binaries.
+>  >
+>  > Patches 3-7 move the DTs out of the platform directores.
+>  >
+>  > I've build tested this on all affected platforms (Octeon, Lantiq, SEAD3,
+>  > Netlogic, and Ralink) as well as Malta.  For platforms where builtin DTBs
+>  > are optional (Netlogic and Ralink), I built with and without the builtin
+>  > DTBs.
+>  >
+>  > Based on 3.17-rc1.
+>  >
+>  > Andrew Bresticker (7):
+>  >   MIPS: Create common infrastructure for building built-in device-trees
+>  >   MIPS: Add support for building device-tree binaries
+>  >   MIPS: Octeon: Move device-trees to arch/mips/boot/dts/
+>  >   MIPS: Lantiq: Move device-trees to arch/mips/boot/dts/
+>  >   MIPS: sead3: Move device-trees to arch/mips/boot/dts/
+>  >   MIPS: Netlogic: Move device-trees to arch/mips/boot/dts/
+>  >   MIPS: ralink: Move device-trees to arch/mips/boot/dts/
+>  >
+>  >  arch/mips/Kconfig                                    |  5 +++++
+>  >  arch/mips/Makefile                                   | 11 +++++++++++
+>  >  arch/mips/boot/.gitignore                            |  1 +
+>  >  arch/mips/boot/dts/Makefile                          | 20
+> ++++++++++++++++++++
+>  >  arch/mips/{lantiq => boot}/dts/danube.dtsi           |  0
+>  >  arch/mips/{lantiq => boot}/dts/easy50712.dts         |  0
+>  >  arch/mips/{ralink => boot}/dts/mt7620a.dtsi          |  0
+>  >  arch/mips/{ralink => boot}/dts/mt7620a_eval.dts      |  0
+>  >  .../mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts |  0
+>  >  .../mips/{cavium-octeon => boot/dts}/octeon_68xx.dts |  0
+>  >  arch/mips/{ralink => boot}/dts/rt2880.dtsi           |  0
+>  >  arch/mips/{ralink => boot}/dts/rt2880_eval.dts       |  0
+>  >  arch/mips/{ralink => boot}/dts/rt3050.dtsi           |  0
+>  >  arch/mips/{ralink => boot}/dts/rt3052_eval.dts       |  0
+>  >  arch/mips/{ralink => boot}/dts/rt3883.dtsi           |  0
+>  >  arch/mips/{ralink => boot}/dts/rt3883_eval.dts       |  0
+>  >  arch/mips/{mti-sead3 => boot/dts}/sead3.dts          |  0
+>  >  arch/mips/{netlogic => boot}/dts/xlp_evp.dts         |  0
+>  >  arch/mips/{netlogic => boot}/dts/xlp_fvp.dts         |  0
+>  >  arch/mips/{netlogic => boot}/dts/xlp_gvp.dts         |  0
+>  >  arch/mips/{netlogic => boot}/dts/xlp_svp.dts         |  0
+>  >  arch/mips/cavium-octeon/.gitignore                   |  2 --
+>  >  arch/mips/cavium-octeon/Makefile                     | 10 ----------
+>  >  arch/mips/lantiq/Kconfig                             |  1 +
+>  >  arch/mips/lantiq/Makefile                            |  2 --
+>  >  arch/mips/lantiq/dts/Makefile                        |  1 -
+>  >  arch/mips/mti-sead3/Makefile                         |  4 ----
+>  >  arch/mips/netlogic/Kconfig                           |  4 ++++
+>  >  arch/mips/netlogic/Makefile                          |  1 -
+>  >  arch/mips/netlogic/dts/Makefile                      |  4 ----
+>  >  arch/mips/ralink/Kconfig                             |  4 ++++
+>  >  arch/mips/ralink/Makefile                            |  2 --
+>  >  arch/mips/ralink/dts/Makefile                        |  4 ----
+>  >  33 files changed, 46 insertions(+), 30 deletions(-)
+>  >  create mode 100644 arch/mips/boot/dts/Makefile
+>  >  rename arch/mips/{lantiq => boot}/dts/danube.dtsi (100%)
+>  >  rename arch/mips/{lantiq => boot}/dts/easy50712.dts (100%)
+>  >  rename arch/mips/{ralink => boot}/dts/mt7620a.dtsi (100%)
+>  >  rename arch/mips/{ralink => boot}/dts/mt7620a_eval.dts (100%)
+>  >  rename arch/mips/{cavium-octeon => boot/dts}/octeon_3xxx.dts (100%)
+>  >  rename arch/mips/{cavium-octeon => boot/dts}/octeon_68xx.dts (100%)
+>  >  rename arch/mips/{ralink => boot}/dts/rt2880.dtsi (100%)
+>  >  rename arch/mips/{ralink => boot}/dts/rt2880_eval.dts (100%)
+>  >  rename arch/mips/{ralink => boot}/dts/rt3050.dtsi (100%)
+>  >  rename arch/mips/{ralink => boot}/dts/rt3052_eval.dts (100%)
+>  >  rename arch/mips/{ralink => boot}/dts/rt3883.dtsi (100%)
+>  >  rename arch/mips/{ralink => boot}/dts/rt3883_eval.dts (100%)
+>  >  rename arch/mips/{mti-sead3 => boot/dts}/sead3.dts (100%)
+>  >  rename arch/mips/{netlogic => boot}/dts/xlp_evp.dts (100%)
+>  >  rename arch/mips/{netlogic => boot}/dts/xlp_fvp.dts (100%)
+>  >  rename arch/mips/{netlogic => boot}/dts/xlp_gvp.dts (100%)
+>  >  rename arch/mips/{netlogic => boot}/dts/xlp_svp.dts (100%)
+>  >  delete mode 100644 arch/mips/cavium-octeon/.gitignore
+>  >  delete mode 100644 arch/mips/lantiq/dts/Makefile
+>  >  delete mode 100644 arch/mips/netlogic/dts/Makefile
+>  >  delete mode 100644 arch/mips/ralink/dts/Makefile
+>  >
+>  > --
+>  > 2.1.0.rc2.206.gedb03e5
+>  >
+>  > --
+>  > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>  > the body of a message to majordomo@vger.kernel.org
+> <mailto:majordomo@vger.kernel.org>
+>  > More majordomo info at http://vger.kernel.org/majordomo-info.html
 >
-> Assuming that we wanna keep things this way, I'm happy to re-spin thi=
-s
-> patch and also add a similar compatible string to the parallela DT.
-
-Your initial patchset is correct with repesct to how the Device Tree
-binding for Ethernet PHY nodes is defined.
-
->
->         Thanks,
->         S=C3=B6ren
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
---=20
-=46lorian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
