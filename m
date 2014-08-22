@@ -1,52 +1,56 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/5] ARM: shmobile: r8a7740: document MSTP clock
- support
-Date: Fri, 22 Aug 2014 17:46:58 +0900
-Message-ID: <20140822084657.GF18670@verge.net.au>
-References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1407507792-8121-2-git-send-email-ulrich.hecht+renesas@gmail.com>
- <20140811011214.GI26570@verge.net.au>
- <20140822010400.GC2783@verge.net.au>
- <CAMuHMdXxgYYyZz_M2975W-bPv6EEsoXp6r8QxfrvgP-Ya4q13w@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC PATCH 5/6] rtc: rtc-isl12022: Change vendor prefix for
+ Intersil Corporation to isil
+Date: Fri, 22 Aug 2014 10:57:09 +0200
+Message-ID: <1408697829.3118.28.camel@paszta.hi.pengutronix.de>
+References: <1408524184-31928-1-git-send-email-p.zabel@pengutronix.de>
+	 <1408524184-31928-6-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXxgYYyZz_M2975W-bPv6EEsoXp6r8QxfrvgP-Ya4q13w@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408524184-31928-6-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 22, 2014 at 09:44:09AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
+Am Mittwoch, den 20.08.2014, 10:43 +0200 schrieb Philipp Zabel:
+> Currently there is a wild mixture of isl, isil, and intersil
+> compatibles in the kernel. At this point, changing the vendor
+> symbol to the most often used variant, which is equal to the
+> NASDAQ symbol, isil, should not hurt, since the isl1208 driver
+> doesn't care either way.
+> Patch db04d6284e2a added device tree support using the then
+> documented isl vendor prefix, so we keep that around for
+> backwards compatibility.
 > 
-> On Fri, Aug 22, 2014 at 3:04 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Mon, Aug 11, 2014 at 10:12:14AM +0900, Simon Horman wrote:
-> >> On Fri, Aug 08, 2014 at 04:23:08PM +0200, Ulrich Hecht wrote:
-> >> > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> >>
-> >> Acked-by: Simon Horman <horms+renesas@verge.net.au>
-> >>
-> >> Mike, could you consider taking this?
-> >
-> > Hi Mike,
-> >
-> > I'm wondering if you could take moment to consider this patch.
-> > It is a dependency for enabling ccf and in turn multiplatform on
-> > the r8a7740 SoC.
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/rtc/rtc-isl12022.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Sidenote: as this patch only updates the documentation, and the driver
-> won't use the newly added value (for now), there's no hard dependency.
-> Furthermore, adding this value is done following the spirit of the existing
-> values, and thus I think you can just continue going forward with the parts
-> that fall under the shmobile jurisdiction.
+> diff --git a/drivers/rtc/rtc-isl12022.c b/drivers/rtc/rtc-isl12022.c
+> index aa55f08..df20f18 100644
+> --- a/drivers/rtc/rtc-isl12022.c
+> +++ b/drivers/rtc/rtc-isl12022.c
+> @@ -275,7 +275,8 @@ static int isl12022_probe(struct i2c_client *client,
+>  
+>  #ifdef CONFIG_OF
+>  static struct of_device_id isl12022_dt_match[] = {
+> -	{ .compatible = "isl,isl12022" },
+> +	{ .compatible = "isil,isl12022" },
+> +	{ .compatible = "isl,isl12022" }, /* for backwards compatibility */
 
-Hi Geert,
+Actually, is it even necessary to keep this around in here?
+If of_driver_match_device fails, i2c_device_match will continue to try
+i2c_match_id if driver->id_table is set, which matches against the
+result of of_modalias_node (dropping the vendor prefix altogether).
 
-I had a conversation with Magnus earlier today and I believe that
-all three of us are (now) in agreement on the point you have made above.
+regards
+Philipp
 
-I'd like to allow myself the weekend to think about this and
-if no issues have surfaced by then I plan to take the remaining
-patches of this series into the next branch of the renesas tree.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
