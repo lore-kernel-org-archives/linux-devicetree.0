@@ -1,52 +1,124 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/5] ARM: shmobile: r8a7740: document MSTP clock support
-Date: Fri, 22 Aug 2014 09:44:09 +0200
-Message-ID: <CAMuHMdXxgYYyZz_M2975W-bPv6EEsoXp6r8QxfrvgP-Ya4q13w@mail.gmail.com>
-References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1407507792-8121-2-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<20140811011214.GI26570@verge.net.au>
-	<20140822010400.GC2783@verge.net.au>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: Gateworks GW5520 support (i.MX6)
+Date: Fri, 22 Aug 2014 15:46:05 +0800
+Message-ID: <20140822074604.GB2540@dragon>
+References: <1407572602-14017-1-git-send-email-tharvey@gateworks.com>
+ <1408679706-18200-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140822010400.GC2783@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408679706-18200-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Thu, Aug 21, 2014 at 08:55:06PM -0700, Tim Harvey wrote:
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
 
-On Fri, Aug 22, 2014 at 3:04 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Mon, Aug 11, 2014 at 10:12:14AM +0900, Simon Horman wrote:
->> On Fri, Aug 08, 2014 at 04:23:08PM +0200, Ulrich Hecht wrote:
->> > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
->>
->> Acked-by: Simon Horman <horms+renesas@verge.net.au>
->>
->> Mike, could you consider taking this?
->
-> Hi Mike,
->
-> I'm wondering if you could take moment to consider this patch.
-> It is a dependency for enabling ccf and in turn multiplatform on
-> the r8a7740 SoC.
+  DTC     arch/arm/boot/dts/imx6dl-gw552x.dtb
+ERROR (phandle_references): Reference to non-existent node or label "pinctrl_hog"
 
-Sidenote: as this patch only updates the documentation, and the driver
-won't use the newly added value (for now), there's no hard dependency.
-Furthermore, adding this value is done following the spirit of the existing
-values, and thus I think you can just continue going forward with the parts
-that fall under the shmobile jurisdiction.
+> +
+> +	imx6qdl-gw552x {
+> +		pinctrl_gpio: gpiogrp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_GPIO_9__GPIO1_IO09	0x4001b0b0 /* USBHUB_RST# */
+> +				MX6QDL_PAD_GPIO_17__GPIO7_IO12	0x4001b0b0 /* PCIESKT_WDIS# */
+> +			>;
+> +		};
 
-Thanks.
+pinctrl_gpio is not referenced by any client device, so kernel will not
+set up these two pins.
 
-Gr{oetje,eeting}s,
+Shawn
 
-                        Geert
-
+> +
+> +		pinctrl_gpio_leds: gpioledsgrp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
+> +				MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
+> +				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
+> +			>;
+> +		};
+> +
+> +		pinctrl_gpmi_nand: gpminandgrp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
+> +				MX6QDL_PAD_NANDF_ALE__NAND_ALE		0xb0b1
+> +				MX6QDL_PAD_NANDF_WP_B__NAND_WP_B	0xb0b1
+> +				MX6QDL_PAD_NANDF_RB0__NAND_READY_B	0xb000
+> +				MX6QDL_PAD_NANDF_CS0__NAND_CE0_B	0xb0b1
+> +				MX6QDL_PAD_NANDF_CS1__NAND_CE1_B	0xb0b1
+> +				MX6QDL_PAD_SD4_CMD__NAND_RE_B		0xb0b1
+> +				MX6QDL_PAD_SD4_CLK__NAND_WE_B		0xb0b1
+> +				MX6QDL_PAD_NANDF_D0__NAND_DATA00	0xb0b1
+> +				MX6QDL_PAD_NANDF_D1__NAND_DATA01	0xb0b1
+> +				MX6QDL_PAD_NANDF_D2__NAND_DATA02	0xb0b1
+> +				MX6QDL_PAD_NANDF_D3__NAND_DATA03	0xb0b1
+> +				MX6QDL_PAD_NANDF_D4__NAND_DATA04	0xb0b1
+> +				MX6QDL_PAD_NANDF_D5__NAND_DATA05	0xb0b1
+> +				MX6QDL_PAD_NANDF_D6__NAND_DATA06	0xb0b1
+> +				MX6QDL_PAD_NANDF_D7__NAND_DATA07	0xb0b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_i2c1: i2c1grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
+> +				MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_i2c2: i2c2grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
+> +				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_i2c3: i2c3grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
+> +				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_pcie: pciegrp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29	0x1b0b0
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart2: uart2grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
+> +				MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart3: uart3grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
+> +				MX6QDL_PAD_EIM_D25__UART3_RX_DATA	0x1b0b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_uart5: uart5grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
+> +				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
+> +			>;
+> +                };
+> +	};
+> +};
+> -- 
+> 1.8.3.2
+> 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
