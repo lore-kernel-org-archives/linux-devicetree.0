@@ -1,83 +1,46 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
-Date: Fri, 22 Aug 2014 08:50:41 +0100
-Message-ID: <20140822075041.GT4266@lee--X1>
-References: <1407796988-25872-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1407796988-25872-3-git-send-email-bjorn.andersson@sonymobile.com>
- <20140821132204.GH4266@lee--X1>
- <20140822012748.GB12494@sonymobile.com>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [PATCH v4 1/2] watchdog: Add Cadence WDT driver
+Date: Fri, 22 Aug 2014 13:24:54 +0530
+Message-ID: <CAFcVECLuC0Xun=QSwa0Q+o2=4VMPR1=wym1W4=SJ0g9=XcKAdw@mail.gmail.com>
+References: <1406788855-19074-1-git-send-email-harinik@xilinx.com>
+	<20140821185722.GA17481@roeck-us.net>
+	<20140822073344.GA23635@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140822012748.GB12494@sonymobile.com>
+In-Reply-To: <20140822073344.GA23635@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "wim@iguana.be" <wim@iguana.be>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, svemula@xilinx.com, anirudh@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 21 Aug 2014, Bjorn Andersson wrote:
-> On Thu 21 Aug 06:22 PDT 2014, Lee Jones wrote:
-> > > +struct qcom_rpm *dev_get_qcom_rpm(struct device *dev)
-> > > +{
-> > > +	return dev_get_drvdata(dev);
-> > > +}
-> > > +EXPORT_SYMBOL(dev_get_qcom_rpm);
-> >=20
-> > No need for this at all.  Use dev_get_drvdata() direct instead.
-> >=20
->=20
-> I see that others have put this as static inline in the header file, =
-so I will
-> follow that. I don't want to expose this directly in the implementati=
-on of the
-> clients.
->=20
-> Let me know if you object.
+Hi Guenter,
 
-I do (unless you convince me otherwise).  Why is this a good idea and
-why 'exposing' this directly is a bad one?  At the moment this looks
-to me like abstraction for the sake of abstraction.
+On Fri, Aug 22, 2014 at 1:03 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Thu, Aug 21, 2014 at 11:57:22AM -0700, Guenter Roeck wrote:
+>> On Thu, Jul 31, 2014 at 12:10:54PM +0530, Harini Katakam wrote:
+>> > Add Cadence WDT driver. This is used by Xilinx Zynq.
+>> >
+>> > Signed-off-by: Harini Katakam <harinik@xilinx.com>
+>>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>
+> Hah, that was too fast. The driver causes build errors for a number or
+> architectures, including x86_64.
+>
+> drivers/watchdog/cadence_wdt.c: In function 'cdns_wdt_writereg':
+> drivers/watchdog/cadence_wdt.c:93:2: error: implicit declaration of function
+> 'writel_relaxed' [-Werror=implicit-function-declaration]
+> cc1: some warnings being treated as errors
+> make[2]: *** [drivers/watchdog/cadence_wdt.o] Error 1
+> make[1]: *** [drivers/watchdog] Error 2
+>
+> Please make sure that the driver is only configurable for architectures
+> supporting writel_relaxed.
 
-> > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +	rpm->status_regs =3D devm_ioremap_resource(&pdev->dev, res);
-> > > +	rpm->ctrl_regs =3D rpm->status_regs + 0x400;
-> > > +	rpm->req_regs =3D rpm->status_regs + 0x600;
-> > > +	if (IS_ERR(rpm->status_regs))
-> > > +		return PTR_ERR(rpm->status_regs);
-> >=20
-> > You should probably do this _before_ using it above.
->=20
-> There's no difference in behaviour, but it just feels cleaner than:
->=20
-> res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> rpm->status_regs =3D devm_ioremap_resource(&pdev->dev, res);
-> if (IS_ERR(rpm->status_regs))
-> 	return PTR_ERR(rpm->status_regs);
-> rpm->ctrl_regs =3D rpm->status_regs + 0x400;
-> rpm->req_regs =3D rpm->status_regs + 0x600;
->=20
-> If you don't like it, I'll change it.
+There were a couple of patches earlier to add relaxed helpers for all
+architectures - I guess they are not applied yet.
+I'll resend series adding dependency on ARM.
 
-There is a difference.  In the current implementation you're doing math
-with a possible error code and assigning rubbish to rpm->ctrl_regs and
-rpm->req_regs.
-
-[...]
-
-> > > +MODULE_DESCRIPTION("Qualcomm Resource Power Manager driver");
-> > > +MODULE_LICENSE("GPL v2");
-> >=20
-> > No one authored this driver?
-> >=20
->=20
-> Thought that was optional, will update.
-
-It's also helpful.  Can you place an Author: line in the header(s) too.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Regards,
+Harini
