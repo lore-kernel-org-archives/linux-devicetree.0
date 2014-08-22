@@ -1,48 +1,84 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA7: fix interrupt-cells for GPIO
-Date: Fri, 22 Aug 2014 16:02:54 -0700
-Message-ID: <20140822230253.GJ10066@atomide.com>
-References: <1406748032-19417-1-git-send-email-nm@ti.com>
- <53F249F3.9070402@ti.com>
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Sat, 23 Aug 2014 01:16:37 +0200
+Message-ID: <CAOiHx=kLfKLZA2Nv+dn87S50209DBXRj8OgZsywXQ0MoqTVA8A@mail.gmail.com>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+ <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
+ <53F7AEAC.90303@gmail.com> <CAL1qeaEaZx0KpMpTSGqZVMZZj1VrzGY3ffRbzEdy4Aks2yHciA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53F249F3.9070402-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <CAL1qeaEaZx0KpMpTSGqZVMZZj1VrzGY3ffRbzEdy4Aks2yHciA@mail.gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: David Daney <ddaney.cavm@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [140818 11:49]:
-> On 07/30/2014 02:20 PM, Nishanth Menon wrote:
-> > GPIO modules are also interrupt sources. However, they require both the
-> > GPIO number and IRQ type to function properly.
-> > 
-> > By declaring that GPIO uses interrupt-cells=<1>, we essentially do not
-> > allow users of the nodes to use the interrupt property appropritely.
-> > 
-> > With this change, the following now works:
-> > 
-> > interrupt-parent = <&gpio6>;
-> > interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
-> > 
-> > Fixes: 6e58b8f1daaf ('ARM: dts: DRA7: Add the dts files for dra7 SoC and dra7-evm board')
-> > Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> > ---
-> > Based on v3.16-rc7
-> > 
-> >  arch/arm/boot/dts/dra7.dtsi |   16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> Tony,
-> Gentle ping. we still have this issue on 3.17-rc1. any suggestions on
-> if we can pick this up during RC?
+On Sat, Aug 23, 2014 at 12:10 AM, Andrew Bresticker
+<abrestic@chromium.org> wrote:
+> On Fri, Aug 22, 2014 at 1:57 PM, David Daney <ddaney.cavm@gmail.com> wrote:
+>> On 08/22/2014 01:42 PM, Florian Fainelli wrote:
+>>>
+>>> On Aug 21, 2014 3:05 PM, "Andrew Bresticker" <abrestic@chromium.org
+>>> <mailto:abrestic@chromium.org>> wrote:
+>>>  >
+>>>  > To be consistent with other architectures and to avoid unnecessary
+>>>  > makefile duplication, move all MIPS device-trees to arch/mips/boot/dts
+>>>  > and build them with a common makefile.
+>>>
+>>> I recall reading that the ARM organization for DTS files was a bit
+>>> unfortunate and should have been something like:
+>>>
+>>> arch/arm/boot/dts/<vendor>/
+>>>
+>>> Is this something we should do for the MIPS and update the other
+>>> architectures to follow that scheme?
+>>
+>>
+>> If we choose not to intermingle .dts files from all the vendors in a single
+>> directory, why do anything at all?  Currently the .dts files for a vendor
+>> are nicely segregated with the rest of the vendors code under a single
+>> directory.
+>>
+>> Personally I think things are fine as they are.  Any common code remaining
+>> in the Makefiles could be moved to the scripts directory for a smaller
+>> change.
+>
+> Assuming we don't move them to a common location just to segregate
+> them again, it makes MIPS consistent with every other architecture
+> (not just ARM!) using DT.  It also makes it easier to introduce common
+> changes later on, like the 'dtbs' or 'dtbs_install' make targets.
 
-Yes thanks applying into omap-for-v3.17/fixes.
+I think having dts files under a predictable location is a good idea,
+especially if it allows common code/targets as "dtbs".
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maybe a totally insane idea, but how this for having the cake and eating it too:
+
+arch/mips/boot/dts/*.dts => dts files to be built along side the kernel as .dtbs
+
+arch/mips/<mach>/*.dts => dts files built into the kernel
+
+(the ../*.dts isn't meant as they should be in the top directory, just
+somewhere in that sub tree)
+
+Because I can see a use case where you want both. For example octeon
+uses generic device tree boards to use as a basis if the bootloader
+did not provide one/is too old, but maybe also provide dts files for
+known boards, which shouldn't be included in the kernel binary itself.
+
+And I would like to do a similar thing when I want to convert bcm63xx
+to device tree, i.e. have dts files for supported boards, but also
+include a "standard"/"fall-back" dts for each of the supported SoCs to
+load if there is no dtb passed and the old board registration code is
+used.
+
+
+Jonas
