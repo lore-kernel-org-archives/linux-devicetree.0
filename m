@@ -1,189 +1,97 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 03/12] PCI: Introduce helper functions to deal with PCI
- I/O ranges.
-Date: Thu, 21 Aug 2014 23:59:41 -0500
-Message-ID: <CAL_JsqKgW=HN35YnYBtAVDPxMYQfR35Bw3ekonXPmNhjrsVDUg@mail.gmail.com>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com> <1407860725-25202-4-git-send-email-Liviu.Dudau@arm.com>
+From: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] Documentation: dts: fsl-usb: Document USB node compatible
+ string for IP version
+Date: Fri, 22 Aug 2014 05:05:41 +0000
+Message-ID: <3fdd7732a9954d13a90ece684771d932@BL2PR03MB161.namprd03.prod.outlook.com>
+References: <1408612727-6774-1-git-send-email-nikhil.badola@freescale.com>
+ <1408659774.2395.21.camel@snotra.buserror.net>
+ <af7cc70458bf471cb20938ce6498ccfe@BN1PR0301MB0593.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407860725-25202-4-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <af7cc70458bf471cb20938ce6498ccfe-RQSpjbwlmjRJV8q+uXLxw5wN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 12, 2014 at 11:25 AM, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
-> Some architectures do not have a simple view of the PCI I/O space
-> and instead use a range of CPU addresses that map to bus addresses.
-> For some architectures these ranges will be expressed by OF bindings
-> in a device tree file.
->
-> This patch introduces a pci_register_io_range() helper function with
-> a generic implementation that can be used by such architectures to
-> keep track of the I/O ranges described by the PCI bindings. If the
-> PCI_IOBASE macro is not defined that signals lack of support for PCI
-> and we return an error.
->
-> In order to retrieve the CPU address associated with an I/O port, a
-> new helper function pci_pio_to_address() is introduced. This will
-> search in the list of ranges registered with pci_register_io_range()
-> and return the CPU address that corresponds to the given port.
->
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
-> ---
->  drivers/of/address.c       | 95 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_address.h |  2 +
->  2 files changed, 97 insertions(+)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 5edfcb0..4dab700 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -5,6 +5,7 @@
->  #include <linux/module.h>
->  #include <linux/of_address.h>
->  #include <linux/pci_regs.h>
-> +#include <linux/slab.h>
->  #include <linux/string.h>
->
->  /* Max address size we deal with */
-> @@ -601,12 +602,106 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
->  }
->  EXPORT_SYMBOL(of_get_address);
->
-> +#ifdef PCI_IOBASE
-> +struct io_range {
-> +       struct list_head list;
-> +       phys_addr_t start;
-> +       resource_size_t size;
-> +};
-> +
-> +static LIST_HEAD(io_range_list);
-> +static DEFINE_SPINLOCK(io_range_lock);
-> +#endif
-> +
-> +/*
-> + * Record the PCI IO range (expressed as CPU physical address + size).
-> + * Return a negative value if an error has occured, zero otherwise
-> + */
-> +int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
-> +{
-> +#ifdef PCI_IOBASE
-> +       struct io_range *range;
-> +       resource_size_t allocated_size = 0;
-> +
-> +       /* check if the range hasn't been previously recorded */
-> +       spin_lock(&io_range_lock);
-> +       list_for_each_entry(range, &io_range_list, list) {
-> +               if (addr >= range->start && addr + size <= range->start + size)
-> +                       return 0;
-> +               allocated_size += range->size;
-> +       }
-> +       spin_unlock(&io_range_lock);
-> +
-> +       /* range not registed yet, check for available space */
-> +       if (allocated_size + size - 1 > IO_SPACE_LIMIT) {
-> +               /* if it's too big check if 64K space can be reserved */
-> +               if (allocated_size + SZ_64K - 1 > IO_SPACE_LIMIT)
-> +                       return -E2BIG;
-> +
-> +               size = SZ_64K;
-> +               pr_warn("Requested IO range too big, new size set to 64K\n");
-> +       }
-> +
-> +       /* add the range to the list */
-> +       range = kzalloc(sizeof(*range), GFP_KERNEL);
-> +       if (!range)
-> +               return -ENOMEM;
-> +
-> +       range->start = addr;
-> +       range->size = size;
-> +
-> +       list_add_tail(&range->list, &io_range_list);
-> +#endif
-> +
-> +       return 0;
-> +}
-> +
-> +phys_addr_t pci_pio_to_address(unsigned long pio)
-> +{
-> +       phys_addr_t address = (phys_addr_t)OF_BAD_ADDR;
-> +
-> +#ifdef PCI_IOBASE
-> +       struct io_range *range;
-> +       resource_size_t allocated_size = 0;
-> +
-> +       if (pio > IO_SPACE_LIMIT)
-> +               return address;
-> +
-> +       spin_lock(&io_range_lock);
-> +       list_for_each_entry(range, &io_range_list, list) {
-> +               if (pio >= allocated_size && pio < allocated_size + range->size) {
-> +                       address = range->start + pio - allocated_size;
-> +                       break;
-> +               }
-> +               allocated_size += range->size;
-> +       }
-> +       spin_unlock(&io_range_lock);
-> +#endif
-> +
-> +       return address;
-> +}
-> +
->  unsigned long __weak pci_address_to_pio(phys_addr_t address)
->  {
-> +#ifdef PCI_IOBASE
-> +       struct io_range *res;
-> +       resource_size_t offset = 0;
-> +
-> +       list_for_each_entry(res, &io_range_list, list) {
-> +               if (address >= res->start &&
-> +                       address < res->start + res->size) {
-> +                       return res->start - address + offset;
-> +               }
-> +               offset += res->size;
-> +       }
-> +
-> +       return (unsigned long)-1;
-> +#else
->         if (address > IO_SPACE_LIMIT)
->                 return (unsigned long)-1;
->
->         return (unsigned long) address;
-> +#endif
->  }
->
->  static int __of_address_to_resource(struct device_node *dev,
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index c13b878..28e6836 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -55,7 +55,9 @@ extern void __iomem *of_iomap(struct device_node *device, int index);
->  extern const __be32 *of_get_address(struct device_node *dev, int index,
->                            u64 *size, unsigned int *flags);
->
-> +extern int pci_register_io_range(phys_addr_t addr, resource_size_t size);
->  extern unsigned long pci_address_to_pio(phys_addr_t addr);
-> +extern phys_addr_t pci_pio_to_address(unsigned long pio);
->
->  extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
->                         struct device_node *node);
-> --
-> 2.0.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBCYWRvbGEgTmlraGlsLUI0NjE3
+MiANClNlbnQ6IEZyaWRheSwgQXVndXN0IDIyLCAyMDE0IDEwOjE4IEFNDQpUbzogV29vZCBTY290
+dC1CMDc0MjENCkNjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2
+Z2VyLmtlcm5lbC5vcmc7IE1laHJlc2ggUmFtbmVlay1CMzEzODMNClN1YmplY3Q6IFJFOiBbUEFU
+Q0hdIERvY3VtZW50YXRpb246IGR0czogZnNsLXVzYjogRG9jdW1lbnQgVVNCIG5vZGUgY29tcGF0
+aWJsZSBzdHJpbmcgZm9yIElQIHZlcnNpb24NCg0KQWRkaW5nIFJhbW5lZWsNCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiBTZW50OiBG
+cmlkYXksIEF1Z3VzdCAyMiwgMjAxNCAzOjUzIEFNDQo+IFRvOiBCYWRvbGEgTmlraGlsLUI0NjE3
+Mg0KPiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIERvY3VtZW50YXRpb246IGR0czogZnNs
+LXVzYjogRG9jdW1lbnQgVVNCIG5vZGUgDQo+IGNvbXBhdGlibGUgc3RyaW5nIGZvciBJUCB2ZXJz
+aW9uDQo+IA0KPiBPbiBUaHUsIDIwMTQtMDgtMjEgYXQgMTQ6NDggKzA1MzAsIE5pa2hpbCBCYWRv
+bGEgd3JvdGU6DQo+ID4gRG9jdW1lbnQgY29tcGF0aWJsZSBzdHJpbmcgY29udGFpbmluZyBJUCB2
+ZXJzaW9uIGluIFVTQiBkZXZpY2UgdHJlZSANCj4gPiBub2RlDQo+ID4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBOaWtoaWwgQmFkb2xhIDxuaWtoaWwuYmFkb2xhQGZyZWVzY2FsZS5jb20+DQo+ID4gLS0t
+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZnNsLXVzYi50eHQg
+fCAxMyANCj4gPiArKysrKysrKy0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlv
+bnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBQbGVhc2UgQ0MgZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmcgb24gYWxsIGRldmljZSB0cmVlIHBhdGNoZXMgKGluIA0KPiBhZGRpdGlvbiB0byBs
+aW51eHBwYy1kZXYpLg0KPiANCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL2ZzbC11c2IudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL2ZzbC11c2IudHh0DQo+ID4gaW5kZXggNDc3OWMwMi4uNWEz
+YTBhOCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+dXNiL2ZzbC11c2IudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3VzYi9mc2wtdXNiLnR4dA0KPiA+IEBAIC0xMCw3ICsxMCwxMCBAQCBSZXF1aXJlZCBwcm9w
+ZXJ0aWVzIDoNCj4gPiAgICAgY29udHJvbGxlcnMsIG9yICJmc2wtdXNiMi1kciIgZm9yIGR1YWwg
+cm9sZSBVU0IgY29udHJvbGxlcnMNCj4gPiAgICAgb3IgImZzbCxtcGM1MTIxLXVzYjItZHIiIGZv
+ciBkdWFsIHJvbGUgVVNCIGNvbnRyb2xsZXJzIG9mIE1QQzUxMjEuDQo+ID4gICAgIFdoZXJldmVy
+IGFwcGxpY2FibGUsIHRoZSBJUCB2ZXJzaW9uIG9mIHRoZSBVU0IgY29udHJvbGxlciBzaG91bGQN
+Cj4gPiAtICAgYWxzbyBiZSBtZW50aW9uZWQgKGZvciBlZy4gZnNsLXVzYjItZHItdjIuMiBmb3Ig
+YnNjOTEzMikuDQo+ID4gKyAgIGFsc28gYmUgbWVudGlvbmVkIGluIGFub3RoZXIgc3RyaW5nLg0K
+PiA+ICsgICBGb3IgbXVsdGkgcG9ydCBob3N0IFVTQiBjb250cm9sbGVyIHdpdGggSVAgdmVyc2lv
+biA8SVBfVmVyPiwgaXQgc2hvdWxkIGJlDQo+ID4gKyAgICJmc2wtdXNiMi1tcGgtPElQX1Zlcj4i
+LiBGb3IgZHVhbCByb2xlIFVTQiBjb250cm9sbGVyIHdpdGggSVAgdmVyc2lvbg0KPiA+ICsgICA8
+SVBfVmVyPiwgaXQgc2hvdWxkIGJlICJmc2wtdXNiMi1kci08SVBfVmVyPiIuDQo+IA0KPiBJdCB3
+YXMgZG9jdW1lbnRlZCBiZWZvcmUgLS0gdGhpcyBpcyBqdXN0IG1ha2luZyBpdCBtb3JlIGV4cGxp
+Y2l0LCByaWdodD8NCj4gDQo+IEZXSVcsIHRoZSB2ZXJzaW9uIG51bWJlciBjYW4gYmUgcmVhZCBv
+dXQgb2YgYSBVU0IgcmVnaXN0ZXIsIHNvIEknZCANCj4gcmF0aGVyIHJlbW92ZSB0aGUgc3VnZ2Vz
+dGlvbiB0byBzcGVjaWZ5IHRoZSB2ZXJzaW9uIG51bWJlciBhbmQgcmVwbGFjZSANCj4gaXQgd2l0
+aCBhIHJlZmVyZW5jZSB0byB0aGUgSUQgcmVnaXN0ZXIuDQp3ZSBoYXZlIGZvbGxvd2luZyB0d28g
+aXNzdWVzIC0NCihhKSBvdXIgVVNCSVAgdmVyc2lvbiByZWdpc3RlciBkb2Vzbid0IGhhdmUgY29u
+c2lzdGVudCAidmVyc2lvbiBmaWVsZCBzaXplIiBvdmVyIA0KbXVsdGlwbGUgdmVyc2lvbihzKS4g
+VGhpcyBpcyB3aHkgd2UgY291bGRuJ3QgdXNlIGl0IGZvciByZWFkaW5nIHZlcnNpb24gaW5mbyBh
+Y3Jvc3MNCnZhcmlvdXMgSVAgdmVyc2lvbnMNCihiKSB0aGlzIHJlZ2lzdGVyIGlzIG5vdCBleHBv
+c2VkIGluIGFsbCBTb0MgUk1zIChwcm9iYWJseSBiZWNhdXNlIG9mIGFib3ZlIHJlYXNvbikNCj4g
+DQo+ID4gICAtIHBoeV90eXBlIDogRm9yIG11bHRpIHBvcnQgaG9zdCBVU0IgY29udHJvbGxlcnMs
+IHNob3VsZCBiZSBvbmUgb2YNCj4gPiAgICAgInVscGkiLCBvciAic2VyaWFsIi4gRm9yIGR1YWwg
+cm9sZSBVU0IgY29udHJvbGxlcnMsIHNob3VsZCBiZQ0KPiA+ICAgICBvbmUgb2YgInVscGkiLCAi
+dXRtaSIsICJ1dG1pX3dpZGUiLCBvciAic2VyaWFsIi4NCj4gPiBAQCAtNDIsOSArNDUsOSBAQCBP
+cHRpb25hbCBwcm9wZXJ0aWVzIDoNCj4gPiAgIC0gZnNsLGludmVydC1wd3ItZmF1bHQgOiBib29s
+ZWFuOyBmb3IgTVBDNTEyMSBVU0IwIG9ubHkuIEluZGljYXRlcw0KPiA+ICAgICB0aGUgUFdSX0ZB
+VUxUIHNpZ25hbCBwb2xhcml0eSBpcyBpbnZlcnRlZC4NCj4gPg0KPiA+IC1FeGFtcGxlIG11bHRp
+IHBvcnQgaG9zdCBVU0IgY29udHJvbGxlciBkZXZpY2Ugbm9kZSA6DQo+ID4gK0V4YW1wbGUgbXVs
+dGkgcG9ydCBob3N0IFVTQiBjb250cm9sbGVyIHZlcnNpb24gMi41IGRldmljZSBub2RlIDoNCj4g
+PiAgCXVzYkAyMjAwMCB7DQo+ID4gLQkJY29tcGF0aWJsZSA9ICJmc2wtdXNiMi1tcGgiOw0KPiA+
+ICsJCWNvbXBhdGlibGUgPSAiZnNsLXVzYjItbXBoLXYyLjUiLCAiZnNsLXVzYjItbXBoIjsNCj4g
+PiAgCQlyZWcgPSA8MjIwMDAgMTAwMD47DQo+ID4gIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+
+ID4gIAkJI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gQEAgLTU1LDkgKzU4LDkgQEAgRXhhbXBsZSBt
+dWx0aSBwb3J0IGhvc3QgVVNCIGNvbnRyb2xsZXIgZGV2aWNlIG5vZGUgOg0KPiA+ICAJCXBvcnQx
+Ow0KPiA+ICAJfTsNCj4gPg0KPiA+IC1FeGFtcGxlIGR1YWwgcm9sZSBVU0IgY29udHJvbGxlciBk
+ZXZpY2Ugbm9kZSA6DQo+ID4gK0V4YW1wbGUgZHVhbCByb2xlIFVTQiBjb250cm9sbGVyIHZlcnNp
+b24gMi41IGRldmljZSBub2RlIDoNCj4gPiAgCXVzYkAyMzAwMCB7DQo+ID4gLQkJY29tcGF0aWJs
+ZSA9ICJmc2wtdXNiMi1kciI7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJmc2wtdXNiMi1kci12Mi41
+IiwgImZzbC11c2IyLWRyIjsNCj4gPiAgCQlyZWcgPSA8MjMwMDAgMTAwMD47DQo+ID4gIAkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gIAkJI3NpemUtY2VsbHMgPSA8MD47DQo+IA0KPiBUaGlz
+IGV4YW1wbGUgZG9lc24ndCBjb3JyZXNwb25kIHRvIGFueSBkZXZpY2UgdHJlZSBJIHNlZS4gIEV2
+ZW4gYWZ0ZXIgDQo+IHlvdXIgbmV4dCBwYXRjaCB0aGF0IHNldHMgdDIwODAncyBVU0IgdG8gdjIu
+NSwgdGhlIGFkZHJlc3NlcyBhcmUgZGlmZmVyZW50Lg0KPiANCkkgcmVja29uIHRoYXQgdGhlIGV4
+YW1wbGUgZW1waGFzaXplcyBvbiBzaG93aW5nIGhvdyBJUCB2ZXJzaW9uIGluZm9ybWF0aW9uIGlz
+DQp0byBiZSBzdG9yZWQgaW4gImNvbXBhdGlibGUgc3RyaW5nIi4gSXMgaXQgbmVjZXNzYXJ5IHRv
+IG1ha2Ugc3VyZSB0aGF0IHdlIHNob3VsZCANCmFsd2F5cyBzaXRlIGFjdHVhbCB2YWx1ZXMgYWxy
+ZWFkeSB1c2VkPw0KPiBBbHNvLCBpZiB5b3UncmUgZ29pbmcgdG8gdXBkYXRlIHRoZSBleGFtcGxl
+LCBwbGVhc2UgYWxzbyB1cGRhdGUgaXQgdG8gDQo+IGJlIG1vZGVybiBpbiBvdGhlciByZXNwZWN0
+cywgc3VjaCBhcyB1c2luZyAweCBmb3IgaGV4IG51bWJlcnMgKG91dHNpZGUgdGhlIHVuaXQgYWRk
+cmVzcykuDQo+IA0KPiAtU2NvdHQNCj4gDQoNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
