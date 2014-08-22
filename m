@@ -1,83 +1,94 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] doc: dt/bindings: input: Fix drv260x binding document
-Date: Fri, 22 Aug 2014 09:15:32 -0500
-Message-ID: <20140822141532.GC22707@saruman.home>
-References: <1408716741-1163-1-git-send-email-dmurphy@ti.com>
-Reply-To: <balbi@ti.com>
+From: Mikhail Ulianov <mikhail.ulyanov@cogentembedded.com>
+Subject: Re: [PATCH 6/6] devicetree: bindings: Document Renesas JPEG
+ Processing Unit.
+Date: Fri, 22 Aug 2014 18:20:53 +0400
+Message-ID: <20140822182053.62667c32@bones>
+References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+	<1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
+	<3694359.xqEjcGBlOG@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eHhjakXzOLJAF9wJ"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408716741-1163-1-git-send-email-dmurphy@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <3694359.xqEjcGBlOG@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: m.chehab@samsung.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---eHhjakXzOLJAF9wJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Laurent,
 
-On Fri, Aug 22, 2014 at 09:12:21AM -0500, Dan Murphy wrote:
-> Update the drv260x dt binding document:
-> - Change the node name to the devices function not the
-> device name.
-> - Add vbat-supply to the example.
-> - Fix indentation of the example.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  .../devicetree/bindings/input/ti,drv260x.txt       |   19 ++++++++++----=
------
->  1 file changed, 10 insertions(+), 9 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/Doc=
-umentation/devicetree/bindings/input/ti,drv260x.txt
-> index a9c8519..214e25d 100644
-> --- a/Documentation/devicetree/bindings/input/ti,drv260x.txt
-> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
-> @@ -37,15 +37,16 @@ Optional properties:
->  			  3.2 v.
->  Example:
-> =20
-> -drv2605l: drv2605l@5a {
-> -		compatible =3D "ti,drv2605l";
-> -		reg =3D <0x5a>;
-> -		enable-gpio =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> -		mode =3D <DRV260X_LRA_MODE>;
-> -		library-sel =3D <DRV260X_LIB_LRA>;
-> -		vib-rated-mv =3D <3200>;
-> -		vib-overdriver-mv =3D <3200>;
-> -};
-> +haptics:@5a {
+Thanks for your comments.
 
-haptics: haptics@5a ??
+On Thu, 21 Aug 2014 01:01:43 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
---=20
-balbi
+> Hi Mikhail,
+> 
+> Thank you for the patch.
+> 
+> On Tuesday 19 August 2014 16:50:53 Mikhail Ulyanov wrote:  
+> > Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+> > ---
+> >  .../devicetree/bindings/media/renesas,jpu.txt      | 23
+> > +++++++++++++++++++ 1 file changed, 23 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/media/renesas,jpu.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt
+> > b/Documentation/devicetree/bindings/media/renesas,jpu.txt new file
+> > mode 100644
+> > index 0000000..44b07df
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
+> > @@ -0,0 +1,23 @@
+> > +* Renesas VSP1 Video Processing Engine  
+> 
+> Copy & paste ? :-)
+>   
+Yeah. Will fix it.
 
---eHhjakXzOLJAF9wJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> > +
+> > +The JPEG processing unit (JPU) incorporates the JPEG codec with an
+> > encoding +and decoding function conforming to the JPEG baseline
+> > process, so that the JPU
+> > +can encode image data and decode JPEG data quickly.
+> > +It can be found in the Renesas R-Car first and second generation
+> > SoCs.  
+> 
+> Is there a difference between the first and second generation JPUs ?
+>   
+There should be no difference because in practice maximum supported
+resolution for Gen2 is 4096x4096 (not 8000x8000 as in overview section
+of documentation). And in Gen1 documentation(overview section) maximum
+supported resolution is also 4096x4096. 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBAgAGBQJT91CEAAoJEIaOsuA1yqREVoUP/jmwHkb95lpDGx4fGJZmrNfU
-NUb2lmCZyDm0nMCpaRnoBQgsebrGh86U9RVossh9+PBmYQIFs9hSN03JQceA3j1C
-8tDOxwV1TjQ/8ZknAq41FyRXL1L5q2iBq1fSLaH6D8q5Vt+ti9vQ15J5Q6uJYfi1
-WYPaaqGbn5ezunHczsQiIl3C9ZeLVNDM+OzcLY0YTsXblsKiUt+pDj6vDYI0JzJ4
-Hr5wbLEj48AefGeE7+wRIuUxNj1w9xbn2nfsmSiFJ1K0TOezqfSE7pAAUjs6mxVE
-9CFgsoHZAEsg5V6eaE4FEbuGAwzjJO9Phl1ZqMrstru2pU8z8bhwz0fzrPoguvmZ
-qe13jMq5uu5IuHLIS3XLtxAQZWo2PldjIV8y3xOgtRH6sUC2xeNjik4A5p+ZKVZE
-7fXYmYhZVUI5Pk8uI1pi1vIvM4ZvKXT6ejTndGJxnL3zoBTcB6o6ADO62sxl2k74
-HkdcMHSVIAJbqwWKYGy4hjWikfJihiX6/gJyMuX9z43wLpH3778Pgq9z9WIIj5CI
-BWWjuBncEIc/94BtfOmVMJ4qCZe0lLyTlFLg7m+dUG38kpQUEl3tCA8u1OEKxco6
-glTzUuVbhf1k4CDqswl4sbVkB0uWbvIzWT9R0LeTCkc9fK3vD63pUrRT+qjrPVcR
-235zgYafGO7OwoYxW5lI
-=5zzd
------END PGP SIGNATURE-----
+> > +
+> > +Required properties:
+> > +  - compatible: should containg one of the following:
+> > +			- "renesas,jpu-r8a7790" for R-Car H2
+> > +			- "renesas,jpu-r8a7791" for R-Car M2  
+> 
+> How about adding a "renesas,jpu" generic compatible, and listing both
+> the SoC- specific and the generic values (in that order) in the
+> compatible property ?
+>   
+Could be a good idea, but there is no JPU in some R-Car Gen1 SoCs
+e.g. E1. Plus we don't have full documentation on JPU in Gen1 SoCs.
+So for now Gen1 is not supported. Or this doesn't matter in that case?
 
---eHhjakXzOLJAF9wJ--
+
+> > +  - reg: Base address and length of the registers block for the
+> > JPU.
+> > +  - interrupts: JPU interrupt specifier.
+> > +  - clocks: A phandle + clock-specifier pair for the JPU
+> > functional clock. +
+> > +Example: R8A7790 (R-Car H2) JPU node
+> > +	jpeg-codec@fe980000 {
+> > +		compatible = "renesas,jpu-r8a7790";
+> > +		reg = <0 0xfe980000 0 0x10300>;
+> > +		interrupts = <0 272 IRQ_TYPE_LEVEL_HIGH>;
+> > +		clocks = <&mstp1_clks R8A7790_CLK_JPU>;
+> > +	};  
+>   
