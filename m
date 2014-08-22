@@ -1,101 +1,132 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC regulators
-Date: Fri, 22 Aug 2014 14:15:46 +0200
-Message-ID: <53F73472.8010609@collabora.co.uk>
-References: <1408350762-15520-1-git-send-email-javier.martinez@collabora.co.uk>	<1408350762-15520-2-git-send-email-javier.martinez@collabora.co.uk> <CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>
+From: Liviu Dudau <liviu@dudau.co.uk>
+Subject: Re: [PATCH v9 12/12] PCI: Introduce pci_remap_iospace() for
+ remapping PCI I/O bus resources into CPU space
+Date: Fri, 22 Aug 2014 13:43:26 +0100
+Message-ID: <20140822124326.GL13147@bart.dudau.co.uk>
+References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
+ <1407860725-25202-13-git-send-email-Liviu.Dudau@arm.com>
+ <CAL_JsqK6XiuS7OJ_2F16ySA8oj9AHqP0fAft21AOtJxXP2SqnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yuvaraj Cd <yuvaraj.lkml@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK6XiuS7OJ_2F16ySA8oj9AHqP0fAft21AOtJxXP2SqnQ@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Yuvaraj,
-
-On 08/22/2014 08:01 AM, Yuvaraj Cd wrote:
->> +
->> +static int max77802_pmic_probe(struct platform_device *pdev)
->> +{
->> +       struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
->> +       struct max77686_platform_data *pdata = dev_get_platdata(iodev->dev);
->> +       struct max77802_regulator_prv *max77802;
->> +       int i, ret = 0, val;
->> +       struct regulator_config config = { };
->> +
->> +       /* This is allocated by the MFD driver */
->> +       if (!pdata) {
->> +               dev_err(&pdev->dev, "no platform data found for regulator\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       max77802 = devm_kzalloc(&pdev->dev,
->> +                               sizeof(struct max77802_regulator_prv),
->> +                               GFP_KERNEL);
->> +       if (!max77802)
->> +               return -ENOMEM;
->> +
->> +       if (iodev->dev->of_node) {
->> +               ret = max77802_pmic_dt_parse_pdata(pdev, pdata);
->> +               if (ret)
->> +                       return ret;
->> +       }
->> +
->> +       config.dev = iodev->dev;
->> +       config.regmap = iodev->regmap;
->> +       config.driver_data = max77802;
->> +       platform_set_drvdata(pdev, max77802);
->> +
->> +       for (i = 0; i < MAX77802_REG_MAX; i++) {
->> +               struct regulator_dev *rdev;
->> +               int id = pdata->regulators[i].id;
->> +               int shift = max77802_get_opmode_shift(id);
->> +
->> +               config.init_data = pdata->regulators[i].initdata;
->> +               config.of_node = pdata->regulators[i].of_node;
->> +
->> +               ret = regmap_read(iodev->regmap, regulators[i].enable_reg, &val);
->> +               max77802->opmode[id] = val >> shift & MAX77802_OPMODE_MASK;
+On Thu, Aug 21, 2014 at 11:16:16PM -0500, Rob Herring wrote:
+> On Tue, Aug 12, 2014 at 11:25 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> > Introduce a default implementation for remapping PCI bus I/O resources
+> > onto the CPU address space. Architectures with special needs may
+> > provide their own version, but most should be able to use this one.
+> >
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 > 
-> I have been using this patch series for adding UHS support for dw_mmc
-> driver. During reboot testing I came across an issue where card
-> detection fails due to vqmmc regulator not getting enabled. On
-> debugging further, I found that PMIC driver is reading the operating
-> mode during probe and reusing it in the enable function. With the UHS
-> patches vqmmc regulator gets disabled during POWER_OFF and if we do
-> warm reboot, an incorrect operating mode(OFF) is read. This leads to
-> the vqmmc regulator staying disabled. I have referred to 77686 driver
-> and observed that they are handling this a little differently. With
-> the following change in the driver above issue is resolved:
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Thanks, Rob, much appreciated!
+
 > 
-> -               ret = regmap_read(iodev->regmap,
-> regulators[i].enable_reg, &val);
-> -               max77802->opmode[id] = val >> shift & MAX77802_OPMODE_MASK;
-> +               max77802->opmode[i] = regulators[i].enable_mask >> shift;
-> 
+> However, I would like to see ARM pci_ioremap_io converted over to this function.
 
-I don't think this change is correct it its current form since
-.enable_mask is initialized to MAX77802_OPMODE_MASK << shift so this is
-actually setting the opmode to MAX77802_OPMODE_MASK.
-
-Now, MAX77802_OPMODE_MASK has the same value than MAX77802_OPMODE_NORMAL
-so what you are really doing here is initializing the opmode to
-MAX77802_OPMODE_NORMAL.
-
-> Please have a look and let me know, if there is any better way of handling this.
->
-
-The first versions of this driver did in fact set the opmode to
-MAX77802_OPMODE_NORMAL on probe but Mark asked me to read it from the
-hardware instead [0]. I was indeed worried at the time that something like
-this could happen on a warm reset [1].
-
-Mark, any opinions on how this should be solved will be highly appreciated.
+Do you care if this is done as a separate patch?
 
 Best regards,
-Javier
+Liviu
 
-[0]: https://lkml.org/lkml/2014/6/16/576
-[1]: https://lkml.org/lkml/2014/6/17/174
+> 
+> Rob
+> 
+> > ---
+> >  drivers/pci/pci.c   | 33 +++++++++++++++++++++++++++++++++
+> >  include/linux/pci.h |  3 +++
+> >  2 files changed, 36 insertions(+)
+> >
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 29d1775..76d21b6 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -2707,6 +2707,39 @@ int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
+> >  }
+> >  EXPORT_SYMBOL(pci_request_regions_exclusive);
+> >
+> > +/**
+> > + *     pci_remap_iospace - Remap the memory mapped I/O space
+> > + *     @res: Resource describing the I/O space
+> > + *     @phys_addr: physical address where the range will be mapped.
+> > + *
+> > + *     Remap the memory mapped I/O space described by the @res
+> > + *     into the CPU physical address space. Only architectures
+> > + *     that have memory mapped IO defined (and hence PCI_IOBASE)
+> > + *     should call this function.
+> > + */
+> > +int __weak pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
+> > +{
+> > +       int err = -ENODEV;
+> > +
+> > +#ifdef PCI_IOBASE
+> > +       if (!(res->flags & IORESOURCE_IO))
+> > +               return -EINVAL;
+> > +
+> > +       if (res->end > IO_SPACE_LIMIT)
+> > +               return -EINVAL;
+> > +
+> > +       err = ioremap_page_range(res->start + (unsigned long)PCI_IOBASE,
+> > +                               res->end + 1 + (unsigned long)PCI_IOBASE,
+> > +                               phys_addr, pgprot_device(PAGE_KERNEL));
+> > +#else
+> > +       /* this architecture does not have memory mapped I/O space,
+> > +          so this function should never be called */
+> > +       WARN_ON(1);
+> > +#endif
+> > +
+> > +       return err;
+> > +}
+> > +
+> >  static void __pci_set_master(struct pci_dev *dev, bool enable)
+> >  {
+> >         u16 old_cmd, cmd;
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index e1e0d80..988c2f5 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -1098,6 +1098,9 @@ int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
+> >                                                   resource_size_t),
+> >                         void *alignf_data);
+> >
+> > +
+> > +int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
+> > +
+> >  static inline dma_addr_t pci_bus_address(struct pci_dev *pdev, int bar)
+> >  {
+> >         struct pci_bus_region region;
+> > --
+> > 2.0.4
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+-- 
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
+
+ One small step
+   for me ...
