@@ -1,59 +1,98 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: Trickle charging for rtc-bq32k
-Date: Fri, 22 Aug 2014 16:38:53 +0200
-Message-ID: <20140822143853.GA28820@amd>
-References: <20140822131150.GA26724@amd>
- <20140822142852.GA1545@katana>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH] doc: dt/bindings: input: Fix drv260x binding document
+Date: Fri, 22 Aug 2014 09:45:24 -0500
+Message-ID: <20140822144524.GE22707@saruman.home>
+References: <1408716741-1163-1-git-send-email-dmurphy@ti.com>
+ <20140822141532.GC22707@saruman.home>
+ <00FC9A978A94B7418C33AFAE8A35ED49DF1F66@DFLE09.ent.ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tVmo9FyGdCe4F4YN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140822142852.GA1545@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <00FC9A978A94B7418C33AFAE8A35ED49DF1F66@DFLE09.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Murphy, Dan" <dmurphy@ti.com>
+Cc: "Balbi, Felipe" <balbi@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri 2014-08-22 09:28:52, Wolfram Sang wrote:
-> 
-> > _But_ this should probably be enabled using device tree entry, right?
-> > Unfortunately, the driver is i2c driver, not platform one, so I don't
-> > see how to do that easily...
-> 
-> Trickle charging is usually depending on the hardware setup, so
-> devicetree is actually a good place to put it. We'd just need generic
-> bindings so that they could be applied to various RTC. Just guessing,
-> resistor value would probably be one such property? We would not need
-> putting plain register values into DT.
+--tVmo9FyGdCe4F4YN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Well, for bq32000 there's selection between "no charging", "diode +
-resistor", "different resistor".
+Hi,
 
-> There should be no difference regarding DT between i2c and platform
-> drivers.
+On Fri, Aug 22, 2014 at 09:25:13AM -0500, Murphy, Dan wrote:
+> Felipe
+>=20
+> On 08/22/2014 09:15 AM, Balbi, Felipe wrote:
+> > On Fri, Aug 22, 2014 at 09:12:21AM -0500, Dan Murphy wrote:
+> >> Update the drv260x dt binding document:
+> >> - Change the node name to the devices function not the
+> >> device name.
+> >> - Add vbat-supply to the example.
+> >> - Fix indentation of the example.
+> >>
+> >> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >> ---
+> >>  .../devicetree/bindings/input/ti,drv260x.txt       |   19 ++++++++++-=
+--------
+> >>  1 file changed, 10 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/=
+Documentation/devicetree/bindings/input/ti,drv260x.txt
+> >> index a9c8519..214e25d 100644
+> >> --- a/Documentation/devicetree/bindings/input/ti,drv260x.txt
+> >> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
+> >> @@ -37,15 +37,16 @@ Optional properties:
+> >>  			  3.2 v.
+> >>  Example:
+> >> =20
+> >> -drv2605l: drv2605l@5a {
+> >> -		compatible =3D "ti,drv2605l";
+> >> -		reg =3D <0x5a>;
+> >> -		enable-gpio =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> >> -		mode =3D <DRV260X_LRA_MODE>;
+> >> -		library-sel =3D <DRV260X_LIB_LRA>;
+> >> -		vib-rated-mv =3D <3200>;
+> >> -		vib-overdriver-mv =3D <3200>;
+> >> -};
+> >> +haptics:@5a {
+> >=20
+> > haptics: haptics@5a ??
+> >=20
+>=20
+> I found both types of entries in the bindings docs.
+> There is no consistency within the input bindings documentation.
 
-Do you have example how to acces of_ from i2c driver?
+I could swear neither two types have a colon character between node name
+and its base address.
 
-Platform drivers do:
+--=20
+balbi
 
-static int palmas_rtc_probe(struct platform_device *pdev)
-{
-        struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
-        struct palmas_rtc *palmas_rtc = NULL;
-	int ret;
-        bool enable_bb_charging = false;
-        bool high_bb_charging;
+--tVmo9FyGdCe4F4YN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-        if (pdev->dev.of_node) {
-	   enable_bb_charging =
-	   of_property_read_bool(pdev->dev.of_node,
-                                        "ti,backup-battery-chargeable");
-					        high_bb_charging =
-	   of_property_read_bool(pdev->dev.of_node,
-                                        "ti,backup-battery-charge-high-current");
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Thanks,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+iQIcBAEBAgAGBQJT91eEAAoJEIaOsuA1yqREgTMP/2XZfPMVWzPigJNrDNaDlQQy
+Y1VSHx/Dzv9kEzh/mj2z1oeAMXdROz12bqzLBJ1DvWbQlq4dHv0Ya+oww0gbYo2g
+pvuCE1NDthHpmIXUZ0wIIsb2k2GRACutSmk9eOD4ZVQ0+TTv0EVJVe0NbTKRK2TV
+1dLENOTKC1e6l/oCXmRNSCgogqdzwDrA2uD4QqlmbcWXeMTjaxDObcwDn1h2mYlh
+n5+UPtFDPuJ30c3XfP7/qKue+mUSFf1/5GvnRyPI5QFxdy1r38U80VQLba2Sdi5g
+77IqjP4t/RDHyJfUWm6f04D6ZBV5QA9kwbKeFo+tI6pG/3b0mu37EVKVA7l/Xx+W
+s8VggWofFr5GdDZY/n2qfJcHUxAvIcIHhEjMpGtiq4Y9XK6lVKWeH+2tW8ksis+l
+jZFG2KRqZFk1qwImYWJ4BwcMiRIjVCuxN/k0k8S19RMx6t26weRrbmHmD6xBJPrX
+kqowW7CCwa9yeAO/SABWPvhvz0DCA3tFonG/rrmn+HVslkyfuGUCpDfABYsHQPG0
+Gn4Jdyrb+jgUnBCSJM/s20Uki38t7QAyx3x2pygxvw0wm+TPKtndHBsZ0DpX1BRG
+DxB1K4c9paruUQzLhrB/TlJjnjVzZ+eNHIBWv8pG7A5RF7cHbHw6YGBTxMIHAQ2A
+BdJX5qtbb0hAy9Pic+Rz
+=cAvk
+-----END PGP SIGNATURE-----
+
+--tVmo9FyGdCe4F4YN--
