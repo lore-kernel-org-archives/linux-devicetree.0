@@ -1,105 +1,81 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 12/12] PCI: Introduce pci_remap_iospace() for remapping
- PCI I/O bus resources into CPU space
-Date: Thu, 21 Aug 2014 23:16:16 -0500
-Message-ID: <CAL_JsqK6XiuS7OJ_2F16ySA8oj9AHqP0fAft21AOtJxXP2SqnQ@mail.gmail.com>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com> <1407860725-25202-13-git-send-email-Liviu.Dudau@arm.com>
+From: "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] Documentation: dts: fsl-usb: Document USB node compatible
+ string for IP version
+Date: Fri, 22 Aug 2014 04:48:23 +0000
+Message-ID: <af7cc70458bf471cb20938ce6498ccfe@BN1PR0301MB0593.namprd03.prod.outlook.com>
+References: <1408612727-6774-1-git-send-email-nikhil.badola@freescale.com>
+ <1408659774.2395.21.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407860725-25202-13-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1408659774.2395.21.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 12, 2014 at 11:25 AM, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
-> Introduce a default implementation for remapping PCI bus I/O resources
-> onto the CPU address space. Architectures with special needs may
-> provide their own version, but most should be able to use this one.
->
-> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-However, I would like to see ARM pci_ioremap_io converted over to this function.
-
-Rob
-
-> ---
->  drivers/pci/pci.c   | 33 +++++++++++++++++++++++++++++++++
->  include/linux/pci.h |  3 +++
->  2 files changed, 36 insertions(+)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 29d1775..76d21b6 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2707,6 +2707,39 @@ int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
->  }
->  EXPORT_SYMBOL(pci_request_regions_exclusive);
->
-> +/**
-> + *     pci_remap_iospace - Remap the memory mapped I/O space
-> + *     @res: Resource describing the I/O space
-> + *     @phys_addr: physical address where the range will be mapped.
-> + *
-> + *     Remap the memory mapped I/O space described by the @res
-> + *     into the CPU physical address space. Only architectures
-> + *     that have memory mapped IO defined (and hence PCI_IOBASE)
-> + *     should call this function.
-> + */
-> +int __weak pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
-> +{
-> +       int err = -ENODEV;
-> +
-> +#ifdef PCI_IOBASE
-> +       if (!(res->flags & IORESOURCE_IO))
-> +               return -EINVAL;
-> +
-> +       if (res->end > IO_SPACE_LIMIT)
-> +               return -EINVAL;
-> +
-> +       err = ioremap_page_range(res->start + (unsigned long)PCI_IOBASE,
-> +                               res->end + 1 + (unsigned long)PCI_IOBASE,
-> +                               phys_addr, pgprot_device(PAGE_KERNEL));
-> +#else
-> +       /* this architecture does not have memory mapped I/O space,
-> +          so this function should never be called */
-> +       WARN_ON(1);
-> +#endif
-> +
-> +       return err;
-> +}
-> +
->  static void __pci_set_master(struct pci_dev *dev, bool enable)
->  {
->         u16 old_cmd, cmd;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index e1e0d80..988c2f5 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1098,6 +1098,9 @@ int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
->                                                   resource_size_t),
->                         void *alignf_data);
->
-> +
-> +int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
-> +
->  static inline dma_addr_t pci_bus_address(struct pci_dev *pdev, int bar)
->  {
->         struct pci_bus_region region;
-> --
-> 2.0.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+QWRkaW5nIFJhbW5lZWsNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBX
+b29kIFNjb3R0LUIwNzQyMQ0KPiBTZW50OiBGcmlkYXksIEF1Z3VzdCAyMiwgMjAxNCAzOjUzIEFN
+DQo+IFRvOiBCYWRvbGEgTmlraGlsLUI0NjE3Mg0KPiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96
+bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0hdIERvY3VtZW50YXRpb246IGR0czogZnNsLXVzYjogRG9jdW1lbnQgVVNCIG5vZGUNCj4gY29t
+cGF0aWJsZSBzdHJpbmcgZm9yIElQIHZlcnNpb24NCj4gDQo+IE9uIFRodSwgMjAxNC0wOC0yMSBh
+dCAxNDo0OCArMDUzMCwgTmlraGlsIEJhZG9sYSB3cm90ZToNCj4gPiBEb2N1bWVudCBjb21wYXRp
+YmxlIHN0cmluZyBjb250YWluaW5nIElQIHZlcnNpb24gaW4gVVNCIGRldmljZSB0cmVlDQo+ID4g
+bm9kZQ0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTmlraGlsIEJhZG9sYSA8bmlraGlsLmJhZG9s
+YUBmcmVlc2NhbGUuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdXNiL2ZzbC11c2IudHh0IHwgMTMgKysrKysrKystLS0tLQ0KPiA+ICAxIGZpbGUg
+Y2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiANCj4gUGxlYXNlIEND
+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnIG9uIGFsbCBkZXZpY2UgdHJlZSBwYXRjaGVzIChp
+biBhZGRpdGlvbiB0bw0KPiBsaW51eHBwYy1kZXYpLg0KPiANCj4gPg0KPiA+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2ZzbC11c2IudHh0DQo+ID4g
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2ZzbC11c2IudHh0DQo+ID4g
+aW5kZXggNDc3OWMwMi4uNWEzYTBhOCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdXNiL2ZzbC11c2IudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9mc2wtdXNiLnR4dA0KPiA+IEBAIC0xMCw3ICsxMCwx
+MCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzIDoNCj4gPiAgICAgY29udHJvbGxlcnMsIG9yICJmc2wt
+dXNiMi1kciIgZm9yIGR1YWwgcm9sZSBVU0IgY29udHJvbGxlcnMNCj4gPiAgICAgb3IgImZzbCxt
+cGM1MTIxLXVzYjItZHIiIGZvciBkdWFsIHJvbGUgVVNCIGNvbnRyb2xsZXJzIG9mIE1QQzUxMjEu
+DQo+ID4gICAgIFdoZXJldmVyIGFwcGxpY2FibGUsIHRoZSBJUCB2ZXJzaW9uIG9mIHRoZSBVU0Ig
+Y29udHJvbGxlciBzaG91bGQNCj4gPiAtICAgYWxzbyBiZSBtZW50aW9uZWQgKGZvciBlZy4gZnNs
+LXVzYjItZHItdjIuMiBmb3IgYnNjOTEzMikuDQo+ID4gKyAgIGFsc28gYmUgbWVudGlvbmVkIGlu
+IGFub3RoZXIgc3RyaW5nLg0KPiA+ICsgICBGb3IgbXVsdGkgcG9ydCBob3N0IFVTQiBjb250cm9s
+bGVyIHdpdGggSVAgdmVyc2lvbiA8SVBfVmVyPiwgaXQgc2hvdWxkIGJlDQo+ID4gKyAgICJmc2wt
+dXNiMi1tcGgtPElQX1Zlcj4iLiBGb3IgZHVhbCByb2xlIFVTQiBjb250cm9sbGVyIHdpdGggSVAg
+dmVyc2lvbg0KPiA+ICsgICA8SVBfVmVyPiwgaXQgc2hvdWxkIGJlICJmc2wtdXNiMi1kci08SVBf
+VmVyPiIuDQo+IA0KPiBJdCB3YXMgZG9jdW1lbnRlZCBiZWZvcmUgLS0gdGhpcyBpcyBqdXN0IG1h
+a2luZyBpdCBtb3JlIGV4cGxpY2l0LCByaWdodD8NCj4gDQo+IEZXSVcsIHRoZSB2ZXJzaW9uIG51
+bWJlciBjYW4gYmUgcmVhZCBvdXQgb2YgYSBVU0IgcmVnaXN0ZXIsIHNvIEknZCByYXRoZXINCj4g
+cmVtb3ZlIHRoZSBzdWdnZXN0aW9uIHRvIHNwZWNpZnkgdGhlIHZlcnNpb24gbnVtYmVyIGFuZCBy
+ZXBsYWNlIGl0IHdpdGggYQ0KPiByZWZlcmVuY2UgdG8gdGhlIElEIHJlZ2lzdGVyLg0KPiANCj4g
+PiAgIC0gcGh5X3R5cGUgOiBGb3IgbXVsdGkgcG9ydCBob3N0IFVTQiBjb250cm9sbGVycywgc2hv
+dWxkIGJlIG9uZSBvZg0KPiA+ICAgICAidWxwaSIsIG9yICJzZXJpYWwiLiBGb3IgZHVhbCByb2xl
+IFVTQiBjb250cm9sbGVycywgc2hvdWxkIGJlDQo+ID4gICAgIG9uZSBvZiAidWxwaSIsICJ1dG1p
+IiwgInV0bWlfd2lkZSIsIG9yICJzZXJpYWwiLg0KPiA+IEBAIC00Miw5ICs0NSw5IEBAIE9wdGlv
+bmFsIHByb3BlcnRpZXMgOg0KPiA+ICAgLSBmc2wsaW52ZXJ0LXB3ci1mYXVsdCA6IGJvb2xlYW47
+IGZvciBNUEM1MTIxIFVTQjAgb25seS4gSW5kaWNhdGVzDQo+ID4gICAgIHRoZSBQV1JfRkFVTFQg
+c2lnbmFsIHBvbGFyaXR5IGlzIGludmVydGVkLg0KPiA+DQo+ID4gLUV4YW1wbGUgbXVsdGkgcG9y
+dCBob3N0IFVTQiBjb250cm9sbGVyIGRldmljZSBub2RlIDoNCj4gPiArRXhhbXBsZSBtdWx0aSBw
+b3J0IGhvc3QgVVNCIGNvbnRyb2xsZXIgdmVyc2lvbiAyLjUgZGV2aWNlIG5vZGUgOg0KPiA+ICAJ
+dXNiQDIyMDAwIHsNCj4gPiAtCQljb21wYXRpYmxlID0gImZzbC11c2IyLW1waCI7DQo+ID4gKwkJ
+Y29tcGF0aWJsZSA9ICJmc2wtdXNiMi1tcGgtdjIuNSIsICJmc2wtdXNiMi1tcGgiOw0KPiA+ICAJ
+CXJlZyA9IDwyMjAwMCAxMDAwPjsNCj4gPiAgCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gPiAg
+CQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gPiBAQCAtNTUsOSArNTgsOSBAQCBFeGFtcGxlIG11bHRp
+IHBvcnQgaG9zdCBVU0IgY29udHJvbGxlciBkZXZpY2Ugbm9kZSA6DQo+ID4gIAkJcG9ydDE7DQo+
+ID4gIAl9Ow0KPiA+DQo+ID4gLUV4YW1wbGUgZHVhbCByb2xlIFVTQiBjb250cm9sbGVyIGRldmlj
+ZSBub2RlIDoNCj4gPiArRXhhbXBsZSBkdWFsIHJvbGUgVVNCIGNvbnRyb2xsZXIgdmVyc2lvbiAy
+LjUgZGV2aWNlIG5vZGUgOg0KPiA+ICAJdXNiQDIzMDAwIHsNCj4gPiAtCQljb21wYXRpYmxlID0g
+ImZzbC11c2IyLWRyIjsNCj4gPiArCQljb21wYXRpYmxlID0gImZzbC11c2IyLWRyLXYyLjUiLCAi
+ZnNsLXVzYjItZHIiOw0KPiA+ICAJCXJlZyA9IDwyMzAwMCAxMDAwPjsNCj4gPiAgCQkjYWRkcmVz
+cy1jZWxscyA9IDwxPjsNCj4gPiAgCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gDQo+IFRoaXMgZXhh
+bXBsZSBkb2Vzbid0IGNvcnJlc3BvbmQgdG8gYW55IGRldmljZSB0cmVlIEkgc2VlLiAgRXZlbiBh
+ZnRlciB5b3VyIG5leHQNCj4gcGF0Y2ggdGhhdCBzZXRzIHQyMDgwJ3MgVVNCIHRvIHYyLjUsIHRo
+ZSBhZGRyZXNzZXMgYXJlIGRpZmZlcmVudC4NCj4gDQo+IEFsc28sIGlmIHlvdSdyZSBnb2luZyB0
+byB1cGRhdGUgdGhlIGV4YW1wbGUsIHBsZWFzZSBhbHNvIHVwZGF0ZSBpdCB0byBiZSBtb2Rlcm4N
+Cj4gaW4gb3RoZXIgcmVzcGVjdHMsIHN1Y2ggYXMgdXNpbmcgMHggZm9yIGhleCBudW1iZXJzIChv
+dXRzaWRlIHRoZSB1bml0IGFkZHJlc3MpLg0KPiANCj4gLVNjb3R0DQo+IA0KDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
