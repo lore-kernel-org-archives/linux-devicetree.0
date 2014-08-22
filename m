@@ -1,35 +1,46 @@
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH] dt-bindings/mfs/palmas.h: Fix typo in include guard
-Date: Fri, 22 Aug 2014 15:09:24 +0200
-Message-ID: <1408712964-14930-1-git-send-email-linux@rasmusvillemoes.dk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
+ initialization order based on the DT)
+Date: Fri, 22 Aug 2014 14:19:19 +0100
+Message-ID: <20140822131919.GX21734@leverpostej>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
+ <20140514141914.446F7C4153D@trevor.secretlab.ca>
+ <20140821140211.GD19293@ulmo.nvidia.com>
+ <53F64624.5000403@ahsoftware.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53F64624.5000403-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- include/dt-bindings/mfd/palmas.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Aug 21, 2014 at 08:19:00PM +0100, Alexander Holler wrote:
+> Am 21.08.2014 16:02, schrieb Thierry Reding:
+> 
+> > Anyway, those are all fairly standard reasons for where deferred probe
+> > triggers, and since I do like deferred probe for it's simplicity and
+> > reliability I'd rather not try to work around it if boot time is all
+> > that people are concerned about.
+> 
+> It's neither simple nor reliable. It's non deterministic brutforcing 
+> while making it almost impossible to identify real errors.
 
-diff --git a/include/dt-bindings/mfd/palmas.h b/include/dt-bindings/mfd/palmas.h
-index 2c8ac48..f4db7df 100644
---- a/include/dt-bindings/mfd/palmas.h
-+++ b/include/dt-bindings/mfd/palmas.h
-@@ -8,11 +8,11 @@
-  */
- 
- #ifndef __DT_BINDINGS_PALMAS_H__
--#define __DT_BINDINGS_PALMAS_H
-+#define __DT_BINDINGS_PALMAS_H__
- 
- /* External control pins */
- #define PALMAS_EXT_CONTROL_PIN_ENABLE1	1
- #define PALMAS_EXT_CONTROL_PIN_ENABLE2	2
- #define PALMAS_EXT_CONTROL_PIN_NSLEEP	3
- 
--#endif /* __DT_BINDINGS_PALMAS_H */
-+#endif /* __DT_BINDINGS_PALMAS_H__ */
--- 
-1.9.2
+It's horrible, yes.
+
+> In my humble opinion the worst way to solve something. I'm pretty sure 
+> if I would have suggest such a solution, the maintainer crowd would have 
+> eaten me without cooking.
+
+We didn't have a better workable solution at the time. Having a hack
+that got boards booting was considered better than not having them boot.
+I don't remember people being particularly enthralled by the idea.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
