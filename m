@@ -1,56 +1,61 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
-Date: Fri, 22 Aug 2014 10:48:25 -0600
-Message-ID: <20140822164825.GA1733@obsidianresearch.com>
-References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com>
- <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
- <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
- <53F5D8D9.7040604@suse.de>
- <f166a186-301c-4288-97cf-71f8173c07e7@BN1AFFO11FD010.protection.gbl>
- <20140822162048.GB8477@obsidianresearch.com>
- <d31d72f2-acac-4aa3-b992-fc244ac6db4e@BY2FFO11FD005.protection.gbl>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 1/6] V4L2: Add Renesas R-Car JPEG codec driver.
+Date: Fri, 22 Aug 2014 17:03:48 +0000
+Message-ID: <53F777F4.30804@xs4all.nl>
+References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com>	<1408452653-14067-2-git-send-email-mikhail.ulyanov@cogentembedded.com>	<53F3531C.4080105@xs4all.nl> <20140822173900.0d3efcd1@bones>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d31d72f2-acac-4aa3-b992-fc244ac6db4e-neA4ZlFjCT0Oyg+UkvAylWYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140822173900.0d3efcd1@bones>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mikhail Ulianov <mikhail.ulyanov@cogentembedded.com>
+Cc: m.chehab@samsung.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, laurent.pinchart@ideasonboard.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 22, 2014 at 09:31:20AM -0700, S=F6ren Brinkmann wrote:
+On 08/22/2014 01:39 PM, Mikhail Ulianov wrote:
+> Hi Hans,
+> 
+> Thanks for your comments.
+> 
+> I have a question on default width, height and sizeimage values
+> m2m driver should return in case when we try to run G_FMT on just
+> opened device. Is there any preferable values? v4l2-compliance tool
+> want it to be non zero, but at that moment we have no information 
+> about output and capture, so i see few options here:
+> 1) ignore v4l-complince error in such case
+>>> v4l2-test-formats.cpp(417): !pix.width || !pix.height"
+> 2) set some default values e.g. 640x480
+> Do you have a suggestion? \
 
-> > >  - the marvell compatible strings are used in our vendor tree. Th=
-ey
-> > >    aren't used anywhere but in our vendor tree. I though keeping =
-them is
-> > >    nice since it identifies the PHY fully. And in case that level=
- of
-> > >    detail is needed at some point it is already there.
-> >=20
-> > DT is complex enough already, don't include useless compatible stri=
-ngs
-> > in mainline - people will see and tend to blindly copy. Ideally you=
-r
-> > vendor tree would use the standard property :|
->=20
-> There are different opinions on this. I also heard to just add such
-> strings, so in case this level of differentiation becomes necessary a=
-t
-> some later point, it is already existing.
+Use 2: just set a default value. V4L2 should always be in a sane state,
+which in this case means that the driver should just pick some default
+initial format.
 
-In some cases, yes, and they should be docuemented in the binding, of
-course.
+Regards,
 
-But there is already a standard compatible string format to uniquely
-identify a phy, so in this case another string is not justified, and
-just creates confusion about what is correct.
+	Hans
 
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks, Mikhail.
+> 
+>> Hi Mikhail,
+>>
+>> I did a quick scan over the source code and I noticed a few things
+>> that aren't right. The easiest for you is probably to run the
+>> v4l2-compliance tool over your driver and it should tell you what
+>> needs to be fixed. The things I noticed are: querycap doesn't fill in
+>> bus_info (should be 'platform:<foo>') and device_caps, the vid_cap
+>> try_fmt fails on a wrong field setting, instead it should just set it.
+>>
+>> I also have some doubts about g_selection, but I need to look at that
+>> again when I have more time next week. It does look like it is not
+>> properly separating the capture and output streams. I would expect
+>> g_selection to return different things for capture and output. Note
+>> that v4l2-compliance doesn't yet check the selection API, so it won't
+>> help you there.
+>>
+>> Regards,
+>>
+>> 	Hans
+
