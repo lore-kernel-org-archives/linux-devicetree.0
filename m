@@ -1,150 +1,70 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH v7] ARM: dts: Prepare node labels for exynos5250
-Date: Fri, 22 Aug 2014 13:37:49 +0200
-Message-ID: <53F72B8D.1080305@suse.de>
-References: <53DCD74B.8090400@gmail.com> <1408539764-5835-1-git-send-email-afaerber@suse.de> <080101cfbdf6$c8fd1f30$5af75d90$@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 00/24] PM / Domains: Generic OF-based support and cleanups
+Date: Fri, 22 Aug 2014 14:15:30 +0200
+Message-ID: <CAMuHMdWLLcWvgvY_nC4doEGnHxNJEQfx5RYbJqZfjm0UT=J47Q@mail.gmail.com>
+References: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <080101cfbdf6$c8fd1f30$5af75d90$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 'Vincent Palatin' <vpalatin@chromium.org>, 'Doug Anderson' <dianders@chromium.org>, 'Javier Martinez Canillas' <javier.martinez@collabora.co.uk>, 'Tomasz Figa' <t.figa@samsung.com>, 'Ben Dooks' <ben-linux@fluff.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Russell King' <linux@arm.linux.org.uk>, LKML <linux-kernel@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Linux PM list <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 22.08.2014 12:49, schrieb Kukjin Kim:
-> Andreas F=C3=A4rber wrote:
->>
->> Allows them to be extended by reference.
->>
->> Reviewed-by: Doug Anderson <dianders@chromium.org>
->> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
->> ---
->>  v6 -> v7:
->>  * Dropped uart* labels (Tomasz Figa)
->>
->>  v6: Split off from Snow/SMDK cleanups (Doug Anderson)
->>
->>  arch/arm/boot/dts/exynos5250.dtsi | 16 ++++++++--------
->>  1 file changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/e=
-xynos5250.dtsi
->> index 492e1eff37bd..42eafd19cfb2 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -218,7 +218,7 @@
->>  		clock-names =3D "fimg2d";
->>  	};
->>
->> -	codec@11000000 {
->> +	mfc: codec@11000000 {
->>  		compatible =3D "samsung,mfc-v6";
->>  		reg =3D <0x11000000 0x10000>;
->>  		interrupts =3D <0 96 0>;
->> @@ -227,7 +227,7 @@
->>  		clock-names =3D "mfc";
->>  	};
->>
->> -	rtc@101E0000 {
->> +	rtc: rtc@101E0000 {
->>  		clocks =3D <&clock CLK_RTC>;
->>  		clock-names =3D "rtc";
->>  		status =3D "disabled";
->> @@ -261,7 +261,7 @@
->>  		clock-names =3D "uart", "clk_uart_baud0";
->>  	};
->>
->> -	sata@122F0000 {
->> +	sata: sata@122F0000 {
->>  		compatible =3D "snps,dwc-ahci";
->>  		samsung,sata-freq =3D <66>;
->>  		reg =3D <0x122F0000 0x1ff>;
->> @@ -573,7 +573,7 @@
->>  		#phy-cells =3D <1>;
->>  	};
->>
->> -	usb@12110000 {
->> +	ehci: usb@12110000 {
->=20
-> I'm not sure which one is recommended between above and "ehci: ehci@1=
-2110000 {"
->=20
->>  		compatible =3D "samsung,exynos4210-ehci";
->>  		reg =3D <0x12110000 0x100>;
->>  		interrupts =3D <0 71 0>;
->> @@ -588,7 +588,7 @@
->>  		};
->>  	};
->>
->> -	usb@12120000 {
->> +	ohci: usb@12120000 {
->=20
-> Same as above...
+Hi Ulf, Tomasz,
 
-A quick git-grep in v3.16.1 shows both ways used in arch/arm/boot/dts/:
- usb@: 232
- xhci@: 0
- ehci@: 41
- ohci@: 60
- uhci@: 7
+On Tue, Jun 10, 2014 at 12:51 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> Parts of this patchset has been posted earlier. To be able to smoothly continue
+> my work in re-factoring genpd I have collected patches into this patchset.
+>
+> The complete patchset is available at the linux-pm_linux-next_genpd branch at:
+> git.linaro.org/people/ulf.hansson/linux-2.6.git
+> This branch is based upon Rafael's linux-pm tree's linux-next branch.
+>
+> And important note. There are dependencies througout this patchset, which means
+> the all need to go together. I suggest we use Rafael's tree, thus I seek for
+> acks from the affected ARM SoC maintainers.
+>
+> Tomasz Figa (3):
+>   base: power: Add generic OF-based power domain look-up
+>   drivercore: Bind/unbind power domain on probe/remove
+>   ARM: exynos: Move to generic power domain bindings
+>
+> Ulf Hansson (21):
+>   PM / Domains: Ignore callbacks for subsys generic_pm_domain_data
+>   PM / Domains: Remove the pm_genpd_add|remove_callbacks APIs
+>   PM / Domains: Remove system PM callbacks from gpd_dev_ops
+>   ARM: shmobile: Drop dev_irq_safe from r8a7779 genpd config
+>   ARM: shmobile: Drop dev_irq_safe from R-mobile genpd config
+>   PM / Domains: Remove dev_irq_safe from genpd config
+>   PM / Domains: Remove redundant check for CONFIG_PM
+>   PM / Domains: Remove legacy API for adding devices through DT
+>   PM / Domains: Remove pm_genpd_syscore_switch() API
+>   PM / Domains: Remove genpd_queue_power_off_work() API
+>   PM / Domains: Add late_initcall to disable unused domains
+>   ARM: exynos: Leave disabling of unused pm domains to genpd
+>   ARM: s3c64xx: Leave disabling of unused pm domains to genpd
+>   drivers: sh: Leave disabling of unused pm domains to genpd
+>   PM / Domains: Remove default_stop_ok() API
+>   dt: bindings: ux500: Add documentation for power domains
+>   dt: bindings: ux500: Add header for power domains specifiers
+>   ARM: ux500: Initial support for power domains
+>   ARM: ux500: Enable Kconfig for the generic power domain
+>   ARM: ux500: Add DT node for ux500 power domains
+>   ARM: ux500: Add sdi[n] devices to VAPE power domain
 
->>  		compatible =3D "samsung,exynos4210-ohci";
->>  		reg =3D <0x12120000 0x100>;
->>  		interrupts =3D <0 71 0>;
->> @@ -725,7 +725,7 @@
->>  		clock-names =3D "gscl";
->>  	};
->>
->> -	hdmi {
->> +	hdmi: hdmi {
->=20
-> Should be
->=20
-> +	hdmi: hdmi@14530000 { ?
+What are your plans with this patch series?
 
-Actually, without applying this patch and my follow-up cleanups strictl=
-y
-using these new labels, we can't rename any of the nodes here, since it
-would break the derived .dts files. It was specifically requested in v5
-to make this patch here separate from subsequent uses of the new labels
-for the benefit of cherry-picking.
+Thanks!
 
-So since you don't seem to disagree with the label names that I add
-here, I consider renaming nodes outside the scope of this patch.
+Gr{oetje,eeting}s,
 
-+1 for reflecting the reg address in the unit address of the hdmi node
-as a follow-up to the refactorings, if that does not break any driver
-assumptions.
+                        Geert
 
-Regards,
-Andreas
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
->>  		compatible =3D "samsung,exynos4212-hdmi";
->>  		reg =3D <0x14530000 0x70000>;
->>  		interrupts =3D <0 95 0>;
->> @@ -751,14 +751,14 @@
->>  		#phy-cells =3D <0>;
->>  	};
->>
->> -	dp-controller@145B0000 {
->> +	dp: dp-controller@145B0000 {
->>  		clocks =3D <&clock CLK_DP>;
->>  		clock-names =3D "dp";
->>  		phys =3D <&dp_phy>;
->>  		phy-names =3D "dp";
->>  	};
->>
->> -	fimd@14400000 {
->> +	fimd: fimd@14400000 {
->>  		clocks =3D <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
->>  		clock-names =3D "sclk_fimd", "fimd";
->>  	};
->> --
->> 2.0.4
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
