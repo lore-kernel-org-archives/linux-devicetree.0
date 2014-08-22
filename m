@@ -1,98 +1,97 @@
-From: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] Documentation: dts: fsl-usb: Document USB node compatible
- string for IP version
-Date: Fri, 22 Aug 2014 05:05:41 +0000
-Message-ID: <3fdd7732a9954d13a90ece684771d932@BL2PR03MB161.namprd03.prod.outlook.com>
-References: <1408612727-6774-1-git-send-email-nikhil.badola@freescale.com>
- <1408659774.2395.21.camel@snotra.buserror.net>
- <af7cc70458bf471cb20938ce6498ccfe@BN1PR0301MB0593.namprd03.prod.outlook.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 9/9] ARM: zynq: Rename 'zynq_platform_cpu_die'
+Date: Fri, 22 Aug 2014 07:52:49 +0200
+Message-ID: <53F6DAB1.9020001@monstr.eu>
+References: <1408567315-28479-1-git-send-email-soren.brinkmann@xilinx.com> <1408567315-28479-10-git-send-email-soren.brinkmann@xilinx.com> <4ac42f4d-72bf-4a8d-a997-094f129d7c74@BN1AFFO11FD020.protection.gbl> <9c7c26e1-4098-4252-a719-fb7b7205be61@BN1AFFO11FD006.protection.gbl>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <af7cc70458bf471cb20938ce6498ccfe-RQSpjbwlmjRJV8q+uXLxw5wN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="esr4mJLf5gHeHliFMEeGFxnVN8o1LmpJf"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <9c7c26e1-4098-4252-a719-fb7b7205be61@BN1AFFO11FD006.protection.gbl>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: Russell King <linux@arm.linux.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBCYWRvbGEgTmlraGlsLUI0NjE3
-MiANClNlbnQ6IEZyaWRheSwgQXVndXN0IDIyLCAyMDE0IDEwOjE4IEFNDQpUbzogV29vZCBTY290
-dC1CMDc0MjENCkNjOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgZGV2aWNldHJlZUB2
-Z2VyLmtlcm5lbC5vcmc7IE1laHJlc2ggUmFtbmVlay1CMzEzODMNClN1YmplY3Q6IFJFOiBbUEFU
-Q0hdIERvY3VtZW50YXRpb246IGR0czogZnNsLXVzYjogRG9jdW1lbnQgVVNCIG5vZGUgY29tcGF0
-aWJsZSBzdHJpbmcgZm9yIElQIHZlcnNpb24NCg0KQWRkaW5nIFJhbW5lZWsNCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBXb29kIFNjb3R0LUIwNzQyMQ0KPiBTZW50OiBG
-cmlkYXksIEF1Z3VzdCAyMiwgMjAxNCAzOjUzIEFNDQo+IFRvOiBCYWRvbGEgTmlraGlsLUI0NjE3
-Mg0KPiBDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIERvY3VtZW50YXRpb246IGR0czogZnNs
-LXVzYjogRG9jdW1lbnQgVVNCIG5vZGUgDQo+IGNvbXBhdGlibGUgc3RyaW5nIGZvciBJUCB2ZXJz
-aW9uDQo+IA0KPiBPbiBUaHUsIDIwMTQtMDgtMjEgYXQgMTQ6NDggKzA1MzAsIE5pa2hpbCBCYWRv
-bGEgd3JvdGU6DQo+ID4gRG9jdW1lbnQgY29tcGF0aWJsZSBzdHJpbmcgY29udGFpbmluZyBJUCB2
-ZXJzaW9uIGluIFVTQiBkZXZpY2UgdHJlZSANCj4gPiBub2RlDQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBOaWtoaWwgQmFkb2xhIDxuaWtoaWwuYmFkb2xhQGZyZWVzY2FsZS5jb20+DQo+ID4gLS0t
-DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvZnNsLXVzYi50eHQg
-fCAxMyANCj4gPiArKysrKysrKy0tLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlv
-bnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBQbGVhc2UgQ0MgZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmcgb24gYWxsIGRldmljZSB0cmVlIHBhdGNoZXMgKGluIA0KPiBhZGRpdGlvbiB0byBs
-aW51eHBwYy1kZXYpLg0KPiANCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvdXNiL2ZzbC11c2IudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvdXNiL2ZzbC11c2IudHh0DQo+ID4gaW5kZXggNDc3OWMwMi4uNWEz
-YTBhOCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-dXNiL2ZzbC11c2IudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3VzYi9mc2wtdXNiLnR4dA0KPiA+IEBAIC0xMCw3ICsxMCwxMCBAQCBSZXF1aXJlZCBwcm9w
-ZXJ0aWVzIDoNCj4gPiAgICAgY29udHJvbGxlcnMsIG9yICJmc2wtdXNiMi1kciIgZm9yIGR1YWwg
-cm9sZSBVU0IgY29udHJvbGxlcnMNCj4gPiAgICAgb3IgImZzbCxtcGM1MTIxLXVzYjItZHIiIGZv
-ciBkdWFsIHJvbGUgVVNCIGNvbnRyb2xsZXJzIG9mIE1QQzUxMjEuDQo+ID4gICAgIFdoZXJldmVy
-IGFwcGxpY2FibGUsIHRoZSBJUCB2ZXJzaW9uIG9mIHRoZSBVU0IgY29udHJvbGxlciBzaG91bGQN
-Cj4gPiAtICAgYWxzbyBiZSBtZW50aW9uZWQgKGZvciBlZy4gZnNsLXVzYjItZHItdjIuMiBmb3Ig
-YnNjOTEzMikuDQo+ID4gKyAgIGFsc28gYmUgbWVudGlvbmVkIGluIGFub3RoZXIgc3RyaW5nLg0K
-PiA+ICsgICBGb3IgbXVsdGkgcG9ydCBob3N0IFVTQiBjb250cm9sbGVyIHdpdGggSVAgdmVyc2lv
-biA8SVBfVmVyPiwgaXQgc2hvdWxkIGJlDQo+ID4gKyAgICJmc2wtdXNiMi1tcGgtPElQX1Zlcj4i
-LiBGb3IgZHVhbCByb2xlIFVTQiBjb250cm9sbGVyIHdpdGggSVAgdmVyc2lvbg0KPiA+ICsgICA8
-SVBfVmVyPiwgaXQgc2hvdWxkIGJlICJmc2wtdXNiMi1kci08SVBfVmVyPiIuDQo+IA0KPiBJdCB3
-YXMgZG9jdW1lbnRlZCBiZWZvcmUgLS0gdGhpcyBpcyBqdXN0IG1ha2luZyBpdCBtb3JlIGV4cGxp
-Y2l0LCByaWdodD8NCj4gDQo+IEZXSVcsIHRoZSB2ZXJzaW9uIG51bWJlciBjYW4gYmUgcmVhZCBv
-dXQgb2YgYSBVU0IgcmVnaXN0ZXIsIHNvIEknZCANCj4gcmF0aGVyIHJlbW92ZSB0aGUgc3VnZ2Vz
-dGlvbiB0byBzcGVjaWZ5IHRoZSB2ZXJzaW9uIG51bWJlciBhbmQgcmVwbGFjZSANCj4gaXQgd2l0
-aCBhIHJlZmVyZW5jZSB0byB0aGUgSUQgcmVnaXN0ZXIuDQp3ZSBoYXZlIGZvbGxvd2luZyB0d28g
-aXNzdWVzIC0NCihhKSBvdXIgVVNCSVAgdmVyc2lvbiByZWdpc3RlciBkb2Vzbid0IGhhdmUgY29u
-c2lzdGVudCAidmVyc2lvbiBmaWVsZCBzaXplIiBvdmVyIA0KbXVsdGlwbGUgdmVyc2lvbihzKS4g
-VGhpcyBpcyB3aHkgd2UgY291bGRuJ3QgdXNlIGl0IGZvciByZWFkaW5nIHZlcnNpb24gaW5mbyBh
-Y3Jvc3MNCnZhcmlvdXMgSVAgdmVyc2lvbnMNCihiKSB0aGlzIHJlZ2lzdGVyIGlzIG5vdCBleHBv
-c2VkIGluIGFsbCBTb0MgUk1zIChwcm9iYWJseSBiZWNhdXNlIG9mIGFib3ZlIHJlYXNvbikNCj4g
-DQo+ID4gICAtIHBoeV90eXBlIDogRm9yIG11bHRpIHBvcnQgaG9zdCBVU0IgY29udHJvbGxlcnMs
-IHNob3VsZCBiZSBvbmUgb2YNCj4gPiAgICAgInVscGkiLCBvciAic2VyaWFsIi4gRm9yIGR1YWwg
-cm9sZSBVU0IgY29udHJvbGxlcnMsIHNob3VsZCBiZQ0KPiA+ICAgICBvbmUgb2YgInVscGkiLCAi
-dXRtaSIsICJ1dG1pX3dpZGUiLCBvciAic2VyaWFsIi4NCj4gPiBAQCAtNDIsOSArNDUsOSBAQCBP
-cHRpb25hbCBwcm9wZXJ0aWVzIDoNCj4gPiAgIC0gZnNsLGludmVydC1wd3ItZmF1bHQgOiBib29s
-ZWFuOyBmb3IgTVBDNTEyMSBVU0IwIG9ubHkuIEluZGljYXRlcw0KPiA+ICAgICB0aGUgUFdSX0ZB
-VUxUIHNpZ25hbCBwb2xhcml0eSBpcyBpbnZlcnRlZC4NCj4gPg0KPiA+IC1FeGFtcGxlIG11bHRp
-IHBvcnQgaG9zdCBVU0IgY29udHJvbGxlciBkZXZpY2Ugbm9kZSA6DQo+ID4gK0V4YW1wbGUgbXVs
-dGkgcG9ydCBob3N0IFVTQiBjb250cm9sbGVyIHZlcnNpb24gMi41IGRldmljZSBub2RlIDoNCj4g
-PiAgCXVzYkAyMjAwMCB7DQo+ID4gLQkJY29tcGF0aWJsZSA9ICJmc2wtdXNiMi1tcGgiOw0KPiA+
-ICsJCWNvbXBhdGlibGUgPSAiZnNsLXVzYjItbXBoLXYyLjUiLCAiZnNsLXVzYjItbXBoIjsNCj4g
-PiAgCQlyZWcgPSA8MjIwMDAgMTAwMD47DQo+ID4gIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+
-ID4gIAkJI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gQEAgLTU1LDkgKzU4LDkgQEAgRXhhbXBsZSBt
-dWx0aSBwb3J0IGhvc3QgVVNCIGNvbnRyb2xsZXIgZGV2aWNlIG5vZGUgOg0KPiA+ICAJCXBvcnQx
-Ow0KPiA+ICAJfTsNCj4gPg0KPiA+IC1FeGFtcGxlIGR1YWwgcm9sZSBVU0IgY29udHJvbGxlciBk
-ZXZpY2Ugbm9kZSA6DQo+ID4gK0V4YW1wbGUgZHVhbCByb2xlIFVTQiBjb250cm9sbGVyIHZlcnNp
-b24gMi41IGRldmljZSBub2RlIDoNCj4gPiAgCXVzYkAyMzAwMCB7DQo+ID4gLQkJY29tcGF0aWJs
-ZSA9ICJmc2wtdXNiMi1kciI7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJmc2wtdXNiMi1kci12Mi41
-IiwgImZzbC11c2IyLWRyIjsNCj4gPiAgCQlyZWcgPSA8MjMwMDAgMTAwMD47DQo+ID4gIAkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gIAkJI3NpemUtY2VsbHMgPSA8MD47DQo+IA0KPiBUaGlz
-IGV4YW1wbGUgZG9lc24ndCBjb3JyZXNwb25kIHRvIGFueSBkZXZpY2UgdHJlZSBJIHNlZS4gIEV2
-ZW4gYWZ0ZXIgDQo+IHlvdXIgbmV4dCBwYXRjaCB0aGF0IHNldHMgdDIwODAncyBVU0IgdG8gdjIu
-NSwgdGhlIGFkZHJlc3NlcyBhcmUgZGlmZmVyZW50Lg0KPiANCkkgcmVja29uIHRoYXQgdGhlIGV4
-YW1wbGUgZW1waGFzaXplcyBvbiBzaG93aW5nIGhvdyBJUCB2ZXJzaW9uIGluZm9ybWF0aW9uIGlz
-DQp0byBiZSBzdG9yZWQgaW4gImNvbXBhdGlibGUgc3RyaW5nIi4gSXMgaXQgbmVjZXNzYXJ5IHRv
-IG1ha2Ugc3VyZSB0aGF0IHdlIHNob3VsZCANCmFsd2F5cyBzaXRlIGFjdHVhbCB2YWx1ZXMgYWxy
-ZWFkeSB1c2VkPw0KPiBBbHNvLCBpZiB5b3UncmUgZ29pbmcgdG8gdXBkYXRlIHRoZSBleGFtcGxl
-LCBwbGVhc2UgYWxzbyB1cGRhdGUgaXQgdG8gDQo+IGJlIG1vZGVybiBpbiBvdGhlciByZXNwZWN0
-cywgc3VjaCBhcyB1c2luZyAweCBmb3IgaGV4IG51bWJlcnMgKG91dHNpZGUgdGhlIHVuaXQgYWRk
-cmVzcykuDQo+IA0KPiAtU2NvdHQNCj4gDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--esr4mJLf5gHeHliFMEeGFxnVN8o1LmpJf
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On 08/21/2014 09:02 PM, S=C3=B6ren Brinkmann wrote:
+> On Thu, 2014-08-21 at 02:28PM +0200, Michal Simek wrote:
+>> On 08/20/2014 10:41 PM, Soren Brinkmann wrote:
+>>> Match the naming pattern of all other SMP ops and rename
+>>> zynq_platform_cpu_die --> zynq_cpu_die.
+>>>
+>>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>>> ---
+>>>  arch/arm/mach-zynq/platsmp.c | 4 ++--
+>>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsm=
+p.c
+>>> index 04e578718aa2..95933c5e70e1 100644
+>>> --- a/arch/arm/mach-zynq/platsmp.c
+>>> +++ b/arch/arm/mach-zynq/platsmp.c
+>>> @@ -138,7 +138,7 @@ static int zynq_cpu_kill(unsigned cpu)
+>>>   *
+>>>   * Called with IRQs disabled
+>>>   */
+>>> -static void zynq_platform_cpu_die(unsigned int cpu)
+>>> +static void zynq_cpu_die(unsigned int cpu)
+>>>  {
+
+Sorry for incorrect place - I mean to use kernel-doc here not below. :-)
+
+
+>>>  	zynq_slcr_cpu_state_write(cpu, true);
+>>> =20
+>>> @@ -158,7 +158,7 @@ struct smp_operations zynq_smp_ops __initdata =3D=
+ {
+>>>  	.smp_boot_secondary	=3D zynq_boot_secondary,
+>>>  	.smp_secondary_init	=3D zynq_secondary_init,
+>>>  #ifdef CONFIG_HOTPLUG_CPU
+>>> -	.cpu_die		=3D zynq_platform_cpu_die,
+>>> +	.cpu_die		=3D zynq_cpu_die,
+>>>  	.cpu_kill		=3D zynq_cpu_kill,
+>>>  #endif
+>>>  };
+>>
+>> Will be good if you can move fix that kernel-doc format for this funct=
+ion
+>> too. It is just nice to have thing.
+>=20
+> All these SMP-ops should be documented in the header defining that
+> struct, shouldn't they?
+
+This struct is not necessary. I have added comment to wrong place.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--esr4mJLf5gHeHliFMEeGFxnVN8o1LmpJf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlP22rEACgkQykllyylKDCGQQgCfbnYaZMHESzaMPiJsxT7s9LST
+eJgAn1gUeByYxo/JC1mXdS9b42LX9CjR
+=9+sD
+-----END PGP SIGNATURE-----
+
+--esr4mJLf5gHeHliFMEeGFxnVN8o1LmpJf--
