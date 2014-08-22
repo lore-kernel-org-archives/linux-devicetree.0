@@ -1,32 +1,115 @@
-From: Stephen Hemminger <stephen-OTpzqLSitTUnbdJkjeBofR2eb7JE58TQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] net: Add Keystone NetCP ethernet driver
-Date: Thu, 21 Aug 2014 19:48:38 -0700
-Message-ID: <20140821194838.32f2c3f1@uryu.home.lan>
-References: <1408115562-22487-1-git-send-email-santosh.shilimkar@ti.com>
-	<1408115562-22487-3-git-send-email-santosh.shilimkar@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/5] ARM: shmobile: r8a7740: clock register bits
+Date: Fri, 22 Aug 2014 11:49:57 +0900
+Message-ID: <20140822024957.GH9099@verge.net.au>
+References: <1407507792-8121-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1407507792-8121-3-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408115562-22487-3-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sandeep_n-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1407507792-8121-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: linux-sh@vger.kernel.org, mturquette@linaro.org, devicetree@vger.kernel.org, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 15 Aug 2014 11:12:41 -0400
-Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+On Fri, Aug 08, 2014 at 04:23:09PM +0200, Ulrich Hecht wrote:
+> Contains the header file with the clock pulse generator and MSTP bits.
 
-> NetCP driver has a plug-in module architecture where each of the NetCP
-> sub-modules exist as a loadable kernel module which plug in to the netcp
-> core. These sub-modules are represented as "netcp-devices" in the dts
-> bindings. It is mandatory to have the ethernet switch sub-module for
-> the ethernet interface to be operational. Any other sub-module like the
-> PA is optional.
+Thanks, I have queued up this patch but I am leaving the
+rest of the series for now.
 
-What are you doing to prevent/discourage proprietary binary only
-sub-modules?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> ---
+>  include/dt-bindings/clock/r8a7740-clock.h | 77 +++++++++++++++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/r8a7740-clock.h
+> 
+> diff --git a/include/dt-bindings/clock/r8a7740-clock.h b/include/dt-bindings/clock/r8a7740-clock.h
+> new file mode 100644
+> index 0000000..f6b4b0f
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r8a7740-clock.h
+> @@ -0,0 +1,77 @@
+> +/*
+> + * Copyright 2014 Ulrich Hecht
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_R8A7740_H__
+> +#define __DT_BINDINGS_CLOCK_R8A7740_H__
+> +
+> +/* CPG */
+> +#define R8A7740_CLK_SYSTEM	0
+> +#define R8A7740_CLK_PLLC0	1
+> +#define R8A7740_CLK_PLLC1	2
+> +#define R8A7740_CLK_PLLC2	3
+> +#define R8A7740_CLK_R		4
+> +#define R8A7740_CLK_USB24S	5
+> +#define R8A7740_CLK_I		6
+> +#define R8A7740_CLK_ZG		7
+> +#define R8A7740_CLK_B		8
+> +#define R8A7740_CLK_M1		9
+> +#define R8A7740_CLK_HP		10
+> +#define R8A7740_CLK_HPP		11
+> +#define R8A7740_CLK_USBP	12
+> +#define R8A7740_CLK_S		13
+> +#define R8A7740_CLK_ZB		14
+> +#define R8A7740_CLK_M3		15
+> +#define R8A7740_CLK_CP		16
+> +
+> +/* MSTP1 */
+> +#define R8A7740_CLK_CEU21	28
+> +#define R8A7740_CLK_CEU20	27
+> +#define R8A7740_CLK_TMU0	25
+> +#define R8A7740_CLK_LCDC1	17
+> +#define R8A7740_CLK_IIC0	16
+> +#define R8A7740_CLK_TMU1	11
+> +#define R8A7740_CLK_LCDC0	0
+> +
+> +/* MSTP2 */
+> +#define R8A7740_CLK_SCIFA6	30
+> +#define R8A7740_CLK_SCIFA7	22
+> +#define R8A7740_CLK_DMAC1	18
+> +#define R8A7740_CLK_DMAC2	17
+> +#define R8A7740_CLK_DMAC3	16
+> +#define R8A7740_CLK_USBDMAC	14
+> +#define R8A7740_CLK_SCIFA5	7
+> +#define R8A7740_CLK_SCIFB	6
+> +#define R8A7740_CLK_SCIFA0	4
+> +#define R8A7740_CLK_SCIFA1	3
+> +#define R8A7740_CLK_SCIFA2	2
+> +#define R8A7740_CLK_SCIFA3	1
+> +#define R8A7740_CLK_SCIFA4	0
+> +
+> +/* MSTP3 */
+> +#define R8A7740_CLK_CMT1	29
+> +#define R8A7740_CLK_FSI		28
+> +#define R8A7740_CLK_IIC1	23
+> +#define R8A7740_CLK_USBF	20
+> +#define R8A7740_CLK_SDHI0	14
+> +#define R8A7740_CLK_SDHI1	13
+> +#define R8A7740_CLK_MMC		12
+> +#define R8A7740_CLK_GETHER	9
+> +#define R8A7740_CLK_TPU0	4
+> +
+> +/* MSTP4 */
+> +#define R8A7740_CLK_USBH	16
+> +#define R8A7740_CLK_SDHI2	15
+> +#define R8A7740_CLK_USBFUNC	7
+> +#define R8A7740_CLK_USBPHY	6
+> +
+> +/* SUBCK* */
+> +#define R8A7740_CLK_SUBCK	9
+> +#define R8A7740_CLK_SUBCK2	10
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_R8A7740_H__ */
+> -- 
+> 1.8.4.5
+> 
