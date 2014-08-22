@@ -1,85 +1,32 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/6] ARM: shmobile: r8a7790: Add JPU clock dt and CPG
- define.
-Date: Fri, 22 Aug 2014 10:57:03 +0900
-Message-ID: <20140822015702.GF9099@verge.net.au>
-References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
- <1408452653-14067-3-git-send-email-mikhail.ulyanov@cogentembedded.com>
- <2193234.fL02BJsSMl@avalon>
+From: Stephen Hemminger <stephen-OTpzqLSitTUnbdJkjeBofR2eb7JE58TQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] net: Add Keystone NetCP ethernet driver
+Date: Thu, 21 Aug 2014 19:48:38 -0700
+Message-ID: <20140821194838.32f2c3f1@uryu.home.lan>
+References: <1408115562-22487-1-git-send-email-santosh.shilimkar@ti.com>
+	<1408115562-22487-3-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2193234.fL02BJsSMl@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, m.chehab@samsung.com, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408115562-22487-3-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sandeep_n-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 21, 2014 at 01:07:23AM +0200, Laurent Pinchart wrote:
-> Hi Mikhail,
-> 
-> Thank you for the patch.
-> 
-> On Tuesday 19 August 2014 16:50:49 Mikhail Ulyanov wrote:
-> 
-> A commit message would be nice.
-> 
-> > Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-> 
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+On Fri, 15 Aug 2014 11:12:41 -0400
+Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
 
-Thanks, I have queued this up.
+> NetCP driver has a plug-in module architecture where each of the NetCP
+> sub-modules exist as a loadable kernel module which plug in to the netcp
+> core. These sub-modules are represented as "netcp-devices" in the dts
+> bindings. It is mandatory to have the ethernet switch sub-module for
+> the ethernet interface to be operational. Any other sub-module like the
+> PA is optional.
 
-> > ---
-> >  arch/arm/boot/dts/r8a7790.dtsi            | 6 +++---
-> >  include/dt-bindings/clock/r8a7790-clock.h | 1 +
-> >  2 files changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-> > index e2e40e5..61fd193 100644
-> > --- a/arch/arm/boot/dts/r8a7790.dtsi
-> > +++ b/arch/arm/boot/dts/r8a7790.dtsi
-> > @@ -868,17 +868,17 @@
-> >  		mstp1_clks: mstp1_clks@e6150134 {
-> >  			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-
-> clocks";
-> >  			reg = <0 0xe6150134 0 4>, <0 0xe6150038 0 4>;
-> > -			clocks = <&p_clk>, <&p_clk>, <&p_clk>, <&rclk_clk>,
-> > +			clocks = <&m2_clk>, <&p_clk>, <&p_clk>, <&p_clk>, <&rclk_clk>,
-> >  				 <&cp_clk>, <&zs_clk>, <&zs_clk>, <&zs_clk>,
-> >  				 <&zs_clk>;
-> >  			#clock-cells = <1>;
-> >  			renesas,clock-indices = <
-> > -				R8A7790_CLK_TMU1 R8A7790_CLK_TMU3 R8A7790_CLK_TMU2
-> > +				R8A7790_CLK_JPU R8A7790_CLK_TMU1 R8A7790_CLK_TMU3 
-> R8A7790_CLK_TMU2
-> >  				R8A7790_CLK_CMT0 R8A7790_CLK_TMU0 R8A7790_CLK_VSP1_DU1
-> >  				R8A7790_CLK_VSP1_DU0 R8A7790_CLK_VSP1_R R8A7790_CLK_VSP1_S
-> > 
-> >  			>;
-> > 
-> >  			clock-output-names =
-> > -				"tmu1", "tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
-> > +				"jpu", "tmu1", "tmu3", "tmu2", "cmt0", "tmu0", "vsp1-du1",
-> >  				"vsp1-du0", "vsp1-rt", "vsp1-sy";
-> >  		};
-> >  		mstp2_clks: mstp2_clks@e6150138 {
-> > diff --git a/include/dt-bindings/clock/r8a7790-clock.h
-> > b/include/dt-bindings/clock/r8a7790-clock.h index f929a79e..8ea7ab0 100644
-> > --- a/include/dt-bindings/clock/r8a7790-clock.h
-> > +++ b/include/dt-bindings/clock/r8a7790-clock.h
-> > @@ -26,6 +26,7 @@
-> >  #define R8A7790_CLK_MSIOF0		0
-> > 
-> >  /* MSTP1 */
-> > +#define R8A7790_CLK_JPU		6
-> >  #define R8A7790_CLK_TMU1		11
-> >  #define R8A7790_CLK_TMU3		21
-> >  #define R8A7790_CLK_TMU2		22
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+What are you doing to prevent/discourage proprietary binary only
+sub-modules?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
