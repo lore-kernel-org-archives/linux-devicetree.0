@@ -1,64 +1,59 @@
-From: "Murphy, Dan" <dmurphy@ti.com>
-Subject: Re: [PATCH] doc: dt/bindings: input: Fix drv260x binding document
-Date: Fri, 22 Aug 2014 14:25:13 +0000
-Message-ID: <00FC9A978A94B7418C33AFAE8A35ED49DF1F66@DFLE09.ent.ti.com>
-References: <1408716741-1163-1-git-send-email-dmurphy@ti.com>
- <20140822141532.GC22707@saruman.home>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: Trickle charging for rtc-bq32k
+Date: Fri, 22 Aug 2014 16:38:53 +0200
+Message-ID: <20140822143853.GA28820@amd>
+References: <20140822131150.GA26724@amd>
+ <20140822142852.GA1545@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Balbi, Felipe" <balbi@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140822142852.GA1545@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Felipe
-
-On 08/22/2014 09:15 AM, Balbi, Felipe wrote:
-> On Fri, Aug 22, 2014 at 09:12:21AM -0500, Dan Murphy wrote:
->> Update the drv260x dt binding document:
->> - Change the node name to the devices function not the
->> device name.
->> - Add vbat-supply to the example.
->> - Fix indentation of the example.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>  .../devicetree/bindings/input/ti,drv260x.txt       |   19 ++++++++++---------
->>  1 file changed, 10 insertions(+), 9 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/input/ti,drv260x.txt b/Documentation/devicetree/bindings/input/ti,drv260x.txt
->> index a9c8519..214e25d 100644
->> --- a/Documentation/devicetree/bindings/input/ti,drv260x.txt
->> +++ b/Documentation/devicetree/bindings/input/ti,drv260x.txt
->> @@ -37,15 +37,16 @@ Optional properties:
->>  			  3.2 v.
->>  Example:
->>  
->> -drv2605l: drv2605l@5a {
->> -		compatible = "ti,drv2605l";
->> -		reg = <0x5a>;
->> -		enable-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->> -		mode = <DRV260X_LRA_MODE>;
->> -		library-sel = <DRV260X_LIB_LRA>;
->> -		vib-rated-mv = <3200>;
->> -		vib-overdriver-mv = <3200>;
->> -};
->> +haptics:@5a {
+On Fri 2014-08-22 09:28:52, Wolfram Sang wrote:
 > 
-> haptics: haptics@5a ??
+> > _But_ this should probably be enabled using device tree entry, right?
+> > Unfortunately, the driver is i2c driver, not platform one, so I don't
+> > see how to do that easily...
 > 
+> Trickle charging is usually depending on the hardware setup, so
+> devicetree is actually a good place to put it. We'd just need generic
+> bindings so that they could be applied to various RTC. Just guessing,
+> resistor value would probably be one such property? We would not need
+> putting plain register values into DT.
 
-I found both types of entries in the bindings docs.
+Well, for bq32000 there's selection between "no charging", "diode +
+resistor", "different resistor".
 
-There is no consistency within the input bindings documentation.
+> There should be no difference regarding DT between i2c and platform
+> drivers.
 
-I have no issue doing it either way.
+Do you have example how to acces of_ from i2c driver?
 
-Dan
+Platform drivers do:
 
+static int palmas_rtc_probe(struct platform_device *pdev)
+{
+        struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
+        struct palmas_rtc *palmas_rtc = NULL;
+	int ret;
+        bool enable_bb_charging = false;
+        bool high_bb_charging;
+
+        if (pdev->dev.of_node) {
+	   enable_bb_charging =
+	   of_property_read_bool(pdev->dev.of_node,
+                                        "ti,backup-battery-chargeable");
+					        high_bb_charging =
+	   of_property_read_bool(pdev->dev.of_node,
+                                        "ti,backup-battery-charge-high-current");
+
+Thanks,
+									Pavel
 -- 
-------------------
-Dan Murphy
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
