@@ -1,65 +1,28 @@
-From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 7/7] ARM: meson: update documentation (uart, timer and
- vendors)
-Date: Sat, 23 Aug 2014 14:24:33 +0200
-Message-ID: <53F88801.4050300@suse.de>
-References: <1408272594-10814-1-git-send-email-carlo@caione.org> <1408272594-10814-8-git-send-email-carlo@caione.org>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: hummingboard: gpio-ir on gpio 3,5
+Date: Sat, 23 Aug 2014 10:32:23 -0300
+Message-ID: <CAOMZO5C=xyYLLBX1PDsJQ9NwzXZxCWTvPMTUWzYcoohOOvA_qA@mail.gmail.com>
+References: <20140823091058.GO30401@n2100.arm.linux.org.uk>
+	<E1XL7MR-0002yX-6N@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1408272594-10814-8-git-send-email-carlo@caione.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Carlo Caione <carlo@caione.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <E1XL7MR-0002yX-6N-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 17.08.2014 12:49, schrieb Carlo Caione:
-> New UART and timer bindings are documented. A new vendor is added to =
-the
-> vendors list.
->=20
-> Signed-off-by: Carlo Caione <carlo@caione.org>
-> ---
->  .../devicetree/bindings/serial/amlogic,meson-uart.txt   | 17 +++++++=
-++++++++++
->  .../devicetree/bindings/timer/amlogic,meson6-timer.txt  | 16 +++++++=
-+++++++++
->  Documentation/devicetree/bindings/vendor-prefixes.txt   |  1 +
->  3 files changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/amlogic,=
-meson-uart.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/amlogic,m=
-eson6-timer.txt
-[...]
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index ac7269f..5cf0618 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -14,6 +14,7 @@ allwinner	Allwinner Technology Co., Ltd.
->  altr	Altera Corp.
->  amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
->  amd	Advanced Micro Devices (AMD), Inc.
-> +amlogic	Amlogic, Inc.
->  ams	AMS AG
->  amstaos	AMS-Taos Inc.
->  apm	Applied Micro Circuits Corporation (APM)
+On Sat, Aug 23, 2014 at 6:11 AM, Russell King
+<rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
 
-Sorry, here's the vendor prefix I was asking about. Please split it off
-into its own patch and best order it before the first use.
+> -                               MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
+> +                               MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x80000000
 
-Documentation of SoC and board seem to be indeed missing though.
-
-Cheers,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+It would be better to replace the '0x80000000' with the real iomux
+value (like 0x1b0b0 for example), so that we do not need to rely on
+the bootloader doing the correct configuration for us.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
