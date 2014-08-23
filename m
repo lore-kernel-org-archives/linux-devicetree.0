@@ -1,60 +1,151 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] i2c: Relax mandatory I2C ID table passing
-Date: Fri, 22 Aug 2014 22:10:42 -0500
-Message-ID: <20140823031042.GB1305@katana>
-References: <1403265753-25851-1-git-send-email-lee.jones@linaro.org>
- <20140717102342.GD30888@lee--X1>
- <20140717130306.GG2740@katana>
- <20140820160157.GO4266@lee--X1>
+From: Joe.C <srv_yingjoe.chen@mediatek.com>
+Subject: Re: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
+ extension is present
+Date: Sat, 23 Aug 2014 13:28:58 +0800
+Message-ID: <1408771738.25080.65.camel@mtksdaap41>
+References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
+ <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
+ <53F724F5.3040004@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140820160157.GO4266@lee--X1>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <53F724F5.3040004@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>, yingjoe.chen@mediatek.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.com>, "hc.yen@mediatek.com" <hc.yen@mediatek.com>, Rand
 List-Id: devicetree@vger.kernel.org
 
 
---8GpibOaaTibBMecb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-> > Sure thing, yet I won't make it for 3.17, sadly :( It has high priority
-> > for 3.18, though.
->=20
-> Do you want me to re-send now the -rc1 had been released?
+Hi,
 
-I think this version will do for an initial review.
+Thanks for your suggestions.
 
-Thanks,
+On Fri, 2014-08-22 at 12:09 +0100, Marc Zyngier wrote:
+> Hi Joe,
+> 
+> On 13/08/14 03:11, Joe.C wrote:
+> > From: "Joe.C" <yingjoe.chen@mediatek.com>
+> > 
+> > GIC supports the combination with external extensions. But this
+> > is not reflected in the checks of the interrupt type flag.
+> > This patch allows interrupt types other than the one supported by GIC,
+> > if an architecture extension is present and supports them.
+> > 
+> > Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+> > ---
+> >  drivers/irqchip/irq-gic.c | 27 ++++++++++++++++++---------
+> >  1 file changed, 18 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> > index 57d165e..66485ab 100644
+> > --- a/drivers/irqchip/irq-gic.c
+> > +++ b/drivers/irqchip/irq-gic.c
+> > @@ -194,23 +194,32 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
+> >  	u32 confoff = (gicirq / 16) * 4;
+> >  	bool enabled = false;
+> >  	u32 val;
+> > +	int ret = 0;
+> >  
+> >  	/* Interrupt configuration for SGIs can't be changed */
+> >  	if (gicirq < 16)
+> >  		return -EINVAL;
+> >  
+> > -	if (type != IRQ_TYPE_LEVEL_HIGH && type != IRQ_TYPE_EDGE_RISING)
+> > -		return -EINVAL;
+> > -
+> >  	raw_spin_lock(&irq_controller_lock);
+> >  
+> > -	if (gic_arch_extn.irq_set_type)
+> > -		gic_arch_extn.irq_set_type(d, type);
+> > +	if (gic_arch_extn.irq_set_type) {
+> > +		ret = gic_arch_extn.irq_set_type(d, type);
+> > +		if (ret)
+> > +			goto out;
+> > +	} else if (type != IRQ_TYPE_LEVEL_HIGH &&
+> > +		type != IRQ_TYPE_EDGE_RISING) {
+> > +			ret = -EINVAL;
+> > +			goto out;
+> > +	}
+> >  
+> >  	val = readl_relaxed(base + GIC_DIST_CONFIG + confoff);
+> > -	if (type == IRQ_TYPE_LEVEL_HIGH)
+> > +	/* Check for both edge and level here, so we can support GIC irq
+> > +	   polarity extension in gic_arch_extn.irq_set_type. If arch
+> > +	   doesn't support polarity extension, the check above will reject
+> > +	   improper type. */
+> > +	if (type & IRQ_TYPE_LEVEL_MASK)
+> >  		val &= ~confmask;
+> > -	else if (type == IRQ_TYPE_EDGE_RISING)
+> > +	else if (type & IRQ_TYPE_EDGE_BOTH)
+> >  		val |= confmask;
+> >  
+> >  	/*
+> > @@ -226,10 +235,10 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
+> >  
+> >  	if (enabled)
+> >  		writel_relaxed(enablemask, base + GIC_DIST_ENABLE_SET + enableoff);
+> > -
+> > +out:
+> >  	raw_spin_unlock(&irq_controller_lock);
+> >  
+> > -	return 0;
+> > +	return ret;
+> >  }
+> >  
+> >  static int gic_retrigger(struct irq_data *d)
+> > 
+> 
+> You're really abusing the gic_arch_extn feature. I know this is
+> tempting, but this is pushing it a bit too far.
+> 
+> This feature exist for one particular reason: if your GIC is in the same
+> power-domain as the CPUs, it will go down as well when you suspend the
+> system, hence being enable to wake the CPU up. You then need a shadow
+> interrupt controller to take over. This is exactly why we call the hook
+> on every GIC-related operation.
 
-   Wolfram
+Actually we are doing this too, it is called SYS_CIRQ in our IC, and
+we'll need to support that in the future. This intpol is part of CIRQ
+function block. Does it make more senses if I add skeleton for CIRQ
+support, and implement intpol inside it?
 
+> Here, you're using it to program something that sits between the device
+> and the GIC. This is a separate block, with its own hardware
+> configuration, that modifies the interrupt signal. This should be
+> reflected in the device-tree and the code paths.
+> 
+> You can probably model this as a separate irqchip for the few interrupts
+> that require this, or have it configured at boot time (assuming the
+> configuration never changes).
 
---8GpibOaaTibBMecb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The boot loader did setup interrupt polarity for those used in boot
+loader, but not all of them. 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Datasheet lists components irqs as low active, so I think it makes more
+sense to allow driver to use IRQF_TRIGGER_LOW instead of having them to
+notice GIC only support high active and use IRQF_TRIGGER_HIGH. This
+rule out configure it at boot loader or kernel init irq time.
 
-iQIcBAEBAgAGBQJT+AYyAAoJEBQN5MwUoCm2TccQAKwd+cUED1/bT34c07NNyjsm
-UYddu2RtUXNrPFBwyaVBI0/JgecmnSrz0FF/7JE9IE8bbhYrf/CNl8Rd5TvFVCf4
-xb7E2wLF8E+pj9FQ0Vj/rp2PBEnWlLmpd8xjmJis1y7azNGMB1LqlKDPBGqHuHtJ
-44GeH+R5J651CszkRbzFgNbKq4uBtlHQ1jBVltGGEMkjY86FfKinoSxc4fyFnBIr
-frjByS8FJUSmtJw3OC1PYTCnO9NbuAh7TB/Mt9wrA9oQCt9p8FdEPutzPvmStUwl
-NM9rYJ0aq4pK3ieqUsn1nTDtFeia9H+IqaiYLGou0/+iZcpODRNs0PJOIhIkZ5t2
-5JWGnLBX2zh5TzKeZYIvMdvzvbmTYafBzOiUyAvgKno5uaxe49QKkj6cEtgJKX7W
-o/tsHjH9GsYKCszxaVN7BVcd9NK1/x41xYjjkyn/l1W8uCgVa8EkL+9zKMWYSpBy
-q8p7YoBRhn0W70Mr6wZCHBmffI2/clLjRF/ikf1B4Okw8Btuwy2BOkmbAeHI3tyF
-dowjxaf31M+kH/h2JUN6atJwHAoZfDeKrJS/++9LpW7z4+/Nb18M76UFpIOLLxm8
-qS0BX0bLYiXJ3LFJOsav0DKrlKY8KZDAhlVfFi86kKhsBLK+Z1BDPEEYN2g2MYsr
-AcBjwWIPR16Zg9E1pLHh
-=0JtU
------END PGP SIGNATURE-----
+If I implement this as a separate irqchip, I need to reuse most gic
+irqchip functions. Without changing irq-gic.c to make them global,
+I can only think of hack like this:
 
---8GpibOaaTibBMecb--
+        gic_init_bases(..) /* init gic */
+        gic_chip = irq_get_chip(0);  /* to get gic irq_chip */
+        org_gic_set_type = gic_chip->irq_set_type;
+        gic_chip->irq_set_type = mt_irq_polarity_set_type;
+
+and calling original gic_set_type from mt_irq_polarity_set_type with irq
+type fixup.
+
+Joe.C
