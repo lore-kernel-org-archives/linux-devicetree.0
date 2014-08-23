@@ -1,38 +1,67 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
-Date: Sat, 23 Aug 2014 18:05:41 +0200
-Message-ID: <87ha1342ei.fsf@free.fr>
-References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
-	<CAN1soZwDDwiLuVkT7kRJX-wy-UmyDj-2yiReGrpBrTOJkKpuSA@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Sat, 23 Aug 2014 09:14:56 -0700
+Message-ID: <20140823161456.GA2758@localhost>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+ <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
+ <20140823063113.GC23715@localhost>
+ <201408231556.42571.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN1soZwDDwiLuVkT7kRJX-wy-UmyDj-2yiReGrpBrTOJkKpuSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Haojian Zhuang's message of "Sat, 2 Aug 2014 20:27:21 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201408231556.42571.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> Acked-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Only with a small comment.
->
-> Regards
-> Haojian
-Hi Mike and Arnd,
+On Sat, Aug 23, 2014 at 03:56:42PM +0200, Arnd Bergmann wrote:
+> On Saturday 23 August 2014, Olof Johansson wrote:
+> > On Fri, Aug 22, 2014 at 02:10:23PM -0700, Andrew Bresticker wrote:
+> > > On Fri, Aug 22, 2014 at 1:42 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> > > >
+> > > > On Aug 21, 2014 3:05 PM, "Andrew Bresticker" <abrestic@chromium.org> wrote:
+> > > > >
+> > > > > To be consistent with other architectures and to avoid unnecessary
+> > > > > makefile duplication, move all MIPS device-trees to arch/mips/boot/dts
+> > > > > and build them with a common makefile.
+> > > >
+> > > > I recall reading that the ARM organization for DTS files was a bit unfortunate
+> > > > and should have been something like:
+> > > >
+> > > > arch/arm/boot/dts/<vendor>/
+> > > >
+> > > > Is this something we should do for the MIPS and update the other architectures
+> > > > to follow that scheme?
+> > > 
+> > > I recall reading that as well and that it would be adopted for ARM64,
+> > > but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
+> > > more.
+> > 
+> > Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
+> > and the amount of files in that directory is becoming pretty
+> > insane. Moving to a subdirectory structure later gets messy which is
+> > why we've been holding off on it.
+> 
+> Another argument is that we plan to actually move all the dts files out of
+> the kernel into a separate project in the future. We really don't want to
+> have the churn of moving all the files now when they get deleted in one
+> of the next merge windows.
 
-I suppose this patchset didn't make it to 3.17 timeframe, right ?
-And I don't see it scheduled either for linux-next.
+To be honest, I don't see that happening within the forseeable
+future. Some of us maintainers like talking about this, but everyone who
+actually develops have nightmares about this scenario. Nobody knows how
+it'll be done without causing some real serious impact on productivity.
 
-Is there something blocking it ?
+> I don't know if we talked about whether that move should be done for
+> all architectures at the same time. If that is the plan, I think it
+> would be best to not move the MIPS files at all but also wait until
+> they can get removed from the kernel tree.
 
-Cheers.
+If MIPS can restructure now before things start growing, then I'd really
+recommend that they do so and not hold off waiting on some event that
+might never happen. :)
 
--- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-Olof
