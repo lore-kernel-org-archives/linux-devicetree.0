@@ -1,85 +1,102 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v3 0/5] Add rockchip RK808 pmic driver
-Date: Sat, 23 Aug 2014 18:27:05 +0800
-Message-ID: <1408789625-16330-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 3/3] ARM: dts: Add DT changes for display on peach_pi
+Date: Sat, 23 Aug 2014 12:29:18 +0200
+Message-ID: <53F86CFE.6070307@suse.de>
+References: <1406317464-7525-1-git-send-email-ajaykumar.rs@samsung.com> <1406317464-7525-4-git-send-email-ajaykumar.rs@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1406317464-7525-4-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay Kumar <ajaykumar.rs@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, dianders@chromium.org, ajaynumb@gmail.com, joshi@samsung.com, prashanth.g@samsung.com, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is the initial version of the RK808 PMIC. This is a power management IC
-for multimedia products.
+Seeing a Reviewed-by, I'm recording comments from another thread so tha=
+t
+they don't get forgotten:
 
-It provides regulators that are able to supply power to processor cores
-and other components. The chip provides other modules including RTC, Clockout
+Am 25.07.2014 21:44, schrieb Ajay Kumar:
+> Add DT nodes for panel-simple "auo,b133htn01" panel.
+> Add backlight enable pin and backlight power supply for pwm-backlight=
+=2E
+> Also add panel phandle needed by dp to enable display on peach_pi.
+>=20
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts |   27 ++++++++++---------=
+--------
+>  1 file changed, 10 insertions(+), 17 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boo=
+t/dts/exynos5800-peach-pi.dts
+> index f3ee48b..5342638 100644
+> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> @@ -28,11 +28,13 @@
+>  		i2c20 =3D "/spi@12d40000/cros-ec@0/i2c-tunnel";
+>  	};
+> =20
+> -	backlight {
+> +	backlight: backlight {
+>  		compatible =3D "pwm-backlight";
+>  		pwms =3D <&pwm 0 1000000 0>;
+>  		brightness-levels =3D <0 100 500 1000 1500 2000 2500 2800>;
+>  		default-brightness-level =3D <7>;
+> +		enable-gpios =3D <&gpx2 2 0>;
+> +		power-supply =3D <&tps65090_fet1>;
+>  		pinctrl-0 =3D <&pwm0_out>;
+>  		pinctrl-names =3D "default";
+>  	};
+> @@ -98,6 +100,12 @@
+>  		regulator-boot-on;
+>  		regulator-always-on;
+>  	};
+> +
+> +	panel: panel-simple {
 
-Changes in v4:
-Adviced by doug
-- add "clock-output-names" propertiey
-- add a header file "rockchip,rk808.h"
-Adviced by Lee Jones in v2
-- modify the description in Kconfig
-- remove some unnecessary header files
-- remove dev from struct rk808
-- use enum for define RK808_ID...
-- use &client->dev replace rk808->dev
-Advices by Doug
-- add a "#clock-cells" propertiy
-- update the example
+Just "panel"? (AF)
 
-Changes in v3:
-- fix compile err
-- fix compile err
+> +		compatible =3D "auo,b133htn01", "simple-panel";
 
-Changes in v2:
-Adviced by javier.martinez
-- separated from rtc-rk808.c
-Adviced by Mark Browm:
-- change of_find_node_by_name to find_child_by_name
-- use RK808_NUM_REGULATORS as the name of the constant
-- create a pdata when missing platform data
-- use the rk808_reg name to supply_regulator name
-- replace regulator_register with devm_regulator_register
-- some other problem with coding style
-Adviced by javier.martinez
-- Add a separate clock driver, rather than in RTC driver
-Adviced by Mark Browm:
-- use defines for register setting value
-- remove rtc alarm disable in shutdown
-- remove while(1) in shutdown
-- remove read 0x2f in probe
+Drop "simple-panel" (Thierry)
 
-Chris Zhong (5):
-  MFD: Add rk808 device tree bindings documentation
-  MFD: RK808: Add new mfd driver for RK808
-  RTC: RK808: add RTC driver for RK808
-  Regulator: RK808: Add regulator driver for RK808
-  Clk: RK808: Add clkout driver for RK808
+> +		power-supply =3D <&tps65090_fet6>;
+> +		backlight =3D <&backlight>;
+> +	};
+>  };
+> =20
+>  &dp {
+> @@ -111,22 +119,7 @@
+>  	samsung,link-rate =3D <0x0a>;
+>  	samsung,lane-count =3D <2>;
+>  	samsung,hpd-gpio =3D <&gpx2 6 0>;
+> -
+> -	display-timings {
+> -		native-mode =3D <&timing1>;
+> -
+> -		timing1: timing@1 {
+> -			clock-frequency =3D <150660000>;
+> -			hactive =3D <1920>;
+> -			vactive =3D <1080>;
+> -			hfront-porch =3D <60>;
+> -			hback-porch =3D <172>;
+> -			hsync-len =3D <80>;
+> -			vback-porch =3D <25>;
+> -			vfront-porch =3D <10>;
+> -			vsync-len =3D <10>;
+> -		};
+> -	};
+> +	panel =3D <&panel>;
+>  };
+> =20
+>  &fimd {
 
- Documentation/devicetree/bindings/mfd/rk808.txt |  133 +++++++
- drivers/clk/Kconfig                             |    9 +
- drivers/clk/Makefile                            |    1 +
- drivers/clk/clk-rk808.c                         |  162 ++++++++
- drivers/mfd/Kconfig                             |   13 +
- drivers/mfd/Makefile                            |    1 +
- drivers/mfd/rk808.c                             |  265 +++++++++++++
- drivers/regulator/Kconfig                       |   10 +
- drivers/regulator/Makefile                      |    1 +
- drivers/regulator/rk808-regulator.c             |  404 ++++++++++++++++++++
- drivers/rtc/Kconfig                             |   11 +
- drivers/rtc/Makefile                            |    1 +
- drivers/rtc/rtc-rk808.c                         |  464 +++++++++++++++++++++++
- include/dt-bindings/clock/rockchip,rk808.h      |   11 +
- include/linux/mfd/rk808.h                       |  211 +++++++++++
- 15 files changed, 1697 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
- create mode 100644 drivers/clk/clk-rk808.c
- create mode 100644 drivers/mfd/rk808.c
- create mode 100644 drivers/regulator/rk808-regulator.c
- create mode 100644 drivers/rtc/rtc-rk808.c
- create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
- create mode 100644 include/linux/mfd/rk808.h
+Regards,
+Andreas
 
--- 
-1.7.9.5
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
