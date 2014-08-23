@@ -1,53 +1,99 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Sat, 23 Aug 2014 21:50:11 +0200
-Message-ID: <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
-	<CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
-	<CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
-	<20140823063113.GC23715@localhost>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] dt-bindings: document Rockchip thermal
+Date: Sun, 24 Aug 2014 01:03:05 +0200
+Message-ID: <1504889.nDzfjZj9xp@diego>
+References: <1408752934-18318-1-git-send-email-caesar.wang@rock-chips.com>
+ <1408752934-18318-2-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140823063113.GC23715@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1408752934-18318-2-git-send-email-caesar.wang@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, addy.ke@rock-chips.com, grant.linkely@linaro.org, xjq@rock-chips.com, linux-pm@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, eduardo.valentin@ti.com, zyw@rock-chips.com, robh+dt@kernel.org, cf@rock-chips.com, rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof@lixom.net> wrote:
->> > arch/arm/boot/dts/<vendor>/
->> >
->> > Is this something we should do for the MIPS and update the other architectures
->> > to follow that scheme?
->>
->> I recall reading that as well and that it would be adopted for ARM64,
->> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
->> more.
->
-> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
-> and the amount of files in that directory is becoming pretty
-> insane. Moving to a subdirectory structure later gets messy which is
-> why we've been holding off on it.
+Hi Caesar,
 
-It would mean we can change our scripts to operate on "interesting"
-DTS files from
+Am Samstag, 23. August 2014, 08:15:33 schrieb Caesar Wang:
+> This add the necessary binding documentation for the thermal
+> found on Rockchip SoCs
+> 
+> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> ---
+>  .../bindings/thermal/rockchip-thermal.txt          |   33
+> ++++++++++++++++++++ 1 file changed, 33 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt new file
+> mode 100644
+> index 0000000..b556eae
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> @@ -0,0 +1,33 @@
+> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+> +
+> +Required properties:
+> +- compatible : "rockchip,rk3288-tsadc"
+> +- reg : physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts : The interrupt number to the cpu. The interrupt specifier
+> format +  depends on the interrupt controller.
+> +- clocks : Must contain an entry for each entry in clock-names.
+> +- clock-names : Shall be "tsadc_clk" for the transfer-clock, and
+> "tsadc_pclk" for +    the peripheral clock.
+> +Optional properties:
+> +- clock-frequency : Thermal sensor's clock frequency.
 
-     do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
+see comment in patch2, this should probably use assigned-rate if at all 
+necessary (and the assigned-rate is not necessary to document here)
 
-to
 
-    do-something-with arch/arm/boot/dts/$vendor/*
+> +- pinctrl-names : Should contain only one value - "default".
+> +- pinctrl-0 : Should contain only one value - &tsadc_int.
 
-which is easier to type...
+in general pinctrl settings are just board-specific settings and do not
+need to be part of the binding documentation.
+And in this case, are you sure that the tsadc uses some pin as interrupt?
+Because in the TRM the TS-ADC interrupt is number 69 of the GIC itself
+and not some pin accessible via pinctrl.
 
-Gr{oetje,eeting}s,
 
-                        Geert
+> +- passive-temp : Temperature of trip 0.
+> +- critical-temp : Temperature of trip 1.
+> +- force-shut-temp : Temperature of force shut down.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+please use the generic trip-points described in
+Documentation/devicetree/bindings/thermal/thermal.txt
+for this, instead of defining new properties
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+Heiko
+
+> +Example:
+> +
+> +tsadc: tsadc@ff280000 {
+> +	compatible = "rockchip,rk3288-tsadc";
+> +	reg = <0xff280000 0x100>;
+> +	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> +	clock-frequency = <10000>;
+> +	clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+> +	clock-names = "tsadc_clk", "tsadc_pclk";
+> +	pinctrl-names = "default";
+> +	pinctrl-1 = <&tsadc_int>;
+> +	passive-temp = <80>;
+> +	critical-temp = <100>;
+> +	force-shut-temp = <120>;
+> +};
