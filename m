@@ -1,53 +1,45 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH] phy: exynos5-usbdrd: Add MODULE_DEVICE_TABLE entry
-Date: Sat, 23 Aug 2014 18:23:15 +0200
-Message-ID: <53F8BFF3.8020001@suse.de>
-References: <1408715892-27728-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 12/12] PCI: Introduce pci_remap_iospace() for remapping
+ PCI I/O bus resources into CPU space
+Date: Sat, 23 Aug 2014 11:57:06 -0500
+Message-ID: <CAL_JsqLP3K1p3Q-B1rBtdRcRwpWJqCLQaML8uX0EXrX5GcO1CA@mail.gmail.com>
+References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
+ <1407860725-25202-13-git-send-email-Liviu.Dudau@arm.com> <CAL_JsqK6XiuS7OJ_2F16ySA8oj9AHqP0fAft21AOtJxXP2SqnQ@mail.gmail.com>
+ <20140822124326.GL13147@bart.dudau.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1408715892-27728-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140822124326.GL13147-hOhETlTuV5niMG9XS5x8Mg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Aug 22, 2014 at 7:43 AM, Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org> wrote:
+> On Thu, Aug 21, 2014 at 11:16:16PM -0500, Rob Herring wrote:
+>> On Tue, Aug 12, 2014 at 11:25 AM, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > Introduce a default implementation for remapping PCI bus I/O resources
+>> > onto the CPU address space. Architectures with special needs may
+>> > provide their own version, but most should be able to use this one.
+>> >
+>> > Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+>>
+>> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Thanks, Rob, much appreciated!
+>
+>>
+>> However, I would like to see ARM pci_ioremap_io converted over to this function.
+>
+> Do you care if this is done as a separate patch?
 
-Am 22.08.2014 15:58, schrieb Sjoerd Simons:
-> Add a MODULE_DEVICE_TABLE call for OF match tables. This allows the
-> module to be autoloaded based on devicetree information.
->=20
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> ---
->  drivers/phy/phy-exynos5-usbdrd.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exyno=
-s5-usbdrd.c
-> index b05302b..e9a0f54 100644
-> --- a/drivers/phy/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/phy-exynos5-usbdrd.c
-> @@ -542,6 +542,7 @@ static const struct of_device_id exynos5_usbdrd_p=
-hy_of_match[] =3D {
->  	},
->  	{ },
->  };
-> +MODULE_DEVICE_TABLE (of, exynos5_usbdrd_phy_of_match);
+Yes, that's fine hence the reviewed-by.
 
-Nit: Probably there should be no space before '('?
-
-> =20
->  static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
->  {
-
-Otherwise certainly sensible. I ran into another such case myself.
-
-Regards,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
