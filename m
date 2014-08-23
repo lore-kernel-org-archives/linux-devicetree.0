@@ -1,53 +1,89 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: l2c: cache size parsing through device tree
-Date: Fri, 22 Aug 2014 18:59:58 -0700
-Message-ID: <CAGVrzcZm9Qktj9wDM5XG8zE=bY7FYF3V5ns3NPY7nCxbSpEckw@mail.gmail.com>
-References: <1407972571-8986-1-git-send-email-f.fainelli@gmail.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v5 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
+Date: Fri, 22 Aug 2014 19:26:14 -0700
+Message-ID: <CAJAp7OgmBUfNOZNbD0jW_fgO+rO=02PmEU64=c2ty6-2ENkBww@mail.gmail.com>
+References: <1407796988-25872-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1407796988-25872-3-git-send-email-bjorn.andersson@sonymobile.com>
+	<20140821132204.GH4266@lee--X1>
+	<20140822012748.GB12494@sonymobile.com>
+	<20140822075041.GT4266@lee--X1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407972571-8986-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140822075041.GT4266@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-08-13 16:29 GMT-07:00 Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Hi all,
+On Fri, Aug 22, 2014 at 12:50 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Thu, 21 Aug 2014, Bjorn Andersson wrote:
+>> On Thu 21 Aug 06:22 PDT 2014, Lee Jones wrote:
+>> > > +struct qcom_rpm *dev_get_qcom_rpm(struct device *dev)
+>> > > +{
+>> > > + return dev_get_drvdata(dev);
+>> > > +}
+>> > > +EXPORT_SYMBOL(dev_get_qcom_rpm);
+>> >
+>> > No need for this at all.  Use dev_get_drvdata() direct instead.
+>> >
+>>
+>> I see that others have put this as static inline in the header file, so I will
+>> follow that. I don't want to expose this directly in the implementation of the
+>> clients.
+>>
+>> Let me know if you object.
 >
-> This patch series adds support for specifying the L2 cache size through Device
-> Tree using the ePAPR standard 'cache-size' and 'cache-sets' properties.
->
-> The rationale behind these patches is to support Broadcom's BCM63138 DSL SoC
-> which comes out of reset with an invalid cache way-size specified in its L2C
-> auxiliary register.
->
-> For the third patch I took the approach of a helper function that can be called
-> by the 3 different of_parse functions that we have currently.
-
-Russell, does that look like what you had in mind? Thank you!
-
->
-> Thanks!
->
-> Florian Fainelli (3):
->   ARM: l2c: enforce use of cache-level property
->   ARM: l2c: order optional properties in alphabetical order
->   ARM: l2c: parse 'cache-size' and 'cache-sets' properties
->
->  Documentation/devicetree/bindings/arm/l2cc.txt |  4 +-
->  arch/arm/mm/cache-l2x0.c                       | 68 ++++++++++++++++++++++++++
->  2 files changed, 71 insertions(+), 1 deletion(-)
->
-> --
-> 1.9.1
+> I do (unless you convince me otherwise).  Why is this a good idea and
+> why 'exposing' this directly is a bad one?  At the moment this looks
+> to me like abstraction for the sake of abstraction.
 >
 
+There's no other reason for it than to abstract because "it's nice",
+so I'll change it.
 
+>> > > + res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> > > + rpm->status_regs = devm_ioremap_resource(&pdev->dev, res);
+>> > > + rpm->ctrl_regs = rpm->status_regs + 0x400;
+>> > > + rpm->req_regs = rpm->status_regs + 0x600;
+>> > > + if (IS_ERR(rpm->status_regs))
+>> > > +         return PTR_ERR(rpm->status_regs);
+>> >
+>> > You should probably do this _before_ using it above.
+>>
+>> There's no difference in behaviour, but it just feels cleaner than:
+>>
+>> res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> rpm->status_regs = devm_ioremap_resource(&pdev->dev, res);
+>> if (IS_ERR(rpm->status_regs))
+>>       return PTR_ERR(rpm->status_regs);
+>> rpm->ctrl_regs = rpm->status_regs + 0x400;
+>> rpm->req_regs = rpm->status_regs + 0x600;
+>>
+>> If you don't like it, I'll change it.
+>
+> There is a difference.  In the current implementation you're doing math
+> with a possible error code and assigning rubbish to rpm->ctrl_regs and
+> rpm->req_regs.
+>
 
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Unfortunately, I still don't understand what practical drawback this
+has, but I will of course change it per your request.
+
+> [...]
+>
+>> > > +MODULE_DESCRIPTION("Qualcomm Resource Power Manager driver");
+>> > > +MODULE_LICENSE("GPL v2");
+>> >
+>> > No one authored this driver?
+>> >
+>>
+>> Thought that was optional, will update.
+>
+> It's also helpful.  Can you place an Author: line in the header(s) too.
+>
+
+Will do.
+
+Regards,
+Bjorn
