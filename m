@@ -1,543 +1,142 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 3/5] RTC: RK808: add RTC driver for RK808
-Date: Sat, 23 Aug 2014 18:34:28 +0800
-Message-ID: <1408790068-16446-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 1/3] ARM: dts: Add DT changes for display on snow
+Date: Sat, 23 Aug 2014 12:47:26 +0200
+Message-ID: <53F8713E.5040408@suse.de>
+References: <1406317464-7525-1-git-send-email-ajaykumar.rs@samsung.com> <1406317464-7525-2-git-send-email-ajaykumar.rs@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1406317464-7525-2-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay Kumar <ajaykumar.rs@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, dianders@chromium.org, ajaynumb@gmail.com, joshi@samsung.com, prashanth.g@samsung.com, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-RK808 PMIC is a MFD with RTC as one of the device. Adding RTC driver
-for supporting RTC device present inside RK808 PMIC.
+Am 25.07.2014 21:44, schrieb Ajay Kumar:
+> Add DT nodes for ptn3460 bridge chip and panel-simple panel.
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+"simple-panel"
 
----
+> Add backlight enable pin and backlight power supply for pwm-backlight=
+=2E
+> Also add bridge phandle needed by dp to enable display on snow.
+>=20
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5250-snow.dts |   40 +++++++++++++++++------=
+----------
+>  1 file changed, 21 insertions(+), 19 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dt=
+s/exynos5250-snow.dts
+> index 6c36d41..f57f993 100644
+> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+> @@ -270,7 +270,7 @@
+>  					dcdc3 {
+>  						ti,enable-ext-control;
+>  					};
+> -					fet1 {
+> +					fet1: fet1 {
+>  						regulator-name =3D "vcd_led";
+>  						ti,overcurrent-wait =3D <3>;
+>  					};
+> @@ -293,7 +293,7 @@
+>  						regulator-always-on;
+>  						ti,overcurrent-wait =3D <3>;
+>  					};
+> -					fet6 {
+> +					fet6: fet6 {
+>  						regulator-name =3D "lcd_vdd";
+>  						ti,overcurrent-wait =3D <3>;
+>  					};
+> @@ -342,6 +342,15 @@
+>  			pinctrl-0 =3D <&max98095_en>;
+>  			pinctrl-names =3D "default";
+>  		};
+> +
+> +		ptn3460: ptn3460-bridge@20 {
 
-Changes in v4:
-- use &client->dev replace rk808->dev
+"lvds-bridge"? (AF)
 
-Changes in v3: None
-Changes in v2:
-Adviced by javier.martinez
-- Add a separate clock driver, rather than in RTC driver
+> +			compatible =3D "nxp,ptn3460";
+> +			reg =3D <0x20>;
+> +			powerdown-gpios =3D <&gpy2 5 0>;
+> +			reset-gpios =3D <&gpx1 5 0>;
+> +			edid-emulation =3D <5>;
+> +			panel =3D <&panel>;
+> +		};
+>  	};
+> =20
+>  	i2s0: i2s@03830000 {
+> @@ -389,11 +398,13 @@
+>  		vdd_pll-supply =3D <&ldo8_reg>;
+>  	};
+> =20
+> -	backlight {
+> +	backlight: backlight {
+>  		compatible =3D "pwm-backlight";
+>  		pwms =3D <&pwm 0 1000000 0>;
+>  		brightness-levels =3D <0 100 500 1000 1500 2000 2500 2800>;
+>  		default-brightness-level =3D <7>;
+> +		enable-gpios =3D <&gpx3 0 0>;
+> +		power-supply =3D <&fet1>;
+>  		pinctrl-0 =3D <&pwm0_out>;
+>  		pinctrl-names =3D "default";
+>  	};
+> @@ -403,6 +414,12 @@
+>  		samsung,invert-vclk;
+>  	};
+> =20
+> +	panel: panel-simple {
 
- drivers/rtc/Kconfig     |   11 ++
- drivers/rtc/Makefile    |    1 +
- drivers/rtc/rtc-rk808.c |  464 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 476 insertions(+)
- create mode 100644 drivers/rtc/rtc-rk808.c
+Just "panel"? (AF)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index a168e96..48f61b2 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -288,6 +288,17 @@ config RTC_DRV_MAX77686
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-max77686.
- 
-+config RTC_DRV_RK808
-+	tristate "Rockchip RK808 RTC"
-+	depends on MFD_RK808
-+	help
-+	  If you say yes here you will get support for the
-+	  RTC of Rk808 PMIC.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-rk808.
-+
-+
- config RTC_DRV_RS5C372
- 	tristate "Ricoh R2025S/D, RS5C372A/B, RV5C386, RV5C387A"
- 	help
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 56f061c..91fe4647 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -109,6 +109,7 @@ obj-$(CONFIG_RTC_DRV_PUV3)	+= rtc-puv3.o
- obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
- obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
- obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
-+obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
- obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
- obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
- obj-$(CONFIG_RTC_DRV_RS5C348)	+= rtc-rs5c348.o
-diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
-new file mode 100644
-index 0000000..51bb410
---- /dev/null
-+++ b/drivers/rtc/rtc-rk808.c
-@@ -0,0 +1,464 @@
-+/*
-+ * RTC driver for Rockchip RK808
-+ *
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/time.h>
-+#include <linux/rtc.h>
-+#include <linux/slab.h>
-+#include <linux/bcd.h>
-+#include <linux/interrupt.h>
-+#include <linux/ioctl.h>
-+#include <linux/completion.h>
-+#include <linux/mfd/rk808.h>
-+#include <linux/delay.h>
-+#include <linux/platform_device.h>
-+#include <linux/miscdevice.h>
-+#include <linux/i2c.h>
-+#include <linux/irqdomain.h>
-+#include <linux/clk-provider.h>
-+
-+/* RTC_CTRL_REG bitfields */
-+#define BIT_RTC_CTRL_REG_STOP_RTC_M		0x01
-+#define BIT_RTC_CTRL_REG_ROUND_30S_M		0x02
-+#define BIT_RTC_CTRL_REG_AUTO_COMP_M		0x04
-+#define BIT_RTC_CTRL_REG_MODE_12_24_M		0x08
-+#define BIT_RTC_CTRL_REG_TEST_MODE_M		0x10
-+#define BIT_RTC_CTRL_REG_SET_32_COUNTER_M	0x20
-+#define BIT_RTC_CTRL_REG_GET_TIME_M		0x40
-+#define BIT_RTC_CTRL_REG_RTC_V_OPT_M		0x80
-+
-+/* RTC_STATUS_REG bitfields */
-+#define BIT_RTC_STATUS_REG_RUN_M		0x02
-+#define BIT_RTC_STATUS_REG_1S_EVENT_M		0x04
-+#define BIT_RTC_STATUS_REG_1M_EVENT_M		0x08
-+#define BIT_RTC_STATUS_REG_1H_EVENT_M		0x10
-+#define BIT_RTC_STATUS_REG_1D_EVENT_M		0x20
-+#define BIT_RTC_STATUS_REG_ALARM_M		0x40
-+#define BIT_RTC_STATUS_REG_POWER_UP_M		0x80
-+
-+/* RTC_INTERRUPTS_REG bitfields */
-+#define BIT_RTC_INTERRUPTS_REG_EVERY_M		0x03
-+#define BIT_RTC_INTERRUPTS_REG_IT_TIMER_M	0x04
-+#define BIT_RTC_INTERRUPTS_REG_IT_ALARM_M	0x08
-+
-+/* DEVCTRL bitfields */
-+#define BIT_RTC_PWDN				0x40
-+
-+/* REG_SECONDS_REG through REG_YEARS_REG is how many registers? */
-+#define ALL_TIME_REGS				7
-+#define ALL_ALM_REGS				6
-+
-+#define RTC_SET_TIME_RETRIES	5
-+#define RTC_GET_TIME_RETRIES	5
-+
-+struct rk808_rtc {
-+	struct rk808 *rk808;
-+	struct rtc_device *rtc;
-+	unsigned int alarm_enabled:1;
-+};
-+
-+/*
-+ * Read current time and date in RTC
-+ */
-+static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
-+{
-+	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
-+	struct rk808 *rk808 = rk808_rtc->rk808;
-+	int ret;
-+	u8 rtc_data[ALL_TIME_REGS + 1];
-+
-+	/* Has the RTC been programmed? */
-+	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+				 BIT_RTC_CTRL_REG_RTC_V_OPT_M, 0);
-+	if (ret) {
-+		dev_err(dev, "Failed to update RTC control: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_bulk_read(rk808->regmap, RK808_SECONDS_REG, rtc_data, 6);
-+	if (ret) {
-+		dev_err(dev, "Failed to bulk read rtc_data: %d\n", ret);
-+		return ret;
-+	}
-+	tm->tm_sec = bcd2bin(rtc_data[0]);
-+	tm->tm_min = bcd2bin(rtc_data[1]);
-+	tm->tm_hour = bcd2bin(rtc_data[2]);
-+	tm->tm_mday = bcd2bin(rtc_data[3]);
-+	tm->tm_mon = bcd2bin(rtc_data[4]) - 1;
-+	tm->tm_year = bcd2bin(rtc_data[5]) + 100;
-+	tm->tm_wday = bcd2bin(rtc_data[6]);
-+	dev_dbg(dev, "RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
-+		1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
-+		tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Set current time and date in RTC
-+ */
-+static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
-+	struct rk808 *rk808 = rk808_rtc->rk808;
-+	int ret;
-+	uint32_t rtc_data[ALL_TIME_REGS + 1];
-+
-+	rtc_data[0] = bin2bcd(tm->tm_sec);
-+	rtc_data[1] = bin2bcd(tm->tm_min);
-+	rtc_data[2] = bin2bcd(tm->tm_hour);
-+	rtc_data[3] = bin2bcd(tm->tm_mday);
-+	rtc_data[4] = bin2bcd(tm->tm_mon + 1);
-+	rtc_data[5] = bin2bcd(tm->tm_year - 100);
-+	rtc_data[6] = bin2bcd(tm->tm_wday);
-+	dev_dbg(dev, "set RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
-+		1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
-+		tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
-+
-+	/* Stop RTC while updating the RTC registers */
-+	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+				 BIT_RTC_CTRL_REG_STOP_RTC_M,
-+				 BIT_RTC_CTRL_REG_STOP_RTC_M);
-+	if (ret) {
-+		dev_err(dev, "Failed to update RTC control: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_bulk_write(rk808->regmap, RK808_SECONDS_REG, rtc_data, 6);
-+	if (ret) {
-+		dev_err(dev, "Failed to bull write rtc_data: %d\n", ret);
-+		return ret;
-+	}
-+	/* Start RTC again */
-+	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
-+	if (ret) {
-+		dev_err(dev, "Failed to update RTC control: %d\n", ret);
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+/*
-+ * Read alarm time and date in RTC
-+ */
-+static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
-+	struct rk808 *rk808 = rk808_rtc->rk808;
-+	int ret;
-+	uint32_t int_reg;
-+	u8 alrm_data[ALL_ALM_REGS + 1];
-+
-+	ret = regmap_bulk_read(rk808->regmap,
-+			       RK808_ALARM_SECONDS_REG, alrm_data, 6);
-+
-+	/* some of these fields may be wildcard/"match all" */
-+	alrm->time.tm_sec = bcd2bin(alrm_data[0]);
-+	alrm->time.tm_min = bcd2bin(alrm_data[1]);
-+	alrm->time.tm_hour = bcd2bin(alrm_data[2]);
-+	alrm->time.tm_mday = bcd2bin(alrm_data[3]);
-+	alrm->time.tm_mon = bcd2bin(alrm_data[4]) - 1;
-+	alrm->time.tm_year = bcd2bin(alrm_data[5]) + 100;
-+
-+	ret = regmap_read(rk808->regmap, RK808_RTC_INT_REG, &int_reg);
-+	if (ret) {
-+		dev_err(dev, "Failed to read RTC INT REG: %d\n", ret);
-+		return ret;
-+	}
-+
-+	dev_dbg(dev, "alrm read RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
-+		1900 + alrm->time.tm_year, alrm->time.tm_mon + 1,
-+		alrm->time.tm_mday, alrm->time.tm_wday, alrm->time.tm_hour,
-+		alrm->time.tm_min, alrm->time.tm_sec);
-+
-+	alrm->enabled = (int_reg & BIT_RTC_INTERRUPTS_REG_IT_ALARM_M) ? 1 : 0;
-+
-+	return 0;
-+}
-+
-+static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
-+{
-+	int ret;
-+	struct rk808 *rk808 = rk808_rtc->rk808;
-+
-+	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
-+				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M, 0);
-+	if (!ret)
-+		rk808_rtc->alarm_enabled = 0;
-+
-+	return ret;
-+}
-+
-+static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
-+{
-+	int ret;
-+	struct rk808 *rk808 = rk808_rtc->rk808;
-+
-+	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
-+				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M,
-+				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
-+	if (!ret)
-+		rk808_rtc->alarm_enabled = 1;
-+
-+	return ret;
-+}
-+
-+static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
-+	struct rk808 *rk808 = rk808_rtc->rk808;
-+	int ret;
-+	unsigned char alrm_data[ALL_TIME_REGS + 1];
-+
-+	ret = rk808_rtc_stop_alarm(rk808_rtc);
-+	if (ret) {
-+		dev_err(dev, "Failed to stop alarm: %d\n", ret);
-+		return ret;
-+	}
-+	dev_dbg(dev, "alrm set RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
-+		1900 + alrm->time.tm_year, alrm->time.tm_mon + 1,
-+		alrm->time.tm_mday, alrm->time.tm_wday, alrm->time.tm_hour,
-+		alrm->time.tm_min, alrm->time.tm_sec);
-+
-+	alrm_data[0] = bin2bcd(alrm->time.tm_sec);
-+	alrm_data[1] = bin2bcd(alrm->time.tm_min);
-+	alrm_data[2] = bin2bcd(alrm->time.tm_hour);
-+	alrm_data[3] = bin2bcd(alrm->time.tm_mday);
-+	alrm_data[4] = bin2bcd(alrm->time.tm_mon + 1);
-+	alrm_data[5] = bin2bcd(alrm->time.tm_year - 100);
-+
-+	ret = regmap_bulk_write(rk808->regmap,
-+				RK808_ALARM_SECONDS_REG, alrm_data, 6);
-+	if (ret) {
-+		dev_err(dev, "Failed to bulk write: %d\n", ret);
-+		return ret;
-+	}
-+	if (alrm->enabled) {
-+		ret = rk808_rtc_start_alarm(rk808_rtc);
-+		if (ret) {
-+			dev_err(dev, "Failed to start alarm: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int rk808_rtc_alarm_irq_enable(struct device *dev,
-+				      unsigned int enabled)
-+{
-+	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
-+
-+	if (enabled)
-+		return rk808_rtc_start_alarm(rk808_rtc);
-+
-+	return rk808_rtc_stop_alarm(rk808_rtc);
-+}
-+
-+/*
-+ * We will just handle setting the frequency and make use the framework for
-+ * reading the periodic interupts.
-+ *
-+ * @freq: Current periodic IRQ freq:
-+ * bit 0: every second
-+ * bit 1: every minute
-+ * bit 2: every hour
-+ * bit 3: every day
-+ */
-+static irqreturn_t rk808_alm_irq(int irq, void *data)
-+{
-+	struct rk808_rtc *rk808_rtc = data;
-+	struct rk808 *rk808 = rk808_rtc->rk808;
-+	struct i2c_client *client = rk808->i2c;
-+	int ret;
-+	uint32_t rtc_ctl;
-+
-+	ret = regmap_update_bits(rk808->regmap, RK808_RTC_STATUS_REG,
-+				 0, 0);
-+	if (ret) {
-+		dev_err(&client->dev,
-+			"%s:Failed to update RTC status: %d\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	rtc_update_irq(rk808_rtc->rtc, 1, RTC_IRQF | RTC_AF);
-+	dev_info(&client->dev,
-+		 "%s:irq=%d,rtc_ctl=0x%x\n", __func__, irq, rtc_ctl);
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct rtc_class_ops rk808_rtc_ops = {
-+	.read_time = rk808_rtc_readtime,
-+	.set_time = rk808_rtc_set_time,
-+	.read_alarm = rk808_rtc_readalarm,
-+	.set_alarm = rk808_rtc_setalarm,
-+	.alarm_irq_enable = rk808_rtc_alarm_irq_enable,
-+};
-+
-+#ifdef CONFIG_PM
-+/* Turn off the alarm if it should not be a wake source. */
-+static int rk808_rtc_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct rk808_rtc *rk808_rtc = dev_get_drvdata(&pdev->dev);
-+	int ret;
-+
-+	if (rk808_rtc->alarm_enabled && device_may_wakeup(&pdev->dev))
-+		ret = rk808_rtc_start_alarm(rk808_rtc);
-+	else
-+		ret = rk808_rtc_stop_alarm(rk808_rtc);
-+
-+	if (ret)
-+		dev_err(&pdev->dev, "Failed to update RTC alarm: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+/* Enable the alarm if it should be enabled (in case it was disabled to
-+ * prevent use as a wake source).
-+ */
-+static int rk808_rtc_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct rk808_rtc *rk808_rtc = dev_get_drvdata(&pdev->dev);
-+	int ret;
-+
-+	if (rk808_rtc->alarm_enabled) {
-+		ret = rk808_rtc_start_alarm(rk808_rtc);
-+		if (ret)
-+			dev_err(&pdev->dev,
-+				"Failed to restart RTC alarm: %d\n", ret);
-+	}
-+
-+	return ret;
-+}
-+#else
-+#define rk808_rtc_suspend NULL
-+#define rk808_rtc_resume NULL
-+#endif
-+
-+static const struct dev_pm_ops rk808_rtc_pm_ops = {
-+	.suspend = rk808_rtc_suspend,
-+	.resume = rk808_rtc_resume,
-+	.poweroff = rk808_rtc_suspend,
-+};
-+
-+/*2012.1.1 12:00:00 Saturday*/
-+struct rtc_time tm_def = {
-+			.tm_wday = 6,
-+			.tm_year = 112,
-+			.tm_mon = 0,
-+			.tm_mday = 1,
-+			.tm_hour = 12,
-+			.tm_min = 0,
-+			.tm_sec = 0,
-+};
-+
-+static int rk808_rtc_probe(struct platform_device *pdev)
-+{
-+	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-+	struct i2c_client *client = rk808->i2c;
-+	struct rk808_rtc *rk808_rtc;
-+	struct rtc_time tm;
-+	int alm_irq;
-+	int ret;
-+
-+	rk808_rtc = devm_kzalloc(&pdev->dev, sizeof(*rk808_rtc), GFP_KERNEL);
-+	if (rk808_rtc == NULL)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, rk808_rtc);
-+	rk808_rtc->rk808 = rk808;
-+
-+	/* start rtc default */
-+	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
-+				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Failed to read RTC control: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG, 0xfe);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Failed to write RTC control: %d\n", ret);
-+			return ret;
-+	}
-+
-+	/* set init time */
-+	ret = rk808_rtc_readtime(&pdev->dev, &tm);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to read RTC time\n");
-+		return ret;
-+	}
-+	ret = rtc_valid_tm(&tm);
-+	if (ret) {
-+		dev_err(&pdev->dev, "invalid date/time and init time\n");
-+		rk808_rtc_set_time(&pdev->dev, &tm_def);
-+	}
-+
-+	device_init_wakeup(&pdev->dev, 1);
-+
-+	rk808_rtc->rtc = devm_rtc_device_register(&pdev->dev,
-+		"rk808", &rk808_rtc_ops, THIS_MODULE);
-+	if (IS_ERR(rk808_rtc->rtc)) {
-+		ret = PTR_ERR(rk808_rtc->rtc);
-+		return ret;
-+	}
-+
-+	alm_irq  = platform_get_irq(pdev, 0);
-+	if (alm_irq <= 0) {
-+		dev_warn(&pdev->dev, "Wake up is not possible as irq = %d\n",
-+			 alm_irq);
-+		return -ENXIO;
-+	}
-+
-+	/* request alarm irq of rk808 */
-+	ret = devm_request_threaded_irq(&pdev->dev, alm_irq, NULL,
-+					rk808_alm_irq,
-+					IRQF_TRIGGER_LOW | IRQF_EARLY_RESUME,
-+					"RTC alarm", rk808_rtc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to request alarm IRQ %d: %d\n",
-+			alm_irq, ret);
-+	}
-+	device_set_wakeup_capable(&pdev->dev, 1);
-+
-+	dev_info(&client->dev, "%s:ok\n", __func__);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver rk808_rtc_driver = {
-+	.probe = rk808_rtc_probe,
-+	.driver = {
-+		.name = "rk808-rtc",
-+		.pm = &rk808_rtc_pm_ops,
-+	},
-+};
-+
-+module_platform_driver(rk808_rtc_driver);
-+
-+MODULE_DESCRIPTION("RTC driver for the rk808 series PMICs");
-+MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_AUTHOR("Zhang Qing <zhanqging-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:rk808-rtc");
--- 
-1.7.9.5
+> +		compatible =3D "simple-panel";
 
+Use something more concrete than "simple-panel"? (Thierry)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		power-supply =3D <&fet6>;
+> +		backlight =3D <&backlight>;
+> +	};
+> +
+>  	dp-controller@145B0000 {
+>  		status =3D "okay";
+>  		pinctrl-names =3D "default";
+> @@ -414,21 +431,6 @@
+>  		samsung,link-rate =3D <0x0a>;
+>  		samsung,lane-count =3D <2>;
+>  		samsung,hpd-gpio =3D <&gpx0 7 0>;
+> -
+> -		display-timings {
+> -			native-mode =3D <&timing1>;
+> -
+> -			timing1: timing@1 {
+> -				clock-frequency =3D <70589280>;
+> -				hactive =3D <1366>;
+> -				vactive =3D <768>;
+> -				hfront-porch =3D <40>;
+> -				hback-porch =3D <40>;
+> -				hsync-len =3D <32>;
+> -				vback-porch =3D <10>;
+> -				vfront-porch =3D <12>;
+> -				vsync-len =3D <6>;
+> -			};
+> -		};
+> +		bridge =3D <&ptn3460>;
+>  	};
+>  };
+
+This patch will trivially conflict with my Snow cleanup [1]; ptn3460
+would go into the appropriate &i2c_* and this hunk into &dp then.
+
+Regards,
+Andreas
+
+[1] https://patchwork.kernel.org/patch/4664801/
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
