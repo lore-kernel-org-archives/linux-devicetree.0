@@ -1,67 +1,53 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Sat, 23 Aug 2014 09:14:56 -0700
-Message-ID: <20140823161456.GA2758@localhost>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
- <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
- <20140823063113.GC23715@localhost>
- <201408231556.42571.arnd@arndb.de>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH] phy: exynos5-usbdrd: Add MODULE_DEVICE_TABLE entry
+Date: Sat, 23 Aug 2014 18:23:15 +0200
+Message-ID: <53F8BFF3.8020001@suse.de>
+References: <1408715892-27728-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201408231556.42571.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1408715892-27728-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 23, 2014 at 03:56:42PM +0200, Arnd Bergmann wrote:
-> On Saturday 23 August 2014, Olof Johansson wrote:
-> > On Fri, Aug 22, 2014 at 02:10:23PM -0700, Andrew Bresticker wrote:
-> > > On Fri, Aug 22, 2014 at 1:42 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> > > >
-> > > > On Aug 21, 2014 3:05 PM, "Andrew Bresticker" <abrestic@chromium.org> wrote:
-> > > > >
-> > > > > To be consistent with other architectures and to avoid unnecessary
-> > > > > makefile duplication, move all MIPS device-trees to arch/mips/boot/dts
-> > > > > and build them with a common makefile.
-> > > >
-> > > > I recall reading that the ARM organization for DTS files was a bit unfortunate
-> > > > and should have been something like:
-> > > >
-> > > > arch/arm/boot/dts/<vendor>/
-> > > >
-> > > > Is this something we should do for the MIPS and update the other architectures
-> > > > to follow that scheme?
-> > > 
-> > > I recall reading that as well and that it would be adopted for ARM64,
-> > > but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
-> > > more.
-> > 
-> > Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
-> > and the amount of files in that directory is becoming pretty
-> > insane. Moving to a subdirectory structure later gets messy which is
-> > why we've been holding off on it.
-> 
-> Another argument is that we plan to actually move all the dts files out of
-> the kernel into a separate project in the future. We really don't want to
-> have the churn of moving all the files now when they get deleted in one
-> of the next merge windows.
+Hi,
 
-To be honest, I don't see that happening within the forseeable
-future. Some of us maintainers like talking about this, but everyone who
-actually develops have nightmares about this scenario. Nobody knows how
-it'll be done without causing some real serious impact on productivity.
+Am 22.08.2014 15:58, schrieb Sjoerd Simons:
+> Add a MODULE_DEVICE_TABLE call for OF match tables. This allows the
+> module to be autoloaded based on devicetree information.
+>=20
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+> ---
+>  drivers/phy/phy-exynos5-usbdrd.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exyno=
+s5-usbdrd.c
+> index b05302b..e9a0f54 100644
+> --- a/drivers/phy/phy-exynos5-usbdrd.c
+> +++ b/drivers/phy/phy-exynos5-usbdrd.c
+> @@ -542,6 +542,7 @@ static const struct of_device_id exynos5_usbdrd_p=
+hy_of_match[] =3D {
+>  	},
+>  	{ },
+>  };
+> +MODULE_DEVICE_TABLE (of, exynos5_usbdrd_phy_of_match);
 
-> I don't know if we talked about whether that move should be done for
-> all architectures at the same time. If that is the plan, I think it
-> would be best to not move the MIPS files at all but also wait until
-> they can get removed from the kernel tree.
+Nit: Probably there should be no space before '('?
 
-If MIPS can restructure now before things start growing, then I'd really
-recommend that they do so and not hold off waiting on some event that
-might never happen. :)
+> =20
+>  static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
+>  {
 
+Otherwise certainly sensible. I ran into another such case myself.
 
--Olof
+Regards,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
