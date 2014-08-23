@@ -1,182 +1,272 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/23] fdt: Add functions to query a node's #address- and
- #size-cells
-Date: Sat, 23 Aug 2014 13:26:57 +0200
-Message-ID: <20140823112655.GA24658@mithrandir>
-References: <1408346196-30419-1-git-send-email-thierry.reding@gmail.com>
- <1408346196-30419-2-git-send-email-thierry.reding@gmail.com>
- <CAPnjgZ2OjqZNDp8F6rXKDHBNaiBywTN1V4JP0ZoHfESF4Y9p=w@mail.gmail.com>
- <20140819105955.GA19515@ulmo>
- <CAPnjgZ09_ADtfzowAzirdwfCG9xF1fEX8Ak8j0VWoyhACJdzKQ@mail.gmail.com>
- <20140819130620.GA1586@ulmo>
- <CAPnjgZ06b3UeeXra5STLht15jU00yAKCwM+UYuqc=50Th9Jd_g@mail.gmail.com>
+From: =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 5/7] ARM: meson: dts: add basic Meson/Meson6/Meson6-atv1200
+ DTSI/DTS
+Date: Sat, 23 Aug 2014 13:27:55 +0200
+Message-ID: <53F87ABB.6060207@suse.de>
+References: <1408272594-10814-1-git-send-email-carlo@caione.org> <1408272594-10814-6-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPnjgZ06b3UeeXra5STLht15jU00yAKCwM+UYuqc=50Th9Jd_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Albert Aribaud <albert.u.boot-LhW3hqR2+23R7s880joybQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1408272594-10814-6-git-send-email-carlo@caione.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Carlo Caione <carlo@caione.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Aug 22, 2014 at 09:03:49PM -0600, Simon Glass wrote:
-> Hi Thierry,
+Am 17.08.2014 12:49, schrieb Carlo Caione:
+> The Meson6 SoC is produced by Amlogic inc. and it is based on 2 Corte=
+x A9
+> and an ARM Mali-400 GPU.
+> This patch adds two basic DTSI for the preliminary support of Meson a=
+nd
+> Meson6 SoCs. Another DTS is also added for supporting the atv1200 boa=
+rd,
+> produced by Geniatech inc.
 >=20
-> On 19 August 2014 07:06, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, Aug 19, 2014 at 06:52:22AM -0600, Simon Glass wrote:
-> >> Hi Theirry,
-> >>
-> >>
-> >> On 19 August 2014 04:59, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
-te:
-> >>
-> >> > On Mon, Aug 18, 2014 at 11:52:36AM -0600, Simon Glass wrote:
-> >> > > Hi Thierry,
-> >> > >
-> >> > > On 18 August 2014 01:16, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> > wrote:
-> >> > > > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> > > >
-> >> > > > Given a device tree node, the fdt_n_addr_cells() function will w=
-alk up
-> >> > > > the device tree and search for an #address-cells property. It re=
-turns
-> >> > > > the number of cells required by the device tree node to represen=
-t an
-> >> > > > address.
-> >> > > >
-> >> > > > Similarly the fdt_n_size_cells() function returns the number of =
-cells
-> >> > > > required by the given device tree node to represent a size. It a=
-chieves
-> >> > > > that by walking up the device tree in seach for a #size-cells pr=
-operty.
-> >> > > >
-> >> > > > If no #address-cells or #size-cells property can be found, both =
-of the
-> >> > > > functions return 1.
-> >> > > >
-> >> > > > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >> > > > ---
-> >> > > >  include/libfdt.h    | 28 ++++++++++++++++++++++++++++
-> >> > > >  lib/libfdt/fdt_ro.c | 36 ++++++++++++++++++++++++++++++++++++
-> >> > > >  2 files changed, 64 insertions(+)
-> >> > > >
-> >> > > > diff --git a/include/libfdt.h b/include/libfdt.h
-> >> > > > index a1ef1e15df3d..e7f991b388cf 100644
-> >> > > > --- a/include/libfdt.h
-> >> > > > +++ b/include/libfdt.h
-> >> > > > @@ -1638,4 +1638,32 @@ int fdt_find_regions(const void *fdt, cha=
-r *
-> >> > const inc[], int inc_count,
-> >> > > >                      struct fdt_region region[], int max_regions,
-> >> > > >                      char *path, int path_len, int add_string_ta=
-b);
-> >> > > >
-> >> > > > +/**
-> >> > > > + * fdt_n_addr_cells() - find the number of address cells requir=
-ed by
-> >> > a node
-> >> > > > + *
-> >> > > > + * Looks up the #address-cells property of the node to examine.=
- If
-> >> > that has
-> >> > > > + * no such property, walks up the device tree until it finds on=
-e in
-> >> > one of
-> >> > > > + * the device's parents. If no #address-cells property is found=
-, it is
-> >> > > > + * assumed to be 1.
-> >> > > > + *
-> >> > > > + * @param fdt          FDT blob
-> >> > > > + * @param node         node to examine
-> >> > > > + * @return number of address cells
-> >> > > > + */
-> >> > > > +int fdt_n_addr_cells(const void *fdt, int node);
-> >> > >
-> >> > > There is a new fdt_address_cells() recently that looks suitable.
-> >> > >
-> >> > > > +
-> >> > > > +/**
-> >> > > > + * fdt_n_size_cells() - find the number of size cells required =
-by a
-> >> > node
-> >> > >
-> >> > > Also fdt_size_cells().
-> >> >
-> >> > Neither of those seem to walk up the tree, so inheriting #address-ce=
-lls
-> >> > or #size-cells from a parent will not work.
-> >> >
-> >> > According to the comments in the code they're also supposed to return
-> >> > the number of cells represented by a bus, not a device (which might
-> >> > explain why it doesn't walk up the tree).
-> >> >
-> >> > I also can't reuse them to implement these fdt_n_addr_cells() and
-> >> > fdt_n_size_cells() functions because they don't return an accurate e=
-rror
-> >> > if the #address-cells and #size-cells are not found, therefore it's
-> >> > impossible to decide when to climb further up the tree.
-> >> >
-> >>
-> >> OK but I have one more question. I thought that dtc gave a warning whe=
-n you
-> >> don't explicitly specify these values in the parent node?
-> >
-> > It doesn't explicitly warn about the properties being absent. Rather it
-> > will fallback to the default (#address-cells =3D <2>, #size-cells =3D <=
-1> in
-> > the version that I have) and warn if those don't match what's expected.
-> >
-> > Interestingly as opposed to what the Linux kernel does, DTC doesn't seem
-> > to climb further up the tree if it can't find the properties in a device
-> > tree node. Instead, it seems to always use the default values instead.
-> >
-> > Adding the devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org mailing list. Maybe somebody there
-> > can help iron out this inconsistency. ePAPR explicitly says that both
-> > "... #address-cells and #size-cells properties are not inherited from
-> > ancestors in the device tree. They shall be explicitly defined." (see
-> > 2.3.5 "#address-cells and #size-cells").
+> Signed-off-by: Carlo Caione <carlo@caione.org>
+> ---
+>  arch/arm/boot/dts/Makefile           |  1 +
+>  arch/arm/boot/dts/meson.dtsi         | 75 ++++++++++++++++++++++++++=
+++++++++++
+>  arch/arm/boot/dts/meson6-atv1200.dts | 27 +++++++++++++
+>  arch/arm/boot/dts/meson6.dtsi        | 44 +++++++++++++++++++++
+>  4 files changed, 147 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/meson.dtsi
+>  create mode 100644 arch/arm/boot/dts/meson6-atv1200.dts
+>  create mode 100644 arch/arm/boot/dts/meson6.dtsi
 >=20
-> That's my understanding too. So should we drop this patch?
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b8c5cd3..604acce 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -159,6 +159,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) +=3D kirkwood-b3.dtb =
+\
+>  	kirkwood-ts419-6282.dtb
+>  dtb-$(CONFIG_ARCH_LPC32XX) +=3D ea3250.dtb phy3250.dtb
+>  dtb-$(CONFIG_ARCH_MARCO) +=3D marco-evb.dtb
+> +dtb-$(CONFIG_MACH_MESON6) +=3D meson6-atv1200.dtb
+>  dtb-$(CONFIG_ARCH_MOXART) +=3D moxart-uc7112lx.dtb
+>  dtb-$(CONFIG_ARCH_MXC) +=3D \
+>  	imx25-eukrea-mbimxsd25-baseboard.dtb \
+> diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.d=
+tsi
+> new file mode 100644
+> index 0000000..934bb2c
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/meson.dtsi
+> @@ -0,0 +1,75 @@
+> +/*
+> + * Copyright 2014 Carlo Caione <carlo@caione.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms of the GNU General Public License as published by=
+ the
+> + * Free Software Foundation; either version 2 of the License, or (at=
+ your
+> + * option) any later version.
+> + */
+> +
+> +/include/ "skeleton.dtsi"
+> +
+> +/ {
+> +	interrupt-parent =3D <&gic>;
+> +
+> +	aliases {
+> +		serial0 =3D &uart_AO;
+> +		serial1 =3D &uart_A;
+> +		serial2 =3D &uart_B;
+> +		serial3 =3D &uart_C;
+> +	};
+> +
+> +	gic: interrupt-controller@c4301000 {
+> +		compatible =3D "arm,cortex-a9-gic";
+> +		reg =3D <0xc4301000 0x1000>,
+> +		      <0xc4300100 0x0100>;
+> +		interrupt-controller;
+> +		#interrupt-cells =3D <3>;
+> +	};
+> +
+> +	timer@c1109940 {
+> +		compatible =3D "amlogic,meson6-timer";
+> +		reg =3D <0xc1109940 0x14>;
+> +		interrupts =3D <0 10 1>;
+> +	};
+> +
+> +	soc@c8100000 {
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		ranges;
+> +
+> +		uart_AO: serial@c81004c0 {
+> +			compatible =3D "amlogic,meson-uart";
+> +			reg =3D <0xc81004c0 0x14>;
+> +			interrupts =3D <0 90 1>;
+> +			clocks =3D <&clk81>;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart_A: serial@c81084c0 {
+> +			compatible =3D "amlogic,meson-uart";
+> +			reg =3D <0xc81084c0 0x14>;
+> +			interrupts =3D <0 90 1>;
+> +			clocks =3D <&clk81>;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart_B: serial@c81084dc {
+> +			compatible =3D "amlogic,meson-uart";
+> +			reg =3D <0xc81084dc 0x14>;
+> +			interrupts =3D <0 90 1>;
+> +			clocks =3D <&clk81>;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		uart_C: serial@c8108700 {
+> +			compatible =3D "amlogic,meson-uart";
+> +			reg =3D <0xc8108700 0x14>;
+> +			interrupts =3D <0 90 1>;
+> +			clocks =3D <&clk81>;
+> +			status =3D "disabled";
+> +		};
+> +	};
+> +}; /* end of / */
+> +
 
-Yes, in this particular case it works fine using the existing
-fdt_address_cells() and fdt_size_cells() functions so I've dropped this
-patch.
+Trailing blank line.
 
-Thierry
+> diff --git a/arch/arm/boot/dts/meson6-atv1200.dts b/arch/arm/boot/dts=
+/meson6-atv1200.dts
+> new file mode 100644
+> index 0000000..b358402
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/meson6-atv1200.dts
+> @@ -0,0 +1,27 @@
+> +/*
+> + * Copyright 2014 Carlo Caione <carlo@caione.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms of the GNU General Public License as published by=
+ the
+> + * Free Software Foundation; either version 2 of the License, or (at=
+ your
+> + * option) any later version.
+> + */
+> +
+> +/dts-v1/;
+> +/include/ "meson6.dtsi"
+> +
+> +/ {
+> +	model =3D "Geniatech ATV1200";
+> +	compatible =3D "geniatech,atv1200";
+> +
+> +	memory {
+> +		reg =3D <0x40000000 0x80000000>;
+> +	};
+> +
+> +	soc@c8100000 {
+> +		uart_AO: serial@c81004c0 {
+> +			status =3D "okay";
+> +		};
+> +	};
+> +}; /* end of / */
+> +
 
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature
+Since this is a new SoC, just override the status down here:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+&uart_A0 {
+	status =3D "okay";
+};
 
-iQIcBAEBAgAGBQJT+Hp/AAoJEN0jrNd/PrOhSOYQAIVI0XUtPewAk0toGH1Gpqgt
-dru6LL4MB1l37FVy4n2Lky39Ym0vI2BEf7MOz4wIBuoHvUi+wiihFsmaaRalZscE
-nP6NYbDNlYFZ0JcTUsKF3tuP6CPZBi7wzcQI7XBOoRrGoEdSjnfmpsCOfrK85Fqw
-39MAVjaom6DvYnBuYc4XZk+XN12JKHEsySYSjez30s8XedLYkN2pn77QCIieOlP1
-QKpthD9Pj2v7Mc7zEPlNoo2ZYG90j95Q3S1oYzwQ5KI6nitCpz2Al4mLpNFIQwE/
-v6cq9m0fiyxfsfgUaXPzbkbPB7zAStktCgA+pgNAQxa7v7U4ZBoP/t9VIlrTOZPw
-jU7KQimXafyKg1b52p6NkDUlTAMuHF3wJ7b+StTbaCK2EsLC8FbKieL3qk7JafdT
-df0XdGaG0qyBUXLgTM2/8GdkA0wYeynpYkQuaQPr6oim0zy+d7NsYsPByl28JLk9
-kLzxVGWhuMjGewax78UgKMqf5gsdRnhjvIaELevu/eSuX8XorKKuEKTbmmppJ6mO
-Zb+8/d4dt8V4Rq0kD3e+SM9RG9qRAxuO34O+9ogT4wjd2ynoc+RDL0wJhZEiUcH1
-J7lkoYgjvLnIopKfIdHQXjH1rZTf1Jp9nVkoV8grqx1hUYFTtnzRZz02BN4bW6Ai
-K1lTjXiCr9w91uSCrvK5
-=pYus
------END PGP SIGNATURE-----
+That decouples it from how you name the SoC node exactly.
 
---IJpNTDwzlM2Ie8A6--
+> diff --git a/arch/arm/boot/dts/meson6.dtsi b/arch/arm/boot/dts/meson6=
+=2Edtsi
+> new file mode 100644
+> index 0000000..d62add4
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/meson6.dtsi
+> @@ -0,0 +1,44 @@
+> +/*
+> + * Copyright 2014 Carlo Caione <carlo@caione.org>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms of the GNU General Public License as published by=
+ the
+> + * Free Software Foundation; either version 2 of the License, or (at=
+ your
+> + * option) any later version.
+> + */
+> +
+> +/include/ "meson.dtsi"
+> +
+> +/ {
+> +	model =3D "Amlogic Meson6 SoC";
+> +	compatible =3D "amlogic,meson6", "amlogic,8726_mx";
+
+In the cover letter you said AML8726-MX - why underscore here?
+
+In 3.17-rc1 at least I don't see the amlogic prefix documented. If so,
+you should probably add it to
+Documentation/devicetree/bindings/vendor-prefixes.txt. Similarly, shoul=
+d
+you document some of those amlogic,* compatible strings in a new
+=2E../bindings/arm/amlogic.txt file?
+
+Same applies to geniatech further above. checkpatch.pl should warn abou=
+t
+undocumented compatible strings.
+
+Cf.
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Doc=
+umentation/devicetree/bindings/submitting-patches.txt
+
+> +
+> +	interrupt-parent =3D <&gic>;
+> +
+> +	cpus {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		cpu@0 {
+> +			device_type =3D "cpu";
+> +			compatible =3D "arm,cortex-a9";
+> +			reg =3D <0x200>;
+> +		};
+> +
+> +		cpu@1 {
+> +			device_type =3D "cpu";
+> +			compatible =3D "arm,cortex-a9";
+> +			reg =3D <0x1>;
+> +		};
+> +	};
+> +
+> +	clocks {
+> +		#address-cells =3D <1>;
+> +
+> +		clk81: clk@0 {
+> +			#clock-cells =3D <0>;
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <200000000>;
+> +		};
+> +	};
+> +}; /* end of / */
+
+Cheers,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
