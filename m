@@ -1,53 +1,35 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: hummingboard: gpio-ir on gpio 3,5
-Date: Sat, 23 Aug 2014 15:33:05 +0100
-Message-ID: <20140823143305.GQ30401@n2100.arm.linux.org.uk>
-References: <20140823091058.GO30401@n2100.arm.linux.org.uk> <E1XL7MR-0002yX-6N@rmk-PC.arm.linux.org.uk> <CAOMZO5C=xyYLLBX1PDsJQ9NwzXZxCWTvPMTUWzYcoohOOvA_qA@mail.gmail.com> <20140823133649.GP30401@n2100.arm.linux.org.uk> <CAOMZO5DrtrEJxmCZSO6RVZom8kzZhu2dikntRwYZeq5j_QZ9sw@mail.gmail.com>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Sat, 23 Aug 2014 16:48:52 +0200
+Message-ID: <CAOiHx=noe=614vv4GyhuvfoAYj0jYDhO5vX+7M2RbQBpE-uPnQ@mail.gmail.com>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+ <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
+ <20140823063113.GC23715@localhost> <201408231556.42571.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5DrtrEJxmCZSO6RVZom8kzZhu2dikntRwYZeq5j_QZ9sw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <201408231556.42571.arnd-r2nGTMty4D4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 23, 2014 at 10:56:37AM -0300, Fabio Estevam wrote:
-> On Sat, Aug 23, 2014 at 10:36 AM, Russell King - ARM Linux
-> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> > On Sat, Aug 23, 2014 at 10:32:23AM -0300, Fabio Estevam wrote:
-> >> On Sat, Aug 23, 2014 at 6:11 AM, Russell King
-> >> <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> >>
-> >> > -                               MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
-> >> > +                               MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x80000000
-> >>
-> >> It would be better to replace the '0x80000000' with the real iomux
-> >> value (like 0x1b0b0 for example), so that we do not need to rely on
-> >> the bootloader doing the correct configuration for us.
-> >
-> > I'd just end up choosing something which appears to work - I've no idea
-> > at present what an appropriate value should be here.
-> 
-> In the working system, you could read the register:
-> 
-> IOMUXC_SW_PAD_CTL_PAD_EIM_AD05 (address: 0x20E043C)
-> 
-> Most likely it will return the default value of 0xb0b1 if the
-> bootloader has not re-configured it.
+On Sat, Aug 23, 2014 at 3:56 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> Another argument is that we plan to actually move all the dts files out of
+> the kernel into a separate project in the future. We really don't want to
+> have the churn of moving all the files now when they get deleted in one
+> of the next merge windows.
+>
+> I don't know if we talked about whether that move should be done for
+> all architectures at the same time. If that is the plan, I think it
+> would be best to not move the MIPS files at all but also wait until
+> they can get removed from the kernel tree.
 
-Most of the pins not associated with booting the kernel are left
-unconfigured by the boot loader - that's because uboot SPL has very
-little space for such things.
+I wonder how this is supposed to work with dtbs that are currently
+expected to be built into the kernel?
 
-Rabeeh has just told me that 0x1b0b1 would be a better value for it.
-I'll add an additional patch to the series for that, rather than
-modifying Rabeeh's original patch.
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+Jonas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
