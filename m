@@ -1,145 +1,93 @@
-From: Loc Ho <lho@apm.com>
-Subject: [PATCH v5 4/4] arm64: Add APM X-Gene SoC EDAC DTS entries
-Date: Sat, 23 Aug 2014 01:23:08 -0600
-Message-ID: <1408778588-3215-5-git-send-email-lho@apm.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v5 0/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Sat, 23 Aug 2014 00:28:40 -0700
+Message-ID: <CAPw-ZTmRK8VuYjrjBYfVCk1J+j+fuc8T-e-3HreKOYbuK56wVw@mail.gmail.com>
 References: <1408778588-3215-1-git-send-email-lho@apm.com>
- <1408778588-3215-2-git-send-email-lho@apm.com>
- <1408778588-3215-3-git-send-email-lho@apm.com>
- <1408778588-3215-4-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1408778588-3215-4-git-send-email-lho@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dougthompson@xmission.com, bp@alien8.de, m.chehab@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
-Cc: devicetree@vger.kernel.org, Feng Kan <fkan@apm.com>, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408778588-3215-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC EDAC DTS entries.
+Hi Rob,
 
-Signed-off-by: Feng Kan <fkan@apm.com>
-Signed-off-by: Loc Ho <lho@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   98 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 98 insertions(+), 0 deletions(-)
+Any update on the ARM64 memory scrub patch since posted v3?
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index c0aceef..2b74d15 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -315,6 +315,104 @@
- 			interrupts = <0x0 0x4f 0x4>;
- 		};
- 
-+		edacmc0: edacmc0@7e800000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e800000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc1: edacmc1@7e840000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e840000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc2: edacmc2@7e880000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e880000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc3: edacmc3@7e8c0000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e8c0000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd0: edacpmd0@7c000000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c000000 0x0 0x200000>,
-+			      <0x0 0x1054a000 0x0 0x10>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd1: edacpmd1@7c200000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c200000 0x0 0x200000>,
-+			      <0x0 0x1054a000 0x0 0x10>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd2: edacpmd2@7c400000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c400000 0x0 0x200000>,
-+			      <0x0 0x1054a000 0x0 0x10>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd3: edacpmd3@7c600000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c600000 0x0 0x200000>,
-+			      <0x0 0x1054a000 0x0 0x10>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacl3: edacl3@7e600000 {
-+			compatible = "apm,xgene-edac-l3";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e600000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacsoc: edacsoc@7e930000 {
-+			compatible = "apm,xgene-edac-soc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e930000 0x0 0x1000>,
-+			      <0x0 0x7e000000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>,
-+				     <0x0 0x27 0x4>;
-+		};
-+
- 		phy1: phy@1f21a000 {
- 			compatible = "apm,xgene-phy";
- 			reg = <0x0 0x1f21a000 0x0 0x100>;
--- 
-1.5.5
+-Loc
+
+On Sat, Aug 23, 2014 at 12:23 AM, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org> wrote:
+> This patch adds support for the APM X-Gene SoC EDAC driver.
+>
+> v5:
+> * Rebase to 3.17.rc1 (next)
+> * Update binding documentation for additional SoC node binding resource
+> * Enable MCU correctable and uncorrectable interrupts if not enabled by
+>   firmware
+> * Enable top level interrupt only after all MCU registered. Otherwise,
+>   error interrupt will never get cleared by the corresponding MCU.
+> * Remove clearing of L1 and L2 errors during initialization time. Otherwise,
+>   they will not be captured between firmware booting and error configuration.
+> * Add capture and clearing SoC register bus errors
+> * Add register bus resource to SoC DT node
+>
+> v4:
+> * Fix PMD l1/l2 error reading address due to wrong variable type
+> * Fix clearing of software generated and HW errors for l1/l2
+>
+> v3:
+> * Update binding documentation for PMD DT node and exampples
+> * Add binding documentation for SoC DT node
+> * Change MC, PMD, and L3C driver error injection to use debugfs
+> * Add missing IRQ for MC correctable error (code and DT)
+> * Use true/false where appropriate instead 1/0
+> * Add bit definition for L1 MMUESR register and fully decode this error
+> * Remove the un-necessary dev variable from xgene_edac_pmd_ctx structure
+> * Add check for disabled PMD (code and DT)
+> * Switch to edac_printk instead pr_err
+> * Some minor comments update
+>
+> v2:
+> * Add EDAC entry in MAINTAINERS for APM EDAC driver
+> * Remove the MC scrub patch
+> * Remove the word 'Caches' from Kconfig
+> * Change all MASK defines to use BIT(x)
+> * Update comment or remove them
+> * Wrap error injection code around CONFIG_EDAC_DEBUG
+> * Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
+> * Change all function XXX_hw_init to XXX_hw_ctl
+> * Fix typo 'activie'
+> * Move calling function edac_mc_alloc after resource retrieval
+> * Check for NULL on platform_get_resource return if reference directly
+> * Add documentation for struct xgene_edac_pmd_ctx
+> * Move L1 and L2 check out of function xgene_edac_pmd_check to its own
+>   functions
+> * Use for loop for configure each CPU of an PMD
+> * Replace /2 by >> 1
+> * Remove unnecessary comment on edac_device_add_device failure
+> * Make mem_err_ip static const
+> * Unwind EDAC register correctly if failed
+> ---
+> Loc Ho (4):
+>   MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
+>   Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
+>     binding
+>   edac: Add APM X-Gene SoC EDAC driver
+>   arm64: Add APM X-Gene SoC EDAC DTS entries
+>
+>  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   83 +
+>  MAINTAINERS                                        |    8 +
+>  arch/arm64/boot/dts/apm-storm.dtsi                 |   98 +
+>  drivers/edac/Kconfig                               |    9 +-
+>  drivers/edac/Makefile                              |    3 +
+>  drivers/edac/xgene_edac.c                          | 2132 ++++++++++++++++++++
+>  6 files changed, 2332 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+>  create mode 100644 drivers/edac/xgene_edac.c
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
