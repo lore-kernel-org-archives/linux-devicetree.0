@@ -1,67 +1,85 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 6/6] ARM: dts: hummingboard: gpio-ir on gpio 3,5
-Date: Sat, 23 Aug 2014 10:11:47 +0100
-Message-ID: <E1XL7MR-0002yX-6N@rmk-PC.arm.linux.org.uk>
-References: <20140823091058.GO30401@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140823091058.GO30401-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v3 0/5] Add rockchip RK808 pmic driver
+Date: Sat, 23 Aug 2014 18:27:05 +0800
+Message-ID: <1408789625-16330-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+This is the initial version of the RK808 PMIC. This is a power management IC
+for multimedia products.
 
-HummingBoard after rev 2.0 and the production one starting rev 3.0 uses
-gpio 3,5 (EIM_DA5 pad) as the gpio infra red receiver input.
+It provides regulators that are able to supply power to processor cores
+and other components. The chip provides other modules including RTC, Clockout
 
-Since the original Carrier1 board is obsolete and we are retiring it,
-update the DT file for this.  This will mean IR reception will not
-work on Carrier1 with this DT file.
+Changes in v4:
+Adviced by doug
+- add "clock-output-names" propertiey
+- add a header file "rockchip,rk808.h"
+Adviced by Lee Jones in v2
+- modify the description in Kconfig
+- remove some unnecessary header files
+- remove dev from struct rk808
+- use enum for define RK808_ID...
+- use &client->dev replace rk808->dev
+Advices by Doug
+- add a "#clock-cells" propertiy
+- update the example
 
-Signed-off-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Changes in v3:
+- fix compile err
+- fix compile err
 
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index bf38072a2779..1f355804c2cb 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -11,9 +11,9 @@
- 
- 	ir_recv: ir-receiver {
- 		compatible = "gpio-ir-receiver";
--		gpios = <&gpio1 2 1>;
-+		gpios = <&gpio3 5 1>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_hummingboard_gpio1_2>;
-+		pinctrl-0 = <&pinctrl_hummingboard_gpio3_5>;
- 	};
- 
- 	regulators {
-@@ -103,9 +103,9 @@
- 			>;
- 		};
- 
--		pinctrl_hummingboard_gpio1_2: hummingboard-gpio1_2 {
-+		pinctrl_hummingboard_gpio3_5: hummingboard-gpio3_5 {
- 			fsl,pins = <
--				MX6QDL_PAD_GPIO_2__GPIO1_IO02 0x80000000
-+				MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x80000000
- 			>;
- 		};
- 
+Changes in v2:
+Adviced by javier.martinez
+- separated from rtc-rk808.c
+Adviced by Mark Browm:
+- change of_find_node_by_name to find_child_by_name
+- use RK808_NUM_REGULATORS as the name of the constant
+- create a pdata when missing platform data
+- use the rk808_reg name to supply_regulator name
+- replace regulator_register with devm_regulator_register
+- some other problem with coding style
+Adviced by javier.martinez
+- Add a separate clock driver, rather than in RTC driver
+Adviced by Mark Browm:
+- use defines for register setting value
+- remove rtc alarm disable in shutdown
+- remove while(1) in shutdown
+- remove read 0x2f in probe
+
+Chris Zhong (5):
+  MFD: Add rk808 device tree bindings documentation
+  MFD: RK808: Add new mfd driver for RK808
+  RTC: RK808: add RTC driver for RK808
+  Regulator: RK808: Add regulator driver for RK808
+  Clk: RK808: Add clkout driver for RK808
+
+ Documentation/devicetree/bindings/mfd/rk808.txt |  133 +++++++
+ drivers/clk/Kconfig                             |    9 +
+ drivers/clk/Makefile                            |    1 +
+ drivers/clk/clk-rk808.c                         |  162 ++++++++
+ drivers/mfd/Kconfig                             |   13 +
+ drivers/mfd/Makefile                            |    1 +
+ drivers/mfd/rk808.c                             |  265 +++++++++++++
+ drivers/regulator/Kconfig                       |   10 +
+ drivers/regulator/Makefile                      |    1 +
+ drivers/regulator/rk808-regulator.c             |  404 ++++++++++++++++++++
+ drivers/rtc/Kconfig                             |   11 +
+ drivers/rtc/Makefile                            |    1 +
+ drivers/rtc/rtc-rk808.c                         |  464 +++++++++++++++++++++++
+ include/dt-bindings/clock/rockchip,rk808.h      |   11 +
+ include/linux/mfd/rk808.h                       |  211 +++++++++++
+ 15 files changed, 1697 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
+ create mode 100644 drivers/clk/clk-rk808.c
+ create mode 100644 drivers/mfd/rk808.c
+ create mode 100644 drivers/regulator/rk808-regulator.c
+ create mode 100644 drivers/rtc/rtc-rk808.c
+ create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
+ create mode 100644 include/linux/mfd/rk808.h
+
 -- 
-1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
