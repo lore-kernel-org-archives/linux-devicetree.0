@@ -1,60 +1,53 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
-Date: Sat, 23 Aug 2014 20:54:38 +0200
-Message-ID: <1465795.XsPpj3dZHX@wuerfel>
-References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr> <CAN1soZwDDwiLuVkT7kRJX-wy-UmyDj-2yiReGrpBrTOJkKpuSA@mail.gmail.com> <87ha1342ei.fsf@free.fr>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Sat, 23 Aug 2014 21:50:11 +0200
+Message-ID: <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+	<CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
+	<CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
+	<20140823063113.GC23715@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87ha1342ei.fsf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140823063113.GC23715@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 23 August 2014 18:05:41 Robert Jarzmik wrote:
-> Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> > Acked-by: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> > Only with a small comment.
-> >
-> > Regards
-> > Haojian
-> Hi Mike and Arnd,
-> 
-> I suppose this patchset didn't make it to 3.17 timeframe, right ?
-> And I don't see it scheduled either for linux-next.
-> 
-> Is there something blocking it ?
+On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof@lixom.net> wrote:
+>> > arch/arm/boot/dts/<vendor>/
+>> >
+>> > Is this something we should do for the MIPS and update the other architectures
+>> > to follow that scheme?
+>>
+>> I recall reading that as well and that it would be adopted for ARM64,
+>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
+>> more.
+>
+> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
+> and the amount of files in that directory is becoming pretty
+> insane. Moving to a subdirectory structure later gets messy which is
+> why we've been holding off on it.
 
-I didn't know we were supposed to merge it. There was no reason
-against merging it when you posted it, but you didn't make it clear
-what you want to happen.
+It would mean we can change our scripts to operate on "interesting"
+DTS files from
 
-By default, I'd expect Haojian to pick up the patches and send
-us a pull request. He sent an Ack, but also didn't make it clear
-that we should pick them up.
+     do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
 
-If you want code to be merged directly through arm-soc, please
-send the pull request "To:" arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org (with all interested
-parties the mailing lists in Cc) and ask us directly to pull it,
-to avoid all ambiguity.
+to
 
-Sometimes we can miss patches (as opposed to pull requests) since
-at least I tend to scan my inbox for the 'GIT PULL' keyword. If
-we don't seem to react within a week, just send a friendly reminder.
+    do-something-with arch/arm/boot/dts/$vendor/*
 
-For the specific case of PXA, I wonder if we should update the
-maintainer entry. As far as I can tell, Eric and Russell are no
-longer actively involved in the maintenance of PXA, and Haojian
-is doing only the bare minimum and is kept busy by other platforms
-these days (mach-hisi, mach-mmp). Should we perhaps add you and/or
-Daniel and remove some of the others if they are no longer as
-actively working on PXA?
+which is easier to type...
 
-	Arnd
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
