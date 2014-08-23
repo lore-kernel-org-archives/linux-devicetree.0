@@ -1,11 +1,15 @@
 From: Loc Ho <lho@apm.com>
-Subject: [PATCH v5 0/4] edac: Add APM X-Gene SoC EDAC driver
-Date: Sat, 23 Aug 2014 01:23:04 -0600
-Message-ID: <1408778588-3215-1-git-send-email-lho@apm.com>
+Subject: [PATCH v5 2/4] Documentation: Add documentation for the APM X-Gene
+ SoC EDAC DTS binding
+Date: Sat, 23 Aug 2014 01:23:06 -0600
+Message-ID: <1408778588-3215-3-git-send-email-lho@apm.com>
+References: <1408778588-3215-1-git-send-email-lho@apm.com>
+ <1408778588-3215-2-git-send-email-lho@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1408778588-3215-2-git-send-email-lho@apm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,73 +20,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: dougthompson@xmission.com, bp@alien8.de, m.chehab@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
-Cc: devicetree@vger.kernel.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Feng Kan <fkan@apm.com>, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the APM X-Gene SoC EDAC driver.
+This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
 
-v5:
-* Rebase to 3.17.rc1 (next)
-* Update binding documentation for additional SoC node binding resource
-* Enable MCU correctable and uncorrectable interrupts if not enabled by
-  firmware
-* Enable top level interrupt only after all MCU registered. Otherwise,
-  error interrupt will never get cleared by the corresponding MCU.
-* Remove clearing of L1 and L2 errors during initialization time. Otherwise,
-  they will not be captured between firmware booting and error configuration.
-* Add capture and clearing SoC register bus errors
-* Add register bus resource to SoC DT node
-
-v4:
-* Fix PMD l1/l2 error reading address due to wrong variable type
-* Fix clearing of software generated and HW errors for l1/l2
-
-v3:
-* Update binding documentation for PMD DT node and exampples
-* Add binding documentation for SoC DT node
-* Change MC, PMD, and L3C driver error injection to use debugfs
-* Add missing IRQ for MC correctable error (code and DT)
-* Use true/false where appropriate instead 1/0
-* Add bit definition for L1 MMUESR register and fully decode this error
-* Remove the un-necessary dev variable from xgene_edac_pmd_ctx structure
-* Add check for disabled PMD (code and DT)
-* Switch to edac_printk instead pr_err
-* Some minor comments update
-
-v2:
-* Add EDAC entry in MAINTAINERS for APM EDAC driver
-* Remove the MC scrub patch
-* Remove the word 'Caches' from Kconfig
-* Change all MASK defines to use BIT(x)
-* Update comment or remove them
-* Wrap error injection code around CONFIG_EDAC_DEBUG
-* Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
-* Change all function XXX_hw_init to XXX_hw_ctl
-* Fix typo 'activie'
-* Move calling function edac_mc_alloc after resource retrieval
-* Check for NULL on platform_get_resource return if reference directly
-* Add documentation for struct xgene_edac_pmd_ctx
-* Move L1 and L2 check out of function xgene_edac_pmd_check to its own
-  functions
-* Use for loop for configure each CPU of an PMD
-* Replace /2 by >> 1
-* Remove unnecessary comment on edac_device_add_device failure
-* Make mem_err_ip static const
-* Unwind EDAC register correctly if failed
+Signed-off-by: Feng Kan <fkan@apm.com>
+Signed-off-by: Loc Ho <lho@apm.com>
 ---
-Loc Ho (4):
-  MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
-  Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
-    binding
-  edac: Add APM X-Gene SoC EDAC driver
-  arm64: Add APM X-Gene SoC EDAC DTS entries
-
- .../devicetree/bindings/edac/apm-xgene-edac.txt    |   83 +
- MAINTAINERS                                        |    8 +
- arch/arm64/boot/dts/apm-storm.dtsi                 |   98 +
- drivers/edac/Kconfig                               |    9 +-
- drivers/edac/Makefile                              |    3 +
- drivers/edac/xgene_edac.c                          | 2132 ++++++++++++++++++++
- 6 files changed, 2332 insertions(+), 1 deletions(-)
+ .../devicetree/bindings/edac/apm-xgene-edac.txt    |   83 ++++++++++++++++++++
+ 1 files changed, 83 insertions(+), 0 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
- create mode 100644 drivers/edac/xgene_edac.c
+
+diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+new file mode 100644
+index 0000000..ce8c30e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+@@ -0,0 +1,83 @@
++* APM X-Gene SoC EDAC nodes
++
++EDAC nodes are defined to describe on-chip error detection and correction.
++There are four types of EDAC:
++
++  memory controller	- Memory controller
++  PMD (L1/L2)		- Processor module unit (PMD) L1/L2 cache
++  L3			- CPU L3 cache
++  SoC			- SoC IP such as SATA, Ethernet, and etc
++
++The following section describes the memory controller DT node binding.
++
++Required properties:
++- compatible		: Shall be "apm,xgene-edac-mc".
++- reg			: First resource shall be the PCP resource.
++			  Second resource shall be the CSW resource.
++			  Third resource shall be the MCB-A resource.
++			  Fourth resource shall be the MCB-B resource.
++			  Fifth resource shall be the MCU resource.
++- interrupts            : Interrupt-specifier for MCU error IRQ(s).
++
++The following section describes the L1/L2 DT node binding.
++
++- compatible		: Shall be "apm,xgene-edac-pmd".
++- reg			: First resource shall be the PCP resource.
++			  Second resource shall be the PMD resource.
++			  Third resource shall be the PMD efuse resource.
++- interrupts            : Interrupt-specifier for PMD error IRQ(s).
++
++The following section describes the L3 DT node binding.
++
++- compatible		: Shall be "apm,xgene-edac-l3".
++- reg			: First resource shall be the PCP resource.
++			  Second resource shall be the L3 resource.
++- interrupts            : Interrupt-specifier for L3 error IRQ(s).
++
++The following section describes the SoC DT node binding.
++
++- compatible		: Shall be "apm,xgene-edac-soc"".
++- reg			: First resource shall be the PCP resource.
++			  Second resource shall be the SoC resource.
++			  Third resource shall be the register bus resource.
++- interrupts		: Interrupt-specifier for SoC error IRQ(s).
++
++Example:
++	edacmc0: edacmc0@7e800000 {
++		compatible = "apm,xgene-edac-mc";
++		reg = <0x0 0x78800000 0x0 0x1000>,
++		      <0x0 0x7e200000 0x0 0x1000>,
++		      <0x0 0x7e700000 0x0 0x1000>,
++		      <0x0 0x7e720000 0x0 0x1000>,
++		      <0x0 0x7e800000 0x0 0x1000>;
++		interrupts = <0x0 0x20 0x4>,
++			     <0x0 0x21 0x4>;
++	};
++
++	edacl3: edacl3@7e600000 {
++		compatible = "apm,xgene-edac-l3";
++		reg = <0x0 0x78800000 0x0 0x1000>,
++		      <0x0 0x7e600000 0x0 0x1000>;
++		interrupts = <0x0 0x20 0x4>,
++			     <0x0 0x21 0x4>;
++	};
++
++	edacpmd0: edacpmd0@7c000000 {
++		compatible = "apm,xgene-edac-pmd";
++		reg = <0x0 0x78800000 0x0 0x1000>,
++		      <0x0 0x7c000000 0x0 0x200000>,
++		      <0x0 0x1054a000 0x0 0x10>;
++		interrupts = <0x0 0x20 0x4>,
++			     <0x0 0x21 0x4>;
++	};
++
++	edacsoc: edacsoc@7e930000 {
++		compatible = "apm,xgene-edac-soc";
++		reg = <0x0 0x78800000 0x0 0x1000>,
++		      <0x0 0x7e930000 0x0 0x1000>,
++		      <0x0 0x7e000000 0x0 0x1000>;
++		interrupts = <0x0 0x20 0x4>,
++			     <0x0 0x21 0x4>,
++			     <0x0 0x27 0x4>;
++	};
++
+-- 
+1.5.5
