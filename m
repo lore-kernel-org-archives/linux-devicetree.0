@@ -1,102 +1,179 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 3/3] ARM: dts: Add DT changes for display on peach_pi
-Date: Sat, 23 Aug 2014 12:29:18 +0200
-Message-ID: <53F86CFE.6070307@suse.de>
-References: <1406317464-7525-1-git-send-email-ajaykumar.rs@samsung.com> <1406317464-7525-4-git-send-email-ajaykumar.rs@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406317464-7525-4-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay Kumar <ajaykumar.rs@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, dianders@chromium.org, ajaynumb@gmail.com, joshi@samsung.com, prashanth.g@samsung.com, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Thierry Reding <thierry.reding@gmail.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 1/5] MFD: Add rk808 device tree bindings documentation
+Date: Sat, 23 Aug 2014 18:29:23 +0800
+Message-ID: <1408789763-16369-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Seeing a Reviewed-by, I'm recording comments from another thread so tha=
-t
-they don't get forgotten:
+rk808.txt: Add device tree bindings for rockchip's rk808 pmic.
 
-Am 25.07.2014 21:44, schrieb Ajay Kumar:
-> Add DT nodes for panel-simple "auo,b133htn01" panel.
-> Add backlight enable pin and backlight power supply for pwm-backlight=
-=2E
-> Also add panel phandle needed by dp to enable display on peach_pi.
->=20
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5800-peach-pi.dts |   27 ++++++++++---------=
---------
->  1 file changed, 10 insertions(+), 17 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boo=
-t/dts/exynos5800-peach-pi.dts
-> index f3ee48b..5342638 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -28,11 +28,13 @@
->  		i2c20 =3D "/spi@12d40000/cros-ec@0/i2c-tunnel";
->  	};
-> =20
-> -	backlight {
-> +	backlight: backlight {
->  		compatible =3D "pwm-backlight";
->  		pwms =3D <&pwm 0 1000000 0>;
->  		brightness-levels =3D <0 100 500 1000 1500 2000 2500 2800>;
->  		default-brightness-level =3D <7>;
-> +		enable-gpios =3D <&gpx2 2 0>;
-> +		power-supply =3D <&tps65090_fet1>;
->  		pinctrl-0 =3D <&pwm0_out>;
->  		pinctrl-names =3D "default";
->  	};
-> @@ -98,6 +100,12 @@
->  		regulator-boot-on;
->  		regulator-always-on;
->  	};
-> +
-> +	panel: panel-simple {
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Just "panel"? (AF)
+---
 
-> +		compatible =3D "auo,b133htn01", "simple-panel";
+Changes in v4:
+Adviced by doug
+- add "clock-output-names" propertiey
+- add a header file "rockchip,rk808.h"
 
-Drop "simple-panel" (Thierry)
+Changes in v3:
+- fix compile err
 
-> +		power-supply =3D <&tps65090_fet6>;
-> +		backlight =3D <&backlight>;
-> +	};
->  };
-> =20
->  &dp {
-> @@ -111,22 +119,7 @@
->  	samsung,link-rate =3D <0x0a>;
->  	samsung,lane-count =3D <2>;
->  	samsung,hpd-gpio =3D <&gpx2 6 0>;
-> -
-> -	display-timings {
-> -		native-mode =3D <&timing1>;
-> -
-> -		timing1: timing@1 {
-> -			clock-frequency =3D <150660000>;
-> -			hactive =3D <1920>;
-> -			vactive =3D <1080>;
-> -			hfront-porch =3D <60>;
-> -			hback-porch =3D <172>;
-> -			hsync-len =3D <80>;
-> -			vback-porch =3D <25>;
-> -			vfront-porch =3D <10>;
-> -			vsync-len =3D <10>;
-> -		};
-> -	};
-> +	panel =3D <&panel>;
->  };
-> =20
->  &fimd {
+Changes in v2:
+Adviced by javier.martinez
+- separated from rtc-rk808.c
 
-Regards,
-Andreas
+ Documentation/devicetree/bindings/mfd/rk808.txt |  133 +++++++++++++++++++++++
+ 1 file changed, 133 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+new file mode 100644
+index 0000000..a9368fc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+@@ -0,0 +1,133 @@
++RK808 Power Management Integrated Circuit
++
++Required properties:
++- compatible: "rockchip,rk808"
++- reg: I2C slave address
++- interrupt-parent: The parent interrupt controller.
++- interrupts: the interrupt outputs of the controller.
++- pinctrl-names: Should contain only one value - "default".
++- pinctrl-0: Should specify pin control groups used for this controller.
++- regulators: This is the list of child nodes that specify the regulator
++  initialization data for defined regulators. Not all regulators for the given
++  device need to be present. The definition for each of these nodes is defined
++  using the standard binding for regulators found at
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++- #clock-cells: the value should be 1
++
++Optional properties:
++- clock-output-names : From common clock binding to override the
++  default output clock name
++- rockchip,system-power-controller: Telling whether or not this pmic is controlling
++  the system power.
++
++Example:
++rk808: pmic@1b {
++	compatible = "rockchip,rk808";
++	interrupt-parent = <&gpio0>;
++	interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pmic_int>;
++	reg = <0x1b>;
++	#clock-cells = <1>;
++	clock-output-names = "xin32k0", "xin32k1";
++	rockchip,system-power-controller;
++
++		regulators {
++			rk808_dcdc1_reg: DCDC_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-name = "vdd_arm";
++			};
++
++			rk808_dcdc2_reg: DCDC_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <1250000>;
++				regulator-name = "vdd_gpu";
++			};
++
++			rk808_dcdc3_reg: DCDC_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vdd_ddr";
++			};
++
++			rk808_dcdc4_reg: DCDC_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vccio";
++			};
++
++			rk808_ldo1_reg: LDO_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			rk808_ldo2_reg: LDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			rk808_ldo3_reg: LDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-name = "LDO_REG3";
++			};
++
++			rk808_ldo4_reg: LDO_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++
++			rk808_ldo5_reg: LDO_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			rk808_ldo6_reg: LDO_REG6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++			};
++
++			rk808_ldo7_reg: LDO_REG7 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++			};
++
++			rk808_ldo8_reg: LDO_REG8 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			rk808_switch1_reg: SWITCH_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++			};
++
++			rk808_switch2_reg: SWITCH_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++			};
++		};
++	};
+-- 
+1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
