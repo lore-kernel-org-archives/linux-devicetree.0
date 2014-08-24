@@ -1,10 +1,8 @@
 From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Subject: [RFC 0/7] bcma: add device tree support
-Date: Sun, 24 Aug 2014 23:24:38 +0200
-Message-ID: <1408915485-8078-2-git-send-email-hauke@hauke-m.de>
-References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de>
+Date: Sun, 24 Aug 2014 23:24:37 +0200
+Message-ID: <1408915485-8078-1-git-send-email-hauke@hauke-m.de>
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408915485-8078-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
