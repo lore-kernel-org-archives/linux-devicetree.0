@@ -1,34 +1,65 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
-Date: Sun, 24 Aug 2014 14:08:19 +0200
-Message-ID: <201408241408.19861.arnd@arndb.de>
-References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr> <1465795.XsPpj3dZHX@wuerfel> <87d2bq43pc.fsf@free.fr>
+From: "Yaniv Gardi" <ygardi@codeaurora.org>
+Subject: RE: [PATCH v3] scsi: ufs-msm: add UFS controller support for Qualcomm MSM chips
+Date: Sun, 24 Aug 2014 16:51:00 +0300
+Message-ID: <000601cfbfa2$7482f3a0$5d88dae0$@codeaurora.org>
+References: <1408026157-26972-1-git-send-email-ygardi@codeaurora.org> <20140816173325.GA3961@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain;
+	charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87d2bq43pc.fsf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140816173325.GA3961@gmail.com>
+Content-Language: en-us
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Dan Aloni' <dan@kernelim.com>
+Cc: James.Bottomley@HansenPartnership.com, hch@infradead.org, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, subhashj@codeaurora.org, noag@codeaurora.org, draviv@codeaurora.org, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Vinayak Holikatti' <vinholikatti@gmail.com>, "'James E.J. Bottomley'" <JBottomley@parallels.com>, 'Grant Likely' <grant.likely@linaro.org>, 'Sujit Reddy Thumma' <sthumma@codeaurora.org>, 'Sahitya Tummala' <stummala@codeaurora.org>, "'open list:OPEN FIRMWARE AND...'" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 24 August 2014, Robert Jarzmik wrote:
-> > By default, I'd expect Haojian to pick up the patches and send
-> > us a pull request. He sent an Ack, but also didn't make it clear
-> > that we should pick them up.
-> I was thinking that they would go through the clk maintainers, hence Haojian's
-> ack. If they should go through arm-soc, they would need Mike's ack.
+Thanks Dan,
 
-Right, makes sense. We have in the past done it either way for other
-platforms. When merging the patches through the clk subsystem, it still
-makes sense to let us know of those plans and ask for an Ack from
-the arm-soc maintainers, to be sure we can plan ahead in case there
-are other (conflicting) patch sets that are sent through arm-soc.
+Your quick glance did spotted a good catch. This variable if un-necessary,
+A new version will be uploaded soon
 
-	Arnd
+Thanks,
+Yaniv
+
+
+-----Original Message-----
+From: linux-scsi-owner@vger.kernel.org
+[mailto:linux-scsi-owner@vger.kernel.org] On Behalf Of Dan Aloni
+Sent: Saturday, August 16, 2014 8:33 PM
+To: Yaniv Gardi
+Cc: James.Bottomley@HansenPartnership.com; hch@infradead.org;
+linux-kernel@vger.kernel.org; linux-scsi@vger.kernel.org;
+linux-arm-msm@vger.kernel.org; santoshsy@gmail.com;
+linux-scsi-owner@vger.kernel.org; subhashj@codeaurora.org;
+noag@codeaurora.org; draviv@codeaurora.org; Rob Herring; Pawel Moll; Mark
+Rutland; Ian Campbell; Kumar Gala; Vinayak Holikatti; James E.J. Bottomley;
+Grant Likely; Sujit Reddy Thumma; Sahitya Tummala; open list:OPEN FIRMWARE
+AND...
+Subject: Re: [PATCH v3] scsi: ufs-msm: add UFS controller support for
+Qualcomm MSM chips
+
+On Thu, Aug 14, 2014 at 05:22:18PM +0300, Yaniv Gardi wrote:
+> diff --git a/drivers/scsi/ufs/ufs-msm.h b/drivers/scsi/ufs/ufs-msm.h 
+> new file mode 100644 index 0000000..6e93f1e
+> --- /dev/null
+> +++ b/drivers/scsi/ufs/ufs-msm.h
+> @@ -0,0 +1,158 @@
+[...]
+> +};
+> +
+> +static LIST_HEAD(phy_list);
+> +
+
+Just noticed this via a quick glance - Seems that this variable is not
+referenced by any of the compilation units, what's the purpose of it?
+And as a static global in a shared private, each of the including
+compilation units gets a copy, which I am not sure was intended anyway.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dan Aloni
+--
+To unsubscribe from this list: send the line "unsubscribe linux-scsi" in the
+body of a message to majordomo@vger.kernel.org More majordomo info at
+http://vger.kernel.org/majordomo-info.html
