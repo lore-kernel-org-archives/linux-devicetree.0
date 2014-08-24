@@ -1,89 +1,33 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [RFC 7/7] ARM: BCM5301X: register bcma bus
-Date: Sun, 24 Aug 2014 23:24:45 +0200
-Message-ID: <1408915485-8078-9-git-send-email-hauke@hauke-m.de>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 2/7] bcm47xx-nvram: add new broadcom nvram driver with dt support
+Date: Sun, 24 Aug 2014 21:45:38 +0000
+Message-ID: <CACna6rx_V46wAAkRFA+XnZNX80tAdWkaYrTUV5VHxLwbC6GvfQ@mail.gmail.com>
 References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de>
+	<1408915485-8078-4-git-send-email-hauke@hauke-m.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408915485-8078-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+In-Reply-To: <1408915485-8078-4-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
----
- arch/arm/boot/dts/bcm4708.dtsi | 58 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+On 24 August 2014 21:24, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
+> This was copied from arch/mips/bcm47xx/nvram.c and modified to interact
+> with device tree. My plan is to make the MIPS bcm47xx also use this new
+> driver some time later.
 
-diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
-index 31141e8..7c240ab 100644
---- a/arch/arm/boot/dts/bcm4708.dtsi
-+++ b/arch/arm/boot/dts/bcm4708.dtsi
-@@ -31,4 +31,62 @@
- 		};
- 	};
- 
-+	nvram0: nvram@0 {
-+		compatible = "brcm,bcm47xx-nvram";
-+		reg = <0x1c000000 0x01000000>;
-+	};
-+
-+	sprom0: sprom@0 {
-+		compatible = "brcm,bcm47xx-sprom";
-+		nvram = <&nvram0>;
-+	};
-+
-+	aix@18000000 {
-+		compatible = "brcm,bus-aix";
-+		reg = <0x18000000 0x1000>;
-+		ranges = <0x00000000 0x18000000 0x00100000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		sprom = <&sprom0>;
-+
-+		usb2@0 {
-+			reg = <0x18021000 0x1000>;
-+			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		usb3@0 {
-+			reg = <0x18023000 0x1000>;
-+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		gmac@0 {
-+			reg = <0x18024000 0x1000>;
-+			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		gmac@1 {
-+			reg = <0x18025000 0x1000>;
-+			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		gmac@2 {
-+			reg = <0x18026000 0x1000>;
-+			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		gmac@3 {
-+			reg = <0x18027000 0x1000>;
-+			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pcie@0 {
-+			reg = <0x18012000 0x1000>;
-+			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		pcie@1 {
-+			reg = <0x18013000 0x1000>;
-+			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
- };
--- 
-1.9.1
+I don't like this.
 
+First, you change API (_getenv call), without explanation why/if we
+really need this. We decided we're very unlikely to ever find devices
+with multiple (separated) NVRAMs. So what's the point of having nvram
+per device?
+
+Secondly, don't duplicate the code. If you're going to switch bcm47xx
+to this new code, handle it smarter. Modify bcm47xx mode, move it to
+the "misc" and re-use in bcm53xx.
 --
 To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
