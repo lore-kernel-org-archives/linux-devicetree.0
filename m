@@ -1,54 +1,60 @@
 From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [RFC 3/7] bcm47xx-sprom: add Broadcom sprom parser driver
-Date: Mon, 25 Aug 2014 17:01:27 +0200
-Message-ID: <CAOiHx=kcnZqkUxTc64oWWnyet2wXZe+3A1Lt2C5kvjgVjgwcVw@mail.gmail.com>
-References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de>
- <1408915485-8078-5-git-send-email-hauke@hauke-m.de> <8344390.rjnOcYBCET@wuerfel>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Mon, 25 Aug 2014 17:17:41 +0200
+Message-ID: <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+ <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
+ <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
+ <20140823063113.GC23715@localhost> <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8344390.rjnOcYBCET@wuerfel>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 25, 2014 at 9:52 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Sunday 24 August 2014 23:24:41 Hauke Mehrtens wrote:
->> This driver needs an nvram driver and fetches the sprom values from the
->> nvram and provides it to any other driver. The calibration data for the
->> wifi chip the mac address and some more board description data is
->> stores in the sprom.
+On Sat, Aug 23, 2014 at 9:50 PM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> > arch/arm/boot/dts/<vendor>/
+>>> >
+>>> > Is this something we should do for the MIPS and update the other architectures
+>>> > to follow that scheme?
+>>>
+>>> I recall reading that as well and that it would be adopted for ARM64,
+>>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
+>>> more.
 >>
->> This is based on a copy of arch/mips/bcm47xx/sprom.c and my plan is to
->> make the bcm47xx MIPS SoCs also use this driver some time later.
+>> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
+>> and the amount of files in that directory is becoming pretty
+>> insane. Moving to a subdirectory structure later gets messy which is
+>> why we've been holding off on it.
 >
->> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->> ---
->>  .../devicetree/bindings/misc/bcm47xx-sprom.txt     |  16 +
+> It would mean we can change our scripts to operate on "interesting"
+> DTS files from
 >
-> I'd prefer not to list the binding in a 'misc' category. Maybe we can
-> have a new category and move the misc/sram.txt into the same?
+>      do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
 >
->>  drivers/misc/Kconfig                               |  14 +
->>  drivers/misc/Makefile                              |   1 +
->>  drivers/misc/bcm47xx-sprom.c                       | 690 +++++++++++++++++++++
+> to
 >
-> On a similar note, putting the driver into drivers/misc seems
-> suboptimal: misc drivers should by definition be something that
-> is for some odd hardware with no external dependencies on it,
-> whereas your driver seems to be used by multiple other drivers.
+>     do-something-with arch/arm/boot/dts/$vendor/*
 >
-> Would it make sense to put it into drivers/bcma when that is the
-> only bus it is used on?
+> which is easier to type...
 
-If the driver will be used for bcm47xx/mips, it will be used for two
-busses, bcma and ssb, so it will need to be at a common
-location.
+Btw, do you mean chip-vendor or device-vendor with vendor?
+Device-vendor could get a bit messy on the source part as the router
+manufacturers tend to switch them quite often. E.g. d-link used arm,
+mips and ubi32 chips from marvell, ubicom, broadcom, atheros, realtek
+and ralink for their dir-615 router, happily switching back and forth.
+There are 14 known different hardware revisions of it where the chip
+differed from the previous one.
+
 
 
 Jonas
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
