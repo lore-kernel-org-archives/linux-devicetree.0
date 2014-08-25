@@ -1,185 +1,257 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] Removes OF_SELFTEST dependency on OF_DYNAMIC
-Date: Mon, 25 Aug 2014 06:43:34 -0700
-Message-ID: <1408974215-24887-1-git-send-email-gaurav.minocha.os@gmail.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] pinctrl: Qualcomm SPMI PMIC pin controller driver
+Date: Mon, 25 Aug 2014 17:00:39 +0300
+Message-ID: <1408975239.5256.39.camel@iivanov-dev>
+References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
+	 <1407771634-14946-5-git-send-email-iivanov@mm-sol.com>
+	 <20140821061607.GF16274@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140821061607.GF16274-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is used to remove the selftests dependency on
-OF_DYNAMIC config flag. Now, it executes only the tests
-that do not depend upon CONFIG_OF_DYNAMIC. Also, it
-defines the functions to attach and detach the node
-if OF_DYNAMIC flag isn't enabled.
+On Wed, 2014-08-20 at 23:16 -0700, Bjorn Andersson wrote:
+> On Mon 11 Aug 08:40 PDT 2014, Ivan T. Ivanov wrote:
+> 
+> > From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > 
+> > This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> > Qualcomm GPIO and MPP sub-function blocks found in the PMIC chips.
+> > 
+> 
+> Hi Ivan,
+> 
+> I'm not very fond of the mixing of gpio and mpp in the same driver, there are
+> so many places where you have extra complexity to handle the fact that both are
+> handled in the same code paths.
 
-Tested with and without OF_DYNAMIC enabled.
+I could split them. Downstream driver uses one driver for GPIO and MPP
+from all PMIC's. Initially to me it looks like GPIO's are MPP's with
+limited functionality, but it turn out that they are 2 different HW
+block with some similarities.
 
-Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/Kconfig    |    1 -
- drivers/of/selftest.c |  103 +++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+), 1 deletion(-)
+> 
+> Also, magic constans aren't good, but with all the shifts and maskes used
+> throughout this driver it's really difficult to follow the code. A lot of this
+> complexity comes from the fact that you're using regmap_update_bits(), so you
+> have to have those masks and shifts everywhere.
+> 
+> As you saw I solved this by keeping track of the various properties set by the
+> driver, another way could be to have a register shadow that you update and
+> flush - it would save you from the attrs-game in pinconf set/get.
+> 
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 5160c4e..1fe3805 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -10,7 +10,6 @@ menu "Device Tree and Open Firmware support"
- config OF_SELFTEST
- 	bool "Device Tree Runtime self tests"
- 	depends on OF_IRQ && OF_EARLY_FLATTREE
--	select OF_DYNAMIC
- 	help
- 	  This option builds in test cases for the device tree infrastructure
- 	  that are executed once at boot time, and the results dumped to the
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index a737cb5..7330007 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -39,6 +39,103 @@ static bool selftest_live_tree;
- 	} \
- }
- 
-+#if !defined(CONFIG_OF_DYNAMIC)
-+void __of_attach_node(struct device_node *np)
-+{
-+	const __be32 *phandle;
-+	int sz;
-+
-+	np->name = __of_get_property(np, "name", NULL) ? : "<NULL>";
-+	np->type = __of_get_property(np, "device_type", NULL) ? : "<NULL>";
-+	phandle = __of_get_property(np, "phandle", &sz);
-+	if (!phandle)
-+		phandle = __of_get_property(np, "linux,phandle", &sz);
-+	if (IS_ENABLED(PPC_PSERIES) && !phandle)
-+		phandle = __of_get_property(np, "ibm,phandle", &sz);
-+	np->phandle = (phandle && (sz >= 4)) ? be32_to_cpup(phandle) : 0;
-+	np->sibling = np->parent->child;
-+	np->allnext = np->parent->allnext;
-+	np->parent->allnext = np;
-+	np->parent->child = np;
-+	of_node_clear_flag(np, OF_DETACHED);
-+}
-+
-+/**
-+ * of_attach_node() - Plug a device node into the tree and global list.
-+ */
-+int of_attach_node(struct device_node *np)
-+{
-+	unsigned long flags;
-+
-+	mutex_lock(&of_mutex);
-+	raw_spin_lock_irqsave(&devtree_lock, flags);
-+	__of_attach_node(np);
-+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+	mutex_unlock(&of_mutex);
-+
-+	return 0;
-+}
-+
-+void __of_detach_node(struct device_node *np)
-+{
-+	struct device_node *parent;
-+
-+	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
-+		return;
-+
-+	parent = np->parent;
-+	if (WARN_ON(!parent))
-+		return;
-+
-+	if (of_allnodes == np)
-+		of_allnodes = np->allnext;
-+	else {
-+		struct device_node *prev;
-+
-+		for (prev = of_allnodes;
-+		     prev->allnext != np;
-+		     prev = prev->allnext)
-+			;
-+		prev->allnext = np->allnext;
-+	}
-+
-+	if (parent->child == np)
-+		parent->child = np->sibling;
-+	else {
-+		struct device_node *prevsib;
-+
-+		for (prevsib = np->parent->child;
-+		     prevsib->sibling != np;
-+		     prevsib = prevsib->sibling)
-+			;
-+		prevsib->sibling = np->sibling;
-+	}
-+
-+	of_node_set_flag(np, OF_DETACHED);
-+}
-+
-+/**
-+ * of_detach_node() - "Unplug" a node from the device tree.
-+ *
-+ * The caller must hold a reference to the node.  The memory associated with
-+ * the node is not freed until its refcount goes to zero.
-+ */
-+int of_detach_node(struct device_node *np)
-+{
-+	unsigned long flags;
-+	int rc = 0;
-+
-+	mutex_lock(&of_mutex);
-+	raw_spin_lock_irqsave(&devtree_lock, flags);
-+	__of_detach_node(np);
-+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+
-+	mutex_unlock(&of_mutex);
-+
-+	return rc;
-+}
-+#endif
-+
- static void __init of_selftest_find_node_by_name(void)
- {
- 	struct device_node *np;
-@@ -86,6 +183,7 @@ static void __init of_selftest_find_node_by_name(void)
- 
- static void __init of_selftest_dynamic(void)
- {
-+#ifdef CONFIG_OF_DYNAMIC
- 	struct device_node *np;
- 	struct property *prop;
- 
-@@ -143,6 +241,7 @@ static void __init of_selftest_dynamic(void)
- 	if (prop->value)
- 		selftest(of_add_property(np, prop) == 0,
- 			 "Adding a large property should have passed\n");
-+#endif
- }
- 
- static void __init of_selftest_parse_phandle_with_args(void)
-@@ -697,7 +796,9 @@ static int __init selftest_data_add(void)
- 		of_allnodes = selftest_data_node;
- 
- 		for_each_of_allnodes(np)
-+#ifdef CONFIG_OF_DYNAMIC
- 			__of_attach_node_sysfs(np);
-+#endif
- 		of_aliases = of_find_node_by_path("/aliases");
- 		of_chosen = of_find_node_by_path("/chosen");
- 		return 0;
-@@ -740,7 +841,9 @@ static void selftest_data_remove(void)
- 		of_chosen = NULL;
- 		for_each_child_of_node(of_allnodes, np)
- 			detach_node_and_children(np);
-+#ifdef CONFIG_OF_DYNAMIC
- 		__of_detach_node_sysfs(of_allnodes);
-+#endif
- 		of_allnodes = NULL;
- 		return;
- 	}
--- 
-1.7.9.5
+Yep. I agree. Currently my implementation is fragile because it depend
+on order of the properties in the DT files. Probably will be best if all
+settings accumulated by pin_config_group_get() are applied in correct
+order in pinmux.enable().
+
+<snip>
+
+> 
+> > +#define QPNP_PIN_PHYSICAL_OFFSET               1
+> 
+> If you just assign the of_node to the gpio_chip and then call
+> gpiochip_add_pin_range(_, _, 1, 0, _) this will give you the off-by-one you're
+> looking for.
+
+I have tried this, but something went wrong, I don't remember what. 
+Will check again.
+
+> > +
+> > +struct qpnp_pinctrl {
+> > +       struct device *dev;
+> > +       struct regmap *map;
+> > +       struct pinctrl_dev *ctrl;
+> > +       struct pinctrl_desc desc;
+> > +       struct gpio_chip chip;
+> > +
+> > +       struct qpnp_padinfo *pads;
+> 
+> As Linus commented on my code, you shouldn't have a list of pads here, you
+> should reference them via desc.pins[x].drv_data
+
+I was trying to avoid multiple small allocation. Will check again.
+
+<snip>
+
+> 
+> > +       const struct qpnp_chipinfo *info;
+> 
+> 'info' is only used during probe, no reason to keep a pointer around.
+
+probe and discover functions.
+
+> 
+> > +       const char *const *groups;
+> > +       const char *const *functions;
+> > +};
+> > +
+> > +static inline struct qpnp_pinctrl *to_qpnp_pinctrl(struct gpio_chip *chip)
+> > +{
+> > +       return container_of(chip, struct qpnp_pinctrl, chip);
+> > +};
+> 
+> I see little point in breaking out the container_of into its own function.
+
+It fit driver state dereferencing to 80 columns.
+
+> > +
+> > +static int qpnp_conv_to_pin(struct qpnp_pinctrl *qctrl,
+> > +                          struct qpnp_padinfo *pad, unsigned param,
+
+<snip>
+
+> > +       case PIN_CONFIG_BIAS_PULL_UP:
+> > +               if (type != QPNP_MPP_TYPE)
+> > +                       return -EINVAL;
+> 
+> The binding documentation says that it's okay to just state "bias-pull-up" and
+> it will be configured as 30uA pull up. 
+
+But is valid only for MPP's.
+
+> I would like us to keep the binding
+> documentation as it is now, but then you need to handle that here.
+> 
+
+Right.
+
+> > +               switch (val) {
+> > +               case 0:
+> > +                       val = QPNP_MPP_PULL_UP_OPEN;
+> > +                       break;
+> > +               case 600:
+> > +                       val = QPNP_MPP_PULL_UP_0P6KOHM;
+> > +                       break;
+> > +               case 10000:
+> > +                       val = QPNP_MPP_PULL_UP_10KOHM;
+> > +                       break;
+> > +               case 30000:
+> > +                       val = QPNP_MPP_PULL_UP_30KOHM;
+> > +                       break;
+> > +               default:
+> > +                       return -EINVAL;
+> > +               }
+
+<snip>
+
+> > +       case QPNP_PINCONF_MODE:
+> > +               if ((pad->modes & BIT(val)) == 0)
+> > +                       return -ENXIO;
+> 
+> -EINVAL?
+> 
+> > +               attr[0].addr  = QPNP_REG_MODE_CTL;
+> > +               attr[0].shift = QPNP_REG_MODE_SEL_SHIFT;
+> > +               attr[0].mask  = QPNP_REG_MODE_SEL_MASK;
+> > +               attr[0].val   = val;
+> 
+> What happens here if I day output-high; qcom,mode = "digital-input"; ?
+
+It depends on the order of which they are found in DT files :-).
+Will fix it.
+
+> > +
+> > +static int qpnp_of_xlate(struct gpio_chip *chip,
+> > +                      const struct of_phandle_args *gpio_desc, u32 *flags)
+> > +{
+> 
+> Assign chip.of_node when registering the gpio_chip and remove this function.
+> 
+> > +       struct qpnp_pinctrl *qctrl = to_qpnp_pinctrl(chip);
+> > +       struct qpnp_padinfo *pad;
+> > +       unsigned pin = gpio_desc->args[0] - QPNP_PIN_PHYSICAL_OFFSET;
+
+This way gpiolib see pin numbers like pinctrl framework, starting from 1.
+I will try to offset gpio range with 1 in registration.
+> 
+> > +
+> > +static int qpnp_control_init(struct qpnp_pinctrl *qctrl,
+> > +                         struct qpnp_padinfo *pad)
+> 
+> This is not "initializing any control", it's rather a
+> qpnp_get_available_modes(type, subtype) function.
+> 
+> > +{
+> > +       pad->modes = 0;
+> > +
+> > +       if (pad->type == QPNP_GPIO_TYPE) {
+> > +               switch (pad->subtype) {
+> > +               case QPNP_GPIO_SUBTYPE_GPIO_4CH:
+> > +               case QPNP_GPIO_SUBTYPE_GPIOC_4CH:
+> > +               case QPNP_GPIO_SUBTYPE_GPIO_8CH:
+> > +               case QPNP_GPIO_SUBTYPE_GPIOC_8CH:
+> 
+> Looks like this switch is not of much use, consider dropping it.
+> 
+> > +
+> > +                       /* only GPIO is supported*/
+> > +                       pad->modes |= BIT(QPNP_PIN_MODE_DIG_IN);
+> > +                       pad->modes |= BIT(QPNP_PIN_MODE_DIG_OUT);
+> > +                       pad->modes |= BIT(QPNP_PIN_MODE_DIG_IN_OUT);
+> > +                       break;
+> > +               default:
+> > +                       dev_err(qctrl->dev, "invalid GPIO subtype 0x%x\n",
+> > +                               pad->subtype);
+> 
+> Is this really going to happen? This would indicate that we have "compatible"
+> chips that suddenly have some new type of gpio/mpp block.
+
+And we should be somehow be noticed, right?
+
+> 
+> > +                       return -EINVAL;
+> > +               }
+
+<snip>
+
+> > +static int qpnp_pinctrl_probe(struct platform_device *pdev)
+> > +{
+> > +       struct device *dev = &pdev->dev;
+> > +       const struct qpnp_chipinfo *qchip;
+> > +       struct qpnp_pinctrl *qctrl;
+> > +
+> > +       qctrl = devm_kzalloc(dev, sizeof(*qctrl), GFP_KERNEL);
+> > +       if (!qctrl)
+> > +               return -ENOMEM;
+> > +
+> > +       platform_set_drvdata(pdev, qctrl);
+> > +
+> > +       qchip = of_match_node(qpnp_pinctrl_of_match, dev->of_node)->data;
+> > +
+> > +       qctrl->info = qchip;
+> 
+> No need to keep track of the info after qpnp_discover().
+
+Right.
+
+<snip>
+
+> > +
+> > +static const struct qpnp_chipinfo qpnp_pm8841_mpp_info = {
+> > +       .npins  = 4,
+> > +       .base   = 0xa000,
+> 
+> Read this from the reg property instead.
+
+If SPMI bindings are changed a little bit, there will be no
+need to hard code even number of pins :-). Will do.
+
+> Regards,
+> Bjorn
+
+Thank you for detailed review. I agree with sniped comments
+and will fix them.
+
+Regards,
+Ivan
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
