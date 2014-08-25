@@ -1,32 +1,43 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] of: Add NVIDIA Tegra xHCI controller binding
-Date: Mon, 25 Aug 2014 13:26:38 -0600
-Message-ID: <53FB8DEE.6050300@wwwdotorg.org>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org> <1408381705-3623-6-git-send-email-abrestic@chromium.org>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v8 3/3] ahci_xgene: Fix the link down in first attempt
+ for the APM X-Gene SoC AHCI SATA host controller driver.
+Date: Mon, 25 Aug 2014 15:30:02 -0400
+Message-ID: <20140825193002.GC21688@htj.dyndns.org>
+References: <1408819047-17224-1-git-send-email-stripathi@apm.com>
+ <1408819047-17224-4-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408381705-3623-6-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408819047-17224-4-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
-> Add device-tree binding documentation for the xHCI controller present
-> on Tegra124 and later SoCs.
+On Sun, Aug 24, 2014 at 12:07:27AM +0530, Suman Tripathi wrote:
+> This patch addresses two HW erratas as described below by retrying the
+> COMRESET:
+> 
+> 1. During speed negotiation, controller is not able to detect ALIGN
+> at GEN3(6Gbps) within 54.6us and results in a timeout. This issue can
+> be recovered by issuing a COMRESET.
+> 
+> 2. Although ALIGN detection is successful, 8b/10b and disparity bit
+> errors can occur which result in the signature FIS not received
+> successfully by the Host controller. Due to this, the PHY communication
+> between the host and drive is not established because of CDR(clock and
+> data recovery) circuit doesn't lock. This issue can be recoverd by issuing
+> a COMRESET.
+> 
+> The above retries are issued only if the port status register PXSTATUS
+> reports device presence detected but PHY communication not established.
+> The maximum retry attempts are 3.
 
-> diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
+Didn't I ask you to update the comment to explain what's going on?  Or
+is the existing comment already sufficient?
 
-> +Required properties:
-> +--------------------
+Thanks.
 
-> + - mboxes: Must contain an entry for the XUSB host mailbox channel.
-> +   See ../mailbox/mailbox.txt for details.
-
-I'd like to use mbox-names here too.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+tejun
