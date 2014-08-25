@@ -1,116 +1,100 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v5 2/3] ARM: dts: Add main PWM info to rk3288
-Date: Mon, 25 Aug 2014 15:59:26 -0700
-Message-ID: <1409007567-23523-3-git-send-email-dianders@chromium.org>
-References: <1409007567-23523-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409007567-23523-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Thierry Reding <thierry.reding@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>
-Cc: Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 00/11] drm: add support for Atmel HLCDC Display Controller
+Date: Tue, 26 Aug 2014 01:39:21 +0200
+Message-ID: <1997793.CWhjU3F32E@avalon>
+References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com> <2138720.5GSxsvjVxS@avalon> <20140821192633.69f6b21b@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20140821192633.69f6b21b@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Clark <robdclark@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the PWM info (other than the VOP PWM) to the main rk3288
-dtsi file.
+Hi Boris,
 
-Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
-Changes in v5:
-- Back to version 3 (no rockchip,grf).
+On Thursday 21 August 2014 19:26:33 Boris BREZILLON wrote:
+> On Thu, 21 Aug 2014 19:08:53 +0200
+> Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> 
+> [...]
+> 
+> >>>> While this could be acceptable when all drivers are statically linked
+> >>>> in the kernel, it might be problematic when you're using modules,
+> >>>> meaning that you won't be able to display anything on your LCD panel
+> >>>> until your HDMI bridge module has been loaded.
+> >>> 
+> >>> No. HDMI should be using proper hotplugging anyway, hence it should be
+> >>> always be loaded anyway. You're in for a world of pain if you think
+> >>> you can run DRM with a driver that's composed of separate kernel
+> >>> modules.
+> >> 
+> >> I was talking about the external RGB to HDMI encoder, should the driver
+> >> for this encoder (which is not on On Chip block) be compiled
+> >> statically too ?
+> > 
+> > Given the move to multiplatform kernels we need to aim for as few modules
+> > compiled in as possible. I'd say this includes HDMI encoders, panels and
+> > display controllers.
+> > 
+> >>> Also if you don't want to use deferred probe, then you're in for the
+> >>> full hotplugging panel dance and that implies that you need to fix a
+> >>> bunch of things in DRM (one being the framebuffer console
+> >>> instantiation
+> >>> that I referred to in the other thread).
+> >> 
+> >> For now, I wait until there is a device connected on the RGB connector
+> >> (connector status set to connector_status_connected) before creating an
+> >> fbdev. It might not be the cleanest way to solve this issue, but it
+> >> works :-).
+> > 
+> > Do you create a new drm_encoder at runtime for the HDMI encoder when it
+> > appears ? I thought the DRM core and API were not able to correctly cope
+> > with that.
+> 
+> I haven't started to work on the HDMI encoder yet, and ATM I only have
+> a single connector (which is true from an HW POV), which is then bound
+> to an LCD panel (the only type of remote endpoint I currently support).
+> 
+> BTW, I wonder how my use case should be represented in the DRM
+> subsystem. As I said, from an HW POV I only have one RGB (or whatever
+> name you choose for it) connector. But on such kind of connectors you
+> can connect several output devices (panels, encoders, ...).
+> And in my case I have 2 devices on the same RGB connector: a panel and
+> an RGB to HDMI converter.
 
-Changes in v4:
-- Add rockchip,grf to pwm nodes.
+The DRM connector object was initially meant to model a physical user-
+accessible connector on a board (VGA, DVI, HDMI, ...) and the properties of 
+the monitor plugged into it. It has then been (ab)used to represent panels, as 
+they're similar to monitors.
 
-Changes in v3: None
+In your case the VGA and HDMI connectors should be modeled as DRM connectors, 
+the RGB to HDMI encoder as a DRM encoder, and the LCDC as a DRM CRTC.
 
- arch/arm/boot/dts/rk3288.dtsi | 68 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
+As DRM hardcodes the pipeline model to CRTC -> encoder -> connector, you will 
+also need a DRM encoder in the VGA path. I suppose your board has a VGA DAC, 
+that's the component you should expose as a DRM encoder (even if it can't be 
+controlled and doesn't limit the valid modes).
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 36be7bb..9c9d9c5 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -261,6 +261,50 @@
- 		status = "disabled";
- 	};
- 
-+	pwm0: pwm@ff680000 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680000 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm0_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		status = "disabled";
-+	};
-+
-+	pwm1: pwm@ff680010 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680010 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm1_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		status = "disabled";
-+	};
-+
-+	pwm2: pwm@ff680020 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680020 0x10>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm2_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		status = "disabled";
-+	};
-+
-+	pwm3: pwm@ff680030 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0xff680030 0x10>;
-+		#pwm-cells = <2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm3_pin>;
-+		clocks = <&cru PCLK_PWM>;
-+		clock-names = "pwm";
-+		status = "disabled";
-+	};
-+
- 	pmu: power-management@ff730000 {
- 		compatible = "rockchip,rk3288-pmu", "syscon";
- 		reg = <0xff730000 0x100>;
-@@ -611,5 +655,29 @@
- 				rockchip,pins = <5 15 3 &pcfg_pull_none>;
- 			};
- 		};
-+
-+		pwm0 {
-+			pwm0_pin: pwm0-pin {
-+				rockchip,pins = <7 0 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm1 {
-+			pwm1_pin: pwm1-pin {
-+				rockchip,pins = <7 1 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm2 {
-+			pwm2_pin: pwm2-pin {
-+				rockchip,pins = <7 22 RK_FUNC_3 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm3 {
-+			pwm3_pin: pwm3-pin {
-+				rockchip,pins = <7 23 RK_FUNC_3 &pcfg_pull_none>;
-+			};
-+		};
- 	};
- };
+> >>> You also can't be using the current device tree bindings because they
+> >>> all assume a dependency from the display controller/output to the
+> >>> panel. For hotplugging you'd need the dependency the other way around
+> >>> (the panel needs to refer to the output by phandle).
+> >> 
+> >> Here [1] is a proposal for notification support in the drm_panel
+> >> infrastructure (which is not that complicated), and here [2] is how
+> >> I use it in my atmel-hlcdc driver to generate hotplug events.
+> > 
+> > Is there a way we could use the component framework for that ? I know that
+> > partial notification isn't supported at the moment, but Russell agreed it
+> > was a real use case that should be implemented at some point.
+> 
+> I'll give it a try.
+
 -- 
-2.1.0.rc2.206.gedb03e5
+Regards,
+
+Laurent Pinchart
+
