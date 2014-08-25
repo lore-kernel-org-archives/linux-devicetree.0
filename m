@@ -1,7 +1,7 @@
 From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv3 1/3] ARM: dts: socfpga: remove extra alias in the ArriaV devkit
-Date: Mon, 25 Aug 2014 07:37:09 -0500
-Message-ID: <1408970231-4316-2-git-send-email-dinguyen@opensource.altera.com>
+Subject: [PATCHv3 3/3] ARM: dts: socfpga: memreserve first 4KB for future system use
+Date: Mon, 25 Aug 2014 07:37:11 -0500
+Message-ID: <1408970231-4316-4-git-send-email-dinguyen@opensource.altera.com>
 References: <1408970231-4316-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,33 +14,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-commit [2755e187 dts: socfpga: Add DTS entry for adding the stmmac glue
-layer for stmmac.] added an extra ethernet alias in the ArriaV devkit
-board file. This patch removes it.
+This patch adds a /memreserve/ section to reserve the first 4K for future
+use by the system. One possible use-case is trampoline code used to bring
+secondary cores online.
 
 Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Acked-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
 ---
- arch/arm/boot/dts/socfpga_arria5_socdk.dts | 7 -------
- 1 file changed, 7 deletions(-)
+v3: Update commit message based on Mark Rutland's comment
+v2: Add a comment in the dts files
+---
+ arch/arm/boot/dts/socfpga_arria5.dtsi   | 2 ++
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-index d532d17..27d551c 100644
---- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-+++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
-@@ -37,13 +37,6 @@
- 		*/
- 		ethernet0 = &gmac1;
- 	};
--
--	aliases {
--		/* this allow the ethaddr uboot environmnet variable contents
--		 * to be added to the gmac1 device tree blob.
--		 */
--		ethernet0 = &gmac1;
--	};
- };
+diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
+index 468fc4c..03e8268 100644
+--- a/arch/arm/boot/dts/socfpga_arria5.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
+@@ -15,6 +15,8 @@
+  */
  
- &gmac1 {
+ /dts-v1/;
++/* First 4KB has trampoline code for secondary cores. */
++/memreserve/ 0x00000000 0x0001000;
+ #include "socfpga.dtsi"
+ 
+ / {
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+index 33cad8b..28c05e7 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
++++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+@@ -16,6 +16,8 @@
+  */
+ 
+ /dts-v1/;
++/* First 4KB has trampoline code for secondary cores. */
++/memreserve/ 0x00000000 0x0001000;
+ #include "socfpga.dtsi"
+ 
+ / {
 -- 
 2.0.3
 
