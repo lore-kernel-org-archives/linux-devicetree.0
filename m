@@ -1,58 +1,137 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 0/6] SolidRun Hummingboard/Cubox-i DT updates
-Date: Mon, 25 Aug 2014 14:29:32 +0800
-Message-ID: <20140825062930.GA6928@dragon>
-References: <20140823091058.GO30401@n2100.arm.linux.org.uk>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] host1x: mipi: Include clock lanes in mipi calibrate
+Date: Mon, 25 Aug 2014 08:33:55 +0200
+Message-ID: <20140825063353.GA12209@ulmo.nvidia.com>
+References: <1407391907-19488-1-git-send-email-seanpaul@chromium.org>
+ <1407391907-19488-4-git-send-email-seanpaul@chromium.org>
+ <20140807083429.GA13315@ulmo.nvidia.com>
+ <CAOw6vbJPtzCesuMVjv06Abe-2PpdhmdJ75EHYU1N+TCfUVssNQ@mail.gmail.com>
+ <CAOw6vbJw8S477S+7L_+ozF2aoxUw+TT7=KQObTz6HYXpzPhr5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140823091058.GO30401-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CAOw6vbJw8S477S+7L_+ozF2aoxUw+TT7=KQObTz6HYXpzPhr5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 23, 2014 at 10:10:58AM +0100, Russell King - ARM Linux wrote:
-> Here's a set of patches updating the Cubox-i/Hummingboard DT files.
-> 
-> The first two are fairly important fixes, so should at least go in
-> for -rc kernels.
-> 
-> The SPDIF patch is something which could go in -rc as well as it's a
-> cosmetic patch, changing the name displayed in (eg) pulseaudio for the
-> SPDIF output from the developer-centric "imx-spdif" to "Integrated SPDIF".
 
-I will sent the first 3 for -rc.  But I second Iain's comment that the
-first patch should have a better commit log to explain why it's an
-important fix.
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Patch 4 updates the Hummingboard support as SolidRun now have a Dual
-> version of this platform, which needs imx6q.dtsi instead of imx6dl.dtsi,
-> and also has mSATA support.
+On Fri, Aug 22, 2014 at 10:54:50AM -0700, Sean Paul wrote:
+> On Thu, Aug 7, 2014 at 10:14 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>=20
+> > On Thu, Aug 7, 2014 at 4:34 AM, Thierry Reding <thierry.reding-Re5JQEeQqe8@public.gmane.org=
+m>
+> > wrote:
+> > > On Thu, Aug 07, 2014 at 02:11:46AM -0400, Sean Paul wrote:
+> > >> When calibrating the mipi phy, also include the clock lanes
+> > >> in the calibration.
+> > >>
+> > >> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > >> ---
+> > >>  drivers/gpu/host1x/mipi.c | 70
+> > +++++++++++++++++++++++++++++++++++++----------
+> > >>  1 file changed, 56 insertions(+), 14 deletions(-)
+> > >>
+> > >> diff --git a/drivers/gpu/host1x/mipi.c b/drivers/gpu/host1x/mipi.c
+> > >> index 0af2892..80578dc 100644
+> > >> --- a/drivers/gpu/host1x/mipi.c
+> > >> +++ b/drivers/gpu/host1x/mipi.c
+> > >> @@ -49,10 +49,18 @@
+> > >>  #define MIPI_CAL_CONFIG_DSIC         0x10
+> > >>  #define MIPI_CAL_CONFIG_DSID         0x11
+> > >>
+> > >> +#define MIPI_CAL_CONFIG_DSIAB_CLK    0x19
+> > >> +#define MIPI_CAL_CONFIG_DSICD_CLK    0x1a
+> > >> +#define MIPI_CAL_CONFIG_CSIAB_CLK    0x1b
+> > >> +#define MIPI_CAL_CONFIG_CSICD_CLK    0x1c
+> > >> +#define MIPI_CAL_CONFIG_CSIE_CLK     0x1d
+> > >> +
+> > >
+> > > These registers don't seem to exist on Tegra114 and earlier. It also
+> > > seems like MIPI_CAL_CONFIG_DSIC and MIPI_CAL_CONFIG_DSID no longer ex=
+ist
+> > > on Tegra124 and later. And CSIC and CSID seem to be shared with DSIB
+> > > (channel A and B) now.
+> > >
+> > > So I think we'll need something more elaborate than this. It should be
+> > > differentiating between SoC revisions to allow checking for valid pad
+> > > selection when calibrating.
+> > >
+> >
+> > Yeah, definitely now that you point that out, we'll need something
+> > better. I've altered the patch so the regs available depends on
+> > compatible value. I'll wait on the following before re-posting.
+> >
+> > > I'll see if I can find out what's up with the change between Tegra114
+> > > and Tegra124 regarding the DSIC and DSID pads. It looks to me like th=
+ey
+> > > were merged to match the DSIA and DSIB controllers, whereas before DS=
+IA
+> > > and DSIB were used for controller DSIA and DSIC and DSID were used for
+> > > controller DSIB.
+> > >
+> >
+> > Thanks for checking in on this. It would be useful to know which clock
+> > lanes need to be configured for which pads. The documentation isn't
+> > particularly good on this, so it's possible that my mapping between
+> > data lane/clock lane in the modules array is incorrect.
+> >
+> >
+> Hi Thierry,
+> Any update on this?
 
-Though it's mostly just a DTS split, the diff stat looks too scary to
-be a material of -rc.
+I don't have any definitive answers yet, but from doing a bit of
+research it seems that the D-PHY for DSI (and CSI) can be configured to
+run in two modes, one where the 4 lanes are used as a single channel and
+another where they can drive two channels. My understanding is that that
+is what the channels refer to. That is, the D-PHY for controller DSI is
+calibrated using the MIPI_CAL_CONFIG_DSIA register (0x0e/0x38) for data
+lanes and MIPI_CAL_CONFIG_DSIA_A (0x19/0x64) and MIPI_CAL_CONFIG_DSIA_B
+(0x1a/0x68) for clock lanes. For controller DSIB the registers are
+MIPI_CAL_CONFIG_DSIB (0x0f/0x3c) and MIPI_CAL_CONFIG_DSIB_A (0x1b/0x6c)
+as well as MIPI_CAL_CONFIG_DSIB_B (0x1c/0x70). The second controller
+also shares the pads with CSIC and CSID.
 
-> 
-> Patch 5 adds the mSATA support for the Dual version of the Hummingboard.
-> 
-> Patch 6 is the first patch which breaks something on the initial version
-> of the Hummingboard, aka Carrier1, specifically the IrDA receiver.  In
-> hindsight, we should not have used the name "Hummingboard" for the
-> Carrier1.  The Carrier1 is obsolete, and people are being encouraged to
-> dispose of the C1 hardware.
-> 
-> Out of these, I think it would be worth getting the first five patches
-> in for 3.17 (even though we're in -rc), but patch 6 should certainly
-> wait for the next merge window.
+As for the difference between Tegra114 and Tegra124 it seems that clock
+lane calibration is new in Tegra124 (or perhaps it was done as part of
+the data lane calibration on Tegra114), but DSIA and DSIB on Tegra114
+refer to DSI channels A and B, whereas DSIC and DSID refer to channels A
+and B of DSIB.
 
-Patches 4 ~ 6 are not fixes in any way, so I prefer to queue them for
-the next merge window.
+The above is still mostly guesswork, though perhaps more educated than
+before. I've filed an internal bug to get confirmation from some of our
+hardware engineers and clarify this in the TRM. I'll let you know when I
+have more information.
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT+tjRAAoJEN0jrNd/PrOhPxoP/R1wS3AdCpvjbUb2Yjpy1wvR
+tR8otO87OMun2XKdhHeIBSpB498AHV9OmeB+9nNxlD66CmVjLLq3DxfmWYr4n9vR
+aZbN0O3ukqTOS4Pv7iX7hJ1D/INXu4JB8bx1kJ1whk7O93RWwrcICVrHaeyJyHNt
+vko3xRAVlnEWS5AC988vguUbSRETChNECGr3P5zKchnBoGcBU3ULnEPdTp32nqLb
+A9ISSY1XnPTYTYGAUsSYU39Mea58aWZ2E0ywl8cCU2I5+3kHIw56EoHb9flXA4pD
+fNb0NBCD5oWFOfHVY7t//dlqg0jplPNBpMoUX4L397Rk20C5idluJyvZQMzQgRCr
+cBNHQ+pn8LNh6eF06Z27C77ung+1f5XnfViAruKgeG3gc5SPQ5XvXEA1gCy7IJ1F
+Tx4LolrbFXlACgeVytS1r5lcuZkRiw4bx6IxCnrmXkiOV6lFbMqVkOBxaTBmLGK7
+W55a09jDBv+Juaz8mmUGOOk8BzWcNVvetzTfhn9zOTxSZZSsrMDHI1GkMHZrAwP7
+c7E7tcsOV74COJtmPj+V0xQdwLYpIneslk1SdlklhmqWhowDHfMjeZLRF6Z/QSP2
+0kqED4zdqNBx1VzYyx91jeBzaM41WU7h4vp3nJBWGj7hbbBQRrUYpu2NDdoDap+W
+LbNcyOr7ZnfOwLflKMlF
+=W0Xh
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
