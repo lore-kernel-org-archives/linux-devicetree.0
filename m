@@ -1,97 +1,72 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: Add documentation for the APM
- X-Gene SoC EDAC DTS binding
-Date: Mon, 25 Aug 2014 15:40:21 -0700
-Message-ID: <CAPw-ZTn+uDZpw+bEy7EH7czu8ZMoCbzk=xn7ygHAe+iYbb5kzQ@mail.gmail.com>
-References: <1408778588-3215-1-git-send-email-lho@apm.com>
-	<1408778588-3215-2-git-send-email-lho@apm.com>
-	<1408778588-3215-3-git-send-email-lho@apm.com>
-	<CAL_JsqKHV=yY9K3e4cQ4+vSvvVwM56hBuEc5OFXHqAmQZkp3Gw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v5 0/3] PWM changes for rk3288-evb
+Date: Mon, 25 Aug 2014 15:59:24 -0700
+Message-ID: <1409007567-23523-1-git-send-email-dianders@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKHV=yY9K3e4cQ4+vSvvVwM56hBuEc5OFXHqAmQZkp3Gw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Doug Thompson <dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+These patches enable the PWM backlight for the rk3288-evb board.
+There were tested by watching the backlight grow from off to max with
+the following instructions:
 
->> This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
->>
->> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
->> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
->> ---
->>  .../devicetree/bindings/edac/apm-xgene-edac.txt    |   83 ++++++++++++++++++++
->>  1 files changed, 83 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->>
->> diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->> new file mode 100644
->> index 0000000..ce8c30e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
->> @@ -0,0 +1,83 @@
->> +* APM X-Gene SoC EDAC nodes
->> +
->> +EDAC nodes are defined to describe on-chip error detection and correction.
->> +There are four types of EDAC:
->
-> EDAC is somewhat a Linux term which makes me suspicious. Is this
-> really how the h/w is defined (i.e. I would find "EDAC" blocks in the
-> h/w reference manual?)?
+  cd /sys/class/backlight/backlight*/
+  for i in $(seq 255); do echo $i > brightness; sleep .01; done
 
-For memory controller and logically, there is such HW block in the
-hardware. Physical, the designer just arrange them in sequential order
-with other memory controller registers. For example, from offset 0x0
-to 0xdc for controller registers and from 0xe0 to 0x118 for error
-enable and status registers, and etc. From the memory controller
-register used by error detection and correction, it is 0x110, 0x114,
-0x314, 0x318, 0x31c, 0x320, and 0x324. All the 0x3xx repeated by an
-stride for 8 ranks.
+The first patch switches PWM cells from 2 to 3 on rk3288.  I think it
+could land in Thierry's tree.  This patch will break backward
+compatibility for rk3288 until changes land handling PWM cells more
+dynamically, but since there are no rk3288 boards shipping yet it
+seems OK.
 
-For the CPU L1/L2, it has an dedicate region for error configuration and status.
+The 2nd and 3rd patches are DTS ones.  They could land in Heiko's tree
+after the first two patches.  They are based atop his current WIP 3.18
+dts tree.  Note that instantiating the PWM backlight will cause the
+system to hang unless Heiko's (clk: rockchip: protect critical clocks
+from getting disabled) <patchwork.kernel.org/patch/4725391> is landed.
 
-For the L3, it is similar to the memory controller. it is arranged in
-sequential order.
+There are no compile time or runtime dependencies between these
+patches except that patch #2 needs to come before patch #3.  ...and of
+course the PWM won't work without all 3 patches.
 
-For the SoC error, it has its own page (region).
+There is a missing patch from this series: the patch that enables the
+proper IP in the rk3288 "grf" (general register file).  That patch can
+come later.  For now we'll assume that firmware (or some out of tree
+kernel patch) will set it up.
 
->
->> +
->> +  memory controller    - Memory controller
->> +  PMD (L1/L2)          - Processor module unit (PMD) L1/L2 cache
->> +  L3                   - CPU L3 cache
->> +  SoC                  - SoC IP such as SATA, Ethernet, and etc
->> +
->> +The following section describes the memory controller DT node binding.
->> +
->> +Required properties:
->> +- compatible           : Shall be "apm,xgene-edac-mc".
->
-> This is only EDAC registers or the entire memory controller?
+Changes in v5:
+- Back to version 3 (no rockchip,grf).
 
-I explained them above comment. It span two segments and interleave
-with some controller registers.
+Changes in v4:
+- Updated comment not to add caveats about pwm_cells 3.
+- rockchip_pwm_set_polarity() is now static.
+- Separate pwm_ops for v1 and v2; no set_polarity() in v1.
+- Added a blank line.
+- Add rockchip,grf to pwm nodes.
 
-> If they
-> are truly separate and only for EDAC, then it is fine.
+Changes in v3:
+- Don't store a private copy of polarity.
+- Use true instead of 1.
+- Cleanup init order with "has_invert".
+- Fix space to tab in 2 places in DTS.
+- Make sure PWM is upper case in prose.
 
-For CPU L1/L2, yes. For other, they are arranged sequentially span two segments.
+Doug Anderson (3):
+  pwm: rockchip: Allow polarity invert on rk3288
+  ARM: dts: Add main PWM info to rk3288
+  ARM: dts: Enable PWM backlight on rk3288-evb
 
-> Otherwise, you
-> should define the actual h/w block in DT and if a block needs to hook
-> up to multiple drivers, then that is a Linux problem in which you
-> should use drivers/mfd or drivers/soc.
+ .../devicetree/bindings/pwm/pwm-rockchip.txt       |  4 +-
+ arch/arm/boot/dts/rk3288-evb.dtsi                  | 53 +++++++++++++++++
+ arch/arm/boot/dts/rk3288.dtsi                      | 68 ++++++++++++++++++++++
+ drivers/pwm/pwm-rockchip.c                         | 57 +++++++++++++++---
+ 4 files changed, 171 insertions(+), 11 deletions(-)
 
-At this point, there is no other driver that accesses them. Memory
-controllers are only access by FW. L1/l2 controller has it own region.
-L3 is only configured by FW. And SoC has its own page.
+-- 
+2.1.0.rc2.206.gedb03e5
 
-I hope this provide enough info for suggestion if this still need to be changed.
-
--Loc
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
