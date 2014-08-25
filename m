@@ -1,37 +1,53 @@
-From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC regulators
-Date: Mon, 25 Aug 2014 19:20:07 +0200
-Message-ID: <53FB7047.7080508@collabora.co.uk>
-References: <1408350762-15520-1-git-send-email-javier.martinez@collabora.co.uk>	<1408350762-15520-2-git-send-email-javier.martinez@collabora.co.uk>	<CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>	<53F73472.8010609@collabora.co.uk>	<20140822144531.GV24407@sirena.org.uk>	<53F7838F.8060906@collabora.co.uk>	<20140822183054.GY24407@sirena.org.uk>	<53F7BDD8.7060500@collabora.co.uk>	<CAD=FV=WC0h7fYm2QFqu3Zka7CsU4BtG-oyPpJav+ygC+gmCR+A@mail.gmail.com>	<CA+NduCCT-KQ=gh7QWkBE4qkA2YOJ8KCVqbkC6Tkmb1aPvCsGFQ@mail.gmail.com>	<53FAFCBC.2050407@collabora.co.uk> <CAD=FV=V4TSKsbjj3dXCdSzVrh3sxH-FkpFEbEo+JA1bN9R-XWA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] pinctrl: bindings: Add OMAP pinctrl binding
+Date: Mon, 25 Aug 2014 10:25:07 -0700
+Message-ID: <20140825172506.GM17254@atomide.com>
+References: <1408716062-26055-1-git-send-email-nm@ti.com>
+ <1408716062-26055-2-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=V4TSKsbjj3dXCdSzVrh3sxH-FkpFEbEo+JA1bN9R-XWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408716062-26055-2-git-send-email-nm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Yuvaraj Cd <yuvaraj.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prashanth G <prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
-
-On 08/25/2014 05:40 PM, Doug Anderson wrote:
->>
->> I see, so probably until we have a way to define the operating mode for
->> each regulator using DT we should set the opmode to normal when enabling a
->> regulator independently of the value the hardware register reported on probe.
->>
->> Can you please test the following change [0] so I can post as a proper
->> patch? Doug, Mark do you think that forcing the regulator to opmode normal
->> when enabling is the right solution here?
+* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [140822 07:03]:
+> Add basic skeleton of OMAP pinctrl bindings. This is compatible with
+> pinctrl,single bindings and is meant purely as a reference point.
 > 
-> IMHO that makes sense.
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+
+Looks like you have ti,omap2420-padconf and ti,omap2430-padconf missing
+but after adding those too:
+
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+
+> ---
+>  .../bindings/pinctrl/ti,omap-pinctrl.txt           |    9 +++++++++
+>  1 file changed, 9 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt
 > 
-
-Thanks, I'll post it as a proper patch tomorrow then.
-
-Best regards,
-Javier
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt
+> new file mode 100644
+> index 0000000..156d964
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt
+> @@ -0,0 +1,9 @@
+> +OMAP Pinctrl definitions
+> +
+> +Required properties:
+> +- compatible : Should be one of:
+> +  "ti,omap3-padconf" - OMAP3 compatible pinctrl
+> +  "ti,omap4-padconf" - OMAP4 compatible pinctrl
+> +  "ti,omap5-padconf" - OMAP5 compatible pinctrl
+> +
+> +See Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt for further details.
+> -- 
+> 1.7.9.5
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
