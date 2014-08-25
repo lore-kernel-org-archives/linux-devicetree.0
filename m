@@ -1,37 +1,40 @@
 From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH v5 2/7] net: cpsw: Add missing return value
-Date: Mon, 25 Aug 2014 08:23:43 +0200
-Message-ID: <1408947828-22316-3-git-send-email-mpa@pengutronix.de>
-References: <1408947828-22316-1-git-send-email-mpa@pengutronix.de>
+Subject: [PATCH v5 0/7] net: cpsw: Support for am335x chip MACIDs
+Date: Mon, 25 Aug 2014 08:23:41 +0200
+Message-ID: <1408947828-22316-1-git-send-email-mpa@pengutronix.de>
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1408947828-22316-1-git-send-email-mpa@pengutronix.de>
 Sender: linux-omap-owner@vger.kernel.org
 To: "David S. Miller" <davem@davemloft.net>
 Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Rostedt <rostedt@goodmis.org>, Mugunthan V N <mugunthanvnm@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-ret is set 0 at this point, so jumping to that error label would result
-in a return value of 0. Set ret to -ENOMEM to return a proper error
-value.
+This series adds support to the cpsw driver to read the MACIDs of the am335x
+chip and use them as fallback. These addresses are only used if there are no
+mac addresses in the devicetree, for example set by a bootloader.
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-Reviewed-by: Wolfram Sang <wsa@the-dreams.de>
----
- drivers/net/ethernet/ti/cpsw.c | 1 +
- 1 file changed, 1 insertion(+)
+v5 contains just a small style fix in patch 5.
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 999fb72688d2..f09b4639ad31 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -2063,6 +2063,7 @@ static int cpsw_probe(struct platform_device *pdev)
- 	priv->irq_enabled = true;
- 	if (!priv->cpts) {
- 		dev_err(&pdev->dev, "error allocating cpts\n");
-+		ret = -ENOMEM;
- 		goto clean_ndev_ret;
- 	}
- 
+Best regards,
+
+Markus Pargmann
+
+
+Markus Pargmann (7):
+  DT doc: net: cpsw mac-address is optional
+  net: cpsw: Add missing return value
+  net: cpsw: header, Add missing include
+  net: cpsw: Replace pr_err by dev_err
+  net: cpsw: Add am33xx MACID readout
+  am33xx: define syscon control module device node
+  arm: dts: am33xx, Add syscon phandle to cpsw node
+
+ Documentation/devicetree/bindings/net/cpsw.txt |  6 +++-
+ arch/arm/boot/dts/am33xx.dtsi                  |  6 ++++
+ drivers/net/ethernet/ti/Kconfig                |  2 ++
+ drivers/net/ethernet/ti/cpsw.c                 | 46 ++++++++++++++++++++++++--
+ drivers/net/ethernet/ti/cpsw.h                 |  1 +
+ 5 files changed, 58 insertions(+), 3 deletions(-)
+
 -- 
 2.1.0.rc1
 
