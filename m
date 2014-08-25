@@ -1,28 +1,54 @@
-From: Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Mon, 25 Aug 2014 16:49:43 +0200
-Message-ID: <20140825144943.GE25892@linux-mips.org>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
- <20140823161456.GA2758@localhost>
- <CAL_JsqLGdZRFXni0Y5Loij3FVfw8RzaizNaRA+_hccXz0opkKw@mail.gmail.com>
- <2336240.173zr5MfQE@wuerfel>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [RFC 3/7] bcm47xx-sprom: add Broadcom sprom parser driver
+Date: Mon, 25 Aug 2014 17:01:27 +0200
+Message-ID: <CAOiHx=kcnZqkUxTc64oWWnyet2wXZe+3A1Lt2C5kvjgVjgwcVw@mail.gmail.com>
+References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de>
+ <1408915485-8078-5-git-send-email-hauke@hauke-m.de> <8344390.rjnOcYBCET@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Received: from localhost.localdomain ([127.0.0.1]:53215 "EHLO linux-mips.org"
-        rhost-flags-OK-OK-OK-FAIL) by eddie.linux-mips.org with ESMTP
-        id S27006749AbaHYOtxF1Ub5 (ORCPT <rfc822;devicetree@vger.kernel.org>
-        + 1 other); Mon, 25 Aug 2014 16:49:53 +0200
-Content-Disposition: inline
-In-Reply-To: <2336240.173zr5MfQE@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robherring2@gmail.com>, Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8344390.rjnOcYBCET@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There have been no forcing arguments for or against acceptance of this
-patch series but given that many other architectures organize their
-DTS files in an arch/<ARCH>/boot/dts/ directory I think MIPS should
-follow that example.
+On Mon, Aug 25, 2014 at 9:52 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Sunday 24 August 2014 23:24:41 Hauke Mehrtens wrote:
+>> This driver needs an nvram driver and fetches the sprom values from the
+>> nvram and provides it to any other driver. The calibration data for the
+>> wifi chip the mac address and some more board description data is
+>> stores in the sprom.
+>>
+>> This is based on a copy of arch/mips/bcm47xx/sprom.c and my plan is to
+>> make the bcm47xx MIPS SoCs also use this driver some time later.
+>
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/misc/bcm47xx-sprom.txt     |  16 +
+>
+> I'd prefer not to list the binding in a 'misc' category. Maybe we can
+> have a new category and move the misc/sram.txt into the same?
+>
+>>  drivers/misc/Kconfig                               |  14 +
+>>  drivers/misc/Makefile                              |   1 +
+>>  drivers/misc/bcm47xx-sprom.c                       | 690 +++++++++++++++++++++
+>
+> On a similar note, putting the driver into drivers/misc seems
+> suboptimal: misc drivers should by definition be something that
+> is for some odd hardware with no external dependencies on it,
+> whereas your driver seems to be used by multiple other drivers.
+>
+> Would it make sense to put it into drivers/bcma when that is the
+> only bus it is used on?
 
-  Ralf
+If the driver will be used for bcm47xx/mips, it will be used for two
+busses, bcma and ssb, so it will need to be at a common
+location.
+
+
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
