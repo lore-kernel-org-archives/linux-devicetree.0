@@ -1,82 +1,28 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [RESEND PATCH 1/4] ARM: STi: DT: STiH407: 407 DT Entry for clockgen A0
-Date: Mon, 25 Aug 2014 16:44:45 +0200
-Message-ID: <1408977888-10473-2-git-send-email-gabriel.fernandez@linaro.org>
-References: <1408977888-10473-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Mon, 25 Aug 2014 16:49:43 +0200
+Message-ID: <20140825144943.GE25892@linux-mips.org>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+ <20140823161456.GA2758@localhost>
+ <CAL_JsqLGdZRFXni0Y5Loij3FVfw8RzaizNaRA+_hccXz0opkKw@mail.gmail.com>
+ <2336240.173zr5MfQE@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1408977888-10473-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, olof@lixom.net
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Olivier Bideau <olivier.bideau@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Received: from localhost.localdomain ([127.0.0.1]:53215 "EHLO linux-mips.org"
+        rhost-flags-OK-OK-OK-FAIL) by eddie.linux-mips.org with ESMTP
+        id S27006749AbaHYOtxF1Ub5 (ORCPT <rfc822;devicetree@vger.kernel.org>
+        + 1 other); Mon, 25 Aug 2014 16:49:53 +0200
+Content-Disposition: inline
+In-Reply-To: <2336240.173zr5MfQE@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robherring2@gmail.com>, Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Patch adds DT entries for clockgen A0
+There have been no forcing arguments for or against acceptance of this
+patch series but given that many other architectures organize their
+DTS files in an arch/<ARCH>/boot/dts/ directory I think MIPS should
+follow that example.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
----
- arch/arm/boot/dts/stih407-clock.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
-index 800f46f..e03e86e 100644
---- a/arch/arm/boot/dts/stih407-clock.dtsi
-+++ b/arch/arm/boot/dts/stih407-clock.dtsi
-@@ -7,6 +7,10 @@
-  */
- / {
- 	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
- 		/*
- 		 * Fixed 30MHz oscillator inputs to SoC
- 		 */
-@@ -35,5 +39,33 @@
- 			clock-frequency = <200000000>;
- 			clock-output-names = "clk-s-icn-reg-0";
- 		};
-+
-+		/*
-+		 * ClockGenAs on SASG2
-+		 */
-+		clockgen-a@090ff000 {
-+			compatible = "st,clkgen-c32";
-+			reg = <0x90ff000 0x1000>;
-+
-+			clk_s_a0_pll: clk-s-a0-pll {
-+				#clock-cells = <1>;
-+				compatible = "st,stih407-plls-c32-a0", "st,clkgen-plls-c32";
-+
-+				clocks = <&clk_sysin>;
-+
-+				clock-output-names = "clk-s-a0-pll-ofd-0";
-+			};
-+
-+			clk_s_a0_flexgen: clk-s-a0-flexgen {
-+				compatible = "st,flexgen";
-+
-+				#clock-cells = <1>;
-+
-+				clocks = <&clk_s_a0_pll 0>,
-+					 <&clk_sysin>;
-+
-+				clock-output-names = "clk-ic-lmi0";
-+			};
-+		};
- 	};
- };
--- 
-1.9.1
+  Ralf
