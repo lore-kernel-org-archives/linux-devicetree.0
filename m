@@ -1,60 +1,88 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Mon, 25 Aug 2014 17:17:41 +0200
-Message-ID: <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
- <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
- <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
- <20140823063113.GC23715@localhost> <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 07/14] clk: sunxi: Introduce mbus compatible
+Date: Mon, 25 Aug 2014 17:18:47 +0200
+Message-ID: <20140825151847.GD15297@lukather>
+References: <1405588134-2396-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1405588134-2396-8-git-send-email-maxime.ripard@free-electrons.com>
+ <CAGb2v64xzwySFcnhAAmPFvUOWGechLZpoxfmb0OmEGOZbV+58Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IDa9Kr4PlLWO/T7L"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64xzwySFcnhAAmPFvUOWGechLZpoxfmb0OmEGOZbV+58Q@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, Chris Ball <chris@printf.net>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 23, 2014 at 9:50 PM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>> > arch/arm/boot/dts/<vendor>/
->>> >
->>> > Is this something we should do for the MIPS and update the other architectures
->>> > to follow that scheme?
->>>
->>> I recall reading that as well and that it would be adopted for ARM64,
->>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
->>> more.
->>
->> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
->> and the amount of files in that directory is becoming pretty
->> insane. Moving to a subdirectory structure later gets messy which is
->> why we've been holding off on it.
->
-> It would mean we can change our scripts to operate on "interesting"
-> DTS files from
->
->      do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
->
-> to
->
->     do-something-with arch/arm/boot/dts/$vendor/*
->
-> which is easier to type...
 
-Btw, do you mean chip-vendor or device-vendor with vendor?
-Device-vendor could get a bit messy on the source part as the router
-manufacturers tend to switch them quite often. E.g. d-link used arm,
-mips and ubi32 chips from marvell, ubicom, broadcom, atheros, realtek
-and ralink for their dir-615 router, happily switching back and forth.
-There are 14 known different hardware revisions of it where the chip
-differed from the previous one.
+--IDa9Kr4PlLWO/T7L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Aug 25, 2014 at 10:17:37PM +0800, Chen-Yu Tsai wrote:
+> Hi,
+>=20
+> On Thu, Jul 17, 2014 at 5:08 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > Even though the mbus clock is a regular module clock, given its nature,=
+ it
+> > needs to be enabled all the time.
+> >
+> > Introduce a new compatible, to differentiate it from the other module c=
+locks.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >  Documentation/devicetree/bindings/clock/sunxi.txt | 1 +
+> >  drivers/clk/sunxi/clk-sunxi.c                     | 1 +
+> >  2 files changed, 2 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Docume=
+ntation/devicetree/bindings/clock/sunxi.txt
+> > index d3a5c3c6d677..112d8525b6e0 100644
+> > --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> > +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> > @@ -46,6 +46,7 @@ Required properties:
+> >         "allwinner,sun6i-a31-apb2-div-clk" - for the APB2 gates on A31
+> >         "allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
+> >         "allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
+> > +       "allwinner,sun4i-a10-mbus-clk" - for the MBUS clock on A10
+>=20
+> This should probably be sun5i-a13-mbus-clk?
+> AFAIK the A10 doesn't have MBUS.
 
+Ah, right, thanks!
 
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--IDa9Kr4PlLWO/T7L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJT+1PXAAoJEBx+YmzsjxAgJ7EQAI15/xQ2wCQScV67ZZP6W6N6
+zR2+MZy941REJbPjAkPg/C4a+Fwl0se99TPO/fMsTFJ3VDqe/YQu6800qlDt5ka1
+T4S/NS9JGNuJPLtZTL6durVyoTvR82HDJFN6GF8V3/9vHEzDXlzUX/TQk5PcHe64
+rFza7jPpw/dfib5GeHQSa31ReLX0RSEWaGrMX+CmCM83kBbYiTUrqvyNXMOd+/xo
+ClrcOXSAMRbCDOGD0Uof0J60TRxoQ9D3EOX90A/KslQWJyN8XFaqj/VeICjRJmmU
+e143T2yvKzeh0NEMZxW5ZAFF5X/0ESuGh3Lgi/vew37pw2aUqS66bvvojg4beEnj
+jfueCafENOykDIl7vBDsekXjKEEMvRt560rA1joFAlA+UbiysjXga5RW/nOpW+PU
+q4bGot6n7qLw4YirZ2rvlBNwEorpM7gpxKylfb7n607x44F8NnlbgsPrKC2PrXEX
+4iI1bSTbVJnezX1LAxaRkGz61qzOJPDsC8QxihZq8Gn4N8kGVzVK73nrHlGtCCsj
+OevlttLqyHoEHefcNXYiodfQ3P7iU3FSDdJhGv2RgdQFXaJFvoaMbWqYjohEnfFU
+RRUq9IsAo6tBd6nD2M429bKxTsNmjqNhF14ki0RKtuVFQgYV3TEg1X+RspIwY7HW
+ykV+BOL7ByZUjWSnwMvy
+=t0aE
+-----END PGP SIGNATURE-----
+
+--IDa9Kr4PlLWO/T7L--
