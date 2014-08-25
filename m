@@ -1,86 +1,94 @@
-From: "Shreyas B. Prabhu" <shreyas-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/9] powerpc/powernv: Support for fastsleep and winkle
-Date: Mon, 25 Aug 2014 23:31:04 +0530
-Message-ID: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "Shreyas B. Prabhu" <shreyas-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "Srivatsa S. Bhat" <srivatsa-DPNOqEs/LNQ@public.gmane.org>, "Preeti U. Murthy" <preeti-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Vaidyanathan Srinivasan <svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: "Shreyas B. Prabhu" <shreyas@linux.vnet.ibm.com>
+Subject: [PATCH 2/9] cpuidle/powernv: Populate cpuidle state details by querying the device-tree
+Date: Mon, 25 Aug 2014 23:31:06 +0530
+Message-ID: <1408989673-14137-3-git-send-email-shreyas@linux.vnet.ibm.com>
+References: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, "Shreyas B. Prabhu" <shreyas@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Fast sleep is an idle state, where the core and the L1 and L2
-caches are brought down to a threshold voltage. This also means that
-the communication between L2 and L3 caches have to be fenced. However
-the current P8 chips have a bug wherein this fencing between L2 and
-L3 caches get delayed by a cpu cycle. This can delay L3 response to
-the other cpus if they request for data during this time. Thus they
-would fetch the same data from the memory which could lead to data
-corruption if L3 cache is not flushed.
-Patch 4 adds support to work around this.
+From: Preeti U Murthy <preeti@linux.vnet.ibm.com>
 
-'Deep Winkle' is a deeper idle state where core and private L2 are powered
-off. While it offers higher power savings, it is at the cost of losing
-hypervisor register state and higher latency.
-Patch 5-9 adds support for winkle and uses it for offline cpus.
+We hard code the metrics relevant for cpuidle states in the kernel today.
+Instead pick them up from the device tree so that they remain relevant
+and updated for the system that the kernel is running on.
 
-Patch 1 - Moves parameters required discover idle states to a location 
-common to both cpuidle driver and powernv core code
-Patch 2 - Populates idle state details from device tree
-Patch 3 - Enables cpus to run guest after waking up from fastsleep/winkle
+Cc: linux-pm@vger.kernel.org
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Preeti U. Murthy <preeti@linux.vnet.ibm.com>
+Signed-off-by: Shreyas B. Prabhu <shreyas@linux.vnet.ibm.com>
+---
+ drivers/cpuidle/cpuidle-powernv.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Srivatsa S. Bhat <srivatsa-DPNOqEs/LNQ@public.gmane.org>
-Cc: Preeti U. Murthy <preeti-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Vaidyanathan Srinivasan <svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-
-Preeti U Murthy (2):
-  cpuidle/powernv: Populate cpuidle state details by querying the
-    device-tree
-  powerpc/powernv/cpuidle: Add workaround to enable fastsleep
-
-Shreyas B. Prabhu (6):
-  powerpc/kvm/book3s_hv: Enable CPUs to run guest after waking up from
-    fast-sleep
-  powerpc/powernv: Add OPAL call to save and restore
-  powerpc: Adding macro for accessing Thread Switch Control Register
-  powerpc/powernv: Add winkle infrastructure
-  powerpc/powernv: Discover and enable winkle
-  powerpc/powernv: Enter deepest supported idle state in offline
-
-Srivatsa S. Bhat (1):
-  powerpc/powernv: Enable Offline CPUs to enter deep idle states
-
- arch/powerpc/include/asm/machdep.h             |   4 +
- arch/powerpc/include/asm/opal.h                |  10 ++
- arch/powerpc/include/asm/paca.h                |   3 +
- arch/powerpc/include/asm/ppc-opcode.h          |   2 +
- arch/powerpc/include/asm/processor.h           |   6 +-
- arch/powerpc/include/asm/reg.h                 |   1 +
- arch/powerpc/kernel/asm-offsets.c              |   1 +
- arch/powerpc/kernel/exceptions-64s.S           |  37 ++---
- arch/powerpc/kernel/idle.c                     |  30 ++++
- arch/powerpc/kernel/idle_power7.S              |  83 +++++++++-
- arch/powerpc/platforms/powernv/opal-wrappers.S |   2 +
- arch/powerpc/platforms/powernv/powernv.h       |   8 +
- arch/powerpc/platforms/powernv/setup.c         | 217 +++++++++++++++++++++++++
- arch/powerpc/platforms/powernv/smp.c           |  13 +-
- arch/powerpc/platforms/powernv/subcore.c       |  15 ++
- drivers/cpuidle/cpuidle-powernv.c              |  40 ++++-
- 16 files changed, 439 insertions(+), 33 deletions(-)
-
+diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
+index 23d2743..3ceff53 100644
+--- a/drivers/cpuidle/cpuidle-powernv.c
++++ b/drivers/cpuidle/cpuidle-powernv.c
+@@ -162,7 +162,8 @@ static int powernv_add_idle_states(void)
+ 	int nr_idle_states = 1; /* Snooze */
+ 	int dt_idle_states;
+ 	const __be32 *idle_state_flags;
+-	u32 len_flags, flags;
++	const __be32 *idle_state_latency;
++	u32 len_flags, flags, latency_ns;
+ 	int i;
+ 
+ 	/* Currently we have snooze statically defined */
+@@ -178,19 +179,33 @@ static int powernv_add_idle_states(void)
+ 		pr_warn("DT-PowerMgmt: missing ibm,cpu-idle-state-flags\n");
+ 		return nr_idle_states;
+ 	}
++	idle_state_latency = of_get_property(power_mgt,
++			"ibm,cpu-idle-state-latencies-ns", NULL);
++	if (!idle_state_latency) {
++		pr_warn("DT-PowerMgmt: missing ibm,cpu-idle-state-latencies-ns\n");
++		return nr_idle_states;
++	}
+ 
+ 	dt_idle_states = len_flags / sizeof(u32);
+ 
+ 	for (i = 0; i < dt_idle_states; i++) {
+ 
+ 		flags = be32_to_cpu(idle_state_flags[i]);
++
++		/* Cpuidle accepts exit_latency in us and we estimate best case
++		 * target residency to be 10x exit_latency
++		 */
++		latency_ns = be32_to_cpu(idle_state_latency[i]);
++
+ 		if (flags & IDLE_INST_NAP) {
+ 			/* Add NAP state */
+ 			strcpy(powernv_states[nr_idle_states].name, "Nap");
+ 			strcpy(powernv_states[nr_idle_states].desc, "Nap");
+ 			powernv_states[nr_idle_states].flags = CPUIDLE_FLAG_TIME_VALID;
+-			powernv_states[nr_idle_states].exit_latency = 10;
+-			powernv_states[nr_idle_states].target_residency = 100;
++			powernv_states[nr_idle_states].exit_latency =
++					((unsigned int)latency_ns) / 1000;
++			powernv_states[nr_idle_states].target_residency =
++					((unsigned int)latency_ns / 100);
+ 			powernv_states[nr_idle_states].enter = &nap_loop;
+ 			nr_idle_states++;
+ 		}
+@@ -201,8 +216,10 @@ static int powernv_add_idle_states(void)
+ 			strcpy(powernv_states[nr_idle_states].desc, "FastSleep");
+ 			powernv_states[nr_idle_states].flags =
+ 				CPUIDLE_FLAG_TIME_VALID | CPUIDLE_FLAG_TIMER_STOP;
+-			powernv_states[nr_idle_states].exit_latency = 300;
+-			powernv_states[nr_idle_states].target_residency = 1000000;
++			powernv_states[nr_idle_states].exit_latency =
++					((unsigned int)latency_ns) / 1000;
++			powernv_states[nr_idle_states].target_residency =
++					((unsigned int)latency_ns / 100);
+ 			powernv_states[nr_idle_states].enter = &fastsleep_loop;
+ 			nr_idle_states++;
+ 		}
 -- 
 1.9.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
