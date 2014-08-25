@@ -1,52 +1,78 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Mon, 25 Aug 2014 10:12:10 +0200
-Message-ID: <2336240.173zr5MfQE@wuerfel>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org> <20140823161456.GA2758@localhost> <CAL_JsqLGdZRFXni0Y5Loij3FVfw8RzaizNaRA+_hccXz0opkKw@mail.gmail.com>
+From: Yuvaraj Cd <yuvaraj.lkml@gmail.com>
+Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC regulators
+Date: Mon, 25 Aug 2014 13:52:04 +0530
+Message-ID: <CA+NduCCT-KQ=gh7QWkBE4qkA2YOJ8KCVqbkC6Tkmb1aPvCsGFQ@mail.gmail.com>
+References: <1408350762-15520-1-git-send-email-javier.martinez@collabora.co.uk>
+	<1408350762-15520-2-git-send-email-javier.martinez@collabora.co.uk>
+	<CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>
+	<53F73472.8010609@collabora.co.uk>
+	<20140822144531.GV24407@sirena.org.uk>
+	<53F7838F.8060906@collabora.co.uk>
+	<20140822183054.GY24407@sirena.org.uk>
+	<53F7BDD8.7060500@collabora.co.uk>
+	<CAD=FV=WC0h7fYm2QFqu3Zka7CsU4BtG-oyPpJav+ygC+gmCR+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <CAL_JsqLGdZRFXni0Y5Loij3FVfw8RzaizNaRA+_hccXz0opkKw@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Rob Herring <robherring2@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WC0h7fYm2QFqu3Zka7CsU4BtG-oyPpJav+ygC+gmCR+A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 24 August 2014 18:43:35 Rob Herring wrote:
-> On Sat, Aug 23, 2014 at 11:14 AM, Olof Johansson <olof@lixom.net> wrote:
-> > On Sat, Aug 23, 2014 at 03:56:42PM +0200, Arnd Bergmann wrote:
-> >>
-> >> Another argument is that we plan to actually move all the dts files out of
-> >> the kernel into a separate project in the future. We really don't want to
-> >> have the churn of moving all the files now when they get deleted in one
-> >> of the next merge windows.
-> >
-> > To be honest, I don't see that happening within the forseeable
-> > future. Some of us maintainers like talking about this, but everyone who
-> > actually develops have nightmares about this scenario. Nobody knows how
-> > it'll be done without causing some real serious impact on productivity.
-> >
-> >> I don't know if we talked about whether that move should be done for
-> >> all architectures at the same time. If that is the plan, I think it
-> >> would be best to not move the MIPS files at all but also wait until
-> >> they can get removed from the kernel tree.
-> >
-> > If MIPS can restructure now before things start growing, then I'd really
-> > recommend that they do so and not hold off waiting on some event that
-> > might never happen. 
-> 
-> Yes, I agree on both points.
-> 
-
-Ok, fair enough.
-
-	Arnd
+On Sat, Aug 23, 2014 at 3:45 AM, Doug Anderson <dianders@chromium.org> wrote:
+> Hi,
+>
+> On Fri, Aug 22, 2014 at 3:02 PM, Javier Martinez Canillas
+> <javier.martinez@collabora.co.uk> wrote:
+>> Hello Mark,
+>>
+>> On 08/22/2014 08:30 PM, Mark Brown wrote:
+>>>
+>>>> The problem is that one of these regulators is used as the vqmmc-supply
+>>>> (VCCQ/VDD_IO) so the mmc host controller driver disables it on
+>>>> MMC_POWER_OFF. Now AFAIK (Yuvaraj can correct me what I got wrong) this
+>>>> shouldn't be an issue since on card detection, the vqmmc supply should be
+>>>> enabled again but on Exynos the built-in card detect line is on the same
+>>>> power rail as vqmmc. That means that disabling the regulator prevents card
+>>>> insertions to be detected.
+>>>
+>>> If the MMC host controller needs a supply enabling in order to do card
+>>> detection and it's supposed to be doing card detection I'd expect it to
+>>> be enabling that supply.  Why is it not doing that?
+>>>
+>>
+>> Good question. I'm not that familiar with the dw_mmc host controller nor
+>> its driver implementation so I'll let Yuvaraj or Doug to answer that.
+Well,here it goes!
+1. Power ON the board LDO4CTRL1[7:6] 11b
+2. dw_mmc driver enable the vqmmc.
+3. checks for UHS support, complete the voltage switching t0 1.8V
+4. Does warm reset by reboot command.
+5. mmc core calls mmc_set_ios() with MMC_POWER_OFF.
+6. dw_mmc driver cut-off the regulator with LDO4CTRL1[7:6] is 00b
+7.dw_mmc driver enable the vqmmc.
+ But after step 7 also, LD4CTRL[7:6] is 00b.
+>
+> I haven't seen the issue that Yuvaraj is reporting (but I also haven't
+> picked up all of the relevant patches and tried to reproduce), so I'm
+> going to have to leave it to Yuvaraj to answer.
+    static int max77802_enable(struct regulator_dev *rdev)
+    {
+      struct max77802_regulator_prv *max77802 = rdev_get_drvdata(rdev);
+     int id = rdev_get_id(rdev);
+     int shift = max77802_get_opmode_shift(id);
+     return regmap_update_bits(rdev->regmap,
+rdev->desc->enable_reg,rdev->desc->enable_mask,max77802->opmode[id] <<
+shift);
+  }
+I think in the above code snippet, the "val" is what we got it during
+the probe.We always write that value for enabling this regulator(which
+is LDO4CTRL1[7:6] 00b after warm reset) which is not correct according
+the MAX77802 manual.
+>
+> As far as I know the dw_mmc driver ought to be enabling vqmmc when it
+> needs it.  Perhaps there's a bug in your patch series that adds vqmmc
+> support to dw_mmc?
+>
+> -Doug
