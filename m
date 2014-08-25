@@ -1,126 +1,92 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH v3 1/6] pinctrl: Device tree bindings for Qualcomm
- pm8xxx gpio block
-Date: Mon, 25 Aug 2014 16:14:00 +0300
-Message-ID: <1408972440.5256.8.camel@iivanov-dev>
-References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
-	 <1407771634-14946-2-git-send-email-iivanov@mm-sol.com>
-	 <20140820222741.GD16274@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v5 0/5] Add rockchip RK808 pmic driver
+Date: Mon, 25 Aug 2014 21:26:24 +0800
+Message-ID: <1408973184-21146-1-git-send-email-zyw@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140820222741.GD16274@sonymobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-08-20 at 15:27 -0700, Bjorn Andersson wrote:
-> On Mon 11 Aug 08:40 PDT 2014, Ivan T. Ivanov wrote:
-> [...]
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> [...]
-> > +SUBNODES:
-> [...]
-> > +- function:
-> > +	Usage: required
-> > +	Value type: <string>
-> > +	Definition: Specify the alternative function to be configured for the
-> > +		    specified pins.  Valid values are:
-> > +		    "normal",
-> > +		    "paired",
-> > +		    "func1",
-> > +		    "func2",
-> > +		    "dtest1",
-> > +		    "dtest2",
-> > +		    "dtest3",
-> > +		    "dtest4"
-> > +
-> 
-> I still think it looks better with "real" functions, but I rather go with this
-> than discussing it forever.
-> 
-> > +- qcom,pull-up-strength:
-> > +	Usage: optional
-> > +	Value type: <u32>
-> > +	Definition: Specifies the strength to use for pull up, if selected.
-> > +		    Valid values are; as defined in
-> > +		    <dt-bindings/pinctrl/qcom,pmic-gpio.h>:
-> > +		    1: 30uA                     (PMIC_GPIO_PULL_UP_30)
-> > +		    2: 1.5uA                    (PMIC_GPIO_PULL_UP_1P5)
-> > +		    3: 31.5uA                   (PMIC_GPIO_PULL_UP_31P5)
-> > +		    4: 1.5uA + 30uA boost       (PMIC_GPIO_PULL_UP_1P5_30)
-> > +		    If this property is ommited 30uA strength will be used if
-> > +		    pull up is selected
-> 
-> I would prefer if we decrement this one step, as it will follow the register
-> values of both the "ssbi" and "spmi" based pmics.
+This is the initial version of the RK808 PMIC. This is a power management IC
+for multimedia products.
 
-Ok.
+It provides regulators that are able to supply power to processor cores
+and other components. The chip provides other modules including RTC, Clockout
 
-> 
-> [...]
-> > +
-> > +- power-source:
-> > +	Usage: optional
-> > +	Value type: <u32>
-> > +	Definition: Selects the power source for the specified pins. Valid
-> > +		    power sources are defined per chip in
-> > +		    <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-> > +		    xxxx_GPIO_L6, xxxx_GPIO_L5...
-> 
-> After implementing this my only concern is that debugfs output is not as useful
-> anymore; saying VIN2 instead of S4. But I can live with this.
-> 
-> > diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> [...]
-> > +
-> > +#define PM8038_GPIO1_2_LPG_DRV		PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8038_GPIO3_5V_BOOST_EN	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8038_GPIO4_SSBI_ALT_CLK	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8038_GPIO5_6_EXT_REG_EN	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8038_GPIO10_11_EXT_REG_EN	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8038_GPIO6_7_CLK		PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8038_GPIO9_BAT_ALRM_OUT	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8038_GPIO6_12_KYPD_DRV	PMIC_GPIO_FUNC_FUNC2
-> > +
-> > +#define PM8058_GPIO7_8_MP3_CLK		PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8058_GPIO7_8_BCLK_19P2MHZ	PMIC_GPIO_FUNC_FUNC2
-> > +#define PM8058_GPIO9_26_KYPD_DRV	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8058_GPIO21_23_UART_TX	PMIC_GPIO_FUNC_FUNC2
-> > +#define PM8058_GPIO24_26_LPG_DRV	PMIC_GPIO_FUNC_FUNC2
-> > +#define PM8058_GPIO33_BCLK_19P2MHZ	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8058_GPIO34_35_MP3_CLK	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8058_GPIO36_BCLK_19P2MHZ	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8058_GPIO37_UPL_OUT		PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8058_GPIO37_UART_M_RX		PMIC_GPIO_FUNC_FUNC2
-> > +#define PM8058_GPIO38_XO_SLEEP_CLK	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8058_GPIO38_39_CLK_32KHZ	PMIC_GPIO_FUNC_FUNC2
-> > +#define PM8058_GPIO39_MP3_CLK		PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8058_GPIO40_EXT_BB_EN		PMIC_GPIO_FUNC_FUNC1
-> > +
-> > +#define PM8917_GPIO9_18_KEYP_DRV	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8917_GPIO20_BAT_ALRM_OUT	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8917_GPIO21_23_UART_TX	PMIC_GPIO_FUNC_FUNC2
-> > +#define PM8917_GPIO25_26_EXT_REG_EN	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8917_GPIO37_38_XO_SLEEP_CLK	PMIC_GPIO_FUNC_FUNC1
-> > +#define PM8917_GPIO37_38_MP3_CLK	PMIC_GPIO_FUNC_FUNC2
-> 
-> Stephens argument was that we don't want to have huge tables for the functions
-> and I can see his point, it will be some work to build all the tables.
-> Adding all this defines is unfortunately doing just that.
+Changes in v5:
+Adviced by doug
+- add some error checking in probe
+- move "rockchip,rk808.h" into the patch about dt-bindings
+- re-edit base on Mark's branch
+- fixed a bug about set_time failed
+Advices by Mark Brown
+- add description about regulator valid name.
+- add a header file "rockchip,rk808".
 
-It is still little bit simpler :-)
+Changes in v4:
+Adviced by doug
+- add "clock-output-names" propertiey
+- add a header file "rockchip,rk808.h"
+- use &client->dev replace rk808->dev
+Adviced by Lee Jones in v2
+- modify the description in Kconfig
+- remove some unnecessary header files
+- remove dev from struct rk808
+- use enum for define RK808_ID...
+Advices by Doug
+- add a "#clock-cells" propertiy
+- update the example
 
-> 
-> I had a version of my driver that exposed real functions by name from the
-> driver, following the pattern we have for other pinctrl drivers and making the
-> dts very easy to read. But if you don't think we should go that route then I
-> suggest that we just call it func1/func2 and skip these defines.
-> 
-> Regards,
-> Bjorn
+Changes in v3:
+- fix compile err
+- fix compile err
 
-Regards,
-Ivan
+Changes in v2:
+Adviced by javier.martinez
+- separated from rtc-rk808.c
+Adviced by Mark Browm:
+- change of_find_node_by_name to find_child_by_name
+- use RK808_NUM_REGULATORS as the name of the constant
+- create a pdata when missing platform data
+- use the rk808_reg name to supply_regulator name
+- replace regulator_register with devm_regulator_register
+- some other problem with coding style
+Adviced by javier.martinez
+- Add a separate clock driver, rather than in RTC driver
+Adviced by Mark Browm:
+- use defines for register setting value
+- remove rtc alarm disable in shutdown
+- remove while(1) in shutdown
+- remove read 0x2f in probe
+
+Chris Zhong (5):
+  dt-bindings: Add RK808 device tree bindings document
+  MFD: RK808: Add new mfd driver for RK808
+  RTC: RK808: add RTC driver for RK808
+  Regulator: RK808: modify for struct rk808 change
+  clk: RK808: Add clkout driver for RK808
+
+ Documentation/devicetree/bindings/mfd/rk808.txt |  142 ++++++++
+ drivers/clk/Kconfig                             |    9 +
+ drivers/clk/Makefile                            |    1 +
+ drivers/clk/clk-rk808.c                         |  164 +++++++++
+ drivers/mfd/Kconfig                             |   13 +
+ drivers/mfd/Makefile                            |    1 +
+ drivers/mfd/rk808.c                             |  265 ++++++++++++++
+ drivers/regulator/rk808-regulator.c             |   34 +-
+ drivers/rtc/Kconfig                             |   11 +
+ drivers/rtc/Makefile                            |    1 +
+ drivers/rtc/rtc-rk808.c                         |  442 +++++++++++++++++++++++
+ include/dt-bindings/clock/rockchip,rk808.h      |   11 +
+ include/linux/mfd/rk808.h                       |  211 +++++++++++
+ 13 files changed, 1285 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
+ create mode 100644 drivers/clk/clk-rk808.c
+ create mode 100644 drivers/mfd/rk808.c
+ create mode 100644 drivers/rtc/rtc-rk808.c
+ create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
+ create mode 100644 include/linux/mfd/rk808.h
+
+-- 
+1.7.9.5
