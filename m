@@ -1,40 +1,43 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 0/6] SolidRun Hummingboard/Cubox-i DT updates
-Date: Mon, 25 Aug 2014 10:51:07 +0100
-Message-ID: <20140825095106.GS30401@n2100.arm.linux.org.uk>
-References: <20140823091058.GO30401@n2100.arm.linux.org.uk> <20140825062930.GA6928@dragon>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH V6 6/8] drm/bridge: Modify drm_bridge core to support
+ driver model
+Date: Mon, 25 Aug 2014 12:10:17 +0200
+Message-ID: <CABxcv=n=1_gG+B8-qESqAWaX04TPKrmQW-zchHhfabCEbgW+LA@mail.gmail.com>
+References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
+	<1406316130-4744-7-git-send-email-ajaykumar.rs@samsung.com>
+	<20140730111931.GI29590@ulmo>
+	<CAEC9eQPv-D2ThnHR=FZiXJJisMf9NRqS-TJQKdZRjV45Y0Mjsw@mail.gmail.com>
+	<20140730150846.GB1345@ulmo>
+	<CAEC9eQMywCiQjD68_=Wwwbnb4Gau-gNEowqWPSvSV=AOc3Waeg@mail.gmail.com>
+	<20140731105813.GE7458@ulmo>
+	<CABxcv=m0eZAOSmTD4GyRmy2eztyBZ3ed27eJEmLXc6cVkZF0iA@mail.gmail.com>
+	<CAEC9eQOA0NAfAORmd8REvORAPhg2ZdoCMTCrP=KiE_rFABOZ=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140825062930.GA6928@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAEC9eQOA0NAfAORmd8REvORAPhg2ZdoCMTCrP=KiE_rFABOZ=A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay kumar <ajaynumb@gmail.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 25, 2014 at 02:29:32PM +0800, Shawn Guo wrote:
-> On Sat, Aug 23, 2014 at 10:10:58AM +0100, Russell King - ARM Linux wrote:
-> > Here's a set of patches updating the Cubox-i/Hummingboard DT files.
-> > 
-> > The first two are fairly important fixes, so should at least go in
-> > for -rc kernels.
-> > 
-> > The SPDIF patch is something which could go in -rc as well as it's a
-> > cosmetic patch, changing the name displayed in (eg) pulseaudio for the
-> > SPDIF output from the developer-centric "imx-spdif" to "Integrated SPDIF".
-> 
-> I will sent the first 3 for -rc.  But I second Iain's comment that the
-> first patch should have a better commit log to explain why it's an
-> important fix.
+Hello Ajay,
 
-I still have no answer for that, so I suggest dropping it until Rabeeh
-can write a better commit log.
+On Mon, Aug 25, 2014 at 8:11 AM, Ajay kumar <ajaynumb@gmail.com> wrote:
+>>
+>> Do you plan to address Thierry's concerns and re-spin this patch?
+>>
+>> Same question for patches:
+>>
+>> "drm/bridge: Add i2c based driver for ptn3460 bridge"
+>> "drm/bridge: Add i2c based driver for ps8622/ps8625 bridge"
+> Yes, I will. I was caught up with some other work.
+> I will be sending a version ASAP.
+>
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Great, glad to know that you will be doing a re-spin!
+
+> Ajay
+
+Thanks a lot and best regards,
+Javier
