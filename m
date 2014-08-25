@@ -1,7 +1,7 @@
 From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCHv3 3/3] ARM: dts: socfpga: memreserve first 4KB for future system use
-Date: Mon, 25 Aug 2014 07:37:11 -0500
-Message-ID: <1408970231-4316-4-git-send-email-dinguyen@opensource.altera.com>
+Subject: [PATCHv3 2/3] ARM: dts: socfpga: Add SD card detect
+Date: Mon, 25 Aug 2014 07:37:10 -0500
+Message-ID: <1408970231-4316-3-git-send-email-dinguyen@opensource.altera.com>
 References: <1408970231-4316-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,46 +14,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-This patch adds a /memreserve/ section to reserve the first 4K for future
-use by the system. One possible use-case is trampoline code used to bring
-secondary cores online.
+Revision D of the SOCFGPA devkit has a GPIO line used for SD/MMC card detect.
 
 Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Acked-by: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
 ---
-v3: Update commit message based on Mark Rutland's comment
-v2: Add a comment in the dts files
----
- arch/arm/boot/dts/socfpga_arria5.dtsi   | 2 ++
- arch/arm/boot/dts/socfpga_cyclone5.dtsi | 2 ++
- 2 files changed, 4 insertions(+)
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi      | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
-index 468fc4c..03e8268 100644
---- a/arch/arm/boot/dts/socfpga_arria5.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
-@@ -15,6 +15,8 @@
-  */
- 
- /dts-v1/;
-+/* First 4KB has trampoline code for secondary cores. */
-+/memreserve/ 0x00000000 0x0001000;
- #include "socfpga.dtsi"
- 
- / {
 diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-index 33cad8b..28c05e7 100644
+index 1ee03c4..33cad8b 100644
 --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
 +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-@@ -16,6 +16,8 @@
-  */
+@@ -28,7 +28,7 @@
+ 			};
+ 		};
  
- /dts-v1/;
-+/* First 4KB has trampoline code for secondary cores. */
-+/memreserve/ 0x00000000 0x0001000;
- #include "socfpga.dtsi"
+-		dwmmc0@ff704000 {
++		mmc0: dwmmc0@ff704000 {
+ 			num-slots = <1>;
+ 			broken-cd;
+ 			bus-width = <4>;
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+index 45de151..d7296a5 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+@@ -68,6 +68,10 @@
+ 	};
+ };
  
- / {
++&mmc0 {
++	cd-gpios = <&gpio1 18 0>;
++};
++
+ &usb1 {
+ 	status = "okay";
+ };
 -- 
 2.0.3
 
