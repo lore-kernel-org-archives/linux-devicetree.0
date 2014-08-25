@@ -1,38 +1,41 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 1/6] V4L2: Add Renesas R-Car JPEG codec driver.
-Date: Mon, 25 Aug 2014 14:49:39 +0200
-Message-ID: <53FB30E3.2050304@xs4all.nl>
-References: <1408452653-14067-2-git-send-email-mikhail.ulyanov@cogentembedded.com> <1408969787-23132-1-git-send-email-mikhail.ulyanov@cogentembedded.com> <53FB2E95.7040505@xs4all.nl>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEG
+ Processing Unit.
+Date: Mon, 25 Aug 2014 14:59:46 +0200
+Message-ID: <CAMuHMdXQAFVJ8Ezd30JNkT6hWoFYKUWk5e0cq88jYUSBTPOzRA@mail.gmail.com>
+References: <1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
+	<1408970132-6690-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53FB2E95.7040505@xs4all.nl>
+In-Reply-To: <1408970132-6690-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, horms@verge.net.au, magnus.damm@gmail.com, m.chehab@samsung.com, robh+dt@kernel.org, grant.likely@linaro.org
-Cc: laurent.pinchart@ideasonboard.com, hans.verkuil@cisco.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/25/2014 02:39 PM, Hans Verkuil wrote:
-> On 08/25/2014 02:29 PM, Mikhail Ulyanov wrote:
->> This patch contains driver for Renesas R-Car JPEG codec.
->>
->> Cnanges since v1:
->>     - s/g_fmt function simplified
->>     - default format for queues added
->>     - dumb vidioc functions added to be in compliance with standard api:
->>         jpu_s_priority, jpu_g_priority
-> 
-> Oops, that's a bug elsewhere. Don't add these empty prio ops, this needs to be
-> solved in the v4l2 core.
-> 
-> I'll post a patch for this.
+Hi Mikhail,
 
-After some thought I've decided to allow prio handling for m2m devices. It is
-actually useful if some application wants exclusive access to the m2m hardware.
+On Mon, Aug 25, 2014 at 2:35 PM, Mikhail Ulyanov
+<mikhail.ulyanov@cogentembedded.com> wrote:
+> +  - compatible: should containg one of the following:
+> +                       - "renesas,jpu-r8a7790" for R-Car H2
+> +                       - "renesas,jpu-r8a7791" for R-Car M2
+> +                       - "renesas,jpu-gen2" for R-Car second generation
 
-So I will change v4l2-compliance instead.
+Isn't "renesas,jpu-gen2" meant as a fallback?
 
-Regards,
+I.e. the DTS should have one of '7790 and '7791, AND the gen2 fallback,
+so we can make the driver match against '7790 and '7791 is we find
+out about an incompatibility.
 
-	Hans
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
