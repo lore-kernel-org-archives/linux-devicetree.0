@@ -1,78 +1,44 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: single: AM437x: Add pinctrl compatibility
-Date: Mon, 25 Aug 2014 10:26:32 -0700
-Message-ID: <20140825172632.GO17254@atomide.com>
-References: <1408716062-26055-1-git-send-email-nm@ti.com>
- <1408716062-26055-4-git-send-email-nm@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] of: Add NVIDIA Tegra flow controller bindings
+Date: Mon, 25 Aug 2014 11:32:20 -0600
+Message-ID: <53FB7324.9080109@wwwdotorg.org>
+References: <1403870848-1754-1-git-send-email-thierry.reding@gmail.com> <53ADE012.5080401@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408716062-26055-4-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53ADE012.5080401-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [140822 07:03]:
-> From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-> 
-> AM437x pinctrl definitions now differ from traditional 16 bit OMAP pin
-> ctrl definitions, in that all 32 bits are used to describe a single pin
-> 
-> Also the location of wakeupenable and event bits have changed.
-> 
-> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-> [nm-l0cyMroinI0@public.gmane.org: minor updates]
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+On 06/27/2014 03:20 PM, Stephen Warren wrote:
+> On 06/27/2014 06:07 AM, Thierry Reding wrote:
+>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> Add device tree bindings for the flow controller found on NVIDIA Tegra
+>> SoCs.
+>>
+>
+>> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt
+>
+>> +NVIDIA Tegra20 Flow Controller
+>> +
+>> +Required properties:
+>> +- compatible: "nvidia,tegra20-flowctrl"
+>> +- reg: Should contain one register range (address and length)
+>> +
+>> +Example:
+>> +
+>> +	flow-controller@60007000 {
+>> +		compatible = "nvidia,tegra20-flowctrl";
+>> +		reg = <0x60007000 0x1000>;
+>> +	};
+>
+> The bindings all have the same structure. Can we collapse them all into
+> this one file and just list all the valid compatible values and say pick
+> one?
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
-> ---
->  .../bindings/pinctrl/ti,omap-pinctrl.txt           |    1 +
->  drivers/pinctrl/pinctrl-single.c                   |    7 +++++++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt
-> index d45386d..af225fe 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/ti,omap-pinctrl.txt
-> @@ -6,5 +6,6 @@ Required properties:
->    "ti,omap4-padconf" - OMAP4 compatible pinctrl
->    "ti,omap5-padconf" - OMAP5 compatible pinctrl
->    "ti,dra7-padconf" - DRA7 compatible pinctrl
-> +  "ti,am437-padconf" - AM437x compatible pinctrl
->  
->  See Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt for further details.
-> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-> index 598d600..784de13 100644
-> --- a/drivers/pinctrl/pinctrl-single.c
-> +++ b/drivers/pinctrl/pinctrl-single.c
-> @@ -1987,6 +1987,12 @@ static const struct pcs_soc_data pinctrl_single_dra7 = {
->  	.irq_status_mask = (1 << 25),	/* WAKEUPEVENT */
->  };
->  
-> +static const struct pcs_soc_data pinctrl_single_am437x = {
-> +	.flags = PCS_QUIRK_SHARED_IRQ,
-> +	.irq_enable_mask = (1 << 29),   /* OMAP_WAKEUP_EN */
-> +	.irq_status_mask = (1 << 30),   /* OMAP_WAKEUP_EVENT */
-> +};
-> +
->  static const struct pcs_soc_data pinctrl_single = {
->  };
->  
-> @@ -1999,6 +2005,7 @@ static struct of_device_id pcs_of_match[] = {
->  	{ .compatible = "ti,omap4-padconf", .data = &pinctrl_single_omap_wkup },
->  	{ .compatible = "ti,omap5-padconf", .data = &pinctrl_single_omap_wkup },
->  	{ .compatible = "ti,dra7-padconf", .data = &pinctrl_single_dra7 },
-> +	{ .compatible = "ti,am437-padconf", .data = &pinctrl_single_am437x },
->  	{ .compatible = "pinctrl-single", .data = &pinctrl_single },
->  	{ .compatible = "pinconf-single", .data = &pinconf_single },
->  	{ },
-> -- 
-> 1.7.9.5
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry, did you post an updated version of this patch? If so, I seem to 
+have lost it, so a repost would be good. Thanks.
