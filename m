@@ -1,44 +1,23 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] of: Add NVIDIA Tegra flow controller bindings
-Date: Mon, 25 Aug 2014 11:32:20 -0600
-Message-ID: <53FB7324.9080109@wwwdotorg.org>
-References: <1403870848-1754-1-git-send-email-thierry.reding@gmail.com> <53ADE012.5080401@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 0/3] Introduce of_match_machine() helper
+Date: Mon, 25 Aug 2014 11:45:38 -0600
+Message-ID: <53FB7642.1000808@wwwdotorg.org>
+References: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53ADE012.5080401-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tuomas Tynkkynen <ttynkkynen@nvidia.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2014 03:20 PM, Stephen Warren wrote:
-> On 06/27/2014 06:07 AM, Thierry Reding wrote:
->> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>
->> Add device tree bindings for the flow controller found on NVIDIA Tegra
->> SoCs.
->>
->
->> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt
->
->> +NVIDIA Tegra20 Flow Controller
->> +
->> +Required properties:
->> +- compatible: "nvidia,tegra20-flowctrl"
->> +- reg: Should contain one register range (address and length)
->> +
->> +Example:
->> +
->> +	flow-controller@60007000 {
->> +		compatible = "nvidia,tegra20-flowctrl";
->> +		reg = <0x60007000 0x1000>;
->> +	};
->
-> The bindings all have the same structure. Can we collapse them all into
-> this one file and just list all the valid compatible values and say pick
-> one?
+On 08/07/2014 05:01 PM, Tuomas Tynkkynen wrote:
+> Some mach-specific drivers that don't require their own node in the device tree
+> (for example drivers/soc/*, cpufreq, cpuidle etc.) want to match on the device
+> tree root compatible property instead. Instead of open-coding (and forgetting
+> to call of_node_put on the root node) everywhere, add a helper to the OF core.
 
-Thierry, did you post an updated version of this patch? If so, I seem to 
-have lost it, so a repost would be good. Thanks.
+Tuomas, I assume there will be a new version of this series to address 
+the review comments? For now, I'm not intending on applying this.
