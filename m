@@ -1,94 +1,55 @@
-From: "Shreyas B. Prabhu" <shreyas@linux.vnet.ibm.com>
-Subject: [PATCH 2/9] cpuidle/powernv: Populate cpuidle state details by querying the device-tree
-Date: Mon, 25 Aug 2014 23:31:06 +0530
-Message-ID: <1408989673-14137-3-git-send-email-shreyas@linux.vnet.ibm.com>
-References: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Preeti U Murthy <preeti@linux.vnet.ibm.com>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, "Shreyas B. Prabhu" <shreyas@linux.vnet.ibm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] of: Add NVIDIA Tegra XUSB mailbox binding
+Date: Mon, 25 Aug 2014 12:48:23 -0600
+Message-ID: <53FB84F7.8030509@wwwdotorg.org>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org> <1408381705-3623-2-git-send-email-abrestic@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408381705-3623-2-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Preeti U Murthy <preeti@linux.vnet.ibm.com>
+On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
+> Add device-tree bindings for the Tegra XUSB mailbox which will be used
+> for communication between the Tegra xHCI controller's firmware and the
+> host processor.
 
-We hard code the metrics relevant for cpuidle states in the kernel today.
-Instead pick them up from the device tree so that they remain relevant
-and updated for the system that the kernel is running on.
+> diff --git a/Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt b/Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
 
-Cc: linux-pm@vger.kernel.org
-Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Preeti U. Murthy <preeti@linux.vnet.ibm.com>
-Signed-off-by: Shreyas B. Prabhu <shreyas@linux.vnet.ibm.com>
----
- drivers/cpuidle/cpuidle-powernv.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+> +NVIDIA Tegra XUSB mailbox
+> +=========================
+> +
+> +The Tegra XUSB mailbox is used by the Tegra xHCI controller's firmware to
+> +communicate requests to the host and PHY drivers.
+> +
+> +Required properties:
+> +--------------------
+> + - compatible: Should be "nvidia,tegra124-xusb-mbox".
+> + - reg: Address and length of the XUSB FPCI registers.
+> + - interrupts: XUSB mailbox interrupt.
+> + - #mbox-cells: Should be 1.  The specifier is the index of the mailbox to
+> +   reference.  See <dt-bindings/mailbox/tegra-xusb-mailbox.h> for the list
+> +   of valid values.
 
-diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-index 23d2743..3ceff53 100644
---- a/drivers/cpuidle/cpuidle-powernv.c
-+++ b/drivers/cpuidle/cpuidle-powernv.c
-@@ -162,7 +162,8 @@ static int powernv_add_idle_states(void)
- 	int nr_idle_states = 1; /* Snooze */
- 	int dt_idle_states;
- 	const __be32 *idle_state_flags;
--	u32 len_flags, flags;
-+	const __be32 *idle_state_latency;
-+	u32 len_flags, flags, latency_ns;
- 	int i;
- 
- 	/* Currently we have snooze statically defined */
-@@ -178,19 +179,33 @@ static int powernv_add_idle_states(void)
- 		pr_warn("DT-PowerMgmt: missing ibm,cpu-idle-state-flags\n");
- 		return nr_idle_states;
- 	}
-+	idle_state_latency = of_get_property(power_mgt,
-+			"ibm,cpu-idle-state-latencies-ns", NULL);
-+	if (!idle_state_latency) {
-+		pr_warn("DT-PowerMgmt: missing ibm,cpu-idle-state-latencies-ns\n");
-+		return nr_idle_states;
-+	}
- 
- 	dt_idle_states = len_flags / sizeof(u32);
- 
- 	for (i = 0; i < dt_idle_states; i++) {
- 
- 		flags = be32_to_cpu(idle_state_flags[i]);
-+
-+		/* Cpuidle accepts exit_latency in us and we estimate best case
-+		 * target residency to be 10x exit_latency
-+		 */
-+		latency_ns = be32_to_cpu(idle_state_latency[i]);
-+
- 		if (flags & IDLE_INST_NAP) {
- 			/* Add NAP state */
- 			strcpy(powernv_states[nr_idle_states].name, "Nap");
- 			strcpy(powernv_states[nr_idle_states].desc, "Nap");
- 			powernv_states[nr_idle_states].flags = CPUIDLE_FLAG_TIME_VALID;
--			powernv_states[nr_idle_states].exit_latency = 10;
--			powernv_states[nr_idle_states].target_residency = 100;
-+			powernv_states[nr_idle_states].exit_latency =
-+					((unsigned int)latency_ns) / 1000;
-+			powernv_states[nr_idle_states].target_residency =
-+					((unsigned int)latency_ns / 100);
- 			powernv_states[nr_idle_states].enter = &nap_loop;
- 			nr_idle_states++;
- 		}
-@@ -201,8 +216,10 @@ static int powernv_add_idle_states(void)
- 			strcpy(powernv_states[nr_idle_states].desc, "FastSleep");
- 			powernv_states[nr_idle_states].flags =
- 				CPUIDLE_FLAG_TIME_VALID | CPUIDLE_FLAG_TIMER_STOP;
--			powernv_states[nr_idle_states].exit_latency = 300;
--			powernv_states[nr_idle_states].target_residency = 1000000;
-+			powernv_states[nr_idle_states].exit_latency =
-+					((unsigned int)latency_ns) / 1000;
-+			powernv_states[nr_idle_states].target_residency =
-+					((unsigned int)latency_ns / 100);
- 			powernv_states[nr_idle_states].enter = &fastsleep_loop;
- 			nr_idle_states++;
- 		}
--- 
-1.9.0
+Is there a common mailbox binding somewhere? I couldn't find one. While 
+the text above specifies the value for #mbox-cells, it doesn't specify 
+the details of what the property is used for (i.e. there's no 
+documentation of the consumer-side of this property, for parsing the 
+mboxes property). Typically, that would be part of a subsystem's common 
+binding document, and that document would be referenced here.
+
+> diff --git a/include/dt-bindings/mailbox/tegra-xusb-mailbox.h b/include/dt-bindings/mailbox/tegra-xusb-mailbox.h
+
+> +#define TEGRA_XUSB_MBOX_CHAN_HOST	0
+> +#define TEGRA_XUSB_MBOX_CHAN_PHY	1
+
+I can't work out how these values relate to hardware at all. Are they in 
+fact properties of the particular firmware that's loaded into the XUSB 
+module? If so, I don't think the DT should contain these values at all. 
+I wonder if the individual MBOX_CMD_* values from patch 2 are any 
+better, although I think those are also defined by the firmware, not the 
+hardware?
