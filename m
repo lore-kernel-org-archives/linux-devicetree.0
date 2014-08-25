@@ -1,95 +1,40 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 6/6] devicetree: bindings: Document Renesas JPEG Processing Unit.
-Date: Mon, 25 Aug 2014 11:49:11 +0200
-Message-ID: <1792321.pxB6gXzI03@avalon>
-References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com> <3694359.xqEjcGBlOG@avalon> <20140822182053.62667c32@bones>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 0/6] SolidRun Hummingboard/Cubox-i DT updates
+Date: Mon, 25 Aug 2014 10:51:07 +0100
+Message-ID: <20140825095106.GS30401@n2100.arm.linux.org.uk>
+References: <20140823091058.GO30401@n2100.arm.linux.org.uk> <20140825062930.GA6928@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140822182053.62667c32@bones>
-Sender: linux-sh-owner@vger.kernel.org
-To: Mikhail Ulianov <mikhail.ulyanov@cogentembedded.com>
-Cc: m.chehab@samsung.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140825062930.GA6928@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mikhail,
-
-On Friday 22 August 2014 18:20:53 Mikhail Ulianov wrote:
-> On Thu, 21 Aug 2014 01:01:43 +0200 Laurent Pinchart wrote:
-> > On Tuesday 19 August 2014 16:50:53 Mikhail Ulyanov wrote:
-> > > Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-> > > ---
-> > > 
-> > >  .../devicetree/bindings/media/renesas,jpu.txt      | 23 +++++++++++++++
-> > >  1 file changed, 23 insertions(+)
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/media/renesas,jpu.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> > > b/Documentation/devicetree/bindings/media/renesas,jpu.txt new file
-> > > mode 100644
-> > > index 0000000..44b07df
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/renesas,jpu.txt
-> > > @@ -0,0 +1,23 @@
-> > > +* Renesas VSP1 Video Processing Engine
+On Mon, Aug 25, 2014 at 02:29:32PM +0800, Shawn Guo wrote:
+> On Sat, Aug 23, 2014 at 10:10:58AM +0100, Russell King - ARM Linux wrote:
+> > Here's a set of patches updating the Cubox-i/Hummingboard DT files.
 > > 
-> > Copy & paste ? :-)
-> 
-> Yeah. Will fix it.
-> 
-> > > +
-> > > +The JPEG processing unit (JPU) incorporates the JPEG codec with an
-> > > encoding +and decoding function conforming to the JPEG baseline
-> > > process, so that the JPU
-> > > +can encode image data and decode JPEG data quickly.
-> > > +It can be found in the Renesas R-Car first and second generation
-> > > SoCs.
+> > The first two are fairly important fixes, so should at least go in
+> > for -rc kernels.
 > > 
-> > Is there a difference between the first and second generation JPUs ?
+> > The SPDIF patch is something which could go in -rc as well as it's a
+> > cosmetic patch, changing the name displayed in (eg) pulseaudio for the
+> > SPDIF output from the developer-centric "imx-spdif" to "Integrated SPDIF".
 > 
-> There should be no difference because in practice maximum supported
-> resolution for Gen2 is 4096x4096 (not 8000x8000 as in overview section
-> of documentation). And in Gen1 documentation(overview section) maximum
-> supported resolution is also 4096x4096.
-> 
-> > > +
-> > > +Required properties:
-> > > +  - compatible: should containg one of the following:
-> > > +			- "renesas,jpu-r8a7790" for R-Car H2
-> > > +			- "renesas,jpu-r8a7791" for R-Car M2
-> > 
-> > How about adding a "renesas,jpu" generic compatible, and listing both
-> > the SoC- specific and the generic values (in that order) in the
-> > compatible property ?
-> 
-> Could be a good idea, but there is no JPU in some R-Car Gen1 SoCs
-> e.g. E1. Plus we don't have full documentation on JPU in Gen1 SoCs.
-> So for now Gen1 is not supported. Or this doesn't matter in that case?
+> I will sent the first 3 for -rc.  But I second Iain's comment that the
+> first patch should have a better commit log to explain why it's an
+> important fix.
 
-The lack of JPU in some chips isn't an issue, but the lack of documentation 
-for Gen1 is a problem. Let's not add a too generic compatible string in that 
-case.
-
-I would still like to add a "renesas,jpu-gen2" compatible in addition to the 
-SoC-specific values, but that might be frowned upon.
-
-> > > +  - reg: Base address and length of the registers block for the
-> > > JPU.
-> > > +  - interrupts: JPU interrupt specifier.
-> > > +  - clocks: A phandle + clock-specifier pair for the JPU
-> > > functional clock. +
-> > > +Example: R8A7790 (R-Car H2) JPU node
-> > > +	jpeg-codec@fe980000 {
-> > > +		compatible = "renesas,jpu-r8a7790";
-> > > +		reg = <0 0xfe980000 0 0x10300>;
-> > > +		interrupts = <0 272 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		clocks = <&mstp1_clks R8A7790_CLK_JPU>;
-> > > +	};
+I still have no answer for that, so I suggest dropping it until Rabeeh
+can write a better commit log.
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
