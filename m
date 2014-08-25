@@ -1,237 +1,271 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v5 5/5] clk: RK808: Add clkout driver for RK808
-Date: Mon, 25 Aug 2014 21:39:22 +0800
-Message-ID: <1408973962-23883-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: hi3620-hi4511: Add HI6421 MFD and regulator nodes
+Date: Mon, 25 Aug 2014 21:39:42 +0800
+Message-ID: <1408973982-2072-4-git-send-email-guodong.xu@linaro.org>
+References: <1408973982-2072-1-git-send-email-guodong.xu@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408973982-2072-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhangnian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Add Hi6421 MFD dts node and regulator nodes into hi3620-hi4511
+board config dts file.
 
+Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+ arch/arm/boot/dts/hi3620-hi4511.dts | 233 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 233 insertions(+)
 
-Changes in v5:
-Advices by Mark Brown
-- add description about regulator valid name.
-- add a header file "rockchip,rk808".
-
-Changes in v4:
-Advices by Doug
-- add a "#clock-cells" propertiy
-- update the example
-
-Changes in v3: None
-Changes in v2: None
-
- drivers/clk/Kconfig     |    9 +++
- drivers/clk/Makefile    |    1 +
- drivers/clk/clk-rk808.c |  164 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 174 insertions(+)
- create mode 100644 drivers/clk/clk-rk808.c
-
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index cfd3af7..84e0590 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -38,6 +38,15 @@ config COMMON_CLK_MAX77686
- 	---help---
- 	  This driver supports Maxim 77686 crystal oscillator clock. 
+diff --git a/arch/arm/boot/dts/hi3620-hi4511.dts b/arch/arm/boot/dts/hi3620-hi4511.dts
+index fe62392..a1aadbb 100644
+--- a/arch/arm/boot/dts/hi3620-hi4511.dts
++++ b/arch/arm/boot/dts/hi3620-hi4511.dts
+@@ -635,6 +635,239 @@
+ 				pinctrl-single,bias-pullup = <0 1 0 1>;
+ 			};
+ 		};
++
++		hi6421 {
++			compatible = "hisilicon,hi6421-pmic";
++			reg = <0xc00000 0x0180>; /* 0x60 << 2 */
++
++			regulators {
++				// supply for MLC NAND/ eMMC
++				hi6421_vout0_reg: hi6421_vout0 {
++					regulator-name = "VOUT0";
++					regulator-min-microvolt = <2850000>;
++					regulator-max-microvolt = <2850000>;
++				};
++
++				// supply for 26M Oscillator
++				hi6421_vout1_reg: hi6421_vout1 {
++					regulator-name = "VOUT1";
++					regulator-min-microvolt = <1700000>;
++					regulator-max-microvolt = <2000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for AP system
++				hi6421_vout2_reg: hi6421_vout2 {
++					regulator-name = "VOUT2";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for DDR PHY I/O
++				hi6421_vout3_reg: hi6421_vout3 {
++					regulator-name = "VOUT3";
++					regulator-min-microvolt = <1050000>;
++					regulator-max-microvolt = <1400000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for MIPI, USB2.0, PCIe, PLL Analog
++				hi6421_vout4_reg: hi6421_vout4 {
++					regulator-name = "VOUT4";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for I/O 1.8V
++				hi6421_vout5_reg: hi6421_vout5 {
++					regulator-name = "VOUT5";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for I/O 2.6V
++				hi6421_vout6_reg: hi6421_vout6 {
++					regulator-name = "VOUT6";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for SD I/O
++				hi6421_vout7_reg: hi6421_vout7 {
++					regulator-name = "VOUT7";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for USB PHY
++				hi6421_vout8_reg: hi6421_vout8 {
++					regulator-name = "VOUT8";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for Efuse power
++				hi6421_vout9_reg: hi6421_vout9 {
++					regulator-name = "VOUT9";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for BT RF&PA
++				hi6421_vout10_reg: hi6421_vout10 {
++					regulator-name = "VOUT10";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for GPS RF&PA
++				hi6421_vout11_reg: hi6421_vout11 {
++					regulator-name = "VOUT11";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for SD card
++				hi6421_vout12_reg: hi6421_vout12 {
++					regulator-name = "VOUT12";
++					regulator-min-microvolt = <2850000>;
++					regulator-max-microvolt = <2850000>;
++				};
++
++				// supply for CMMB
++				hi6421_vout13_reg: hi6421_vout13 {
++					regulator-name = "VOUT13";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for WIFI I/O
++				hi6421_vout14_reg: hi6421_vout14 {
++					regulator-name = "VOUT14";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for WIFI core & PA
++				hi6421_vout15_reg: hi6421_vout15 {
++					regulator-name = "VOUT15";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				// supply for LCD I/O
++				hi6421_vout16_reg: hi6421_vout16 {
++					regulator-name = "VOUT16";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
++				};
++
++				// supply for LCD Ananlog
++				hi6421_vout17_reg: hi6421_vout17 {
++					regulator-name = "VOUT17";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
++				};
++
++				// supply for Camera I/O
++				hi6421_vout18_reg: hi6421_vout18 {
++					regulator-name = "VOUT18";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for Camera Analog
++				hi6421_vout19_reg: hi6421_vout19 {
++					regulator-name = "VOUT19";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for Camera VCM
++				hi6421_vout20_reg: hi6421_vout20 {
++					regulator-name = "VOUT20";
++					regulator-min-microvolt = <1500000>;
++					regulator-max-microvolt = <3000000>;
++				};
++
++				// supply for Audio, incl. HKADC
++				hi6421_vout_audio_reg: hi6421_vout_audio {
++					regulator-name = "AVDD2";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <3300000>;
++				};
++
++				// supply for Cortex-A9 CPU core
++				hi6421_buck0_reg: hi6421_buck0 {
++					regulator-name = "VBUCK0";
++					regulator-min-microvolt = <700000>;
++					regulator-max-microvolt = <1600000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for Cortex-A9 CPU core
++				hi6421_buck1_reg: hi6421_buck1 {
++					regulator-name = "VBUCK1";
++					regulator-min-microvolt = <700000>;
++					regulator-max-microvolt = <1600000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for GPU
++				hi6421_buck2_reg: hi6421_buck2 {
++					regulator-name = "VBUCK2";
++					regulator-min-microvolt = <700000>;
++					regulator-max-microvolt = <1600000>;
++					regulator-boot-on;
++				};
++
++				// supply for Peripheral
++				hi6421_buck3_reg: hi6421_buck3 {
++					regulator-name = "VBUCK3";
++					regulator-min-microvolt = <950000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for LPDDR2 and AP I/O
++				hi6421_buck4_reg: hi6421_buck4 {
++					regulator-name = "VBUCK4";
++					regulator-min-microvolt = <1150000>;
++					regulator-max-microvolt = <2000000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				// supply for Low voltage
++				hi6421_buck5_reg: hi6421_buck5 {
++					regulator-name = "VBUCK5";
++					regulator-min-microvolt = <1150000>;
++					regulator-max-microvolt = <1900000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++			};
++		};
++
+ 	};
  
-+config COMMON_CLK_RK808
-+	tristate "Clock driver for RK808"
-+	depends on MFD_RK808
-+	---help---
-+	  This driver supports RK808 crystal oscillator clock. These
-+	  multi-function devices have two fixed-rate oscillators,
-+	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
-+	  by control register.
-+
- config COMMON_CLK_SI5351
- 	tristate "Clock driver for SiLabs 5351A/B/C"
- 	depends on I2C
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index f537a0b..99f53d5 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_ARCH_NOMADIK)		+= clk-nomadik.o
- obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
- obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
- obj-$(CONFIG_CLK_PPC_CORENET)		+= clk-ppc-corenet.o
-+obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
- obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
- obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
- obj-$(CONFIG_COMMON_CLK_SI570)		+= clk-si570.o
-diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-new file mode 100644
-index 0000000..a8f8d81
---- /dev/null
-+++ b/drivers/clk/clk-rk808.c
-@@ -0,0 +1,164 @@
-+/*
-+ * Clkout driver for Rockchip RK808
-+ *
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * Author: Chris Zhong <zyw@rock-chips.com>
-+ * Author: Zhang Qing <zhangqing@rock-chips.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/rk808.h>
-+#include <linux/i2c.h>
-+
-+struct rk808_clkout {
-+	struct rk808 *rk808;
-+	struct clk_onecell_data clk_data;
-+	struct clk_hw		clkout1_hw;
-+	struct clk_hw		clkout2_hw;
-+};
-+
-+static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
-+					      unsigned long parent_rate)
-+{
-+	return 32768;
-+}
-+
-+static int rk808_clkout1_is_prepared(struct clk_hw *hw)
-+{
-+	return 1;
-+}
-+
-+static int rk808_clkout2_control(struct clk_hw *hw, bool enable)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+
-+	return regmap_update_bits(rk808->regmap, RK808_CLK32OUT_REG,
-+				  CLK32KOUT2_EN, enable ? CLK32KOUT2_EN : 0);
-+}
-+
-+static int rk808_clkout2_prepare(struct clk_hw *hw)
-+{
-+	return rk808_clkout2_control(hw, 1);
-+}
-+
-+static void rk808_clkout2_unprepare(struct clk_hw *hw)
-+{
-+	rk808_clkout2_control(hw, 0);
-+}
-+
-+static int rk808_clkout2_is_prepared(struct clk_hw *hw)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+	uint32_t val;
-+
-+	int ret = regmap_read(rk808->regmap, RK808_CLK32OUT_REG, &val);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return (val & CLK32KOUT2_EN) ? 1 : 0;
-+}
-+
-+static const struct clk_ops rk808_clkout1_ops = {
-+	.is_prepared = rk808_clkout1_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static const struct clk_ops rk808_clkout2_ops = {
-+	.prepare = rk808_clkout2_prepare,
-+	.unprepare = rk808_clkout2_unprepare,
-+	.is_prepared = rk808_clkout2_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static int rk808_clkout_probe(struct platform_device *pdev)
-+{
-+	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-+	struct i2c_client *client = rk808->i2c;
-+	struct device_node *node = client->dev.of_node;
-+	struct clk_init_data init = {};
-+	struct clk **clk_table;
-+	struct rk808_clkout *rk808_clkout;
-+
-+	rk808_clkout = devm_kzalloc(&client->dev,
-+				    sizeof(*rk808_clkout), GFP_KERNEL);
-+	if (!rk808_clkout)
-+		return -ENOMEM;
-+
-+	rk808_clkout->rk808 = rk808;
-+
-+	clk_table = devm_kzalloc(&client->dev,
-+				 2*sizeof(struct clk *), GFP_KERNEL);
-+	if (!clk_table)
-+		return -ENOMEM;
-+
-+	init.flags = CLK_IS_ROOT;
-+	init.parent_names = NULL;
-+	init.num_parents = 0;
-+	init.name = "rk808-clkout1";
-+	init.ops = &rk808_clkout1_ops;
-+	rk808_clkout->clkout1_hw.init = &init;
-+
-+	/* optional override of the clockname */
-+	of_property_read_string_index(node, "clock-output-names",
-+				      0, &init.name);
-+
-+	clk_table[0] = devm_clk_register(&client->dev,
-+					 &rk808_clkout->clkout1_hw);
-+	if (IS_ERR(clk_table[0]))
-+		return PTR_ERR(clk_table[0]);
-+
-+	init.name = "rk808-clkout2";
-+	init.ops = &rk808_clkout2_ops;
-+	rk808_clkout->clkout2_hw.init = &init;
-+
-+	/* optional override of the clockname */
-+	of_property_read_string_index(node, "clock-output-names",
-+				      1, &init.name);
-+
-+	clk_table[1] = devm_clk_register(&client->dev,
-+					 &rk808_clkout->clkout2_hw);
-+	if (IS_ERR(clk_table[1]))
-+		return PTR_ERR(clk_table[1]);
-+
-+	rk808_clkout->clk_data.clks = clk_table;
-+	rk808_clkout->clk_data.clk_num = 2;
-+
-+	return of_clk_add_provider(node, of_clk_src_onecell_get, clk_table);
-+}
-+
-+static struct platform_driver rk808_clkout_driver = {
-+	.probe = rk808_clkout_probe,
-+	.driver		= {
-+		.name	= "rk808-clkout",
-+		.owner	= THIS_MODULE,
-+	},
-+};
-+
-+module_platform_driver(rk808_clkout_driver);
-+
-+MODULE_DESCRIPTION("Clkout driver for the rk808 series PMICs");
-+MODULE_AUTHOR("Chris Zhong <zyw@rock-chips.com>");
-+MODULE_AUTHOR("Zhang Qing <zhanqging@rock-chips.com>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:rk808-clkout");
+ 	gpio-keys {
 -- 
-1.7.9.5
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
