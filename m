@@ -1,55 +1,126 @@
-From: Jon Loeliger <jdl@jdl.com>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
- initialization order based on the DT)
-Date: Mon, 25 Aug 2014 08:08:59 -0500
-Message-ID: <E1XLu15-0002DP-6o@jdl.com>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
- <20140514141914.446F7C4153D@trevor.secretlab.ca>
- <20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de>
- <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v3 1/6] pinctrl: Device tree bindings for Qualcomm
+ pm8xxx gpio block
+Date: Mon, 25 Aug 2014 16:14:00 +0300
+Message-ID: <1408972440.5256.8.camel@iivanov-dev>
+References: <1407771634-14946-1-git-send-email-iivanov@mm-sol.com>
+	 <1407771634-14946-2-git-send-email-iivanov@mm-sol.com>
+	 <20140820222741.GD16274@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20140825093931.GB2399@ulmo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Alexander Holler <holler@ahsoftware.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140820222741.GD16274@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2014-08-20 at 15:27 -0700, Bjorn Andersson wrote:
+> On Mon 11 Aug 08:40 PDT 2014, Ivan T. Ivanov wrote:
+> [...]
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+> [...]
+> > +SUBNODES:
+> [...]
+> > +- function:
+> > +	Usage: required
+> > +	Value type: <string>
+> > +	Definition: Specify the alternative function to be configured for the
+> > +		    specified pins.  Valid values are:
+> > +		    "normal",
+> > +		    "paired",
+> > +		    "func1",
+> > +		    "func2",
+> > +		    "dtest1",
+> > +		    "dtest2",
+> > +		    "dtest3",
+> > +		    "dtest4"
+> > +
 > 
+> I still think it looks better with "real" functions, but I rather go with this
+> than discussing it forever.
+> 
+> > +- qcom,pull-up-strength:
+> > +	Usage: optional
+> > +	Value type: <u32>
+> > +	Definition: Specifies the strength to use for pull up, if selected.
+> > +		    Valid values are; as defined in
+> > +		    <dt-bindings/pinctrl/qcom,pmic-gpio.h>:
+> > +		    1: 30uA                     (PMIC_GPIO_PULL_UP_30)
+> > +		    2: 1.5uA                    (PMIC_GPIO_PULL_UP_1P5)
+> > +		    3: 31.5uA                   (PMIC_GPIO_PULL_UP_31P5)
+> > +		    4: 1.5uA + 30uA boost       (PMIC_GPIO_PULL_UP_1P5_30)
+> > +		    If this property is ommited 30uA strength will be used if
+> > +		    pull up is selected
+> 
+> I would prefer if we decrement this one step, as it will follow the register
+> values of both the "ssbi" and "spmi" based pmics.
 
-> Anyway, instead of going back and forth between "deferred probe is good"
-> and "deferred probe is bad", how about we do something useful now and
-> concentrate on how to make use of the information we have in DT with the
-> goal to reduce the number of cases where deferred probing is required?
+Ok.
 
-Good idea.
+> 
+> [...]
+> > +
+> > +- power-source:
+> > +	Usage: optional
+> > +	Value type: <u32>
+> > +	Definition: Selects the power source for the specified pins. Valid
+> > +		    power sources are defined per chip in
+> > +		    <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+> > +		    xxxx_GPIO_L6, xxxx_GPIO_L5...
+> 
+> After implementing this my only concern is that debugfs output is not as useful
+> anymore; saying VIN2 instead of S4. But I can live with this.
+> 
+> > diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+> [...]
+> > +
+> > +#define PM8038_GPIO1_2_LPG_DRV		PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8038_GPIO3_5V_BOOST_EN	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8038_GPIO4_SSBI_ALT_CLK	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8038_GPIO5_6_EXT_REG_EN	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8038_GPIO10_11_EXT_REG_EN	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8038_GPIO6_7_CLK		PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8038_GPIO9_BAT_ALRM_OUT	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8038_GPIO6_12_KYPD_DRV	PMIC_GPIO_FUNC_FUNC2
+> > +
+> > +#define PM8058_GPIO7_8_MP3_CLK		PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8058_GPIO7_8_BCLK_19P2MHZ	PMIC_GPIO_FUNC_FUNC2
+> > +#define PM8058_GPIO9_26_KYPD_DRV	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8058_GPIO21_23_UART_TX	PMIC_GPIO_FUNC_FUNC2
+> > +#define PM8058_GPIO24_26_LPG_DRV	PMIC_GPIO_FUNC_FUNC2
+> > +#define PM8058_GPIO33_BCLK_19P2MHZ	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8058_GPIO34_35_MP3_CLK	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8058_GPIO36_BCLK_19P2MHZ	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8058_GPIO37_UPL_OUT		PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8058_GPIO37_UART_M_RX		PMIC_GPIO_FUNC_FUNC2
+> > +#define PM8058_GPIO38_XO_SLEEP_CLK	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8058_GPIO38_39_CLK_32KHZ	PMIC_GPIO_FUNC_FUNC2
+> > +#define PM8058_GPIO39_MP3_CLK		PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8058_GPIO40_EXT_BB_EN		PMIC_GPIO_FUNC_FUNC1
+> > +
+> > +#define PM8917_GPIO9_18_KEYP_DRV	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8917_GPIO20_BAT_ALRM_OUT	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8917_GPIO21_23_UART_TX	PMIC_GPIO_FUNC_FUNC2
+> > +#define PM8917_GPIO25_26_EXT_REG_EN	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8917_GPIO37_38_XO_SLEEP_CLK	PMIC_GPIO_FUNC_FUNC1
+> > +#define PM8917_GPIO37_38_MP3_CLK	PMIC_GPIO_FUNC_FUNC2
+> 
+> Stephens argument was that we don't want to have huge tables for the functions
+> and I can see his point, it will be some work to build all the tables.
+> Adding all this defines is unfortunately doing just that.
 
-The proposal on the table is to allow the probe code
-to make a topological sort of the devices based on
-dependency information either implied, explicitly stated
-or both.  That is likely a fundamentally correct approach.
+It is still little bit simpler :-)
 
-I believe some of the issues that need to be resolved are:
+> 
+> I had a version of my driver that exposed real functions by name from the
+> driver, following the pattern we have for other pinctrl drivers and making the
+> dts very easy to read. But if you don't think we should go that route then I
+> suggest that we just call it func1/func2 and skip these defines.
+> 
+> Regards,
+> Bjorn
 
-    1) What constitutes a dependency?
-    2) How is that dependency expressed?
-    3) How do we add missing dependencies?
-    4) Backward compatability problems.
-
-There are other questions, of course.  Is it a topsort
-per bus?  Are there required "early devices"?  Should
-the inter-node dependencies be expressed at each node,
-or in a separate hierarchy within the DTS?  Others.
-
-HTH,
-jdl
+Regards,
+Ivan
