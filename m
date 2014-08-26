@@ -1,116 +1,119 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
- initialization order based on the DT)
-Date: Tue, 26 Aug 2014 13:08:28 +0200
-Message-ID: <20140826110827.GA31350@ulmo>
-References: <53F64624.5000403@ahsoftware.de>
- <20140822131919.GX21734@leverpostej>
- <20140825093931.GB2399@ulmo>
- <E1XLu15-0002DP-6o@jdl.com>
- <20140825133714.GH4163@ulmo.nvidia.com>
- <20140826084208.AE5F0C40989@trevor.secretlab.ca>
- <20140826084922.GG17263@ulmo>
- <53FC566C.30904@ahsoftware.de>
- <20140826102503.GC31124@ulmo>
- <53FC6513.5040800@ahsoftware.de>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Tue, 26 Aug 2014 12:20:13 +0100
+Message-ID: <20140826112013.GK9574@lee--X1>
+References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com>
+ <20140820092117.GI4266@lee--X1>
+ <53FA9D1E.8040202@rock-chips.com>
+ <20140826092205.GG9574@lee--X1>
+ <53FC5BD1.7030406@rock-chips.com>
+ <20140826102036.GJ9574@lee--X1>
+ <53FC63EE.6060104@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53FC6513.5040800@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Jon Loeliger <jdl@jdl.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <53FC63EE.6060104-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---wac7ysb48OaltWcw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Aug 26, 2014 at 12:44:35PM +0200, Alexander Holler wrote:
-> Am 26.08.2014 12:25, schrieb Thierry Reding:
-> >On Tue, Aug 26, 2014 at 11:42:04AM +0200, Alexander Holler wrote:
->=20
-> >>You need either the type information in the DTB (that's why I've add th=
-ose
-> >>"dependencies" to identify phandles), or you need to know every binding=
- (at
-> >>"dependency-resolve-time" to identify phandles. The latter is impractic=
-able
-> >>to implement in a generic way (for use with every possible binding).
+On Tue, 26 Aug 2014, Chris Zhong wrote:
+> On 08/26/2014 06:20 PM, Lee Jones wrote:
+> >On Tue, 26 Aug 2014, Chris Zhong wrote:
+> >>On 08/26/2014 05:22 PM, Lee Jones wrote:
+> >>>On Mon, 25 Aug 2014, Chris Zhong wrote:
+> >>>>On 08/20/2014 05:21 PM, Lee Jones wrote:
+> >>>>>On Wed, 20 Aug 2014, Chris Zhong wrote:
+> >>>>>
+> >>>>>>The RK808 chip is a power management IC for multimedia and hand=
+held
+> >>>>>>devices. It contains the following components:
+> >>>>>>
+> >>>>>>- Regulators
+> >>>>>>- RTC
+> >>>>>>
+> >>>>>>The rk808 core driver is registered as a platform driver and pr=
+ovides
+> >>>>>>communication through I2C with the host device for the differen=
+t
+> >>>>>>components.
+> >>>>>>
+> >>>>>>Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >>>>>>---
+> >>>[...]
+> >>>
+> >>>>>>+	rk808->pdata =3D pdata;
+> >>>>>Remove pdata from 'struct rk808'.  You can obtain it from dev.
+> >>>>Can I keep this pdata in rk808, because it is used in the regulat=
+or driver.
+> >>>>The one obtain from dev maybe empty.
+> >>>If the one in dev is empty, you should populate that instead.
+> >>So, should I malloc a pada, and assign it to client->dev?
+> >If client->dev.pdata is NULL, yes.
 > >
-> >Like I already mentioned, this could be done in drivers who contain that
-> >information already anyway. Or parts of it could be done in subsystem-
-> >specific callbacks where a generic binding is available.
+> >But actually, I have more important questions that need to be answer=
+ed
+> >first.  Ones which I would normally be able to answer myself if the
+> >patch-set had been sent as one (i.e. threaded) instead of as
+> >individual patches:
+> >
+> >- What are you using pdata for?
 >=20
-> That would end up with almost the same ugly driver-based workarounds as n=
-ow.
-> It's much better if a driver author only has to define it's prerequisits =
-(in
-> form of dependencies in the dts) and could be sure the driver will only be
-> probed if those are met, than to do that stuff based on a subsystem or ev=
-en
-> driver level.
+> For save some properties,
 >=20
-> If you add dependency-information to drivers, you have two problems:
+> like "rockchip,system-power-controller" in MFD
+> and some regulator properties in regulator/rk808...
+>=20
+> >- Where is pdata populated?
+>=20
+> It is populated in probe in mfd/rk808.c
+>=20
+> actually, I copy it from tps65910.c
+>=20
+>=20
+> >- Where is pdata used?
+>=20
+> pdata is used in mfd and regulator
 
-We already have all that dependency information in drivers anyway. Each
-driver requests the resources at .probe() time. What I proposed (it was
-really Arnd who proposed it first) is to move that information out of
-code and into some sort of table that could be used by the driver core
-to figure out dependencies.
+I'm still a little confused.  I see it being populated in the MFD
+driver, then I only see the attributes populated in the MFD driver
+used in the MFD driver and nowhere else?  I do see other attributes
+used in the regulator driver i.e. .of_node[], but these are then used
+only in the regulator driver, thus they shouldn't really be pdata.
 
-> - How do you get these information from the driver (remember, currently
-> there is only one initial call, a initcall which might do almost anything)
+Let me put it another way:
 
-While I don't think it's necessary, that's something that could be
-changed. I mean, we have access to the full source code of this
-operating system, so we can change every aspect of it. If we can't find
-a way to make this work with the current initcall sequence it's always
-an option to extend that sequence so that it meets our needs.
+struct rk808_board {
++       int irq;
++       int irq_base;
++       int wakeup;
++       bool pm_off;
++       struct regulator_init_data *rk808_init_data[rk808_NUM_REGULATOR=
+S];
++       struct device_node *of_node[rk808_NUM_REGULATORS];
++       int pmic_sleep_gpio;
++       unsigned int dcdc_slp_voltage[3]; /* buckx_voltage in uV */
++       unsigned int ldo_slp_voltage[7];
++};
 
-> - These information might become outdated and you would have to change all
-> drivers. E.g. if the name of a dependency (driver) changes it wouldn't be
-> done with changing the dts (maybe plural), but you would have to change t=
-he
-> source of all dependant drivers too.
+=46or each of the above:
 
-No. Drivers implement a DT binding. That binding defines what power
-supplies, clocks, pinmux, ... the device needs. Those constitute the
-dependencies. We most certainly don't want to depend on driver names
-since there can be a multitude of different drivers that provide a given
-dependency.
+- Can it be passed from platform data i.e. arch/<arch>/{plat,mach}-*?
+- Can it use local (not passed from driver to driver) variable instead?
 
-What drivers should provide (and what they already provide today) is the
-name of the property and the index of the cell that they expect to find
-a phandle in as well as the type of the phandle. That's all that's
-necessary, really. Everything else can be derived from that phandle and
-the type.
+If the answer to the first question is 'no' and/or if the answer to
+the second question is 'yes', then it shouldn't be platform data.
 
-Thierry
-
---wac7ysb48OaltWcw
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT/GqrAAoJEN0jrNd/PrOhyv8QAKiBbg8DL4/0dYdInmyl8EPD
-dcb92vMSYN9Wbc6guTjtm/YNdB4T1jCyF6RKmWPD+/pgGJ00iKvrnvbqI9O4DTRn
-WIix4j3ihaHYpZYPkLp/ByHf7yg7YXbfPNzoQP5XcVw1htFJcSr/xs5PPI052Iu3
-jglHUdG3sT6Q78k1DmV1oaHNxnKz2MS0fObqz0RAfKJu/7pvkf1N8U/DJrrz9coJ
-LATEkGdm1mY/ww5zDKUPQmih3iN/eq1dDshg0/qM1ki09HUWp+tv91FN1cug+KbT
-mwqCdkGEmXoFDKFOb8bUAjf41qciPdiepHuNFt/55J66+EZgpqJ+hCohevqqpqwX
-jmTgkCT5xbIzaw6HMvtiEcJClmiZ/oiwE4qH03OyshKvlAHH5O72MpN7j+ilxwiO
-J3igNV2ZEzdjsta2Y8SPVxl3g2ahdkyGkA0/yj7EeYsZimAUsORFRBMd3+l8h6oy
-yzMt5rdG45lzT0E0V6TSCoBifRscwZbJrNWeN7Rrc3dfmtmXZTMWD/vKto4N92V8
-Co9Jp85KVLnJcotO4sv0apK/EwKKx4CEy9hNwGqfwZ9K5D46O0CndsARMsXHfW6P
-WuIlZOS3wcjWLHeMDitYTrMC0uE8/JbxnytgUUygWODOyD+UbeFQOx5ogd9b95o4
-ef8EdV0uy0NbvPx5IDbl
-=BvsA
------END PGP SIGNATURE-----
-
---wac7ysb48OaltWcw--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
