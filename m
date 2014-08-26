@@ -1,154 +1,39 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCHv2 27/27] OMAPDSS: connector-analog-tv: Add DT support
-Date: Tue, 26 Aug 2014 18:58:45 +0200
-Message-ID: <21704808.AJTjtXoZly@avalon>
-References: <1387205794-32246-1-git-send-email-tomi.valkeinen@ti.com> <1387205794-32246-28-git-send-email-tomi.valkeinen@ti.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Tue, 26 Aug 2014 10:08:08 -0700
+Message-ID: <CAD=FV=X1GY+uUqt7fHETnt=qmPpLp+qtasvVZN8dXC4gxTYX-g@mail.gmail.com>
+References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1387205794-32246-28-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1409062444-12019-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@chr>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
+Chris,
 
-On Monday 16 December 2013 16:56:34 Tomi Valkeinen wrote:
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> ---
->  .../video/omap2/displays-new/connector-analog-tv.c | 66 ++++++++++++++++++-
->  1 file changed, 65 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/video/omap2/displays-new/connector-analog-tv.c
-> b/drivers/video/omap2/displays-new/connector-analog-tv.c index
-> ccd9073f706f..ebed25a86487 100644
-> --- a/drivers/video/omap2/displays-new/connector-analog-tv.c
-> +++ b/drivers/video/omap2/displays-new/connector-analog-tv.c
-> @@ -12,6 +12,7 @@
->  #include <linux/slab.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of.h>
-> 
->  #include <video/omapdss.h>
->  #include <video/omap-panel-data.h>
-> @@ -42,6 +43,12 @@ static const struct omap_video_timings tvc_pal_timings =
-> { .interlace	= true,
->  };
-> 
-> +static const struct of_device_id tvc_of_match[];
-> +
-> +struct tvc_of_data {
-> +	enum omap_dss_venc_type connector_type;
-> +};
-> +
->  #define to_panel_data(x) container_of(x, struct panel_drv_data, dssdev)
-> 
->  static int tvc_connect(struct omap_dss_device *dssdev)
-> @@ -92,7 +99,10 @@ static int tvc_enable(struct omap_dss_device *dssdev)
->  	in->ops.atv->set_timings(in, &ddata->timings);
-> 
->  	in->ops.atv->set_type(in, ddata->connector_type);
-> -	in->ops.atv->invert_vid_out_polarity(in, ddata->invert_polarity);
-> +
-> +	if (!ddata->dev->of_node)
-> +		in->ops.atv->invert_vid_out_polarity(in,
-> +			ddata->invert_polarity);
-> 
->  	r = in->ops.atv->enable(in);
->  	if (r)
-> @@ -205,6 +215,35 @@ static int tvc_probe_pdata(struct platform_device
-> *pdev) return 0;
->  }
-> 
-> +static int tvc_probe_of(struct platform_device *pdev)
-> +{
-> +	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct omap_dss_device *in;
-> +	const struct of_device_id *match;
-> +	const struct tvc_of_data *data;
-> +
-> +	match = of_match_node(tvc_of_match, pdev->dev.of_node);
-> +	if (!match) {
-> +		dev_err(&pdev->dev, "unsupported device\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	data = match->data;
-> +
-> +	in = omapdss_of_find_source_for_first_ep(node);
-> +	if (IS_ERR(in)) {
-> +		dev_err(&pdev->dev, "failed to find video source\n");
-> +		return PTR_ERR(in);
-> +	}
-> +
-> +	ddata->in = in;
-> +
-> +	ddata->connector_type = data->connector_type;
-> +
-> +	return 0;
-> +}
-> +
->  static int tvc_probe(struct platform_device *pdev)
->  {
->  	struct panel_drv_data *ddata;
-> @@ -222,6 +261,10 @@ static int tvc_probe(struct platform_device *pdev)
->  		r = tvc_probe_pdata(pdev);
->  		if (r)
->  			return r;
-> +	} else if (pdev->dev.of_node) {
-> +		r = tvc_probe_of(pdev);
-> +		if (r)
-> +			return r;
->  	} else {
->  		return -ENODEV;
->  	}
-> @@ -263,12 +306,33 @@ static int __exit tvc_remove(struct platform_device
-> *pdev) return 0;
->  }
-> 
-> +static const struct tvc_of_data tv_svideo_data = {
-> +	.connector_type = OMAP_DSS_VENC_TYPE_SVIDEO,
-> +};
-> +
-> +static const struct tvc_of_data tv_composite_video_data = {
-> +	.connector_type = OMAP_DSS_VENC_TYPE_COMPOSITE,
-> +};
-> +
-> +static const struct of_device_id tvc_of_match[] = {
-> +	{
-> +		.compatible = "svideo-connector",
-> +		.data = &tv_svideo_data,
-> +	},
-> +	{
-> +		.compatible = "composite-video-connector",
+On Tue, Aug 26, 2014 at 7:14 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> +static struct regmap_irq_chip rk808_irq_chip = {
+> +       .name = "rk808",
+> +       .irqs = rk808_irqs,
+> +       .num_irqs = ARRAY_SIZE(rk808_irqs),
+> +       .num_regs = 2,
+> +       .irq_reg_stride = 2,
+> +       .status_base = RK808_INT_STS_REG1,
+> +       .mask_base = RK808_INT_STS_MSK_REG1,
+> +       .ack_base = RK808_INT_STS_REG1,
 
-I've just noticed that this doesn't match the bindings that document the 
-compatible value to be "composite-connector".
+Can you add ".init_ack_masked = true" here?  If I don't do that and I
+boot with the IRQ configured as "level low" then the system will just
+keep getting IRQs that it can't handle and eventually disable the
+whole rk808.  If I boot with the IRQ as "falling edge" then the system
+will never get RTC alarms.
 
-> +		.data = &tv_composite_video_data,
-> +	},
-> +	{},
-> +};
-> +
->  static struct platform_driver tvc_connector_driver = {
->  	.probe	= tvc_probe,
->  	.remove	= __exit_p(tvc_remove),
->  	.driver	= {
->  		.name	= "connector-analog-tv",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = tvc_of_match,
->  	},
->  };
-
--- 
-Regards,
-
-Laurent Pinchart
-
+I posted this fixup with an explanation at
+<https://chromium-review.googlesource.com/#/c/214241/> and it could be
+squashed into your patch.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
