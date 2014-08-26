@@ -1,99 +1,95 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v5 3/5] RTC: RK808: add RTC driver for RK808
-Date: Tue, 26 Aug 2014 17:47:08 +0800
-Message-ID: <53FC579C.50507@rock-chips.com>
-References: <1408973668-21436-1-git-send-email-zyw@rock-chips.com> <CAD=FV=VYJvgXXcYkq+vcpZkXZBDbgfRGNyF8GA6MnvMAGaAebQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
+Date: Tue, 26 Aug 2014 11:54:43 +0200
+Message-ID: <5184912.mY2hCPH20k@wuerfel>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org> <6589717.GOLq1GlTCJ@wuerfel> <20140826090810.GH17263@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=VYJvgXXcYkq+vcpZkXZBDbgfRGNyF8GA6MnvMAGaAebQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@c>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140826090810.GH17263@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Koichi Yasutake <yasutake.koichi-NAum8xwdG0+S7A1Ibl2khg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 26 August 2014 11:08:11 Thierry Reding wrote:
+> On Tue, Aug 26, 2014 at 10:09:25AM +0200, Arnd Bergmann wrote:
+> > On Tuesday 26 August 2014 09:50:25 Thierry Reding wrote:
+> > > On Tue, Aug 26, 2014 at 09:43:50AM +0200, Arnd Bergmann wrote:
+> > > > On Tuesday 26 August 2014 08:57:31 Thierry Reding wrote:
+> > > > > On Mon, Aug 25, 2014 at 01:01:52PM -0600, Stephen Warren wrote:
+> > > > > > On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
+> > > > > [...]
+> > > > > > >+static int tegra_xusb_mbox_probe(struct platform_device *pdev)
+> > > > > > 
+> > > > > > >+    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > > > > >+    if (!res)
+> > > > > > >+            return -ENODEV;
+> > > > > > 
+> > > > > > Should devm_request_mem_region() be called here to claim the region?
+> > > > > > 
+> > > > > > >+    mbox->regs = devm_ioremap_nocache(&pdev->dev, res->start,
+> > > > > > >+                                      resource_size(res));
+> > > > > > >+    if (!mbox->regs)
+> > > > > > >+            return -ENOMEM;
+> > > > > > 
+> > > > > > Is _nocache required? I don't see other drivers using it. I assume there's
+> > > > > > nothing special about the mbox registers.
+> > > > > 
+> > > > > Most drivers should be using devm_ioremap_resource() which will use the
+> > > > > _nocache variant of devm_ioremap() when appropriate. Usually the region
+> > > > > will not be marked cacheable (IORESOURCE_CACHEABLE) and therefore be
+> > > > > remapped uncached.
+> > > > > 
+> > > > 
+> > > > Note that ioremap() and ioremap_nocache() are the same. We really shouldn't
+> > > > ever call ioremap_nocache().
+> > > 
+> > > Perhaps we should remove ioremap_nocache() in that case. Or ioremap(),
+> > > really, and keep only those variants that do what they claim to do.
+> > 
+> > That would be good, but there are many instances of either one:
+> > 
+> > arnd@wuerfel:/git/arm-soc$ git grep -w ioremap | wc
+> >    2156   13402  183732
+> > arnd@wuerfel:/git/arm-soc$ git grep -w ioremap_nocache | wc
+> >     485    2529   42955
+> 
+> Ugh... nothing that I currently have time for. Perhaps this is a good
+> one for the Janitors? I'm not sure if the kernelnewbies.org TODO list is
+> still frequented since many pages seem to be very old. Is there some
+> other place where I could add this?
 
-On 08/26/2014 11:22 AM, Doug Anderson wrote:
->> +       int ret;
->> >+
->> >+       /* Has the RTC been programmed? */
->> >+       ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
->> >+                                BIT_RTC_CTRL_REG_RTC_V_OPT_M, 0);
-> Can you explain what you're doing here?  The comment seems wrong since
-> it implies that you're checking something.
->
-> >From what I can tell from the manual you're setting "RTC_READSEL" to 0
-> which means "Read access directly to dynamic registers.".  That's not
-> clear here, and RTC_V_OPT_M makes no sense to me.
+I'm not sure if it's really worth it. One thing we might do is just
+remove all definitions of ioremap_nocache and add a wrapper to
+include/linux/io.h, to make it more obvious what is going on.
 
-RK808 has a shadowed register for saving a "frozen" RTC time.
-When user setting "RTC_READSEL" to 1, the time will save in this 
-shadowed register.
-In this case, user read rtc time register, actually get the time of that 
-moment.
-So, I move it to probe, this bit needn't clear every time
->> >+       tm->tm_min = bcd2bin(rtc_data[1]) & MINUTES_REG_MAK;
->> >+       tm->tm_hour = bcd2bin(rtc_data[2]) & HOURS_REG_MSK;
->> >+       tm->tm_mday = bcd2bin(rtc_data[3]) & DAYS_REG_MSK;
->> >+       tm->tm_mon = (bcd2bin(rtc_data[4]) & MONTHS_REG_MSK) - 1;
->> >+       tm->tm_year = (bcd2bin(rtc_data[5]) & YEARS_REG_MSK) + 100;
->> >+       tm->tm_wday = bcd2bin(rtc_data[6]) & WEEKS_REG_MSK;
->> >+       dev_dbg(dev, "RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
->> >+               1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
->> >+               tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
->> >+
->> >+       return 0;
->> >+}
->> >+
->> >+/*
->> >+ * Set current time and date in RTC
->> >+ */
->> >+static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
-> Make this "const struct rtc_time *tm"
-It will be a warning if add const.
-It should be match
-int (*set_time)(struct device *, struct rtc_time *);
-in rtc.h
->
->> +               rk808_rtc_set_time(&pdev->dev, &tm_def);
->> >+       }
->> >+
->> >+       device_init_wakeup(&pdev->dev, 1);
-> You can skip this.  We'll set "wakeup-source" in the device tree.
-> That will set I2C_CLIENT_WAKE.  That will cause the i2c core to call
-> device_init_wakeup() for you.
-If I remove it, wakealarm is disappear, even though I add 
-"wakeup-source" in device tree.
-So, I keep it temporarily
->
->> +       if (IS_ERR(rk808_rtc->rtc)) {
->> >+               ret = PTR_ERR(rk808_rtc->rtc);
->> >+               return ret;
->> >+       }
->> >+
->> >+       alm_irq  = platform_get_irq(pdev, 0);
-> Are you sure that platform_get_irq() works in this case?  In Javier's
-> in-flight max77802 driver he use regmap_irq_get_virq().
->
-> ...oh, maybe your way does work!  You've got the rtc_resources to
-> specify things, so that looks good...
->
-> ...but I tried testing it by doing:
->
-> cd /sys/class/rtc/rtc0
-> echo +2 > wakealarm
-> sleep 5
-> grep 808 /proc/interrupts
->
-> ...and I didn't see an interrupt go off.  Any idea why?
-It works well.
+> > > > devm_ioremap_resource() and pci_iomap() checking for IORESOURCE_CACHEABLE is
+> > > > rather silly, since it doesn't call ioremap_cache() in that case.
+> > > 
+> > > Then that should be fixed.
+> > 
+> > Yes. I'd suggest we just ignore that flag and always call ioremap here.
+> > 
+> > When I checked this before, IORESOURCE_CACHEABLE only ever gets set for
+> > PCI ROM BARs, which we don't map into the kernel.
+> 
+> There's still a few users of ioremap_cache() around and they are
+> potential candidates for a conversion to devm_ioremap_resource(), so I
+> think it'd still make sense to keep the check.
 
+Possibly. Note that these are all in architecture-specific code, as
+evidenced by the fact that we have multiple names for this function:
 
+ioremap_cache:    arm, arm64, x86, ia64, sh
+ioremap_cached:   metag, unicore32
+ioremap_cachable: mips
 
+All other architectures have none of the above.
 
+An alternative approach would be to kill off IORESOURCE_CACHEABLE
+and introduce a devm_ioremap_resource_cache() helper when the first
+driver wants it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
