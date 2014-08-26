@@ -1,87 +1,43 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/6] mfd: Add hi6421 PMIC core driver
-Date: Tue, 26 Aug 2014 10:07:06 +0100
-Message-ID: <20140826090706.GF9574@lee--X1>
-References: <1408367356-2628-1-git-send-email-guodong.xu@linaro.org>
- <1408367356-2628-5-git-send-email-guodong.xu@linaro.org>
- <20140820080912.GG4266@lee--X1>
- <53FAFF03.1000301@linaro.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC regulators
+Date: Tue, 26 Aug 2014 11:08:07 +0200
+Message-ID: <53FC4E77.2090205@collabora.co.uk>
+References: <CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com> <53F73472.8010609@collabora.co.uk> <20140822144531.GV24407@sirena.org.uk> <53F7838F.8060906@collabora.co.uk> <20140822183054.GY24407@sirena.org.uk> <53F7BDD8.7060500@collabora.co.uk> <CAD=FV=WC0h7fYm2QFqu3Zka7CsU4BtG-oyPpJav+ygC+gmCR+A@mail.gmail.com> <CA+NduCCT-KQ=gh7QWkBE4qkA2YOJ8KCVqbkC6Tkmb1aPvCsGFQ@mail.gmail.com> <53FAFCBC.2050407@collabora.co.uk> <CAD=FV=V4TSKsbjj3dXCdSzVrh3sxH-FkpFEbEo+JA1bN9R-XWA@mail.gmail.com> <20140826071721.GV17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53FAFF03.1000301-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, zhangnian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140826071721.GV17528@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Doug Anderson <dianders@chromium.org>
+Cc: Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Aug 2014, Guodong Xu wrote:
-> On 08/20/2014 04:09 PM, Lee Jones wrote:
-> > On Mon, 18 Aug 2014, Guodong Xu wrote:
-> >> This adds driver to support HiSilicon Hi6421 PMIC. Hi6421 includes=
- multi-
-> >> functions, such as regulators, codec, ADCs, Coulomb counter, etc.
-> >> This driver includes core APIs _only_.
-> >>
-> >> Drivers for individul components, like voltage regulators, are
-> >> implemented in corresponding driver directories and files.
-> >>
-> >> Registers in Hi6421 are memory mapped, so using regmap-mmio API.
-> >>
-> >> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/mfd/hi6421.txt |  37 +++++++
+Hello Mark,
 
-[...]
+On 08/26/2014 09:17 AM, Mark Brown wrote:
+> On Mon, Aug 25, 2014 at 08:40:40AM -0700, Doug Anderson wrote:
+>> > Can you please test the following change [0] so I can post as a proper
+>> > patch? Doug, Mark do you think that forcing the regulator to opmode normal
+>> > when enabling is the right solution here?
+> 
+>> IMHO that makes sense.
+> 
+> No, this doesn't make any obvious sense to me at all.  Picking normal as
+> a default if the hardware reads back off due to overlapping
+> impelementation or something *might* make sense but not overwriting the
+> hardware state without explicit permission from the machine integration
+> is a key goal for the regulator API.
+> 
 
-> >> + * Author: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or =
-modify
-> >> + * it under the terms of the GNU General Public License version 2=
- as
-> >> + * published by the Free Software Foundation.
-> >=20
-> > This should also contain a link to the full licence.
-> >=20
-> > See: COPYING
-> >=20
->=20
-> Thanks. I checked COPYING, but there is no 'link' to full license. I
+Just to be sure I understood you correctly, what might makes sense to you
+then is to set the opmode to normal as default on probe only if off is
+read back from the hardware register but leaving the enable function as it
+is now using the opmode set on probe?
 
-I was making reference to the fact that COPYING tells you to provide a
-link to the full notice:
+That seems like a safer solution indeed since enable won't overwrite other
+values different from off read from the hardware register, I'll prepare a
+patch.
 
-"To do so, attach the following notices to the program.  It is safest
-to attach them to the start of each source file to most effectively
-convey the exclusion of warranty; and each file should have at least
-the "copyright" line and a pointer to where the full notice is found."
-
-> copied a link from other c source: http://www.gnu.org/licenses/
-> is that OK?
-
-Yes, that's fine.
-
-> >> +	platform_set_drvdata(pdev, pmic);
-> >=20
-> > It's not _that_ important, but I like to see this at the end after =
-you
-> > know everything else has succeeded.
->=20
-> When I move this after mfd_add_devices(), it fails to boot. In mfd
-> devices's probe, pmic->regmap is used.
-
-You can move it to just before mfd_add_devices().
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks a lot for your help and best regards,
+Javier
