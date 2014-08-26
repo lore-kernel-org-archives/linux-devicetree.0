@@ -1,70 +1,41 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC
- regulators
-Date: Tue, 26 Aug 2014 10:12:26 +0100
-Message-ID: <20140826091226.GD17528@sirena.org.uk>
-References: <20140822144531.GV24407@sirena.org.uk>
- <53F7838F.8060906@collabora.co.uk>
- <20140822183054.GY24407@sirena.org.uk>
- <53F7BDD8.7060500@collabora.co.uk>
- <CAD=FV=WC0h7fYm2QFqu3Zka7CsU4BtG-oyPpJav+ygC+gmCR+A@mail.gmail.com>
- <CA+NduCCT-KQ=gh7QWkBE4qkA2YOJ8KCVqbkC6Tkmb1aPvCsGFQ@mail.gmail.com>
- <53FAFCBC.2050407@collabora.co.uk>
- <CAD=FV=V4TSKsbjj3dXCdSzVrh3sxH-FkpFEbEo+JA1bN9R-XWA@mail.gmail.com>
- <20140826071721.GV17528@sirena.org.uk>
- <53FC4E77.2090205@collabora.co.uk>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
+Date: Tue, 26 Aug 2014 11:19:01 +0200
+Message-ID: <53FC5105.6070901@metafoo.de>
+References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com> <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com> <53F9A6EE.5070005@metafoo.de> <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com> <20140826062558.GR17528@sirena.org.uk> <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com> <20140826091120.GC17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ig7JDkzUL4ONGnSW"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53FC4E77.2090205@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Doug Anderson <dianders@chromium.org>, Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140826091120.GC17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 08/26/2014 11:11 AM, Mark Brown wrote:
+> On Tue, Aug 26, 2014 at 01:34:21AM -0700, Kuninori Morimoto wrote:
+>
+>> This patch expand route setting by using DAI name.
+>> You can select "ak4642-hifi" side "Playback" by below.
+>
+>> DT
+>> 	simple-audio-card,routing =
+>> 		"ak4642-hifi Playback", "DAI0 Playback";
+>
+>> non DT
+>> 	struct snd_soc_dapm_route route[] = {
+>> 		{ "ak4642-hifi Playback", NULL, "DAI0 Playback"},
+>> 	}
+>
+> If we're already specifying the DAI links for the (D)PCM code it seems
+> like we shouldn't also have to put DAPM routes for them in DT as well.
+>
 
---ig7JDkzUL4ONGnSW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Aug 26, 2014 at 11:08:07AM +0200, Javier Martinez Canillas wrote:
-> On 08/26/2014 09:17 AM, Mark Brown wrote:
-
-> > No, this doesn't make any obvious sense to me at all.  Picking normal as
-> > a default if the hardware reads back off due to overlapping
-> > impelementation or something *might* make sense but not overwriting the
-> > hardware state without explicit permission from the machine integration
-> > is a key goal for the regulator API.
-
-> Just to be sure I understood you correctly, what might makes sense to you
-> then is to set the opmode to normal as default on probe only if off is
-> read back from the hardware register but leaving the enable function as it
-> is now using the opmode set on probe?
-
-Yes.
-
---ig7JDkzUL4ONGnSW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT/E93AAoJELSic+t+oim9Z9wP/ilHZSLQJ/CVDF09FNLu2Jpu
-n844oCfKVtBN64UHeW1yulg3uO+/G2hKOllLYJVRtWMe8kocZNJm7a08tQQco3lu
-TrBvp79d6Bav5vhjCL/1Oq6vCPWPpZXuYMhrWSrefT6OPViEA6CS+W5issxjBjD7
-gsB1kUJY5OKs/pCw0CuSXxDIM1FMFvcAvjxcBbB5JAKPqhvIwB11J4wdT6GuKZ80
-DxZwLD6xh/senl8mR9dU0RqLogNJmLtACFxG8KZ9AfJVudue8Y+L+G/UonXOYsre
-OFXQq75X2FkztoIyNCh0TuLejlCk0hPDATkFLpJZSzXV6Dx+oqUUtSnfkEQiMSmB
-btCC9Fc7bhK2Vc8k1cScriUd/TaaWo02ehTvao7FoZZ6lFid01HSwM2rTExu66yD
-IdXVmFR+prBaLKWZJgcbndB02CDO7yOcM5Tys0y3GAEcDx+dvZx0vNt4L4YU8mNy
-8HM8hR9xVa89R4Uo5SaRQW6cX741ObAFBuKfa0WlwS1KhSQtLSekRZ5msak1pdr8
-7JSnhDGHFWMFRN9rXnuwB1IsHRMxcGmxvj0gsWfnhMi1GybHi10etj6H9jJh+NWX
-FfPNz5TqAw6y4xxI5wWrhQJjSPVdt4xgICOXscmGwOVRlkyN5g938HIa8HJ6YGzO
-HKH27p07KKyfKIgU7+uJ
-=ojZJ
------END PGP SIGNATURE-----
-
---ig7JDkzUL4ONGnSW--
+Yes, and I think we shouldn't use anything except for datahsheet pin names 
+in the devicetree routing, because otherwise we are leaking driver 
+implementation details.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
