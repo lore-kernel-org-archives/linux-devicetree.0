@@ -1,47 +1,36 @@
 From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/2] usb: phy: mxs: add imx6sx support
-Date: Tue, 26 Aug 2014 10:55:17 +0800
-Message-ID: <1409021718-5969-1-git-send-email-peter.chen@freescale.com>
+Subject: [PATCH 2/2] doc: dt: mxs-phy: add compatible string for imx6sx-usbphy
+Date: Tue, 26 Aug 2014 10:55:18 +0800
+Message-ID: <1409021718-5969-2-git-send-email-peter.chen@freescale.com>
+References: <1409021718-5969-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409021718-5969-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add imx6sx support
+Add compatible string for imx6sx-usbphy.
 
 Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- drivers/usb/phy/phy-mxs-usb.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/mxs-phy.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
-index c42bdf0..00972ec 100644
---- a/drivers/usb/phy/phy-mxs-usb.c
-+++ b/drivers/usb/phy/phy-mxs-usb.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright 2012-2013 Freescale Semiconductor, Inc.
-+ * Copyright 2012-2014 Freescale Semiconductor, Inc.
-  * Copyright (C) 2012 Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-  * on behalf of DENX Software Engineering GmbH
-  *
-@@ -125,7 +125,13 @@ static const struct mxs_phy_data imx6sl_phy_data = {
- 		MXS_PHY_NEED_IP_FIX,
- };
- 
-+static const struct mxs_phy_data imx6sx_phy_data = {
-+	.flags = MXS_PHY_DISCONNECT_LINE_WITHOUT_VBUS |
-+		MXS_PHY_NEED_IP_FIX,
-+};
-+
- static const struct of_device_id mxs_phy_dt_ids[] = {
-+	{ .compatible = "fsl,imx6sx-usbphy", .data = &imx6sx_phy_data, },
- 	{ .compatible = "fsl,imx6sl-usbphy", .data = &imx6sl_phy_data, },
- 	{ .compatible = "fsl,imx6q-usbphy", .data = &imx6q_phy_data, },
- 	{ .compatible = "fsl,imx23-usbphy", .data = &imx23_phy_data, },
+diff --git a/Documentation/devicetree/bindings/usb/mxs-phy.txt b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+index cef181a..96681c9 100644
+--- a/Documentation/devicetree/bindings/usb/mxs-phy.txt
++++ b/Documentation/devicetree/bindings/usb/mxs-phy.txt
+@@ -5,6 +5,7 @@ Required properties:
+ 	* "fsl,imx23-usbphy" for imx23 and imx28
+ 	* "fsl,imx6q-usbphy" for imx6dq and imx6dl
+ 	* "fsl,imx6sl-usbphy" for imx6sl
++	* "fsl,imx6sx-usbphy" for imx6sx
+   "fsl,imx23-usbphy" is still a fallback for other strings
+ - reg: Should contain registers location and length
+ - interrupts: Should contain phy interrupt
 -- 
 1.7.9.5
 
