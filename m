@@ -1,50 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 4/5] Regulator: RK808: modify for struct rk808 change
-Date: Tue, 26 Aug 2014 08:30:50 +0100
-Message-ID: <20140826073050.GX17528@sirena.org.uk>
-References: <1408973826-23845-1-git-send-email-zyw@rock-chips.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
+Date: Tue, 26 Aug 2014 09:43:50 +0200
+Message-ID: <3804028.YQzQ4uAVsf@wuerfel>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org> <53FB8820.4010202@wwwdotorg.org> <20140826065729.GC15573@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7LcHW5enrYT/B6h/"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408973826-23845-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140826065729.GC15573@ulmo>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 26 August 2014 08:57:31 Thierry Reding wrote:
+> On Mon, Aug 25, 2014 at 01:01:52PM -0600, Stephen Warren wrote:
+> > On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
+> [...]
+> > >+static int tegra_xusb_mbox_probe(struct platform_device *pdev)
+> > 
+> > >+    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > >+    if (!res)
+> > >+            return -ENODEV;
+> > 
+> > Should devm_request_mem_region() be called here to claim the region?
+> > 
+> > >+    mbox->regs = devm_ioremap_nocache(&pdev->dev, res->start,
+> > >+                                      resource_size(res));
+> > >+    if (!mbox->regs)
+> > >+            return -ENOMEM;
+> > 
+> > Is _nocache required? I don't see other drivers using it. I assume there's
+> > nothing special about the mbox registers.
+> 
+> Most drivers should be using devm_ioremap_resource() which will use the
+> _nocache variant of devm_ioremap() when appropriate. Usually the region
+> will not be marked cacheable (IORESOURCE_CACHEABLE) and therefore be
+> remapped uncached.
+> 
 
---7LcHW5enrYT/B6h/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Note that ioremap() and ioremap_nocache() are the same. We really shouldn't
+ever call ioremap_nocache().
 
-On Mon, Aug 25, 2014 at 09:37:06PM +0800, Chris Zhong wrote:
-> The "dev" has been deleted from "struct rk808" in rk808 mfd driver
-> so rk808->dev should be replaced by &client->dev here.
+devm_ioremap_resource() and pci_iomap() checking for IORESOURCE_CACHEABLE is
+rather silly, since it doesn't call ioremap_cache() in that case.
 
-Applied, thanks.
-
---7LcHW5enrYT/B6h/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT/DenAAoJELSic+t+oim9x0gP/0zi7e0HTlygyZgbyf7dxrhe
-WtQ4Dlq5sDpCDZOj1xVbiOdOrvYHh4LjrUJJYE+8bvvHfpnQQZastW5IjaK+cWZR
-WSSP4wV0I5wCplcQq2WqsKAMIM/HfZFMF2vQihvYhiXvztzD8Xs/3BfllxFxBJ0r
-5frLWul0U8YK1IKrurRCVFO4WUAQLlUzqL6N0z0ia/X3q1b6TagZTfSumhaGXgvi
-ZY0MkkAUQTzoUD5CYAjoz0euUIz3oOm5MKJU/6f+tds3HtH8dMkoCiiNqn1zW1/7
-8WXbrCO+lt1THbX4j3cZXYVQkbPBsyc11T9RsyqY0qoJ4JKnR4zbGMC3L9fA1g3G
-47g/0aNe8NEg3T8y/0/ZojTMJwKdAgeU7VBCwxvLHQyunDMf2h9eJA9UmiDgN4Yj
-ns4D95LPxfegAhy09Z9IdZijU+FuWSRV8KXn28Ez7jl+3lYvtNnob98OBWdvgEdu
-kDZAmVWe/NFRmeB1Ra9uPiXqlbFK9/jjg+r+ozvN6BRvCN3Zh5o221oI5hYu6Zv/
-9+jAY/o2uoteph9leN7hVZIN31DX4rC1iB/sqdqTrwqO0lGfIotmYJxVuYWqev/l
-9XDK+li43xt335Uyu9vaBr5+farfpJ3QO5y+G4xJH0mR5DiJnw4GHn9ds8jBkc49
-eGfusMAZBaOQ2mPmP5zR
-=Mm4l
------END PGP SIGNATURE-----
-
---7LcHW5enrYT/B6h/--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
