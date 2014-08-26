@@ -1,76 +1,73 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Tue, 26 Aug 2014 08:57:31 +0200
-Message-ID: <20140826065729.GC15573@ulmo>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
- <1408381705-3623-3-git-send-email-abrestic@chromium.org>
- <53FB8820.4010202@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC
+ regulators
+Date: Tue, 26 Aug 2014 08:17:21 +0100
+Message-ID: <20140826071721.GV17528@sirena.org.uk>
+References: <CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>
+ <53F73472.8010609@collabora.co.uk>
+ <20140822144531.GV24407@sirena.org.uk>
+ <53F7838F.8060906@collabora.co.uk>
+ <20140822183054.GY24407@sirena.org.uk>
+ <53F7BDD8.7060500@collabora.co.uk>
+ <CAD=FV=WC0h7fYm2QFqu3Zka7CsU4BtG-oyPpJav+ygC+gmCR+A@mail.gmail.com>
+ <CA+NduCCT-KQ=gh7QWkBE4qkA2YOJ8KCVqbkC6Tkmb1aPvCsGFQ@mail.gmail.com>
+ <53FAFCBC.2050407@collabora.co.uk>
+ <CAD=FV=V4TSKsbjj3dXCdSzVrh3sxH-FkpFEbEo+JA1bN9R-XWA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vEao7xgI/oilGqZ+"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="lu4tnxbYRVx46Dqu"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53FB8820.4010202-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAD=FV=V4TSKsbjj3dXCdSzVrh3sxH-FkpFEbEo+JA1bN9R-XWA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
---vEao7xgI/oilGqZ+
+--lu4tnxbYRVx46Dqu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 25, 2014 at 01:01:52PM -0600, Stephen Warren wrote:
-> On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
-[...]
-> >+static int tegra_xusb_mbox_probe(struct platform_device *pdev)
->=20
-> >+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >+	if (!res)
-> >+		return -ENODEV;
->=20
-> Should devm_request_mem_region() be called here to claim the region?
->=20
-> >+	mbox->regs =3D devm_ioremap_nocache(&pdev->dev, res->start,
-> >+					  resource_size(res));
-> >+	if (!mbox->regs)
-> >+		return -ENOMEM;
->=20
-> Is _nocache required? I don't see other drivers using it. I assume there's
-> nothing special about the mbox registers.
+On Mon, Aug 25, 2014 at 08:40:40AM -0700, Doug Anderson wrote:
+> On Mon, Aug 25, 2014 at 2:07 AM, Javier Martinez Canillas
 
-Most drivers should be using devm_ioremap_resource() which will use the
-_nocache variant of devm_ioremap() when appropriate. Usually the region
-will not be marked cacheable (IORESOURCE_CACHEABLE) and therefore be
-remapped uncached.
+> > I see, so probably until we have a way to define the operating mode for
+> > each regulator using DT we should set the opmode to normal when enabling a
+> > regulator independently of the value the hardware register reported on probe.
 
-Thierry
+> > Can you please test the following change [0] so I can post as a proper
+> > patch? Doug, Mark do you think that forcing the regulator to opmode normal
+> > when enabling is the right solution here?
 
---vEao7xgI/oilGqZ+
-Content-Type: application/pgp-signature
+> IMHO that makes sense.
+
+No, this doesn't make any obvious sense to me at all.  Picking normal as
+a default if the hardware reads back off due to overlapping
+impelementation or something *might* make sense but not overwriting the
+hardware state without explicit permission from the machine integration
+is a key goal for the regulator API.
+
+--lu4tnxbYRVx46Dqu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT/C/ZAAoJEN0jrNd/PrOh+FEP/iBrDm8It9BvNIgaJPQyAur+
-ITotMb7ok+lntJDe1U5k+zDjUL6oz+V9/VSXXoJ1aVK0yMSlaQh8J1kVyY/ng692
-9v7xlHlvd4wTdvh5yMcR1rXq6t5RYOR9olRTt9Ueu8DLjge3YP+UfDZ88pG611o8
-peGAZ9UmlsiepbAOaqyaeqGWynd7SbNMKDSTtppnviZNJlxfKh3I+JMetYYbYut8
-uBNBRnaOlWqWNoYFoL2DPVk2SRQnndY4v+KuYyh/isFei4yGMtUsHzTk8sHuzqqh
-OyhLjWDk8caodmKEIIABlZiMXQFGkxhwbd+jADOFwO+d9D/oEQFRMw0kZydpy0Ob
-YAZFQSn8/LZHDhwFMv8+u/JClFddUS0nmit1M0/fB2tm8rAc6G810wD816SPPtsg
-IPUZt9DA6YE3rOIuC4oGvl2IzQjDn+cPlWmEJp89r4BzMjlZU9vje7TJ+gCBjlqV
-+/tuC/xnrWBpSfZ6rIwVkW0K9xJM/wtjTbZxEfPLvtdmVFjl9rhUEcYDc3P8rIY0
-kAz5M8nGS5L72Vc+C5sq+6u2zmtTpA2KvHoPGCdczMqFxfoovHVYOrdFM8Jbncxy
-1PG6+vo8Ihm4LE8d0Wa+xnJ6OkCpsVQ+5VrJ9rUFlKd1yo8VWtAvpl5oAtIfSwV5
-162sIf1/+ckqFd+bKVSJ
-=4K+c
+iQIcBAEBAgAGBQJT/DR+AAoJELSic+t+oim9ZN4P/jLbGogtmFYIfgc7Tfl+re1P
+WMyrGA4jB7P7bJk989oii/0ES/4XFoxbUzBeNhNFNHm9nn6Uhhd6z4y7GTyvV799
+EKF6SDQIcGTVuZ3WSiE7KfPcYnzwz/HM4/yTvSYlY5/1R5VpPNfGeDXpabucGw9M
+rn8Pe3osE5ftP1N91od5qyQXhweE2VCg8eisQOp9ta/S3JncKigA20IViL/hQFXz
+bcMc7hNwMj67DjgD/hPW9Jc/6YBhER4JGHprrzFMAhOGRzkQcsMULuq0TdP80fL0
+N1QUlz0tH8MrBMIZivHn3guxNQ3/OI9x56qQc6iX+TAIQ2qlGaOH83M4XvA3XPWP
+2ahgN88/JWFFjWEdVg9OL8H9ySQfB1Kab1wM+DNbcTOAmxoVc/ADKSDWTbPIUePz
+Znh2f1yxMqpdXso6iGUQyW/egz6R5MycWnh/pxAHZxpzhN8CfD4uKk8tTSdjAIQ3
+qzUJt4vo81ACQvci0JO0xO/UfuoqHv2scqNjbyvAO0w2U13zY9WDfR8HHdxo7Odi
+1/xAEeHHI2pkUwhJNQn+4RizXCd6mBsWYSrOTARquTQUwCRXoNWKhhLC3en6E16L
+VaU/a/U1nCMl11XEC7mA8bjTaT0+zH7oonqV8C/RUsiM5qnzRV4qMt8ORqGG9XA6
+sO4YUGaVn8yIJMjlwQmv
+=juCQ
 -----END PGP SIGNATURE-----
 
---vEao7xgI/oilGqZ+--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--lu4tnxbYRVx46Dqu--
