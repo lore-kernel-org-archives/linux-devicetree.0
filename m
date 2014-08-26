@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v7 5/5] ARM: dts: imx6qdl: Allow disabling the PU regulator, add a enable ramp delay
-Date: Tue, 26 Aug 2014 15:46:31 +0200
-Message-ID: <1409060791-23167-6-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v7 4/5] ARM: dts: imx6sl: Add power-domain information to gpc node
+Date: Tue, 26 Aug 2014 15:46:30 +0200
+Message-ID: <1409060791-23167-5-git-send-email-p.zabel@pengutronix.de>
 References: <1409060791-23167-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1409060791-23167-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -10,30 +10,32 @@ To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PU regulator is enabled during boot, but not necessarily always-on.
-It can be disabled by the generic pm domain framework when the PU power
-domain is shut down. The ramp delay of 150 us might be a bit conservative,
-the value is taken from the Freescale kernel.
+The PGC that is part of GPC controls isolation and power sequencing of the
+power domains. The PU power domain will be handled by the generic pm domain
+framework. It needs a phandle to the PU regulator to turn off power when
+the domain is disabled and a list of clocks to be enabled during powerup
+for reset propagation.
 
 Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6sl.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 0b1384c..d8d3d93 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -579,7 +579,8 @@
- 					regulator-name = "vddpu";
- 					regulator-min-microvolt = <725000>;
- 					regulator-max-microvolt = <1450000>;
--					regulator-always-on;
-+					regulator-enable-ramp-delay = <150>;
-+					regulator-boot-on;
- 					anatop-reg-offset = <0x140>;
- 					anatop-vol-bit-shift = <9>;
- 					anatop-vol-bit-width = <5>;
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index c75800c..7ae4847 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -581,6 +581,10 @@
+ 				compatible = "fsl,imx6sl-gpc", "fsl,imx6q-gpc";
+ 				reg = <0x020dc000 0x4000>;
+ 				interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>;
++				pu-supply = <&reg_pu>;
++				clocks = <&clks IMX6SL_CLK_GPU2D_OVG>,
++					 <&clks IMX6SL_CLK_GPU2D_PODF>;
++				#power-domain-cells = <1>;
+ 			};
+ 
+ 			gpr: iomuxc-gpr@020e0000 {
 -- 
 2.1.0.rc1
 
