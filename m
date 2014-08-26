@@ -1,61 +1,79 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Tue, 26 Aug 2014 12:04:18 +0200
-Message-ID: <4609609.i9jPXymFJZ@wuerfel>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
- <20140826065729.GC15573@ulmo>
- <063D6719AE5E284EB5DD2968C1650D6D17481234@AcuExch.aculab.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
+ initialization order based on the DT)
+Date: Tue, 26 Aug 2014 11:11:07 +0100
+Message-ID: <20140826101107.GC32315@leverpostej>
+References: <20140514141914.446F7C4153D@trevor.secretlab.ca>
+ <20140821140211.GD19293@ulmo.nvidia.com>
+ <53F64624.5000403@ahsoftware.de>
+ <20140822131919.GX21734@leverpostej>
+ <20140825093931.GB2399@ulmo>
+ <E1XLu15-0002DP-6o@jdl.com>
+ <20140825133714.GH4163@ulmo.nvidia.com>
+ <20140826084208.AE5F0C40989@trevor.secretlab.ca>
+ <20140826084922.GG17263@ulmo>
+ <53FC566C.30904@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D17481234@AcuExch.aculab.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Andrew Bresticker <abrestic@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, David Laight <David.Laight@aculab.com>, 'Thierry Reding' <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53FC566C.30904@ahsoftware.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Holler <holler@ahsoftware.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Jon Loeliger <jdl@jdl.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 26 August 2014 08:54:53 David Laight wrote:
-> From: Thierry Reding
-> ...
-> > > Is _nocache required? I don't see other drivers using it. I assume there's
-> > > nothing special about the mbox registers.
-> > 
-> > Most drivers should be using devm_ioremap_resource() which will use the
-> > _nocache variant of devm_ioremap() when appropriate. Usually the region
-> > will not be marked cacheable (IORESOURCE_CACHEABLE) and therefore be
-> > remapped uncached.
+On Tue, Aug 26, 2014 at 10:42:04AM +0100, Alexander Holler wrote:
+> Am 26.08.2014 10:49, schrieb Thierry Reding:
+> > On Tue, Aug 26, 2014 at 09:42:08AM +0100, Grant Likely wrote:
+> >> On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
+> > [...]
+> >>> There are somewhat standardized bindings for the above and especially
+> >>> for bindings of the type that clocks implement this is trivial. We can
+> >>> simply iterate over each (phandle, specifier) tuple and check that the
+> >>> corresponding clock provider can be resolved (which typically means that
+> >>> it's been registered with the common clock framework).
+> >>>
+> >>> For regulators (and regulator-like bindings) the problem is somewhat
+> >>> more difficult because they property names are not standardized. One way
+> >>> to solve this would be to look for property names with a -supply suffix,
+> >>> but that could obviously lead to false positives. One alternative that I
+> >>> think could eliminate this would be to explicitly list dependencies in
+> >>> drivers. This would allow core code to step through such a list and
+> >>> resolve the (phandle, specifier) tuples.
+> >>
+> >> False positives and negatives may not actually be a problem. It is
+> >> suboptimal, certainly, but it shouldn't outright break the kernel.
+> >
+> > There could be cases where some random integer in a cell could be
+> > interpreted as a phandle and resolve to a struct device_node. I suppose
+> > it might be unlikely, but not impossible, that the device_node could
+> > even match a device in the correct subsystem and you'd get a wrong
+> > dependency. Granted, a wrong dependency may not be catastrophic in that
+> > it won't lead to a crash, but it could lead to various kinds of
+> > weirdness and hard to diagnose problems.
 > 
-> A related question:
-> Is there any way for a driver to force that part of a PCIe BAR be mapped
-> through the data cache even when the BAR isn't actually marked cacheable?
+> You need either the type information in the DTB (that's why I've add 
+> those "dependencies" to identify phandles), or you need to know every 
+> binding (at "dependency-resolve-time" to identify phandles.
 
-No. BARs are not actually marked cacheable anyway, except for the ROM
-BAR, which we tend to not use.
+While having type information in the DTB would be fantastic, it's not
+something we can expect from the systems already in the wild, and I
+worry how it would interact with bootloaders that modify the DTB (I
+don't know if any modify properties with phandles).
 
-Some architectures don't even allow any caching of PCI memory ranges,
-so we have no architecture independent API for that.
+> The latter is impracticable to implement in a generic way (for use
+> with every possible binding).
 
-It's possible that ioremap_cache() works on x86 and/or ARM if you call
-it manually on the physical address (rather than using a resource
-API).
+I don't think we necessarily need dependency information for every
+binding and driver. We only need dependency information where a device
+has a dependency on another device and we don't currently have an
+explicit probe ordering guaranteed by Linux.
 
-> Some hardware has address regions (which might not be an entire BAR)
-> that are actually memory and mapping through the data cache will
-> generate longer PCIe transfers [1].
-> Clearly the driver will have to be very careful about cache flushes
-> and invalidates to make this work.
+Where a device driver lacks dependency information and fails to probe,
+we can fall back to the current deferred probing.
 
-Some framebuffer drivers use writethrough mappings, but those again
-are only available on few architectures. vesafb uses ioremap_cache,
-but this works because the memory is in system RAM and not on PCI.
+Do we have any worst case example systems / drivers / dts?
 
-	Arnd
+Thanks,
+Mark.
