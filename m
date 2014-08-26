@@ -1,47 +1,42 @@
-From: Pramod Gurav <pramod.gurav@smartplayin.com>
-Subject: [PATCH 1/2] ARM: DT: APQ8064: Add pinctrl support This patch adds device tree nodes to support pinctrl for apq8064 SOC
-Date: Tue, 26 Aug 2014 11:31:06 -0700
-Message-ID: <1409077867-9446-1-git-send-email-pramod.gurav@smartplayin.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: Pramod Gurav <pramod.gurav@smartplayin.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv10 1/2] edac: altera: Add Altera SDRAM EDAC support.
+Date: Tue, 26 Aug 2014 13:38:23 -0500
+Message-ID: <53FCD41F.2060203@opensource.altera.com>
+References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com>
+ <1407770293-27190-2-git-send-email-tthayer@opensource.altera.com>
+ <20140814184930.GB11558@amd.pavel.ucw.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140814184930.GB11558@amd.pavel.ucw.cz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pavel Machek <pavel@denx.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, sameo@linux.intel.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, atull@opensource.altera.com, dougthompson@xmission.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, bp@alien8.de, dinguyen@opensource.altera.com, lee.jones@linaro.org, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Pawel Moll <pawel.moll@arm.com>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-CC: Kumar Gala <galak@codeaurora.org>
-CC: devicetree@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
 
-Signed-off-by: Pramod Gurav <pramod.gurav@smartplayin.com>
----
- arch/arm/boot/dts/qcom-apq8064.dtsi |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+On 08/14/2014 01:49 PM, Pavel Machek wrote:
+> On Mon 2014-08-11 10:18:12, tthayer@opensource.altera.com wrote:
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
+>> This patch adds support for the CycloneV and ArriaV SDRAM controllers.
+>> Correction and reporting of SBEs, Panic on DBEs.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> Acked-by: Pavel Machek <pavel@denx.de>
+>
+Hi All,
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index d66fb25..681e194 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -73,6 +73,17 @@
- 		ranges;
- 		compatible = "simple-bus";
- 
-+		msm_gpio: pinctrl@800000 {
-+			compatible = "qcom,apq8064-pinctrl";
-+			reg = <0x800000 0x4000>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupts = <0 32 0x4>;
-+		};
-+
- 		intc: interrupt-controller@2000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
--- 
-1.7.0.4
+Any further comments or suggestions on this patch series? Thanks for 
+reviewing, Pavel!
+
+Thor
