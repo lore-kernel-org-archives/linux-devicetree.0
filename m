@@ -1,113 +1,99 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
- initialization order based on the DT)
-Date: Tue, 26 Aug 2014 16:17:16 +0200
-Message-ID: <20140826141714.GA3027@ulmo>
-References: <20140826084208.AE5F0C40989@trevor.secretlab.ca>
- <20140826084922.GG17263@ulmo>
- <53FC566C.30904@ahsoftware.de>
- <20140826102503.GC31124@ulmo>
- <53FC6513.5040800@ahsoftware.de>
- <20140826110827.GA31350@ulmo>
- <53FC6E4A.6030407@ahsoftware.de>
- <20140826114718.GB641@ulmo>
- <53FC76E8.5050009@ahsoftware.de>
- <E1XMHGc-0008TS-CQ@jdl.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v6 5/5] regulator: RK808: remove redundant code
+Date: Tue, 26 Aug 2014 22:18:57 +0800
+Message-ID: <1409062737-12259-1-git-send-email-zyw@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <E1XMHGc-0008TS-CQ@jdl.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Loeliger <jdl@jdl.com>
-Cc: Alexander Holler <holler@ahsoftware.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
+remove the redundant code, since pdata has been removed from stuct rk808
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
-On Tue, Aug 26, 2014 at 08:58:34AM -0500, Jon Loeliger wrote:
-> > >>
-> > >> Drivers don't provide that information (dependencies) in any usable =
-way. And
-> > >> as you said yourself, it's already contained in phandles. So what we=
- are
-> > >> discussing here about? The proposal to use phandles for that is alre=
-ady on
-> > >> the table since several month. ;)
-> > >>
-> > >> Sorry, but I don't understand what you want to propose.
-> > >
-> > > In many cases we simply don't know where phandles are stored since we
-> > > don't have the type information in DT. But drivers already know the t=
-ype
-> > > of a specific phandle and where to get it from, so the proposal is to
-> > > make that knowledge more generally useful so that it can be used for
-> > > dependency resolution.
-> >=20
-> > How?
->=20
-> Is the issue around which we are dancing here the timing of
-> topsort and the probing?  When the driver is probed, sure, it
-> touches and resolves a bunch of phandles and references other
-> nodes and devices.  But that is at probe time, and it only has
-> the context of itself then.
->=20
-> I think we need to do the complete topsort *before* we attempt
-> to do any probing.  So three steps:
->=20
->     1) Graph Construction
->         Add a new "emit dependencies" function to driver bindings.
->         Iterate over known devices or nodes in the DT in any order.
-> 	    Call the "emit dependencies" function.  It adds all
-> 	    dependency edges to a global graph by knowing what
-> 	    phandles or other pieces it will need.
-> 	    A driver with no "emit dependencies" function can be
-> 	    added to the graph anywhere without loss of generality.
->         Add any additional edges for whatever reason.
->=20
->     2) Topsort the generated driver graph
->=20
->     3) Call probe for real in topsort order
+---
 
-Yes, I think that makes a lot of sense. We need to provide a way to make
-the dependency information available before probe time, otherwise we
-don't gain anything. Whether we provide that in a form of a function
-call or a table is an implementation detail.
+Changes in v6: 
+- remove the redundant code
 
-I do think that requiring drivers to provide a function is going to make
-things more complicated than necessary since that "emit dependencies"
-function would need to copy a lot of the things that .probe() does
-already. Sharing this information in a table sounds like a good idea. An
-"emit dependencies" function in the core can use that data to resolve
-dependencies whereas the driver core can equally use that information to
-request the devices so that the drivers don't have to do so.
+Changes in v5:
+- re-edit base on Mark's branch
 
-Thierry
+Changes in v4:
+- use &client->dev replace rk808->dev
 
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature
+Changes in v3: None
+Changes in v2:
+Adviced by Mark Browm:
+- change of_find_node_by_name to find_child_by_name
+- use RK808_NUM_REGULATORS as the name of the constant
+- create a pdata when missing platform data
+- use the rk808_reg name to supply_regulator name
+- replace regulator_register with devm_regulator_register
+- some other problem with coding styl
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ drivers/regulator/rk808-regulator.c |   17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-iQIcBAEBAgAGBQJT/JbqAAoJEN0jrNd/PrOhRO0QAI8oe8CV7IHOG8vGapPUF3Mm
-8szHIo+VIz5nbXab5jCR6/sI+mJDLi8Dg5gwz+voDZ3+8Pax1D5JfG42NlDeDczr
-gxpq7emCgcvQvTErNAHTKGaBYmDm1Qlj7GM57Htj0E+zY9JssTGNMq5H8aT3F438
-tpfeD40v4bFBVG4rzFTW8QHDnpCTqZkHIicXDzcdmixuJfGEw7Bpd/YiAiyMUDYH
-rN2molWlxE4Xi/gDbRVg8VuCSpt118psNyignf11po/CCbtkxvhX2bB/izbbrfl5
-Cqurhk7CS+n/0yDmdflK6Qargtcs29KBbMFS6kHh5vYKzbcXsAfpwD+rexIXm3ir
-GvEpqiSMGSgDQPySE0IIeEmNkLiOEonHJSDai/VITWpidLRiHknyRuvgNHimp6RY
-w2/HYsnf3Zze9RE67Gk9figiydqsV+P85hpCFcWoVQRsHBVwGAFRQCsByEnYk+2S
-m1lKaclmGBBaas9q7nc6/0aAIKvW0awTAYa5MfjM00COOSw5kq5L6aRrxYgTfYOK
-4JlPAzi0w6mBZ7/rkCkNeSQ3Tny0CBqnXl4Mime65R0Gz/KeDoexlNpgsGOJ0Fe2
-BjS48Ri7YGNeCexRE97Ddhx4gFJIK5Vm1Gu7rHw8sEQxn/G6a5CplSFgNr+7mUss
-t/9CeoAEMUu6r1CKkKEP
-=6ATE
------END PGP SIGNATURE-----
-
---lrZ03NoBR/3+SXJZ--
+diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
+index f00d6d8..f42952e 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -294,11 +294,10 @@ static struct of_regulator_match rk808_reg_matches[] = {
+ 	[RK808_ID_SWITCH2]	= { .name = "SWITCH_REG2" },
+ };
+ 
+-static int rk808_regulator_dts(struct rk808 *rk808)
++static int rk808_regulator_dts(struct i2c_client *client,
++			       struct rk808_board *pdata)
+ {
+ 	struct device_node *np, *reg_np;
+-	struct i2c_client *client = rk808->i2c;
+-	struct rk808_board *pdata = rk808->pdata;
+ 	int i, ret;
+ 
+ 	np = client->dev.of_node;
+@@ -335,7 +334,7 @@ static int rk808_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+ 	struct i2c_client *client = rk808->i2c;
+-	struct rk808_board *pdata = rk808->pdata;
++	struct rk808_board *pdata = dev_get_platdata(&client->dev);
+ 	struct regulator_config config = {};
+ 	struct regulator_dev *rk808_rdev;
+ 	struct regulator_init_data *reg_data;
+@@ -343,22 +342,15 @@ static int rk808_regulator_probe(struct platform_device *pdev)
+ 	int ret = 0;
+ 
+ 	if (!pdata) {
+-		dev_warn(&client->dev, "%s no pdata, create it\n", __func__);
+ 		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+ 		if (!pdata)
+ 			return -ENOMEM;
+ 	}
+ 
+-	ret = rk808_regulator_dts(rk808);
++	ret = rk808_regulator_dts(client, pdata);
+ 	if (ret)
+ 		return ret;
+ 
+-	rk808->num_regulators = RK808_NUM_REGULATORS;
+-	rk808->rdev = devm_kzalloc(&pdev->dev, RK808_NUM_REGULATORS *
+-				   sizeof(struct regulator_dev *), GFP_KERNEL);
+-	if (!rk808->rdev)
+-		return -ENOMEM;
+-
+ 	/* Instantiate the regulators */
+ 	for (i = 0; i < RK808_NUM_REGULATORS; i++) {
+ 		reg_data = pdata->rk808_init_data[i];
+@@ -382,7 +374,6 @@ static int rk808_regulator_probe(struct platform_device *pdev)
+ 				"failed to register %d regulator\n", i);
+ 			return PTR_ERR(rk808_rdev);
+ 		}
+-		rk808->rdev[i] = rk808_rdev;
+ 	}
+ 	return 0;
+ }
+-- 
+1.7.9.5
