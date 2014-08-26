@@ -1,82 +1,67 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
-Date: Tue, 26 Aug 2014 11:50:28 +0100
-Message-ID: <20140826105028.GK17528@sirena.org.uk>
-References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com>
- <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com>
- <53F9A6EE.5070005@metafoo.de>
- <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com>
- <20140826062558.GR17528@sirena.org.uk>
- <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com>
- <20140826091120.GC17528@sirena.org.uk>
- <53FC5105.6070901@metafoo.de>
- <20140826094211.GF17528@sirena.org.uk>
- <87r403mtip.wl%kuninori.morimoto.gx@gmail.com>
+From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Subject: RE: [RESEND PATCH V2] devicetree: Dialog Semiconductor consolidate
+ existing vendor prefixes to standardise on 'dlg'
+Date: Tue, 26 Aug 2014 10:54:59 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B39744@SW-EX-MBX02.diasemi.com>
+References: <201408221446.s7MEkNVF001775@swsrvapps-01.diasemi.com>
+ <20140826093312.GI9574@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="e4yZxm10vOVuQa+Y"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87r403mtip.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140826093312.GI9574@lee--X1>
+Content-Language: en-US
+Sender: linux-sh-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>, DEVICE TREE <devicetree@vger.kernel.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Guenter Roeck <linux@roeck-us.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jonathan Cameron <jic23@kernel.org>, Kumar Gala <galak@codeaurora.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, LINUX KERNEL <linux-kernel@vger.kernel.org>, LINUX SH <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Martin Fuzzey <mfuzzey@parkeon.com>, Pawel Moll <pawel.moll@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-
---e4yZxm10vOVuQa+Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Aug 26, 2014 at 03:31:44AM -0700, Kuninori Morimoto wrote:
-
-> > > >If we're already specifying the DAI links for the (D)PCM code it seems
-> > > >like we shouldn't also have to put DAPM routes for them in DT as well.
-
-> > > Yes, and I think we shouldn't use anything except for datahsheet pin names
-> > > in the devicetree routing, because otherwise we are leaking driver
-> > > implementation details.
-
-> It came from snd_soc_of_parse_audio_routing()
-> Do you mean this function itself is not good ?
-
-That's intended to be routing analogue pins to each other, not for DAI
-links in DPCM - for DAI links we should be getting this information from
-elsewhere.
-
-> > While I agree with the sentiment for this when it comes to DAIs we
-> > probably want to use the name the interfaces get in the documentation
-> > rather than pin names since they involve multiple pins working together.
-
-> Sorry, but what does your "interfaces get in the documentation" mean ?
-
-If the documentation refers to the interface as for example "I2S0" then
-the DT should refer to it as I2S0 too.
-
---e4yZxm10vOVuQa+Y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT/GZxAAoJELSic+t+oim9wtwP/040y/IQvV5KcOYlrzT3rhTq
-1WY+OM5nCWAm3Tliq3l3C4bHS9LUSS7NWkor2ftK9IYeI7v0k+kSKzL88uUtogcL
-qMUabr6UD30WY9j/7s5MQOR+sgw+48lMyObUADZ3mi5niflATWzEE4PuztAPR/oI
-spijyWvRnIfdZqfAzE9N1A81B5+Y794PwFKeMHgo97lLGeGK99bDDHaTyNz8Q5ip
-3paJVDwUF7Bqe8zBtLlv+9Qoz8GGDppUDjADLiKu8j5fkYGGcx6oNSOpfuikLyJg
-y3Ktd3Xmz+OX5B6gM8aizU+joef5kFGK32N9jol5C720wFoJicGdWjcs8acJhbxp
-8MTrEOdFOTzxhG0yD96DZwAw3Ae5+d4X5FMLNJOGdYdpBtuOQRc3xDtaDXbvq841
-XwCSxS91juFaQ6IIsG7sk+6C7qH9jDHYxxtG9eZRHk3T0Sco8Zi1yzzsiMDNzHlD
-J13g+AaRiJlHkjhk/0atQ4NR/QVco2p7P9hsv1w9raMvVCt6JKrwD7xQQ3lhISfS
-90Rmx/y5paiqqa/qn8tUZ1KcPGGhJ6lSnvP2Mtp2bmCFMqBcTfYcMTUXn5rfkOGh
-bms5Qbg0ZODk1BLHKcSsP+YpLIYeztd4m3Vqn524MCFkBzyI9PlKLOyGjOQ5huHs
-BJ/WSv0INTk+lqgCXf1H
-=t1PJ
------END PGP SIGNATURE-----
-
---e4yZxm10vOVuQa+Y--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjYgQXVndXN0IDIwMTQgMTA6MzMgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIEZyaSwgMjIg
+QXVnIDIwMTQsIE9wZW5zb3VyY2UgW1N0ZXZlIFR3aXNzXSB3cm90ZToNCj4gPiBGcm9tOiBTdGV2
+ZSBUd2lzcyA8c3R3aXNzLm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4NCj4gPiBUaGlzIHBh
+dGNoIHNlcmllcyB1cGRhdGVzIHRoZSBkZXZpY2UgdHJlZSB2ZW5kb3IgcHJlZml4IGZvcg0KPiA+
+IERpYWxvZyBTZW1pY29uZHVjdG9yLg0KPiA+DQoNClsuLi5dDQoNCj4gPiBJIHRoaW5rIHRoaXMg
+aXMgaXQuIEJ1dCwgaWYgSSBhbSBtaXNzaW5nIGFueXRoaW5nIG9yIHRoZXJlIGFyZSBwcm9ibGVt
+cywgY2FuDQo+ID4gSSBnZXQgYSBxdWljayBleHBsYW5hdGlvbiBpbiB0aGUgcmVwbHkgc28gSSBj
+YW4gZml4IGl0IGFuZCBtb3ZlIGZvcndhcmRzDQo+ID4gcGxlYXNlPw0KPiA+DQo+ID4gSW4gZnVs
+bDoNCj4gPiBBY2tlZC1ieSB0aGUgZm9sbG93aW5nIHBlb3BsZSBzbyBmYXI6DQo+IA0KPiBXaGVu
+IHlvdSBzYXkgInNvIGZhciIsIGRvZXMgdGhhdCBtZWFuIHlvdSdyZSBtaXNzaW5nIEFja3Mgc3Rp
+bGw/DQoNCkhpIExlZSwNCg0KQXBvbG9naWVzIGZvciBteSAic28gZmFyIiAtLSB0aGF0IGlzIGp1
+c3QgbXkgd29yZGluZy4NCg0KQXMgSSB1bmRlcnN0YW5kIGl0IEkgaGF2ZSBhbGwgdGhlIEFja3Mg
+dGhhdCBhcmUgbmVjZXNzYXJ5LiBJIGFtIGJhc2luZyBteSBBY2tzIGxpc3Qgb24NCnRoZSBnZXRf
+bWFpbnRhaW5lcnMgc2NyaXB0IG91dHB1dCBhbmQgb24gYSBwcmV2aW91cyByZXF1ZXN0IGZvciBS
+ZW5lc2FzIGFuZCANCkZyZWVzY2FsZSBpbnB1dHMgLS0gd2hpY2ggSSBoYXZlIGFsc28gZ290Lg0K
+SSBkbyBub3Qgc2VlIGFueSBtaXN0YWtlcyBvciBtaXNzaW5nIGVudHJpZXMgZnJvbSBteSBwYXJ0
+Lg0KDQo+IA0KPiBJZiB5b3UgaGF2ZSB0aGUgZnVsbC1zZXQgSSB3aWxsIGFwcGx5IHRoaXMgYW5k
+IHNlbmQgb3V0IHRoZSBuZWNlc3NhcnkNCj4gcHVsbC1yZXF1ZXN0KHMpLg0KPiANCg0KWWVzIHBs
+ZWFzZS4NCg0KUmVnYXJkcywNClN0ZXZlDQoNCnBzLiBmb3IgcmVmZXJlbmNlLCAgdGhpcyBpcyBt
+eSBqdXN0aWZpY2F0aW9uIGZvciBhbGwgZmlsZXMgaW4gdGhlIHBhdGNoLg0KDQouL2RyaXZlcnMv
+bWZkL2RhOTA1NS1jb3JlLmMNCglTdXBwb3J0IE9wZW5zb3VyY2UgPHN1cHBvcnQub3BlbnNvdXJj
+ZUBkaWFzZW1pLmNvbT4gKHN1cHBvcnRlcjpESUFMT0cgU0VNSUNPTkRVQy4uLikNCglMZWUgSm9u
+ZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPiAoc3VwcG9ydGVyOk1VTFRJRlVOQ1RJT04gREVWLi4u
+LGNvbW1pdHM6My84PTM4JSkNCg0KLi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cmVndWxhdG9yL2RhOTIxMC50eHQuZ2V0X21haW50YWluZXINCglSb2IgSGVycmluZyA8cm9iaCtk
+dEBrZXJuZWwub3JnPiAobWFpbnRhaW5lcjpPUEVOIEZJUk1XQVJFIEFORC4uLikNCglTIFR3aXNz
+IDxzdHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4gKGF1dGhvcmVkIGxpbmVzOjIvMjE9MTAl
+KQ0KDQouL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtcGh5dGVjLXBmbGEwMi5kdHNpLmdldF9t
+YWludGFpbmVyDQoJU2hhd24gR3VvIDxzaGF3bi5ndW9AZnJlZXNjYWxlLmNvbT4gKG1haW50YWlu
+ZXI6QVJNL0ZSRUVTQ0FMRSBJTVguLi4sYXV0aG9yZWQgbGluZXM6Mjc2LzI3OT05OSUsY29tbWl0
+czo2Lzc9ODYlKQ0KCVJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+IChtYWludGFpbmVy
+Ok9QRU4gRklSTVdBUkUgQU5ELi4uKQ0KDQouL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5k
+dHMuZ2V0X21haW50YWluZXINCglTaGF3biBHdW8gPHNoYXduLmd1b0BmcmVlc2NhbGUuY29tPiAo
+bWFpbnRhaW5lcjpBUk0vRlJFRVNDQUxFIElNWC4uLixhdXRob3JlZCBsaW5lczoyNzYvMjc5PTk5
+JSxjb21taXRzOjYvNz04NiUpDQoJUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gKG1h
+aW50YWluZXI6T1BFTiBGSVJNV0FSRSBBTkQuLi4pDQoNCi4vYXJjaC9hcm0vYm9vdC9kdHMvcjhh
+Nzc5MS1rb2Vsc2NoLmR0cy5nZXRfbWFpbnRhaW5lcg0KCVNpbW9uIEhvcm1hbiA8aG9ybXNAdmVy
+Z2UubmV0LmF1PiAoc3VwcG9ydGVyOkFSTS9TSE1PQklMRSBBUk0uLi4sY29tbWl0czoyNS8yNj05
+NiUpDQoJUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gKG1haW50YWluZXI6T1BFTiBG
+SVJNV0FSRSBBTkQuLi4pDQoNCi4vYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MC1sYWdlci5kdHMu
+Z2V0X21haW50YWluZXINCglTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4gKHN1cHBv
+cnRlcjpBUk0vU0hNT0JJTEUgQVJNLi4uLGNvbW1pdHM6MjUvMjY9OTYlKQ0KCVJvYiBIZXJyaW5n
+IDxyb2JoK2R0QGtlcm5lbC5vcmc+IChtYWludGFpbmVyOk9QRU4gRklSTVdBUkUgQU5ELi4uKQ0K
+DQouL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0
+LmdldF9tYWludGFpbmVyDQoJUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gKG1haW50
+YWluZXI6T1BFTiBGSVJNV0FSRSBBTkQuLi4sY29tbWl0czo0MC83OD01MSUpDQoNCi4vRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0LmdldF9t
+YWludGFpbmVyDQoJUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gKG1haW50YWluZXI6
+T1BFTiBGSVJNV0FSRSBBTkQuLi4pDQoNCg==
