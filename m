@@ -1,250 +1,113 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v6 4/5] clk: RK808: Add clkout driver for RK808
-Date: Tue, 26 Aug 2014 22:16:28 +0800
-Message-ID: <1409062589-12157-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
+ initialization order based on the DT)
+Date: Tue, 26 Aug 2014 16:17:16 +0200
+Message-ID: <20140826141714.GA3027@ulmo>
+References: <20140826084208.AE5F0C40989@trevor.secretlab.ca>
+ <20140826084922.GG17263@ulmo>
+ <53FC566C.30904@ahsoftware.de>
+ <20140826102503.GC31124@ulmo>
+ <53FC6513.5040800@ahsoftware.de>
+ <20140826110827.GA31350@ulmo>
+ <53FC6E4A.6030407@ahsoftware.de>
+ <20140826114718.GB641@ulmo>
+ <53FC76E8.5050009@ahsoftware.de>
+ <E1XMHGc-0008TS-CQ@jdl.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <E1XMHGc-0008TS-CQ@jdl.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Loeliger <jdl@jdl.com>
+Cc: Alexander Holler <holler@ahsoftware.de>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
----
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v6:
-Adviced by doug
-- use correct argument call of_clk_add_provider in probe
+On Tue, Aug 26, 2014 at 08:58:34AM -0500, Jon Loeliger wrote:
+> > >>
+> > >> Drivers don't provide that information (dependencies) in any usable =
+way. And
+> > >> as you said yourself, it's already contained in phandles. So what we=
+ are
+> > >> discussing here about? The proposal to use phandles for that is alre=
+ady on
+> > >> the table since several month. ;)
+> > >>
+> > >> Sorry, but I don't understand what you want to propose.
+> > >
+> > > In many cases we simply don't know where phandles are stored since we
+> > > don't have the type information in DT. But drivers already know the t=
+ype
+> > > of a specific phandle and where to get it from, so the proposal is to
+> > > make that knowledge more generally useful so that it can be used for
+> > > dependency resolution.
+> >=20
+> > How?
+>=20
+> Is the issue around which we are dancing here the timing of
+> topsort and the probing?  When the driver is probed, sure, it
+> touches and resolves a bunch of phandles and references other
+> nodes and devices.  But that is at probe time, and it only has
+> the context of itself then.
+>=20
+> I think we need to do the complete topsort *before* we attempt
+> to do any probing.  So three steps:
+>=20
+>     1) Graph Construction
+>         Add a new "emit dependencies" function to driver bindings.
+>         Iterate over known devices or nodes in the DT in any order.
+> 	    Call the "emit dependencies" function.  It adds all
+> 	    dependency edges to a global graph by knowing what
+> 	    phandles or other pieces it will need.
+> 	    A driver with no "emit dependencies" function can be
+> 	    added to the graph anywhere without loss of generality.
+>         Add any additional edges for whatever reason.
+>=20
+>     2) Topsort the generated driver graph
+>=20
+>     3) Call probe for real in topsort order
 
-Changes in v5:
-Adviced by doug
-- add some error checking in probe
-- move "rockchip,rk808.h" into the patch about dt-bindings
+Yes, I think that makes a lot of sense. We need to provide a way to make
+the dependency information available before probe time, otherwise we
+don't gain anything. Whether we provide that in a form of a function
+call or a table is an implementation detail.
 
-Changes in v4:
-Adviced by doug
-- add "clock-output-names" propertiey
-- add a header file "rockchip,rk808.h"
+I do think that requiring drivers to provide a function is going to make
+things more complicated than necessary since that "emit dependencies"
+function would need to copy a lot of the things that .probe() does
+already. Sharing this information in a table sounds like a good idea. An
+"emit dependencies" function in the core can use that data to resolve
+dependencies whereas the driver core can equally use that information to
+request the devices so that the drivers don't have to do so.
 
-Changes in v3:
-- fix compile err
+Thierry
 
-Changes in v2:
-Adviced by javier.martinez
-- separated from rtc-rk808.
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature
 
- drivers/clk/Kconfig     |    9 +++
- drivers/clk/Makefile    |    1 +
- drivers/clk/clk-rk808.c |  163 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 173 insertions(+)
- create mode 100644 drivers/clk/clk-rk808.c
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index cfd3af7..84e0590 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -38,6 +38,15 @@ config COMMON_CLK_MAX77686
- 	---help---
- 	  This driver supports Maxim 77686 crystal oscillator clock. 
- 
-+config COMMON_CLK_RK808
-+	tristate "Clock driver for RK808"
-+	depends on MFD_RK808
-+	---help---
-+	  This driver supports RK808 crystal oscillator clock. These
-+	  multi-function devices have two fixed-rate oscillators,
-+	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
-+	  by control register.
-+
- config COMMON_CLK_SI5351
- 	tristate "Clock driver for SiLabs 5351A/B/C"
- 	depends on I2C
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index f537a0b..99f53d5 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_ARCH_NOMADIK)		+= clk-nomadik.o
- obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
- obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
- obj-$(CONFIG_CLK_PPC_CORENET)		+= clk-ppc-corenet.o
-+obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
- obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
- obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
- obj-$(CONFIG_COMMON_CLK_SI570)		+= clk-si570.o
-diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-new file mode 100644
-index 0000000..21f8b54
---- /dev/null
-+++ b/drivers/clk/clk-rk808.c
-@@ -0,0 +1,163 @@
-+/*
-+ * Clkout driver for Rockchip RK808
-+ *
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/rk808.h>
-+#include <linux/i2c.h>
-+
-+struct rk808_clkout {
-+	struct rk808 *rk808;
-+	struct clk_onecell_data clk_data;
-+	struct clk_hw		clkout1_hw;
-+	struct clk_hw		clkout2_hw;
-+};
-+
-+static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
-+					      unsigned long parent_rate)
-+{
-+	return 32768;
-+}
-+
-+static int rk808_clkout1_is_prepared(struct clk_hw *hw)
-+{
-+	return 1;
-+}
-+
-+static int rk808_clkout2_control(struct clk_hw *hw, bool enable)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+
-+	return regmap_update_bits(rk808->regmap, RK808_CLK32OUT_REG,
-+				  CLK32KOUT2_EN, enable ? CLK32KOUT2_EN : 0);
-+}
-+
-+static int rk808_clkout2_prepare(struct clk_hw *hw)
-+{
-+	return rk808_clkout2_control(hw, 1);
-+}
-+
-+static void rk808_clkout2_unprepare(struct clk_hw *hw)
-+{
-+	rk808_clkout2_control(hw, 0);
-+}
-+
-+static int rk808_clkout2_is_prepared(struct clk_hw *hw)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+	uint32_t val;
-+
-+	int ret = regmap_read(rk808->regmap, RK808_CLK32OUT_REG, &val);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return (val & CLK32KOUT2_EN) ? 1 : 0;
-+}
-+
-+static const struct clk_ops rk808_clkout1_ops = {
-+	.is_prepared = rk808_clkout1_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static const struct clk_ops rk808_clkout2_ops = {
-+	.prepare = rk808_clkout2_prepare,
-+	.unprepare = rk808_clkout2_unprepare,
-+	.is_prepared = rk808_clkout2_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static int rk808_clkout_probe(struct platform_device *pdev)
-+{
-+	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-+	struct i2c_client *client = rk808->i2c;
-+	struct device_node *node = client->dev.of_node;
-+	struct clk_init_data init = {};
-+	struct clk **clk_table;
-+	struct rk808_clkout *rk808_clkout;
-+
-+	rk808_clkout = devm_kzalloc(&client->dev,
-+				    sizeof(*rk808_clkout), GFP_KERNEL);
-+	if (!rk808_clkout)
-+		return -ENOMEM;
-+
-+	rk808_clkout->rk808 = rk808;
-+
-+	clk_table = devm_kzalloc(&client->dev,
-+				 2*sizeof(struct clk *), GFP_KERNEL);
-+	if (!clk_table)
-+		return -ENOMEM;
-+
-+	init.flags = CLK_IS_ROOT;
-+	init.parent_names = NULL;
-+	init.num_parents = 0;
-+	init.name = "rk808-clkout1";
-+	init.ops = &rk808_clkout1_ops;
-+	rk808_clkout->clkout1_hw.init = &init;
-+
-+	/* optional override of the clockname */
-+	of_property_read_string_index(node, "clock-output-names",
-+				      0, &init.name);
-+
-+	clk_table[0] = devm_clk_register(&client->dev,
-+					 &rk808_clkout->clkout1_hw);
-+	if (IS_ERR(clk_table[0]))
-+		return PTR_ERR(clk_table[0]);
-+
-+	init.name = "rk808-clkout2";
-+	init.ops = &rk808_clkout2_ops;
-+	rk808_clkout->clkout2_hw.init = &init;
-+
-+	/* optional override of the clockname */
-+	of_property_read_string_index(node, "clock-output-names",
-+				      1, &init.name);
-+
-+	clk_table[1] = devm_clk_register(&client->dev,
-+					 &rk808_clkout->clkout2_hw);
-+	if (IS_ERR(clk_table[1]))
-+		return PTR_ERR(clk_table[1]);
-+
-+	rk808_clkout->clk_data.clks = clk_table;
-+	rk808_clkout->clk_data.clk_num = 2;
-+
-+	return of_clk_add_provider(node, of_clk_src_onecell_get,
-+				   &rk808_clkout->clk_data);
-+}
-+
-+static struct platform_driver rk808_clkout_driver = {
-+	.probe = rk808_clkout_probe,
-+	.driver		= {
-+		.name	= "rk808-clkout",
-+		.owner	= THIS_MODULE,
-+	},
-+};
-+
-+module_platform_driver(rk808_clkout_driver);
-+
-+MODULE_DESCRIPTION("Clkout driver for the rk808 series PMICs");
-+MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:rk808-clkout");
--- 
-1.7.9.5
+iQIcBAEBAgAGBQJT/JbqAAoJEN0jrNd/PrOhRO0QAI8oe8CV7IHOG8vGapPUF3Mm
+8szHIo+VIz5nbXab5jCR6/sI+mJDLi8Dg5gwz+voDZ3+8Pax1D5JfG42NlDeDczr
+gxpq7emCgcvQvTErNAHTKGaBYmDm1Qlj7GM57Htj0E+zY9JssTGNMq5H8aT3F438
+tpfeD40v4bFBVG4rzFTW8QHDnpCTqZkHIicXDzcdmixuJfGEw7Bpd/YiAiyMUDYH
+rN2molWlxE4Xi/gDbRVg8VuCSpt118psNyignf11po/CCbtkxvhX2bB/izbbrfl5
+Cqurhk7CS+n/0yDmdflK6Qargtcs29KBbMFS6kHh5vYKzbcXsAfpwD+rexIXm3ir
+GvEpqiSMGSgDQPySE0IIeEmNkLiOEonHJSDai/VITWpidLRiHknyRuvgNHimp6RY
+w2/HYsnf3Zze9RE67Gk9figiydqsV+P85hpCFcWoVQRsHBVwGAFRQCsByEnYk+2S
+m1lKaclmGBBaas9q7nc6/0aAIKvW0awTAYa5MfjM00COOSw5kq5L6aRrxYgTfYOK
+4JlPAzi0w6mBZ7/rkCkNeSQ3Tny0CBqnXl4Mime65R0Gz/KeDoexlNpgsGOJ0Fe2
+BjS48Ri7YGNeCexRE97Ddhx4gFJIK5Vm1Gu7rHw8sEQxn/G6a5CplSFgNr+7mUss
+t/9CeoAEMUu6r1CKkKEP
+=6ATE
+-----END PGP SIGNATURE-----
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--lrZ03NoBR/3+SXJZ--
