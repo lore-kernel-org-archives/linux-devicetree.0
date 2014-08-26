@@ -1,37 +1,39 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RESEND PATCH v3] clk: shmobile: div6: support selectable-input clocks
-Date: Tue, 26 Aug 2014 17:22:50 +0200
-Message-ID: <CAMuHMdXSFb-L=tuJJyL3b+Ch8MZHcQmPWtaj7OjQuKWo02t1cw@mail.gmail.com>
-References: <1409065878-32047-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v8 3/3] ahci_xgene: Fix the link down in first attempt
+ for the APM X-Gene SoC AHCI SATA host controller driver.
+Date: Tue, 26 Aug 2014 11:29:48 -0400
+Message-ID: <20140826152948.GC29286@htj.dyndns.org>
+References: <1408819047-17224-1-git-send-email-stripathi@apm.com>
+ <1408819047-17224-4-git-send-email-stripathi@apm.com>
+ <20140825193002.GC21688@htj.dyndns.org>
+ <CAOHikRDpLBAnH4pmFzfu_RXFUZNAWPc-Q34zS1_Mx-odOmXonA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409065878-32047-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Linux-sh list <linux-sh@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOHikRDpLBAnH4pmFzfu_RXFUZNAWPc-Q34zS1_Mx-odOmXonA@mail.gmail.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
+On Tue, Aug 26, 2014 at 12:17:35PM +0530, Suman Tripathi wrote:
+> Didn't I ask you to update the comment to explain what's going on?
+> [suman] : can you specifically tell which part of the comment is not clear
+> and need more explanation?
 
-On Tue, Aug 26, 2014 at 5:11 PM, Ulrich Hecht
-<ulrich.hecht+renesas@gmail.com> wrote:
-> Adds support for DIV6 clocks with selectable parents as found in the r8a73a4,
-> r8a7740, sh73a0, and other SoCs.
+The comment on top of the function doesn't seem to match what's being
+implemented.  In addition, it's generally not very useful to list the
+actual algorithm in text.  Put algorithm in code and explain the
+summary and rationales for it in the comments.  Nothing explains why
+the retries are being done.
 
-Thanks!
+> is the existing comment already sufficient?
+> [suman] : The existing comment is sufficient .
 
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+No, this isn't.  You don't have to include a novel to explain it but
+there's something different going on here and you should provide
+information on why this sort of deviation is necessary.
 
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+tejun
