@@ -1,88 +1,44 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 0/4] CMA & device tree, once again
-Date: Tue, 26 Aug 2014 15:00:28 +0200
-Message-ID: <53FC84EC.1050800@samsung.com>
-References: <1405321966-28184-1-git-send-email-m.szyprowski@samsung.com>
- <53E56B16.5030402@codeaurora.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/9] PM / Domains: Add generic OF-based power domain
+ look-up
+Date: Tue, 26 Aug 2014 15:15:18 +0200
+Message-ID: <1409058918.2911.55.camel@paszta.hi.pengutronix.de>
+References: <1409054837-5667-1-git-send-email-ulf.hansson@linaro.org>
+	 <1409054837-5667-3-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <53E56B16.5030402@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laura Abbott <lauraa@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Michal Nazarewicz <mina86@mina86.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sascha Hauer <s.hauer@pengutronix.de>, Nishanth Peethambaran <nishanth.p@gmail.com>, Marc <marc.ceeeee@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Paul Mackerras <paulus@samba.org>, Jon Medhurst <tixy@linaro.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, "Aneesh Kumar K.V." <aneesh.kumar@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1409054837-5667-3-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Philipp Zabel <philipp.zabel@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, linux-acpi@vger.kernel.org, Simon Horman <horms@verge.net.au>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>linux-a
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Ulf,
 
-On 2014-08-09 02:28, Laura Abbott wrote:
-> On 7/14/2014 12:12 AM, Marek Szyprowski wrote:
->> Hello,
->>
->> This is one more respin of the patches which add support for creating
->> reserved memory regions defined in device tree. The last attempt
->> (http://lists.linaro.org/pipermail/linaro-mm-sig/2014-February/003738.html)
->> ended in merging only half of the code, so right now we have complete
->> documentation merged and only basic code, which implements a half of it
->> is written in the documentation. Although the merged patches allow to
->> reserve memory, there is no way of using it for devices and drivers.
->>
->> This situation makes CMA rather useless, as the main architecture (ARM),
->> which used it, has been converted from board-file based system
->> initialization to device tree. Thus there is no place to use direct
->> calls to dma_declare_contiguous() and some new solution, which bases on
->> device tree, is urgently needed.
->>
->> This patch series fixes this issue. It provides two, already widely
->> discussed and already present in the kernel, drivers for reserved
->> memory: first based on DMA-coherent allocator, second using Contiguous
->> Memory Allocator. The first one nicely implements typical 'carved out'
->> reserved memory way of allocating contiguous buffers in a kernel-style
->> way. The memory is used exclusively by devices assigned to the given
->> memory region. The second one allows to reuse reserved memory for
->> movable kernel pages (like disk buffers, anonymous memory) and migrates
->> it out when device to allocates contiguous memory buffer. Both driver
->> provides memory buffers via standard dma-mapping API.
->>
->> The patches have been rebased on top of latest CMA and mm changes merged
->> to akmp kernel tree.
->>
->> To define a 64MiB CMA region following node is needed:
->>
->> multimedia_reserved: multimedia_mem_region {
->> 	compatible = "shared-dma-pool";
->> 	reusable;
->> 	size = <0x4000000>;
->> 	alignment = <0x400000>;
->> };
->>
->> Similarly, one can define 64MiB region with DMA coherent memory:
->>
->> multimedia_reserved: multimedia_mem_region {
->> 	compatible = "shared-dma-pool";
->> 	no-map;
->> 	size = <0x4000000>;
->> 	alignment = <0x400000>;
->> };
->>
-> Longer term, I think it would be good if we didn't have to use no-map with
-> the coherent memory. With no-map and dma-coherent.c right now, not only
-> do you lose out on the physical memory space, you also have to give up
-> the same amount of vmalloc space for mapping. On arm32, if you have the default
-> 240MB vmalloc space, 64M is ~25% of the vmalloc space. At least on arm you can
-> make this up by remapping the memory as coherent.
->
-> I haven't seen this picked up anywhere yet so you are welcome to add
->
-> Tested-by: Laura Abbott <lauraa@codeaurora.org>
+Am Dienstag, den 26.08.2014, 14:07 +0200 schrieb Ulf Hansson:
+> From: Tomasz Figa <t.figa@samsung.com>
+> 
+> This patch introduces generic code to perform power domain look-up using
+> device tree and automatically bind devices to their power domains.
+> Generic device tree binding is introduced to specify power domains of
+> devices in their device tree nodes.
+> 
+> Backwards compatibility with legacy Samsung-specific power domain
+> bindings is provided, but for now the new code is not compiled when
+> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
+> will change as soon as Exynos power domain code gets converted to use
+> the generic framework in further patch.
+> 
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Right, when the code reaches mainline I will add code which will remove 
-no-map
-requirement. Changing memory attributes can be handled in this case the same
-way as for CMA.
+Thank you for updating this series. I've tested patches 1-4
+using the PU power domain on i.MX6.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+regards
+Philipp
+
