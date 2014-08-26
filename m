@@ -1,64 +1,87 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEG
- Processing Unit.
-Date: Tue, 26 Aug 2014 18:01:26 +0900
-Message-ID: <20140826090126.GC29667@verge.net.au>
-References: <1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
- <1408970132-6690-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
- <CAMuHMdXQAFVJ8Ezd30JNkT6hWoFYKUWk5e0cq88jYUSBTPOzRA@mail.gmail.com>
- <20140825235720.GB7217@verge.net.au>
- <CAMuHMdW0r-xGJZtc4AFvxMnTu1rdEROf2DvywScC-XhSELFMtQ@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 4/6] mfd: Add hi6421 PMIC core driver
+Date: Tue, 26 Aug 2014 10:07:06 +0100
+Message-ID: <20140826090706.GF9574@lee--X1>
+References: <1408367356-2628-1-git-send-email-guodong.xu@linaro.org>
+ <1408367356-2628-5-git-send-email-guodong.xu@linaro.org>
+ <20140820080912.GG4266@lee--X1>
+ <53FAFF03.1000301@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdW0r-xGJZtc4AFvxMnTu1rdEROf2DvywScC-XhSELFMtQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <53FAFF03.1000301-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, zhangnian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 26, 2014 at 10:03:34AM +0200, Geert Uytterhoeven wrote:
-> On Tue, Aug 26, 2014 at 1:57 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geert Uytterhoeven wrote:
-> >> Hi Mikhail,
+On Mon, 25 Aug 2014, Guodong Xu wrote:
+> On 08/20/2014 04:09 PM, Lee Jones wrote:
+> > On Mon, 18 Aug 2014, Guodong Xu wrote:
+> >> This adds driver to support HiSilicon Hi6421 PMIC. Hi6421 includes=
+ multi-
+> >> functions, such as regulators, codec, ADCs, Coulomb counter, etc.
+> >> This driver includes core APIs _only_.
 > >>
-> >> On Mon, Aug 25, 2014 at 2:35 PM, Mikhail Ulyanov
-> >> <mikhail.ulyanov@cogentembedded.com> wrote:
-> >> > +  - compatible: should containg one of the following:
-> >> > +                       - "renesas,jpu-r8a7790" for R-Car H2
-> >> > +                       - "renesas,jpu-r8a7791" for R-Car M2
-> >> > +                       - "renesas,jpu-gen2" for R-Car second generation
+> >> Drivers for individul components, like voltage regulators, are
+> >> implemented in corresponding driver directories and files.
 > >>
-> >> Isn't "renesas,jpu-gen2" meant as a fallback?
+> >> Registers in Hi6421 are memory mapped, so using regmap-mmio API.
 > >>
-> >> I.e. the DTS should have one of '7790 and '7791, AND the gen2 fallback,
-> >> so we can make the driver match against '7790 and '7791 is we find
-> >> out about an incompatibility.
-> >
-> > Is there a document that clearly states that there is such a thing
-> > as jpu-gen2 in hardware? If not I would prefer not to add a binding for it.
-> 
-> We do have a document that describes the "JPEG Processing Unit (JPU)",
-> as found in the following members of the "Second Generation R-Car Series
-> Products": "R-Car H2", "R-Car M2-W", "R-Car M2-N", and "R-Car V2H".
+> >> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/mfd/hi6421.txt |  37 +++++++
 
-Oh, that is nice :)
+[...]
 
->From my point of view that ticks a lot of boxes.
-But I wonder if we can come up with a better name than jpu,-gen2.
+> >> + * Author: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or =
+modify
+> >> + * it under the terms of the GNU General Public License version 2=
+ as
+> >> + * published by the Free Software Foundation.
+> >=20
+> > This should also contain a link to the full licence.
+> >=20
+> > See: COPYING
+> >=20
+>=20
+> Thanks. I checked COPYING, but there is no 'link' to full license. I
 
-> As for other SoCs, M1, H1, and A1 also seem to contain a JPU, but just
-> like Mikhail, I don't have enough information to say anything about those.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+I was making reference to the fact that COPYING tells you to provide a
+link to the full notice:
+
+"To do so, attach the following notices to the program.  It is safest
+to attach them to the start of each source file to most effectively
+convey the exclusion of warranty; and each file should have at least
+the "copyright" line and a pointer to where the full notice is found."
+
+> copied a link from other c source: http://www.gnu.org/licenses/
+> is that OK?
+
+Yes, that's fine.
+
+> >> +	platform_set_drvdata(pdev, pmic);
+> >=20
+> > It's not _that_ important, but I like to see this at the end after =
+you
+> > know everything else has succeeded.
+>=20
+> When I move this after mfd_add_devices(), it fails to boot. In mfd
+> devices's probe, pmic->regmap is used.
+
+You can move it to just before mfd_add_devices().
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
