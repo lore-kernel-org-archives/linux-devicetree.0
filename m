@@ -1,186 +1,113 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RESEND PATCH v3] clk: shmobile: div6: support selectable-input clocks
-Date: Tue, 26 Aug 2014 18:47:11 +0200
-Message-ID: <1435844.NvqxA65edX@avalon>
-References: <1409065878-32047-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH 1/2] dt-bindings: document Rockchip thermal
+Date: Wed, 27 Aug 2014 00:47:02 +0800
+Message-ID: <53FCBA06.90701@rock-chips.com>
+References: <1408752934-18318-1-git-send-email-caesar.wang@rock-chips.com> <1408752934-18318-2-git-send-email-caesar.wang@rock-chips.com> <1504889.nDzfjZj9xp@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409065878-32047-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: horms@verge.net.au, linux-sh@vger.kernel.org, mturquette@linaro.org, magnus.damm@gmail.com, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1504889.nDzfjZj9xp@diego>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: rui.zhang@intel.com, rdunlap@infradead.org, cf@rock-chips.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, zyw@rock-chips.com, huangtao@rock-chips.com, xjq@rock-chips.com, addy.ke@rock-chips.com, dianders@chromium.org, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
+Heiko,
+=E5=9C=A8 2014/8/24 7:03, Heiko St=C3=BCbner =E5=86=99=E9=81=93:
+> Hi Caesar,
+>
+> Am Samstag, 23. August 2014, 08:15:33 schrieb Caesar Wang:
+>> This add the necessary binding documentation for the thermal
+>> found on Rockchip SoCs
+>>
+>> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>> ---
+>>   .../bindings/thermal/rockchip-thermal.txt          |   33
+>> ++++++++++++++++++++ 1 file changed, 33 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
+mal.txt
+>> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt new=
+ file
+>> mode 100644
+>> index 0000000..b556eae
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>> @@ -0,0 +1,33 @@
+>> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+>> +
+>> +Required properties:
+>> +- compatible : "rockchip,rk3288-tsadc"
+>> +- reg : physical base address of the controller and length of memor=
+y mapped
+>> +  region.
+>> +- interrupts : The interrupt number to the cpu. The interrupt speci=
+fier
+>> format +  depends on the interrupt controller.
+>> +- clocks : Must contain an entry for each entry in clock-names.
+>> +- clock-names : Shall be "tsadc_clk" for the transfer-clock, and
+>> "tsadc_pclk" for +    the peripheral clock.
+>> +Optional properties:
+>> +- clock-frequency : Thermal sensor's clock frequency.
+> see comment in patch2, this should probably use assigned-rate if at a=
+ll
+> necessary (and the assigned-rate is not necessary to document here)
+>
+>
+>> +- pinctrl-names : Should contain only one value - "default".
+>> +- pinctrl-0 : Should contain only one value - &tsadc_int.
+> in general pinctrl settings are just board-specific settings and do n=
+ot
+> need to be part of the binding documentation.
+> And in this case, are you sure that the tsadc uses some pin as interr=
+upt?
+> Because in the TRM the TS-ADC interrupt is number 69 of the GIC itsel=
+f
+> and not some pin accessible via pinctrl.
+>
+>
+>> +- passive-temp : Temperature of trip 0.
+>> +- critical-temp : Temperature of trip 1.
+>> +- force-shut-temp : Temperature of force shut down.
+> please use the generic trip-points described in
+> Documentation/devicetree/bindings/thermal/thermal.txt
+> for this, instead of defining new properties
 
-Thank you for the patch.
+There are have 4 trip-points mode in thermal.txt.
+It's ACTIVE=E3=80=81PASSAIVE=E3=80=81 HOT and  CRITICAL.
 
-On Tuesday 26 August 2014 17:11:18 Ulrich Hecht wrote:
-> Adds support for DIV6 clocks with selectable parents as found in the
-> r8a73a4, r8a7740, sh73a0, and other SoCs.
+Do you have some suggestion for fix it if I need add shut-temp mode ?
 
-I find the commit message a bit misleading, it made me assume the patch added 
-support for selecting the input at runtime, which it doesn't. How about 
-something along the lines of "Add support for selecting the DIV6 parent at 
-initialization time based on the current hardware configuration" ?
+- Caesar
+>
+> Heiko
+>
+>> +Example:
+>> +
+>> +tsadc: tsadc@ff280000 {
+>> +	compatible =3D "rockchip,rk3288-tsadc";
+>> +	reg =3D <0xff280000 0x100>;
+>> +	interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>> +	clock-frequency =3D <10000>;
+>> +	clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+>> +	clock-names =3D "tsadc_clk", "tsadc_pclk";
+>> +	pinctrl-names =3D "default";
+>> +	pinctrl-1 =3D <&tsadc_int>;
+>> +	passive-temp =3D <80>;
+>> +	critical-temp =3D <100>;
+>> +	force-shut-temp =3D <120>;
+>> +};
+>
+>
+>
 
-Please see below for a couple of minor comments.
+--=20
+Best regards,
+Caesar
 
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> ---
-> 
-> Changes since v2:
-> - add r8a73a4 to bindings
-> - use u32 where appropriate
-> - don't split error message
-> 
-> Changes since v1:
-> - make sure unrelated register bits are preserved
-> - use the plural for the clocks property in bindings
-> 
->  .../bindings/clock/renesas,cpg-div6-clocks.txt     | 12 +++++++-
->  drivers/clk/shmobile/clk-div6.c                    | 32 +++++++++++++++----
->  2 files changed, 37 insertions(+), 7 deletions(-)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt index
-> 952e373..b002d2b 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> @@ -7,14 +7,24 @@ to 64.
->  Required Properties:
-> 
->    - compatible: Must be one of the following
-> +    - "renesas,r8a73a4-div6-clock" for R8A73A4 (R-Mobile APE6) DIV6 clocks
-> +    - "renesas,r8a7740-div6-clock" for R8A7740 (R-Mobile A1) DIV6 clocks
->      - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
->      - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
-> +    - "renesas,sh73a0-div6-clock" for SH73A0 (SH-MobileAG5) DIV6 clocks
->      - "renesas,cpg-div6-clock" for generic DIV6 clocks
->    - reg: Base address and length of the memory resource used by the DIV6
-> clock
-> -  - clocks: Reference to the parent clock
-> +  - clocks: Reference to the parent clock(s)
->    - #clock-cells: Must be 0
->    - clock-output-names: The name of the clock as a free-form string
-> 
-> +Optional Properties:
-> +
-> +  - renesas,src-shift: Bit position of the input clock selector (default:
-> +    fixed input clock)
-> +  - renesas,src-width: Bit width of the input clock selector (default:
-> fixed
-> +    input clock)
-
-Should we mention that if one of the properties is set then the other must be 
-set as well ?
-
-If I'm not mistaken those properties don't apply to the H2 and M2 CPGs. Should 
-that be mentioned in the bindings ?
-
-> +
-> 
->  Example
->  -------
-> diff --git a/drivers/clk/shmobile/clk-div6.c
-> b/drivers/clk/shmobile/clk-div6.c index f065f69..2282bec 100644
-> --- a/drivers/clk/shmobile/clk-div6.c
-> +++ b/drivers/clk/shmobile/clk-div6.c
-> @@ -38,9 +38,12 @@ struct div6_clock {
-> 
->  static int cpg_div6_clock_enable(struct clk_hw *hw)
->  {
-> +	u32 val;
->  	struct div6_clock *clock = to_div6_clock(hw);
-
-Could you please reverse the order of those two lines to match the coding 
-style of the file ? I tend to sort local variables in "reverse christmas tree" 
-order.
-
-> -	clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-> +	val = (clk_readl(clock->reg) & ~(CPG_DIV6_DIV_MASK | CPG_DIV6_CKSTP))
-> +		| CPG_DIV6_DIV(clock->div - 1);
-
-Could you please align the | under the = ?
-
-> +	clk_writel(val, clock->reg);
-> 
->  	return 0;
->  }
-> @@ -52,8 +55,8 @@ static void cpg_div6_clock_disable(struct clk_hw *hw)
->  	/* DIV6 clocks require the divisor field to be non-zero when stopping
->  	 * the clock.
->  	 */
-> -	clk_writel(CPG_DIV6_CKSTP | CPG_DIV6_DIV(CPG_DIV6_DIV_MASK),
-> -		   clock->reg);
-> +	clk_writel(clk_readl(clock->reg) | CPG_DIV6_CKSTP | CPG_DIV6_DIV_MASK,
-> +		clock->reg);
-
-Could you please align the clock under the clk_read ?
-
->  }
-> 
->  static int cpg_div6_clock_is_enabled(struct clk_hw *hw)
-> @@ -94,12 +97,14 @@ static int cpg_div6_clock_set_rate(struct clk_hw *hw,
-> unsigned long rate, {
->  	struct div6_clock *clock = to_div6_clock(hw);
->  	unsigned int div = cpg_div6_clock_calc_div(rate, parent_rate);
-> +	u32 val;
-> 
->  	clock->div = div;
-> 
-> +	val = clk_readl(clock->reg) & ~CPG_DIV6_DIV_MASK;
->  	/* Only program the new divisor if the clock isn't stopped. */
-> -	if (!(clk_readl(clock->reg) & CPG_DIV6_CKSTP))
-> -		clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-> +	if (!(val & CPG_DIV6_CKSTP))
-> +		clk_writel(val | CPG_DIV6_DIV(clock->div - 1), clock->reg);
-> 
->  	return 0;
->  }
-> @@ -121,6 +126,7 @@ static void __init cpg_div6_clock_init(struct
-> device_node *np) const char *name;
->  	struct clk *clk;
->  	int ret;
-> +	u32 src_shift, src_width;
-
-Same comment here, could you please split the declaration on two lines and 
-move them above int ret ?
-
->  	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
->  	if (!clock) {
-> @@ -150,7 +156,21 @@ static void __init cpg_div6_clock_init(struct
-> device_node *np) goto error;
->  	}
-> 
-> -	parent_name = of_clk_get_parent_name(np, 0);
-> +	if (!of_property_read_u32(np, "renesas,src-shift", &src_shift)) {
-> +		if (!of_property_read_u32(np, "renesas,src-width",
-> +					&src_width)) {
-> +			unsigned int parent_idx =
-> +				(clk_readl(clock->reg) >> src_shift) &
-> +				(BIT(src_width) - 1);
-> +			parent_name = of_clk_get_parent_name(np, parent_idx);
-> +		} else {
-> +			pr_err("%s: renesas,src-shift without renesas,src-width in %s\n",
-> +			       __func__, np->name);
-> +			goto error;
-> +		}
-> +	} else
-> +		parent_name = of_clk_get_parent_name(np, 0);
-
-Please add { } around the above line (didn't checkpatch.pl warn about that ?).
-
-> +
->  	if (parent_name == NULL) {
->  		pr_err("%s: failed to get %s DIV6 clock parent name\n",
->  		       __func__, np->name);
-
--- 
-Regards,
-
-Laurent Pinchart
 
