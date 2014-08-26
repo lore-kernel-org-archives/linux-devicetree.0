@@ -1,42 +1,33 @@
 From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv10 1/2] edac: altera: Add Altera SDRAM EDAC support.
-Date: Tue, 26 Aug 2014 13:38:23 -0500
-Message-ID: <53FCD41F.2060203@opensource.altera.com>
-References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com>
- <1407770293-27190-2-git-send-email-tthayer@opensource.altera.com>
- <20140814184930.GB11558@amd.pavel.ucw.cz>
+Subject: Re: [PATCHv10 2/2] arm: dts: Add Altera SDRAM EDAC bindings & devicetree
+ entries.
+Date: Tue, 26 Aug 2014 13:39:18 -0500
+Message-ID: <53FCD456.3050404@opensource.altera.com>
+References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com> <1407770293-27190-3-git-send-email-tthayer@opensource.altera.com> <20140814184949.GC11558@amd.pavel.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140814184930.GB11558@amd.pavel.ucw.cz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140814184949.GC11558@amd.pavel.ucw.cz>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Pavel Machek <pavel@denx.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, sameo@linux.intel.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, atull@opensource.altera.com, dougthompson@xmission.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, rob@landley.net, galak@codeaurora.org, grant.likely@linaro.org, bp@alien8.de, dinguyen@opensource.altera.com, lee.jones@linaro.org, delicious.quinoa@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 On 08/14/2014 01:49 PM, Pavel Machek wrote:
-> On Mon 2014-08-11 10:18:12, tthayer@opensource.altera.com wrote:
+> On Mon 2014-08-11 10:18:13, tthayer@opensource.altera.com wrote:
 >> From: Thor Thayer <tthayer@opensource.altera.com>
 >>
->> This patch adds support for the CycloneV and ArriaV SDRAM controllers.
->> Correction and reporting of SBEs, Panic on DBEs.
+>> Add the Altera SDRAM EDAC bindings and device tree changes to the Altera SoC project.
 >>
 >> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 > Acked-by: Pavel Machek <pavel@denx.de>
 >
+>
 Hi All,
 
-Any further comments or suggestions on this patch series? Thanks for 
-reviewing, Pavel!
+Any further comments or suggestions on this patch series? Thanks for the 
+review, Pavel!
 
 Thor
