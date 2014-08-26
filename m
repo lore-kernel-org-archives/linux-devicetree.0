@@ -1,99 +1,156 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v6 5/5] regulator: RK808: remove redundant code
-Date: Tue, 26 Aug 2014 22:18:57 +0800
-Message-ID: <1409062737-12259-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/6] iommu/arm-smmu: add support for specifying clocks
+Date: Tue, 26 Aug 2014 15:27:58 +0100
+Message-ID: <20140826142757.GU23445@arm.com>
+References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
+	<1407891099-24641-2-git-send-email-mitchelh@codeaurora.org>
+	<20140819125833.GO23128@arm.com> <53F39F6D.1040205@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53F39F6D.1040205-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-remove the redundant code, since pdata has been removed from stuct rk808
+[adding Mike]
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+On Tue, Aug 19, 2014 at 08:03:09PM +0100, Olav Haugan wrote:
+> Hi Will,
 
----
+Hi Olav,
 
-Changes in v6: 
-- remove the redundant code
+> On 8/19/2014 5:58 AM, Will Deacon wrote:
+> > On Wed, Aug 13, 2014 at 01:51:34AM +0100, Mitchel Humpherys wrote:
+> >> On some platforms with tight power constraints it is polite to only
+> >> leave your clocks on for as long as you absolutely need them. Currently
+> >> we assume that all clocks necessary for SMMU register access are always
+> >> on.
+> >>
+> >> Add some optional device tree properties to specify any clocks that are
+> >> necessary for SMMU register access and turn them on and off as needed.
+> >>
+> >> If no clocks are specified in the device tree things continue to work
+> >> the way they always have: we assume all necessary clocks are always
+> >> turned on.
+> > 
+> > How does this interact with an SMMU in bypass mode?
+> 
+> Do you mean if you have a platform that requires clock and power
+> management but we leave the SMMU in bypass (i.e. no one calls into the
+> SMMU driver) how are the clock/power managed?
+> 
+> Clients of the SMMU driver are required to vote for clocks and power
+> when they know they need to use the SMMU. However, the clock and power
+> needed to be on for the SMMU to service bus masters aren't necessarily
+> the same as the ones needed to read/write registers...See below.
 
-Changes in v5:
-- re-edit base on Mark's branch
+The case I'm thinking of is where a device masters through the IOMMU, but
+doesn't make use of any translations. In this case, its transactions will
+bypass the SMMU and I want to ensure that continues to happen, regardless of
+the power state of the SMMU.
 
-Changes in v4:
-- use &client->dev replace rk808->dev
+> >> +static int arm_smmu_enable_clocks(struct arm_smmu_device *smmu)
+> >> +{
+> >> +	int i, ret = 0;
+> >> +
+> >> +	for (i = 0; i < smmu->num_clocks; ++i) {
+> >> +		ret = clk_prepare_enable(smmu->clocks[i]);
+> >> +		if (ret) {
+> >> +			dev_err(smmu->dev, "Couldn't enable clock #%d\n", i);
+> >> +			while (i--)
+> >> +				clk_disable_unprepare(smmu->clocks[i]);
+> >> +			break;
+> >> +		}
+> >> +	}
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static void arm_smmu_disable_clocks(struct arm_smmu_device *smmu)
+> >> +{
+> >> +	int i;
+> >> +
+> >> +	for (i = 0; i < smmu->num_clocks; ++i)
+> >> +		clk_disable_unprepare(smmu->clocks[i]);
+> >> +}
+> > 
+> > What stops theses from racing with each other when there are multiple
+> > clocks? I also assume that the clk API ignores calls to clk_enable_prepare
+> > for a clk that's already enabled? I couldn't find that code...
+> 
+> All the clock APIs are reference counted yes. Not sure what you mean by
+> racing with each other? When you call to enable a clock the call does
+> not return until the clock is already ON (or OFF).
 
-Changes in v3: None
-Changes in v2:
-Adviced by Mark Browm:
-- change of_find_node_by_name to find_child_by_name
-- use RK808_NUM_REGULATORS as the name of the constant
-- create a pdata when missing platform data
-- use the rk808_reg name to supply_regulator name
-- replace regulator_register with devm_regulator_register
-- some other problem with coding styl
+I was thinking of an interrupt handler racing with normal code, but actually
+you balance the clk enable/disable in the interrupt handlers. However, it's
+not safe to call these clk functions from irq context anyway, since
+clk_prepare may sleep.
 
- drivers/regulator/rk808-regulator.c |   17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
+> >> +int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+> >>  {
+> >>  	unsigned long size;
+> >>  	void __iomem *gr0_base = ARM_SMMU_GR0(smmu);
+> >> @@ -2027,10 +2124,16 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+> >>  	}
+> >>  	dev_notice(dev, "registered %d master devices\n", i);
+> >>  
+> >> -	err = arm_smmu_device_cfg_probe(smmu);
+> >> +	err = arm_smmu_init_clocks(smmu);
+> >>  	if (err)
+> >>  		goto out_put_masters;
+> >>  
+> >> +	arm_smmu_enable_clocks(smmu);
+> >> +
+> >> +	err = arm_smmu_device_cfg_probe(smmu);
+> >> +	if (err)
+> >> +		goto out_disable_clocks;
+> >> +
+> >>  	parse_driver_options(smmu);
+> >>  
+> >>  	if (smmu->version > 1 &&
+> >> @@ -2039,7 +2142,7 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+> >>  			"found only %d context interrupt(s) but %d required\n",
+> >>  			smmu->num_context_irqs, smmu->num_context_banks);
+> >>  		err = -ENODEV;
+> >> -		goto out_put_masters;
+> >> +		goto out_disable_clocks;
+> >>  	}
+> >>  
+> >>  	for (i = 0; i < smmu->num_global_irqs; ++i) {
+> >> @@ -2061,12 +2164,16 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+> >>  	spin_unlock(&arm_smmu_devices_lock);
+> >>  
+> >>  	arm_smmu_device_reset(smmu);
+> >> +	arm_smmu_disable_clocks(smmu);
+> > 
+> > I wonder if this is really the right thing to do. Rather than the
+> > fine-grained clock enable/disable you have, why don't we just enable in
+> > domain_init and disable in domain_destroy, with refcounting for the clocks?
+> > 
+> 
+> So the whole point of all of this is that we try to save power. As Mitch
+> wrote in the commit text we want to only leave the clock and power on
+> for as short period of time as possible.
 
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index f00d6d8..f42952e 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -294,11 +294,10 @@ static struct of_regulator_match rk808_reg_matches[] = {
- 	[RK808_ID_SWITCH2]	= { .name = "SWITCH_REG2" },
- };
- 
--static int rk808_regulator_dts(struct rk808 *rk808)
-+static int rk808_regulator_dts(struct i2c_client *client,
-+			       struct rk808_board *pdata)
- {
- 	struct device_node *np, *reg_np;
--	struct i2c_client *client = rk808->i2c;
--	struct rk808_board *pdata = rk808->pdata;
- 	int i, ret;
- 
- 	np = client->dev.of_node;
-@@ -335,7 +334,7 @@ static int rk808_regulator_probe(struct platform_device *pdev)
- {
- 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
- 	struct i2c_client *client = rk808->i2c;
--	struct rk808_board *pdata = rk808->pdata;
-+	struct rk808_board *pdata = dev_get_platdata(&client->dev);
- 	struct regulator_config config = {};
- 	struct regulator_dev *rk808_rdev;
- 	struct regulator_init_data *reg_data;
-@@ -343,22 +342,15 @@ static int rk808_regulator_probe(struct platform_device *pdev)
- 	int ret = 0;
- 
- 	if (!pdata) {
--		dev_warn(&client->dev, "%s no pdata, create it\n", __func__);
- 		pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
- 		if (!pdata)
- 			return -ENOMEM;
- 	}
- 
--	ret = rk808_regulator_dts(rk808);
-+	ret = rk808_regulator_dts(client, pdata);
- 	if (ret)
- 		return ret;
- 
--	rk808->num_regulators = RK808_NUM_REGULATORS;
--	rk808->rdev = devm_kzalloc(&pdev->dev, RK808_NUM_REGULATORS *
--				   sizeof(struct regulator_dev *), GFP_KERNEL);
--	if (!rk808->rdev)
--		return -ENOMEM;
--
- 	/* Instantiate the regulators */
- 	for (i = 0; i < RK808_NUM_REGULATORS; i++) {
- 		reg_data = pdata->rk808_init_data[i];
-@@ -382,7 +374,6 @@ static int rk808_regulator_probe(struct platform_device *pdev)
- 				"failed to register %d regulator\n", i);
- 			return PTR_ERR(rk808_rdev);
- 		}
--		rk808->rdev[i] = rk808_rdev;
- 	}
- 	return 0;
- }
--- 
-1.7.9.5
+Understood, but if the clocks are going up and down like yo-yos, then it's
+not obvious that you end up saving any power at all. Have you tried
+measuring the power consumption with different granularities for the clocks?
+
+The code you're proposing seems to take the approach of `we're going to
+access registers so enable the clocks, access the registers then disable the
+clocks', which is simple but may not be particularly effective.
+
+Will
