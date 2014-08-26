@@ -1,83 +1,114 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Tue, 26 Aug 2014 09:36:50 +0100
-Message-ID: <20140826083650.GE9574@lee--X1>
-References: <1408973516-21395-1-git-send-email-zyw@rock-chips.com>
- <CAD=FV=Wz1yssGvB05ExPaYxsiizcPRYrfP9OWE+HdoSDKVc_Tw@mail.gmail.com>
- <53FBF6EB.1080002@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
+ initialization order based on the DT)
+Date: Tue, 26 Aug 2014 09:42:08 +0100
+Message-ID: <20140826084208.AE5F0C40989@trevor.secretlab.ca>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
+	<20140514141914.446F7C4153D@trevor.secretlab.ca>
+	<20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de>
+	<20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo>
+	<E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53FBF6EB.1080002-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20140825133714.GH4163-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonn>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Aug 2014, Chris Zhong wrote:
-> On 08/26/2014 04:44 AM, Doug Anderson wrote:
-> >On Mon, Aug 25, 2014 at 6:31 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wr=
-ote:
+On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Aug 25, 2014 at 08:08:59AM -0500, Jon Loeliger wrote:
+> > > 
+> > 
+> > > Anyway, instead of going back and forth between "deferred probe is good"
+> > > and "deferred probe is bad", how about we do something useful now and
+> > > concentrate on how to make use of the information we have in DT with the
+> > > goal to reduce the number of cases where deferred probing is required?
+> > 
+> > Good idea.
+> > 
+> > The proposal on the table is to allow the probe code
+> > to make a topological sort of the devices based on
+> > dependency information either implied, explicitly stated
+> > or both.  That is likely a fundamentally correct approach.
+> > 
+> > I believe some of the issues that need to be resolved are:
+> > 
+> >     1) What constitutes a dependency?
+> >     2) How is that dependency expressed?
+> >     3) How do we add missing dependencies?
+> >     4) Backward compatability problems.
+> > 
+> > There are other questions, of course.  Is it a topsort
+> > per bus?  Are there required "early devices"?  Should
+> > the inter-node dependencies be expressed at each node,
+> > or in a separate hierarchy within the DTS?  Others.
+> 
+> I think Grant already objected to the idea of explicitly adding
+> dependency information into the device tree sources. Rather, if I
+> understand correctly, we should be using the information readily
+> available (phandle references) as much as possible before resorting to
+> additional properties.
 
-[...]
+My objection is primarily around the concern that the dependency data
+will get stale if firmware modifies the tree or that the kernel will
+break when by relying on incorrect dependency information.
 
-> >You need a Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->=20
-> Done
+If the kernel can handle incorrect dependencies gracefully (like falling
+back to deferred probe) then we can consider additional properties.
 
-[...]
+> So far we've been operating under the assumption that a dependency is
+> modeled as a phandle reference and that the dependent would contain the
+> phandle reference to the dependency. That's for example how clocks and
+> regulators (to name only a few) work. A simplified example would look
+> like this:
+> 
+> 	clock: clock@... {
+> 		...
+> 		#clock-cells = <1>;
+> 		...
+> 	};
+> 
+> 	pmic: pmic@... {
+> 		regulators {
+> 			vdd_foo: ldo0 {
+> 				...
+> 			};
+> 
+> 			vdd_bar: ldo1 {
+> 				...
+> 			};
+> 	};
+> 
+> 	device@... {
+> 		vdd-supply = <&vdd_foo>;
+> 		clocks = <&clock 0>;
+> 	};
+> 
+> 	device@... {
+> 		vdd-supply = <&vdd_bar>;
+> 		clocks = <&clock 1>;
+> 	};
+> 
+> There are somewhat standardized bindings for the above and especially
+> for bindings of the type that clocks implement this is trivial. We can
+> simply iterate over each (phandle, specifier) tuple and check that the
+> corresponding clock provider can be resolved (which typically means that
+> it's been registered with the common clock framework).
+> 
+> For regulators (and regulator-like bindings) the problem is somewhat
+> more difficult because they property names are not standardized. One way
+> to solve this would be to look for property names with a -supply suffix,
+> but that could obviously lead to false positives. One alternative that I
+> think could eliminate this would be to explicitly list dependencies in
+> drivers. This would allow core code to step through such a list and
+> resolve the (phandle, specifier) tuples.
 
-> >I think Lee's "Grim" comment here was that prefixing globals with "g=
-_"
-> >is not consistent with the Linux coding style.  Just remove the "g_"=
-=2E
->=20
-> Done
+False positives and negatives may not actually be a problem. It is
+suboptimal, certainly, but it shouldn't outright break the kernel.
 
-[...]
+g.
 
-> >{ RK808_BUCK3_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_150MA },
-> >
-> >instead of:
-> >
-> >{RK808_BUCK3_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_150MA},
->=20
-> Done
-
-[...]
-
-> >nit: add spacing so that VB_LO_SEL_3500MV lines up under VB_LO_ACT
->=20
-> Done
-
-[...]
-
-> >I think Lee wanted the above to be:
-> >
-> >        { "rk808", },
->=20
-> Done
-
-[...]
-
-> >I think Lee wanted you to remove ".owner =3D THIS_MODULE"
->=20
-> Done
-
-[...]
-
-You've just spammed 10(00)'s of people with an email that contains
-zero useful content.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
