@@ -1,54 +1,99 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Tue, 26 Aug 2014 11:42:04 +0200
-Message-ID: <53FC566C.30904@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de> <20140514141914.446F7C4153D@trevor.secretlab.ca> <20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] RTC: RK808: add RTC driver for RK808
+Date: Tue, 26 Aug 2014 17:47:08 +0800
+Message-ID: <53FC579C.50507@rock-chips.com>
+References: <1408973668-21436-1-git-send-email-zyw@rock-chips.com> <CAD=FV=VYJvgXXcYkq+vcpZkXZBDbgfRGNyF8GA6MnvMAGaAebQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140826084922.GG17263@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Jon Loeliger <jdl@jdl.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=VYJvgXXcYkq+vcpZkXZBDbgfRGNyF8GA6MnvMAGaAebQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@c>
 List-Id: devicetree@vger.kernel.org
 
-Am 26.08.2014 10:49, schrieb Thierry Reding:
-> On Tue, Aug 26, 2014 at 09:42:08AM +0100, Grant Likely wrote:
->> On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
-> [...]
->>> There are somewhat standardized bindings for the above and especially
->>> for bindings of the type that clocks implement this is trivial. We can
->>> simply iterate over each (phandle, specifier) tuple and check that the
->>> corresponding clock provider can be resolved (which typically means that
->>> it's been registered with the common clock framework).
->>>
->>> For regulators (and regulator-like bindings) the problem is somewhat
->>> more difficult because they property names are not standardized. One way
->>> to solve this would be to look for property names with a -supply suffix,
->>> but that could obviously lead to false positives. One alternative that I
->>> think could eliminate this would be to explicitly list dependencies in
->>> drivers. This would allow core code to step through such a list and
->>> resolve the (phandle, specifier) tuples.
->>
->> False positives and negatives may not actually be a problem. It is
->> suboptimal, certainly, but it shouldn't outright break the kernel.
+
+On 08/26/2014 11:22 AM, Doug Anderson wrote:
+>> +       int ret;
+>> >+
+>> >+       /* Has the RTC been programmed? */
+>> >+       ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
+>> >+                                BIT_RTC_CTRL_REG_RTC_V_OPT_M, 0);
+> Can you explain what you're doing here?  The comment seems wrong since
+> it implies that you're checking something.
 >
-> There could be cases where some random integer in a cell could be
-> interpreted as a phandle and resolve to a struct device_node. I suppose
-> it might be unlikely, but not impossible, that the device_node could
-> even match a device in the correct subsystem and you'd get a wrong
-> dependency. Granted, a wrong dependency may not be catastrophic in that
-> it won't lead to a crash, but it could lead to various kinds of
-> weirdness and hard to diagnose problems.
+> >From what I can tell from the manual you're setting "RTC_READSEL" to 0
+> which means "Read access directly to dynamic registers.".  That's not
+> clear here, and RTC_V_OPT_M makes no sense to me.
 
-You need either the type information in the DTB (that's why I've add 
-those "dependencies" to identify phandles), or you need to know every 
-binding (at "dependency-resolve-time" to identify phandles. The latter 
-is impracticable to implement in a generic way (for use with every 
-possible binding).
+RK808 has a shadowed register for saving a "frozen" RTC time.
+When user setting "RTC_READSEL" to 1, the time will save in this 
+shadowed register.
+In this case, user read rtc time register, actually get the time of that 
+moment.
+So, I move it to probe, this bit needn't clear every time
+>> >+       tm->tm_min = bcd2bin(rtc_data[1]) & MINUTES_REG_MAK;
+>> >+       tm->tm_hour = bcd2bin(rtc_data[2]) & HOURS_REG_MSK;
+>> >+       tm->tm_mday = bcd2bin(rtc_data[3]) & DAYS_REG_MSK;
+>> >+       tm->tm_mon = (bcd2bin(rtc_data[4]) & MONTHS_REG_MSK) - 1;
+>> >+       tm->tm_year = (bcd2bin(rtc_data[5]) & YEARS_REG_MSK) + 100;
+>> >+       tm->tm_wday = bcd2bin(rtc_data[6]) & WEEKS_REG_MSK;
+>> >+       dev_dbg(dev, "RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
+>> >+               1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
+>> >+               tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
+>> >+
+>> >+       return 0;
+>> >+}
+>> >+
+>> >+/*
+>> >+ * Set current time and date in RTC
+>> >+ */
+>> >+static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
+> Make this "const struct rtc_time *tm"
+It will be a warning if add const.
+It should be match
+int (*set_time)(struct device *, struct rtc_time *);
+in rtc.h
+>
+>> +               rk808_rtc_set_time(&pdev->dev, &tm_def);
+>> >+       }
+>> >+
+>> >+       device_init_wakeup(&pdev->dev, 1);
+> You can skip this.  We'll set "wakeup-source" in the device tree.
+> That will set I2C_CLIENT_WAKE.  That will cause the i2c core to call
+> device_init_wakeup() for you.
+If I remove it, wakealarm is disappear, even though I add 
+"wakeup-source" in device tree.
+So, I keep it temporarily
+>
+>> +       if (IS_ERR(rk808_rtc->rtc)) {
+>> >+               ret = PTR_ERR(rk808_rtc->rtc);
+>> >+               return ret;
+>> >+       }
+>> >+
+>> >+       alm_irq  = platform_get_irq(pdev, 0);
+> Are you sure that platform_get_irq() works in this case?  In Javier's
+> in-flight max77802 driver he use regmap_irq_get_virq().
+>
+> ...oh, maybe your way does work!  You've got the rtc_resources to
+> specify things, so that looks good...
+>
+> ...but I tried testing it by doing:
+>
+> cd /sys/class/rtc/rtc0
+> echo +2 > wakealarm
+> sleep 5
+> grep 808 /proc/interrupts
+>
+> ...and I didn't see an interrupt go off.  Any idea why?
+It works well.
 
-Regards,
 
-Alexander Holler
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
