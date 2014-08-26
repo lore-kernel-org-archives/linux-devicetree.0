@@ -1,61 +1,76 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEG
- Processing Unit.
-Date: Tue, 26 Aug 2014 11:27:43 +0200
-Message-ID: <CAMuHMdWaO27XhfdwhMHS2+gndoysZbQsT0YLp7KhR_cWujxvTQ@mail.gmail.com>
-References: <1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
-	<1408970132-6690-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-	<CAMuHMdXQAFVJ8Ezd30JNkT6hWoFYKUWk5e0cq88jYUSBTPOzRA@mail.gmail.com>
-	<20140825235720.GB7217@verge.net.au>
-	<CAMuHMdW0r-xGJZtc4AFvxMnTu1rdEROf2DvywScC-XhSELFMtQ@mail.gmail.com>
-	<20140826090126.GC29667@verge.net.au>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH V2] devicetree: Dialog Semiconductor consolidate
+ existing vendor prefixes to standardise on 'dlg'
+Date: Tue, 26 Aug 2014 10:33:12 +0100
+Message-ID: <20140826093312.GI9574@lee--X1>
+References: <201408221446.s7MEkNVF001775@swsrvapps-01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140826090126.GC29667@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201408221446.s7MEkNVF001775@swsrvapps-01.diasemi.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>, DEVICE TREE <devicetree@vger.kernel.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Guenter Roeck <linux@roeck-us.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jonathan Cameron <jic23@kernel.org>, Kumar Gala <galak@codeaurora.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, LINUX KERNEL <linux-kernel@vger.kernel.org>, LINUX SH <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Martin Fuzzey <mfuzzey@parkeon.com>, Pawel Moll <pawel.moll@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Samu
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 26, 2014 at 11:01 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Aug 26, 2014 at 10:03:34AM +0200, Geert Uytterhoeven wrote:
->> On Tue, Aug 26, 2014 at 1:57 AM, Simon Horman <horms@verge.net.au> wrote:
->> > On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geert Uytterhoeven wrote:
->> >> On Mon, Aug 25, 2014 at 2:35 PM, Mikhail Ulyanov
->> >> <mikhail.ulyanov@cogentembedded.com> wrote:
->> >> > +  - compatible: should containg one of the following:
->> >> > +                       - "renesas,jpu-r8a7790" for R-Car H2
->> >> > +                       - "renesas,jpu-r8a7791" for R-Car M2
->> >> > +                       - "renesas,jpu-gen2" for R-Car second generation
->> >>
->> >> Isn't "renesas,jpu-gen2" meant as a fallback?
->> >>
->> >> I.e. the DTS should have one of '7790 and '7791, AND the gen2 fallback,
->> >> so we can make the driver match against '7790 and '7791 is we find
->> >> out about an incompatibility.
->> >
->> > Is there a document that clearly states that there is such a thing
->> > as jpu-gen2 in hardware? If not I would prefer not to add a binding for it.
->>
->> We do have a document that describes the "JPEG Processing Unit (JPU)",
->> as found in the following members of the "Second Generation R-Car Series
->> Products": "R-Car H2", "R-Car M2-W", "R-Car M2-N", and "R-Car V2H".
->
-> Oh, that is nice :)
->
-> From my point of view that ticks a lot of boxes.
-> But I wonder if we can come up with a better name than jpu,-gen2.
+On Fri, 22 Aug 2014, Opensource [Steve Twiss] wrote:
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
+>=20
+> This patch series updates the device tree vendor prefix for
+> Dialog Semiconductor.
+>=20
+> Various methods are currently used throughout the kernel: 'diasemi',
+> 'dialog' and 'dlg'. Others have also been suggested.
+>=20
+> This patch set aims to consolidate the usage of the vendor prefix to
+> use a common standard. The prefix 'dlg' is used.
+>=20
+> Acked-by: Simon Horman <horms+renesas@verge.net.au>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Shawn Guo <shawn.guo@freescale.com>
+>=20
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+>=20
+> ---
 
-"jpu-rcar-gen2"?
+[...]
 
-Gr{oetje,eeting}s,
+> Hi Lee,
+>=20
+> This is a resend according to requests for e-mail reformatting and re=
+moval
+> of '[]' in From: and Signed-off-by: tags. There are no patch alterati=
+ons
+> from RFC V2.
+>=20
+> I have got the Ack for the two remaining files r8a7790-lager.dts and
+> r8a7791-koelsch.dts because of the previous request for SHMobile to A=
+ck
+> their part of the patch.
+> - http://www.spinics.net/lists/arm-kernel/msg349289.html
+> - https://lkml.org/lkml/2014/6/11/273
+>=20
+> I think this is it. But, if I am missing anything or there are proble=
+ms, can
+> I get a quick explanation in the reply so I can fix it and move forwa=
+rds
+> please?
+>=20
+> In full:
+> Acked-by the following people so far:
 
-                        Geert
+When you say "so far", does that mean you're missing Acks still?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+If you have the full-set I will apply this and send out the necessary
+pull-request(s).
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
