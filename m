@@ -1,78 +1,54 @@
-From: Aaron Sierra <asierra@xes-inc.com>
-Subject: [PATCH v3] powerpc: fsl_pci: Add forced PCI Agent enumeration
-Date: Tue, 26 Aug 2014 16:46:11 -0500 (CDT)
-Message-ID: <1671876277.447905.1409089571181.JavaMail.zimbra@xes-inc.com>
-References: <225331217.447792.1409089347911.JavaMail.zimbra@xes-inc.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <225331217.447792.1409089347911.JavaMail.zimbra@xes-inc.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Scott Wood <scottwood@freescale.com>, devicetree@vger.kernel.org, Minghuan Lian <minghuan.lian@freescale.com>
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/4] Add support for Ricoh RN5T618 PMIC
+Date: Wed, 27 Aug 2014 00:13:53 +0200
+Message-ID: <1409091237-16722-1-git-send-email-b.galvani@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGZvbGxvd2luZyBjb21taXQgcHJldmVudHMgdGhlIE1QQzg1NDhFIG9uIHRoZSBYUGVkaXRl
-NTIwMCBQclBNQwptb2R1bGUgZnJvbSBlbnVtZXJhdGluZyBpdHMgUENJL1BDSS1YIGJ1czoKCiAg
-ICBwb3dlcnBjL2ZzbC1wY2k6IHVzZSAnSGVhZGVyIFR5cGUnIHRvIGlkZW50aWZ5IFBDSUUgbW9k
-ZQoKVGhlIHByZXZpb3VzIHBhdGNoIHByZXZlbnRzIGFueSBGcmVlc2NhbGUgUENJLVggYnJpZGdl
-IGZyb20gZW51bWVyYXRpbmcKdGhlIGJ1cywgaWYgaXQgaXMgaGFyZHdhcmUgc3RyYXBwZWQgaW50
-byBBZ2VudCBtb2RlLgoKSW4gUENJLVgsIHRoZSBIb3N0IGlzIHJlc3BvbnNpYmxlIGZvciBkcml2
-aW5nIHRoZSBQQ0ktWCBpbml0aWFsaXphdGlvbgpwYXR0ZXJuIHRvIGRldmljZXMgb24gdGhlIGJ1
-cywgc28gdGhhdCB0aGV5IGtub3cgd2hldGhlciB0byBvcGVyYXRlIGluCmNvbnZlbnRpb25hbCBQ
-Q0kgb3IgUENJLVggbW9kZSBhcyB3ZWxsIGFzIHdoYXQgdGhlIGJ1cyB0aW1pbmcgd2lsbCBiZS4K
-Rm9yIGEgUENJLVggUHJQTUMsIHRoZSBwYXR0ZXJuIGlzIGRyaXZlbiBieSB0aGUgbWV6emFuaW5l
-IGNhcnJpZXIgaXQgaXMKaW5zdGFsbGVkIG9udG8uIFRoZXJlZm9yZSwgUHJQTUNzIGFyZSBQQ0kt
-WCBBZ2VudHMsIGJ1dCBvbmUgcGVyIHN5c3RlbQptYXkgc3RpbGwgZW51bWVyYXRlIHRoZSBidXMu
-CgpUaGlzIHBhdGNoIGNhdXNlcyB0aGUgZGV2aWNlIG5vZGUgb2YgYW55IFBDSS9QQ0ktWCBicmlk
-Z2Ugc3RyYXBwZWQgaW50bwpBZ2VudCBtb2RlIHRvIGJlIGNoZWNrZWQgZm9yIHRoZSBmc2wscGNp
-LWFnZW50LWZvcmNlLWVudW0gcHJvcGVydHkuIElmCnRoZSBwcm9wZXJ0eSBpcyBwcmVzZW50IGlu
-IHRoZSBub2RlLCB0aGUgYnJpZGdlIHdpbGwgYmUgYWxsb3dlZCB0bwplbnVtZXJhdGUgdGhlIGJ1
-cy4KCkNjOiBNaW5naHVhbiBMaWFuIDxNaW5naHVhbi5MaWFuQGZyZWVzY2FsZS5jb20+ClNpZ25l
-ZC1vZmYtYnk6IEFhcm9uIFNpZXJyYSA8YXNpZXJyYUB4ZXMtaW5jLmNvbT4KLS0tCiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2ZzbCxwY2kudHh0IHwgMjcgKysrKysrKysr
-KysrKysrKysrKysrKysKIGFyY2gvcG93ZXJwYy9zeXNkZXYvZnNsX3BjaS5jICAgICAgICAgICAg
-ICAgICAgICAgfCAgMyArKy0KIDIgZmlsZXMgY2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKSwgMSBk
-ZWxldGlvbigtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9wY2kvZnNsLHBjaS50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGNpL2ZzbCxwY2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3BjaS9mc2wscGNpLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAw
-MDAwLi5kOGFjNGE3Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3BjaS9mc2wscGNpLnR4dApAQCAtMCwwICsxLDI3IEBACisqIEJ1cyBFbnVtZXJh
-dGlvbiBieSBGcmVlc2NhbGUgUENJLVggQWdlbnQKKworVHlwaWNhbGx5IGFueSBGcmVlc2NhbGUg
-UENJLVggYnJpZGdlIGhhcmR3YXJlIHN0cmFwcGVkIGludG8gQWdlbnQgbW9kZQoraXMgcHJldmVu
-dGVkIGZyb20gZW51bWVyYXRpbmcgdGhlIGJ1cy4gVGhlIFByUE1DIGZvcm0tZmFjdG9yIHJlcXVp
-cmVzCithbGwgbWV6emFuaW5lcyB0byBiZSBQQ0ktWCBBZ2VudHMsIGJ1dCBvbmUgcGVyIHN5c3Rl
-bSBtYXkgc3RpbGwKK2VudW1lcmF0ZSB0aGUgYnVzLgorCitUaGUgcHJvcGVydHkgZGVmaW5lZCBi
-ZWxvdyB3aWxsIGFsbG93IGEgUENJLVggYnJpZGdlIHRvIGJlIHVzZWQgZm9yIGJ1cworZW51bWVy
-YXRpb24gZGVzcGl0ZSBiZWluZyBzdHJhcHBlZCBpbnRvIEFnZW50IG1vZGUuCisKK1JlcXVpcmVk
-IHByb3BlcnRpZXM6CistIGZzbCxwY2ktYWdlbnQtZm9yY2UtZW51bSA6IFRoZXJlIGlzIG5vIHZh
-bHVlIGFzc29jaWF0ZWQgd2l0aCB0aGlzCisgIHByb3BlcnR5LiBUaGUgcHJvcGVydHkgaXRzZWxm
-IGlzIHRyZWF0ZWQgYXMgYSBib29sZWFuLgorCitFeGFtcGxlOgorCisJLyogUENJLVggYnJpZGdl
-IGtub3duIHRvIGJlIFByUE1DIE1vbmFyY2ggKi8KKwlwY2kwOiBwY2lAZWYwMDgwMDAgeworCQlm
-c2wscGNpLWFnZW50LWZvcmNlLWVudW07CisJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47CisJCSNz
-aXplLWNlbGxzID0gPDI+OworCQkjYWRkcmVzcy1jZWxscyA9IDwzPjsKKwkJY29tcGF0aWJsZSA9
-ICJmc2wsbXBjODU0MC1wY2l4IiwgImZzbCxtcGM4NTQwLXBjaSI7CisJCWRldmljZV90eXBlID0g
-InBjaSI7CisJCS4uLgorCQkuLi4KKwl9OwpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL3N5c2Rl
-di9mc2xfcGNpLmMgYi9hcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF9wY2kuYwppbmRleCA0YmQwOTFh
-Li5kMTM2NjNmIDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF9wY2kuYworKysg
-Yi9hcmNoL3Bvd2VycGMvc3lzZGV2L2ZzbF9wY2kuYwpAQCAtNTIyLDcgKzUyMiw4IEBAIGludCBm
-c2xfYWRkX2JyaWRnZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBpbnQgaXNfcHJpbWFy
-eSkKIAl9IGVsc2UgewogCQkvKiBGb3IgUENJIHJlYWQgUFJPRyB0byBpZGVudGlmeSBjb250cm9s
-bGVyIG1vZGUgKi8KIAkJZWFybHlfcmVhZF9jb25maWdfYnl0ZShob3NlLCAwLCAwLCBQQ0lfQ0xB
-U1NfUFJPRywgJnByb2dpZik7Ci0JCWlmICgocHJvZ2lmICYgMSkgPT0gMSkKKwkJaWYgKChwcm9n
-aWYgJiAxKSAmJgorCQkgICAgIW9mX3Byb3BlcnR5X3JlYWRfYm9vbChkZXYsICJmc2wscGNpLWFn
-ZW50LWZvcmNlLWVudW0iKSkKIAkJCWdvdG8gbm9fYnJpZGdlOwogCX0KIAotLSAKMS45LjEKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRl
-diBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0
-cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Ricoh RN5T618 is a power management IC which includes 3 step-down DCDC
+converters, 7 low-dropout regulators, a Li-ion battery charger, fuel
+gauge, ADC, GPIOs and a watchdog timer.
+
+This series adds a MFD core driver and separate drivers to support the
+regulator and watchdog functionalities.
+
+The patchset has been tested on a Tronsmart Vega S89 Elite TV box on
+top of other patches needed to support the Amlogic Meson SoC. The tree
+with all the changes is available at:
+
+  https://github.com/bengal/linux/tree/rn5t618
+
+Beniamino Galvani (4):
+  mfd: Add Ricoh RN5T618 PMIC core driver
+  regulator: add driver for Ricoh RN5T618 regulators
+  watchdog: add driver for Ricoh RN5T618 watchdog
+  mfd: rn5t618: document device tree bindings
+
+ Documentation/devicetree/bindings/mfd/rn5t618.txt |   36 ++++
+ drivers/mfd/Kconfig                               |   11 +
+ drivers/mfd/Makefile                              |    1 +
+ drivers/mfd/rn5t618.c                             |  129 ++++++++++++
+ drivers/regulator/Kconfig                         |    6 +
+ drivers/regulator/Makefile                        |    1 +
+ drivers/regulator/rn5t618-regulator.c             |  143 +++++++++++++
+ drivers/watchdog/Kconfig                          |   11 +
+ drivers/watchdog/Makefile                         |    1 +
+ drivers/watchdog/rn5t618_wdt.c                    |  196 ++++++++++++++++++
+ include/linux/mfd/rn5t618.h                       |  228 +++++++++++++++++++++
+ 11 files changed, 763 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rn5t618.txt
+ create mode 100644 drivers/mfd/rn5t618.c
+ create mode 100644 drivers/regulator/rn5t618-regulator.c
+ create mode 100644 drivers/watchdog/rn5t618_wdt.c
+ create mode 100644 include/linux/mfd/rn5t618.h
+
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
