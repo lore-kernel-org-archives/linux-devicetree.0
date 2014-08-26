@@ -1,119 +1,81 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] iommu/arm-smmu: add support for iova_to_phys through
-	ATS1PR
-Date: Tue, 26 Aug 2014 14:54:51 +0100
-Message-ID: <20140826135451.GQ23445@arm.com>
-References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
-	<1407891099-24641-4-git-send-email-mitchelh@codeaurora.org>
-	<20140819124431.GL23128@arm.com>
-	<vnkwa970qrfq.fsf@mitchelh-linux.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <vnkwa970qrfq.fsf-Yf+dfxj6toJBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization order based on the DT)
+Date: Tue, 26 Aug 2014 08:58:34 -0500
+Message-ID: <E1XMHGc-0008TS-CQ@jdl.com>
+References: <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826102503.GC31124@ulmo> <53FC6513.5040800@ahsoftware.de> <20140826110827.GA31350@ulmo> <53FC6E4A.6030407@ahsoftware.de> <20140826114718.GB641@ulmo> <53FC76E8.5050009@ahsoftware.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <53FC76E8.5050009-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mitch,
-
-On Tue, Aug 19, 2014 at 07:12:41PM +0100, Mitchel Humpherys wrote:
-> On Tue, Aug 19 2014 at 05:44:32 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > We don't have writeq for arch/arm/.
-> 
-> Ah yes looks like this is an MSM-ism that never made it upstream since
-> it wouldn't be guaranteed to be atomic. I'll make sure to do arm32
-> compiles on upstream kernels for future patches, sorry!
-> 
-> I guess we could use <asm-generic/io-64-nonatomic-lo-hi.h> but I can
-> also re-work this to be two separate writel's.
-
-Yeah, just do two writels.
-
-> >> +	}
-> >> +
-> >> +	mb();
+> >>
+> >> Drivers don't provide that information (dependencies) in any usable way. And
+> >> as you said yourself, it's already contained in phandles. So what we are
+> >> discussing here about? The proposal to use phandles for that is already on
+> >> the table since several month. ;)
+> >>
+> >> Sorry, but I don't understand what you want to propose.
 > >
-> > Why?
+> > In many cases we simply don't know where phandles are stored since we
+> > don't have the type information in DT. But drivers already know the type
+> > of a specific phandle and where to get it from, so the proposal is to
+> > make that knowledge more generally useful so that it can be used for
+> > dependency resolution.
 > 
-> My thought was that if we start polling ATSR_ACTIVE prematurely (before
-> the write to ATS1PR actually finishes) all heck could break loose? Not
-> sure if that's a bogus assumption due to device memory being strongly
-> ordered?
+> How?
 
-I think the device-memory guarantees should be enough. If not, we need a
-comment explaining why.
+Is the issue around which we are dancing here the timing of
+topsort and the probing?  When the driver is probed, sure, it
+touches and resolves a bunch of phandles and references other
+nodes and devices.  But that is at probe time, and it only has
+the context of itself then.
 
-> >> +	while (readl_relaxed(cb_base + ARM_SMMU_CB_ATSR) & ATSR_ACTIVE) {
-> >> +		if (++count == ATSR_LOOP_TIMEOUT) {
-> >> +			dev_err(dev,
-> >> +				"iova to phys timed out on 0x%pa for %s. Falling back to software table walk.\n",
-> >> +				&iova, dev_name(dev));
-> >> +			arm_smmu_disable_clocks(smmu);
-> >> +			return arm_smmu_iova_to_phys_soft(domain, iova);
-> >> +		}
-> >> +		cpu_relax();
-> >> +	}
-> >
-> > Do you know what happened to Olav's patches to make this sort of code
-> > generic?
-> 
-> I assume you're talking about this, right?
-> 
->     http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/267943.html
-> 
-> Yeah looks like he never sent an update since it was part of a series
-> that wasn't going to make it in (the qsmmu driver). I can always bring
-> that patch (actually Matt Wagantall's patch) in here and rework this to
-> use that.
+I think we need to do the complete topsort *before* we attempt
+to do any probing.  So three steps:
 
-Yup, I think it would be useful to revive that as a separate series.
+    1) Graph Construction
+        Add a new "emit dependencies" function to driver bindings.
+        Iterate over known devices or nodes in the DT in any order.
+	    Call the "emit dependencies" function.  It adds all
+	    dependency edges to a global graph by knowing what
+	    phandles or other pieces it will need.
+	    A driver with no "emit dependencies" function can be
+	    added to the graph anywhere without loss of generality.
+        Add any additional edges for whatever reason.
 
-> >
-> >> @@ -2005,6 +2073,11 @@ int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
-> >>  		return -ENODEV;
-> >>  	}
-> >>  
-> >> +	if (smmu->version == 1 || (!(id & ID0_ATOSNS) && (id & ID0_S1TS))) {
-> >
-> > Are you sure about this? The v2 spec says that is ATOSNS is clear then S1TS
-> > is also clear.
-> 
-> I was looking at Section 4.1.1 of ARM IHI 0062C ID091613 which states:
-> 
->     In SMMUv2, the address translation registers are OPTIONAL. The
->     address translation registers are implemented only when both:
-> 
->         o The SMMU_IDR0.S1TS bit is set to 1.
->         o The SMMU_IDR0.ATOSNS bit is set to 0.
-> 
-> I assume you're referring to section 9.6.1 of the same document:
-> 
->     ATOSNS, bit[26]
->     Address Translation Operations Not Supported. The possible values of
->     this bit are:
-> 
->         0 Address translation operations are supported. Stage 1
->           translation is not supported, that is, the S1TS bit is set to 0.
-> 
->         1 Address translation operations are not supported. Stage 1
->           translation is supported, that is, the S1TS bit is set to 1.
-> 
-> If that really means that S1TS and ATOSNS always have the same value
-> then Section 4.1.1 doesn't make any sense. Or am I missing something?
+    2) Topsort the generated driver graph
 
-I'll get this checked, as those two paragraphs don't make an awful lot of
-sense together.
+    3) Call probe for real in topsort order
+      
+Alexander, I don't recall the details of your patch series.
+Can you please remind us if it took this approach in the kernel?
 
-Will
+> Anyway, I'm leaving this discussion. I've already made a proposal
+> which solved most mentioned problems (imho) and even offered usable
+> patches
+
+Darn.  I think you clearly have a pony in this race, and it
+would be good if you still participated.  Really.
+
+> (ok, they suffer under the "not invented here" syndrom, but ...). ;)
+
+There isn't a single thing in the entire Linux Kernel community
+that was "invented here"; every aspect of it was NIH'ed by *someone*.
+That's how it gets built, changed, maintained, fixed, etc.
+
+> But please continue this discussion, I will try to not disturb it
+> anymore.
+
+I'm sorry to hear that.
+
+> Regards,
+> Alexander Holler
+
+HTH,
+jdl
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
