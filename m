@@ -1,101 +1,115 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Tue, 26 Aug 2014 14:00:40 +0200
-Message-ID: <53FC76E8.5050009@ahsoftware.de>
-References: <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826102503.GC31124@ulmo> <53FC6513.5040800@ahsoftware.de> <20140826110827.GA31350@ulmo> <53FC6E4A.6030407@ahsoftware.de> <20140826114718.GB641@ulmo>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Tue, 26 Aug 2014 20:05:04 +0800
+Message-ID: <53FC77F0.4030004@rock-chips.com>
+References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com> <20140820092117.GI4266@lee--X1> <53FA9D1E.8040202@rock-chips.com> <20140826092205.GG9574@lee--X1> <53FC5BD1.7030406@rock-chips.com> <20140826102036.GJ9574@lee--X1> <53FC63EE.6060104@rock-chips.com> <20140826112013.GK9574@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140826114718.GB641@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140826112013.GK9574@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Am 26.08.2014 13:47, schrieb Thierry Reding:
-> On Tue, Aug 26, 2014 at 01:23:54PM +0200, Alexander Holler wrote:
->> Am 26.08.2014 13:08, schrieb Thierry Reding:
->>> On Tue, Aug 26, 2014 at 12:44:35PM +0200, Alexander Holler wrote:
->>>> Am 26.08.2014 12:25, schrieb Thierry Reding:
->>>>> On Tue, Aug 26, 2014 at 11:42:04AM +0200, Alexander Holler wrote:
->>>>
->>>>>> You need either the type information in the DTB (that's why I've add those
->>>>>> "dependencies" to identify phandles), or you need to know every binding (at
->>>>>> "dependency-resolve-time" to identify phandles. The latter is impracticable
->>>>>> to implement in a generic way (for use with every possible binding).
+
+On 08/26/2014 07:20 PM, Lee Jones wrote:
+> On Tue, 26 Aug 2014, Chris Zhong wrote:
+>> On 08/26/2014 06:20 PM, Lee Jones wrote:
+>>> On Tue, 26 Aug 2014, Chris Zhong wrote:
+>>>> On 08/26/2014 05:22 PM, Lee Jones wrote:
+>>>>> On Mon, 25 Aug 2014, Chris Zhong wrote:
+>>>>>> On 08/20/2014 05:21 PM, Lee Jones wrote:
+>>>>>>> On Wed, 20 Aug 2014, Chris Zhong wrote:
+>>>>>>>
+>>>>>>>> The RK808 chip is a power management IC for multimedia and handheld
+>>>>>>>> devices. It contains the following components:
+>>>>>>>>
+>>>>>>>> - Regulators
+>>>>>>>> - RTC
+>>>>>>>>
+>>>>>>>> The rk808 core driver is registered as a platform driver and provides
+>>>>>>>> communication through I2C with the host device for the different
+>>>>>>>> components.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>>>>>>>> ---
+>>>>> [...]
 >>>>>
->>>>> Like I already mentioned, this could be done in drivers who contain that
->>>>> information already anyway. Or parts of it could be done in subsystem-
->>>>> specific callbacks where a generic binding is available.
->>>>
->>>> That would end up with almost the same ugly driver-based workarounds as now.
->>>> It's much better if a driver author only has to define it's prerequisits (in
->>>> form of dependencies in the dts) and could be sure the driver will only be
->>>> probed if those are met, than to do that stuff based on a subsystem or even
->>>> driver level.
->>>>
->>>> If you add dependency-information to drivers, you have two problems:
+>>>>>>>> +	rk808->pdata = pdata;
+>>>>>>> Remove pdata from 'struct rk808'.  You can obtain it from dev.
+>>>>>> Can I keep this pdata in rk808, because it is used in the regulator driver.
+>>>>>> The one obtain from dev maybe empty.
+>>>>> If the one in dev is empty, you should populate that instead.
+>>>> So, should I malloc a pada, and assign it to client->dev?
+>>> If client->dev.pdata is NULL, yes.
 >>>
->>> We already have all that dependency information in drivers anyway. Each
->>> driver requests the resources at .probe() time. What I proposed (it was
->>> really Arnd who proposed it first) is to move that information out of
->>> code and into some sort of table that could be used by the driver core
->>> to figure out dependencies.
+>>> But actually, I have more important questions that need to be answered
+>>> first.  Ones which I would normally be able to answer myself if the
+>>> patch-set had been sent as one (i.e. threaded) instead of as
+>>> individual patches:
 >>>
->>>> - How do you get these information from the driver (remember, currently
->>>> there is only one initial call, a initcall which might do almost anything)
->>>
->>> While I don't think it's necessary, that's something that could be
->>> changed. I mean, we have access to the full source code of this
->>> operating system, so we can change every aspect of it. If we can't find
->>> a way to make this work with the current initcall sequence it's always
->>> an option to extend that sequence so that it meets our needs.
->>>
->>>> - These information might become outdated and you would have to change all
->>>> drivers. E.g. if the name of a dependency (driver) changes it wouldn't be
->>>> done with changing the dts (maybe plural), but you would have to change the
->>>> source of all dependant drivers too.
->>>
->>> No. Drivers implement a DT binding. That binding defines what power
->>> supplies, clocks, pinmux, ... the device needs. Those constitute the
->>> dependencies. We most certainly don't want to depend on driver names
->>> since there can be a multitude of different drivers that provide a given
->>> dependency.
->>>
->>> What drivers should provide (and what they already provide today) is the
->>> name of the property and the index of the cell that they expect to find
->>> a phandle in as well as the type of the phandle. That's all that's
->>> necessary, really. Everything else can be derived from that phandle and
->>> the type.
+>>> - What are you using pdata for?
+>> For save some properties,
 >>
->> Drivers don't provide that information (dependencies) in any usable way. And
->> as you said yourself, it's already contained in phandles. So what we are
->> discussing here about? The proposal to use phandles for that is already on
->> the table since several month. ;)
+>> like "rockchip,system-power-controller" in MFD
+>> and some regulator properties in regulator/rk808...
 >>
->> Sorry, but I don't understand what you want to propose.
+>>> - Where is pdata populated?
+>> It is populated in probe in mfd/rk808.c
+>>
+>> actually, I copy it from tps65910.c
+>>
+>>
+>>> - Where is pdata used?
+>> pdata is used in mfd and regulator
+> I'm still a little confused.  I see it being populated in the MFD
+> driver, then I only see the attributes populated in the MFD driver
+> used in the MFD driver and nowhere else?  I do see other attributes
+> used in the regulator driver i.e. .of_node[], but these are then used
+> only in the regulator driver, thus they shouldn't really be pdata.
 >
-> In many cases we simply don't know where phandles are stored since we
-> don't have the type information in DT. But drivers already know the type
-> of a specific phandle and where to get it from, so the proposal is to
-> make that knowledge more generally useful so that it can be used for
-> dependency resolution.
+> Let me put it another way:
+>
+> struct rk808_board {
+> +       int irq;
+> +       int irq_base;
+> +       int wakeup;
+> +       bool pm_off;
+> +       struct regulator_init_data *rk808_init_data[rk808_NUM_REGULATORS];
+> +       struct device_node *of_node[rk808_NUM_REGULATORS];
+> +       int pmic_sleep_gpio;
+> +       unsigned int dcdc_slp_voltage[3]; /* buckx_voltage in uV */
+> +       unsigned int ldo_slp_voltage[7];
+> +};
+>
+> For each of the above:
+>
+> - Can it be passed from platform data i.e. arch/<arch>/{plat,mach}-*?
+> - Can it use local (not passed from driver to driver) variable instead?
+>
+> If the answer to the first question is 'no' and/or if the answer to
+> the second question is 'yes', then it shouldn't be platform data.
 
-How?
+Yes, if we have no dts file, these value can pass from mach-rk***.
 
-Anyway, I'm leaving this discussion. I've already made a proposal which 
-solved most mentioned problems (imho) and even offered usable patches 
-(ok, they suffer under the "not invented here" syndrom, but ...). ;)
+It can be filled with all user setting of rk808, in a struct.
 
-But please continue this discussion, I will try to not disturb it anymore.
+the latest struct is:
 
-Regards,
+struct rk808_board {
 
-Alexander Holler
+     int wakeup;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+     bool pm_off;
+
+     struct regulator_init_data *rk808_init_data[RK808_NUM_REGULATORS];
+
+     struct device_node *of_node[RK808_NUM_REGULATORS];
+
+     unsigned int dcdc_slp_voltage[3]; /* buckx_voltage in uV */
+
+     unsigned int ldo_slp_voltage[7];
+
+};
