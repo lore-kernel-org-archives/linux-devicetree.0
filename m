@@ -1,172 +1,261 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 4/8] qcom: spm-devices: Add SPM device manager for
- the SoC
-Date: Mon, 25 Aug 2014 19:17:15 -0700
-Message-ID: <53FBEE2B.7020008@codeaurora.org>
-References: <1408486537-6358-1-git-send-email-lina.iyer@linaro.org> <1408486537-6358-5-git-send-email-lina.iyer@linaro.org> <53FBC971.1070102@codeaurora.org> <20140826003153.GA72292@ilina-mac.local>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] dt-bindings: Add RK808 device tree bindings document
+Date: Tue, 26 Aug 2014 10:18:16 +0800
+Message-ID: <53FBEE68.20403@rock-chips.com>
+References: <1408973362-21355-1-git-send-email-zyw@rock-chips.com> <CAD=FV=Wp7e__00WAcXZB-kZZ28hsnWwq+eYOYeeDMYNQVSmkzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140826003153.GA72292@ilina-mac.local>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: daniel.lezcano@linaro.org, khilman@linaro.org, davidb@codeaurora.org, galak@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, msivasub@codeaurora.org, Praveen Chidamabram <pchidamb@codeaurora.org>, Murali Nalajala <mnalajal@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=Wp7e__00WAcXZB-kZZ28hsnWwq+eYOYeeDMYNQVSmkzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@c>
 List-Id: devicetree@vger.kernel.org
 
-On 08/25/14 17:31, Lina Iyer wrote:
-> On Mon, Aug 25, 2014 at 04:40:33PM -0700, Stephen Boyd wrote:
->> On 08/19/14 15:15, Lina Iyer wrote:
->>> diff --git a/Documentation/devicetree/bindings/arm/msm/spm.txt
->>> b/Documentation/devicetree/bindings/arm/msm/spm.txt
->>> new file mode 100644
->>> index 0000000..318e024
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/arm/msm/spm.txt
->>
->> We already have a binding document for SAW. Please add stuff there
->> because SPM is just a component of SAW.
->>
-> I agree that SPM is just a component of the SAW. But the document there
-> seems to indicate regulator details, totally unrelated to the actual SAW
-> hardware functionality.
 
-Huh? The SAW binding should be extended with whatever properties are
-necessary. Probably the only thing we need is the delays. Everything
-else can be determined from the compatible?
+On 08/26/2014 04:14 AM, Doug Anderson wrote:
+> Chris,
+>
+> On Mon, Aug 25, 2014 at 6:29 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> Add device tree bindings documentation and a header file
+>> for rockchip's RK808 pmic.
+>>
+>> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> ---
+>>
+>> Changes in v5:
+>> Adviced by doug
+>> - add some error checking in probe
+>> - move "rockchip,rk808.h" into the patch about dt-bindings
+>>
+>> Changes in v4:
+>> Adviced by doug
+>> - add "clock-output-names" propertiey
+>> - add a header file "rockchip,rk808.h"
+>>
+>> Changes in v3:
+>> - fix compile err
+>>
+>> Changes in v2:
+>> Adviced by javier.martinez
+>> - separated from rtc-rk808.c
+>>
+>>   Documentation/devicetree/bindings/mfd/rk808.txt |  142 +++++++++++++++++++++++
+>>   include/dt-bindings/clock/rockchip,rk808.h      |   11 ++
+>>   2 files changed, 153 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
+>>   create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+>> new file mode 100644
+>> index 0000000..e5786e9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+>> @@ -0,0 +1,142 @@
+>> +RK808 Power Management Integrated Circuit
+>> +
+>> +Required properties:
+>> +- compatible: "rockchip,rk808"
+>> +- reg: I2C slave address
+>> +- interrupt-parent: The parent interrupt controller.
+>> +- interrupts: the interrupt outputs of the controller.
+>> +- pinctrl-names: Should contain only one value - "default".
+>> +- pinctrl-0: Should specify pin control groups used for this controller.
+> You could probably skip including the pinctrl stuff here.  Keep it in
+> the example.  Nothing in the driver requires this and it's really an
+> artifact of the board.
 
-SAW has a connection to the PMIC, does it not? If it isn't directly
-connected we can come up with a different name for the node, but just
-because the node name in the example is misleading doesn't mean we
-should completely disregard what we already have.
+Done
 
 >
->>> @@ -0,0 +1,47 @@
->>> +* Subsystem Power Manager (SAW2)
->>> +
->>> +S4 generation of MSMs have SPM hardware blocks to control the
->>> Application
->>> +Processor Sub-System power. These SPM blocks run individual state
->>> machine
->>> +to determine what the core (L2 or Krait/Scorpion) would do when the
->>> WFI
->>> +instruction is executed by the core.
->>> +
->>> +The devicetree representation of the SPM block should be:
->>> +
->>> +Required properties
->>> +
->>> +- compatible: Could be one of -
->>> +        "qcom,spm-v2.1"
->>> +        "qcom,spm-v3.0"
->>> +- reg: The physical address and the size of the SPM's memory mapped
->>> registers
->>> +- qcom,cpu: phandle for the CPU that the SPM block is attached to.
->>> +    This field is required on only for SPMs that control the CPU.
->>
->> We have a phandle from the CPU/L2 to the SAW, so this isn't necessary.
->>
-> Sorry, I dont understand. Care to explain pls? Its necessary to know
-> what SPM instance controls which CPU or L2, so as to pick the right SPM
-> device to configure.
+>> +- regulators: This is the list of child nodes that specify the regulator
+> Technically "regulators" is not a property, it's a child node.  See
+> max8998 maybe for a sample, where it says:
+>
+> Regulators: All the regulators of MAX8998 to be instantiated shall be
+> listed in a child node named 'regulators'. Each regulator is represented
+> by a child node of the 'regulators' node.
+>
+>          regulator-name {
+>                  /* standard regulator bindings here */
+>          };
 
-We have a phandle in the CPU nodes pointing to the SAW that is
-associated with that CPU (qcom,saw). SPM is a part of a SAW. Thus there
-is no need for this qcom,cpu property once the SAW node is used.
-Instead, we can search the CPU and cache nodes for a qcom,saw that
-matches the of_node for the platform device we're probing.
+Done
 
 >
->>> +- qcom,saw2-cfg: SAW2 configuration register
->>
->> Why? Compatible should indicate where this register is.
->>
-> There are multiple versions of saw handled by the same driver and
-> distinguished by the version register. These SAW revisions differ in the
-> register offset organization. The variable holds the value to be
-> configured in the saw2-cfg register. I will update the documentation to
-> be more clear.
->>> +- qcom,saw2-spm-ctl: The SPM control register
->>
->> Why? Compatible should indicate where this register is.
->>
-> See above. 
+>> +  initialization data for defined regulators. Not all regulators for the given
+>> +  device need to be present. The definition for each of these nodes is defined
+>> +  using the standard binding for regulators found at
+>> +  Documentation/devicetree/bindings/regulator/regulator.txt.
+>> +- #clock-cells: the value should be 1
+>> +- The following are the names of the regulators that the rk808 pmic block
+>> +  supports. Note: The 'n' below represents the number as per the datasheet:
+>> +
+>> +  - DCDC_REGn
+>> +       - valid values for n are 1 to 4.
+>> +  - LDO_REGn
+>> +       - valid values for n are 1 to 8.
+>> +  - SWITCH_REGn
+>> +       - valid values for n are 1 to 2.
+>> +
+>> +Optional properties:
+>> +- clock-output-names : From common clock binding to override the
+>> +  default output clock name
+> nit: no space before the ":"
 
-Ah this is more register jam table in DT? cfg should probably be
-described in desired clock rate and then the driver can figure out the
-value by multiplying that the input clock rate. spm-ctl looks like it's
-usually used to describe "enable", which seems rather obvious. Why isn't
-the driver always writing the enable bit (bit 0)?
+Done
 
 >
->>> +- qcom,saw2-spm-dly: Provides the values for the SPM delay command
->>> in the SPM
->>> +    sequence
->>
->> This is actually three values packed into one register for three
->> different selectable delays, right? We don't typically do register jam
->> tables in DT. Perhaps it should be split out into 3 different
->> properties. Or maybe it shouldn't be specified in DT at all and should
->> be determined algorithmically from the command sequences? From what I
->> can tell most of the sequences don't even use these delays.
->>
-> Not at all sequences use the delays. These cannot be determined
-> algorithmatically, They may be added to the sequence for changes in
-> hardware. Let me revisit the sequences to see if they need to be set
-> with the current sequence in use.
->
+>> +- rockchip,system-power-controller: Telling whether or not this pmic is controlling
+>> +  the system power.
+>> +
+>> +Example:
+>> +rk808: pmic@1b {
+>> +       compatible = "rockchip,rk808";
+>> +       interrupt-parent = <&gpio0>;
+>> +       interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pmic_int>;
+>> +       reg = <0x1b>;
+>> +       #clock-cells = <1>;
+>> +       clock-output-names = "xin32k0", "xin32k1";
+>> +       rockchip,system-power-controller;
+>> +
+>> +               regulators {
+> nit: you've indented regulators one too many spots.
 
-I was thinking perhaps these should be more structured binary blobs that
-indicate the delays that would be necessary in the first 3 bytes or
-something and then the command sequence after that.
-
-        <delay1> <delay2> <delay3> <sequence>
-
-Or perhaps
-
-        <num delays=N> <delayN-1> <delayN> <sequence>
-
-and then the code would parse these first few bytes and compress them
-into 3 values that are written into the register.
-
-BTW, I wonder if these sequences should be firmware blobs? Or at least,
-different files that we then /incbin/ into the final DT blob (if DT
-reviewers approve putting blobs like this into the kernel, Cc'ed the DT
-list just in case).
+Done
 
 >
 >
->>> +
->>> +Optional properties
->>> +
->>> +- qcom,saw2-spm-cmd-wfi: The WFI command sequence
->>> +- qcom,saw2-spm-cmd-ret: The Retention command sequence
->>> +- qcom,saw2-spm-cmd-spc: The Standalone PC command sequence
->>> +- qcom,saw2-spm-cmd-pc: The Power Collapse command sequence. This
->>> sequence may
->>> +    turn off other SoC components.
->>> +- qcom,saw2-spm-cmd-gdhs: GDHS (Globally Distributed Head Switch)
->>> command
->>> +    sequence. This sequence will retain the memory but turn off the
->>> logic.
->>
->> I wonder if these should be properties of the idle states? That way the
->> driver isn't searching for them by name in DT, instead it knows what
->> state is associated with what sequence that the SPM needs to have
->> programmed.
->>
-> I see the relation you are seeing. But its not a property of the idle
-> state. Its an SoC specific property that the idle uses to indicate a
-> state. Better off lying here. I doubt there would be a good support for
-> holding SoC specific stuff in the ARM idle-states nodes.
+>> +                       rk808_dcdc1_reg: DCDC_REG1 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <1200000>;
+>> +                               regulator-max-microvolt = <1200000>;
+>> +                               regulator-name = "vdd_arm";
+>> +                       };
+>> +
+>> +                       rk808_dcdc2_reg: DCDC_REG2 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <850000>;
+>> +                               regulator-max-microvolt = <1250000>;
+>> +                               regulator-name = "vdd_gpu";
+>> +                       };
+>> +
+>> +                       rk808_dcdc3_reg: DCDC_REG3 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-name = "vdd_ddr";
+>> +                       };
+>> +
+>> +                       rk808_dcdc4_reg: DCDC_REG4 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <3300000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                               regulator-name = "vccio";
+>> +                       };
+>> +
+>> +                       rk808_ldo1_reg: LDO_REG1 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <3300000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                       };
+>> +
+>> +                       rk808_ldo2_reg: LDO_REG2 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <3300000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                       };
+>> +
+>> +                       rk808_ldo3_reg: LDO_REG3 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <1000000>;
+>> +                               regulator-max-microvolt = <1000000>;
+>> +                               regulator-name = "LDO_REG3";
+>> +                       };
+>> +
+>> +                       rk808_ldo4_reg: LDO_REG4 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <1800000>;
+>> +                               regulator-max-microvolt = <1800000>;
+>> +                       };
+>> +
+>> +                       rk808_ldo5_reg: LDO_REG5 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <1800000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                       };
+>> +
+>> +                       rk808_ldo6_reg: LDO_REG6 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <1000000>;
+>> +                               regulator-max-microvolt = <1000000>;
+>> +                       };
+>> +
+>> +                       rk808_ldo7_reg: LDO_REG7 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <1800000>;
+>> +                               regulator-max-microvolt = <1800000>;
+>> +                       };
+>> +
+>> +                       rk808_ldo8_reg: LDO_REG8 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                               regulator-min-microvolt = <3300000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                       };
+>> +
+>> +                       rk808_switch1_reg: SWITCH_REG1 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                       };
+>> +
+>> +                       rk808_switch2_reg: SWITCH_REG2 {
+>> +                               regulator-always-on;
+>> +                               regulator-boot-on;
+>> +                       };
+>> +               };
+>> +       };
+>> diff --git a/include/dt-bindings/clock/rockchip,rk808.h b/include/dt-bindings/clock/rockchip,rk808.h
+>> new file mode 100644
+>> index 0000000..1a87343
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/rockchip,rk808.h
+>> @@ -0,0 +1,11 @@
+>> +/*
+>> + * This header provides constants clk index RK808 pmic clkout
+>> + */
+>> +#ifndef _CLK_ROCKCHIP_RK808
+>> +#define _CLK_ROCKCHIP_RK808
+>> +
+>> +/* CLOCKOUT index */
+>> +#define RK808_CLKOUT0          0
+>> +#define RK808_CLKOUT1          1
+>> +
+>> +#endif
+> IMHO nothing above is terrible, but it would be nice to spin it if
+> possible.  After those small cleanups I personally think this is ready
+> to land.
+>
+> -Doug
+>
 >
 >
 
-What isn't specifically related to the 1) idle state and 2) CPU/L2/etc.
-that the idle state is used in? I would think that by pointing to
-different idle states from different CPU nodes we could cover all cases.
-What is the SoC specific stuff in here?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
