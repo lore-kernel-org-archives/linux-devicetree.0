@@ -1,201 +1,139 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Generic communication of boot loader state to the OS
-Date: Tue, 26 Aug 2014 14:05:17 -0400
-Message-ID: <CAKON4OzwzGjtPBN6yTCSrqX1bzpGxQwh8bU_D1MSU_XYRts65Q@mail.gmail.com>
-References: <CAKON4Oz-PRgXyNKj=T9ymzOOhCMPjBMdYdE1Mr1CHWv3boskiw@mail.gmail.com>
-	<20140826171658.GJ4078@leverpostej>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] RTC: RK808: add RTC driver for RK808
+Date: Tue, 26 Aug 2014 11:24:41 -0700
+Message-ID: <CAD=FV=XrjrYMY+VZgGmQA8wK-9Dw87ssHpRkE=Wtm95eSuwUsQ@mail.gmail.com>
+References: <1408973668-21436-1-git-send-email-zyw@rock-chips.com>
+	<CAD=FV=VYJvgXXcYkq+vcpZkXZBDbgfRGNyF8GA6MnvMAGaAebQ@mail.gmail.com>
+	<53FC579C.50507@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBC55LFUF6ALBBXMY6OPQKGQEUAGMFHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140826171658.GJ4078@leverpostej>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53FC579C.50507-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@chr>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 26, 2014 at 1:16 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi Jon,
+Chris,
+
+On Tue, Aug 26, 2014 at 2:47 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
 >
-> On Tue, Aug 26, 2014 at 05:10:00PM +0100, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> New thread split off from the simple-framebuffer discussion....
+> On 08/26/2014 11:22 AM, Doug Anderson wrote:
+>>>
+>>> +       int ret;
+>>> >+
+>>> >+       /* Has the RTC been programmed? */
+>>> >+       ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
+>>> >+                                BIT_RTC_CTRL_REG_RTC_V_OPT_M, 0);
 >>
->> Is there a generic, underlying problem here that needs to be solved?
->> AFAIK no one has designed a general purpose mechanism for
->> communicating boot loader state to the OS. There is the existing
->> device tree <chosen> node but it is limited compared to what is
->> needed. Maybe we should step back and first design a good solution to
->> this basic problem. Then specific solutions for things like
->> framebuffers would fall out of the basic design.
->
-> I think the fundamental problem here is unfortunately far too abstract
-> for the general solution to be any more concrete. The solution to "we
-> don't communicate boot state" is "we should communicate boot state".
->
-> We can perhaps come up with general guidelines (for instance, the clock
-> subsystem has assigned-* properties), but I don't think there's a
-> one-size-fits-all solution.
->
->> So what are the requirements?
->> 1) Indicate that the boot loader has set up a device
->> 2) Indicate the purpose of that device
->> 3) Protect the resources in use
->> 4) Provide for a handoff to the OS specific device driver
->> 5) Communicate all of this via the device tree
+>> Can you explain what you're doing here?  The comment seems wrong since
+>> it implies that you're checking something.
 >>
->> So what is a device tree syntax that would solve this general problem?
->> As a first design attempt, I would propose <boot> (or <chosen>) child
->> nodes be added to the various core devices. By core device I mean the
->> top level device, like the framebuffer, not each dependent clock and
->> regulator.
+>> >From what I can tell from the manual you're setting "RTC_READSEL" to 0
+>> which means "Read access directly to dynamic registers.".  That's not
+>> clear here, and RTC_V_OPT_M makes no sense to me.
+>
+>
+> RK808 has a shadowed register for saving a "frozen" RTC time.
+> When user setting "RTC_READSEL" to 1, the time will save in this shadowed
+> register.
+> In this case, user read rtc time register, actually get the time of that
+> moment.
+> So, I move it to probe, this bit needn't clear every time
+
+OK, now that I understand what BIT_RTC_CTRL_REG_RTC_READSEL_M is, I
+think that we need it here.
+
+At the beginning to readtime() you should set
+BIT_RTC_CTRL_REG_RTC_READSEL_M to 1.  At the end of readtime() you
+should set it to 0.  Make sure you set it back to 0 in the error
+condition, too.
+
+If you don't use READSEL you can get in confusing situations when
+times wrap over.  Pretend that it's 11:59:59 when you start.  You read
+the seconds.  Then the time ticks and you read the minutes and hours.
+You'll end up reporting 12:00:59 when you really should report
+12:00:00 or 11:59:59
+
+
+>>> >+       tm->tm_min = bcd2bin(rtc_data[1]) & MINUTES_REG_MAK;
+>>> >+       tm->tm_hour = bcd2bin(rtc_data[2]) & HOURS_REG_MSK;
+>>> >+       tm->tm_mday = bcd2bin(rtc_data[3]) & DAYS_REG_MSK;
+>>> >+       tm->tm_mon = (bcd2bin(rtc_data[4]) & MONTHS_REG_MSK) - 1;
+>>> >+       tm->tm_year = (bcd2bin(rtc_data[5]) & YEARS_REG_MSK) + 100;
+>>> >+       tm->tm_wday = bcd2bin(rtc_data[6]) & WEEKS_REG_MSK;
+>>> >+       dev_dbg(dev, "RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
+>>> >+               1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
+>>> >+               tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
+>>> >+
+>>> >+       return 0;
+>>> >+}
+>>> >+
+>>> >+/*
+>>> >+ * Set current time and date in RTC
+>>> >+ */
+>>> >+static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
 >>
->> Inside the <boot> nodes a compatible string would be used to designate
->> a device class the bootloader has assigned to the devices. For example
->> - serial, framebuffer, media, input, network.
+>> Make this "const struct rtc_time *tm"
 >
-> In general we should already know the class of device if we have a
-> driver for said device, no?
->
-> As far as I can tell all we need to have is a way of designating
-> preferred devices and their preferred/current configuration. We have
-> bits of that already (e.g. stdout-path, assigned-rate).
->
->> Some examples, I've deleted a lot of properties to make them smaller.
->> The boot loader could add these nodes either statically or
->> dynamically.
+> It will be a warning if add const.
+> It should be match
+> int (*set_time)(struct device *, struct rtc_time *);
+> in rtc.h
+
+Oh, right.  Thanks.
+
+
+>>> +               rk808_rtc_set_time(&pdev->dev, &tm_def);
+>>> >+       }
+>>> >+
+>>> >+       device_init_wakeup(&pdev->dev, 1);
 >>
->> uart0: uart@01c18000 {
->>         compatible = "allwinner,sun4i-a10-uart";
->>         clocks = <&ahb_gates 20>, <&uart2_clk>;
->>         clock-names = "ahb", "mod";
->>         boot {
->>                 compatible = "boot,serial";
->>                 baud = <192000>;
->>                 console;
->>        };
->> };
+>> You can skip this.  We'll set "wakeup-source" in the device tree.
+>> That will set I2C_CLIENT_WAKE.  That will cause the i2c core to call
+>> device_init_wakeup() for you.
 >
-> There's already the stdout-path (and stdin-path) binding for designating
-> a serial port. I think we should improve support for those rather than
-> introducing a new binding. The only painful part is describing the
-> pre-configured rate if the OS needs to know.
->
->> reserved-memory {
->>         display_reserved: framebuffer@78000000 {
->>                 reg = <0x78000000 0x800000>;
->>         };
->> };
+> If I remove it, wakealarm is disappear, even though I add "wakeup-source" in
+> device tree.
+> So, I keep it temporarily
+
+OK, I think I understand.  It's because MFD doesn't percolate things
+down to the devices.  The main device is setup as a wakeup-source but
+not this one.  I think you can leave it as you have it..
+
+
+>>> +       if (IS_ERR(rk808_rtc->rtc)) {
+>>> >+               ret = PTR_ERR(rk808_rtc->rtc);
+>>> >+               return ret;
+>>> >+       }
+>>> >+
+>>> >+       alm_irq  = platform_get_irq(pdev, 0);
 >>
->> fb0: fb@01c10000 {
->>         compatible = "allwinner,sun4i-a10-framebuffer";
->>         clocks = <&ahb_gates 18>, <&fb2_clk>;
->>         clock-names = "ahb", "mod";
->>         boot {
->>                 compatible = "boot,framebuffer";
->>                 memory-region = <&display_reserved>;
->>         };
->> };
->
-> I was under the impression that the reserved-memory binding could be
-> used for handing over the memory in use by a framebuffer, so as far as I
-> can see we only new thing to communicate would be the configured mode of
-> the display.
->
-> Do we have any systems with multiple displays where we need to specify
-> which is preferred?
->
->> spi1: spi@01c16000 {
->>         compatible = "allwinner,sun4i-a10-spi";
->>         clocks = <&ahb_gates 22>, <&spi2_clk>;
->>         clock-names = "ahb", "mod";
+>> Are you sure that platform_get_irq() works in this case?  In Javier's
+>> in-flight max77802 driver he use regmap_irq_get_virq().
 >>
->>         flash0: flash@2 {
->>         compatible = "atmel,at12345";
->>         reg = <2>;
->>         spi-max-frequency = <100000>;
->>                 boot {
->>                         compatible = "boot,media";
->>                 };
->>         };
->> };
->
-> Is this a problem on existing systems? Do we need a DT property?
->
-> If so, this would be better as something like /chosen/root-device (so
-> you can't accidentally describe multiple devices as the boot medium).
->
->> An OS booting off from a device tree like this can then implement
->> support for boot,xxxx drivers if it chooses. If it doesn't implement
->> support for the boot tags, nothing changes from the current situation.
+>> ...oh, maybe your way does work!  You've got the rtc_resources to
+>> specify things, so that looks good...
 >>
->> The problem with clocks and regulators can be addressed by following
->> the chains of clocks/regulators in the parent nodes of the boot
->> sections. This would be implement by these frameworks providing a
->> "claim_all_xxx(DT node)" function.  A boot,framebuffer driver would
->> first call claim_all_clk(parent node) and claim_all_regulator(parent
->> node). Need to figure out exactly how these functions would work.
+>> ...but I tried testing it by doing:
+>>
+>> cd /sys/class/rtc/rtc0
+>> echo +2 > wakealarm
+>> sleep 5
+>> grep 808 /proc/interrupts
+>>
+>> ...and I didn't see an interrupt go off.  Any idea why?
 >
-> I'm not sure I follow. What is the problem with clocks and regulators
-> that this tries to solve?
->
-> Are we just trying to leave them in their current configuration (rather
-> than disabling)? Are we trying to prevent other drivers from fiddling
-> with them? Something else?
+> It works well.
 
-The current problem with simple-fb is that the clock subsystem
-contains code to automatically shut off clocks that aren't in use. A
-similar problem exists for regulators. And I agree that code like that
-makes sense.
+I figured it out.  We need
+<https://chromium-review.googlesource.com/#/c/214241/>.  Maybe you
+have a different bootloader or some other code in your kernel that
+made it so you didn't see the problem.  ...and it's better to change
+the IRQ in the dts to "level low".
 
-Simplefb does not mark these items as being in use, so they get shut
-off. So how can we communicate to these subsystems that these
-clocks/regulators are actually in use by simple-fb? Simple-fb is
-generic code and it does not know about specific devices or clocks or
-regulators.
-
-Uboot could individually mark each one.  But then how does uboot tell
-the OS that a simple-fb has been set up? You could make a node like
-'chosen/framebuffer'. But then how do you tell where the reserved
-memory is? Making a <boot> node inside the specific device makes more
-sense to me. That also makes it easy to determine what
-clock/regulators apply.
-
-Also note that things like the console are also vulnerable to this. If
-I switch from a built-in serial driver over to a modprobe one, the
-UART clocks will get disabled in the interval between the clk shut off
-code and the loading of the module. This is the same window that makes
-the framebuffer flicker during boot.  And generic ARM kernels modprobe
-in all of their drivers.
-
->
->> Driver handoff is the OS's problem. Under Linux the device specific
->> drivers could soft-link to the boot,xxx code. After the device
->> specific driver is fully initialized it would tell the boot,xxx driver
->> to let go.
->
-> I'm not sure I follow why we need the stub drivers at all. Is the idea
-> to just have them hog resources until the real driver comes up?
->
->> As a side effect this will eliminate the need for kernel command line
->> parameters describing boot state. Like console="". Over time it might
->> even be able to pass a DHCP IP address from uboot into the kernel.
->
-> We have a generic mechanism for communicating the MAC address of an
-> ethernet adapter. I don't see a fundamental reason we can't add
-> properties to communicate a DHCP lease and associated information. Is
-> anyone looking into that?
->
-> Thanks,
-> Mark.
-
-
-
--- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
