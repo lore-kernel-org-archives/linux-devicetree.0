@@ -1,82 +1,146 @@
-From: Iain Paton <ipaton0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: dts: microsom-ar8035: MDIO pad must be set open
- drain
-Date: Tue, 26 Aug 2014 13:16:46 +0100
-Message-ID: <53FC7AAE.8090803@gmail.com>
-References: <20140823091058.GO30401@n2100.arm.linux.org.uk> <E1XL7M1-0002yD-K3@rmk-PC.arm.linux.org.uk> <53F9B416.5030907@gmail.com> <20140826101538.GA28777@dragon>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Tue, 26 Aug 2014 13:23:04 +0100
+Message-ID: <20140826122304.GA26707@lee--X1>
+References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com>
+ <20140820092117.GI4266@lee--X1>
+ <53FA9D1E.8040202@rock-chips.com>
+ <20140826092205.GG9574@lee--X1>
+ <53FC5BD1.7030406@rock-chips.com>
+ <20140826102036.GJ9574@lee--X1>
+ <53FC63EE.6060104@rock-chips.com>
+ <20140826112013.GK9574@lee--X1>
+ <53FC77F0.4030004@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140826101538.GA28777@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53FC77F0.4030004@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 26/08/14 11:15, Shawn Guo wrote:
-> On Sun, Aug 24, 2014 at 10:44:54AM +0100, Iain Paton wrote:
->> On 23/08/14 10:11, Russell King wrote:
->>> From: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
->>> To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>>
->>> MDIO pad must be set open drain.
->>>
->>> Signed-off-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
->>> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi b/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
->>> index d16066608e21..db9f45b2c573 100644
->>> --- a/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
->>> +++ b/arch/arm/boot/dts/imx6qdl-microsom-ar8035.dtsi
->>> @@ -17,7 +17,7 @@
->>>  	enet {
->>>  		pinctrl_microsom_enet_ar8035: microsom-enet-ar8035 {
->>>  			fsl,pins = <
->>> -				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
->>> +				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b8b0
->>>  				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
->>>  				/* AR8035 reset */
->>>  				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x130b0
->>>
->>
->> Can you elaborate some more on the reasons for this?  
-> 
-> I just got the following text from Rabeeh explaining the change.
-> 
-> "This patch is important for the MicroSOM implementation due to the
-> following details -
-> 
-> 1. VIH of the Atheros phy is 1.7V.
-> 2. NVCC_ENET which is the power domain of the MDIO pad is driven by the
->    PHY's LDO (i.e. either 1.8v or 2.5v).
-> 3. The MicroSOM implements an onbouard 1.6kohm pull up to 3.3v (R3000).
-> 
-> In the case the PHY's LDO was 1.8v then there would be only a 100mV
-> margin for the signal to be acknowledged as high (1.8v-1.7v).
-> Due to that setting the pad as an open drain will let the 1.6kohm pull
-> that signal high to 3.3 that assures enough margins to the PHY to be
-> acked as '1' logic.
-> 
-> Notice that this change is not required to the SabreSD boards since that
-> hardware drives the NVCC_EIM power island from a 3.3v power rail."
-> 
->>
->> I'd like to understand if it's something specific to the hardware on that 
->> board, or if other i.MX6 boards using the ar8035 are doing it wrong as well.
-> 
-> So from text above, it's a MicroSOM board specific change, I think.
+On Tue, 26 Aug 2014, Chris Zhong wrote:
+> On 08/26/2014 07:20 PM, Lee Jones wrote:
+> >On Tue, 26 Aug 2014, Chris Zhong wrote:
+> >>On 08/26/2014 06:20 PM, Lee Jones wrote:
+> >>>On Tue, 26 Aug 2014, Chris Zhong wrote:
+> >>>>On 08/26/2014 05:22 PM, Lee Jones wrote:
+> >>>>>On Mon, 25 Aug 2014, Chris Zhong wrote:
+> >>>>>>On 08/20/2014 05:21 PM, Lee Jones wrote:
+> >>>>>>>On Wed, 20 Aug 2014, Chris Zhong wrote:
+> >>>>>>>
+> >>>>>>>>The RK808 chip is a power management IC for multimedia and ha=
+ndheld
+> >>>>>>>>devices. It contains the following components:
+> >>>>>>>>
+> >>>>>>>>- Regulators
+> >>>>>>>>- RTC
+> >>>>>>>>
+> >>>>>>>>The rk808 core driver is registered as a platform driver and =
+provides
+> >>>>>>>>communication through I2C with the host device for the differ=
+ent
+> >>>>>>>>components.
+> >>>>>>>>
+> >>>>>>>>Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> >>>>>>>>---
+> >>>>>[...]
+> >>>>>
+> >>>>>>>>+	rk808->pdata =3D pdata;
+> >>>>>>>Remove pdata from 'struct rk808'.  You can obtain it from dev.
+> >>>>>>Can I keep this pdata in rk808, because it is used in the regul=
+ator driver.
+> >>>>>>The one obtain from dev maybe empty.
+> >>>>>If the one in dev is empty, you should populate that instead.
+> >>>>So, should I malloc a pada, and assign it to client->dev?
+> >>>If client->dev.pdata is NULL, yes.
+> >>>
+> >>>But actually, I have more important questions that need to be answ=
+ered
+> >>>first.  Ones which I would normally be able to answer myself if th=
+e
+> >>>patch-set had been sent as one (i.e. threaded) instead of as
+> >>>individual patches:
+> >>>
+> >>>- What are you using pdata for?
+> >>For save some properties,
+> >>
+> >>like "rockchip,system-power-controller" in MFD
+> >>and some regulator properties in regulator/rk808...
+> >>
+> >>>- Where is pdata populated?
+> >>It is populated in probe in mfd/rk808.c
+> >>
+> >>actually, I copy it from tps65910.c
+> >>
+> >>
+> >>>- Where is pdata used?
+> >>pdata is used in mfd and regulator
+> >I'm still a little confused.  I see it being populated in the MFD
+> >driver, then I only see the attributes populated in the MFD driver
+> >used in the MFD driver and nowhere else?  I do see other attributes
+> >used in the regulator driver i.e. .of_node[], but these are then use=
+d
+> >only in the regulator driver, thus they shouldn't really be pdata.
+> >
+> >Let me put it another way:
+> >
+> >struct rk808_board {
+> >+       int irq;
+> >+       int irq_base;
+> >+       int wakeup;
+> >+       bool pm_off;
+> >+       struct regulator_init_data *rk808_init_data[rk808_NUM_REGULA=
+TORS];
+> >+       struct device_node *of_node[rk808_NUM_REGULATORS];
+> >+       int pmic_sleep_gpio;
+> >+       unsigned int dcdc_slp_voltage[3]; /* buckx_voltage in uV */
+> >+       unsigned int ldo_slp_voltage[7];
+> >+};
+> >
+> >For each of the above:
+> >
+> >- Can it be passed from platform data i.e. arch/<arch>/{plat,mach}-*=
+?
+> >- Can it use local (not passed from driver to driver) variable inste=
+ad?
+> >
+> >If the answer to the first question is 'no' and/or if the answer to
+> >the second question is 'yes', then it shouldn't be platform data.
+>=20
+> Yes, if we have no dts file, these value can pass from mach-rk***.
+>=20
+> It can be filled with all user setting of rk808, in a struct.
+>=20
+> the latest struct is:
+>=20
+> struct rk808_board {
+>=20
+>     int wakeup;
+>=20
+>     bool pm_off;
+>=20
+>     struct regulator_init_data *rk808_init_data[RK808_NUM_REGULATORS]=
+;
+>=20
+>     struct device_node *of_node[RK808_NUM_REGULATORS];
+>=20
+>     unsigned int dcdc_slp_voltage[3]; /* buckx_voltage in uV */
+>=20
+>     unsigned int ldo_slp_voltage[7];
+>=20
+> };
 
-Ok, that makes a lot of sense. Practical implementation reasons wins any 
-argument.  
-No objections from me to this, I think we understand the reasons now.
+This version looks much more acceptable.
 
-Iain
+Although, I am concerned about of_node[].  Isn't that only populated
+and used in the regulator driver?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
