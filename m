@@ -1,42 +1,61 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Tue, 26 Aug 2014 18:05:05 +0800
-Message-ID: <53FC5BD1.7030406@rock-chips.com>
-References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com> <20140820092117.GI4266@lee--X1> <53FA9D1E.8040202@rock-chips.com> <20140826092205.GG9574@lee--X1>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
+Date: Tue, 26 Aug 2014 12:04:18 +0200
+Message-ID: <4609609.i9jPXymFJZ@wuerfel>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
+ <20140826065729.GC15573@ulmo>
+ <063D6719AE5E284EB5DD2968C1650D6D17481234@AcuExch.aculab.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140826092205.GG9574@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D17481234@AcuExch.aculab.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Andrew Bresticker <abrestic@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, David Laight <David.Laight@aculab.com>, 'Thierry Reding' <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 26 August 2014 08:54:53 David Laight wrote:
+> From: Thierry Reding
+> ...
+> > > Is _nocache required? I don't see other drivers using it. I assume there's
+> > > nothing special about the mbox registers.
+> > 
+> > Most drivers should be using devm_ioremap_resource() which will use the
+> > _nocache variant of devm_ioremap() when appropriate. Usually the region
+> > will not be marked cacheable (IORESOURCE_CACHEABLE) and therefore be
+> > remapped uncached.
+> 
+> A related question:
+> Is there any way for a driver to force that part of a PCIe BAR be mapped
+> through the data cache even when the BAR isn't actually marked cacheable?
 
-On 08/26/2014 05:22 PM, Lee Jones wrote:
-> On Mon, 25 Aug 2014, Chris Zhong wrote:
->> On 08/20/2014 05:21 PM, Lee Jones wrote:
->>> On Wed, 20 Aug 2014, Chris Zhong wrote:
->>>
->>>> The RK808 chip is a power management IC for multimedia and handheld
->>>> devices. It contains the following components:
->>>>
->>>> - Regulators
->>>> - RTC
->>>>
->>>> The rk808 core driver is registered as a platform driver and provides
->>>> communication through I2C with the host device for the different
->>>> components.
->>>>
->>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->>>> ---
-> [...]
->
->>>> +	rk808->pdata = pdata;
->>> Remove pdata from 'struct rk808'.  You can obtain it from dev.
->> Can I keep this pdata in rk808, because it is used in the regulator driver.
->> The one obtain from dev maybe empty.
-> If the one in dev is empty, you should populate that instead.
+No. BARs are not actually marked cacheable anyway, except for the ROM
+BAR, which we tend to not use.
 
-So, should I malloc a pada, and assign it to client->dev?
+Some architectures don't even allow any caching of PCI memory ranges,
+so we have no architecture independent API for that.
+
+It's possible that ioremap_cache() works on x86 and/or ARM if you call
+it manually on the physical address (rather than using a resource
+API).
+
+> Some hardware has address regions (which might not be an entire BAR)
+> that are actually memory and mapping through the data cache will
+> generate longer PCIe transfers [1].
+> Clearly the driver will have to be very careful about cache flushes
+> and invalidates to make this work.
+
+Some framebuffer drivers use writethrough mappings, but those again
+are only available on few architectures. vesafb uses ioremap_cache,
+but this works because the memory is in system RAM and not on PCI.
+
+	Arnd
