@@ -1,73 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 1/2] regulator: Add driver for max77802 PMIC PMIC
- regulators
-Date: Tue, 26 Aug 2014 08:17:21 +0100
-Message-ID: <20140826071721.GV17528@sirena.org.uk>
-References: <CA+NduCDL65=Y=PyU3FfXsTz0FfbmYzicGrY4U7ji3_V+nXhtCQ@mail.gmail.com>
- <53F73472.8010609@collabora.co.uk>
- <20140822144531.GV24407@sirena.org.uk>
- <53F7838F.8060906@collabora.co.uk>
- <20140822183054.GY24407@sirena.org.uk>
- <53F7BDD8.7060500@collabora.co.uk>
- <CAD=FV=WC0h7fYm2QFqu3Zka7CsU4BtG-oyPpJav+ygC+gmCR+A@mail.gmail.com>
- <CA+NduCCT-KQ=gh7QWkBE4qkA2YOJ8KCVqbkC6Tkmb1aPvCsGFQ@mail.gmail.com>
- <53FAFCBC.2050407@collabora.co.uk>
- <CAD=FV=V4TSKsbjj3dXCdSzVrh3sxH-FkpFEbEo+JA1bN9R-XWA@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
+ binding
+Date: Tue, 26 Aug 2014 08:27:27 +0100
+Message-ID: <20140826072727.GB9574@lee--X1>
+References: <1409029109-28769-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1409029109-28769-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lu4tnxbYRVx46Dqu"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=V4TSKsbjj3dXCdSzVrh3sxH-FkpFEbEo+JA1bN9R-XWA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Yuvaraj Cd <yuvaraj.lkml@gmail.com>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Abhilash Kesavan <a.kesavan@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, sunil joshi <joshi@samsung.com>
+In-Reply-To: <1409029109-28769-2-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 25 Aug 2014, Bjorn Andersson wrote:
 
---lu4tnxbYRVx46Dqu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Add binding for the Qualcomm Resource Power Manager (RPM) found in 86=
+60,
+> 8960 and 8064 based devices. The binding currently describes the rpm
+> itself and the regulator subnodes.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,rpm.txt |  246 ++++++++++=
+++++++++++
+>  include/dt-bindings/mfd/qcom,rpm.h                 |  154 ++++++++++=
+++
+>  2 files changed, 400 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.tx=
+t
+>  create mode 100644 include/dt-bindings/mfd/qcom,rpm.h
 
-On Mon, Aug 25, 2014 at 08:40:40AM -0700, Doug Anderson wrote:
-> On Mon, Aug 25, 2014 at 2:07 AM, Javier Martinez Canillas
+Please use the same filename formatting as the existing files.
 
-> > I see, so probably until we have a way to define the operating mode for
-> > each regulator using DT we should set the opmode to normal when enabling a
-> > regulator independently of the value the hardware register reported on probe.
+[...]
 
-> > Can you please test the following change [0] so I can post as a proper
-> > patch? Doug, Mark do you think that forcing the regulator to opmode normal
-> > when enabling is the right solution here?
-
-> IMHO that makes sense.
-
-No, this doesn't make any obvious sense to me at all.  Picking normal as
-a default if the hardware reads back off due to overlapping
-impelementation or something *might* make sense but not overwriting the
-hardware state without explicit permission from the machine integration
-is a key goal for the regulator API.
-
---lu4tnxbYRVx46Dqu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT/DR+AAoJELSic+t+oim9ZN4P/jLbGogtmFYIfgc7Tfl+re1P
-WMyrGA4jB7P7bJk989oii/0ES/4XFoxbUzBeNhNFNHm9nn6Uhhd6z4y7GTyvV799
-EKF6SDQIcGTVuZ3WSiE7KfPcYnzwz/HM4/yTvSYlY5/1R5VpPNfGeDXpabucGw9M
-rn8Pe3osE5ftP1N91od5qyQXhweE2VCg8eisQOp9ta/S3JncKigA20IViL/hQFXz
-bcMc7hNwMj67DjgD/hPW9Jc/6YBhER4JGHprrzFMAhOGRzkQcsMULuq0TdP80fL0
-N1QUlz0tH8MrBMIZivHn3guxNQ3/OI9x56qQc6iX+TAIQ2qlGaOH83M4XvA3XPWP
-2ahgN88/JWFFjWEdVg9OL8H9ySQfB1Kab1wM+DNbcTOAmxoVc/ADKSDWTbPIUePz
-Znh2f1yxMqpdXso6iGUQyW/egz6R5MycWnh/pxAHZxpzhN8CfD4uKk8tTSdjAIQ3
-qzUJt4vo81ACQvci0JO0xO/UfuoqHv2scqNjbyvAO0w2U13zY9WDfR8HHdxo7Odi
-1/xAEeHHI2pkUwhJNQn+4RizXCd6mBsWYSrOTARquTQUwCRXoNWKhhLC3en6E16L
-VaU/a/U1nCMl11XEC7mA8bjTaT0+zH7oonqV8C/RUsiM5qnzRV4qMt8ORqGG9XA6
-sO4YUGaVn8yIJMjlwQmv
-=juCQ
------END PGP SIGNATURE-----
-
---lu4tnxbYRVx46Dqu--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
