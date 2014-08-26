@@ -1,115 +1,84 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Tue, 26 Aug 2014 20:05:04 +0800
-Message-ID: <53FC77F0.4030004@rock-chips.com>
-References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com> <20140820092117.GI4266@lee--X1> <53FA9D1E.8040202@rock-chips.com> <20140826092205.GG9574@lee--X1> <53FC5BD1.7030406@rock-chips.com> <20140826102036.GJ9574@lee--X1> <53FC63EE.6060104@rock-chips.com> <20140826112013.GK9574@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140826112013.GK9574@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 0/9] PM / Domains: Generic OF-based support
+Date: Tue, 26 Aug 2014 14:07:08 +0200
+Message-ID: <1409054837-5667-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset has a bit of a history and some parts of it has been posted
+earlier.
 
-On 08/26/2014 07:20 PM, Lee Jones wrote:
-> On Tue, 26 Aug 2014, Chris Zhong wrote:
->> On 08/26/2014 06:20 PM, Lee Jones wrote:
->>> On Tue, 26 Aug 2014, Chris Zhong wrote:
->>>> On 08/26/2014 05:22 PM, Lee Jones wrote:
->>>>> On Mon, 25 Aug 2014, Chris Zhong wrote:
->>>>>> On 08/20/2014 05:21 PM, Lee Jones wrote:
->>>>>>> On Wed, 20 Aug 2014, Chris Zhong wrote:
->>>>>>>
->>>>>>>> The RK808 chip is a power management IC for multimedia and handheld
->>>>>>>> devices. It contains the following components:
->>>>>>>>
->>>>>>>> - Regulators
->>>>>>>> - RTC
->>>>>>>>
->>>>>>>> The rk808 core driver is registered as a platform driver and provides
->>>>>>>> communication through I2C with the host device for the different
->>>>>>>> components.
->>>>>>>>
->>>>>>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->>>>>>>> ---
->>>>> [...]
->>>>>
->>>>>>>> +	rk808->pdata = pdata;
->>>>>>> Remove pdata from 'struct rk808'.  You can obtain it from dev.
->>>>>> Can I keep this pdata in rk808, because it is used in the regulator driver.
->>>>>> The one obtain from dev maybe empty.
->>>>> If the one in dev is empty, you should populate that instead.
->>>> So, should I malloc a pada, and assign it to client->dev?
->>> If client->dev.pdata is NULL, yes.
->>>
->>> But actually, I have more important questions that need to be answered
->>> first.  Ones which I would normally be able to answer myself if the
->>> patch-set had been sent as one (i.e. threaded) instead of as
->>> individual patches:
->>>
->>> - What are you using pdata for?
->> For save some properties,
->>
->> like "rockchip,system-power-controller" in MFD
->> and some regulator properties in regulator/rk808...
->>
->>> - Where is pdata populated?
->> It is populated in probe in mfd/rk808.c
->>
->> actually, I copy it from tps65910.c
->>
->>
->>> - Where is pdata used?
->> pdata is used in mfd and regulator
-> I'm still a little confused.  I see it being populated in the MFD
-> driver, then I only see the attributes populated in the MFD driver
-> used in the MFD driver and nowhere else?  I do see other attributes
-> used in the regulator driver i.e. .of_node[], but these are then used
-> only in the regulator driver, thus they shouldn't really be pdata.
->
-> Let me put it another way:
->
-> struct rk808_board {
-> +       int irq;
-> +       int irq_base;
-> +       int wakeup;
-> +       bool pm_off;
-> +       struct regulator_init_data *rk808_init_data[rk808_NUM_REGULATORS];
-> +       struct device_node *of_node[rk808_NUM_REGULATORS];
-> +       int pmic_sleep_gpio;
-> +       unsigned int dcdc_slp_voltage[3]; /* buckx_voltage in uV */
-> +       unsigned int ldo_slp_voltage[7];
-> +};
->
-> For each of the above:
->
-> - Can it be passed from platform data i.e. arch/<arch>/{plat,mach}-*?
-> - Can it use local (not passed from driver to driver) variable instead?
->
-> If the answer to the first question is 'no' and/or if the answer to
-> the second question is 'yes', then it shouldn't be platform data.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/262725.html
 
-Yes, if we have no dts file, these value can pass from mach-rk***.
+I intentially didn't increase version number of the patches, since I think it
+will cause more confusion than clarity.
 
-It can be filled with all user setting of rk808, in a struct.
+A summary of changes since the last patchset (link above):
+	- Instead of letting driver core handling the device to power domain
+	binding/unbinding, follow the behavior of how the ACPI power domain
+	is handled.
 
-the latest struct is:
 
-struct rk808_board {
+This is a summary of what these patches are intended to do:
 
-     int wakeup;
+1)
+Add generic power domain OF-based support which also includes APIs to handle
+attach/detach of generic power domains to devices.
 
-     bool pm_off;
+2)
+Adding a common API to attach/detach power domains and include support for the
+ACPI and the generic power domain in there.
 
-     struct regulator_init_data *rk808_init_data[RK808_NUM_REGULATORS];
+3)
+>From subsystem level code, at probe/remove, convert from invoking the ACPI
+specific power domain attach/detach functions to the new common attach/detach
+APIs.
 
-     struct device_node *of_node[RK808_NUM_REGULATORS];
+4)
+Add support for the AMBA bus to attach/detach power domains, using the new
+common APIs.
 
-     unsigned int dcdc_slp_voltage[3]; /* buckx_voltage in uV */
+5)
+Convert Exynos to use the new generic power domain OF support.
 
-     unsigned int ldo_slp_voltage[7];
+Obviously, there are dependencies througout this patchset, which means if they
+get accepted the all need to go together.
 
-};
+
+Tomasz Figa (2):
+  PM / Domains: Add generic OF-based power domain look-up
+  ARM: exynos: Move to generic power domain bindings
+
+Ulf Hansson (7):
+  ACPI / PM: Let acpi_dev_pm_detach() return an error code
+  PM / Domains: Add APIs to attach/detach a power domain for a device
+  drivercore / platform: Convert to dev_pm_domain_attach|detach()
+  i2c: core: Convert to dev_pm_domain_attach|detach()
+  mmc: sdio: Convert to dev_pm_domain_attach|detach()
+  spi: core: Convert to dev_pm_domain_attach|detach()
+  amba: Add support for attach/detach of power domains
+
+ .../bindings/arm/exynos/power_domain.txt           |  13 +-
+ .../devicetree/bindings/power/power_domain.txt     |  51 ++++
+ arch/arm/mach-exynos/pm_domains.c                  |  78 +-----
+ drivers/acpi/device_pm.c                           |   4 +
+ drivers/amba/bus.c                                 |  10 +-
+ drivers/base/platform.c                            |  15 +-
+ drivers/base/power/common.c                        |  58 ++++
+ drivers/base/power/domain.c                        | 291 +++++++++++++++++++++
+ drivers/i2c/i2c-core.c                             |  13 +-
+ drivers/mmc/core/sdio_bus.c                        |   4 +-
+ drivers/spi/spi.c                                  |  12 +-
+ include/linux/acpi.h                               |   7 +-
+ include/linux/pm.h                                 |  14 +
+ include/linux/pm_domain.h                          |  46 ++++
+ kernel/power/Kconfig                               |   4 +
+ 15 files changed, 514 insertions(+), 106 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
+
+-- 
+1.9.1
+
