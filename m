@@ -1,229 +1,69 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v5 1/5] dt-bindings: Add RK808 device tree bindings
- document
-Date: Tue, 26 Aug 2014 10:42:08 +0100
-Message-ID: <20140826094208.GA32315@leverpostej>
-References: <1408973362-21355-1-git-send-email-zyw@rock-chips.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
+Date: Tue, 26 Aug 2014 10:42:11 +0100
+Message-ID: <20140826094211.GF17528@sirena.org.uk>
+References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com>
+ <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com>
+ <53F9A6EE.5070005@metafoo.de>
+ <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com>
+ <20140826062558.GR17528@sirena.org.uk>
+ <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com>
+ <20140826091120.GC17528@sirena.org.uk>
+ <53FC5105.6070901@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="91FpgGVafXqcwc9i"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1408973362-21355-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "mturquette@linaro.org" <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "hl@rock-chips.com" <hl@rock-chips.com>, "huangtao@rock-chips.com" <huangtao@rock-chips.com>, "cf@rock-chips.com" <cf@rock-chips.com>, "zhangqing@rock-chips.com" <zhangqing@rock>
+In-Reply-To: <53FC5105.6070901-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 25, 2014 at 02:29:22PM +0100, Chris Zhong wrote:
-> Add device tree bindings documentation and a header file
-> for rockchip's RK808 pmic.
-> 
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-> 
-> ---
-> 
-> Changes in v5:
-> Adviced by doug
-> - add some error checking in probe
-> - move "rockchip,rk808.h" into the patch about dt-bindings
-> 
-> Changes in v4:
-> Adviced by doug
-> - add "clock-output-names" propertiey
-> - add a header file "rockchip,rk808.h"
-> 
-> Changes in v3:
-> - fix compile err
-> 
-> Changes in v2:
-> Adviced by javier.martinez
-> - separated from rtc-rk808.c
-> 
->  Documentation/devicetree/bindings/mfd/rk808.txt |  142 +++++++++++++++++++++++
->  include/dt-bindings/clock/rockchip,rk808.h      |   11 ++
->  2 files changed, 153 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
->  create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-> new file mode 100644
-> index 0000000..e5786e9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-> @@ -0,0 +1,142 @@
-> +RK808 Power Management Integrated Circuit
-> +
-> +Required properties:
-> +- compatible: "rockchip,rk808"
-> +- reg: I2C slave address
-> +- interrupt-parent: The parent interrupt controller.
-> +- interrupts: the interrupt outputs of the controller.
-> +- pinctrl-names: Should contain only one value - "default".
-> +- pinctrl-0: Should specify pin control groups used for this controller.
-> +- regulators: This is the list of child nodes that specify the regulator
-> +  initialization data for defined regulators. Not all regulators for the given
-> +  device need to be present. The definition for each of these nodes is defined
-> +  using the standard binding for regulators found at
-> +  Documentation/devicetree/bindings/regulator/regulator.txt.
-> +- #clock-cells: the value should be 1
 
-It would be nice to have a description of the valid values.
+--91FpgGVafXqcwc9i
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-They look to be 0 and 1 in include/dt-bindings/clock/rockchip,rk808.h.
+On Tue, Aug 26, 2014 at 11:19:01AM +0200, Lars-Peter Clausen wrote:
+> On 08/26/2014 11:11 AM, Mark Brown wrote:
 
-Thanks,
-Mark.
+> >If we're already specifying the DAI links for the (D)PCM code it seems
+> >like we shouldn't also have to put DAPM routes for them in DT as well.
 
-> +- The following are the names of the regulators that the rk808 pmic block
-> +  supports. Note: The 'n' below represents the number as per the datasheet:
-> +
-> +  - DCDC_REGn
-> +	- valid values for n are 1 to 4.
-> +  - LDO_REGn
-> +	- valid values for n are 1 to 8.
-> +  - SWITCH_REGn
-> +	- valid values for n are 1 to 2.
-> +
-> +Optional properties:
-> +- clock-output-names : From common clock binding to override the
-> +  default output clock name
-> +- rockchip,system-power-controller: Telling whether or not this pmic is controlling
-> +  the system power.
-> +
-> +Example:
-> +rk808: pmic@1b {
-> +	compatible = "rockchip,rk808";
-> +	interrupt-parent = <&gpio0>;
-> +	interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pmic_int>;
-> +	reg = <0x1b>;
-> +	#clock-cells = <1>;
-> +	clock-output-names = "xin32k0", "xin32k1";
-> +	rockchip,system-power-controller;
-> +
-> +		regulators {
-> +			rk808_dcdc1_reg: DCDC_REG1 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1200000>;
-> +				regulator-max-microvolt = <1200000>;
-> +				regulator-name = "vdd_arm";
-> +			};
-> +
-> +			rk808_dcdc2_reg: DCDC_REG2 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <850000>;
-> +				regulator-max-microvolt = <1250000>;
-> +				regulator-name = "vdd_gpu";
-> +			};
-> +
-> +			rk808_dcdc3_reg: DCDC_REG3 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-name = "vdd_ddr";
-> +			};
-> +
-> +			rk808_dcdc4_reg: DCDC_REG4 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-name = "vccio";
-> +			};
-> +
-> +			rk808_ldo1_reg: LDO_REG1 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +
-> +			rk808_ldo2_reg: LDO_REG2 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +
-> +			rk808_ldo3_reg: LDO_REG3 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1000000>;
-> +				regulator-max-microvolt = <1000000>;
-> +				regulator-name = "LDO_REG3";
-> +			};
-> +
-> +			rk808_ldo4_reg: LDO_REG4 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +			};
-> +
-> +			rk808_ldo5_reg: LDO_REG5 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +
-> +			rk808_ldo6_reg: LDO_REG6 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1000000>;
-> +				regulator-max-microvolt = <1000000>;
-> +			};
-> +
-> +			rk808_ldo7_reg: LDO_REG7 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <1800000>;
-> +			};
-> +
-> +			rk808_ldo8_reg: LDO_REG8 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +				regulator-min-microvolt = <3300000>;
-> +				regulator-max-microvolt = <3300000>;
-> +			};
-> +
-> +			rk808_switch1_reg: SWITCH_REG1 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +
-> +			rk808_switch2_reg: SWITCH_REG2 {
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +		};
-> +	};
-> diff --git a/include/dt-bindings/clock/rockchip,rk808.h b/include/dt-bindings/clock/rockchip,rk808.h
-> new file mode 100644
-> index 0000000..1a87343
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/rockchip,rk808.h
-> @@ -0,0 +1,11 @@
-> +/*
-> + * This header provides constants clk index RK808 pmic clkout
-> + */
-> +#ifndef _CLK_ROCKCHIP_RK808
-> +#define _CLK_ROCKCHIP_RK808
-> +
-> +/* CLOCKOUT index */
-> +#define RK808_CLKOUT0		0
-> +#define RK808_CLKOUT1		1
-> +
-> +#endif
-> -- 
-> 1.7.9.5
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> Yes, and I think we shouldn't use anything except for datahsheet pin names
+> in the devicetree routing, because otherwise we are leaking driver
+> implementation details.
+
+While I agree with the sentiment for this when it comes to DAIs we
+probably want to use the name the interfaces get in the documentation
+rather than pin names since they involve multiple pins working together.
+
+--91FpgGVafXqcwc9i
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT/FZvAAoJELSic+t+oim9hU8P/08+GbYltu7rFK24ev1AmZSS
+/yTYKxCnZDvDg1p/A33BZOSIJQtkQXvPpyP/7SyTS5KfXn+5B0sMR8bcCZFfWjzy
+RmzeaLIXgN2WEbSziduZ84OsRVHRZC9KPXvDBvSKVXF/18RczbBt64JU7vPlOeIe
+m/P47zYOHUmVhsiUKVRv9FdpH1ltqMFA4Vr5WGk6R1XB6kedDGwxwo//AwOmzM9v
+CVrWdD/BS0O1gj1ULmLWBuZ4Wp8svzZfVtfi3sejT3NVlWPYp8rm5fhkegJ0lIh9
+bcw0GNYzSe5qdIVn1IMxYzMydxRTKx4ym06EAxlZsIJUnr41QkbOAOwavqtt7eIN
+LvstA2SXZ9t/4K4pCaILVTYbryK/03udBXk6RMrljTH9tEhLvyXRw6vyuVweo7Df
+qCYDEZcsQDENSVdT144uDKxMbbx+JtKCr+wRctvAddGYa6vRqLZz6Jx+gRS7XCQs
+jqffGgwu2uQeBK/R2MRO3EMdvZWY9thH1bKwtOscaJZa7QksF0Ovn2TLCMhONYG+
+6eVxVmEbWsVcLHbq8ctuGFuVjDz1yceTvqT/5nNGoXmfh5gBob9jK/adlYqPlIek
+ezn8zrdGfLws2WtmOtVQAHJs5mcv4H0XRZ7fXXnsM+hMPc2bmbx0+SQvJDomJ6E8
+h4KqLv0pcxMnmVOFRkc1
+=dfve
+-----END PGP SIGNATURE-----
+
+--91FpgGVafXqcwc9i--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
