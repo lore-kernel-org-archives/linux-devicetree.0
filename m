@@ -1,78 +1,55 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
-Date: Tue, 26 Aug 2014 07:25:58 +0100
-Message-ID: <20140826062558.GR17528@sirena.org.uk>
-References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com>
- <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com>
- <53F9A6EE.5070005@metafoo.de>
- <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RdTaDyjgticwLCHG"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <871ts4nmki.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/5] of: Add NVIDIA Tegra Legacy Interrupt Controller binding
+Date: Tue, 26 Aug 2014 08:41:00 +0200
+Message-ID: <1409035264-16999-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---RdTaDyjgticwLCHG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The Legacy Interrupt Controller found on NVIDIA Tegra SoCs is used by
+the AVP coprocessor and can also serve as a backup for the ARM Cortex
+CPU's local interrupt controller (GIC).
 
-On Mon, Aug 25, 2014 at 05:04:20PM -0700, Kuninori Morimoto wrote:
+The LIC is subdivided into multiple identical units, each handling 32
+possible interrupt sources.
 
-> > That's something we need to fix, but I don't think removing the stream =
-names=20
-> > is the right way to do this. In a multi CODEC environment you'll quite=
-=20
-> > likely end up with widgets of the same name. Ideally a route endpoint w=
-ould=20
-> > be expressed by a tuple of DT node and pin name. But I don't think it i=
-s=20
-> > possible to mix integer and string elements in a property.
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3:
+- bracket individual tuples in the "reg" property
 
-It's not.  Now that we have preprocessor support it's a lot easier to
-just use numbers though - the legibility problems from just using raw
-numbers in big tables don't apply so much any more.
+ .../interrupt-controller/nvidia,tegra20-ictlr.txt     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
 
-> Thank you for your advice.
-> "DT node and name" seems nice idea, but it works on DT case only ?
-> Anyway, I re-consider about this too.
-> It can be trial and error...
-
-I think that for hardware which has fairly monolithic audio blocks using
-DPCM it might be worth thinking about providing a way for the DT to look
-like the DT for a simple I2S DAI with the driver for the IP in the SoC
-filling in all the structure needed by DPCM.
-
---RdTaDyjgticwLCHG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT/ChyAAoJELSic+t+oim9EYgP/1FTi/A7BcQ/cPVBwIhrw6+o
-mQuET220BPwdztxgxxE62g6tza7knk4brNJrg+K7S4OdjeI6lydFLZuMhg07uqlg
-C98UiuO2/Vl11PD4TIu1s4+7bzAElFdveDQgdt+7R7LJjRh+Y3NmgaQRqhzhTPDM
-jaG9IwT5n3J2NEA/9wtWZHbmUGtctBeQ5ljnUFFGNg67ZyfO9beC/Mv6KxJCWyKI
-5D7A9ylKxhsTLePpVqHV6D1ey6ocNf72PYLHhEwhKVCJu3Hl+skuMgH7NW6eeUyB
-6zCfdyU4GR6P21g2ikvtJJMLD3F9BVNIxgerTyhPp55+QTkO9r6suX1QKGSh9X88
-8Oavj8yfPiHIEdvl+FfsFwSCRVlQP47xENw0qcVF/NIVxchIWyEhNZPva/V3stUm
-KI3NgXN24ITENWKpfU6BQtTXN3bKn/uTbTnuolosJYN+Atmrkh7ZhkP7l4BMZBzI
-ZZWUr2c62svCxLFgDFsdZsJmnr3eA23JWCEJhWJdeykGbIaxi1pboqcnKIBZyGSL
-LmqJMUb40iZVCT3iaAwy7piimkbWdu4JzA62hHKSIr9fWkrKhsDOTbbTZa2BaqnC
-u8nsOFichH2wmsZudpECV0MK3WyO13XMfoOz+sA2h935Cq1HOjrXNyJokcxXa/sU
-QDUJDRxGkD8cuLxHlvwu
-=OQYc
------END PGP SIGNATURE-----
-
---RdTaDyjgticwLCHG--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
+new file mode 100644
+index 000000000000..1639389b7360
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
+@@ -0,0 +1,19 @@
++NVIDIA Tegra Legacy Interrupt Controller
++
++The legacy interrupt controller is divided into units that serve 32 interrupts
++each. Tegra20 implements four units, whereas Tegra30 and later implement five.
++
++Required properties:
++- compatible: "nvidia,tegra<chip>-ictlr"
++- reg: Physical base address and length of the controller's registers. There
++  should be one entry for each unit.
++
++Example:
++
++	interrupt-controller@60004000 {
++		compatible = "nvidia,tegra20-ictlr";
++		reg = <0x60004000 0x40>, /* primary controller */
++		      <0x60004100 0x40>, /* secondary controller */
++		      <0x60004200 0x40>, /* tertiary controller */
++		      <0x60004300 0x40>; /* quaternary controller */
++	};
+-- 
+2.0.4
