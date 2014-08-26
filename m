@@ -1,40 +1,168 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Tue, 26 Aug 2014 10:08:08 -0700
-Message-ID: <CAD=FV=X1GY+uUqt7fHETnt=qmPpLp+qtasvVZN8dXC4gxTYX-g@mail.gmail.com>
-References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Generic communication of boot loader state to the OS
+Date: Tue, 26 Aug 2014 18:16:58 +0100
+Message-ID: <20140826171658.GJ4078@leverpostej>
+References: <CAKON4Oz-PRgXyNKj=T9ymzOOhCMPjBMdYdE1Mr1CHWv3boskiw@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409062444-12019-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@chr>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRMFBMIXEGBBGEC6OPQKGQEEJGKPZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAKON4Oz-PRgXyNKj=T9ymzOOhCMPjBMdYdE1Mr1CHWv3boskiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+Content-Disposition: inline
+To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+Hi Jon,
 
-On Tue, Aug 26, 2014 at 7:14 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> +static struct regmap_irq_chip rk808_irq_chip = {
-> +       .name = "rk808",
-> +       .irqs = rk808_irqs,
-> +       .num_irqs = ARRAY_SIZE(rk808_irqs),
-> +       .num_regs = 2,
-> +       .irq_reg_stride = 2,
-> +       .status_base = RK808_INT_STS_REG1,
-> +       .mask_base = RK808_INT_STS_MSK_REG1,
-> +       .ack_base = RK808_INT_STS_REG1,
+On Tue, Aug 26, 2014 at 05:10:00PM +0100, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> New thread split off from the simple-framebuffer discussion....
+> 
+> Is there a generic, underlying problem here that needs to be solved?
+> AFAIK no one has designed a general purpose mechanism for
+> communicating boot loader state to the OS. There is the existing
+> device tree <chosen> node but it is limited compared to what is
+> needed. Maybe we should step back and first design a good solution to
+> this basic problem. Then specific solutions for things like
+> framebuffers would fall out of the basic design.
 
-Can you add ".init_ack_masked = true" here?  If I don't do that and I
-boot with the IRQ configured as "level low" then the system will just
-keep getting IRQs that it can't handle and eventually disable the
-whole rk808.  If I boot with the IRQ as "falling edge" then the system
-will never get RTC alarms.
+I think the fundamental problem here is unfortunately far too abstract
+for the general solution to be any more concrete. The solution to "we
+don't communicate boot state" is "we should communicate boot state".
 
-I posted this fixup with an explanation at
-<https://chromium-review.googlesource.com/#/c/214241/> and it could be
-squashed into your patch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We can perhaps come up with general guidelines (for instance, the clock
+subsystem has assigned-* properties), but I don't think there's a
+one-size-fits-all solution.
+
+> So what are the requirements?
+> 1) Indicate that the boot loader has set up a device
+> 2) Indicate the purpose of that device
+> 3) Protect the resources in use
+> 4) Provide for a handoff to the OS specific device driver
+> 5) Communicate all of this via the device tree
+> 
+> So what is a device tree syntax that would solve this general problem?
+> As a first design attempt, I would propose <boot> (or <chosen>) child
+> nodes be added to the various core devices. By core device I mean the
+> top level device, like the framebuffer, not each dependent clock and
+> regulator.
+> 
+> Inside the <boot> nodes a compatible string would be used to designate
+> a device class the bootloader has assigned to the devices. For example
+> - serial, framebuffer, media, input, network.
+
+In general we should already know the class of device if we have a
+driver for said device, no?
+
+As far as I can tell all we need to have is a way of designating
+preferred devices and their preferred/current configuration. We have
+bits of that already (e.g. stdout-path, assigned-rate).
+
+> Some examples, I've deleted a lot of properties to make them smaller.
+> The boot loader could add these nodes either statically or
+> dynamically.
+> 
+> uart0: uart@01c18000 {
+>         compatible = "allwinner,sun4i-a10-uart";
+>         clocks = <&ahb_gates 20>, <&uart2_clk>;
+>         clock-names = "ahb", "mod";
+>         boot {
+>                 compatible = "boot,serial";
+>                 baud = <192000>;
+>                 console;
+>        };
+> };
+
+There's already the stdout-path (and stdin-path) binding for designating
+a serial port. I think we should improve support for those rather than
+introducing a new binding. The only painful part is describing the
+pre-configured rate if the OS needs to know.
+
+> reserved-memory {
+>         display_reserved: framebuffer@78000000 {
+>                 reg = <0x78000000 0x800000>;
+>         };
+> };
+> 
+> fb0: fb@01c10000 {
+>         compatible = "allwinner,sun4i-a10-framebuffer";
+>         clocks = <&ahb_gates 18>, <&fb2_clk>;
+>         clock-names = "ahb", "mod";
+>         boot {
+>                 compatible = "boot,framebuffer";
+>                 memory-region = <&display_reserved>;
+>         };
+> };
+
+I was under the impression that the reserved-memory binding could be
+used for handing over the memory in use by a framebuffer, so as far as I
+can see we only new thing to communicate would be the configured mode of
+the display.
+
+Do we have any systems with multiple displays where we need to specify
+which is preferred?
+
+> spi1: spi@01c16000 {
+>         compatible = "allwinner,sun4i-a10-spi";
+>         clocks = <&ahb_gates 22>, <&spi2_clk>;
+>         clock-names = "ahb", "mod";
+> 
+>         flash0: flash@2 {
+>         compatible = "atmel,at12345";
+>         reg = <2>;
+>         spi-max-frequency = <100000>;
+>                 boot {
+>                         compatible = "boot,media";
+>                 };
+>         };
+> };
+
+Is this a problem on existing systems? Do we need a DT property?
+
+If so, this would be better as something like /chosen/root-device (so
+you can't accidentally describe multiple devices as the boot medium).
+
+> An OS booting off from a device tree like this can then implement
+> support for boot,xxxx drivers if it chooses. If it doesn't implement
+> support for the boot tags, nothing changes from the current situation.
+> 
+> The problem with clocks and regulators can be addressed by following
+> the chains of clocks/regulators in the parent nodes of the boot
+> sections. This would be implement by these frameworks providing a
+> "claim_all_xxx(DT node)" function.  A boot,framebuffer driver would
+> first call claim_all_clk(parent node) and claim_all_regulator(parent
+> node). Need to figure out exactly how these functions would work.
+
+I'm not sure I follow. What is the problem with clocks and regulators
+that this tries to solve?
+
+Are we just trying to leave them in their current configuration (rather
+than disabling)? Are we trying to prevent other drivers from fiddling
+with them? Something else?
+
+> Driver handoff is the OS's problem. Under Linux the device specific
+> drivers could soft-link to the boot,xxx code. After the device
+> specific driver is fully initialized it would tell the boot,xxx driver
+> to let go.
+
+I'm not sure I follow why we need the stub drivers at all. Is the idea
+to just have them hog resources until the real driver comes up?
+
+> As a side effect this will eliminate the need for kernel command line
+> parameters describing boot state. Like console="". Over time it might
+> even be able to pass a DHCP IP address from uboot into the kernel.
+
+We have a generic mechanism for communicating the MAC address of an
+ethernet adapter. I don't see a fundamental reason we can't add
+properties to communicate a DHCP lease and associated information. Is
+anyone looking into that?
+
+Thanks,
+Mark.
