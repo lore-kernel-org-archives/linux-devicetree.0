@@ -1,73 +1,50 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Tue, 26 Aug 2014 18:39:42 +0800
-Message-ID: <53FC63EE.6060104@rock-chips.com>
-References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com> <20140820092117.GI4266@lee--X1> <53FA9D1E.8040202@rock-chips.com> <20140826092205.GG9574@lee--X1> <53FC5BD1.7030406@rock-chips.com> <20140826102036.GJ9574@lee--X1>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Tue, 26 Aug 2014 12:44:35 +0200
+Message-ID: <53FC6513.5040800@ahsoftware.de>
+References: <20140514141914.446F7C4153D@trevor.secretlab.ca> <20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826102503.GC31124@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140826102036.GJ9574@lee--X1>
+In-Reply-To: <20140826102503.GC31124@ulmo>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Am 26.08.2014 12:25, schrieb Thierry Reding:
+> On Tue, Aug 26, 2014 at 11:42:04AM +0200, Alexander Holler wrote:
 
-On 08/26/2014 06:20 PM, Lee Jones wrote:
-> On Tue, 26 Aug 2014, Chris Zhong wrote:
->> On 08/26/2014 05:22 PM, Lee Jones wrote:
->>> On Mon, 25 Aug 2014, Chris Zhong wrote:
->>>> On 08/20/2014 05:21 PM, Lee Jones wrote:
->>>>> On Wed, 20 Aug 2014, Chris Zhong wrote:
->>>>>
->>>>>> The RK808 chip is a power management IC for multimedia and handheld
->>>>>> devices. It contains the following components:
->>>>>>
->>>>>> - Regulators
->>>>>> - RTC
->>>>>>
->>>>>> The rk808 core driver is registered as a platform driver and provides
->>>>>> communication through I2C with the host device for the different
->>>>>> components.
->>>>>>
->>>>>> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>>>> ---
->>> [...]
->>>
->>>>>> +	rk808->pdata = pdata;
->>>>> Remove pdata from 'struct rk808'.  You can obtain it from dev.
->>>> Can I keep this pdata in rk808, because it is used in the regulator driver.
->>>> The one obtain from dev maybe empty.
->>> If the one in dev is empty, you should populate that instead.
->> So, should I malloc a pada, and assign it to client->dev?
-> If client->dev.pdata is NULL, yes.
+>> You need either the type information in the DTB (that's why I've add those
+>> "dependencies" to identify phandles), or you need to know every binding (at
+>> "dependency-resolve-time" to identify phandles. The latter is impracticable
+>> to implement in a generic way (for use with every possible binding).
 >
-> But actually, I have more important questions that need to be answered
-> first.  Ones which I would normally be able to answer myself if the
-> patch-set had been sent as one (i.e. threaded) instead of as
-> individual patches:
->
-> - What are you using pdata for?
+> Like I already mentioned, this could be done in drivers who contain that
+> information already anyway. Or parts of it could be done in subsystem-
+> specific callbacks where a generic binding is available.
 
-For save some properties,
+That would end up with almost the same ugly driver-based workarounds as 
+now. It's much better if a driver author only has to define it's 
+prerequisits (in form of dependencies in the dts) and could be sure the 
+driver will only be probed if those are met, than to do that stuff based 
+on a subsystem or even driver level.
 
-like "rockchip,system-power-controller" in MFD
-and some regulator properties in regulator/rk808...
+If you add dependency-information to drivers, you have two problems:
 
-> - Where is pdata populated?
+- How do you get these information from the driver (remember, currently 
+there is only one initial call, a initcall which might do almost anything)
 
-It is populated in probe in mfd/rk808.c
+- These information might become outdated and you would have to change 
+all drivers. E.g. if the name of a dependency (driver) changes it 
+wouldn't be done with changing the dts (maybe plural), but you would 
+have to change the source of all dependant drivers too.
 
-actually, I copy it from tps65910.c
+Regards,
 
-
-> - Where is pdata used?
-
-pdata is used in mfd and regulator
-
-
-
+Alexander Holler
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
