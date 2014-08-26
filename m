@@ -1,114 +1,84 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
  initialization order based on the DT)
-Date: Tue, 26 Aug 2014 09:42:08 +0100
-Message-ID: <20140826084208.AE5F0C40989@trevor.secretlab.ca>
+Date: Tue, 26 Aug 2014 10:49:24 +0200
+Message-ID: <20140826084922.GG17263@ulmo>
 References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
-	<20140514141914.446F7C4153D@trevor.secretlab.ca>
-	<20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de>
-	<20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo>
-	<E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140825133714.GH4163-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+ <20140514141914.446F7C4153D@trevor.secretlab.ca>
+ <20140821140211.GD19293@ulmo.nvidia.com>
+ <53F64624.5000403@ahsoftware.de>
+ <20140822131919.GX21734@leverpostej>
+ <20140825093931.GB2399@ulmo>
+ <E1XLu15-0002DP-6o@jdl.com>
+ <20140825133714.GH4163@ulmo.nvidia.com>
+ <20140826084208.AE5F0C40989@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UTZ8bGhNySVQ9LYl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140826084208.AE5F0C40989@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Jon Loeliger <jdl@jdl.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Holler <holler@ahsoftware.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Aug 25, 2014 at 08:08:59AM -0500, Jon Loeliger wrote:
-> > > 
-> > 
-> > > Anyway, instead of going back and forth between "deferred probe is good"
-> > > and "deferred probe is bad", how about we do something useful now and
-> > > concentrate on how to make use of the information we have in DT with the
-> > > goal to reduce the number of cases where deferred probing is required?
-> > 
-> > Good idea.
-> > 
-> > The proposal on the table is to allow the probe code
-> > to make a topological sort of the devices based on
-> > dependency information either implied, explicitly stated
-> > or both.  That is likely a fundamentally correct approach.
-> > 
-> > I believe some of the issues that need to be resolved are:
-> > 
-> >     1) What constitutes a dependency?
-> >     2) How is that dependency expressed?
-> >     3) How do we add missing dependencies?
-> >     4) Backward compatability problems.
-> > 
-> > There are other questions, of course.  Is it a topsort
-> > per bus?  Are there required "early devices"?  Should
-> > the inter-node dependencies be expressed at each node,
-> > or in a separate hierarchy within the DTS?  Others.
-> 
-> I think Grant already objected to the idea of explicitly adding
-> dependency information into the device tree sources. Rather, if I
-> understand correctly, we should be using the information readily
-> available (phandle references) as much as possible before resorting to
-> additional properties.
 
-My objection is primarily around the concern that the dependency data
-will get stale if firmware modifies the tree or that the kernel will
-break when by relying on incorrect dependency information.
+--UTZ8bGhNySVQ9LYl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If the kernel can handle incorrect dependencies gracefully (like falling
-back to deferred probe) then we can consider additional properties.
+On Tue, Aug 26, 2014 at 09:42:08AM +0100, Grant Likely wrote:
+> On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding@gmail.=
+com> wrote:
+[...]
+> > There are somewhat standardized bindings for the above and especially
+> > for bindings of the type that clocks implement this is trivial. We can
+> > simply iterate over each (phandle, specifier) tuple and check that the
+> > corresponding clock provider can be resolved (which typically means that
+> > it's been registered with the common clock framework).
+> >=20
+> > For regulators (and regulator-like bindings) the problem is somewhat
+> > more difficult because they property names are not standardized. One way
+> > to solve this would be to look for property names with a -supply suffix,
+> > but that could obviously lead to false positives. One alternative that I
+> > think could eliminate this would be to explicitly list dependencies in
+> > drivers. This would allow core code to step through such a list and
+> > resolve the (phandle, specifier) tuples.
+>=20
+> False positives and negatives may not actually be a problem. It is
+> suboptimal, certainly, but it shouldn't outright break the kernel.
 
-> So far we've been operating under the assumption that a dependency is
-> modeled as a phandle reference and that the dependent would contain the
-> phandle reference to the dependency. That's for example how clocks and
-> regulators (to name only a few) work. A simplified example would look
-> like this:
-> 
-> 	clock: clock@... {
-> 		...
-> 		#clock-cells = <1>;
-> 		...
-> 	};
-> 
-> 	pmic: pmic@... {
-> 		regulators {
-> 			vdd_foo: ldo0 {
-> 				...
-> 			};
-> 
-> 			vdd_bar: ldo1 {
-> 				...
-> 			};
-> 	};
-> 
-> 	device@... {
-> 		vdd-supply = <&vdd_foo>;
-> 		clocks = <&clock 0>;
-> 	};
-> 
-> 	device@... {
-> 		vdd-supply = <&vdd_bar>;
-> 		clocks = <&clock 1>;
-> 	};
-> 
-> There are somewhat standardized bindings for the above and especially
-> for bindings of the type that clocks implement this is trivial. We can
-> simply iterate over each (phandle, specifier) tuple and check that the
-> corresponding clock provider can be resolved (which typically means that
-> it's been registered with the common clock framework).
-> 
-> For regulators (and regulator-like bindings) the problem is somewhat
-> more difficult because they property names are not standardized. One way
-> to solve this would be to look for property names with a -supply suffix,
-> but that could obviously lead to false positives. One alternative that I
-> think could eliminate this would be to explicitly list dependencies in
-> drivers. This would allow core code to step through such a list and
-> resolve the (phandle, specifier) tuples.
+There could be cases where some random integer in a cell could be
+interpreted as a phandle and resolve to a struct device_node. I suppose
+it might be unlikely, but not impossible, that the device_node could
+even match a device in the correct subsystem and you'd get a wrong
+dependency. Granted, a wrong dependency may not be catastrophic in that
+it won't lead to a crash, but it could lead to various kinds of
+weirdness and hard to diagnose problems.
 
-False positives and negatives may not actually be a problem. It is
-suboptimal, certainly, but it shouldn't outright break the kernel.
+Thierry
 
-g.
+--UTZ8bGhNySVQ9LYl
+Content-Type: application/pgp-signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT/EoSAAoJEN0jrNd/PrOhIdgQAJqaVIyBb472+KcPmbk9iH8Z
+vQBg9uMfX66v+zvanycOpe0NCa7JHoxCOCTu5t8XWKd+8md9t0P87xjDKgOP2XZE
+sZSTUpcLrZABWUjwULjNfPdo3osmlMHOfnqL7Mgyi509PGuCMVLW9cpjUJt9W6Vb
+8OahWkFt1h2oZlYYR/EI/TcrbuzyfK6a7oSUOsA0A9YfY4X0xovFkxuhSpFVF+C0
+IxkwPMQZX5/rCxzoPQXBgcn14mYkmRS5Sc+by1PtLKPkvzZnXHpNkRDavEz3Zqv2
+sx1RvMNeGpMJdIajY8XafRniwsTMt7sIRjjcQhrn247hCJyJ/kKjjRgrVeS/r4Ld
+rZ+Ftynq6kZRxQ4ULDZFFry1QZB14Fp8Bx2vAkO6opbeGlLy/wEHFQaQDfv3sfDG
+7yS7q3Vzrj2UBjNp76aqO5IeD3TAlA3O/XyYD9KSgTEezLDPbrOcfELuEhGm3B8+
+UH5xMzx5TvIy8rbNNdSBA5tiIC7r6fDd3+YfQ+N8ZpqMmruD6Qxzr/bD2SU8+ZwL
+p9wR8AA5lFoLYSNVRqsH5liotJt0zTbsZ+UNqPojb2Ai9Fbv4SUKWDPQ5wcZEh/b
+9bBE3cw4/hbjWGlIF2n8jSZysh2+8qPeiRaWdOWxQm3AXK2GU5v96tflz4FRK+DI
+aMnpkwTIRudbJ3m298vR
+=OhnR
+-----END PGP SIGNATURE-----
+
+--UTZ8bGhNySVQ9LYl--
