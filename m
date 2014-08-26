@@ -1,113 +1,88 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH 1/2] dt-bindings: document Rockchip thermal
-Date: Wed, 27 Aug 2014 00:47:02 +0800
-Message-ID: <53FCBA06.90701@rock-chips.com>
-References: <1408752934-18318-1-git-send-email-caesar.wang@rock-chips.com> <1408752934-18318-2-git-send-email-caesar.wang@rock-chips.com> <1504889.nDzfjZj9xp@diego>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Tue, 26 Aug 2014 09:57:28 -0700
+Message-ID: <CAD=FV=UYXmFBc3j2TdOGVwp_6oWkQ+84DvWr_X+XoZkvsQ=3gA@mail.gmail.com>
+References: <1408973516-21395-1-git-send-email-zyw@rock-chips.com>
+	<CAD=FV=Wz1yssGvB05ExPaYxsiizcPRYrfP9OWE+HdoSDKVc_Tw@mail.gmail.com>
+	<20140826083206.GD9574@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1504889.nDzfjZj9xp@diego>
-Sender: linux-doc-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: rui.zhang@intel.com, rdunlap@infradead.org, cf@rock-chips.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, zyw@rock-chips.com, huangtao@rock-chips.com, xjq@rock-chips.com, addy.ke@rock-chips.com, dianders@chromium.org, zhaoyifeng <zyf@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140826083206.GD9574@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@chr>
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
-=E5=9C=A8 2014/8/24 7:03, Heiko St=C3=BCbner =E5=86=99=E9=81=93:
-> Hi Caesar,
->
-> Am Samstag, 23. August 2014, 08:15:33 schrieb Caesar Wang:
->> This add the necessary binding documentation for the thermal
->> found on Rockchip SoCs
+Lee,
+
+On Tue, Aug 26, 2014 at 1:32 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, 25 Aug 2014, Doug Anderson wrote:
+>> On Mon, Aug 25, 2014 at 6:31 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> > The RK808 chip is a power management IC for multimedia and handheld
+>> > devices. It contains the following components:
+>> >
+>> > - Regulators
+>> > - RTC
+>> >
+>> > The RK808 core driver is registered as a platform driver and provides
+>> > communication through I2C with the host device for the different
+>> > components.
+>> >
+>> > Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >>
->> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
->> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
->> ---
->>   .../bindings/thermal/rockchip-thermal.txt          |   33
->> ++++++++++++++++++++ 1 file changed, 33 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>> You need a Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >>
->> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
-mal.txt
->> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt new=
- file
->> mode 100644
->> index 0000000..b556eae
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->> @@ -0,0 +1,33 @@
->> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
->> +
->> +Required properties:
->> +- compatible : "rockchip,rk3288-tsadc"
->> +- reg : physical base address of the controller and length of memor=
-y mapped
->> +  region.
->> +- interrupts : The interrupt number to the cpu. The interrupt speci=
-fier
->> format +  depends on the interrupt controller.
->> +- clocks : Must contain an entry for each entry in clock-names.
->> +- clock-names : Shall be "tsadc_clk" for the transfer-clock, and
->> "tsadc_pclk" for +    the peripheral clock.
->> +Optional properties:
->> +- clock-frequency : Thermal sensor's clock frequency.
-> see comment in patch2, this should probably use assigned-rate if at a=
-ll
-> necessary (and the assigned-rate is not necessary to document here)
+>> > ---
 >
+> [...]
 >
->> +- pinctrl-names : Should contain only one value - "default".
->> +- pinctrl-0 : Should contain only one value - &tsadc_int.
-> in general pinctrl settings are just board-specific settings and do n=
-ot
-> need to be part of the binding documentation.
-> And in this case, are you sure that the tsadc uses some pin as interr=
-upt?
-> Because in the TRM the TS-ADC interrupt is number 69 of the GIC itsel=
-f
-> and not some pin accessible via pinctrl.
+>> > +static struct rk808 *g_rk808;
+>>
+>> I think Lee's "Grim" comment here was that prefixing globals with "g_"
+>> is not consistent with the Linux coding style.  Just remove the "g_".
 >
+> That and the seemingly unavoidable use of a global pointer.
 >
->> +- passive-temp : Temperature of trip 0.
->> +- critical-temp : Temperature of trip 1.
->> +- force-shut-temp : Temperature of force shut down.
-> please use the generic trip-points described in
-> Documentation/devicetree/bindings/thermal/thermal.txt
-> for this, instead of defining new properties
+> [...]
+>
+>> > +static const struct i2c_device_id rk808_ids[] = {
+>> > +        { "rk808", 0 },
+>>
+>> I think Lee wanted the above to be:
+>>
+>>        { "rk808", },
+>
+> Right, but the ',' is now superfluous.
 
-There are have 4 trip-points mode in thermal.txt.
-It's ACTIVE=E3=80=81PASSAIVE=E3=80=81 HOT and  CRITICAL.
-
-Do you have some suggestion for fix it if I need add shut-temp mode ?
-
-- Caesar
->
-> Heiko
->
->> +Example:
->> +
->> +tsadc: tsadc@ff280000 {
->> +	compatible =3D "rockchip,rk3288-tsadc";
->> +	reg =3D <0xff280000 0x100>;
->> +	interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->> +	clock-frequency =3D <10000>;
->> +	clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
->> +	clock-names =3D "tsadc_clk", "tsadc_pclk";
->> +	pinctrl-names =3D "default";
->> +	pinctrl-1 =3D <&tsadc_int>;
->> +	passive-temp =3D <80>;
->> +	critical-temp =3D <100>;
->> +	force-shut-temp =3D <120>;
->> +};
->
->
->
-
---=20
-Best regards,
-Caesar
+Yeah, I debated that.  Generally I like to have commas at the end just
+like a like a semicolon at the end of the final statement (C requires
+this, but other languages don't).  Anyway, neither here nor there.  ;)
+ I'm happy having the comma removed.
 
 
+> [...]
+>
+>> I didn't do a thorough review, just compared to Lee's old feedback.
+>> Maybe a good idea to get in the habit to responding to others comments
+>> with "Done" so others know you have addressed each comment?
+>
+> Please only do this locally or in your head.  Reading replies to
+> reviews containing only a break-down of what has been fixed is a waste
+> of everyone's time.  If/when replying to comments/observations that
+> you do _not_ agree with, please snip out all of the ones that you _do_
+> agree with.
+
+Sorry for suggesting.  I actually find even an email filled with
+nothing but "Done" helpful.  It give me a warm fuzzy that the person
+spinning the code _actually_ looked at all the comments (and didn't
+miss something).
+
+...but it's really up to you.  If you hate the "Done"s then Chris
+certainly shouldn't send them.
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
