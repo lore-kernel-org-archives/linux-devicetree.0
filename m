@@ -1,84 +1,149 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Tue, 26 Aug 2014 13:23:54 +0200
-Message-ID: <53FC6E4A.6030407@ahsoftware.de>
-References: <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826102503.GC31124@ulmo> <53FC6513.5040800@ahsoftware.de> <20140826110827.GA31350@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140826110827.GA31350@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Kiran Padwal <kiran.padwal@smartplayin.com>
+Subject: [PATCH v3] ARM: apq8064: Add pinmux and i2c pinctrl nodes
+Date: Tue, 26 Aug 2014 17:00:45 +0530
+Message-ID: <1409052645-14984-1-git-send-email-kiran.padwal@smartplayin.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davidb@codeaurora.org, afaerber@suse.de
+Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Kiran Padwal <kiran.padwal@smartplayin.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 26.08.2014 13:08, schrieb Thierry Reding:
-> On Tue, Aug 26, 2014 at 12:44:35PM +0200, Alexander Holler wrote:
->> Am 26.08.2014 12:25, schrieb Thierry Reding:
->>> On Tue, Aug 26, 2014 at 11:42:04AM +0200, Alexander Holler wrote:
->>
->>>> You need either the type information in the DTB (that's why I've add those
->>>> "dependencies" to identify phandles), or you need to know every binding (at
->>>> "dependency-resolve-time" to identify phandles. The latter is impracticable
->>>> to implement in a generic way (for use with every possible binding).
->>>
->>> Like I already mentioned, this could be done in drivers who contain that
->>> information already anyway. Or parts of it could be done in subsystem-
->>> specific callbacks where a generic binding is available.
->>
->> That would end up with almost the same ugly driver-based workarounds as now.
->> It's much better if a driver author only has to define it's prerequisits (in
->> form of dependencies in the dts) and could be sure the driver will only be
->> probed if those are met, than to do that stuff based on a subsystem or even
->> driver level.
->>
->> If you add dependency-information to drivers, you have two problems:
->
-> We already have all that dependency information in drivers anyway. Each
-> driver requests the resources at .probe() time. What I proposed (it was
-> really Arnd who proposed it first) is to move that information out of
-> code and into some sort of table that could be used by the driver core
-> to figure out dependencies.
->
->> - How do you get these information from the driver (remember, currently
->> there is only one initial call, a initcall which might do almost anything)
->
-> While I don't think it's necessary, that's something that could be
-> changed. I mean, we have access to the full source code of this
-> operating system, so we can change every aspect of it. If we can't find
-> a way to make this work with the current initcall sequence it's always
-> an option to extend that sequence so that it meets our needs.
->
->> - These information might become outdated and you would have to change all
->> drivers. E.g. if the name of a dependency (driver) changes it wouldn't be
->> done with changing the dts (maybe plural), but you would have to change the
->> source of all dependant drivers too.
->
-> No. Drivers implement a DT binding. That binding defines what power
-> supplies, clocks, pinmux, ... the device needs. Those constitute the
-> dependencies. We most certainly don't want to depend on driver names
-> since there can be a multitude of different drivers that provide a given
-> dependency.
->
-> What drivers should provide (and what they already provide today) is the
-> name of the property and the index of the cell that they expect to find
-> a phandle in as well as the type of the phandle. That's all that's
-> necessary, really. Everything else can be derived from that phandle and
-> the type.
+This patch adds pinmux and i2c pinctrl DT node for IFC6410 board.
+It also adds necessary DT support for i2c eeprom which is present on
+IFC6410.
 
-Drivers don't provide that information (dependencies) in any usable way. 
-And as you said yourself, it's already contained in phandles. So what we 
-are discussing here about? The proposal to use phandles for that is 
-already on the table since several month. ;)
+Tested on IFC6410 board.
 
-Sorry, but I don't understand what you want to propose.
+Signed-off-by: Kiran Padwal <kiran.padwal@smartplayin.com>
+---
+Changes since v2:
+ - Renamed pinmux i2c subnode "i2c1_pinmux" to "i2c1".
+ - Removed labes of node.
+ - Used canonical value as "okay" instead of "ok".
+ - Used macros.
 
-Regards,
+Changes since v1:
+ - Renamed pinmux phandle "qcom_pinmux" to "tlmm_pinmux".
+ - Updated pinmux interrupt.
 
-Alexander Holler
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |   27 ++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi        |   53 ++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 7c2441d..ef0857e 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -5,6 +5,24 @@
+ 	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
+ 
+ 	soc {
++		gsbi@12440000 {
++			status = "okay";
++			qcom,mode = <GSBI_PROT_I2C>;
++
++			i2c@12460000 {
++				status = "okay";
++				clock-frequency = <200000>;
++				pinctrl-0 = <&i2c1_pins>;
++				pinctrl-names = "default";
++
++				eeprom: eeprom@52 {
++					compatible = "atmel,24c128";
++					reg = <0x52>;
++					pagesize = <32>;
++				};
++			};
++		};
++
+ 		gsbi@16600000 {
+ 			status = "ok";
+ 			qcom,mode = <GSBI_PROT_I2C_UART>;
+@@ -12,5 +30,14 @@
+ 				status = "ok";
+ 			};
+ 		};
++
++		pinmux@800000 {
++			i2c1_pins: i2c1 {
++				mux {
++					pins = "gpio20", "gpio21";
++					function = "gsbi1";
++				};
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 92bf793..5dddbf3 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -89,6 +89,17 @@
+ 			cpu-offset = <0x80000>;
+ 		};
+ 
++		tlmm_pinmux: pinmux@800000 {
++			compatible = "qcom,apq8064-pinctrl";
++			reg = <0x800000 0x4000>;
++
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupts = <0 16 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		acc0: clock-controller@2088000 {
+ 			compatible = "qcom,kpss-acc-v1";
+ 			reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
+@@ -133,6 +144,48 @@
+ 			regulator;
+ 		};
+ 
++		gsbi1: gsbi@12440000 {
++			status = "disabled";
++			compatible = "qcom,gsbi-v1.0.0";
++			reg = <0x12440000 0x100>;
++			clocks = <&gcc GSBI1_H_CLK>;
++			clock-names = "iface";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			i2c1: i2c@12460000 {
++				compatible = "qcom,i2c-qup-v1.1.1";
++				reg = <0x12460000 0x1000>;
++				interrupts = <0 194 IRQ_TYPE_NONE>;
++				clocks = <&gcc GSBI1_QUP_CLK>, <&gcc GSBI1_H_CLK>;
++				clock-names = "core", "iface";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
++		gsbi2: gsbi@12480000 {
++			status = "disabled";
++			compatible = "qcom,gsbi-v1.0.0";
++			reg = <0x12480000 0x100>;
++			clocks = <&gcc GSBI2_H_CLK>;
++			clock-names = "iface";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			i2c2: i2c@124a0000 {
++				compatible = "qcom,i2c-qup-v1.1.1";
++				reg = <0x124a0000 0x1000>;
++				interrupts = <0 196 IRQ_TYPE_NONE>;
++				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
++				clock-names = "core", "iface";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		gsbi7: gsbi@16600000 {
+ 			status = "disabled";
+ 			compatible = "qcom,gsbi-v1.0.0";
+-- 
+1.7.9.5
