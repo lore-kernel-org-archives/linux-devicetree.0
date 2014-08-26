@@ -1,61 +1,64 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
- initialization order based on the DT)
-Date: Tue, 26 Aug 2014 09:51:28 +0100
-Message-ID: <20140826085128.958A9C40989@trevor.secretlab.ca>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
-	<20140514141914.446F7C4153D@trevor.secretlab.ca>
-	<20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de>
-	<20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo>
-	<E1XLu15-0002DP-6o@jdl.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1XLu15-0002DP-6o-CYoMK+44s/E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: lager: correct memory map
+Date: Tue, 26 Aug 2014 17:52:37 +0900
+Message-ID: <20140826085234.GA29667@verge.net.au>
+References: <1409021623-10633-1-git-send-email-horms+renesas@verge.net.au>
+ <CAOesGMieRk4Dvg=gxTgcVssARkK6DeoaVyK8619B2N5=wwo=Uw@mail.gmail.com>
+ <20140826042055.GA12108@verge.net.au>
+ <CAMuHMdVqZ29-jaS+kLwdVycLOMSbz9H7oJGuq3dLH2y-81mVcQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVqZ29-jaS+kLwdVycLOMSbz9H7oJGuq3dLH2y-81mVcQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Olof Johansson <olof@lixom.net>, Linux-sh list <linux-sh@vger.kernel.org>, NAOYA SHIIBA <naoya.shiiba.nx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Aug 2014 08:08:59 -0500, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org> wrote:
-> > 
+On Tue, Aug 26, 2014 at 09:52:10AM +0200, Geert Uytterhoeven wrote:
+> On Tue, Aug 26, 2014 at 6:20 AM, Simon Horman <horms@verge.net.au> wrote:
+> >> > diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+> >> > index 0118cbf..84dcafa 100644
+> >> > --- a/arch/arm/boot/dts/r8a7790-lager.dts
+> >> > +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+> >> > @@ -32,7 +32,7 @@
+> >> >                 reg = <0 0x40000000 0 0x40000000>;
+> >> >         };
+> >> >
+> >> > -       memory@180000000 {
+> >> > +       memory@140000000 {
+> >>
+> >> That should even be "memory@1,40000000".
+> >
+> > Two comma-separated 32bit values in the case
+> > where a memory range starts above 4Gb?
 > 
-> > Anyway, instead of going back and forth between "deferred probe is good"
-> > and "deferred probe is bad", how about we do something useful now and
-> > concentrate on how to make use of the information we have in DT with the
-> > goal to reduce the number of cases where deferred probing is required?
+> Yes. As #address-cells is 2, there should be two values after the "@"
+> (the first one may be optional if it's zero, I don't know for sure?)
 > 
-> Good idea.
+> > If so it looks like this will be the first user of that syntax
+> > (I don't see any in linux-next today).
 > 
-> The proposal on the table is to allow the probe code
-> to make a topological sort of the devices based on
-> dependency information either implied, explicitly stated
-> or both.  That is likely a fundamentally correct approach.
-> 
-> I believe some of the issues that need to be resolved are:
-> 
->     1) What constitutes a dependency?
->     2) How is that dependency expressed?
->     3) How do we add missing dependencies?
->     4) Backward compatability problems.
-> 
-> There are other questions, of course.  Is it a topsort
-> per bus?  Are there required "early devices"?  Should
-> the inter-node dependencies be expressed at each node,
-> or in a separate hierarchy within the DTS?  Others.
+> No, "git grep '@.*,' -- arch/arm/boot/dts" shows several users.
+> Not all of them are 64-bit memory addresses, but some are.
 
-Getting the dependency tree I think is only half the problem. The other
-have is how to get the driver model to actually order probing using that
-list. That problem is hard because the order drivers are probed is
-currently determined by the interaction of driver link order, driver
-initcall level, and device registration order. The first devices are
-registered at an early initcall, before their drivers, and therefore
-bind order is primarily determined by initcall level and driver link
-order. However, later devices (ie. i2c clients) are registered by the
-bus driver (ie. again, i2c) and probe order may be primarily link order
-(if the driver is not yet registered) or registration order (if the
-driver was registered before the parent bus).
+Thanks, I like your grep better than mine.
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > I do however see several users of memrory@64bit_value.
+> > Mostly other renesas fds files; ecx-2000.dts being the exception.
+> > Should they be fixed too?
+> >
+> > $ find -name "*.dts" | xargs grep memory@[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]
+> > ./arch/arm/boot/dts/r8a7791-henninger.dts:      memory@200000000 {
+> > ./arch/arm/boot/dts/r8a7791-koelsch.dts:        memory@200000000 {
+> > ./arch/arm/boot/dts/ecx-2000.dts:       memory@200000000 {
+> > ./arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts:      memory@200000000 {
+> > ./arch/arm/boot/dts/r8a7790-lager.dts:  memory@180000000 {
+> > ./arch/arm/boot/dts/r8a73a4-ape6evm.dts:        memory@200000000 {
+> 
+> Yes, these should be fixed, too.
+> 
+> It's a pity dtc doesn't complain about this.
+
+Indeed.
