@@ -1,44 +1,74 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/9] PM / Domains: Add generic OF-based power domain
- look-up
-Date: Tue, 26 Aug 2014 15:15:18 +0200
-Message-ID: <1409058918.2911.55.camel@paszta.hi.pengutronix.de>
-References: <1409054837-5667-1-git-send-email-ulf.hansson@linaro.org>
-	 <1409054837-5667-3-git-send-email-ulf.hansson@linaro.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v5 1/3] pwm: rockchip: Allow polarity invert on rk3288
+Date: Tue, 26 Aug 2014 15:41:39 +0200
+Message-ID: <20140826134138.GA2980@ulmo>
+References: <1409007567-23523-1-git-send-email-dianders@chromium.org>
+ <1409007567-23523-2-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1409054837-5667-3-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Philipp Zabel <philipp.zabel@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, linux-acpi@vger.kernel.org, Simon Horman <horms@verge.net.au>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>linux-a
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1409007567-23523-2-git-send-email-dianders@chromium.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, olof@lixom.net, Eddie Cai <eddie.cai@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
 
-Am Dienstag, den 26.08.2014, 14:07 +0200 schrieb Ulf Hansson:
-> From: Tomasz Figa <t.figa@samsung.com>
-> 
-> This patch introduces generic code to perform power domain look-up using
-> device tree and automatically bind devices to their power domains.
-> Generic device tree binding is introduced to specify power domains of
-> devices in their device tree nodes.
-> 
-> Backwards compatibility with legacy Samsung-specific power domain
-> bindings is provided, but for now the new code is not compiled when
-> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
-> will change as soon as Exynos power domain code gets converted to use
-> the generic framework in further patch.
-> 
-> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for updating this series. I've tested patches 1-4
-using the PU power domain on i.MX6.
+On Mon, Aug 25, 2014 at 03:59:25PM -0700, Doug Anderson wrote:
+> The rk3288 has the ability to invert the polarity of the PWM.  Let's
+> enable that ability.  Note that this increases pwm_cells to 3 for
+> rk3288.
+>=20
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Reviewed-by: Caesar Wang <caesar.wang@rock-chips.com>
+> ---
+> Changes in v5: None
+> Changes in v4:
+> - Updated comment not to add caveats about pwm_cells 3.
+> - rockchip_pwm_set_polarity() is now static.
+> - Separate pwm_ops for v1 and v2; no set_polarity() in v1.
+> - Added a blank line.
+>=20
+> Changes in v3:
+> - Don't store a private copy of polarity.
+> - Use true instead of 1.
+> - Cleanup init order with "has_invert".
+>=20
+>  .../devicetree/bindings/pwm/pwm-rockchip.txt       |  4 +-
+>  drivers/pwm/pwm-rockchip.c                         | 57 ++++++++++++++++=
+++----
+>  2 files changed, 50 insertions(+), 11 deletions(-)
 
-Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+Applied, thanks.
 
-regards
-Philipp
+Thierry
 
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT/I6SAAoJEN0jrNd/PrOhCdUP/inJkzIIKf/NijSTLxngMdfs
+s7jkmXFSHuLIgIW+yfPOXftxY+fC/gOrKQTZBORLPCT0UtNzHMhrAcdyZHQ074KG
+g1LXtkapK+VGSo5hVijOgxXEe5eTzc0EO4YFQpCLBYLd/BhlOuk+h4twJJyZfR27
+uA0w539wbXpy3qBMIS8NEiToT6zqYrXOMUV0ddcMmuzEef5AOJFSkO7s6uGlKGXm
+MUbMU3FjOfgVaTMCwtqr8lwueqvvF739EHbsrhjofWAXi3xMc0KtoeMUNjYvSr7e
+2iPWuM7JthqorDvy7g0q9x6x7vvoxyYfTfHzAk4chdaf/MhE+50J9zwk8FL0JpxX
+nUzIfFE3Uyfh+WFUE/KF+/DScSLTVKCuLuySQue0dKHXZAYcMJFJa7ldj9j+ebru
+pcuv/2hbHC2i4jZ+BMl6ernBTMeAaeIzNaVAKzGeeSQ1BNcLDJGPAjLMfw3HOGVK
+N/90IiUdHqXFWHnEl/qcMWzUPye8bbaC61JYBTqsxo/z5v4y4Ms4rtMGk1njEZIr
+J5rGN0S9rFn4T2urtryhvmAzgk4cYjVVmIk1dZGeHsI3aWOzatf5FFFb3i4CulWN
+fI+nUwE8ZavHUpLwX1pf6pWkqBjSRpErwmk1/3MCU/7nKnjyxx8fAjBcApOPwKt3
+b65e0iCZv45l3dCiVT86
+=E9tI
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
