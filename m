@@ -1,52 +1,164 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCHv10 2/2] arm: dts: Add Altera SDRAM EDAC bindings &
- devicetree entries.
-Date: Tue, 26 Aug 2014 16:25:52 -0500
-Message-ID: <CADhT+wfHMb=DvXTwzEZdhGrAeihc5QTnTAccU9T-4tXrRZ5SkA@mail.gmail.com>
-References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com>
-	<1407770293-27190-3-git-send-email-tthayer@opensource.altera.com>
-	<20140814184949.GC11558@amd.pavel.ucw.cz>
-	<53FCD456.3050404@opensource.altera.com>
-	<53FCEDDA.4060906@opensource.altera.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [RFC 3/7] bcm47xx-sprom: add Broadcom sprom parser driver
+Date: Tue, 26 Aug 2014 23:32:32 +0200
+Message-ID: <53FCFCF0.2010704@hauke-m.de>
+References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de> <1408915485-8078-5-git-send-email-hauke@hauke-m.de> <8344390.rjnOcYBCET@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53FCEDDA.4060906@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@opensource.altera.com>
-Cc: Thor Thayer <tthayer@opensource.altera.com>, Pavel Machek <pavel@denx.de>, Rob Herring <robherring2@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, atull@opensource.altera.com, Alan Tull <delicious.quinoa@gmail.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, bp@alien8.de, sameo@linux.intel.com, lee.jones@linaro.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux List <linux-kernel@vger.kernel.org>, Thor Thayer <tthayer.linux@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8344390.rjnOcYBCET@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 26, 2014 at 3:28 PM, Dinh Nguyen
-<dinguyen@opensource.altera.com> wrote:
-> On 08/26/2014 01:39 PM, Thor Thayer wrote:
+On 08/25/2014 09:52 AM, Arnd Bergmann wrote:
+> On Sunday 24 August 2014 23:24:41 Hauke Mehrtens wrote:
+>> This driver needs an nvram driver and fetches the sprom values from the
+>> nvram and provides it to any other driver. The calibration data for the
+>> wifi chip the mac address and some more board description data is
+>> stores in the sprom.
 >>
->> On 08/14/2014 01:49 PM, Pavel Machek wrote:
->>> On Mon 2014-08-11 10:18:13, tthayer@opensource.altera.com wrote:
->>>> From: Thor Thayer <tthayer@opensource.altera.com>
->>>>
->>>> Add the Altera SDRAM EDAC bindings and device tree changes to the
->>>> Altera SoC project.
->>>>
->>>> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->>> Acked-by: Pavel Machek <pavel@denx.de>
->>>
->>>
->> Hi All,
+>> This is based on a copy of arch/mips/bcm47xx/sprom.c and my plan is to
+>> make the bcm47xx MIPS SoCs also use this driver some time later.
+> 
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/misc/bcm47xx-sprom.txt     |  16 +
+> 
+> I'd prefer not to list the binding in a 'misc' category. Maybe we can
+> have a new category and move the misc/sram.txt into the same?
+> 
+>>  drivers/misc/Kconfig                               |  14 +
+>>  drivers/misc/Makefile                              |   1 +
+>>  drivers/misc/bcm47xx-sprom.c                       | 690 +++++++++++++++++++++
+> 
+> On a similar note, putting the driver into drivers/misc seems
+> suboptimal: misc drivers should by definition be something that
+> is for some odd hardware with no external dependencies on it,
+> whereas your driver seems to be used by multiple other drivers.
+> 
+> Would it make sense to put it into drivers/bcma when that is the
+> only bus it is used on?
+
+As Jonas already said this code should be used for the bcm53xx ARM code
+and the bcm47xx MIPS code and it is needed for drivers/bcma/ and
+drivers/ssb/ (ssb only for old mips devices). Do you have any better
+idea than putting this to drivers/misc/ ? For the mips SoC we need the
+code very early and will not use the driver interface but probably
+directly call the function name.
+> 
+>>  4 files changed, 721 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/misc/bcm47xx-sprom.txt
+>>  create mode 100644 drivers/misc/bcm47xx-sprom.c
 >>
->> Any further comments or suggestions on this patch series? Thanks for the
->> review, Pavel!
->
-> If Boris is okay with driver part and everyone else is OK with the DTS
-> portion, then I can apply the DTS patch to my tree, and Boris take the
-> driver patch into his tree?
->
+>> diff --git a/Documentation/devicetree/bindings/misc/bcm47xx-sprom.txt b/Documentation/devicetree/bindings/misc/bcm47xx-sprom.txt
+>> new file mode 100644
+>> index 0000000..eed2a4a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/misc/bcm47xx-sprom.txt
+>> @@ -0,0 +1,16 @@
+>> +Broadcom bcm47xx/bcm53xx sprom converter
+>> +
+>> +This driver provbides an sprom based on a given nvram.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : brcm,bcm47xx-sprom
+> 
+> Please use a specific SoC here as the compatible string, not something
+> with 'x' in it as a wildcard.
 
+I will change that.
 
-Actually, I think I need to get an Ack-by from a DTS maintainer before
-I can apply
-this as it is introducing a new binding.
+> 
+>> +#define NVRAM_READ_VAL(type)						\
+>> +static void nvram_read_ ## type (const struct bcm47xx_sprom_fill *fill,	\
+>> +				 const char *postfix, const char *name, \
+>> +				 type *val, type allset)		\
+>> +{									\
+>> +	char buf[100];							\
+>> +	int err;							\
+>> +	type var;							\
+>> +									\
+>> +	err = get_nvram_var(fill, postfix, name, buf, sizeof(buf));	\
+>> +	if (err < 0)							\
+>> +		return;							\
+>> +	err = kstrto ## type(strim(buf), 0, &var);			\
+>> +	if (err) {							\
+>> +		pr_warn("can not parse nvram name %s%s%s with value %s got %i\n",	\
+>> +			fill->prefix, name, postfix, buf, err);		\
+>> +		return;							\
+>> +	}								\
+>> +	if (allset && var == allset)					\
+>> +		return;							\
+>> +	*val = var;							\
+>> +}
+>> +
+>> +NVRAM_READ_VAL(u8)
+>> +NVRAM_READ_VAL(s8)
+>> +NVRAM_READ_VAL(u16)
+>> +NVRAM_READ_VAL(u32)
+>> +
+>> +#undef NVRAM_READ_VAL
+> 
+> Hmm, multiline macros are ugly. How about using one function to read
+> into an s64 internally using kstrtoll, and simple inline wrappers around
+> that for the smaller types, doing the appropriate range check?
 
-Sorry for the noise.
+Yes that should work I will try it.
 
-Dinh
+>> +static void bcm47xx_sprom_fill_r1234589(struct ssb_sprom *sprom,
+>> +					const struct bcm47xx_sprom_fill *fill)
+>> +{
+>> +	nvram_read_u16(fill, NULL, "devid", &sprom->dev_id, 0);
+>> +	nvram_read_u8(fill, NULL, "ledbh0", &sprom->gpio0, 0xff);
+>> +	nvram_read_u8(fill, NULL, "ledbh1", &sprom->gpio1, 0xff);
+>> +	nvram_read_u8(fill, NULL, "ledbh2", &sprom->gpio2, 0xff);
+>> +	nvram_read_u8(fill, NULL, "ledbh3", &sprom->gpio3, 0xff);
+>> +	nvram_read_u8(fill, NULL, "aa2g", &sprom->ant_available_bg, 0);
+>> +	nvram_read_u8(fill, NULL, "aa5g", &sprom->ant_available_a, 0);
+>> +	nvram_read_s8(fill, NULL, "ag0", &sprom->antenna_gain.a0, 0);
+>> +	nvram_read_s8(fill, NULL, "ag1", &sprom->antenna_gain.a1, 0);
+>> +	nvram_read_alpha2(fill, "ccode", sprom->alpha2);
+>> +}
+> 
+> Rather than calling the same set of functions multiple times, can you
+> do this using a table driven approach for smaller code size and
+> improved readability?
+
+I will try to change that.
+
+>> +static int bcm47xx_sprom_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	struct ssb_sprom *sprom;
+>> +	const __be32 *handle;
+>> +	struct device_node *nvram_node;
+>> +	struct platform_device *nvram_dev;
+>> +	struct bcm47xx_sprom_fill fill;
+>> +
+>> +	/* Alloc */
+>> +	sprom = devm_kzalloc(dev, sizeof(*sprom), GFP_KERNEL);
+>> +	if (!sprom)
+>> +		return -ENOMEM;
+>> +
+>> +	handle = of_get_property(np, "nvram", NULL);
+>> +	if (!handle)
+>> +		return -ENOMEM;
+>> +
+>> +	nvram_node = of_find_node_by_phandle(be32_to_cpup(handle));
+> 
+> You can avoid the explicit be32_to_cpup here if you use
+> of_property_read_u32 above.
+
+Thanks for the hint.
+
+Hauke
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
