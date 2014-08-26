@@ -1,203 +1,124 @@
 From: Chao Xie <chao.xie@marvell.com>
-Subject: [PATCH 01/12] clk: mmp: add prefix "mmp" for structures defined for
- clk-frac
-Date: Tue, 26 Aug 2014 12:38:13 +0800
-Message-ID: <1409027904-21859-2-git-send-email-chao.xie@marvell.com>
+Subject: [PATCH 11/12] arm: mmp: Make all the dts file to be compiled by Makefile
+Date: Tue, 26 Aug 2014 12:38:23 +0800
+Message-ID: <1409027904-21859-12-git-send-email-chao.xie@marvell.com>
 References: <1409027904-21859-1-git-send-email-chao.xie@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1409027904-21859-1-git-send-email-chao.xie@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: haojian.zhuang@gmail.com, haojian.zhuang@linaro.org, mturquette@linaro.org, chao.xie@marvell.com, xiechao_mail@163.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Chao Xie <chao.xie@marvell.com>
 
-The structures defined for clk-frac will be used out side
-of clk-frac.c.
-To avoid conflicts, add prefix "mmp" for these structures'
-name.
+Add items in arch/arm/boot/dt/Makefile to compile the dtb
+for mach-mmp.
+Change the dts and dtsi file to use #include instead of \include\
 
 Signed-off-by: Chao Xie <chao.xie@marvell.com>
 ---
- drivers/clk/mmp/clk-frac.c   | 23 ++++++++++++-----------
- drivers/clk/mmp/clk-mmp2.c   |  4 ++--
- drivers/clk/mmp/clk-pxa168.c |  4 ++--
- drivers/clk/mmp/clk-pxa910.c |  4 ++--
- drivers/clk/mmp/clk.h        |  8 ++++----
- 5 files changed, 22 insertions(+), 21 deletions(-)
+ arch/arm/boot/dts/Makefile            | 3 +++
+ arch/arm/boot/dts/mmp2-brownstone.dts | 2 +-
+ arch/arm/boot/dts/mmp2.dtsi           | 2 +-
+ arch/arm/boot/dts/pxa168-aspenite.dts | 2 +-
+ arch/arm/boot/dts/pxa168.dtsi         | 2 +-
+ arch/arm/boot/dts/pxa910-dkb.dts      | 2 +-
+ arch/arm/boot/dts/pxa910.dtsi         | 2 +-
+ 7 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/mmp/clk-frac.c b/drivers/clk/mmp/clk-frac.c
-index 23a56f5..3fbc9ca 100644
---- a/drivers/clk/mmp/clk-frac.c
-+++ b/drivers/clk/mmp/clk-frac.c
-@@ -22,19 +22,19 @@
-  * numerator/denominator = Fin / (Fout * factor)
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index acb6b42..16f91c9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -159,6 +159,9 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += kirkwood-b3.dtb \
+ 	kirkwood-ts419-6282.dtb
+ dtb-$(CONFIG_ARCH_LPC32XX) += ea3250.dtb phy3250.dtb
+ dtb-$(CONFIG_ARCH_MARCO) += marco-evb.dtb
++dtb-$(CONFIG_ARCH_MMP) += pxa168-aspenite.dtb \
++	pxa910-dkb.dtb \
++	mmp2-brownstone.dtb
+ dtb-$(CONFIG_ARCH_MOXART) += moxart-uc7112lx.dtb
+ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx25-eukrea-mbimxsd25-baseboard.dtb \
+diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
+index 7f70a39..350208c 100644
+--- a/arch/arm/boot/dts/mmp2-brownstone.dts
++++ b/arch/arm/boot/dts/mmp2-brownstone.dts
+@@ -8,7 +8,7 @@
   */
  
--#define to_clk_factor(hw) container_of(hw, struct clk_factor, hw)
--struct clk_factor {
-+#define to_clk_factor(hw) container_of(hw, struct mmp_clk_factor, hw)
-+struct mmp_clk_factor {
- 	struct clk_hw		hw;
- 	void __iomem		*base;
--	struct clk_factor_masks	*masks;
--	struct clk_factor_tbl	*ftbl;
-+	struct mmp_clk_factor_masks	*masks;
-+	struct mmp_clk_factor_tbl	*ftbl;
- 	unsigned int		ftbl_cnt;
- };
+ /dts-v1/;
+-/include/ "mmp2.dtsi"
++#include "mmp2.dtsi"
  
- static long clk_factor_round_rate(struct clk_hw *hw, unsigned long drate,
- 		unsigned long *prate)
- {
--	struct clk_factor *factor = to_clk_factor(hw);
-+	struct mmp_clk_factor *factor = to_clk_factor(hw);
- 	unsigned long rate = 0, prev_rate;
- 	int i;
- 
-@@ -58,8 +58,8 @@ static long clk_factor_round_rate(struct clk_hw *hw, unsigned long drate,
- static unsigned long clk_factor_recalc_rate(struct clk_hw *hw,
- 		unsigned long parent_rate)
- {
--	struct clk_factor *factor = to_clk_factor(hw);
--	struct clk_factor_masks *masks = factor->masks;
-+	struct mmp_clk_factor *factor = to_clk_factor(hw);
-+	struct mmp_clk_factor_masks *masks = factor->masks;
- 	unsigned int val, num, den;
- 
- 	val = readl_relaxed(factor->base);
-@@ -81,8 +81,8 @@ static unsigned long clk_factor_recalc_rate(struct clk_hw *hw,
- static int clk_factor_set_rate(struct clk_hw *hw, unsigned long drate,
- 				unsigned long prate)
- {
--	struct clk_factor *factor = to_clk_factor(hw);
--	struct clk_factor_masks *masks = factor->masks;
-+	struct mmp_clk_factor *factor = to_clk_factor(hw);
-+	struct mmp_clk_factor_masks *masks = factor->masks;
- 	int i;
- 	unsigned long val;
- 	unsigned long prev_rate, rate = 0;
-@@ -118,10 +118,11 @@ static struct clk_ops clk_factor_ops = {
- 
- struct clk *mmp_clk_register_factor(const char *name, const char *parent_name,
- 		unsigned long flags, void __iomem *base,
--		struct clk_factor_masks *masks, struct clk_factor_tbl *ftbl,
-+		struct mmp_clk_factor_masks *masks,
-+		struct mmp_clk_factor_tbl *ftbl,
- 		unsigned int ftbl_cnt)
- {
--	struct clk_factor *factor;
-+	struct mmp_clk_factor *factor;
- 	struct clk_init_data init;
- 	struct clk *clk;
- 
-diff --git a/drivers/clk/mmp/clk-mmp2.c b/drivers/clk/mmp/clk-mmp2.c
-index b2721ca..7083f12 100644
---- a/drivers/clk/mmp/clk-mmp2.c
-+++ b/drivers/clk/mmp/clk-mmp2.c
-@@ -54,7 +54,7 @@
- 
- static DEFINE_SPINLOCK(clk_lock);
- 
--static struct clk_factor_masks uart_factor_masks = {
-+static struct mmp_clk_factor_masks uart_factor_masks = {
- 	.factor = 2,
- 	.num_mask = 0x1fff,
- 	.den_mask = 0x1fff,
-@@ -62,7 +62,7 @@ static struct clk_factor_masks uart_factor_masks = {
- 	.den_shift = 0,
- };
- 
--static struct clk_factor_tbl uart_factor_tbl[] = {
-+static struct mmp_clk_factor_tbl uart_factor_tbl[] = {
- 	{.num = 14634, .den = 2165},	/*14.745MHZ */
- 	{.num = 3521, .den = 689},	/*19.23MHZ */
- 	{.num = 9679, .den = 5728},	/*58.9824MHZ */
-diff --git a/drivers/clk/mmp/clk-pxa168.c b/drivers/clk/mmp/clk-pxa168.c
-index 014396b..75266ac 100644
---- a/drivers/clk/mmp/clk-pxa168.c
-+++ b/drivers/clk/mmp/clk-pxa168.c
-@@ -47,7 +47,7 @@
- 
- static DEFINE_SPINLOCK(clk_lock);
- 
--static struct clk_factor_masks uart_factor_masks = {
-+static struct mmp_clk_factor_masks uart_factor_masks = {
- 	.factor = 2,
- 	.num_mask = 0x1fff,
- 	.den_mask = 0x1fff,
-@@ -55,7 +55,7 @@ static struct clk_factor_masks uart_factor_masks = {
- 	.den_shift = 0,
- };
- 
--static struct clk_factor_tbl uart_factor_tbl[] = {
-+static struct mmp_clk_factor_tbl uart_factor_tbl[] = {
- 	{.num = 8125, .den = 1536},	/*14.745MHZ */
- };
- 
-diff --git a/drivers/clk/mmp/clk-pxa910.c b/drivers/clk/mmp/clk-pxa910.c
-index 9efc6a4..f817999 100644
---- a/drivers/clk/mmp/clk-pxa910.c
-+++ b/drivers/clk/mmp/clk-pxa910.c
-@@ -45,7 +45,7 @@
- 
- static DEFINE_SPINLOCK(clk_lock);
- 
--static struct clk_factor_masks uart_factor_masks = {
-+static struct mmp_clk_factor_masks uart_factor_masks = {
- 	.factor = 2,
- 	.num_mask = 0x1fff,
- 	.den_mask = 0x1fff,
-@@ -53,7 +53,7 @@ static struct clk_factor_masks uart_factor_masks = {
- 	.den_shift = 0,
- };
- 
--static struct clk_factor_tbl uart_factor_tbl[] = {
-+static struct mmp_clk_factor_tbl uart_factor_tbl[] = {
- 	{.num = 8125, .den = 1536},	/*14.745MHZ */
- };
- 
-diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
-index ab86dd4..3fe92be 100644
---- a/drivers/clk/mmp/clk.h
-+++ b/drivers/clk/mmp/clk.h
+ / {
+ 	model = "Marvell MMP2 Brownstone Development Board";
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index 4e8b08c..e44f996 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
 @@ -7,7 +7,7 @@
- #define APBC_NO_BUS_CTRL	BIT(0)
- #define APBC_POWER_CTRL		BIT(1)
+  *  publishhed by the Free Software Foundation.
+  */
  
--struct clk_factor_masks {
-+struct mmp_clk_factor_masks {
- 	unsigned int	factor;
- 	unsigned int	num_mask;
- 	unsigned int	den_mask;
-@@ -15,7 +15,7 @@ struct clk_factor_masks {
- 	unsigned int	den_shift;
- };
+-/include/ "skeleton.dtsi"
++#include "skeleton.dtsi"
  
--struct clk_factor_tbl {
-+struct mmp_clk_factor_tbl {
- 	unsigned int num;
- 	unsigned int den;
- };
-@@ -30,6 +30,6 @@ extern struct clk *mmp_clk_register_apmu(const char *name,
- 		spinlock_t *lock);
- extern struct clk *mmp_clk_register_factor(const char *name,
- 		const char *parent_name, unsigned long flags,
--		void __iomem *base, struct clk_factor_masks *masks,
--		struct clk_factor_tbl *ftbl, unsigned int ftbl_cnt);
-+		void __iomem *base, struct mmp_clk_factor_masks *masks,
-+		struct mmp_clk_factor_tbl *ftbl, unsigned int ftbl_cnt);
- #endif
+ / {
+ 	aliases {
+diff --git a/arch/arm/boot/dts/pxa168-aspenite.dts b/arch/arm/boot/dts/pxa168-aspenite.dts
+index e762fac..0a988b3 100644
+--- a/arch/arm/boot/dts/pxa168-aspenite.dts
++++ b/arch/arm/boot/dts/pxa168-aspenite.dts
+@@ -8,7 +8,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "pxa168.dtsi"
++#include "pxa168.dtsi"
+ 
+ / {
+ 	model = "Marvell PXA168 Aspenite Development Board";
+diff --git a/arch/arm/boot/dts/pxa168.dtsi b/arch/arm/boot/dts/pxa168.dtsi
+index 975dad2..bfcbdef 100644
+--- a/arch/arm/boot/dts/pxa168.dtsi
++++ b/arch/arm/boot/dts/pxa168.dtsi
+@@ -7,7 +7,7 @@
+  *  publishhed by the Free Software Foundation.
+  */
+ 
+-/include/ "skeleton.dtsi"
++#include "skeleton.dtsi"
+ 
+ / {
+ 	aliases {
+diff --git a/arch/arm/boot/dts/pxa910-dkb.dts b/arch/arm/boot/dts/pxa910-dkb.dts
+index 595492a..c82f281 100644
+--- a/arch/arm/boot/dts/pxa910-dkb.dts
++++ b/arch/arm/boot/dts/pxa910-dkb.dts
+@@ -8,7 +8,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "pxa910.dtsi"
++#include "pxa910.dtsi"
+ 
+ / {
+ 	model = "Marvell PXA910 DKB Development Board";
+diff --git a/arch/arm/boot/dts/pxa910.dtsi b/arch/arm/boot/dts/pxa910.dtsi
+index 0247c62..884c6e8 100644
+--- a/arch/arm/boot/dts/pxa910.dtsi
++++ b/arch/arm/boot/dts/pxa910.dtsi
+@@ -7,7 +7,7 @@
+  *  publishhed by the Free Software Foundation.
+  */
+ 
+-/include/ "skeleton.dtsi"
++#include "skeleton.dtsi"
+ 
+ / {
+ 	aliases {
 -- 
 1.8.3.2
