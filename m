@@ -1,116 +1,70 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Tue, 26 Aug 2014 11:08:11 +0200
-Message-ID: <20140826090810.GH17263@ulmo>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
- <3804028.YQzQ4uAVsf@wuerfel>
- <20140826075023.GB17263@ulmo>
- <6589717.GOLq1GlTCJ@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
+Date: Tue, 26 Aug 2014 10:11:20 +0100
+Message-ID: <20140826091120.GC17528@sirena.org.uk>
+References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com>
+ <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com>
+ <53F9A6EE.5070005@metafoo.de>
+ <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com>
+ <20140826062558.GR17528@sirena.org.uk>
+ <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2xzXx3ruJf7hsAzo"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="jsNFkiRwgzQUdnk6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6589717.GOLq1GlTCJ@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Andrew Bresticker <abrestic@chromium.org>, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Jonas Bonn <jonas@southpole.se>, David Howells <dhowells@redhat.com>, Koichi Yasutake <yasutake.koichi@jp.panasonic.com>
+In-Reply-To: <87wq9vmyyc.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---2xzXx3ruJf7hsAzo
+--jsNFkiRwgzQUdnk6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 26, 2014 at 10:09:25AM +0200, Arnd Bergmann wrote:
-> On Tuesday 26 August 2014 09:50:25 Thierry Reding wrote:
-> > On Tue, Aug 26, 2014 at 09:43:50AM +0200, Arnd Bergmann wrote:
-> > > On Tuesday 26 August 2014 08:57:31 Thierry Reding wrote:
-> > > > On Mon, Aug 25, 2014 at 01:01:52PM -0600, Stephen Warren wrote:
-> > > > > On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
-> > > > [...]
-> > > > > >+static int tegra_xusb_mbox_probe(struct platform_device *pdev)
-> > > > >=20
-> > > > > >+    res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > > > >+    if (!res)
-> > > > > >+            return -ENODEV;
-> > > > >=20
-> > > > > Should devm_request_mem_region() be called here to claim the regi=
-on?
-> > > > >=20
-> > > > > >+    mbox->regs =3D devm_ioremap_nocache(&pdev->dev, res->start,
-> > > > > >+                                      resource_size(res));
-> > > > > >+    if (!mbox->regs)
-> > > > > >+            return -ENOMEM;
-> > > > >=20
-> > > > > Is _nocache required? I don't see other drivers using it. I assum=
-e there's
-> > > > > nothing special about the mbox registers.
-> > > >=20
-> > > > Most drivers should be using devm_ioremap_resource() which will use=
- the
-> > > > _nocache variant of devm_ioremap() when appropriate. Usually the re=
-gion
-> > > > will not be marked cacheable (IORESOURCE_CACHEABLE) and therefore be
-> > > > remapped uncached.
-> > > >=20
-> > >=20
-> > > Note that ioremap() and ioremap_nocache() are the same. We really sho=
-uldn't
-> > > ever call ioremap_nocache().
-> >=20
-> > Perhaps we should remove ioremap_nocache() in that case. Or ioremap(),
-> > really, and keep only those variants that do what they claim to do.
->=20
-> That would be good, but there are many instances of either one:
->=20
-> arnd@wuerfel:/git/arm-soc$ git grep -w ioremap | wc
->    2156   13402  183732
-> arnd@wuerfel:/git/arm-soc$ git grep -w ioremap_nocache | wc
->     485    2529   42955
+On Tue, Aug 26, 2014 at 01:34:21AM -0700, Kuninori Morimoto wrote:
 
-Ugh... nothing that I currently have time for. Perhaps this is a good
-one for the Janitors? I'm not sure if the kernelnewbies.org TODO list is
-still frequented since many pages seem to be very old. Is there some
-other place where I could add this?
+> This patch expand route setting by using DAI name.
+> You can select "ak4642-hifi" side "Playback" by below.
 
-> > > devm_ioremap_resource() and pci_iomap() checking for IORESOURCE_CACHE=
-ABLE is
-> > > rather silly, since it doesn't call ioremap_cache() in that case.
-> >=20
-> > Then that should be fixed.
->=20
-> Yes. I'd suggest we just ignore that flag and always call ioremap here.
->=20
-> When I checked this before, IORESOURCE_CACHEABLE only ever gets set for
-> PCI ROM BARs, which we don't map into the kernel.
+> DT
+> 	simple-audio-card,routing =
+> 		"ak4642-hifi Playback", "DAI0 Playback";
 
-There's still a few users of ioremap_cache() around and they are
-potential candidates for a conversion to devm_ioremap_resource(), so I
-think it'd still make sense to keep the check.
+> non DT
+> 	struct snd_soc_dapm_route route[] = {
+> 		{ "ak4642-hifi Playback", NULL, "DAI0 Playback"},
+> 	}
 
-Thierry
+If we're already specifying the DAI links for the (D)PCM code it seems
+like we shouldn't also have to put DAPM routes for them in DT as well.
 
---2xzXx3ruJf7hsAzo
-Content-Type: application/pgp-signature
+--jsNFkiRwgzQUdnk6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT/E56AAoJEN0jrNd/PrOhjjsP/iihISc+TdGfwZRYLSx4hvsW
-H2FTvyclQhdflRRHfiTNsCAzLS5DUIFunukZN2TCS/bYh9qauZ41CziSSJY78Q8K
-9RJq8cdQINSVw4rf/BTfG+4vgTH7Nq2/woM4CTkLLXwjsp1YqG1+72OfH/kejb+x
-4LGVqS2IL/A9NCsUFGu/xK9VK2cUW56V8VkRNsSsEDy//y5kJJcmVI4h8NZrIhwc
-TtCase4zWThwNtc51SiODnX+z25sO5u4DDe+dX2fM3nGoBAwr3wu/dhv28grdxuJ
-dDtilpVHJr5S+FccS+e+t836nYvewvbJizOmaUOUzWKYZhC9XYvPIAmsj9nN0aUW
-/uatfJ/i47oRQWFqhCCkw9qME21dIW9qHfr4yW5qG8S6dnL5vL6TWSD5AUNePggE
-B0MOaWYyOg0qtHY4Y/7nPrUHiSQIlwTVRcHgLE3zFmE1qEnwFjUcOcaeWMLz3DSQ
-QznztJ8tVhDGvrL9eWdCVWR01uqRV5rm4cHX6E+zA04scBPE9EMEDhvRTURSXPKI
-vj+DiW5aToCd0RFlgYpjT6Cpw5ZLyv0uB7MdJNDrST6SaKx9tKFqL25Q0v17AKpp
-yWwI8Zlh1Ww5zziWp8bHhMVbxuhbXrKzh7r4ym4wYchK72IE5bIRx4eOU9vWuclE
-Js9S1OJpXwnWULHvNU5C
-=2Kba
+iQIcBAEBAgAGBQJT/E81AAoJELSic+t+oim9mEoQAJC04zxQkyEU8l/ZpgqJzQC9
+tB+8SY7wEU/JhTraaaD92BckhtnQiL0JWWy+DU15KSvsWBFBqgWZmTFQC6o1zZAk
+wjSMOrRfrn0Cb4AOpH0+1mnp+Z48IGN8sUDtb0tOTClJGSHDS9V1fVccEPmfOsXA
+lI9bcfF8MuHMZW86zEWz+cpDjAOYTSBzFnwg1ncjIjQEne+ImO08scUMr5vvxGtu
+IDkpArSSnhoekbOmPt5kKLZL/z+NRyRnxd68S0AWNzg9efhIl+4v/wLPxY8LaR2A
+EjNvw/wl6qE4No+l7T3/FlboW7+6Htm0R/db+32667bUsFVw6eGPxzk23/WlyQGD
+ki8N7/TRhVol0ueEmjnfAqZVNFaJlVmHOTDXnNI0MdHxYf0s1v+LkS4R8p8A1QqD
+bwi4mbH+d3CpcOh+1G4Z1HGLjvJ1a+CgMx/mEwZXrb66bJOo3W0D1lNcWyGpCKmh
+AInH9gajms98GZDSLmddK07HY9QShdTmyC6IjcjPX2ryDBgQhPNpDOKdZHHdl2pl
+xF1eLbC4IL5Nem7/0nxWGNG07AzmQa4LIwlu8RkBq6likjWsQzp7O7cC+cvmENzT
+cVfZNwmsC64WsJnbvqOXdgYBmnK99eJzu20taXH7Wa+T6YZb7/uFYlqrovce+EZu
+rcy35tJd1lkHIqSu4YoV
+=7uLH
 -----END PGP SIGNATURE-----
 
---2xzXx3ruJf7hsAzo--
+--jsNFkiRwgzQUdnk6--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
