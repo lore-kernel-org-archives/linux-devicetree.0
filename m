@@ -1,67 +1,58 @@
-From: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
-Subject: RE: [RESEND PATCH V2] devicetree: Dialog Semiconductor consolidate
- existing vendor prefixes to standardise on 'dlg'
-Date: Tue, 26 Aug 2014 10:54:59 +0000
-Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7D0B39744@SW-EX-MBX02.diasemi.com>
-References: <201408221446.s7MEkNVF001775@swsrvapps-01.diasemi.com>
- <20140826093312.GI9574@lee--X1>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Tue, 26 Aug 2014 13:01:29 +0200
+Message-ID: <53FC6909.9000704@ahsoftware.de>
+References: <20140514141914.446F7C4153D@trevor.secretlab.ca> <20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826102503.GC31124@ulmo> <53FC6513.5040800@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140826093312.GI9574@lee--X1>
-Content-Language: en-US
-Sender: linux-sh-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>, DEVICE TREE <devicetree@vger.kernel.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Guenter Roeck <linux@roeck-us.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jonathan Cameron <jic23@kernel.org>, Kumar Gala <galak@codeaurora.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, LINUX KERNEL <linux-kernel@vger.kernel.org>, LINUX SH <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Martin Fuzzey <mfuzzey@parkeon.com>, Pawel Moll <pawel.moll@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53FC6513.5040800-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjYgQXVndXN0IDIwMTQgMTA6MzMgTGVlIEpvbmVzIHdyb3RlOg0KDQo+IE9uIEZyaSwgMjIg
-QXVnIDIwMTQsIE9wZW5zb3VyY2UgW1N0ZXZlIFR3aXNzXSB3cm90ZToNCj4gPiBGcm9tOiBTdGV2
-ZSBUd2lzcyA8c3R3aXNzLm9wZW5zb3VyY2VAZGlhc2VtaS5jb20+DQo+ID4NCj4gPiBUaGlzIHBh
-dGNoIHNlcmllcyB1cGRhdGVzIHRoZSBkZXZpY2UgdHJlZSB2ZW5kb3IgcHJlZml4IGZvcg0KPiA+
-IERpYWxvZyBTZW1pY29uZHVjdG9yLg0KPiA+DQoNClsuLi5dDQoNCj4gPiBJIHRoaW5rIHRoaXMg
-aXMgaXQuIEJ1dCwgaWYgSSBhbSBtaXNzaW5nIGFueXRoaW5nIG9yIHRoZXJlIGFyZSBwcm9ibGVt
-cywgY2FuDQo+ID4gSSBnZXQgYSBxdWljayBleHBsYW5hdGlvbiBpbiB0aGUgcmVwbHkgc28gSSBj
-YW4gZml4IGl0IGFuZCBtb3ZlIGZvcndhcmRzDQo+ID4gcGxlYXNlPw0KPiA+DQo+ID4gSW4gZnVs
-bDoNCj4gPiBBY2tlZC1ieSB0aGUgZm9sbG93aW5nIHBlb3BsZSBzbyBmYXI6DQo+IA0KPiBXaGVu
-IHlvdSBzYXkgInNvIGZhciIsIGRvZXMgdGhhdCBtZWFuIHlvdSdyZSBtaXNzaW5nIEFja3Mgc3Rp
-bGw/DQoNCkhpIExlZSwNCg0KQXBvbG9naWVzIGZvciBteSAic28gZmFyIiAtLSB0aGF0IGlzIGp1
-c3QgbXkgd29yZGluZy4NCg0KQXMgSSB1bmRlcnN0YW5kIGl0IEkgaGF2ZSBhbGwgdGhlIEFja3Mg
-dGhhdCBhcmUgbmVjZXNzYXJ5LiBJIGFtIGJhc2luZyBteSBBY2tzIGxpc3Qgb24NCnRoZSBnZXRf
-bWFpbnRhaW5lcnMgc2NyaXB0IG91dHB1dCBhbmQgb24gYSBwcmV2aW91cyByZXF1ZXN0IGZvciBS
-ZW5lc2FzIGFuZCANCkZyZWVzY2FsZSBpbnB1dHMgLS0gd2hpY2ggSSBoYXZlIGFsc28gZ290Lg0K
-SSBkbyBub3Qgc2VlIGFueSBtaXN0YWtlcyBvciBtaXNzaW5nIGVudHJpZXMgZnJvbSBteSBwYXJ0
-Lg0KDQo+IA0KPiBJZiB5b3UgaGF2ZSB0aGUgZnVsbC1zZXQgSSB3aWxsIGFwcGx5IHRoaXMgYW5k
-IHNlbmQgb3V0IHRoZSBuZWNlc3NhcnkNCj4gcHVsbC1yZXF1ZXN0KHMpLg0KPiANCg0KWWVzIHBs
-ZWFzZS4NCg0KUmVnYXJkcywNClN0ZXZlDQoNCnBzLiBmb3IgcmVmZXJlbmNlLCAgdGhpcyBpcyBt
-eSBqdXN0aWZpY2F0aW9uIGZvciBhbGwgZmlsZXMgaW4gdGhlIHBhdGNoLg0KDQouL2RyaXZlcnMv
-bWZkL2RhOTA1NS1jb3JlLmMNCglTdXBwb3J0IE9wZW5zb3VyY2UgPHN1cHBvcnQub3BlbnNvdXJj
-ZUBkaWFzZW1pLmNvbT4gKHN1cHBvcnRlcjpESUFMT0cgU0VNSUNPTkRVQy4uLikNCglMZWUgSm9u
-ZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPiAoc3VwcG9ydGVyOk1VTFRJRlVOQ1RJT04gREVWLi4u
-LGNvbW1pdHM6My84PTM4JSkNCg0KLi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-cmVndWxhdG9yL2RhOTIxMC50eHQuZ2V0X21haW50YWluZXINCglSb2IgSGVycmluZyA8cm9iaCtk
-dEBrZXJuZWwub3JnPiAobWFpbnRhaW5lcjpPUEVOIEZJUk1XQVJFIEFORC4uLikNCglTIFR3aXNz
-IDxzdHdpc3Mub3BlbnNvdXJjZUBkaWFzZW1pLmNvbT4gKGF1dGhvcmVkIGxpbmVzOjIvMjE9MTAl
-KQ0KDQouL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtcGh5dGVjLXBmbGEwMi5kdHNpLmdldF9t
-YWludGFpbmVyDQoJU2hhd24gR3VvIDxzaGF3bi5ndW9AZnJlZXNjYWxlLmNvbT4gKG1haW50YWlu
-ZXI6QVJNL0ZSRUVTQ0FMRSBJTVguLi4sYXV0aG9yZWQgbGluZXM6Mjc2LzI3OT05OSUsY29tbWl0
-czo2Lzc9ODYlKQ0KCVJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+IChtYWludGFpbmVy
-Ok9QRU4gRklSTVdBUkUgQU5ELi4uKQ0KDQouL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDUzLXNtZC5k
-dHMuZ2V0X21haW50YWluZXINCglTaGF3biBHdW8gPHNoYXduLmd1b0BmcmVlc2NhbGUuY29tPiAo
-bWFpbnRhaW5lcjpBUk0vRlJFRVNDQUxFIElNWC4uLixhdXRob3JlZCBsaW5lczoyNzYvMjc5PTk5
-JSxjb21taXRzOjYvNz04NiUpDQoJUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gKG1h
-aW50YWluZXI6T1BFTiBGSVJNV0FSRSBBTkQuLi4pDQoNCi4vYXJjaC9hcm0vYm9vdC9kdHMvcjhh
-Nzc5MS1rb2Vsc2NoLmR0cy5nZXRfbWFpbnRhaW5lcg0KCVNpbW9uIEhvcm1hbiA8aG9ybXNAdmVy
-Z2UubmV0LmF1PiAoc3VwcG9ydGVyOkFSTS9TSE1PQklMRSBBUk0uLi4sY29tbWl0czoyNS8yNj05
-NiUpDQoJUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gKG1haW50YWluZXI6T1BFTiBG
-SVJNV0FSRSBBTkQuLi4pDQoNCi4vYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MC1sYWdlci5kdHMu
-Z2V0X21haW50YWluZXINCglTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4gKHN1cHBv
-cnRlcjpBUk0vU0hNT0JJTEUgQVJNLi4uLGNvbW1pdHM6MjUvMjY9OTYlKQ0KCVJvYiBIZXJyaW5n
-IDxyb2JoK2R0QGtlcm5lbC5vcmc+IChtYWludGFpbmVyOk9QRU4gRklSTVdBUkUgQU5ELi4uKQ0K
-DQouL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0
-LmdldF9tYWludGFpbmVyDQoJUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gKG1haW50
-YWluZXI6T1BFTiBGSVJNV0FSRSBBTkQuLi4sY29tbWl0czo0MC83OD01MSUpDQoNCi4vRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2kyYy90cml2aWFsLWRldmljZXMudHh0LmdldF9t
-YWludGFpbmVyDQoJUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4gKG1haW50YWluZXI6
-T1BFTiBGSVJNV0FSRSBBTkQuLi4pDQoNCg==
+Am 26.08.2014 12:44, schrieb Alexander Holler:
+> Am 26.08.2014 12:25, schrieb Thierry Reding:
+>> On Tue, Aug 26, 2014 at 11:42:04AM +0200, Alexander Holler wrote:
+>
+>>> You need either the type information in the DTB (that's why I've add
+>>> those
+>>> "dependencies" to identify phandles), or you need to know every
+>>> binding (at
+>>> "dependency-resolve-time" to identify phandles. The latter is
+>>> impracticable
+>>> to implement in a generic way (for use with every possible binding).
+>>
+>> Like I already mentioned, this could be done in drivers who contain that
+>> information already anyway. Or parts of it could be done in subsystem-
+>> specific callbacks where a generic binding is available.
+>
+> That would end up with almost the same ugly driver-based workarounds as
+> now. It's much better if a driver author only has to define it's
+> prerequisits (in form of dependencies in the dts) and could be sure the
+> driver will only be probed if those are met, than to do that stuff based
+> on a subsystem or even driver level.
+>
+> If you add dependency-information to drivers, you have two problems:
+>
+> - How do you get these information from the driver (remember, currently
+> there is only one initial call, a initcall which might do almost anything)
+>
+> - These information might become outdated and you would have to change
+> all drivers. E.g. if the name of a dependency (driver) changes it
+> wouldn't be done with changing the dts (maybe plural), but you would
+> have to change the source of all dependant drivers too.
+
+And after having sorted my brain:
+
+A driver depends on a binding (and its API), but not on explicit named 
+other drivers. So trying it (again) on driver level is doomed to fail.
+
+Alexander Holler
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
