@@ -1,67 +1,141 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Tue, 26 Aug 2014 13:45:39 +0200
-Message-ID: <20140826114537.GA641@ulmo>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
- <5184912.mY2hCPH20k@wuerfel>
- <20140826102011.GA31124@ulmo>
- <14224406.FU8QFA3vsD@wuerfel>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
+ initialization order based on the DT)
+Date: Tue, 26 Aug 2014 13:47:19 +0200
+Message-ID: <20140826114718.GB641@ulmo>
+References: <20140825093931.GB2399@ulmo>
+ <E1XLu15-0002DP-6o@jdl.com>
+ <20140825133714.GH4163@ulmo.nvidia.com>
+ <20140826084208.AE5F0C40989@trevor.secretlab.ca>
+ <20140826084922.GG17263@ulmo>
+ <53FC566C.30904@ahsoftware.de>
+ <20140826102503.GC31124@ulmo>
+ <53FC6513.5040800@ahsoftware.de>
+ <20140826110827.GA31350@ulmo>
+ <53FC6E4A.6030407@ahsoftware.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <14224406.FU8QFA3vsD@wuerfel>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Koichi Yasutake <yasutake.koichi-NAum8xwdG0+S7A1Ibl2khg@public.gmane.org>
+In-Reply-To: <53FC6E4A.6030407-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ReaqsoxgOBHFXBhH
+--H+4ONPRPur6+Ovig
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 26, 2014 at 01:35:34PM +0200, Arnd Bergmann wrote:
-> On Tuesday 26 August 2014 12:20:13 Thierry Reding wrote:
-> > On Tue, Aug 26, 2014 at 11:54:43AM +0200, Arnd Bergmann wrote: >=20
-> > > I'm not sure if it's really worth it. One thing we might do is just
-> > > remove all definitions of ioremap_nocache and add a wrapper to
-> > > include/linux/io.h, to make it more obvious what is going on.
-> >=20
-> > Yes, I suppose that would work too. I still think there's an advantage
-> > in being explicit and avoid aliases like this. Perhaps a __deprecated
-> > annotation would help with that?
+On Tue, Aug 26, 2014 at 01:23:54PM +0200, Alexander Holler wrote:
+> Am 26.08.2014 13:08, schrieb Thierry Reding:
+> >On Tue, Aug 26, 2014 at 12:44:35PM +0200, Alexander Holler wrote:
+> >>Am 26.08.2014 12:25, schrieb Thierry Reding:
+> >>>On Tue, Aug 26, 2014 at 11:42:04AM +0200, Alexander Holler wrote:
+> >>
+> >>>>You need either the type information in the DTB (that's why I've add =
+those
+> >>>>"dependencies" to identify phandles), or you need to know every bindi=
+ng (at
+> >>>>"dependency-resolve-time" to identify phandles. The latter is impract=
+icable
+> >>>>to implement in a generic way (for use with every possible binding).
+> >>>
+> >>>Like I already mentioned, this could be done in drivers who contain th=
+at
+> >>>information already anyway. Or parts of it could be done in subsystem-
+> >>>specific callbacks where a generic binding is available.
+> >>
+> >>That would end up with almost the same ugly driver-based workarounds as=
+ now.
+> >>It's much better if a driver author only has to define it's prerequisit=
+s (in
+> >>form of dependencies in the dts) and could be sure the driver will only=
+ be
+> >>probed if those are met, than to do that stuff based on a subsystem or =
+even
+> >>driver level.
+> >>
+> >>If you add dependency-information to drivers, you have two problems:
+> >
+> >We already have all that dependency information in drivers anyway. Each
+> >driver requests the resources at .probe() time. What I proposed (it was
+> >really Arnd who proposed it first) is to move that information out of
+> >code and into some sort of table that could be used by the driver core
+> >to figure out dependencies.
+> >
+> >>- How do you get these information from the driver (remember, currently
+> >>there is only one initial call, a initcall which might do almost anythi=
+ng)
+> >
+> >While I don't think it's necessary, that's something that could be
+> >changed. I mean, we have access to the full source code of this
+> >operating system, so we can change every aspect of it. If we can't find
+> >a way to make this work with the current initcall sequence it's always
+> >an option to extend that sequence so that it meets our needs.
+> >
+> >>- These information might become outdated and you would have to change =
+all
+> >>drivers. E.g. if the name of a dependency (driver) changes it wouldn't =
+be
+> >>done with changing the dts (maybe plural), but you would have to change=
+ the
+> >>source of all dependant drivers too.
+> >
+> >No. Drivers implement a DT binding. That binding defines what power
+> >supplies, clocks, pinmux, ... the device needs. Those constitute the
+> >dependencies. We most certainly don't want to depend on driver names
+> >since there can be a multitude of different drivers that provide a given
+> >dependency.
+> >
+> >What drivers should provide (and what they already provide today) is the
+> >name of the property and the index of the cell that they expect to find
+> >a phandle in as well as the type of the phandle. That's all that's
+> >necessary, really. Everything else can be derived from that phandle and
+> >the type.
 >=20
-> I fear adding __deprecated would be too controversial, because that
-> would add hundreds of new warnings to code that is not actually wrong.
+> Drivers don't provide that information (dependencies) in any usable way. =
+And
+> as you said yourself, it's already contained in phandles. So what we are
+> discussing here about? The proposal to use phandles for that is already on
+> the table since several month. ;)
+>=20
+> Sorry, but I don't understand what you want to propose.
 
-Right. __deprecated is enabled via Kconfig, though, so people could turn
-that off if they don't want to see the warnings. I don't mind very much
-either way.
+In many cases we simply don't know where phandles are stored since we
+don't have the type information in DT. But drivers already know the type
+of a specific phandle and where to get it from, so the proposal is to
+make that knowledge more generally useful so that it can be used for
+dependency resolution.
 
 Thierry
 
---ReaqsoxgOBHFXBhH
+--H+4ONPRPur6+Ovig
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJT/HNhAAoJEN0jrNd/PrOhhM8P/Rr+x6dsQRCcRUKorXb6j3dw
-YF2K830WVytEP9/GTNb1ZD77BzFrGhW8Wt+z9dfwip43SYxAxArMytiHkthht8Vz
-+TnBgsNlAG53MxVdyxWN/snFN5Apjykk1L47M7+BSOwlwtOIMeIDzhTLU1fYiEsJ
-q/WGNqsxF5plvDF7vp4pCPBAbVg/rqXYz0abvyHI/xOFWcK1YPoGH8BX6ZhlhyBT
-PUg55X+yUk25qiq+lMxAE0CBYqF+te//pAF/7LzZ1xL8XTYGGQ8A5mFzfoxh+iTn
-61dmMFF7qeZ3CdP+xl7OxT5UPQyKuv8+yD5Rnx7guy0Se0qAdale1wRGkyZEyj0C
-nlogJFOh7qGi9WeG8wJE9GPP4HYwigdDneWWUScg8SCJTG6bPCCCKisPnhU2luqz
-OXEEXOK+l38SpanrO1nZIzc0bz3Qt7e4q0G05+0GbVphXT5YYNOJhl64NDwmofnA
-pd9Z3KNilkkggAP4tCnF+yFu6swDuiZwvBoIe1O/d7dvUu0FXzlfldEDQS4mdqP9
-/6QNyrsznqRptPZkUWIahvNyP80nffzFqNlR5QebQpZD4+VU/9MDwovx1aAyliUH
-ryk1vlnshLgsnyqVT0+5P/MbPtZJgxzvozS0zMIRH729xNVblgyadExyWqdRHGAM
-ypl5zk2EgIlkjpD4l+Wy
-=xbXr
+iQIcBAEBAgAGBQJT/HPGAAoJEN0jrNd/PrOhlmoP/jA9hpYXpuZKg6a1P2oIKICF
+dAksyM2/s7CAdAVhsMHFmNqNqI914EP/Gg6LxpufKDJmzP7tjaU8vPltIsfelaMv
+7ntbYVOeLfto3l+bBsXRDieKQ87MIiSTTdY7KqxglFJknPNDec+C/UjXyHEaPvkZ
+vUjKZJtwa3URdDlRsW55QwuUW0NpeoMJ6bjfn+HGmJ9Syu+bN6MpXqeYyva19Gzl
+iyGv+ks4Kqkloyl5eux2GCz+fS024vNcuQwkbEW/V2D9t5O3IOdSo9iNufBaCH8c
+cHsWkJ5d1oa2Z5do176PhcfRH81kE3ouLGCkUNVODsKL4QcgyRcRkKKyt7eETZKm
+Ol31d3dAOiHVUgMrjcWZYLjof5yPcfcnkE8tk4e2mofSq4DEditVT8kmBNhNPIhD
+C3Sc6uMVl4nJI/2R068t+aj1EIKTHFSd9tEyi4NwxsMrIYNO4UB2y9j2Yhlc894H
+htazJbuizsVt/pqrN+w2g8cyCXZvm8GBdMwanCazkWDSLm7hT6mKmSayN7PKPI5Q
+iP9MTX+prFkhqLGlCF7OypI1NlirO/b8HQffcoQsV0Py8ie5PjXRU/2hZym11dNV
+O9hv24Ju4ay6NNmaAPRHVfsHiECckYKgGC/h2WTZdkvzT3+bFsj9umCtxhULY0QB
+N9PZgfPX1L4exCinJWaL
+=W1VK
 -----END PGP SIGNATURE-----
 
---ReaqsoxgOBHFXBhH--
+--H+4ONPRPur6+Ovig--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
