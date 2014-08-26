@@ -1,168 +1,79 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Generic communication of boot loader state to the OS
-Date: Tue, 26 Aug 2014 18:16:58 +0100
-Message-ID: <20140826171658.GJ4078@leverpostej>
-References: <CAKON4Oz-PRgXyNKj=T9ymzOOhCMPjBMdYdE1Mr1CHWv3boskiw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Tue, 26 Aug 2014 10:19:48 -0700
+Message-ID: <CAD=FV=Wk1QV6oKhVML6eu74cnSYAXPGBuY54D3vLcxqZAjHb8w@mail.gmail.com>
+References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com>
+	<20140820092117.GI4266@lee--X1>
+	<53FA9D1E.8040202@rock-chips.com>
+	<20140826092205.GG9574@lee--X1>
+	<20140826162831.GA22842@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRMFBMIXEGBBGEC6OPQKGQEEJGKPZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAKON4Oz-PRgXyNKj=T9ymzOOhCMPjBMdYdE1Mr1CHWv3boskiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Content-Disposition: inline
-To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140826162831.GA22842@core.coreip.homeip.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@l>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+Hi,
 
-On Tue, Aug 26, 2014 at 05:10:00PM +0100, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> New thread split off from the simple-framebuffer discussion....
-> 
-> Is there a generic, underlying problem here that needs to be solved?
-> AFAIK no one has designed a general purpose mechanism for
-> communicating boot loader state to the OS. There is the existing
-> device tree <chosen> node but it is limited compared to what is
-> needed. Maybe we should step back and first design a good solution to
-> this basic problem. Then specific solutions for things like
-> framebuffers would fall out of the basic design.
+On Tue, Aug 26, 2014 at 9:28 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> Hi Lee,
+>
+> On Tue, Aug 26, 2014 at 10:22:05AM +0100, Lee Jones wrote:
+>> On Mon, 25 Aug 2014, Chris Zhong wrote:
+>> > On 08/20/2014 05:21 PM, Lee Jones wrote:
+>> > >On Wed, 20 Aug 2014, Chris Zhong wrote:
+>> > >
+>> > >>The RK808 chip is a power management IC for multimedia and handheld
+>> > >>devices. It contains the following components:
+>> > >>
+>> > >>- Regulators
+>> > >>- RTC
+>> > >>
+>> > >>The rk808 core driver is registered as a platform driver and provides
+>> > >>communication through I2C with the host device for the different
+>> > >>components.
+>> > >>
+>> > >>Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>> > >>---
+>>
+>> [...]
+>>
+>> > >>+ rk808->pdata = pdata;
+>> > >Remove pdata from 'struct rk808'.  You can obtain it from dev.
+>> >
+>> > Can I keep this pdata in rk808, because it is used in the regulator driver.
+>> > The one obtain from dev maybe empty.
+>>
+>> If the one in dev is empty, you should populate that instead.
+>
+> No, drivers should not populate platform data in devices - they do not
+> own it (unlike drvdata). Platform data should be read-only so that if
+> one would unbind and then try to re-bind the driver we'd end up in
+> exactly same state as before.
+>
+> For DT systems we should be allocating platform data separately and make
+> sure we clean up after ourselves.
 
-I think the fundamental problem here is unfortunately far too abstract
-for the general solution to be any more concrete. The solution to "we
-don't communicate boot state" is "we should communicate boot state".
+Given Dmitry's advice it seems like Chris's old code (allocate pdata
+and store it in the driver's private structures) was correct.  That
+also seems to match what I've seen other drivers do.
 
-We can perhaps come up with general guidelines (for instance, the clock
-subsystem has assigned-* properties), but I don't think there's a
-one-size-fits-all solution.
+Of course what Chris ended up doing was basically saying that "device
+tree" is required for rk808 and that you can't pass data into the
+driver using pdata (at least in v6 you can't specify
+"rockchip,system-power-controller" unless you're using device tree).
+To me that doesn't seem terrible.  ...though he should probably finish
+what he started by:
 
-> So what are the requirements?
-> 1) Indicate that the boot loader has set up a device
-> 2) Indicate the purpose of that device
-> 3) Protect the resources in use
-> 4) Provide for a handoff to the OS specific device driver
-> 5) Communicate all of this via the device tree
-> 
-> So what is a device tree syntax that would solve this general problem?
-> As a first design attempt, I would propose <boot> (or <chosen>) child
-> nodes be added to the various core devices. By core device I mean the
-> top level device, like the framebuffer, not each dependent clock and
-> regulator.
-> 
-> Inside the <boot> nodes a compatible string would be used to designate
-> a device class the bootloader has assigned to the devices. For example
-> - serial, framebuffer, media, input, network.
+* Moving "struct rk808_board" so it's private to the regulator .c file
 
-In general we should already know the class of device if we have a
-driver for said device, no?
+* Don't even pretend you can get stuff from dev_get_platdata() in
+rk808-regulator.c
 
-As far as I can tell all we need to have is a way of designating
-preferred devices and their preferred/current configuration. We have
-bits of that already (e.g. stdout-path, assigned-rate).
+* Add a dependency on "OF" in the Kconfig for rk808.
 
-> Some examples, I've deleted a lot of properties to make them smaller.
-> The boot loader could add these nodes either statically or
-> dynamically.
-> 
-> uart0: uart@01c18000 {
->         compatible = "allwinner,sun4i-a10-uart";
->         clocks = <&ahb_gates 20>, <&uart2_clk>;
->         clock-names = "ahb", "mod";
->         boot {
->                 compatible = "boot,serial";
->                 baud = <192000>;
->                 console;
->        };
-> };
-
-There's already the stdout-path (and stdin-path) binding for designating
-a serial port. I think we should improve support for those rather than
-introducing a new binding. The only painful part is describing the
-pre-configured rate if the OS needs to know.
-
-> reserved-memory {
->         display_reserved: framebuffer@78000000 {
->                 reg = <0x78000000 0x800000>;
->         };
-> };
-> 
-> fb0: fb@01c10000 {
->         compatible = "allwinner,sun4i-a10-framebuffer";
->         clocks = <&ahb_gates 18>, <&fb2_clk>;
->         clock-names = "ahb", "mod";
->         boot {
->                 compatible = "boot,framebuffer";
->                 memory-region = <&display_reserved>;
->         };
-> };
-
-I was under the impression that the reserved-memory binding could be
-used for handing over the memory in use by a framebuffer, so as far as I
-can see we only new thing to communicate would be the configured mode of
-the display.
-
-Do we have any systems with multiple displays where we need to specify
-which is preferred?
-
-> spi1: spi@01c16000 {
->         compatible = "allwinner,sun4i-a10-spi";
->         clocks = <&ahb_gates 22>, <&spi2_clk>;
->         clock-names = "ahb", "mod";
-> 
->         flash0: flash@2 {
->         compatible = "atmel,at12345";
->         reg = <2>;
->         spi-max-frequency = <100000>;
->                 boot {
->                         compatible = "boot,media";
->                 };
->         };
-> };
-
-Is this a problem on existing systems? Do we need a DT property?
-
-If so, this would be better as something like /chosen/root-device (so
-you can't accidentally describe multiple devices as the boot medium).
-
-> An OS booting off from a device tree like this can then implement
-> support for boot,xxxx drivers if it chooses. If it doesn't implement
-> support for the boot tags, nothing changes from the current situation.
-> 
-> The problem with clocks and regulators can be addressed by following
-> the chains of clocks/regulators in the parent nodes of the boot
-> sections. This would be implement by these frameworks providing a
-> "claim_all_xxx(DT node)" function.  A boot,framebuffer driver would
-> first call claim_all_clk(parent node) and claim_all_regulator(parent
-> node). Need to figure out exactly how these functions would work.
-
-I'm not sure I follow. What is the problem with clocks and regulators
-that this tries to solve?
-
-Are we just trying to leave them in their current configuration (rather
-than disabling)? Are we trying to prevent other drivers from fiddling
-with them? Something else?
-
-> Driver handoff is the OS's problem. Under Linux the device specific
-> drivers could soft-link to the boot,xxx code. After the device
-> specific driver is fully initialized it would tell the boot,xxx driver
-> to let go.
-
-I'm not sure I follow why we need the stub drivers at all. Is the idea
-to just have them hog resources until the real driver comes up?
-
-> As a side effect this will eliminate the need for kernel command line
-> parameters describing boot state. Like console="". Over time it might
-> even be able to pass a DHCP IP address from uboot into the kernel.
-
-We have a generic mechanism for communicating the MAC address of an
-ethernet adapter. I don't see a fundamental reason we can't add
-properties to communicate a DHCP lease and associated information. Is
-anyone looking into that?
-
-Thanks,
-Mark.
+-Doug
