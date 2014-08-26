@@ -1,276 +1,201 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 4/5] clk: RK808: Add clkout driver for RK808
-Date: Tue, 26 Aug 2014 11:02:23 -0700
-Message-ID: <CAD=FV=WS=FaJdDVomCo2FxnsoRxDAHNNK-VX75JLzBYHHGS8AA@mail.gmail.com>
-References: <1409062589-12157-1-git-send-email-zyw@rock-chips.com>
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Generic communication of boot loader state to the OS
+Date: Tue, 26 Aug 2014 14:05:17 -0400
+Message-ID: <CAKON4OzwzGjtPBN6yTCSrqX1bzpGxQwh8bU_D1MSU_XYRts65Q@mail.gmail.com>
+References: <CAKON4Oz-PRgXyNKj=T9ymzOOhCMPjBMdYdE1Mr1CHWv3boskiw@mail.gmail.com>
+	<20140826171658.GJ4078@leverpostej>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409062589-12157-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chr>
+Return-path: <linux-sunxi+bncBC55LFUF6ALBBXMY6OPQKGQEUAGMFHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140826171658.GJ4078@leverpostej>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Chris,
-
-On Tue, Aug 26, 2014 at 7:16 AM, Chris Zhong <zyw@rock-chips.com> wrote:
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+On Tue, Aug 26, 2014 at 1:16 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Hi Jon,
 >
-> ---
+> On Tue, Aug 26, 2014 at 05:10:00PM +0100, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> New thread split off from the simple-framebuffer discussion....
+>>
+>> Is there a generic, underlying problem here that needs to be solved?
+>> AFAIK no one has designed a general purpose mechanism for
+>> communicating boot loader state to the OS. There is the existing
+>> device tree <chosen> node but it is limited compared to what is
+>> needed. Maybe we should step back and first design a good solution to
+>> this basic problem. Then specific solutions for things like
+>> framebuffers would fall out of the basic design.
 >
-> Changes in v6:
-> Adviced by doug
-> - use correct argument call of_clk_add_provider in probe
+> I think the fundamental problem here is unfortunately far too abstract
+> for the general solution to be any more concrete. The solution to "we
+> don't communicate boot state" is "we should communicate boot state".
 >
-> Changes in v5:
-> Adviced by doug
-> - add some error checking in probe
-> - move "rockchip,rk808.h" into the patch about dt-bindings
+> We can perhaps come up with general guidelines (for instance, the clock
+> subsystem has assigned-* properties), but I don't think there's a
+> one-size-fits-all solution.
 >
-> Changes in v4:
-> Adviced by doug
-> - add "clock-output-names" propertiey
-> - add a header file "rockchip,rk808.h"
+>> So what are the requirements?
+>> 1) Indicate that the boot loader has set up a device
+>> 2) Indicate the purpose of that device
+>> 3) Protect the resources in use
+>> 4) Provide for a handoff to the OS specific device driver
+>> 5) Communicate all of this via the device tree
+>>
+>> So what is a device tree syntax that would solve this general problem?
+>> As a first design attempt, I would propose <boot> (or <chosen>) child
+>> nodes be added to the various core devices. By core device I mean the
+>> top level device, like the framebuffer, not each dependent clock and
+>> regulator.
+>>
+>> Inside the <boot> nodes a compatible string would be used to designate
+>> a device class the bootloader has assigned to the devices. For example
+>> - serial, framebuffer, media, input, network.
 >
-> Changes in v3:
-> - fix compile err
+> In general we should already know the class of device if we have a
+> driver for said device, no?
 >
-> Changes in v2:
-> Adviced by javier.martinez
-> - separated from rtc-rk808.
+> As far as I can tell all we need to have is a way of designating
+> preferred devices and their preferred/current configuration. We have
+> bits of that already (e.g. stdout-path, assigned-rate).
 >
->  drivers/clk/Kconfig     |    9 +++
->  drivers/clk/Makefile    |    1 +
->  drivers/clk/clk-rk808.c |  163 +++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 173 insertions(+)
->  create mode 100644 drivers/clk/clk-rk808.c
+>> Some examples, I've deleted a lot of properties to make them smaller.
+>> The boot loader could add these nodes either statically or
+>> dynamically.
+>>
+>> uart0: uart@01c18000 {
+>>         compatible = "allwinner,sun4i-a10-uart";
+>>         clocks = <&ahb_gates 20>, <&uart2_clk>;
+>>         clock-names = "ahb", "mod";
+>>         boot {
+>>                 compatible = "boot,serial";
+>>                 baud = <192000>;
+>>                 console;
+>>        };
+>> };
 >
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index cfd3af7..84e0590 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -38,6 +38,15 @@ config COMMON_CLK_MAX77686
->         ---help---
->           This driver supports Maxim 77686 crystal oscillator clock.
+> There's already the stdout-path (and stdin-path) binding for designating
+> a serial port. I think we should improve support for those rather than
+> introducing a new binding. The only painful part is describing the
+> pre-configured rate if the OS needs to know.
 >
-> +config COMMON_CLK_RK808
-> +       tristate "Clock driver for RK808"
-> +       depends on MFD_RK808
-> +       ---help---
-> +         This driver supports RK808 crystal oscillator clock. These
-> +         multi-function devices have two fixed-rate oscillators,
-> +         clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
-> +         by control register.
-> +
->  config COMMON_CLK_SI5351
->         tristate "Clock driver for SiLabs 5351A/B/C"
->         depends on I2C
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index f537a0b..99f53d5 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_ARCH_NOMADIK)            += clk-nomadik.o
->  obj-$(CONFIG_ARCH_NSPIRE)              += clk-nspire.o
->  obj-$(CONFIG_COMMON_CLK_PALMAS)                += clk-palmas.o
->  obj-$(CONFIG_CLK_PPC_CORENET)          += clk-ppc-corenet.o
-> +obj-$(CONFIG_COMMON_CLK_RK808)         += clk-rk808.o
->  obj-$(CONFIG_COMMON_CLK_S2MPS11)       += clk-s2mps11.o
->  obj-$(CONFIG_COMMON_CLK_SI5351)                += clk-si5351.o
->  obj-$(CONFIG_COMMON_CLK_SI570)         += clk-si570.o
-> diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-> new file mode 100644
-> index 0000000..21f8b54
-> --- /dev/null
-> +++ b/drivers/clk/clk-rk808.c
-> @@ -0,0 +1,163 @@
-> +/*
-> + * Clkout driver for Rockchip RK808
-> + *
-> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * Author: Chris Zhong <zyw@rock-chips.com>
+>> reserved-memory {
+>>         display_reserved: framebuffer@78000000 {
+>>                 reg = <0x78000000 0x800000>;
+>>         };
+>> };
+>>
+>> fb0: fb@01c10000 {
+>>         compatible = "allwinner,sun4i-a10-framebuffer";
+>>         clocks = <&ahb_gates 18>, <&fb2_clk>;
+>>         clock-names = "ahb", "mod";
+>>         boot {
+>>                 compatible = "boot,framebuffer";
+>>                 memory-region = <&display_reserved>;
+>>         };
+>> };
+>
+> I was under the impression that the reserved-memory binding could be
+> used for handing over the memory in use by a framebuffer, so as far as I
+> can see we only new thing to communicate would be the configured mode of
+> the display.
+>
+> Do we have any systems with multiple displays where we need to specify
+> which is preferred?
+>
+>> spi1: spi@01c16000 {
+>>         compatible = "allwinner,sun4i-a10-spi";
+>>         clocks = <&ahb_gates 22>, <&spi2_clk>;
+>>         clock-names = "ahb", "mod";
+>>
+>>         flash0: flash@2 {
+>>         compatible = "atmel,at12345";
+>>         reg = <2>;
+>>         spi-max-frequency = <100000>;
+>>                 boot {
+>>                         compatible = "boot,media";
+>>                 };
+>>         };
+>> };
+>
+> Is this a problem on existing systems? Do we need a DT property?
+>
+> If so, this would be better as something like /chosen/root-device (so
+> you can't accidentally describe multiple devices as the boot medium).
+>
+>> An OS booting off from a device tree like this can then implement
+>> support for boot,xxxx drivers if it chooses. If it doesn't implement
+>> support for the boot tags, nothing changes from the current situation.
+>>
+>> The problem with clocks and regulators can be addressed by following
+>> the chains of clocks/regulators in the parent nodes of the boot
+>> sections. This would be implement by these frameworks providing a
+>> "claim_all_xxx(DT node)" function.  A boot,framebuffer driver would
+>> first call claim_all_clk(parent node) and claim_all_regulator(parent
+>> node). Need to figure out exactly how these functions would work.
+>
+> I'm not sure I follow. What is the problem with clocks and regulators
+> that this tries to solve?
+>
+> Are we just trying to leave them in their current configuration (rather
+> than disabling)? Are we trying to prevent other drivers from fiddling
+> with them? Something else?
 
-I probably would have removed "Author" here (like in other patches)
-since it's below in MODULE_AUTHOR.  ...but I'm not a huge stickler for
-it.
+The current problem with simple-fb is that the clock subsystem
+contains code to automatically shut off clocks that aren't in use. A
+similar problem exists for regulators. And I agree that code like that
+makes sense.
 
+Simplefb does not mark these items as being in use, so they get shut
+off. So how can we communicate to these subsystems that these
+clocks/regulators are actually in use by simple-fb? Simple-fb is
+generic code and it does not know about specific devices or clocks or
+regulators.
 
+Uboot could individually mark each one.  But then how does uboot tell
+the OS that a simple-fb has been set up? You could make a node like
+'chosen/framebuffer'. But then how do you tell where the reserved
+memory is? Making a <boot> node inside the specific device makes more
+sense to me. That also makes it easy to determine what
+clock/regulators apply.
 
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/rk808.h>
-> +#include <linux/i2c.h>
-> +
-> +struct rk808_clkout {
-> +       struct rk808 *rk808;
-> +       struct clk_onecell_data clk_data;
-> +       struct clk_hw           clkout1_hw;
-> +       struct clk_hw           clkout2_hw;
-> +};
-> +
-> +static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
-> +                                             unsigned long parent_rate)
-> +{
-> +       return 32768;
-> +}
-> +
-> +static int rk808_clkout1_is_prepared(struct clk_hw *hw)
-> +{
-> +       return 1;
-> +}
-> +
-> +static int rk808_clkout2_control(struct clk_hw *hw, bool enable)
-> +{
-> +       struct rk808_clkout *rk808_clkout = container_of(hw,
-> +                                                        struct rk808_clkout,
-> +                                                        clkout2_hw);
-> +       struct rk808 *rk808 = rk808_clkout->rk808;
-> +
-> +       return regmap_update_bits(rk808->regmap, RK808_CLK32OUT_REG,
-> +                                 CLK32KOUT2_EN, enable ? CLK32KOUT2_EN : 0);
-> +}
-> +
-> +static int rk808_clkout2_prepare(struct clk_hw *hw)
-> +{
-> +       return rk808_clkout2_control(hw, 1);
+Also note that things like the console are also vulnerable to this. If
+I switch from a built-in serial driver over to a modprobe one, the
+UART clocks will get disabled in the interval between the clk shut off
+code and the loading of the module. This is the same window that makes
+the framebuffer flicker during boot.  And generic ARM kernels modprobe
+in all of their drivers.
 
-nit: I'd pass "true" instead of 1.  I should have noticed earlier.
-
-> +}
-> +
-> +static void rk808_clkout2_unprepare(struct clk_hw *hw)
-> +{
-> +       rk808_clkout2_control(hw, 0);
-
-nit: I'd pass "false" instead of 0.
-
-> +}
-> +
-> +static int rk808_clkout2_is_prepared(struct clk_hw *hw)
-> +{
-> +       struct rk808_clkout *rk808_clkout = container_of(hw,
-> +                                                        struct rk808_clkout,
-> +                                                        clkout2_hw);
-> +       struct rk808 *rk808 = rk808_clkout->rk808;
-> +       uint32_t val;
-> +
-> +       int ret = regmap_read(rk808->regmap, RK808_CLK32OUT_REG, &val);
-> +
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       return (val & CLK32KOUT2_EN) ? 1 : 0;
-> +}
-> +
-> +static const struct clk_ops rk808_clkout1_ops = {
-> +       .is_prepared = rk808_clkout1_is_prepared,
-> +       .recalc_rate = rk808_clkout_recalc_rate,
-> +};
-> +
-> +static const struct clk_ops rk808_clkout2_ops = {
-> +       .prepare = rk808_clkout2_prepare,
-> +       .unprepare = rk808_clkout2_unprepare,
-> +       .is_prepared = rk808_clkout2_is_prepared,
-> +       .recalc_rate = rk808_clkout_recalc_rate,
-> +};
-> +
-> +static int rk808_clkout_probe(struct platform_device *pdev)
-> +{
-> +       struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-> +       struct i2c_client *client = rk808->i2c;
-> +       struct device_node *node = client->dev.of_node;
-> +       struct clk_init_data init = {};
-> +       struct clk **clk_table;
-> +       struct rk808_clkout *rk808_clkout;
-> +
-> +       rk808_clkout = devm_kzalloc(&client->dev,
-> +                                   sizeof(*rk808_clkout), GFP_KERNEL);
-> +       if (!rk808_clkout)
-> +               return -ENOMEM;
-> +
-> +       rk808_clkout->rk808 = rk808;
-> +
-> +       clk_table = devm_kzalloc(&client->dev,
-> +                                2*sizeof(struct clk *), GFP_KERNEL);
-
-nit: space around "*".
-
-> +       if (!clk_table)
-> +               return -ENOMEM;
-> +
-> +       init.flags = CLK_IS_ROOT;
-> +       init.parent_names = NULL;
-> +       init.num_parents = 0;
-> +       init.name = "rk808-clkout1";
-> +       init.ops = &rk808_clkout1_ops;
-> +       rk808_clkout->clkout1_hw.init = &init;
-> +
-> +       /* optional override of the clockname */
-> +       of_property_read_string_index(node, "clock-output-names",
-> +                                     0, &init.name);
-> +
-> +       clk_table[0] = devm_clk_register(&client->dev,
-> +                                        &rk808_clkout->clkout1_hw);
-> +       if (IS_ERR(clk_table[0]))
-> +               return PTR_ERR(clk_table[0]);
-> +
-> +       init.name = "rk808-clkout2";
-> +       init.ops = &rk808_clkout2_ops;
-> +       rk808_clkout->clkout2_hw.init = &init;
-> +
-> +       /* optional override of the clockname */
-> +       of_property_read_string_index(node, "clock-output-names",
-> +                                     1, &init.name);
-> +
-> +       clk_table[1] = devm_clk_register(&client->dev,
-> +                                        &rk808_clkout->clkout2_hw);
-> +       if (IS_ERR(clk_table[1]))
-> +               return PTR_ERR(clk_table[1]);
-> +
-> +       rk808_clkout->clk_data.clks = clk_table;
-> +       rk808_clkout->clk_data.clk_num = 2;
-> +
-> +       return of_clk_add_provider(node, of_clk_src_onecell_get,
-> +                                  &rk808_clkout->clk_data);
-> +}
-> +
-> +static struct platform_driver rk808_clkout_driver = {
-> +       .probe = rk808_clkout_probe,
-> +       .driver         = {
-> +               .name   = "rk808-clkout",
-> +               .owner  = THIS_MODULE,
-
-nit: you could remove "THIS_MODULE" as Lee suggested in another patch.
-
-> +       },
-> +};
-> +
-> +module_platform_driver(rk808_clkout_driver);
-> +
-> +MODULE_DESCRIPTION("Clkout driver for the rk808 series PMICs");
-> +MODULE_AUTHOR("Chris Zhong <zyw@rock-chips.com>");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:rk808-clkout");
+>
+>> Driver handoff is the OS's problem. Under Linux the device specific
+>> drivers could soft-link to the boot,xxx code. After the device
+>> specific driver is fully initialized it would tell the boot,xxx driver
+>> to let go.
+>
+> I'm not sure I follow why we need the stub drivers at all. Is the idea
+> to just have them hog resources until the real driver comes up?
+>
+>> As a side effect this will eliminate the need for kernel command line
+>> parameters describing boot state. Like console="". Over time it might
+>> even be able to pass a DHCP IP address from uboot into the kernel.
+>
+> We have a generic mechanism for communicating the MAC address of an
+> ethernet adapter. I don't see a fundamental reason we can't add
+> properties to communicate a DHCP lease and associated information. Is
+> anyone looking into that?
+>
+> Thanks,
+> Mark.
 
 
-Nothing above is really important and I've tested that this driver
-works both as a clock source for clocks on rk3288 and for use by clock
-clients, so feel free to add my:
 
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Tested-by: Doug Anderson <dianders@chromium.org>
+-- 
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
