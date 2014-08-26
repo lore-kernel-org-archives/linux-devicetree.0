@@ -1,113 +1,52 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dts: fsl-usb: Document USB node
- compatible string for IP version
-Date: Tue, 26 Aug 2014 17:53:01 -0500
-Message-ID: <1409093581.6510.94.camel@snotra.buserror.net>
-References: <1408612727-6774-1-git-send-email-nikhil.badola@freescale.com>
-	 <1408659774.2395.21.camel@snotra.buserror.net>
-	 <af7cc70458bf471cb20938ce6498ccfe@BN1PR0301MB0593.namprd03.prod.outlook.com>
-	 <3fdd7732a9954d13a90ece684771d932@BL2PR03MB161.namprd03.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3fdd7732a9954d13a90ece684771d932-AZ66ij2kwaabJzs9G/iQcuO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mehresh Ramneek-B31383 <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Badola Nikhil-B46172 <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: [PATCH v2 2/2] dt-bindings: document Rockchip thermal
+Date: Wed, 27 Aug 2014 07:41:43 +0800
+Message-ID: <1409096503-7081-3-git-send-email-caesar.wang@rock-chips.com>
+References: <1409096503-7081-1-git-send-email-caesar.wang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409096503-7081-1-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, grant.likely@linaro.org
+Cc: robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, Caesar Wang <caesar.wang@rock-chips.com>, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-08-22 at 00:05 -0500, Mehresh Ramneek-B31383 wrote:
-> 
-> -----Original Message-----
-> From: Badola Nikhil-B46172 
-> Sent: Friday, August 22, 2014 10:18 AM
-> To: Wood Scott-B07421
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mehresh Ramneek-B31383
-> Subject: RE: [PATCH] Documentation: dts: fsl-usb: Document USB node compatible string for IP version
-> 
-> Adding Ramneek
-> 
-> > -----Original Message-----
-> > From: Wood Scott-B07421
-> > Sent: Friday, August 22, 2014 3:53 AM
-> > To: Badola Nikhil-B46172
-> > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Subject: Re: [PATCH] Documentation: dts: fsl-usb: Document USB node 
-> > compatible string for IP version
-> > 
-> > On Thu, 2014-08-21 at 14:48 +0530, Nikhil Badola wrote:
-> > > Document compatible string containing IP version in USB device tree 
-> > > node
-> > >
-> > > Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/usb/fsl-usb.txt | 13 
-> > > ++++++++-----
-> > >  1 file changed, 8 insertions(+), 5 deletions(-)
-> > 
-> > Please CC devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org on all device tree patches (in 
-> > addition to linuxppc-dev).
-> > 
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.txt
-> > > b/Documentation/devicetree/bindings/usb/fsl-usb.txt
-> > > index 4779c02..5a3a0a8 100644
-> > > --- a/Documentation/devicetree/bindings/usb/fsl-usb.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/fsl-usb.txt
-> > > @@ -10,7 +10,10 @@ Required properties :
-> > >     controllers, or "fsl-usb2-dr" for dual role USB controllers
-> > >     or "fsl,mpc5121-usb2-dr" for dual role USB controllers of MPC5121.
-> > >     Wherever applicable, the IP version of the USB controller should
-> > > -   also be mentioned (for eg. fsl-usb2-dr-v2.2 for bsc9132).
-> > > +   also be mentioned in another string.
-> > > +   For multi port host USB controller with IP version <IP_Ver>, it should be
-> > > +   "fsl-usb2-mph-<IP_Ver>". For dual role USB controller with IP version
-> > > +   <IP_Ver>, it should be "fsl-usb2-dr-<IP_Ver>".
-> > 
-> > It was documented before -- this is just making it more explicit, right?
-> > 
-> > FWIW, the version number can be read out of a USB register, so I'd 
-> > rather remove the suggestion to specify the version number and replace 
-> > it with a reference to the ID register.
-> we have following two issues -
-> (a) our USBIP version register doesn't have consistent "version field size" over 
-> multiple version(s). This is why we couldn't use it for reading version info across
-> various IP versions
-> (b) this register is not exposed in all SoC RMs (probably because of above reason)
+This add the necessary binding documentation for the thermal
+found on Rockchip SoCs
 
-:-(
+Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
 
-If this is just a problem with older chips, we could have a new
-compatible name that designates the family of USB block versions with a
-sane version register.
+Change-Id: I822eba808c76ab51a5562eb61020a4aed4ff555e
+---
+ .../bindings/thermal/rockchip-thermal.txt          |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
 
-> > > @@ -55,9 +58,9 @@ Example multi port host USB controller device node :
-> > >  		port1;
-> > >  	};
-> > >
-> > > -Example dual role USB controller device node :
-> > > +Example dual role USB controller version 2.5 device node :
-> > >  	usb@23000 {
-> > > -		compatible = "fsl-usb2-dr";
-> > > +		compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
-> > >  		reg = <23000 1000>;
-> > >  		#address-cells = <1>;
-> > >  		#size-cells = <0>;
-> > 
-> > This example doesn't correspond to any device tree I see.  Even after 
-> > your next patch that sets t2080's USB to v2.5, the addresses are different.
-> > 
-> I reckon that the example emphasizes on showing how IP version information is
-> to be stored in "compatible string". Is it necessary to make sure that we should 
-> always site actual values already used?
-
-The more realistic the examples are, the better.
-
--Scott
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+new file mode 100644
+index 0000000..ff8db39
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+@@ -0,0 +1,20 @@
++* Temperature Sensor ADC (TSADC) on rockchip SoCs
++
++Required properties:
++- compatible : "rockchip,rk3288-tsadc"
++- reg : physical base address of the controller and length of memory mapped
++  region.
++- interrupts : The interrupt number to the cpu. The interrupt specifier format
++  depends on the interrupt controller.
++- clocks : Must contain an entry for each entry in clock-names.
++- clock-names : Shall be "tsadc_clk" for the transfer-clock, and "tsadc_pclk" for
++    the peripheral clock.
++
++Example:
++tsadc: tsadc@ff280000 {
++	compatible = "rockchip,rk3288-tsadc";
++	reg = <0xff280000 0x100>;
++	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
++	clock-names = "tsadc_clk", "tsadc_pclk";
++};
+-- 
+1.7.9.5
