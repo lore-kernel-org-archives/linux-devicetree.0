@@ -1,51 +1,119 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 5/5] regulator: RK808: remove redundant code
-Date: Tue, 26 Aug 2014 14:08:48 -0700
-Message-ID: <CAD=FV=WHM1ouCA_D35MG9u9B+gYLC8MGebw_X94_bLkkDVKCXQ@mail.gmail.com>
-References: <1409062737-12259-1-git-send-email-zyw@rock-chips.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [RFC 4/7] bcma: register bcma as device tree driver
+Date: Tue, 26 Aug 2014 23:25:36 +0200
+Message-ID: <53FCFB50.80800@hauke-m.de>
+References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de> <1408915485-8078-6-git-send-email-hauke@hauke-m.de> <2462012.kILSFadzpm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409062737-12259-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@chr>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2462012.kILSFadzpm@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+On 08/25/2014 09:57 AM, Arnd Bergmann wrote:
+> On Sunday 24 August 2014 23:24:42 Hauke Mehrtens wrote:
+>> This driver is used by the bcm53xx ARM SoC code. Now it is possible to
+>> give the address of the chipcommon core in device tree and bcma will
+>> search for all the other cores.
+>>
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> 
+> Looks good to me overall. Two small comments:
+> 
+>>  Documentation/devicetree/bindings/bus/bcma.txt | 46 +++++++++++++++++
+>>  drivers/bcma/host_soc.c                        | 70 ++++++++++++++++++++++++++
+>>  include/linux/bcma/bcma.h                      |  2 +
+>>  3 files changed, 118 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/bus/bcma.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documentation/devicetree/bindings/bus/bcma.txt
+>> new file mode 100644
+>> index 0000000..52fb929
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/bus/bcma.txt
+>> @@ -0,0 +1,46 @@
+>> +Broadcom AIX bcma bus driver
+>> +
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : brcm,bus-aix
+>> +
+>> +- reg : iomem address range of chipcommon core
+>> +
+>> +Optional properties:
+>> +
+>> +- sprom: reference to a sprom driver. This is needed for sprom less devices.
+>> +        Use bcm47xx_sprom for example.
+>> +
+>> +
+>> +The cores on the AIX bus are auto detected by bcma. Detection of the
+>> +IRQ number is not supported on BCM47xx/BCM53xx ARM SoCs, so it is
+>> +possible to provide the IRQ number over device tree. The IRQ number and
+>> +the device tree child entry will be added to the core with the matching
+>> +reg address.
+> 
+> What is the problem with the interrupt numbers? Is that information
+> missing completely from the data available to the brcm bus, or is it
+> in an inconvenient format?
 
-On Tue, Aug 26, 2014 at 7:18 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> remove the redundant code, since pdata has been removed from stuct rk808
->
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> ---
->
-> Changes in v6:
-> - remove the redundant code
->
-> Changes in v5:
-> - re-edit base on Mark's branch
->
-> Changes in v4:
-> - use &client->dev replace rk808->dev
->
-> Changes in v3: None
-> Changes in v2:
-> Adviced by Mark Browm:
-> - change of_find_node_by_name to find_child_by_name
-> - use RK808_NUM_REGULATORS as the name of the constant
-> - create a pdata when missing platform data
-> - use the rk808_reg name to supply_regulator name
-> - replace regulator_register with devm_regulator_register
-> - some other problem with coding styl
->
->  drivers/regulator/rk808-regulator.c |   17 ++++-------------
->  1 file changed, 4 insertions(+), 13 deletions(-)
+I do not have access to the datasheet, only to the vendor source code.
+The irq numbers are hard coded in the vendor code, see:
+https://github.com/RMerl/asuswrt-merlin/blob/master/release/src-rt-6.x.4708/linux/linux-2.6.36/arch/arm/plat-brcm/bcm5301x_pcie.c#L286
 
-Probably shouldn't land until we've solved problems around the
-"platform data" in the MFD patch...
+On the mips SoCs it was possible to read them from some register in the
+mips core on the aix bus.
+
+> 
+>> +Example:
+>> +
+>> +       aix@18000000 {
+>> +               compatible = "brcm,bus-aix";
+>> +               reg = <0x18000000 0x1000>;
+>> +               ranges = <0x00000000 0x18000000 0x00100000>;
+>> +               #address-cells = <1>;
+>> +               #size-cells = <1>;
+>> +               sprom = <&sprom0>;
+>> +
+>> +               gmac@0 {
+>> +                       reg = <0x18024000 0x1000>;
+>> +                       interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+>> +               };
+> 
+> The @0 part seems wrong here: the address should generally match
+> the first entry in the reg property, which would be gmac@18024000.
+> 
+> Also, you probably mean ethernet@ not gmac@.
+
+Will change that.
+
+>> +               gmac@1 {
+>> +                       reg = <0x18025000 0x1000>;
+>> +                       interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+>> +               };
+>> +
+>> +               pcie@0 {
+>> +                       reg = <0x18012000 0x1000>;
+>> +                       interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+>> +               };
+>> +       };
+> 
+> We may require additional properties for the pcie node, depending on whether
+> we want to use the DT probing interfaces for it, or whether it should just
+> hardcode the settings used on brcm based on the ID.
+
+I wrote a driver for the PCIe host controller and it also automatically
+detects all needed memory addresses, it just had to provide the IRQ
+number through device tree.
+
+> 
+> 	Arnd
+> 
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
