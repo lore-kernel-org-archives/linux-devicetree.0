@@ -1,81 +1,119 @@
-Return-Path: <linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org>
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAwLzNdIGdwaW86IHN5c2NvbjogcmV1c2UgZm9yIGtl?=
- =?UTF-8?B?eXN0b25lIDIgc29jcw==?=
-Mime-Version: 1.0
-Date: Thu, 21 Aug 2014 20:51:14 +0400
-Message-ID: <1408639874.873856101@f420.i.mail.ru>
-In-Reply-To: <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
-References: <53ECE9B1.4060303@ti.com>
- <1408638203-8246-1-git-send-email-grygorii.strashko@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robherring2=gmail.com@lists.infradead.org
-To: =?UTF-8?B?R3J5Z29yaWkgU3RyYXNoa28=?= <grygorii.strashko@ti.com>
-Cc: =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou@gmail.com>, devicetree@vger.kernel.org, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org
+Return-Path: <rayj00@yahoo.com>
+Message-ID: <97722.98452.bm@smtp111.mail.bf1.yahoo.com>
+MIME-Version: 1.0
+From: Ray <rayj00@yahoo.com>
+Subject: RE: [PATCH v2 6/6] devicetree: bindings: Document Renesas
+ JPEGProcessing Unit.
+Date: Mon, 25 Aug 2014 20:21:14 -0400
+Content-Type: multipart/alternative;
+	boundary="_BA9F540D-DCE4-4D87-BE61-9C92BA7D457B_"
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-VGh1LCAyMSBBdWcgMjAxNCAxOToyMzoyMCArMDMwMCDQvtGCIEdyeWdvcmlpIFN0cmFzaGtvIDxn
-cnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+Ogo+IEhpIEFsbCwKPiAKPiBBbGV4YW5kZXIsCj4gCj4g
-SSd2ZSB1cGRhdGVkIGdwaW8tc3lzY29uIGFzIHJlcXVlc3RlZCBpbiBbM10uCj4gSSBzdGlsbCBk
-b24ndCBsaWtlIGl0LCBidXQgYW55IHdheSBJIGRpZCBpdCA6KAo+IAo+IExpbnVzLAo+IAo+IEkn
-ZCB2ZXJ5IGFwcHJlY2lhdGVkIGlmIHlvdSBjYW4gY29tbWVudCBvbiB0aGVzZSBzZXJpZXMuCj4g
-UGVyc29uYWxseSwgSSBsaWtlIHYxIFszXSwgYmVjYXVzZSB0aGlzIHYyIGlzIG5vdCBlbGVnYW50
-IGFuZCB3aWxsCj4gcmVxdWlyZSBjb25zdGFudCBjb2RlIHBhdGNoaW5nIGluIGNhc2Ugb2YgYWRk
-aW5nIG5ldyBTb0NzIG9yIG5ldyBTb0MncyB2ZXJzaW9ucy4KPiAKPiBUaGlzIHNlcmllcyBpbnRl
-bmRlZCB0byBpbnRlZ3JhdGUgS2V5c3RvbmUgMiBEU1AgR1BJTyBjb250cm9sbGVyIGZ1bmN0aW9u
-YWxpdHkKPiBpbnRvIGdwaW8tc3lzY29uIGRyaXZlciAoZHJpdmVycy9ncGlvL2dwaW8tc3lzY29u
-LmMpIGFzIHJlcXVlc3RlZAo+IGJ5IExpbnVzIFdhbGxlaWogaW4gWzFdLgo+IAo+IE9uIEtleXN0
-b25lIFNPQ3MsIEFSTSBob3N0IGNhbiBzZW5kIGludGVycnVwdHMgdG8gRFNQIGNvcmVzIHVzaW5n
-IHRoZQo+IERTUCBHUElPIGNvbnRyb2xsZXIgSVAuIEVhY2ggRFNQIEdQSU8gY29udHJvbGxlciBw
-cm92aWRlcyAyOCBJUlEgc2lnbmFscyBmb3IKPiBlYWNoIERTUCBjb3JlLiBUaGlzIGlzIG9uZSBv
-ZiB0aGUgY29tcG9uZW50IHVzZWQgYnkgdGhlIElQQyBtZWNoYW5pc20gdXNlZAo+IG9uIEtleXN0
-b25lIFNPQ3MuCj4gCj4gS2V5c3RvbmUgMiBEU1AgR1BJTyBjb250cm9sbGVyIGhhcyBzcGVjaWZp
-YyBmZWF0dXJlczoKPiAtIGVhY2ggR1BJTyBjYW4gYmUgY29uZmlndXJlZCBvbmx5IGFzIG91dHB1
-dCBwaW47Cj4gLSBzZXR0aW5nIEdQSU8gdmFsdWUgdG8gMSBjYXVzZXMgSVJRIGdlbmVyYXRpb24g
-b24gdGFyZ2V0IERTUCBjb3JlOwo+IC0gcmVhZGluZyBwaW4gdmFsdWUgcmV0dXJucyAwIC0gaWYg
-SVJRIHdhcyBoYW5kbGVkIG9yIDEgLSBJUlEgaXMgc3RpbGwKPiAgIHBlbmRpbmcuCj4gCj4gVGhl
-IGdwaW8tc3lzY29uIGRyaXZlciB3YXMgbmVlZCB0byBiZSB1cGRhdGVkIHRvIHNhdGlzZnkgS2V5
-c3RvbmUgMiBTb0MKPiByZXF1aXJlbWVudHM6Cj4gLSBzcGVjaWFsIHNlcXVlbmNlIG9mIG9wZXJh
-dGlvbnMgbmVlZCB0byBiZSB1c2VkIHRvIGFzc2lnbiBvdXRwdXQgR1BJTyB2YWx1ZS4KPiAgICBB
-cyByZXN1bHQsIGZpcnN0IHBhdGNoIGludHJvZHVjZXMgU29DIHNwZWNpZmljIGNhbGxiYWNrIC5z
-ZXQoKSB0byBjb25maWd1cmUKPiAgICBvdXRwdXQgR1BJTyB2YWx1ZS4KPiAKPiBBbHNvLCBwYXRj
-aCAzIHdhcyBhZGRlZCB0byBpbGx1c3RyYXRlIERTUCBHUElPIGNvbmZpZ3VyYXRpb24gaW4gRFQg
-dXNlZCBieSBLZXlzdG9uZSAyLgo+IAo+IFJlbGF0ZWQgc2ljdXNzaW9uczoKPiAgWzFdIGh0dHBz
-Oi8vbGttbC5vcmcvbGttbC8yMDE0LzcvMTYvMTcwCj4gIFsyXSBodHRwczovL2xrbWwub3JnL2xr
-bWwvMjAxNC83LzIzLzM1Mgo+ICBbM10gaHR0cHM6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9kZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZy9tc2czNzg2My5odG1sCj4gCj4gR3J5Z29yaWkgU3RyYXNo
-a28gKDMpOgo+ICAgZ3Bpbzogc3lzY29uOiBhZGQgc29jIHNwZWNpZmljIGNhbGxiYWNrIHRvIGFz
-c2lnbiBvdXRwdXQgdmFsdWUKPiAgIGdwaW86IHN5c2NvbjogcmV1c2UgZm9yIGtleXN0b25lIDIg
-c29jcwo+ICAgQVJNOiBkdHM6IGtleXN0b25lLWsyaGs6IGFkZCBkc3AgZ3BpbyBjb250cm9sbGVy
-cyBub2Rlcwo+IAo+ICAuLi4vYmluZGluZ3MvZ3Bpby9ncGlvLW1jdHJsLWtleXN0b25lLnR4dCAg
-ICAgICAgICB8ICAgNDIgKysrKysrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2syaGsuZHRzaSAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICA0OCArKysrKysrCj4gIGRyaXZlcnMvZ3Bpby9ncGlvLXN5
-c2Nvbi5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDE0MCArKysrKysrKysrKysrKysrKysr
-Kwo+ICAzIGZpbGVzIGNoYW5nZWQsIDIzMCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLW1jdHJsLWtl
-eXN0b25lLnR4dAoKMS4gbWN0cmwgLT4gZHNwIGluIGZpbGVuYW1lcwoyLiBtY3RybCAtPiBkc3Ag
-aW4gZG9jdW1lbnRhdGlvbi4KMy4gSGVyZSBpcyBhIG1vcmUgZWxlZ2FudCBzb2x1dGlvbiBmb3Ig
-Zmlyc3QgcGFydC4KCi0tLSBncGlvLXN5c2Nvbi5jLm9sZAkyMDE0LTA4LTE5IDA5OjQ2OjA5LjAw
-MDAwMDAwMCArMDQwMAorKysgZ3Bpby1zeXNjb24uYwkyMDE0LTA4LTIxIDIwOjQ1OjQ5LjM1NzUy
-OTMyMyArMDQwMApAQCAtMTExLDcgKzExMSw3IEBACiAJCQkJICAgQklUKG9mZnMgJSBTWVNDT05f
-UkVHX0JJVFMpKTsKIAl9CiAKLQlzeXNjb25fZ3Bpb19zZXQoY2hpcCwgb2Zmc2V0LCB2YWwpOwor
-CXByaXYtPmRhdGEtPnNldChjaGlwLCBvZmZzZXQsIHZhbCk7CiAKIAlyZXR1cm4gMDsKIH0KQEAg
-LTE1OSw3ICsxNTksNyBAQAogCWlmIChwcml2LT5kYXRhLT5mbGFncyAmIEdQSU9fU1lTQ09OX0ZF
-QVRfSU4pCiAJCXByaXYtPmNoaXAuZGlyZWN0aW9uX2lucHV0ID0gc3lzY29uX2dwaW9fZGlyX2lu
-OwogCWlmIChwcml2LT5kYXRhLT5mbGFncyAmIEdQSU9fU1lTQ09OX0ZFQVRfT1VUKSB7Ci0JCXBy
-aXYtPmNoaXAuc2V0ID0gc3lzY29uX2dwaW9fc2V0OworCQlwcml2LT5jaGlwLnNldCA9IHByaXYt
-PmRhdGEtPnNldCA/IDogc3lzY29uX2dwaW9fc2V0OwogCQlwcml2LT5jaGlwLmRpcmVjdGlvbl9v
-dXRwdXQgPSBzeXNjb25fZ3Bpb19kaXJfb3V0OwogCX0KIAoKLS0tCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+--_BA9F540D-DCE4-4D87-BE61-9C92BA7D457B_
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+
+Someone please figure out how I can get off this email list!!!!!
+
+-----Original Message-----
+From: "Simon Horman" <horms@verge.net.au>
+Sent: =E2=80=8E8/=E2=80=8E25/=E2=80=8E2014 7:57 PM
+To: "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc: "Mikhail Ulyanov" <mikhail.ulyanov@cogentembedded.com>; "Magnus Damm" <=
+magnus.damm@gmail.com>; "Mauro Carvalho Chehab" <m.chehab@samsung.com>; "Ro=
+b Herring" <robh+dt@kernel.org>; "Grant Likely" <grant.likely@linaro.org>; =
+"Mark Rutland" <mark.rutland@arm.com>; "Ian Campbell" <ijc+devicetree@helli=
+on.org.uk>; "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>; "Hans V=
+erkuil" <hans.verkuil@cisco.com>; "Linux-sh list" <linux-sh@vger.kernel.org=
+>; "Linux Media Mailing List" <linux-media@vger.kernel.org>; "devicetree@vg=
+er.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEGProc=
+essing Unit.
+
+On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geert Uytterhoeven wrote:
+> Hi Mikhail,
+>=20
+> On Mon, Aug 25, 2014 at 2:35 PM, Mikhail Ulyanov
+> <mikhail.ulyanov@cogentembedded.com> wrote:
+> > +  - compatible: should containg one of the following:
+> > +                       - "renesas,jpu-r8a7790" for R-Car H2
+> > +                       - "renesas,jpu-r8a7791" for R-Car M2
+> > +                       - "renesas,jpu-gen2" for R-Car second generatio=
+n
+>=20
+> Isn't "renesas,jpu-gen2" meant as a fallback?
+>=20
+> I.e. the DTS should have one of '7790 and '7791, AND the gen2 fallback,
+> so we can make the driver match against '7790 and '7791 is we find
+> out about an incompatibility.
+
+Is there a document that clearly states that there is such a thing
+as jpu-gen2 in hardware? If not I would prefer not to add a binding for it.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-media" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--_BA9F540D-DCE4-4D87-BE61-9C92BA7D457B_
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html; charset="utf-8"
+
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Dutf-8" http-equiv=3DContent-Type></HE=
+AD>
+<BODY>
+<DIV>
+<DIV style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif">Someone ple=
+ase figure out how I can get off this email list!!!!!</DIV></DIV>
+<DIV dir=3Dltr>
+<HR>
+<SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEIGH=
+T: bold">From: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,=
+sans-serif"><A href=3D"mailto:horms@verge.net.au">Simon Horman</A></SPAN><B=
+R><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEI=
+GHT: bold">Sent: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibr=
+i,sans-serif">=E2=80=8E8/=E2=80=8E25/=E2=80=8E2014 7:57 PM</SPAN><BR><SPAN =
+style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEIGHT: bol=
+d">To: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-ser=
+if"><A href=3D"mailto:geert@linux-m68k.org">Geert Uytterhoeven</A></SPAN><B=
+R><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEI=
+GHT: bold">Cc: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,=
+sans-serif"><A href=3D"mailto:mikhail.ulyanov@cogentembedded.com">Mikhail U=
+lyanov</A>; <A href=3D"mailto:magnus.damm@gmail.com">Magnus Damm</A>; <A hr=
+ef=3D"mailto:m.chehab@samsung.com">Mauro Carvalho Chehab</A>; <A href=3D"ma=
+ilto:robh+dt@kernel.org">Rob Herring</A>; <A href=3D"mailto:grant.likely@li=
+naro.org">Grant Likely</A>; <A href=3D"mailto:mark.rutland@arm.com">Mark Ru=
+tland</A>; <A href=3D"mailto:ijc+devicetree@hellion.org.uk">Ian Campbell</A=
+>; <A href=3D"mailto:laurent.pinchart@ideasonboard.com">Laurent Pinchart</A=
+>; <A href=3D"mailto:hans.verkuil@cisco.com">Hans Verkuil</A>; <A href=3D"m=
+ailto:linux-sh@vger.kernel.org">Linux-sh list</A>; <A href=3D"mailto:linux-=
+media@vger.kernel.org">Linux Media Mailing List</A>; <A href=3D"mailto:devi=
+cetree@vger.kernel.org">devicetree@vger.kernel.org</A></SPAN><BR><SPAN styl=
+e=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-serif; FONT-WEIGHT: bold">S=
+ubject: </SPAN><SPAN style=3D"FONT-SIZE: 11pt; FONT-FAMILY: Calibri,sans-se=
+rif">Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEGProcessi=
+ng Unit.</SPAN><BR><BR></DIV>On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geer=
+t Uytterhoeven wrote:<BR>&gt; Hi Mikhail,<BR>&gt; <BR>&gt; On Mon, Aug 25, =
+2014 at 2:35 PM, Mikhail Ulyanov<BR>&gt; &lt;mikhail.ulyanov@cogentembedded=
+.com&gt; wrote:<BR>&gt; &gt; +&nbsp; - compatible: should containg one of t=
+he following:<BR>&gt; &gt; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp; - "renesas,jpu-r8a7790" for R-Car H2<BR>&gt; &gt; +&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - "renesas,jpu-r8a7791" for R-=
+Car M2<BR>&gt; &gt; +&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp; - "renesas,jpu-gen2" for R-Car second generation<BR>&gt; <BR>&gt; Isn't=
+ "renesas,jpu-gen2" meant as a fallback?<BR>&gt; <BR>&gt; I.e. the DTS shou=
+ld have one of '7790 and '7791, AND the gen2 fallback,<BR>&gt; so we can ma=
+ke the driver match against '7790 and '7791 is we find<BR>&gt; out about an=
+ incompatibility.<BR><BR>Is there a document that clearly states that there=
+ is such a thing<BR>as jpu-gen2 in hardware? If not I would prefer not to a=
+dd a binding for it.<BR>--<BR>To unsubscribe from this list: send the line =
+"unsubscribe linux-media" in<BR>the body of a message to majordomo@vger.ker=
+nel.org<BR>More majordomo info at&nbsp; http://vger.kernel.org/majordomo-in=
+fo.html<BR></BODY></HTML>=
+
+--_BA9F540D-DCE4-4D87-BE61-9C92BA7D457B_--
