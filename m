@@ -1,72 +1,60 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/5] Add rockchip RK808 pmic driver
-Date: Tue, 26 Aug 2014 17:26:06 +0100
-Message-ID: <20140826162606.GC26707@lee--X1>
-References: <1409062218-11844-1-git-send-email-zyw@rock-chips.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Tue, 26 Aug 2014 09:28:32 -0700
+Message-ID: <20140826162831.GA22842@core.coreip.homeip.net>
+References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com>
+ <20140820092117.GI4266@lee--X1>
+ <53FA9D1E.8040202@rock-chips.com>
+ <20140826092205.GG9574@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1409062218-11844-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+In-Reply-To: <20140826092205.GG9574@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Chris Zhong <zyw@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Aug 2014, Chris Zhong wrote:
-> This is the initial version of the RK808 PMIC. This is a power manage=
-ment IC
-> for multimedia products.
->=20
-> It provides regulators that are able to supply power to processor cor=
-es
-> and other components. The chip provides other modules including RTC, =
-Clockout
->=20
-> Chris Zhong (5):
->   dt-bindings: Add RK808 device tree bindings document
->   MFD: RK808: Add new mfd driver for RK808
->   RTC: RK808: add RTC driver for RK808
->   clk: RK808: Add clkout driver for RK808
->   regulator: RK808: remove redundant code
+Hi Lee,
 
-You're still sending your sets un-threaded.  Please see the `git
-send-email` help for information on how to do that.  It makes things
-so much easier to cross-reference if the patches stay together in ones
-INBOX.
+On Tue, Aug 26, 2014 at 10:22:05AM +0100, Lee Jones wrote:
+> On Mon, 25 Aug 2014, Chris Zhong wrote:
+> > On 08/20/2014 05:21 PM, Lee Jones wrote:
+> > >On Wed, 20 Aug 2014, Chris Zhong wrote:
+> > >
+> > >>The RK808 chip is a power management IC for multimedia and handheld
+> > >>devices. It contains the following components:
+> > >>
+> > >>- Regulators
+> > >>- RTC
+> > >>
+> > >>The rk808 core driver is registered as a platform driver and provides
+> > >>communication through I2C with the host device for the different
+> > >>components.
+> > >>
+> > >>Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> > >>---
+> 
+> [...]
+> 
+> > >>+	rk808->pdata = pdata;
+> > >Remove pdata from 'struct rk808'.  You can obtain it from dev.
+> > 
+> > Can I keep this pdata in rk808, because it is used in the regulator driver.
+> > The one obtain from dev maybe empty.
+> 
+> If the one in dev is empty, you should populate that instead.
 
->  Documentation/devicetree/bindings/mfd/rk808.txt |  150 +++++++++
->  drivers/clk/Kconfig                             |    9 +
->  drivers/clk/Makefile                            |    1 +
->  drivers/clk/clk-rk808.c                         |  163 +++++++++
->  drivers/mfd/Kconfig                             |   13 +
->  drivers/mfd/Makefile                            |    1 +
->  drivers/mfd/rk808.c                             |  257 +++++++++++++=
-+
->  drivers/regulator/rk808-regulator.c             |   17 +-
->  drivers/rtc/Kconfig                             |   10 +
->  drivers/rtc/Makefile                            |    1 +
->  drivers/rtc/rtc-rk808.c                         |  412 +++++++++++++=
-++++++++++
->  include/dt-bindings/clock/rockchip,rk808.h      |   11 +
->  include/linux/mfd/rk808.h                       |  202 +++++++++++
->  13 files changed, 1234 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
->  create mode 100644 drivers/clk/clk-rk808.c
->  create mode 100644 drivers/mfd/rk808.c
->  create mode 100644 drivers/rtc/rtc-rk808.c
->  create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
->  create mode 100644 include/linux/mfd/rk808.h
->=20
+No, drivers should not populate platform data in devices - they do not
+own it (unlike drvdata). Platform data should be read-only so that if
+one would unbind and then try to re-bind the driver we'd end up in
+exactly same state as before.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For DT systems we should be allocating platform data separately and make
+sure we clean up after ourselves.
+
+Thanks.
+
+-- 
+Dmitry
