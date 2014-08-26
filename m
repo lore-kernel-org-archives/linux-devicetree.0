@@ -1,56 +1,50 @@
-From: Mikko Perttunen <mperttunen@nvidia.com>
-Subject: Re: [PATCH v2 4/9] pinctrl: tegra-xusb: Add USB PHY support
-Date: Tue, 26 Aug 2014 10:29:33 +0300
-Message-ID: <53FC375D.5060206@nvidia.com>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org> <1408381705-3623-5-git-send-email-abrestic@chromium.org> <53FB8CFE.3090007@wwwdotorg.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 4/5] Regulator: RK808: modify for struct rk808 change
+Date: Tue, 26 Aug 2014 08:30:50 +0100
+Message-ID: <20140826073050.GX17528@sirena.org.uk>
+References: <1408973826-23845-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7LcHW5enrYT/B6h/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53FB8CFE.3090007@wwwdotorg.org>
+Content-Disposition: inline
+In-Reply-To: <1408973826-23845-1-git-send-email-zyw@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Andrew Bresticker <abrestic@chromium.org>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 25/08/14 22:22, Stephen Warren wrote:
-> On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
->> In addition to the PCIe and SATA PHYs, the XUSB pad controller also
->> supports 3 UTMI, 2 HSIC, and 2 USB3 PHYs.  Each USB3 PHY uses a single
->> PCIe or SATA lane and is mapped to one of the three UTMI ports.
->>
->> The xHCI controller will also send messages intended for the PHY driver,
->> so request and listen for messages on the mailbox's PHY channel.
->
-> I'd like a review from Thierry here as the HW expert.
->
-> I need an ack from LinusW in order to take this pinctrl patch through
-> the Tegra tree.
->
->> diff --git a/drivers/pinctrl/pinctrl-tegra-xusb.c
->> b/drivers/pinctrl/pinctrl-tegra-xusb.c
->
->> +static int usb3_phy_power_on(struct phy *phy)
->> +{
->> +    struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
->> +    int port = usb3_phy_to_port(phy);
->> +    int lane = padctl->usb3_ports[port].lane;
->> +    u32 value, offset;
->> +
->> +    if (!is_pcie_or_sata_lane(lane)) {
->> +        dev_err(padctl->dev, "USB3 PHY %d mapped to invalid lane: %d\n",
->> +            port, lane);
->> +        return -EINVAL;
->> +    }
->
-> An aside: This implies that the SATA driver should be talking to this
-> pinctrl driver and explicitly powering on the XUSB pins. However, the
-> SATA driver doesn't depend on this series. I'm a bit confused how that
-> works. Perhaps it's just by accident? Mikko, can you comment?
 
-The SATA driver does depend on the pinctrl-tegra-xusb driver to power on 
-the SATA lane. It looks like what this patch does is it adds support for 
-using the SATA pad for USB3, in which case the SATA lane also needs to 
-be powered on. At least that's the understanding I got from a quick read.
+--7LcHW5enrYT/B6h/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Mikko
+On Mon, Aug 25, 2014 at 09:37:06PM +0800, Chris Zhong wrote:
+> The "dev" has been deleted from "struct rk808" in rk808 mfd driver
+> so rk808->dev should be replaced by &client->dev here.
+
+Applied, thanks.
+
+--7LcHW5enrYT/B6h/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT/DenAAoJELSic+t+oim9x0gP/0zi7e0HTlygyZgbyf7dxrhe
+WtQ4Dlq5sDpCDZOj1xVbiOdOrvYHh4LjrUJJYE+8bvvHfpnQQZastW5IjaK+cWZR
+WSSP4wV0I5wCplcQq2WqsKAMIM/HfZFMF2vQihvYhiXvztzD8Xs/3BfllxFxBJ0r
+5frLWul0U8YK1IKrurRCVFO4WUAQLlUzqL6N0z0ia/X3q1b6TagZTfSumhaGXgvi
+ZY0MkkAUQTzoUD5CYAjoz0euUIz3oOm5MKJU/6f+tds3HtH8dMkoCiiNqn1zW1/7
+8WXbrCO+lt1THbX4j3cZXYVQkbPBsyc11T9RsyqY0qoJ4JKnR4zbGMC3L9fA1g3G
+47g/0aNe8NEg3T8y/0/ZojTMJwKdAgeU7VBCwxvLHQyunDMf2h9eJA9UmiDgN4Yj
+ns4D95LPxfegAhy09Z9IdZijU+FuWSRV8KXn28Ez7jl+3lYvtNnob98OBWdvgEdu
+kDZAmVWe/NFRmeB1Ra9uPiXqlbFK9/jjg+r+ozvN6BRvCN3Zh5o221oI5hYu6Zv/
+9+jAY/o2uoteph9leN7hVZIN31DX4rC1iB/sqdqTrwqO0lGfIotmYJxVuYWqev/l
+9XDK+li43xt335Uyu9vaBr5+farfpJ3QO5y+G4xJH0mR5DiJnw4GHn9ds8jBkc49
+eGfusMAZBaOQ2mPmP5zR
+=Mm4l
+-----END PGP SIGNATURE-----
+
+--7LcHW5enrYT/B6h/--
