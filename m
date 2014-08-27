@@ -1,38 +1,72 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
- extension is present
-Date: Wed, 27 Aug 2014 16:03:22 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1408271556350.3323@nanos>
-References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com> <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com> <53F724F5.3040004@arm.com> <1409133344.25382.37.camel@coredoba.hi.pengutronix.de> <53FDB4B3.6000400@arm.com>
- <alpine.DEB.2.10.1408271347210.3323@nanos> <87ppfmoxxz.fsf@approximate.cambridge.arm.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH] Add support for definition of register maps in DT in
+ ADV7604
+Date: Wed, 27 Aug 2014 16:05:30 +0200
+Message-ID: <53FDE5AA.2040805@metafoo.de>
+References: <1409143986-13990-1-git-send-email-jean-michel.hautbois@vodalys.com> <53FDD718.3020202@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <87ppfmoxxz.fsf@approximate.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: =?ISO-8859-15?Q?Jan_L=FCbbe?= <jlu@pengutronix.de>, Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "Joe.C" <srv_yingjoe.chen@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, Pawel Moll <Pawel.Moll@arm.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>"Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupst>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53FDD718.3020202-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Aug 2014, Marc Zyngier wrote:
-> I very much like that kind of approach. Stacking domains seems to solve
-> a number of issues at once:
-> 
-> - NVIDIA's gic extension
-> - TI's crossbar
-> - ARM's GICv2m
-> - Mediatek's glorified line inverter
-> - ... and probably the next madness that's going to land tomorrow
+On 08/27/2014 03:03 PM, Hans Verkuil wrote:
+> On 08/27/14 14:53, jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org wrote:
+>> From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+>>
+>> This patch adds support for DT parsing of register maps adresses.
+>> This allows multiple adv76xx devices on the same bus.
+>>
+>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/media/i2c/adv7604.txt      | 12 ++++
+>>   drivers/media/i2c/adv7604.c                        | 71 ++++++++++++++++++----
+>>   2 files changed, 71 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> index c27cede..33881fb 100644
+>> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+>> @@ -32,6 +32,18 @@ The digital output port node must contain at least one endpoint.
+>>   Optional Properties:
+>>
+>>     - reset-gpios: Reference to the GPIO connected to the device's reset pin.
+>> +  - adv7604-page-avlink: Programmed address for avlink register map
+>> +  - adv7604-page-cec: Programmed address for cec register map
+>> +  - adv7604-page-infoframe: Programmed address for infoframe register map
+>> +  - adv7604-page-esdp: Programmed address for esdp register map
+>> +  - adv7604-page-dpp: Programmed address for dpp register map
+>> +  - adv7604-page-afe: Programmed address for afe register map
+>> +  - adv7604-page-rep: Programmed address for rep register map
+>> +  - adv7604-page-edid: Programmed address for edid register map
+>> +  - adv7604-page-hdmi: Programmed address for hdmi register map
+>> +  - adv7604-page-test: Programmed address for test register map
+>> +  - adv7604-page-cp: Programmed address for cp register map
+>> +  - adv7604-page-vdp: Programmed address for vdp register map
+>
+> Might adv7604-addr-avlink be a better name? Other than that it looks good
+> to me.
 
-Its probably already there you just don't know about it yet :)
- 
-> I haven't completly groked the way we're going to allocate domains and
-> irq_data structures, but this is definitely something worth
+Those properties need at least a vendor prefix. But to be honest I'd rather see 
+generic support for multiple addresses in the I2C core. This is not a feature 
+that is specific to this particular device. And for example similar things work 
+already fine for other buses like for example MMIO devices.
 
-All we have for now is a rough idea and some pseudo code in my lengthy
-reply to Jiang, but it shouldn't be hard to implement something
-useful.
+E.g. something like
 
-Thanks,
+reg = <0x12 0x34 0x56 0x78 ...>
+reg-names = "main", "avlink", "cec", "infoframe", ...
 
-	tglx
+Ideally accessing those other addresses will be hidden in the I2C core by a 
+helper function that allows you to create a dummy device for a particular 
+sub-address.
+
+- Lars
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
