@@ -1,34 +1,38 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv10 2/2] arm: dts: Add Altera SDRAM EDAC bindings & devicetree
- entries.
-Date: Wed, 27 Aug 2014 08:06:32 -0500
-Message-ID: <53FDD7D8.5050602@opensource.altera.com>
-References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com> <1407770293-27190-3-git-send-email-tthayer@opensource.altera.com> <20140814184949.GC11558@amd.pavel.ucw.cz> <53FCD456.3050404@opensource.altera.com> <53FCEDDA.4060906@opensource.altera.com> <20140827063638.GA28234@nazgul.tnic>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v2 2/3] rc: Introduce hix5hd2 IR transmitter driver
+Date: Wed, 27 Aug 2014 14:15:09 +0100
+Message-ID: <20140827131509.GA3195@gofer.mess.org>
+References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org>
+ <1408613086-12538-3-git-send-email-zhangfei.gao@linaro.org>
+ <20140821100739.GA3252@gofer.mess.org>
+ <53FD9BB7.6080207@linaro.org>
+ <20140827095106.GA2712@gofer.mess.org>
+ <53FDAE94.8010404@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140827063638.GA28234@nazgul.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thor Thayer <tthayer@opensource.altera.com>, Pavel Machek <pavel@denx.de>, robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@opensource.altera.com, delicious.quinoa@gmail.com, dougthompson@xmission.com, grant.likely@linaro.org, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53FDAE94.8010404@linaro.org>
+Sender: linux-media-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, David =?iso-8859-1?Q?H=E4rdeman?= <david@hardeman.nu>, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Guoxiong Yan <yanguoxiong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris
+On Wed, Aug 27, 2014 at 06:10:28PM +0800, zhangfei wrote:
+> On 08/27/2014 05:51 PM, Sean Young wrote:
+> >On Wed, Aug 27, 2014 at 04:49:59PM +0800, zhangfei wrote:
+> >>On 08/21/2014 06:07 PM, Sean Young wrote:
+> >IR. There is be no reason to run lircd if you use this method.
+> Do you mean kernel decoder is enough to cover?
+> We use user space lircd to cosider more flexibility, even some
+> non-standard protocol.
 
-On 8/27/14, 1:36 AM, Borislav Petkov wrote:
-> On Tue, Aug 26, 2014 at 03:28:10PM -0500, Dinh Nguyen wrote:
->> If Boris is okay with driver part and everyone else is OK with the DTS
->> portion, then I can apply the DTS patch to my tree, and Boris take the
->> driver patch into his tree?
-> 
-> Actually, it would be easier for everyone involved if those patches go
-> together due to their dependency. So if you want me to take a look at
-> the EDAC parts again and give you my ack so that you can pick them all
-> up together and they go through your tree, let me know.
-> 
+Just out of interest, what flexibility does lircd offer which the kernel
+decoders do not? 
 
-That would be great!
+> Anyway both method can be supported, depending on whether setting
+> the optional property "linux,rc-map-name" or not.
 
-Thanks,
-Dinh
+Great, thanks.
+
+Sean
