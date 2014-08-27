@@ -1,54 +1,80 @@
-From: Robert Richter <robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v9 00/12] Support for creating generic PCI host bridges
- from DT
-Date: Wed, 27 Aug 2014 18:24:04 +0200
-Message-ID: <20140827162404.GA4818@rric.localhost>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
+ in DT
+Date: Wed, 27 Aug 2014 19:27:00 +0300
+Message-ID: <53FE06D4.8030708@mm-sol.com>
+References: <53D788A7.4020303@mm-sol.com> <3794875.CZFbAag5Sv@wuerfel> <53D7AA72.6010309@mm-sol.com> <20140729234522.E9FF1C40738@trevor.secretlab.ca> <53D84558.7060406@codeaurora.org> <CAL_JsqJjH0OH+X=fzwqAPeWarjoLev7v6Nv_QhAa+nZyztMnFA@mail.gmail.com> <20140730060619.GC19933@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1407860725-25202-1-git-send-email-Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140730060619.GC19933@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Liviu,
+On 07/30/2014 09:06 AM, Stephen Boyd wrote:
+> On 07/29, Rob Herring wrote:
+>> On Tue, Jul 29, 2014 at 8:07 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>>> On 07/29/14 16:45, Grant Likely wrote:
+>>>> On Tue, 29 Jul 2014 17:06:42 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
+>>>>>
+>>>>> This was just an example. Of course it has many issues and probaly it is
+>>>>> wrong:) The main goal was to understand does IORESOURCE_REG resource
+>>>>> type and parsing the *reg* properties for non-translatable addresses are
+>>>>> feasible. And also does it acceptable by community and OF platform
+>>>>> maintainers.
+>>>> The use case is actually very different from of_address_to_resource or
+>>>> of_get_address() because those APIs explicitly return physical memory
+>>>> addresses from the CPU perspective. It makes more sense to create a new
+>>>> API that doesn't attempt to translate the reg address. Alternately, a
+>>>> new API that only translates upto a given parent node.
+>>>
+>>> The most important thing is that platform_get_resource{_by_name}(&pdev,
+>>> IORESOURCE_REG, n) returns the reg property and optional size encoded
+>>> into a struct resource. I think Rob is suggesting we circumvent the
+>>> entire of_address_to_resource() path and do some if
+>>> (IS_ENABLED(CONFIG_OF) && type == IORESOURCE_REG) check in
+>>> platform_get_resource() to package up the reg property into a struct
+>>> resource. That should work.
+>>
+>> No, I'm saying why are you using platform_get_resource at all and
+>> adding a new resource type? I don't see any advantage.
+> 
+> First off, the resource type is not new. IORESOURCE_REG has
+> existed for two years (see commit 72dcb1197228 "resources: Add
+> register address resource type, 2012-08-07").
+> 
+> The main advantage is allowing things like
+> platform_get_resource_by_name() and platform_get_resource() to
+> work seamlessly with devicetree. If we don't have this, drivers
+> are going to open code their reg property parsing and possibly
+> reg-names parsing. There are a handful of drivers that would be
+> doing this duplicate work.
+> 
+> Sure, we could consolidate them into an OF helper function, but
+> then these are the only platform drivers that are getting their
+> reg properties via a special non-translatable address function.
+> The drivers don't care that they're using non-translateable
+> addresses as long as they can pass the address returned from
+> platform_get_resource() to their regmap and do I/O. The drivers
+> are written under the assumption that they're a sub-device of
+> some parent device (in this case a PMIC) and so they assume that
+> the regmap has already been setup for them.
 
-On 12.08.14 17:25:13, Liviu Dudau wrote:
-> This is my updated attempt at adding support for generic PCI host
-> bridge controllers that make use of device tree information to
-> configure themselves. This version incorporates Catalin's proposal
-> for managing domain numbers that got Bjorn's approval. I am now requesting
-> ACKs from the relevant maintainers as I would like to get the upstream ball
-> rolling.
->
-> Of the more important changes vs v8, this version has an altered implementation
-> of of_create_pci_host_bridge() that allows for easier conversion of architectures
-> that use pci_scan_root_bus() in their code rather than pci_create_root_bus().
-> With my v8 version of the patchset it would've meant adding back the code
-> from pci_scan_root_bus() into architectural code. v9 fixes that and adds
-> a callback parameter to of_create_pci_host_bridge() that permits the host
-> controller driver to finish the driver setup before the bus is being scanned.
->
-> To repeat for the benefit of people writing host bridge drivers on top of
-> my patchset: the API for of_create_pci_host_bridge() has changed and it will now
-> do all the child bus and device scanning for you, so you only need to provide a
-> setup function that will be called before scanning start. I will post a patch
-> that Lorenzo has kindly constructed for converting pci-host-generic.c to my API.
+Starting from the fact that these devices are sub-functions of PMIC (MFD
+devices) and currently there are no so many users of similar API outside
+of PMIC's world, does it make sense to implement an API for
+non-translatable addresses in MFD core?
 
-would it be possible to provide a branch with this patch set in your
-git repo as for v8?
+We could pass a null pointer to the mfd_cell->resources which means that
+the resources will be collected from the DT. There is already code in
+mfd_add_device() which passed over every child of the parent device
+node. This way the mfd_add_device() will fill the proper resource type
+and the sub-function drivers can use platform_get_resource() without
+worries.
 
-This would make rebasing and testing of our Cavium Thunder code base
-much easier. We could then also refer to a public repo where our
-patches base on.
-
-Thanks,
-
--Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+Stan
