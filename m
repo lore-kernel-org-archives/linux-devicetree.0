@@ -1,47 +1,47 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-Subject: Re: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
- extension is present
-Date: Wed, 27 Aug 2014 11:55:44 +0200
-Message-ID: <1409133344.25382.37.camel@coredoba.hi.pengutronix.de>
-References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
-	 <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
-	 <53F724F5.3040004@arm.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v2 2/3] rc: Introduce hix5hd2 IR transmitter driver
+Date: Wed, 27 Aug 2014 18:10:28 +0800
+Message-ID: <53FDAE94.8010404@linaro.org>
+References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org> <1408613086-12538-3-git-send-email-zhangfei.gao@linaro.org> <20140821100739.GA3252@gofer.mess.org> <53FD9BB7.6080207@linaro.org> <20140827095106.GA2712@gofer.mess.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53F724F5.3040004@arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: "Joe.C" <srv_yingjoe.chen@mediatek.com>, Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>"Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20140827095106.GA2712@gofer.mess.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sean Young <sean@mess.org>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, =?ISO-8859-1?Q?David_?= =?ISO-8859-1?Q?H=E4rdeman?= <david@hardeman.nu>, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Guoxiong Yan <yanguoxiong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Marc,
+Hi, Sean
 
-On Fri, 2014-08-22 at 12:09 +0100, Marc Zyngier wrote:
-> Here, you're using it to program something that sits between the
-> device and the GIC. This is a separate block, with its own hardware
-> configuration, that modifies the interrupt signal. This should be
-> reflected in the device-tree and the code paths.
-> 
-> You can probably model this as a separate irqchip for the few
-> interrupts that require this, or have it configured at boot time
-> (assuming the configuration never changes).
+On 08/27/2014 05:51 PM, Sean Young wrote:
+> On Wed, Aug 27, 2014 at 04:49:59PM +0800, zhangfei wrote:
+>> On 08/21/2014 06:07 PM, Sean Young wrote:
+>>> On Thu, Aug 21, 2014 at 05:24:44PM +0800, Zhangfei Gao wrote:
+>>> It would be useful is rdev->input_phys, rdev->input_id,
+>>> rdev->timeout, rdev->rx_resolution are set correctly.
+>>
+>> OK, will set rdev->timeout, rdev->rx_resolution
+>> Not sure the usage of rdev->input_id, why is it required?
+>
+> This is for the EVIOCGID ioctl on the input device which will be created
+> for the rc device. This is used for delivering input events from decoded
 
-It seems to me that using a separate irqchip for a simple inverter would
-add the run-time overhead of passing through wrapper functions on every
-IRQ. Do you have an idea how this could be avoided without using the
-gic_arch_extn feature?
+Find EVIOCGID in drivers/input/evdev.c
+Will use same value as sunxi-cir.c & gpio-ir-recv.c, if these value has 
+no special requirement.
+         rcdev->input_id.bustype = BUS_HOST;
+         rcdev->input_id.vendor = 0x0001;
+         rcdev->input_id.product = 0x0001;
+         rcdev->input_id.version = 0x0100;
 
-As in the DT the actual IRQ polarity should be used, simply configuring
-the HW IRQ polarity in the bootloader is not enough without telling the
-GIC driver which polarity is supported on which IRQ, right?
+> IR. There is be no reason to run lircd if you use this method.
+Do you mean kernel decoder is enough to cover?
+We use user space lircd to cosider more flexibility, even some 
+non-standard protocol.
 
-Regards,
-Jan
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Anyway both method can be supported, depending on whether setting the 
+optional property "linux,rc-map-name" or not.
 
+Thanks
