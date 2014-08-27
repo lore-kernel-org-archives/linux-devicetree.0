@@ -1,66 +1,48 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: dts: hix5hd2: add gmac node
-Date: Wed, 27 Aug 2014 23:08:08 +0800
-Message-ID: <53FDF458.2020601@linaro.org>
-References: <1409143114-23311-1-git-send-email-zhangfei.gao@linaro.org> <1409143114-23311-2-git-send-email-zhangfei.gao@linaro.org> <20140827145406.GA9737@leverpostej> <53FDF2CC.8080302@linaro.org> <20140827150409.GC9737@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH resend] checkpatch: Enable whitespace checks for DTS files
+Date: Wed, 27 Aug 2014 17:08:26 +0200
+Message-ID: <1409152106-9424-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140827150409.GC9737@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+When run on *.dtsi or *.dts files, the whitespace checks were skipped,
+while they are valid for DTS files.  Hence stop skipping them.
 
+I ran checkpatch on all in-tree DTS files, and didn't notice any error or
+warning messages that are inappropriate for DTS files.
 
-On 08/27/2014 11:04 PM, Mark Rutland wrote:
-> On Wed, Aug 27, 2014 at 04:01:32PM +0100, zhangfei wrote:
->>
->>
->> On 08/27/2014 10:54 PM, Mark Rutland wrote:
->>> On Wed, Aug 27, 2014 at 01:38:29PM +0100, Zhangfei Gao wrote:
->>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>    arch/arm/boot/dts/hisi-x5hd2-dkb.dts |   26 ++++++++++++++++++++++++++
->>>>    arch/arm/boot/dts/hisi-x5hd2.dtsi    |   16 ++++++++++++++++
->>>>    2 files changed, 42 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
->>>> index 05b44c2..0344de0 100644
->>>> --- a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
->>>> +++ b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
->>>> @@ -51,3 +51,29 @@
->>>>    &uart0 {
->>>>    	status = "okay";
->>>>    };
->>>> +
->>>> +&gmac0 {
->>>> +	#address-cells = <1>;
->>>> +	#size-cells = <0>;
->>>> +	phy-handle = <&phy2>;
->>>> +	phy-mode = "mii";
->>>> +	mac-address = [00 00 00 00 00 00];
->>>
->>> If this is just so space is pre-allocated for the bootloader to patch
->>> this, please place a comment to that effect.
->>>
->>> Otherwise that doesn't look right.
->>
->> Yes, it is placeholder, bootloader will overwrite field.
->>
->> Also net driver will use random address if if not valid addr.
->> if (!is_valid_ether_addr(ndev->dev_addr))
->> 	eth_hw_addr_random(ndev);	
->
-> Sure. All I'm asking for is to have something like:
->
-> /* Placeholder, overwritten by bootloader */
-> mac-address = [00 00 00 00 00 00];
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+ scripts/checkpatch.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Got it, will update.
-Thanks Mark.
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 31a731e06f50..ded90b6d7e17 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2338,7 +2338,7 @@ sub process {
+ 		}
+ 
+ # check we are in a valid source file if not then ignore this hunk
+-		next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
++		next if ($realfile !~ /\.(h|c|s|S|pl|sh|dtsi|dts)$/);
+ 
+ #line length limit
+ 		if ($line =~ /^\+/ && $prevrawline !~ /\/\*\*/ &&
+@@ -2399,7 +2399,7 @@ sub process {
+ 		}
+ 
+ # check we are in a valid source file C or perl if not then ignore this hunk
+-		next if ($realfile !~ /\.(h|c|pl)$/);
++		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
+ 
+ # at the beginning of a line any tabs must come first and anything
+ # more than 8 must use tabs.
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
