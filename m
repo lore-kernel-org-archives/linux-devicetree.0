@@ -1,154 +1,85 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
- extension is present
-Date: Wed, 27 Aug 2014 15:29:35 +0100
-Message-ID: <20140827142935.GA9490@leverpostej>
-References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
- <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
- <53F724F5.3040004@arm.com>
- <1409133344.25382.37.camel@coredoba.hi.pengutronix.de>
- <53FDB4B3.6000400@arm.com>
- <alpine.DEB.2.10.1408271347210.3323@nanos>
- <87ppfmoxxz.fsf@approximate.cambridge.arm.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
+ initialization order based on the DT)
+Date: Wed, 27 Aug 2014 15:44:03 +0100
+Message-ID: <20140827144403.GB13850@arm.com>
+References: <53F64624.5000403@ahsoftware.de>
+ <20140822131919.GX21734@leverpostej>
+ <20140825093931.GB2399@ulmo>
+ <E1XLu15-0002DP-6o@jdl.com>
+ <20140825133714.GH4163@ulmo.nvidia.com>
+ <20140826084208.AE5F0C40989@trevor.secretlab.ca>
+ <20140826084922.GG17263@ulmo>
+ <53FC566C.30904@ahsoftware.de>
+ <20140826101107.GC32315@leverpostej>
+ <20140827103432.64927C409CB@trevor.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <87ppfmoxxz.fsf@approximate.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jan =?utf-8?B?TMO8YmJl?= <jlu@pengutronix.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "Joe.C" <srv_yingjoe.chen@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, Pawel Moll <Pawel.Moll@arm.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>"Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream>
+In-Reply-To: <20140827103432.64927C409CB-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 27, 2014 at 02:37:44PM +0100, Marc Zyngier wrote:
-> [Adding Jiang Liu to the spam-fest]
+On Wed, Aug 27, 2014 at 11:34:32AM +0100, Grant Likely wrote:
+> On Tue, 26 Aug 2014 11:11:07 +0100, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Tue, Aug 26, 2014 at 10:42:04AM +0100, Alexander Holler wrote:
+> > > Am 26.08.2014 10:49, schrieb Thierry Reding:
+> > > > On Tue, Aug 26, 2014 at 09:42:08AM +0100, Grant Likely wrote:
+> > > >> On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > [...]
+> > > >>> There are somewhat standardized bindings for the above and especially
+> > > >>> for bindings of the type that clocks implement this is trivial. We can
+> > > >>> simply iterate over each (phandle, specifier) tuple and check that the
+> > > >>> corresponding clock provider can be resolved (which typically means that
+> > > >>> it's been registered with the common clock framework).
+> > > >>>
+> > > >>> For regulators (and regulator-like bindings) the problem is somewhat
+> > > >>> more difficult because they property names are not standardized. One way
+> > > >>> to solve this would be to look for property names with a -supply suffix,
+> > > >>> but that could obviously lead to false positives. One alternative that I
+> > > >>> think could eliminate this would be to explicitly list dependencies in
+> > > >>> drivers. This would allow core code to step through such a list and
+> > > >>> resolve the (phandle, specifier) tuples.
+> > > >>
+> > > >> False positives and negatives may not actually be a problem. It is
+> > > >> suboptimal, certainly, but it shouldn't outright break the kernel.
+> > > >
+> > > > There could be cases where some random integer in a cell could be
+> > > > interpreted as a phandle and resolve to a struct device_node. I suppose
+> > > > it might be unlikely, but not impossible, that the device_node could
+> > > > even match a device in the correct subsystem and you'd get a wrong
+> > > > dependency. Granted, a wrong dependency may not be catastrophic in that
+> > > > it won't lead to a crash, but it could lead to various kinds of
+> > > > weirdness and hard to diagnose problems.
+> > > 
+> > > You need either the type information in the DTB (that's why I've add 
+> > > those "dependencies" to identify phandles), or you need to know every 
+> > > binding (at "dependency-resolve-time" to identify phandles.
+> > 
+> > While having type information in the DTB would be fantastic, it's not
+> > something we can expect from the systems already in the wild, and I
+> > worry how it would interact with bootloaders that modify the DTB (I
+> > don't know if any modify properties with phandles).
 > 
-> Hi Thomas,
-> 
-> On Wed, Aug 27 2014 at  1:23:48 pm BST, Thomas Gleixner <tglx@linutronix.de> wrote:
-> > On Wed, 27 Aug 2014, Marc Zyngier wrote:
-> >> > As in the DT the actual IRQ polarity should be used, simply configuring
-> >> > the HW IRQ polarity in the bootloader is not enough without telling the
-> >> > GIC driver which polarity is supported on which IRQ, right?
-> >> 
-> >> Looking a bit closer at things, what you describe in DT is the IRQ
-> >> polarity the interrupt controller sees. Nothing else should interpret
-> >> that field.
-> >> 
-> >> So it is legal (IMO) to have a device with an interrupt specifier
-> >> describing a rising edge interrupt, and yet have the device generating a
-> >> falling edge, with Mediatek's special sauce doing the conversion in between.
-> >> 
-> >> Something will have to configure the polarity widget though, but that
-> >> can be left outside of the GIC.
-> >
-> > This seems to become a popular topic and it looks like the whole GIC
-> > extension thing is going to explode sooner than later.
-> >
-> > We are currently discussing hierarchical irq domains to solve a
-> > different issue in x86 land. See the related discussion here:
-> >
-> > 	  https://lkml.org/lkml/2014/8/1/67
-> 
-> Ah, very interesting. Thanks for pointing that out.
-> 
-> > Now looking at these GIC plus extra sauce problems, I wonder whether
-> > this wouldn't be solvable in a similar way. If you look at it from the
-> > HW perspective you have:
-> >
-> >    ---------      ---------
-> > ---| MAGIC |------|ARM GIC|
-> > ---|       |------|       |
-> > ---|       |------|       |
-> > ---|       |------|       |
-> > ---|       |------|       |
-> >    ---------      ---------
-> >
-> > The MAGIC interrupt controller only provides functionality which is
-> > not available from the ARM architected GIC but maps 1:1 to the ARM GIC
-> > interrupt lines. So it looks like a variation to the more dynamic
-> > mapping of MSI -> Remap -> CPU-Vector problem we need to solve on x86.
-> >
-> > The idea is to have two irq domains: magic_domain and armgic_domain.
-> >
-> > The magic_domain is the frontend facing the devices and the
-> > armgic_domain is the parent domain. This is also reflected in
-> > hierarchical data structures, i.e. irq_desc->irq_data will get a new
-> > field parent_data, which points to the irq_data of the parent
-> > interrupt controller, which is allocated separately when the interrupt
-> > line is instantiated.
-> >
-> > So in the above case the hotpath ack/eoi functions of the irq chip
-> > associated to the device interrupt, i.e. magic_chip, would do:
-> >
-> > irq_ack(struct irq_data *d)
-> > {
-> > 	struct irq_data *pd = d->parent_data;
-> >
-> > 	pd->chip->irq_ack(pd);
-> > }
-> >
-> > Granted, that's another level of indirection, but this is going to be
-> > more efficient than a boatload of conditional hooks in the GIC code
-> > proper. Not to talk about the maintainability of the whole maze.
-> >
-> > The irq_set_type() function would do:
-> >
-> > irq_set_type(struct irq_data *d, int type)
-> > {
-> > 	struct irq_data *pd = d->parent_data;
-> >
-> > 	gic_type = set_magic_chip_type(d, type);
-> >
-> > 	return pd->chip->irq_set_type(d, gic_type);
-> > }
-> >
-> > Switching to this allows to completely avoid the gazillion of hooks in
-> > the gic code and should work nicely with multiplatform kernels by
-> > simpling hooking up the domain parent relation ship to the proper
-> > magic domain or leave the armgic as the direct device interface in
-> > case the SoC does not have the magic chip in front of the arm gic.
-> >
-> > Thoughts?
-> 
-> I very much like that kind of approach. Stacking domains seems to solve
-> a number of issues at once:
-> 
-> - NVIDIA's gic extension
-> - TI's crossbar
-> - ARM's GICv2m
-> - Mediatek's glorified line inverter
-> - ... and probably the next madness that's going to land tomorrow
-> 
-> I haven't completly groked the way we're going to allocate domains and
-> irq_data structures, but this is definitely something worth
-> investigating. I'm not too worried about the indirection either - at
-> least we end up with maintainable code.
-> 
-> We need to work out how to drive the whole stacking from a DT
-> perspective: Mark, any idea?
+> Anything we do here is firmly in the realm of optimization and
+> improvement. Adding data to the tree is fine as long as we don't make
+> the kernel depend on it. Older platforms will continue to work without
+> the optimization.
 
-Describing the lines the magic irqchip has to its parent irqchip is
-simple, the standard interrupts property can handle that:
+It's not just optimisation but an important feature for new arm64 SoCs.
+Given some Tegra discussions recently, in many cases the machine_desc
+use on arm is primarily to initialise devices in the right order. If we
+can solve this in a more deterministic way (other than deferred
+probing), we avoid the need for a dedicated SoC platform driver (or
+machine_desc) or workarounds like different initcall levels and explicit
+DT parsing.
 
-parent: parent {
-	...
-	#interrupt-cells = <1>;
-};
-
-magic {
-	...
-	interrupt-parent = <&parent>;
-	interrupts = <3>, <6>, <17>, <2>;
-	#interrupt-cells = <1>;
-};
-
-The harder part is describing the configuration of each interrupt to the
-magic irqchip (e.g. edge vs level triggered), which is inseparable form
-the line identifier in the interrupt-specifier.
-
-If there interrupts don't share the same configuration then I'm not sure
-how we describe that in the DT. That's especially problematic if the
-assignment of parent line is dynamic (as with the crossbar iirc).
-
-Mark.
+-- 
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
