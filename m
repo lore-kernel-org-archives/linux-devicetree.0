@@ -1,221 +1,77 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Wed, 27 Aug 2014 14:39:36 +0100
-Message-ID: <20140827133936.GD6364@lee--X1>
-References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: adc: ti_am335x_adc: make sample delay, open
+ delay, averaging DT parameters
+Date: Wed, 27 Aug 2014 14:56:35 +0100
+Message-ID: <20140827135635.GH6364@lee--X1>
+References: <1409141990-29627-1-git-send-email-vigneshr@ti.com>
+ <1409141990-29627-2-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
+In-Reply-To: <1409141990-29627-2-git-send-email-vigneshr-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Aug 2014, Chris Zhong wrote:
+On Wed, 27 Aug 2014, Vignesh R wrote:
 
-> The RK808 chip is a power management IC for multimedia and handheld
-> devices. It contains the following components:
+> Number of averaging, open delay, sample delay are made DT parameters.
+> By decreasing averaging and delays more samples can be obtained per
+> second increasing performance of ADC. Previously the number of
+> averages per step was fixed to 16. Making these parameters
+> configurable will help in balancing speed vs accuracy.
+> For each ADC step provide DT based paramters to set open delay,
+> sample delay and number of averaging. One configurable step is
+> used per ADC channel. Since there can be atmost 8 ADC channels,
+> steps 16 to 8 are used for ADC.
 >=20
-> - Regulators
-> - RTC
-> - Clkout
->=20
-> The RK808 core driver is registered as a platform driver and provides
-> communication through I2C with the host device for the different
-> components.
->=20
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-> Signed-off-by: Zhang Qing <zhangqing@rock-chips.com>
->=20
+> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 > ---
->=20
-> Changes in v6:
-> Adviced by Lee Jones in v2
-> - rk808_i2c_client instead of g_rk808
-> - remove pdata form struct rk808
->=20
-> Changes in v5: None
-> Changes in v4:
-> Adviced by Lee Jones in v2
-> - modify the description in Kconfig
-> - remove some unnecessary header files
-> - remove dev from struct rk808
-> - use enum for define RK808_ID...
->=20
-> Changes in v3:
-> - fix compile err
->=20
-> Changes in v2:
-> Adviced by Mark Browm:
-> - use defines for register setting value
-> - remove rtc alarm disable in shutdown
-> - remove while(1) in shutdown
-> - remove read 0x2f in probe
->=20
->  drivers/mfd/Kconfig       |   13 +++
->  drivers/mfd/Makefile      |    1 +
->  drivers/mfd/rk808.c       |  257 +++++++++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/rk808.h |  202 +++++++++++++++++++++++++++++++++++
->  4 files changed, 473 insertions(+)
->  create mode 100644 drivers/mfd/rk808.c
->  create mode 100644 include/linux/mfd/rk808.h
+>  .../bindings/input/touchscreen/ti-tsc-adc.txt      |   18 +++++++
+>  drivers/iio/adc/ti_am335x_adc.c                    |   49 ++++++++++=
++++++++---
+>  include/linux/mfd/ti_am335x_tscadc.h               |    3 ++
+>  3 files changed, 63 insertions(+), 7 deletions(-)
 
 [...]
 
-> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
-> new file mode 100644
-> index 0000000..f0d6518
-> --- /dev/null
-> +++ b/drivers/mfd/rk808.c
+> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd=
+/ti_am335x_tscadc.h
+> index fb96c84..26d3e84 100644
+> --- a/include/linux/mfd/ti_am335x_tscadc.h
+> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> @@ -82,14 +82,17 @@
 
-[...]
+There are so many different formats at play here, it's difficult to
+see what's happening where!
 
-> +static int rk808_probe(struct i2c_client *client,
-> +		       const struct i2c_device_id *id)
-> +{
-> +	int ret;
-> +	int pm_off =3D 0;
-> +	struct rk808 *rk808;
-> +	struct device_node *np =3D client->dev.of_node;
+>  #define STEPCONFIG_INP_AN4	STEPCONFIG_INP(4)
+>  #define STEPCONFIG_INP_ADCREFM	STEPCONFIG_INP(8)
+>  #define STEPCONFIG_FIFO1	BIT(26)
+> +#define STEPCONFIG_AVG_MAX	16
+> =20
+>  /* Delay register */
+>  #define STEPDELAY_OPEN_MASK	(0x3FFFF << 0)
+>  #define STEPDELAY_OPEN(val)	((val) << 0)
 
-Are you prepared for np =3D=3D NULL?
+What's the point in shifting by zero?
 
-> +	pm_off =3D of_property_read_bool(np,
-> +				       "rockchip,system-power-controller");
+>  #define STEPCONFIG_OPENDLY	STEPDELAY_OPEN(0x098)
+> +#define STEPDELAY_OPEN_MAX	0x3FFFF
 
-Rather than have this floating up here, can you put it down where it
-is used?
+Put this up the top, then you can use it when defining
+STEPDELAY_OPEN_MASK.
 
-> +	rk808 =3D devm_kzalloc(&client->dev, sizeof(*rk808), GFP_KERNEL);
-> +	if (!rk808)
-> +		return -ENOMEM;
-> +
-> +	rk808->i2c =3D client;
-> +	i2c_set_clientdata(client, rk808);
+>  #define STEPDELAY_SAMPLE_MASK	(0xFF << 24)
+>  #define STEPDELAY_SAMPLE(val)	((val) << 24)
+>  #define STEPCONFIG_SAMPLEDLY	STEPDELAY_SAMPLE(0)
+> +#define STEPDELAY_SAMPLE_MAX	0xFF
 
-I tend to like drive data set at the last moment.  Usually just
-before mfd_add_devices().
-
-> +	rk808->regmap =3D devm_regmap_init_i2c(client, &rk808_regmap_config=
-);
-> +	if (IS_ERR(rk808->regmap)) {
-> +		dev_err(&client->dev, "regmap initialization failed\n");
-> +		return PTR_ERR(rk808->regmap);
-> +	}
-> +
-> +	ret =3D rk808_pre_init(rk808);
-> +	if (ret)
-> +		return ret;
-
-Does this need to be a seperate function?  It's only one call to
-egmap_update_bits() and is not reused.
-
-> +	if (!client->irq) {
-> +		dev_err(&client->dev, "No interrupt support, no core IRQ\n");
-> +		return -EINVAL;
-> +	}
-
-If this is a show stopper, perhaps you should test for it higher up
-before allocating anything else?
-
-> +	ret =3D regmap_add_irq_chip(rk808->regmap, client->irq,
-> +				  IRQF_ONESHOT, -1,
-> +				  &rk808_irq_chip, &rk808->irq_data);
-> +	if (ret) {
-> +		dev_err(&client->dev, "Failed to add irq_chip %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret =3D mfd_add_devices(&client->dev, -1,
-> +			      rk808s, ARRAY_SIZE(rk808s),
-> +			      NULL, 0, regmap_irq_get_domain(rk808->irq_data));
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to add MFD devices %d\n", ret);
-> +		goto err_irq;
-> +	}
-> +
-> +	if (pm_off && !pm_power_off) {
-> +		rk808_i2c_client =3D client;
-> +		pm_power_off =3D rk808_device_shutdown;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_irq:
-> +	regmap_del_irq_chip(client->irq, rk808->irq_data);
-> +	return ret;
-> +}
-> +
-> +static int rk808_remove(struct i2c_client *client)
-> +{
-> +	struct rk808 *rk808 =3D i2c_get_clientdata(client);
-> +
-> +	regmap_del_irq_chip(client->irq, rk808->irq_data);
-> +	mfd_remove_devices(&client->dev);
-> +	pm_power_off =3D NULL;
-
-'\n' here.  No need to squash everything together.
-
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id rk808_of_match[] =3D {
-> +	{ .compatible =3D "rockchip,rk808" },
-> +};
-> +MODULE_DEVICE_TABLE(of, rk808_of_match);
-> +
-> +static const struct i2c_device_id rk808_ids[] =3D {
-> +	 { "rk808" },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(i2c, rk808_ids);
-
-My OCD senses are tingling.  Either have a blank line above the calls
-to MODULE_DEVICE_TABLE() or don't.
-
-> +static struct i2c_driver rk808_i2c_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "rk808",
-> +		.of_match_table =3D of_match_ptr(rk808_of_match),
-> +	},
-> +	.probe    =3D rk808_probe,
-> +	.remove   =3D rk808_remove,
-> +	.id_table =3D rk808_ids,
-> +};
-> +
-> +module_i2c_driver(rk808_i2c_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Chris Zhong <zyw@rock-chips.com>");
-> +MODULE_AUTHOR("Zhang Qing <zhangqing@rock-chips.com>");
-> +MODULE_DESCRIPTION("RK808 PMIC driver");
-> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-> new file mode 100644
-> index 0000000..7af1952
-> --- /dev/null
-> +++ b/include/linux/mfd/rk808.h
-> @@ -0,0 +1,202 @@
-
-[...]
-
-> +struct rk808_board {
-> +	struct regulator_init_data *rk808_init_data[RK808_NUM_REGULATORS];
-> +	struct device_node *of_node[RK808_NUM_REGULATORS];
-> +};
-
-This is only used in the regulator driver.  Do you have a regulator
-specific header file that you can define it in instead?
-
-> +struct rk808 {
-> +	struct i2c_client *i2c;
-> +	struct regmap_irq_chip_data *irq_data;
-> +	struct regmap *regmap;
-> +};
-> +#endif /* __LINUX_REGULATOR_rk808_H */
+>  /* Charge Config */
+>  #define STEPCHARGE_RFP_MASK	(7 << 12)
 
 --=20
 Lee Jones
