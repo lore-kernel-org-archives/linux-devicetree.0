@@ -1,48 +1,73 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 2/7] bcm47xx-nvram: add new broadcom nvram driver with dt support
-Date: Wed, 27 Aug 2014 20:43:40 +0200
-Message-ID: <CACna6ryXtFwJxBhEoJe+2mZWut24egtgXzzybxQ=rtPn9+X+2g@mail.gmail.com>
-References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de>
-	<1408915485-8078-4-git-send-email-hauke@hauke-m.de>
-	<CACna6rwJBDpg9VS4h5hfP4wtGRVwAdRUq5mELeA0OFWWzH9jsA@mail.gmail.com>
-	<53FE217B.7000401@gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: hummingboard: gpio-ir on gpio 3,5
+Date: Wed, 27 Aug 2014 19:43:54 +0100
+Message-ID: <20140827184354.GA30401@n2100.arm.linux.org.uk>
+References: <20140823091058.GO30401@n2100.arm.linux.org.uk> <E1XL7MR-0002yX-6N@rmk-PC.arm.linux.org.uk> <CAOMZO5C=xyYLLBX1PDsJQ9NwzXZxCWTvPMTUWzYcoohOOvA_qA@mail.gmail.com> <20140823133649.GP30401@n2100.arm.linux.org.uk> <CAOMZO5DrtrEJxmCZSO6RVZom8kzZhu2dikntRwYZeq5j_QZ9sw@mail.gmail.com> <20140823143305.GQ30401@n2100.arm.linux.org.uk> <CAOMZO5DgPLHwDsRPkssRDT5tKyfOo=Udg6vD5VPUQ43wsV346w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53FE217B.7000401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5DgPLHwDsRPkssRDT5tKyfOo=Udg6vD5VPUQ43wsV346w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 August 2014 20:20, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 08/26/2014 10:54 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
->> Could we avoid that? Type of flash can easily be checked in the code=
-=2E
->> All we need to do is to read BCMA_IOST register of BCMA_CORE_NS_ROM
->> core.
->
-> So there is a boot status register you can read to tell what type of
-> flash you booted from, but does that also give you the resource range=
-s
-> for these type of flashes? Presumably they will be mapped into differ=
-ent
-> addresses (at least bcm63xx is like that), that information needs to =
-be
-> listed somewhere.
+On Sat, Aug 23, 2014 at 12:02:05PM -0300, Fabio Estevam wrote:
+> On Sat, Aug 23, 2014 at 11:33 AM, Russell King - ARM Linux
+> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> 
+> > Most of the pins not associated with booting the kernel are left
+> > unconfigured by the boot loader - that's because uboot SPL has very
+> > little space for such things.
+> >
+> > Rabeeh has just told me that 0x1b0b1 would be a better value for it.
+> > I'll add an additional patch to the series for that, rather than
+> > modifying Rabeeh's original patch.
+> 
+> Sounds good, thanks.
 
-Take a look at find_nvram in nvram_rw.c. It scans the whole region
-which is up to 0x02000000 (SI_FLASH2_SZ) size.
+Right, here's the patch to make that change.  Shawn, can you pick this
+one up as well please?
 
-In case of NAND limit is slightly different (nfl_boot_size function):
-1) On ARM it's 0x800000 or 0x2600000
-2) On MIPS it's 0x200000
+Thanks.
 
---=20
-Rafa=C5=82
+8<===
+>From 5cebff8f6232fbafde7af564eca61447f951040e Mon Sep 17 00:00:00 2001
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Date: Sat, 23 Aug 2014 15:34:07 +0100
+Subject: [PATCH] ARM: dts: hummingboard: fix configuration of IR input
+
+Add the IOMUX setting for the IR input, rather than relying on the
+boot loader.
+
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+index 4aa0ae357b00..7fe29de89e9d 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+@@ -130,7 +130,7 @@
+ 
+ 		pinctrl_hummingboard_gpio3_5: hummingboard-gpio3_5 {
+ 			fsl,pins = <
+-				MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x80000000
++				MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x1b0b1
+ 			>;
+ 		};
+ 
+-- 
+1.8.3.1
+
+
+
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireles=
-s" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
