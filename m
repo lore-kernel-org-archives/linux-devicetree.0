@@ -1,99 +1,47 @@
-From: Weike Chen <alvin.chen@intel.com>
-Subject: [PATCH 2/3] GPIO: gpio-dwapb: Support Debounce
-Date: Wed, 27 Aug 2014 10:46:27 -0700
-Message-ID: <1409161588-19417-3-git-send-email-alvin.chen@intel.com>
-References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Mika Westerberg <mika.westerberg@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Alvin Chen <alvin.chen@intel.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+Subject: Re: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
+ extension is present
+Date: Wed, 27 Aug 2014 11:55:44 +0200
+Message-ID: <1409133344.25382.37.camel@coredoba.hi.pengutronix.de>
+References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
+	 <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
+	 <53F724F5.3040004@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53F724F5.3040004@arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: "Joe.C" <srv_yingjoe.chen@mediatek.com>, Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>"Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@mediatek.>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables 'debounce' for the designware GPIO, and
-it is based on Josef Ahmad's previous work.
+Marc,
 
-Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
-Reviewed-by: Shevchenko, Andriy <andriy.shevchenko@intel.com>
-Signed-off-by: Weike Chen <alvin.chen@intel.com>
----
- drivers/gpio/gpio-dwapb.c |   42 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+On Fri, 2014-08-22 at 12:09 +0100, Marc Zyngier wrote:
+> Here, you're using it to program something that sits between the
+> device and the GIC. This is a separate block, with its own hardware
+> configuration, that modifies the interrupt signal. This should be
+> reflected in the device-tree and the code paths.
+> 
+> You can probably model this as a separate irqchip for the few
+> interrupts that require this, or have it configured at boot time
+> (assuming the configuration never changes).
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 155a64b..e0ab988 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -36,6 +36,7 @@
- #define GPIO_INTTYPE_LEVEL	0x38
- #define GPIO_INT_POLARITY	0x3c
- #define GPIO_INTSTATUS		0x40
-+#define GPIO_PORTA_DEBOUNCE	0x48
- #define GPIO_PORTA_EOI		0x4c
- #define GPIO_EXT_PORTA		0x50
- #define GPIO_EXT_PORTB		0x54
-@@ -64,6 +65,23 @@ struct dwapb_gpio {
- 	const struct dwapb_gpio_platform_data	*pdata;
- };
- 
-+static inline u32 dwapb_read(struct dwapb_gpio *gpio, unsigned int offset)
-+{
-+	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-+	void __iomem *reg_base	= gpio->regs;
-+
-+	return bgc->read_reg(reg_base + offset);
-+}
-+
-+static inline void dwapb_write(struct dwapb_gpio *gpio, unsigned int offset,
-+			       u32 val)
-+{
-+	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-+	void __iomem *reg_base	= gpio->regs;
-+
-+	bgc->write_reg(reg_base + offset, val);
-+}
-+
- static int dwapb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- {
- 	struct bgpio_chip *bgc = to_bgpio_chip(gc);
-@@ -209,6 +227,29 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
- 	return 0;
- }
- 
-+static int dwapb_gpio_set_debounce(struct gpio_chip *gc,
-+				   unsigned offset, unsigned debounce)
-+{
-+	struct bgpio_chip *bgc = to_bgpio_chip(gc);
-+	struct dwapb_gpio_port *port =
-+			container_of(bgc, struct dwapb_gpio_port, bgc);
-+	struct dwapb_gpio *gpio = port->gpio;
-+	unsigned long flags, val_deb;
-+	unsigned long mask = bgc->pin2mask(bgc, offset);
-+
-+	spin_lock_irqsave(&bgc->lock, flags);
-+
-+	val_deb = dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
-+	if (debounce)
-+		dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, mask | val_deb);
-+	else
-+		dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, ~mask & val_deb);
-+
-+	spin_unlock_irqrestore(&bgc->lock, flags);
-+
-+	return 0;
-+}
-+
- static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
- {
- 	struct irq_desc *desc = irq_to_desc(irq);
-@@ -342,6 +383,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 
- 	port->bgc.gc.ngpio = pp->ngpio;
- 	port->bgc.gc.base = pp->gpio_base;
-+	port->bgc.gc.set_debounce = dwapb_gpio_set_debounce;
- 
- 	/*
- 	 * Only port A can provide interrupts in all configurations of the IP.
+It seems to me that using a separate irqchip for a simple inverter would
+add the run-time overhead of passing through wrapper functions on every
+IRQ. Do you have an idea how this could be avoided without using the
+gic_arch_extn feature?
+
+As in the DT the actual IRQ polarity should be used, simply configuring
+the HW IRQ polarity in the bootloader is not enough without telling the
+GIC driver which polarity is supported on which IRQ, right?
+
+Regards,
+Jan
 -- 
-1.7.9.5
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
