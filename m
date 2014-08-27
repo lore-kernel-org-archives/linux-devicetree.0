@@ -1,53 +1,86 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] mfd: rn5t618: document device tree bindings
-Date: Wed, 27 Aug 2014 08:08:26 +0100
-Message-ID: <20140827070826.GP17528@sirena.org.uk>
-References: <1409091237-16722-1-git-send-email-b.galvani@gmail.com>
- <1409091237-16722-5-git-send-email-b.galvani@gmail.com>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Wed, 27 Aug 2014 09:16:23 +0200
+Message-ID: <53FD85C7.4080900@ahsoftware.de>
+References: <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826102503.GC31124@ulmo> <53FC6513.5040800@ahsoftware.de> <20140826110827.GA31350@ulmo> <53FC6E4A.6030407@ahsoftware.de> <20140826114718.GB641@ulmo> <53FC76E8.5050009@ahsoftware.de> <E1XMHGc-0008TS-CQ@jdl.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="U0u+fYXQgj+TwTlT"
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409091237-16722-5-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <E1XMHGc-0008TS-CQ-CYoMK+44s/E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Am 26.08.2014 15:58, schrieb Jon Loeliger:
 
---U0u+fYXQgj+TwTlT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I think we need to do the complete topsort *before* we attempt
+> to do any probing.  So three steps:
+>
+>     1) Graph Construction
+>         Add a new "emit dependencies" function to driver bindings.
+>         Iterate over known devices or nodes in the DT in any order.
+> 	    Call the "emit dependencies" function.  It adds all
+> 	    dependency edges to a global graph by knowing what
+> 	    phandles or other pieces it will need.
+> 	    A driver with no "emit dependencies" function can be
+> 	    added to the graph anywhere without loss of generality.
+>         Add any additional edges for whatever reason.
+>
+>     2) Topsort the generated driver graph
+>
+>     3) Call probe for real in topsort order
+>
+> Alexander, I don't recall the details of your patch series.
+> Can you please remind us if it took this approach in the kernel?
+>
+>> Anyway, I'm leaving this discussion. I've already made a proposal
+>> which solved most mentioned problems (imho) and even offered usable
+>> patches
 
-On Wed, Aug 27, 2014 at 12:13:57AM +0200, Beniamino Galvani wrote:
-> This adds the device tree bindings documentation for Ricoh RN5T618.
+Why should I? I've posted patches along with a lot of comments and
+explanations, and e.g. you are just talking that it should be made like
+my patches already did. And others do talk too like my patches and the
+accompanying comments from me which explain most stuff never have 
+existed and just repeat what the patches already do without refering to 
+them.
 
-Reviwed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Darn.  I think you clearly have a pony in this race, and it
+> would be good if you still participated.  Really.
 
---U0u+fYXQgj+TwTlT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Thanks. But I don't see it as a race and I don't want to take part in a 
+race (and I usually avoid those silly contests which have become chic in 
+the IT world). I just offered a solution (or at least a working starting 
+point to a solution).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+>> (ok, they suffer under the "not invented here" syndrom, but ...). ;)
+>
+> There isn't a single thing in the entire Linux Kernel community
+> that was "invented here"; every aspect of it was NIH'ed by *someone*.
+> That's how it gets built, changed, maintained, fixed, etc.
 
-iQIcBAEBAgAGBQJT/YPnAAoJELSic+t+oim9MwAP/RzNc6KnqhRzLiMqYnbx4jC7
-tszSrfdesKDpy/zscgShMKgZjeOFDwbQ204KjjnAaTB1wj7mORYIGRxQf+UivH1P
-odV19lAu6P7O3AxNz7zb2tinyr9z1Ms+gqxoN/L/FPtVuBGABwW2GJ8JlmE7ehKQ
-BvQY6U3yJusBTfsAgSXb+e5C5mNIp+YV3uA7XGSjjHD++gngEsFq8HcSL9eURpNY
-RlCaBboIO+MqJ/hWtWf3wUaTt9rY6vg5XlIDxQvIscku4DZx/o4lJOBMqB7UVtYe
-xdLMN/Cny2mWWkjgkT1IxCNFQ8osCYWbmPiHlxJymYArD8UaFmtK3LvNSBC27VjJ
-i5F9qM+W0TfXej0+NrHhJmq4Mv6K3UJiDwdDpEyxSauVdQutDAkhsZ/UVlM0u7tR
-so1HfKh//CvsFR7ImMj+1y2ZC4+Kx172t2yjaWQXLCvnWQz4RVsC0fbBmPndw2yz
-b/2OqalXkMr3IOZNWO53Bj4J0+FYzZNIvZKA3PCQbi+mjUTGf/q/D5c9CzoiqImb
-fmklufTNbncCAQgNjRq8O/C/aFEJjqYWrVr1v9+xR6BAA/duCmkV2yUAyGSgrTlm
-6XPROOTqWQChRe589hqwA/zarYCTia9bcm8psCaPd+AdZ+WHj+y8EkJOnFy6Y2kj
-hoIylNRT5xi97H5dyTVk
-=AUjw
------END PGP SIGNATURE-----
+Might be true in an ideal open source world and might have been true for 
+past kernel development when most people weren't full time kernel 
+developers. But nowadays it appears to me like many parts of the kernel 
+have become in the hands of closed groups. And they build and enforce 
+hurdles that high, that nobody else can take them without spending an 
+idiotic amount of time. Just like many other "consortiums" do, you only 
+have to build enough rules to protect from the outside while still 
+looking open.
 
---U0u+fYXQgj+TwTlT--
+E.g. an example I've seen often is that someone spend a lot of time to 
+examine and fix a bug and write a commented patch. And the only response 
+from the maintainer was that he should add an emtpy line before a return 
+statement and similiar silly things to enforce patch-ping-pong. Such 
+just drives people on the other end crazy and they likely won't spend 
+the time to post another patch (they still might  fix other bugs, but 
+just for themself).
+
+Regards,
+
+Alexander Holler
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
