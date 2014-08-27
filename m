@@ -1,146 +1,82 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH v6 4/5] clk: RK808: Add clkout driver for RK808
-Date: Wed, 27 Aug 2014 12:22:01 +0100
-Message-ID: <53FDBF59.1050001@codethink.co.uk>
-References: <1409062589-12157-1-git-send-email-zyw@rock-chips.com> <CAD=FV=WS=FaJdDVomCo2FxnsoRxDAHNNK-VX75JLzBYHHGS8AA@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Wed, 27 Aug 2014 12:27:09 +0100
+Message-ID: <20140827112709.GB6364@lee--X1>
+References: <1408505461-24200-1-git-send-email-zyw@rock-chips.com>
+ <20140820092117.GI4266@lee--X1>
+ <53FA9D1E.8040202@rock-chips.com>
+ <20140826092205.GG9574@lee--X1>
+ <20140826162831.GA22842@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=WS=FaJdDVomCo2FxnsoRxDAHNNK-VX75JLzBYHHGS8AA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140826162831.GA22842-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@c>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/08/14 19:02, Doug Anderson wrote:
-> Chris,
-> 
-> On Tue, Aug 26, 2014 at 7:16 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> ---
->>
->> Changes in v6:
->> Adviced by doug
->> - use correct argument call of_clk_add_provider in probe
->>
->> Changes in v5:
->> Adviced by doug
->> - add some error checking in probe
->> - move "rockchip,rk808.h" into the patch about dt-bindings
->>
->> Changes in v4:
->> Adviced by doug
->> - add "clock-output-names" propertiey
->> - add a header file "rockchip,rk808.h"
->>
->> Changes in v3:
->> - fix compile err
->>
->> Changes in v2:
->> Adviced by javier.martinez
->> - separated from rtc-rk808.
->>
->>  drivers/clk/Kconfig     |    9 +++
->>  drivers/clk/Makefile    |    1 +
->>  drivers/clk/clk-rk808.c |  163 +++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 173 insertions(+)
->>  create mode 100644 drivers/clk/clk-rk808.c
->>
->> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
->> index cfd3af7..84e0590 100644
->> --- a/drivers/clk/Kconfig
->> +++ b/drivers/clk/Kconfig
->> @@ -38,6 +38,15 @@ config COMMON_CLK_MAX77686
->>         ---help---
->>           This driver supports Maxim 77686 crystal oscillator clock.
->>
->> +config COMMON_CLK_RK808
->> +       tristate "Clock driver for RK808"
->> +       depends on MFD_RK808
->> +       ---help---
->> +         This driver supports RK808 crystal oscillator clock. These
->> +         multi-function devices have two fixed-rate oscillators,
->> +         clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
->> +         by control register.
->> +
->>  config COMMON_CLK_SI5351
->>         tristate "Clock driver for SiLabs 5351A/B/C"
->>         depends on I2C
->> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
->> index f537a0b..99f53d5 100644
->> --- a/drivers/clk/Makefile
->> +++ b/drivers/clk/Makefile
->> @@ -28,6 +28,7 @@ obj-$(CONFIG_ARCH_NOMADIK)            += clk-nomadik.o
->>  obj-$(CONFIG_ARCH_NSPIRE)              += clk-nspire.o
->>  obj-$(CONFIG_COMMON_CLK_PALMAS)                += clk-palmas.o
->>  obj-$(CONFIG_CLK_PPC_CORENET)          += clk-ppc-corenet.o
->> +obj-$(CONFIG_COMMON_CLK_RK808)         += clk-rk808.o
->>  obj-$(CONFIG_COMMON_CLK_S2MPS11)       += clk-s2mps11.o
->>  obj-$(CONFIG_COMMON_CLK_SI5351)                += clk-si5351.o
->>  obj-$(CONFIG_COMMON_CLK_SI570)         += clk-si570.o
->> diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
->> new file mode 100644
->> index 0000000..21f8b54
->> --- /dev/null
->> +++ b/drivers/clk/clk-rk808.c
->> @@ -0,0 +1,163 @@
->> +/*
->> + * Clkout driver for Rockchip RK808
->> + *
->> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
->> + *
->> + * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> I probably would have removed "Author" here (like in other patches)
-> since it's below in MODULE_AUTHOR.  ...but I'm not a huge stickler for
-> it.
-> 
-> 
-> 
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/clk-provider.h>
->> +#include <linux/module.h>
->> +#include <linux/slab.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/mfd/rk808.h>
->> +#include <linux/i2c.h>
->> +
->> +struct rk808_clkout {
->> +       struct rk808 *rk808;
->> +       struct clk_onecell_data clk_data;
->> +       struct clk_hw           clkout1_hw;
->> +       struct clk_hw           clkout2_hw;
->> +};
->> +
->> +static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
->> +                                             unsigned long parent_rate)
->> +{
->> +       return 32768;
->> +}
->> +
+On Tue, 26 Aug 2014, Dmitry Torokhov wrote:
+> On Tue, Aug 26, 2014 at 10:22:05AM +0100, Lee Jones wrote:
+> > On Mon, 25 Aug 2014, Chris Zhong wrote:
+> > > On 08/20/2014 05:21 PM, Lee Jones wrote:
+> > > >On Wed, 20 Aug 2014, Chris Zhong wrote:
+> > > >
+> > > >>The RK808 chip is a power management IC for multimedia and hand=
+held
+> > > >>devices. It contains the following components:
+> > > >>
+> > > >>- Regulators
+> > > >>- RTC
+> > > >>
+> > > >>The rk808 core driver is registered as a platform driver and pr=
+ovides
+> > > >>communication through I2C with the host device for the differen=
+t
+> > > >>components.
+> > > >>
+> > > >>Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > > >>---
+> >=20
+> > [...]
+> >=20
+> > > >>+	rk808->pdata =3D pdata;
+> > > >Remove pdata from 'struct rk808'.  You can obtain it from dev.
+> > >=20
+> > > Can I keep this pdata in rk808, because it is used in the regulat=
+or driver.
+> > > The one obtain from dev maybe empty.
+> >=20
+> > If the one in dev is empty, you should populate that instead.
+>=20
+> No, drivers should not populate platform data in devices - they do no=
+t
+> own it (unlike drvdata). Platform data should be read-only so that if
+> one would unbind and then try to re-bind the driver we'd end up in
+> exactly same state as before.
 
-Given one of these is a fixed, ungatable clock then surely it would
-be easier to use a separate fixed clock node for that and then just
-have a none for the gated clock?
+Right.
 
+I guess this point is moot now, as my other point about pdata not
+actually being required has been accecpted.  But, when I say "you
+can obtain it from dev" I meant via dev_get_platdata(dev), rather than
+dev_get_platdata(dev->parent).  So if this 'pdata' has to go somewhere,
+rather than sticking it in the MFD's (parent) platform_data, the
+=2Eplatform_data attribute in 'struct mfd_cell' should be used.
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+> For DT systems we should be allocating platform data separately and m=
+ake
+> sure we clean up after ourselves.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
