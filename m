@@ -1,60 +1,95 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH 2/3 repost] clocksource: sh_mtu2: Document r7s72100 binding
-Date: Wed, 27 Aug 2014 14:28:19 +0900
-Message-ID: <1409117300-2133-3-git-send-email-horms+renesas@verge.net.au>
-References: <1409117300-2133-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409117300-2133-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>
+From: "Zheng, Lv" <lv.zheng@intel.com>
+Subject: RE: [PATCH 1/9] ACPI / PM: Let acpi_dev_pm_detach() return an error
+ code
+Date: Wed, 27 Aug 2014 05:43:07 +0000
+Message-ID: <1AE640813FDE7649BE1B193DEA596E880265FDCA@SHSMSX101.ccr.corp.intel.com>
+References: <1409054837-5667-1-git-send-email-ulf.hansson@linaro.org>
+ <1409054837-5667-2-git-send-email-ulf.hansson@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1409054837-5667-2-git-send-email-ulf.hansson@linaro.org>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-In general Renesas hardware is not documented to the extent
-where the relationship between IP blocks on different SoCs can be assumed
-although they may appear to operate the same way. Furthermore the
-documentation typically does not specify a version for individual
-IP blocks. For these reasons a convention of using the SoC name in place
-of a version and providing SoC-specific compat strings has been adopted.
+Hi,
 
-Although not universally liked this convention is used in the bindings
-for the drivers a number of drivers for Renesas hardware. The purpose
-of this patch is to update the Renesas R-Car Multi-Function Timer Pulse
-Unit 2 (MTU2) driver to follow this convention.
+> From: linux-acpi-owner@vger.kernel.org [mailto:linux-acpi-owner@vger.kernel.org] On Behalf Of Ulf Hansson
+> Sent: Tuesday, August 26, 2014 8:07 PM
+> To: Rafael J. Wysocki; Brown, Len; Pavel Machek; Greg Kroah-Hartman; linux-pm@vger.kernel.org
+> 
+> To give callers the option of acting on a errors while removing the
+> pm_domain ops for the device in the ACPI power domain, let
+> acpi_dev_pm_detach() return an int to provide the error code.
+> 
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> ---
+>  drivers/acpi/device_pm.c | 4 ++++
+>  include/linux/acpi.h     | 7 +++++--
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+> index 67075f8..fa78abb 100644
+> --- a/drivers/acpi/device_pm.c
+> +++ b/drivers/acpi/device_pm.c
+> @@ -1087,6 +1087,8 @@ EXPORT_SYMBOL_GPL(acpi_dev_pm_attach);
+>   *
+>   * Callers must ensure proper synchronization of this function with power
+>   * management callbacks.
+> + *
+> + * Returns 0 on successfully detached power domain or negative error code.
+>   */
+>  void acpi_dev_pm_detach(struct device *dev, bool power_off)
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Should the return type be "int" here?
 
----
-* I plan to follow up with a patch patch to use the new binding in the
-  dtsi files for the r7s72100 SoC.
----
- Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Thanks and best regards
+-Lv
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-index 917453f..ec4d334 100644
---- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-@@ -8,7 +8,9 @@ are independent. The MTU2 hardware supports five channels indexed from 0 to 4.
- 
- Required Properties:
- 
--  - compatible: must contain "renesas,mtu2"
-+  - compatible: must be one of the following.
-+    - "renesas,mtu2" for generic MTU2
-+    - "renesas,mtu2-r7s72100" for R7S72100 MTU2
- 
-   - reg: base address and length of the registers block for the timer module.
- 
-@@ -26,7 +28,7 @@ Required Properties:
- Example: R7S72100 (RZ/A1H) MTU2 node
- 
- 	mtu2: timer@fcff0000 {
--		compatible = "renesas,mtu2";
-+		compatible = "renesas,mtu2-r7s72100", "renesas,mtu2";
- 		reg = <0xfcff0000 0x400>;
- 		interrupts = <0 139 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 146 IRQ_TYPE_LEVEL_HIGH>,
--- 
-2.0.1
-
+>  {
+> @@ -1107,7 +1109,9 @@ void acpi_dev_pm_detach(struct device *dev, bool power_off)
+>  			acpi_device_wakeup(adev, ACPI_STATE_S0, false);
+>  			acpi_dev_pm_low_power(dev, adev, ACPI_STATE_S0);
+>  		}
+> +		return 0;
+>  	}
+> +	return -ENODEV;
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_dev_pm_detach);
+>  #endif /* CONFIG_PM */
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 5320153..a7bfdf6 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -576,7 +576,7 @@ static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
+>  #if defined(CONFIG_ACPI) && defined(CONFIG_PM)
+>  struct acpi_device *acpi_dev_pm_get_node(struct device *dev);
+>  int acpi_dev_pm_attach(struct device *dev, bool power_on);
+> -void acpi_dev_pm_detach(struct device *dev, bool power_off);
+> +int acpi_dev_pm_detach(struct device *dev, bool power_off);
+>  #else
+>  static inline struct acpi_device *acpi_dev_pm_get_node(struct device *dev)
+>  {
+> @@ -586,7 +586,10 @@ static inline int acpi_dev_pm_attach(struct device *dev, bool power_on)
+>  {
+>  	return -ENODEV;
+>  }
+> -static inline void acpi_dev_pm_detach(struct device *dev, bool power_off) {}
+> +static inline int acpi_dev_pm_detach(struct device *dev, bool power_off)
+> +{
+> +	return -ENODEV;
+> +}
+>  #endif
+> 
+>  #ifdef CONFIG_ACPI
+> --
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-acpi" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
