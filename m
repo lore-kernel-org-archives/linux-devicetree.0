@@ -1,60 +1,39 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEG
- Processing Unit.
-Date: Wed, 27 Aug 2014 14:15:01 +0900
-Message-ID: <20140827051501.GB1343@verge.net.au>
-References: <1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
- <1408970132-6690-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
- <CAMuHMdXQAFVJ8Ezd30JNkT6hWoFYKUWk5e0cq88jYUSBTPOzRA@mail.gmail.com>
- <20140825235720.GB7217@verge.net.au>
- <CAMuHMdW0r-xGJZtc4AFvxMnTu1rdEROf2DvywScC-XhSELFMtQ@mail.gmail.com>
- <20140826090126.GC29667@verge.net.au>
- <CAMuHMdWaO27XhfdwhMHS2+gndoysZbQsT0YLp7KhR_cWujxvTQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWaO27XhfdwhMHS2+gndoysZbQsT0YLp7KhR_cWujxvTQ@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH 0/3 repost] clocksource: Document Renesas SoC specific bindings
+Date: Wed, 27 Aug 2014 14:28:17 +0900
+Message-ID: <1409117300-2133-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 26, 2014 at 11:27:43AM +0200, Geert Uytterhoeven wrote:
-> On Tue, Aug 26, 2014 at 11:01 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Tue, Aug 26, 2014 at 10:03:34AM +0200, Geert Uytterhoeven wrote:
-> >> On Tue, Aug 26, 2014 at 1:57 AM, Simon Horman <horms@verge.net.au> wrote:
-> >> > On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geert Uytterhoeven wrote:
-> >> >> On Mon, Aug 25, 2014 at 2:35 PM, Mikhail Ulyanov
-> >> >> <mikhail.ulyanov@cogentembedded.com> wrote:
-> >> >> > +  - compatible: should containg one of the following:
-> >> >> > +                       - "renesas,jpu-r8a7790" for R-Car H2
-> >> >> > +                       - "renesas,jpu-r8a7791" for R-Car M2
-> >> >> > +                       - "renesas,jpu-gen2" for R-Car second generation
-> >> >>
-> >> >> Isn't "renesas,jpu-gen2" meant as a fallback?
-> >> >>
-> >> >> I.e. the DTS should have one of '7790 and '7791, AND the gen2 fallback,
-> >> >> so we can make the driver match against '7790 and '7791 is we find
-> >> >> out about an incompatibility.
-> >> >
-> >> > Is there a document that clearly states that there is such a thing
-> >> > as jpu-gen2 in hardware? If not I would prefer not to add a binding for it.
-> >>
-> >> We do have a document that describes the "JPEG Processing Unit (JPU)",
-> >> as found in the following members of the "Second Generation R-Car Series
-> >> Products": "R-Car H2", "R-Car M2-W", "R-Car M2-N", and "R-Car V2H".
-> >
-> > Oh, that is nice :)
-> >
-> > From my point of view that ticks a lot of boxes.
-> > But I wonder if we can come up with a better name than jpu,-gen2.
-> 
-> "jpu-rcar-gen2"?
+[Repost with correct deviceetree email address]
 
-I guess that is a slight improvement.
+In general Renesas hardware is not documented to the extent where the
+relationship between IP blocks on different SoCs can be assumed although
+they may appear to operate the same way. Furthermore the documentation
+typically does not specify a version for individual IP blocks. For these
+reasons a convention of using the SoC name in place of a version and
+providing SoC-specific compat strings has been adopted.
 
-But suppose some gen2 SoC exists or comes to exists that
-has different IP. Suppose there is more than one that same
-the same IP that is different to the SoCs covered by the
-existing compat string?
+Although not universally liked this convention is used in the bindings for
+the drivers a number of drivers for Renesas hardware. The purpose of this
+patch is to update the Renesas clocksource drivers to follow this convention.
+
+I plan to follow up with patches to use these new bindings in the
+dtsi files for the affected SoCs.
+
+Simon Horman (3):
+  clocksource: sh_cmt: Document SoC specific bindings
+  clocksource: sh_mtu2: Document r7s72100 binding
+  clocksource: sh_tmu: Document r8a7779 binding
+
+ .../devicetree/bindings/timer/renesas,cmt.txt      | 26 +++++++++++++++++++++-
+ .../devicetree/bindings/timer/renesas,mtu2.txt     |  6 +++--
+ .../devicetree/bindings/timer/renesas,tmu.txt      |  6 +++--
+ 3 files changed, 33 insertions(+), 5 deletions(-)
+
+-- 
+2.0.1
+
