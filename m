@@ -1,82 +1,128 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
- initialization order based on the DT)
-Date: Wed, 27 Aug 2014 18:52:43 +0100
-Message-ID: <20140827175243.GJ13850@arm.com>
-References: <20140825133714.GH4163@ulmo.nvidia.com>
- <20140826084208.AE5F0C40989@trevor.secretlab.ca>
- <20140826084922.GG17263@ulmo>
- <53FC566C.30904@ahsoftware.de>
- <20140826101107.GC32315@leverpostej>
- <20140827103432.64927C409CB@trevor.secretlab.ca>
- <20140827144403.GB13850@arm.com>
- <53FE05AE.9000406@wwwdotorg.org>
- <53FE07BE.7000809@ahsoftware.de>
- <53FE0966.5020206@wwwdotorg.org>
+From: David Riley <davidriley@google.com>
+Subject: Re: [PATCH v1 1/1] power: Add simple gpio-restart driver
+Date: Wed, 27 Aug 2014 10:56:20 -0700
+Message-ID: <CAASgrz3ArGUJnPVvBcm2Hm0gwcUPYt2504M3t-3M5=c2DmKotA@mail.gmail.com>
+References: <1409096705-24290-1-git-send-email-davidriley@chromium.org>
+	<1409096705-24290-2-git-send-email-davidriley@chromium.org>
+	<20140827014300.GA29512@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53FE0966.5020206-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140827014300.GA29512@earth.universe>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Anton Vorontsov <anton@enomsg.org>, Marc Carino <marc.ceeeee@gmail.com>, Anders Berg <anders.berg@lsi.com>, Laxman Dewangan <ldewangan@nvidia.com>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Jamie Lentin <jm@lentin.co.uk>, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 27, 2014 at 05:37:58PM +0100, Stephen Warren wrote:
-> On 08/27/2014 10:30 AM, Alexander Holler wrote:
-> > Am 27.08.2014 18:22, schrieb Stephen Warren:
-> >> On 08/27/2014 08:44 AM, Catalin Marinas wrote:
-> >
-> >>> It's not just optimisation but an important feature for new arm64 SoCs.
-> >>> Given some Tegra discussions recently, in many cases the machine_desc
-> >>> use on arm is primarily to initialise devices in the right order. If we
-> >>> can solve this in a more deterministic way (other than deferred
-> >>> probing), we avoid the need for a dedicated SoC platform driver (or
-> >>> machine_desc) or workarounds like different initcall levels and explicit
-> >>> DT parsing.
-> >>
-> >> A lot of the ordering is SW driver dependencies. I'm not sure how much
-> >> of that can accurately be claimed as HW dependencies. As such, I'm not
-> >> sure that putting dependencies into DT would be a good idea; it doesn't
-> >> feel like HW data, and might well change if we restructure SW. It'd need
-> >> some detailed research though.
-> >
-> > Almost every phandle is a dependency, so the DT is already full with them.
-> 
-> That's true, but not entirely relevant.
-> 
-> phandles in DT should only be present where there's an obvious HW 
-> dependency. It's obvious that, for example, there's a real HW dependency 
-> between an IRQ controller and a device that has an IRQ signal fed into 
-> the IRQ controller. It makes perfect sense to represent that as a 
-> phandle (+args).
+Hi Sebastian,
 
-Other examples are power controllers or some MFD device (as we have on
-vexpress). For these we normally have phandles.
+Thanks for the feedback.
 
-> However, most of the ordering imposed by the Tegra machine descriptor 
-> callbacks is nothing to do with this. It's more that the SW driver for 
-> component X needs some low level data (e.g. SKU/fuse information) before 
-> it can run. However, there's no real HW dependency between the HW 
-> component X and the fuse module. As such, it doesn't make sense to 
-> represent such a dependency in DT, using a phandle or by any other means.
+On Tue, Aug 26, 2014 at 6:43 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> Hi David,
+>
+> On Tue, Aug 26, 2014 at 04:45:05PM -0700, David Riley wrote:
+>> This driver registers a restart handler to set a GPIO line high/low
+>> to reset a board based on devicetree bindings.
+>
+> Driver looks fine to me. I have some comments about the
+> Documentation, though:
+>
+>> [...]
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-restart.txt b/Documentation/devicetree/bindings/gpio/gpio-restart.txt
+>> new file mode 100644
+>> index 0000000..7cd58788
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-restart.txt
+>> @@ -0,0 +1,48 @@
+>> +Driver a GPIO line that can be used to restart the system as a
+>> +restart handler.
+>
+> Please fix the Typo (first word).
 
-But isn't fuse some piece of hardware? We don't have a model for it, so
-I guess you just present it as a library that accesses the hardware.
-Anyway, in such case something like Pawel's SoC driver proposal would
-work. Now if anything inside the SoC bus (I have to re-read, I don't
-fully remember the details) is probed after the SoC driver, you could
-even initialise your SoC at device_initcall() level.
+Fixed.
 
-> Irrespective though, a new kernel needs to work against an old DT,
+>
+>> [...]
+>> +
+>> +The driver supports both level triggered and edge triggered power off.
+>> +At driver load time, the driver will request the given gpio line and
+>> +install a restart handler.
+>
+> The wording is too driver centric IMHO. You are supposed to document
+> the binding in a generic way. Maybe start with something like:
+>
+> "This binding supports level and edge triggered reset."
+>
+> (power off is the wrong word, since there is already gpio-poweroff).
 
-I fully agree. But we shouldn't really extend the "old DT" statement to
-a new ARMv8 SoC ;).
+I've cleaned this up for v2.
 
--- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +If the optional properties 'input' is +not found, the GPIO line
+>> +will be driven in the inactive state. Otherwise its configured
+>> +as an input.
+>
+> What is this needed for?
+
+This allows other hardware to be attached to the same line to reset
+the system.  Carried forward from the gpio-poweroff implementation I
+based this on.
+
+>> +When do_kernel_restart is called the various restart handlers will be tried
+>> +in order.  The gpio is configured as an output, and drive active, so
+>> +triggering a level triggered power off condition. This will also cause an
+>> +inactive->active edge condition, so triggering positive edge triggered
+>> +power off. After a delay of 100ms, the GPIO is set to inactive, thus
+>> +causing an active->inactive edge, triggering negative edge triggered power
+>> +off. After another 100ms delay the GPIO is driver active again. If the
+>> +power is still on and the CPU still running after a 3000ms delay, a
+>> +WARN_ON(1) is emitted.
+>
+> I really appreciate the description of the driver (it made it easier
+> to review it :)), but Documentation/devicetree should avoid
+> Linuxisms. In other words: this is the wrong location for the
+> description.
+
+I've cleaned this up as well and made the explicit delays configurable.
+
+>
+>> +Required properties:
+>> +- compatible : should be "gpio-restart".
+>> +- gpios : The GPIO to set high/low, see "gpios property" in
+>> +  Documentation/devicetree/bindings/gpio/gpio.txt. If the pin should be
+>> +  low to power down the board set it to "Active Low", otherwise set
+>> +  gpio to "Active High".
+>> +
+>> +Optional properties:
+>> +- input : Initially configure the GPIO line as an input. Only reconfigure
+>> +  it to an output when the machine_restart function is called. If this optional
+>> +  property is not specified, the GPIO is initialized as an output in its
+>> +  inactive state.
+>> +- priority : A priority ranging from 0 to 255 (default 128) according to
+>> +  the following guidelines:
+>> +     0:      Restart handler of last resort, with limited restart
+>> +             capabilities
+>> +     128:    Default restart handler; use if no other restart handler is
+>> +             expected to be available, and/or if restart functionality is
+>> +             sufficient to restart the entire system
+>> +     255:    Highest priority restart handler, will preempt all other
+>> +             restart handlers
+>
+> You should add a short information about the property type here
+> (e.g. "8 bit integer" for priority).
+
+As per Olof's comments I've just changed this to be a regular cell for
+consistency with other bindings and will handle the range checking
+internally.
+
+>
+>> +Examples:
+>> +
+>> +gpio-restart {
+>> +     compatible = "gpio-restart";
+>> +     gpios = <&gpio 4 0>;
+>> +     priority = /bits/ 8 <200>;
+>> +};
+>> [...]
+>
+> -- Sebastian
