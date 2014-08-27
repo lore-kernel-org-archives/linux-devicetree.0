@@ -1,162 +1,74 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 11/14] arm64: dts: Add initial device tree support for
- EXYNOS7
-Date: Wed, 27 Aug 2014 11:42:31 +0100
-Message-ID: <20140827104231.GB7773@leverpostej>
-References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com>
- <1409132660-1898-3-git-send-email-ch.naveen@samsung.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] of: Fix memory block alignment in early_init_dt_add_memory_arch()
+Date: Wed, 27 Aug 2014 13:08:51 +0200
+Message-ID: <CAMuHMdWZ_GDS_W-Y26ig7cKf7wdr82XF1kyLd8dFzc7Jb4_r-w@mail.gmail.com>
+References: <1408547431-24001-1-git-send-email-geert+renesas@glider.be>
+	<20140827103048.80BBBC409CB@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409132660-1898-3-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cpgs@samsung.com" <cpgs@samsung.com>, Thomas Abraham <thomas.ab@samsung.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140827103048.80BBBC409CB-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Naveen,
+Hi Grant,
 
-On Wed, Aug 27, 2014 at 10:44:18AM +0100, Naveen Krishna Chatradhi wrote:
-> Add initial device tree nodes for EXYNOS7 SoC.
-> Also, includes the dt-binding definitions for clock ids.
+On Wed, Aug 27, 2014 at 12:30 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, 20 Aug 2014 17:10:31 +0200, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+>> If a memory block is not aligned to PAGE_SIZE, its base address must be
+>> rounded up, not down, and its size must be reduced.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>
+> Looks reasonable. What is the situation that exposed this problem?
 
-Fallout from a rebase? That latter part doesn't seem to be relevant.
+When ARM switched from arm_add_memory() to early_init_dt_add_memory_arch()
+for DT-based platforms, I just noticed this when comparing the two
+implementations.
 
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Cc: Thomas Abraham <thomas.ab@samsung.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->  arch/arm64/boot/dts/exynos7.dtsi |  553 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 553 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos7.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/exynos7.dtsi b/arch/arm64/boot/dts/exynos7.dtsi
-> new file mode 100644
-> index 0000000..6b9eaf4
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos7.dtsi
-> @@ -0,0 +1,553 @@
-> +/*
-> + * SAMSUNG EXYNOS7 SoC device tree source
-> + *
-> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-> + *             http://www.samsung.com
-> + *
-> + * SAMSUNG EXYNOS7 SoC device nodes are listed in this file.
-> + * EXYNOS7 based board files can include this file and provide
-> + * values for board specfic bindings.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <dt-bindings/clock/exynos7-clk.h>
-> +
-> +/ {
-> +       compatible = "samsung,exynos7";
-> +       interrupt-parent = <&gic>;
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
+I don't know if it triggers in the wild.
 
-Can we guarantee everything going to live within 0x0 - 0xffffffff for
-all boards using the SoC?
+> Should size be checked for page alignment also?
 
-I suspect that we can't, so the addresses and sizes at the top level
-should be two cells. At some point there is bound to be something above
-4GB that we'll need to map, so to save us from a painful dts refactoring
-we should have the dts organised to support that from the outside.
+Size is already rounded down if it's not page aligned, cfr. the context below.
 
-[...]
+>> ---
+>>  drivers/of/fdt.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index f46a24ffa3fe..95fa81b8ca19 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -928,7 +928,11 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>>  void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+>>  {
+>>       const u64 phys_offset = __pa(PAGE_OFFSET);
+>> -     base &= PAGE_MASK;
+>> +
+>> +     if (!PAGE_ALIGNED(base)) {
+>> +             size -= PAGE_SIZE - (base & ~PAGE_MASK);
+>> +             base = PAGE_ALIGN(base);
+>> +     }
+>>       size &= PAGE_MASK;
+>>
+>>       if (base > MAX_PHYS_ADDR) {
+>> --
+>> 1.9.1
 
-> +       cpus {
-> +               #address-cells = <2>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a57", "arm,armv8";
-> +                       reg = <0x0 0x0>;
-> +               };
-> +       };
+Gr{oetje,eeting}s,
 
-Only UP?
+                        Geert
 
-[...]
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-> +       gic: interrupt-controller@11001000 {
-> +               compatible = "arm,gic-400";
-> +               #interrupt-cells = <3>;
-> +               #address-cells = <0>;
-> +               interrupt-controller;
-> +               reg =   <0x11001000 0x1000>,
-> +                       <0x11002000 0x1000>,
-> +                       <0x11004000 0x2000>,
-> +                       <0x11006000 0x2000>;
-> +       };
-
-Nice to see GICV and GICH.
-
-[...]
-
-> +       mct@101C0000 {
-> +               compatible = "samsung,exynos4210-mct";
-> +               reg = <0x101C0000 0x800>;
-> +               interrupt-controller;
-> +               #interrupt-cells = <1>;
-> +               interrupt-parent = <&mct_map>;
-> +               interrupts =    <0>, <1>, <2>, <3>,
-> +                               <4>, <5>, <6>, <7>,
-> +                               <8>, <9>, <10>, <11>;
-> +               clocks = <&fin_pll>, <&clock_peris PCLK_MCT>;
-> +               clock-names = "fin_pll", "mct";
-> +
-> +               mct_map: mct-map {
-> +                       #interrupt-cells = <1>;
-> +                       #address-cells = <0>;
-> +                       #size-cells = <0>;
-> +                       interrupt-map = <0 &gic 0 112 0>,
-> +                                       <1 &gic 0 113 0>,
-> +                                       <2 &gic 0 114 0>,
-> +                                       <3 &gic 0 115 0>,
-> +                                       <4 &gic 0 116 0>,
-> +                                       <5 &gic 0 117 0>,
-> +                                       <6 &gic 0 118 0>,
-> +                                       <7 &gic 0 119 0>,
-> +                                       <8 &gic 0 120 0>,
-> +                                       <9 &gic 0 121 0>,
-> +                                       <10 &gic 0 122 0>,
-> +                                       <11 &gic 0 123 0>;
-> +               };
-> +       };
-
-I don't see why need the map here. Why can't we describe the GIC
-interrupts directly?
-
-[...]
-
-> +       timer {
-> +               compatible = "arm,armv8-timer";
-> +               interrupts = <1 13 0xff01>,
-> +                            <1 14 0xff01>,
-> +                            <1 11 0xff01>,
-> +                            <1 10 0xff01>;
-> +               clock-frequency = <24000000>;
-
-Your firmware/bootloader should configure CNTFRQ, and this shouldn't be
-necessary. The clock-frequency property is an incomplete workaround for
-broken firmware that in an ideal world we could kill off.
-
-> +               use-clocksource-only;
-> +               use-physical-timer;
-
-Neither of these properties were introduced by this series, and no
-rationale was given.
-
-What are these properties for, and why do you believe they are
-necessary?
-
-Thanks,
-Mark.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
