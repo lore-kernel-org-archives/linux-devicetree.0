@@ -1,61 +1,45 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] doc: dt: mxs-phy: add compatible string for
- imx6sx-usbphy
-Date: Wed, 27 Aug 2014 14:09:04 -0500
-Message-ID: <20140827190904.GD6347@saruman.home>
-References: <1409021718-5969-1-git-send-email-peter.chen@freescale.com>
- <1409021718-5969-2-git-send-email-peter.chen@freescale.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mJm6k4Vb/yFcL9ZU"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409021718-5969-2-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: David Riley <davidriley@chromium.org>
+Subject: [PATCH v2 0/1] gpio-restart restart handler
+Date: Wed, 27 Aug 2014 12:23:50 -0700
+Message-ID: <1409167431-21155-1-git-send-email-davidriley@chromium.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, David Riley <davidriley@chromium.org>, Arnd Bergmann <arnd@arndb.de>, Anton Vorontsov <anton@enomsg.org>, Marc Carino <marc.ceeeee@gmail.com>, Anders Berg <anders.berg@lsi.com>, Laxman Dewangan <ldewangan@nvidia.com>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, Jamie Lentin <jm@lentin.co.uk>, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---mJm6k4Vb/yFcL9ZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This driver builds upon Guenter Roeck's kernel restart handler patchset
+to add a driver which registers a GPIO-based restart handler which restarts
+the system by toggling a GPIO.
 
-On Tue, Aug 26, 2014 at 10:55:18AM +0800, Peter Chen wrote:
-> Add compatible string for imx6sx-usbphy.
->=20
-> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Changes are based off 3.17-rc2 with the following patches from v7 of 
+Guenter's patchset:
+https://patchwork.kernel.org/patch/4746721/
+https://patchwork.kernel.org/patch/4746731/
+https://patchwork.kernel.org/patch/4747011/
+https://patchwork.kernel.org/patch/4746741/
+https://patchwork.kernel.org/patch/4746861/
 
-do I need to take this one as well or will DT folks take care of patch 2 ?
+Changes since v1:
+v2:
+	- Updated devicetree binding to make it less kernel specific
+	- Changed priority property from u8 type to standard u32
+	- Rename input property to open-source
+	- Made delays configurable from binding
+	- Removed unneeded BUG_ON
+	- Used devm_gpiod_get flags parameter to configure initial direction
 
---=20
-balbi
+David Riley (1):
+  power: Add simple gpio-restart driver
 
---mJm6k4Vb/yFcL9ZU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ .../devicetree/bindings/gpio/gpio-restart.txt      |  54 ++++++++
+ drivers/power/reset/Kconfig                        |   8 ++
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/gpio-restart.c                 | 149 +++++++++++++++++++++
+ 4 files changed, 212 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-restart.txt
+ create mode 100644 drivers/power/reset/gpio-restart.c
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+-- 
+2.0.0
 
-iQIcBAEBAgAGBQJT/izQAAoJEIaOsuA1yqREDbQP/0H2GknnkdtOmlKVkwbjrIiz
-ggTox0QtvRVJlUfopUWKsTIBUhkNYYhNuVNEQir9rGNvUDaB+ILUaYSXh/1Haotz
-cjMRdLQfCJUA1bEkZkEwTGktMBwruZV5T5+80Qbn4Nrvckq1U81w+RD4Aso+7gtl
-qF0UApoOa3SEGZMC6esYajYYz1hEHWR3RzQQppQVDLh76XA8mDhhXfCHBeNdbOhn
-cP2QurTSgY3Syg9Lk+NwFsKxt93jLSBBls9iIEGy11Gai/Q+KPEmZ2+4crc8cR3Y
-0IQ/K8k/0a8/bVx1G2bfV5Rqhr58Zq1N/LCcyV4kfyJqJGB06r7vpIomLHEAY/tw
-IfEPaS8+Dh5U5o7BBor5uKX29kswR6JcYmxaxYZfRx6cM7Ruxht4+SvwTegr4kgq
-lWOgzYP18Usa8LpCNxofQDONS7iJ22dFEe2/k3o+9pctbL7NGnzpTHNw5nKm72Og
-J8PIlLCMGnJKfi4nsl3FVjB73LQCRgQP5Sx9lkyJGEMI+vU2XSW2IUtv1s0IqjC7
-/G4XnQ8hQWxntBarUu7XGotkR7AkTvg01YdG62W5JWQ9y5PxWK5v02hYbjROLx/+
-9tNFjCVFyFzfVEdKuAWwGZHrCQ3gMWGRuiML3U10kE9lyLvRGYehxxwQuuPWDbke
-EdBXYePl3mW4wA1ysjz/
-=XqmF
------END PGP SIGNATURE-----
-
---mJm6k4Vb/yFcL9ZU--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
