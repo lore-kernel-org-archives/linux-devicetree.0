@@ -1,224 +1,87 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Removes OF_SELFTEST dependency on OF_DYNAMIC
-Date: Wed, 27 Aug 2014 11:26:54 +0100
-Message-ID: <20140827102654.C2E79C409CB@trevor.secretlab.ca>
-References: <1408974215-24887-1-git-send-email-gaurav.minocha.os@gmail.com>
+Subject: Re: [PATCH] of: Fix constantness of of_n_size_cells
+Date: Wed, 27 Aug 2014 11:28:27 +0100
+Message-ID: <20140827102827.50E15C409CB@trevor.secretlab.ca>
+References: <cover.1408729200.git.geoff@infradead.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408974215-24887-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1408729200.git.geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Aug 2014 06:43:34 -0700, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch is used to remove the selftests dependency on
-> OF_DYNAMIC config flag. Now, it executes only the tests
-> that do not depend upon CONFIG_OF_DYNAMIC. Also, it
-> defines the functions to attach and detach the node
-> if OF_DYNAMIC flag isn't enabled.
+On Fri, 22 Aug 2014 17:43:36 +0000, Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+> The of_n_size_cells() routine only does a read-only operation on the device tree
+> passed in, so add the const keyword to that argument so that of_n_size_cells()
+> can be called with read-only data without casting.
 > 
-> Tested with and without OF_DYNAMIC enabled.
+> Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 
-Hi Gaurav,
-
-Thanks for the patch. We've already talked about this on the phone, but
-for posterity I've added comments below...
-
-> 
-> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/of/Kconfig    |    1 -
->  drivers/of/selftest.c |  103 +++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 103 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 5160c4e..1fe3805 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -10,7 +10,6 @@ menu "Device Tree and Open Firmware support"
->  config OF_SELFTEST
->  	bool "Device Tree Runtime self tests"
->  	depends on OF_IRQ && OF_EARLY_FLATTREE
-> -	select OF_DYNAMIC
->  	help
->  	  This option builds in test cases for the device tree infrastructure
->  	  that are executed once at boot time, and the results dumped to the
-> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-> index a737cb5..7330007 100644
-> --- a/drivers/of/selftest.c
-> +++ b/drivers/of/selftest.c
-> @@ -39,6 +39,103 @@ static bool selftest_live_tree;
->  	} \
->  }
->  
-> +#if !defined(CONFIG_OF_DYNAMIC)
-> +void __of_attach_node(struct device_node *np)
-> +{
-> +	const __be32 *phandle;
-> +	int sz;
-> +
-> +	np->name = __of_get_property(np, "name", NULL) ? : "<NULL>";
-> +	np->type = __of_get_property(np, "device_type", NULL) ? : "<NULL>";
-> +	phandle = __of_get_property(np, "phandle", &sz);
-> +	if (!phandle)
-> +		phandle = __of_get_property(np, "linux,phandle", &sz);
-> +	if (IS_ENABLED(PPC_PSERIES) && !phandle)
-> +		phandle = __of_get_property(np, "ibm,phandle", &sz);
-
-The above two lines can be dropped. The test data doesn't use the
-ibm,phandle property. Only IBM firmware does.
-
-> +	np->phandle = (phandle && (sz >= 4)) ? be32_to_cpup(phandle) : 0;
-> +	np->sibling = np->parent->child;
-> +	np->allnext = np->parent->allnext;
-> +	np->parent->allnext = np;
-> +	np->parent->child = np;
-> +	of_node_clear_flag(np, OF_DETACHED);
-> +}
-> +
-> +/**
-> + * of_attach_node() - Plug a device node into the tree and global list.
-> + */
-> +int of_attach_node(struct device_node *np)
-> +{
-> +	unsigned long flags;
-> +
-> +	mutex_lock(&of_mutex);
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
-> +	__of_attach_node(np);
-> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	mutex_unlock(&of_mutex);
-> +
-> +	return 0;
-> +}
-
-Given that this is only used by the selftest module, there is no need
-for the separate __of_attach_node() function wrapped by of_attach_node().
-Just put the body of __of_attach_node into this function.
-
-> +
-> +void __of_detach_node(struct device_node *np)
-> +{
-> +	struct device_node *parent;
-> +
-> +	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
-> +		return;
-> +
-> +	parent = np->parent;
-> +	if (WARN_ON(!parent))
-> +		return;
-> +
-> +	if (of_allnodes == np)
-> +		of_allnodes = np->allnext;
-> +	else {
-> +		struct device_node *prev;
-> +
-> +		for (prev = of_allnodes;
-> +		     prev->allnext != np;
-> +		     prev = prev->allnext)
-> +			;
-> +		prev->allnext = np->allnext;
-> +	}
-> +
-> +	if (parent->child == np)
-> +		parent->child = np->sibling;
-> +	else {
-> +		struct device_node *prevsib;
-> +
-> +		for (prevsib = np->parent->child;
-> +		     prevsib->sibling != np;
-> +		     prevsib = prevsib->sibling)
-> +			;
-> +		prevsib->sibling = np->sibling;
-> +	}
-> +
-> +	of_node_set_flag(np, OF_DETACHED);
-> +}
-> +
-> +/**
-> + * of_detach_node() - "Unplug" a node from the device tree.
-> + *
-> + * The caller must hold a reference to the node.  The memory associated with
-> + * the node is not freed until its refcount goes to zero.
-> + */
-> +int of_detach_node(struct device_node *np)
-> +{
-> +	unsigned long flags;
-> +	int rc = 0;
-> +
-> +	mutex_lock(&of_mutex);
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
-> +	__of_detach_node(np);
-> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +
-> +	mutex_unlock(&of_mutex);
-> +
-> +	return rc;
-> +}
-> +#endif
-> +
->  static void __init of_selftest_find_node_by_name(void)
->  {
->  	struct device_node *np;
-> @@ -86,6 +183,7 @@ static void __init of_selftest_find_node_by_name(void)
->  
->  static void __init of_selftest_dynamic(void)
->  {
-> +#ifdef CONFIG_OF_DYNAMIC
->  	struct device_node *np;
->  	struct property *prop;
->  
-> @@ -143,6 +241,7 @@ static void __init of_selftest_dynamic(void)
->  	if (prop->value)
->  		selftest(of_add_property(np, prop) == 0,
->  			 "Adding a large property should have passed\n");
-> +#endif
->  }
->  
->  static void __init of_selftest_parse_phandle_with_args(void)
-> @@ -697,7 +796,9 @@ static int __init selftest_data_add(void)
->  		of_allnodes = selftest_data_node;
->  
->  		for_each_of_allnodes(np)
-> +#ifdef CONFIG_OF_DYNAMIC
->  			__of_attach_node_sysfs(np);
-> +#endif
-
-The normal way to block out a function call is to define an empty
-__of_attach_node_sysfs() static inline so that #ifdefs don't appear in
-the middle of a function.
-
-BTW, this hunk is also buggy. When CONFIG_OF_DYNAMIC is disabled it
-executes the next line once for each and every node.
-
-However, despite all of the above, I don't think we can get away with
-not registering the nodes with sysfs. Doing that means we can't ever
-write tests for the sysfs integration.
-
->  		of_aliases = of_find_node_by_path("/aliases");
->  		of_chosen = of_find_node_by_path("/chosen");
->  		return 0;
-> @@ -740,7 +841,9 @@ static void selftest_data_remove(void)
->  		of_chosen = NULL;
->  		for_each_child_of_node(of_allnodes, np)
->  			detach_node_and_children(np);
-> +#ifdef CONFIG_OF_DYNAMIC
->  		__of_detach_node_sysfs(of_allnodes);
-> +#endif
-
-This must be done otherwise sysfs will be in an inconsistent state.
-We've got three choices here. 1) don't bother removing the testcase
-data, 2) include the __of_attach_node_sysfs() and __of_detach_node_sysfs()
-hooks, or 3) don't attach the nodes to sysfs at all. Not attaching to
-sysfs isn't appealing because it means we can't ever write tests that
-depend on the sysfs hooks.
-
-Originally, I was thinking that not removing the data is the best
-approach, but after looking at it there really isn't much more that
-needs to be pulled in to make it work. I would go with option 2 and make
-sure the sysfs registrations are properly handled.
+What is the code that exposed this problem?
 
 g.
+
+> ---
+> The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
+> 
+>   Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
+> 
+> are available in the git repository at:
+> 
+>   git://git.linaro.org/people/geoff.levand/linux-kexec.git for-of
+> 
+> for you to fetch changes up to e7667576c053daedba1da0b14d4476bc25a86a11:
+> 
+>   of: Fix constantness of of_n_size_cells (2014-08-22 10:33:59 -0700)
+> 
+> ----------------------------------------------------------------
+> Geoff Levand (1):
+>       of: Fix constantness of of_n_size_cells
+>  drivers/of/base.c  | 4 ++--
+>  include/linux/of.h | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d8574ad..f773679 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -53,7 +53,7 @@ DEFINE_MUTEX(of_mutex);
+>   */
+>  DEFINE_RAW_SPINLOCK(devtree_lock);
+>  
+> -int of_n_addr_cells(struct device_node *np)
+> +int of_n_addr_cells(const struct device_node *np)
+>  {
+>  	const __be32 *ip;
+>  
+> @@ -69,7 +69,7 @@ int of_n_addr_cells(struct device_node *np)
+>  }
+>  EXPORT_SYMBOL(of_n_addr_cells);
+>  
+> -int of_n_size_cells(struct device_node *np)
+> +int of_n_size_cells(const struct device_node *np)
+>  {
+>  	const __be32 *ip;
+>  
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 6c4363b..6eebcf6 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -285,8 +285,8 @@ extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
+>  #define for_each_property_of_node(dn, pp) \
+>  	for (pp = dn->properties; pp != NULL; pp = pp->next)
+>  
+> -extern int of_n_addr_cells(struct device_node *np);
+> -extern int of_n_size_cells(struct device_node *np);
+> +extern int of_n_addr_cells(const struct device_node *np);
+> +extern int of_n_size_cells(const struct device_node *np);
+>  extern const struct of_device_id *of_match_node(
+>  	const struct of_device_id *matches, const struct device_node *node);
+>  extern int of_modalias_node(struct device_node *node, char *modalias, int len);
+> -- 
+> 1.9.1
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
