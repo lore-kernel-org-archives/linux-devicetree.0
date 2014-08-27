@@ -1,72 +1,100 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH] Add support for definition of register maps in DT in
- ADV7604
-Date: Wed, 27 Aug 2014 16:05:30 +0200
-Message-ID: <53FDE5AA.2040805@metafoo.de>
-References: <1409143986-13990-1-git-send-email-jean-michel.hautbois@vodalys.com> <53FDD718.3020202@xs4all.nl>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] mfd: Add hi6421 PMIC core driver
+Date: Wed, 27 Aug 2014 15:11:27 +0100
+Message-ID: <20140827141127.GA24579@lee--X1>
+References: <1408973982-2072-1-git-send-email-guodong.xu@linaro.org>
+ <1408973982-2072-3-git-send-email-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53FDD718.3020202-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408973982-2072-3-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhangnian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2014 03:03 PM, Hans Verkuil wrote:
-> On 08/27/14 14:53, jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org wrote:
->> From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
->>
->> This patch adds support for DT parsing of register maps adresses.
->> This allows multiple adv76xx devices on the same bus.
->>
->> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
->> ---
->>   .../devicetree/bindings/media/i2c/adv7604.txt      | 12 ++++
->>   drivers/media/i2c/adv7604.c                        | 71 ++++++++++++++++++----
->>   2 files changed, 71 insertions(+), 12 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> index c27cede..33881fb 100644
->> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> @@ -32,6 +32,18 @@ The digital output port node must contain at least one endpoint.
->>   Optional Properties:
->>
->>     - reset-gpios: Reference to the GPIO connected to the device's reset pin.
->> +  - adv7604-page-avlink: Programmed address for avlink register map
->> +  - adv7604-page-cec: Programmed address for cec register map
->> +  - adv7604-page-infoframe: Programmed address for infoframe register map
->> +  - adv7604-page-esdp: Programmed address for esdp register map
->> +  - adv7604-page-dpp: Programmed address for dpp register map
->> +  - adv7604-page-afe: Programmed address for afe register map
->> +  - adv7604-page-rep: Programmed address for rep register map
->> +  - adv7604-page-edid: Programmed address for edid register map
->> +  - adv7604-page-hdmi: Programmed address for hdmi register map
->> +  - adv7604-page-test: Programmed address for test register map
->> +  - adv7604-page-cp: Programmed address for cp register map
->> +  - adv7604-page-vdp: Programmed address for vdp register map
->
-> Might adv7604-addr-avlink be a better name? Other than that it looks good
-> to me.
+> This adds driver to support HiSilicon Hi6421 PMIC. Hi6421 includes mu=
+lti-
+> functions, such as regulators, codec, ADCs, Coulomb counter, etc.
+> This driver includes core APIs _only_.
+>=20
+> Drivers for individul components, like voltage regulators, are
+> implemented in corresponding driver directories and files.
+>=20
+> Registers in Hi6421 are memory mapped, so using regmap-mmio API.
+>=20
+> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
 
-Those properties need at least a vendor prefix. But to be honest I'd rather see 
-generic support for multiple addresses in the I2C core. This is not a feature 
-that is specific to this particular device. And for example similar things work 
-already fine for other buses like for example MMIO devices.
+The patch is missing version information normally indicated to in the
+=C2=A3SUBJECT line with a full description added here.  This looks like=
+ a
+first submission, but we both know that it's not.=20
 
-E.g. something like
+>  drivers/mfd/Kconfig             |  13 +++++
+>  drivers/mfd/Makefile            |   1 +
+>  drivers/mfd/hi6421-pmic-core.c  | 112 ++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/hi6421-pmic.h |  42 +++++++++++++++
+>  4 files changed, 168 insertions(+)
+>  create mode 100644 drivers/mfd/hi6421-pmic-core.c
+>  create mode 100644 include/linux/mfd/hi6421-pmic.h
 
-reg = <0x12 0x34 0x56 0x78 ...>
-reg-names = "main", "avlink", "cec", "infoframe", ...
+[...]
 
-Ideally accessing those other addresses will be hidden in the I2C core by a 
-helper function that allows you to create a dummy device for a particular 
-sub-address.
+> diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic=
+-core.c
+> new file mode 100644
+> index 0000000..c6cba8f
+> --- /dev/null
+> +++ b/drivers/mfd/hi6421-pmic-core.c
+> @@ -0,0 +1,112 @@
 
-- Lars
+[...]
+
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/hi6421-pmic.h>
+> +
+> +static struct of_device_id of_hi6421_pmic_match_tbl[] =3D {
+> +	{ .compatible =3D "hisilicon,hi6421-pmic", },
+> +	{ },
+> +};
+
+Unless you're going to use this to of_match() on in future, this
+should be down by the definition of 'struct platform_driver'.
+
+> +static int hi6421_pmic_probe(struct platform_device *pdev)
+> +{
+
+[...]
+
+> +	/* set over-current protection debounce 8ms */
+> +	regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
+> +		(HI6421_OCP_DEB_SEL_MASK | HI6421_OCP_EN_DEBOUNCE_MASK |
+> +		 HI6421_OCP_AUTO_STOP_MASK),
+> +		(HI6421_OCP_DEB_SEL_8MS | HI6421_OCP_EN_DEBOUNCE_ENABLE));
+
+These might read a little better stacked and aligned.
+
+> +	pmic->dev =3D &pdev->dev;
+
+Can't you retrieve this via dev->parent?
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
