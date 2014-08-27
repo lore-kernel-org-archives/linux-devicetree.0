@@ -1,64 +1,80 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Wed, 27 Aug 2014 11:30:25 -0700
-Message-ID: <CAL1qeaFTw=0XMEkag1Z8C4jKkWnwBeGJLYxHGiYfKXBk-9o0Yw@mail.gmail.com>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
-	<CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
-	<CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
-	<20140823063113.GC23715@localhost>
-	<CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com>
-	<CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v6 4/5] clk: RK808: Add clkout driver for RK808
+Date: Wed, 27 Aug 2014 20:32:53 +0200
+Message-ID: <5320662.uDieR7oLoG@diego>
+References: <1409062589-12157-1-git-send-email-zyw@rock-chips.com> <CAD=FV=WS=FaJdDVomCo2FxnsoRxDAHNNK-VX75JLzBYHHGS8AA@mail.gmail.com> <53FDBF59.1050001@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
+In-Reply-To: <53FDBF59.1050001@codethink.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Gorski <jogo@openwrt.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Olof Johansson <olof@lixom.net>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Ben Dooks <ben.dooks@codethink.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Doug Anderson <dianders@chromium.org>, Chris Zhong <zyw@rock-chips.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Dmitry Torokhov <dtor@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Kever Yang <kever.yang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 25, 2014 at 8:17 AM, Jonas Gorski <jogo@openwrt.org> wrote:
-> On Sat, Aug 23, 2014 at 9:50 PM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof@lixom.net> wrote:
->>>> > arch/arm/boot/dts/<vendor>/
->>>> >
->>>> > Is this something we should do for the MIPS and update the other architectures
->>>> > to follow that scheme?
->>>>
->>>> I recall reading that as well and that it would be adopted for ARM64,
->>>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
->>>> more.
->>>
->>> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
->>> and the amount of files in that directory is becoming pretty
->>> insane. Moving to a subdirectory structure later gets messy which is
->>> why we've been holding off on it.
->>
->> It would mean we can change our scripts to operate on "interesting"
->> DTS files from
->>
->>      do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
->>
->> to
->>
->>     do-something-with arch/arm/boot/dts/$vendor/*
->>
->> which is easier to type...
->
-> Btw, do you mean chip-vendor or device-vendor with vendor?
-> Device-vendor could get a bit messy on the source part as the router
-> manufacturers tend to switch them quite often. E.g. d-link used arm,
-> mips and ubi32 chips from marvell, ubicom, broadcom, atheros, realtek
-> and ralink for their dir-615 router, happily switching back and forth.
-> There are 14 known different hardware revisions of it where the chip
-> differed from the previous one.
+Am Mittwoch, 27. August 2014, 12:22:01 schrieb Ben Dooks:
+> >> diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
+> >> new file mode 100644
+> >> index 0000000..21f8b54
+> >> --- /dev/null
+> >> +++ b/drivers/clk/clk-rk808.c
+> >> @@ -0,0 +1,163 @@
+> >> +/*
+> >> + * Clkout driver for Rockchip RK808
+> >> + *
+> >> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+> >> + *
+> >> + * Author: Chris Zhong <zyw@rock-chips.com>
+> > 
+> > I probably would have removed "Author" here (like in other patches)
+> > since it's below in MODULE_AUTHOR.  ...but I'm not a huge stickler for
+> > it.
+> > 
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify
+> >> it
+> >> + * under the terms and conditions of the GNU General Public License,
+> >> + * version 2, as published by the Free Software Foundation.
+> >> + *
+> >> + * This program is distributed in the hope it will be useful, but
+> >> WITHOUT
+> >> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> >> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+> >> for + * more details.
+> >> + */
+> >> +
+> >> +#include <linux/clk.h>
+> >> +#include <linux/clk-provider.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/slab.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/mfd/rk808.h>
+> >> +#include <linux/i2c.h>
+> >> +
+> >> +struct rk808_clkout {
+> >> +       struct rk808 *rk808;
+> >> +       struct clk_onecell_data clk_data;
+> >> +       struct clk_hw           clkout1_hw;
+> >> +       struct clk_hw           clkout2_hw;
+> >> +};
+> >> +
+> >> +static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
+> >> +                                             unsigned long parent_rate)
+> >> +{
+> >> +       return 32768;
+> >> +}
+> >> +
+> 
+> Given one of these is a fixed, ungatable clock then surely it would
+> be easier to use a separate fixed clock node for that and then just
+> have a none for the gated clock?
 
-I'm going to assume it means chip/SoC vendor.  That would result in
-the following structure (I think):
+Hmm, with the devicetree being supposed to describe the hardware, I guess this 
+is debatable. As both clocks are provided by the rk808 chip, I guess the clock 
+references for both also should point there and not some arbitary fixed clock 
+somewhere else in the dt?
 
-Octeon -> cavium/
-Lantiq -> lantiq/
-Netlogic -> netlogic/ (or should this now be brcm/?)
-SEAD-3 -> mti/
-Ralink -> ralink/
+But this view could also be to pendantic :-) .
+
+Maybe the dt maintainers can shed some light on this.
