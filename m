@@ -1,82 +1,74 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v1 1/1] power: Add simple gpio-restart driver
-Date: Wed, 27 Aug 2014 11:14:13 -0700
-Message-ID: <20140827181413.GA2198@roeck-us.net>
-References: <1409096705-24290-1-git-send-email-davidriley@chromium.org>
- <1409096705-24290-2-git-send-email-davidriley@chromium.org>
- <20140827014300.GA29512@earth.universe>
- <CAASgrz3ArGUJnPVvBcm2Hm0gwcUPYt2504M3t-3M5=c2DmKotA@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
+Date: Wed, 27 Aug 2014 12:19:21 -0600
+Message-ID: <53FE2129.6080305@wwwdotorg.org>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>	<1408381705-3623-3-git-send-email-abrestic@chromium.org>	<53FB8820.4010202@wwwdotorg.org>	<CAL1qeaERHeKKNpqh9qHOppgT7ymvntisdjVvZheP78U6NaPz-A@mail.gmail.com>	<53FE1A7A.4010906@wwwdotorg.org> <CAL1qeaGPr=BeYL1-=ddRL7rSuvYdQcd6vCEEHDrNA-KYst6bnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAASgrz3ArGUJnPVvBcm2Hm0gwcUPYt2504M3t-3M5=c2DmKotA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL1qeaGPr=BeYL1-=ddRL7rSuvYdQcd6vCEEHDrNA-KYst6bnw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Riley <davidriley-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anders Berg <anders.berg-M7mHMAq9Yzo@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TbrhsbdSgBK9A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 27, 2014 at 10:56:20AM -0700, David Riley wrote:
-> Hi Sebastian,
-> 
-> Thanks for the feedback.
-> 
-> On Tue, Aug 26, 2014 at 6:43 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > Hi David,
-> >
-> > On Tue, Aug 26, 2014 at 04:45:05PM -0700, David Riley wrote:
-> >> This driver registers a restart handler to set a GPIO line high/low
-> >> to reset a board based on devicetree bindings.
-> >
-> > Driver looks fine to me. I have some comments about the
-> > Documentation, though:
-> >
-> >> [...]
-> >> diff --git a/Documentation/devicetree/bindings/gpio/gpio-restart.txt b/Documentation/devicetree/bindings/gpio/gpio-restart.txt
-> >> new file mode 100644
-> >> index 0000000..7cd58788
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/gpio/gpio-restart.txt
-> >> @@ -0,0 +1,48 @@
-> >> +Driver a GPIO line that can be used to restart the system as a
-> >> +restart handler.
-> >
-> > Please fix the Typo (first word).
-> 
-> Fixed.
-> 
-> >
-> >> [...]
-> >> +
-> >> +The driver supports both level triggered and edge triggered power off.
-> >> +At driver load time, the driver will request the given gpio line and
-> >> +install a restart handler.
-> >
-> > The wording is too driver centric IMHO. You are supposed to document
-> > the binding in a generic way. Maybe start with something like:
-> >
-> > "This binding supports level and edge triggered reset."
-> >
-> > (power off is the wrong word, since there is already gpio-poweroff).
-> 
-> I've cleaned this up for v2.
-> 
-> >> +If the optional properties 'input' is +not found, the GPIO line
-> >> +will be driven in the inactive state. Otherwise its configured
-> >> +as an input.
-> >
-> > What is this needed for?
-> 
-> This allows other hardware to be attached to the same line to reset
-> the system.  Carried forward from the gpio-poweroff implementation I
-> based this on.
-> 
-Maybe rephrase; the point isn't really that it is configured as input but
-that it is an open source pin unless actively driven to reset the system.
-That linux models the pin as input is really an implementation detail.
+On 08/27/2014 12:13 PM, Andrew Bresticker wrote:
+> On Wed, Aug 27, 2014 at 10:50 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 08/27/2014 11:38 AM, Andrew Bresticker wrote:
+>>>
+>>> On Mon, Aug 25, 2014 at 12:01 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>> wrote:
+>>>>
+>>>> On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
+>>>>>
+>>>>> +static int tegra_xusb_mbox_probe(struct platform_device *pdev)
+>>>>
+>>>>
+>>>>
+>>>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>>>
+>>>>> +       if (!res)
+>>>>> +               return -ENODEV;
+>>>>
+>>>>
+>>>>
+>>>> Should devm_request_mem_region() be called here to claim the region?
+>>>
+>>>
+>>> No, the xHCI host driver also needs to map these registers, so they
+>>> cannot be mapped exclusively here.
+>>
+>>
+>> That's unfortunate. Having multiple drivers with overlapping register
+>> regions is not a good idea. Can we instead have a top-level driver map all
+>> the IO regions, then instantiate the various different sub-components
+>> internally, and divide up the address space. Probably via MFD or similar.
+>> That would prevent multiple drivers from touching the same register region.
+>
+> Perhaps I'm misunderstanding, but I don't see how MFD would prevent us
+> from having to map this register space in two different locations -
+> the XUSB FPCI address space cannot be divided cleanly between host and
+> mailbox registers.  Or are you saying that there should be a separate
+> device driver that exposes an API for accessing this register space,
+> like the Tegra fuse or PMC drivers?
 
-Thanks,
-Guenter
+With MFD, there's typically a top-level driver for the HW module (or 
+register space) that gets instantiated by the DT node. This driver then 
+instantiates all the different sub-drivers that use that register space, 
+and provides APIs for the sub-drivers to access the registers (either 
+custom APIs or more recently by passing a regmap object down to the 
+sub-drivers).
+
+This top-level driver is the only driver that maps the space, and can 
+manage sharing the space between the various sub-drivers.
+
+That said, I haven't noticed many MFD drivers for MMIO devices. I 
+certainly have seen multiple different drivers just re-mapping shared 
+registers for themselves. It is simpler and does work. However, people 
+usually mutter about it when it happens, since it's not clear which 
+drivers are using what from the IO mapping registry. Using MFD or 
+similar would allow the sharing to work in a clean fashion.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
