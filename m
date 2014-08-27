@@ -1,82 +1,61 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
-Date: Wed, 27 Aug 2014 10:24:11 +0200
-Message-ID: <53FD95AB.6080903@metafoo.de>
-References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com> <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com> <53F9A6EE.5070005@metafoo.de> <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com> <20140826062558.GR17528@sirena.org.uk> <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com> <20140826091120.GC17528@sirena.org.uk> <53FC5105.6070901@metafoo.de> <20140826094211.GF17528@sirena.org.uk> <87r403mtip.wl%kuninori.morimoto.gx@gmail.com> <20140826105028.GK17528@sirena.org.uk> <87d2bmpwi2.wl%kuninori.morimoto.gx@gmail.com> <87a96qpqsy.wl%kuninori.morimoto.gx@gmail.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 9/9] arm64: Add new cpu-return-addr device tree binding
+Date: Wed, 27 Aug 2014 09:30:22 +0100
+Message-ID: <20140827083022.GE6968@arm.com>
+References: <cover.1408736066.git.geoff@infradead.org>
+ <4192d403bb9703063c59a052293faa19d38d2f02.1408736066.git.geoff@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87a96qpqsy.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4192d403bb9703063c59a052293faa19d38d2f02.1408736066.git.geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+To: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2014 05:14 AM, Kuninori Morimoto wrote:
->
-> Hi Mark again
->
->> But, How about this case ?
->>
->>     FE cpu:   CPU-A
->>        codec: Codec-A
->>
->>     BE cpu:   CPU-B
->>        codec: Codec-B
->
-> I found 1 method.
-> I can create it if we can assume that
-> "simple-card doen't support above style",
->
->> If the documentation refers to the interface as for example "I2S0" then
->> the DT should refer to it as I2S0 too.
->
-> simple-card is using "format" property now,
-> and I remember that someone want to exchange format in DPCM.
->
-> My 1st DPCM patch used "remote" property for specify FE/BE.
-> And, we can get DAI stream_name if we can update snd_soc_of_get_dai_name()
-> This means, we can use DPCM like below
-> if you can accept my previous "ASoC: dapm: enable DAI name on DAPM route"
-> What do you think ?
->
-> 	sound {
-> 		compatible = "simple-audio-card";
->
-> 		/* FrontEnd */
-> 		simple-audio-card,dai-link@0 {
-> 			...
-> 			format = "left_j";
-> 			remote = <&endpoint>;
->
-> 			cpu {
-> 				sound-dai = <&rcar_sound 0>;
-> 			};
-> 			codec { /* dummy */ };
-> 		};
->
-> 		/* BackEnd */
-> 		endpoint: simple-audio-card,dai-link@1 {
-> 			...
-> 			format = "left_j";
->
-> 			cpu { /* dummy */ };
-> 			codec1: codec {
-> 				sound-dai = <&ak4643>;
-> 			};
-> 		};
-> 	};
+On Fri, Aug 22, 2014 at 08:49:17PM +0100, Geoff Levand wrote:
+> Add a new arm64 device tree binding cpu-return-addr.  This binding is recomended
+> for all ARM v8 CPUs that have an "enable-method" property value of "spin-table".
+> The value is a 64 bit physical address that secondary CPU execution will transfer
+> to upon CPU shutdown.
+> 
+> Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 1fe72a0..42d5d5f 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -201,6 +201,15 @@ nodes to be present and contain the properties described below.
+>  			  property identifying a 64-bit zero-initialised
+>  			  memory location.
+>  
+> +	- cpu-return-addr
+> +		Usage: recomended for all ARM v8 CPUs that have an
+> +		       "enable-method" property value of "spin-table".
+> +		Value type: <prop-encoded-array>
+> +		Definition:
+> +			# On ARM v8 64-bit systems must be a two cell property.
+> +			The value is a 64 bit physical address that secondary
+> +			CPU execution will transfer to upon CPU shutdown.
 
-When you try to come up with with a binding try to completely ignore that 
-something call DPCM exists. The binding is supposed to describe the hardware 
-and how the different hardware components are interconnected. So try to come 
-up with a binding that accurately describes the hardware connections. Once 
-that is done try to map the binding onto the existing software framework. 
-The last step may require some adjustments to the framework.
+As I've been away for most of the past four weeks, I haven't read all
+the threads around this topic. But I don't think we ended up with a
+clearly agreed recommendation for cpu-return-addr. If we do, we also
+need to be clear on what state the CPU should be in when returned to
+such address (ELx, MMU, caches).
 
-- Lars
+In general, if we need returning to firmware I would strongly recommend
+PSCI but I know there is the Applied board which does not have EL3, so
+something like this may work. But we need to get them into discussion as
+well since I assume cpu-return-addr would be a firmware provided
+address.
 
+-- 
+Catalin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
