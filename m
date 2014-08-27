@@ -1,54 +1,55 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: document Rockchip thermal
-Date: Thu, 28 Aug 2014 04:36:35 +0800
-Message-ID: <53FE4153.3080601@rock-chips.com>
-References: <1409096503-7081-1-git-send-email-caesar.wang@rock-chips.com> <1409096503-7081-3-git-send-email-caesar.wang@rock-chips.com> <5911166.ElkaNhDZrP@wuerfel>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH 1/4] mfd: Add Ricoh RN5T618 PMIC core driver
+Date: Wed, 27 Aug 2014 23:12:37 +0200
+Message-ID: <20140827211237.GA24921@gmail.com>
+References: <1409091237-16722-1-git-send-email-b.galvani@gmail.com>
+ <1409091237-16722-2-git-send-email-b.galvani@gmail.com>
+ <20140827075614.GZ26707@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5911166.ElkaNhDZrP@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, zhaoyifeng <zyf@rock-chips.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140827075614.GZ26707@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
+On Wed, Aug 27, 2014 at 08:56:14AM +0100, Lee Jones wrote:
+[...]
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index 8d5fad2..fae8c5b 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -582,6 +582,17 @@ config MFD_RC5T583
+> >  	  Additional drivers must be enabled in order to use the
+> >  	  different functionality of the device.
+> >  
+> > +config MFD_RN5T618
+> > +	bool "Ricoh RN5T5618 PMIC"
+> 
+> Shouldn't this be tristate?
 
+Yes, I suppose the driver would work also as a module, I only have to
+uninstall the pm_power_off hook on module removal.
 
-=E5=9C=A8 2014=E5=B9=B408=E6=9C=8828=E6=97=A5 04:17, Arnd Bergmann =E5=86=
-=99=E9=81=93:
-> On Wednesday 27 August 2014 07:41:43 Caesar Wang wrote:
->> +- clock-names : Shall be "tsadc_clk" for the transfer-clock, and "t=
-sadc_pclk" for
->> +    the peripheral clock.
->>
-> Why not just name them "clk" and "pclk"? The "tsadc" part seems highl=
-y redundant.
->
-> Alternatively, how about "transfer" and "peripheral"?
+> > +++ b/drivers/mfd/rn5t618.c
+> > @@ -0,0 +1,129 @@
+> 
+> [...]
+> 
+> > +static int rn5t618_i2c_probe(struct i2c_client *i2c,
+> > +			     const struct i2c_device_id *id)
+> > +{
+> 
+> [...]
+> 
+> > +	dev_info(&i2c->dev, "RN5T618 MFD driver loaded");
+> 
+> Can you remove this line?  We normally only print things when
+> information is gathered from a chip i.e. version information and the
+> like.
 
-It seems  nappropriate description.
+I will remove it, thanks.
 
-But,I will fix  as the following:
-
--clock-names =EF=BC=9A Shall be "tsadc" for the converter-clock, and "a=
-pb_pclk" for
-               the peripheral clock.
-
-Thanks!
-
-
-
->
-> 	Arnd
->
->
->
-
---=20
-Best regards,
-Caesar
-
-
+Beniamino
