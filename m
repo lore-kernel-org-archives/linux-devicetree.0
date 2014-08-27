@@ -1,76 +1,198 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] pinctrl: tegra-xusb: Add USB PHY support
-Date: Wed, 27 Aug 2014 09:44:02 -0700
-Message-ID: <CAL1qeaHMa_KrqQyPgvJssOnW8mefQ8KPO9+WdkVODbY2XJe_LQ@mail.gmail.com>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
-	<1408381705-3623-5-git-send-email-abrestic@chromium.org>
-	<53FB8CFE.3090007@wwwdotorg.org>
+From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/8] pinctrl: add driver for MB86S7x
+Date: Wed, 27 Aug 2014 22:28:07 +0530
+Message-ID: <CAJe_Zhc8kgAsk+O+oER4b2E_Zw8B41bkHSXk3BgcGTZWpN8OdQ@mail.gmail.com>
+References: <1405233067-4725-1-git-send-email-mollie.wu@linaro.org>
+	<CACRpkdb_NC7j=XkbMPv8YYLSeEd1AOpFqmD8x+ohC7ds3cPCfg@mail.gmail.com>
+	<CAJe_Zhe2VuzHtkojm9nxvDTjT4AL7Znvma+5T7JTadvFJ1vAJQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53FB8CFE.3090007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel@lists>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_Zhe2VuzHtkojm9nxvDTjT4AL7Znvma+5T7JTadvFJ1vAJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, fwu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 25, 2014 at 12:22 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
+On 22 August 2014 13:16, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 22 July 2014 21:41, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Sun, Jul 13, 2014 at 8:31 AM, Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
 >>
->> In addition to the PCIe and SATA PHYs, the XUSB pad controller also
->> supports 3 UTMI, 2 HSIC, and 2 USB3 PHYs.  Each USB3 PHY uses a single
->> PCIe or SATA lane and is mapped to one of the three UTMI ports.
+>>> +static int
+>>> +mb86s70_pmx_enable(struct pinctrl_dev *pctl,
+>>> +                  unsigned func_selector, unsigned group_selector)
+>>> +{
+>>> +       struct mb86s70_pmux_chip *pchip = pinctrl_dev_get_drvdata(pctl);
+>>> +       unsigned long flags;
+>>> +       const unsigned *pins;
+>>> +       int i, j;
+>>> +
+>>> +       if (group_selector >= grp_count) {
+>>> +               pr_err("%s:%d\n", __func__, __LINE__);
+>>> +               return -EINVAL;
+>>> +       }
+>>> +
+>>> +       j = mb86s7x_pgrps[group_selector].num_pins;
+>>> +       pins = mb86s7x_pgrps[group_selector].pins;
+>>> +
+>>> +       spin_lock_irqsave(&pchip->lock, flags);
+>>> +
+>>> +       /* Busy if any pin in the same 'bunch' is taken */
+>>> +       for (i = 0; i < j; i++) {
+>>> +               u32 val;
+>>> +               int p = pins[i] / 4 * 4;
+>>> +
+>>> +               if (pins[i] >= PINS_VIRT) /* Not for virtual pins */
+>>> +                       continue;
+>>> +
+>>> +               val = readl(pchip->base + p);
+>>> +               /* skip if no change needed */
+>>> +               if (val == mb86s7x_pmx_funcs[func_selector].prog_val)
+>>> +                       continue;
+>>> +
+>>> +               if (pchip->pin_busy[p]) {
+>>> +                       pr_err("%s:%d:%d %d busy\n",
+>>> +                              __func__, __LINE__, pins[i], p);
+>>> +                       goto busy_exit;
+>>> +               }
+>>> +
+>>> +               if (pchip->pin_busy[p + 1]) {
+>>> +                       pr_err("%s:%d:%d %d busy\n",
+>>> +                              __func__, __LINE__, pins[i], p+1);
+>>> +                       goto busy_exit;
+>>> +               }
 >>
->> The xHCI controller will also send messages intended for the PHY driver,
->> so request and listen for messages on the mailbox's PHY channel.
+>> I don't see why you are doing this and keeping track of
+>> pins as "busy" or not. One thing the pin control core does
+>> is to make sure pins do not collide in different use cases,
+>> it seems like you're re-implementing this check again.
+>>
+>>> +               if (p == 64)
+>>> +                       continue;
+>>
+>> This if-clause seems dubious. At least add a comment as
+>> to what is happening here and why.
+>>
+>>> +               if (pchip->pin_busy[p + 2]) {
+>>> +                       pr_err("%s:%d:%d %d busy\n",
+>>> +                              __func__, __LINE__, pins[i], p+2);
+>>> +                       goto busy_exit;
+>>> +               }
+>>> +
+>>> +               if (pchip->pin_busy[p + 3]) {
+>>> +                       pr_err("%s:%d:%d %d busy\n",
+>>> +                              __func__, __LINE__, pins[i], p+3);
+>>> +                       goto busy_exit;
+>>> +               }
+>>
+>> I don't understand this either.
+>>
+>> Why all this fuzz around the four pins from p ... p+3?
+>>
+>>> +               continue;
+>>> +busy_exit:
+>>> +               spin_unlock_irqrestore(&pchip->lock, flags);
+>>> +               pr_err("%s:%d Take a look!\n", __func__, __LINE__);
+>>> +               return -EBUSY;
+>>> +       }
+>>
+>> You don't have to have the busy_exit: inside the for-loop right?
+>>
+>> Just push it below the return 0; in the end of this function
+>> so you can get rid of the dangling continue;
+>>
+>>> +       pr_debug("Going to enable %s on pins -",
+>>> +                mb86s7x_pmx_funcs[func_selector].name);
+>>> +       for (i = 0; i < j; i++) {
+>>> +               int p = pins[i];
+>>> +
+>>> +               pr_debug(" %d", p);
+>>> +               pchip->pin_busy[p] = true;
+>>
+>> So I'm questioning this....
+>>
+>>> +               if (p < PINS_VIRT) /* Not for virtual pins */
+>>
+>> We need an explanation somewhere about what "virtual pins"
+>> means in this driver, I have never seen that before.
+>>
+>>> +                       writel(mb86s7x_pmx_funcs[func_selector].prog_val,
+>>> +                              pchip->base + p / 4 * 4);
+>>
+>> This may need some static inline like described above to simplify
+>> the code and make it more readable, but I see what is going on.
+>>
+>>> +       }
+>>> +
+>>> +       spin_unlock_irqrestore(&pchip->lock, flags);
+>>> +       pr_debug("\n");
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static void
+>>> +mb86s70_pmx_disable(struct pinctrl_dev *pctl,
+>>> +                   unsigned func_selector, unsigned group_selector)
+>>> +{
+>>> +       struct mb86s70_pmux_chip *pchip = pinctrl_dev_get_drvdata(pctl);
+>>> +       unsigned long flags;
+>>> +       const unsigned *pins;
+>>> +       int i, j;
+>>> +
+>>> +       if (group_selector >= grp_count) {
+>>> +               pr_err("%s:%d\n", __func__, __LINE__);
+>>> +               return;
+>>> +       }
+>>> +
+>>> +       j = mb86s7x_pgrps[group_selector].num_pins;
+>>> +       pins = mb86s7x_pgrps[group_selector].pins;
+>>> +
+>>> +       pr_debug("Going to disable %s on pins -",
+>>> +                mb86s7x_pmx_funcs[func_selector].name);
+>>> +       spin_lock_irqsave(&pchip->lock, flags);
+>>> +       for (i = 0; i < j; i++) {
+>>> +               pr_debug(" %d", pins[i]);
+>>> +               pchip->pin_busy[pins[i]] = false;
+>>> +       }
+>>> +       spin_unlock_irqrestore(&pchip->lock, flags);
+>>> +       pr_debug("\n");
+>>> +}
+>>
+>> Remove this function. The .disable member is gone from
+>> struct pinmux_ops, as it was ambiguous, see commit
+>> 2243a87d90b42eb38bc281957df3e57c712b5e56
+>> "pinctrl: avoid duplicated calling enable_pinmux_setting for a pin"
+>>
+> Hmm... I just got bitten by this while updating the patchset. Sorry I
+> missed the patch review.
 >
+> The reasons given in changelog are
+>   (1) 'Fix' desc->mux_usecount
+>   (2) The .disable callback is not useful for any of the existing platforms.
 >
-> I'd like a review from Thierry here as the HW expert.
+> Well, for (2) I think it is only reasonable for the provider to need
+> to know when some resource is released by a user just as when it was
+> requested.
+>    Even if the core ensures only one user is provided access to a pin,
+> the controller driver may still need to know when a pin is no more in
+> use. For ex, within consecutive 4 pins my controller can not enable a
+> pin for some function if any in the bunch is already
+> enabled/configured. So I need to know if the pin has been
+> disabled/released, so I can go ahead enabling the 'neighbor' pin for
+> some other role.
 >
-> I need an ack from LinusW in order to take this pinctrl patch through the
-> Tegra tree.
+> For reason (1), there should be some way to fix within the core?
 >
->> diff --git a/drivers/pinctrl/pinctrl-tegra-xusb.c
->> b/drivers/pinctrl/pinctrl-tegra-xusb.c
->
->
->> +static int usb3_phy_power_on(struct phy *phy)
->> +{
->> +       struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
->> +       int port = usb3_phy_to_port(phy);
->> +       int lane = padctl->usb3_ports[port].lane;
->> +       u32 value, offset;
->> +
->> +       if (!is_pcie_or_sata_lane(lane)) {
->> +               dev_err(padctl->dev, "USB3 PHY %d mapped to invalid lane:
->> %d\n",
->> +                       port, lane);
->> +               return -EINVAL;
->> +       }
->
->
-> An aside: This implies that the SATA driver should be talking to this
-> pinctrl driver and explicitly powering on the XUSB pins. However, the SATA
-> driver doesn't depend on this series. I'm a bit confused how that works.
-> Perhaps it's just by accident? Mikko, can you comment?
+Polite ping...
 
-As Mikko mentioned, the enabling of the SATA lane in
-usb3_phy_power_on() is for when the SATA lane is being used for USB3.
+I can't find a way around not knowing when a pin is let free. Do we
+revert the commit and fix the situation for the author's platform
+instead?
 
->> +static int utmi_phy_to_port(struct phy *phy)
->> +{
->> +       struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
->> +       int i;
->> +
->> +       for (i = 0; i < TEGRA_XUSB_UTMI_PHYS; i++) {
->> +               if (phy == padctl->phys[TEGRA_XUSB_PADCTL_UTMI_P0 + i])
->> +                       break;
->> +       }
->> +       BUG_ON(i == TEGRA_XUSB_UTMI_PHYS);
->
->
-> Can this be triggered by e.g. bad DT content? If so, returning an error
-> would be nicer. The comment applies to other xxx_to_port() functions.
-
-No, it cannot.  The struct phy that's passed in here comes from the
-PHY core and must be a PHY that we registered earlier in probe().
+Thanks
+Jassi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
