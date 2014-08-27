@@ -1,95 +1,57 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Wed, 27 Aug 2014 18:58:54 +0200
-Message-ID: <53FE0E4E.7080000@ahsoftware.de>
-References: <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826101107.GC32315@leverpostej> <20140827103432.64927C409CB@trevor.secretlab.ca> <20140827144403.GB13850@arm.com> <53FE05AE.9000406@wwwdotorg.org> <53FE07BE.7000809@ahsoftware.de> <53FE0966.5020206@wwwdotorg.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Wed, 27 Aug 2014 18:02:51 +0100
+Message-ID: <20140827170251.GB24579@lee--X1>
+References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
+ <20140827133936.GD6364@lee--X1>
+ <CAD=FV=WAN=WCdMd4hWDr8qzsg3TWTGX_OAa=6KHvyWrqjmk7MA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53FE0966.5020206@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WAN=WCdMd4hWDr8qzsg3TWTGX_OAa=6KHvyWrqjmk7MA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@c>
 List-Id: devicetree@vger.kernel.org
 
-Am 27.08.2014 18:37, schrieb Stephen Warren:
-> On 08/27/2014 10:30 AM, Alexander Holler wrote:
->> Am 27.08.2014 18:22, schrieb Stephen Warren:
->>> On 08/27/2014 08:44 AM, Catalin Marinas wrote:
->>
->>>> It's not just optimisation but an important feature for new arm64 SoCs.
->>>> Given some Tegra discussions recently, in many cases the machine_desc
->>>> use on arm is primarily to initialise devices in the right order. If we
->>>> can solve this in a more deterministic way (other than deferred
->>>> probing), we avoid the need for a dedicated SoC platform driver (or
->>>> machine_desc) or workarounds like different initcall levels and
->>>> explicit
->>>> DT parsing.
->>>
->>> A lot of the ordering is SW driver dependencies. I'm not sure how much
->>> of that can accurately be claimed as HW dependencies. As such, I'm not
->>> sure that putting dependencies into DT would be a good idea; it doesn't
->>> feel like HW data, and might well change if we restructure SW. It'd need
->>> some detailed research though.
->>
->> Almost every phandle is a dependency, so the DT is already full with
->> them.
->
-> That's true, but not entirely relevant.
->
-> phandles in DT should only be present where there's an obvious HW
-> dependency. It's obvious that, for example, there's a real HW dependency
-> between an IRQ controller and a device that has an IRQ signal fed into
-> the IRQ controller. It makes perfect sense to represent that as a
-> phandle (+args).
->
-> However, most of the ordering imposed by the Tegra machine descriptor
-> callbacks is nothing to do with this. It's more that the SW driver for
-> component X needs some low level data (e.g. SKU/fuse information) before
-> it can run. However, there's no real HW dependency between the HW
-> component X and the fuse module. As such, it doesn't make sense to
-> represent such a dependency in DT, using a phandle or by any other means.
->
-> Of course, there are probably cases where we could/should add some more
-> phandles/... and likewise cases where we shouldn't. That's why detailed
-> research is needed.
->
-> Irrespective though, a new kernel needs to work against an old DT, so
-> always needs to work without any (of these new) dependencies being
-> represented in DT, since they aren't represented there today. So, I
-> think pushing the issue into DT is a non-starter either way, unless we
-> accept yet another ABI-breaking change, in which case we should just
-> give up on any claims of ABI and make everyone's lives simpler.
+On Wed, 27 Aug 2014, Doug Anderson wrote:
+> On Wed, Aug 27, 2014 at 6:39 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wro=
+te:
+> >> +static int rk808_probe(struct i2c_client *client,
+> >> +                    const struct i2c_device_id *id)
+> >> +{
+> >> +     int ret;
+> >> +     int pm_off =3D 0;
+> >> +     struct rk808 *rk808;
+> >> +     struct device_node *np =3D client->dev.of_node;
+> >
+> > Are you prepared for np =3D=3D NULL?
+>=20
+> Given that the driver no longer supports getting its config from
+> platform data, I think it simply depends on OF now.  It seems like we
+> could add a "&& OF" to the dependencies.  Is that OK with you?
 
-If I hear research, my response is usually "how many years"?
+If the driver depends on OF, then it should be specified in the Kconfig=
+=2E
 
-Fact is that there are already a lot of usable dependencies in the DT, 
-they just didn't find their way into the kernel and weren't used.
+> It doesn't hurt to still add a check for np =3D=3D NULL and bail out,=
+ though.
 
-And I think it doesn't help much to make the picture more complicated 
-than it already is. Solve one step by another and not try to solve 
-everything at once.
+If we're depending on OF, then there's no real need to do this.
 
-So first enable the kernel to use dependencies at all. I've shown that 
-it doesn't need magic to do so. Afterwards you can extend or change the 
-existing solution. It's not always the best approach, but for 
-complicated things it often doesn't make sense trying to solve 
-everything at first.
+And of_property_read_bool() does a NULL check on np anyway, so not
+checking is still okay.  I was just wondering if not checking was a
+mistake or intentional?
 
-Of course, my approach isn't perfect, but at least it is something 
-people can already use to play with.
-
-Ok, the way how my patches do handle devices (not drivers) might be 
-completely wrong, but that's just because I've never got in contact with 
-the device-model before, it always just worked. So I haven't spend any 
-time to look into that before and I didn't spend much time to look into 
-that for my patches (I just discoverd that device-handling by drivers 
-looks sometimes awkward). I was happy with what I've achieved in the 
-short time I've spend, and therfor posted the patches to give other 
-people an easy possibility to try the stuff themself.
-
-Regards,
-
-Alexander Holler
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
