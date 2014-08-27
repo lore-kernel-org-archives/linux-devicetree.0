@@ -1,97 +1,53 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 7/7] ARM: BCM5301X: register bcma bus
-Date: Wed, 27 Aug 2014 11:22:01 -0700
-Message-ID: <53FE21C9.7060909@gmail.com>
-References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de> <1408915485-8078-9-git-send-email-hauke@hauke-m.de>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
+ in DT
+Date: Wed, 27 Aug 2014 11:24:49 -0700
+Message-ID: <CAJAp7OhoRQ1eWack1e=OL0cS4Fxmgxc7OWeNxcj1qt7Q-x-sQA@mail.gmail.com>
+References: <53D788A7.4020303@mm-sol.com>
+	<3794875.CZFbAag5Sv@wuerfel>
+	<53D7AA72.6010309@mm-sol.com>
+	<20140729234522.E9FF1C40738@trevor.secretlab.ca>
+	<53D84558.7060406@codeaurora.org>
+	<CAL_JsqJjH0OH+X=fzwqAPeWarjoLev7v6Nv_QhAa+nZyztMnFA@mail.gmail.com>
+	<20140730060619.GC19933@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408915485-8078-9-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140730060619.GC19933@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/24/2014 02:24 PM, Hauke Mehrtens wrote:
-> ---
->  arch/arm/boot/dts/bcm4708.dtsi | 58 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
+On Tue, Jul 29, 2014 at 11:06 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 07/29, Rob Herring wrote:
+[..]
+>>
+>> You might as well do of_property_read_u32 in the below example.
+>>
+>
+> Fair enough. The example is probably too simple. Things are
+> sometimes slightly more complicated and a simple
+> of_property_read_u32() isn't going to work in the case of
+> multiple reg values or when reg-names is in play.
+>
 
-We probably want a compatible string for each of these aix subnodes you
-are adding, so we can match them.
+But do we have such cases in the Qualcomm PMICs?
 
-> 
-> diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
-> index 31141e8..7c240ab 100644
-> --- a/arch/arm/boot/dts/bcm4708.dtsi
-> +++ b/arch/arm/boot/dts/bcm4708.dtsi
-> @@ -31,4 +31,62 @@
->  		};
->  	};
->  
-> +	nvram0: nvram@0 {
-> +		compatible = "brcm,bcm47xx-nvram";
-> +		reg = <0x1c000000 0x01000000>;
-> +	};
-> +
-> +	sprom0: sprom@0 {
-> +		compatible = "brcm,bcm47xx-sprom";
-> +		nvram = <&nvram0>;
-> +	};
-> +
-> +	aix@18000000 {
-> +		compatible = "brcm,bus-aix";
-> +		reg = <0x18000000 0x1000>;
-> +		ranges = <0x00000000 0x18000000 0x00100000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		sprom = <&sprom0>;
-> +
-> +		usb2@0 {
-> +			reg = <0x18021000 0x1000>;
-> +			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		usb3@0 {
-> +			reg = <0x18023000 0x1000>;
-> +			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		gmac@0 {
-> +			reg = <0x18024000 0x1000>;
-> +			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		gmac@1 {
-> +			reg = <0x18025000 0x1000>;
-> +			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		gmac@2 {
-> +			reg = <0x18026000 0x1000>;
-> +			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		gmac@3 {
-> +			reg = <0x18027000 0x1000>;
-> +			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pcie@0 {
-> +			reg = <0x18012000 0x1000>;
-> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		pcie@1 {
-> +			reg = <0x18013000 0x1000>;
-> +			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
->  };
-> 
+The only case I've hit so far is for gpios and mpps, where it feels
+like reg should be base, size and not simply base reg of first gpio -
+but that's a different thing.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, so far it seems like most drivers just code the base address in
+the driver, as we have very specific compatibles.
+
+
+How about we stop trying so hard to make this "perfect" and just merge
+something close to Josh's original proposal and ignore this problem?
+Currently all we're doing is delaying any possibility of getting
+drivers for the individual blocks merged.
+If we have the dt bindings require the reg to be there, we can discuss
+and change this all we want later!
+
+Regards,
+Bjorn
