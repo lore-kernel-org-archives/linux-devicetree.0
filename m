@@ -1,74 +1,75 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] of: Fix memory block alignment in early_init_dt_add_memory_arch()
-Date: Wed, 27 Aug 2014 13:08:51 +0200
-Message-ID: <CAMuHMdWZ_GDS_W-Y26ig7cKf7wdr82XF1kyLd8dFzc7Jb4_r-w@mail.gmail.com>
-References: <1408547431-24001-1-git-send-email-geert+renesas@glider.be>
-	<20140827103048.80BBBC409CB@trevor.secretlab.ca>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 13/14] arm64: exynos7: Enable ARMv8 based Exynos7 (SoC)
+ support
+Date: Wed, 27 Aug 2014 12:09:28 +0100
+Message-ID: <20140827110927.GC7773@leverpostej>
+References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com>
+ <1409132660-1898-5-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140827103048.80BBBC409CB-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1409132660-1898-5-git-send-email-ch.naveen@samsung.com>
+Content-Language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cpgs@samsung.com" <cpgs@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hi,
 
-On Wed, Aug 27, 2014 at 12:30 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, 20 Aug 2014 17:10:31 +0200, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
->> If a memory block is not aligned to PAGE_SIZE, its base address must be
->> rounded up, not down, and its size must be reduced.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->
-> Looks reasonable. What is the situation that exposed this problem?
+On Wed, Aug 27, 2014 at 10:44:20AM +0100, Naveen Krishna Chatradhi wrote:
+> From: Alim Akhtar <alim.akhtar@samsung.com>
+> 
+> This patch adds the necessary Kconfig entries to enable
+> support for the ARMv8 based Exynos7 SoC.
+> 
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> ---
+>  arch/arm64/Kconfig |   17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index fd4e81a..d555558 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -134,6 +134,23 @@ source "kernel/Kconfig.freezer"
+>  
+>  menu "Platform selection"
+>  
+> +config ARCH_EXYNOS7
+> +	bool "ARMv8 based SAMSUNG EXYNOS7"
+> +	select HAVE_S3C2410_WATCHDOG if WATCHDOG
+> +	select CLKSRC_OF
 
-When ARM switched from arm_add_memory() to early_init_dt_add_memory_arch()
-for DT-based platforms, I just noticed this when comparing the two
-implementations.
+This seems to be implied by ARM_ARCH_TIMER in the core arm64 Kconfig, so
+I'm not sure this is necessary.
 
-I don't know if it triggers in the wild.
+> +	select COMMON_CLK_SAMSUNG
+> +	select GPIOLIB
 
-> Should size be checked for page alignment also?
+You select ARCH_REQUIRE_GPIOLIB below, so is this necessary?
 
-Size is already rounded down if it's not page aligned, cfr. the context below.
+> +	select PINCTRL
+> +	select PINCTRL_EXYNOS
+> +	select RTC_CLASS
+> +	select HAVE_S3C_RTC
+> +	select GENERIC_GPIO
+> +	select ARCH_REQUIRE_GPIOLIB
+> +	select HAVE_CLK
 
->> ---
->>  drivers/of/fdt.c | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index f46a24ffa3fe..95fa81b8ca19 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -928,7 +928,11 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
->>  void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
->>  {
->>       const u64 phys_offset = __pa(PAGE_OFFSET);
->> -     base &= PAGE_MASK;
->> +
->> +     if (!PAGE_ALIGNED(base)) {
->> +             size -= PAGE_SIZE - (base & ~PAGE_MASK);
->> +             base = PAGE_ALIGN(base);
->> +     }
->>       size &= PAGE_MASK;
->>
->>       if (base > MAX_PHYS_ADDR) {
->> --
->> 1.9.1
+Isn't this selected already through the core arm64 Kconfig?
 
-Gr{oetje,eeting}s,
+It looks like we have COMMON_CLK, which selects CLKDEV_LOOKUP, which
+selects HAVE_CLK.
 
-                        Geert
+> +	select HAVE_SMP
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+I may have missed something, but I didn't see any SMP support in this
+series.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
