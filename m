@@ -1,147 +1,224 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
- extension is present
-Date: Wed, 27 Aug 2014 14:37:44 +0100
-Message-ID: <87ppfmoxxz.fsf@approximate.cambridge.arm.com>
-References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
- <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
- <53F724F5.3040004@arm.com>
- <1409133344.25382.37.camel@coredoba.hi.pengutronix.de>
- <53FDB4B3.6000400@arm.com> <alpine.DEB.2.10.1408271347210.3323@nanos>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Wed, 27 Aug 2014 14:39:36 +0100
+Message-ID: <20140827133936.GD6364@lee--X1>
+References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.DEB.2.10.1408271347210.3323@nanos> (Thomas Gleixner's
- message of "Wed, 27 Aug 2014 13:23:48 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "Joe.C" <srv_yingjoe.chen@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>"Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jan =?utf-8?Q?L=C3=BCbbe?= <jlu@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@medi>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-[Adding Jiang Liu to the spam-fest]
+On Tue, 26 Aug 2014, Chris Zhong wrote:
 
-Hi Thomas,
+> The RK808 chip is a power management IC for multimedia and handheld
+> devices. It contains the following components:
+>=20
+> - Regulators
+> - RTC
+> - Clkout
+>=20
+> The RK808 core driver is registered as a platform driver and provides
+> communication through I2C with the host device for the different
+> components.
+>=20
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Signed-off-by: Zhang Qing <zhangqing@rock-chips.com>
+>=20
+> ---
+>=20
+> Changes in v6:
+> Adviced by Lee Jones in v2
+> - rk808_i2c_client instead of g_rk808
+> - remove pdata form struct rk808
+>=20
+> Changes in v5: None
+> Changes in v4:
+> Adviced by Lee Jones in v2
+> - modify the description in Kconfig
+> - remove some unnecessary header files
+> - remove dev from struct rk808
+> - use enum for define RK808_ID...
+>=20
+> Changes in v3:
+> - fix compile err
+>=20
+> Changes in v2:
+> Adviced by Mark Browm:
+> - use defines for register setting value
+> - remove rtc alarm disable in shutdown
+> - remove while(1) in shutdown
+> - remove read 0x2f in probe
+>=20
+>  drivers/mfd/Kconfig       |   13 +++
+>  drivers/mfd/Makefile      |    1 +
+>  drivers/mfd/rk808.c       |  257 +++++++++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/rk808.h |  202 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 473 insertions(+)
+>  create mode 100644 drivers/mfd/rk808.c
+>  create mode 100644 include/linux/mfd/rk808.h
 
-On Wed, Aug 27 2014 at  1:23:48 pm BST, Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Wed, 27 Aug 2014, Marc Zyngier wrote:
->> > As in the DT the actual IRQ polarity should be used, simply configuring
->> > the HW IRQ polarity in the bootloader is not enough without telling the
->> > GIC driver which polarity is supported on which IRQ, right?
->> 
->> Looking a bit closer at things, what you describe in DT is the IRQ
->> polarity the interrupt controller sees. Nothing else should interpret
->> that field.
->> 
->> So it is legal (IMO) to have a device with an interrupt specifier
->> describing a rising edge interrupt, and yet have the device generating a
->> falling edge, with Mediatek's special sauce doing the conversion in between.
->> 
->> Something will have to configure the polarity widget though, but that
->> can be left outside of the GIC.
->
-> This seems to become a popular topic and it looks like the whole GIC
-> extension thing is going to explode sooner than later.
->
-> We are currently discussing hierarchical irq domains to solve a
-> different issue in x86 land. See the related discussion here:
->
-> 	  https://lkml.org/lkml/2014/8/1/67
+[...]
 
-Ah, very interesting. Thanks for pointing that out.
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> new file mode 100644
+> index 0000000..f0d6518
+> --- /dev/null
+> +++ b/drivers/mfd/rk808.c
 
-> Now looking at these GIC plus extra sauce problems, I wonder whether
-> this wouldn't be solvable in a similar way. If you look at it from the
-> HW perspective you have:
->
->    ---------      ---------
-> ---| MAGIC |------|ARM GIC|
-> ---|       |------|       |
-> ---|       |------|       |
-> ---|       |------|       |
-> ---|       |------|       |
->    ---------      ---------
->
-> The MAGIC interrupt controller only provides functionality which is
-> not available from the ARM architected GIC but maps 1:1 to the ARM GIC
-> interrupt lines. So it looks like a variation to the more dynamic
-> mapping of MSI -> Remap -> CPU-Vector problem we need to solve on x86.
->
-> The idea is to have two irq domains: magic_domain and armgic_domain.
->
-> The magic_domain is the frontend facing the devices and the
-> armgic_domain is the parent domain. This is also reflected in
-> hierarchical data structures, i.e. irq_desc->irq_data will get a new
-> field parent_data, which points to the irq_data of the parent
-> interrupt controller, which is allocated separately when the interrupt
-> line is instantiated.
->
-> So in the above case the hotpath ack/eoi functions of the irq chip
-> associated to the device interrupt, i.e. magic_chip, would do:
->
-> irq_ack(struct irq_data *d)
-> {
-> 	struct irq_data *pd = d->parent_data;
->
-> 	pd->chip->irq_ack(pd);
-> }
->
-> Granted, that's another level of indirection, but this is going to be
-> more efficient than a boatload of conditional hooks in the GIC code
-> proper. Not to talk about the maintainability of the whole maze.
->
-> The irq_set_type() function would do:
->
-> irq_set_type(struct irq_data *d, int type)
-> {
-> 	struct irq_data *pd = d->parent_data;
->
-> 	gic_type = set_magic_chip_type(d, type);
->
-> 	return pd->chip->irq_set_type(d, gic_type);
-> }
->
-> Switching to this allows to completely avoid the gazillion of hooks in
-> the gic code and should work nicely with multiplatform kernels by
-> simpling hooking up the domain parent relation ship to the proper
-> magic domain or leave the armgic as the direct device interface in
-> case the SoC does not have the magic chip in front of the arm gic.
->
-> Thoughts?
+[...]
 
-I very much like that kind of approach. Stacking domains seems to solve
-a number of issues at once:
+> +static int rk808_probe(struct i2c_client *client,
+> +		       const struct i2c_device_id *id)
+> +{
+> +	int ret;
+> +	int pm_off =3D 0;
+> +	struct rk808 *rk808;
+> +	struct device_node *np =3D client->dev.of_node;
 
-- NVIDIA's gic extension
-- TI's crossbar
-- ARM's GICv2m
-- Mediatek's glorified line inverter
-- ... and probably the next madness that's going to land tomorrow
+Are you prepared for np =3D=3D NULL?
 
-I haven't completly groked the way we're going to allocate domains and
-irq_data structures, but this is definitely something worth
-investigating. I'm not too worried about the indirection either - at
-least we end up with maintainable code.
+> +	pm_off =3D of_property_read_bool(np,
+> +				       "rockchip,system-power-controller");
 
-We need to work out how to drive the whole stacking from a DT
-perspective: Mark, any idea?
+Rather than have this floating up here, can you put it down where it
+is used?
 
-Jiang, would you mind keeping us ARM folks posted when you resend your
-patch series? That'd be much appreciated.
+> +	rk808 =3D devm_kzalloc(&client->dev, sizeof(*rk808), GFP_KERNEL);
+> +	if (!rk808)
+> +		return -ENOMEM;
+> +
+> +	rk808->i2c =3D client;
+> +	i2c_set_clientdata(client, rk808);
 
-In the meantime, I'll furbish an axe and aim it squarely at the GIC
-code... ;-)
+I tend to like drive data set at the last moment.  Usually just
+before mfd_add_devices().
 
-Thanks again,
+> +	rk808->regmap =3D devm_regmap_init_i2c(client, &rk808_regmap_config=
+);
+> +	if (IS_ERR(rk808->regmap)) {
+> +		dev_err(&client->dev, "regmap initialization failed\n");
+> +		return PTR_ERR(rk808->regmap);
+> +	}
+> +
+> +	ret =3D rk808_pre_init(rk808);
+> +	if (ret)
+> +		return ret;
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+Does this need to be a seperate function?  It's only one call to
+egmap_update_bits() and is not reused.
+
+> +	if (!client->irq) {
+> +		dev_err(&client->dev, "No interrupt support, no core IRQ\n");
+> +		return -EINVAL;
+> +	}
+
+If this is a show stopper, perhaps you should test for it higher up
+before allocating anything else?
+
+> +	ret =3D regmap_add_irq_chip(rk808->regmap, client->irq,
+> +				  IRQF_ONESHOT, -1,
+> +				  &rk808_irq_chip, &rk808->irq_data);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Failed to add irq_chip %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D mfd_add_devices(&client->dev, -1,
+> +			      rk808s, ARRAY_SIZE(rk808s),
+> +			      NULL, 0, regmap_irq_get_domain(rk808->irq_data));
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to add MFD devices %d\n", ret);
+> +		goto err_irq;
+> +	}
+> +
+> +	if (pm_off && !pm_power_off) {
+> +		rk808_i2c_client =3D client;
+> +		pm_power_off =3D rk808_device_shutdown;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_irq:
+> +	regmap_del_irq_chip(client->irq, rk808->irq_data);
+> +	return ret;
+> +}
+> +
+> +static int rk808_remove(struct i2c_client *client)
+> +{
+> +	struct rk808 *rk808 =3D i2c_get_clientdata(client);
+> +
+> +	regmap_del_irq_chip(client->irq, rk808->irq_data);
+> +	mfd_remove_devices(&client->dev);
+> +	pm_power_off =3D NULL;
+
+'\n' here.  No need to squash everything together.
+
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id rk808_of_match[] =3D {
+> +	{ .compatible =3D "rockchip,rk808" },
+> +};
+> +MODULE_DEVICE_TABLE(of, rk808_of_match);
+> +
+> +static const struct i2c_device_id rk808_ids[] =3D {
+> +	 { "rk808" },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(i2c, rk808_ids);
+
+My OCD senses are tingling.  Either have a blank line above the calls
+to MODULE_DEVICE_TABLE() or don't.
+
+> +static struct i2c_driver rk808_i2c_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "rk808",
+> +		.of_match_table =3D of_match_ptr(rk808_of_match),
+> +	},
+> +	.probe    =3D rk808_probe,
+> +	.remove   =3D rk808_remove,
+> +	.id_table =3D rk808_ids,
+> +};
+> +
+> +module_i2c_driver(rk808_i2c_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Chris Zhong <zyw@rock-chips.com>");
+> +MODULE_AUTHOR("Zhang Qing <zhangqing@rock-chips.com>");
+> +MODULE_DESCRIPTION("RK808 PMIC driver");
+> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+> new file mode 100644
+> index 0000000..7af1952
+> --- /dev/null
+> +++ b/include/linux/mfd/rk808.h
+> @@ -0,0 +1,202 @@
+
+[...]
+
+> +struct rk808_board {
+> +	struct regulator_init_data *rk808_init_data[RK808_NUM_REGULATORS];
+> +	struct device_node *of_node[RK808_NUM_REGULATORS];
+> +};
+
+This is only used in the regulator driver.  Do you have a regulator
+specific header file that you can define it in instead?
+
+> +struct rk808 {
+> +	struct i2c_client *i2c;
+> +	struct regmap_irq_chip_data *irq_data;
+> +	struct regmap *regmap;
+> +};
+> +#endif /* __LINUX_REGULATOR_rk808_H */
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
