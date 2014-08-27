@@ -1,49 +1,97 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [RFC 2/7] bcm47xx-nvram: add new broadcom nvram driver with dt
- support
-Date: Wed, 27 Aug 2014 11:20:43 -0700
-Message-ID: <53FE217B.7000401@gmail.com>
-References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de> <1408915485-8078-4-git-send-email-hauke@hauke-m.de> <CACna6rwJBDpg9VS4h5hfP4wtGRVwAdRUq5mELeA0OFWWzH9jsA@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 7/7] ARM: BCM5301X: register bcma bus
+Date: Wed, 27 Aug 2014 11:22:01 -0700
+Message-ID: <53FE21C9.7060909@gmail.com>
+References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de> <1408915485-8078-9-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <CACna6rwJBDpg9VS4h5hfP4wtGRVwAdRUq5mELeA0OFWWzH9jsA@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: devicetree@vger.kernel.org, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408915485-8078-9-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/26/2014 10:54 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
-> On 24 August 2014 23:24, Hauke Mehrtens <hauke@hauke-m.de> wrote:
->> +On NorthStar ARM SoCs the NAND flash is available at 0x1c000000 and=
- the
->> +NOR flash is at 0x1e000000
->> +
->> +Example:
->> +
->> +nvram0: nvram@0 {
->> +       compatible =3D "brcm,bcm47xx-nvram";
->> +       reg =3D <0x1c000000 0x01000000>;
->> +};
->=20
-> Could we avoid that? Type of flash can easily be checked in the code.
-> All we need to do is to read BCMA_IOST register of BCMA_CORE_NS_ROM
-> core.
+On 08/24/2014 02:24 PM, Hauke Mehrtens wrote:
+> ---
+>  arch/arm/boot/dts/bcm4708.dtsi | 58 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
 
-So there is a boot status register you can read to tell what type of
-flash you booted from, but does that also give you the resource ranges
-for these type of flashes? Presumably they will be mapped into differen=
-t
-addresses (at least bcm63xx is like that), that information needs to be
-listed somewhere.
+We probably want a compatible string for each of these aix subnodes you
+are adding, so we can match them.
+
+> 
+> diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
+> index 31141e8..7c240ab 100644
+> --- a/arch/arm/boot/dts/bcm4708.dtsi
+> +++ b/arch/arm/boot/dts/bcm4708.dtsi
+> @@ -31,4 +31,62 @@
+>  		};
+>  	};
+>  
+> +	nvram0: nvram@0 {
+> +		compatible = "brcm,bcm47xx-nvram";
+> +		reg = <0x1c000000 0x01000000>;
+> +	};
+> +
+> +	sprom0: sprom@0 {
+> +		compatible = "brcm,bcm47xx-sprom";
+> +		nvram = <&nvram0>;
+> +	};
+> +
+> +	aix@18000000 {
+> +		compatible = "brcm,bus-aix";
+> +		reg = <0x18000000 0x1000>;
+> +		ranges = <0x00000000 0x18000000 0x00100000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		sprom = <&sprom0>;
+> +
+> +		usb2@0 {
+> +			reg = <0x18021000 0x1000>;
+> +			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		usb3@0 {
+> +			reg = <0x18023000 0x1000>;
+> +			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		gmac@0 {
+> +			reg = <0x18024000 0x1000>;
+> +			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		gmac@1 {
+> +			reg = <0x18025000 0x1000>;
+> +			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		gmac@2 {
+> +			reg = <0x18026000 0x1000>;
+> +			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		gmac@3 {
+> +			reg = <0x18027000 0x1000>;
+> +			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		pcie@0 {
+> +			reg = <0x18012000 0x1000>;
+> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		pcie@1 {
+> +			reg = <0x18013000 0x1000>;
+> +			interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +	};
+>  };
+> 
+
 --
-=46lorian
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
