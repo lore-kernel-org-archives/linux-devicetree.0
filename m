@@ -1,7 +1,7 @@
 From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/6] ARM: dts: hix5hd2: add sata node
-Date: Wed, 27 Aug 2014 20:38:32 +0800
-Message-ID: <1409143114-23311-5-git-send-email-zhangfei.gao@linaro.org>
+Subject: [PATCH 5/6] ARM: dts: hix5hd2: add gpio node
+Date: Wed, 27 Aug 2014 20:38:33 +0800
+Message-ID: <1409143114-23311-6-git-send-email-zhangfei.gao@linaro.org>
 References: <1409143114-23311-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1409143114-23311-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -13,53 +13,254 @@ List-Id: devicetree@vger.kernel.org
 Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/hisi-x5hd2-dkb.dts |    5 +++++
- arch/arm/boot/dts/hisi-x5hd2.dtsi    |   20 ++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ arch/arm/boot/dts/hisi-x5hd2.dtsi |  234 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 234 insertions(+)
 
-diff --git a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
-index 0344de0..1529254 100644
---- a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
-+++ b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
-@@ -77,3 +77,8 @@
- 		reg = <1>;
- 	};
- };
-+
-+&ahci {
-+        phys = <&sata_phy>;
-+        phy-names = "sata-phy";
-+};
 diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-index 9252264..18f52f0 100644
+index 18f52f0..152f3ad 100644
 --- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
 +++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -213,5 +213,25 @@
- 			interrupts = <0 67 4>;
- 			clocks = <&clock HIX5HD2_USB_CLK>;
+@@ -131,6 +131,240 @@
+ 				clock-names = "apb_pclk";
+ 				status = "disabled";
+ 			};
++
++			gpio0: gpio@b20000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb20000 0x1000>;
++				interrupts = <0 108 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio1: gpio@b21000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb21000 0x1000>;
++				interrupts = <0 109 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio2: gpio@b22000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb22000 0x1000>;
++				interrupts = <0 110 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio3: gpio@b23000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb23000 0x1000>;
++				interrupts = <0 111 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio4: gpio@b24000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb24000 0x1000>;
++				interrupts = <0 112 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio5: gpio@004000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0x004000 0x1000>;
++				interrupts = <0 113 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio6: gpio@b26000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb26000 0x1000>;
++				interrupts = <0 114 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio7: gpio@b27000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb27000 0x1000>;
++				interrupts = <0 115 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio8: gpio@b28000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb28000 0x1000>;
++				interrupts = <0 116 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio9: gpio@b29000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb29000 0x1000>;
++				interrupts = <0 117 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio10: gpio@b2a000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb2a000 0x1000>;
++				interrupts = <0 118 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio11: gpio@b2b000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb2b000 0x1000>;
++				interrupts = <0 119 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio12: gpio@b2c000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb2c000 0x1000>;
++				interrupts = <0 120 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio13: gpio@b2d000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb2d000 0x1000>;
++				interrupts = <0 121 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio14: gpio@b2e000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb2e000 0x1000>;
++				interrupts = <0 122 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio15: gpio@b2f000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb2f000 0x1000>;
++				interrupts = <0 123 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio16: gpio@b30000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb30000 0x1000>;
++				interrupts = <0 124 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
++
++			gpio17: gpio@b31000 {
++				compatible = "arm,pl061", "arm,primecell";
++				reg = <0xb31000 0x1000>;
++				interrupts = <0 125 0x4>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&clock HIX5HD2_FIXED_100M>;
++				clock-names = "apb_pclk";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				status = "disabled";
++			};
  		};
-+
-+		peripheral_ctrl: syscon@a20000 {
-+			compatible = "syscon";
-+			reg = <0xa20000 0x1000>;
-+		};
-+
-+		sata_phy: phy@1900000 {
-+			compatible = "hisilicon,hix5hd2-sata-phy";
-+			reg = <0x1900000 0x10000>;
-+			#phy-cells = <0>;
-+			hisilicon,peripheral-syscon = <&peripheral_ctrl>;
-+			hisilicon,power-reg = <0x8 10>;
-+		};
-+
-+		ahci: sata@1900000 {
-+                        compatible = "hisilicon,hisi-ahci";
-+                        reg = <0x1900000 0x10000>;
-+                        interrupts = <0 70 4>;
-+                        clocks = <&clock HIX5HD2_SATA_CLK>;
-+		};
- 	};
- };
+ 
+ 		local_timer@00a00600 {
 -- 
 1.7.9.5
 
