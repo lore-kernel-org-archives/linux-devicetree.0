@@ -1,97 +1,36 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 03/16] video: Add DT binding documentation for VGA
- connector
-Date: Wed, 27 Aug 2014 19:22:42 +0200
-Message-ID: <1455918.Ek46oPnquz@avalon>
-References: <1409157673-4154-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1409157673-4154-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <CAL_JsqLOzrgncpTa3SqMjc=XeYuvXhGrvk9dKA+Fgh_g_wycCA@mail.gmail.com>
+From: Dmitry Torokhov <dtor@chromium.org>
+Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Wed, 27 Aug 2014 10:21:38 -0700
+Message-ID: <12367482.Ifp3ZtRrMQ@dtor-glaptop>
+References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com> <20140827133936.GD6364@lee--X1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqLOzrgncpTa3SqMjc=XeYuvXhGrvk9dKA+Fgh_g_wycCA@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, SH-Linux <linux-sh@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140827133936.GD6364@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Chris Zhong <zyw@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wednesday 27 August 2014 12:12:36 Rob Herring wrote:
-> On Wed, Aug 27, 2014 at 11:41 AM, Laurent Pinchart wrote:
-> > The VGA connector is described by a single input port and an optional
-> > DDC bus.
-> 
-> Wasn't there a generic connector binding for DVI, HDMI, etc.?
-
-As far as I know, there are three separate generic bindings for DVI 
-connectors, HDMI connectors, and analog TV connectors. The VGA connector 
-doesn't seem to really fit into one of those categories.
-
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-fbdev@vger.kernel.org
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  .../devicetree/bindings/video/vga-connector.txt    | 28
-> >  ++++++++++++++++++++++ 1 file changed, 28 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/video/vga-connector.txt> 
-> > diff --git a/Documentation/devicetree/bindings/video/vga-connector.txt
-> > b/Documentation/devicetree/bindings/video/vga-connector.txt new file mode
-> > 100644
-> > index 0000000..9a45ec1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/video/vga-connector.txt
-> > @@ -0,0 +1,28 @@
-> > +VGA Connector
-> > +==============
+On Wednesday, August 27, 2014 02:39:36 PM Lee Jones wrote:
+> On Tue, 26 Aug 2014, Chris Zhong wrote:
 > > +
-> > +Required properties:
-> > +- compatible: "vga-connector"
-> > +
-> > +Optional properties:
-> > +- label: a symbolic name for the connector
-> 
-> ...which corresponds to hardware labels.
-> 
-> > +- ddc-i2c-bus: phandle to the I2C bus that is connected to VGA DDC
-> > +
-> > +Required nodes:
-> > +- Video port for VGA input
-> 
-> A reference to the relevant video graph bindings should be added here.
-
-I'll fix that.
-
-> > +
-> > +Example
-> > +-------
-> > +
-> > +vga0: connector@0 {
-> > +       compatible = "vga-connector";
-> > +       label = "vga";
-> > +
-> > +       ddc-i2c-bus = <&i2c3>;
-> > +
-> > +       port {
-> > +               vga_connector_in: endpoint {
-> > +                       remote-endpoint = <&adv7123_out>;
-> > +               };
-> > +       };
+> > +static struct of_device_id rk808_of_match[] = {
+> > +	{ .compatible = "rockchip,rk808" },
 > > +};
+> > +MODULE_DEVICE_TABLE(of, rk808_of_match);
+> > +
+> > +static const struct i2c_device_id rk808_ids[] = {
+> > +	 { "rk808" },
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(i2c, rk808_ids);
+> 
+> My OCD senses are tingling.  Either have a blank line above the calls
+> to MODULE_DEVICE_TABLE() or don't.
 
--- 
-Regards,
+Wait, don't we also need sentinel entries in both these tables?
 
-Laurent Pinchart
+Thanks,
+Dmitry
