@@ -1,80 +1,48 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v6 4/5] clk: RK808: Add clkout driver for RK808
-Date: Wed, 27 Aug 2014 20:32:53 +0200
-Message-ID: <5320662.uDieR7oLoG@diego>
-References: <1409062589-12157-1-git-send-email-zyw@rock-chips.com> <CAD=FV=WS=FaJdDVomCo2FxnsoRxDAHNNK-VX75JLzBYHHGS8AA@mail.gmail.com> <53FDBF59.1050001@codethink.co.uk>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 2/7] bcm47xx-nvram: add new broadcom nvram driver with dt support
+Date: Wed, 27 Aug 2014 20:43:40 +0200
+Message-ID: <CACna6ryXtFwJxBhEoJe+2mZWut24egtgXzzybxQ=rtPn9+X+2g@mail.gmail.com>
+References: <1408915485-8078-1-git-send-email-hauke@hauke-m.de>
+	<1408915485-8078-4-git-send-email-hauke@hauke-m.de>
+	<CACna6rwJBDpg9VS4h5hfP4wtGRVwAdRUq5mELeA0OFWWzH9jsA@mail.gmail.com>
+	<53FE217B.7000401@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53FDBF59.1050001@codethink.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Chris Zhong <zyw@rock-chips.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Dmitry Torokhov <dtor@chromium.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Kever Yang <kever.yang@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53FE217B.7000401-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 27. August 2014, 12:22:01 schrieb Ben Dooks:
-> >> diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-> >> new file mode 100644
-> >> index 0000000..21f8b54
-> >> --- /dev/null
-> >> +++ b/drivers/clk/clk-rk808.c
-> >> @@ -0,0 +1,163 @@
-> >> +/*
-> >> + * Clkout driver for Rockchip RK808
-> >> + *
-> >> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-> >> + *
-> >> + * Author: Chris Zhong <zyw@rock-chips.com>
-> > 
-> > I probably would have removed "Author" here (like in other patches)
-> > since it's below in MODULE_AUTHOR.  ...but I'm not a huge stickler for
-> > it.
-> > 
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or modify
-> >> it
-> >> + * under the terms and conditions of the GNU General Public License,
-> >> + * version 2, as published by the Free Software Foundation.
-> >> + *
-> >> + * This program is distributed in the hope it will be useful, but
-> >> WITHOUT
-> >> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> >> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-> >> for + * more details.
-> >> + */
-> >> +
-> >> +#include <linux/clk.h>
-> >> +#include <linux/clk-provider.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/slab.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/mfd/rk808.h>
-> >> +#include <linux/i2c.h>
-> >> +
-> >> +struct rk808_clkout {
-> >> +       struct rk808 *rk808;
-> >> +       struct clk_onecell_data clk_data;
-> >> +       struct clk_hw           clkout1_hw;
-> >> +       struct clk_hw           clkout2_hw;
-> >> +};
-> >> +
-> >> +static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
-> >> +                                             unsigned long parent_rate)
-> >> +{
-> >> +       return 32768;
-> >> +}
-> >> +
-> 
-> Given one of these is a fixed, ungatable clock then surely it would
-> be easier to use a separate fixed clock node for that and then just
-> have a none for the gated clock?
+On 27 August 2014 20:20, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 08/26/2014 10:54 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> Could we avoid that? Type of flash can easily be checked in the code=
+=2E
+>> All we need to do is to read BCMA_IOST register of BCMA_CORE_NS_ROM
+>> core.
+>
+> So there is a boot status register you can read to tell what type of
+> flash you booted from, but does that also give you the resource range=
+s
+> for these type of flashes? Presumably they will be mapped into differ=
+ent
+> addresses (at least bcm63xx is like that), that information needs to =
+be
+> listed somewhere.
 
-Hmm, with the devicetree being supposed to describe the hardware, I guess this 
-is debatable. As both clocks are provided by the rk808 chip, I guess the clock 
-references for both also should point there and not some arbitary fixed clock 
-somewhere else in the dt?
+Take a look at find_nvram in nvram_rw.c. It scans the whole region
+which is up to 0x02000000 (SI_FLASH2_SZ) size.
 
-But this view could also be to pendantic :-) .
+In case of NAND limit is slightly different (nfl_boot_size function):
+1) On ARM it's 0x800000 or 0x2600000
+2) On MIPS it's 0x200000
 
-Maybe the dt maintainers can shed some light on this.
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireles=
+s" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
