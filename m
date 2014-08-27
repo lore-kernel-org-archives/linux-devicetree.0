@@ -1,55 +1,36 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH resend] checkpatch: Enable whitespace checks for DTS
- files
-Date: Wed, 27 Aug 2014 09:37:13 -0700
-Message-ID: <1409157433.25751.7.camel@joe-AO725>
-References: <1409152106-9424-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409152106-9424-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Whitcroft <apw@canonical.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 01/16] devicetree: Add vendor prefix "mitsubishi" to vendor-prefixes.txt
+Date: Wed, 27 Aug 2014 18:40:58 +0200
+Message-ID: <1409157673-4154-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1409157673-4154-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1409157673-4154-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(adding Andrew Morton)
+Mitsubishi Electric Corporation has a numerical stock ticker, use the
+company name as vendor prefix.
 
-On Wed, 2014-08-27 at 17:08 +0200, Geert Uytterhoeven wrote:
-> When run on *.dtsi or *.dts files, the whitespace checks were skipped,
-> while they are valid for DTS files.  Hence stop skipping them.
-> 
-> I ran checkpatch on all in-tree DTS files, and didn't notice any error or
-> warning messages that are inappropriate for DTS files.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Joe Perches <joe@perches.com>
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac7269f..7292cfc 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -83,6 +83,7 @@ maxim	Maxim Integrated Products
+ mediatek	MediaTek Inc.
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
++mitsubishi	Mitsubishi Electric Corporation
+ mosaixtech	Mosaix Technologies, Inc.
+ moxa	Moxa
+ mpl	MPL AG
+-- 
+1.8.5.5
 
-> ---
->  scripts/checkpatch.pl | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 31a731e06f50..ded90b6d7e17 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2338,7 +2338,7 @@ sub process {
->  		}
->  
->  # check we are in a valid source file if not then ignore this hunk
-> -		next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
-> +		next if ($realfile !~ /\.(h|c|s|S|pl|sh|dtsi|dts)$/);
->  
->  #line length limit
->  		if ($line =~ /^\+/ && $prevrawline !~ /\/\*\*/ &&
-> @@ -2399,7 +2399,7 @@ sub process {
->  		}
->  
->  # check we are in a valid source file C or perl if not then ignore this hunk
-> -		next if ($realfile !~ /\.(h|c|pl)$/);
-> +		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
->  
->  # at the beginning of a line any tabs must come first and anything
->  # more than 8 must use tabs.
