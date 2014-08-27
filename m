@@ -1,71 +1,50 @@
 From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v2 3/3] [media] rc: remove change_protocol in rc-ir-raw.c
-Date: Wed, 27 Aug 2014 16:42:34 +0800
-Message-ID: <53FD99FA.4030207@linaro.org>
-References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org>	<1408613086-12538-4-git-send-email-zhangfei.gao@linaro.org> <20140821065006.6d831ec4@concha.lan>
+Subject: Re: [PATCH v2 2/3] rc: Introduce hix5hd2 IR transmitter driver
+Date: Wed, 27 Aug 2014 16:49:59 +0800
+Message-ID: <53FD9BB7.6080207@linaro.org>
+References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org> <1408613086-12538-3-git-send-email-zhangfei.gao@linaro.org> <20140821100739.GA3252@gofer.mess.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
+Content-Type: text/plain; charset=UTF-8;
 	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20140821065006.6d831ec4@concha.lan>
+In-Reply-To: <20140821100739.GA3252@gofer.mess.org>
 Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
-Cc: =?ISO-8859-1?Q?David_H=E4rdeman?= <david@hardeman.nu>, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+To: Sean Young <sean@mess.org>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, =?UTF-8?B?RGF2aWQgSMOkcg==?= =?UTF-8?B?ZGVtYW4=?= <david@hardeman.nu>, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Guoxiong Yan <yanguoxiong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 08/21/2014 07:50 PM, Mauro Carvalho Chehab wrote:
-> Em Thu, 21 Aug 2014 17:24:45 +0800
-> Zhangfei Gao <zhangfei.gao@linaro.org> escreveu:
->
->> With commit 4924a311a62f ("[media] rc-core: rename ir-raw.c"),
->> empty change_protocol was introduced.
->
-> No. This was introduced on this changeset:
->
-> commit da6e162d6a4607362f8478c715c797d84d449f8b
-> Author: David H=E4rdeman <david@hardeman.nu>
-> Date:   Thu Apr 3 20:32:16 2014 -0300
->
->      [media] rc-core: simplify sysfs code
->
->> As a result, rc_register_device will set dev->enabled_protocols
->> addording to rc_map->rc_type, which prevent using all protocols.
->
-> I strongly suspect that this patch will break some things, as
-> the new code seems to expect that this is always be set.
->
-> See the code at store_protocols(): if this callback is not set,
-> then it won't allow to disable a protocol.
->
-> Also, this doesn't prevent using all protocols. You can still use
-> "ir-keytable -p all" to enable all protocols (the "all" protocol
-> type were introduced recently at the userspace tool).
->
->  From the way I see, setting the protocol when a table is loaded
-> is not a bad thing, as:
-> - if RC tables are loaded, the needed protocol to decode it is
->    already known;
-> - by running just one IR decoder, the IR handling routine will
->    be faster and will consume less power;
-> - on a real case scenario, it is a way more likely that just one
->    decoder will ever be needed by the end user.
->
-> So, I think that this is just annoying for developers when are checki=
-ng
-> if all decoders are working, by sending keycodes from different IR ty=
-pes
-> at the same time.
->
+On 08/21/2014 06:07 PM, Sean Young wrote:
+> On Thu, Aug 21, 2014 at 05:24:44PM +0800, Zhangfei Gao wrote:
+>> From: Guoxiong Yan <yanguoxiong@huawei.com>
 
-Thanks Mauro for the kind explanation.
+>> +	rdev->driver_type =3D RC_DRIVER_IR_RAW;
+>> +	rdev->allowed_protocols =3D RC_BIT_ALL;
+>> +	rdev->priv =3D priv;
+>> +	rdev->open =3D hix5hd2_ir_open;
+>> +	rdev->close =3D hix5hd2_ir_close;
+>> +	rdev->driver_name =3D IR_HIX5HD2_NAME;
+>> +	rdev->map_name =3D RC_MAP_LIRC;
+>
+> I'm not sure RC_MAP_LIRC is appropriate. If the hardware has no impli=
+cit
+> remote, can this be stored in device tree like the sunxi-cir.c driver=
+ does?
 
-ir-keytable seems also enalbe specific protocol
--p, --protocol=3DPROTOCOL
+OK=EF=BC=8C got it.
+Will set optional property "linux,rc-map-name" for the map_name.
+We usually use user space lirc decoder, so this optional property may=20
+not need to be set in dts.
 
-Currently we use lirc user space decoder/keymap and only need=20
-pulse-length information from kernel.
+>
+>> +	rdev->input_name =3D "Hisilicon hix5hd2 Remote Control Receiver";
+>
+> It would be useful is rdev->input_phys, rdev->input_id,
+> rdev->timeout, rdev->rx_resolution are set correctly.
 
-Thanks for the info.
+OK, will set rdev->timeout, rdev->rx_resolution
+Not sure the usage of rdev->input_id, why is it required?
+
+Thanks for the suggestion.
