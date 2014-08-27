@@ -1,53 +1,78 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Fix memory block alignment in
- early_init_dt_add_memory_arch()
-Date: Wed, 27 Aug 2014 11:30:48 +0100
-Message-ID: <20140827103048.80BBBC409CB@trevor.secretlab.ca>
-References: <1408547431-24001-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408547431-24001-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
+ initialization order based on the DT)
+Date: Wed, 27 Aug 2014 11:34:32 +0100
+Message-ID: <20140827103432.64927C409CB@trevor.secretlab.ca>
+References: <20140514141914.446F7C4153D@trevor.secretlab.ca>
+	<20140821140211.GD19293@ulmo.nvidia.com> <53F64624.5000403@ahsoftware.de>
+	<20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo>
+	<E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com>
+	<20140826084208.AE5F0C40989@trevor.secretlab.ca>
+	<20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de>
+	<20140826101107.GC32315@leverpostej>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140826101107.GC32315@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Alexander Holler <holler@ahsoftware.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jon Loeliger <jdl@jdl.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Aug 2014 17:10:31 +0200, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
-> If a memory block is not aligned to PAGE_SIZE, its base address must be
-> rounded up, not down, and its size must be reduced.
+On Tue, 26 Aug 2014 11:11:07 +0100, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Tue, Aug 26, 2014 at 10:42:04AM +0100, Alexander Holler wrote:
+> > Am 26.08.2014 10:49, schrieb Thierry Reding:
+> > > On Tue, Aug 26, 2014 at 09:42:08AM +0100, Grant Likely wrote:
+> > >> On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
+> > > [...]
+> > >>> There are somewhat standardized bindings for the above and especially
+> > >>> for bindings of the type that clocks implement this is trivial. We can
+> > >>> simply iterate over each (phandle, specifier) tuple and check that the
+> > >>> corresponding clock provider can be resolved (which typically means that
+> > >>> it's been registered with the common clock framework).
+> > >>>
+> > >>> For regulators (and regulator-like bindings) the problem is somewhat
+> > >>> more difficult because they property names are not standardized. One way
+> > >>> to solve this would be to look for property names with a -supply suffix,
+> > >>> but that could obviously lead to false positives. One alternative that I
+> > >>> think could eliminate this would be to explicitly list dependencies in
+> > >>> drivers. This would allow core code to step through such a list and
+> > >>> resolve the (phandle, specifier) tuples.
+> > >>
+> > >> False positives and negatives may not actually be a problem. It is
+> > >> suboptimal, certainly, but it shouldn't outright break the kernel.
+> > >
+> > > There could be cases where some random integer in a cell could be
+> > > interpreted as a phandle and resolve to a struct device_node. I suppose
+> > > it might be unlikely, but not impossible, that the device_node could
+> > > even match a device in the correct subsystem and you'd get a wrong
+> > > dependency. Granted, a wrong dependency may not be catastrophic in that
+> > > it won't lead to a crash, but it could lead to various kinds of
+> > > weirdness and hard to diagnose problems.
+> > 
+> > You need either the type information in the DTB (that's why I've add 
+> > those "dependencies" to identify phandles), or you need to know every 
+> > binding (at "dependency-resolve-time" to identify phandles.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> While having type information in the DTB would be fantastic, it's not
+> something we can expect from the systems already in the wild, and I
+> worry how it would interact with bootloaders that modify the DTB (I
+> don't know if any modify properties with phandles).
 
-Looks reasonable. What is the situation that exposed this problem?
-Should size be checked for page alignment also?
+Anything we do here is firmly in the realm of optimization and
+improvement. Adding data to the tree is fine as long as we don't make
+the kernel depend on it. Older platforms will continue to work without
+the optimization.
+
+> > The latter is impracticable to implement in a generic way (for use
+> > with every possible binding).
+> 
+> I don't think we necessarily need dependency information for every
+> binding and driver. We only need dependency information where a device
+> has a dependency on another device and we don't currently have an
+> explicit probe ordering guaranteed by Linux.
+> 
+> Where a device driver lacks dependency information and fails to probe,
+> we can fall back to the current deferred probing.
+
+Exactly.
 
 g.
-
-> ---
->  drivers/of/fdt.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index f46a24ffa3fe..95fa81b8ca19 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -928,7 +928,11 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
->  void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
->  {
->  	const u64 phys_offset = __pa(PAGE_OFFSET);
-> -	base &= PAGE_MASK;
-> +
-> +	if (!PAGE_ALIGNED(base)) {
-> +		size -= PAGE_SIZE - (base & ~PAGE_MASK);
-> +		base = PAGE_ALIGN(base);
-> +	}
->  	size &= PAGE_MASK;
->  
->  	if (base > MAX_PHYS_ADDR) {
-> -- 
-> 1.9.1
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
