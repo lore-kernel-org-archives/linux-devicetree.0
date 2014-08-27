@@ -1,118 +1,83 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3 repost] clocksource: sh_cmt: Document SoC specific
- bindings
-Date: Wed, 27 Aug 2014 17:09:47 +0900
-Message-ID: <20140827080946.GD5936@verge.net.au>
-References: <1409117300-2133-1-git-send-email-horms+renesas@verge.net.au>
- <1409117300-2133-2-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdUv6bwSjHLhHumiuaBFS8WAw0y1sNq4PcofjOz6UiOfrA@mail.gmail.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
+Date: Wed, 27 Aug 2014 10:24:11 +0200
+Message-ID: <53FD95AB.6080903@metafoo.de>
+References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com> <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com> <53F9A6EE.5070005@metafoo.de> <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com> <20140826062558.GR17528@sirena.org.uk> <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com> <20140826091120.GC17528@sirena.org.uk> <53FC5105.6070901@metafoo.de> <20140826094211.GF17528@sirena.org.uk> <87r403mtip.wl%kuninori.morimoto.gx@gmail.com> <20140826105028.GK17528@sirena.org.uk> <87d2bmpwi2.wl%kuninori.morimoto.gx@gmail.com> <87a96qpqsy.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUv6bwSjHLhHumiuaBFS8WAw0y1sNq4PcofjOz6UiOfrA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87a96qpqsy.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 27, 2014 at 08:55:36AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Wed, Aug 27, 2014 at 7:28 AM, Simon Horman
-> <horms+renesas@verge.net.au> wrote:
-> > n general Renesas hardware is not documented to the extent
-> > where the relationship between IP blocks on different SoCs can be assumed
-> > although they may appear to operate the same way. Furthermore the
-> > documentation typically does not specify a version for individual
-> > IP blocks. For these reasons a convention of using the SoC name in place
-> > of a version and providing SoC-specific compat strings has been adopted.
-> >
-> > Although not universally liked this convention is used in the bindings
-> > for the drivers a number of drivers for Renesas hardware. The purpose
-> 
-> s/the drivers //
+On 08/27/2014 05:14 AM, Kuninori Morimoto wrote:
+>
+> Hi Mark again
+>
+>> But, How about this case ?
+>>
+>>     FE cpu:   CPU-A
+>>        codec: Codec-A
+>>
+>>     BE cpu:   CPU-B
+>>        codec: Codec-B
+>
+> I found 1 method.
+> I can create it if we can assume that
+> "simple-card doen't support above style",
+>
+>> If the documentation refers to the interface as for example "I2S0" then
+>> the DT should refer to it as I2S0 too.
+>
+> simple-card is using "format" property now,
+> and I remember that someone want to exchange format in DPCM.
+>
+> My 1st DPCM patch used "remote" property for specify FE/BE.
+> And, we can get DAI stream_name if we can update snd_soc_of_get_dai_name()
+> This means, we can use DPCM like below
+> if you can accept my previous "ASoC: dapm: enable DAI name on DAPM route"
+> What do you think ?
+>
+> 	sound {
+> 		compatible = "simple-audio-card";
+>
+> 		/* FrontEnd */
+> 		simple-audio-card,dai-link@0 {
+> 			...
+> 			format = "left_j";
+> 			remote = <&endpoint>;
+>
+> 			cpu {
+> 				sound-dai = <&rcar_sound 0>;
+> 			};
+> 			codec { /* dummy */ };
+> 		};
+>
+> 		/* BackEnd */
+> 		endpoint: simple-audio-card,dai-link@1 {
+> 			...
+> 			format = "left_j";
+>
+> 			cpu { /* dummy */ };
+> 			codec1: codec {
+> 				sound-dai = <&ak4643>;
+> 			};
+> 		};
+> 	};
 
-Thanks.
+When you try to come up with with a binding try to completely ignore that 
+something call DPCM exists. The binding is supposed to describe the hardware 
+and how the different hardware components are interconnected. So try to come 
+up with a binding that accurately describes the hardware connections. Once 
+that is done try to map the binding onto the existing software framework. 
+The last step may require some adjustments to the framework.
 
-> 
-> > of this patch is to update the Renesas R-Car Compare Match Timer (CMT)
-> > driver to follow this convention.
-> >
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> 
-> 
-> 
-> > ---
-> > * I plan to follow up with patches to use these new bindings in the
-> >   dtsi files for the affected SoCs.
-> > ---
-> >  .../devicetree/bindings/timer/renesas,cmt.txt      | 26 +++++++++++++++++++++-
-> >  1 file changed, 25 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > index a17418b..500bad2 100644
-> > --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> > @@ -16,10 +16,34 @@ Required Properties:
-> >                 (CMT0 on sh7372, sh73a0 and r8a7740)
-> >      - "renesas,cmt-32-fast" for the 32-bit CMT with fast clock support
-> >                 (CMT[234] on sh7372, sh73a0 and r8a7740)
-> > +    - "renesas,cmt-32-fast-r8a7740" for the R8A7740 32-bit CMT with fast
-> > +               clock support (CMT[234])
-> > +    - "renesas,cmt-32-fast-sh7372" for the SH7372 32-bit CMT with fast
-> > +               clock support (CMT[234])
-> > +    - "renesas,cmt-32-fast-sh73a0" for the SH73A0 32-bit CMT with fast
-> > +               clock support (CMT[234])
-> 
-> > +    - "renesas,cmt-32-r8a7740" for the R8a7740 32-bit CMT
-> > +               (CMT0)
-> > +    - "renesas,cmt-32-sh7372" for the SH7372 32-bit CMT
-> > +               (CMT0)
-> > +    - "renesas,cmt-32-sh73a0" for the SH73a0 32-bit CMT
-> > +               (CMT0)
-> 
-> I'd move these 3 non-fast "renesas,cmt-32-*" values up, under
-> "renesas,cmt-32".
-> 
-> >      - "renesas,cmt-48" for the 48-bit CMT
-> >                 (CMT1 on sh7372, sh73a0 and r8a7740)
-> >      - "renesas,cmt-48-gen2" for the second generation 48-bit CMT
-> >                 (CMT[01] on r8a73a4, r8a7790 and r8a7791)
-> > +    - "renesas,cmt-48-r8a73a4" for the R8A73A4 48-bit CMT
-> > +               (CMT[01])
-> > +    - "renesas,cmt-48-r8a7740" for the R8A7740 48-bit CMT
-> > +               (CMT1)
-> > +    - "renesas,cmt-48-r8a7790" for the R8A7790 48-bit CMT
-> > +               (CMT[01])
-> > +    - "renesas,cmt-48-r8a7791" for the R8A7791 48-bit CMT
-> > +               (CMT[01])
-> > +    - "renesas,cmt-48-sh7372" for the SH7372 48-bit CMT
-> > +               (CMT1)
-> > +    - "renesas,cmt-48-sh73a0" for the SH73A0 48-bit CMT
-> > +               (CMT1)
-> 
-> I'd split the above in original and gen2.
+- Lars
 
-Sure. I'll re-order things as you suggest.
-
-> Perhaps you can also add blank lines in between the 4 blocks of
-> types; the list is getting long?
-
-Good idea.
-
-> Apart from the minor issues above
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> (for the whole series)
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
