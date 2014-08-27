@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 03/16] video: Add DT binding documentation for VGA connector
-Date: Wed, 27 Aug 2014 18:41:00 +0200
-Message-ID: <1409157673-4154-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 05/16] video: Add THC63LVDM83D DT bindings documentation
+Date: Wed, 27 Aug 2014 18:41:02 +0200
+Message-ID: <1409157673-4154-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1409157673-4154-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,50 +21,72 @@ To: dri-devel@lists.freedesktop.org
 Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The VGA connector is described by a single input port and an optional
-DDC bus.
+The THC63LVDM83D is a video LVDS serializer described by an input port,
+an output port, and an optional power down GPIO.
 
 Cc: devicetree@vger.kernel.org
 Cc: linux-fbdev@vger.kernel.org
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../devicetree/bindings/video/vga-connector.txt    | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/vga-connector.txt
+ .../devicetree/bindings/video/thine,thc63lvdm83d   | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/thine,thc63lvdm83d
 
-diff --git a/Documentation/devicetree/bindings/video/vga-connector.txt b/Documentation/devicetree/bindings/video/vga-connector.txt
+diff --git a/Documentation/devicetree/bindings/video/thine,thc63lvdm83d b/Documentation/devicetree/bindings/video/thine,thc63lvdm83d
 new file mode 100644
-index 0000000..9a45ec1
+index 0000000..527e236
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/vga-connector.txt
-@@ -0,0 +1,28 @@
-+VGA Connector
-+==============
++++ b/Documentation/devicetree/bindings/video/thine,thc63lvdm83d
+@@ -0,0 +1,50 @@
++THine Electronics THC63LVDM83D LVDS serializer
++----------------------------------------------
++
++The THC63LVDM83D is an LVDS serializer designed to support pixel data
++transmission between a host and a flat panel.
 +
 +Required properties:
-+- compatible: "vga-connector"
++
++- compatible: Should be "thine,thc63lvdm83d"
 +
 +Optional properties:
-+- label: a symbolic name for the connector
-+- ddc-i2c-bus: phandle to the I2C bus that is connected to VGA DDC
++
++- pwdn-gpios: Power down control GPIO
 +
 +Required nodes:
-+- Video port for VGA input
++
++The THC63LVDM83D has two video ports. Their connections are modeled using the
++OFgraph bindings specified in Documentation/devicetree/bindings/graph.txt.
++
++- Video port 0 for CMOS/TTL input
++- Video port 1 for LVDS output
++
 +
 +Example
 +-------
 +
-+vga0: connector@0 {
-+	compatible = "vga-connector";
-+	label = "vga";
++	lvds_enc: encoder@0 {
++		compatible = "thine,thc63lvdm83d";
 +
-+	ddc-i2c-bus = <&i2c3>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+	port {
-+		vga_connector_in: endpoint {
-+			remote-endpoint = <&adv7123_out>;
++			port@0 {
++				reg = <0>;
++
++				lvds_enc_in: endpoint@0 {
++					remote-endpoint = <&rgb_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				lvds_enc_out: endpoint@0 {
++					remote-endpoint = <&panel_in>;
++				};
++			};
 +		};
 +	};
-+};
 -- 
 1.8.5.5
