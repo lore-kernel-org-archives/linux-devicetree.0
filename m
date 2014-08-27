@@ -1,73 +1,95 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: hummingboard: gpio-ir on gpio 3,5
-Date: Wed, 27 Aug 2014 19:43:54 +0100
-Message-ID: <20140827184354.GA30401@n2100.arm.linux.org.uk>
-References: <20140823091058.GO30401@n2100.arm.linux.org.uk> <E1XL7MR-0002yX-6N@rmk-PC.arm.linux.org.uk> <CAOMZO5C=xyYLLBX1PDsJQ9NwzXZxCWTvPMTUWzYcoohOOvA_qA@mail.gmail.com> <20140823133649.GP30401@n2100.arm.linux.org.uk> <CAOMZO5DrtrEJxmCZSO6RVZom8kzZhu2dikntRwYZeq5j_QZ9sw@mail.gmail.com> <20140823143305.GQ30401@n2100.arm.linux.org.uk> <CAOMZO5DgPLHwDsRPkssRDT5tKyfOo=Udg6vD5VPUQ43wsV346w@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v6 3/5] RTC: RK808: add RTC driver for RK808
+Date: Wed, 27 Aug 2014 20:52:19 +0200
+Message-ID: <6810623.bmce33g2Ev@diego>
+References: <1409062496-12074-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5DgPLHwDsRPkssRDT5tKyfOo=Udg6vD5VPUQ43wsV346w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409062496-12074-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 23, 2014 at 12:02:05PM -0300, Fabio Estevam wrote:
-> On Sat, Aug 23, 2014 at 11:33 AM, Russell King - ARM Linux
-> <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+Hi Chris,
+
+Am Dienstag, 26. August 2014, 22:14:56 schrieb Chris Zhong:
+> Adding RTC driver for supporting RTC device present inside RK808 PMIC.
 > 
-> > Most of the pins not associated with booting the kernel are left
-> > unconfigured by the boot loader - that's because uboot SPL has very
-> > little space for such things.
-> >
-> > Rabeeh has just told me that 0x1b0b1 would be a better value for it.
-> > I'll add an additional patch to the series for that, rather than
-> > modifying Rabeeh's original patch.
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Signed-off-by: Zhang Qing <zhangqing@rock-chips.com>
 > 
-> Sounds good, thanks.
+> ---
+> 
+> Changes in v6:
+> Adviced by doug
+> - move RTC_READSEL setting into probe
+> 
+> Changes in v5:
+> - fixed a bug about set_time failed
+> 
+> Changes in v4:
+> - use &client->dev replace rk808->dev
+> 
+> Changes in v3: None
+> Changes in v2:
+> Adviced by javier.martinez
+> - Add a separate clock driver, rather than in RTC driver
+> 
+>  drivers/rtc/Kconfig     |   10 ++
+>  drivers/rtc/Makefile    |    1 +
+>  drivers/rtc/rtc-rk808.c |  412
+> +++++++++++++++++++++++++++++++++++++++++++++++ 3 files changed, 423
+> insertions(+)
+>  create mode 100644 drivers/rtc/rtc-rk808.c
+> 
 
-Right, here's the patch to make that change.  Shawn, can you pick this
-one up as well please?
+[...]
 
-Thanks.
+> diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
+> new file mode 100644
+> index 0000000..00cd997
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-rk808.c
 
-8<===
->From 5cebff8f6232fbafde7af564eca61447f951040e Mon Sep 17 00:00:00 2001
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Date: Sat, 23 Aug 2014 15:34:07 +0100
-Subject: [PATCH] ARM: dts: hummingboard: fix configuration of IR input
+[...]
 
-Add the IOMUX setting for the IR input, rather than relying on the
-boot loader.
+> +/*
+> + * We will just handle setting the frequency and make use the framework for
+> + * reading the periodic interupts.
+> + *
+> + * @freq: Current periodic IRQ freq:
+> + * bit 0: every second
+> + * bit 1: every minute
+> + * bit 2: every hour
+> + * bit 3: every day
+> + */
+> +static irqreturn_t rk808_alarm_irq(int irq, void *data)
+> +{
+> +	struct rk808_rtc *rk808_rtc = data;
+> +	struct rk808 *rk808 = rk808_rtc->rk808;
+> +	struct i2c_client *client = rk808->i2c;
+> +	uint32_t rtc_ctl;
+> +	int ret;
+> +
+> +	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
+> +			   RTC_STATUS_MASK);
+> +	if (ret) {
+> +		dev_err(&client->dev,
+> +			"%s:Failed to update RTC status: %d\n", __func__, ret);
+> +		return ret;
+> +	}
+> +
+> +	rtc_update_irq(rk808_rtc->rtc, 1, RTC_IRQF | RTC_AF);
+> +	dev_dbg(&client->dev,
+> +		 "%s:irq=%d,rtc_ctl=0x%x\n", __func__, irq, rtc_ctl);
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+what is rtc_ctl? It seems to be unused and its use in the dev_dbg produces:
 
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index 4aa0ae357b00..7fe29de89e9d 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -130,7 +130,7 @@
- 
- 		pinctrl_hummingboard_gpio3_5: hummingboard-gpio3_5 {
- 			fsl,pins = <
--				MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x80000000
-+				MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x1b0b1
- 			>;
- 		};
- 
--- 
-1.8.3.1
+drivers/rtc/rtc-rk808.c: In function 'rk808_alarm_irq':
+drivers/rtc/rtc-rk808.c:258:2: warning: 'rtc_ctl' may be used uninitialized in this function [-Wuninitialized]
 
 
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Heiko
