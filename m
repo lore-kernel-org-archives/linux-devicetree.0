@@ -1,104 +1,80 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH 3/3] GPIO: gpio-dwapb: Suspend & Resume PM enabling
-Date: Wed, 27 Aug 2014 11:15:04 -0500
-Message-ID: <alpine.DEB.2.02.1408271103120.11131@atx-linux-37>
-References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com> <1409161588-19417-4-git-send-email-alvin.chen@intel.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Wed, 27 Aug 2014 10:22:06 -0600
+Message-ID: <53FE05AE.9000406@wwwdotorg.org>
+References: <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826101107.GC32315@leverpostej> <20140827103432.64927C409CB@trevor.secretlab.ca> <20140827144403.GB13850@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1409161588-19417-4-git-send-email-alvin.chen@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Mika Westerberg <mika.westerberg@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, yvanderv@opensource.altera.com, dinguyen@opensource.altera.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140827144403.GB13850-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Aug 2014, Weike Chen wrote:
+On 08/27/2014 08:44 AM, Catalin Marinas wrote:
+> On Wed, Aug 27, 2014 at 11:34:32AM +0100, Grant Likely wrote:
+>> On Tue, 26 Aug 2014 11:11:07 +0100, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> On Tue, Aug 26, 2014 at 10:42:04AM +0100, Alexander Holler wrote:
+>>>> Am 26.08.2014 10:49, schrieb Thierry Reding:
+>>>>> On Tue, Aug 26, 2014 at 09:42:08AM +0100, Grant Likely wrote:
+>>>>>> On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> [...]
+>>>>>>> There are somewhat standardized bindings for the above and especially
+>>>>>>> for bindings of the type that clocks implement this is trivial. We can
+>>>>>>> simply iterate over each (phandle, specifier) tuple and check that the
+>>>>>>> corresponding clock provider can be resolved (which typically means that
+>>>>>>> it's been registered with the common clock framework).
+>>>>>>>
+>>>>>>> For regulators (and regulator-like bindings) the problem is somewhat
+>>>>>>> more difficult because they property names are not standardized. One way
+>>>>>>> to solve this would be to look for property names with a -supply suffix,
+>>>>>>> but that could obviously lead to false positives. One alternative that I
+>>>>>>> think could eliminate this would be to explicitly list dependencies in
+>>>>>>> drivers. This would allow core code to step through such a list and
+>>>>>>> resolve the (phandle, specifier) tuples.
+>>>>>>
+>>>>>> False positives and negatives may not actually be a problem. It is
+>>>>>> suboptimal, certainly, but it shouldn't outright break the kernel.
+>>>>>
+>>>>> There could be cases where some random integer in a cell could be
+>>>>> interpreted as a phandle and resolve to a struct device_node. I suppose
+>>>>> it might be unlikely, but not impossible, that the device_node could
+>>>>> even match a device in the correct subsystem and you'd get a wrong
+>>>>> dependency. Granted, a wrong dependency may not be catastrophic in that
+>>>>> it won't lead to a crash, but it could lead to various kinds of
+>>>>> weirdness and hard to diagnose problems.
+>>>>
+>>>> You need either the type information in the DTB (that's why I've add
+>>>> those "dependencies" to identify phandles), or you need to know every
+>>>> binding (at "dependency-resolve-time" to identify phandles.
+>>>
+>>> While having type information in the DTB would be fantastic, it's not
+>>> something we can expect from the systems already in the wild, and I
+>>> worry how it would interact with bootloaders that modify the DTB (I
+>>> don't know if any modify properties with phandles).
+>>
+>> Anything we do here is firmly in the realm of optimization and
+>> improvement. Adding data to the tree is fine as long as we don't make
+>> the kernel depend on it. Older platforms will continue to work without
+>> the optimization.
+>
+> It's not just optimisation but an important feature for new arm64 SoCs.
+> Given some Tegra discussions recently, in many cases the machine_desc
+> use on arm is primarily to initialise devices in the right order. If we
+> can solve this in a more deterministic way (other than deferred
+> probing), we avoid the need for a dedicated SoC platform driver (or
+> machine_desc) or workarounds like different initcall levels and explicit
+> DT parsing.
 
-> This patch enables suspend and resume mode for the power management, and
-> it is based on Josef Ahmad's previous work.
-> 
-> Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
-> Reviewed-by: Shevchenko, Andriy <andriy.shevchenko@intel.com>
-> Signed-off-by: Weike Chen <alvin.chen@intel.com>
-> ---
->  drivers/gpio/gpio-dwapb.c |   67 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
-> 
-
-Hi Weike,
-
-I tried out these patches on the current master branch (v3.17-rc2-9-g68e3702) with a socfpga cyclone5 board.
-
-If I apply all 3 patches, the kernel doesn't boot.
-
-If I rebuild with only the first patch, I get only one gpio block showing up (should
-have 3 for this board) and these messages:
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at /home/atull/repos/linux-socfpga/fs/sysfs/dir.c:31 sysfs_warn_dup+0x58/0x74()
-sysfs: cannot create duplicate filename '/class/gpio/gpiochip0'
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.17.0-rc2-00012-g7ad6a41 #1
-[<c0014ab4>] (unwind_backtrace) from [<c0011684>] (show_stack+0x10/0x14)
-[<c0011684>] (show_stack) from [<c03d3d80>] (dump_stack+0x74/0x90)
-[<c03d3d80>] (dump_stack) from [<c0020c88>] (warn_slowpath_common+0x68/0x8c)
-[<c0020c88>] (warn_slowpath_common) from [<c0020d40>] (warn_slowpath_fmt+0x30/0x40)
-[<c0020d40>] (warn_slowpath_fmt) from [<c0144e5c>] (sysfs_warn_dup+0x58/0x74)
-[<c0144e5c>] (sysfs_warn_dup) from [<c0145180>] (sysfs_do_create_link_sd+0xbc/0xc4)
-[<c0145180>] (sysfs_do_create_link_sd) from [<c02357f4>] (device_add+0x304/0x4ec)
-[<c02357f4>] (device_add) from [<c0235a78>] (device_create_groups_vargs+0x9c/0xcc)
-[<c0235a78>] (device_create_groups_vargs) from [<c0235af4>] (device_create_vargs+0x20/0x28)
-[<c0235af4>] (device_create_vargs) from [<c0235b1c>] (device_create+0x20/0x28)
-[<c0235b1c>] (device_create) from [<c020be4c>] (gpiochip_export+0x4c/0x98)
-[<c020be4c>] (gpiochip_export) from [<c020a408>] (gpiochip_add+0x114/0x29c)
-[<c020a408>] (gpiochip_add) from [<c020c818>] (dwapb_gpio_probe+0x16c/0x634)
-[<c020c818>] (dwapb_gpio_probe) from [<c0239198>] (platform_drv_probe+0x2c/0x5c)
-[<c0239198>] (platform_drv_probe) from [<c0237bd4>] (driver_probe_device+0x78/0x208)
-[<c0237bd4>] (driver_probe_device) from [<c0237df0>] (__driver_attach+0x8c/0x90)
-[<c0237df0>] (__driver_attach) from [<c02364b8>] (bus_for_each_dev+0x54/0x88)
-[<c02364b8>] (bus_for_each_dev) from [<c023748c>] (bus_add_driver+0xd8/0x1d4)
-[<c023748c>] (bus_add_driver) from [<c0238564>] (driver_register+0x78/0xf4)
-[<c0238564>] (driver_register) from [<c0008884>] (do_one_initcall+0x80/0x1b8)
-[<c0008884>] (do_one_initcall) from [<c052fcd4>] (kernel_init_freeable+0x170/0x240)
-[<c052fcd4>] (kernel_init_freeable) from [<c03d0238>] (kernel_init+0x8/0xec)
-[<c03d0238>] (kernel_init) from [<c000e578>] (ret_from_fork+0x14/0x3c)
----[ end trace 209e273f37ff62dd ]---
-gpiochip_add: GPIOs 0..28 (ff709000.gpio) failed to register
-gpio-dwapb ff709000.gpio: failed to register gpiochip for /soc/gpio@ff709000/gpio-controller@0
-gpio-dwapb: probe of ff709000.gpio failed with error -17
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1 at /home/atull/repos/linux-socfpga/fs/sysfs/dir.c:31 sysfs_warn_dup+0x58/0x74()
-sysfs: cannot create duplicate filename '/class/gpio/gpiochip0'
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W      3.17.0-rc2-00012-g7ad6a41 #1
-[<c0014ab4>] (unwind_backtrace) from [<c0011684>] (show_stack+0x10/0x14)
-[<c0011684>] (show_stack) from [<c03d3d80>] (dump_stack+0x74/0x90)
-[<c03d3d80>] (dump_stack) from [<c0020c88>] (warn_slowpath_common+0x68/0x8c)
-[<c0020c88>] (warn_slowpath_common) from [<c0020d40>] (warn_slowpath_fmt+0x30/0x40)
-[<c0020d40>] (warn_slowpath_fmt) from [<c0144e5c>] (sysfs_warn_dup+0x58/0x74)
-[<c0144e5c>] (sysfs_warn_dup) from [<c0145180>] (sysfs_do_create_link_sd+0xbc/0xc4)
-[<c0145180>] (sysfs_do_create_link_sd) from [<c02357f4>] (device_add+0x304/0x4ec)
-[<c02357f4>] (device_add) from [<c0235a78>] (device_create_groups_vargs+0x9c/0xcc)
-[<c0235a78>] (device_create_groups_vargs) from [<c0235af4>] (device_create_vargs+0x20/0x28)
-[<c0235af4>] (device_create_vargs) from [<c0235b1c>] (device_create+0x20/0x28)
-[<c0235b1c>] (device_create) from [<c020be4c>] (gpiochip_export+0x4c/0x98)
-[<c020be4c>] (gpiochip_export) from [<c020a408>] (gpiochip_add+0x114/0x29c)
-[<c020a408>] (gpiochip_add) from [<c020c818>] (dwapb_gpio_probe+0x16c/0x634)
-[<c020c818>] (dwapb_gpio_probe) from [<c0239198>] (platform_drv_probe+0x2c/0x5c)
-[<c0239198>] (platform_drv_probe) from [<c0237bd4>] (driver_probe_device+0x78/0x208)
-[<c0237bd4>] (driver_probe_device) from [<c0237df0>] (__driver_attach+0x8c/0x90)
-[<c0237df0>] (__driver_attach) from [<c02364b8>] (bus_for_each_dev+0x54/0x88)
-[<c02364b8>] (bus_for_each_dev) from [<c023748c>] (bus_add_driver+0xd8/0x1d4)
-[<c023748c>] (bus_add_driver) from [<c0238564>] (driver_register+0x78/0xf4)
-[<c0238564>] (driver_register) from [<c0008884>] (do_one_initcall+0x80/0x1b8)
-[<c0008884>] (do_one_initcall) from [<c052fcd4>] (kernel_init_freeable+0x170/0x240)
-[<c052fcd4>] (kernel_init_freeable) from [<c03d0238>] (kernel_init+0x8/0xec)
-[<c03d0238>] (kernel_init) from [<c000e578>] (ret_from_fork+0x14/0x3c)
----[ end trace 209e273f37ff62de ]---
-gpiochip_add: GPIOs 0..26 (ff70a000.gpio) failed to register
-gpio-dwapb ff70a000.gpio: failed to register gpiochip for /soc/gpio@ff70a000/gpio-controller@0
-gpio-dwapb: probe of ff70a000.gpio failed with error -17
-
-How are you testing this?
-
-Alan
+A lot of the ordering is SW driver dependencies. I'm not sure how much 
+of that can accurately be claimed as HW dependencies. As such, I'm not 
+sure that putting dependencies into DT would be a good idea; it doesn't 
+feel like HW data, and might well change if we restructure SW. It'd need 
+some detailed research though.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
