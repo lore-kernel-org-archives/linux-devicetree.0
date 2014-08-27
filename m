@@ -1,67 +1,172 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Wed, 27 Aug 2014 12:33:35 -0700
-Message-ID: <53FE328F.5040204@caviumnetworks.com>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org> <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com> <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com> <20140823063113.GC23715@localhost> <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com> <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com> <CAL1qeaFTw=0XMEkag1Z8C4jKkWnwBeGJLYxHGiYfKXBk-9o0Yw@mail.gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Wed, 27 Aug 2014 12:59:35 -0700
+Message-ID: <CAD=FV=XasFYbZnFp5edJHsoyr6JRa7Wf0=GJZu3jr1doFULQBg@mail.gmail.com>
+References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
+	<3801360.yPqDYLVpxz@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaFTw=0XMEkag1Z8C4jKkWnwBeGJLYxHGiYfKXBk-9o0Yw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <3801360.yPqDYLVpxz@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmi
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2014 11:30 AM, Andrew Bresticker wrote:
-> On Mon, Aug 25, 2014 at 8:17 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
->> On Sat, Aug 23, 2014 at 9:50 PM, Geert Uytterhoeven
->> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->>> On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>>>>> arch/arm/boot/dts/<vendor>/
->>>>>>
->>>>>> Is this something we should do for the MIPS and update the other architectures
->>>>>> to follow that scheme?
->>>>>
->>>>> I recall reading that as well and that it would be adopted for ARM64,
->>>>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
->>>>> more.
->>>>
->>>> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
->>>> and the amount of files in that directory is becoming pretty
->>>> insane. Moving to a subdirectory structure later gets messy which is
->>>> why we've been holding off on it.
->>>
->>> It would mean we can change our scripts to operate on "interesting"
->>> DTS files from
->>>
->>>       do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
->>>
->>> to
->>>
->>>      do-something-with arch/arm/boot/dts/$vendor/*
->>>
->>> which is easier to type...
+Heiko,
+
+On Wed, Aug 27, 2014 at 12:53 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> =
+wrote:
+> Hi Chris,
+>
+> Am Dienstag, 26. August 2014, 22:14:04 schrieb Chris Zhong:
+>> The RK808 chip is a power management IC for multimedia and handheld
+>> devices. It contains the following components:
 >>
->> Btw, do you mean chip-vendor or device-vendor with vendor?
->> Device-vendor could get a bit messy on the source part as the router
->> manufacturers tend to switch them quite often. E.g. d-link used arm,
->> mips and ubi32 chips from marvell, ubicom, broadcom, atheros, realtek
->> and ralink for their dir-615 router, happily switching back and forth.
->> There are 14 known different hardware revisions of it where the chip
->> differed from the previous one.
+>> - Regulators
+>> - RTC
+>> - Clkout
+>>
+>> The RK808 core driver is registered as a platform driver and provide=
+s
+>> communication through I2C with the host device for the different
+>> components.
+>>
+>> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> ---
 >
-> I'm going to assume it means chip/SoC vendor.  That would result in
-> the following structure (I think):
+> when testing this with Dougs dts integration I got irq errors like th=
+e
+> following:
 >
-> Octeon -> cavium/
+> INT_STS_REG1: 0x0
+> INT_STS_MSK_REG1: 0x0
+> INT_STS_REG2: 0x1
+> INT_STS_MSK_REG2: 0x0
+> random: nonblocking pool is initialized
+> irq 192: nobody cared (try booting with the "irqpoll" option)
+> CPU: 0 PID: 40 Comm: irq/192-rk808 Not tainted 3.17.0-rc1+ #1015
+> [<c001461c>] (unwind_backtrace) from [<c0011190>] (show_stack+0x10/0x=
+14)
+> [<c0011190>] (show_stack) from [<c03e3e04>] (dump_stack+0x6c/0x84)
+> [<c03e3e04>] (dump_stack) from [<c00508e4>] (__report_bad_irq+0x28/0x=
+b8)
+> [<c00508e4>] (__report_bad_irq) from [<c0050de4>] (note_interrupt+0x1=
+e8/0x28c)
+> [<c0050de4>] (note_interrupt) from [<c004ebdc>] (handle_irq_event_per=
+cpu+0x104/0x120)
+> [<c004ebdc>] (handle_irq_event_percpu) from [<c004ec3c>] (handle_irq_=
+event+0x44/0x64)
+> [<c004ec3c>] (handle_irq_event) from [<c0051910>] (handle_level_irq+0=
+xd4/0x11c)
+> [<c0051910>] (handle_level_irq) from [<c004e5a8>] (generic_handle_irq=
++0x20/0x30)
+> [<c004e5a8>] (generic_handle_irq) from [<c01ba490>] (rockchip_irq_dem=
+ux+0x190/0x228)
+> [<c01ba490>] (rockchip_irq_demux) from [<c004e5a8>] (generic_handle_i=
+rq+0x20/0x30)
+> [<c004e5a8>] (generic_handle_irq) from [<c000f060>] (handle_IRQ+0x68/=
+0x90)
+> [<c000f060>] (handle_IRQ) from [<c000858c>] (gic_handle_irq+0x3c/0x60=
+)
+> [<c000858c>] (gic_handle_irq) from [<c0011bc0>] (__irq_svc+0x40/0x50)
+> Exception stack(0xee31bed8 to 0xee31bf20)
+> bec0:                                                       ee093518 =
+f005e000
+> bee0: 00000010 000093e9 ee1fe880 ee2f98c0 ee1fe880 ee2f98e0 c004f6f0 =
+00000000
+> bf00: 00000000 00000000 c03eb6d0 ee31bf20 c00522dc c004f628 60000113 =
+ffffffff
+> [<c0011bc0>] (__irq_svc) from [<c004f628>] (irq_finalize_oneshot+0xd4=
+/0xf0)
+> [<c004f628>] (irq_finalize_oneshot) from [<c004f71c>] (irq_thread_fn+=
+0x2c/0x34)
+> [<c004f71c>] (irq_thread_fn) from [<c004f844>] (irq_thread+0xc4/0x148=
+)
+> [<c004f844>] (irq_thread) from [<c0035524>] (kthread+0xdc/0xf0)
+> [<c0035524>] (kthread) from [<c000e7f8>] (ret_from_fork+0x14/0x3c)
+> handlers:
+> [<c004ec5c>] irq_default_primary_handler threaded [<c021cc7c>] regmap=
+_irq_thread
+> Disabling IRQ #192
+>
+>
+> As you can see there was already a PLUG_IN_INT pending, which stalled=
+ the
+> system till the irq got deactivated after 100000 iterations:
+>
+>            CPU0
+> [...]
+>  92:     600231       GIC  92  ff650000.i2c
+> 192:     100001  rockchip_gpio_irq   4  rk808
+>
+>
+> I fixed it up with the following:
+>
+> ------------ 8< ---------------
+> diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+> index f0d6518..1c25be7 100644
+> --- a/drivers/mfd/rk808.c
+> +++ b/drivers/mfd/rk808.c
+> @@ -61,8 +61,14 @@ static const struct rk808_reg_data pre_init_reg[] =
+=3D {
+>         { RK808_BUCK2_CONFIG_REG, BUCK2_RATE_MASK,  BUCK_ILMIN_200MA =
+},
+>         { RK808_VB_MON_REG,       MASK_ALL,         VB_LO_ACT |
+>                                                     VB_LO_SEL_3500MV =
+},
+> -       { RK808_INT_STS_REG1,     MASK_NONE,        0 },
+> -       { RK808_INT_STS_REG2,     MASK_NONE,        0 },
+> +
+> +       /* ack any pending interrupts */
+> +       { RK808_INT_STS_REG1,     INT_STS_REG1_MASK, INT_STS_REG1_MAS=
+K },
+> +       { RK808_INT_STS_REG2,     INT_STS_REG2_MASK, INT_STS_REG2_MAS=
+K },
+> +
+> +       /* mask all interrupts */
+> +       { RK808_INT_STS_MSK_REG1, INT_STS_REG1_MASK, INT_STS_REG1_MAS=
+K },
+> +       { RK808_INT_STS_MSK_REG2, INT_STS_REG2_MASK, INT_STS_REG2_MAS=
+K },
+>  };
+>
+>  static const struct regmap_irq rk808_irqs[] =3D {
+> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+> index 7af1952..8f8e48c 100644
+> --- a/include/linux/mfd/rk808.h
+> +++ b/include/linux/mfd/rk808.h
+> @@ -156,6 +156,8 @@ enum rk808_reg {
+>  #define BUCK2_RATE_MASK                (3 << 3)
+>  #define MASK_ALL       0xff
+>  #define MASK_NONE      0
+> +#define INT_STS_REG1_MASK      0x7f
+> +#define INT_STS_REG2_MASK      0x3
+>
+>  #define SWITCH2_EN     BIT(6)
+>  #define SWITCH1_EN     BIT(5)
+> ------------ 8< ---------------
+>
+> On startup I guess all pending irqs should be acked and also masked, =
+as we normally
+> don't want to handle interrupts that happened way in the past and the=
+y
+> will get unmasked on their own, when one of them gets requested by th=
+e rtc
+> for example.
+>
+>
+> Heiko
 
-To match the state of the art naming we have in other MIPS related 
-directories, it should probably be "cavium-octeon/" (See 
-arch/mips/cavium-octeon, and arch/mips/include/asm/mach-cavium-octeon)
+Please see <https://chromium-review.googlesource.com/214241>  I asked
+Chris to squash this into his next revision.
 
-David Daney
+-Doug
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
