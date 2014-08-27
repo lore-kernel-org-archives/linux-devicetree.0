@@ -1,134 +1,115 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Wed, 27 Aug 2014 16:30:37 -0600
-Message-ID: <53FE5C0D.8000004@wwwdotorg.org>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>	<1408381705-3623-3-git-send-email-abrestic@chromium.org>	<53FB8820.4010202@wwwdotorg.org>	<CAL1qeaERHeKKNpqh9qHOppgT7ymvntisdjVvZheP78U6NaPz-A@mail.gmail.com>	<53FE1A7A.4010906@wwwdotorg.org>	<CAL1qeaGPr=BeYL1-=ddRL7rSuvYdQcd6vCEEHDrNA-KYst6bnw@mail.gmail.com>	<53FE2129.6080305@wwwdotorg.org> <CAL1qeaGHz1+L8r-AXetw422ZWSJX1h025YOx9kB+EE4yJpOowQ@mail.gmail.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dts: fsl-usb: Document USB node
+ compatible string for IP version
+Date: Wed, 27 Aug 2014 18:34:55 -0500
+Message-ID: <1409182495.6510.130.camel@snotra.buserror.net>
+References: <1408612727-6774-1-git-send-email-nikhil.badola@freescale.com>
+	 <1408659774.2395.21.camel@snotra.buserror.net>
+	 <af7cc70458bf471cb20938ce6498ccfe@BN1PR0301MB0593.namprd03.prod.outlook.com>
+	 <3fdd7732a9954d13a90ece684771d932@BL2PR03MB161.namprd03.prod.outlook.com>
+	 <1409093581.6510.94.camel@snotra.buserror.net>
+	 <7032a06004444bc3af8d71c799e974e0@BL2PR03MB161.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaGHz1+L8r-AXetw422ZWSJX1h025YOx9kB+EE4yJpOowQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <7032a06004444bc3af8d71c799e974e0-AZ66ij2kwaabJzs9G/iQcuO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TbrhsbdSgBK9A@public.gmane.org
+To: Mehresh Ramneek-B31383 <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Badola Nikhil-B46172 <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2014 03:56 PM, Andrew Bresticker wrote:
-> On Wed, Aug 27, 2014 at 11:19 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 08/27/2014 12:13 PM, Andrew Bresticker wrote:
->>>
->>> On Wed, Aug 27, 2014 at 10:50 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>> wrote:
->>>>
->>>> On 08/27/2014 11:38 AM, Andrew Bresticker wrote:
->>>>>
->>>>>
->>>>> On Mon, Aug 25, 2014 at 12:01 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->>>>> wrote:
->>>>>>
->>>>>>
->>>>>> On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
->>>>>>>
->>>>>>>
->>>>>>> +static int tegra_xusb_mbox_probe(struct platform_device *pdev)
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>>>>>
->>>>>>> +       if (!res)
->>>>>>> +               return -ENODEV;
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> Should devm_request_mem_region() be called here to claim the region?
->>>>>
->>>>>
->>>>>
->>>>> No, the xHCI host driver also needs to map these registers, so they
->>>>> cannot be mapped exclusively here.
->>>>
->>>>
->>>>
->>>> That's unfortunate. Having multiple drivers with overlapping register
->>>> regions is not a good idea. Can we instead have a top-level driver map
->>>> all
->>>> the IO regions, then instantiate the various different sub-components
->>>> internally, and divide up the address space. Probably via MFD or similar.
->>>> That would prevent multiple drivers from touching the same register
->>>> region.
->>>
->>>
->>> Perhaps I'm misunderstanding, but I don't see how MFD would prevent us
->>> from having to map this register space in two different locations -
->>> the XUSB FPCI address space cannot be divided cleanly between host and
->>> mailbox registers.  Or are you saying that there should be a separate
->>> device driver that exposes an API for accessing this register space,
->>> like the Tegra fuse or PMC drivers?
->>
->>
->> With MFD, there's typically a top-level driver for the HW module (or
->> register space) that gets instantiated by the DT node. This driver then
->> instantiates all the different sub-drivers that use that register space, and
->> provides APIs for the sub-drivers to access the registers (either custom
->> APIs or more recently by passing a regmap object down to the sub-drivers).
->>
->> This top-level driver is the only driver that maps the space, and can manage
->> sharing the space between the various sub-drivers.
->
-> So if I'm understanding correctly, we end up with something like this:
->
-> usb@70090000 {
->          compatible = "nvidia,tegra124-xusb";
->          reg = <0x0 0x70090000 0x0 0x8000>, // xHCI host registers
->                <0x0 0x70098000 0x0 0x1000>, // FPCI registers
->                <0x0 0x70099000 0x0 0x1000>; // IPFS registers
->          interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>, // host interrupt
->                       <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH"; // mailbox interrupt
->
->          host-controller {
->                  compatible = "nvidia,tegra124-xhci";
->                  ...
->          };
->
->          mailbox {
->                  compatible = "nvidia,tegra124-xusb-mailbox";
->                 ...
->          };
-> };
->
-> To be honest though, this seems like overkill to share a couple of
-> registers when no other resources are shared between the two.
+On Wed, 2014-08-27 at 00:46 -0500, Mehresh Ramneek-B31383 wrote:
+> 
+> > -----Original Message-----
+> > From: Wood Scott-B07421
+> > Sent: Wednesday, August 27, 2014 4:23 AM
+> > To: Mehresh Ramneek-B31383
+> > Cc: Badola Nikhil-B46172; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org;
+> > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Subject: Re: [PATCH] Documentation: dts: fsl-usb: Document USB node
+> > compatible string for IP version
+> > 
+> > On Fri, 2014-08-22 at 00:05 -0500, Mehresh Ramneek-B31383 wrote:
+> > >
+> > > -----Original Message-----
+> > > From: Badola Nikhil-B46172
+> > > Sent: Friday, August 22, 2014 10:18 AM
+> > > To: Wood Scott-B07421
+> > > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mehresh
+> > > Ramneek-B31383
+> > > Subject: RE: [PATCH] Documentation: dts: fsl-usb: Document USB node
+> > > compatible string for IP version
+> > >
+> > > Adding Ramneek
+> > >
+> > > > -----Original Message-----
+> > > > From: Wood Scott-B07421
+> > > > Sent: Friday, August 22, 2014 3:53 AM
+> > > > To: Badola Nikhil-B46172
+> > > > Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > > Subject: Re: [PATCH] Documentation: dts: fsl-usb: Document USB node
+> > > > compatible string for IP version
+> > > >
+> > > > On Thu, 2014-08-21 at 14:48 +0530, Nikhil Badola wrote:
+> > > > > Document compatible string containing IP version in USB device
+> > > > > tree node
+> > > > >
+> > > > > Signed-off-by: Nikhil Badola <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/usb/fsl-usb.txt | 13
+> > > > > ++++++++-----
+> > > > >  1 file changed, 8 insertions(+), 5 deletions(-)
+> > > >
+> > > > Please CC devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org on all device tree patches (in
+> > > > addition to linuxppc-dev).
+> > > >
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> > > > > b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> > > > > index 4779c02..5a3a0a8 100644
+> > > > > --- a/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> > > > > +++ b/Documentation/devicetree/bindings/usb/fsl-usb.txt
+> > > > > @@ -10,7 +10,10 @@ Required properties :
+> > > > >     controllers, or "fsl-usb2-dr" for dual role USB controllers
+> > > > >     or "fsl,mpc5121-usb2-dr" for dual role USB controllers of MPC5121.
+> > > > >     Wherever applicable, the IP version of the USB controller should
+> > > > > -   also be mentioned (for eg. fsl-usb2-dr-v2.2 for bsc9132).
+> > > > > +   also be mentioned in another string.
+> > > > > +   For multi port host USB controller with IP version <IP_Ver>, it should
+> > be
+> > > > > +   "fsl-usb2-mph-<IP_Ver>". For dual role USB controller with IP version
+> > > > > +   <IP_Ver>, it should be "fsl-usb2-dr-<IP_Ver>".
+> > > >
+> > > > It was documented before -- this is just making it more explicit, right?
+> > > >
+> > > > FWIW, the version number can be read out of a USB register, so I'd
+> > > > rather remove the suggestion to specify the version number and
+> > > > replace it with a reference to the ID register.
+> > > we have following two issues -
+> > > (a) our USBIP version register doesn't have consistent "version field
+> > > size" over multiple version(s). This is why we couldn't use it for
+> > > reading version info across various IP versions
+> > > (b) this register is not exposed in all SoC RMs (probably because of
+> > > above reason)
+> > 
+> > :-(
+> > 
+> > If this is just a problem with older chips, we could have a new compatible name
+> > that designates the family of USB block versions with a sane version register.
+> > 
+> we could have done...but we have a requirement to write version specific code...
+> for instance, usb controller init sequence has changes from version 2.5 onwards...
+> then there are version specific errata fixe(s) also. Hence we decided to go for
+> compatible string containing hw ip version (major no.) so that our workaround/code is
+> consistent with hw ip version(s) published in errata(s)
 
-Something like that, yes.
+I wasn't saying ignore version differences.  I was suggesting that we
+make a special case out of older versions where the version register is
+different/broken.
 
-Given that the "xusb" driver knows that its HW module contains both an 
-XHCI and XUSB mailbox chunk, those might not need to appear inside the 
-main XUSB module, but could be hard-coded into the driver. They might 
-serve as convenient containers for sub-device-specific properties though.
+-Scott
 
-Other alternatives might be:
-
-a) If the registers that are shared between drivers are distinct, then 
-divide the reg values into non-overlapping lists. We have taken this 
-approach for the MC/SMMU drivers on Tegra, although it's a horrible mess 
-and Thierry is actively thinking about reverting that and doing it 
-through MFD or something MFD-like.
-
-b) Allow the same IO region to be claimed by multiple devices, perhaps 
-with a new API so that it doesn't accidentally happen when not desired.
-
-c) Ignore the issue and deal with the fact that not all driver usage 
-shows up in /proc/iomem. This is what we have for the Tegra USB2 and 
-USB2 PHY drivers, and this is (I think) what your current patch does.
-
-To be honest, none of the options are that good; some end up with the 
-correct result but are a pain to implement, but others are nice and 
-simple yet /proc/iomem isn't complete. Given that, I'm personally not 
-going to try and mandate one option or the other, so the current patch 
-is fine. Food for thought though:-)
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
