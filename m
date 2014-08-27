@@ -1,39 +1,33 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH 08/14] i2c: exynos5: Add Kconfig dependencies
-Date: Wed, 27 Aug 2014 15:15:40 +0530
-Message-ID: <1409132740-1954-2-git-send-email-ch.naveen@samsung.com>
-References: <1409132740-1954-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1409132740-1954-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, cpgs@samsung.com, broonie@kernel.org, Wolfram Sang <wsa@the-dreams.de>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v2 2/3] rc: Introduce hix5hd2 IR transmitter driver
+Date: Wed, 27 Aug 2014 10:51:06 +0100
+Message-ID: <20140827095106.GA2712@gofer.mess.org>
+References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org>
+ <1408613086-12538-3-git-send-email-zhangfei.gao@linaro.org>
+ <20140821100739.GA3252@gofer.mess.org>
+ <53FD9BB7.6080207@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53FD9BB7.6080207@linaro.org>
+Sender: linux-media-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, David =?iso-8859-1?Q?H=E4rdeman?= <david@hardeman.nu>, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Guoxiong Yan <yanguoxiong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-The i2c-exynos5.c driver can be reused for the HSI2C controller
-on Exynos7 SoCs from Samsung.
+On Wed, Aug 27, 2014 at 04:49:59PM +0800, zhangfei wrote:
+> On 08/21/2014 06:07 PM, Sean Young wrote:
+> >On Thu, Aug 21, 2014 at 05:24:44PM +0800, Zhangfei Gao wrote:
+> >It would be useful is rdev->input_phys, rdev->input_id,
+> >rdev->timeout, rdev->rx_resolution are set correctly.
+> 
+> OK, will set rdev->timeout, rdev->rx_resolution
+> Not sure the usage of rdev->input_id, why is it required?
 
-This patch adds the Kconfig dependency to choose i2c-exynos5.c
-for CONFIG_ARCH_EXYNOS7.
+This is for the EVIOCGID ioctl on the input device which will be created 
+for the rc device. This is used for delivering input events from decoded
+IR. There is be no reason to run lircd if you use this method.
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-To: linux-i2c@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>
----
- drivers/i2c/busses/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 2ac87fa..bd18fa6 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -465,7 +465,7 @@ config I2C_EG20T
- 
- config I2C_EXYNOS5
- 	tristate "Exynos5 high-speed I2C driver"
--	depends on ARCH_EXYNOS5 && OF
-+	depends on (ARCH_EXYNOS5 || ARCH_EXYNOS7) && OF
- 	default y
- 	help
- 	  High-speed I2C controller on Exynos5 based Samsung SoCs.
--- 
-1.7.9.5
+Sean
