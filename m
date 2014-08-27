@@ -1,52 +1,225 @@
-From: Henrik =?ISO-8859-1?Q?Nordstr=F6m?= <henrik-N0bZODiMPoV/1Aw6q1k8hdHuzzzSOjJt@public.gmane.org>
-Subject: Re: Re: Generic communication of boot loader state to
- the OS
-Date: Wed, 27 Aug 2014 12:14:14 +0200
-Message-ID: <1409134454.2701.46.camel@localhost>
-References: <CAKON4Oz-PRgXyNKj=T9ymzOOhCMPjBMdYdE1Mr1CHWv3boskiw@mail.gmail.com>
-	 <20140826182816.GW30401@n2100.arm.linux.org.uk>
-	 <CAKON4Oy7SU9kj=DdJ+Oq14ukL7kHP7Qn9bPrQ3PKUL6ZJww=gw@mail.gmail.com>
-	 <20140826190230.GX30401@n2100.arm.linux.org.uk>
-	 <CAKON4OwG2XfGYv+BMqMStWvAf_K_AYdarhpQQw3FLHWE+D8Sxg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDOLXAGRVEERB7W662PQKGQEHHBBEDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAKON4OwG2XfGYv+BMqMStWvAf_K_AYdarhpQQw3FLHWE+D8Sxg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Removes OF_SELFTEST dependency on OF_DYNAMIC
+Date: Wed, 27 Aug 2014 11:26:54 +0100
+Message-ID: <20140827102654.C2E79C409CB@trevor.secretlab.ca>
+References: <1408974215-24887-1-git-send-email-gaurav.minocha.os@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408974215-24887-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-tis 2014-08-26 klockan 16:50 -0400 skrev jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org:
+On Mon, 25 Aug 2014 06:43:34 -0700, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch is used to remove the selftests dependency on
+> OF_DYNAMIC config flag. Now, it executes only the tests
+> that do not depend upon CONFIG_OF_DYNAMIC. Also, it
+> defines the functions to attach and detach the node
+> if OF_DYNAMIC flag isn't enabled.
+> 
+> Tested with and without OF_DYNAMIC enabled.
 
-> I wonder if DHCP client couldn't be replaced with a udev event. Set a
-> timer in the kernel for the length of the lease. Then generate a udev
-> event when it is ready to expire. Udev event runs an app that gets a
-> new lease.  Now there is no process to kill on reboot and everyone is
-> happy.
+Hi Gaurav,
 
-DHCP clients should release their IP back to the DHCP pool when no
-longer in use and is why this is normally down on shutdown/reboot.
-Special care is needed for doing this when your rootfs is on NFS, but
-that's all an OS support issue in how to properly supporting NFS root,
-not at all related to devicetree or bootloaders.
+Thanks for the patch. We've already talked about this on the phone, but
+for posterity I've added comments below...
 
-The question on communicating DHCP lease details between bootloader and
-OS is partially valid for this discussion as an example of possible user
-of such communication. It is not strictly required as we can have (and
-do have) an initrd that requests a dhcp lease before kernel needs IP
-running for NFS etc, but reusing the existing lease is faster (in the
-range of seconds in many networks). There is however a lot of small
-details in DHCP that may make that infeasible in the end, but those are
-again all OS implementation details not related to how to communicate
-existing lease information from bootloader to OS.
+> 
+> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/Kconfig    |    1 -
+>  drivers/of/selftest.c |  103 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 103 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index 5160c4e..1fe3805 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -10,7 +10,6 @@ menu "Device Tree and Open Firmware support"
+>  config OF_SELFTEST
+>  	bool "Device Tree Runtime self tests"
+>  	depends on OF_IRQ && OF_EARLY_FLATTREE
+> -	select OF_DYNAMIC
+>  	help
+>  	  This option builds in test cases for the device tree infrastructure
+>  	  that are executed once at boot time, and the results dumped to the
+> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+> index a737cb5..7330007 100644
+> --- a/drivers/of/selftest.c
+> +++ b/drivers/of/selftest.c
+> @@ -39,6 +39,103 @@ static bool selftest_live_tree;
+>  	} \
+>  }
+>  
+> +#if !defined(CONFIG_OF_DYNAMIC)
+> +void __of_attach_node(struct device_node *np)
+> +{
+> +	const __be32 *phandle;
+> +	int sz;
+> +
+> +	np->name = __of_get_property(np, "name", NULL) ? : "<NULL>";
+> +	np->type = __of_get_property(np, "device_type", NULL) ? : "<NULL>";
+> +	phandle = __of_get_property(np, "phandle", &sz);
+> +	if (!phandle)
+> +		phandle = __of_get_property(np, "linux,phandle", &sz);
+> +	if (IS_ENABLED(PPC_PSERIES) && !phandle)
+> +		phandle = __of_get_property(np, "ibm,phandle", &sz);
 
-Regards
-Henrik
+The above two lines can be dropped. The test data doesn't use the
+ibm,phandle property. Only IBM firmware does.
+
+> +	np->phandle = (phandle && (sz >= 4)) ? be32_to_cpup(phandle) : 0;
+> +	np->sibling = np->parent->child;
+> +	np->allnext = np->parent->allnext;
+> +	np->parent->allnext = np;
+> +	np->parent->child = np;
+> +	of_node_clear_flag(np, OF_DETACHED);
+> +}
+> +
+> +/**
+> + * of_attach_node() - Plug a device node into the tree and global list.
+> + */
+> +int of_attach_node(struct device_node *np)
+> +{
+> +	unsigned long flags;
+> +
+> +	mutex_lock(&of_mutex);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> +	__of_attach_node(np);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	mutex_unlock(&of_mutex);
+> +
+> +	return 0;
+> +}
+
+Given that this is only used by the selftest module, there is no need
+for the separate __of_attach_node() function wrapped by of_attach_node().
+Just put the body of __of_attach_node into this function.
+
+> +
+> +void __of_detach_node(struct device_node *np)
+> +{
+> +	struct device_node *parent;
+> +
+> +	if (WARN_ON(of_node_check_flag(np, OF_DETACHED)))
+> +		return;
+> +
+> +	parent = np->parent;
+> +	if (WARN_ON(!parent))
+> +		return;
+> +
+> +	if (of_allnodes == np)
+> +		of_allnodes = np->allnext;
+> +	else {
+> +		struct device_node *prev;
+> +
+> +		for (prev = of_allnodes;
+> +		     prev->allnext != np;
+> +		     prev = prev->allnext)
+> +			;
+> +		prev->allnext = np->allnext;
+> +	}
+> +
+> +	if (parent->child == np)
+> +		parent->child = np->sibling;
+> +	else {
+> +		struct device_node *prevsib;
+> +
+> +		for (prevsib = np->parent->child;
+> +		     prevsib->sibling != np;
+> +		     prevsib = prevsib->sibling)
+> +			;
+> +		prevsib->sibling = np->sibling;
+> +	}
+> +
+> +	of_node_set_flag(np, OF_DETACHED);
+> +}
+> +
+> +/**
+> + * of_detach_node() - "Unplug" a node from the device tree.
+> + *
+> + * The caller must hold a reference to the node.  The memory associated with
+> + * the node is not freed until its refcount goes to zero.
+> + */
+> +int of_detach_node(struct device_node *np)
+> +{
+> +	unsigned long flags;
+> +	int rc = 0;
+> +
+> +	mutex_lock(&of_mutex);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> +	__of_detach_node(np);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +
+> +	mutex_unlock(&of_mutex);
+> +
+> +	return rc;
+> +}
+> +#endif
+> +
+>  static void __init of_selftest_find_node_by_name(void)
+>  {
+>  	struct device_node *np;
+> @@ -86,6 +183,7 @@ static void __init of_selftest_find_node_by_name(void)
+>  
+>  static void __init of_selftest_dynamic(void)
+>  {
+> +#ifdef CONFIG_OF_DYNAMIC
+>  	struct device_node *np;
+>  	struct property *prop;
+>  
+> @@ -143,6 +241,7 @@ static void __init of_selftest_dynamic(void)
+>  	if (prop->value)
+>  		selftest(of_add_property(np, prop) == 0,
+>  			 "Adding a large property should have passed\n");
+> +#endif
+>  }
+>  
+>  static void __init of_selftest_parse_phandle_with_args(void)
+> @@ -697,7 +796,9 @@ static int __init selftest_data_add(void)
+>  		of_allnodes = selftest_data_node;
+>  
+>  		for_each_of_allnodes(np)
+> +#ifdef CONFIG_OF_DYNAMIC
+>  			__of_attach_node_sysfs(np);
+> +#endif
+
+The normal way to block out a function call is to define an empty
+__of_attach_node_sysfs() static inline so that #ifdefs don't appear in
+the middle of a function.
+
+BTW, this hunk is also buggy. When CONFIG_OF_DYNAMIC is disabled it
+executes the next line once for each and every node.
+
+However, despite all of the above, I don't think we can get away with
+not registering the nodes with sysfs. Doing that means we can't ever
+write tests for the sysfs integration.
+
+>  		of_aliases = of_find_node_by_path("/aliases");
+>  		of_chosen = of_find_node_by_path("/chosen");
+>  		return 0;
+> @@ -740,7 +841,9 @@ static void selftest_data_remove(void)
+>  		of_chosen = NULL;
+>  		for_each_child_of_node(of_allnodes, np)
+>  			detach_node_and_children(np);
+> +#ifdef CONFIG_OF_DYNAMIC
+>  		__of_detach_node_sysfs(of_allnodes);
+> +#endif
+
+This must be done otherwise sysfs will be in an inconsistent state.
+We've got three choices here. 1) don't bother removing the testcase
+data, 2) include the __of_attach_node_sysfs() and __of_detach_node_sysfs()
+hooks, or 3) don't attach the nodes to sysfs at all. Not attaching to
+sysfs isn't appealing because it means we can't ever write tests that
+depend on the sysfs hooks.
+
+Originally, I was thinking that not removing the data is the best
+approach, but after looking at it there really isn't much more that
+needs to be pulled in to make it work. I would go with option 2 and make
+sure the sysfs registrations are properly handled.
+
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
