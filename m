@@ -1,53 +1,64 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
- in DT
-Date: Wed, 27 Aug 2014 11:24:49 -0700
-Message-ID: <CAJAp7OhoRQ1eWack1e=OL0cS4Fxmgxc7OWeNxcj1qt7Q-x-sQA@mail.gmail.com>
-References: <53D788A7.4020303@mm-sol.com>
-	<3794875.CZFbAag5Sv@wuerfel>
-	<53D7AA72.6010309@mm-sol.com>
-	<20140729234522.E9FF1C40738@trevor.secretlab.ca>
-	<53D84558.7060406@codeaurora.org>
-	<CAL_JsqJjH0OH+X=fzwqAPeWarjoLev7v6Nv_QhAa+nZyztMnFA@mail.gmail.com>
-	<20140730060619.GC19933@codeaurora.org>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Wed, 27 Aug 2014 11:30:25 -0700
+Message-ID: <CAL1qeaFTw=0XMEkag1Z8C4jKkWnwBeGJLYxHGiYfKXBk-9o0Yw@mail.gmail.com>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+	<CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
+	<CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
+	<20140823063113.GC23715@localhost>
+	<CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com>
+	<CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140730060619.GC19933@codeaurora.org>
+In-Reply-To: <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@linaro.org>
+To: Jonas Gorski <jogo@openwrt.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Olof Johansson <olof@lixom.net>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 29, 2014 at 11:06 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 07/29, Rob Herring wrote:
-[..]
+On Mon, Aug 25, 2014 at 8:17 AM, Jonas Gorski <jogo@openwrt.org> wrote:
+> On Sat, Aug 23, 2014 at 9:50 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof@lixom.net> wrote:
+>>>> > arch/arm/boot/dts/<vendor>/
+>>>> >
+>>>> > Is this something we should do for the MIPS and update the other architectures
+>>>> > to follow that scheme?
+>>>>
+>>>> I recall reading that as well and that it would be adopted for ARM64,
+>>>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
+>>>> more.
+>>>
+>>> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
+>>> and the amount of files in that directory is becoming pretty
+>>> insane. Moving to a subdirectory structure later gets messy which is
+>>> why we've been holding off on it.
 >>
->> You might as well do of_property_read_u32 in the below example.
+>> It would mean we can change our scripts to operate on "interesting"
+>> DTS files from
 >>
+>>      do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
+>>
+>> to
+>>
+>>     do-something-with arch/arm/boot/dts/$vendor/*
+>>
+>> which is easier to type...
 >
-> Fair enough. The example is probably too simple. Things are
-> sometimes slightly more complicated and a simple
-> of_property_read_u32() isn't going to work in the case of
-> multiple reg values or when reg-names is in play.
->
+> Btw, do you mean chip-vendor or device-vendor with vendor?
+> Device-vendor could get a bit messy on the source part as the router
+> manufacturers tend to switch them quite often. E.g. d-link used arm,
+> mips and ubi32 chips from marvell, ubicom, broadcom, atheros, realtek
+> and ralink for their dir-615 router, happily switching back and forth.
+> There are 14 known different hardware revisions of it where the chip
+> differed from the previous one.
 
-But do we have such cases in the Qualcomm PMICs?
+I'm going to assume it means chip/SoC vendor.  That would result in
+the following structure (I think):
 
-The only case I've hit so far is for gpios and mpps, where it feels
-like reg should be base, size and not simply base reg of first gpio -
-but that's a different thing.
-
-Also, so far it seems like most drivers just code the base address in
-the driver, as we have very specific compatibles.
-
-
-How about we stop trying so hard to make this "perfect" and just merge
-something close to Josh's original proposal and ignore this problem?
-Currently all we're doing is delaying any possibility of getting
-drivers for the individual blocks merged.
-If we have the dt bindings require the reg to be there, we can discuss
-and change this all we want later!
-
-Regards,
-Bjorn
+Octeon -> cavium/
+Lantiq -> lantiq/
+Netlogic -> netlogic/ (or should this now be brcm/?)
+SEAD-3 -> mti/
+Ralink -> ralink/
