@@ -1,60 +1,76 @@
-From: Philippe Reynes <tremyfr@gmail.com>
-Subject: [PATCH v3] apf27dev: add max1027 in the dts
-Date: Sun, 31 Aug 2014 22:40:29 +0200
-Message-ID: <1409517629-5918-1-git-send-email-tremyfr@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: shawn.guo@freescale.com, kernel@pengutronix.de, shc_work@mail.ru, Philippe Reynes <tremyfr@gmail.com>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <a0132425@kernel.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 1/2] iio: adc: ti_am335x_adc: refactor DT parsing into a function
+Date: Wed, 27 Aug 2014 17:49:49 +0530
+Message-ID: <1409141990-29627-1-git-send-email-vigneshr@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Felipe Balbi <balbi@ti.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+List-ID: <devicetree@vger.kernel.org>
 
+Refactor DT parsing into a seperate function from probe() to
+help addition of more DT parameters later.
 
-Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+No functional changes.
+
+Signed-off-by: Vignesh R <vigneshr@ti.com>
 ---
- arch/arm/boot/dts/imx27-apf27dev.dts |   17 +++++++++++++++++
- 1 files changed, 17 insertions(+), 0 deletions(-)
+ drivers/iio/adc/ti_am335x_adc.c |   29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-Changelog:
-v3: (thanks Alexander Shiyan for the feedback)
-- add datasheet pin name as comment
-
-v2: (thanks Alexander Shiyan for the feedback)
-- spi mode 0 is the default so no need to explicitly define it
-
-diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
-index b982309..0c08fbb 100644
---- a/arch/arm/boot/dts/imx27-apf27dev.dts
-+++ b/arch/arm/boot/dts/imx27-apf27dev.dts
-@@ -82,6 +82,16 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
- 	status = "okay";
-+
-+	adc@0 {
-+		compatible = "maxim,max1027";
-+		reg = <0>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_max1027>;
-+		spi-max-frequency = <10000000>;
-+	};
+diff --git a/drivers/iio/adc/ti_am335x_adc.c b/drivers/iio/adc/ti_am335x_adc.c
+index 63b2bb6..dfb0db0 100644
+--- a/drivers/iio/adc/ti_am335x_adc.c
++++ b/drivers/iio/adc/ti_am335x_adc.c
+@@ -407,16 +407,30 @@ static const struct iio_info tiadc_info = {
+ 	.driver_module = THIS_MODULE,
  };
  
- &cspi2 {
-@@ -230,6 +240,13 @@
- 		pinctrl_sdhc2_cd: sdhc2cdgrp {
- 			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
- 		};
++static int tiadc_parse_dt(struct platform_device *pdev,
++				struct tiadc_device *adc_dev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct property *prop;
++	const __be32 *cur;
++	int channels = 0;
++	u32 val;
 +
-+		pinctrl_max1027: max1027 {
-+			 fsl,pins = <
-+				 MX27_PAD_UART1_CTS__GPIO5_14 0 /* CNVST */
-+				 MX27_PAD_UART1_RTS__GPIO5_15 0 /* EOC */
-+			>;
-+		};
- 	};
- };
++	of_property_for_each_u32(node, "ti,adc-channels", prop, cur, val) {
++		adc_dev->channel_line[channels] = val;
++		channels++;
++	}
++
++	adc_dev->channels = channels;
++	return 0;
++}
++
+ static int tiadc_probe(struct platform_device *pdev)
+ {
+ 	struct iio_dev		*indio_dev;
+ 	struct tiadc_device	*adc_dev;
+ 	struct device_node	*node = pdev->dev.of_node;
+-	struct property		*prop;
+-	const __be32		*cur;
+ 	int			err;
+-	u32			val;
+-	int			channels = 0;
  
+ 	if (!node) {
+ 		dev_err(&pdev->dev, "Could not find valid DT data.\n");
+@@ -432,12 +446,7 @@ static int tiadc_probe(struct platform_device *pdev)
+ 	adc_dev = iio_priv(indio_dev);
+ 
+ 	adc_dev->mfd_tscadc = ti_tscadc_dev_get(pdev);
+-
+-	of_property_for_each_u32(node, "ti,adc-channels", prop, cur, val) {
+-		adc_dev->channel_line[channels] = val;
+-		channels++;
+-	}
+-	adc_dev->channels = channels;
++	tiadc_parse_dt(pdev, adc_dev);
+ 
+ 	indio_dev->dev.parent = &pdev->dev;
+ 	indio_dev->name = dev_name(&pdev->dev);
 -- 
-1.7.4.4
+1.7.9.5
