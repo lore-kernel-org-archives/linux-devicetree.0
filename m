@@ -1,244 +1,164 @@
-From: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH v5] coresight: bindings for coresight drivers
-Date: Wed, 27 Aug 2014 11:29:28 -0600
-Message-ID: <1409160568-7401-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: afaerber-l3A5Bk7waGM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
+Date: Wed, 27 Aug 2014 10:38:56 -0700
+Message-ID: <CAL1qeaERHeKKNpqh9qHOppgT7ymvntisdjVvZheP78U6NaPz-A@mail.gmail.com>
+References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
+	<1408381705-3623-3-git-send-email-abrestic@chromium.org>
+	<53FB8820.4010202@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53FB8820.4010202@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Mon, Aug 25, 2014 at 12:01 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 08/18/2014 11:08 AM, Andrew Bresticker wrote:
+>>
+>> The Tegra xHCI controller's firmware communicates requests to the host
+>> processor through a mailbox interface.  While there is only a single
+>> communication channel, messages sent by the controller can be divided
+>> into two groups: those intended for the PHY driver and those intended
+>> for the host-controller driver.  This mailbox driver exposes the two
+>> channels and routes incoming messages to the appropriate channel based
+>> on the command encoded in the message.
+>
+>
+>> diff --git a/drivers/mailbox/tegra-xusb-mailbox.c
+>> b/drivers/mailbox/tegra-xusb-mailbox.c
+>
+>
+>> +#define XUSB_CFG_ARU_MBOX_CMD                  0xe4
+>> +#define  MBOX_FALC_INT_EN                      BIT(27)
+>> +#define  MBOX_PME_INT_EN                       BIT(28)
+>> +#define  MBOX_SMI_INT_EN                       BIT(29)
+>> +#define  MBOX_XHCI_INT_EN                      BIT(30)
+>> +#define  MBOX_INT_EN                           BIT(31)
+>
+>
+> Those field names don't match the documentation in the TRM; they're called
+> DEST_xxx rather than xxx_INT_EN. I'm not sure what that disconnect means
+> (i.e. whether it's just a different naming choice, or there's some practical
+> disconnect that will cause issues.)
 
-Coresight IP blocks allow for the support of HW assisted tracing
-on ARM SoCs.  Bindings for the currently available blocks are
-presented herein.
+Hmm... interestingly *_INT_EN is the convention the downstream kernels
+used.  DEST_* is definitely more accurate as I'm pretty sure these
+bits select the destination for the interrupt.
 
-Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Panchaxari Prasannamurthy <panchaxari.prasannamurthy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-Changes for V5:
-   - Reformatted binding specification to improve readability.
-   - Fixed node specification in example.
+>> +static struct mbox_chan *mbox_cmd_to_chan(struct tegra_xusb_mbox *mbox,
+>> u32 cmd)
+>> +{
+>> +       switch (cmd) {
+>> +       case MBOX_CMD_INC_FALC_CLOCK:
+>> +       case MBOX_CMD_DEC_FALC_CLOCK:
+>> +       case MBOX_CMD_INC_SSPI_CLOCK:
+>> +       case MBOX_CMD_DEC_SSPI_CLOCK:
+>> +       case MBOX_CMD_SET_BW:
+>> +               return &mbox->mbox.chans[TEGRA_XUSB_MBOX_CHAN_HOST];
+>> +       case MBOX_CMD_SAVE_DFE_CTLE_CTX:
+>> +       case MBOX_CMD_START_HSIC_IDLE:
+>> +       case MBOX_CMD_STOP_HSIC_IDLE:
+>> +               return &mbox->mbox.chans[TEGRA_XUSB_MBOX_CHAN_PHY];
+>> +       default:
+>> +               return NULL;
+>> +       }
+>> +}
+>
+>
+> This makes me think that the CHAN_HOST/CHAN_PHY values are purely a facet of
+> the Linux driver's message de-multiplexing, rather than anything to do with
+> the HW.
 
- .../devicetree/bindings/arm/coresight.txt          | 203 +++++++++++++++++++++
- 1 file changed, 203 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
+Yup, they are...
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-new file mode 100644
-index 0000000..96dd947
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -0,0 +1,203 @@
-+* CoreSight Components:
-+
-+CoreSight components are compliant with the ARM CoreSight architecture
-+specification and can be connected in various topologies to suit a particular
-+SoCs tracing needs. These trace components can generally be classified as sinks,
-+links and sources. Trace data produced by one or more sources flows through the
-+intermediate links connecting the source to the currently selected sink. Each
-+CoreSight component device should use these properties to describe its hardware
-+characteristcs.
-+
-+* Required properties for all components *except* non-configurable replicators:
-+
-+	* compatible: These have to be supplemented with "arm,primecell" as
-+	  drivers are using the AMBA bus interface.  Possible values include:
-+		- "arm,coresight-etb10", "arm,primecell";
-+		- "arm,coresight-tpiu", "arm,primecell";
-+		- "arm,coresight-tmc", "arm,primecell";
-+		- "arm,coresight-funnel", "arm,primecell";
-+		- "arm,coresight-etm3x", "arm,primecell";
-+
-+	* reg: physical base address and length of the register
-+	  set(s) of the component.
-+
-+	* clocks: the clock associated to this component.
-+
-+	* clock-names: the name of the clock as referenced by the code.
-+	  Since we are using the AMBA framework, the name should be
-+	  "apb_pclk".
-+
-+	* port or ports: The representation of the component's port
-+	  layout using the generic DT graph presentation found in
-+	  "bindings/graph.txt".
-+
-+* Required properties for devices that don't show up on the AMBA bus, such as
-+  non-configurable replicators:
-+
-+	* compatible: Currently supported value is (note the absence of the
-+	  AMBA markee):
-+		- "arm,coresight-replicator"
-+
-+	* id: a unique number that will identify this replicator.
-+
-+	* port or ports: same as above.
-+
-+* Optional properties for ETM/PTMs:
-+
-+	* arm,cp14: must be present if the system accesses ETM/PTM management registers
-+	  via co-processor 14.
-+
-+	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the source is
-+	  considered to belong to CPU0.
-+
-+* Optional property for TMC:
-+
-+	* arm,buffer-size: size of contiguous buffer space for TMC ETR
-+	 (embedded trace router)
-+
-+
-+Example:
-+
-+1. Sinks
-+	etb@0,20010000 {
-+		compatible = "arm,coresight-etb10", "arm,primecell";
-+		reg = <0 0x20010000 0 0x1000>;
-+
-+		coresight-default-sink;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			etb_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port0>;
-+			};
-+		};
-+	};
-+
-+	tpiu@0,20030000 {
-+		compatible = "arm,coresight-tpiu", "arm,primecell";
-+		reg = <0 0x20030000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			tpiu_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port1>;
-+			};
-+		};
-+	};
-+
-+2. Links
-+	replicator {
-+		/* non-configurable replicators don't show up on the
-+		 * AMBA bus.  As such no need to add "arm,primecell".
-+		 */
-+		compatible = "arm,coresight-replicator";
-+		/* this will show up in debugfs as "0.replicator" */
-+		id = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* replicator output ports */
-+			port@0 {
-+				reg = <0>;
-+				replicator_out_port0: endpoint {
-+					remote-endpoint = <&etb_in_port>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				replicator_out_port1: endpoint {
-+					remote-endpoint = <&tpiu_in_port>;
-+				};
-+			};
-+
-+			/* replicator input port */
-+			port@2 {
-+				reg = <0>;
-+				replicator_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&funnel_out_port0>;
-+				};
-+			};
-+		};
-+	};
-+
-+	funnel@0,20040000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x20040000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* funnel output port */
-+			port@0 {
-+				reg = <0>;
-+				funnel_out_port0: endpoint {
-+					remote-endpoint = <&replicator_in_port0>;
-+				};
-+			};
-+
-+			/* funnel input ports */
-+			port@1 {
-+				reg = <0>;
-+				funnel_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm0_out_port>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <1>;
-+				funnel_in_port1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm1_out_port>;
-+				};
-+			};
-+
-+			port@3 {
-+				reg = <2>;
-+				funnel_in_port2: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm0_out_port>;
-+				};
-+			};
-+
-+		};
-+	};
-+
-+3. Sources
-+	ptm@0,2201c000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201c000 0 0x1000>;
-+
-+		cpu = <&cpu0>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm0_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port0>;
-+			};
-+		};
-+	};
-+
-+	ptm@0,2201d000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201d000 0 0x1000>;
-+
-+		cpu = <&cpu1>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm1_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port1>;
-+			};
-+		};
-+	};
--- 
-1.9.1
+> I'm not even sure if it's appropriate for the low-level mailbox driver to
+> know about the semantics of the message, rather than simply sending them on
+> to the client driver? Perhaps when drivers register(?) for callbacks(?) for
+> messages, they should state which types of messages they want to listen to?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So there's not really a way for the client driver to tell the mailbox
+driver which types of messages it wants to listen to on a particular
+channel with the mailbox framework - it simply provides a way for
+clients to bind with channels.  I think there are a couple of options
+here, either: a) have a channel per message (as you mentioned in the
+previous patch), which allows the client to only register for messages
+(channels) it wants to handle, or b) extend the mailbox framework to
+allow shared channels so that both clients can receive messages on the
+single channel and handle messages appropriately.   The disadvantage
+of (a) is that the commands are firmware defined and could
+theoretically change between releases of the firmware, though I'm not
+sure how common that is in practice.  So that leaves (b) - Jassi, what
+do you think about having shared (non-exclusive) channels?
+
+>> +static irqreturn_t tegra_xusb_mbox_irq(int irq, void *p)
+>
+>
+>> +       /* Clear mbox interrupts */
+>>
+>> +       reg = mbox_readl(mbox, XUSB_CFG_ARU_SMI_INTR);
+>> +       if (reg & MBOX_SMI_INTR_FW_HANG)
+>> +               dev_err(mbox->mbox.dev, "Controller firmware hang\n");
+>> +       mbox_writel(mbox, reg, XUSB_CFG_ARU_SMI_INTR);
+>
+>
+>> +       /*
+>>
+>> +        * Set the mailbox back to idle.  The recipient of the message is
+>> +        * responsible for sending an ACK/NAK, if necessary.
+>> +        */
+>> +       reg = mbox_readl(mbox, XUSB_CFG_ARU_MBOX_CMD);
+>> +       reg &= ~MBOX_SMI_INT_EN;
+>> +       mbox_writel(mbox, reg, XUSB_CFG_ARU_MBOX_CMD);
+>
+>
+> Does the protocol not allow the remote firmware to send another message
+> until the host has ack'd/nak'd the message; the code above turns off the IRQ
+> that indicated to the host that a message was sent to it...
+
+While the firmware generally will not send another message until the
+previous one is ACK'd/NAK'd (with the exception of the SET_BW
+command), the above does not prevent it from doing so.  I believe the
+controller sets up the DEST_* bits properly before sending another
+message.
+
+>> +static int tegra_xusb_mbox_probe(struct platform_device *pdev)
+>
+>
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>
+>> +       if (!res)
+>> +               return -ENODEV;
+>
+>
+> Should devm_request_mem_region() be called here to claim the region?
+
+No, the xHCI host driver also needs to map these registers, so they
+cannot be mapped exclusively here.
+
+>> +       mbox->regs = devm_ioremap_nocache(&pdev->dev, res->start,
+>> +                                         resource_size(res));
+>> +       if (!mbox->regs)
+>> +               return -ENOMEM;
+>
+>
+> Is _nocache required? I don't see other drivers using it. I assume there's
+> nothing special about the mbox registers.
+
+I'll drop the _nocache.
+
+>> +       mbox->irq = platform_get_irq(pdev, 0);
+>> +       if (mbox->irq < 0)
+>> +               return mbox->irq;
+>> +       ret = devm_request_irq(&pdev->dev, mbox->irq, tegra_xusb_mbox_irq,
+>> 0,
+>> +                              dev_name(&pdev->dev), mbox);
+>
+>
+> Is it possible for an IRQ to occur after tegra_xusb_mbox_remove() has
+> returned, but before the cleanup for the devm IRQ allocation occurs? If that
+> happens, will the code handle it gracefully, or crash?
+
+It looks like mbox_chan_received_data() will crash if the channel is
+unbound, so yes, this needs to be fixed.
