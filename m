@@ -1,54 +1,67 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Thu, 28 Aug 2014 00:56:35 +0530
-Message-ID: <CAJe_ZhexxKSDfJeojY5FETdzvnA6082mcXjpfQ-oaMNRTN=-Sw@mail.gmail.com>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
-	<1408381705-3623-3-git-send-email-abrestic@chromium.org>
-	<53FB8820.4010202@wwwdotorg.org>
-	<CAL1qeaERHeKKNpqh9qHOppgT7ymvntisdjVvZheP78U6NaPz-A@mail.gmail.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Wed, 27 Aug 2014 12:33:35 -0700
+Message-ID: <53FE328F.5040204@caviumnetworks.com>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org> <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com> <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com> <20140823063113.GC23715@localhost> <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com> <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com> <CAL1qeaFTw=0XMEkag1Z8C4jKkWnwBeGJLYxHGiYfKXBk-9o0Yw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaERHeKKNpqh9qHOppgT7ymvntisdjVvZheP78U6NaPz-A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaFTw=0XMEkag1Z8C4jKkWnwBeGJLYxHGiYfKXBk-9o0Yw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra@vger.k
+Cc: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 August 2014 23:08, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> On Mon, Aug 25, 2014 at 12:01 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-
->> I'm not even sure if it's appropriate for the low-level mailbox driver to
->> know about the semantics of the message, rather than simply sending them on
->> to the client driver? Perhaps when drivers register(?) for callbacks(?) for
->> messages, they should state which types of messages they want to listen to?
+On 08/27/2014 11:30 AM, Andrew Bresticker wrote:
+> On Mon, Aug 25, 2014 at 8:17 AM, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+>> On Sat, Aug 23, 2014 at 9:50 PM, Geert Uytterhoeven
+>> <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>>> On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>>>>> arch/arm/boot/dts/<vendor>/
+>>>>>>
+>>>>>> Is this something we should do for the MIPS and update the other architectures
+>>>>>> to follow that scheme?
+>>>>>
+>>>>> I recall reading that as well and that it would be adopted for ARM64,
+>>>>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
+>>>>> more.
+>>>>
+>>>> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
+>>>> and the amount of files in that directory is becoming pretty
+>>>> insane. Moving to a subdirectory structure later gets messy which is
+>>>> why we've been holding off on it.
+>>>
+>>> It would mean we can change our scripts to operate on "interesting"
+>>> DTS files from
+>>>
+>>>       do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
+>>>
+>>> to
+>>>
+>>>      do-something-with arch/arm/boot/dts/$vendor/*
+>>>
+>>> which is easier to type...
+>>
+>> Btw, do you mean chip-vendor or device-vendor with vendor?
+>> Device-vendor could get a bit messy on the source part as the router
+>> manufacturers tend to switch them quite often. E.g. d-link used arm,
+>> mips and ubi32 chips from marvell, ubicom, broadcom, atheros, realtek
+>> and ralink for their dir-615 router, happily switching back and forth.
+>> There are 14 known different hardware revisions of it where the chip
+>> differed from the previous one.
 >
-> So there's not really a way for the client driver to tell the mailbox
-> driver which types of messages it wants to listen to on a particular
-> channel with the mailbox framework - it simply provides a way for
-> clients to bind with channels.  I think there are a couple of options
-> here, either: a) have a channel per message (as you mentioned in the
-> previous patch), which allows the client to only register for messages
-> (channels) it wants to handle, or b) extend the mailbox framework to
-> allow shared channels so that both clients can receive messages on the
-> single channel and handle messages appropriately.   The disadvantage
-> of (a) is that the commands are firmware defined and could
-> theoretically change between releases of the firmware, though I'm not
-> sure how common that is in practice.  So that leaves (b) - Jassi, what
-> do you think about having shared (non-exclusive) channels?
+> I'm going to assume it means chip/SoC vendor.  That would result in
+> the following structure (I think):
 >
-n++ ... 'mailbox' is one such device that imbibes properties of local
-controller hardware and the remote firmware. Change in remote f/w's
-behavior might require the controller driver to change besides our
-client driver. A typical example is format of payloads (if
-involved).... a client and mailbox controller driver have direct
-understanding of the packet format ... which is likely to change with
-remote f/w.  So if the original concern "why are we doing s/w protocol
-stuff in controller driver?" won't go away by providing for shared
-channels (which would have its own tradeoffs).
+> Octeon -> cavium/
 
-BTW, on DMAEngine we are moving towards virtual channels backed by
-limited physical ones ... your setup looks quite similar. So your
-demuxer doesn't hurt my eyes at all.
+To match the state of the art naming we have in other MIPS related 
+directories, it should probably be "cavium-octeon/" (See 
+arch/mips/cavium-octeon, and arch/mips/include/asm/mach-cavium-octeon)
 
--jassi
+David Daney
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
