@@ -1,169 +1,124 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 3/9] PM / Domains: Add APIs to attach/detach a power
- domain for a device
-Date: Wed, 27 Aug 2014 09:38:41 +0200
-Message-ID: <CAPDyKFpfQApUFtgjJ9mLGzSJbRiYzCVR-yYZcheWKWBc9x+Zag@mail.gmail.com>
-References: <1409054837-5667-1-git-send-email-ulf.hansson@linaro.org>
-	<1409054837-5667-4-git-send-email-ulf.hansson@linaro.org>
-	<4718058.Ou8igBffVK@vostro.rjw.lan>
-	<CAPDyKFoMjYaTzD1+Z9dxByMYZv3Qo4xKyMFT7XKRyq7oijr9ng@mail.gmail.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v4 00/11] drm: add support for Atmel HLCDC Display
+ Controller
+Date: Wed, 27 Aug 2014 09:52:35 +0200
+Message-ID: <20140827095235.20334e2d@bbrezillon>
+References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com>
+	<2138720.5GSxsvjVxS@avalon>
+	<20140821192633.69f6b21b@bbrezillon>
+	<1997793.CWhjU3F32E@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFoMjYaTzD1+Z9dxByMYZv3Qo4xKyMFT7XKRyq7oijr9ng@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the->
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1997793.CWhjU3F32E@avalon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Clark <robdclark@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 August 2014 09:37, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 27 August 2014 02:20, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->> On Tuesday, August 26, 2014 02:07:11 PM Ulf Hansson wrote:
->>> To maintain scalability let's add common methods to attach and detach
->>> a power domain for a device, dev_pm_domain_attach|detach().
->>>
->>> Typically dev_pm_domain_attach() shall be invoked from subsystem level
->>> code at the probe phase to try to attach a device to it's power domain.
->>> The reversed actions may be done a the remove phase and then by invoking
->>> dev_pm_domain_detach().
->>>
->>> The supported power domains at this point are the ACPI and the generic
->>> power domains.
->>>
->>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->>> ---
->>>  drivers/base/power/common.c | 58 +++++++++++++++++++++++++++++++++++++++++++++
->>>  include/linux/pm.h          | 14 +++++++++++
->>>  2 files changed, 72 insertions(+)
->>>
->>> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
->>> index df2e5ee..f544128 100644
->>> --- a/drivers/base/power/common.c
->>> +++ b/drivers/base/power/common.c
->>> @@ -11,6 +11,8 @@
->>>  #include <linux/export.h>
->>>  #include <linux/slab.h>
->>>  #include <linux/pm_clock.h>
->>> +#include <linux/acpi.h>
->>> +#include <linux/pm_domain.h>
->>>
->>>  /**
->>>   * dev_pm_get_subsys_data - Create or refcount power.subsys_data for device.
->>> @@ -82,3 +84,59 @@ int dev_pm_put_subsys_data(struct device *dev)
->>>       return ret;
->>>  }
->>>  EXPORT_SYMBOL_GPL(dev_pm_put_subsys_data);
->>> +
->>> +/**
->>> + * dev_pm_domain_attach - Attach a device to it's power domain.
->>> + * @dev: Device to attach.
->>> + * @power_on: Used to indicate whether we should power on the device.
->>> + *
->>> + * The @dev may only be attached to a single power domain. By iterating through
->>> + * the available alternatives we try to find a valid domain for the device.
->>> + *
->>> + * This function should typically be invoked from subsystem level code during
->>> + * the probe phase. Especially for those that's hold devices which requires
->>> + * power management through power domains.
->>> + *
->>> + * Callers must ensure proper synchronization of this function with power
->>> + * management callbacks.
->>> + *
->>> + * Returns 0 on successfully attached power domain or negative error code.
->>> + */
->>> +int dev_pm_domain_attach(struct device *dev, bool power_on)
->>> +{
->>> +     int ret;
->>> +
->>> +     ret = acpi_dev_pm_attach(dev, power_on);
->>> +     if (ret == -EPROBE_DEFER)
->>
->> This doesn't seem to be possible today.  At least I'm not sure how it can
->> happen.
->
-> You are right, but I did this intentionally. The reason for having
-> this check, was that I didn't want the new API to put the limit on
-> handling deferred probe.
->
-> I happy the above check, if you think it's better!?
+Hi Laurent,
 
-s/happy/happy to change
+On Tue, 26 Aug 2014 01:39:21 +0200
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
->
-> Kind regards
-> Uffe
->
->>
->>> +             return ret;
->>> +     else
->>> +             ret = genpd_dev_pm_attach(dev);
->>> +
->>> +     return ret;
->>> +}
->>> +EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
->>
->> On a more general note, are you sure that the place where we call
->> acpi_dev_pm_attach() will always be suitable for calling genpd_dev_pm_attach()?
->>
->
-> Currently, I haven't seen any place where it doesn't make sense.
->
-> Additionally if such place is found, we may either just ignore it and
-> let the caller of the API worry about the returned error or invoke the
-> genpd/acpi API immediately instead.
->
->>> +
->>> +/**
->>> + * dev_pm_domain_detach - Detach a device from it's power domain.
->>> + * @dev: Device to attach.
->>> + * @power_off: Used to indicate whether we should power off the device.
->>> + *
->>> + * The @dev may be attached to a power domain. By iterating through the
->>> + * available alternatives we detach it from it's power domain.
->>> + *
->>> + * This functions will reverse the actions from dev_pm_domain_attach() and
->>> + * thus detach the @dev from it's power domain. Typically it should be invoked
->>> + * from subsystem level code during the remove phase.
->>> + *
->>> + * Callers must ensure proper synchronization of this function with power
->>> + * management callbacks.
->>> + *
->>> + * Returns 0 on successfully detached power domain or negative error code.
->>> + */
->>> +int dev_pm_domain_detach(struct device *dev, bool power_off)
->>> +{
->>> +     if (acpi_dev_pm_detach(dev, power_off))
->>> +             return genpd_dev_pm_detach(dev);
->>> +     return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(dev_pm_domain_detach);
->>> diff --git a/include/linux/pm.h b/include/linux/pm.h
->>> index 72c0fe0..8176b07 100644
->>> --- a/include/linux/pm.h
->>> +++ b/include/linux/pm.h
->>> @@ -621,6 +621,20 @@ struct dev_pm_domain {
->>>       struct dev_pm_ops       ops;
->>>  };
->>>
->>> +#ifdef CONFIG_PM
->>> +extern int dev_pm_domain_attach(struct device *dev, bool power_on);
->>> +extern int dev_pm_domain_detach(struct device *dev, bool power_off);
->>> +#else
->>> +static inline int dev_pm_domain_attach(struct device *dev, bool power_on)
->>> +{
->>> +     return -ENODEV;
->>> +}
->>> +static inline int dev_pm_domain_detach(struct device *dev, bool power_off)
->>> +{
->>> +     return -ENODEV;
->>> +}
->>> +#endif
->>> +
->>>  /*
->>>   * The PM_EVENT_ messages are also used by drivers implementing the legacy
->>>   * suspend framework, based on the ->suspend() and ->resume() callbacks common
->>>
->>
->> --
->> I speak only for myself.
->> Rafael J. Wysocki, Intel Open Source Technology Center.
+> Hi Boris,
+> 
+> On Thursday 21 August 2014 19:26:33 Boris BREZILLON wrote:
+> > On Thu, 21 Aug 2014 19:08:53 +0200
+> > Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> > 
+> > [...]
+> > 
+> > >>>> While this could be acceptable when all drivers are statically linked
+> > >>>> in the kernel, it might be problematic when you're using modules,
+> > >>>> meaning that you won't be able to display anything on your LCD panel
+> > >>>> until your HDMI bridge module has been loaded.
+> > >>> 
+> > >>> No. HDMI should be using proper hotplugging anyway, hence it should be
+> > >>> always be loaded anyway. You're in for a world of pain if you think
+> > >>> you can run DRM with a driver that's composed of separate kernel
+> > >>> modules.
+> > >> 
+> > >> I was talking about the external RGB to HDMI encoder, should the driver
+> > >> for this encoder (which is not on On Chip block) be compiled
+> > >> statically too ?
+> > > 
+> > > Given the move to multiplatform kernels we need to aim for as few modules
+> > > compiled in as possible. I'd say this includes HDMI encoders, panels and
+> > > display controllers.
+> > > 
+> > >>> Also if you don't want to use deferred probe, then you're in for the
+> > >>> full hotplugging panel dance and that implies that you need to fix a
+> > >>> bunch of things in DRM (one being the framebuffer console
+> > >>> instantiation
+> > >>> that I referred to in the other thread).
+> > >> 
+> > >> For now, I wait until there is a device connected on the RGB connector
+> > >> (connector status set to connector_status_connected) before creating an
+> > >> fbdev. It might not be the cleanest way to solve this issue, but it
+> > >> works :-).
+> > > 
+> > > Do you create a new drm_encoder at runtime for the HDMI encoder when it
+> > > appears ? I thought the DRM core and API were not able to correctly cope
+> > > with that.
+> > 
+> > I haven't started to work on the HDMI encoder yet, and ATM I only have
+> > a single connector (which is true from an HW POV), which is then bound
+> > to an LCD panel (the only type of remote endpoint I currently support).
+> > 
+> > BTW, I wonder how my use case should be represented in the DRM
+> > subsystem. As I said, from an HW POV I only have one RGB (or whatever
+> > name you choose for it) connector. But on such kind of connectors you
+> > can connect several output devices (panels, encoders, ...).
+> > And in my case I have 2 devices on the same RGB connector: a panel and
+> > an RGB to HDMI converter.
+> 
+> The DRM connector object was initially meant to model a physical user-
+> accessible connector on a board (VGA, DVI, HDMI, ...) and the properties of 
+> the monitor plugged into it. It has then been (ab)used to represent panels, as 
+> they're similar to monitors.
+> 
+> In your case the VGA and HDMI connectors should be modeled as DRM connectors, 
+> the RGB to HDMI encoder as a DRM encoder, and the LCDC as a DRM CRTC.
+
+I don't have any VGA connector (or I'm missing something :-)), but I
+have an LCD panel and an RGB to HDMI encoder connected on the same RGB
+connector.
+
+> 
+> As DRM hardcodes the pipeline model to CRTC -> encoder -> connector, you will 
+> also need a DRM encoder in the VGA path. I suppose your board has a VGA DAC, 
+> that's the component you should expose as a DRM encoder (even if it can't be 
+> controlled and doesn't limit the valid modes).
+
+Actually, my problem is that both devices are connected on the same RGB
+connector, and thus share the same display mode (resolution, HSYNC,
+VSYNC, RGB output mode, ...).
+This means that all remote devices have to agree on a specific mode if
+we want to mirror the display on several output devices, otherwise we
+must disable one of the output devices.
+
+> 
+> > >>> You also can't be using the current device tree bindings because they
+> > >>> all assume a dependency from the display controller/output to the
+> > >>> panel. For hotplugging you'd need the dependency the other way around
+> > >>> (the panel needs to refer to the output by phandle).
+> > >> 
+> > >> Here [1] is a proposal for notification support in the drm_panel
+> > >> infrastructure (which is not that complicated), and here [2] is how
+> > >> I use it in my atmel-hlcdc driver to generate hotplug events.
+> > > 
+> > > Is there a way we could use the component framework for that ? I know that
+> > > partial notification isn't supported at the moment, but Russell agreed it
+> > > was a real use case that should be implemented at some point.
+> > 
+> > I'll give it a try.
+> 
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
