@@ -1,73 +1,29 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: add hym8563 rtc to Radxa Rock board
-Date: Wed, 27 Aug 2014 23:44:56 +0200
-Message-ID: <6745529.KGldgCPX1B@diego>
-References: <2306550.nl6CA81PdX@phil>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] pinctrl: qcom: Add APQ8084 pinctrl support
+Date: Wed, 27 Aug 2014 16:53:05 -0500
+Message-ID: <20140827215305.GA19106@qualcomm.com>
+References: <1409057156-1201-1-git-send-email-gdjakov@mm-sol.com>
+ <1409057156-1201-2-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2306550.nl6CA81PdX@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1409057156-1201-2-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: linus.walleij@linaro.org, galak@codeaurora.org, bjorn.andersson@sonymobile.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, iivanov@mm-sol.com, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 20. August 2014, 21:07:22 schrieb Heiko St=FCbner:
-> The Radxa Rock uses a hym8563 as rtc. Add the i2c device and necessar=
-y
-> pinconfig for the interrupt pin - labeled rtc_int in the schematics.
->=20
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+On Tue, Aug 26, 2014 at 03:45:54PM +0300, Georgi Djakov wrote:
+> This patchset adds pinctrl support for the Qualcomm APQ8084 platform.
+> 
+> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
 
-Added both patches to my v3.18-next/dts branch.
+Looks good.  I'll try to test this tomorrow, but for now....
 
+Reviewed-by: Andy Gross <agross@codeaurora.org>
 
-> ---
-> if nobody complains I'll queue this into my v3.18-next/dts branch
->=20
->  arch/arm/boot/dts/rk3188-radxarock.dts | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts
-> b/arch/arm/boot/dts/rk3188-radxarock.dts index ef72faf..ff35acfa 1006=
-44
-> --- a/arch/arm/boot/dts/rk3188-radxarock.dts
-> +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
-> @@ -80,6 +80,17 @@
->  	status =3D "okay";
->  	clock-frequency =3D <400000>;
->=20
-> +	rtc@51 {
-> +		compatible =3D "haoyu,hym8563";
-> +		reg =3D <0x51>;
-> +		interrupt-parent =3D <&gpio0>;
-> +		interrupts =3D <13 IRQ_TYPE_EDGE_FALLING>;
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&rtc_int>;
-> +		#clock-cells =3D <0>;
-> +		clock-output-names =3D "xin32k";
-> +	};
-> +
->  	act8846: act8846@5a {
->  		compatible =3D "active-semi,act8846";
->  		reg =3D <0x5a>;
-> @@ -196,6 +207,12 @@
->  		};
->  	};
->=20
-> +	hym8563 {
-> +		rtc_int: rtc-int {
-> +			rockchip,pins =3D <RK_GPIO0 0 RK_FUNC_GPIO &pcfg_pull_up>;
-> +		};
-> +	};
-> +
->  	ir-receiver {
->  		ir_recv_pin: ir-recv-pin {
->  			rockchip,pins =3D <RK_GPIO0 10 RK_FUNC_GPIO &pcfg_pull_none>;
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
