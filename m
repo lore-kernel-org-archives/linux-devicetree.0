@@ -1,106 +1,54 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/3 repost] clocksource: sh_cmt: Document SoC specific bindings
-Date: Wed, 27 Aug 2014 08:55:36 +0200
-Message-ID: <CAMuHMdUv6bwSjHLhHumiuaBFS8WAw0y1sNq4PcofjOz6UiOfrA@mail.gmail.com>
-References: <1409117300-2133-1-git-send-email-horms+renesas@verge.net.au>
-	<1409117300-2133-2-git-send-email-horms+renesas@verge.net.au>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] mfd: rn5t618: document device tree bindings
+Date: Wed, 27 Aug 2014 08:08:26 +0100
+Message-ID: <20140827070826.GP17528@sirena.org.uk>
+References: <1409091237-16722-1-git-send-email-b.galvani@gmail.com>
+ <1409091237-16722-5-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409117300-2133-2-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="U0u+fYXQgj+TwTlT"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409091237-16722-5-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
 
-On Wed, Aug 27, 2014 at 7:28 AM, Simon Horman
-<horms+renesas@verge.net.au> wrote:
-> n general Renesas hardware is not documented to the extent
-> where the relationship between IP blocks on different SoCs can be assumed
-> although they may appear to operate the same way. Furthermore the
-> documentation typically does not specify a version for individual
-> IP blocks. For these reasons a convention of using the SoC name in place
-> of a version and providing SoC-specific compat strings has been adopted.
->
-> Although not universally liked this convention is used in the bindings
-> for the drivers a number of drivers for Renesas hardware. The purpose
+--U0u+fYXQgj+TwTlT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-s/the drivers //
+On Wed, Aug 27, 2014 at 12:13:57AM +0200, Beniamino Galvani wrote:
+> This adds the device tree bindings documentation for Ricoh RN5T618.
 
-> of this patch is to update the Renesas R-Car Compare Match Timer (CMT)
-> driver to follow this convention.
->
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+Reviwed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
+--U0u+fYXQgj+TwTlT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> ---
-> * I plan to follow up with patches to use these new bindings in the
->   dtsi files for the affected SoCs.
-> ---
->  .../devicetree/bindings/timer/renesas,cmt.txt      | 26 +++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> index a17418b..500bad2 100644
-> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> @@ -16,10 +16,34 @@ Required Properties:
->                 (CMT0 on sh7372, sh73a0 and r8a7740)
->      - "renesas,cmt-32-fast" for the 32-bit CMT with fast clock support
->                 (CMT[234] on sh7372, sh73a0 and r8a7740)
-> +    - "renesas,cmt-32-fast-r8a7740" for the R8A7740 32-bit CMT with fast
-> +               clock support (CMT[234])
-> +    - "renesas,cmt-32-fast-sh7372" for the SH7372 32-bit CMT with fast
-> +               clock support (CMT[234])
-> +    - "renesas,cmt-32-fast-sh73a0" for the SH73A0 32-bit CMT with fast
-> +               clock support (CMT[234])
+iQIcBAEBAgAGBQJT/YPnAAoJELSic+t+oim9MwAP/RzNc6KnqhRzLiMqYnbx4jC7
+tszSrfdesKDpy/zscgShMKgZjeOFDwbQ204KjjnAaTB1wj7mORYIGRxQf+UivH1P
+odV19lAu6P7O3AxNz7zb2tinyr9z1Ms+gqxoN/L/FPtVuBGABwW2GJ8JlmE7ehKQ
+BvQY6U3yJusBTfsAgSXb+e5C5mNIp+YV3uA7XGSjjHD++gngEsFq8HcSL9eURpNY
+RlCaBboIO+MqJ/hWtWf3wUaTt9rY6vg5XlIDxQvIscku4DZx/o4lJOBMqB7UVtYe
+xdLMN/Cny2mWWkjgkT1IxCNFQ8osCYWbmPiHlxJymYArD8UaFmtK3LvNSBC27VjJ
+i5F9qM+W0TfXej0+NrHhJmq4Mv6K3UJiDwdDpEyxSauVdQutDAkhsZ/UVlM0u7tR
+so1HfKh//CvsFR7ImMj+1y2ZC4+Kx172t2yjaWQXLCvnWQz4RVsC0fbBmPndw2yz
+b/2OqalXkMr3IOZNWO53Bj4J0+FYzZNIvZKA3PCQbi+mjUTGf/q/D5c9CzoiqImb
+fmklufTNbncCAQgNjRq8O/C/aFEJjqYWrVr1v9+xR6BAA/duCmkV2yUAyGSgrTlm
+6XPROOTqWQChRe589hqwA/zarYCTia9bcm8psCaPd+AdZ+WHj+y8EkJOnFy6Y2kj
+hoIylNRT5xi97H5dyTVk
+=AUjw
+-----END PGP SIGNATURE-----
 
-> +    - "renesas,cmt-32-r8a7740" for the R8a7740 32-bit CMT
-> +               (CMT0)
-> +    - "renesas,cmt-32-sh7372" for the SH7372 32-bit CMT
-> +               (CMT0)
-> +    - "renesas,cmt-32-sh73a0" for the SH73a0 32-bit CMT
-> +               (CMT0)
-
-I'd move these 3 non-fast "renesas,cmt-32-*" values up, under
-"renesas,cmt-32".
-
->      - "renesas,cmt-48" for the 48-bit CMT
->                 (CMT1 on sh7372, sh73a0 and r8a7740)
->      - "renesas,cmt-48-gen2" for the second generation 48-bit CMT
->                 (CMT[01] on r8a73a4, r8a7790 and r8a7791)
-> +    - "renesas,cmt-48-r8a73a4" for the R8A73A4 48-bit CMT
-> +               (CMT[01])
-> +    - "renesas,cmt-48-r8a7740" for the R8A7740 48-bit CMT
-> +               (CMT1)
-> +    - "renesas,cmt-48-r8a7790" for the R8A7790 48-bit CMT
-> +               (CMT[01])
-> +    - "renesas,cmt-48-r8a7791" for the R8A7791 48-bit CMT
-> +               (CMT[01])
-> +    - "renesas,cmt-48-sh7372" for the SH7372 48-bit CMT
-> +               (CMT1)
-> +    - "renesas,cmt-48-sh73a0" for the SH73A0 48-bit CMT
-> +               (CMT1)
-
-I'd split the above in original and gen2.
-
-Perhaps you can also add blank lines in between the 4 blocks of
-types; the list is getting long?
-
-Apart from the minor issues above
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-(for the whole series)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+--U0u+fYXQgj+TwTlT--
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
