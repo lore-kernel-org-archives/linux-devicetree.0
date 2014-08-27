@@ -1,48 +1,45 @@
 From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/6] ARM: dts: hix5hd2: add mmc node
-Date: Wed, 27 Aug 2014 20:38:30 +0800
-Message-ID: <1409143114-23311-3-git-send-email-zhangfei.gao@linaro.org>
+Subject: [PATCH 3/6] ARM: dts: hix5hd2: add usb node
+Date: Wed, 27 Aug 2014 20:38:31 +0800
+Message-ID: <1409143114-23311-4-git-send-email-zhangfei.gao@linaro.org>
 References: <1409143114-23311-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1409143114-23311-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/hisi-x5hd2.dtsi |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/hisi-x5hd2.dtsi |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-index 012525c..802331b 100644
+index 802331b..9252264 100644
 --- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
 +++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -167,6 +167,23 @@
- 			};
+@@ -199,5 +199,19 @@
+ 			clocks = <&clock HIX5HD2_MAC1_CLK>;
+ 			status = "disabled";
  		};
- 
-+		/* unremovable emmc as mmcblk0 */
-+		mmc: mmc@1830000 {
-+			compatible = "snps,dw-mshc";
-+			reg = <0x1830000 0x1000>;
-+			interrupts = <0 35 4>;
-+			clocks = <&clock HIX5HD2_MMC_CIU_RST>, <&clock HIX5HD2_MMC_BIU_CLK>;
-+			clock-names = "ciu", "biu";
-+		};
 +
-+		sd: mmc@1820000 {
-+			compatible = "snps,dw-mshc";
-+			reg = <0x1820000 0x1000>;
-+			interrupts = <0 34 4>;
-+			clocks = <&clock HIX5HD2_SD_CIU_RST>, <&clock HIX5HD2_SD_BIU_CLK>;
-+			clock-names = "ciu","biu";
-+		};
++		usb0: ehci@1890000 {
++		        compatible = "generic-ehci";
++			reg = <0x1890000 0x1000>;
++			interrupts = <0 66 4>;
++			clocks = <&clock HIX5HD2_USB_CLK>;
++	        };
 +
- 		gmac0: ethernet@1840000 {
- 			compatible = "hisilicon,hix5hd2-gmac";
- 			reg = <0x1840000 0x1000>,<0x184300c 0x4>;
++		usb1: ohci@1880000 {
++			compatible = "generic-ohci";
++			reg = <0x1880000 0x1000>;
++			interrupts = <0 67 4>;
++			clocks = <&clock HIX5HD2_USB_CLK>;
++		};
+ 	};
+ };
 -- 
 1.7.9.5
 
