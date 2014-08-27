@@ -1,85 +1,48 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
- initialization order based on the DT)
-Date: Wed, 27 Aug 2014 15:44:03 +0100
-Message-ID: <20140827144403.GB13850@arm.com>
-References: <53F64624.5000403@ahsoftware.de>
- <20140822131919.GX21734@leverpostej>
- <20140825093931.GB2399@ulmo>
- <E1XLu15-0002DP-6o@jdl.com>
- <20140825133714.GH4163@ulmo.nvidia.com>
- <20140826084208.AE5F0C40989@trevor.secretlab.ca>
- <20140826084922.GG17263@ulmo>
- <53FC566C.30904@ahsoftware.de>
- <20140826101107.GC32315@leverpostej>
- <20140827103432.64927C409CB@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140827103432.64927C409CB-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Subject: [PATCH V7 11/12] Documentation: bridge: Add documentation for ps8622
+ DT properties
+Date: Wed, 27 Aug 2014 20:09:57 +0530
+Message-ID: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: inki.dae@samsung.com, thierry.reding@gmail.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 27, 2014 at 11:34:32AM +0100, Grant Likely wrote:
-> On Tue, 26 Aug 2014 11:11:07 +0100, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Tue, Aug 26, 2014 at 10:42:04AM +0100, Alexander Holler wrote:
-> > > Am 26.08.2014 10:49, schrieb Thierry Reding:
-> > > > On Tue, Aug 26, 2014 at 09:42:08AM +0100, Grant Likely wrote:
-> > > >> On Mon, 25 Aug 2014 15:37:16 +0200, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > > [...]
-> > > >>> There are somewhat standardized bindings for the above and especially
-> > > >>> for bindings of the type that clocks implement this is trivial. We can
-> > > >>> simply iterate over each (phandle, specifier) tuple and check that the
-> > > >>> corresponding clock provider can be resolved (which typically means that
-> > > >>> it's been registered with the common clock framework).
-> > > >>>
-> > > >>> For regulators (and regulator-like bindings) the problem is somewhat
-> > > >>> more difficult because they property names are not standardized. One way
-> > > >>> to solve this would be to look for property names with a -supply suffix,
-> > > >>> but that could obviously lead to false positives. One alternative that I
-> > > >>> think could eliminate this would be to explicitly list dependencies in
-> > > >>> drivers. This would allow core code to step through such a list and
-> > > >>> resolve the (phandle, specifier) tuples.
-> > > >>
-> > > >> False positives and negatives may not actually be a problem. It is
-> > > >> suboptimal, certainly, but it shouldn't outright break the kernel.
-> > > >
-> > > > There could be cases where some random integer in a cell could be
-> > > > interpreted as a phandle and resolve to a struct device_node. I suppose
-> > > > it might be unlikely, but not impossible, that the device_node could
-> > > > even match a device in the correct subsystem and you'd get a wrong
-> > > > dependency. Granted, a wrong dependency may not be catastrophic in that
-> > > > it won't lead to a crash, but it could lead to various kinds of
-> > > > weirdness and hard to diagnose problems.
-> > > 
-> > > You need either the type information in the DTB (that's why I've add 
-> > > those "dependencies" to identify phandles), or you need to know every 
-> > > binding (at "dependency-resolve-time" to identify phandles.
-> > 
-> > While having type information in the DTB would be fantastic, it's not
-> > something we can expect from the systems already in the wild, and I
-> > worry how it would interact with bootloaders that modify the DTB (I
-> > don't know if any modify properties with phandles).
-> 
-> Anything we do here is firmly in the realm of optimization and
-> improvement. Adding data to the tree is fine as long as we don't make
-> the kernel depend on it. Older platforms will continue to work without
-> the optimization.
+Add documentation for DT properties supported by ps8622/ps8625
+eDP-LVDS converter.
 
-It's not just optimisation but an important feature for new arm64 SoCs.
-Given some Tegra discussions recently, in many cases the machine_desc
-use on arm is primarily to initialise devices in the right order. If we
-can solve this in a more deterministic way (other than deferred
-probing), we avoid the need for a dedicated SoC platform driver (or
-machine_desc) or workarounds like different initcall levels and explicit
-DT parsing.
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+---
+ .../devicetree/bindings/video/bridge/ps8622.txt    |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/bridge/ps8622.txt
 
+diff --git a/Documentation/devicetree/bindings/video/bridge/ps8622.txt b/Documentation/devicetree/bindings/video/bridge/ps8622.txt
+new file mode 100644
+index 0000000..0ec8172
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/bridge/ps8622.txt
+@@ -0,0 +1,20 @@
++ps8622-bridge bindings
++
++Required properties:
++	- compatible: "parade,ps8622" or "parade,ps8625"
++	- reg: first i2c address of the bridge
++	- sleep-gpios: OF device-tree gpio specification for PD_ pin.
++	- reset-gpios: OF device-tree gpio specification for RST_ pin.
++
++Optional properties:
++	- lane-count: number of DP lanes to use
++	- use-external-pwm: backlight will be controlled by an external PWM
++
++Example:
++	lvds-bridge@48 {
++		compatible = "parade,ps8622";
++		reg = <0x48>;
++		sleep-gpios = <&gpc3 6 1 0 0>;
++		reset-gpios = <&gpc3 1 1 0 0>;
++		lane-count = <1>;
++	};
 -- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
