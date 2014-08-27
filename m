@@ -1,80 +1,84 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 1/5] dt-bindings: Add RK808 device tree bindings
- document
-Date: Wed, 27 Aug 2014 13:39:18 +0100
-Message-ID: <20140827123917.GA8742@leverpostej>
-References: <1409062288-11882-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/6] ARM: dts: hix5hd2: add gmac node
+Date: Wed, 27 Aug 2014 20:38:29 +0800
+Message-ID: <1409143114-23311-2-git-send-email-zhangfei.gao@linaro.org>
+References: <1409143114-23311-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409062288-11882-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1409143114-23311-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <zhangqing@rock>
+To: haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/hisi-x5hd2-dkb.dts |   26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/hisi-x5hd2.dtsi    |   16 ++++++++++++++++
+ 2 files changed, 42 insertions(+)
 
-On Tue, Aug 26, 2014 at 03:11:28PM +0100, Chris Zhong wrote:
-> Add device tree bindings documentation and a header file
-> for rockchip's RK808 pmic.
-> 
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> ---
-> 
-> Changes in v6:
-> Advices by Mark Rutland
-> - add description about clock-cells
-> Advices by Doug
-> - modify description about regulator
-> - remove pinctrl description
-> 
-> Changes in v5:
-> Advices by Mark Brown
-> - add description about regulator valid name.
-> - add a header file "rockchip,rk808".
-> 
-> Changes in v4:
-> Advices by Doug
-> - add a "#clock-cells" propertiy
-> - update the example
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/mfd/rk808.txt |  150 +++++++++++++++++++++++
->  include/dt-bindings/clock/rockchip,rk808.h      |   11 ++
->  2 files changed, 161 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
->  create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-> new file mode 100644
-> index 0000000..6c39360
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-> @@ -0,0 +1,150 @@
-> +RK808 Power Management Integrated Circuit
-> +
-> +Required properties:
-> +- compatible: "rockchip,rk808"
-> +- reg: I2C slave address
-> +- interrupt-parent: The parent interrupt controller.
-> +- interrupts: the interrupt outputs of the controller.
-> +- #clock-cells: RK808 has 2 clkout, they are always 32khz,
-> +  the value should be 1
+diff --git a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
+index 05b44c2..0344de0 100644
+--- a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
++++ b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
+@@ -51,3 +51,29 @@
+ &uart0 {
+ 	status = "okay";
+ };
++
++&gmac0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	phy-handle = <&phy2>;
++	phy-mode = "mii";
++	mac-address = [00 00 00 00 00 00];
++	status = "okay";
++
++	phy2: ethernet-phy@2 {
++		reg = <2>;
++	};
++};
++
++&gmac1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	phy-handle = <&phy1>;
++	phy-mode = "rgmii";
++	mac-address = [00 00 00 00 00 00];
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
+diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
+index f85ba29..012525c 100644
+--- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
++++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
+@@ -166,5 +166,21 @@
+ 				#clock-cells = <1>;
+ 			};
+ 		};
++
++		gmac0: ethernet@1840000 {
++			compatible = "hisilicon,hix5hd2-gmac";
++			reg = <0x1840000 0x1000>,<0x184300c 0x4>;
++			interrupts = <0 71 4>;
++			clocks = <&clock HIX5HD2_MAC0_CLK>;
++			status = "disabled";
++		};
++
++		gmac1: ethernet@1841000 {
++			compatible = "hisilicon,hix5hd2-gmac";
++			reg = <0x1841000 0x1000>,<0x1843010 0x4>;
++			interrupts = <0 72 4>;
++			clocks = <&clock HIX5HD2_MAC1_CLK>;
++			status = "disabled";
++		};
+ 	};
+ };
+-- 
+1.7.9.5
 
-When I mentioned the describing the value values before, I meant the
-values that the cell in the specifier can take, 0 and 1, possibly
-described as mnemnoics with reference to the binding header file.
-
-Apologies if that was unclear.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
