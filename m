@@ -1,11 +1,13 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 00/16] R-Car Display Unit DT bindings
-Date: Wed, 27 Aug 2014 18:40:57 +0200
-Message-ID: <1409157673-4154-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 04/16] video: Add ADV7123 DT bindings documentation
+Date: Wed, 27 Aug 2014 18:41:01 +0200
+Message-ID: <1409157673-4154-5-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1409157673-4154-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1409157673-4154-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -19,85 +21,72 @@ To: dri-devel@lists.freedesktop.org
 Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-This patch series documents and implements DT bindings support for the R-Car
-Display Unit (DU).
-
-Unlike the previous attempt that tried to create a new model for composite
-display devices and failed to get any real traction from DRM developers, the
-approach taken here focuses on DT bindings without requiring core changes
-outside of the DU driver.
-
-Aside of the usual boring core properties (compatible, reg, interrupts and
-clocks), the proposed bindings use the OF graph bindings to model connections
-between the DU output video ports and the on-board and off-board components.
-As such they do not depend on any particular implementation or implementation
-philosophy.
-
-The series starts by documenting DT bindings for the devices present on the
-Marzen, Lager and Koelsch boards not already supported in the mainline kernel
-(01/16 to 05/16) and for the DU (06/16). It then reworks the rcar_du platform
-data to ease implementation of the DT bindings (07/16). The next step is to
-implement support for the DU DT bindings in the R-Car DU DRM driver (08/16).
-Finally the remaining patches add the DU DT nodes for all supported SoCs
-(09/16 to 11/16), remove DU platform data from the DT-based board files (12/16
-and 13/16) and describe the on-board devices connected to the DU outputs for
-the Marzen, Lager and Koelsch boards (14/16 to 16/16).
+The ADV7123 is a video DAC described by an input port, an output port,
+and an optional power save GPIO.
 
 Cc: devicetree@vger.kernel.org
 Cc: linux-fbdev@vger.kernel.org
-
-Laurent Pinchart (16):
-  devicetree: Add vendor prefix "mitsubishi" to vendor-prefixes.txt
-  devicetree: Add vendor prefix "thine" to vendor-prefixes.txt
-  video: Add DT binding documentation for VGA connector
-  video: Add ADV7123 DT bindings documentation
-  video: Add THC63LVDM83D DT bindings documentation
-  video: Add DT bindings for the R-Car Display Unit
-  drm/rcar-du: Use struct videomode in platform data
-  drm/rcar-du: Add OF support
-  ARM: shmobile: r8a7779: Add DU node to device tree
-  ARM: shmobile: r8a7790: Add DU node to device tree
-  ARM: shmobile: r8a7791: Add DU node to device tree
-  ARM: shmobile: lager-reference: Remove DU platform device
-  ARM: shmobile: koelsch-reference: Remove DU platform device
-  ARM: shmobile: marzen: Enable DU device in DT
-  ARM: shmobile: lager: Enable DU device in DT
-  ARM: shmobile: koelsch: Enable DU device in DT
-
- .../devicetree/bindings/vendor-prefixes.txt        |   2 +
- .../devicetree/bindings/video/adi,adv7123.txt      |  50 +++++
- .../devicetree/bindings/video/renesas,du.txt       |  84 ++++++++
- .../devicetree/bindings/video/thine,thc63lvdm83d   |  50 +++++
- .../devicetree/bindings/video/vga-connector.txt    |  28 +++
- arch/arm/boot/dts/r8a7779-marzen.dts               | 106 ++++++++++
- arch/arm/boot/dts/r8a7779.dtsi                     |  24 +++
- arch/arm/boot/dts/r8a7790-lager.dts                |  78 ++++++-
- arch/arm/boot/dts/r8a7790.dtsi                     |  39 ++++
- arch/arm/boot/dts/r8a7791-koelsch.dts              |  43 +++-
- arch/arm/boot/dts/r8a7791.dtsi                     |  30 +++
- arch/arm/mach-shmobile/board-koelsch-reference.c   |  74 -------
- arch/arm/mach-shmobile/board-koelsch.c             |  19 +-
- arch/arm/mach-shmobile/board-lager-reference.c     |  81 --------
- arch/arm/mach-shmobile/board-lager.c               |  19 +-
- arch/arm/mach-shmobile/board-marzen.c              |  19 +-
- drivers/gpu/drm/rcar-du/Kconfig                    |   1 +
- drivers/gpu/drm/rcar-du/rcar_du_drv.c              | 170 ++++++++-------
- drivers/gpu/drm/rcar-du/rcar_du_drv.h              |   2 +
- drivers/gpu/drm/rcar-du/rcar_du_encoder.c          |  11 +-
- drivers/gpu/drm/rcar-du/rcar_du_encoder.h          |   3 +-
- drivers/gpu/drm/rcar-du/rcar_du_kms.c              | 231 +++++++++++++++++++--
- drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c          |  43 ++--
- drivers/gpu/drm/rcar-du/rcar_du_lvdscon.h          |   3 +-
- include/linux/platform_data/rcar-du.h              |   4 +-
- 25 files changed, 904 insertions(+), 310 deletions(-)
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../devicetree/bindings/video/adi,adv7123.txt      | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/video/adi,adv7123.txt
- create mode 100644 Documentation/devicetree/bindings/video/renesas,du.txt
- create mode 100644 Documentation/devicetree/bindings/video/thine,thc63lvdm83d
- create mode 100644 Documentation/devicetree/bindings/video/vga-connector.txt
 
+diff --git a/Documentation/devicetree/bindings/video/adi,adv7123.txt b/Documentation/devicetree/bindings/video/adi,adv7123.txt
+new file mode 100644
+index 0000000..a6b2b2b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/adi,adv7123.txt
+@@ -0,0 +1,50 @@
++Analog Device ADV7123 Video DAC
++-------------------------------
++
++The ADV7123 is a digital-to-analog converter that outputs VGA signals from a
++parallel video input.
++
++Required properties:
++
++- compatible: Should be "adi,adv7123"
++
++Optional properties:
++
++- psave-gpios: Power save control GPIO
++
++Required nodes:
++
++The ADV7123 has two video ports. Their connections are modeled using the OF
++graph bindings specified in Documentation/devicetree/bindings/graph.txt.
++
++- Video port 0 for DPI input
++- Video port 1 for VGA output
++
++
++Example
++-------
++
++	adv7123: encoder@0 {
++		compatible = "adi,adv7123";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				adv7123_in: endpoint@0 {
++					remote-endpoint = <&dpi_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				adv7123_out: endpoint@0 {
++					remote-endpoint = <&vga_connector_in>;
++				};
++			};
++		};
++	};
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.5.5
