@@ -1,99 +1,33 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RESEND PATCH v2 1/4] irqchip: gic: Change irq type check when
- extension is present
-Date: Wed, 27 Aug 2014 17:22:05 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1408271657310.3323@nanos>
-References: <1407895884-18131-1-git-send-email-srv_yingjoe.chen@mediatek.com>
- <1407895884-18131-2-git-send-email-srv_yingjoe.chen@mediatek.com>
- <53F724F5.3040004@arm.com>
- <1409133344.25382.37.camel@coredoba.hi.pengutronix.de>
- <53FDB4B3.6000400@arm.com>
- <alpine.DEB.2.10.1408271347210.3323@nanos>
- <87ppfmoxxz.fsf@approximate.cambridge.arm.com>
- <20140827142935.GA9490@leverpostej>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Wed, 27 Aug 2014 08:56:35 -0700
+Message-ID: <CAD=FV=WAN=WCdMd4hWDr8qzsg3TWTGX_OAa=6KHvyWrqjmk7MA@mail.gmail.com>
+References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
+	<20140827133936.GD6364@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140827142935.GA9490@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "Joe.C" <srv_yingjoe.chen@mediatek.com>, "yh.chen@mediatek.com" <yh.chen@mediatek.com>, "nathan.chung@mediatek.com" <nathan.chung@mediatek.com>"Joe.C" <yingjoe.chen@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?ISO-8859-15?Q?Jan_L=FCbbe?= <jlu@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "eddie.huang@mediatek.com" <eddie.huang@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "srv_heupstream@mediatek.com" <srv_heupstream@m>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140827133936.GD6364@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chr>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Aug 2014, Mark Rutland wrote:
-> On Wed, Aug 27, 2014 at 02:37:44PM +0100, Marc Zyngier wrote:
-> > We need to work out how to drive the whole stacking from a DT
-> > perspective: Mark, any idea?
-> 
-> Describing the lines the magic irqchip has to its parent irqchip is
-> simple, the standard interrupts property can handle that:
-> 
-> parent: parent {
-> 	...
-> 	#interrupt-cells = <1>;
-> };
-> 
-> magic {
-> 	...
-> 	interrupt-parent = <&parent>;
-> 	interrupts = <3>, <6>, <17>, <2>;
-> 	#interrupt-cells = <1>;
-> };
-> 
-> The harder part is describing the configuration of each interrupt to the
-> magic irqchip (e.g. edge vs level triggered), which is inseparable form
-> the line identifier in the interrupt-specifier.
+Lee,
 
-Do we really need to decribe that at the this level?
+On Wed, Aug 27, 2014 at 6:39 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>> +static int rk808_probe(struct i2c_client *client,
+>> +                    const struct i2c_device_id *id)
+>> +{
+>> +     int ret;
+>> +     int pm_off = 0;
+>> +     struct rk808 *rk808;
+>> +     struct device_node *np = client->dev.of_node;
+>
+> Are you prepared for np == NULL?
 
-You have the parent ARMGIC and the maGIC with a specified (or even
-dynamic) routing of the maGIC lines to the ARMGIC.
+Given that the driver no longer supports getting its config from
+platform data, I think it simply depends on OF now.  It seems like we
+could add a "&& OF" to the dependencies.  Is that OK with you?
 
-Now the device which uses a maGIC interrupt specifies the interrupt
-type at the maGIC.
-
-So the type setter function of the maGIC configures the maGIC hardware
-in such a way that the output to the ARMGIC results in a type which
-the ARMGIC can handle and calls the type setter function of the maGIC
-with that type.
-
-I don't think you need to decribe this in the magic/parent relation
-ship at all. maGIC should know what kind of output it can provide to
-ARMGIC so that should just work, unless I'm missing something.
-
-> If there interrupts don't share the same configuration then I'm not sure
-> how we describe that in the DT. That's especially problematic if the
-> assignment of parent line is dynamic (as with the crossbar iirc).
-
-Why is this an issue?
-
-There are two ways to solve that:
-
-1) You can do a fully dynamic allocation at the parent level, which of
-   course requires that the whole parent range is dynamically
-   managed. That's what we are planning for the MSI/Remap/Vector
-   stacking
-
-2) You define the irq lines at the parent which are available for
-   dynamic stacking and let the allocation code hand one out.
-
-3) You tell the maGIC controller which lines of the parent are
-   available for it, so it can only stack onto those lines and instead
-   of letting the parent allocate a free one, the maGIC needs to map
-   its stuff to one of those ARMGIC lines.
-
-Which one to chose depends on the particular maGIC incarnation, but
-its not a big issue to select one ...
-
-Thanks,
-
-	tglx
+It doesn't hurt to still add a check for np == NULL and bail out, though.
