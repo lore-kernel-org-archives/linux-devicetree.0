@@ -1,198 +1,95 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/8] pinctrl: add driver for MB86S7x
-Date: Wed, 27 Aug 2014 22:28:07 +0530
-Message-ID: <CAJe_Zhc8kgAsk+O+oER4b2E_Zw8B41bkHSXk3BgcGTZWpN8OdQ@mail.gmail.com>
-References: <1405233067-4725-1-git-send-email-mollie.wu@linaro.org>
-	<CACRpkdb_NC7j=XkbMPv8YYLSeEd1AOpFqmD8x+ohC7ds3cPCfg@mail.gmail.com>
-	<CAJe_Zhe2VuzHtkojm9nxvDTjT4AL7Znvma+5T7JTadvFJ1vAJQ@mail.gmail.com>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Wed, 27 Aug 2014 18:58:54 +0200
+Message-ID: <53FE0E4E.7080000@ahsoftware.de>
+References: <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826101107.GC32315@leverpostej> <20140827103432.64927C409CB@trevor.secretlab.ca> <20140827144403.GB13850@arm.com> <53FE05AE.9000406@wwwdotorg.org> <53FE07BE.7000809@ahsoftware.de> <53FE0966.5020206@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_Zhe2VuzHtkojm9nxvDTjT4AL7Znvma+5T7JTadvFJ1vAJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, fwu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53FE0966.5020206@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 August 2014 13:16, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 22 July 2014 21:41, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Sun, Jul 13, 2014 at 8:31 AM, Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Am 27.08.2014 18:37, schrieb Stephen Warren:
+> On 08/27/2014 10:30 AM, Alexander Holler wrote:
+>> Am 27.08.2014 18:22, schrieb Stephen Warren:
+>>> On 08/27/2014 08:44 AM, Catalin Marinas wrote:
+>>
+>>>> It's not just optimisation but an important feature for new arm64 SoCs.
+>>>> Given some Tegra discussions recently, in many cases the machine_desc
+>>>> use on arm is primarily to initialise devices in the right order. If we
+>>>> can solve this in a more deterministic way (other than deferred
+>>>> probing), we avoid the need for a dedicated SoC platform driver (or
+>>>> machine_desc) or workarounds like different initcall levels and
+>>>> explicit
+>>>> DT parsing.
+>>>
+>>> A lot of the ordering is SW driver dependencies. I'm not sure how much
+>>> of that can accurately be claimed as HW dependencies. As such, I'm not
+>>> sure that putting dependencies into DT would be a good idea; it doesn't
+>>> feel like HW data, and might well change if we restructure SW. It'd need
+>>> some detailed research though.
+>>
+>> Almost every phandle is a dependency, so the DT is already full with
+>> them.
 >
->>
->>> +static int
->>> +mb86s70_pmx_enable(struct pinctrl_dev *pctl,
->>> +                  unsigned func_selector, unsigned group_selector)
->>> +{
->>> +       struct mb86s70_pmux_chip *pchip = pinctrl_dev_get_drvdata(pctl);
->>> +       unsigned long flags;
->>> +       const unsigned *pins;
->>> +       int i, j;
->>> +
->>> +       if (group_selector >= grp_count) {
->>> +               pr_err("%s:%d\n", __func__, __LINE__);
->>> +               return -EINVAL;
->>> +       }
->>> +
->>> +       j = mb86s7x_pgrps[group_selector].num_pins;
->>> +       pins = mb86s7x_pgrps[group_selector].pins;
->>> +
->>> +       spin_lock_irqsave(&pchip->lock, flags);
->>> +
->>> +       /* Busy if any pin in the same 'bunch' is taken */
->>> +       for (i = 0; i < j; i++) {
->>> +               u32 val;
->>> +               int p = pins[i] / 4 * 4;
->>> +
->>> +               if (pins[i] >= PINS_VIRT) /* Not for virtual pins */
->>> +                       continue;
->>> +
->>> +               val = readl(pchip->base + p);
->>> +               /* skip if no change needed */
->>> +               if (val == mb86s7x_pmx_funcs[func_selector].prog_val)
->>> +                       continue;
->>> +
->>> +               if (pchip->pin_busy[p]) {
->>> +                       pr_err("%s:%d:%d %d busy\n",
->>> +                              __func__, __LINE__, pins[i], p);
->>> +                       goto busy_exit;
->>> +               }
->>> +
->>> +               if (pchip->pin_busy[p + 1]) {
->>> +                       pr_err("%s:%d:%d %d busy\n",
->>> +                              __func__, __LINE__, pins[i], p+1);
->>> +                       goto busy_exit;
->>> +               }
->>
->> I don't see why you are doing this and keeping track of
->> pins as "busy" or not. One thing the pin control core does
->> is to make sure pins do not collide in different use cases,
->> it seems like you're re-implementing this check again.
->>
->>> +               if (p == 64)
->>> +                       continue;
->>
->> This if-clause seems dubious. At least add a comment as
->> to what is happening here and why.
->>
->>> +               if (pchip->pin_busy[p + 2]) {
->>> +                       pr_err("%s:%d:%d %d busy\n",
->>> +                              __func__, __LINE__, pins[i], p+2);
->>> +                       goto busy_exit;
->>> +               }
->>> +
->>> +               if (pchip->pin_busy[p + 3]) {
->>> +                       pr_err("%s:%d:%d %d busy\n",
->>> +                              __func__, __LINE__, pins[i], p+3);
->>> +                       goto busy_exit;
->>> +               }
->>
->> I don't understand this either.
->>
->> Why all this fuzz around the four pins from p ... p+3?
->>
->>> +               continue;
->>> +busy_exit:
->>> +               spin_unlock_irqrestore(&pchip->lock, flags);
->>> +               pr_err("%s:%d Take a look!\n", __func__, __LINE__);
->>> +               return -EBUSY;
->>> +       }
->>
->> You don't have to have the busy_exit: inside the for-loop right?
->>
->> Just push it below the return 0; in the end of this function
->> so you can get rid of the dangling continue;
->>
->>> +       pr_debug("Going to enable %s on pins -",
->>> +                mb86s7x_pmx_funcs[func_selector].name);
->>> +       for (i = 0; i < j; i++) {
->>> +               int p = pins[i];
->>> +
->>> +               pr_debug(" %d", p);
->>> +               pchip->pin_busy[p] = true;
->>
->> So I'm questioning this....
->>
->>> +               if (p < PINS_VIRT) /* Not for virtual pins */
->>
->> We need an explanation somewhere about what "virtual pins"
->> means in this driver, I have never seen that before.
->>
->>> +                       writel(mb86s7x_pmx_funcs[func_selector].prog_val,
->>> +                              pchip->base + p / 4 * 4);
->>
->> This may need some static inline like described above to simplify
->> the code and make it more readable, but I see what is going on.
->>
->>> +       }
->>> +
->>> +       spin_unlock_irqrestore(&pchip->lock, flags);
->>> +       pr_debug("\n");
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static void
->>> +mb86s70_pmx_disable(struct pinctrl_dev *pctl,
->>> +                   unsigned func_selector, unsigned group_selector)
->>> +{
->>> +       struct mb86s70_pmux_chip *pchip = pinctrl_dev_get_drvdata(pctl);
->>> +       unsigned long flags;
->>> +       const unsigned *pins;
->>> +       int i, j;
->>> +
->>> +       if (group_selector >= grp_count) {
->>> +               pr_err("%s:%d\n", __func__, __LINE__);
->>> +               return;
->>> +       }
->>> +
->>> +       j = mb86s7x_pgrps[group_selector].num_pins;
->>> +       pins = mb86s7x_pgrps[group_selector].pins;
->>> +
->>> +       pr_debug("Going to disable %s on pins -",
->>> +                mb86s7x_pmx_funcs[func_selector].name);
->>> +       spin_lock_irqsave(&pchip->lock, flags);
->>> +       for (i = 0; i < j; i++) {
->>> +               pr_debug(" %d", pins[i]);
->>> +               pchip->pin_busy[pins[i]] = false;
->>> +       }
->>> +       spin_unlock_irqrestore(&pchip->lock, flags);
->>> +       pr_debug("\n");
->>> +}
->>
->> Remove this function. The .disable member is gone from
->> struct pinmux_ops, as it was ambiguous, see commit
->> 2243a87d90b42eb38bc281957df3e57c712b5e56
->> "pinctrl: avoid duplicated calling enable_pinmux_setting for a pin"
->>
-> Hmm... I just got bitten by this while updating the patchset. Sorry I
-> missed the patch review.
+> That's true, but not entirely relevant.
 >
-> The reasons given in changelog are
->   (1) 'Fix' desc->mux_usecount
->   (2) The .disable callback is not useful for any of the existing platforms.
+> phandles in DT should only be present where there's an obvious HW
+> dependency. It's obvious that, for example, there's a real HW dependency
+> between an IRQ controller and a device that has an IRQ signal fed into
+> the IRQ controller. It makes perfect sense to represent that as a
+> phandle (+args).
 >
-> Well, for (2) I think it is only reasonable for the provider to need
-> to know when some resource is released by a user just as when it was
-> requested.
->    Even if the core ensures only one user is provided access to a pin,
-> the controller driver may still need to know when a pin is no more in
-> use. For ex, within consecutive 4 pins my controller can not enable a
-> pin for some function if any in the bunch is already
-> enabled/configured. So I need to know if the pin has been
-> disabled/released, so I can go ahead enabling the 'neighbor' pin for
-> some other role.
+> However, most of the ordering imposed by the Tegra machine descriptor
+> callbacks is nothing to do with this. It's more that the SW driver for
+> component X needs some low level data (e.g. SKU/fuse information) before
+> it can run. However, there's no real HW dependency between the HW
+> component X and the fuse module. As such, it doesn't make sense to
+> represent such a dependency in DT, using a phandle or by any other means.
 >
-> For reason (1), there should be some way to fix within the core?
+> Of course, there are probably cases where we could/should add some more
+> phandles/... and likewise cases where we shouldn't. That's why detailed
+> research is needed.
 >
-Polite ping...
+> Irrespective though, a new kernel needs to work against an old DT, so
+> always needs to work without any (of these new) dependencies being
+> represented in DT, since they aren't represented there today. So, I
+> think pushing the issue into DT is a non-starter either way, unless we
+> accept yet another ABI-breaking change, in which case we should just
+> give up on any claims of ABI and make everyone's lives simpler.
 
-I can't find a way around not knowing when a pin is let free. Do we
-revert the commit and fix the situation for the author's platform
-instead?
+If I hear research, my response is usually "how many years"?
 
-Thanks
-Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fact is that there are already a lot of usable dependencies in the DT, 
+they just didn't find their way into the kernel and weren't used.
+
+And I think it doesn't help much to make the picture more complicated 
+than it already is. Solve one step by another and not try to solve 
+everything at once.
+
+So first enable the kernel to use dependencies at all. I've shown that 
+it doesn't need magic to do so. Afterwards you can extend or change the 
+existing solution. It's not always the best approach, but for 
+complicated things it often doesn't make sense trying to solve 
+everything at first.
+
+Of course, my approach isn't perfect, but at least it is something 
+people can already use to play with.
+
+Ok, the way how my patches do handle devices (not drivers) might be 
+completely wrong, but that's just because I've never got in contact with 
+the device-model before, it always just worked. So I haven't spend any 
+time to look into that before and I didn't spend much time to look into 
+that for my patches (I just discoverd that device-handling by drivers 
+looks sometimes awkward). I was happy with what I've achieved in the 
+short time I've spend, and therfor posted the patches to give other 
+people an easy possibility to try the stuff themself.
+
+Regards,
+
+Alexander Holler
