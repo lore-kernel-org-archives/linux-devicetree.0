@@ -1,63 +1,76 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 0/2] IO voltage domain support for rk3188 and rk3288
-Date: Thu, 28 Aug 2014 17:26:43 -0400
-Message-ID: <53FF9E93.3040601@ti.com>
-References: <1409254565-10677-1-git-send-email-dianders@chromium.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 11/14] arm64: dts: Add initial device tree support for EXYNOS7
+Date: Thu, 28 Aug 2014 15:23:49 -0700
+Message-ID: <CAOesGMhsayvhBK_gVgzB3+69YC1Ca6hsBHsONJm_QEcSKpVZOw@mail.gmail.com>
+References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com>
+	<1409132660-1898-3-git-send-email-ch.naveen@samsung.com>
+	<20140828035639.GB4972@localhost>
+	<20140828094846.GD14650@leverpostej>
+	<CAOesGMjY8wfAcq2fLgs=ZWHdiWtFqxr+ncUKTje0SnXqO-CCgQ@mail.gmail.com>
+	<20140828170306.GQ14650@leverpostej>
+	<CAOesGMgYeFObKHA9znzBq9t2mLv8WWT1QaKugQ6yf7RgV09Qyg@mail.gmail.com>
+	<CAL_JsqLVsjJVL+GoJVMoXGiGxVKSh0oyJ-nwKEkXfa+fWid7yA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1409254565-10677-1-git-send-email-dianders@chromium.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, olof@lixom.net, Arnd Bergmann <arnd@arndb.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Addy Ke <addy.ke@rock-chips.com>, swarren@nvidia.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Nishanth Menon <nm@ti.com>, pdeschrijver@nvidia.com, galak@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, sandeep_n@ti.com, agross@codeaurora.org, grant.likely@linaro.org, treding@nvidia.com, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLVsjJVL+GoJVMoXGiGxVKSh0oyJ-nwKEkXfa+fWid7yA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cpgs@samsung.com" <cpgs@samsung.com>, Thomas Abraham <thomas.ab@samsung.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1cnNkYXkgMjggQXVndXN0IDIwMTQgMDM6MzYgUE0sIERvdWcgQW5kZXJzb24gd3JvdGU6
-Cj4gVGhlc2UgdHdvIHBhdGNoZXMgYWRkIHN1cHBvcnQgZm9yIGF1dG9tYXRpY2FsbHkgY29uZmln
-dXJpbmcgdGhlIElPCj4gdm9sdGFnZSBkb21haW5zIG9uIHJrMzE4OCBhbmQgcmszMjg4IFNvQ3Mu
-ICBUaGUgZmlyc3QgcGF0Y2ggYWRkcyBzb21lCj4gbmV3IG5vdGlmaWNhdGlvbiB0eXBlcyB0byB0
-aGUgcmVndWxhdG9yIGNvZGUuICBJdCdzIHVzZWQgYnkgdGhlIHNlY29uZAo+IHBhdGNoIHdoaWNo
-IGFjdHVhbGx5IGltcGxlbWVudHMgdGhlIElPIHZvbHRhZ2UgZG9tYWluIGRyaXZlci4KPiAKPiBU
-aGVzZSB0d28gcGF0Y2hlcyB3ZXJlIGNvLWRldmVsb3BlZCBieSBIZWlrbyBTdMO8Ym5lciBhbmQg
-RG91ZyBBbmRlcnNvbgo+IChwcm9vZiBvZiBjb25jZXB0IHBhdGNoZXMgd2VyZSB3cml0dGVuIGJ5
-IEhlaWtvKS4gIFRoZXkgd2VyZSB0ZXN0ZWQgaW4KPiBhIHByaXZhdGUgYnJhbmNoIG9uIGFuIHJr
-MzI4OCBib2FyZCB1c2luZyByazgwOCBpbnN0ZWFkIG9mIG1haW5saW5lCj4gc2luY2Ugcms4MDgg
-c3VwcG9ydCBpc24ndCBmaW5hbGl6ZWQgaW4gbWFpbmxpbmUgeWV0Lgo+IAo+IChzb3JyeSBpZiB5
-b3UgZ290IHRoaXMgc2VyaWVzIHR3aWNlOyBteSBtYWlsZXIgc2VlbXMgdW5oYXBweSB3aXRoIG1l
-KQo+IAo+IEhlaWtvIFN0w7xibmVyICgyKToKPiAgIHJlZ3VsYXRvcjogY29yZTogQWRkIFJFR1VM
-QVRPUl9FVkVOVF9QUkVfVk9MVEFHRV9DSEFOR0UgKGFuZCBBQk9SVCkKPiAgIHNvYy9yb2NrY2hp
-cDogaW8tZG9tYWluOiBhZGQgZHJpdmVyIGhhbmRsaW5nIGlvIGRvbWFpbnMKPiAKU29ycnkgdG8g
-c2hvdCBkb3duIGJ1dCB5b3VyIElPIGRvbWFpbnMgYXJlIG5vdGhpbmcgYnV0IHZvbHRhZ2UgZG9t
-YWlucwphbmQgeW91IHNob3VsZCByZWFsbHkgYnVpbGQgc29tZXRoaW5nIGluIHRoZSBkcml2ZXJz
-L3Bvd2VyLyoKClBsZWFzZSBoYXZlIGEgbG9vayBhdCB0aGUgUkZDIFsxXS4gWW91IHNob3VsZCBy
-ZWFsbHkgZ28gb24gdGhvc2UKbGluZXMgYW5kIGNvbGxhYm9yYXRlIHRvIG1ha2UgYSBnZW5lcmlj
-IHZvbHRhZ2UgZG9tYWluIGxheWVyIGluc3RlYWQgb2YgdGhyb3dpbmcKdGhlIGRyaXZlciB1bmRl
-ciBkcml2ZXJzL3NvYy4gCgo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcm9ja2NoaXAv
-aW8tZG9tYWluLnR4dCB8ICA2MCArKysrCj4gIGRyaXZlcnMvcmVndWxhdG9yL2NvcmUuYyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgIDYzICsrKy0KPiAgZHJpdmVycy9zb2MvS2NvbmZpZyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL3NvYy9NYWtl
-ZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvc29j
-L3JvY2tjaGlwL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwICsKPiAgZHJpdmVy
-cy9zb2Mvcm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBk
-cml2ZXJzL3NvYy9yb2NrY2hpcC9pby1kb21haW4uYyAgICAgICAgICAgICAgICAgICB8IDMzMyAr
-KysrKysrKysrKysrKysrKysrKysKPiAgaW5jbHVkZS9saW51eC9yZWd1bGF0b3IvY29uc3VtZXIu
-aCAgICAgICAgICAgICAgICAgfCAgMjAgKysKPiAgOCBmaWxlcyBjaGFuZ2VkLCA0ODIgaW5zZXJ0
-aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcm9ja2NoaXAvaW8tZG9tYWluLnR4dAo+ICBjcmVh
-dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2Mvcm9ja2NoaXAvS2NvbmZpZwo+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9zb2Mvcm9ja2NoaXAvTWFrZWZpbGUKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvc29jL3JvY2tjaGlwL2lvLWRvbWFpbi5jCj4gCgpSZWdhcmRzLApTYW50b3No
-ClsxXSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5l
-bC8yMDE0LUZlYnJ1YXJ5LzIzMzgxOS5odG1sCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Thu, Aug 28, 2014 at 10:54 AM, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Aug 28, 2014 at 12:19 PM, Olof Johansson <olof@lixom.net> wrote:
+>> On Thu, Aug 28, 2014 at 10:03 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>>> On Thu, Aug 28, 2014 at 05:28:22PM +0100, Olof Johansson wrote:
+>>>> On Thu, Aug 28, 2014 at 2:48 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>>>> > Hi,
+>>>> >
+>>>> >> > +   cpus {
+>>>> >> > +           #address-cells = <2>;
+>>>> >> > +           #size-cells = <0>;
+>>>> >>
+>>>> >> Why size-cells=2? Can you not fit a cpuid in 32 bits?
+>>>> >
+>>>> > As of commit 72aea393a2e7 (arm64: smp: honour #address-size when parsing
+>>>> > CPU reg property) Linux can handle single-cell cpu node reg entries
+>>>> > where /cpus/#address-cells = <1>.
+>>>> >
+>>>> > I can't make any guarantees about other code (e.g. bootloaders) which
+>>>> > might try to do things with cpu nodes, YMMV.
+>>>>
+>>>> Ok. If address-cells is kept at 2 the unit address needs to be changed
+>>>> to "0,0". So one or the other has to be changed.
+>>>
+>>> I'm happy either way.
+>>>
+>>> I'm not sure the rest of the tree had "0," prefixes on all of the
+>>> unit-addresses for 64-bit addresses that were under 4GB, and I'm not
+>>> sure that existing dts consistently do that either.
+>>>
+>>> Do we want to enforce that for all 64-bit unit-addresses?
+>>
+>> Yeah, I believe that's the only valid format for a 2-address-cell unit address.
+>
+> But we don't do leading 0's anywhere else like single cell unit
+> addresses. Buses expressed with ranges and offsets are one example.
+> Also, I2C addresses have a 32-bit size in DT yet are only 8-bit and we
+> don't do leading zero's there.
+
+Ok, I'm happily proven wrong here, also by confirming how this is done
+on "real" OF.
+
+According to benh:
+
+15:20 <benh> ojn: 0,0 is not quite right, it's supposed to be used
+when the two numbers are different things, like device,fn on PCI
+
+The same is true for >2^32 unit addresses, they just use the one
+integer instead of x,y.
+
+So, I take back all I've said on this in the last 72 hours. :) It
+looks like we might need to revisit some of the 32-bit DTs.  Simon,
+drop the series you had. :)
+
+
+-Olof
