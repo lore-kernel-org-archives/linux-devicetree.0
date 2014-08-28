@@ -1,169 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V2 1/2] ARM: dts: Add DT changes for display on snow
-Date: Thu, 28 Aug 2014 10:15:09 +0100
-Message-ID: <20140828091509.GA14650@leverpostej>
-References: <1409150908-12801-1-git-send-email-ajaykumar.rs@samsung.com>
- <20140827150146.GB9737@leverpostej>
- <CAEC9eQMKfso-rmMdqyDZeCdaxf21O1fqN6Z2YrS=njqGHh5d5Q@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND PATCH] ARM: dts: make arch-timer always on in rk3288 soc
+Date: Thu, 28 Aug 2014 10:17:58 +0100
+Message-ID: <20140828091758.GB14650@leverpostej>
+References: <1409190017-12656-1-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAEC9eQMKfso-rmMdqyDZeCdaxf21O1fqN6Z2YrS=njqGHh5d5Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "kgene.kim@gmail.com" <kgene.kim@gmail.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "seanpaul@google.com" <seanpaul@google.com>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "joshi@samsung.com" <joshi@samsung.com>, "prashanth.g@samsung.com" <prashanth.g@samsung.com>
+In-Reply-To: <1409190017-12656-1-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 06:34:33AM +0100, Ajay kumar wrote:
-> On Wed, Aug 27, 2014 at 8:31 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Wed, Aug 27, 2014 at 03:48:27PM +0100, Ajay Kumar wrote:
-> >> Add DT nodes for ptn3460 bridge chip and panel.
-> >> Add backlight enable pin and backlight power supply for pwm-backlight.
-> >> Also add bridge phandle needed by dp to enable display on snow.
-> >>
-> >> Note that, snow doesn't support "chunghwa,claa101wb01" panel,
-> >> but still we choose to reuse the binding since "chunghwa,claa101wb01"
-> >> has similar LCD timings.
-> >
-> > What does it actually have?
-> >
-> > It's fine to have "chunghwa,claa101wb01" as a fallback but we should
-> > have an identifier for the actual display, too.
-> Actual display used is "AUO,B116XTN0", for which no data currently exists
-> in panel file. Instead of adding a new panel_desc for B116XTN0,
-> why not we reuse existing ones? what is the "identifier" you are talking about?
+Hi Kever,
 
-The compatible string.
+On Thu, Aug 28, 2014 at 02:40:17AM +0100, Kever Yang wrote:
+> We need use the hrtimer, which need the arch-timer to be 'always-on'
 
-So in the dts we'd have compatible = "au0,b116xtn0", "chunghwa,claa101wb01";
-
-That way if we need specific data we can add it later.
-
-What vendor is AU0? Can we add a vendor-prefix in parallel?
+I asked a question on the last posting [1]. Can you please confirm
+either way?
 
 Thanks,
 Mark.
 
+[1] lists.infradead.org/pipermail/linux-arm-kernel/2014-August/282327.html
+
+> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
 > 
-> Ajay
-> > Thanks,
-> > Mark.
-> >
-> >> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> >> ---
-> >> Changes since V1:
-> >>       -- Remove "simple-panel" compatible string.
-> >>       -- Use GPIO_ACTIVE_HIGH instead of 0.
-> >>       -- Change panel node naming from "panel-simple" to "panel".
-> >>
-> >>  arch/arm/boot/dts/exynos5250-snow.dts |   41 ++++++++++++++++++---------------
-> >>  1 file changed, 22 insertions(+), 19 deletions(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-> >> index f2b8c41..1ac9709 100644
-> >> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> >> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> >> @@ -9,6 +9,7 @@
-> >>  */
-> >>
-> >>  /dts-v1/;
-> >> +#include <dt-bindings/gpio/gpio.h>
-> >>  #include "exynos5250.dtsi"
-> >>  #include "exynos5250-cros-common.dtsi"
-> >>
-> >> @@ -181,7 +182,7 @@
-> >>                                       dcdc3 {
-> >>                                               ti,enable-ext-control;
-> >>                                       };
-> >> -                                     fet1 {
-> >> +                                     fet1: fet1 {
-> >>                                               regulator-name = "vcd_led";
-> >>                                               ti,overcurrent-wait = <3>;
-> >>                                       };
-> >> @@ -204,7 +205,7 @@
-> >>                                               regulator-always-on;
-> >>                                               ti,overcurrent-wait = <3>;
-> >>                                       };
-> >> -                                     fet6 {
-> >> +                                     fet6: fet6 {
-> >>                                               regulator-name = "lcd_vdd";
-> >>                                               ti,overcurrent-wait = <3>;
-> >>                                       };
-> >> @@ -253,6 +254,15 @@
-> >>                       pinctrl-0 = <&max98095_en>;
-> >>                       pinctrl-names = "default";
-> >>               };
-> >> +
-> >> +             ptn3460: lvds-bridge@20 {
-> >> +                     compatible = "nxp,ptn3460";
-> >> +                     reg = <0x20>;
-> >> +                     powerdown-gpios = <&gpy2 5 GPIO_ACTIVE_HIGH>;
-> >> +                     reset-gpios = <&gpx1 5 GPIO_ACTIVE_HIGH>;
-> >> +                     edid-emulation = <5>;
-> >> +                     panel = <&panel>;
-> >> +             };
-> >>       };
-> >>
-> >>       i2s0: i2s@03830000 {
-> >> @@ -300,11 +310,13 @@
-> >>               vdd_pll-supply = <&ldo8_reg>;
-> >>       };
-> >>
-> >> -     backlight {
-> >> +     backlight: backlight {
-> >>               compatible = "pwm-backlight";
-> >>               pwms = <&pwm 0 1000000 0>;
-> >>               brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
-> >>               default-brightness-level = <7>;
-> >> +             enable-gpios = <&gpx3 0 GPIO_ACTIVE_HIGH>;
-> >> +             power-supply = <&fet1>;
-> >>               pinctrl-0 = <&pwm0_out>;
-> >>               pinctrl-names = "default";
-> >>       };
-> >> @@ -314,6 +326,12 @@
-> >>               samsung,invert-vclk;
-> >>       };
-> >>
-> >> +     panel: panel {
-> >> +             compatible = "chunghwa,claa101wb01";
-> >> +             power-supply = <&fet6>;
-> >> +             backlight = <&backlight>;
-> >> +     };
-> >> +
-> >>       dp-controller@145B0000 {
-> >>               status = "okay";
-> >>               pinctrl-names = "default";
-> >> @@ -325,22 +343,7 @@
-> >>               samsung,link-rate = <0x0a>;
-> >>               samsung,lane-count = <2>;
-> >>               samsung,hpd-gpio = <&gpx0 7 0>;
-> >> -
-> >> -             display-timings {
-> >> -                     native-mode = <&timing1>;
-> >> -
-> >> -                     timing1: timing@1 {
-> >> -                             clock-frequency = <70589280>;
-> >> -                             hactive = <1366>;
-> >> -                             vactive = <768>;
-> >> -                             hfront-porch = <40>;
-> >> -                             hback-porch = <40>;
-> >> -                             hsync-len = <32>;
-> >> -                             vback-porch = <10>;
-> >> -                             vfront-porch = <12>;
-> >> -                             vsync-len = <6>;
-> >> -                     };
-> >> -             };
-> >> +             bridge = <&ptn3460>;
-> >>       };
-> >>  };
-> >>
-> >> --
-> >> 1.7.9.5
-> >>
-> >> --
-> >> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> >> the body of a message to majordomo@vger.kernel.org
-> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >>
+>  arch/arm/boot/dts/rk3288.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 5950b0a..698e6ea 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -76,6 +76,7 @@
+>  			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
+>  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+>  		clock-frequency = <24000000>;
+> +		always-on;
+>  	};
+>  
+>  	i2c1: i2c@ff140000 {
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
