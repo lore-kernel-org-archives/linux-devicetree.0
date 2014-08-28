@@ -1,79 +1,42 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: dts: make arch-timer always on in rk3288 soc
-Date: Thu, 28 Aug 2014 16:11:21 +0100
-Message-ID: <20140828151121.GM14650@leverpostej>
-References: <1409190017-12656-1-git-send-email-kever.yang@rock-chips.com>
- <20140828091758.GB14650@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140828091758.GB14650@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v3 0/3] Introduce hix5hd2 IR transmitter driver
+Date: Thu, 28 Aug 2014 23:16:14 +0800
+Message-ID: <1409238977-19444-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>, sean@mess.org, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 10:17:58AM +0100, Mark Rutland wrote:
-> Hi Kever,
-> 
-> On Thu, Aug 28, 2014 at 02:40:17AM +0100, Kever Yang wrote:
-> > We need use the hrtimer, which need the arch-timer to be 'always-on'
-> 
-> I asked a question on the last posting [1]. Can you please confirm
-> either way?
-> 
-> Thanks,
-> Mark.
-> 
-> [1] lists.infradead.org/pipermail/linux-arm-kernel/2014-August/282327.html
+v3:
+Got info from Mauro, 3.17 disable all protocol by default, specific protocol
+can be selected via ir-keytable and /sys/class/rc/rc0/protocols
 
-To clarify: if there are low power states that the CPU can enter where
-we lose state, then this patch isn't correct.
+Got suggestion from Sean, add rdev specific info, like timeout, resoluton.
+Add optional property "linux,rc-map-name", if kernel keymap is used
+otherwise user space keymap will be used.
 
-A more general approach would be to enable the broadcast hrtimer for
-arm, as has been done for arm64.
+v2:
+Rebase to 3.17-rc1, solve two issues:
+a) rc_set_allowed_protocols is deprecated
+b) rc-ir-raw.c add empty change_protocol, which block using all protocol
+For example, when rdev->map_name = RC_MAP_LIRC, ir-nec-decoder can not be used.
 
-See commit 5d1638acb9f6 (tick: Introduce hrtimer based broadcast) which
-introduced the broadcast hrtimer, and commit 9358d755bd5c (arm64:
-kernel: initialize broadcast hrtimer based clock event device) which
-added the requisite plumbing for arm64.
+Guoxiong Yan (2):
+  rc: Add DT bindings for hix5hd2
+  rc: Introduce hix5hd2 IR transmitter driver
 
-Mark.
+Zhangfei Gao (1):
+  ARM: dts: hix5hd2: add ir node
 
-> 
-> > Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
-> > 
-> >  arch/arm/boot/dts/rk3288.dtsi | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> > index 5950b0a..698e6ea 100644
-> > --- a/arch/arm/boot/dts/rk3288.dtsi
-> > +++ b/arch/arm/boot/dts/rk3288.dtsi
-> > @@ -76,6 +76,7 @@
-> >  			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
-> >  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> >  		clock-frequency = <24000000>;
-> > +		always-on;
-> >  	};
-> >  
-> >  	i2c1: i2c@ff140000 {
-> > -- 
-> > 1.9.1
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/media/hix5hd2-ir.txt       |   25 ++
+ arch/arm/boot/dts/hisi-x5hd2.dtsi                  |   10 +-
+ drivers/media/rc/Kconfig                           |   11 +
+ drivers/media/rc/Makefile                          |    1 +
+ drivers/media/rc/ir-hix5hd2.c                      |  351 ++++++++++++++++++++
+ 5 files changed, 397 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/hix5hd2-ir.txt
+ create mode 100644 drivers/media/rc/ir-hix5hd2.c
+
+-- 
+1.7.9.5
