@@ -1,7 +1,7 @@
 From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 1/6] ARM: dts: hix5hd2: add gmac node
-Date: Thu, 28 Aug 2014 13:34:15 +0800
-Message-ID: <1409204060-9223-2-git-send-email-zhangfei.gao@linaro.org>
+Subject: [PATCH v2 2/6] ARM: dts: hix5hd2: add mmc node
+Date: Thu, 28 Aug 2014 13:34:16 +0800
+Message-ID: <1409204060-9223-3-git-send-email-zhangfei.gao@linaro.org>
 References: <1409204060-9223-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1409204060-9223-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -12,72 +12,37 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/hisi-x5hd2-dkb.dts |   28 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/hisi-x5hd2.dtsi    |   16 ++++++++++++++++
- 2 files changed, 44 insertions(+)
+ arch/arm/boot/dts/hisi-x5hd2.dtsi |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
-index 05b44c2..0da3f3b 100644
---- a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
-+++ b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
-@@ -51,3 +51,31 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&gmac0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	phy-handle = <&phy2>;
-+	phy-mode = "mii";
-+	/* Placeholder, overwritten by bootloader */
-+	mac-address = [00 00 00 00 00 00];
-+	status = "okay";
-+
-+	phy2: ethernet-phy@2 {
-+		reg = <2>;
-+	};
-+};
-+
-+&gmac1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	phy-handle = <&phy1>;
-+	phy-mode = "rgmii";
-+	/* Placeholder, overwritten by bootloader */
-+	mac-address = [00 00 00 00 00 00];
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
 diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-index f85ba29..012525c 100644
+index 012525c..802331b 100644
 --- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
 +++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -166,5 +166,21 @@
- 				#clock-cells = <1>;
+@@ -167,6 +167,23 @@
  			};
  		};
-+
-+		gmac0: ethernet@1840000 {
-+			compatible = "hisilicon,hix5hd2-gmac";
-+			reg = <0x1840000 0x1000>,<0x184300c 0x4>;
-+			interrupts = <0 71 4>;
-+			clocks = <&clock HIX5HD2_MAC0_CLK>;
-+			status = "disabled";
+ 
++		/* unremovable emmc as mmcblk0 */
++		mmc: mmc@1830000 {
++			compatible = "snps,dw-mshc";
++			reg = <0x1830000 0x1000>;
++			interrupts = <0 35 4>;
++			clocks = <&clock HIX5HD2_MMC_CIU_RST>, <&clock HIX5HD2_MMC_BIU_CLK>;
++			clock-names = "ciu", "biu";
 +		};
 +
-+		gmac1: ethernet@1841000 {
-+			compatible = "hisilicon,hix5hd2-gmac";
-+			reg = <0x1841000 0x1000>,<0x1843010 0x4>;
-+			interrupts = <0 72 4>;
-+			clocks = <&clock HIX5HD2_MAC1_CLK>;
-+			status = "disabled";
++		sd: mmc@1820000 {
++			compatible = "snps,dw-mshc";
++			reg = <0x1820000 0x1000>;
++			interrupts = <0 34 4>;
++			clocks = <&clock HIX5HD2_SD_CIU_RST>, <&clock HIX5HD2_SD_BIU_CLK>;
++			clock-names = "ciu","biu";
 +		};
- 	};
- };
++
+ 		gmac0: ethernet@1840000 {
+ 			compatible = "hisilicon,hix5hd2-gmac";
+ 			reg = <0x1840000 0x1000>,<0x184300c 0x4>;
 -- 
 1.7.9.5
 
