@@ -1,82 +1,96 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
-Date: Thu, 28 Aug 2014 18:11:43 +0200
-Message-ID: <3440260.edal29kzlR@diego>
-References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com> <2852853.mfRZfFVSev@wuerfel> <20140828143733.GA18084@developer>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
+Date: Thu, 28 Aug 2014 17:10:25 +0100
+Message-ID: <20140828161025.GO14650@leverpostej>
+References: <20140828124237.GA29102@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140828125915.GJ14650@leverpostej>
+ <20140828155157.GB23677@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140828143733.GA18084@developer>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhaoyifeng <zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140828155157.GB23677-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 28. August 2014, 10:37:35 schrieb Eduardo Valentin:
-> Ceasar and Arnd,
-> 
-> On Thu, Aug 28, 2014 at 10:48:23AM +0200, Arnd Bergmann wrote:
-> > On Thursday 28 August 2014 08:59:19 Caesar Wang wrote:
-> > > Thermal is TS-ADC Controller module supports user-defined mode and
-> > > automatic mode.
+On Thu, Aug 28, 2014 at 04:51:57PM +0100, Guenter Roeck wrote:
+> On Thu, Aug 28, 2014 at 01:59:15PM +0100, Mark Rutland wrote:
+> > On Thu, Aug 28, 2014 at 01:42:44PM +0100, Matti Vaittinen wrote:
+> > > Patch adding support for specifying trickle charger setup from device
+> > > tree. Patch is based on linux-next tree.
 > > > 
-> > > User-defined mode refers,TSADC all the control signals entirely by
-> > > software
-> > > writing to register for direct control.
 > > > 
-> > > Automaic mode refers to the module automatically poll TSADC output,and
-> > > the results Were checked.
+> > > Some DS13XX devices have "trickle chargers". Introduce a device tree binding
+> > > for specifying the setup and register values.
 > > > 
-> > > If you find that the temperature High in a period of time, an interrupt
-> > > is generated to the processor down-measures taken;if the temperature
-> > > over a period of time High, the resulting TSHUT gave CRU module,let it
-> > > reset the entire chip, or via GPIO give PMIC.
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
+> > > ---
+> > >  .../devicetree/bindings/i2c/trivial-devices.txt    |  1 -
+> > >  .../devicetree/bindings/rtc/dallas,ds1339.txt      | 19 ++++++++++
+> > >  drivers/rtc/rtc-ds1307.c                           | 44 ++++++++++++++++++++--
+> > >  3 files changed, 59 insertions(+), 5 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
 > > > 
-> > > Signed-off-by: zhaoyifeng <zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > > Signed-off-by: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > > index 6af570e..e9206a4 100644
+> > > --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > > +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > > @@ -35,7 +35,6 @@ catalyst,24c32		i2c serial eeprom
+> > >  cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
+> > >  dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
+> > >  dallas,ds1338		I2C RTC with 56-Byte NV RAM
+> > > -dallas,ds1339		I2C Serial Real-Time Clock
+> > >  dallas,ds1340		I2C RTC with Trickle Charger
+> > >  dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
+> > >  dallas,ds1631		High-Precision Digital Thermometer
+> > > diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+> > > new file mode 100644
+> > > index 0000000..9faf40e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+> > > @@ -0,0 +1,19 @@
+> > > +* Dallas DS1339		I2C Serial Real-Time Clock
+> > > +
+> > > +Required properties:
+> > > +- compatible: Should contain "dallas,ds1339".
+> > > +- reg: I2C address for chip
+> > > +
+> > > +Optional properties:
+> > > +- trickle_setup : Used Trickle Charger configuration,
+> > > +        corresponding to 5 lowest bits in trickle charger register.
 > > 
-> > Hi Caesar,
+> The value is provided via platform data, so it is platform specific
+> and presumably needs to be configurable. I did, however, not find
+> a single in-kernel driver which is actually setting it.
+> So this is a good question.
+
+I'm uncomfortable adding a field we don't understand to DT.
+
+Is there any publicly-available documentation for the device?
+
+> > s/_/-/ in property names please.
 > > 
-> > After looking at the driver (last time I only received the patch for
-> > the binding), I have a more general comment:
+> > What do these bits do? is there any documentation available?
 > > 
-> > This looks like a general-purpose ADC device, not an IP block that is
-> > specific to thermal management. The binding looks ok for that purpose
-> > but should probably be moved into
-> > Documentation/devicetree/bindings/iio/adc/ as a minor change.
-> 
-> I agree with Arnd's point here. It makes sense to me to have this driver
-> under the IIO umbrella.
+> > Why do they need to be in the DT?
+> > 
+> > Why do we not have a higher-level description?
+> > 
+> > > +- trickle_reg   : Trickle charger register address. Defaults to 0x10 for ds1339.
+> > 
+> > Is this expected to change? Why does this need to be in the DT?
+> > 
+> A quick look into the code suggests that this is a chip specific register,
+> and the register address is set by the driver depending on the chip type.
+> I don't think it should be configurable via dt.
 
-interesting suggestion :-)
+Ok.
 
-I've just taken another look at the registers of the ts-adc on the rk3066 
-which is completely different from the rk3288 one. Interestingly the rk3066 one 
-is "just" another saradc IP, so for this one it would really make sense.
-
-
-> > On the driver side, I believe the correct way to deal with this setup
-> > is to split your driver into a generic drivers/iio/adc/rockchips-tsadc.c
-> > file, and a smaller thermal driver that uses the iio in-kernel interfaces,
-> > ideally one that is independent of the underlying hardware and can
-> > work on any ADC implementation.
-> 
-> Agreed. If you can write such interface and make your driver to work in
-> such way, that would be great.
-
-But I currently don't see how you would model the temperature handling parts 
-from a generic thermal driver to a generic adc driver for the rk3288-tsadc.
-
-I guess the general temperature irq handling would use iio-triggers? But how 
-does the target temperature get into the TSADC_COMP1_INT register.
-
-Also when getting the temperature, Caesar's driver compares it to its trip 
-points and sets the next trip point depending on the current temperature 
-(passive <-> critical) in rockchip_get_temp.
-
-Maybe there is some completely easy way for this, but currently I don't see 
-it.
-
-
-Heiko
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
