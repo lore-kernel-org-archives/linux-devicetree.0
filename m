@@ -1,51 +1,70 @@
-From: Pramod Gurav <pramod.gurav@smartplayin.com>
-Subject: [PATCH 1/4] ARM: DT: APQ8064: Add pinctrl support
-Date: Thu, 28 Aug 2014 20:22:47 -0700
-Message-ID: <1409282570-27299-2-git-send-email-pramod.gurav@smartplayin.com>
-References: <1409282570-27299-1-git-send-email-pramod.gurav@smartplayin.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1409282570-27299-1-git-send-email-pramod.gurav@smartplayin.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Pramod Gurav <pramod.gurav@smartplayin.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
+Date: Thu, 28 Aug 2014 10:04:46 -0500
+Message-ID: <CAL_Jsq+zpvK4Zbp4cN2eq3hfGDc09x3d4+b_TdEgnSQ5063rZw@mail.gmail.com>
+References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
+ <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
+ <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
+ <20140823063113.GC23715@localhost> <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com>
+ <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Jonas Gorski <jogo@openwrt.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>"devicetree@vger.kernel.org" <devicetree@>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree nodes to support pinctrl for apq8064 SOC
+On Mon, Aug 25, 2014 at 10:17 AM, Jonas Gorski <jogo@openwrt.org> wrote:
+> On Sat, Aug 23, 2014 at 9:50 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof@lixom.net> wrote:
+>>>> > arch/arm/boot/dts/<vendor>/
+>>>> >
+>>>> > Is this something we should do for the MIPS and update the other architectures
+>>>> > to follow that scheme?
+>>>>
+>>>> I recall reading that as well and that it would be adopted for ARM64,
+>>>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
+>>>> more.
+>>>
+>>> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
+>>> and the amount of files in that directory is becoming pretty
+>>> insane. Moving to a subdirectory structure later gets messy which is
+>>> why we've been holding off on it.
+>>
+>> It would mean we can change our scripts to operate on "interesting"
+>> DTS files from
+>>
+>>      do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
+>>
+>> to
+>>
+>>     do-something-with arch/arm/boot/dts/$vendor/*
+>>
+>> which is easier to type...
+>
+> Btw, do you mean chip-vendor or device-vendor with vendor?
+> Device-vendor could get a bit messy on the source part as the router
+> manufacturers tend to switch them quite often. E.g. d-link used arm,
+> mips and ubi32 chips from marvell, ubicom, broadcom, atheros, realtek
+> and ralink for their dir-615 router, happily switching back and forth.
+> There are 14 known different hardware revisions of it where the chip
+> differed from the previous one.
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Pawel Moll <pawel.moll@arm.com>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-CC: Kumar Gala <galak@codeaurora.org>
-CC: devicetree@vger.kernel.org
-CC: linux-arm-kernel@lists.infradead.org
+There's probably no hard and fast rule that works perfectly for
+everything. Since the chip/soc generally defines most of the platform,
+I would say follow the chip vendor. A few "../other-vendor/" includes
+would be okay, but they should be the exception. 3rd party boards with
+common daughter cards come to mind here.
 
-Signed-off-by: Pramod Gurav <pramod.gurav@smartplayin.com>
----
- arch/arm/boot/dts/qcom-apq8064.dtsi |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index d66fb25..e23303e 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -73,6 +73,17 @@
- 		ranges;
- 		compatible = "simple-bus";
- 
-+		msm_gpio: pinctrl@800000 {
-+			compatible = "qcom,apq8064-pinctrl";
-+			reg = <0x800000 0x4000>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			interrupts = <0 16 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		intc: interrupt-controller@2000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
--- 
-1.7.0.4
+Rob
