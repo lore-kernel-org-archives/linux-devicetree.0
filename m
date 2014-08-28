@@ -1,97 +1,82 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH v2 3/7] MIPS: Octeon: Move device-trees to arch/mips/boot/dts/cavium-octeon/
-Date: Wed, 27 Aug 2014 19:10:08 -0700
-Message-ID: <1409191812-23697-4-git-send-email-abrestic@chromium.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 5/7] MIPS: sead3: Move device-trees to arch/mips/boot/dts/mti/
+Date: Wed, 27 Aug 2014 19:10:10 -0700
+Message-ID: <1409191812-23697-6-git-send-email-abrestic@chromium.org>
 References: <1409191812-23697-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409191812-23697-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: James Hogan <james.hogan@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, David Daney <david.daney@cavium.com>, John Crispin <blogic@openwrt.org>, Jayachandran C <jchandra@broadcom.com>, Qais Yousef <qais.yousef@imgtec.com>, Florian Fainelli <f.fainelli@gmail.com>, Jonas Gorski <jogo@openwrt.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Andrew Bresticker <abrestic@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409191812-23697-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move the Octeon device-trees to arch/mips/boot/dts/cavium-octeon/ and
-update the Makefiles accordingly.  Since Octeon requires the device-tree
-to be built into the kernel, select BUILTIN_DTB as well.
+Move the SEAD-3 device-tree to arch/mips/boot/dts/mti/ and update the
+Makefiles accordingly.  Since SEAD-3 requires the device-tree to be
+built into the kernel, select BUILTIN_DTB when building for SEAD-3.
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- arch/mips/Kconfig                                      |  1 +
- arch/mips/boot/dts/Makefile                            |  2 ++
- arch/mips/boot/dts/cavium-octeon/Makefile              |  2 ++
- arch/mips/{ => boot/dts}/cavium-octeon/octeon_3xxx.dts |  0
- arch/mips/{ => boot/dts}/cavium-octeon/octeon_68xx.dts |  0
- arch/mips/cavium-octeon/.gitignore                     |  2 --
- arch/mips/cavium-octeon/Makefile                       | 10 ----------
- 7 files changed, 5 insertions(+), 12 deletions(-)
- create mode 100644 arch/mips/boot/dts/cavium-octeon/Makefile
- rename arch/mips/{ => boot/dts}/cavium-octeon/octeon_3xxx.dts (100%)
- rename arch/mips/{ => boot/dts}/cavium-octeon/octeon_68xx.dts (100%)
- delete mode 100644 arch/mips/cavium-octeon/.gitignore
+ arch/mips/Kconfig                               | 1 +
+ arch/mips/boot/dts/Makefile                     | 1 +
+ arch/mips/boot/dts/mti/Makefile                 | 1 +
+ arch/mips/{mti-sead3 => boot/dts/mti}/sead3.dts | 0
+ arch/mips/mti-sead3/Makefile                    | 4 ----
+ 5 files changed, 3 insertions(+), 4 deletions(-)
+ create mode 100644 arch/mips/boot/dts/mti/Makefile
+ rename arch/mips/{mti-sead3 => boot/dts/mti}/sead3.dts (100%)
 
 diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 19b8aac..dbfcf35 100644
+index dbfcf35..a72c7c9 100644
 --- a/arch/mips/Kconfig
 +++ b/arch/mips/Kconfig
-@@ -741,6 +741,7 @@ config CAVIUM_OCTEON_SOC
- 	select ARCH_SPARSEMEM_ENABLE
- 	select SYS_SUPPORTS_SMP
- 	select NR_CPUS_DEFAULT_16
+@@ -353,6 +353,7 @@ config MIPS_SEAD3
+ 	bool "MIPS SEAD3 board"
+ 	select BOOT_ELF32
+ 	select BOOT_RAW
 +	select BUILTIN_DTB
- 	help
- 	  This option supports all of the Octeon reference boards from Cavium
- 	  Networks. It builds a kernel that dynamically determines the Octeon
+ 	select CEVT_R4K
+ 	select CSRC_R4K
+ 	select CSRC_GIC
 diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index dcb7810..a8daed1 100644
+index 0f16e92..e32cc0f 100644
 --- a/arch/mips/boot/dts/Makefile
 +++ b/arch/mips/boot/dts/Makefile
-@@ -1,3 +1,5 @@
-+include arch/mips/boot/dts/cavium-octeon/Makefile
-+
+@@ -1,5 +1,6 @@
+ include arch/mips/boot/dts/cavium-octeon/Makefile
+ include arch/mips/boot/dts/lantiq/Makefile
++include arch/mips/boot/dts/mti/Makefile
+ 
  obj-y		+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
  
- targets		+= dtbs
-diff --git a/arch/mips/boot/dts/cavium-octeon/Makefile b/arch/mips/boot/dts/cavium-octeon/Makefile
+diff --git a/arch/mips/boot/dts/mti/Makefile b/arch/mips/boot/dts/mti/Makefile
 new file mode 100644
-index 0000000..4663d75
+index 0000000..913fac9
 --- /dev/null
-+++ b/arch/mips/boot/dts/cavium-octeon/Makefile
-@@ -0,0 +1,2 @@
-+dtb-$(CONFIG_CAVIUM_OCTEON_SOC)	+= cavium-octeon/octeon_3xxx.dtb \
-+				cavium-octeon/octeon_68xx.dtb
-diff --git a/arch/mips/cavium-octeon/octeon_3xxx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
++++ b/arch/mips/boot/dts/mti/Makefile
+@@ -0,0 +1 @@
++dtb-$(CONFIG_MIPS_SEAD3)	+= mti/sead3.dtb
+diff --git a/arch/mips/mti-sead3/sead3.dts b/arch/mips/boot/dts/mti/sead3.dts
 similarity index 100%
-rename from arch/mips/cavium-octeon/octeon_3xxx.dts
-rename to arch/mips/boot/dts/cavium-octeon/octeon_3xxx.dts
-diff --git a/arch/mips/cavium-octeon/octeon_68xx.dts b/arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
-similarity index 100%
-rename from arch/mips/cavium-octeon/octeon_68xx.dts
-rename to arch/mips/boot/dts/cavium-octeon/octeon_68xx.dts
-diff --git a/arch/mips/cavium-octeon/.gitignore b/arch/mips/cavium-octeon/.gitignore
-deleted file mode 100644
-index 39c9686..0000000
---- a/arch/mips/cavium-octeon/.gitignore
-+++ /dev/null
-@@ -1,2 +0,0 @@
--*.dtb.S
--*.dtb
-diff --git a/arch/mips/cavium-octeon/Makefile b/arch/mips/cavium-octeon/Makefile
-index 4e95204..42f5f1a 100644
---- a/arch/mips/cavium-octeon/Makefile
-+++ b/arch/mips/cavium-octeon/Makefile
-@@ -20,13 +20,3 @@ obj-y += executive/
- obj-$(CONFIG_MTD)		      += flash_setup.o
- obj-$(CONFIG_SMP)		      += smp.o
- obj-$(CONFIG_OCTEON_ILM)	      += oct_ilm.o
+rename from arch/mips/mti-sead3/sead3.dts
+rename to arch/mips/boot/dts/mti/sead3.dts
+diff --git a/arch/mips/mti-sead3/Makefile b/arch/mips/mti-sead3/Makefile
+index 071786f..febf433 100644
+--- a/arch/mips/mti-sead3/Makefile
++++ b/arch/mips/mti-sead3/Makefile
+@@ -19,9 +19,5 @@ obj-y				+= sead3-i2c-dev.o sead3-i2c.o \
+ 
+ obj-$(CONFIG_EARLY_PRINTK)	+= sead3-console.o
+ obj-$(CONFIG_USB_EHCI_HCD)	+= sead3-ehci.o
+-obj-$(CONFIG_OF)		+= sead3.dtb.o
+ 
+ CFLAGS_sead3-setup.o = -I$(src)/../../../scripts/dtc/libfdt
 -
--DTS_FILES = octeon_3xxx.dts octeon_68xx.dts
--DTB_FILES = $(patsubst %.dts, %.dtb, $(DTS_FILES))
--
--obj-y += $(patsubst %.dts, %.dtb.o, $(DTS_FILES))
--
--# Let's keep the .dtb files around in case we want to look at them.
--.SECONDARY:  $(addprefix $(obj)/, $(DTB_FILES))
--
--clean-files += $(DTB_FILES) $(patsubst %.dtb, %.dtb.S, $(DTB_FILES))
+-$(obj)/%.dtb: $(obj)/%.dts
+-	$(call if_changed,dtc)
 -- 
 2.1.0.rc2.206.gedb03e5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
