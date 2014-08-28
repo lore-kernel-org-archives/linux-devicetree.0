@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 2/3] irqchip: renesas-irqc: Add DT binding documentation
-Date: Thu, 28 Aug 2014 09:59:59 +0200
-Message-ID: <1409212800-4957-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 3/3] irqchip: renesas-irqc: Add binding docs for new R-Car Gen2 SoCs
+Date: Thu, 28 Aug 2014 10:00:00 +0200
+Message-ID: <1409212800-4957-3-git-send-email-geert+renesas@glider.be>
 References: <1409212800-4957-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1409212800-4957-1-git-send-email-geert+renesas@glider.be>
@@ -10,55 +10,35 @@ To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
 Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The renesas-irqc driver supports DT, but the DT binding documentation was
-missing.
+  - r8a7792 (R-Car V2H)
+  - r8a7793 (R-Car M2-N)
+  - r8a7794 (R-Car E2)
+
+r8a7791 is now called "R-Car M2-W".
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
 ---
-v2:
-  - Add Acked-by
-  - Remove last blank line
+v2: Drop RFC
 ---
- .../bindings/interrupt-controller/renesas,irqc.txt | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+ .../devicetree/bindings/interrupt-controller/renesas,irqc.txt        | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-new file mode 100644
-index 000000000000..48e8291e5bcc
---- /dev/null
+index 48e8291e5bcc..1a88e62228e5 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
 +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-@@ -0,0 +1,29 @@
-+DT bindings for the R-Mobile/R-Car interrupt controller
-+
-+Required properties:
-+
-+- compatible: has to be "renesas,irqc-<soctype>", "renesas,irqc" as fallback.
-+  Examples with soctypes are:
-+    - "renesas,irqc-r8a73a4" (R-Mobile AP6)
-+    - "renesas,irqc-r8a7790" (R-Car H2)
-+    - "renesas,irqc-r8a7791" (R-Car M2)
-+- #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
-+  interrupts.txt in this directory
-+
-+Optional properties:
-+
-+- any properties, listed in interrupts.txt, and any standard resource allocation
-+  properties
-+
-+Example:
-+
-+	irqc0: interrupt-controller@e61c0000 {
-+		compatible = "renesas,irqc-r8a7790", "renesas,irqc";
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+		reg = <0 0xe61c0000 0 0x200>;
-+		interrupts = <0 0 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 1 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 2 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 3 IRQ_TYPE_LEVEL_HIGH>;
-+	};
+@@ -6,7 +6,10 @@ Required properties:
+   Examples with soctypes are:
+     - "renesas,irqc-r8a73a4" (R-Mobile AP6)
+     - "renesas,irqc-r8a7790" (R-Car H2)
+-    - "renesas,irqc-r8a7791" (R-Car M2)
++    - "renesas,irqc-r8a7791" (R-Car M2-W)
++    - "renesas,irqc-r8a7792" (R-Car V2H)
++    - "renesas,irqc-r8a7793" (R-Car M2-N)
++    - "renesas,irqc-r8a7794" (R-Car E2)
+ - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
+   interrupts.txt in this directory
+ 
 -- 
 1.9.1
 
