@@ -1,101 +1,92 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH 3/5] phy: exynos5-usbdrd: Add facility for VBUS-BOOST-5V supply
-Date: Thu, 28 Aug 2014 13:31:58 +0530
-Message-ID: <1409212920-28526-4-git-send-email-gautam.vivek@samsung.com>
-References: <1409212920-28526-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409212920-28526-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, kishon@ti.com, kgene.kim@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
+Date: Thu, 28 Aug 2014 09:02:51 +0100
+Message-ID: <20140828080251.GG17528@sirena.org.uk>
+References: <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com>
+ <20140826091120.GC17528@sirena.org.uk>
+ <53FC5105.6070901@metafoo.de>
+ <20140826094211.GF17528@sirena.org.uk>
+ <87r403mtip.wl%kuninori.morimoto.gx@gmail.com>
+ <20140826105028.GK17528@sirena.org.uk>
+ <87d2bmpwi2.wl%kuninori.morimoto.gx@gmail.com>
+ <87a96qpqsy.wl%kuninori.morimoto.gx@gmail.com>
+ <53FD95AB.6080903@metafoo.de>
+ <87fvghihaq.wl%kuninori.morimoto.gx@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="GzfDEbkz4QNhsw37"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87fvghihaq.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some Exynos SoCs have a separate regulator controlling a
-Boost 5V supply which goes as input for VBUS regulator.
-So adding a control for the same in driver, to enable
-vbus supply on the port.
 
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
----
- drivers/phy/phy-exynos5-usbdrd.c |   27 +++++++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+--GzfDEbkz4QNhsw37
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exynos5-usbdrd.c
-index 685c108..a6d0cb7 100644
---- a/drivers/phy/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/phy-exynos5-usbdrd.c
-@@ -176,6 +176,7 @@ struct exynos5_usbdrd_phy {
- 	u32 extrefclk;
- 	struct clk *ref_clk;
- 	struct regulator *vbus;
-+	struct regulator *vbus_boost;
- };
- 
- static inline
-@@ -457,11 +458,19 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
- 	clk_prepare_enable(phy_drd->ref_clk);
- 
- 	/* Enable VBUS supply */
-+	if (phy_drd->vbus_boost) {
-+		ret = regulator_enable(phy_drd->vbus_boost);
-+		if (ret) {
-+			dev_err(phy_drd->dev,
-+				"Failed to enable VBUS boost supply\n");
-+			goto fail_vbus;
-+		}
-+	}
- 	if (phy_drd->vbus) {
- 		ret = regulator_enable(phy_drd->vbus);
- 		if (ret) {
- 			dev_err(phy_drd->dev, "Failed to enable VBUS supply\n");
--			goto fail_vbus;
-+			goto fail_vbus_boost;
- 		}
- 	}
- 
-@@ -470,6 +479,9 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
- 
- 	return 0;
- 
-+fail_vbus_boost:
-+	if (phy_drd->vbus_boost)
-+		regulator_disable(phy_drd->vbus_boost);
- fail_vbus:
- 	clk_disable_unprepare(phy_drd->ref_clk);
- 	if (!IS_ERR(phy_drd->pipeclk))
-@@ -493,6 +505,8 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
- 	/* Disable VBUS supply */
- 	if (phy_drd->vbus)
- 		regulator_disable(phy_drd->vbus);
-+	if (phy_drd->vbus_boost)
-+		regulator_disable(phy_drd->vbus_boost);
- 
- 	clk_disable_unprepare(phy_drd->ref_clk);
- 	if (!IS_ERR(phy_drd->pipeclk))
-@@ -645,7 +659,7 @@ static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
- 		break;
- 	}
- 
--	/* Get Vbus regulator */
-+	/* Get Vbus regulators */
- 	phy_drd->vbus = devm_regulator_get(dev, "vbus");
- 	if (IS_ERR(phy_drd->vbus)) {
- 		ret = PTR_ERR(phy_drd->vbus);
-@@ -655,6 +669,15 @@ static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
- 		dev_warn(dev, "Failed to get VBUS supply regulator\n");
- 		phy_drd->vbus = NULL;
- 	}
-+	phy_drd->vbus_boost = devm_regulator_get(dev, "vbus-boost");
-+	if (IS_ERR(phy_drd->vbus_boost)) {
-+		ret = PTR_ERR(phy_drd->vbus_boost);
-+		if (ret == -EPROBE_DEFER)
-+			return ret;
-+
-+		dev_warn(dev, "Failed to get VBUS boost supply regulator\n");
-+		phy_drd->vbus_boost = NULL;
-+	}
- 
- 	dev_vdbg(dev, "Creating usbdrd_phy phy\n");
- 
--- 
-1.7.10.4
+On Wed, Aug 27, 2014 at 05:33:55PM -0700, Kuninori Morimoto wrote:
+
+> Now, my system is working well with simple-card by this
+
+> 	sound {
+> 		compatible =3D "simple-audio-card";
+> 		...
+>=20
+> 		cpu {
+> 			sound-dai =3D <&rcar_sound 0>;
+> 		};
+> 		codec {
+> 			sound-dai =3D <&ak4643>;
+> 		};
+> 	};
+
+> The reason why I'm tring to support DPCM on simple-card is "sampling rate=
+ convert".
+> My rcar_sound can convert sampling rate, and I tried to add this feature =
+as
+> rcar_sound property.
+> But, Mark rejected and requests me to use DPCM for it,
+> since it can be common featrue.
+> Current existing simple-card can't use it, and I'm tring.
+> But, am I misunderstanding ?
+
+There's two separate things here.  One is how the code is implemented
+(which does look very much like it should be doing DPCM) and the other
+is how the DT binding looks - the DT binding is supposed to be a
+hardware neutral thing and not depend on Linux implementation details.
+If you've already got the hardware described well enough to discover
+everything then that generally indicates that the DT binding should not
+need to change.
+
+--GzfDEbkz4QNhsw37
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT/uIoAAoJELSic+t+oim967oP/A3r0e8aU5SqoDnB4y3YuN8z
+p6Wepl/8ENcokMMF5JJ43VE5WPXjiKjPogmU3XUgUw358Brmc70+twNNNS58u006
+ApUhnOg0yzU0rCiY04+yu8xkkxg4SO4qZWUt775ug2rU2xlA0aHfv9zrhimu9U9u
+MT6gMGvmRAbPa5AqPVGufYFWjUGWi3f3LJFBQIabCBJKmoTNahPaawkN/Ry0DUyn
+QRAZomlgq8z+qNJj65K6nHSwFmx7SHeSLODpOyzlc3Ym/DbcgX0YXypf9AeKYD9t
+a68vj2/qo6I1ftRrrmrhi2dYH3GowiVYZhVwhEeFMOjerRjmaBhV2OjA/ZHbONk9
+GBz3oqLI/eUs5w7/q0o96ig5bCMvaOlUsA1qXki7kg8aahSn7ERHw/s9br9UOYn1
+o04CwruIB0ali/TymwTVGQzXgqtyMRBXqkAKYJfSj7qa8bpCcP0hoSs1FdY8NOER
+oVXr9v+hN/W9icFFxgCXz8jNIVJT7m+LESwegJGbGCUFbXnlp4LnEctGDsHL4bXC
+2NMEuLjaUj5gQg56Pe9d62xotHAeeoqnsv01hdUVNd4ihPmLL/20H9EH5lFKL5uc
+BT6yx9X6EfqFeLj5GxEZXpc0t+BwMMoz0kL8TS5nYayjt+ZTVMF76UryDbPQNDsd
+9qxc98WXuJxxH6iK86nu
+=OEM+
+-----END PGP SIGNATURE-----
+
+--GzfDEbkz4QNhsw37--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
