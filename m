@@ -1,145 +1,110 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 00/11] drm: add support for Atmel HLCDC Display Controller
-Date: Fri, 29 Aug 2014 00:52:47 +0200
-Message-ID: <1589754.DxSd6XN1nL@avalon>
-References: <1406034695-15534-1-git-send-email-boris.brezillon@free-electrons.com> <1805054.en0m884lPo@avalon> <20140828162100.71543859@bbrezillon>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
+Date: Fri, 29 Aug 2014 01:01:40 +0200
+Message-ID: <4669530.jbaGRecGMH@diego>
+References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com> <4488604.oBeB6it8Vr@wuerfel> <53FF84C4.9080902@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140828162100.71543859@bbrezillon>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Clark <robdclark@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53FF84C4.9080902@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>, Eduardo Valentin <edubezval@gmail.com>, Jonathan Cameron <jic23@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, rui.zhang@intel.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com, zhaoyifeng <zyf@rock-chips.com>, linux-iio@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Caesar,
 
-On Thursday 28 August 2014 16:21:00 Boris BREZILLON wrote:
-> On Thu, 28 Aug 2014 14:19:22 +0200 Laurent Pinchart wrote:
-> > Hi Boris,
+Am Freitag, 29. August 2014, 03:36:36 schrieb Caesar Wang:
+> Arnd & Heiko & Eduardo,
 >=20
-> [...]
+> OK. Maybe you are right.
 >=20
-> >> I don't have any VGA connector (or I'm missing something :-)),
-> >=20
-> > My bad.
->=20
-> No problem.
->=20
-> >> but I have an LCD panel and an RGB to HDMI encoder connected on th=
-e same
-> >> RGB connector.
-> >=20
-> > There's no such thing as an RGB connector in DRM. Your SoC has a pa=
-rallel
-> > RGB video output (I assume it's a DPI bus). From a DRM point of vie=
-w,
-> > that bus corresponds to the output of the CRTC.
->=20
-> Okay, this mean I'll have to dispatch some of the code I've put in
-> atmel_hlcdc_output.c into atmel_hlcdc_crtc.c (BTW, any chance you cou=
-ld
-> take a look at this files ?).
+> This driver should be put into drivers/iio/adc/* ,
+> Anyway,I will re-edit it ASAP.
 
-Not in the very near future I'm afraid, I'm moving to a new flat in a c=
-ouple=20
-of days, that will keep me pretty busy. If nobody has reviewed your pat=
-ches in=20
-a week from now feel free to ping me.
+I pieced together an example on how this could look, if you need inspir=
+ation.
 
-> >>> As DRM hardcodes the pipeline model to CRTC -> encoder -> connect=
-or,
-> >>> you will also need a DRM encoder in the VGA path. I suppose your =
-board
-> >>> has a VGA DAC, that's the component you should expose as a DRM en=
-coder
-> >>> (even if it can't be controlled and doesn't limit the valid modes=
-).
-> >>=20
-> >> Actually, my problem is that both devices are connected on the sam=
-e RGB
-> >> connector, and thus share the same display mode (resolution, HSYNC=
-,
-> >> VSYNC, RGB output mode, ...).
-> >> This means that all remote devices have to agree on a specific mod=
-e if
-> >> we want to mirror the display on several output devices, otherwise=
- we
-> >> must disable one of the output devices.
-> >=20
-> > That's not really a problem. From a DRM perspective you need to mod=
-el your
-> > device as
-> >=20
-> > ,------.       ,---------------.       ,-----------------.
-> > | CRTC | -+--> | Dummy Encoder | ----> | Panel Connector |
-> > `------=B4  |    `---------------=B4       `-----------------=B4
-> >           |    ,---------------.       ,-----------------.
-> >           \--> | HDMI Encoder  | ----> | HDMI Connector  |
-> >                `---------------=B4       `-----------------=B4
-> >=20
-> > The HDMI pipeline is pretty straightforward.
-> >=20
-> > You have told me that the panel has a parallel RGB input without an=
-y
-> > encoder in the panel pipeline (by the way, which panel model are yo=
-u
-> > using ?). However, DRM requires an encoder in every pipeline. You w=
-ill
-> > thus need to instantiate a dummy encoder. One option would be to se=
-t the
-> > encoder and connector types to DRM_MODE_ENCODER_LVDS and
-> > DRM_MODE_CONNECTOR_LVDS respectively, as that's what userspace usua=
-lly
-> > expects for panels. That doesn't reflect the reality in your case t=
-hough,
-> > so creating a new DRM_MODE_CONNECTOR_DPI type might be needed, poss=
-ibly
-> > to be used with DRM_MODE_ENCODER_NONE.
-> >=20
-> > As neither encoder can modify the mode, the same mode will be outpu=
-t on
-> > the two connectors.
->=20
-> There are still several things to I'd like to understand:
->  1) who's gonna configure the RGB bus output format (RGB444, RGB666,
->     RGB888) which directly depends on the device connected on this bu=
-s:
->     the CRTC or the dummy and HDMI encoders.
+As I've written, the tsadc on the rk3066 is simply another saradc, so i=
+t was=20
+easy to build a usable example with it, which you can find in my=20
+devel/workbench branch [0].
 
-Your mileage my vary, but in general I believe this should be the=20
-responsibility of the CRTC driver (the HLCDC driver in your case), from=
+Things to note, the adc values are converted to voltages instead of the=
 =20
-information it gets from DT and/or queries dynamically from the encoder=
-s at=20
-runtime.
+"code"-values listed in the TRM [formula: (code * vref_mv)  >> 12)] and=
+ the=20
+temperatures are listed in millikelvin (C+273150) as expected by the pe=
+nding=20
+iio-thermal driver.
 
->  2) Where should the HDMI encoder/connector support be implemented:
->     in drivers/gpu/drm/atmel-hlcdc, drivers/gpu/drm/bridge or somewhe=
-re
->     else. My point is that I don't want to add specific support for t=
-he
->     Sil902x transmitter chip in the hlcdc driver.
 
-The HDMI encoder should definitely be handled by a standalone driver. W=
-e have=20
-two infrastructures for this at the moment, drm_bridge and drm_encoder_=
-slave.=20
-I'd like to see them being merged. I need to implement support for an H=
-DMI=20
-encoder as well, I'll see if I can give this a try.
+@Courtney: (not sure how to reply to the old thread from february)
+the only issue I found was the unit of the voltages. The binding doc li=
+sts=20
+them as uV, while iio (and the driver itself) expect to use mV.
 
-> Sorry if these are silly questions, but I'm still trying to understan=
-d
-> how my case should be modeled :-).
+Otherwise the iio-thermal driver:
+Tested-by: Heiko Stuebner <heiko@sntech.de>
 
-As I don't have straightforward answers I won't consider the questions =
-as=20
-silly :-)
 
---=20
-Regards,
+Heiko
 
-Laurent Pinchart
+
+
+[0] https://github.com/mmind/linux-rockchip/commits/devel/workbench
+(recent commits till "thermal: add generic IIO channel thermal sensor d=
+river")
+
+
+
+> =E5=9C=A8 2014/8/29 0:16, Arnd Bergmann =E5=86=99=E9=81=93:
+> > On Thursday 28 August 2014 18:11:43 Heiko St=C3=BCbner wrote:
+> >> Am Donnerstag, 28. August 2014, 10:37:35 schrieb Eduardo Valentin:
+> >>>> On the driver side, I believe the correct way to deal with this =
+setup
+> >>>> is to split your driver into a generic
+> >>>> drivers/iio/adc/rockchips-tsadc.c
+> >>>> file, and a smaller thermal driver that uses the iio in-kernel
+> >>>> interfaces,
+> >>>> ideally one that is independent of the underlying hardware and c=
+an
+> >>>> work on any ADC implementation.
+> >>>=20
+> >>> Agreed. If you can write such interface and make your driver to w=
+ork in
+> >>> such way, that would be great.
+> >>=20
+> >> But I currently don't see how you would model the temperature hand=
+ling
+> >> parts from a generic thermal driver to a generic adc driver for th=
+e
+> >> rk3288-tsadc.
+> >>=20
+> >> I guess the general temperature irq handling would use iio-trigger=
+s? But
+> >> how does the target temperature get into the TSADC_COMP1_INT regis=
+ter.
+> >>=20
+> >> Also when getting the temperature, Caesar's driver compares it to =
+its
+> >> trip
+> >> points and sets the next trip point depending on the current tempe=
+rature
+> >> (passive <-> critical) in rockchip_get_temp.
+> >>=20
+> >> Maybe there is some completely easy way for this, but currently I =
+don't
+> >> see
+> >> it.
+> >=20
+> > Eduardo earlier today replied to an email about a generic driver fo=
+r
+> > thermal, which was posted in February but hasn't been merged.
+> > See https://lkml.org/lkml/2014/2/5/810
+> >=20
+> > There may be a newer version of this patch, which I haven't found.
+> >=20
+> > 	Arnd
 
