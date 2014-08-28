@@ -1,56 +1,70 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4/8] i2c: Make I2C ID tables non-mandatory for DT'ed devices
-Date: Thu, 28 Aug 2014 15:35:34 +0100
-Message-ID: <1409236538-21274-5-git-send-email-lee.jones@linaro.org>
-References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
+Date: Thu, 28 Aug 2014 10:37:35 -0400
+Message-ID: <20140828143733.GA18084@developer>
+References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com>
+ <1409187562-12370-2-git-send-email-caesar.wang@rock-chips.com>
+ <2852853.mfRZfFVSev@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <2852853.mfRZfFVSev@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: lee.jones@linaro.org, kernel@stlinux.com, wsa@the-dreams.de, grant.likely@linaro.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Caesar Wang <caesar.wang@rock-chips.com>, heiko@sntech.de, rui.zhang@intel.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com, zhaoyifeng <zyf@rock-chips.com>, linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently the I2C framework insists on devices supplying an I2C ID
-table.  Many of the devices which do so unnecessarily adding quite a
-few wasted lines to kernel code.  This patch allows drivers a means
-to 'not' supply the aforementioned table and match on DT match tables
-instead.
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/i2c/i2c-core.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Ceasar and Arnd,
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 5728b2e..c6013cd 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -101,7 +101,7 @@ static int i2c_device_match(struct device *dev, struct device_driver *drv)
- 
- 
- 	/* Attempt an OF style match */
--	if (of_driver_match_device(dev, drv))
-+	if (i2c_of_match_device(drv->of_match_table, client))
- 		return 1;
- 
- 	/* Then ACPI style match */
-@@ -269,7 +269,15 @@ static int i2c_device_probe(struct device *dev)
- 		return 0;
- 
- 	driver = to_i2c_driver(dev->driver);
--	if (!driver->probe || !driver->id_table)
-+	if (!driver->probe)
-+		return -EINVAL;
-+
-+	/*
-+	 * An I2C ID table is not mandatory, if and only if, a suitable Device
-+	 * Tree match table entry is supplied for the probing device.
-+	 */
-+	if (!driver->id_table &&
-+	    !i2c_of_match_device(dev->driver->of_match_table, client))
- 		return -ENODEV;
- 
- 	if (!device_can_wakeup(&client->dev))
--- 
-1.9.1
+On Thu, Aug 28, 2014 at 10:48:23AM +0200, Arnd Bergmann wrote:
+> On Thursday 28 August 2014 08:59:19 Caesar Wang wrote:
+> > Thermal is TS-ADC Controller module supports user-defined mode and automatic mode.
+> > 
+> > User-defined mode refers,TSADC all the control signals entirely by software
+> > writing to register for direct control.
+> > 
+> > Automaic mode refers to the module automatically poll TSADC output,and the results
+> > Were checked.
+> > 
+> > If you find that the temperature High in a period of time, an interrupt is generated
+> > to the processor down-measures taken;if the temperature over a period of time High,
+> > the resulting TSHUT gave CRU module,let it reset the entire chip, or via GPIO give PMIC.
+> > 
+> > Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> > Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> 
+> Hi Caesar,
+> 
+> After looking at the driver (last time I only received the patch for
+> the binding), I have a more general comment:
+> 
+> This looks like a general-purpose ADC device, not an IP block that is
+> specific to thermal management. The binding looks ok for that purpose
+> but should probably be moved into Documentation/devicetree/bindings/iio/adc/
+> as a minor change.
+> 
+
+I agree with Arnd's point here. It makes sense to me to have this driver
+under the IIO umbrella. 
+
+> On the driver side, I believe the correct way to deal with this setup
+> is to split your driver into a generic drivers/iio/adc/rockchips-tsadc.c
+> file, and a smaller thermal driver that uses the iio in-kernel interfaces,
+> ideally one that is independent of the underlying hardware and can
+> work on any ADC implementation.
+> 
+
+Agreed. If you can write such interface and make your driver to work in
+such way, that would be great.
+
+> I've put the IIO maintainer on Cc in this mail, maybe Jonathan or someone
+> else on the linux-iio mailing list has some extra insight.
+> 
+> 	Arnd
+
+
+Cheers,
+
+Eduardo
