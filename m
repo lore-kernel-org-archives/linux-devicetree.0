@@ -1,60 +1,67 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V2 1/2] ARM: dts: Add DT changes for display on snow
-Date: Thu, 28 Aug 2014 10:52:11 +0100
-Message-ID: <20140828095211.GE14650@leverpostej>
-References: <1409150908-12801-1-git-send-email-ajaykumar.rs@samsung.com>
- <20140827150146.GB9737@leverpostej>
- <CAEC9eQMKfso-rmMdqyDZeCdaxf21O1fqN6Z2YrS=njqGHh5d5Q@mail.gmail.com>
- <20140828091509.GA14650@leverpostej>
- <CAEC9eQN+EJmrG70O+2Sg5GD0OHudhqo5beGDN8K4_kmOKKPOmw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAEC9eQN+EJmrG70O+2Sg5GD0OHudhqo5beGDN8K4_kmOKKPOmw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>
-Cc: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "kgene.kim@gmail.com" <kgene.kim@gmail.com>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "seanpaul@google.com" <seanpaul@google.com>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "joshi@samsung.com" <joshi@samsung.com>, "prashanth.g@samsung.com" <prashanth.g@samsung.com>
+From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/7] Adding Skyworks SKY81452 device drivers
+Date: Thu, 28 Aug 2014 19:38:27 +0900
+Message-ID: <1409222307-23225-1-git-send-email-jack.yoo@skyworksinc.com>
+References: <1407488899-31065-1-git-send-email-jack.yoo@skyworksinc.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407488899-31065-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 10:34:32AM +0100, Ajay kumar wrote:
-> On Thu, Aug 28, 2014 at 2:45 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Thu, Aug 28, 2014 at 06:34:33AM +0100, Ajay kumar wrote:
-> >> On Wed, Aug 27, 2014 at 8:31 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >> > On Wed, Aug 27, 2014 at 03:48:27PM +0100, Ajay Kumar wrote:
-> >> >> Add DT nodes for ptn3460 bridge chip and panel.
-> >> >> Add backlight enable pin and backlight power supply for pwm-backlight.
-> >> >> Also add bridge phandle needed by dp to enable display on snow.
-> >> >>
-> >> >> Note that, snow doesn't support "chunghwa,claa101wb01" panel,
-> >> >> but still we choose to reuse the binding since "chunghwa,claa101wb01"
-> >> >> has similar LCD timings.
-> >> >
-> >> > What does it actually have?
-> >> >
-> >> > It's fine to have "chunghwa,claa101wb01" as a fallback but we should
-> >> > have an identifier for the actual display, too.
-> >> Actual display used is "AUO,B116XTN0", for which no data currently exists
-> >> in panel file. Instead of adding a new panel_desc for B116XTN0,
-> >> why not we reuse existing ones? what is the "identifier" you are talking about?
-> >
-> > The compatible string.
-> >
-> > So in the dts we'd have compatible = "au0,b116xtn0", "chunghwa,claa101wb01";
-> Sorry, hardware engineer says actual LCD name is "auo,b116xw03".
+This patch set includes regulator and backlight driver for SKY81452.
+Also it includes documents for device tree and module.
 
-Ok.
+v2:
+Split the patches for each sub-system.
+Added 'reg' attribute for I2C address in device tree documents
+Added 'compatible' attribute in child drivers
+Renamed CONFIG_SKY81452 to CONFIG_MFD_SKY81452
+Changed the dependency from I2C=y to I2C, for CONFIG_MFD_SKY81452
+Added message for exception or errors.
 
-> > That way if we need specific data we can add it later.
-> I think we can add a new panel_desc for "auo,b116xw03".
-> Because its actual LCD dimension is 256x144, but "chungwa, claa101wb01" has
-> LCD dimension 223x125.
-> What is Thierry's opinion on adding this new LCD?
-> 
-> > What vendor is AU0? Can we add a vendor-prefix in parallel?
-> its "auo" (already present: AU Optronics Corporation)
+Gyungoh Yoo (7):
+  Adding Skyworks SKY81452 MFD driver
+  Adding Skyworks SKY81452 regulator driver
+  Adding Skyworks SKY81452 backlight driver
+  Adding SKY81452 MFD device tree bindings document
+  Adding SKY81452 regulator device tree bindings document
+  Adding SKY81452 backlight device tree bindings document
+  Adding SKY81452 backlight document
 
-Ah, whoops. Mistook 'O' for '0'.
+ Documentation/backlight/sky81452-backlight.txt     |  26 ++
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ Documentation/devicetree/bindings/mfd/sky81452.txt |  32 ++
+ .../bindings/regulator/sky81452-regulator.txt      |  18 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ .../video/backlight/sky81452-backlight.txt         |  24 ++
+ drivers/mfd/Kconfig                                |  12 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/sky81452.c                             | 108 +++++++
+ drivers/regulator/Kconfig                          |  11 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/sky81452-regulator.c             | 140 +++++++++
+ drivers/video/backlight/Kconfig                    |  10 +
+ drivers/video/backlight/Makefile                   |   1 +
+ drivers/video/backlight/sky81452-backlight.c       | 347 +++++++++++++++++++++
+ include/linux/mfd/sky81452.h                       |  32 ++
+ include/linux/sky81452-backlight.h                 |  47 +++
+ 17 files changed, 812 insertions(+)
+ create mode 100644 Documentation/backlight/sky81452-backlight.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/sky81452.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+ create mode 100644 drivers/mfd/sky81452.c
+ create mode 100644 drivers/regulator/sky81452-regulator.c
+ create mode 100644 drivers/video/backlight/sky81452-backlight.c
+ create mode 100644 include/linux/mfd/sky81452.h
+ create mode 100644 include/linux/sky81452-backlight.h
 
-Thanks,
-Mark.
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
