@@ -1,70 +1,129 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 0/7] MIPS: Move device-tree files to a common location
-Date: Thu, 28 Aug 2014 10:04:46 -0500
-Message-ID: <CAL_Jsq+zpvK4Zbp4cN2eq3hfGDc09x3d4+b_TdEgnSQ5063rZw@mail.gmail.com>
-References: <1408651466-8334-1-git-send-email-abrestic@chromium.org>
- <CAGVrzcZobuL4z0WNX+Sz4p_uwaPL-S5yvEmgRUwZPJi4+qq0tg@mail.gmail.com>
- <CAL1qeaGb-o0P7x4nZPJ+dGfoSKz+2ANrB0gGrBi19TtPxVTAZQ@mail.gmail.com>
- <20140823063113.GC23715@localhost> <CAMuHMdXudu0kuOkKN8JCrWZSrQ4awKHhHU0E2ss++ProP0rteQ@mail.gmail.com>
- <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH 3/3] GPIO: gpio-dwapb: Suspend & Resume PM enabling
+Date: Thu, 28 Aug 2014 10:01:02 -0500
+Message-ID: <alpine.DEB.2.02.1408280955560.26299@atx-linux-37>
+References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com> <1409161588-19417-4-git-send-email-alvin.chen@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <CAOiHx=mZPt=p_jw4fyEqgniJvqunQ86ro_Run5ZtD1zLYWzmqA@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Jonas Gorski <jogo@openwrt.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Florian Fainelli <f.fainelli@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, David Daney <david.daney@cavium.com>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, Qais Yousef <qais.yousef@imgtec.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, John Crispin <blogic@openwrt.org>, Mark Rutland <mark.rutland@arm.com>, Jayachandran C <jchandra@broadcom.com>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>"devicetree@vger.kernel.org" <devicetree@>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1409161588-19417-4-git-send-email-alvin.chen@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Weike Chen <alvin.chen@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Mika Westerberg <mika.westerberg@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 25, 2014 at 10:17 AM, Jonas Gorski <jogo@openwrt.org> wrote:
-> On Sat, Aug 23, 2014 at 9:50 PM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Sat, Aug 23, 2014 at 8:31 AM, Olof Johansson <olof@lixom.net> wrote:
->>>> > arch/arm/boot/dts/<vendor>/
->>>> >
->>>> > Is this something we should do for the MIPS and update the other architectures
->>>> > to follow that scheme?
->>>>
->>>> I recall reading that as well and that it would be adopted for ARM64,
->>>> but that hasn't seemed to have happened.  Perhaps Olof (CC'ed) will no
->>>> more.
->>>
->>> Yeah, I highly recommend having a directory per vendor. We didn't on ARM,
->>> and the amount of files in that directory is becoming pretty
->>> insane. Moving to a subdirectory structure later gets messy which is
->>> why we've been holding off on it.
->>
->> It would mean we can change our scripts to operate on "interesting"
->> DTS files from
->>
->>      do-something-with $(git grep -l $vendor, -- arch/arm/boot/dts)
->>
->> to
->>
->>     do-something-with arch/arm/boot/dts/$vendor/*
->>
->> which is easier to type...
->
-> Btw, do you mean chip-vendor or device-vendor with vendor?
-> Device-vendor could get a bit messy on the source part as the router
-> manufacturers tend to switch them quite often. E.g. d-link used arm,
-> mips and ubi32 chips from marvell, ubicom, broadcom, atheros, realtek
-> and ralink for their dir-615 router, happily switching back and forth.
-> There are 14 known different hardware revisions of it where the chip
-> differed from the previous one.
+On Wed, 27 Aug 2014, Weike Chen wrote:
 
-There's probably no hard and fast rule that works perfectly for
-everything. Since the chip/soc generally defines most of the platform,
-I would say follow the chip vendor. A few "../other-vendor/" includes
-would be okay, but they should be the exception. 3rd party boards with
-common daughter cards come to mind here.
+> This patch enables suspend and resume mode for the power management, and
+> it is based on Josef Ahmad's previous work.
+> 
+> Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
+> Reviewed-by: Shevchenko, Andriy <andriy.shevchenko@intel.com>
+> Signed-off-by: Weike Chen <alvin.chen@intel.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c |   67 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+> 
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index e0ab988..1055cb3 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -560,10 +560,77 @@ static const struct of_device_id dwapb_of_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, dwapb_of_match);
+>  
+> +#if defined CONFIG_PM_SLEEP
+> +/* Store GPIO context across system-wide suspend/resume transitions */
+> +static struct gpio_saved_regs {
+> +	unsigned long data;
+> +	unsigned long dir;
+> +	unsigned long int_en;
+> +	unsigned long int_mask;
+> +	unsigned long int_type;
+> +	unsigned long int_pol;
+> +	unsigned long int_deb;
+> +} saved_regs;
+> +
+> +static int dwapb_gpio_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
+> +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&bgc->lock, flags);
+> +
+> +	saved_regs.int_mask	= dwapb_read(gpio, GPIO_INTMASK);
+> +	saved_regs.int_en	= dwapb_read(gpio, GPIO_INTEN);
+> +	saved_regs.int_deb	= dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
+> +	saved_regs.int_pol	= dwapb_read(gpio, GPIO_INT_POLARITY);
+> +	saved_regs.int_type	= dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
+> +	saved_regs.dir		= dwapb_read(gpio, GPIO_SWPORTA_DDR);
+> +	saved_regs.data		= dwapb_read(gpio, GPIO_SWPORTA_DR);
 
-Rob
+Hello,
+
+The DesignWare GPIO IP can be configured to have ports a, b, c, and d. So 
+you will need to save and restore any ports that are present.  I think 
+that *some* configurations of the IP include a register that can tell us 
+how it was configured, but that register is also optional :)  I don't have 
+confidence that we can read/write the registers blindly whether they are 
+known to be there or not.  So you may be stuck with looking at the
+device tree or platform data to know whether banks b, c, or d exist.
+
+Alan
+
+> +
+> +	/* Mask out interrupts */
+> +	dwapb_write(gpio, GPIO_INTMASK, 0xffffffff);
+> +
+> +	spin_unlock_irqrestore(&bgc->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwapb_gpio_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
+> +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&bgc->lock, flags);
+> +
+> +	dwapb_write(gpio, GPIO_SWPORTA_DR, saved_regs.data);
+> +	dwapb_write(gpio, GPIO_SWPORTA_DDR, saved_regs.dir);
+> +	dwapb_write(gpio, GPIO_INTTYPE_LEVEL, saved_regs.int_type);
+> +	dwapb_write(gpio, GPIO_INT_POLARITY, saved_regs.int_pol);
+> +	dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, saved_regs.int_deb);
+> +	dwapb_write(gpio, GPIO_INTEN, saved_regs.int_en);
+> +	dwapb_write(gpio, GPIO_INTMASK, saved_regs.int_mask);
+> +
+> +	/* Clear out spurious interrupts */
+> +	dwapb_write(gpio, GPIO_PORTA_EOI, 0xffffffff);
+> +
+> +	spin_unlock_irqrestore(&bgc->lock, flags);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
+> +			 dwapb_gpio_resume);
+> +
+>  static struct platform_driver dwapb_gpio_driver = {
+>  	.driver		= {
+>  		.name	= "gpio-dwapb",
+>  		.owner	= THIS_MODULE,
+> +		.pm	= &dwapb_gpio_pm_ops,
+>  		.of_match_table = of_match_ptr(dwapb_of_match),
+>  	},
+>  	.probe		= dwapb_gpio_probe,
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
