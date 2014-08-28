@@ -1,129 +1,104 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [RFC PATCH 5/9] mfd: Add ACPI support
-Date: Thu, 28 Aug 2014 14:45:33 +0300
-Message-ID: <20140828114533.GW1785@lahna.fi.intel.com>
-References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
- <1408255459-17625-6-git-send-email-mika.westerberg@linux.intel.com>
- <20140828112900.GM24579@lee--X1>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v2 1/7] mfd: Add support for DA9150 combined charger &
+ fuel-gauge device
+Date: Thu, 28 Aug 2014 17:17:08 +0530
+Message-ID: <53FF16BC.9050701@gmail.com>
+References: <cover.1409145187.git.Adam.Thomson.Opensource@diasemi.com> <d6c7de200c9447dbafa74ee76739da943a0b73b2.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140828112900.GM24579@lee--X1>
+In-Reply-To: <d6c7de200c9447dbafa74ee76739da943a0b73b2.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>
+Cc: linux-kernel@vger.kernel.org, support.opensource@diasemi.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 12:29:00PM +0100, Lee Jones wrote:
-> On Sun, 17 Aug 2014, Mika Westerberg wrote:
-> 
-> > If an MFD device is backed by ACPI namespace, we should allow subdevice
-> > drivers to access their corresponding ACPI companion devices through normal
-> > means (e.g using ACPI_COMPANION()).
-> > 
-> > This patch adds such support to the MFD core. If the MFD parent device
-> > doesn't specify any ACPI _HID/_CID for the child device, the child device
-> > will share the parent ACPI companion device. Otherwise the child device
-> > will be assigned with the corresponding ACPI companion, if found in the
-> > namespace below the parent.
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Reviewed-by: Darren Hart <dvhart@linux.intel.com>
-> > ---
-> >  Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++
-> >  drivers/mfd/mfd-core.c             | 41 ++++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/core.h           |  3 +++
-> >  3 files changed, 71 insertions(+)
-> > 
-> > diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
-> > index e182be5e3c83..74e35c54febf 100644
-> > --- a/Documentation/acpi/enumeration.txt
-> > +++ b/Documentation/acpi/enumeration.txt
-> > @@ -312,3 +312,30 @@ a code like this:
-> >  
-> >  There are also devm_* versions of these functions which release the
-> >  descriptors once the device is released.
-> > +
-> > +MFD devices
-> > +~~~~~~~~~~~
-> > +The MFD devices create platform devices from their children. For the
-> > +child devices there needs to be an ACPI handle that they can use to
-> > +reference parts of the ACPI namespace that relate to them. In the Linux
-> > +MFD subsystem we provide two ways:
-> > +
-> > +	o The children share the parent ACPI handle.
-> > +	o The MFD cell can specify the ACPI id of the device.
-> > +
-> > +For the first case, the MFD drivers do not need to do anything. The
-> > +resulting child platform device will have its ACPI_COMPANION() set to point
-> > +to the parent device.
-> > +
-> > +If the ACPI namespace has a device that we can match using an ACPI id,
-> > +the id should be set like:
-> > +
-> > +	static struct mfd_cell my_subdevice_cell = {
-> > +		.name = "my_subdevice",
-> > +		/* set the resources relative to the parent */
-> > +		.acpi_pnpid = "XYZ0001",
-> > +	};
-> > +
-> > +The ACPI id "XYZ0001" is then used to lookup an ACPI device directly under
-> > +the MFD device and if found, that ACPI companion device is bound to the
-> > +resulting child platform device.
-> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > index 892d343193ad..bb466b28b3b6 100644
-> > --- a/drivers/mfd/mfd-core.c
-> > +++ b/drivers/mfd/mfd-core.c
-> > @@ -78,6 +78,45 @@ static int mfd_platform_add_cell(struct platform_device *pdev,
-> >  	return 0;
-> >  }
-> >  
-> > +#if IS_ENABLED(CONFIG_ACPI)
-> > +static void mfd_acpi_add_device(const struct mfd_cell *cell,
-> > +				struct platform_device *pdev)
-> > +{
-> > +	struct acpi_device *parent_adev;
-> > +	struct acpi_device *adev = NULL;
-> > +
-> > +	parent_adev = ACPI_COMPANION(pdev->dev.parent);
-> > +	if (!parent_adev)
-> > +		return;
-> > +
-> > +	/*
-> > +	 * MFD child device gets its ACPI handle either from the ACPI
-> > +	 * device directly under the parent that matches the acpi_pnpid or
-> > +	 * it will use the parent handle if is no acpi_pnpid is given.
-> > +	 */
-> > +	if (cell->acpi_pnpid) {
-> > +		struct acpi_device_id ids[2] = {};
-> > +		struct acpi_device *child_adev;
-> > +
-> > +		strlcpy(ids[0].id, cell->acpi_pnpid, sizeof(ids[0].id));
-> > +		list_for_each_entry(child_adev, &parent_adev->children, node)
-> > +			if (acpi_match_device_ids(child_adev, ids)) {
-> > +				adev = child_adev;
-> > +				break;
-> > +			}
-> 
-> What happens if cell->acpi_pnpid is provided, but not matched?
-> 
-> Surely adev will them be NULL?
-> 
-> In these cases shouldn't you then "adev = parent_adev"?
+On 08/28/2014 04:18 PM, Adam Thomson wrote:
 
-Good point. I'll fix that in the next version.
+(...)
 
-> 
-> > +	} else {
-> > +		adev = parent_adev;
-> > +	}
-> > +
-> > +	ACPI_COMPANION_SET(&pdev->dev, adev);
-> > +}
-> > +#else
-> > +static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
-> > +				       struct platform_device *pdev)
-> > +{
-> > +}
-> > +#endif
+> +static int da9150_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct da9150 *da9150;
+> +	int ret;
+> +
+> +	da9150 = devm_kzalloc(&client->dev, sizeof(struct da9150), GFP_KERNEL);
+> +	if (da9150 == NULL)
+> +		return -ENOMEM;
+
+da9150 = devm_kzalloc(&client->dev, sizeof(*da9150), GFP_KERNEL);
+if (!da9150)
+	return -ENOMEM;
+
+> +	da9150->dev = &client->dev;
+> +	da9150->irq = client->irq;
+> +	i2c_set_clientdata(client, da9150);
+> +	dev_set_drvdata(da9150->dev, da9150);
+> +
+> +	da9150->regmap = devm_regmap_init_i2c(client, &da9150_regmap_config);
+> +	if (IS_ERR(da9150->regmap)) {
+> +		ret = PTR_ERR(da9150->regmap);
+> +		dev_err(da9150->dev, "Failed to allocate register map: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	return da9150_device_init(da9150);
+> +}
+> +
+> +static int da9150_remove(struct i2c_client *client)
+> +{
+> +	struct da9150 *da9150 = i2c_get_clientdata(client);
+> +
+> +	da9150_device_exit(da9150);
+> +
+> +	return 0;
+> +}
+> +
+> +static void da9150_shutdown(struct i2c_client *client)
+> +{
+> +	struct da9150 *da9150 = i2c_get_clientdata(client);
+> +
+> +	da9150_device_shutdown(da9150);
+> +}
+> +
+> +static const struct i2c_device_id da9150_i2c_id[] = {
+> +	{ "da9150", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, da9150_i2c_id);
+> +
+> +static const struct of_device_id da9150_of_match[] = {
+> +	{ .compatible = "dlg,da9150", },
+> +	{ }
+> +};
+> +
+
+missed MODULE_DEVICE_TABLE(of, ...)   ?
+
+> +static struct i2c_driver da9150_driver = {
+> +	.driver	= {
+> +		.name	= "da9150",
+> +		.owner	= THIS_MODULE,
+
+No need to update this field...
+
+> +		.of_match_table = of_match_ptr(da9150_of_match),
+> +	},
+> +	.probe		= da9150_probe,
+> +	.remove		= da9150_remove,
+> +	.shutdown	= da9150_shutdown,
+> +	.id_table	= da9150_i2c_id,
+> +};
+> +
+> +module_i2c_driver(da9150_driver);
+> +
+> +MODULE_DESCRIPTION("I2C Driver for DA9150");
+> +MODULE_AUTHOR("Adam Thomson <Adam.Thomson.Opensource@diasemi.com");
+> +MODULE_LICENSE("GPL");
+>
+-- 
+Regards,
+Varka Bhadram.
