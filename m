@@ -1,96 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
-Date: Thu, 28 Aug 2014 17:10:25 +0100
-Message-ID: <20140828161025.GO14650@leverpostej>
-References: <20140828124237.GA29102@fi-ourus-dhcp00977.emea.nsn-net.net>
- <20140828125915.GJ14650@leverpostej>
- <20140828155157.GB23677@roeck-us.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] ARM: tegra: Initialize interrupt controller from DT
+Date: Thu, 28 Aug 2014 18:10:55 +0200
+Message-ID: <3056623.fB9uqpleQ5@wuerfel>
+References: <1409239879-12376-1-git-send-email-thierry.reding@gmail.com> <1409239879-12376-3-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140828155157.GB23677-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409239879-12376-3-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 04:51:57PM +0100, Guenter Roeck wrote:
-> On Thu, Aug 28, 2014 at 01:59:15PM +0100, Mark Rutland wrote:
-> > On Thu, Aug 28, 2014 at 01:42:44PM +0100, Matti Vaittinen wrote:
-> > > Patch adding support for specifying trickle charger setup from device
-> > > tree. Patch is based on linux-next tree.
-> > > 
-> > > 
-> > > Some DS13XX devices have "trickle chargers". Introduce a device tree binding
-> > > for specifying the setup and register values.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/i2c/trivial-devices.txt    |  1 -
-> > >  .../devicetree/bindings/rtc/dallas,ds1339.txt      | 19 ++++++++++
-> > >  drivers/rtc/rtc-ds1307.c                           | 44 ++++++++++++++++++++--
-> > >  3 files changed, 59 insertions(+), 5 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > index 6af570e..e9206a4 100644
-> > > --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> > > @@ -35,7 +35,6 @@ catalyst,24c32		i2c serial eeprom
-> > >  cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
-> > >  dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
-> > >  dallas,ds1338		I2C RTC with 56-Byte NV RAM
-> > > -dallas,ds1339		I2C Serial Real-Time Clock
-> > >  dallas,ds1340		I2C RTC with Trickle Charger
-> > >  dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
-> > >  dallas,ds1631		High-Precision Digital Thermometer
-> > > diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> > > new file mode 100644
-> > > index 0000000..9faf40e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-> > > @@ -0,0 +1,19 @@
-> > > +* Dallas DS1339		I2C Serial Real-Time Clock
-> > > +
-> > > +Required properties:
-> > > +- compatible: Should contain "dallas,ds1339".
-> > > +- reg: I2C address for chip
-> > > +
-> > > +Optional properties:
-> > > +- trickle_setup : Used Trickle Charger configuration,
-> > > +        corresponding to 5 lowest bits in trickle charger register.
-> > 
-> The value is provided via platform data, so it is platform specific
-> and presumably needs to be configurable. I did, however, not find
-> a single in-kernel driver which is actually setting it.
-> So this is a good question.
+On Thursday 28 August 2014 17:31:17 Thierry Reding wrote:
 
-I'm uncomfortable adding a field we don't understand to DT.
+>  void __init tegra_init_irq(void)
+>  {
+> -	int i;
+> -	void __iomem *distbase;
+> +	unsigned int max_ictlrs = ARRAY_SIZE(ictlr_regs), i;
+> +	const struct of_device_id *match;
+> +	struct device_node *np;
+> +	struct resource res;
+> +
+> +	np = of_find_matching_node_and_match(NULL, ictlr_matches, &match);
+> +	if (np) {
+> +		const struct tegra_ictlr_soc *soc = match->data;
+> +
+> +		for (i = 0; i < soc->num_ictlrs; i++) {
+> +			if (of_address_to_resource(np, i, &res) < 0)
+> +				break;
+> +
+> +			ictlr_regs[i] = res;
+> +		}
+> +
+> +		WARN(i != soc->num_ictlrs,
+> +		     "Found %u interrupt controllers in DT; expected %u.\n",
+> +		     i, soc->num_ictlrs);
+> +
+> +		max_ictlrs = soc->num_ictlrs;
+> +		of_node_put(np);
+> +	} else {
+> +		/*
+> +		 * If no matching device node was found, fall back to using
+> +		 * the chip ID.
+> +		 */
+> +
+> +		/* Tegra30 and later have five interrupt controllers, ... */
+> +		max_ictlrs = ARRAY_SIZE(ictlr_regs);
+> +
+> +		/* ..., but Tegra20 only has four. */
+> +		if (of_machine_is_compatible("nvidia,tegra20"))
+> +			max_ictlrs--;
+> +	}
 
-Is there any publicly-available documentation for the device?
+How about moving the entire file to drivers/irqchip and using the
+IRQCHIP_DECLARE() helper for the DT case?
 
-> > s/_/-/ in property names please.
-> > 
-> > What do these bits do? is there any documentation available?
-> > 
-> > Why do they need to be in the DT?
-> > 
-> > Why do we not have a higher-level description?
-> > 
-> > > +- trickle_reg   : Trickle charger register address. Defaults to 0x10 for ds1339.
-> > 
-> > Is this expected to change? Why does this need to be in the DT?
-> > 
-> A quick look into the code suggests that this is a chip specific register,
-> and the register address is set by the driver depending on the chip type.
-> I don't think it should be configurable via dt.
+For the fallback, you can have an entry into that file that just takes
+the address and number, which you can call from platform code here.
 
-Ok.
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
