@@ -1,55 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/7] Adding Skyworks SKY81452 regulator driver
-Date: Thu, 28 Aug 2014 12:02:54 +0100
-Message-ID: <20140828110254.GN17528@sirena.org.uk>
-References: <1409222307-23225-1-git-send-email-jack.yoo@skyworksinc.com>
- <1409222797-23343-1-git-send-email-jack.yoo@skyworksinc.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] MAINTAINERS: Include DA9150 files in Dialog
+ Semiconductor support list.
+Date: Thu, 28 Aug 2014 12:17:41 +0100
+Message-ID: <20140828111741.GK24579@lee--X1>
+References: <cover.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
+ <09b13677b1e2d1cf02e4eb43e2777f8081ec9597.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9oYvVerlq//e2GY1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1409222797-23343-1-git-send-email-jack.yoo@skyworksinc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gyungoh Yoo <gyungoh@gmail.com>
-Cc: lgirdwood@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gyungoh Yoo <jack.yoo@skyworksinc.com>
+In-Reply-To: <09b13677b1e2d1cf02e4eb43e2777f8081ec9597.1409145187.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 28 Aug 2014, Adam Thomson wrote:
 
---9oYvVerlq//e2GY1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  MAINTAINERS | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-On Thu, Aug 28, 2014 at 07:46:37PM +0900, Gyungoh Yoo wrote:
-> v2:
-> Added 'compatible' attribute in the driver
-> Added message for exception or errors.
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This driver has already been applied, please send any changes as
-incremental patches against current code.  I would *not* expect to see
-a compatible being defined for a MFD function device though unless it's
-genuinely reusable.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index aefa948..6dc0aee 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2883,12 +2883,15 @@ S:	Supported
+>  F:	Documentation/hwmon/da90??
+>  F:	drivers/gpio/gpio-da90??.c
+>  F:	drivers/hwmon/da90??-hwmon.c
+> +F:	drivers/iio/adc/da91??-*.c
+>  F:	drivers/input/misc/da90??_onkey.c
+>  F:	drivers/input/touchscreen/da9052_tsi.c
+>  F:	drivers/leds/leds-da90??.c
+>  F:	drivers/mfd/da903x.c
+>  F:	drivers/mfd/da90??-*.c
+> +F:	drivers/mfd/da91??-*.c
+>  F:	drivers/power/da9052-battery.c
+> +F:	drivers/power/da91??-*.c
+>  F:	drivers/regulator/da903x.c
+>  F:	drivers/regulator/da9???-regulator.[ch]
+>  F:	drivers/rtc/rtc-da90??.c
+> @@ -2898,6 +2901,7 @@ F:	include/linux/mfd/da903x.h
+>  F:	include/linux/mfd/da9052/
+>  F:	include/linux/mfd/da9055/
+>  F:	include/linux/mfd/da9063/
+> +F:	include/linux/mfd/da9150/
+>  F:	include/sound/da[79]*.h
+>  F:	sound/soc/codecs/da[79]*.[ch]
+>=20
 
---9oYvVerlq//e2GY1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT/wxaAAoJELSic+t+oim9IYkP/1ioNxcqKjuuHpYrXdJL2X+T
-Xe9ActSrZEZTgEgBYd67Pid+tko+D1EqYTcsPGnBM8zcdhx529A88gCxKPCNK6yW
-m93W11Iqm5mUfhvQw8ZU/dJ3Ui8vlzGJOxrax4wZUfa2PBRuV16GE5oMpuLn0dXv
-q3nyccCbdLlirGiD7PeEcSZy+N5FWGl0ndOqbbhpxVRPCVovLsGww69beOEje69O
-2Ze++w9nPsMNFYC/MYMGrwDpJZZpkqSBbOa2RYcWij2PND9Nr7Jha8nnOpk57nmV
-gLCsws9/miOMGYEt9qCBals2m+xjJvOEPtoHAbVQ1aYryREgDyf+UVuWk77N61gA
-b8TwXPgarI5CwIy02OZprphQJ7wtDpzSLBdOljXw9Wc92m855eObWWwSO0+eeI3e
-SxnmBua2kJ/jn01jdd0698njLzg41i7wpqE0PqxnJjL5bT1VNQnY5Zre31tlk5Qy
-O48mnaRP61SEAG4V02Ul/2NjaNpWUrpnO8HvG/t6v3KdReGLCa0Ti5T6rUfxSvdx
-UaXO5nF+9aBfbWWzvbBJxzdA8a0VA5XdrWSLo5i4h43DnF0OK1nKU0bWe2Mctxh+
-vKQRqwPomqpPlLqBkRqWZ3IlJt6qoWQUlZp/7ANgaVGb+xj8+HxyCHWOIsiK8B7k
-tfGPFG/qfm5EBxuGRdg7
-=4V4/
------END PGP SIGNATURE-----
-
---9oYvVerlq//e2GY1--
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
