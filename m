@@ -1,58 +1,45 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
- in DT
-Date: Thu, 28 Aug 2014 10:58:29 +0300
-Message-ID: <53FEE125.2080600@mm-sol.com>
-References: <53D788A7.4020303@mm-sol.com> <3794875.CZFbAag5Sv@wuerfel> <53D7AA72.6010309@mm-sol.com> <20140729234522.E9FF1C40738@trevor.secretlab.ca> <53D84558.7060406@codeaurora.org> <CAL_JsqJjH0OH+X=fzwqAPeWarjoLev7v6Nv_QhAa+nZyztMnFA@mail.gmail.com> <20140730060619.GC19933@codeaurora.org> <CAJAp7OhoRQ1eWack1e=OL0cS4Fxmgxc7OWeNxcj1qt7Q-x-sQA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OhoRQ1eWack1e=OL0cS4Fxmgxc7OWeNxcj1qt7Q-x-sQA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@linaro.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 1/3] irqchip: renesas-intc-irqpin: Document SoC-specific bindings
+Date: Thu, 28 Aug 2014 09:59:58 +0200
+Message-ID: <1409212800-4957-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 08/27/2014 09:24 PM, Bjorn Andersson wrote:
-> On Tue, Jul 29, 2014 at 11:06 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> On 07/29, Rob Herring wrote:
-> [..]
->>>
->>> You might as well do of_property_read_u32 in the below example.
->>>
->>
->> Fair enough. The example is probably too simple. Things are
->> sometimes slightly more complicated and a simple
->> of_property_read_u32() isn't going to work in the case of
->> multiple reg values or when reg-names is in play.
->>
-> 
-> But do we have such cases in the Qualcomm PMICs?
+The documentation only mentioned the generic fallback compatible property.
+Add the missing SoC-specific compatible properties, which are already in
+use.
 
-yes, we have few - rtc, iadc and partially regulators.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+---
+v2:
+  - Add Acked-by
+---
+ .../bindings/interrupt-controller/renesas,intc-irqpin.txt         | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-> 
-> The only case I've hit so far is for gpios and mpps, where it feels
-> like reg should be base, size and not simply base reg of first gpio -
-> but that's a different thing.
-> 
-> Also, so far it seems like most drivers just code the base address in
-> the driver, as we have very specific compatibles.
-> 
-> 
-> How about we stop trying so hard to make this "perfect" and just merge
-> something close to Josh's original proposal and ignore this problem?
-> Currently all we're doing is delaying any possibility of getting
-> drivers for the individual blocks merged.
-> If we have the dt bindings require the reg to be there, we can discuss
-> and change this all we want later!
-
-I totally agree with you, the latest PMIC version of the patches sent
-two weeks ago follow this assumption but I didn't receive any
-ack/reviewed-by from anyone and we miss the merge window. :(
-
-
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+index 1f8b0c507c26..c73acd060093 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+@@ -2,7 +2,13 @@ DT bindings for the R-/SH-Mobile irqpin controller
+ 
+ Required properties:
+ 
+-- compatible: has to be "renesas,intc-irqpin"
++- compatible: has to be "renesas,intc-irqpin-<soctype>", "renesas,intc-irqpin"
++  as fallback.
++  Examples with soctypes are:
++    - "renesas,intc-irqpin-r8a7740" (R-Mobile A1)
++    - "renesas,intc-irqpin-r8a7778" (R-Car M1A)
++    - "renesas,intc-irqpin-r8a7779" (R-Car H1)
++    - "renesas,intc-irqpin-sh73a0" (SH-Mobile AG5)
+ - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
+   interrupts.txt in this directory
+ 
 -- 
-regards,
-Stan
+1.9.1
+
