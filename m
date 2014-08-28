@@ -1,89 +1,63 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap4-panda: Fix model and SoC family details
-Date: Thu, 28 Aug 2014 15:45:03 -0500
-Message-ID: <1409258703-21188-1-git-send-email-nm@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH 0/2] IO voltage domain support for rk3188 and rk3288
+Date: Thu, 28 Aug 2014 17:26:43 -0400
+Message-ID: <53FF9E93.3040601@ti.com>
+References: <1409254565-10677-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1409254565-10677-1-git-send-email-dianders@chromium.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Doug Anderson <dianders@chromium.org>, Mark Brown <broonie@kernel.org>, Heiko Stuebner <heiko@sntech.de>, olof@lixom.net, Arnd Bergmann <arnd@arndb.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Addy Ke <addy.ke@rock-chips.com>, swarren@nvidia.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Nishanth Menon <nm@ti.com>, pdeschrijver@nvidia.com, galak@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, sandeep_n@ti.com, agross@codeaurora.org, grant.likely@linaro.org, treding@nvidia.com, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently we claim that omap4-panda and omap4-panda-es are essentially
-the same, but they are not since PandaBoard-ES uses OMAP4460 and
-PandaBoard uses OMAP4430.
-
-So, split the common definition and make the model name available.
-
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
----
-Based on v3.17-rc2
-
-Testing logs: (boot test):
-Before Patch(v3.17-rc2)
-1: pandaboard-es:  Boot PASS: http://slexy.org/raw/s209HfpVTs
-2: pandaboard-vanilla:  Boot PASS: http://slexy.org/raw/s21YNmOhQL
-
-After Patch
-1: pandaboard-es:  Boot PASS: http://slexy.org/raw/s20FH76BTn
-2: pandaboard-vanilla:  Boot PASS: http://slexy.org/raw/s2vFLcfkBu
-
-Note: 'ti,omap4-panda-es' is not documented in bindings, not entirely
-sure if we should be doing the same for every board compatibility.
-
- arch/arm/boot/dts/omap4-panda-common.dtsi |    3 ---
- arch/arm/boot/dts/omap4-panda-es.dts      |    5 +++++
- arch/arm/boot/dts/omap4-panda.dts         |    5 +++++
- 3 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-index 8cfa3c8..1505135 100644
---- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-+++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-@@ -8,9 +8,6 @@
- #include "elpida_ecb240abacn.dtsi"
- 
- / {
--	model = "TI OMAP4 PandaBoard";
--	compatible = "ti,omap4-panda", "ti,omap4430", "ti,omap4";
--
- 	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x40000000>; /* 1 GB */
-diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
-index 816d1c9..2f1dabc 100644
---- a/arch/arm/boot/dts/omap4-panda-es.dts
-+++ b/arch/arm/boot/dts/omap4-panda-es.dts
-@@ -10,6 +10,11 @@
- #include "omap4460.dtsi"
- #include "omap4-panda-common.dtsi"
- 
-+/ {
-+	model = "TI OMAP4 PandaBoard-ES";
-+	compatible = "ti,omap4-panda-es", "ti,omap4-panda", "ti,omap4460", "ti,omap4430", "ti,omap4";
-+};
-+
- /* Audio routing is differnet between PandaBoard4430 and PandaBoardES */
- &sound {
- 	ti,model = "PandaBoardES";
-diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index 6189a8b..a0e28b2 100644
---- a/arch/arm/boot/dts/omap4-panda.dts
-+++ b/arch/arm/boot/dts/omap4-panda.dts
-@@ -9,3 +9,8 @@
- 
- #include "omap443x.dtsi"
- #include "omap4-panda-common.dtsi"
-+
-+/ {
-+	model = "TI OMAP4 PandaBoard";
-+	compatible = "ti,omap4-panda", "ti,omap4430", "ti,omap4";
-+};
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1cnNkYXkgMjggQXVndXN0IDIwMTQgMDM6MzYgUE0sIERvdWcgQW5kZXJzb24gd3JvdGU6
+Cj4gVGhlc2UgdHdvIHBhdGNoZXMgYWRkIHN1cHBvcnQgZm9yIGF1dG9tYXRpY2FsbHkgY29uZmln
+dXJpbmcgdGhlIElPCj4gdm9sdGFnZSBkb21haW5zIG9uIHJrMzE4OCBhbmQgcmszMjg4IFNvQ3Mu
+ICBUaGUgZmlyc3QgcGF0Y2ggYWRkcyBzb21lCj4gbmV3IG5vdGlmaWNhdGlvbiB0eXBlcyB0byB0
+aGUgcmVndWxhdG9yIGNvZGUuICBJdCdzIHVzZWQgYnkgdGhlIHNlY29uZAo+IHBhdGNoIHdoaWNo
+IGFjdHVhbGx5IGltcGxlbWVudHMgdGhlIElPIHZvbHRhZ2UgZG9tYWluIGRyaXZlci4KPiAKPiBU
+aGVzZSB0d28gcGF0Y2hlcyB3ZXJlIGNvLWRldmVsb3BlZCBieSBIZWlrbyBTdMO8Ym5lciBhbmQg
+RG91ZyBBbmRlcnNvbgo+IChwcm9vZiBvZiBjb25jZXB0IHBhdGNoZXMgd2VyZSB3cml0dGVuIGJ5
+IEhlaWtvKS4gIFRoZXkgd2VyZSB0ZXN0ZWQgaW4KPiBhIHByaXZhdGUgYnJhbmNoIG9uIGFuIHJr
+MzI4OCBib2FyZCB1c2luZyByazgwOCBpbnN0ZWFkIG9mIG1haW5saW5lCj4gc2luY2Ugcms4MDgg
+c3VwcG9ydCBpc24ndCBmaW5hbGl6ZWQgaW4gbWFpbmxpbmUgeWV0Lgo+IAo+IChzb3JyeSBpZiB5
+b3UgZ290IHRoaXMgc2VyaWVzIHR3aWNlOyBteSBtYWlsZXIgc2VlbXMgdW5oYXBweSB3aXRoIG1l
+KQo+IAo+IEhlaWtvIFN0w7xibmVyICgyKToKPiAgIHJlZ3VsYXRvcjogY29yZTogQWRkIFJFR1VM
+QVRPUl9FVkVOVF9QUkVfVk9MVEFHRV9DSEFOR0UgKGFuZCBBQk9SVCkKPiAgIHNvYy9yb2NrY2hp
+cDogaW8tZG9tYWluOiBhZGQgZHJpdmVyIGhhbmRsaW5nIGlvIGRvbWFpbnMKPiAKU29ycnkgdG8g
+c2hvdCBkb3duIGJ1dCB5b3VyIElPIGRvbWFpbnMgYXJlIG5vdGhpbmcgYnV0IHZvbHRhZ2UgZG9t
+YWlucwphbmQgeW91IHNob3VsZCByZWFsbHkgYnVpbGQgc29tZXRoaW5nIGluIHRoZSBkcml2ZXJz
+L3Bvd2VyLyoKClBsZWFzZSBoYXZlIGEgbG9vayBhdCB0aGUgUkZDIFsxXS4gWW91IHNob3VsZCBy
+ZWFsbHkgZ28gb24gdGhvc2UKbGluZXMgYW5kIGNvbGxhYm9yYXRlIHRvIG1ha2UgYSBnZW5lcmlj
+IHZvbHRhZ2UgZG9tYWluIGxheWVyIGluc3RlYWQgb2YgdGhyb3dpbmcKdGhlIGRyaXZlciB1bmRl
+ciBkcml2ZXJzL3NvYy4gCgo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcm9ja2NoaXAv
+aW8tZG9tYWluLnR4dCB8ICA2MCArKysrCj4gIGRyaXZlcnMvcmVndWxhdG9yL2NvcmUuYyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDYzICsrKy0KPiAgZHJpdmVycy9zb2MvS2NvbmZpZyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL3NvYy9NYWtl
+ZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvc29j
+L3JvY2tjaGlwL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgIDEwICsKPiAgZHJpdmVy
+cy9zb2Mvcm9ja2NoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBk
+cml2ZXJzL3NvYy9yb2NrY2hpcC9pby1kb21haW4uYyAgICAgICAgICAgICAgICAgICB8IDMzMyAr
+KysrKysrKysrKysrKysrKysrKysKPiAgaW5jbHVkZS9saW51eC9yZWd1bGF0b3IvY29uc3VtZXIu
+aCAgICAgICAgICAgICAgICAgfCAgMjAgKysKPiAgOCBmaWxlcyBjaGFuZ2VkLCA0ODIgaW5zZXJ0
+aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcm9ja2NoaXAvaW8tZG9tYWluLnR4dAo+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zb2Mvcm9ja2NoaXAvS2NvbmZpZwo+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9zb2Mvcm9ja2NoaXAvTWFrZWZpbGUKPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvc29jL3JvY2tjaGlwL2lvLWRvbWFpbi5jCj4gCgpSZWdhcmRzLApTYW50b3No
+ClsxXSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5l
+bC8yMDE0LUZlYnJ1YXJ5LzIzMzgxOS5odG1sCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
