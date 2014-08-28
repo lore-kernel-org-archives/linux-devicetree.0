@@ -1,60 +1,64 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
- initialization order based on the DT)
-Date: Thu, 28 Aug 2014 10:23:08 +0100
-Message-ID: <20140828092308.GA31111@arm.com>
-References: <20140826084208.AE5F0C40989@trevor.secretlab.ca>
- <20140826084922.GG17263@ulmo>
- <53FC566C.30904@ahsoftware.de>
- <20140826101107.GC32315@leverpostej>
- <20140827103432.64927C409CB@trevor.secretlab.ca>
- <20140827144403.GB13850@arm.com>
- <53FE05AE.9000406@wwwdotorg.org>
- <53FE07BE.7000809@ahsoftware.de>
- <53FE0966.5020206@wwwdotorg.org>
- <53FED13C.4070606@ahsoftware.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53FED13C.4070606@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v9 2/3] ahci_xgene: Skip the PHY and clock initialization if already configured by the firmware.
+Date: Thu, 28 Aug 2014 14:51:21 +0530
+Message-ID: <1409217682-5759-3-git-send-email-stripathi@apm.com>
+References: <1409217682-5759-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1409217682-5759-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 07:50:36AM +0100, Alexander Holler wrote:
-> Am 27.08.2014 18:37, schrieb Stephen Warren:
-> > Of course, there are probably cases where we could/should add some more
-> > phandles/... and likewise cases where we shouldn't. That's why detailed
-> > research is needed.
-> 
-> Just because I'm curious, I wonder how this research does or shoud look 
-> like.
-> 
-> Defered probes did come to light with 3.4, that was more than 2 years 
-> ago. Ok, most people (like me) just noticed it during the last months 
-> when they switched to DT and have run into a problem (the deferred probe 
-> mechanism is an error-message killer), but some must have seen it 
-> already 2 years ago.
-> 
-> And I wonder how the ACPI world solves that problem. My guess would be 
-> hardcoded stuff in the firmware-blob (BIOS), just like it happened with 
-> board files, but I've never seen BIOS code and my knowledge about ACPI 
-> is almost zero. ;)
+This patch implements the feature to skip the PHY and clock
+initialization if it is already configured by the firmware.
 
-ACPI doesn't even attempt to solve such problems at the OS level. SoCs
-aimed at ACPI should have simple hardware configuration (from a Linux
-perspective) initialised by firmware (e.g. clocks) and devices living on
-a standard bus like PCIe. If a SoC requires specific low-level code to
-initialise the hardware in a specific order (other than architected
-peripherals like GIC, timers; e.g. MFD devices), we should deem it
-unsuitable for ACPI.
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+ drivers/ata/ahci_xgene.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-ACPI should only be used by vendors who know exactly why they need and
-how to implement it properly and not just because the marketing
-department told them to (it would also be nice if the Linux kernel
-community was informed about such reasons).
+diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+index f416495..c721887 100644
+--- a/drivers/ata/ahci_xgene.c
++++ b/drivers/ata/ahci_xgene.c
+@@ -145,6 +145,14 @@ static unsigned int xgene_ahci_qc_issue(struct ata_queued_cmd *qc)
+ 	return rc;
+ }
 
--- 
-Catalin
++static bool xgene_ahci_is_memram_inited(struct xgene_ahci_context *ctx)
++{
++	void __iomem *diagcsr = ctx->csr_diag;
++
++	return (readl(diagcsr + CFG_MEM_RAM_SHUTDOWN) == 0 &&
++	        readl(diagcsr + BLOCK_MEM_RDY) == 0xFFFFFFFF);
++}
++
+ /**
+  * xgene_ahci_read_id - Read ID data from the specified device
+  * @dev: device
+@@ -468,6 +476,11 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+
++	if (xgene_ahci_is_memram_inited(ctx)) {
++		dev_info(dev, "skip clock and PHY initialization\n");
++		goto skip_clk_phy;
++	}
++
+ 	/* Due to errata, HW requires full toggle transition */
+ 	rc = ahci_platform_enable_clks(hpriv);
+ 	if (rc)
+@@ -481,6 +494,8 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 	/* Configure the host controller */
+ 	xgene_ahci_hw_init(hpriv);
+
++skip_clk_phy:
++
+ 	hflags = AHCI_HFLAG_NO_PMP | AHCI_HFLAG_NO_NCQ;
+
+ 	rc = ahci_platform_init_host(pdev, hpriv, &xgene_ahci_port_info,
+--
+1.8.2.1
+
