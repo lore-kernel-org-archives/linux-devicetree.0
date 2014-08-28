@@ -1,58 +1,90 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: dts: make arch-timer always on in rk3288 soc
-Date: Thu, 28 Aug 2014 10:17:58 +0100
-Message-ID: <20140828091758.GB14650@leverpostej>
-References: <1409190017-12656-1-git-send-email-kever.yang@rock-chips.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v2 3/3] [media] rc: remove change_protocol in rc-ir-raw.c
+Date: Thu, 28 Aug 2014 17:18:38 +0800
+Message-ID: <53FEF3EE.1040708@linaro.org>
+References: <1408613086-12538-1-git-send-email-zhangfei.gao@linaro.org> <1408613086-12538-4-git-send-email-zhangfei.gao@linaro.org> <20140821065006.6d831ec4@concha.lan> <53FD99FA.4030207@linaro.org> <20140827083447.6af0157f.m.chehab@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409190017-12656-1-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20140827083447.6af0157f.m.chehab@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>
+Cc: =?UTF-8?B?RGF2aWQgSMOkcmRlbWFu?= <david@hardeman.nu>, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kever,
 
-On Thu, Aug 28, 2014 at 02:40:17AM +0100, Kever Yang wrote:
-> We need use the hrtimer, which need the arch-timer to be 'always-on'
 
-I asked a question on the last posting [1]. Can you please confirm
-either way?
+On 08/27/2014 07:34 PM, Mauro Carvalho Chehab wrote:
 
-Thanks,
-Mark.
+>>>> With commit 4924a311a62f ("[media] rc-core: rename ir-raw.c"),
+>>>> empty change_protocol was introduced.
+>>>
+>>> No. This was introduced on this changeset:
+>>>
+>>> commit da6e162d6a4607362f8478c715c797d84d449f8b
+>>> Author: David H=C3=A4rdeman <david@hardeman.nu>
+>>> Date:   Thu Apr 3 20:32:16 2014 -0300
+>>>
+>>>       [media] rc-core: simplify sysfs code
+>>>
+>>>> As a result, rc_register_device will set dev->enabled_protocols
+>>>> addording to rc_map->rc_type, which prevent using all protocols.
+>>>
+>>> I strongly suspect that this patch will break some things, as
+>>> the new code seems to expect that this is always be set.
+>>>
+>>> See the code at store_protocols(): if this callback is not set,
+>>> then it won't allow to disable a protocol.
+>>>
+>>> Also, this doesn't prevent using all protocols. You can still use
+>>> "ir-keytable -p all" to enable all protocols (the "all" protocol
+>>> type were introduced recently at the userspace tool).
+>>>
+>>>   From the way I see, setting the protocol when a table is loaded
+>>> is not a bad thing, as:
+>>> - if RC tables are loaded, the needed protocol to decode it is
+>>>     already known;
+>>> - by running just one IR decoder, the IR handling routine will
+>>>     be faster and will consume less power;
+>>> - on a real case scenario, it is a way more likely that just one
+>>>     decoder will ever be needed by the end user.
+>>>
+>>> So, I think that this is just annoying for developers when are chec=
+king
+>>> if all decoders are working, by sending keycodes from different IR =
+types
+>>> at the same time.
+>>>
+>>
+>> Thanks Mauro for the kind explanation.
+>>
+>> ir-keytable seems also enalbe specific protocol
+>> -p, --protocol=3DPROTOCOL
+>>
+>> Currently we use lirc user space decoder/keymap and only need
+>> pulse-length information from kernel.
+>
+> Well, you can use ir-keytable to disable everything but lirc, not
+> compile the other hardware decoders or directly write "lirc" to
+> /sys/class/rc/rc0/protocols (see Documentation/ABI/testing/sysfs-clas=
+s-rc).
+>
+> Anyway, I suggest you to use the hardware decoder instead of lirc,
+> as the in-kernel decoders should be lighter than lirc and works prett=
+y
+> well, but this is, of course, your decision.
+>
+> Btw, it would make sense, IMHO, to have a way to setup LIRC daemon to
+> enable LIRC output on a given remote controller, and, optionally,
+> disabling the hardware decoders that are needlessly enabled.
+>
 
-[1] lists.infradead.org/pipermail/linux-arm-kernel/2014-August/282327.html
+Thanks Mauro
 
-> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
->  arch/arm/boot/dts/rk3288.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 5950b0a..698e6ea 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -76,6 +76,7 @@
->  			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
->  			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->  		clock-frequency = <24000000>;
-> +		always-on;
->  	};
->  
->  	i2c1: i2c@ff140000 {
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Double checked, both ir-keytable and /sys/class/rc/rc0/protocols can=20
+enable/disable protocols, which is much easier than dts passing=20
+information, and by default all protocols are disabled.
+
+Thanks for this kind information.
