@@ -1,59 +1,83 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] spi: sh-msiof: Add support for new R-Car Gen2 SoCs
-Date: Thu, 28 Aug 2014 19:17:59 +0100
-Message-ID: <20140828181759.GI29327@sirena.org.uk>
-References: <1409213463-5599-1-git-send-email-geert+renesas@glider.be>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 11/14] arm64: dts: Add initial device tree support for
+ EXYNOS7
+Date: Thu, 28 Aug 2014 19:17:28 +0100
+Message-ID: <20140828181728.GF18005@leverpostej>
+References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com>
+ <1409132660-1898-3-git-send-email-ch.naveen@samsung.com>
+ <20140828035639.GB4972@localhost>
+ <20140828094846.GD14650@leverpostej>
+ <CAOesGMjY8wfAcq2fLgs=ZWHdiWtFqxr+ncUKTje0SnXqO-CCgQ@mail.gmail.com>
+ <20140828170306.GQ14650@leverpostej>
+ <CAOesGMgYeFObKHA9znzBq9t2mLv8WWT1QaKugQ6yf7RgV09Qyg@mail.gmail.com>
+ <20140828173931.GB18005@leverpostej>
+ <CAMuHMdXTo+JN+eSgvU_HkMKcv3RS1Dr+D3VnHF8x+EdKiK8j1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SdaPbLtAangIkrMZ"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1409213463-5599-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAMuHMdXTo+JN+eSgvU_HkMKcv3RS1Dr+D3VnHF8x+EdKiK8j1g@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh@kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Thomas Abraham <thomas.ab@samsung.com>, "cpgs@samsung.com" <cpgs@samsung.com>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Aug 28, 2014 at 06:47:00PM +0100, Geert Uytterhoeven wrote:
+> Hi Mark,
+> 
+> On Thu, Aug 28, 2014 at 7:39 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> >> >> Ok. If address-cells is kept at 2 the unit address needs to be changed
+> >> >> to "0,0". So one or the other has to be changed.
+> >> >
+> >> > I'm happy either way.
+> >> >
+> >> > I'm not sure the rest of the tree had "0," prefixes on all of the
+> >> > unit-addresses for 64-bit addresses that were under 4GB, and I'm not
+> >> > sure that existing dts consistently do that either.
+> >> >
+> >> > Do we want to enforce that for all 64-bit unit-addresses?
+> >>
+> >> Yeah, I believe that's the only valid format for a 2-address-cell unit address.
+> >
+> > Fair enough. I didn't spot this explicitly mentioned anywhere in ePAPR,
+> > but the examples match.
+> 
+> I couldn't find much about how the unit-addresses should really look like.
+> 
+> Power_ePAPR_APPROVED_v1.1.pdf:
+> "The unit-address component of the name is specific to the bus type on
+> which the node sits. It consists
+> of one or more ASCII characters from the set of characters in Table
+> 2-1. The unit-address must
+> match the first address specified in the reg property of the node. If
+> the node has no reg property, the
+> @ and unit-address must be omitted and the node-name alone
+> differentiates the node from other nodes
+> at the same level in the tree. The binding for a particular bus may
+> specify additional, more specific
+> requirements for the format of reg and the unit-address."
+> 
+> "Table 2.1" contains lot of characters, definitely not limited to hex numbers.
+> Also nothing about (not) needing a "0x" prefix.
 
---SdaPbLtAangIkrMZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is unfortunate. I guess this was assumed to be implied by way of
+the examples. :/
 
-On Thu, Aug 28, 2014 at 10:11:03AM +0200, Geert Uytterhoeven wrote:
-> Add support for MSIOF in:
->   - r8a7792 (R-Car V2H)
->   - r8a7793 (R-Car M2-N)
->   - r8a7794 (R-Car E2)
->=20
-> r8a7791 is now called "R-Car M2-W".
+> > I should probably re-jig that checkpatch test I had for unit-addresses.
+> 
+> It would be great if dtc started complaining about unit-addresses not
+> matching the first reg property.
 
-Applied, thanks.
+Agreed.
 
---SdaPbLtAangIkrMZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+When I last tried I thought that required more complex parsing than
+could be done with a regex.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+That said, I'd forgotten that properties must come before child nodes,
+so I though I had to at least balance '{' and '}' for children. I guess
+all we need to do is find a line beginning with '\s*reg\s*=\s*<' before
+the next '{' or '}'.
 
-iQIcBAEBAgAGBQJT/3JTAAoJELSic+t+oim9/1EQAIK0OPfWSyW6AR8DjNbjau6Q
-vaYGPZhy8iXDCwSQtmx7JjBh7E97NoWJhiRxYL2PQvLoVgYZPmE3kfRYqQDsE4qR
-RT7AUASc/pvaJyBd3Sx188CqXY1eSSiMFhJV8o9t8B5ZwxttxBZSmDTnAe416EE7
-Kk7peWas6p1roY6PCmnKppvB/oES5pUVvEepQFrHPAiTYhOP3Iw+Wf5q27HiKHbQ
-6mUBm3xkYF7weu3ZC7E9SKAt2vGfHABg2ideEOoOMEiboHMlA5J3GHCG18PVk0LG
-O4GUyFhPkh1StEaLs7xb7vnR6+pXNeGiLh7eJVTWjuGKfQp1wFUkbPnyq+BfCPBh
-mYJWSy5qizOgNtWbAmrQ/K2Y8SlFnGC5vCCrlLb3ZW+GOaJ5FpG1GCtU84KLBi7i
-xUPKmgnFS6VINsFyKqCeAF+eH1ly+YW+heK5FUtP8GX8tbbvLiQSHx9sYXI3WNGh
-cIrWDt1XPPH+VIdYmCPZxPa4/jxcpKUQnFgw734khdORt1HGObHDtaumbqyQVTk4
-pG7AWJLTsKFAVOWMEDNQItvj2hEml4gURV+xI0zKRCdsqn+7MkSaUuQ6jXfUU56c
-M7r0eso5Cduxat196fqgGBOfufvPoRf+Q2p+JtRKGcDaeCdpJtnS7PMHsG70dWio
-kh8Ys4CK/m4EeB2SnXw3
-=cxI8
------END PGP SIGNATURE-----
+Maybe this will be easier than previously thought. :)
 
---SdaPbLtAangIkrMZ--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
