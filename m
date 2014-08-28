@@ -1,37 +1,90 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 2/2] doc: dt: mxs-phy: add compatible string for
- imx6sx-usbphy
-Date: Thu, 28 Aug 2014 16:40:25 +0800
-Message-ID: <20140828084023.GA32228@peterchendt>
-References: <1409021718-5969-1-git-send-email-peter.chen@freescale.com>
- <1409021718-5969-2-git-send-email-peter.chen@freescale.com>
- <20140827190904.GD6347@saruman.home>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: hummingboard: gpio-ir on gpio 3,5
+Date: Thu, 28 Aug 2014 16:42:47 +0800
+Message-ID: <20140828084246.GF28777@dragon>
+References: <20140823091058.GO30401@n2100.arm.linux.org.uk>
+ <E1XL7MR-0002yX-6N@rmk-PC.arm.linux.org.uk>
+ <CAOMZO5C=xyYLLBX1PDsJQ9NwzXZxCWTvPMTUWzYcoohOOvA_qA@mail.gmail.com>
+ <20140823133649.GP30401@n2100.arm.linux.org.uk>
+ <CAOMZO5DrtrEJxmCZSO6RVZom8kzZhu2dikntRwYZeq5j_QZ9sw@mail.gmail.com>
+ <20140823143305.GQ30401@n2100.arm.linux.org.uk>
+ <CAOMZO5DgPLHwDsRPkssRDT5tKyfOo=Udg6vD5VPUQ43wsV346w@mail.gmail.com>
+ <20140827184354.GA30401@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140827190904.GD6347-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20140827184354.GA30401-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 27, 2014 at 02:09:04PM -0500, Felipe Balbi wrote:
-> On Tue, Aug 26, 2014 at 10:55:18AM +0800, Peter Chen wrote:
-> > Add compatible string for imx6sx-usbphy.
+On Wed, Aug 27, 2014 at 07:43:54PM +0100, Russell King - ARM Linux wrote:
+> On Sat, Aug 23, 2014 at 12:02:05PM -0300, Fabio Estevam wrote:
+> > On Sat, Aug 23, 2014 at 11:33 AM, Russell King - ARM Linux
+> > <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
 > > 
-> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > Most of the pins not associated with booting the kernel are left
+> > > unconfigured by the boot loader - that's because uboot SPL has very
+> > > little space for such things.
+> > >
+> > > Rabeeh has just told me that 0x1b0b1 would be a better value for it.
+> > > I'll add an additional patch to the series for that, rather than
+> > > modifying Rabeeh's original patch.
+> > 
+> > Sounds good, thanks.
 > 
-> do I need to take this one as well or will DT folks take care of patch 2 ?
+> Right, here's the patch to make that change.  Shawn, can you pick this
+> one up as well please?
 > 
+> Thanks.
+> 
+> 8<===
+> From 5cebff8f6232fbafde7af564eca61447f951040e Mon Sep 17 00:00:00 2001
+> From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Date: Sat, 23 Aug 2014 15:34:07 +0100
+> Subject: [PATCH] ARM: dts: hummingboard: fix configuration of IR input
+> 
+> Add the IOMUX setting for the IR input, rather than relying on the
+> boot loader.
+> 
+> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 
-It is DT change for driver, if there is no objection from DT guys, the driver
-maintainer needs to take it.
+Applied, thanks.
 
--- 
-Best Regards,
-Peter Chen
+Shawn
+
+> ---
+>  arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> index 4aa0ae357b00..7fe29de89e9d 100644
+> --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> @@ -130,7 +130,7 @@
+>  
+>  		pinctrl_hummingboard_gpio3_5: hummingboard-gpio3_5 {
+>  			fsl,pins = <
+> -				MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x80000000
+> +				MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x1b0b1
+>  			>;
+>  		};
+>  
+> -- 
+> 1.8.3.1
+> 
+> 
+> 
+> -- 
+> FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+> according to speedtest.net.
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
