@@ -1,91 +1,86 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] watchdog: add driver for Ricoh RN5T618 watchdog
-Date: Thu, 28 Aug 2014 08:19:46 +0100
-Message-ID: <20140828071946.GF24579@lee--X1>
-References: <1409091237-16722-1-git-send-email-b.galvani@gmail.com>
- <1409091237-16722-4-git-send-email-b.galvani@gmail.com>
- <20140827190135.GA18849@roeck-us.net>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
+Date: Thu, 28 Aug 2014 09:23:55 +0200
+Message-ID: <53FED90B.8070308@metafoo.de>
+References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com> <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com> <53F9A6EE.5070005@metafoo.de> <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com> <20140826062558.GR17528@sirena.org.uk> <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com> <20140826091120.GC17528@sirena.org.uk> <53FC5105.6070901@metafoo.de> <20140826094211.GF17528@sirena.org.uk> <87r403mtip.wl%kuninori.morimoto.gx@gmail.com> <20140826105028.GK17528@sirena.org.uk> <87d2bmpwi2.wl%kuninori.morimoto.gx@gmail.com> <87a96qpqsy.wl%kuninori.morimoto.gx@gmail.com> <53FD95AB.6080903@metafoo.de> <87fvghihaq.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140827190135.GA18849-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <87fvghihaq.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Aug 2014, Guenter Roeck wrote:
-> On Wed, Aug 27, 2014 at 12:13:56AM +0200, Beniamino Galvani wrote:
-> > This adds a driver for the watchdog timer available in Ricoh RN5T61=
-8
-> > PMIC. The device supports a programmable expiration time of 1, 8, 3=
-2
-> > or 128 seconds.
-> >=20
-> > Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  drivers/watchdog/Kconfig       |   11 +++
-> >  drivers/watchdog/Makefile      |    1 +
-> >  drivers/watchdog/rn5t618_wdt.c |  196 ++++++++++++++++++++++++++++=
-++++++++++++
-> >  include/linux/mfd/rn5t618.h    |    4 +
-> >  4 files changed, 212 insertions(+)
-> >  create mode 100644 drivers/watchdog/rn5t618_wdt.c
+On 08/28/2014 02:33 AM, Kuninori Morimoto wrote:
+>
+> Hi Lars
+>
+> Thank you for your comment
+>
+>>> 	sound {
+>>> 		compatible = "simple-audio-card";
+>>>
+>>> 		/* FrontEnd */
+>>> 		simple-audio-card,dai-link@0 {
+>>> 			...
+>>> 			format = "left_j";
+>>> 			remote = <&endpoint>;
+>>>
+>>> 			cpu {
+>>> 				sound-dai = <&rcar_sound 0>;
+>>> 			};
+>>> 			codec { /* dummy */ };
+>>> 		};
+>>>
+>>> 		/* BackEnd */
+>>> 		endpoint: simple-audio-card,dai-link@1 {
+>>> 			...
+>>> 			format = "left_j";
+>>>
+>>> 			cpu { /* dummy */ };
+>>> 			codec1: codec {
+>>> 				sound-dai = <&ak4643>;
+>>> 			};
+>>> 		};
+>>> 	};
+>>
+>> When you try to come up with with a binding try to completely ignore that
+>> something call DPCM exists. The binding is supposed to describe the hardware
+>> and how the different hardware components are interconnected. So try to come
+>> up with a binding that accurately describes the hardware connections. Once
+>> that is done try to map the binding onto the existing software framework.
+>> The last step may require some adjustments to the framework.
+>
+> Now, my system is working well with simple-card by this
+>
+> 	sound {
+> 		compatible = "simple-audio-card";
+> 		...
+>
+> 		cpu {
+> 			sound-dai = <&rcar_sound 0>;
+> 		};
+> 		codec {
+> 			sound-dai = <&ak4643>;
+> 		};
+> 	};
+>
+> The reason why I'm tring to support DPCM on simple-card is "sampling rate convert".
+> My rcar_sound can convert sampling rate, and I tried to add this feature as
+> rcar_sound property.
+> But, Mark rejected and requests me to use DPCM for it,
+> since it can be common featrue.
+> Current existing simple-card can't use it, and I'm tring.
+> But, am I misunderstanding ?
 
-[...]
+Is the sample rate converter a extra module, or is the sample rate converter 
+just a feature of the I2S core?
 
-> > +++ b/drivers/watchdog/rn5t618_wdt.c
-> > @@ -0,0 +1,196 @@
+- Lars
 
-[...]
-
-> > +static int rn5t618_wdt_set_timeout(struct watchdog_device *wdt_dev=
-,
-> > +				   unsigned int timeout)
-> > +{
-> > +	struct rn5t618_wdt *wdt =3D watchdog_get_drvdata(wdt_dev);
-> > +	int ret, i;
-> > +
-> > +	for (i =3D 0; i < ARRAY_SIZE(rn5t618_wdt_map); i++) {
-> > +		if (rn5t618_wdt_map[i].time + 1 >=3D timeout)
-> > +			break;
-> > +	}
-> > +
-> > +	if (i =3D=3D ARRAY_SIZE(rn5t618_wdt_map))
-> > +		ret =3D -EINVAL;
->=20
-> Can you simplify this a bit ? If you use
->=20
-> 	if (i =3D=3D ARRAY_SIZE(rn5t618_wdt_map))
-> 		return -EINVAL;
-
-This changes the semantics.
-
-> > +	else
->=20
-> You can drop this else statement.
->=20
-> > +		ret =3D regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDO=
-G,
-> > +					 RN5T618_WATCHDOG_WDOGTIM_M,
-> > +					 rn5t618_wdt_map[i].reg_val);
-> > +	if (!ret)
-> > +		wdt_dev->timeout =3D rn5t618_wdt_map[i].time;
-
-=2E.. Isn't this important?
-
-> > +	return ret;
-> > +}
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
