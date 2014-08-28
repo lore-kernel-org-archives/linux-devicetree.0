@@ -1,104 +1,85 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v2 1/7] mfd: Add support for DA9150 combined charger &
- fuel-gauge device
-Date: Thu, 28 Aug 2014 17:17:08 +0530
-Message-ID: <53FF16BC.9050701@gmail.com>
-References: <cover.1409145187.git.Adam.Thomson.Opensource@diasemi.com> <d6c7de200c9447dbafa74ee76739da943a0b73b2.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] watchdog: add driver for Ricoh RN5T618 watchdog
+Date: Thu, 28 Aug 2014 05:11:04 -0700
+Message-ID: <53FF1C58.3070006@roeck-us.net>
+References: <1409091237-16722-1-git-send-email-b.galvani@gmail.com> <1409091237-16722-4-git-send-email-b.galvani@gmail.com> <20140827190135.GA18849@roeck-us.net> <20140828071946.GF24579@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d6c7de200c9447dbafa74ee76739da943a0b73b2.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>
-Cc: linux-kernel@vger.kernel.org, support.opensource@diasemi.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140828071946.GF24579@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2014 04:18 PM, Adam Thomson wrote:
-
-(...)
-
-> +static int da9150_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct da9150 *da9150;
-> +	int ret;
-> +
-> +	da9150 = devm_kzalloc(&client->dev, sizeof(struct da9150), GFP_KERNEL);
-> +	if (da9150 == NULL)
-> +		return -ENOMEM;
-
-da9150 = devm_kzalloc(&client->dev, sizeof(*da9150), GFP_KERNEL);
-if (!da9150)
-	return -ENOMEM;
-
-> +	da9150->dev = &client->dev;
-> +	da9150->irq = client->irq;
-> +	i2c_set_clientdata(client, da9150);
-> +	dev_set_drvdata(da9150->dev, da9150);
-> +
-> +	da9150->regmap = devm_regmap_init_i2c(client, &da9150_regmap_config);
-> +	if (IS_ERR(da9150->regmap)) {
-> +		ret = PTR_ERR(da9150->regmap);
-> +		dev_err(da9150->dev, "Failed to allocate register map: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	return da9150_device_init(da9150);
-> +}
-> +
-> +static int da9150_remove(struct i2c_client *client)
-> +{
-> +	struct da9150 *da9150 = i2c_get_clientdata(client);
-> +
-> +	da9150_device_exit(da9150);
-> +
-> +	return 0;
-> +}
-> +
-> +static void da9150_shutdown(struct i2c_client *client)
-> +{
-> +	struct da9150 *da9150 = i2c_get_clientdata(client);
-> +
-> +	da9150_device_shutdown(da9150);
-> +}
-> +
-> +static const struct i2c_device_id da9150_i2c_id[] = {
-> +	{ "da9150", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, da9150_i2c_id);
-> +
-> +static const struct of_device_id da9150_of_match[] = {
-> +	{ .compatible = "dlg,da9150", },
-> +	{ }
-> +};
-> +
-
-missed MODULE_DEVICE_TABLE(of, ...)   ?
-
-> +static struct i2c_driver da9150_driver = {
-> +	.driver	= {
-> +		.name	= "da9150",
-> +		.owner	= THIS_MODULE,
-
-No need to update this field...
-
-> +		.of_match_table = of_match_ptr(da9150_of_match),
-> +	},
-> +	.probe		= da9150_probe,
-> +	.remove		= da9150_remove,
-> +	.shutdown	= da9150_shutdown,
-> +	.id_table	= da9150_i2c_id,
-> +};
-> +
-> +module_i2c_driver(da9150_driver);
-> +
-> +MODULE_DESCRIPTION("I2C Driver for DA9150");
-> +MODULE_AUTHOR("Adam Thomson <Adam.Thomson.Opensource@diasemi.com");
-> +MODULE_LICENSE("GPL");
+On 08/28/2014 12:19 AM, Lee Jones wrote:
+> On Wed, 27 Aug 2014, Guenter Roeck wrote:
+>> On Wed, Aug 27, 2014 at 12:13:56AM +0200, Beniamino Galvani wrote:
+>>> This adds a driver for the watchdog timer available in Ricoh RN5T618
+>>> PMIC. The device supports a programmable expiration time of 1, 8, 32
+>>> or 128 seconds.
+>>>
+>>> Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>   drivers/watchdog/Kconfig       |   11 +++
+>>>   drivers/watchdog/Makefile      |    1 +
+>>>   drivers/watchdog/rn5t618_wdt.c |  196 ++++++++++++++++++++++++++++++++++++++++
+>>>   include/linux/mfd/rn5t618.h    |    4 +
+>>>   4 files changed, 212 insertions(+)
+>>>   create mode 100644 drivers/watchdog/rn5t618_wdt.c
 >
--- 
-Regards,
-Varka Bhadram.
+> [...]
+>
+>>> +++ b/drivers/watchdog/rn5t618_wdt.c
+>>> @@ -0,0 +1,196 @@
+>
+> [...]
+>
+>>> +static int rn5t618_wdt_set_timeout(struct watchdog_device *wdt_dev,
+>>> +				   unsigned int timeout)
+>>> +{
+>>> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
+>>> +	int ret, i;
+>>> +
+>>> +	for (i = 0; i < ARRAY_SIZE(rn5t618_wdt_map); i++) {
+>>> +		if (rn5t618_wdt_map[i].time + 1 >= timeout)
+>>> +			break;
+>>> +	}
+>>> +
+>>> +	if (i == ARRAY_SIZE(rn5t618_wdt_map))
+>>> +		ret = -EINVAL;
+>>
+>> Can you simplify this a bit ? If you use
+>>
+>> 	if (i == ARRAY_SIZE(rn5t618_wdt_map))
+>> 		return -EINVAL;
+>
+> This changes the semantics.
+>
+How so ? If ret is set to -EINVAL, the rest of the function won't do anything
+but eventually return -EINVAL. I don't see why returning -EINVAL immediately
+would change that.
+
+Guenter
+
+>>> +	else
+>>
+>> You can drop this else statement.
+>>
+>>> +		ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
+>>> +					 RN5T618_WATCHDOG_WDOGTIM_M,
+>>> +					 rn5t618_wdt_map[i].reg_val);
+>>> +	if (!ret)
+>>> +		wdt_dev->timeout = rn5t618_wdt_map[i].time;
+>
+> ... Isn't this important?
+>
+>>> +	return ret;
+>>> +}
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
