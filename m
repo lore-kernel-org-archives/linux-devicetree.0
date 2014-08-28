@@ -1,78 +1,57 @@
-From: Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder
- SoC
-Date: Thu, 28 Aug 2014 18:15:56 +0200
-Message-ID: <20140828161556.GN4703@rric.localhost>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org>
- <CAOesGMh9KkdKB_ytJ7CCbkPW7dHTX91NdfDMsMNfbmOBVOJ8PQ@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
+Date: Thu, 28 Aug 2014 18:16:27 +0200
+Message-ID: <4488604.oBeB6it8Vr@wuerfel>
+References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com> <20140828143733.GA18084@developer> <3440260.edal29kzlR@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMh9KkdKB_ytJ7CCbkPW7dHTX91NdfDMsMNfbmOBVOJ8PQ@mail.gmail.com>
+In-Reply-To: <3440260.edal29kzlR@diego>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, Robert Richter <rrichter@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Eduardo Valentin <edubezval@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>, rui.zhang@intel.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com, zhaoyifeng <zyf@rock-chips.com>, linux-iio@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Olof,
+On Thursday 28 August 2014 18:11:43 Heiko St=FCbner wrote:
+> Am Donnerstag, 28. August 2014, 10:37:35 schrieb Eduardo Valentin:
+> > > On the driver side, I believe the correct way to deal with this s=
+etup
+> > > is to split your driver into a generic drivers/iio/adc/rockchips-=
+tsadc.c
+> > > file, and a smaller thermal driver that uses the iio in-kernel in=
+terfaces,
+> > > ideally one that is independent of the underlying hardware and ca=
+n
+> > > work on any ADC implementation.
+> >=20
+> > Agreed. If you can write such interface and make your driver to wor=
+k in
+> > such way, that would be great.
+>=20
+> But I currently don't see how you would model the temperature handlin=
+g parts=20
+> from a generic thermal driver to a generic adc driver for the rk3288-=
+tsadc.
+>=20
+> I guess the general temperature irq handling would use iio-triggers? =
+But how=20
+> does the target temperature get into the TSADC_COMP1_INT register.
+>=20
+> Also when getting the temperature, Caesar's driver compares it to its=
+ trip=20
+> points and sets the next trip point depending on the current temperat=
+ure=20
+> (passive <-> critical) in rockchip_get_temp.
+>=20
+> Maybe there is some completely easy way for this, but currently I don=
+'t see=20
+> it.
 
-On 30.07.14 11:14:23, Olof Johansson wrote:
-> On Wed, Jul 30, 2014 at 8:06 AM, Robert Richter <rric@kernel.org> wrote:
-> > From: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
-> >
-> > Add initial device tree nodes for Cavium Thunder SoCs with support of
-> > 48 cores and gicv3. The dts file requires further changes, esp. for
-> > pci, gicv3-its and smmu. This changes will be added later together
-> > with the device drivers.
-> >
-> > Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
-> > Signed-off-by: Robert Richter <rrichter@cavium.com>
-> > ---
-> >  arch/arm64/boot/dts/Makefile         |   1 +
-> >  arch/arm64/boot/dts/thunder-88xx.dts | 387 +++++++++++++++++++++++++++++++++++
-> >  2 files changed, 388 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
-> >
-> > diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> > index c52bdb051f66..f8001a62029c 100644
-> > --- a/arch/arm64/boot/dts/Makefile
-> > +++ b/arch/arm64/boot/dts/Makefile
-> > @@ -1,3 +1,4 @@
-> > +dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
-> >  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
-> >  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
-> 
-> Oh, and:
-> 
-> Let's fix the mistake we made on 32-bit here (that we can't undo
-> unless we move all dts files now, which is too much churn), and put
-> each SoC vendor in its own subdirectory.
-> 
-> So, please add a arch/arm64/boot/dts/cavium/ directory, add a Makefile
-> and the dts there.
-> 
-> We should move vexpress under arm/   and xgene under apm/ too.
+Eduardo earlier today replied to an email about a generic driver for
+thermal, which was posted in February but hasn't been merged.
+See https://lkml.org/lkml/2014/2/5/810
 
-I was looking into this. It turned out that this would introduce more
-pain than it solves. The problem with introducing vendor subdirs for
-.dts files is that this will require also subdirs for .dtb files to
-avoid name conflicts. This means that dtb files are no longer in a
-single directory. Current build scripts and makefiles rely on this.
-E.g.:
+There may be a newer version of this patch, which I haven't found.
 
- scripts/Makefile.lib:$(obj)/%.dtb.S: $(obj)/%.dtb
-
-Thus, the introduction of vendor subdirs is not easy to implement and
-may break existing workflows. Also, no other arch has vendor subdirs.
-
-A solution would be to have a naming scheme for dts files which
-requires the vendor in the file name, such as cavium-thunder-88xx.dtb.
-Though, these long names may look a bit ugly.
-
-Hmm... Any thoughts?
-
-Thanks,
-
--Robert
+	Arnd
