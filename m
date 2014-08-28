@@ -1,49 +1,37 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v2 6/9] mmc: sdio: Convert to dev_pm_domain_attach|detach()
-Date: Thu, 28 Aug 2014 10:38:59 +0200
-Message-ID: <1409215142-8218-7-git-send-email-ulf.hansson@linaro.org>
-References: <1409215142-8218-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1409215142-8218-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 2/2] doc: dt: mxs-phy: add compatible string for
+ imx6sx-usbphy
+Date: Thu, 28 Aug 2014 16:40:25 +0800
+Message-ID: <20140828084023.GA32228@peterchendt>
+References: <1409021718-5969-1-git-send-email-peter.chen@freescale.com>
+ <1409021718-5969-2-git-send-email-peter.chen@freescale.com>
+ <20140827190904.GD6347@saruman.home>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140827190904.GD6347-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Previously only the ACPI power domain was supported by the sdio bus.
+On Wed, Aug 27, 2014 at 02:09:04PM -0500, Felipe Balbi wrote:
+> On Tue, Aug 26, 2014 at 10:55:18AM +0800, Peter Chen wrote:
+> > Add compatible string for imx6sx-usbphy.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> do I need to take this one as well or will DT folks take care of patch 2 ?
+> 
 
-Let's convert to the common attach/detach functions for power domains,
-which currently means we are extending the support to include the
-generic power domain as well.
+It is DT change for driver, if there is no objection from DT guys, the driver
+maintainer needs to take it.
 
-Cc: linux-mmc@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/mmc/core/sdio_bus.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/mmc/core/sdio_bus.c b/drivers/mmc/core/sdio_bus.c
-index 4fa8fef9..1df0fc6 100644
---- a/drivers/mmc/core/sdio_bus.c
-+++ b/drivers/mmc/core/sdio_bus.c
-@@ -315,7 +315,7 @@ int sdio_add_func(struct sdio_func *func)
- 	ret = device_add(&func->dev);
- 	if (ret == 0) {
- 		sdio_func_set_present(func);
--		acpi_dev_pm_attach(&func->dev, false);
-+		dev_pm_domain_attach(&func->dev, false);
- 	}
- 
- 	return ret;
-@@ -332,7 +332,7 @@ void sdio_remove_func(struct sdio_func *func)
- 	if (!sdio_func_present(func))
- 		return;
- 
--	acpi_dev_pm_detach(&func->dev, false);
-+	dev_pm_domain_detach(&func->dev, false);
- 	device_del(&func->dev);
- 	put_device(&func->dev);
- }
 -- 
-1.9.1
-
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
