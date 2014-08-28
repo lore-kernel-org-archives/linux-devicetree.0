@@ -1,86 +1,51 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
-Date: Thu, 28 Aug 2014 09:23:55 +0200
-Message-ID: <53FED90B.8070308@metafoo.de>
-References: <87fvgriqrb.wl%kuninori.morimoto.gx@gmail.com> <874mx7iqgt.wl%kuninori.morimoto.gx@renesas.com> <53F9A6EE.5070005@metafoo.de> <871ts4nmki.wl%kuninori.morimoto.gx@gmail.com> <20140826062558.GR17528@sirena.org.uk> <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com> <20140826091120.GC17528@sirena.org.uk> <53FC5105.6070901@metafoo.de> <20140826094211.GF17528@sirena.org.uk> <87r403mtip.wl%kuninori.morimoto.gx@gmail.com> <20140826105028.GK17528@sirena.org.uk> <87d2bmpwi2.wl%kuninori.morimoto.gx@gmail.com> <87a96qpqsy.wl%kuninori.morimoto.gx@gmail.com> <53FD95AB.6080903@metafoo.de> <87fvghihaq.wl%kuninori.morimoto.gx@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Thu, 28 Aug 2014 08:33:42 +0100
+Message-ID: <20140828073342.GH24579@lee--X1>
+References: <1409062444-12019-1-git-send-email-zyw@rock-chips.com>
+ <20140827133936.GD6364@lee--X1>
+ <12367482.Ifp3ZtRrMQ@dtor-glaptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87fvghihaq.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <12367482.Ifp3ZtRrMQ@dtor-glaptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dtor@chromium.org>
+Cc: Chris Zhong <zyw@rock-chips.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, dianders@chromium.org, heiko@sntech.de, olof@lixom.net, sonnyrao@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2014 02:33 AM, Kuninori Morimoto wrote:
->
-> Hi Lars
->
-> Thank you for your comment
->
->>> 	sound {
->>> 		compatible = "simple-audio-card";
->>>
->>> 		/* FrontEnd */
->>> 		simple-audio-card,dai-link@0 {
->>> 			...
->>> 			format = "left_j";
->>> 			remote = <&endpoint>;
->>>
->>> 			cpu {
->>> 				sound-dai = <&rcar_sound 0>;
->>> 			};
->>> 			codec { /* dummy */ };
->>> 		};
->>>
->>> 		/* BackEnd */
->>> 		endpoint: simple-audio-card,dai-link@1 {
->>> 			...
->>> 			format = "left_j";
->>>
->>> 			cpu { /* dummy */ };
->>> 			codec1: codec {
->>> 				sound-dai = <&ak4643>;
->>> 			};
->>> 		};
->>> 	};
->>
->> When you try to come up with with a binding try to completely ignore that
->> something call DPCM exists. The binding is supposed to describe the hardware
->> and how the different hardware components are interconnected. So try to come
->> up with a binding that accurately describes the hardware connections. Once
->> that is done try to map the binding onto the existing software framework.
->> The last step may require some adjustments to the framework.
->
-> Now, my system is working well with simple-card by this
->
-> 	sound {
-> 		compatible = "simple-audio-card";
-> 		...
->
-> 		cpu {
-> 			sound-dai = <&rcar_sound 0>;
-> 		};
-> 		codec {
-> 			sound-dai = <&ak4643>;
-> 		};
-> 	};
->
-> The reason why I'm tring to support DPCM on simple-card is "sampling rate convert".
-> My rcar_sound can convert sampling rate, and I tried to add this feature as
-> rcar_sound property.
-> But, Mark rejected and requests me to use DPCM for it,
-> since it can be common featrue.
-> Current existing simple-card can't use it, and I'm tring.
-> But, am I misunderstanding ?
+On Wed, 27 Aug 2014, Dmitry Torokhov wrote:
 
-Is the sample rate converter a extra module, or is the sample rate converter 
-just a feature of the I2S core?
+> On Wednesday, August 27, 2014 02:39:36 PM Lee Jones wrote:
+> > On Tue, 26 Aug 2014, Chris Zhong wrote:
+> > > +
+> > > +static struct of_device_id rk808_of_match[] =3D {
+> > > +	{ .compatible =3D "rockchip,rk808" },
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, rk808_of_match);
+> > > +
+> > > +static const struct i2c_device_id rk808_ids[] =3D {
+> > > +	 { "rk808" },
+> > > +};
+> > > +
+> > > +MODULE_DEVICE_TABLE(i2c, rk808_ids);
+> >=20
+> > My OCD senses are tingling.  Either have a blank line above the cal=
+ls
+> > to MODULE_DEVICE_TABLE() or don't.
+>=20
+> Wait, don't we also need sentinel entries in both these tables?
 
-- Lars
+Good spot, yes please.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ { },
+
+Will do fine.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
