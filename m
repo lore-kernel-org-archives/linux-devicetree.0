@@ -1,61 +1,179 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 7/7] MAINTAINERS: Include DA9150 files in Dialog
- Semiconductor support list.
-Date: Thu, 28 Aug 2014 12:17:41 +0100
-Message-ID: <20140828111741.GK24579@lee--X1>
-References: <cover.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
- <09b13677b1e2d1cf02e4eb43e2777f8081ec9597.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH 5/9] mfd: Add ACPI support
+Date: Thu, 28 Aug 2014 12:29:00 +0100
+Message-ID: <20140828112900.GM24579@lee--X1>
+References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
+ <1408255459-17625-6-git-send-email-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <09b13677b1e2d1cf02e4eb43e2777f8081ec9597.1409145187.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
+In-Reply-To: <1408255459-17625-6-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 28 Aug 2014, Adam Thomson wrote:
+On Sun, 17 Aug 2014, Mika Westerberg wrote:
 
-> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-> ---
->  MAINTAINERS | 4 ++++
->  1 file changed, 4 insertions(+)
-
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index aefa948..6dc0aee 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2883,12 +2883,15 @@ S:	Supported
->  F:	Documentation/hwmon/da90??
->  F:	drivers/gpio/gpio-da90??.c
->  F:	drivers/hwmon/da90??-hwmon.c
-> +F:	drivers/iio/adc/da91??-*.c
->  F:	drivers/input/misc/da90??_onkey.c
->  F:	drivers/input/touchscreen/da9052_tsi.c
->  F:	drivers/leds/leds-da90??.c
->  F:	drivers/mfd/da903x.c
->  F:	drivers/mfd/da90??-*.c
-> +F:	drivers/mfd/da91??-*.c
->  F:	drivers/power/da9052-battery.c
-> +F:	drivers/power/da91??-*.c
->  F:	drivers/regulator/da903x.c
->  F:	drivers/regulator/da9???-regulator.[ch]
->  F:	drivers/rtc/rtc-da90??.c
-> @@ -2898,6 +2901,7 @@ F:	include/linux/mfd/da903x.h
->  F:	include/linux/mfd/da9052/
->  F:	include/linux/mfd/da9055/
->  F:	include/linux/mfd/da9063/
-> +F:	include/linux/mfd/da9150/
->  F:	include/sound/da[79]*.h
->  F:	sound/soc/codecs/da[79]*.[ch]
+> If an MFD device is backed by ACPI namespace, we should allow subdevi=
+ce
+> drivers to access their corresponding ACPI companion devices through =
+normal
+> means (e.g using ACPI_COMPANION()).
 >=20
+> This patch adds such support to the MFD core. If the MFD parent devic=
+e
+> doesn't specify any ACPI _HID/_CID for the child device, the child de=
+vice
+> will share the parent ACPI companion device. Otherwise the child devi=
+ce
+> will be assigned with the corresponding ACPI companion, if found in t=
+he
+> namespace below the parent.
+>=20
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+> ---
+>  Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++
+>  drivers/mfd/mfd-core.c             | 41 ++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/core.h           |  3 +++
+>  3 files changed, 71 insertions(+)
+>=20
+> diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/=
+enumeration.txt
+> index e182be5e3c83..74e35c54febf 100644
+> --- a/Documentation/acpi/enumeration.txt
+> +++ b/Documentation/acpi/enumeration.txt
+> @@ -312,3 +312,30 @@ a code like this:
+> =20
+>  There are also devm_* versions of these functions which release the
+>  descriptors once the device is released.
+> +
+> +MFD devices
+> +~~~~~~~~~~~
+> +The MFD devices create platform devices from their children. For the
+> +child devices there needs to be an ACPI handle that they can use to
+> +reference parts of the ACPI namespace that relate to them. In the Li=
+nux
+> +MFD subsystem we provide two ways:
+> +
+> +	o The children share the parent ACPI handle.
+> +	o The MFD cell can specify the ACPI id of the device.
+> +
+> +For the first case, the MFD drivers do not need to do anything. The
+> +resulting child platform device will have its ACPI_COMPANION() set t=
+o point
+> +to the parent device.
+> +
+> +If the ACPI namespace has a device that we can match using an ACPI i=
+d,
+> +the id should be set like:
+> +
+> +	static struct mfd_cell my_subdevice_cell =3D {
+> +		.name =3D "my_subdevice",
+> +		/* set the resources relative to the parent */
+> +		.acpi_pnpid =3D "XYZ0001",
+> +	};
+> +
+> +The ACPI id "XYZ0001" is then used to lookup an ACPI device directly=
+ under
+> +the MFD device and if found, that ACPI companion device is bound to =
+the
+> +resulting child platform device.
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index 892d343193ad..bb466b28b3b6 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -78,6 +78,45 @@ static int mfd_platform_add_cell(struct platform_d=
+evice *pdev,
+>  	return 0;
+>  }
+> =20
+> +#if IS_ENABLED(CONFIG_ACPI)
+> +static void mfd_acpi_add_device(const struct mfd_cell *cell,
+> +				struct platform_device *pdev)
+> +{
+> +	struct acpi_device *parent_adev;
+> +	struct acpi_device *adev =3D NULL;
+> +
+> +	parent_adev =3D ACPI_COMPANION(pdev->dev.parent);
+> +	if (!parent_adev)
+> +		return;
+> +
+> +	/*
+> +	 * MFD child device gets its ACPI handle either from the ACPI
+> +	 * device directly under the parent that matches the acpi_pnpid or
+> +	 * it will use the parent handle if is no acpi_pnpid is given.
+> +	 */
+> +	if (cell->acpi_pnpid) {
+> +		struct acpi_device_id ids[2] =3D {};
+> +		struct acpi_device *child_adev;
+> +
+> +		strlcpy(ids[0].id, cell->acpi_pnpid, sizeof(ids[0].id));
+> +		list_for_each_entry(child_adev, &parent_adev->children, node)
+> +			if (acpi_match_device_ids(child_adev, ids)) {
+> +				adev =3D child_adev;
+> +				break;
+> +			}
+
+What happens if cell->acpi_pnpid is provided, but not matched?
+
+Surely adev will them be NULL?
+
+In these cases shouldn't you then "adev =3D parent_adev"?
+
+> +	} else {
+> +		adev =3D parent_adev;
+> +	}
+> +
+> +	ACPI_COMPANION_SET(&pdev->dev, adev);
+> +}
+> +#else
+> +static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
+> +				       struct platform_device *pdev)
+> +{
+> +}
+> +#endif
+> +
+>  static int mfd_add_device(struct device *parent, int id,
+>  			  const struct mfd_cell *cell, atomic_t *usage_count,
+>  			  struct resource *mem_base,
+> @@ -118,6 +157,8 @@ static int mfd_add_device(struct device *parent, =
+int id,
+>  		}
+>  	}
+> =20
+> +	mfd_acpi_add_device(cell, pdev);
+> +
+>  	if (cell->pdata_size) {
+>  		ret =3D platform_device_add_data(pdev,
+>  					cell->platform_data, cell->pdata_size);
+> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> index f543de91ce19..73e1709d4c09 100644
+> --- a/include/linux/mfd/core.h
+> +++ b/include/linux/mfd/core.h
+> @@ -44,6 +44,9 @@ struct mfd_cell {
+>  	 */
+>  	const char		*of_compatible;
+> =20
+> +	/* Matches ACPI PNP id, either _HID or _CID */
+> +	const char		*acpi_pnpid;
+> +
+>  	/*
+>  	 * These resources can be specified relative to the parent device.
+>  	 * For accessing hardware you should use resources from the platfor=
+m dev
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
