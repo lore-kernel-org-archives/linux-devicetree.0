@@ -1,55 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2] spi: rspi: Add support for new R-Car Gen2 SoCs
-Date: Thu, 28 Aug 2014 15:33:42 +0100
-Message-ID: <20140828143342.GA29327@sirena.org.uk>
-References: <1409213419-5507-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409213419-5507-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-sh@vger.kernel.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND 0/8] i2c: Relax mandatory I2C ID table passing
+Date: Thu, 28 Aug 2014 15:35:30 +0100
+Message-ID: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Wolfram,
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Placing this firmly back on your plate.  I truly hope we don't miss
+another merge-window.  This patch-set has the support of some pretty
+senior kernel maintainers, so I hope acceptance shouldn't be too
+difficult.
 
-On Thu, Aug 28, 2014 at 10:10:19AM +0200, Geert Uytterhoeven wrote:
-> Add support for QSPI in:
->   - r8a7792 (R-Car V2H)
->   - r8a7793 (R-Car M2-N)
->   - r8a7794 (R-Car E2)
->=20
-> r8a7791 is now called "R-Car M2-W".
+As previously discussed I believe it should be okay for an I2C device
+driver _not_ supply an I2C ID table to match to.  The I2C subsystem
+should be able to match via other means, such as via OF tables.  The
+blocking factor during our previous conversation was to keep
+registering via sysfs up and running.  This set does that.
 
-Applied, thanks.
+After thinking more deeply about the problem, it occurred to me that
+any I2C device driver which uses the sysfs method and issues an
+of_match_device() would also fail their probe().  Bolted on to this
+set is a new, more generic way for these devices to match against
+either of the I2C/OF tables.
 
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I hope this ticks all of your boxes.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+v3:
+  - Insist on passing 'struct i2c_client' instead of 'struct device'
+  - Remove hook from of_match_device()
 
-iQIcBAEBAgAGBQJT/z3CAAoJELSic+t+oim9PrEP/2XoVZ+UW472VbDvmzLJ6QLc
-s7yFVHmILvNIVKec4SYRZ4HRMUD387ieKeAc//oPKG06RmuP41gxaVNf5X4t1J2r
-Lh4D/LsNSeGFoI633qn3+ZpzV/15CJCTfz2J/YG1ZwY22ba0Yopj3Uh/ehO2CSQc
-Z2Bl3Ud33d6pKFavbL67z4rh11L/kOhCgv+QDGaDg8WKBdksDl/KXhkJ8M6E/kdo
-TY0v3dA5V7YYMZWnIYAGU8Q9VfWxiTWppJcEgU5TOSaCNqxeYzH1A+hMNKoe/2td
-2LzgxkRHZbZQOh98Zzv3n2XvobeGW5pkHPNUD+RZrrgFuIWJruI1LFJ7R4aNjlWI
-nemmR9jzxPmlxcsFzT1f/+ih75ODyMSooaP97HsP/Us9kra2Cdu921O4NFSRO0QD
-oOLWyNM0P61x9qotwlrq8kBCx4EwhR/SaVamYPkEQVo7blKn5YyAswuVD17I1pV4
-31UCS6O5buvyZi8LN+PK3YEqMqMMNQmRcK6gxb3q+rzxJa3OBaefNJ2K/rCSfw0/
-8ScT607aCOghYGaj4l72szHKR/mto7JNjRdf/zNd7JY7RpZjszKTxuLr3/PROnmv
-kUkmwvphJ1nIui+ngX0tMl0bR/S+ZWurdC0+oNAKlPg13NffwfQHfcxvWP/+YuS7
-yZn8kYIO6rU2hFqEGEU7
-=Q1Xr
------END PGP SIGNATURE-----
+v2:
+  - Removal of ACPI support (this is really an OF issue).
+  - Add a new .probe2( with will seamlessly replace
+  - Supply a warning on devices matching via OF without a suitable compatible
+  - Remove unified match_device() - bad idea as it subverts type-safe behaviour
+  - Provide examples of the kind of clean-up possible after this set.
+    - I already have the full support from the maintainer of these drivers =;-)
 
---G4iJoqBmSsgzjUCe--
+Kind regards,
+Lee
+
+Lee Jones (8):
+  i2c: Add pointer dereference protection to i2c_match_id()
+  i2c: Add the ability to match device to compatible string without an
+    of_node
+  i2c: Match using traditional OF methods, then by vendor-less
+    compatible strings
+  i2c: Make I2C ID tables non-mandatory for DT'ed devices
+  i2c: Export i2c_match_id() for direct use by device drivers
+  i2c: Provide a temporary .probe2() call-back type
+  mfd: 88pm860x: Move over to new I2C device .probe() call
+  mfd: as3722: Rid driver of superfluous I2C device ID structure
+
+ drivers/i2c/i2c-core.c      | 72 +++++++++++++++++++++++++++++++++++++++------
+ drivers/mfd/88pm860x-core.c |  5 ++--
+ drivers/mfd/as3722.c        | 12 ++------
+ include/linux/i2c.h         | 22 +++++++++++++-
+ 4 files changed, 88 insertions(+), 23 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
