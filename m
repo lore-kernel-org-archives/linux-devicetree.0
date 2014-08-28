@@ -1,171 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH 5/9] mfd: Add ACPI support
-Date: Thu, 28 Aug 2014 12:29:00 +0100
-Message-ID: <20140828112900.GM24579@lee--X1>
-References: <1408255459-17625-1-git-send-email-mika.westerberg@linux.intel.com>
- <1408255459-17625-6-git-send-email-mika.westerberg@linux.intel.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v3 1/2] mfd: arizona: Add support for
+ INn_Modec register control
+Date: Thu, 28 Aug 2014 12:36:51 +0100
+Message-ID: <20140828113651.GN24579@lee--X1>
+References: <20140818200003.2ab8aca0@songinha-Samsung-DeskTop-System>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1408255459-17625-6-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20140818200003.2ab8aca0@songinha-Samsung-DeskTop-System>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 17 Aug 2014, Mika Westerberg wrote:
+On Mon, 18 Aug 2014, Inha Song wrote:
 
-> If an MFD device is backed by ACPI namespace, we should allow subdevi=
-ce
-> drivers to access their corresponding ACPI companion devices through =
-normal
-> means (e.g using ACPI_COMPANION()).
+> Some boards need to set the INn_MODE[1:0] register to change
+> the input signal patch. This wlf,inmode property is optional.
+> If present, values must be specified less than or equal to
+> the number of input singals. If values less than the number
+> of input signals, elements that has not been specifed are set
+> to 0 by default.
 >=20
-> This patch adds such support to the MFD core. If the MFD parent devic=
-e
-> doesn't specify any ACPI _HID/_CID for the child device, the child de=
-vice
-> will share the parent ACPI companion device. Otherwise the child devi=
-ce
-> will be assigned with the corresponding ACPI companion, if found in t=
-he
-> namespace below the parent.
+> Example:
+>    - wlf,inmode =3D <2 0 2>;	/* IN1, IN3 use DMIC */
 >=20
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+> Signed-off-by: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++
->  drivers/mfd/mfd-core.c             | 41 ++++++++++++++++++++++++++++=
-++++++++++
->  include/linux/mfd/core.h           |  3 +++
->  3 files changed, 71 insertions(+)
+>  drivers/mfd/arizona-core.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/=
-enumeration.txt
-> index e182be5e3c83..74e35c54febf 100644
-> --- a/Documentation/acpi/enumeration.txt
-> +++ b/Documentation/acpi/enumeration.txt
-> @@ -312,3 +312,30 @@ a code like this:
+> diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+> index 10a0cb9..81e6db8 100644
+> --- a/drivers/mfd/arizona-core.c
+> +++ b/drivers/mfd/arizona-core.c
+> @@ -534,7 +534,7 @@ EXPORT_SYMBOL_GPL(arizona_of_get_named_gpio);
+>  static int arizona_of_get_core_pdata(struct arizona *arizona)
+>  {
+>  	struct arizona_pdata *pdata =3D &arizona->pdata;
+> -	int ret, i;
+> +	int ret, i, proplen;
 > =20
->  There are also devm_* versions of these functions which release the
->  descriptors once the device is released.
-> +
-> +MFD devices
-> +~~~~~~~~~~~
-> +The MFD devices create platform devices from their children. For the
-> +child devices there needs to be an ACPI handle that they can use to
-> +reference parts of the ACPI namespace that relate to them. In the Li=
-nux
-> +MFD subsystem we provide two ways:
-> +
-> +	o The children share the parent ACPI handle.
-> +	o The MFD cell can specify the ACPI id of the device.
-> +
-> +For the first case, the MFD drivers do not need to do anything. The
-> +resulting child platform device will have its ACPI_COMPANION() set t=
-o point
-> +to the parent device.
-> +
-> +If the ACPI namespace has a device that we can match using an ACPI i=
-d,
-> +the id should be set like:
-> +
-> +	static struct mfd_cell my_subdevice_cell =3D {
-> +		.name =3D "my_subdevice",
-> +		/* set the resources relative to the parent */
-> +		.acpi_pnpid =3D "XYZ0001",
-> +	};
-> +
-> +The ACPI id "XYZ0001" is then used to lookup an ACPI device directly=
- under
-> +the MFD device and if found, that ACPI companion device is bound to =
-the
-> +resulting child platform device.
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index 892d343193ad..bb466b28b3b6 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -78,6 +78,45 @@ static int mfd_platform_add_cell(struct platform_d=
-evice *pdev,
->  	return 0;
->  }
+>  	pdata->reset =3D arizona_of_get_named_gpio(arizona, "wlf,reset", tr=
+ue);
 > =20
-> +#if IS_ENABLED(CONFIG_ACPI)
-> +static void mfd_acpi_add_device(const struct mfd_cell *cell,
-> +				struct platform_device *pdev)
-> +{
-> +	struct acpi_device *parent_adev;
-> +	struct acpi_device *adev =3D NULL;
-> +
-> +	parent_adev =3D ACPI_COMPANION(pdev->dev.parent);
-> +	if (!parent_adev)
-> +		return;
-> +
-> +	/*
-> +	 * MFD child device gets its ACPI handle either from the ACPI
-> +	 * device directly under the parent that matches the acpi_pnpid or
-> +	 * it will use the parent handle if is no acpi_pnpid is given.
-> +	 */
-> +	if (cell->acpi_pnpid) {
-> +		struct acpi_device_id ids[2] =3D {};
-> +		struct acpi_device *child_adev;
-> +
-> +		strlcpy(ids[0].id, cell->acpi_pnpid, sizeof(ids[0].id));
-> +		list_for_each_entry(child_adev, &parent_adev->children, node)
-> +			if (acpi_match_device_ids(child_adev, ids)) {
-> +				adev =3D child_adev;
-> +				break;
-> +			}
-
-What happens if cell->acpi_pnpid is provided, but not matched?
-
-Surely adev will them be NULL?
-
-In these cases shouldn't you then "adev =3D parent_adev"?
-
-> +	} else {
-> +		adev =3D parent_adev;
-> +	}
-> +
-> +	ACPI_COMPANION_SET(&pdev->dev, adev);
-> +}
-> +#else
-> +static inline void mfd_acpi_add_device(const struct mfd_cell *cell,
-> +				       struct platform_device *pdev)
-> +{
-> +}
-> +#endif
-> +
->  static int mfd_add_device(struct device *parent, int id,
->  			  const struct mfd_cell *cell, atomic_t *usage_count,
->  			  struct resource *mem_base,
-> @@ -118,6 +157,8 @@ static int mfd_add_device(struct device *parent, =
-int id,
->  		}
+> @@ -560,6 +560,12 @@ static int arizona_of_get_core_pdata(struct ariz=
+ona *arizona)
+>  			ret);
 >  	}
 > =20
-> +	mfd_acpi_add_device(cell, pdev);
-> +
->  	if (cell->pdata_size) {
->  		ret =3D platform_device_add_data(pdev,
->  					cell->platform_data, cell->pdata_size);
-> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-> index f543de91ce19..73e1709d4c09 100644
-> --- a/include/linux/mfd/core.h
-> +++ b/include/linux/mfd/core.h
-> @@ -44,6 +44,9 @@ struct mfd_cell {
->  	 */
->  	const char		*of_compatible;
-> =20
-> +	/* Matches ACPI PNP id, either _HID or _CID */
-> +	const char		*acpi_pnpid;
-> +
->  	/*
->  	 * These resources can be specified relative to the parent device.
->  	 * For accessing hardware you should use resources from the platfor=
-m dev
+> +	proplen =3D of_property_count_u32_elems(arizona->dev->of_node,
+> +					      "wlf,inmode");
+> +	if (proplen > 0 && proplen <=3D ARRAY_SIZE(arizona->pdata.inmode))
+> +		of_property_read_u32_array(arizona->dev->of_node, "wlf,inmode",
+> +					   arizona->pdata.inmode, proplen);
+
+of_property_for_each_u32()?
 
 --=20
 Lee Jones
@@ -173,7 +65,7 @@ Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
-the body of a message to majordomo@vger.kernel.org
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
