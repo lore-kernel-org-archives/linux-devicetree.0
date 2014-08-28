@@ -1,57 +1,55 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 6/7] Adding SKY81452 backlight device tree bindings document
-Date: Thu, 28 Aug 2014 20:00:01 +0900
-Message-ID: <1409223601-23619-1-git-send-email-jack.yoo@skyworksinc.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/7] Adding Skyworks SKY81452 regulator driver
+Date: Thu, 28 Aug 2014 12:02:54 +0100
+Message-ID: <20140828110254.GN17528@sirena.org.uk>
 References: <1409222307-23225-1-git-send-email-jack.yoo@skyworksinc.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409222307-23225-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ <1409222797-23343-1-git-send-email-jack.yoo@skyworksinc.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9oYvVerlq//e2GY1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1409222797-23343-1-git-send-email-jack.yoo@skyworksinc.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: lgirdwood@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Gyungoh Yoo <jack.yoo@skyworksinc.com>
 List-Id: devicetree@vger.kernel.org
 
-v2:
-Added 'compatible' attribute in child drivers
 
----
- .../video/backlight/sky81452-backlight.txt         | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
+--9oYvVerlq//e2GY1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-new file mode 100644
-index 0000000..2c2d947
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/sky81452-backlight.txt
-@@ -0,0 +1,24 @@
-+SKY81452-backlight bindings
-+
-+Required properties:
-+- compatible		: Must be "skyworks,sky81452-backlight"
-+
-+Optional properties:
-+- name			: Name of backlight device. Default is 'lcd-backlight'.
-+- gpio-enable		: GPIO to use to EN pin.
-+- enable		: Enable mask for current sink channel 1 to 6.
-+- ignore-pwm		: Ignore both PWM input
-+- dpwm-mode		: Enable DPWM dimming mode, otherwise Analog dimming mode
-+- phase-shift		: Enable phase shift mode
-+- ovp-level		: Over-voltage protection level. Should be between 14 or 28V.
-+- short-detection-threshold	: It should be one of 4, 5, 6 and 7V.
-+- boost-current-limit	: It should be one of 800, 1100 and 1500mA.
-+
-+Example:
-+
-+	backlight {
-+		compatible = "skyworks,sky81452-backlight";
-+		name = "pwm-backlight";
-+		enable = <0x3F>;
-+		ignore-pwm;
-+	};
--- 
-1.9.1
+On Thu, Aug 28, 2014 at 07:46:37PM +0900, Gyungoh Yoo wrote:
+> v2:
+> Added 'compatible' attribute in the driver
+> Added message for exception or errors.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This driver has already been applied, please send any changes as
+incremental patches against current code.  I would *not* expect to see
+a compatible being defined for a MFD function device though unless it's
+genuinely reusable.
+
+--9oYvVerlq//e2GY1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJT/wxaAAoJELSic+t+oim9IYkP/1ioNxcqKjuuHpYrXdJL2X+T
+Xe9ActSrZEZTgEgBYd67Pid+tko+D1EqYTcsPGnBM8zcdhx529A88gCxKPCNK6yW
+m93W11Iqm5mUfhvQw8ZU/dJ3Ui8vlzGJOxrax4wZUfa2PBRuV16GE5oMpuLn0dXv
+q3nyccCbdLlirGiD7PeEcSZy+N5FWGl0ndOqbbhpxVRPCVovLsGww69beOEje69O
+2Ze++w9nPsMNFYC/MYMGrwDpJZZpkqSBbOa2RYcWij2PND9Nr7Jha8nnOpk57nmV
+gLCsws9/miOMGYEt9qCBals2m+xjJvOEPtoHAbVQ1aYryREgDyf+UVuWk77N61gA
+b8TwXPgarI5CwIy02OZprphQJ7wtDpzSLBdOljXw9Wc92m855eObWWwSO0+eeI3e
+SxnmBua2kJ/jn01jdd0698njLzg41i7wpqE0PqxnJjL5bT1VNQnY5Zre31tlk5Qy
+O48mnaRP61SEAG4V02Ul/2NjaNpWUrpnO8HvG/t6v3KdReGLCa0Ti5T6rUfxSvdx
+UaXO5nF+9aBfbWWzvbBJxzdA8a0VA5XdrWSLo5i4h43DnF0OK1nKU0bWe2Mctxh+
+vKQRqwPomqpPlLqBkRqWZ3IlJt6qoWQUlZp/7ANgaVGb+xj8+HxyCHWOIsiK8B7k
+tfGPFG/qfm5EBxuGRdg7
+=4V4/
+-----END PGP SIGNATURE-----
+
+--9oYvVerlq//e2GY1--
