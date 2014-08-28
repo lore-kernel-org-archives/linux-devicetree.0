@@ -1,38 +1,46 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH resend 2/2] ARM: shmobile: r8a7779 dtsi: Add SoC-specific thermal compatible property
-Date: Thu, 28 Aug 2014 10:20:40 +0200
-Message-ID: <1409214040-5937-2-git-send-email-geert+renesas@glider.be>
-References: <1409214040-5937-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/2] ARM: shmobile: kzm9g-reference dts: Use tabs for indentation
+Date: Thu, 28 Aug 2014 10:21:56 +0200
+Message-ID: <1409214116-6016-2-git-send-email-geert+renesas@glider.be>
+References: <1409214116-6016-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409214040-5937-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1409214116-6016-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The thermal node used the generic compatible property only.
-Add the SoC-specific one, to make it future proof.
+Checkpatch says:
+
+ERROR: code indent should use tabs where possible
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-Resend, doc update is in v3.17-rc1
----
- arch/arm/boot/dts/r8a7779.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sh73a0-kzm9g-reference.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index 559788b2ff77..ddc89000854c 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -256,7 +256,7 @@
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+index 18662aec2ec4..477f8153debd 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+@@ -66,7 +66,7 @@
  	};
  
- 	thermal@ffc48000 {
--		compatible = "renesas,rcar-thermal";
-+		compatible = "renesas,thermal-r8a7779", "renesas,rcar-thermal";
- 		reg = <0xffc48000 0x38>;
+ 	vmmc_sdhi0: regulator@2 {
+-	        compatible = "regulator-fixed";
++		compatible = "regulator-fixed";
+ 		regulator-name = "SDHI0 Vcc";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+@@ -75,7 +75,7 @@
  	};
  
+ 	vmmc_sdhi2: regulator@3 {
+-	        compatible = "regulator-fixed";
++		compatible = "regulator-fixed";
+ 		regulator-name = "SDHI2 Vcc";
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
 -- 
 1.9.1
 
