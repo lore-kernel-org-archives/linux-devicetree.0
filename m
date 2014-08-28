@@ -1,119 +1,55 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH 2/3] GPIO: gpio-dwapb: Support Debounce
-Date: Thu, 28 Aug 2014 10:11:56 -0500
-Message-ID: <alpine.DEB.2.02.1408281007290.26299@atx-linux-37>
-References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com> <1409161588-19417-3-git-send-email-alvin.chen@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1409161588-19417-3-git-send-email-alvin.chen@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Mika Westerberg <mika.westerberg@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 1/5] of: Add NVIDIA Tegra Legacy Interrupt Controller binding
+Date: Thu, 28 Aug 2014 17:31:15 +0200
+Message-ID: <1409239879-12376-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Aug 2014, Weike Chen wrote:
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> This patch enables 'debounce' for the designware GPIO, and
-> it is based on Josef Ahmad's previous work.
-> 
-> Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
-> Reviewed-by: Shevchenko, Andriy <andriy.shevchenko@intel.com>
-> Signed-off-by: Weike Chen <alvin.chen@intel.com>
-> ---
->  drivers/gpio/gpio-dwapb.c |   42 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index 155a64b..e0ab988 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -36,6 +36,7 @@
->  #define GPIO_INTTYPE_LEVEL	0x38
->  #define GPIO_INT_POLARITY	0x3c
->  #define GPIO_INTSTATUS		0x40
-> +#define GPIO_PORTA_DEBOUNCE	0x48
->  #define GPIO_PORTA_EOI		0x4c
->  #define GPIO_EXT_PORTA		0x50
->  #define GPIO_EXT_PORTB		0x54
-> @@ -64,6 +65,23 @@ struct dwapb_gpio {
->  	const struct dwapb_gpio_platform_data	*pdata;
->  };
->  
-> +static inline u32 dwapb_read(struct dwapb_gpio *gpio, unsigned int offset)
-> +{
-> +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-> +	void __iomem *reg_base	= gpio->regs;
-> +
-> +	return bgc->read_reg(reg_base + offset);
-> +}
-> +
-> +static inline void dwapb_write(struct dwapb_gpio *gpio, unsigned int offset,
-> +			       u32 val)
-> +{
-> +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-> +	void __iomem *reg_base	= gpio->regs;
-> +
-> +	bgc->write_reg(reg_base + offset, val);
-> +}
-> +
+The Legacy Interrupt Controller found on NVIDIA Tegra SoCs is used by
+the AVP coprocessor and can also serve as a backup for the ARM Cortex
+CPU's local interrupt controller (GIC).
 
-Hello,
+The LIC is subdivided into multiple identical units, each handling 32
+possible interrupt sources.
 
-I don't understand the reason for adding dwapb_read and dwapb_write here.  
-The rest of the driver is using readl and writel.  I'd rather not see two 
-different methods being used in the same driver for register access.  
-Maybe I'm missing something, but if we need to add dwapb_read/write, then
-it should be used for all register access.
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3:
+- bracket individual tuples in the "reg" property
 
-Alan
+ .../interrupt-controller/nvidia,tegra20-ictlr.txt     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
 
->  static int dwapb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->  {
->  	struct bgpio_chip *bgc = to_bgpio_chip(gc);
-> @@ -209,6 +227,29 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
->  	return 0;
->  }
->  
-> +static int dwapb_gpio_set_debounce(struct gpio_chip *gc,
-> +				   unsigned offset, unsigned debounce)
-> +{
-> +	struct bgpio_chip *bgc = to_bgpio_chip(gc);
-> +	struct dwapb_gpio_port *port =
-> +			container_of(bgc, struct dwapb_gpio_port, bgc);
-> +	struct dwapb_gpio *gpio = port->gpio;
-> +	unsigned long flags, val_deb;
-> +	unsigned long mask = bgc->pin2mask(bgc, offset);
-> +
-> +	spin_lock_irqsave(&bgc->lock, flags);
-> +
-> +	val_deb = dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
-> +	if (debounce)
-> +		dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, mask | val_deb);
-> +	else
-> +		dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, ~mask & val_deb);
-> +
-> +	spin_unlock_irqrestore(&bgc->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
->  static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
->  {
->  	struct irq_desc *desc = irq_to_desc(irq);
-> @@ -342,6 +383,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
->  
->  	port->bgc.gc.ngpio = pp->ngpio;
->  	port->bgc.gc.base = pp->gpio_base;
-> +	port->bgc.gc.set_debounce = dwapb_gpio_set_debounce;
->  
->  	/*
->  	 * Only port A can provide interrupts in all configurations of the IP.
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
+new file mode 100644
+index 000000000000..1639389b7360
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/nvidia,tegra20-ictlr.txt
+@@ -0,0 +1,19 @@
++NVIDIA Tegra Legacy Interrupt Controller
++
++The legacy interrupt controller is divided into units that serve 32 interrupts
++each. Tegra20 implements four units, whereas Tegra30 and later implement five.
++
++Required properties:
++- compatible: "nvidia,tegra<chip>-ictlr"
++- reg: Physical base address and length of the controller's registers. There
++  should be one entry for each unit.
++
++Example:
++
++	interrupt-controller@60004000 {
++		compatible = "nvidia,tegra20-ictlr";
++		reg = <0x60004000 0x40>, /* primary controller */
++		      <0x60004100 0x40>, /* secondary controller */
++		      <0x60004200 0x40>, /* tertiary controller */
++		      <0x60004300 0x40>; /* quaternary controller */
++	};
+-- 
+2.0.4
