@@ -1,39 +1,129 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Thu, 28 Aug 2014 08:50:36 +0200
-Message-ID: <53FED13C.4070606@ahsoftware.de>
-References: <53F64624.5000403@ahsoftware.de> <20140822131919.GX21734@leverpostej> <20140825093931.GB2399@ulmo> <E1XLu15-0002DP-6o@jdl.com> <20140825133714.GH4163@ulmo.nvidia.com> <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826101107.GC32315@leverpostej> <20140827103432.64927C409CB@trevor.secretlab.ca> <20140827144403.GB13850@arm.com> <53FE05AE.9000406@wwwdotorg.org> <53FE07BE.7000809@ahsoftware.de> <53FE0966.5020206@wwwdotorg.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/2] iio: adc: ti_am335x_adc: make sample delay, open
+ delay, averaging DT parameters
+Date: Thu, 28 Aug 2014 08:11:23 +0100
+Message-ID: <20140828071123.GE24579@lee--X1>
+References: <1409141990-29627-1-git-send-email-vigneshr@ti.com>
+ <1409141990-29627-2-git-send-email-vigneshr@ti.com>
+ <20140827135635.GH6364@lee--X1>
+ <53FEBA43.2000607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53FE0966.5020206@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53FEBA43.2000607@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, Felipe Balbi <balbi@ti.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-iio@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 27.08.2014 18:37, schrieb Stephen Warren:
+On Thu, 28 Aug 2014, Vignesh R wrote:
+> On Wednesday 27 August 2014 07:26 PM, Lee Jones wrote:
+> > On Wed, 27 Aug 2014, Vignesh R wrote:
+> >=20
+> >> Number of averaging, open delay, sample delay are made DT paramete=
+rs.
+> >> By decreasing averaging and delays more samples can be obtained pe=
+r
+> >> second increasing performance of ADC. Previously the number of
+> >> averages per step was fixed to 16. Making these parameters
+> >> configurable will help in balancing speed vs accuracy.
+> >> For each ADC step provide DT based paramters to set open delay,
+> >> sample delay and number of averaging. One configurable step is
+> >> used per ADC channel. Since there can be atmost 8 ADC channels,
+> >> steps 16 to 8 are used for ADC.
+> >>
+> >> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> >> ---
+> >>  .../bindings/input/touchscreen/ti-tsc-adc.txt      |   18 +++++++
+> >>  drivers/iio/adc/ti_am335x_adc.c                    |   49 +++++++=
+++++++++++---
+> >>  include/linux/mfd/ti_am335x_tscadc.h               |    3 ++
+> >>  3 files changed, 63 insertions(+), 7 deletions(-)
+> >=20
+> > [...]
+> >=20
+> >> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/=
+mfd/ti_am335x_tscadc.h
+> >> index fb96c84..26d3e84 100644
+> >> --- a/include/linux/mfd/ti_am335x_tscadc.h
+> >> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+> >> @@ -82,14 +82,17 @@
+> >=20
+> > There are so many different formats at play here, it's difficult to
+> > see what's happening where!
+>=20
+> I did not understand "different formats". Please explain.
 
-> Of course, there are probably cases where we could/should add some more
-> phandles/... and likewise cases where we shouldn't. That's why detailed
-> research is needed.
+My complaint is with the existing layout, rather than your patch:
 
-Just because I'm curious, I wonder how this research does or shoud look 
-like.
+> #define STEPCONFIG_INP_AN4     STEPCONFIG_INP(4)
+> #define STEPCONFIG_INP_ADCREFM STEPCONFIG_INP(8)
+> #define STEPCONFIG_FIFO1       BIT(26)
 
-Defered probes did come to light with 3.4, that was more than 2 years 
-ago. Ok, most people (like me) just noticed it during the last months 
-when they switched to DT and have run into a problem (the deferred probe 
-mechanism is an error-message killer), but some must have seen it 
-already 2 years ago.
+Base10 MACROS.
 
-And I wonder how the ACPI world solves that problem. My guess would be 
-hardcoded stuff in the firmware-blob (BIOS), just like it happened with 
-board files, but I've never seen BIOS code and my knowledge about ACPI 
-is almost zero. ;)
+#define STEPCONFIG_AVG_MAX     16
 
-Regards,
+Base10 int.
 
-Alexander Holler
+> /* Delay register */
+> #define STEPDELAY_OPEN_MASK    (0x3FFFF << 0)
+
+Base16 shift.
+
+> #define STEPDELAY_OPEN(val)    ((val) << 0)
+
+MACRO shift.
+
+> #define STEPCONFIG_OPENDLY     STEPDELAY_OPEN(0x098)
+
+Base16 MACRO.
+
+> #define STEPDELAY_OPEN_MAX     0x3FFFF
+
+Base16 int.
+
+> #define STEPDELAY_SAMPLE_MASK  (0xFF << 24)
+
+Base16 shift.
+
+> #define STEPDELAY_SAMPLE(val)  ((val) << 24)
+
+MACRO shift.
+
+> #define STEPCONFIG_SAMPLEDLY   STEPDELAY_SAMPLE(0)
+
+24 shift of 0 (still zero?).
+
+> #define STEPDELAY_SAMPLE_MAX   0xFF
+
+Base16 int.
+
+There is no consistency here, it's just a bunch of 'stuff', which
+makes making sense of them all difficult.
+
+> >>  #define STEPCONFIG_INP_AN4	STEPCONFIG_INP(4)
+> >>  #define STEPCONFIG_INP_ADCREFM	STEPCONFIG_INP(8)
+> >>  #define STEPCONFIG_FIFO1	BIT(26)
+> >> +#define STEPCONFIG_AVG_MAX	16
+> >> =20
+> >>  /* Delay register */
+> >>  #define STEPDELAY_OPEN_MASK	(0x3FFFF << 0)
+> >>  #define STEPDELAY_OPEN(val)	((val) << 0)
+> >=20
+> > What's the point in shifting by zero?
+>=20
+> I agree. But my patch did not add these lines. I can remove them. Do =
+you
+> want me to do this change as part of current patch or as a separate
+> cleanup patch?
+
+That's up to Jonathan.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
