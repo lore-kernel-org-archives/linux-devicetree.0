@@ -1,92 +1,120 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 8/8] ASoC: add snd-soc-dummy DT support
-Date: Thu, 28 Aug 2014 09:02:51 +0100
-Message-ID: <20140828080251.GG17528@sirena.org.uk>
-References: <87wq9vmyyc.wl%kuninori.morimoto.gx@gmail.com>
- <20140826091120.GC17528@sirena.org.uk>
- <53FC5105.6070901@metafoo.de>
- <20140826094211.GF17528@sirena.org.uk>
- <87r403mtip.wl%kuninori.morimoto.gx@gmail.com>
- <20140826105028.GK17528@sirena.org.uk>
- <87d2bmpwi2.wl%kuninori.morimoto.gx@gmail.com>
- <87a96qpqsy.wl%kuninori.morimoto.gx@gmail.com>
- <53FD95AB.6080903@metafoo.de>
- <87fvghihaq.wl%kuninori.morimoto.gx@gmail.com>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH 2/5] phy: exynos5-usbdrd: Add pipe-clk and utmi-clk support
+Date: Thu, 28 Aug 2014 13:31:57 +0530
+Message-ID: <1409212920-28526-3-git-send-email-gautam.vivek@samsung.com>
+References: <1409212920-28526-1-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GzfDEbkz4QNhsw37"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87fvghihaq.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1409212920-28526-1-git-send-email-gautam.vivek@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, balbi@ti.com, kishon@ti.com, kgene.kim@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Exynos7 SoC has now separate gate control for 125MHz pipe3 phy
+clock, as well as 60MHz utmi phy clock.
+So get the same and control in the phy-exynos5-usbdrd driver.
 
---GzfDEbkz4QNhsw37
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+---
+ .../devicetree/bindings/phy/samsung-phy.txt        |    4 ++++
+ drivers/phy/phy-exynos5-usbdrd.c                   |   24 ++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-On Wed, Aug 27, 2014 at 05:33:55PM -0700, Kuninori Morimoto wrote:
-
-> Now, my system is working well with simple-card by this
-
-> 	sound {
-> 		compatible =3D "simple-audio-card";
-> 		...
->=20
-> 		cpu {
-> 			sound-dai =3D <&rcar_sound 0>;
-> 		};
-> 		codec {
-> 			sound-dai =3D <&ak4643>;
-> 		};
-> 	};
-
-> The reason why I'm tring to support DPCM on simple-card is "sampling rate=
- convert".
-> My rcar_sound can convert sampling rate, and I tried to add this feature =
-as
-> rcar_sound property.
-> But, Mark rejected and requests me to use DPCM for it,
-> since it can be common featrue.
-> Current existing simple-card can't use it, and I'm tring.
-> But, am I misunderstanding ?
-
-There's two separate things here.  One is how the code is implemented
-(which does look very much like it should be doing DPCM) and the other
-is how the DT binding looks - the DT binding is supposed to be a
-hardware neutral thing and not depend on Linux implementation details.
-If you've already got the hardware described well enough to discover
-everything then that generally indicates that the DT binding should not
-need to change.
-
---GzfDEbkz4QNhsw37
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJT/uIoAAoJELSic+t+oim967oP/A3r0e8aU5SqoDnB4y3YuN8z
-p6Wepl/8ENcokMMF5JJ43VE5WPXjiKjPogmU3XUgUw358Brmc70+twNNNS58u006
-ApUhnOg0yzU0rCiY04+yu8xkkxg4SO4qZWUt775ug2rU2xlA0aHfv9zrhimu9U9u
-MT6gMGvmRAbPa5AqPVGufYFWjUGWi3f3LJFBQIabCBJKmoTNahPaawkN/Ry0DUyn
-QRAZomlgq8z+qNJj65K6nHSwFmx7SHeSLODpOyzlc3Ym/DbcgX0YXypf9AeKYD9t
-a68vj2/qo6I1ftRrrmrhi2dYH3GowiVYZhVwhEeFMOjerRjmaBhV2OjA/ZHbONk9
-GBz3oqLI/eUs5w7/q0o96ig5bCMvaOlUsA1qXki7kg8aahSn7ERHw/s9br9UOYn1
-o04CwruIB0ali/TymwTVGQzXgqtyMRBXqkAKYJfSj7qa8bpCcP0hoSs1FdY8NOER
-oVXr9v+hN/W9icFFxgCXz8jNIVJT7m+LESwegJGbGCUFbXnlp4LnEctGDsHL4bXC
-2NMEuLjaUj5gQg56Pe9d62xotHAeeoqnsv01hdUVNd4ihPmLL/20H9EH5lFKL5uc
-BT6yx9X6EfqFeLj5GxEZXpc0t+BwMMoz0kL8TS5nYayjt+ZTVMF76UryDbPQNDsd
-9qxc98WXuJxxH6iK86nu
-=OEM+
------END PGP SIGNATURE-----
-
---GzfDEbkz4QNhsw37--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+index 7a6feea..b64d616 100644
+--- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
++++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+@@ -135,6 +135,10 @@ Required properties:
+ 	       PHY operations, associated by phy name. It is used to
+ 	       determine bit values for clock settings register.
+ 	       For Exynos5420 this is given as 'sclk_usbphy30' in CMU.
++	- optional clocks: Next gen Exynos SoCs have following additional
++			   gate clocks available:
++			   - phy_pipe: for PIPE3 phy
++			   - phy_utmi: for UTMI+ phy
+ - samsung,pmu-syscon: phandle for PMU system controller interface, used to
+ 		      control pmu registers for power isolation.
+ - #phy-cells : from the generic PHY bindings, must be 1;
+diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exynos5-usbdrd.c
+index b05302b..685c108 100644
+--- a/drivers/phy/phy-exynos5-usbdrd.c
++++ b/drivers/phy/phy-exynos5-usbdrd.c
+@@ -148,6 +148,8 @@ struct exynos5_usbdrd_phy_drvdata {
+  * @dev: pointer to device instance of this platform device
+  * @reg_phy: usb phy controller register memory base
+  * @clk: phy clock for register access
++ * @pipeclk: clock for pipe3 phy
++ * @utmiclk: clock for utmi+ phy
+  * @drv_data: pointer to SoC level driver data structure
+  * @phys[]: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
+  *	    instances each with its 'phy' and 'phy_cfg'.
+@@ -161,6 +163,8 @@ struct exynos5_usbdrd_phy {
+ 	struct device *dev;
+ 	void __iomem *reg_phy;
+ 	struct clk *clk;
++	struct clk *pipeclk;
++	struct clk *utmiclk;
+ 	const struct exynos5_usbdrd_phy_drvdata *drv_data;
+ 	struct phy_usb_instance {
+ 		struct phy *phy;
+@@ -446,6 +450,10 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
+ 
+ 	dev_dbg(phy_drd->dev, "Request to power_on usbdrd_phy phy\n");
+ 
++	if (!IS_ERR(phy_drd->utmiclk))
++		clk_prepare_enable(phy_drd->utmiclk);
++	if (!IS_ERR(phy_drd->pipeclk))
++		clk_prepare_enable(phy_drd->pipeclk);
+ 	clk_prepare_enable(phy_drd->ref_clk);
+ 
+ 	/* Enable VBUS supply */
+@@ -464,6 +472,10 @@ static int exynos5_usbdrd_phy_power_on(struct phy *phy)
+ 
+ fail_vbus:
+ 	clk_disable_unprepare(phy_drd->ref_clk);
++	if (!IS_ERR(phy_drd->pipeclk))
++		clk_disable_unprepare(phy_drd->pipeclk);
++	if (!IS_ERR(phy_drd->utmiclk))
++		clk_disable_unprepare(phy_drd->utmiclk);
+ 
+ 	return ret;
+ }
+@@ -483,6 +495,10 @@ static int exynos5_usbdrd_phy_power_off(struct phy *phy)
+ 		regulator_disable(phy_drd->vbus);
+ 
+ 	clk_disable_unprepare(phy_drd->ref_clk);
++	if (!IS_ERR(phy_drd->pipeclk))
++		clk_disable_unprepare(phy_drd->pipeclk);
++	if (!IS_ERR(phy_drd->utmiclk))
++		clk_disable_unprepare(phy_drd->utmiclk);
+ 
+ 	return 0;
+ }
+@@ -581,6 +597,14 @@ static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
+ 		return PTR_ERR(phy_drd->clk);
+ 	}
+ 
++	phy_drd->pipeclk = devm_clk_get(dev, "phy_pipe");
++	if (IS_ERR(phy_drd->pipeclk))
++		dev_warn(dev, "Failed to get pipe3 phy operational clock\n");
++
++	phy_drd->utmiclk = devm_clk_get(dev, "phy_utmi");
++	if (IS_ERR(phy_drd->utmiclk))
++		dev_warn(dev, "Failed to get utmi phy operational clock\n");
++
+ 	phy_drd->ref_clk = devm_clk_get(dev, "ref");
+ 	if (IS_ERR(phy_drd->ref_clk)) {
+ 		dev_err(dev, "Failed to get reference clock of usbdrd phy\n");
+-- 
+1.7.10.4
