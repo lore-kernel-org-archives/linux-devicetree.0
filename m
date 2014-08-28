@@ -1,205 +1,93 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 11/14] arm64: dts: Add initial device tree support for
- EXYNOS7
-Date: Thu, 28 Aug 2014 09:35:50 +0100
-Message-ID: <53FEE9E6.2000204@arm.com>
-References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com> <1409132660-1898-3-git-send-email-ch.naveen@samsung.com> <20140828035639.GB4972@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140828035639.GB4972@localhost>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh@kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Thomas Abraham <thomas.ab@samsung.com>, "cpgs@samsung.com" <cpgs@samsung.com>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v2 0/9] PM / Domains: Generic OF-based support
+Date: Thu, 28 Aug 2014 10:38:53 +0200
+Message-ID: <1409215142-8218-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/08/14 04:56, Olof Johansson wrote:
-> Hi,
-> 
-> On Wed, Aug 27, 2014 at 03:14:18PM +0530, Naveen Krishna Chatradhi wrote:
->> Add initial device tree nodes for EXYNOS7 SoC.
->> Also, includes the dt-binding definitions for clock ids.
-> 
-> Uh, no -- it just adds the dtsi.
-> 
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> Cc: Thomas Abraham <thomas.ab@samsung.com>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> ---
->>  arch/arm64/boot/dts/exynos7.dtsi |  553 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 553 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/exynos7.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/exynos7.dtsi b/arch/arm64/boot/dts/exynos7.dtsi
->> new file mode 100644
->> index 0000000..6b9eaf4
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/exynos7.dtsi
-> 
-> Let's not make the same mistake as on 32-bit, and go with a directory
-> hierarchy here from day one.
-> 
-> So, please create a exynos subdirectory for this file. You also need
-> a Makefile when you add a board dts.
-> 
->> @@ -0,0 +1,553 @@
->> +/*
->> + * SAMSUNG EXYNOS7 SoC device tree source
->> + *
->> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
->> + *		http://www.samsung.com
->> + *
->> + * SAMSUNG EXYNOS7 SoC device nodes are listed in this file.
->> + * EXYNOS7 based board files can include this file and provide
->> + * values for board specfic bindings.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <dt-bindings/clock/exynos7-clk.h>
->> +
->> +/ {
->> +	compatible = "samsung,exynos7";
->> +	interrupt-parent = <&gic>;
->> +	#address-cells = <1>;
->> +	#size-cells = <1>;
-> 
-> You should probably use address-cells/size-cells 2/2 on a 64-bit platform.
-> 
->> +	aliases {
->> +		pinctrl0 = &pinctrl_0;
->> +		pinctrl1 = &pinctrl_1;
->> +		pinctrl2 = &pinctrl_2;
->> +		pinctrl3 = &pinctrl_3;
->> +		pinctrl4 = &pinctrl_4;
->> +		pinctrl5 = &pinctrl_5;
->> +		pinctrl6 = &pinctrl_6;
->> +		pinctrl7 = &pinctrl_7;
->> +		pinctrl8 = &pinctrl_8;
->> +		pinctrl9 = &pinctrl_9;
->> +		mshc0 = &mmc_0;
->> +		mshc2 = &mmc_2;
->> +	};
->> +
->> +	chipid@10000000 {
->> +		compatible = "samsung,exynos4210-chipid";
->> +		reg = <0x10000000 0x100>;
->> +	};
->> +
->> +	cpus {
->> +		#address-cells = <2>;
->> +		#size-cells = <0>;
-> 
-> Why size-cells=2? Can you not fit a cpuid in 32 bits?
-> 
->> +		cpu@0 {
->> +			device_type = "cpu";
->> +			compatible = "arm,cortex-a57", "arm,armv8";
->> +			reg = <0x0 0x0>;
->> +		};
->> +	};
->> +
->> +	fin_pll: xxti {
->> +		compatible = "fixed-clock";
->> +		clock-frequency = <24000000>;
->> +		clock-output-names = "fin_pll";
->> +		#clock-cells = <0>;
->> +	};
->> +
->> +	gic: interrupt-controller@11001000 {
->> +		compatible = "arm,gic-400";
->> +		#interrupt-cells = <3>;
->> +		#address-cells = <0>;
->> +		interrupt-controller;
->> +		reg =	<0x11001000 0x1000>,
->> +			<0x11002000 0x1000>,
->> +			<0x11004000 0x2000>,
->> +			<0x11006000 0x2000>;
->> +	};
->> +
->> +	hsi2c_0: hsi2c@13640000 {
->> +		compatible = "samsung,exynos7-hsi2c";
-> 
-> Is the i2c controller here completely new?
-> 
-> Also, please use 'i2c' for node name on these nodes.
-> 
->> +		reg = <0x13640000 0x1000>;
->> +		interrupts = <0 441 0>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&hs_i2c0_bus>;
->> +		clocks = <&clock_peric0 PCLK_HSI2C0>;
->> +		clock-names = "hsi2c";
->> +		status = "disabled";
->> +	};
->> +
->> +	hsi2c_1: hsi2c@13650000 {
->> +		compatible = "samsung,exynos7-hsi2c";
->> +		reg = <0x13650000 0x1000>;
->> +		interrupts = <0 442 0>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&hs_i2c1_bus>;
->> +		clocks = <&clock_peric0 PCLK_HSI2C1>;
->> +		clock-names = "hsi2c";
->> +		status = "disabled";
->> +	};
->> +
->> +	hsi2c_2: hsi2c@14E60000 {
-> 
-> I much prefer lowercase hex in unit addresses (and reg entries) below. I
-> know 32-bit uses uppercase, but let's switch going forward here.
-> 
->> +	mct@101C0000 {
->> +		compatible = "samsung,exynos4210-mct";
-> 
-> Please just do away with MCT here, and use architected timers going
-> forward. There really shouldn't be a need to keep supporting MCT any
-> more -- it's a construct from before arch timers on Cortex-A9.
-> 
->> +	mmc_0: mmc@15740000 {
->> +		compatible = "samsung,exynos7-dw-mshc-smu";
-> 
-> Is this controller backwards compatible with exynos5 ones?
-> 
->> +	/* The Clock nodes are ordered as per the usermanual. */
-> 
-> "The clock"
-> 
-> "user manual"
-> 
->> +	timer {
->> +	        compatible = "arm,armv8-timer";
->> +	        interrupts = <1 13 0xff01>,
->> +	                     <1 14 0xff01>,
->> +	                     <1 11 0xff01>,
->> +	                     <1 10 0xff01>;
->> +	        clock-frequency = <24000000>;
->> +		use-clocksource-only;
->> +		use-physical-timer;
-> 
-> These two properties are not standard, and I would expect any 64-bit
-> platform to come with PSCI such that you have a way to initialize the
-> virtual timers.
+Changes in v2:
+	- Fix the ACPI patch, it didn't even compile for CONFIG_ACPI.
+	- Updated some comments in code and in commit messages.
+	- Fixed the dev_pm_domain_attach API to handle EPROBE_DEFER properly.
+	- Rebased the ARM Exynos patch.
+	- Added some Tested-by tags.
 
-It really sickens me that this is the n-th iteration of a Samsung SoC
-having the generic timer (basically since the 5250 came out), and still
-it is littered with stupid firmware bugs:
-- Broken CNTFRQ (as outlined by the need of clock-frequency)
-- Broken CNTVOFF (as hinted by the reliance on the physical timer)
 
-You would think that after over two years, someone would have a clue and
-added the missing 4 instructions to the boot ROM.
+This patchset has a bit of a history and some parts of it has been posted
+earlier.
 
-Or not.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/262725.html
 
-	M.
+In the first revision I intentially didn't increase version number of the
+patches, since I think it would have cause more confusion than clarity.
+
+A summary of changes in V1 and since the last patchset, from the link above:
+	- Instead of letting driver core handling the device to power domain
+	binding/unbinding, follow the behavior of how the ACPI power domain
+	is handled.
+
+
+This is a summary of what these patches are intended to do:
+
+1)
+Add generic power domain OF-based support which also includes APIs to handle
+attach/detach of generic power domains to devices.
+
+2)
+Adding a common API to attach/detach power domains and include support for the
+ACPI and the generic power domain in there.
+
+3)
+>From subsystem level code, at probe/remove, convert from invoking the ACPI
+specific power domain attach/detach functions to the new common attach/detach
+APIs.
+
+4)
+Add support for the AMBA bus to attach/detach power domains, using the new
+common APIs.
+
+5)
+Convert Exynos to use the new generic power domain OF support.
+
+Obviously, there are dependencies througout this patchset, which means if they
+get accepted the all need to go together. It might also be convenient to share
+them through an immutable branch.
+
+
+Tomasz Figa (2):
+  PM / Domains: Add generic OF-based power domain look-up
+  ARM: exynos: Move to generic power domain bindings
+
+Ulf Hansson (7):
+  ACPI / PM: Let acpi_dev_pm_detach() return an error code
+  PM / Domains: Add APIs to attach/detach a PM domain for a device
+  drivercore / platform: Convert to dev_pm_domain_attach|detach()
+  i2c: core: Convert to dev_pm_domain_attach|detach()
+  mmc: sdio: Convert to dev_pm_domain_attach|detach()
+  spi: core: Convert to dev_pm_domain_attach|detach()
+  amba: Add support for attach/detach of power domains
+
+ .../bindings/arm/exynos/power_domain.txt           |  13 +-
+ .../devicetree/bindings/power/power_domain.txt     |  51 ++++
+ arch/arm/mach-exynos/pm_domains.c                  |  78 +-----
+ drivers/acpi/device_pm.c                           |   8 +-
+ drivers/amba/bus.c                                 |  10 +-
+ drivers/base/platform.c                            |  15 +-
+ drivers/base/power/common.c                        |  56 ++++
+ drivers/base/power/domain.c                        | 291 +++++++++++++++++++++
+ drivers/i2c/i2c-core.c                             |  13 +-
+ drivers/mmc/core/sdio_bus.c                        |   4 +-
+ drivers/spi/spi.c                                  |  12 +-
+ include/linux/acpi.h                               |   7 +-
+ include/linux/pm.h                                 |  14 +
+ include/linux/pm_domain.h                          |  46 ++++
+ kernel/power/Kconfig                               |   4 +
+ 15 files changed, 515 insertions(+), 107 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
+
 -- 
-Jazz is not dead. It just smells funny...
+1.9.1
+
