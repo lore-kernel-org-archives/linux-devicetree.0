@@ -1,36 +1,34 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] of: Add vendor prefix for Sitronix
-Date: Thu, 28 Aug 2014 09:47:54 +0200
-Message-ID: <1409212074-2966-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Carlo Caione <carlo@caione.org>
+Subject: Re: [PATCH 2/7] ARM: meson: serial: add MesonX SoC on-chip uart
+ driver
+Date: Thu, 28 Aug 2014 09:51:15 +0200
+Message-ID: <20140828075115.GA2601@carlo-MacBookPro>
+References: <1408272594-10814-1-git-send-email-carlo@caione.org>
+ <1408272594-10814-3-git-send-email-carlo@caione.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408272594-10814-3-git-send-email-carlo@caione.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-The stock ticker for Sitronix is just a number.
-"sitronix,st1232" is already in use for the Sitronix st1232 touchscreen
-controller on Atmark Techno Armadillo 800 EVA.
+On Sun, Aug 17, 2014 at 12:49:49PM +0200, Carlo Caione wrote:
+> The SoC has four fully functional UARTs which use the same programming
+> model. They are named UART_A, UART_B, UART_C and UART_AO (Always-On)
+> which cannot be powered off.
+> 
+> Signed-off-by: Carlo Caione <carlo@caione.org>
+> ---
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2: Mention armadillo
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+<cut>
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 34cc1bfcebfd..41799a69964b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -126,6 +126,7 @@ silabs	Silicon Laboratories
- simtek
- sii	Seiko Instruments, Inc.
- sirf	SiRF Technology, Inc.
-+sitronix	Sitronix Technology Corporation
- smsc	Standard Microsystems Corporation
- snps 	Synopsys, Inc.
- solidrun	SolidRun
+Hi,
+Any feedback on this patch before submitting v2?
+
+Thanks,
+
 -- 
-1.9.1
-
+Carlo Caione
