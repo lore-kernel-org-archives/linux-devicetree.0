@@ -1,44 +1,35 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/3] irqchip: renesas-irqc: Add binding docs for new R-Car Gen2 SoCs
-Date: Thu, 28 Aug 2014 10:00:00 +0200
-Message-ID: <1409212800-4957-3-git-send-email-geert+renesas@glider.be>
-References: <1409212800-4957-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409212800-4957-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH 0/5] usb: dwc3/phy-exynos5-usbdrd: Extend support to Exynos7
+Date: Thu, 28 Aug 2014 13:31:55 +0530
+Message-ID: <1409212920-28526-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, kishon@ti.com, kgene.kim@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-  - r8a7792 (R-Car V2H)
-  - r8a7793 (R-Car M2-N)
-  - r8a7794 (R-Car E2)
+Adding required support for clocks and additional VBUS regulators
+to enable USB 3.0 support on Exynos7 SoC.
 
-r8a7791 is now called "R-Car M2-W".
+This series depends for ACRH_EXYNOS7 support on following series:
+[PATCH 00/14] Support 64bit Cortex A57 based Exynos7 SoC
+https://www.mail-archive.com/devicetree@vger.kernel.org/msg39392.html
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2: Drop RFC
----
- .../devicetree/bindings/interrupt-controller/renesas,irqc.txt        | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+The series is based on usb-next branch.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-index 48e8291e5bcc..1a88e62228e5 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-@@ -6,7 +6,10 @@ Required properties:
-   Examples with soctypes are:
-     - "renesas,irqc-r8a73a4" (R-Mobile AP6)
-     - "renesas,irqc-r8a7790" (R-Car H2)
--    - "renesas,irqc-r8a7791" (R-Car M2)
-+    - "renesas,irqc-r8a7791" (R-Car M2-W)
-+    - "renesas,irqc-r8a7792" (R-Car V2H)
-+    - "renesas,irqc-r8a7793" (R-Car M2-N)
-+    - "renesas,irqc-r8a7794" (R-Car E2)
- - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
-   interrupts.txt in this directory
- 
+Vivek Gautam (5):
+  usb: dwc3: exynos: Add support for SCLK present on Exynos7
+  phy: exynos5-usbdrd: Add pipe-clk and utmi-clk support
+  phy: exynos5-usbdrd: Add facility for VBUS-BOOST-5V supply
+  usb: dwc3: Adding Kconfig dependency for Exynos7
+  phy: exynos5-usbdrd: Adding Kconfig dependency for Exynos7
+
+ .../devicetree/bindings/phy/samsung-phy.txt        |    4 ++
+ drivers/phy/Kconfig                                |    2 +-
+ drivers/phy/phy-exynos5-usbdrd.c                   |   51 +++++++++++++++++++-
+ drivers/usb/dwc3/Kconfig                           |    2 +-
+ drivers/usb/dwc3/dwc3-exynos.c                     |   16 ++++++
+ 5 files changed, 71 insertions(+), 4 deletions(-)
+
 -- 
-1.9.1
-
+1.7.10.4
