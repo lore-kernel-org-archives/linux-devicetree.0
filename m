@@ -1,40 +1,44 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCHv2] ASoC: fsl-sai: using 'lsb-first' property instead of
- 'big-endian-data'.
-Date: Fri, 29 Aug 2014 12:18:04 -0700
-Message-ID: <20140829191803.GA7756@Asurada>
-References: <20140829110601.GB21473@leverpostej>
- <20140829115943.GV29327@sirena.org.uk>
- <20140829164010.GA5520@Asurada>
- <20140829172601.GC18555@leverpostej>
- <20140829174019.GA5536@Asurada>
- <20140829191141.GA29327@sirena.org.uk>
+From: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH] of: Fix constantness of of_n_size_cells
+Date: Fri, 29 Aug 2014 12:26:50 -0700
+Message-ID: <1409340410.21254.63.camel@smoke>
+References: <cover.1408729200.git.geoff@infradead.org>
+	 <20140827102827.50E15C409CB@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140829191141.GA29327@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Xiubo Li <Li.Xiubo@freescale.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140827102827.50E15C409CB-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 08:11:41PM +0100, Mark Brown wrote:
-> On Fri, Aug 29, 2014 at 10:40:20AM -0700, Nicolin Chen wrote:
+Hi Grant,
+
+On Wed, 2014-08-27 at 11:28 +0100, Grant Likely wrote:
+> On Fri, 22 Aug 2014 17:43:36 +0000, Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
+> > The of_n_size_cells() routine only does a read-only operation on the device tree
+> > passed in, so add the const keyword to that argument so that of_n_size_cells()
+> > can be called with read-only data without casting.
+> > 
+> > Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 > 
-> > Agreed, it's better to be described in the commit comments as well.
-> 
-> > And regarding the compatibility with the old DT, I personally prefer
-> > it to be added in the change for safety but if this case is allowable
-> > which I'm not so sure about it, I'm fairly okay with the rename.
-> 
-> If you're happy I can easily add a note, but keeping the old property
+> What is the code that exposed this problem?
 
-That will be helpful, thank you :)
+For the arm64 kexec support and the arm64 spin-table hot-plug support I
+am working on I need to read the cpu hardware id from a device tree.  I
+don't need to modify the device tree, just get property values, so in
+that code I have it in a pointer to a const.  I can cast off that const
+when I do the call to of_n_size_cells() if you don't think it worthwhile
+to make this change.  Here's the code:
 
-> would remove all doubt :)  I'll wait for either an ack or a respin.
++	p->hwid = of_read_number(cell, of_n_addr_cells(dn))
++		& MPIDR_HWID_BITMASK;
 
-Yea, I'm fine with it. Acked.
+-Geoff
 
-Thanks
-Nicolin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
