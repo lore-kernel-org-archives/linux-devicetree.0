@@ -1,152 +1,86 @@
 From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH 12/12] MIPS: Malta: Map GIC local interrupts
-Date: Fri, 29 Aug 2014 15:14:39 -0700
-Message-ID: <1409350479-19108-13-git-send-email-abrestic@chromium.org>
+Subject: [PATCH 04/12] MIPS: GIC: Move MIPS_GIC_IRQ_BASE into platform irq.h
+Date: Fri, 29 Aug 2014 15:14:31 -0700
+Message-ID: <1409350479-19108-5-git-send-email-abrestic@chromium.org>
 References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 Cc: Andrew Bresticker <abrestic@chromium.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the GIC driver properly supports local interrupts, extend
-the static interrupt mapping to include the GIC timer and watchdog
-and fix up the GIC interrupt setup and handling so that the local
-interrupts are properly handled.  Note that ipi_map is also renamed
-to gic_irq_map since it is now also used to track mapping of non-IPI
-interrupts to CPUs.
+Define a generic MIPS_GIC_IRQ_BASE which is suitable for Malta and
+the upcoming Danube board in <mach-generic/irq.h>.  Since Sead-3 is
+different and uses a MIPS_GIC_IRQ_BASE equal to the CPU IRQ base (0),
+define its MIPS_GIC_IRQ_BASE in <mach-sead3/irq.h>.
 
 Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 ---
- arch/mips/mti-malta/malta-int.c | 44 +++++++++++++++++++++++++++++++----------
- 1 file changed, 34 insertions(+), 10 deletions(-)
+ arch/mips/include/asm/mach-generic/irq.h     | 6 ++++++
+ arch/mips/include/asm/mach-sead3/irq.h       | 1 +
+ arch/mips/include/asm/mips-boards/maltaint.h | 2 --
+ arch/mips/include/asm/mips-boards/sead3int.h | 2 --
+ 4 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/mti-malta/malta-int.c b/arch/mips/mti-malta/malta-int.c
-index e4f43ba..16b1473 100644
---- a/arch/mips/mti-malta/malta-int.c
-+++ b/arch/mips/mti-malta/malta-int.c
-@@ -38,7 +38,7 @@
- #include <asm/rtlx.h>
+diff --git a/arch/mips/include/asm/mach-generic/irq.h b/arch/mips/include/asm/mach-generic/irq.h
+index 139cd20..c0fc62b 100644
+--- a/arch/mips/include/asm/mach-generic/irq.h
++++ b/arch/mips/include/asm/mach-generic/irq.h
+@@ -36,4 +36,10 @@
  
- static unsigned long _msc01_biu_base;
--static unsigned int ipi_map[NR_CPUS];
-+static unsigned int gic_irq_map[NR_CPUS];
+ #endif /* CONFIG_IRQ_CPU */
  
- static DEFINE_RAW_SPINLOCK(mips_irq_lock);
- 
-@@ -129,8 +129,8 @@ static void malta_hw0_irqdispatch(void)
- 
- static void malta_ipi_irqdispatch(void)
- {
--#ifdef CONFIG_MIPS_GIC_IPI
- 	unsigned long irq;
-+#ifdef CONFIG_MIPS_GIC_IPI
- 	DECLARE_BITMAP(pending, GIC_NUM_INTRS);
- 
- 	gic_get_int_mask(pending, ipi_ints);
-@@ -143,8 +143,12 @@ static void malta_ipi_irqdispatch(void)
- 		irq = find_next_bit(pending, GIC_NUM_INTRS, irq + 1);
- 	}
- #endif
--	if (gic_compare_int())
--		do_IRQ(MIPS_GIC_IRQ_BASE);
-+	irq = gic_get_local_int();
-+	while (irq < GIC_NUM_LOCAL_INTRS) {
-+		do_IRQ(MIPS_GIC_LOCAL_IRQ_BASE + irq);
++#ifdef CONFIG_IRQ_GIC
++#ifndef MIPS_GIC_IRQ_BASE
++#define MIPS_GIC_IRQ_BASE (MIPS_CPU_IRQ_BASE + 8)
++#endif
++#endif /* CONFIG_IRQ_GIC */
 +
-+		irq = gic_get_local_int();
-+	}
- }
+ #endif /* __ASM_MACH_GENERIC_IRQ_H */
+diff --git a/arch/mips/include/asm/mach-sead3/irq.h b/arch/mips/include/asm/mach-sead3/irq.h
+index d8106f7..52c75d5 100644
+--- a/arch/mips/include/asm/mach-sead3/irq.h
++++ b/arch/mips/include/asm/mach-sead3/irq.h
+@@ -1,6 +1,7 @@
+ #ifndef __ASM_MACH_MIPS_IRQ_H
+ #define __ASM_MACH_MIPS_IRQ_H
  
- static void corehi_irqdispatch(void)
-@@ -288,7 +292,7 @@ asmlinkage void plat_irq_dispatch(void)
++#define MIPS_GIC_IRQ_BASE 0
+ #define GIC_NUM_INTRS (24 + NR_CPUS * 2)
+ #define NR_IRQS 256
  
- 	if (irq == MIPSCPU_INT_I8259A)
- 		malta_hw0_irqdispatch();
--	else if (gic_present && ((1 << irq) & ipi_map[smp_processor_id()]))
-+	else if (gic_present && ((1 << irq) & gic_irq_map[smp_processor_id()]))
- 		malta_ipi_irqdispatch();
- 	else
- 		do_IRQ(MIPS_CPU_IRQ_BASE + irq);
-@@ -408,7 +412,7 @@ static int msc_nr_eicirqs __initdata = ARRAY_SIZE(msc_eicirqmap);
- #define GIC_CPU_NMI GIC_MAP_TO_NMI_MSK
- #define X GIC_UNUSED
+diff --git a/arch/mips/include/asm/mips-boards/maltaint.h b/arch/mips/include/asm/mips-boards/maltaint.h
+index e330732..9d23343 100644
+--- a/arch/mips/include/asm/mips-boards/maltaint.h
++++ b/arch/mips/include/asm/mips-boards/maltaint.h
+@@ -10,8 +10,6 @@
+ #ifndef _MIPS_MALTAINT_H
+ #define _MIPS_MALTAINT_H
  
--static struct gic_intr_map gic_intr_map[GIC_NUM_INTRS] = {
-+static struct gic_intr_map gic_intr_map[GIC_NUM_INTRS + GIC_NUM_LOCAL_INTRS] = {
- 	{ X, X,		   X,		X,		0 },
- 	{ X, X,		   X,		X,		0 },
- 	{ X, X,		   X,		X,		0 },
-@@ -425,7 +429,10 @@ static struct gic_intr_map gic_intr_map[GIC_NUM_INTRS] = {
- 	{ 0, GIC_CPU_NMI,  GIC_POL_POS, GIC_TRIG_LEVEL, GIC_FLAG_TRANSPARENT },
- 	{ 0, GIC_CPU_NMI,  GIC_POL_POS, GIC_TRIG_LEVEL, GIC_FLAG_TRANSPARENT },
- 	{ X, X,		   X,		X,		0 },
--	/* The remainder of this table is initialised by fill_ipi_map */
-+	/*
-+	 * The remainder of this table is initialised by fill_ipi_map and
-+	 * fill_local_irq_map
-+	 */
- };
- #undef X
+-#define MIPS_GIC_IRQ_BASE	(MIPS_CPU_IRQ_BASE + 8)
+-
+ /*
+  * Interrupts 0..15 are used for Malta ISA compatible interrupts
+  */
+diff --git a/arch/mips/include/asm/mips-boards/sead3int.h b/arch/mips/include/asm/mips-boards/sead3int.h
+index 6b17aaf..11ebec9 100644
+--- a/arch/mips/include/asm/mips-boards/sead3int.h
++++ b/arch/mips/include/asm/mips-boards/sead3int.h
+@@ -14,6 +14,4 @@
+ #define GIC_BASE_ADDR		0x1b1c0000
+ #define GIC_ADDRSPACE_SZ	(128 * 1024)
  
-@@ -438,7 +445,7 @@ static void __init fill_ipi_map1(int baseintr, int cpu, int cpupin)
- 	gic_intr_map[intr].polarity = GIC_POL_POS;
- 	gic_intr_map[intr].trigtype = GIC_TRIG_EDGE;
- 	gic_intr_map[intr].flags = 0;
--	ipi_map[cpu] |= (1 << (cpupin + 2));
-+	gic_irq_map[cpu] |= (1 << (cpupin + 2));
- 	bitmap_set(ipi_ints, intr, 1);
- }
- 
-@@ -453,6 +460,22 @@ static void __init fill_ipi_map(void)
- }
- #endif
- 
-+static void __init fill_local_irq_map(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < GIC_NUM_LOCAL_INTRS; i++) {
-+		int intr = i + GIC_NUM_INTRS;
-+
-+		gic_intr_map[intr].cpunum = 0;
-+		gic_intr_map[intr].pin = GIC_CPU_INT2;
-+		gic_intr_map[intr].flags = 0;
-+	}
-+
-+	for (i = 0; i < NR_CPUS; i++)
-+		gic_irq_map[i] |= 1 << (GIC_CPU_INT2 + 2);
-+}
-+
- void __init arch_init_ipiirq(int irq, struct irqaction *action)
- {
- 	setup_irq(irq, action);
-@@ -533,6 +556,7 @@ void __init arch_init_irq(void)
- 		gic_resched_int_base = gic_call_int_base - nr_cpu_ids;
- 		fill_ipi_map();
- #endif
-+		fill_local_irq_map();
- 		gic_init(GIC_BASE_ADDR, GIC_ADDRSPACE_SZ, gic_intr_map,
- 				ARRAY_SIZE(gic_intr_map), MIPS_GIC_IRQ_BASE);
- 		if (!mips_cm_present()) {
-@@ -542,8 +566,7 @@ void __init arch_init_irq(void)
- 				(i | (0x1 << MSC01_SC_CFG_GICENA_SHF));
- 			pr_debug("GIC Enabled\n");
- 		}
--#if defined(CONFIG_MIPS_GIC_IPI)
--		/* set up ipi interrupts */
-+		/* set up ipi and local interrupts */
- 		if (cpu_has_vint) {
- 			set_vi_handler(MIPSCPU_INT_IPI0, malta_ipi_irqdispatch);
- 			set_vi_handler(MIPSCPU_INT_IPI1, malta_ipi_irqdispatch);
-@@ -557,6 +580,7 @@ void __init arch_init_irq(void)
- 		write_c0_status(0x1100dc00);
- 		pr_info("CPU%d: status register frc %08x\n",
- 			smp_processor_id(), read_c0_status());
-+#if defined(CONFIG_MIPS_GIC_IPI)
- 		for (i = 0; i < nr_cpu_ids; i++) {
- 			arch_init_ipiirq(MIPS_GIC_IRQ_BASE +
- 					 GIC_RESCHED_INT(i), &irq_resched);
+-#define MIPS_GIC_IRQ_BASE	(MIPS_CPU_IRQ_BASE + 0)
+-
+ #endif /* !(_MIPS_SEAD3INT_H) */
 -- 
 2.1.0.rc2.206.gedb03e5
