@@ -1,194 +1,152 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-Subject: [PATCH v2 2/2] adv7604: Use DT parsing in dummy creation
-Date: Fri, 29 Aug 2014 17:15:03 +0200
-Message-ID: <1409325303-15906-2-git-send-email-jean-michel.hautbois@vodalys.com>
-References: <1409325303-15906-1-git-send-email-jean-michel.hautbois@vodalys.com>
+From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
+Date: Fri, 29 Aug 2014 17:18:07 +0200
+Message-ID: <540099AF.4020005@suse.de>
+References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com> <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com> <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl> <53F5D8D9.7040604@suse.de> <f166a186-301c-4288-97cf-71f8173c07e7@BN1AFFO11FD010.protection.gbl> <CAGVrzcYWN83tznwvw1M9V_mwWgobs2kwtRvEj4stqE=XGC10fg@mail.gmail.com> <20140825174610.GA13737@obsidianresearch.com> <53FB9AC4.8010704@gmail.com> <660fe929-1f16-4e22-8bd3-0388cd363978@BY2FFO11FD038.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1409325303-15906-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: lars@metafoo.de, w.sang@pengutronix.de, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, mark.rutland@arm.com, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="L9SjPjK87rLQL0d6dcRU2bdsfjHCWwCCn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <660fe929-1f16-4e22-8bd3-0388cd363978@BY2FFO11FD038.protection.gbl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>, Florian Fainelli <f.fainelli@gmail.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch uses DT in order to parse addresses for dummy devices of adv=
-7604.
-The ADV7604 has thirteen 256-byte maps that can be accessed via the mai=
-n
-I=C2=B2C ports. Each map has it own I=C2=B2C address and acts
-as a standard slave device on the I=C2=B2C bus.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--L9SjPjK87rLQL0d6dcRU2bdsfjHCWwCCn
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-If nothing is defined, it uses default addresses.
-The main prupose is using two adv76xx on the same i2c bus.
+Am 29.08.2014 16:08, schrieb Michal Simek:
+> On 08/25/2014 10:21 PM, Florian Fainelli wrote:
+>> On 08/25/2014 10:46 AM, Jason Gunthorpe wrote:
+>>> On Fri, Aug 22, 2014 at 01:47:09PM -0700, Florian Fainelli wrote:
+>>>
+>>>>>  - the ID based strings seem to be not needed since, IIUC, the core=
 
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
----
- .../devicetree/bindings/media/i2c/adv7604.txt      | 17 +++++-
- drivers/media/i2c/adv7604.c                        | 60 ++++++++++++++=
---------
- 2 files changed, 55 insertions(+), 22 deletions(-)
+>>>>>    reads the ID from the PHY and uses it, so I just left it out not=
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/=
-Documentation/devicetree/bindings/media/i2c/adv7604.txt
-index c27cede..8486b5c 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-@@ -10,8 +10,12 @@ Required Properties:
-=20
-   - compatible: Must contain one of the following
-     - "adi,adv7611" for the ADV7611
-+    - "adi,adv7604" for the ADV7604
-=20
--  - reg: I2C slave address
-+  - reg: I2C slave addresses
-+    The ADV7604 has thirteen 256-byte maps that can be accessed via th=
-e main
-+    I=C2=B2C ports. Each map has it own I=C2=B2C address and acts
-+    as a standard slave device on the I=C2=B2C bus.
-=20
-   - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
-     detection pins, one per HDMI input. The active flag indicates the =
-GPIO
-@@ -32,6 +36,12 @@ The digital output port node must contain at least o=
-ne endpoint.
- Optional Properties:
-=20
-   - reset-gpios: Reference to the GPIO connected to the device's reset=
- pin.
-+  - reg-names : Names of maps with programmable addresses.
-+		It can contain any map needing another address than default one.
-+		Possible maps names are :
-+ADV7604 : "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe", =
-"rep",
-+		"edid", "hdmi", "test", "cp", "vdp"
-+ADV7611 : "main", "cec", "infoframe", "afe", "rep", "edid", "hdmi", "c=
-p"
-=20
- Optional Endpoint Properties:
-=20
-@@ -50,7 +60,10 @@ Example:
-=20
- 	hdmi_receiver@4c {
- 		compatible =3D "adi,adv7611";
--		reg =3D <0x4c>;
-+		/* edid page will be accessible @ 0x66 on i2c bus */
-+		/* other maps keep their default addresses */
-+		reg =3D <0x4c 0x66>;
-+		reg-names =3D "main", "edid";
-=20
- 		reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;
- 		hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-index d4fa213..56037dd 100644
---- a/drivers/media/i2c/adv7604.c
-+++ b/drivers/media/i2c/adv7604.c
-@@ -326,6 +326,22 @@ static const struct adv7604_video_standards adv760=
-4_prim_mode_hdmi_gr[] =3D {
- 	{ },
- };
-=20
-+static const char const *adv7604_secondary_names[] =3D {
-+	"main", /* ADV7604_PAGE_IO */
-+	"avlink", /* ADV7604_PAGE_AVLINK */
-+	"cec", /* ADV7604_PAGE_CEC */
-+	"infoframe", /* ADV7604_PAGE_INFOFRAME */
-+	"esdp", /* ADV7604_PAGE_ESDP */
-+	"dpp", /* ADV7604_PAGE_DPP */
-+	"afe", /* ADV7604_PAGE_AFE */
-+	"rep", /* ADV7604_PAGE_REP */
-+	"edid", /* ADV7604_PAGE_EDID */
-+	"hdmi", /* ADV7604_PAGE_HDMI */
-+	"test", /* ADV7604_PAGE_TEST */
-+	"cp", /* ADV7604_PAGE_CP */
-+	"vdp" /* ADV7604_PAGE_VDP */
-+};
-+
- /* -------------------------------------------------------------------=
----- */
-=20
- static inline struct adv7604_state *to_state(struct v4l2_subdev *sd)
-@@ -2528,13 +2544,31 @@ static void adv7604_unregister_clients(struct a=
-dv7604_state *state)
- }
-=20
- static struct i2c_client *adv7604_dummy_client(struct v4l2_subdev *sd,
--							u8 addr, u8 io_reg)
-+						unsigned int i)
- {
- 	struct i2c_client *client =3D v4l2_get_subdevdata(sd);
-+	struct adv7604_platform_data *pdata =3D client->dev.platform_data;
-+	unsigned int io_reg =3D 0xf2 + i;
-+	unsigned int default_addr =3D io_read(sd, io_reg) >> 1;
-+	struct i2c_client *new_client;
-+
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		/* Try to find it in DT */
-+		new_client =3D i2c_new_secondary_device(client,
-+			adv7604_secondary_names[i], default_addr);
-+	} else if (pdata) {
-+		if (pdata->i2c_addresses[i])
-+			new_client =3D i2c_new_dummy(client->adapter,
-+						pdata->i2c_addresses[i]);
-+		else
-+			new_client =3D i2c_new_dummy(client->adapter,
-+						default_addr);
-+	}
-=20
--	if (addr)
--		io_write(sd, io_reg, addr << 1);
--	return i2c_new_dummy(client->adapter, io_read(sd, io_reg) >> 1);
-+	if (new_client)
-+		io_write(sd, io_reg, new_client->addr << 1);
-+
-+	return new_client;
- }
-=20
- static const struct adv7604_reg_seq adv7604_recommended_settings_afe[]=
- =3D {
-@@ -2677,6 +2711,7 @@ MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
-=20
- static struct of_device_id adv7604_of_id[] __maybe_unused =3D {
- 	{ .compatible =3D "adi,adv7611", .data =3D &adv7604_chip_info[ADV7611=
-] },
-+	{ .compatible =3D "adi,adv7604", .data =3D &adv7604_chip_info[ADV7604=
-] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, adv7604_of_id);
-@@ -2717,20 +2752,6 @@ static int adv7604_parse_dt(struct adv7604_state=
- *state)
- 	/* Disable the interrupt for now as no DT-based board uses it. */
- 	state->pdata.int1_config =3D ADV7604_INT1_CONFIG_DISABLED;
-=20
--	/* Use the default I2C addresses. */
--	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] =3D 0x42;
--	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] =3D 0x40;
--	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] =3D 0x3e;
--	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] =3D 0x38;
--	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] =3D 0x3c;
--	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] =3D 0x26;
--	state->pdata.i2c_addresses[ADV7604_PAGE_REP] =3D 0x32;
--	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] =3D 0x36;
--	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] =3D 0x34;
--	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] =3D 0x30;
--	state->pdata.i2c_addresses[ADV7604_PAGE_CP] =3D 0x22;
--	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] =3D 0x24;
--
- 	/* Hardcode the remaining platform data fields. */
- 	state->pdata.disable_pwrdnb =3D 0;
- 	state->pdata.disable_cable_det_rst =3D 0;
-@@ -2891,8 +2912,7 @@ static int adv7604_probe(struct i2c_client *clien=
-t,
- 			continue;
-=20
- 		state->i2c_clients[i] =3D
--			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
--					     0xf2 + i);
-+			adv7604_dummy_client(sd, i);
- 		if (state->i2c_clients[i] =3D=3D NULL) {
- 			err =3D -ENOMEM;
- 			v4l2_err(sd, "failed to create i2c client %u\n", i);
+>>>>>    trying to figure out how to obtain the correct ID
+>>>>
+>>>> It is not needed, but it is one way to specify a PHY device if you d=
+o
+>>>> not know what compatible string to use instead.
+>>>
+>>> No, it is a way to specify a PHY device if the kernel can't auto prob=
+e
+>>> the Phy ID.
+>>>
+>>> Last I checked, the kernel doesn't support plain text compatible
+>>> strings for phys - everything is driven on the phy id, either auto
+>>> probed or specified in the DT.
+>>
+>> That's right. Some PHY drivers might be relying on specific compatible=
+
+>> strings though, but not the core PHY library that probes and maps a
+>> driver to a PHY node.
+>>
+>>>
+>>>>>  - the marvell compatible strings are used in our vendor tree. They=
+
+>>>>>    aren't used anywhere but in our vendor tree. I though keeping th=
+em is
+>>>>>    nice since it identifies the PHY fully. And in case that level o=
+f
+>>>>>    detail is needed at some point it is already there.
+>>>>
+>>>> And this is the recommended way to do it in case we ever need to key=
+ a
+>>>> software decision based on the hardware.
+>>>
+>>> All compatible strings need to be documented.
+>>>
+>>> .. and they need to encode more information than you get from the phy=
+
+>>> id - die revsision, package option, functional options, voltage
+>>> codes. Etc.
+>>>
+>>> .. and they actually need to be *right*
+>>
+>> Agreed.
+>>
+>>>
+>>> An example: The kernel reports 88E1318S for all four chips in that
+>>> family, AFAIK you have to read the package marking to figure out whic=
+h
+>>> you have (it is the same die, with options switched on/off at
+>>> packaging time). People have already posted patches trying to
+>>> helpfully add a 'marvell,88E1318S' compatible string based on kernel
+>>> output. Except it is wrong, it isn't actually the '8S version in the
+>>> HW.
+>>>
+>>> Even worse, Marvell has a whole series of socket compatible phys. Jus=
+t
+>>> because the board the DT author looked at has a '318, doesn't mean
+>>> that every board ever made will. We've actually already been switchin=
+g
+>>> between the 318 and 318S for production depending on which has part
+>>> availability.
+>>>
+>>> Basically: don't try to override self-discoverable hardware in DT
+>>> without a really good reason.
+>>
+>> I think that's a very good point, at the very least let's use a
+>> compatible string that contains the full 32-bits PHY OUI.
+>=20
+> I think resolution is:
+> 1. Do not use marvell,88e1518 because it is not listed anywhere
+> 2. Do not add ethernet-phy-idAAAA.BBBB because it breaks autodetection
+> if there is different phy on the board and we shouldn't restrict us in =
+this.
+> In spite of autodetection takes some time.
+> 3. "ethernet-phy-ieee802.3-c22" is optional that's why doesn't need to =
+be added
+> 4. Any listed compatible string has to be parsed which takes time
+>=20
+> That's why I think make sense not to use any compatible string.
+> This should give us all flexibility which we want to have.
+
+Sorry, but we do need some node that we can reference via phy-handle
+from the gem node, don't we?
+
+In that case, is not specifying any compatible string a valid option?
+
+If you don't want to specify the IDs, then I would've assumed we need to
+specify the -c22 in order to have *some* compatible string in order to
+trigger loading of the appropriate driver module.
+
+Regards,
+Andreas
+
 --=20
-2.0.4
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=BC=
+rnberg
+
+
+--L9SjPjK87rLQL0d6dcRU2bdsfjHCWwCCn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJUAJmyAAoJEPou0S0+fgE/btsP/1Vjwczj47L41H3pUJAAmzT4
+UVJr7/EPUzSWMekRUL82SxTXJdVHzZtuu+5CMoIDva+GQpdQnCsZysAMCK0WC03H
+OfG1VL2A21FAjA+/67mau4uh/AcPecgGYe6Fy5lkW3hmv2ToPnAzLrOFofXrZjrG
+6EmElRzwQ+pW5pRHAkXvyO47cr6/8WCfg8QMckAgpejpQQUIQWPjQ7t4Hx2NuMW6
+4dxJRtf0wmvH5nG+Fzr6Pw/fyrQ1zgMETE4a7dDoILbc145t/8OnujKx5+0qqmQX
+mC3IequtbMBjYr+0cBal0MIptFhgQ0te6BbGg7LJF2yjMDovvNxs2hLS1OD1nObx
+Oi55RwgnMDgmvnFd8/c9AUk/ymHcdTOQfS8WBwhiFv6BZY/0CDb0i13CW1pxT0XA
++GCu35HWdP9XCu+CTUwiRzTuwXfjwDpR05Msb0BVZ7XejUdpMe1D+CWxpYkzeuAd
+PSBM9MWfHerZQ26cV79AIlyvw8Eoma8NqBVV1V1bSanYAkEmU5QlWykzysNvQ0ZU
+UeptIarS+zlGMgAJwlmsZbC0PNLrN4v6hjjlfEmXlmIiIfy3BDv58IGrI4/o9Mxz
+DfhajYNrrbzlgTdRrQ9X+iaDfm62V9XmgA8PyBQmcEQx+IYDXSYHAQJoni/n4TTs
+uIgz/k++al6inabvRHq/
+=AYo3
+-----END PGP SIGNATURE-----
+
+--L9SjPjK87rLQL0d6dcRU2bdsfjHCWwCCn--
