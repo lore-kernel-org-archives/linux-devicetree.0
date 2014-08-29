@@ -1,68 +1,168 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: dts: make arch-timer always on in rk3288 soc
-Date: Fri, 29 Aug 2014 12:22:42 +0100
-Message-ID: <20140829112242.GC21473@leverpostej>
-References: <1409190017-12656-1-git-send-email-kever.yang@rock-chips.com>
- <20140828091758.GB14650@leverpostej>
- <20140828151121.GM14650@leverpostej>
- <53FFEE40.3010001@rock-chips.com>
+From: "edubezval@gmail.com" <edubezval@gmail.com>
+Subject: Re: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
+Date: Fri, 29 Aug 2014 07:39:19 -0400
+Message-ID: <CAC-25o-winy6jVjh9_hQ-t2VO2UfxG67pW5DpOve8A2o39EJSw@mail.gmail.com>
+References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com>
+	<2852853.mfRZfFVSev@wuerfel>
+	<20140828143733.GA18084@developer>
+	<3440260.edal29kzlR@diego>
+	<2014082909531345696848@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53FFEE40.3010001-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <2014082909531345696848@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?B?6LW15Luq5bOw?= <zyf@rock-chips.com>
+Cc: =?UTF-8?Q?HeikoSt=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Caesar Wang <caesar.wang@rock-chips.com>, "rui.zhang" <rui.zhang@intel.com>, "grant.likely" <grant.likely@linaro.org>, robh+dt <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-pm <linux-pm@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-doc <linux-doc@vger.kernel.org>, =?UTF-8?B?6buE5rab?= <huangtao@rock-chips.com>, =?UTF-8?B?6JSh5p6r?= <cf@rock-chips.com>, dianders <dianders@chromium.org>, dtor <dtor@chromium.org>, =?UTF-8?B?6ZKf5YuH5rGq?= <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "dmitry.torokhov" <dmitry.torokhov@gmail.com>, linux-iio <linux-iio@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 04:06:40AM +0100, Huang Tao wrote:
-> Hi, Mark:
+Hello Zhao,
 
-Hi,
+On Thu, Aug 28, 2014 at 9:54 PM, =E8=B5=B5=E4=BB=AA=E5=B3=B0 <zyf@rock-=
+chips.com> wrote:
+> Hi Heiko=EF=BC=8C
+>
+>    The TS-ADC on RK3288 has two component, a tsadc and a tsadc contro=
+ller.
+> The tsadc controller is similar like the thermal manager unit on othe=
+r SOCs.
+> We followed the naming of 3066, but not named as the Thermal Manager.
+>
+>    Moreover,there is only one set of apb registers to access the tsad=
+c
+> controller,and the tsadc is controlled by the tsadc controller,could =
+not
+> access directly. If we write a general tsadc driver by accessed tsadc
+> controller registers, and it hardly to write a driver for the tsadc
+> controller.
 
-> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8828=E6=97=A5 23:11, Mark Rutland =E5=
-=86=99=E9=81=93:
-> > To clarify: if there are low power states that the CPU can enter wh=
-ere
-> > we lose state, then this patch isn't correct.
-> Right now, the software of RK3288 SoC only support CPU hotplug
-> (cpu_on/off) and power off all CPUs on suspend.
+As suggested by Arnd, you can use the generic driver as interface
+between thermal framework and IIO layer. The driver you are going to
+write to your ADC is going to be in the IIO subsystem. The only
+difference is that the generic driver would work for any ADC driver in
+the IIO subsystem.
+https://lkml.org/lkml/2014/2/5/810
 
-Sure, but that's a Linux implementation detail rather than a fixed
-property of the hardware. Given those states exist, the "always-on"
-property is not appropriate.
+In fact, there is already a generic driver. We just need to get it up
+to date.  I see some testing has been already done, and results sound
+promising.
 
-> We do not implement cpuidle to power off CPU. Do you think we should
-> introduce a broadcast timer?
+>
+>    So, I do not agree to write a generic adc driver for the rk3288-ts=
+adc.
+>
+> ________________________________
+> Yifeng Zhao
+>
+> =E5=8F=91=E4=BB=B6=E4=BA=BA=EF=BC=9A HeikoSt=C3=BCbner
+> =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4=EF=BC=9A 2014-08-29 00:11
+> =E6=94=B6=E4=BB=B6=E4=BA=BA=EF=BC=9A Eduardo Valentin
+> =E6=8A=84=E9=80=81=EF=BC=9A Arnd Bergmann; Caesar Wang; rui.zhang; gr=
+ant.likely; robh+dt;
+> linux-kernel; linux-pm; linux-arm-kernel; devicetree; linux-doc; huan=
+gtao;
+> cf; dianders; dtor; zyw; addy.ke; dmitry.torokhov; zhaoyifeng; linux-=
+iio;
+> Jonathan Cameron
+> =E4=B8=BB=E9=A2=98=EF=BC=9A Re: [PATCH v3 1/4] thermal: rockchip: add=
+ driver for thermal
+>
+> Am Donnerstag, 28. August 2014, 10:37:35 schrieb Eduardo Valentin:
+>> Ceasar and Arnd,
+>>
+>> On Thu, Aug 28, 2014 at 10:48:23AM +0200, Arnd Bergmann wrote:
+>> > On Thursday 28 August 2014 08:59:19 Caesar Wang wrote:
+>> > > Thermal is TS-ADC Controller module supports user-defined mode a=
+nd
+>> > > automatic mode.
+>> > >
+>> > > User-defined mode refers,TSADC all the control signals entirely =
+by
+>> > > software
+>> > > writing to register for direct control.
+>> > >
+>> > > Automaic mode refers to the module automatically poll TSADC outp=
+ut,and
+>> > > the results Were checked.
+>> > >
+>> > > If you find that the temperature High in a period of time, an
+>> > > interrupt
+>> > > is generated to the processor down-measures taken;if the tempera=
+ture
+>> > > over a period of time High, the resulting TSHUT gave CRU module,=
+let it
+>> > > reset the entire chip, or via GPIO give PMIC.
+>> > >
+>> > > Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+>> > > Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>> >
+>> > Hi Caesar,
+>> >
+>> > After looking at the driver (last time I only received the patch f=
+or
+>> > the binding), I have a more general comment:
+>> >
+>> > This looks like a general-purpose ADC device, not an IP block that=
+ is
+>> > specific to thermal management. The binding looks ok for that purp=
+ose
+>> > but should probably be moved into
+>> > Documentation/devicetree/bindings/iio/adc/ as a minor change.
+>>
+>> I agree with Arnd's point here. It makes sense to me to have this dr=
+iver
+>> under the IIO umbrella.
+>
+> interesting suggestion :-)
+>
+> I've just taken another look at the registers of the ts-adc on the rk=
+3066
+> which is completely different from the rk3288 one. Interestingly the =
+rk3066
+> one
+> is "just" another saradc IP, so for this one it would really make sen=
+se.
+>
+>
+>> > On the driver side, I believe the correct way to deal with this se=
+tup
+>> > is to split your driver into a generic drivers/iio/adc/rockchips-t=
+sadc.c
+>> > file, and a smaller thermal driver that uses the iio in-kernel
+>> > interfaces,
+>> > ideally one that is independent of the underlying hardware and can
+>> > work on any ADC implementation.
+>>
+>> Agreed. If you can write such interface and make your driver to work=
+ in
+>> such way, that would be great.
+>
+> But I currently don't see how you would model the temperature handlin=
+g parts
+> from a generic thermal driver to a generic adc driver for the rk3288-=
+tsadc.
+>
+> I guess the general temperature irq handling would use iio-triggers? =
+But how
+> does the target temperature get into the TSADC_COMP1_INT register.
+>
+> Also when getting the temperature, Caesar's driver compares it to its=
+ trip
+> points and sets the next trip point depending on the current temperat=
+ure
+> (passive <-> critical) in rockchip_get_temp.
+>
+> Maybe there is some completely easy way for this, but currently I don=
+'t see
+> it.
+>
+>
+> Heiko
+>
+>
 
-If one is present, yes.=20
 
-> On our early kernel, I never see any interrupt on a broadcast timer
-> (yes, we implement it with a external timer).
 
-That's fine; Linux doesn't need to use it just yet. However, when we
-want to use low power states later, it will be necessary to enable
-placing all CPUS into a low power state.
-
-If your external timer is already supported by an existing driver, ther=
-e
-is no reason not to add it now.
-
-> > A more general approach would be to enable the broadcast hrtimer fo=
-r
-> > arm, as has been done for arm64.
-> Yes. I think it should be done by arm framework.
-
-Patches welcome.
-
-I also think it would make sense to enable this for arm.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Eduardo Bezerra Valentin
