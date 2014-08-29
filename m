@@ -1,74 +1,85 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2] mmc: dw_mmc: move rockchip related code to a separate file
-Date: Fri, 29 Aug 2014 13:05:39 +0200
-Message-ID: <CAPDyKFqAx=WVk2T6FwsSZ0hHsC5ARZF4KhHnn9MCbT6DkAAXkg@mail.gmail.com>
-References: <1408003293-27375-1-git-send-email-addy.ke@rock-chips.com>
-	<1408422974-22301-1-git-send-email-addy.ke@rock-chips.com>
-	<CAD=FV=Xri1gVdBvmEmxzsyf3z=+Qpuzj4afJ-A2NJfPY0in00A@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv2] ASoC: fsl-sai: using 'lsb-first' property instead of
+ 'big-endian-data'.
+Date: Fri, 29 Aug 2014 12:06:01 +0100
+Message-ID: <20140829110601.GB21473@leverpostej>
+References: <1409296332-39318-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=Xri1gVdBvmEmxzsyf3z=+Qpuzj4afJ-A2NJfPY0in00A@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Addy Ke <addy.ke@rock-chips.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <chris@printf.net>, Dinh Nguyen <dinguyen@altera.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "zhenfu.fang" <zhenfu.fang@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, lintao <lintao@rock-chips.com>, chenfen <chenfen@rock-chips.com>, zyf <zyf@rock-chips.com>, Jianqun Xu <xjq@rock-chip>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409296332-39318-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19 August 2014 19:28, Doug Anderson <dianders@chromium.org> wrote:
-> Hi,
->
-> On Mon, Aug 18, 2014 at 9:36 PM, Addy Ke <addy.ke@rock-chips.com> wro=
-te:
->> To support HS200 and UHS-1, we need add a big hunk of code,
->> as shown in the following patches. So a separate file for
->> rockchip SOCs is suitable.
->>
->> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
->> ---
->> Changes in v2:
->> - Kconfig: depend on ARCH_ROCKCHIP, suggested by Bartlomiej Zolnierk=
-iewicz
->> - Kconfig: depend on OF, suggested by Doug Anderson
->> - Not change suspend/resume code, suggested by Doug Anderson
->> - If pdev->dev.of_node is NULL, then return -ENODEV, suggested by He=
-iko St=C3=BCbner
->>
->>  drivers/mmc/host/Kconfig           |   9 +++
->>  drivers/mmc/host/Makefile          |   1 +
->>  drivers/mmc/host/dw_mmc-pltfm.c    |  57 ----------------
->>  drivers/mmc/host/dw_mmc-rockchip.c | 136 ++++++++++++++++++++++++++=
-+++++++++++
->>  4 files changed, 146 insertions(+), 57 deletions(-)
->>  create mode 100644 drivers/mmc/host/dw_mmc-rockchip.c
->>
->> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
->> index a565254..f6095f6 100644
->> --- a/drivers/mmc/host/Kconfig
->> +++ b/drivers/mmc/host/Kconfig
->> @@ -621,6 +621,15 @@ config MMC_DW_PCI
->>
->>           If unsure, say N.
->>
->> +config MMC_DW_ROCKCHIP
->> +       tristate "Rockchip specific extensions for Synopsys DW Memor=
-y Card Interface"
->> +       depends on MMC_DW && ARCH_ROCKCHIP && OF
->
-> Actually, Heiko's change to check if pdev->dev.of_node is NULL means
-> that you don't need to depend on OF anymore.
->
-> Ulf: do you want Addy to spin again, or do you want to just remove
-> this "&& OF" when applying the patch?
->
-> ...I've tested this both with and without the "&& OF", and the "&& OF=
-"
-> won't really hurt anything, so:
->
-> Tested-by: Doug Anderson <dianders@chromium.org>
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
+On Fri, Aug 29, 2014 at 08:12:12AM +0100, Xiubo Li wrote:
+> The 'big-endian-data' property is originally used to indicate whether the
+> LSB firstly or MSB firstly will be transmitted to the CODEC or received
+> from the CODEC, and there has nothing relation to the memory data.
+> 
+> Generally, if the audio data in big endian format, which will be using the
+> bytes reversion, Here this can only be used to bits reversion.
+> 
+> So using the 'lsb-first' instead of 'big-endian-data' can make the code
+> to be readable easier and more easy to understand what this property is
+> used to do.
+> 
+> This property used for configuring whether the LSB or the MSB is transmitted
+> first for the fifo data.
+> 
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/sound/fsl-sai.txt | 8 ++++----
+>  sound/soc/fsl/fsl_sai.c                             | 6 +++---
+>  sound/soc/fsl/fsl_sai.h                             | 2 +-
+>  3 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> index 06a405e..4956b14 100644
+> --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
+> @@ -20,9 +20,9 @@ Required properties:
+>    See ../pinctrl/pinctrl-bindings.txt for details of the property values.
+>  - big-endian: Boolean property, required if all the FTM_PWM registers
+>    are big-endian rather than little-endian.
+> -- big-endian-data: If this property is absent, the little endian mode will
+> -  be in use as default, or the big endian mode will be in use for all the
+> -  fifo data.
+> +- lsb-first: Configures whether the LSB or the MSB is transmitted first for
+> +  the fifo data. If this property is absent, the MSB is transmitted first as
+> +  default, or the LSB is transmitted first.
 
-Thanks! Applied for next and by removing the dependency to "OF".
+Both Nicolin [1] and Mark [2] asked for the old property to be kept
+around for compatibility reasons. Those requests seem to have been
+ignored entirely; the commit message doesn't even describe why you
+believe removing support for the old property is safe.
 
-Kind regards
-Uffe
+So NAK unless this patch is updated to either:
+
+- Keep support for the old property, but mark it as deprecated in the
+  documentation (having a warning if said property is used is also
+  fine).
+
+- Describe why it is safe to remove the property outright, and both Mark
+  and Nicolin agree that this is fine.
+
+The former is the preferred way of doing things, and the latter should
+be the exceptional case. We don't even save much here my dropping
+support for the old property.
+
+I have no proeprty with addition of the the new property; the rationale
+for the new naming makes sense to me.
+
+Thanks,
+Mark.
+
+[1] http://lkml.kernel.org/r/20140827070544.GO17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org
+[2] http://lkml.kernel.org/r/CAGoOwPSTJaT0UA4yaYR0x49C8UHbmKAR8PzUfV9ZWVW5XBfV5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
