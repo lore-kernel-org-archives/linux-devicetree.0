@@ -1,56 +1,51 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH] thermal: add generic IIO channel thermal sensor driver
-Date: Thu, 28 Aug 2014 10:46:34 -0400
-Message-ID: <20140828144632.GA18194@developer>
-References: <1391651007-29813-1-git-send-email-courtney.cavin@sonymobile.com>
- <1393484014.2637.14.camel@rzhang1-mobl4>
- <20140314211952.GJ18578@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140314211952.GJ18578@sonymobile.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, "eduardo.valentin@ti.com" <eduardo.valentin@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Pramod Gurav <pramod.gurav@smartplayin.com>
+Subject: [PATCH 2/4] ARM: DT: APQ8064: Add node for ps_hold function in pinctrl
+Date: Thu, 28 Aug 2014 20:22:48 -0700
+Message-ID: <1409282570-27299-3-git-send-email-pramod.gurav@smartplayin.com>
+References: <1409282570-27299-1-git-send-email-pramod.gurav@smartplayin.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1409282570-27299-1-git-send-email-pramod.gurav@smartplayin.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Pramod Gurav <pramod.gurav@smartplayin.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 14, 2014 at 02:19:53PM -0700, Courtney Cavin wrote:
-> On Thu, Feb 27, 2014 at 07:53:34AM +0100, Zhang Rui wrote:
-> > On Wed, 2014-02-05 at 17:43 -0800, Courtney Cavin wrote:
-> > > This driver is a generic method for using IIO ADC channels as thermal
-> > > sensors.
-> > > 
-> > > Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> > 
-> > Eduardo,
-> > 
-> > what do you think of this patch?
-> 
-> Apparently not very much.  Oh well.
+This patch adds DT support to configure GPIO_78 as function ps_hold
+on apq8064.
 
-Curtney,
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Pawel Moll <pawel.moll@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: devicetree@vger.kernel.org
+CC: linux-arm-kernel@lists.infradead.org
 
-Apolizes, this one fell into the cracks.
+Signed-off-by: Pramod Gurav <pramod.gurav@smartplayin.com>
+---
+ arch/arm/boot/dts/qcom-apq8064.dtsi |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-
-> 
-> Sans further input, I will submit a new series with the following
-> changes:
-> 	- Fix some return values in probe().
-> 	- Change DT binding
-> 		- Submit as seperate patch in series
-> 		- Reword/rename to represent a thermistor
-> 		- Remove specific references to IIO, where appropriate
-
-
-Do you already send your new version or the current one is still the
-latest?
-
-> 
-> -Courtney
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index e23303e..35c1907 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -82,6 +82,16 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 			interrupts = <0 16 IRQ_TYPE_LEVEL_HIGH>;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&ps_hold>;
++
++			ps_hold: ps_hold {
++				mux {
++					pins = "gpio78";
++					function = "ps_hold";
++				};
++			};
+ 		};
+ 
+ 		intc: interrupt-controller@2000000 {
+-- 
+1.7.0.4
