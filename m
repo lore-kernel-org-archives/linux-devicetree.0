@@ -1,44 +1,66 @@
-From: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH] of: Fix constantness of of_n_size_cells
-Date: Fri, 29 Aug 2014 12:26:50 -0700
-Message-ID: <1409340410.21254.63.camel@smoke>
-References: <cover.1408729200.git.geoff@infradead.org>
-	 <20140827102827.50E15C409CB@trevor.secretlab.ca>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] ARM: tegra: Initialize interrupt controller from DT
+Date: Fri, 29 Aug 2014 21:53:42 +0200
+Message-ID: <3113165.EcqFA5vr07@wuerfel>
+References: <1409239879-12376-1-git-send-email-thierry.reding@gmail.com> <20140829142408.GA31264@ulmo> <20140829150422.GA11035@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140827102827.50E15C409CB-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140829150422.GA11035@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On Wed, 2014-08-27 at 11:28 +0100, Grant Likely wrote:
-> On Fri, 22 Aug 2014 17:43:36 +0000, Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
-> > The of_n_size_cells() routine only does a read-only operation on the device tree
-> > passed in, so add the const keyword to that argument so that of_n_size_cells()
-> > can be called with read-only data without casting.
-> > 
-> > Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+On Friday 29 August 2014 17:04:28 Thierry Reding wrote:
+>         static struct irq_chip *extn;
 > 
-> What is the code that exposed this problem?
+>         void gic_arch_register(const struct irqchip *chip)
+>         {
+>                 if (WARN(extn != NULL))
+>                         return;
+> 
+>                 gic_chip.flags |= chip->flags;
+>                 extn = chip;
+>         }
+> 
+> Any preferences, or other ideas? Adding Thomas and Jason, perhaps they
+> can provide more input on how to solve this.
 
-For the arm64 kexec support and the arm64 spin-table hot-plug support I
-am working on I need to read the cpu hardware id from a device tree.  I
-don't need to modify the device tree, just get property values, so in
-that code I have it in a pointer to a const.  I can cast off that const
-when I do the call to of_n_size_cells() if you don't think it worthwhile
-to make this change.  Here's the code:
+I think the entire gic_arch_extn method is done in a rather odd way
+and we should try to come up with a replacement.
 
-+	p->hwid = of_read_number(cell, of_n_addr_cells(dn))
-+		& MPIDR_HWID_BITMASK;
+These are the users at the moment:
 
--Geoff
+arch/arm/mach-exynos/pm.c:      gic_arch_extn.irq_set_wake = exynos_irq_set_wake;
+arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_mask = imx_gpc_irq_mask;
+arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_unmask = imx_gpc_irq_unmask;
+arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_set_wake = imx_gpc_irq_set_wake;
+arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.irq_mask = wakeupgen_mask;
+arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.irq_unmask = wakeupgen_unmask;
+arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_W
+arch/arm/mach-shmobile/intc-sh73a0.c:   gic_arch_extn.irq_set_wake = sh73a0_set_wake;
+arch/arm/mach-shmobile/setup-r8a7779.c: gic_arch_extn.irq_set_wake = r8a7779_set_wake;
+arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_ack = tegra_ack;
+arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_eoi = tegra_eoi;
+arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_mask = tegra_mask;
+arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_unmask = tegra_unmask;
+arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_retrigger = tegra_retrigger;
+arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_set_wake = tegra_set_wake;
+arch/arm/mach-tegra/irq.c:      gic_arch_extn.flags = IRQCHIP_MASK_ON_SUSPEND;
+arch/arm/mach-ux500/cpu.c:      gic_arch_extn.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND;
+arch/arm/mach-zynq/common.c:    gic_arch_extn.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have to admit I don't really understand how these work, but what
+I'd expect to work better is a way to turn the gic code into more
+of a library that can be used by specialized drivers. In that
+case you would register a driver for the tegra gic using IRQCHIP_DECLARE
+and that driver would call a variation of gic_of_init() or gic_init_bases()
+with the extra stuff as arguments.
+
+We'd have to hack around the fact that all these platforms currently
+don't list a specialized compatible string, but at least for the future
+we should be able to do this without special hacks.
+
+	Arnd
