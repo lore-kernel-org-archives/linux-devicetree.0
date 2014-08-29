@@ -1,51 +1,40 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCHv2] ASoC: fsl-sai: using 'lsb-first' property instead of
- 'big-endian-data'.
-Date: Fri, 29 Aug 2014 10:40:20 -0700
-Message-ID: <20140829174019.GA5536@Asurada>
-References: <20140829110601.GB21473@leverpostej>
- <20140829115943.GV29327@sirena.org.uk>
- <20140829164010.GA5520@Asurada>
- <20140829172601.GC18555@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140829172601.GC18555@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Mark Brown <broonie@kernel.org>, Xiubo Li <Li.Xiubo@freescale.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH 0/2] r8a777[89] dtsi sorting
+Date: Fri, 29 Aug 2014 20:16:39 +0200
+Message-ID: <1409336201-708-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: horms@verge.net.au, devicetree@vger.kernel.org, magnus.damm@gmail.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 06:26:02PM +0100, Mark Rutland wrote:
-> On Fri, Aug 29, 2014 at 05:40:11PM +0100, Nicolin Chen wrote:
-> > On Fri, Aug 29, 2014 at 12:59:43PM +0100, Mark Brown wrote:
-> > > On Fri, Aug 29, 2014 at 12:06:01PM +0100, Mark Rutland wrote:
-> > > > On Fri, Aug 29, 2014 at 08:12:12AM +0100, Xiubo Li wrote:
-> > > 
-> > > > > The 'big-endian-data' property is originally used to indicate whether the
-> > > > > LSB firstly or MSB firstly will be transmitted to the CODEC or received
-> > > > > from the CODEC, and there has nothing relation to the memory data.
-> > > 
-> > > > Both Nicolin [1] and Mark [2] asked for the old property to be kept
-> > > > around for compatibility reasons. Those requests seem to have been
-> > > > ignored entirely; the commit message doesn't even describe why you
-> > > > believe removing support for the old property is safe.
-> > > 
-> > > The response was that the relevant chips aren't out in the wild so it's
-> > > vanishingly unlikely that anyone would have a real DT with this option
-> > > enabled.  I'll defer to Nicolin on if that's the case or not.
-> > 
-> > Yea, it sounds like so. I thought Vf610 also used this property. But if
-> > only LS1 using it, I think we may consent this rename right?
-> 
-> If you two are happy, then fine by me. My only concern was that the
-> rationale for this being safe wasn't in the commit message.
+Hi!
 
-Agreed, it's better to be described in the commit comments as well.
+These are the dtsi files for r8a7778 and r8a7779 sorted according to what I
+imagine to be accepted standards now: sort by address, "compatible" goes
+first, #include directives before anything else.  The sorting was done using
+a little script I wrote (https://github.com/uli/dtssort).
 
-And regarding the compatibility with the old DT, I personally prefer
-it to be added in the change for safety but if this case is allowable
-which I'm not so sure about it, I'm fairly okay with the rename.
+I chose these two files because the required changes are relatively small. 
+Doing this for r8a779x yields a gargantuan and entirely unreadable patch due
+to the random shifting about of large blocks of code.  If anybody knows a
+tool that makes such things somewhat manageable to review, please speak up.
 
-Nicolin
+I'd also like to know if there is consensus on different/additional
+standards that I'm not aware of.
+
+CU
+Uli
+
+
+Ulrich Hecht (2):
+  ARM: shmobile: r8a7778 dtsi: sort it
+  ARM: shmobile: r8a7779 dtsi: sort it
+
+ arch/arm/boot/dts/r8a7778.dtsi |  56 ++---
+ arch/arm/boot/dts/r8a7779.dtsi | 472 ++++++++++++++++++++---------------------
+ 2 files changed, 264 insertions(+), 264 deletions(-)
+
+-- 
+1.8.4.5
+
