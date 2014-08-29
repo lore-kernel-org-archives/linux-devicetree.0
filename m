@@ -1,26 +1,66 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH resend 2/2] ARM: shmobile: r8a7779 dtsi: Add SoC-specific
- thermal compatible property
-Date: Fri, 29 Aug 2014 09:01:07 +0900
-Message-ID: <20140829000107.GH16165@verge.net.au>
-References: <1409214040-5937-1-git-send-email-geert+renesas@glider.be>
- <1409214040-5937-2-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7779 dtsi: Use tabs for indentation
+Date: Fri, 29 Aug 2014 09:06:13 +0900
+Message-ID: <20140829000613.GI16165@verge.net.au>
+References: <1409214116-6016-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1409214040-5937-2-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1409214116-6016-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 10:20:40AM +0200, Geert Uytterhoeven wrote:
-> The thermal node used the generic compatible property only.
-> Add the SoC-specific one, to make it future proof.
+On Thu, Aug 28, 2014 at 10:21:55AM +0200, Geert Uytterhoeven wrote:
+> Checkpatch says:
+> 
+> ERROR: code indent should use tabs where possible
+
+Thanks, I have queued this up.
+
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> Resend, doc update is in v3.17-rc1
-
-Thanks, I have queued this up.
+>  arch/arm/boot/dts/r8a7779.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+> index ddc89000854c..d25ed7b4aece 100644
+> --- a/arch/arm/boot/dts/r8a7779.dtsi
+> +++ b/arch/arm/boot/dts/r8a7779.dtsi
+> @@ -440,10 +440,10 @@
+>  		/* Gate clocks */
+>  		mstp0_clks: clocks@ffc80030 {
+>  			compatible = "renesas,r8a7779-mstp-clocks",
+> -			             "renesas,cpg-mstp-clocks";
+> +				     "renesas,cpg-mstp-clocks";
+>  			reg = <0xffc80030 4>;
+>  			clocks = <&cpg_clocks R8A7779_CLK_S>,
+> -			         <&cpg_clocks R8A7779_CLK_P>,
+> +				 <&cpg_clocks R8A7779_CLK_P>,
+>  				 <&cpg_clocks R8A7779_CLK_P>,
+>  				 <&cpg_clocks R8A7779_CLK_P>,
+>  				 <&cpg_clocks R8A7779_CLK_S>,
+> @@ -477,7 +477,7 @@
+>  		};
+>  		mstp1_clks: clocks@ffc80034 {
+>  			compatible = "renesas,r8a7779-mstp-clocks",
+> -			             "renesas,cpg-mstp-clocks";
+> +				     "renesas,cpg-mstp-clocks";
+>  			reg = <0xffc80034 4>, <0xffc80044 4>;
+>  			clocks = <&cpg_clocks R8A7779_CLK_P>,
+>  				 <&cpg_clocks R8A7779_CLK_P>,
+> @@ -506,7 +506,7 @@
+>  		};
+>  		mstp3_clks: clocks@ffc8003c {
+>  			compatible = "renesas,r8a7779-mstp-clocks",
+> -			             "renesas,cpg-mstp-clocks";
+> +				     "renesas,cpg-mstp-clocks";
+>  			reg = <0xffc8003c 4>;
+>  			clocks = <&s4_clk>, <&s4_clk>, <&s4_clk>, <&s4_clk>,
+>  				 <&s4_clk>, <&s4_clk>;
+> -- 
+> 1.9.1
+> 
