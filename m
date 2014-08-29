@@ -1,84 +1,121 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv2] ASoC: fsl-sai: using 'lsb-first' property instead of
- 'big-endian-data'.
-Date: Fri, 29 Aug 2014 12:06:01 +0100
-Message-ID: <20140829110601.GB21473@leverpostej>
-References: <1409296332-39318-1-git-send-email-Li.Xiubo@freescale.com>
+From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
+Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
+Date: Fri, 29 Aug 2014 15:19:56 +0300
+Message-ID: <20140829121954.GB13630@fi-ourus-dhcp00977.emea.nsn-net.net>
+References: <20140828124237.GA29102@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140828125915.GJ14650@leverpostej>
+ <20140828155157.GB23677@roeck-us.net>
+ <20140828161025.GO14650@leverpostej>
+ <20140828164825.GA12153@roeck-us.net>
+ <20140828172842.GF12769@titan.lakedaemon.net>
+ <20140828174034.GC15307@roeck-us.net>
+ <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140829104001.GB19424@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1409296332-39318-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20140829104001.GB19424@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: ext Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 08:12:12AM +0100, Xiubo Li wrote:
-> The 'big-endian-data' property is originally used to indicate whether the
-> LSB firstly or MSB firstly will be transmitted to the CODEC or received
-> from the CODEC, and there has nothing relation to the memory data.
+On Fri, Aug 29, 2014 at 11:40:02AM +0100, ext Mark Rutland wrote:
+> On Fri, Aug 29, 2014 at 08:34:25AM +0100, Matti Vaittinen wrote:
+> > On Thu, Aug 28, 2014 at 10:40:34AM -0700, ext Guenter Roeck wrote:
+> > > On Thu, Aug 28, 2014 at 01:28:42PM -0400, Jason Cooper wrote:
+> > > > On Thu, Aug 28, 2014 at 09:48:25AM -0700, Guenter Roeck wrote:
+> > > > 
+> > > > It may be a bit of overkill, but I think a DT macro would be the most
+> > > > maintainable solution here:
+> > > > 
+> > > > #define DS1339_TRCKL_DIODE   0x08
+> > > > #define DS1339_TRCKL_NODIODE 0x04
+> > > > #define DS1339_TRCKL_R250    0x01
+> > > > #define DS1339_TRCKL_R2000   0x02
+> > > > #define DS1339_TRCKL_R4000   0x03
+> > > > 
+> > > > trickle_setup = <DS1339_TRCKL_DIODE | DS1339_TRCKL_R250>;
+> > > > 
+> > > > And the driver would take care of oring it with the enable pattern.
+> > > > 
+> > > 
+> > > Yes, that sounds reasonable as well.
+> > > 
+> > I thought of this too. However the ds1307 seems to be designed to work
+> > with bunch of chips. What then when next chip supported by this driver
+> > introduces 75, 1000 and 5000 ohm resistors? Or something else. (Or add
+> > some other configuration). I do not see this approach to be
+> > maintainable in long run.
 > 
-> Generally, if the audio data in big endian format, which will be using the
-> bytes reversion, Here this can only be used to bits reversion.
+> If a new chip comes out with new features, the driver will need an
+> update anyhow. We have no guarantee that the register placement will be
+> the same, let alone the layout.
+
+This is why I originally also added the trickle_reg property. But let's
+leave it out.
+
 > 
-> So using the 'lsb-first' instead of 'big-endian-data' can make the code
-> to be readable easier and more easy to understand what this property is
-> used to do.
+> If and when said new chip comes out we allocate a new compatible string.
+> If it's compatible iwith (i.e. is a superset of) an existing device's
+> programming model, we add that existing string as a fallback in the
+> compatible list so old kernels can drive the subset of features they
+> understand.
+
+Yes.
+
 > 
-> This property used for configuring whether the LSB or the MSB is transmitted
-> first for the fifo data.
+> > I see strong possibility of polluting dt with endless amount of
+> > defines. Furthermore I believe the benefits of these defines would be
+> > negligible compared to effort maintaining defines and documentation of
+> > them causes. Surely the one who needs to add dt node for this chip in
+> > his board's dt has the manual for the chip he has on board. Especially
+> > so if he knows the trickle charger there and wants to configure it.
+> > The plain resistor type still gives zero information without knowing
+> > the other details.
 > 
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/sound/fsl-sai.txt | 8 ++++----
->  sound/soc/fsl/fsl_sai.c                             | 6 +++---
->  sound/soc/fsl/fsl_sai.h                             | 2 +-
->  3 files changed, 8 insertions(+), 8 deletions(-)
+> I would rather that the driver had some idea of what it were doing
+> rather than being a glorified copy routine.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl-sai.txt b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> index 06a405e..4956b14 100644
-> --- a/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> +++ b/Documentation/devicetree/bindings/sound/fsl-sai.txt
-> @@ -20,9 +20,9 @@ Required properties:
->    See ../pinctrl/pinctrl-bindings.txt for details of the property values.
->  - big-endian: Boolean property, required if all the FTM_PWM registers
->    are big-endian rather than little-endian.
-> -- big-endian-data: If this property is absent, the little endian mode will
-> -  be in use as default, or the big endian mode will be in use for all the
-> -  fifo data.
-> +- lsb-first: Configures whether the LSB or the MSB is transmitted first for
-> +  the fifo data. If this property is absent, the MSB is transmitted first as
-> +  default, or the LSB is transmitted first.
+> I would suggest we have two properties that describe the resistor's
+> rating and whether or not there is a diode:
+> 
+> trickle-resistor-ohms = <250>
+> diode-connected;
+> 
+> That's easy for a human to write and/or validate, we can easily extend
+> it in future, requires no proliferation of macros, and describes the
+> hardware rather than telling software what to do.
+> 
+> The driver becomes a little more complicated, but gains sanity checking,
+> which is a good thing.
 
-Both Nicolin [1] and Mark [2] asked for the old property to be kept
-around for compatibility reasons. Those requests seem to have been
-ignored entirely; the commit message doesn't even describe why you
-believe removing support for the old property is safe.
+This looks like a nice way. Problem is that I can not provide support for 
+all chips ds1307 supports. I have access to ds1339 variant only. I assume
+the driver should thus reject this dt information for all other chips for 
+now.
 
-So NAK unless this patch is updated to either:
+> 
+> I'm still worried that we have no idea what the device is intended to
+> charge. Surely that's important?
 
-- Keep support for the old property, but mark it as deprecated in the
-  documentation (having a warning if said property is used is also
-  fine).
+In my case it will charge capcitor which provides Vbackup for short
+power breaks.
 
-- Describe why it is safe to remove the property outright, and both Mark
-  and Nicolin agree that this is fine.
+Br.
+--Matti Vaittinen
 
-The former is the preferred way of doing things, and the latter should
-be the exceptional case. We don't even save much here my dropping
-support for the old property.
 
-I have no proeprty with addition of the the new property; the rationale
-for the new naming makes sense to me.
+-- 
+=============================================
 
-Thanks,
-Mark.
+Matti Vaittinen
+Senile SW Specialist
+FINLAND 
 
-[1] http://lkml.kernel.org/r/20140827070544.GO17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org
-[2] http://lkml.kernel.org/r/CAGoOwPSTJaT0UA4yaYR0x49C8UHbmKAR8PzUfV9ZWVW5XBfV5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org
+~~ When things go utterly wrong vim users can always type :help! ~~
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
