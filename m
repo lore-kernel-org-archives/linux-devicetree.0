@@ -1,9 +1,8 @@
-From: Jason Cooper <jason@lakedaemon.net>
+From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
 Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
-Date: Fri, 29 Aug 2014 08:48:29 -0400
-Message-ID: <20140829124829.GD3683@titan.lakedaemon.net>
-References: <20140828125915.GJ14650@leverpostej>
- <20140828155157.GB23677@roeck-us.net>
+Date: Fri, 29 Aug 2014 17:06:56 +0300
+Message-ID: <20140829140656.GC13630@fi-ourus-dhcp00977.emea.nsn-net.net>
+References: <20140828155157.GB23677@roeck-us.net>
  <20140828161025.GO14650@leverpostej>
  <20140828164825.GA12153@roeck-us.net>
  <20140828172842.GF12769@titan.lakedaemon.net>
@@ -12,49 +11,65 @@ References: <20140828125915.GJ14650@leverpostej>
  <20140829104001.GB19424@leverpostej>
  <20140829122452.GA3683@titan.lakedaemon.net>
  <20140829124216.GD21473@leverpostej>
+ <20140829124829.GD3683@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140829124216.GD21473@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Matti Vaittinen <matti.vaittinen@nsn.com>, ext Guenter Roeck <linux@roeck-us.net>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "jic23@kernel.org" <jic23@kernel.org>, "arno@natisbad.org" <arno@natisbad.org>, "jgunthorpe@obsidianresearch.com" <jgunthorpe@obsidianresearch.com>, "san@rosetechnology.dk" <san@rosetechnology.dk>, "hs@denx.de" <hs@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Sverdlin Alexander <alexander.sverdlin@nsn.com>
+In-Reply-To: <20140829124829.GD3683-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ext Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 01:42:16PM +0100, Mark Rutland wrote:
-> On Fri, Aug 29, 2014 at 01:24:52PM +0100, Jason Cooper wrote:
-> > On Fri, Aug 29, 2014 at 11:40:02AM +0100, Mark Rutland wrote:
-...
-Someone wrote:
-> > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
-> > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1337.pdf
-> > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1338.pdf
-> > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1339.pdf
-> > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1340.pdf
-> > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1388.pdf
-> > > > > > > http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
-...
-> > > I would suggest we have two properties that describe the resistor's
-> > > rating and whether or not there is a diode:
+On Fri, Aug 29, 2014 at 08:48:29AM -0400, ext Jason Cooper wrote:
+> On Fri, Aug 29, 2014 at 01:42:16PM +0100, Mark Rutland wrote:
+> > On Fri, Aug 29, 2014 at 01:24:52PM +0100, Jason Cooper wrote:
+> > > On Fri, Aug 29, 2014 at 11:40:02AM +0100, Mark Rutland wrote:
+> ...
+> Someone wrote:
+> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1337.pdf
+> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1338.pdf
+> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1339.pdf
+> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1340.pdf
+> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1388.pdf
+> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
+> ...
+> > > > I would suggest we have two properties that describe the resistor's
+> > > > rating and whether or not there is a diode:
+> > > > 
+> > > > trickle-resistor-ohms = <250>
+> > > > diode-connected;
 > > > 
-> > > trickle-resistor-ohms = <250>
-> > > diode-connected;
+> > > I much prefer this solution over my own suggestion.  With one small
+> > > change, s/diode-connected/trickle-diode-enable/  Does that sound ok?
 > > 
-> > I much prefer this solution over my own suggestion.  With one small
-> > change, s/diode-connected/trickle-diode-enable/  Does that sound ok?
+> > I'm not too keen on 'enable'; I was under the impression that this
+> > described whether or not there was an external diode. Perhaps I've
+> > misunderstood?
 > 
-> I'm not too keen on 'enable'; I was under the impression that this
-> described whether or not there was an external diode. Perhaps I've
-> misunderstood?
+> iiuc from the link ds1339 ds, the register configuration is enabling
+> internal diodes and resistors for the trickle charge configuration.  I
+> may have read it incorrectly, though.
 
-iiuc from the link ds1339 ds, the register configuration is enabling
-internal diodes and resistors for the trickle charge configuration.  I
-may have read it incorrectly, though.
+Yes. It is about using internal diode.
 
-In either case, my main point was to prepend 'trickle-' to the property
-to more accurately describe what it is toggling.
+I will cook new patch based on these comments on monday.
 
-thx,
+Regards
+  Matti Vaittinen
 
-Jason.
+-- 
+=============================================
+
+Matti Vaittinen
+Senile SW Specialist
+FINLAND 
+
+~~ When things go utterly wrong vim users can always type :help! ~~
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
