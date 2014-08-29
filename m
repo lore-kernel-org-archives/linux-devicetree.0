@@ -1,75 +1,58 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND 0/8] i2c: Relax mandatory I2C ID table passing
-Date: Fri, 29 Aug 2014 09:58:04 +0100
-Message-ID: <20140829085804.GE24579@lee--X1>
-References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
- <20140829084538.GC1329@katana>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] MFD: ARM (IMX & R8): Immutable branch for Dialog
+ Semiconductor - vendor prefix consolidation
+Date: Fri, 29 Aug 2014 10:13:59 +0100
+Message-ID: <20140829091359.GF24579@lee--X1>
+References: <201408221446.s7MEkNVF001775@swsrvapps-01.diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140829084538.GC1329@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <201408221446.s7MEkNVF001775@swsrvapps-01.diasemi.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: "Opensource [Steve Twiss]" <stwiss.opensource@diasemi.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Arnaud Ebalard <arno@natisbad.org>, DEVICE TREE <devicetree@vger.kernel.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Guenter Roeck <linux@roeck-us.net>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Jonathan Cameron <jic23@kernel.org>, Kumar Gala <galak@codeaurora.org>, LINUX ARM KERNEL <linux-arm-kernel@lists.infradead.org>, LINUX KERNEL <linux-kernel@vger.kernel.org>, LINUX SH <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Brown <broonie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Martin Fuzzey <mfuzzey@parkeon.com>, Pawel Moll <pawel.moll@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Samu
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Aug 2014, Wolfram Sang wrote:
-> > Placing this firmly back on your plate.  I truly hope we don't miss
-> > another merge-window.
->=20
-> Nope, we won't. I'll still need a week or so due to other duties.
+IMX and R8 sub-arch Maintainers,
 
-Perfectly reasonable.
+The following changes since commit 52addcf9d6669fa439387610bc65c92fa098=
+0cef:
 
-> > This patch-set has the support of some pretty
-> > senior kernel maintainers, so I hope acceptance shouldn't be too
-> > difficult.
->=20
-> Cool, then they could ack it like Grant did? That surely helps.
+  Linux 3.17-rc2 (2014-08-25 15:36:20 -0700)
 
-I was talking about Grant (and Linus - I'll poke him seperately). ;)
+are available in the git repository at:
 
-> > As previously discussed I believe it should be okay for an I2C devi=
-ce
-> > driver _not_ supply an I2C ID table to match to.
->=20
-> I agree...
->=20
-> > The I2C subsystem
-> > should be able to match via other means, such as via OF tables.  Th=
-e
-> > blocking factor during our previous conversation was to keep
-> > registering via sysfs up and running.  This set does that.
->=20
-> ... yet it also should not cause regressions. If you fixed that, soun=
-ds
-> great!
->
-> > After thinking more deeply about the problem, it occurred to me tha=
-t
-> > any I2C device driver which uses the sysfs method and issues an
-> > of_match_device() would also fail their probe().  Bolted on to this
-> > set is a new, more generic way for these devices to match against
-> > either of the I2C/OF tables.
->=20
-> Even better :) I am generally positive with your patchset, but need t=
-o
-> review the implementation. For core stuff, this simply needs more
-> attention.
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd=
+-arm-v3.18
 
-Agree.
+for you to fetch changes up to bd597f47ca4bf7a522a0298a95c7f9b2f0a75b9e=
+:
 
-Thanks Wolfram.
+  devicetree: Dialog Semiconductor consolidate existing vendor prefixes=
+ to standardise on 'dlg' (2014-08-29 09:26:29 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD and some ARM sub-arch maintainers.
+----------------------------------------------------------------
+Steve Twiss (1):
+      devicetree: Dialog Semiconductor consolidate existing vendor pref=
+ixes to standardise on 'dlg'
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |  2 +-
+ .../devicetree/bindings/regulator/da9210.txt       |  4 ++--
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/boot/dts/imx53-smd.dts                    |  2 +-
+ arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi       |  2 +-
+ arch/arm/boot/dts/r8a7790-lager.dts                |  2 +-
+ arch/arm/boot/dts/r8a7791-koelsch.dts              |  2 +-
+ drivers/mfd/da9055-core.c                          | 26 +++++++++++---=
+--------
+ 8 files changed, 21 insertions(+), 20 deletions(-)
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
