@@ -1,7 +1,7 @@
-From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
-Date: Fri, 29 Aug 2014 17:06:56 +0300
-Message-ID: <20140829140656.GC13630@fi-ourus-dhcp00977.emea.nsn-net.net>
+Date: Fri, 29 Aug 2014 14:03:54 +0100
+Message-ID: <20140829130354.GE21473@leverpostej>
 References: <20140828155157.GB23677@roeck-us.net>
  <20140828161025.GO14650@leverpostej>
  <20140828164825.GA12153@roeck-us.net>
@@ -18,11 +18,11 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
 In-Reply-To: <20140829124829.GD3683-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 08:48:29AM -0400, ext Jason Cooper wrote:
+On Fri, Aug 29, 2014 at 01:48:29PM +0100, Jason Cooper wrote:
 > On Fri, Aug 29, 2014 at 01:42:16PM +0100, Mark Rutland wrote:
 > > On Fri, Aug 29, 2014 at 01:24:52PM +0100, Jason Cooper wrote:
 > > > On Fri, Aug 29, 2014 at 11:40:02AM +0100, Mark Rutland wrote:
@@ -53,22 +53,16 @@ On Fri, Aug 29, 2014 at 08:48:29AM -0400, ext Jason Cooper wrote:
 > internal diodes and resistors for the trickle charge configuration.  I
 > may have read it incorrectly, though.
 
-Yes. It is about using internal diode.
+Ok.
 
-I will cook new patch based on these comments on monday.
+> In either case, my main point was to prepend 'trickle-' to the property
+> to more accurately describe what it is toggling.
 
-Regards
-  Matti Vaittinen
+That's fine by me. My only concern was 'enable' due to the
+internal/external confusion.
 
--- 
-=============================================
-
-Matti Vaittinen
-Senile SW Specialist
-FINLAND 
-
-~~ When things go utterly wrong vim users can always type :help! ~~
-
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
