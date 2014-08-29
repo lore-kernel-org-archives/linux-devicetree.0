@@ -1,54 +1,44 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v2 2/3] dt: Document Qualcomm APQ8084 pinctrl binding
-Date: Fri, 29 Aug 2014 16:10:26 +0300
-Message-ID: <54007BC2.4080809@mm-sol.com>
-References: <1409057156-1201-1-git-send-email-gdjakov@mm-sol.com> <1409057156-1201-3-git-send-email-gdjakov@mm-sol.com> <20140829060941.GH12494@sonymobile.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 5/5] regulator: RK808: remove redundant code
+Date: Fri, 29 Aug 2014 06:13:10 -0700
+Message-ID: <CAD=FV=X1xOg=-_xZ70X5=ZzRLiuws_2gv5n2fj_AaLTYMq58=A@mail.gmail.com>
+References: <1409062737-12259-1-git-send-email-zyw@rock-chips.com>
+	<20140827090146.GU17528@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140829060941.GH12494@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "iivanov@mm-sol.com" <iivanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140827090146.GU17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2014 09:09 AM, Bjorn Andersson wrote:
-> On Tue 26 Aug 05:45 PDT 2014, Georgi Djakov wrote:
-> 
->> Define a new binding for the Qualcomm TLMM (Top-Level Mode Mux) based pin
->> controller inside the APQ8084.
->>
->> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
-> [...]
->> +Valid values for function are:
->> +adsp_ext, audio_ref, blsp_i2c1, blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5,
->> +blsp_i2c6, blsp_i2c7, blsp_i2c8, blsp_i2c9, blsp_i2c10, blsp_i2c11, blsp_i2c12,
->> +blsp_spi1, blsp_spi2, blsp_spi3, blsp_spi4, blsp_spi5, blsp_spi6, blsp_spi7,
->> +blsp_spi8, blsp_spi9, blsp_spi10, blsp_spi11, blsp_spi12, blsp_uart1,
->> +blsp_uart2, blsp_uart3, blsp_uart4, blsp_uart5, blsp_uart6, blsp_uart7,
->> +blsp_uart8, blsp_uart9, blsp_uart10, blsp_uart11, blsp_uart12, blsp_uim1,
->> +blsp_uim2, blsp_uim3, blsp_uim4, blsp_uim5, blsp_uim6, blsp_uim7, blsp_uim8,
->> +blsp_uim9, blsp_uim10, blsp_uim11, blsp_uim12, cam_mclk0, cam_mclk1, cam_mclk2,
->> +cam_mclk3, cci_async, cci_async_in0, cci_i2c0, cci_i2c1, cci_timer0, cci_timer1,
->> +cci_timer2, cci_timer3, cci_timer4, edp_hpd, gcc_gp1, gcc_gp2, gcc_gp3, gcc_obt,
->> +gcc_vtt, gp_mn, gp_pdm0, gp_pdm1, gp_pdm2, gp0_clk, gp1_clk, gpio, hdmi_cec,
->> +hdmi_ddc, hdmi_dtest, hdmi_hpd, hdmi_rcv, hsic, ldo_en, ldo_update, mdp_vsync,
->> +pci_e0, pci_e0_n, pci_e0_rst, pci_e1, pci_e1_rst, pci_e1_rst_n, pci_e1_clkreq_n,
->> +pri_mi2s, qua_mi2s, sata_act, sata_devsleep, sata_devsleep_n, sd_write,
->> +sdc_emmc_mode, sdc3, sdc4, sec_mi2s, slimbus, spdif_tx, spkr_i2s, spkr_i2s_ws,
->> +spss_geni, ter_mi2s, tsif1, tsif2, uim, uim_batt_alarm, gpio
-> 
-> It would be nice if these where indented.
-> 
-> Also, the last binding I sent up was for msm8960, where I got some comments
-> that made me change the format completely. I don't require you to follow that
-> instead, but I have to vent my opinion saying that it would be nice if you
-> did ;)
-> 
+Mark,
 
-Oh, sorry for missing that and thank you for pointing it out! I will update
-and resend.
+On Wed, Aug 27, 2014 at 2:01 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Aug 26, 2014 at 10:18:57PM +0800, Chris Zhong wrote:
+>> remove the redundant code, since pdata has been removed from stuct rk808
+>
+> I've applied this but if there's further changes needed please wait
+> until the MFD changes they depend on have been accepted before
+> resending.  This will be less work all round.
 
-BR,
-Georgi
+Can you clarify?  As Chris makes the MFD changes that Lee and others
+have requested then the regulator driver needs to change as well.
+It's helpful for reviewers (and testers) of Chris's changes to see how
+the regulator driver changes as the MFD interface changes.  Should he
+just take you off the CC list until he's ready?
+
+I've asked Chris to please send out the next version of the series
+(including the regulator changes needed) since I'd like to see
+feedback addressed.  If that doesn't match what you want him to do,
+please yell at me and not at him...
+
+
+Thanks!
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
