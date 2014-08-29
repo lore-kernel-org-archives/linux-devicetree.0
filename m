@@ -1,77 +1,125 @@
-From: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
-Date: Fri, 29 Aug 2014 20:08:44 +0800
-Message-ID: <54006D4C.2070404@rock-chips.com>
-References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com>	<2852853.mfRZfFVSev@wuerfel>	<20140828143733.GA18084@developer>	<3440260.edal29kzlR@diego>	<2014082909531345696848@rock-chips.com> <CAC-25o-winy6jVjh9_hQ-t2VO2UfxG67pW5DpOve8A2o39EJSw@mail.gmail.com>
+From: Robert Richter <robert.richter@caviumnetworks.com>
+Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder SoC
+Date: Fri, 29 Aug 2014 14:10:23 +0200
+Message-ID: <20140829121023.GW13038@rric.localhost>
+References: <1406732794-20920-1-git-send-email-rric@kernel.org>
+ <1406732794-20920-3-git-send-email-rric@kernel.org>
+ <CAOesGMh9KkdKB_ytJ7CCbkPW7dHTX91NdfDMsMNfbmOBVOJ8PQ@mail.gmail.com>
+ <20140828161556.GN4703@rric.localhost>
+ <20140828162549.GP14650@leverpostej>
+ <CAOesGMjtjcgUNV8WLp6_Zbok-0zq5afg_KS8QJYp=kDVabrQvg@mail.gmail.com>
+ <20140828181429.GO4703@rric.localhost>
+ <CAOesGMh3TEKZkyPjopfSm07C2ydw5=2VrzY0xQ=9jkhoA-Z_kQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAC-25o-winy6jVjh9_hQ-t2VO2UfxG67pW5DpOve8A2o39EJSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?6LW15Luq5bOw?= <zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?B?SGVpa29TdMO8Ym5lcg==?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "rui.zhang" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "grant.likely" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?6JSh5p6r?= <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dtor <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?6ZKf5YuH5rGq?= <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "dmitry.torokhov" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMh3TEKZkyPjopfSm07C2ydw5=2VrzY0xQ=9jkhoA-Z_kQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Robert Richter <rric@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Eduardo Bezerra Valentin:
+On 28.08.14 16:01:08, Olof Johansson wrote:
+> On Thu, Aug 28, 2014 at 11:14 AM, Robert Richter <rric@kernel.org> wrote:
+> > On 28.08.14 09:31:43, Olof Johansson wrote:
+> >> On Thu, Aug 28, 2014 at 9:25 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> >> > On Thu, Aug 28, 2014 at 05:15:56PM +0100, Robert Richter wrote:
+> >> >> Olof,
+> >> >>
+> >> >> On 30.07.14 11:14:23, Olof Johansson wrote:
+> >> >> > On Wed, Jul 30, 2014 at 8:06 AM, Robert Richter <rric@kernel.org> wrote:
+> >> >> > > From: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
+> >> >> > >
+> >> >> > > Add initial device tree nodes for Cavium Thunder SoCs with support of
+> >> >> > > 48 cores and gicv3. The dts file requires further changes, esp. for
+> >> >> > > pci, gicv3-its and smmu. This changes will be added later together
+> >> >> > > with the device drivers.
+> >> >> > >
+> >> >> > > Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
+> >> >> > > Signed-off-by: Robert Richter <rrichter@cavium.com>
+> >> >> > > ---
+> >> >> > >  arch/arm64/boot/dts/Makefile         |   1 +
+> >> >> > >  arch/arm64/boot/dts/thunder-88xx.dts | 387 +++++++++++++++++++++++++++++++++++
+> >> >> > >  2 files changed, 388 insertions(+)
+> >> >> > >  create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
+> >> >> > >
+> >> >> > > diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> >> >> > > index c52bdb051f66..f8001a62029c 100644
+> >> >> > > --- a/arch/arm64/boot/dts/Makefile
+> >> >> > > +++ b/arch/arm64/boot/dts/Makefile
+> >> >> > > @@ -1,3 +1,4 @@
+> >> >> > > +dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
+> >> >> > >  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+> >> >> > >  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+> >> >> >
+> >> >> > Oh, and:
+> >> >> >
+> >> >> > Let's fix the mistake we made on 32-bit here (that we can't undo
+> >> >> > unless we move all dts files now, which is too much churn), and put
+> >> >> > each SoC vendor in its own subdirectory.
+> >> >> >
+> >> >> > So, please add a arch/arm64/boot/dts/cavium/ directory, add a Makefile
+> >> >> > and the dts there.
+> >> >> >
+> >> >> > We should move vexpress under arm/   and xgene under apm/ too.
+> >> >>
+> >> >> I was looking into this. It turned out that this would introduce more
+> >> >> pain than it solves. The problem with introducing vendor subdirs for
+> >> >> .dts files is that this will require also subdirs for .dtb files to
+> >> >> avoid name conflicts. This means that dtb files are no longer in a
+> >> >> single directory. Current build scripts and makefiles rely on this.
+> >> >> E.g.:
+> >> >>
+> >> >>  scripts/Makefile.lib:$(obj)/%.dtb.S: $(obj)/%.dtb
+> >> >>
+> >> >> Thus, the introduction of vendor subdirs is not easy to implement and
+> >> >> may break existing workflows. Also, no other arch has vendor subdirs.
+> >> >>
+> >> >> A solution would be to have a naming scheme for dts files which
+> >> >> requires the vendor in the file name, such as cavium-thunder-88xx.dtb.
+> >> >> Though, these long names may look a bit ugly.
+> >> >>
+> >> >> Hmm... Any thoughts?
+> >> >
+> >> > That would make it possible to search, but the number of files in one
+> >> > place might become somewhat overwelming (which I believe was Olof's
+> >> > concern).
+> >> >
+> >> > Olof, thoughts?
+> >>
+> >> Yeah, on 32 bit we've got an ever-growing and very large directory
+> >> today that is becoming a headache. Carving it up in directories to
+> >> reduce plain directory size would come a long way.
+> >>
+> >> I think we would catch name conflicts quickly with the automatic
+> >> builders we have today -- and it's likely that the files will have a
+> >> platform prefix anyway so it shouldn't be a big issue. I think we can
+> >> live with that.
+> >
+> > So you mean, having the source files with subdirectories, but the dtb
+> > files in a single obj dir?
 
-=E5=9C=A8 2014=E5=B9=B408=E6=9C=8829=E6=97=A5 19:39, edubezval-Re5JQEeQqe8@public.gmane.org=
-m =E5=86=99=E9=81=93:
-> Hello Zhao,
->
-> On Thu, Aug 28, 2014 at 9:54 PM, =E8=B5=B5=E4=BB=AA=E5=B3=B0 <zyf@roc=
-k-chips.com> wrote:
->> Hi Heiko=EF=BC=8C
->>
->>    The TS-ADC on RK3288 has two component, a tsadc and a tsadc contr=
-oller.
->> The tsadc controller is similar like the thermal manager unit on oth=
-er SOCs.
->> We followed the naming of 3066, but not named as the Thermal Manager=
-=2E
->>
->>    Moreover,there is only one set of apb registers to access the tsa=
-dc
->> controller,and the tsadc is controlled by the tsadc controller,could=
- not
->> access directly. If we write a general tsadc driver by accessed tsad=
-c
->> controller registers, and it hardly to write a driver for the tsadc
->> controller.
-> As suggested by Arnd, you can use the generic driver as interface
-> between thermal framework and IIO layer. The driver you are going to
-> write to your ADC is going to be in the IIO subsystem. The only
-> difference is that the generic driver would work for any ADC driver i=
-n
-> the IIO subsystem.
-> https://lkml.org/lkml/2014/2/5/810
->
-> In fact, there is already a generic driver. We just need to get it up
-> to date.  I see some testing has been already done, and results sound
-> promising.
-This iio_thermal driver only support get temperature from the ADC IIO
-channel.
-It dose not support any advanced feature such as configure the
-temperature when system should be reset.
-So if we adapt it, we will access the register form both TSADC IIO
-driver and  thermal driver.
-I don't thank this is a good ideal.
+It seems it will be easier to have also subdirs for objs.
 
-In fact, we should ignore the "ADC" stuff. This sensor use ADC internal=
-,
-but it is transparent to software, especially in automatic mode.
->
->>    So, I do not agree to write a generic adc driver for the rk3288-t=
-sadc.
->>
->> ________________________________
->> Yifeng Zhao
->>
->>
+> Thinking about it a bit more, the even more obvious solution that I
+> for some reason didn't think of at the time, is to have the
+> dtbs_install target create the appropriate subdirectories on the
+> install side, so that the structure is preserved.
+> 
+> That comes a bit closer to how modules are handled as well.
 
+Yes, dtbs_install target would be useful.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will come with a solution for this too.
+
+-Robert
