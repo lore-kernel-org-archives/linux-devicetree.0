@@ -1,65 +1,61 @@
-From: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: dts: make arch-timer always on in rk3288
- soc
-Date: Fri, 29 Aug 2014 19:44:33 +0800
-Message-ID: <540067A1.6090005@rock-chips.com>
-References: <1409190017-12656-1-git-send-email-kever.yang@rock-chips.com> <20140828091758.GB14650@leverpostej> <20140828151121.GM14650@leverpostej> <53FFEE40.3010001@rock-chips.com> <20140829112242.GC21473@leverpostej>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2] ASoC: fsl-sai: using 'lsb-first' property instead of
+ 'big-endian-data'.
+Date: Fri, 29 Aug 2014 12:59:43 +0100
+Message-ID: <20140829115943.GV29327@sirena.org.uk>
+References: <20140829110601.GB21473@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140829112242.GC21473@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="s0H35NU0PUc8VBh+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140829110601.GB21473@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Xiubo Li <Li.Xiubo@freescale.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-=E5=9C=A8 2014=E5=B9=B408=E6=9C=8829=E6=97=A5 19:22, Mark Rutland =E5=86=
-=99=E9=81=93:
->> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8828=E6=97=A5 23:11, Mark Rutland =E5=
-=86=99=E9=81=93:
->>> To clarify: if there are low power states that the CPU can enter wh=
-ere
->>> we lose state, then this patch isn't correct.
->> Right now, the software of RK3288 SoC only support CPU hotplug
->> (cpu_on/off) and power off all CPUs on suspend.
-> Sure, but that's a Linux implementation detail rather than a fixed
-> property of the hardware. Given those states exist, the "always-on"
-> property is not appropriate.
->
->> We do not implement cpuidle to power off CPU. Do you think we should
->> introduce a broadcast timer?
-> If one is present, yes.=20
->
->> On our early kernel, I never see any interrupt on a broadcast timer
->> (yes, we implement it with a external timer).
-> That's fine; Linux doesn't need to use it just yet. However, when we
-> want to use low power states later, it will be necessary to enable
-> placing all CPUS into a low power state.
->
-> If your external timer is already supported by an existing driver, th=
-ere
-> is no reason not to add it now.
->
->>> A more general approach would be to enable the broadcast hrtimer fo=
-r
->>> arm, as has been done for arm64.
->> Yes. I think it should be done by arm framework.
-> Patches welcome.
->
-> I also think it would make sense to enable this for arm.
->
-> Thanks,
-> Mark.
->
->
-Okay, so this patch is wrong as I expected.
-Thank you!
+--s0H35NU0PUc8VBh+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Aug 29, 2014 at 12:06:01PM +0100, Mark Rutland wrote:
+> On Fri, Aug 29, 2014 at 08:12:12AM +0100, Xiubo Li wrote:
+
+> > The 'big-endian-data' property is originally used to indicate whether the
+> > LSB firstly or MSB firstly will be transmitted to the CODEC or received
+> > from the CODEC, and there has nothing relation to the memory data.
+
+> Both Nicolin [1] and Mark [2] asked for the old property to be kept
+> around for compatibility reasons. Those requests seem to have been
+> ignored entirely; the commit message doesn't even describe why you
+> believe removing support for the old property is safe.
+
+The response was that the relevant chips aren't out in the wild so it's
+vanishingly unlikely that anyone would have a real DT with this option
+enabled.  I'll defer to Nicolin on if that's the case or not.
+
+--s0H35NU0PUc8VBh+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUAGssAAoJELSic+t+oim9TNYQAJwN380ACjc82CC/8I5V25OZ
+i1VqXY0W+SHBnFx1ENACiHFAZS/IsiCd+n2h0yFlPrGfDGqxU+zZ/W+m364CJYSF
+psd+Udnyx8TI1MPq9cbWyvWCCIS4CGjRmySNfk1l8u7YYUcR/+Z7QU2NHNzyyvcg
+0vpvs7Ycqhp0WUIfMh4u7n3/2bCEBzgWPrbkGgpx3hgQ+9X/isFGKQQfFX/9jtn3
+eigxkQ9B5eqNJjk5wa+tOaOYy66Us/8u8yXCe9T4i9UzgkRjjPY62rpoSe0HyREa
+1ui7fydT/Olg6KLaaJqsOsKzUSkLKt8XSDCyQYigHf/s3ja3nwB+ku+A5LwStFSc
+pJiPmh5S48ODao1fn3KXxdAYObYNPpFFYb5LEn6yDzT/VZMrmvfkVR/sMZewMsDb
+MtuY/32fdVm/5Hk9UJsWVYx0lL/YyrOAKw718oHKcq8ZX8shaeTWp7rzyQz3DY13
+RFtfeuu2HKtrfuFgNbGYbmWMb4iujpydGaCjNjrPIaAd45XdDmZOLG8gWUVJc4n4
+uz2AmMd3C2IzBm6As6uns68VqeF0W7jczQX5Pd69HosVmgopCQwOlJl/o8QYst7R
+XuQBGkhiWSxW3XUiu74Q98QUanthoaDEyk4CYD9WFNtBq+jNzACkbz/vtEzjDRJ1
+PIgIV6U2vyS+ZTanKfXT
+=CMuk
+-----END PGP SIGNATURE-----
+
+--s0H35NU0PUc8VBh+--
