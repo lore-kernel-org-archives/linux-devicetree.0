@@ -1,62 +1,221 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Fri, 29 Aug 2014 03:43:26 +0200
-Message-ID: <53FFDABE.3000507@ahsoftware.de>
-References: <20140826084208.AE5F0C40989@trevor.secretlab.ca> <20140826084922.GG17263@ulmo> <53FC566C.30904@ahsoftware.de> <20140826101107.GC32315@leverpostej> <20140827103432.64927C409CB@trevor.secretlab.ca> <20140827144403.GB13850@arm.com> <53FE05AE.9000406@wwwdotorg.org> <53FE07BE.7000809@ahsoftware.de> <53FE0966.5020206@wwwdotorg.org> <53FED13C.4070606@ahsoftware.de> <20140828092308.GA31111@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2.1 1/7] Adding Skyworks SKY81452 MFD driver
+Date: Fri, 29 Aug 2014 11:03:21 +0900
+Message-ID: <1409277801-28588-1-git-send-email-jack.yoo@skyworksinc.com>
+References: <1409222631-23293-1-git-send-email-jack.yoo@skyworksinc.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140828092308.GA31111-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1409222631-23293-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 28.08.2014 11:23, schrieb Catalin Marinas:
-> On Thu, Aug 28, 2014 at 07:50:36AM +0100, Alexander Holler wrote:
+v2.1:
+Clear mfd_cells to zero before setting.
+Added of_compatible into mfd_cells
 
->> And I wonder how the ACPI world solves that problem. My guess would be
->> hardcoded stuff in the firmware-blob (BIOS), just like it happened with
->> board files, but I've never seen BIOS code and my knowledge about ACPI
->> is almost zero. ;)
->
-> ACPI doesn't even attempt to solve such problems at the OS level. SoCs
-> aimed at ACPI should have simple hardware configuration (from a Linux
-> perspective) initialised by firmware (e.g. clocks) and devices living on
-> a standard bus like PCIe. If a SoC requires specific low-level code to
-> initialise the hardware in a specific order (other than architected
-> peripherals like GIC, timers; e.g. MFD devices), we should deem it
-> unsuitable for ACPI.
->
-> ACPI should only be used by vendors who know exactly why they need and
-> how to implement it properly and not just because the marketing
-> department told them to (it would also be nice if the Linux kernel
-> community was informed about such reasons).
+---
+ drivers/mfd/Kconfig          |  12 +++++
+ drivers/mfd/Makefile         |   1 +
+ drivers/mfd/sky81452.c       | 111 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/sky81452.h |  32 +++++++++++++
+ 4 files changed, 156 insertions(+)
+ create mode 100644 drivers/mfd/sky81452.c
+ create mode 100644 include/linux/mfd/sky81452.h
 
-Hmm, Jon Masters from Red Hat sounds too like UEFI/ACPI is the way to go.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index de5abf2..6962b4e 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -626,6 +626,18 @@ config MFD_SM501_GPIO
+ 	 lines on the SM501. The platform data is used to supply the
+ 	 base number for the first GPIO line to register.
+ 
++config MFD_SKY81452
++	tristate "Skyworks Solutions SKY81452"
++	select MFD_CORE
++	select REGMAP_I2C
++	depends on I2C
++	help
++	  This is the core driver for the Skyworks SKY81452 backlight and
++	  voltage regulator device.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called sky81452.
++
+ config MFD_SMSC
+        bool "SMSC ECE1099 series chips"
+        depends on I2C=y
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index f001487..6c2f317 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -169,6 +169,7 @@ obj-$(CONFIG_MFD_AS3711)	+= as3711.o
+ obj-$(CONFIG_MFD_AS3722)	+= as3722.o
+ obj-$(CONFIG_MFD_STW481X)	+= stw481x.o
+ obj-$(CONFIG_MFD_IPAQ_MICRO)	+= ipaq-micro.o
++obj-$(CONFIG_MFD_SKY81452)		+= sky81452.o
+ 
+ intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
+ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+diff --git a/drivers/mfd/sky81452.c b/drivers/mfd/sky81452.c
+new file mode 100644
+index 0000000..e91b928
+--- /dev/null
++++ b/drivers/mfd/sky81452.c
+@@ -0,0 +1,111 @@
++/*
++ * sky81452.c	SKY81452 MFD driver
++ *
++ * Copyright 2014 Skyworks Solutions Inc.
++ * Author : Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; either version 2, or (at your option) any
++ * later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/err.h>
++#include <linux/slab.h>
++#include <linux/i2c.h>
++#include <linux/regmap.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/sky81452.h>
++
++static const struct regmap_config sky81452_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++};
++
++static int sky81452_probe(struct i2c_client *client,
++				const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	const struct sky81452_platform_data *pdata = dev_get_platdata(dev);
++	struct mfd_cell cells[2];
++	struct regmap *regmap;
++	int ret;
++
++	if (!pdata) {
++		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++		if (!pdata)
++			return -ENOMEM;
++	}
++
++	regmap = devm_regmap_init_i2c(client, &sky81452_config);
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "failed to initialize I2C:%d", PTR_ERR(regmap));
++		return PTR_ERR(regmap);
++	}
++
++	i2c_set_clientdata(client, regmap);
++
++	memset(cells, 0, sizeof(cells));
++	cells[0].name = "sky81452-bl";
++	cells[0].of_compatible = "skyworks,sky81452-backlight";
++	cells[0].platform_data = pdata->bl_pdata;
++	cells[0].pdata_size = sizeof(*pdata->bl_pdata);
++	cells[1].name = "sky81452-regulator";
++	cells[1].of_compatible = "skyworks,sky81452-regulator";
++	cells[1].platform_data = pdata->regulator_init_data;
++	cells[1].pdata_size = sizeof(*pdata->regulator_init_data);
++
++	ret = mfd_add_devices(dev, -1, cells, ARRAY_SIZE(cells), NULL, 0, NULL);
++	if (IS_ERR_VALUE(ret))
++		dev_err(dev, "failed to add child device:%d", ret);
++
++	return ret;
++}
++
++static int sky81452_remove(struct i2c_client *client)
++{
++	mfd_remove_devices(&client->dev);
++	return 0;
++}
++
++static const struct i2c_device_id sky81452_ids[] = {
++	{ "sky81452" },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, sky81452_ids);
++
++#ifdef CONFIG_OF
++static const struct of_device_id sky81452_of_match[] = {
++	{ .compatible = "skyworks,sky81452", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sky81452_of_match);
++#endif
++
++static struct i2c_driver sky81452_driver = {
++	.driver = {
++		.name = "sky81452",
++		.of_match_table = of_match_ptr(sky81452_of_match),
++	},
++	.probe = sky81452_probe,
++	.remove = sky81452_remove,
++	.id_table = sky81452_ids,
++};
++
++module_i2c_driver(sky81452_driver);
++
++MODULE_DESCRIPTION("Skyworks SKY81452 MFD driver");
++MODULE_AUTHOR("Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>");
++MODULE_LICENSE("GPL");
++MODULE_VERSION("1.1");
+diff --git a/include/linux/mfd/sky81452.h b/include/linux/mfd/sky81452.h
+new file mode 100644
+index 0000000..142f762
+--- /dev/null
++++ b/include/linux/mfd/sky81452.h
+@@ -0,0 +1,32 @@
++/*
++ * sky81452.h	SKY81452 MFD driver
++ *
++ * Copyright 2014 Skyworks Solutions Inc.
++ * Author : Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; either version 2, or (at your option) any
++ * later version.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef _SKY81452_H
++#define _SKY81452_H
++
++#include <linux/sky81452-backlight.h>
++#include <linux/regulator/machine.h>
++
++struct sky81452_platform_data {
++	struct sky81452_bl_platform_data *bl_pdata;
++	struct regulator_init_data *regulator_init_data;
++};
++
++#endif
+-- 
+1.9.1
 
-But maybe he's right and hiding ugly code in proprietary/binary firmware 
-blobs where no one can see and criticize it is really the way to go.
-
-Personally I think it's a way back to the past ("when everything was 
-better", at least that is what most human brains do like to suggest) and 
-just a dream. And I don't believe that the stuff which was and is hidden 
-away always just works and doesn't need fixes (one can't do themself). 
-In my humble opinion that's a nice but wrong myth and doesn't take into 
-consideration that HW (and SW) gets more and more complicated too (and 
-thus more faulty).
-
-And even the biggest companies already have problems to produce stuff
-which just works (they just employ humans too), not to speak from 
-smaller board vendors. So it's much better to keep the source as visible 
-as possible to as much people as possible (in the OS) and not to rely on 
-some binary blob as most BIOSes are.
-
-Regards,
-
-Alexander Holler
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
