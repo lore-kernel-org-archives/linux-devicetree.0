@@ -1,10 +1,8 @@
 From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH 04/12] MIPS: GIC: Move MIPS_GIC_IRQ_BASE into platform irq.h
-Date: Fri, 29 Aug 2014 15:14:31 -0700
-Message-ID: <1409350479-19108-5-git-send-email-abrestic@chromium.org>
-References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
+Subject: [PATCH 00/12] MIPS: GIC device-tree support
+Date: Fri, 29 Aug 2014 15:14:27 -0700
+Message-ID: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -18,69 +16,48 @@ To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel 
 Cc: Andrew Bresticker <abrestic@chromium.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define a generic MIPS_GIC_IRQ_BASE which is suitable for Malta and
-the upcoming Danube board in <mach-generic/irq.h>.  Since Sead-3 is
-different and uses a MIPS_GIC_IRQ_BASE equal to the CPU IRQ base (0),
-define its MIPS_GIC_IRQ_BASE in <mach-sead3/irq.h>.
+This series add support for mapping and routing GIC interrupts through
+the device-tree, which will be used on the upcoming interAptiv-based
+Danube SoC.
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
----
- arch/mips/include/asm/mach-generic/irq.h     | 6 ++++++
- arch/mips/include/asm/mach-sead3/irq.h       | 1 +
- arch/mips/include/asm/mips-boards/maltaint.h | 2 --
- arch/mips/include/asm/mips-boards/sead3int.h | 2 --
- 4 files changed, 7 insertions(+), 4 deletions(-)
+- Patches 1 and 2 provide improvements to the CPU interrupt controller
+  when used with DT.
+- Patches 3 through 7 add device-tree support for the GIC.
+- Patches 8 and 9 are misc. GIC irqchip cleanups.
+- Patches 10 through 12 cleanup/fix GIC local interrupt support.
 
-diff --git a/arch/mips/include/asm/mach-generic/irq.h b/arch/mips/include/asm/mach-generic/irq.h
-index 139cd20..c0fc62b 100644
---- a/arch/mips/include/asm/mach-generic/irq.h
-+++ b/arch/mips/include/asm/mach-generic/irq.h
-@@ -36,4 +36,10 @@
- 
- #endif /* CONFIG_IRQ_CPU */
- 
-+#ifdef CONFIG_IRQ_GIC
-+#ifndef MIPS_GIC_IRQ_BASE
-+#define MIPS_GIC_IRQ_BASE (MIPS_CPU_IRQ_BASE + 8)
-+#endif
-+#endif /* CONFIG_IRQ_GIC */
-+
- #endif /* __ASM_MACH_GENERIC_IRQ_H */
-diff --git a/arch/mips/include/asm/mach-sead3/irq.h b/arch/mips/include/asm/mach-sead3/irq.h
-index d8106f7..52c75d5 100644
---- a/arch/mips/include/asm/mach-sead3/irq.h
-+++ b/arch/mips/include/asm/mach-sead3/irq.h
-@@ -1,6 +1,7 @@
- #ifndef __ASM_MACH_MIPS_IRQ_H
- #define __ASM_MACH_MIPS_IRQ_H
- 
-+#define MIPS_GIC_IRQ_BASE 0
- #define GIC_NUM_INTRS (24 + NR_CPUS * 2)
- #define NR_IRQS 256
- 
-diff --git a/arch/mips/include/asm/mips-boards/maltaint.h b/arch/mips/include/asm/mips-boards/maltaint.h
-index e330732..9d23343 100644
---- a/arch/mips/include/asm/mips-boards/maltaint.h
-+++ b/arch/mips/include/asm/mips-boards/maltaint.h
-@@ -10,8 +10,6 @@
- #ifndef _MIPS_MALTAINT_H
- #define _MIPS_MALTAINT_H
- 
--#define MIPS_GIC_IRQ_BASE	(MIPS_CPU_IRQ_BASE + 8)
--
- /*
-  * Interrupts 0..15 are used for Malta ISA compatible interrupts
-  */
-diff --git a/arch/mips/include/asm/mips-boards/sead3int.h b/arch/mips/include/asm/mips-boards/sead3int.h
-index 6b17aaf..11ebec9 100644
---- a/arch/mips/include/asm/mips-boards/sead3int.h
-+++ b/arch/mips/include/asm/mips-boards/sead3int.h
-@@ -14,6 +14,4 @@
- #define GIC_BASE_ADDR		0x1b1c0000
- #define GIC_ADDRSPACE_SZ	(128 * 1024)
- 
--#define MIPS_GIC_IRQ_BASE	(MIPS_CPU_IRQ_BASE + 0)
--
- #endif /* !(_MIPS_SEAD3INT_H) */
+Based on 3.17-rc2 and boot tested on Danube (+ out of tree patches) and
+Malta.  Build tested for SEAD-3.  Paul Burton has also tested this series
+with his WIP Malta DT support [0].
+
+[0] https://github.com/paulburton/linux/commits/wip-malta-dt
+
+Andrew Bresticker (12):
+  MIPS: Provide a generic plat_irq_dispatch
+  MIPS: Set vint handler when mapping CPU interrupts
+  of: Add binding document for MIPS GIC
+  MIPS: GIC: Move MIPS_GIC_IRQ_BASE into platform irq.h
+  MIPS: GIC: Add device-tree support
+  MIPS: GIC: Add generic IPI support when using DT
+  MIPS: GIC: Implement irq_set_type callback
+  MIPS: GIC: Implement generic irq_ack/irq_eoi callbacks
+  MIPS: GIC: Fix gic_set_affinity() return value
+  MIPS: GIC: Support local interrupts
+  MIPS: GIC: Use local interrupts for timer
+  MIPS: Malta: Map GIC local interrupts
+
+ Documentation/devicetree/bindings/mips/gic.txt |  50 +++
+ arch/mips/include/asm/gic.h                    |  36 ++
+ arch/mips/include/asm/mach-generic/irq.h       |   8 +
+ arch/mips/include/asm/mach-sead3/irq.h         |   1 +
+ arch/mips/include/asm/mips-boards/maltaint.h   |   2 -
+ arch/mips/include/asm/mips-boards/sead3int.h   |   2 -
+ arch/mips/kernel/cevt-gic.c                    |  16 +-
+ arch/mips/kernel/irq-gic.c                     | 434 ++++++++++++++++++++++++-
+ arch/mips/kernel/irq_cpu.c                     |  32 +-
+ arch/mips/mti-malta/malta-int.c                |  44 ++-
+ 10 files changed, 585 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
+
 -- 
 2.1.0.rc2.206.gedb03e5
