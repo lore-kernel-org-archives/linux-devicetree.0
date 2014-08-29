@@ -1,41 +1,90 @@
-From: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2] ASoC: fsl-sai: using 'lsb-first' property instead of
- 'big-endian-data'.
-Date: Fri, 29 Aug 2014 09:40:11 -0700
-Message-ID: <20140829164010.GA5520@Asurada>
-References: <20140829110601.GB21473@leverpostej>
- <20140829115943.GV29327@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/5] ARM: Berlin: Ethernet support
+Date: Fri, 29 Aug 2014 18:47:17 +0200
+Message-ID: <5400AE95.2040308@gmail.com>
+References: <1409320263-10295-1-git-send-email-antoine.tenart@free-electrons.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140829115943.GV29327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1409320263-10295-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 12:59:43PM +0100, Mark Brown wrote:
-> On Fri, Aug 29, 2014 at 12:06:01PM +0100, Mark Rutland wrote:
-> > On Fri, Aug 29, 2014 at 08:12:12AM +0100, Xiubo Li wrote:
+On 08/29/2014 03:50 PM, Antoine Tenart wrote:
+> This series introduce the Marvell Berlin Ethernet driver, allowing to
+> handle the fast Ethernet port. This driver is based on the mv643xx_eth
+> driver and reuse some of its functions. While I wanted to make these
+> functions common to the two drivers at first, I finally do think this
+> is not a great idea:
+> - Registers are very different.
+> - The mv643xx_eth supports up to 1000Mbps interfaces and performance
+>   issues may occur, whereas the mvberlin_eth is only for fast Ethernet.
+> - The mvberlin_eth driver uses a hash table to filter incoming packets.
+> - A few other differences.
 > 
-> > > The 'big-endian-data' property is originally used to indicate whether the
-> > > LSB firstly or MSB firstly will be transmitted to the CODEC or received
-> > > from the CODEC, and there has nothing relation to the memory data.
-> 
-> > Both Nicolin [1] and Mark [2] asked for the old property to be kept
-> > around for compatibility reasons. Those requests seem to have been
-> > ignored entirely; the commit message doesn't even describe why you
-> > believe removing support for the old property is safe.
-> 
-> The response was that the relevant chips aren't out in the wild so it's
-> vanishingly unlikely that anyone would have a real DT with this option
-> enabled.  I'll defer to Nicolin on if that's the case or not.
+> I tried to stay close to the mv643xx_eth implementation, so that the
+> discussion is still open, but I still ended up with lots of tiny
+> differences that can be hard to manage for both cases. In the end I do
+> think having two separate drivers is a good choice.
 
-Yea, it sounds like so. I thought Vf610 also used this property. But if
-only LS1 using it, I think we may consent this rename right?
+Antoine,
 
-Nicolin
+first of all, thanks a lot for providing this driver! I checked the
+usual Marvell datasheets to see where the ethernet IP in Berlin comes
+from and I hate to say it but it very much looks like PXA168, see [1]
+A.22. Also, there is already a driver for pxa168_eth available.
+
+I'll test and review you current driver on BG2 asap, but I guess it
+should be merged with pxa168_eth _if_ the registers are really
+compatible.
+
+Sebastian
+
+[1]
+http://www.marvell.com/application-processors/armada-100/assets/armada_16x_software_manual.pdf
+
+> That being said, I tested the Ethernet communication with ICMP pings,
+> netcat, tried to use some network related softwares (such as ssh). Here
+> is an iperf output:
+> 
+>  ------------------------------------------------------------
+>  Client connecting to 192.168.0.11, TCP port 5001
+>  TCP window size: 85.0 KByte (default)
+>  ------------------------------------------------------------
+>  [  3] local 192.168.0.20 port 44183 connected with 192.168.0.11 port 5001
+>  [ ID] Interval       Transfer     Bandwidth
+>  [  3]  0.0-10.0 sec   113 MBytes  94.8 Mbits/sec
+> 
+> Tests were done on a BG2Q DMP, and this series currently does not add
+> other device tree nodes than the ones for this board.
+> 
+> Thanks!
+> 
+> Antoine
+> 
+> 
+> Antoine Tenart (5):
+>   net: mvberlin_eth: add an Ethernet driver for Marvell Berlin
+>   Documentation: bindings: net: add the Marvell Berlin Ethernet
+>     controller
+>   Documentation: devicetree: net: mention Marvell Berlin
+>   ARM: dts: berlin: add ethernet and mdio nodes
+>   ARM: dts: berlin: enable the Ethernet port on the BG2Q DMP
+> 
+>  .../devicetree/bindings/net/marvell-berlin.txt     |   23 +
+>  .../devicetree/bindings/net/marvell-orion-mdio.txt |    6 +-
+>  arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |   13 +
+>  arch/arm/boot/dts/berlin2q.dtsi                    |   19 +
+>  drivers/net/ethernet/marvell/Kconfig               |    9 +
+>  drivers/net/ethernet/marvell/Makefile              |    1 +
+>  drivers/net/ethernet/marvell/mvberlin_eth.c        | 2081 ++++++++++++++++++++
+>  7 files changed, 2149 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/marvell-berlin.txt
+>  create mode 100644 drivers/net/ethernet/marvell/mvberlin_eth.c
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
