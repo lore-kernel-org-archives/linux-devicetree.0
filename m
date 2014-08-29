@@ -1,83 +1,72 @@
-From: Inha Song <ideal.song@samsung.com>
-Subject: Re: [alsa-devel] [PATCH v3 1/2] mfd: arizona: Add support for
- INn_Modec register control
-Date: Fri, 29 Aug 2014 17:02:30 +0900
-Message-ID: <20140829170230.673ca9ff@songinha-Samsung-DeskTop-System>
-References: <20140818200003.2ab8aca0@songinha-Samsung-DeskTop-System>
- <20140828113651.GN24579@lee--X1>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] ARM: dts: hix5hd2: add wdg node
+Date: Fri, 29 Aug 2014 16:12:54 +0800
+Message-ID: <54003606.5090407@linaro.org>
+References: <1409204060-9223-1-git-send-email-zhangfei.gao@linaro.org> <1409204060-9223-7-git-send-email-zhangfei.gao@linaro.org> <53FEF4A7.2040001@gmail.com> <20140828171228.GR14650@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140828113651.GN24579@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com, lgirdwood@gmail.com, sameo@linux.intel.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140828171228.GR14650@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Lee
-Thanks for your review.
 
-On Thu, 28 Aug 2014 12:36:51 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
 
-> On Mon, 18 Aug 2014, Inha Song wrote:
->=20
-> > Some boards need to set the INn_MODE[1:0] register to change
-> > the input signal patch. This wlf,inmode property is optional.
-> > If present, values must be specified less than or equal to
-> > the number of input singals. If values less than the number
-> > of input signals, elements that has not been specifed are set
-> > to 0 by default.
-> >=20
-> > Example:
-> >    - wlf,inmode =3D <2 0 2>;	/* IN1, IN3 use DMIC */
-> >=20
-> > Signed-off-by: Inha Song <ideal.song@samsung.com>
-> > ---
-> >  drivers/mfd/arizona-core.c | 8 +++++++-
-> >  1 file changed, 7 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.=
-c
-> > index 10a0cb9..81e6db8 100644
-> > --- a/drivers/mfd/arizona-core.c
-> > +++ b/drivers/mfd/arizona-core.c
-> > @@ -534,7 +534,7 @@ EXPORT_SYMBOL_GPL(arizona_of_get_named_gpio);
-> >  static int arizona_of_get_core_pdata(struct arizona *arizona)
-> >  {
-> >  	struct arizona_pdata *pdata =3D &arizona->pdata;
-> > -	int ret, i;
-> > +	int ret, i, proplen;
-> > =20
-> >  	pdata->reset =3D arizona_of_get_named_gpio(arizona, "wlf,reset", =
-true);
-> > =20
-> > @@ -560,6 +560,12 @@ static int arizona_of_get_core_pdata(struct ar=
-izona *arizona)
-> >  			ret);
-> >  	}
-> > =20
-> > +	proplen =3D of_property_count_u32_elems(arizona->dev->of_node,
-> > +					      "wlf,inmode");
-> > +	if (proplen > 0 && proplen <=3D ARRAY_SIZE(arizona->pdata.inmode)=
-)
-> > +		of_property_read_u32_array(arizona->dev->of_node, "wlf,inmode",
-> > +					   arizona->pdata.inmode, proplen);
->=20
-> of_property_for_each_u32()?
+On 08/29/2014 01:12 AM, Mark Rutland wrote:
+> On Thu, Aug 28, 2014 at 10:21:43AM +0100, Dinh Nguyen wrote:
+>>
+>>
+>> On 8/28/14, 12:34 AM, Zhangfei Gao wrote:
+>>> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/hisi-x5hd2.dtsi |    9 +++++++++
+>>>   1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/=
+hisi-x5hd2.dtsi
+>>> index 152f3ad..7b1cb53 100644
+>>> --- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
+>>> +++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
+>>> @@ -365,6 +365,15 @@
+>>>   				#interrupt-cells =3D <2>;
+>>>   				status =3D "disabled";
+>>>   			};
+>>> +
+>>> +			wdg0: wdg@a2c000 {
+>>
+>> A nit-pick here, but everybody else is using 'wdt' for a watchdog ti=
+mer
+>> node.
 
-Is it more clear to use of_property_for_each_u32() instead of
-of_property_read_u32_array()?
+Sure=EF=BC=8Cwill change to
+wdt0: watchdog@a2c000
 
-If so, I will fix in v5.
+>>
+>>> +				compatible =3D "arm,sp805", "arm,primecell";
+>>
+>> I didn't see an entry for "arm,sp805" in Documentations, should ther=
+e be
+>> one?
+>
+> There probably should, yes. It looks like only the sp804 is documente=
+d.
+>
+> Pawel, it looks like you were the first sp805,sp810 dt user. Care to =
+put
+> together a couple of documents? ;)
+>
 
-Best regards,
-Inha Song.
+Yes, that would be great,
+Not find bindings for drivers/watchdog/sp805_wdt.c.
 
->=20
-> --=20
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
