@@ -1,48 +1,36 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/4] gpio: syscon: add soc specific callback to assign
- output value
-Date: Fri, 29 Aug 2014 08:19:13 +0200
-Message-ID: <CACRpkdaq2=f92yEEZgGHOtixDk35O9tmN2PZkSPKrGwGVDS_mQ@mail.gmail.com>
-References: <1407946582-20927-1-git-send-email-grygorii.strashko@ti.com>
-	<1407946582-20927-2-git-send-email-grygorii.strashko@ti.com>
+Subject: Re: [RFC PATCH 7/9] gpio: sch: Consolidate core and resume banks
+Date: Fri, 29 Aug 2014 08:36:31 +0200
+Message-ID: <CACRpkdZr3aLfiD24cpXjtrczvkuCvpfsSv6zadawkQf+v8vsfQ@mail.gmail.com>
+References: <1408172039-32513-1-git-send-email-mika.westerberg@linux.intel.com>
+	<1408172039-32513-8-git-send-email-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1407946582-20927-2-git-send-email-grygorii.strashko@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Alexander Shiyan <shc_work@mail.ru>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408172039-32513-8-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Darren Hart <dvhart@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Al Stone <al.stone@linaro.org>, Olof Johansson <olof@lixom.net>, Matthew Garrett <matthew.garrett@nebula.com>, Matt Fleming <matt.fleming@intel.com>, David Woodhouse <dwmw2@infradead.org>, "H. Peter Anvin" <hpa@zytor.com>, Jacob Pan <jacob.jun.pan@linux.intel.com>, Josh Triplett <josh@joshtriplett.org>, Aaron Lu <aaron.lu@intel.com>, Max Eliaser <max.eliaser@intel.com>, Robert Moore <robert.moore@intel.com>, Len Brown <lenb@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Brown <broonie@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>Rob
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 13, 2014 at 6:16 PM, Grygorii Strashko
-<grygorii.strashko@ti.com> wrote:
+On Sat, Aug 16, 2014 at 8:53 AM, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
 
-> Some SoCs (like Keystone) may require to perform special
-> sequence of operations to assign output GPIO value, so default
-> implementation of .set() callback from gpio-syscon driver
-> can't be used.
+> This is actually a single device with two sets of identical registers,
+> which just happen to start from a different offset. Instead of having
+> separate GPIO chips created we consolidate them to be single GPIO chip.
 >
-> Hence, add optional, SoC specific callback to assign output
-> gpio value.
+> In addition having a single GPIO chip allows us to handle ACPI GPIO
+> translation in the core in a more generic way, since the two GPIO chips
+> share the same parent ACPI device.
 >
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Tested-by: Max Eliaser <max.eliaser@intel.com>
 
-Hm :-/
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-I didn't realize this wasn't a quite so straight-forward a
-syscon GPIO driver.
-
-Now I start to think that it looks kludgy to bolt this onto
-the other driver and think we may need to go back to the
-other version which puts it as a separate driver. I guess
-that is what you refer to as v1?
-
-I have a hard time to make my mind up about these
-syscon things, sorry :-(
-
-Now I have to ask you: which way do you prefer to do it,
-if you can choose freely? The initial driver or augmenting
-the syscon driver (patch v1)?
+I guess this needs to be merged with the rest of the stuff in this series
+so for the GPIO sch part go ahead.
 
 Yours,
 Linus Walleij
