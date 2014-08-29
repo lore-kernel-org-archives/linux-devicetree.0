@@ -1,150 +1,41 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: Re: [PATCH v3 2/3] rc: Introduce hix5hd2 IR transmitter driver
-Date: Fri, 29 Aug 2014 09:11:41 +0530
-Message-ID: <53FFF675.7020702@gmail.com>
-References: <1409238977-19444-1-git-send-email-zhangfei.gao@linaro.org> <1409238977-19444-3-git-send-email-zhangfei.gao@linaro.org>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: use IORESOURCE_REG resource type for non-translatable addresses
+ in DT
+Date: Thu, 28 Aug 2014 21:09:24 -0700
+Message-ID: <CAJAp7Oj+3bUAciLcbfZpfDE0MFem8G_P1gTjV=-UK_U3o4UEZw@mail.gmail.com>
+References: <53D788A7.4020303@mm-sol.com>
+	<3794875.CZFbAag5Sv@wuerfel>
+	<53D7AA72.6010309@mm-sol.com>
+	<20140729234522.E9FF1C40738@trevor.secretlab.ca>
+	<53D84558.7060406@codeaurora.org>
+	<CAL_JsqJjH0OH+X=fzwqAPeWarjoLev7v6Nv_QhAa+nZyztMnFA@mail.gmail.com>
+	<20140730060619.GC19933@codeaurora.org>
+	<CAJAp7OhoRQ1eWack1e=OL0cS4Fxmgxc7OWeNxcj1qt7Q-x-sQA@mail.gmail.com>
+	<53FE53E1.9030605@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1409238977-19444-3-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, sean@mess.org, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Guoxiong Yan <yanguoxiong@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53FE53E1.9030605@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/28/2014 08:46 PM, Zhangfei Gao wrote:
-> From: Guoxiong Yan <yanguoxiong@huawei.com>
+On Wed, Aug 27, 2014 at 2:55 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> What's Josh's original proposal? We've already punted on this for SSBI
+> PMICs and just required them to put registers in DT for use some day and
+> I don't see anyone blocking individual SPMI pmic drivers from merging
+> over this. So I guess I agree with you that we can move forward with the
+> other drivers. I'd still like to see us make this better though, so it
+> seems worthwhile to have the discussion and get to some conclusion.
 >
-> IR transmitter driver for Hisilicon hix5hd2 soc
->
-> By default all protocols are disabled.
-> For example nec decoder can be enabled by either
-> 1. ir-keytable -p nec
-> 2. echo nec > /sys/class/rc/rc0/protocols
-> See see Documentation/ABI/testing/sysfs-class-rc
->
-(...)
 
-> +static irqreturn_t hix5hd2_ir_rx_interrupt(int irq, void *data)
-> +{
-> +	u32 symb_num, symb_val, symb_time;
-> +	u32 data_l, data_h;
-> +	u32 irq_sr, i;
-> +	struct hix5hd2_ir_priv *priv = data;
-> +
-> +	irq_sr = readl_relaxed(priv->base + IR_INTS);
-> +	if (irq_sr & INTMS_OVERFLOW) {
-> +		/*
-> +		 * we must read IR_DATAL first, then we can clean up
-> +		 * IR_INTS availably since logic would not clear
-> +		 * fifo when overflow, drv do the job
-> +		 */
-> +		ir_raw_event_reset(priv->rdev);
-> +		symb_num = readl_relaxed(priv->base + IR_DATAH);
-> +		for (i = 0; i < symb_num; i++)
-> +			readl_relaxed(priv->base + IR_DATAL);
-> +
-> +		writel_relaxed(INT_CLR_OVERFLOW, priv->base + IR_INTC);
-> +		dev_info(priv->dev, "overflow, level=%d\n",
-> +			 IR_CFG_INT_THRESHOLD);
-> +	}
-> +
-> +	if ((irq_sr & INTMS_SYMBRCV) || (irq_sr & INTMS_TIMEOUT)) {
-> +		DEFINE_IR_RAW_EVENT(ev);
-> +
-> +		symb_num = readl_relaxed(priv->base + IR_DATAH);
-> +		for (i = 0; i < symb_num; i++) {
-> +			symb_val = readl_relaxed(priv->base + IR_DATAL);
-> +			data_l = ((symb_val & 0xffff) * 10);
-> +			data_h =  ((symb_val >> 16) & 0xffff) * 10;
-> +			symb_time = (data_l + data_h) / 10;
-> +
-> +			ev.duration = US_TO_NS(data_l);
-> +			ev.pulse = true;
-> +			ir_raw_event_store(priv->rdev, &ev);
-> +
-> +			if (symb_time < IR_CFG_SYMBOL_MAXWIDTH) {
-> +				ev.duration = US_TO_NS(data_h);
-> +				ev.pulse = false;
-> +				ir_raw_event_store(priv->rdev, &ev);
-> +			} else {
-> +				hix5hd2_ir_send_lirc_timeout(priv->rdev);
-> +			}
-> +		}
-> +
-> +		if (irq_sr & INTMS_SYMBRCV)
-> +			writel_relaxed(INT_CLR_RCV, priv->base + IR_INTC);
-> +		if (irq_sr & INTMS_TIMEOUT)
-> +			writel_relaxed(INT_CLR_TIMEOUT, priv->base + IR_INTC);
-> +	}
-> +
-> +	/* Empty software fifo */
-> +	ir_raw_event_handle(priv->rdev);
-> +	return IRQ_HANDLED;
-> +}
-> +
+That sounds totally reasonable, I agree that we should try to sort
+this out and if we do this should be applicable on pm8xxx as well(?).
 
-It looks good if the entire ISR() above the probe()/remove() functionalities
-of the driver. Maximum of the developers follows this structure.
+My concern was that further discussions would hinder the ability of
+actually committing the pm8x41 container driver and that is in my eyes
+blocking integration of drivers for the pmic blocks.
 
-(...)
-
-> +static struct of_device_id hix5hd2_ir_table[] = {
-> +	{ .compatible = "hisilicon,hix5hd2-ir", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, hix5hd2_ir_table);
-> +
-
-Every driver put these device ids above *struct platform_driver* definition.
-So that we can see the of_match_table....
-
-> +static int hix5hd2_ir_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct rc_dev *rdev;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct hix5hd2_ir_priv *priv;
-> +	struct device_node *node = pdev->dev.of_node;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(struct hix5hd2_ir_priv), GFP_KERNEL);
-
-sizeof(*priv)...?
-
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-
-(...)
-
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(hix5hd2_ir_pm_ops, hix5hd2_ir_suspend,
-> +			 hix5hd2_ir_resume);
-> +
-
-We can move the device ids here....
-
-> +static struct platform_driver hix5hd2_ir_driver = {
-> +	.driver = {
-> +		.name = IR_HIX5HD2_NAME,
-> +		.of_match_table = hix5hd2_ir_table,
-> +		.pm     = &hix5hd2_ir_pm_ops,
-> +	},
-> +	.probe = hix5hd2_ir_probe,
-> +	.remove = hix5hd2_ir_remove,
-> +};
-> +
-> +module_platform_driver(hix5hd2_ir_driver);
-> +
-> +MODULE_DESCRIPTION("RC Transceiver driver for hix5hd2 platforms");
-> +MODULE_AUTHOR("Guoxiong Yan <yanguoxiong@huawei.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:hix5hd2-ir");
-
-
--- 
 Regards,
-Varka Bhadram.
+Bjorn
