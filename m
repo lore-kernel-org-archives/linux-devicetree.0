@@ -1,125 +1,161 @@
-From: Robert Richter <robert.richter@caviumnetworks.com>
-Subject: Re: [PATCH 2/5] arm64, thunder: Add initial dts for Cavium Thunder SoC
-Date: Fri, 29 Aug 2014 14:10:23 +0200
-Message-ID: <20140829121023.GW13038@rric.localhost>
-References: <1406732794-20920-1-git-send-email-rric@kernel.org>
- <1406732794-20920-3-git-send-email-rric@kernel.org>
- <CAOesGMh9KkdKB_ytJ7CCbkPW7dHTX91NdfDMsMNfbmOBVOJ8PQ@mail.gmail.com>
- <20140828161556.GN4703@rric.localhost>
- <20140828162549.GP14650@leverpostej>
- <CAOesGMjtjcgUNV8WLp6_Zbok-0zq5afg_KS8QJYp=kDVabrQvg@mail.gmail.com>
- <20140828181429.GO4703@rric.localhost>
- <CAOesGMh3TEKZkyPjopfSm07C2ydw5=2VrzY0xQ=9jkhoA-Z_kQ@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
+Date: Fri, 29 Aug 2014 08:24:52 -0400
+Message-ID: <20140829122452.GA3683@titan.lakedaemon.net>
+References: <20140828124237.GA29102@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140828125915.GJ14650@leverpostej>
+ <20140828155157.GB23677@roeck-us.net>
+ <20140828161025.GO14650@leverpostej>
+ <20140828164825.GA12153@roeck-us.net>
+ <20140828172842.GF12769@titan.lakedaemon.net>
+ <20140828174034.GC15307@roeck-us.net>
+ <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140829104001.GB19424@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMh3TEKZkyPjopfSm07C2ydw5=2VrzY0xQ=9jkhoA-Z_kQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Robert Richter <rric@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20140829104001.GB19424@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28.08.14 16:01:08, Olof Johansson wrote:
-> On Thu, Aug 28, 2014 at 11:14 AM, Robert Richter <rric@kernel.org> wrote:
-> > On 28.08.14 09:31:43, Olof Johansson wrote:
-> >> On Thu, Aug 28, 2014 at 9:25 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >> > On Thu, Aug 28, 2014 at 05:15:56PM +0100, Robert Richter wrote:
-> >> >> Olof,
-> >> >>
-> >> >> On 30.07.14 11:14:23, Olof Johansson wrote:
-> >> >> > On Wed, Jul 30, 2014 at 8:06 AM, Robert Richter <rric@kernel.org> wrote:
-> >> >> > > From: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
-> >> >> > >
-> >> >> > > Add initial device tree nodes for Cavium Thunder SoCs with support of
-> >> >> > > 48 cores and gicv3. The dts file requires further changes, esp. for
-> >> >> > > pci, gicv3-its and smmu. This changes will be added later together
-> >> >> > > with the device drivers.
-> >> >> > >
-> >> >> > > Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
-> >> >> > > Signed-off-by: Robert Richter <rrichter@cavium.com>
-> >> >> > > ---
-> >> >> > >  arch/arm64/boot/dts/Makefile         |   1 +
-> >> >> > >  arch/arm64/boot/dts/thunder-88xx.dts | 387 +++++++++++++++++++++++++++++++++++
-> >> >> > >  2 files changed, 388 insertions(+)
-> >> >> > >  create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
-> >> >> > >
-> >> >> > > diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> >> >> > > index c52bdb051f66..f8001a62029c 100644
-> >> >> > > --- a/arch/arm64/boot/dts/Makefile
-> >> >> > > +++ b/arch/arm64/boot/dts/Makefile
-> >> >> > > @@ -1,3 +1,4 @@
-> >> >> > > +dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
-> >> >> > >  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
-> >> >> > >  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
-> >> >> >
-> >> >> > Oh, and:
-> >> >> >
-> >> >> > Let's fix the mistake we made on 32-bit here (that we can't undo
-> >> >> > unless we move all dts files now, which is too much churn), and put
-> >> >> > each SoC vendor in its own subdirectory.
-> >> >> >
-> >> >> > So, please add a arch/arm64/boot/dts/cavium/ directory, add a Makefile
-> >> >> > and the dts there.
-> >> >> >
-> >> >> > We should move vexpress under arm/   and xgene under apm/ too.
-> >> >>
-> >> >> I was looking into this. It turned out that this would introduce more
-> >> >> pain than it solves. The problem with introducing vendor subdirs for
-> >> >> .dts files is that this will require also subdirs for .dtb files to
-> >> >> avoid name conflicts. This means that dtb files are no longer in a
-> >> >> single directory. Current build scripts and makefiles rely on this.
-> >> >> E.g.:
-> >> >>
-> >> >>  scripts/Makefile.lib:$(obj)/%.dtb.S: $(obj)/%.dtb
-> >> >>
-> >> >> Thus, the introduction of vendor subdirs is not easy to implement and
-> >> >> may break existing workflows. Also, no other arch has vendor subdirs.
-> >> >>
-> >> >> A solution would be to have a naming scheme for dts files which
-> >> >> requires the vendor in the file name, such as cavium-thunder-88xx.dtb.
-> >> >> Though, these long names may look a bit ugly.
-> >> >>
-> >> >> Hmm... Any thoughts?
-> >> >
-> >> > That would make it possible to search, but the number of files in one
-> >> > place might become somewhat overwelming (which I believe was Olof's
-> >> > concern).
-> >> >
-> >> > Olof, thoughts?
-> >>
-> >> Yeah, on 32 bit we've got an ever-growing and very large directory
-> >> today that is becoming a headache. Carving it up in directories to
-> >> reduce plain directory size would come a long way.
-> >>
-> >> I think we would catch name conflicts quickly with the automatic
-> >> builders we have today -- and it's likely that the files will have a
-> >> platform prefix anyway so it shouldn't be a big issue. I think we can
-> >> live with that.
-> >
-> > So you mean, having the source files with subdirectories, but the dtb
-> > files in a single obj dir?
-
-It seems it will be easier to have also subdirs for objs.
-
-> Thinking about it a bit more, the even more obvious solution that I
-> for some reason didn't think of at the time, is to have the
-> dtbs_install target create the appropriate subdirectories on the
-> install side, so that the structure is preserved.
+On Fri, Aug 29, 2014 at 11:40:02AM +0100, Mark Rutland wrote:
+> On Fri, Aug 29, 2014 at 08:34:25AM +0100, Matti Vaittinen wrote:
+> > On Thu, Aug 28, 2014 at 10:40:34AM -0700, ext Guenter Roeck wrote:
+> > > On Thu, Aug 28, 2014 at 01:28:42PM -0400, Jason Cooper wrote:
+> > > > On Thu, Aug 28, 2014 at 09:48:25AM -0700, Guenter Roeck wrote:
+> > > > > On Thu, Aug 28, 2014 at 05:10:25PM +0100, Mark Rutland wrote:
+> > > > > > On Thu, Aug 28, 2014 at 04:51:57PM +0100, Guenter Roeck wrote:
+> > > > > > > On Thu, Aug 28, 2014 at 01:59:15PM +0100, Mark Rutland wrote:
+> > > > > > > > On Thu, Aug 28, 2014 at 01:42:44PM +0100, Matti Vaittinen wrote:
+> > > > > > > > > Patch adding support for specifying trickle charger setup from device
+> > > > > > > > > tree. Patch is based on linux-next tree.
+> > > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > Some DS13XX devices have "trickle chargers". Introduce a device tree binding
+> > > > > > > > > for specifying the setup and register values.
+> > > > > > > > > 
+> > > > > > > > > +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+> > > > > > > > > @@ -0,0 +1,19 @@
+> > > > > > > > > +* Dallas DS1339		I2C Serial Real-Time Clock
+> > > > > > > > > +
+> > > > > > > > > +Required properties:
+> > > > > > > > > +- compatible: Should contain "dallas,ds1339".
+> > > > > > > > > +- reg: I2C address for chip
+> > > > > > > > > +
+> > > > > > > > > +Optional properties:
+> > > > > > > > > +- trickle_setup : Used Trickle Charger configuration,
+> > > > > > > > > +        corresponding to 5 lowest bits in trickle charger register.
+> > > > > > > > 
+> > > > > > > The value is provided via platform data, so it is platform specific
+> > > > > > > and presumably needs to be configurable. I did, however, not find
+> > > > > > > a single in-kernel driver which is actually setting it.
+> > > > > > > So this is a good question.
+> > > > > > 
+> > > > > > I'm uncomfortable adding a field we don't understand to DT.
+> > > > > > 
+> > > > > > Is there any publicly-available documentation for the device?
+> > > > > > 
+> > > > > 
+> > > > > Lots ;-)
+> > > > > 
+> > > > > http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+> > > > > http://datasheets.maximintegrated.com/en/ds/DS1337.pdf
+> > > > > http://datasheets.maximintegrated.com/en/ds/DS1338.pdf
+> > > > > http://datasheets.maximintegrated.com/en/ds/DS1339.pdf
+> > > > > http://datasheets.maximintegrated.com/en/ds/DS1340.pdf
+> > > > > http://datasheets.maximintegrated.com/en/ds/DS1388.pdf
+> > > > > http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
+> > > > > 
+> > > > > Code suggests that DS1339, DS1339, and DS1340 have the register.
+> > > > > 
+> > > > > Looking into the datasheets, the configuration consists of two parts:
+> > > > > - diode connected or not
+> > > > > - trickle charger resistor value (250, 2000, or 4000 ohm)
+> > > > > 
+> > > > > Given that, it seems to me that those values should be configured
+> > > > > explicitly instead of using a binary value, and that the driver
+> > > > > should perform the conversion from dt entry to register value.
+> > > > 
+> > > > iiuc, there is no way for the kernel to determine what is being trickle
+> > > > charged, and thus no way to determine how it should set this register.
+> > > > 
+> > > > It may be a bit of overkill, but I think a DT macro would be the most
+> > > > maintainable solution here:
+> > > > 
+> > > > #define DS1339_TRCKL_DIODE   0x08
+> > > > #define DS1339_TRCKL_NODIODE 0x04
+> > > > #define DS1339_TRCKL_R250    0x01
+> > > > #define DS1339_TRCKL_R2000   0x02
+> > > > #define DS1339_TRCKL_R4000   0x03
+> > > > 
+> > > > trickle_setup = <DS1339_TRCKL_DIODE | DS1339_TRCKL_R250>;
+> > > > 
+> > > > And the driver would take care of oring it with the enable pattern.
+> > > > 
+> > > 
+> > > Yes, that sounds reasonable as well.
+> > > 
+> > I thought of this too. However the ds1307 seems to be designed to work
+> > with bunch of chips. What then when next chip supported by this driver
+> > introduces 75, 1000 and 5000 ohm resistors? Or something else. (Or add
+> > some other configuration). I do not see this approach to be
+> > maintainable in long run.
 > 
-> That comes a bit closer to how modules are handled as well.
+> If a new chip comes out with new features, the driver will need an
+> update anyhow. We have no guarantee that the register placement will be
+> the same, let alone the layout.
 
-Yes, dtbs_install target would be useful.
+Yes, I'm reminded of our conversations a year ago in Edinburgh.  It's
+impossible to engineer a perfect, future-proof binding.  But that
+being said...
 
-Will come with a solution for this too.
+> If and when said new chip comes out we allocate a new compatible string.
+> If it's compatible iwith (i.e. is a superset of) an existing device's
+> programming model, we add that existing string as a fallback in the
+> compatible list so old kernels can drive the subset of features they
+> understand.
+> 
+> > I see strong possibility of polluting dt with endless amount of
+> > defines. Furthermore I believe the benefits of these defines would be
+> > negligible compared to effort maintaining defines and documentation of
+> > them causes. Surely the one who needs to add dt node for this chip in
+> > his board's dt has the manual for the chip he has on board. Especially
+> > so if he knows the trickle charger there and wants to configure it.
+> > The plain resistor type still gives zero information without knowing
+> > the other details.
+> 
+> I would rather that the driver had some idea of what it were doing
+> rather than being a glorified copy routine.
+> 
+> I would suggest we have two properties that describe the resistor's
+> rating and whether or not there is a diode:
+> 
+> trickle-resistor-ohms = <250>
+> diode-connected;
 
--Robert
+I much prefer this solution over my own suggestion.  With one small
+change, s/diode-connected/trickle-diode-enable/  Does that sound ok?
+
+> That's easy for a human to write and/or validate, we can easily extend
+> it in future, requires no proliferation of macros, and describes the
+> hardware rather than telling software what to do.
+> 
+> The driver becomes a little more complicated, but gains sanity checking,
+> which is a good thing.
+> 
+> I'm still worried that we have no idea what the device is intended to
+> charge. Surely that's important?
+
+In the docs it said a variety of batteries and supercaps.  Yeah, not
+much help...
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
