@@ -1,41 +1,40 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] Adding Skyworks SKY81452 regulator driver
-Date: Fri, 29 Aug 2014 11:21:55 +0900
-Message-ID: <20140829022155.GA28641@jack-ThinkPad-T520>
-References: <1409222307-23225-1-git-send-email-jack.yoo@skyworksinc.com>
- <1409222797-23343-1-git-send-email-jack.yoo@skyworksinc.com>
- <20140828110254.GN17528@sirena.org.uk>
+From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] ARM: dts: vf610-twr: remove useless property for sound card.
+Date: Fri, 29 Aug 2014 10:22:21 +0800
+Message-ID: <1409278941-16975-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140828110254.GN17528-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 12:02:54PM +0100, Mark Brown wrote:
-> On Thu, Aug 28, 2014 at 07:46:37PM +0900, Gyungoh Yoo wrote:
-> > v2:
-> > Added 'compatible' attribute in the driver
-> > Added message for exception or errors.
-> 
-> This driver has already been applied, please send any changes as
-> incremental patches against current code.  I would *not* expect to see
-> a compatible being defined for a MFD function device though unless it's
-> genuinely reusable.
+This was added by:
+Commit 8128c4f36 ("ARM: dts: vf610-twr: Add simple-card support.")
 
-I am really sorry about confusing. I will resumit this regulator driver as the incremental patches.
+This useless property may cause some confusions for users.
 
-BTW,
-as Lee Jones-MFD supporter mentioned,
-MFD core provides infrastructure for child drivers using compatible.
-https://lkml.org/lkml/2014/8/27/132
+Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/vf610-twr.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-I want your opinion.
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index 58e988e..82d16ac 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -76,7 +76,6 @@
+ 
+ 		simple-audio-card,cpu {
+ 			sound-dai = <&sai2>;
+-			master-clkdir-out;
+ 			frame-master;
+ 			bitclock-master;
+ 		};
+-- 
+1.8.5
 
-Thank you.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
