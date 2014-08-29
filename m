@@ -1,101 +1,49 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] ARM: tegra: Initialize interrupt controller from
- DT
-Date: Fri, 29 Aug 2014 09:31:40 +0200
-Message-ID: <20140829073139.GG13106@ulmo>
-References: <1409239879-12376-1-git-send-email-thierry.reding@gmail.com>
- <1409239879-12376-3-git-send-email-thierry.reding@gmail.com>
- <3056623.fB9uqpleQ5@wuerfel>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 2/3] GPIO: gpio-dwapb: Support Debounce
+Date: Fri, 29 Aug 2014 07:38:04 +0000
+Message-ID: <1409297883.30155.29.camel@intel.com>
+References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
+	 <1409161588-19417-3-git-send-email-alvin.chen@intel.com>
+	 <alpine.DEB.2.02.1408281007290.26299@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4eRLI4hEmsdu6Npr"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3056623.fB9uqpleQ5@wuerfel>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1408281007290.26299@atx-linux-37>
+Content-Language: en-US
+Content-ID: <DB08BCA516C8BA43817BDBC6326C36AB@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "atull@opensource.altera.com" <atull@opensource.altera.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Chen, Alvin" <alvin.chen@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+T24gVGh1LCAyMDE0LTA4LTI4IGF0IDEwOjExIC0wNTAwLCBhdHVsbCB3cm90ZToNCj4gT24gV2Vk
+LCAyNyBBdWcgMjAxNCwgV2Vpa2UgQ2hlbiB3cm90ZToNCg0KW10NCg0KPiA+ICtzdGF0aWMgaW5s
+aW5lIHUzMiBkd2FwYl9yZWFkKHN0cnVjdCBkd2FwYl9ncGlvICpncGlvLCB1bnNpZ25lZCBpbnQg
+b2Zmc2V0KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgYmdwaW9fY2hpcCAqYmdjCT0gJmdwaW8tPnBv
+cnRzWzBdLmJnYzsNCj4gPiArCXZvaWQgX19pb21lbSAqcmVnX2Jhc2UJPSBncGlvLT5yZWdzOw0K
+PiA+ICsNCj4gPiArCXJldHVybiBiZ2MtPnJlYWRfcmVnKHJlZ19iYXNlICsgb2Zmc2V0KTsNCj4g
+PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGlubGluZSB2b2lkIGR3YXBiX3dyaXRlKHN0cnVjdCBk
+d2FwYl9ncGlvICpncGlvLCB1bnNpZ25lZCBpbnQgb2Zmc2V0LA0KPiA+ICsJCQkgICAgICAgdTMy
+IHZhbCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGJncGlvX2NoaXAgKmJnYwk9ICZncGlvLT5wb3J0
+c1swXS5iZ2M7DQo+ID4gKwl2b2lkIF9faW9tZW0gKnJlZ19iYXNlCT0gZ3Bpby0+cmVnczsNCj4g
+PiArDQo+ID4gKwliZ2MtPndyaXRlX3JlZyhyZWdfYmFzZSArIG9mZnNldCwgdmFsKTsNCj4gPiAr
+fQ0KPiA+ICsNCj4gDQo+IEhlbGxvLA0KPiANCj4gSSBkb24ndCB1bmRlcnN0YW5kIHRoZSByZWFz
+b24gZm9yIGFkZGluZyBkd2FwYl9yZWFkIGFuZCBkd2FwYl93cml0ZSBoZXJlLiAgDQo+IFRoZSBy
+ZXN0IG9mIHRoZSBkcml2ZXIgaXMgdXNpbmcgcmVhZGwgYW5kIHdyaXRlbC4gIEknZCByYXRoZXIg
+bm90IHNlZSB0d28gDQo+IGRpZmZlcmVudCBtZXRob2RzIGJlaW5nIHVzZWQgaW4gdGhlIHNhbWUg
+ZHJpdmVyIGZvciByZWdpc3RlciBhY2Nlc3MuICANCj4gTWF5YmUgSSdtIG1pc3Npbmcgc29tZXRo
+aW5nLCBidXQgaWYgd2UgbmVlZCB0byBhZGQgZHdhcGJfcmVhZC93cml0ZSwgdGhlbg0KPiBpdCBz
+aG91bGQgYmUgdXNlZCBmb3IgYWxsIHJlZ2lzdGVyIGFjY2Vzcy4NCg0KQWxhbiwgaXQgd2FzIG15
+IHByb3Bvc2FsLiBJIHJhdGhlciBhZ3JlZSB0aGF0IGlzIGJldHRlciB0byBjb252ZXJ0IGFsbA0K
+YWNjZXNzZXMgdG8gdGhhdC4NCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hl
+bmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpJbnRlbCBGaW5s
+YW5kIE95ClJlZ2lzdGVyZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxzaW5raSAKQnVzaW5l
+c3MgSWRlbnRpdHkgQ29kZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBIZWxzaW5raSAKClRo
+aXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG1h
+dGVyaWFsIGZvcgp0aGUgc29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lwaWVudChzKS4gQW55
+IHJldmlldyBvciBkaXN0cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5IHByb2hpYml0ZWQu
+IElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFzZSBjb250YWN0IHRo
+ZSBzZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29waWVzLgo=
 
---4eRLI4hEmsdu6Npr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 28, 2014 at 06:10:55PM +0200, Arnd Bergmann wrote:
-> On Thursday 28 August 2014 17:31:17 Thierry Reding wrote:
->=20
-> >  void __init tegra_init_irq(void)
-> >  {
-> > -	int i;
-> > -	void __iomem *distbase;
-> > +	unsigned int max_ictlrs =3D ARRAY_SIZE(ictlr_regs), i;
-> > +	const struct of_device_id *match;
-> > +	struct device_node *np;
-> > +	struct resource res;
-> > +
-> > +	np =3D of_find_matching_node_and_match(NULL, ictlr_matches, &match);
-> > +	if (np) {
-> > +		const struct tegra_ictlr_soc *soc =3D match->data;
-> > +
-> > +		for (i =3D 0; i < soc->num_ictlrs; i++) {
-> > +			if (of_address_to_resource(np, i, &res) < 0)
-> > +				break;
-> > +
-> > +			ictlr_regs[i] =3D res;
-> > +		}
-> > +
-> > +		WARN(i !=3D soc->num_ictlrs,
-> > +		     "Found %u interrupt controllers in DT; expected %u.\n",
-> > +		     i, soc->num_ictlrs);
-> > +
-> > +		max_ictlrs =3D soc->num_ictlrs;
-> > +		of_node_put(np);
-> > +	} else {
-> > +		/*
-> > +		 * If no matching device node was found, fall back to using
-> > +		 * the chip ID.
-> > +		 */
-> > +
-> > +		/* Tegra30 and later have five interrupt controllers, ... */
-> > +		max_ictlrs =3D ARRAY_SIZE(ictlr_regs);
-> > +
-> > +		/* ..., but Tegra20 only has four. */
-> > +		if (of_machine_is_compatible("nvidia,tegra20"))
-> > +			max_ictlrs--;
-> > +	}
->=20
-> How about moving the entire file to drivers/irqchip and using the
-> IRQCHIP_DECLARE() helper for the DT case?
->=20
-> For the fallback, you can have an entry into that file that just takes
-> the address and number, which you can call from platform code here.
-
-I think I did try that at some point, but there were issues that I don't
-remember. I'll give it another shot.
-
-Thierry
-
---4eRLI4hEmsdu6Npr
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUACxbAAoJEN0jrNd/PrOh2MUP/RLmUAv4CHJoW2V7HzcmUhi3
-rutQh7bxdJtK8Z+dfjV5PF4ajsZFf6PG7+Ey8MGUC4WZBoVpR3HAxGRYL0DwT+pE
-nIsVgVnfYSYc7uePRFH6N4byP6SMxyIObZI74BcYScGJtAsYdARlk1yAJChQInt8
-tstRU7VsLN1WW9yJFjpN6q99ZO/8aT3mPF7+q8y5MMrNFl21tO8tBwR3UcXV7xKR
-XN3xSI+Lm8+pk7qpgKYn9VnnOcjEvePxea6c5Fzd/jM/3i0PefJachWe0BeWG5uu
-5D45I9LYyK1atxbp+PzT6g9lNGlQ8GBD2S1cwXXrVb+4SN7ClGeQO5tDlRguM1GL
-qoH89+1aa6Pbh24Wd3WpaBhasD0qD+oveqxUEG8R/5SzkHEH5YZX052272GtsjWF
-Z1SLXwef+wte1HsKJdE8BjAALVY3tL1JwIo97akV55XPZW8oyhIjRMJauh3x7bjC
-0N7KESbCb7ZduLSWXR5nBBeMXrrWLSdUWoOLfqgGfKADkXu2DIGA+ufZweD9+Dr/
-7DQISmkavQlloGcez+T6MA2NOBQ1B4ekoEscpiPPQkPDxFOBEyVbcTnHhqyKqg1c
-c/G3sEuosaJZR6S5FS6SGUWvMqHPFClex8mMi4am002m+0c7UtVUwjtjnqSxTyqX
-KyTBmHjStyS8DIiHJ5Mw
-=WcaH
------END PGP SIGNATURE-----
-
---4eRLI4hEmsdu6Npr--
