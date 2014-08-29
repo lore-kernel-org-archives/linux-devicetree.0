@@ -1,40 +1,65 @@
-From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/3] staging: iio: light: isl29018: add support for other chips
-Date: Fri, 29 Aug 2014 17:26:19 +0300
-Message-ID: <1409322382-30021-1-git-send-email-laurentiu.palcu@intel.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Teodora Baluta <teodora.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurentiu Palcu <laurentiu.palcu@intel.com>
+Subject: [PATCH 1/3] staging: iio: light: isl29018: fix typo
+Date: Fri, 29 Aug 2014 17:26:20 +0300
+Message-ID: <1409322382-30021-2-git-send-email-laurentiu.palcu@intel.com>
+References: <1409322382-30021-1-git-send-email-laurentiu.palcu@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1409322382-30021-1-git-send-email-laurentiu.palcu@intel.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Jonathan Cameron <jic23@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Laurentiu Palcu <laurentiu.palcu@intel.com>, Jingoo Han <jg1.han@samsung.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org, Sachin Kamat <sachin.kamat@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Derek Basehore <dbasehore@chromium.org>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Teodora Baluta <teodora.baluta@intel.com>, Peter Meerwald <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+isl29108 was used, instead of isl29018.
 
-This patchset adds support for 2 similar ALS chips: ISL29023 and ISL29035.
+Signed-off-by: Laurentiu Palcu <laurentiu.palcu@intel.com>
+---
+ drivers/staging/iio/light/isl29018.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-The chip I performed tests on was a ISL29035, since I didn't have eval boards, for the
-other 2 chips, handy.
-
-The registers tables for each chip can be found here:
-
-ISL29018: [1] - page 10
-ISL29023: [2] - page 8
-ISL29035: [3] - page 10
-
-[1] http://www.intersil.com/content/dam/Intersil/documents/isl2/isl29018.pdf
-[2] http://www.intersil.com/content/dam/Intersil/documents/isl2/isl29023.pdf
-[3] http://www.intersil.com/content/dam/Intersil/documents/isl2/isl29035.pdf
-
-thanks,
-laurentiu
-
-Laurentiu Palcu (3):
-  staging: iio: light: isl29018: fix typo
-  staging: iio: light: isl29018: add support for isl29023 and isl29035
-  staging: iio: light: isl29018: add ACPI support
-
- drivers/staging/iio/light/isl29018.c | 205 ++++++++++++++++++++++++++++++-----
- 1 file changed, 179 insertions(+), 26 deletions(-)
-
+diff --git a/drivers/staging/iio/light/isl29018.c b/drivers/staging/iio/light/isl29018.c
+index 86cc8f9..63c70be 100644
+--- a/drivers/staging/iio/light/isl29018.c
++++ b/drivers/staging/iio/light/isl29018.c
+@@ -447,7 +447,7 @@ static struct attribute *isl29018_attributes[] = {
+ 	NULL
+ };
+ 
+-static const struct attribute_group isl29108_group = {
++static const struct attribute_group isl29018_group = {
+ 	.attrs = isl29018_attributes,
+ };
+ 
+@@ -510,8 +510,8 @@ static int isl29018_chip_init(struct isl29018_chip *chip)
+ 	return 0;
+ }
+ 
+-static const struct iio_info isl29108_info = {
+-	.attrs = &isl29108_group,
++static const struct iio_info isl29018_info = {
++	.attrs = &isl29018_group,
+ 	.driver_module = THIS_MODULE,
+ 	.read_raw = &isl29018_read_raw,
+ 	.write_raw = &isl29018_write_raw,
+@@ -579,7 +579,7 @@ static int isl29018_probe(struct i2c_client *client,
+ 	if (err)
+ 		return err;
+ 
+-	indio_dev->info = &isl29108_info;
++	indio_dev->info = &isl29018_info;
+ 	indio_dev->channels = isl29018_channels;
+ 	indio_dev->num_channels = ARRAY_SIZE(isl29018_channels);
+ 	indio_dev->name = id->name;
 -- 
 1.9.1
