@@ -1,55 +1,63 @@
 From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH 08/12] MIPS: GIC: Implement generic irq_ack/irq_eoi callbacks
-Date: Fri, 29 Aug 2014 15:14:35 -0700
-Message-ID: <1409350479-19108-9-git-send-email-abrestic@chromium.org>
+Subject: [PATCH 11/12] MIPS: GIC: Use local interrupts for timer
+Date: Fri, 29 Aug 2014 15:14:38 -0700
+Message-ID: <1409350479-19108-12-git-send-email-abrestic@chromium.org>
 References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 Cc: Andrew Bresticker <abrestic@chromium.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Implement a default gic_irq_ack() and gic_finish_irq().  These are
-suitable for handling IPIs on Malta and the upcoming Danube board.
+Instead of using GIC interrupt 0 for the timer (which was not even
+handled correctly by the GIC irqchip code and could conflict with an
+actual external interrupt), use the designated local interrupt for
+the GIC timer.
+
+Also, since the timer is a per-CPU interrupt, initialize it with
+setup_percpu_irq() and enable it with enable_percpu_irq() instead
+of using direct register writes.
 
 Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 ---
- arch/mips/kernel/irq-gic.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/mips/kernel/cevt-gic.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/arch/mips/kernel/irq-gic.c b/arch/mips/kernel/irq-gic.c
-index 01fcc28..1764b01 100644
---- a/arch/mips/kernel/irq-gic.c
-+++ b/arch/mips/kernel/irq-gic.c
-@@ -242,6 +242,20 @@ static void gic_unmask_irq(struct irq_data *d)
- 	GIC_SET_INTR_MASK(d->irq - gic_irq_base);
- }
+diff --git a/arch/mips/kernel/cevt-gic.c b/arch/mips/kernel/cevt-gic.c
+index 6093716..cae72a4 100644
+--- a/arch/mips/kernel/cevt-gic.c
++++ b/arch/mips/kernel/cevt-gic.c
+@@ -68,7 +68,7 @@ int gic_clockevent_init(void)
+ 	if (!cpu_has_counter || !gic_frequency)
+ 		return -ENXIO;
  
-+void __weak gic_irq_ack(struct irq_data *d)
-+{
-+	GIC_CLR_INTR_MASK(d->irq - gic_irq_base);
-+
-+	/* Clear edge detector */
-+	if (gic_irq_flags[d->irq - gic_irq_base] & GIC_TRIG_EDGE)
-+		GICWRITE(GIC_REG(SHARED, GIC_SH_WEDGE), d->irq - gic_irq_base);
-+}
-+
-+void __weak gic_finish_irq(struct irq_data *d)
-+{
-+	GIC_SET_INTR_MASK(d->irq - gic_irq_base);
-+}
-+
- static int gic_set_type(struct irq_data *d, unsigned int type)
- {
- 	unsigned int irq = d->irq - gic_irq_base;
+-	irq = MIPS_GIC_IRQ_BASE;
++	irq = MIPS_GIC_LOCAL_IRQ_BASE + GIC_LOCAL_INTR_COMPARE;
+ 
+ 	cd = &per_cpu(gic_clockevent_device, cpu);
+ 
+@@ -91,15 +91,13 @@ int gic_clockevent_init(void)
+ 
+ 	clockevents_register_device(cd);
+ 
+-	GICWRITE(GIC_REG(VPE_LOCAL, GIC_VPE_COMPARE_MAP), 0x80000002);
+-	GICWRITE(GIC_REG(VPE_LOCAL, GIC_VPE_SMASK), GIC_VPE_SMASK_CMP_MSK);
++	if (!gic_timer_irq_installed) {
++		setup_percpu_irq(irq, &gic_compare_irqaction);
++		irq_set_handler(irq, handle_percpu_irq);
++		gic_timer_irq_installed = 1;
++	}
+ 
+-	if (gic_timer_irq_installed)
+-		return 0;
++	enable_percpu_irq(irq, 0);
+ 
+-	gic_timer_irq_installed = 1;
+-
+-	setup_irq(irq, &gic_compare_irqaction);
+-	irq_set_handler(irq, handle_percpu_irq);
+ 	return 0;
+ }
 -- 
 2.1.0.rc2.206.gedb03e5
