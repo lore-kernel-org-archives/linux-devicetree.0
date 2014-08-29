@@ -1,64 +1,77 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2] mmc: tmio-mmc: Add support for SDHI on new R-Car Gen2 SoCs
-Date: Fri, 29 Aug 2014 14:07:21 +0200
-Message-ID: <CAPDyKFpPq+BUn4xh-9b39FB2R7ZtZ_4Fq_5uZ-JnNWD=jRL2nA@mail.gmail.com>
-References: <1409213239-5413-1-git-send-email-geert+renesas@glider.be>
+From: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
+Date: Fri, 29 Aug 2014 20:08:44 +0800
+Message-ID: <54006D4C.2070404@rock-chips.com>
+References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com>	<2852853.mfRZfFVSev@wuerfel>	<20140828143733.GA18084@developer>	<3440260.edal29kzlR@diego>	<2014082909531345696848@rock-chips.com> <CAC-25o-winy6jVjh9_hQ-t2VO2UfxG67pW5DpOve8A2o39EJSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1409213239-5413-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAC-25o-winy6jVjh9_hQ-t2VO2UfxG67pW5DpOve8A2o39EJSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?6LW15Luq5bOw?= <zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?B?SGVpa29TdMO8Ym5lcg==?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "rui.zhang" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "grant.likely" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?6JSh5p6r?= <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dianders <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dtor <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?B?6ZKf5YuH5rGq?= <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "dmitry.torokhov" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28 August 2014 10:07, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
->   - r8a7792 (R-Car V2H)
->   - r8a7793 (R-Car M2-N)
->   - r8a7794 (R-Car E2)
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Dear Eduardo Bezerra Valentin:
 
-Thanks! Applied for next.
+=E5=9C=A8 2014=E5=B9=B408=E6=9C=8829=E6=97=A5 19:39, edubezval-Re5JQEeQqe8@public.gmane.org=
+m =E5=86=99=E9=81=93:
+> Hello Zhao,
+>
+> On Thu, Aug 28, 2014 at 9:54 PM, =E8=B5=B5=E4=BB=AA=E5=B3=B0 <zyf@roc=
+k-chips.com> wrote:
+>> Hi Heiko=EF=BC=8C
+>>
+>>    The TS-ADC on RK3288 has two component, a tsadc and a tsadc contr=
+oller.
+>> The tsadc controller is similar like the thermal manager unit on oth=
+er SOCs.
+>> We followed the naming of 3066, but not named as the Thermal Manager=
+=2E
+>>
+>>    Moreover,there is only one set of apb registers to access the tsa=
+dc
+>> controller,and the tsadc is controlled by the tsadc controller,could=
+ not
+>> access directly. If we write a general tsadc driver by accessed tsad=
+c
+>> controller registers, and it hardly to write a driver for the tsadc
+>> controller.
+> As suggested by Arnd, you can use the generic driver as interface
+> between thermal framework and IIO layer. The driver you are going to
+> write to your ADC is going to be in the IIO subsystem. The only
+> difference is that the generic driver would work for any ADC driver i=
+n
+> the IIO subsystem.
+> https://lkml.org/lkml/2014/2/5/810
+>
+> In fact, there is already a generic driver. We just need to get it up
+> to date.  I see some testing has been already done, and results sound
+> promising.
+This iio_thermal driver only support get temperature from the ADC IIO
+channel.
+It dose not support any advanced feature such as configure the
+temperature when system should be reset.
+So if we adapt it, we will access the register form both TSADC IIO
+driver and  thermal driver.
+I don't thank this is a good ideal.
 
-Kind regards
-Uffe
+In fact, we should ignore the "ADC" stuff. This sensor use ADC internal=
+,
+but it is transparent to software, especially in automatic mode.
+>
+>>    So, I do not agree to write a generic adc driver for the rk3288-t=
+sadc.
+>>
+>> ________________________________
+>> Yifeng Zhao
+>>
+>>
 
-> ---
-> v2: Drop RFC
-> ---
->  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 3 +++
->  drivers/mmc/host/sh_mobile_sdhi.c                  | 3 +++
->  2 files changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> index fa0f327cde01..400b640fabc7 100644
-> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> @@ -19,6 +19,9 @@ Required properties:
->                 "renesas,sdhi-r8a7779" - SDHI IP on R8A7779 SoC
->                 "renesas,sdhi-r8a7790" - SDHI IP on R8A7790 SoC
->                 "renesas,sdhi-r8a7791" - SDHI IP on R8A7791 SoC
-> +               "renesas,sdhi-r8a7792" - SDHI IP on R8A7792 SoC
-> +               "renesas,sdhi-r8a7793" - SDHI IP on R8A7793 SoC
-> +               "renesas,sdhi-r8a7794" - SDHI IP on R8A7794 SoC
->
->  Optional properties:
->  - toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
-> diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
-> index d5d493719491..f2585b6c1414 100644
-> --- a/drivers/mmc/host/sh_mobile_sdhi.c
-> +++ b/drivers/mmc/host/sh_mobile_sdhi.c
-> @@ -72,6 +72,9 @@ static const struct of_device_id sh_mobile_sdhi_of_match[] = {
->         { .compatible = "renesas,sdhi-r8a7779", .data = &of_rcar_gen1_compatible, },
->         { .compatible = "renesas,sdhi-r8a7790", .data = &of_rcar_gen2_compatible, },
->         { .compatible = "renesas,sdhi-r8a7791", .data = &of_rcar_gen2_compatible, },
-> +       { .compatible = "renesas,sdhi-r8a7792", .data = &of_rcar_gen2_compatible, },
-> +       { .compatible = "renesas,sdhi-r8a7793", .data = &of_rcar_gen2_compatible, },
-> +       { .compatible = "renesas,sdhi-r8a7794", .data = &of_rcar_gen2_compatible, },
->         {},
->  };
->  MODULE_DEVICE_TABLE(of, sh_mobile_sdhi_of_match);
-> --
-> 1.9.1
->
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
