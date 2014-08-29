@@ -1,51 +1,92 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 0/2] r8a777[89] dtsi sorting
-Date: Fri, 29 Aug 2014 22:03:27 +0200
-Message-ID: <CAMuHMdXZ_drLTdm_912EOL+g+rYqwOmH361NzQgz9+ruDmUEnA@mail.gmail.com>
-References: <1409336201-708-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCH 9/9] arm64: Add new cpu-return-addr device tree binding
+Date: Fri, 29 Aug 2014 14:45:04 -0700
+Message-ID: <1409348704.21254.95.camel@smoke>
+References: <cover.1408736066.git.geoff@infradead.org>
+	 <4192d403bb9703063c59a052293faa19d38d2f02.1408736066.git.geoff@infradead.org>
+	 <20140827083022.GE6968@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409336201-708-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140827083022.GE6968-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Arun Chandran <achandran-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uli,
+Hi Catalin,
 
-On Fri, Aug 29, 2014 at 8:16 PM, Ulrich Hecht
-<ulrich.hecht+renesas@gmail.com> wrote:
-> These are the dtsi files for r8a7778 and r8a7779 sorted according to what I
-> imagine to be accepted standards now: sort by address, "compatible" goes
-> first, #include directives before anything else.  The sorting was done using
-> a little script I wrote (https://github.com/uli/dtssort).
+On Wed, 2014-08-27 at 09:30 +0100, Catalin Marinas wrote:
+> On Fri, Aug 22, 2014 at 08:49:17PM +0100, Geoff Levand wrote:
+> > Add a new arm64 device tree binding cpu-return-addr.  This binding is recomended
+> > for all ARM v8 CPUs that have an "enable-method" property value of "spin-table".
+> > The value is a 64 bit physical address that secondary CPU execution will transfer
+> > to upon CPU shutdown.
+> > 
+> > Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/cpus.txt | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> > index 1fe72a0..42d5d5f 100644
+> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> > @@ -201,6 +201,15 @@ nodes to be present and contain the properties described below.
+> >  			  property identifying a 64-bit zero-initialised
+> >  			  memory location.
+> >  
+> > +	- cpu-return-addr
+> > +		Usage: recomended for all ARM v8 CPUs that have an
+> > +		       "enable-method" property value of "spin-table".
+> > +		Value type: <prop-encoded-array>
+> > +		Definition:
+> > +			# On ARM v8 64-bit systems must be a two cell property.
+> > +			The value is a 64 bit physical address that secondary
+> > +			CPU execution will transfer to upon CPU shutdown.
+> 
+> As I've been away for most of the past four weeks, I haven't read all
+> the threads around this topic. But I don't think we ended up with a
+> clearly agreed recommendation for cpu-return-addr. If we do, we also
+> need to be clear on what state the CPU should be in when returned to
+> such address (ELx, MMU, caches).
 
-Nice! (but soon thereafter I got sidetracked by decomp ;-)
+Regarding the system state, I think what Mark proposed [1] is what we
+should work towards.  I'll add that to the binding's Definition text.
 
-> I chose these two files because the required changes are relatively small.
-> Doing this for r8a779x yields a gargantuan and entirely unreadable patch due
-> to the random shifting about of large blocks of code.  If anybody knows a
-> tool that makes such things somewhat manageable to review, please speak up.
+I have not tried to implement it yet though, but once I get it working
+and tested we'll be able to say that this is what works and should be
+the interface.
 
-You more or less gave a solution at the top of your email: split it in multiple
-patches: one to sort the includes, one to sort the properties inside the nodes,
-and one single patch for each node you move.
-Yes, too many patches, but good for the patch statistics ;-)
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/278910.html
 
-Another approach could be to start considering SoCs as built from multiple
-hardware blocks, not only at the hardware/software level, but also at the DTS
-level. I.e. use macros to instantiate nodes. This makes it easier to avoid
-stupid typos in e.g. the 5th i2c node. In addition, many SoCs are similar, and
-only differ in a few nodes.
+> In general, if we need returning to firmware I would strongly recommend
+> PSCI but I know there is the Applied board which does not have EL3, so
+> something like this may work. But we need to get them into discussion as
+> well since I assume cpu-return-addr would be a firmware provided
+> address.
 
-Gr{oetje,eeting}s,
+Yes, cpu-return-addr will be (optionally) provided by the firmware.
 
-                        Geert
+The current kexec_prepare system call implementation I have checks
+the return of cpu_ops.cpu_disable() for all CPUs.  I have setup the
+spin-table cpu_disable() to check if the device tree defines a
+cpu-return-addr for that CPU.  So if there is no cpu-return-addr
+kexec_prepare will fail and the user will get an error on a kernel
+load from kexec-tools.
+
+Feng Kan of APM has already said that address O will work correctly
+for the APM board [2], and Arun Chandran has tested this.
+
+[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/273084.html
+
+-Geoff
+
+
+
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
