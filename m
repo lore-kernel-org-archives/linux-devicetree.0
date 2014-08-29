@@ -1,53 +1,33 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 0/2] IO voltage domain support for rk3188 and rk3288
-Date: Thu, 28 Aug 2014 12:19:19 -0700
-Message-ID: <1409253562-8907-1-git-send-email-dianders@chromium.org>
+From: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add APM X-Gene SoC RNG device driver
+Date: Fri, 29 Aug 2014 21:49:05 +0800
+Message-ID: <20140829134905.GE9971@gondor.apana.org.au>
+References: <1408750000-28453-1-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408750000-28453-1-git-send-email-fkan-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, sandeep_n-l0cyMroinI0@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+To: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Cc: patches-qTEPVZfXA3Y@public.gmane.org, mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-These two patches add support for automatically configuring the IO
-voltage domains on rk3188 and rk3288 SoCs.  The first patch adds some
-new notification types to the regulator code.  It's used by the second
-patch which actually implements the IO voltage domain driver.
+On Fri, Aug 22, 2014 at 04:26:37PM -0700, Feng Kan wrote:
+> Add APM X-Gene SoC RNG device driver.
+> 
+> Feng Kan (3):
+>   hwrng: xgene: add support for APM X-Gene SoC RNG support
+>   Documentation: rng: Add X-Gene SoC RNG driver documentation
+>   arm64: dts: add random number generator dts node to APM X-Gene
+>     platform.
 
-These two patches were co-developed by Heiko St=C3=BCbner and Doug Ande=
-rson
-(proof of concept patches were written by Heiko).  They were tested in
-a private branch on an rk3288 board using rk808 instead of mainline
-since rk808 support isn't finalized in mainline yet.
-
-
-Heiko St=C3=BCbner (2):
-  regulator: core: Add REGULATOR_EVENT_PRE_VOLTAGE_CHANGE (and ABORT)
-  soc/rockchip: io-domain: add driver handling io domains
-
- .../devicetree/bindings/arm/rockchip/io-domain.txt |  60 ++++
- drivers/regulator/core.c                           |  63 +++-
- drivers/soc/Kconfig                                |   1 +
- drivers/soc/Makefile                               |   1 +
- drivers/soc/rockchip/Kconfig                       |  10 +
- drivers/soc/rockchip/Makefile                      |   1 +
- drivers/soc/rockchip/io-domain.c                   | 333 +++++++++++++=
-++++++++
- include/linux/regulator/consumer.h                 |  20 ++
- 8 files changed, 482 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip/io-d=
-omain.txt
- create mode 100644 drivers/soc/rockchip/Kconfig
- create mode 100644 drivers/soc/rockchip/Makefile
- create mode 100644 drivers/soc/rockchip/io-domain.c
-
---=20
-2.1.0.rc2.206.gedb03e5
-
+All applied.
+-- 
+Email: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
