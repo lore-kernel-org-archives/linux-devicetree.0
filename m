@@ -1,68 +1,110 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
-Date: Fri, 29 Aug 2014 17:46:18 +0200
-Message-ID: <5400A04A.9000208@suse.de>
-References: <1408550219-19825-1-git-send-email-soren.brinkmann@xilinx.com> <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com> <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl> <53F5D8D9.7040604@suse.de> <f166a186-301c-4288-97cf-71f8173c07e7@BN1AFFO11FD010.protection.gbl> <CAGVrzcYWN83tznwvw1M9V_mwWgobs2kwtRvEj4stqE=XGC10fg@mail.gmail.com> <20140825174610.GA13737@obsidianresearch.com> <53FB9AC4.8010704@gmail.com> <660fe929-1f16-4e22-8bd3-0388cd363978@BY2FFO11FD038.protection.gbl> <540099AF.4020005@suse.de> <e52ebd6c-2f0d-4ea9-a01f-882212956ace@BL2FFO11FD029.protection.gbl>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] adv7604: Use DT parsing in dummy creation
+Date: Fri, 29 Aug 2014 17:49:26 +0200
+Message-ID: <5400A106.6060004@metafoo.de>
+References: <1409325303-15906-1-git-send-email-jean-michel.hautbois@vodalys.com> <1409325303-15906-2-git-send-email-jean-michel.hautbois@vodalys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e52ebd6c-2f0d-4ea9-a01f-882212956ace-xjCwUguQ55/ZIcVUQlG5kGYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+In-Reply-To: <1409325303-15906-2-git-send-email-jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 29.08.2014 17:35, schrieb S=C3=B6ren Brinkmann:
-> On Fri, 2014-08-29 at 05:18PM +0200, Andreas F=C3=A4rber wrote:
->> Am 29.08.2014 16:08, schrieb Michal Simek:
->>> I think resolution is:
->>> 1. Do not use marvell,88e1518 because it is not listed anywhere
->>> 2. Do not add ethernet-phy-idAAAA.BBBB because it breaks autodetect=
-ion
->>> if there is different phy on the board and we shouldn't restrict us=
- in this.
->>> In spite of autodetection takes some time.
->>> 3. "ethernet-phy-ieee802.3-c22" is optional that's why doesn't need=
- to be added
->>> 4. Any listed compatible string has to be parsed which takes time
->>>
->>> That's why I think make sense not to use any compatible string.
->>> This should give us all flexibility which we want to have.
->>
->> Sorry, but we do need some node that we can reference via phy-handle
->> from the gem node, don't we?
->>
->> In that case, is not specifying any compatible string a valid option=
-?
->>
->> If you don't want to specify the IDs, then I would've assumed we nee=
-d to
->> specify the -c22 in order to have *some* compatible string in order =
-to
->> trigger loading of the appropriate driver module.
->=20
-> The compatible string is listed as optional property for PHYs. So, no=
-t
-> having one is an option, I guess. But, I'd also prefer to at least ke=
-ep
-> the -c22 one, since I saw problems when I tried using -c45 (the Zed p=
-hy
-> should support it...).
-> Also, so far, we haven't had any phy nodes in our Zynq dts files and
-> Ethernet worked, so the auto-detection there works pretty well
-> apparently. But it may be problematic if more than a single PHY is on
-> the MDIO bus, I'd assume.
+On 08/29/2014 05:15 PM, Jean-Michel Hautbois wrote:
+> This patch uses DT in order to parse addresses for dummy devices of a=
+dv7604.
+> The ADV7604 has thirteen 256-byte maps that can be accessed via the m=
+ain
+> I=C2=B2C ports. Each map has it own I=C2=B2C address and acts
+> as a standard slave device on the I=C2=B2C bus.
+>
+> If nothing is defined, it uses default addresses.
+> The main prupose is using two adv76xx on the same i2c bus.
 
-Hm, it didn't work for me initially, but maybe some config option was
-missing in multi_v7 or something else. I'll re-test next week.
+Ideally this patch is split up in two patches. One patch adding support=
+ for=20
+i2c_new_secondary_device() and one patch adding support for DT for the =
+adv7604.
 
-Andreas
+[...]
+> +static const char const *adv7604_secondary_names[] =3D {
+> +	"main", /* ADV7604_PAGE_IO */
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+How about [ADV7604_PAGE_IO] =3D "main", instead of having the comment, =
+this=20
+makes things more explicit.
+
+> +	"avlink", /* ADV7604_PAGE_AVLINK */
+> +	"cec", /* ADV7604_PAGE_CEC */
+> +	"infoframe", /* ADV7604_PAGE_INFOFRAME */
+> +	"esdp", /* ADV7604_PAGE_ESDP */
+> +	"dpp", /* ADV7604_PAGE_DPP */
+> +	"afe", /* ADV7604_PAGE_AFE */
+> +	"rep", /* ADV7604_PAGE_REP */
+> +	"edid", /* ADV7604_PAGE_EDID */
+> +	"hdmi", /* ADV7604_PAGE_HDMI */
+> +	"test", /* ADV7604_PAGE_TEST */
+> +	"cp", /* ADV7604_PAGE_CP */
+> +	"vdp" /* ADV7604_PAGE_VDP */
+> +};
+> +
+>   /* ----------------------------------------------------------------=
+------- */
+>
+>   static inline struct adv7604_state *to_state(struct v4l2_subdev *sd=
+)
+> @@ -2528,13 +2544,31 @@ static void adv7604_unregister_clients(struct=
+ adv7604_state *state)
+>   }
+>
+>   static struct i2c_client *adv7604_dummy_client(struct v4l2_subdev *=
+sd,
+> -							u8 addr, u8 io_reg)
+> +						unsigned int i)
+>   {
+>   	struct i2c_client *client =3D v4l2_get_subdevdata(sd);
+> +	struct adv7604_platform_data *pdata =3D client->dev.platform_data;
+> +	unsigned int io_reg =3D 0xf2 + i;
+> +	unsigned int default_addr =3D io_read(sd, io_reg) >> 1;
+> +	struct i2c_client *new_client;
+> +
+> +	if (IS_ENABLED(CONFIG_OF)) {
+
+No CONFIG_OF. i2c_new_secondary_device() is supposed to be the generic=20
+method of instantiating the secondary i2c_client, regardless of how the=
+=20
+address is specified. For this driver we still need to keep the old met=
+hod=20
+of instantiation via platform data for legacy reasons for now. So what =
+this=20
+should look like is:
+
+
+	if (pdata && pdata->i2c_addresses[i])
+		new_client =3D i2c_new_dummy(client->adapter,
+			pdata->i2c_addresses[i]);=09
+	else
+		new_client =3D i2c_new_secondary_device(client,
+			adv7604_secondary_names[i], default_addr);
+
+
+> +		/* Try to find it in DT */
+> +		new_client =3D i2c_new_secondary_device(client,
+> +			adv7604_secondary_names[i], default_addr);
+> +	} else if (pdata) {
+> +		if (pdata->i2c_addresses[i])
+> +			new_client =3D i2c_new_dummy(client->adapter,
+> +						pdata->i2c_addresses[i]);
+> +		else
+> +			new_client =3D i2c_new_dummy(client->adapter,
+> +						default_addr);
+> +	}
+>
+[...]
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
