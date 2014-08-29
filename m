@@ -1,43 +1,61 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv2] ASoC: fsl-sai: using 'lsb-first' property instead of
- 'big-endian-data'.
-Date: Fri, 29 Aug 2014 18:26:02 +0100
-Message-ID: <20140829172601.GC18555@leverpostej>
-References: <20140829110601.GB21473@leverpostej>
- <20140829115943.GV29327@sirena.org.uk>
- <20140829164010.GA5520@Asurada>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: zynq: DT: Add Ethernet phys
+Date: Fri, 29 Aug 2014 11:31:02 -0600
+Message-ID: <20140829173102.GA30917@obsidianresearch.com>
+References: <1408550219-19825-3-git-send-email-soren.brinkmann@xilinx.com>
+ <5a7b6f57-b6c0-4fb3-af0d-d403277c0207@BN1AFFO11FD045.protection.gbl>
+ <53F5D8D9.7040604@suse.de>
+ <f166a186-301c-4288-97cf-71f8173c07e7@BN1AFFO11FD010.protection.gbl>
+ <CAGVrzcYWN83tznwvw1M9V_mwWgobs2kwtRvEj4stqE=XGC10fg@mail.gmail.com>
+ <20140825174610.GA13737@obsidianresearch.com>
+ <53FB9AC4.8010704@gmail.com>
+ <660fe929-1f16-4e22-8bd3-0388cd363978@BY2FFO11FD038.protection.gbl>
+ <540099AF.4020005@suse.de>
+ <e52ebd6c-2f0d-4ea9-a01f-882212956ace@BL2FFO11FD029.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140829164010.GA5520@Asurada>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Xiubo Li <Li.Xiubo@freescale.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <e52ebd6c-2f0d-4ea9-a01f-882212956ace-xjCwUguQ55/ZIcVUQlG5kGYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 05:40:11PM +0100, Nicolin Chen wrote:
-> On Fri, Aug 29, 2014 at 12:59:43PM +0100, Mark Brown wrote:
-> > On Fri, Aug 29, 2014 at 12:06:01PM +0100, Mark Rutland wrote:
-> > > On Fri, Aug 29, 2014 at 08:12:12AM +0100, Xiubo Li wrote:
-> > 
-> > > > The 'big-endian-data' property is originally used to indicate whether the
-> > > > LSB firstly or MSB firstly will be transmitted to the CODEC or received
-> > > > from the CODEC, and there has nothing relation to the memory data.
-> > 
-> > > Both Nicolin [1] and Mark [2] asked for the old property to be kept
-> > > around for compatibility reasons. Those requests seem to have been
-> > > ignored entirely; the commit message doesn't even describe why you
-> > > believe removing support for the old property is safe.
-> > 
-> > The response was that the relevant chips aren't out in the wild so it's
-> > vanishingly unlikely that anyone would have a real DT with this option
-> > enabled.  I'll defer to Nicolin on if that's the case or not.
-> 
-> Yea, it sounds like so. I thought Vf610 also used this property. But if
-> only LS1 using it, I think we may consent this rename right?
+On Fri, Aug 29, 2014 at 08:35:36AM -0700, S=F6ren Brinkmann wrote:
 
-If you two are happy, then fine by me. My only concern was that the
-rationale for this being safe wasn't in the commit message.
+> The compatible string is listed as optional property for PHYs. So, no=
+t
+> having one is an option, I guess. But, I'd also prefer to at least ke=
+ep
+> the -c22 one, since I saw problems when I tried using -c45 (the Zed p=
+hy
+> should support it...).
 
-Mark.
+-c45 and -c22 use a completely different MDIO protocol, Zed doesn't
+have a 10GE port, so it certainly doesn't use -c45.
+
+If there is no compatible string at all the defined default is to use
+-c22.
+
+> Also, so far, we haven't had any phy nodes in our Zynq dts files and
+> Ethernet worked, so the auto-detection there works pretty well
+> apparently. But it may be problematic if more than a single PHY is on
+> the MDIO bus, I'd assume.
+
+Phy autodetection has always worked in some cases, but for DT ethernet
+bindings it is expected that there is an option to specify an explicit
+MDIO bus, and a phy-handle phandle to point to the phy. The phy should
+be explicitly called out with the fixed MDIO address specified to
+avoid sketchy MDIO address auto probing.
+
+This provides the framework to specify interrupts and register
+overrides for the phy in the DT.
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
