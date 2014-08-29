@@ -1,49 +1,83 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 2/3] GPIO: gpio-dwapb: Support Debounce
-Date: Fri, 29 Aug 2014 07:38:04 +0000
-Message-ID: <1409297883.30155.29.camel@intel.com>
-References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
-	 <1409161588-19417-3-git-send-email-alvin.chen@intel.com>
-	 <alpine.DEB.2.02.1408281007290.26299@atx-linux-37>
+From: Inha Song <ideal.song@samsung.com>
+Subject: Re: [alsa-devel] [PATCH v3 1/2] mfd: arizona: Add support for
+ INn_Modec register control
+Date: Fri, 29 Aug 2014 17:02:30 +0900
+Message-ID: <20140829170230.673ca9ff@songinha-Samsung-DeskTop-System>
+References: <20140818200003.2ab8aca0@songinha-Samsung-DeskTop-System>
+ <20140828113651.GN24579@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1408281007290.26299@atx-linux-37>
-Content-Language: en-US
-Content-ID: <DB08BCA516C8BA43817BDBC6326C36AB@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "atull@opensource.altera.com" <atull@opensource.altera.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Chen, Alvin" <alvin.chen@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20140828113651.GN24579@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: broonie@kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com, lgirdwood@gmail.com, sameo@linux.intel.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE0LTA4LTI4IGF0IDEwOjExIC0wNTAwLCBhdHVsbCB3cm90ZToNCj4gT24gV2Vk
-LCAyNyBBdWcgMjAxNCwgV2Vpa2UgQ2hlbiB3cm90ZToNCg0KW10NCg0KPiA+ICtzdGF0aWMgaW5s
-aW5lIHUzMiBkd2FwYl9yZWFkKHN0cnVjdCBkd2FwYl9ncGlvICpncGlvLCB1bnNpZ25lZCBpbnQg
-b2Zmc2V0KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgYmdwaW9fY2hpcCAqYmdjCT0gJmdwaW8tPnBv
-cnRzWzBdLmJnYzsNCj4gPiArCXZvaWQgX19pb21lbSAqcmVnX2Jhc2UJPSBncGlvLT5yZWdzOw0K
-PiA+ICsNCj4gPiArCXJldHVybiBiZ2MtPnJlYWRfcmVnKHJlZ19iYXNlICsgb2Zmc2V0KTsNCj4g
-PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIGlubGluZSB2b2lkIGR3YXBiX3dyaXRlKHN0cnVjdCBk
-d2FwYl9ncGlvICpncGlvLCB1bnNpZ25lZCBpbnQgb2Zmc2V0LA0KPiA+ICsJCQkgICAgICAgdTMy
-IHZhbCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGJncGlvX2NoaXAgKmJnYwk9ICZncGlvLT5wb3J0
-c1swXS5iZ2M7DQo+ID4gKwl2b2lkIF9faW9tZW0gKnJlZ19iYXNlCT0gZ3Bpby0+cmVnczsNCj4g
-PiArDQo+ID4gKwliZ2MtPndyaXRlX3JlZyhyZWdfYmFzZSArIG9mZnNldCwgdmFsKTsNCj4gPiAr
-fQ0KPiA+ICsNCj4gDQo+IEhlbGxvLA0KPiANCj4gSSBkb24ndCB1bmRlcnN0YW5kIHRoZSByZWFz
-b24gZm9yIGFkZGluZyBkd2FwYl9yZWFkIGFuZCBkd2FwYl93cml0ZSBoZXJlLiAgDQo+IFRoZSBy
-ZXN0IG9mIHRoZSBkcml2ZXIgaXMgdXNpbmcgcmVhZGwgYW5kIHdyaXRlbC4gIEknZCByYXRoZXIg
-bm90IHNlZSB0d28gDQo+IGRpZmZlcmVudCBtZXRob2RzIGJlaW5nIHVzZWQgaW4gdGhlIHNhbWUg
-ZHJpdmVyIGZvciByZWdpc3RlciBhY2Nlc3MuICANCj4gTWF5YmUgSSdtIG1pc3Npbmcgc29tZXRo
-aW5nLCBidXQgaWYgd2UgbmVlZCB0byBhZGQgZHdhcGJfcmVhZC93cml0ZSwgdGhlbg0KPiBpdCBz
-aG91bGQgYmUgdXNlZCBmb3IgYWxsIHJlZ2lzdGVyIGFjY2Vzcy4NCg0KQWxhbiwgaXQgd2FzIG15
-IHByb3Bvc2FsLiBJIHJhdGhlciBhZ3JlZSB0aGF0IGlzIGJldHRlciB0byBjb252ZXJ0IGFsbA0K
-YWNjZXNzZXMgdG8gdGhhdC4NCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hl
-bmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpJbnRlbCBGaW5s
-YW5kIE95ClJlZ2lzdGVyZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxzaW5raSAKQnVzaW5l
-c3MgSWRlbnRpdHkgQ29kZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBIZWxzaW5raSAKClRo
-aXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG1h
-dGVyaWFsIGZvcgp0aGUgc29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lwaWVudChzKS4gQW55
-IHJldmlldyBvciBkaXN0cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5IHByb2hpYml0ZWQu
-IElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFzZSBjb250YWN0IHRo
-ZSBzZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29waWVzLgo=
+Hi, Lee
+Thanks for your review.
 
+On Thu, 28 Aug 2014 12:36:51 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
+
+> On Mon, 18 Aug 2014, Inha Song wrote:
+>=20
+> > Some boards need to set the INn_MODE[1:0] register to change
+> > the input signal patch. This wlf,inmode property is optional.
+> > If present, values must be specified less than or equal to
+> > the number of input singals. If values less than the number
+> > of input signals, elements that has not been specifed are set
+> > to 0 by default.
+> >=20
+> > Example:
+> >    - wlf,inmode =3D <2 0 2>;	/* IN1, IN3 use DMIC */
+> >=20
+> > Signed-off-by: Inha Song <ideal.song@samsung.com>
+> > ---
+> >  drivers/mfd/arizona-core.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.=
+c
+> > index 10a0cb9..81e6db8 100644
+> > --- a/drivers/mfd/arizona-core.c
+> > +++ b/drivers/mfd/arizona-core.c
+> > @@ -534,7 +534,7 @@ EXPORT_SYMBOL_GPL(arizona_of_get_named_gpio);
+> >  static int arizona_of_get_core_pdata(struct arizona *arizona)
+> >  {
+> >  	struct arizona_pdata *pdata =3D &arizona->pdata;
+> > -	int ret, i;
+> > +	int ret, i, proplen;
+> > =20
+> >  	pdata->reset =3D arizona_of_get_named_gpio(arizona, "wlf,reset", =
+true);
+> > =20
+> > @@ -560,6 +560,12 @@ static int arizona_of_get_core_pdata(struct ar=
+izona *arizona)
+> >  			ret);
+> >  	}
+> > =20
+> > +	proplen =3D of_property_count_u32_elems(arizona->dev->of_node,
+> > +					      "wlf,inmode");
+> > +	if (proplen > 0 && proplen <=3D ARRAY_SIZE(arizona->pdata.inmode)=
+)
+> > +		of_property_read_u32_array(arizona->dev->of_node, "wlf,inmode",
+> > +					   arizona->pdata.inmode, proplen);
+>=20
+> of_property_for_each_u32()?
+
+Is it more clear to use of_property_for_each_u32() instead of
+of_property_read_u32_array()?
+
+If so, I will fix in v5.
+
+Best regards,
+Inha Song.
+
+>=20
+> --=20
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
