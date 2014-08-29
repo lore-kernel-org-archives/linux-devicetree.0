@@ -1,154 +1,153 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] adv7604: Use DT parsing in dummy creation
-Date: Fri, 29 Aug 2014 15:28:17 +0200
-Message-ID: <1409318897-12668-2-git-send-email-jean-michel.hautbois@vodalys.com>
-References: <1409318897-12668-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409318897-12668-1-git-send-email-jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 7/7] MIPS: ralink: Move device-trees to arch/mips/boot/dts/ralink/
+Date: Thu, 28 Aug 2014 20:56:59 -0700
+Message-ID: <1409284619-6910-1-git-send-email-abrestic@chromium.org>
+References: <1409191812-23697-1-git-send-email-abrestic@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409191812-23697-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch uses DT in order to parse addresses for dummy devices of adv7604.
-If nothing is defined, it uses default addresses.
-The main prupose is using two adv76xx on the same i2c bus.
+Move the Ralink device-trees to arch/mips/boot/dts/ralink/ and update
+the Makefiles accordingly.  A built-in device-tree is optional, so
+select BUILTIN_DTB when it is requested.
 
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- .../devicetree/bindings/media/i2c/adv7604.txt      |  7 ++-
- drivers/media/i2c/adv7604.c                        | 56 ++++++++++++++--------
- 2 files changed, 42 insertions(+), 21 deletions(-)
+Looks like this one didn't make it through the first time.
+---
+ arch/mips/boot/dts/Makefile                                | 1 +
+ arch/mips/boot/dts/ralink/Makefile                         | 4 ++++
+ arch/mips/{ralink/dts => boot/dts/ralink}/mt7620a.dtsi     | 0
+ arch/mips/{ralink/dts => boot/dts/ralink}/mt7620a_eval.dts | 0
+ arch/mips/{ralink/dts => boot/dts/ralink}/rt2880.dtsi      | 0
+ arch/mips/{ralink/dts => boot/dts/ralink}/rt2880_eval.dts  | 0
+ arch/mips/{ralink/dts => boot/dts/ralink}/rt3050.dtsi      | 0
+ arch/mips/{ralink/dts => boot/dts/ralink}/rt3052_eval.dts  | 0
+ arch/mips/{ralink/dts => boot/dts/ralink}/rt3883.dtsi      | 0
+ arch/mips/{ralink/dts => boot/dts/ralink}/rt3883_eval.dts  | 0
+ arch/mips/ralink/Kconfig                                   | 4 ++++
+ arch/mips/ralink/Makefile                                  | 2 --
+ arch/mips/ralink/dts/Makefile                              | 4 ----
+ 13 files changed, 9 insertions(+), 6 deletions(-)
+ create mode 100644 arch/mips/boot/dts/ralink/Makefile
+ rename arch/mips/{ralink/dts => boot/dts/ralink}/mt7620a.dtsi (100%)
+ rename arch/mips/{ralink/dts => boot/dts/ralink}/mt7620a_eval.dts (100%)
+ rename arch/mips/{ralink/dts => boot/dts/ralink}/rt2880.dtsi (100%)
+ rename arch/mips/{ralink/dts => boot/dts/ralink}/rt2880_eval.dts (100%)
+ rename arch/mips/{ralink/dts => boot/dts/ralink}/rt3050.dtsi (100%)
+ rename arch/mips/{ralink/dts => boot/dts/ralink}/rt3052_eval.dts (100%)
+ rename arch/mips/{ralink/dts => boot/dts/ralink}/rt3883.dtsi (100%)
+ rename arch/mips/{ralink/dts => boot/dts/ralink}/rt3883_eval.dts (100%)
+ delete mode 100644 arch/mips/ralink/dts/Makefile
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-index c27cede..221b75c 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-@@ -10,6 +10,7 @@ Required Properties:
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index a861be5..47406f7 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -2,6 +2,7 @@ include arch/mips/boot/dts/cavium-octeon/Makefile
+ include arch/mips/boot/dts/lantiq/Makefile
+ include arch/mips/boot/dts/mti/Makefile
+ include arch/mips/boot/dts/netlogic/Makefile
++include arch/mips/boot/dts/ralink/Makefile
  
-   - compatible: Must contain one of the following
-     - "adi,adv7611" for the ADV7611
-+    - "adi,adv7604" for the ADV7604
+ obj-y		+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
  
-   - reg: I2C slave address
+diff --git a/arch/mips/boot/dts/ralink/Makefile b/arch/mips/boot/dts/ralink/Makefile
+new file mode 100644
+index 0000000..81a567e
+--- /dev/null
++++ b/arch/mips/boot/dts/ralink/Makefile
+@@ -0,0 +1,4 @@
++dtb-$(CONFIG_DTB_RT2880_EVAL)	+= ralink/rt2880_eval.dtb
++dtb-$(CONFIG_DTB_RT305X_EVAL)	+= ralink/rt3052_eval.dtb
++dtb-$(CONFIG_DTB_RT3883_EVAL)	+= ralink/rt3883_eval.dtb
++dtb-$(CONFIG_DTB_MT7620A_EVAL)	+= ralink/mt7620a_eval.dtb
+diff --git a/arch/mips/ralink/dts/mt7620a.dtsi b/arch/mips/boot/dts/ralink/mt7620a.dtsi
+similarity index 100%
+rename from arch/mips/ralink/dts/mt7620a.dtsi
+rename to arch/mips/boot/dts/ralink/mt7620a.dtsi
+diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/boot/dts/ralink/mt7620a_eval.dts
+similarity index 100%
+rename from arch/mips/ralink/dts/mt7620a_eval.dts
+rename to arch/mips/boot/dts/ralink/mt7620a_eval.dts
+diff --git a/arch/mips/ralink/dts/rt2880.dtsi b/arch/mips/boot/dts/ralink/rt2880.dtsi
+similarity index 100%
+rename from arch/mips/ralink/dts/rt2880.dtsi
+rename to arch/mips/boot/dts/ralink/rt2880.dtsi
+diff --git a/arch/mips/ralink/dts/rt2880_eval.dts b/arch/mips/boot/dts/ralink/rt2880_eval.dts
+similarity index 100%
+rename from arch/mips/ralink/dts/rt2880_eval.dts
+rename to arch/mips/boot/dts/ralink/rt2880_eval.dts
+diff --git a/arch/mips/ralink/dts/rt3050.dtsi b/arch/mips/boot/dts/ralink/rt3050.dtsi
+similarity index 100%
+rename from arch/mips/ralink/dts/rt3050.dtsi
+rename to arch/mips/boot/dts/ralink/rt3050.dtsi
+diff --git a/arch/mips/ralink/dts/rt3052_eval.dts b/arch/mips/boot/dts/ralink/rt3052_eval.dts
+similarity index 100%
+rename from arch/mips/ralink/dts/rt3052_eval.dts
+rename to arch/mips/boot/dts/ralink/rt3052_eval.dts
+diff --git a/arch/mips/ralink/dts/rt3883.dtsi b/arch/mips/boot/dts/ralink/rt3883.dtsi
+similarity index 100%
+rename from arch/mips/ralink/dts/rt3883.dtsi
+rename to arch/mips/boot/dts/ralink/rt3883.dtsi
+diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/boot/dts/ralink/rt3883_eval.dts
+similarity index 100%
+rename from arch/mips/ralink/dts/rt3883_eval.dts
+rename to arch/mips/boot/dts/ralink/rt3883_eval.dts
+diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
+index 4a29665..77e8a96 100644
+--- a/arch/mips/ralink/Kconfig
++++ b/arch/mips/ralink/Kconfig
+@@ -42,18 +42,22 @@ choice
+ 	config DTB_RT2880_EVAL
+ 		bool "RT2880 eval kit"
+ 		depends on SOC_RT288X
++		select BUILTIN_DTB
  
-@@ -32,6 +33,8 @@ The digital output port node must contain at least one endpoint.
- Optional Properties:
+ 	config DTB_RT305X_EVAL
+ 		bool "RT305x eval kit"
+ 		depends on SOC_RT305X
++		select BUILTIN_DTB
  
-   - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-+  - reg-names : Names of registers to be reprogrammed.
-+		Refer to source code for possible values.
+ 	config DTB_RT3883_EVAL
+ 		bool "RT3883 eval kit"
+ 		depends on SOC_RT3883
++		select BUILTIN_DTB
  
- Optional Endpoint Properties:
+ 	config DTB_MT7620A_EVAL
+ 		bool "MT7620A eval kit"
+ 		depends on SOC_MT7620
++		select BUILTIN_DTB
  
-@@ -50,7 +53,9 @@ Example:
+ endchoice
  
- 	hdmi_receiver@4c {
- 		compatible = "adi,adv7611";
--		reg = <0x4c>;
-+		/* edid page will be accessible @ 0x66 on i2c bus*/
-+		reg = <0x4c 0x66>;
-+		reg-names = "main", "edid";
+diff --git a/arch/mips/ralink/Makefile b/arch/mips/ralink/Makefile
+index 98ae349..2c09c8a 100644
+--- a/arch/mips/ralink/Makefile
++++ b/arch/mips/ralink/Makefile
+@@ -16,5 +16,3 @@ obj-$(CONFIG_SOC_RT3883) += rt3883.o
+ obj-$(CONFIG_SOC_MT7620) += mt7620.o
  
- 		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
- 		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-index d4fa213..4e660a2 100644
---- a/drivers/media/i2c/adv7604.c
-+++ b/drivers/media/i2c/adv7604.c
-@@ -326,6 +326,22 @@ static const struct adv7604_video_standards adv7604_prim_mode_hdmi_gr[] = {
- 	{ },
- };
- 
-+static const char const *adv7604_secondary_names[] = {
-+	"main", /* ADV7604_PAGE_IO */
-+	"avlink", /* ADV7604_PAGE_AVLINK */
-+	"cec", /* ADV7604_PAGE_CEC */
-+	"infoframe", /* ADV7604_PAGE_INFOFRAME */
-+	"esdp", /* ADV7604_PAGE_ESDP */
-+	"dpp", /* ADV7604_PAGE_DPP */
-+	"afe", /* ADV7604_PAGE_AFE */
-+	"rep", /* ADV7604_PAGE_REP */
-+	"edid", /* ADV7604_PAGE_EDID */
-+	"hdmi", /* ADV7604_PAGE_HDMI */
-+	"test", /* ADV7604_PAGE_TEST */
-+	"cp", /* ADV7604_PAGE_CP */
-+	"vdp" /* ADV7604_PAGE_VDP */
-+};
-+
- /* ----------------------------------------------------------------------- */
- 
- static inline struct adv7604_state *to_state(struct v4l2_subdev *sd)
-@@ -2528,13 +2544,27 @@ static void adv7604_unregister_clients(struct adv7604_state *state)
- }
- 
- static struct i2c_client *adv7604_dummy_client(struct v4l2_subdev *sd,
--							u8 addr, u8 io_reg)
-+						unsigned int i)
- {
- 	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	struct adv7604_platform_data *pdata = client->dev.platform_data;
-+	unsigned int io_reg = 0xf2 + i;
-+	struct i2c_client *new_client;
-+
-+	/* Try to find it in DT */
-+	new_client = i2c_new_secondary_device(client,
-+			adv7604_secondary_names[i], io_read(sd, io_reg) >> 1);
- 
--	if (addr)
--		io_write(sd, io_reg, addr << 1);
--	return i2c_new_dummy(client->adapter, io_read(sd, io_reg) >> 1);
-+	if (!new_client)
-+		/* if not defined in DT, use default if available */
-+		if (pdata && pdata->i2c_addresses[i])
-+			new_client = i2c_new_dummy(client->adapter,
-+						pdata->i2c_addresses[i]);
-+
-+	if (new_client)
-+		io_write(sd, io_reg, new_client->addr << 1);
-+
-+	return new_client;
- }
- 
- static const struct adv7604_reg_seq adv7604_recommended_settings_afe[] = {
-@@ -2677,6 +2707,7 @@ MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
- 
- static struct of_device_id adv7604_of_id[] __maybe_unused = {
- 	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
-+	{ .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, adv7604_of_id);
-@@ -2717,20 +2748,6 @@ static int adv7604_parse_dt(struct adv7604_state *state)
- 	/* Disable the interrupt for now as no DT-based board uses it. */
- 	state->pdata.int1_config = ADV7604_INT1_CONFIG_DISABLED;
- 
--	/* Use the default I2C addresses. */
--	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] = 0x42;
--	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] = 0x40;
--	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] = 0x3e;
--	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] = 0x38;
--	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] = 0x3c;
--	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] = 0x26;
--	state->pdata.i2c_addresses[ADV7604_PAGE_REP] = 0x32;
--	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] = 0x36;
--	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] = 0x34;
--	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] = 0x30;
--	state->pdata.i2c_addresses[ADV7604_PAGE_CP] = 0x22;
--	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] = 0x24;
+ obj-$(CONFIG_EARLY_PRINTK) += early_printk.o
 -
- 	/* Hardcode the remaining platform data fields. */
- 	state->pdata.disable_pwrdnb = 0;
- 	state->pdata.disable_cable_det_rst = 0;
-@@ -2891,8 +2908,7 @@ static int adv7604_probe(struct i2c_client *client,
- 			continue;
- 
- 		state->i2c_clients[i] =
--			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
--					     0xf2 + i);
-+			adv7604_dummy_client(sd, i);
- 		if (state->i2c_clients[i] == NULL) {
- 			err = -ENOMEM;
- 			v4l2_err(sd, "failed to create i2c client %u\n", i);
+-obj-y += dts/
+diff --git a/arch/mips/ralink/dts/Makefile b/arch/mips/ralink/dts/Makefile
+deleted file mode 100644
+index 18194fa..0000000
+--- a/arch/mips/ralink/dts/Makefile
++++ /dev/null
+@@ -1,4 +0,0 @@
+-obj-$(CONFIG_DTB_RT2880_EVAL) := rt2880_eval.dtb.o
+-obj-$(CONFIG_DTB_RT305X_EVAL) := rt3052_eval.dtb.o
+-obj-$(CONFIG_DTB_RT3883_EVAL) := rt3883_eval.dtb.o
+-obj-$(CONFIG_DTB_MT7620A_EVAL) := mt7620a_eval.dtb.o
 -- 
-2.0.4
+2.1.0.rc2.206.gedb03e5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
