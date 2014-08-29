@@ -1,85 +1,40 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] adv7604: Use DT parsing in dummy creation
-Date: Fri, 29 Aug 2014 15:25:18 +0100
-Message-ID: <20140829142518.GA27331@leverpostej>
-References: <1409318897-12668-1-git-send-email-jean-michel.hautbois@vodalys.com>
- <1409318897-12668-2-git-send-email-jean-michel.hautbois@vodalys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409318897-12668-2-git-send-email-jean-michel.hautbois@vodalys.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "w.sang@pengutronix.de" <w.sang@pengutronix.de>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>
+From: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] staging: iio: light: isl29018: add support for other chips
+Date: Fri, 29 Aug 2014 17:26:19 +0300
+Message-ID: <1409322382-30021-1-git-send-email-laurentiu.palcu@intel.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Teodora Baluta <teodora.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Fri, Aug 29, 2014 at 02:28:17PM +0100, Jean-Michel Hautbois wrote:
-> This patch uses DT in order to parse addresses for dummy devices of adv7604.
-> If nothing is defined, it uses default addresses.
-> The main prupose is using two adv76xx on the same i2c bus.
+This patchset adds support for 2 similar ALS chips: ISL29023 and ISL29035.
 
-This is rather opaque.
+The chip I performed tests on was a ISL29035, since I didn't have eval boards, for the
+other 2 chips, handy.
 
-It seems from the code below that a single adv7611 device has multiple
-I2C addresses at which different registers may be accessed. I guess the
-secondary instances of the unit have different addresses for all of the
-pages?
+The registers tables for each chip can be found here:
 
-> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-> ---
->  .../devicetree/bindings/media/i2c/adv7604.txt      |  7 ++-
->  drivers/media/i2c/adv7604.c                        | 56 ++++++++++++++--------
->  2 files changed, 42 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> index c27cede..221b75c 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> @@ -10,6 +10,7 @@ Required Properties:
->  
->    - compatible: Must contain one of the following
->      - "adi,adv7611" for the ADV7611
-> +    - "adi,adv7604" for the ADV7604
->  
->    - reg: I2C slave address
+ISL29018: [1] - page 10
+ISL29023: [2] - page 8
+ISL29035: [3] - page 10
 
-This should be updated, at least to say "address(es)".
+[1] http://www.intersil.com/content/dam/Intersil/documents/isl2/isl29018.pdf
+[2] http://www.intersil.com/content/dam/Intersil/documents/isl2/isl29023.pdf
+[3] http://www.intersil.com/content/dam/Intersil/documents/isl2/isl29035.pdf
 
->  
-> @@ -32,6 +33,8 @@ The digital output port node must contain at least one endpoint.
->  Optional Properties:
->  
->    - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-> +  - reg-names : Names of registers to be reprogrammed.
+thanks,
+laurentiu
 
-This doesn't describe _which_ names you expect, and I have no idea what
-is meant by "to be reprogrammed".
+Laurentiu Palcu (3):
+  staging: iio: light: isl29018: fix typo
+  staging: iio: light: isl29018: add support for isl29023 and isl29035
+  staging: iio: light: isl29018: add ACPI support
 
-> +		Refer to source code for possible values.
+ drivers/staging/iio/light/isl29018.c | 205 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 179 insertions(+), 26 deletions(-)
 
-Bindings shouldn't say things like this. The binding should describe the
-contract between the DTB and the OS, which this clearly doesn't.
-
-A binding document shouldn't necessitate reading code.
-
->  Optional Endpoint Properties:
->  
-> @@ -50,7 +53,9 @@ Example:
->  
->  	hdmi_receiver@4c {
->  		compatible = "adi,adv7611";
-> -		reg = <0x4c>;
-> +		/* edid page will be accessible @ 0x66 on i2c bus*/
-> +		reg = <0x4c 0x66>;
-> +		reg-names = "main", "edid";
-
-What about the other IDs? Are they accessible or not?
-
-Why didn't we always list the full set of IDs in the first place? That
-would have made this far less painful.
-
-Thanks,
-Mark.
+-- 
+1.9.1
