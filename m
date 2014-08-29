@@ -1,145 +1,147 @@
-From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
-Subject: [PATCH v2] rtc: ds1307: add trickle charger device tree binding
-Date: Fri, 29 Aug 2014 14:29:09 +0300
-Message-ID: <20140829112902.GA14650@fi-ourus-dhcp00977.emea.nsn-net.net>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
+Date: Fri, 29 Aug 2014 11:40:02 +0100
+Message-ID: <20140829104001.GB19424@leverpostej>
+References: <20140828124237.GA29102@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140828125915.GJ14650@leverpostej>
+ <20140828155157.GB23677@roeck-us.net>
+ <20140828161025.GO14650@leverpostej>
+ <20140828164825.GA12153@roeck-us.net>
+ <20140828172842.GF12769@titan.lakedaemon.net>
+ <20140828174034.GC15307@roeck-us.net>
+ <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
+In-Reply-To: <20140829073413.GN4587-3P0KQDf13zYjNwtGTSXw41mm0B4v8B71Fo5piaCiEZ7R7s880joybQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+To: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
+Cc: ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Second version of the patch delta to previous:
- - fixed the property fetching 
- - removed the trickle register property
- - removed underscore from setup value property name
- - added higher level meaning of setup value for ds1339 in documentation.
+On Fri, Aug 29, 2014 at 08:34:25AM +0100, Matti Vaittinen wrote:
+> On Thu, Aug 28, 2014 at 10:40:34AM -0700, ext Guenter Roeck wrote:
+> > On Thu, Aug 28, 2014 at 01:28:42PM -0400, Jason Cooper wrote:
+> > > On Thu, Aug 28, 2014 at 09:48:25AM -0700, Guenter Roeck wrote:
+> > > > On Thu, Aug 28, 2014 at 05:10:25PM +0100, Mark Rutland wrote:
+> > > > > On Thu, Aug 28, 2014 at 04:51:57PM +0100, Guenter Roeck wrote:
+> > > > > > On Thu, Aug 28, 2014 at 01:59:15PM +0100, Mark Rutland wrote:
+> > > > > > > On Thu, Aug 28, 2014 at 01:42:44PM +0100, Matti Vaittinen wrote:
+> > > > > > > > Patch adding support for specifying trickle charger setup from device
+> > > > > > > > tree. Patch is based on linux-next tree.
+> > > > > > > > 
+> > > > > > > > 
+> > > > > > > > Some DS13XX devices have "trickle chargers". Introduce a device tree binding
+> > > > > > > > for specifying the setup and register values.
+> > > > > > > > 
+> > > > > > > > +++ b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+> > > > > > > > @@ -0,0 +1,19 @@
+> > > > > > > > +* Dallas DS1339		I2C Serial Real-Time Clock
+> > > > > > > > +
+> > > > > > > > +Required properties:
+> > > > > > > > +- compatible: Should contain "dallas,ds1339".
+> > > > > > > > +- reg: I2C address for chip
+> > > > > > > > +
+> > > > > > > > +Optional properties:
+> > > > > > > > +- trickle_setup : Used Trickle Charger configuration,
+> > > > > > > > +        corresponding to 5 lowest bits in trickle charger register.
+> > > > > > > 
+> > > > > > The value is provided via platform data, so it is platform specific
+> > > > > > and presumably needs to be configurable. I did, however, not find
+> > > > > > a single in-kernel driver which is actually setting it.
+> > > > > > So this is a good question.
+> > > > > 
+> > > > > I'm uncomfortable adding a field we don't understand to DT.
+> > > > > 
+> > > > > Is there any publicly-available documentation for the device?
+> > > > > 
+> > > > 
+> > > > Lots ;-)
+> > > > 
+> > > > http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+> > > > http://datasheets.maximintegrated.com/en/ds/DS1337.pdf
+> > > > http://datasheets.maximintegrated.com/en/ds/DS1338.pdf
+> > > > http://datasheets.maximintegrated.com/en/ds/DS1339.pdf
+> > > > http://datasheets.maximintegrated.com/en/ds/DS1340.pdf
+> > > > http://datasheets.maximintegrated.com/en/ds/DS1388.pdf
+> > > > http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
+> > > > 
+> > > > Code suggests that DS1339, DS1339, and DS1340 have the register.
+> > > > 
+> > > > Looking into the datasheets, the configuration consists of two parts:
+> > > > - diode connected or not
+> > > > - trickle charger resistor value (250, 2000, or 4000 ohm)
+> > > > 
+> > > > Given that, it seems to me that those values should be configured
+> > > > explicitly instead of using a binary value, and that the driver
+> > > > should perform the conversion from dt entry to register value.
+> > > 
+> > > iiuc, there is no way for the kernel to determine what is being trickle
+> > > charged, and thus no way to determine how it should set this register.
+> > > 
+> > > It may be a bit of overkill, but I think a DT macro would be the most
+> > > maintainable solution here:
+> > > 
+> > > #define DS1339_TRCKL_DIODE   0x08
+> > > #define DS1339_TRCKL_NODIODE 0x04
+> > > #define DS1339_TRCKL_R250    0x01
+> > > #define DS1339_TRCKL_R2000   0x02
+> > > #define DS1339_TRCKL_R4000   0x03
+> > > 
+> > > trickle_setup = <DS1339_TRCKL_DIODE | DS1339_TRCKL_R250>;
+> > > 
+> > > And the driver would take care of oring it with the enable pattern.
+> > > 
+> > 
+> > Yes, that sounds reasonable as well.
+> > 
+> I thought of this too. However the ds1307 seems to be designed to work
+> with bunch of chips. What then when next chip supported by this driver
+> introduces 75, 1000 and 5000 ohm resistors? Or something else. (Or add
+> some other configuration). I do not see this approach to be
+> maintainable in long run.
 
+If a new chip comes out with new features, the driver will need an
+update anyhow. We have no guarantee that the register placement will be
+the same, let alone the layout.
 
+If and when said new chip comes out we allocate a new compatible string.
+If it's compatible iwith (i.e. is a superset of) an existing device's
+programming model, we add that existing string as a fallback in the
+compatible list so old kernels can drive the subset of features they
+understand.
 
-    Some DS13XX devices have "trickle chargers". Introduce a device tree binding
-    for specifying the trickle charger setup value.
+> I see strong possibility of polluting dt with endless amount of
+> defines. Furthermore I believe the benefits of these defines would be
+> negligible compared to effort maintaining defines and documentation of
+> them causes. Surely the one who needs to add dt node for this chip in
+> his board's dt has the manual for the chip he has on board. Especially
+> so if he knows the trickle charger there and wants to configure it.
+> The plain resistor type still gives zero information without knowing
+> the other details.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
----
- .../devicetree/bindings/i2c/trivial-devices.txt    |  1 -
- .../devicetree/bindings/rtc/dallas,ds1339.txt      | 24 ++++++++++++++++++++++
- drivers/rtc/rtc-ds1307.c                           | 23 +++++++++++++++++----
- 3 files changed, 43 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+I would rather that the driver had some idea of what it were doing
+rather than being a glorified copy routine.
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 6af570e..e9206a4 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -35,7 +35,6 @@ catalyst,24c32		i2c serial eeprom
- cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
- dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
- dallas,ds1338		I2C RTC with 56-Byte NV RAM
--dallas,ds1339		I2C Serial Real-Time Clock
- dallas,ds1340		I2C RTC with Trickle Charger
- dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
- dallas,ds1631		High-Precision Digital Thermometer
-diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-new file mode 100644
-index 0000000..07214d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-@@ -0,0 +1,24 @@
-+* Dallas DS1339		I2C Serial Real-Time Clock
-+
-+Required properties:
-+- compatible: Should contain "dallas,ds1339".
-+- reg: I2C address for chip
-+
-+Optional properties:
-+- trickle : Used Trickle Charger configuration,
-+	corresponding to 4 lowest bits in trickle charger register.
-+	Following values are specified:
-+		0x5 => No diode, 250 ohm
-+		0x9 => Diode, 250 ohm
-+		0x6 => No diode, 2k ohm
-+		0xa => Diode, 2k ohm
-+		0x7 => No diode, 4k ohm
-+		0xb => Diode, 4k ohm
-+Example:
-+	ds1339: rtc@68 {
-+		compatible = "dallas,ds1339";
-+		trickle = <0x5>;
-+		reg = <0x68>;
-+	};
-+
-+
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index f03d5ba..cb2364e 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -126,9 +126,10 @@ struct chip_desc {
- 	u16			nvram_offset;
- 	u16			nvram_size;
- 	u16			trickle_charger_reg;
-+	u8			trickle_charger_setup;
- };
- 
--static const struct chip_desc chips[last_ds_type] = {
-+static struct chip_desc chips[last_ds_type] = {
- 	[ds_1307] = {
- 		.nvram_offset	= 8,
- 		.nvram_size	= 56,
-@@ -833,15 +834,17 @@ ds1307_nvram_write(struct file *filp, struct kobject *kobj,
- 	return count;
- }
- 
-+
- /*----------------------------------------------------------------------*/
- 
-+
- static int ds1307_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
- 	struct ds1307		*ds1307;
- 	int			err = -ENODEV;
- 	int			tmp;
--	const struct chip_desc	*chip = &chips[id->driver_data];
-+	struct chip_desc	*chip = &chips[id->driver_data];
- 	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
- 	bool			want_irq = false;
- 	unsigned char		*buf;
-@@ -852,6 +855,7 @@ static int ds1307_probe(struct i2c_client *client,
- 		[ds_3231] = DS3231_BIT_BBSQW,
- 	};
- 	const struct rtc_class_ops *rtc_ops = &ds13xx_rtc_ops;
-+	uint32_t setup = 0;
- 
- 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)
- 	    && !i2c_check_functionality(adapter, I2C_FUNC_SMBUS_I2C_BLOCK))
-@@ -866,9 +870,20 @@ static int ds1307_probe(struct i2c_client *client,
- 	ds1307->client	= client;
- 	ds1307->type	= id->driver_data;
- 
--	if (pdata && pdata->trickle_charger_setup && chip->trickle_charger_reg)
-+	if (!pdata && client->dev.of_node) {
-+		of_property_read_u32(client->dev.of_node, "trickle" , &setup);
-+		chip->trickle_charger_setup = setup;
-+	} else if (pdata && pdata->trickle_charger_setup)
-+		chip->trickle_charger_setup = pdata->trickle_charger_setup;
-+
-+	if (chip->trickle_charger_setup && chip->trickle_charger_reg) {
-+		dev_dbg(&client->dev, "writing trickle charger info 0x%x to 0x%x\n",
-+		    DS13XX_TRICKLE_CHARGER_MAGIC | chip->trickle_charger_setup,
-+		    chip->trickle_charger_reg);
- 		i2c_smbus_write_byte_data(client, chip->trickle_charger_reg,
--			DS13XX_TRICKLE_CHARGER_MAGIC | pdata->trickle_charger_setup);
-+		    DS13XX_TRICKLE_CHARGER_MAGIC |
-+		    chip->trickle_charger_setup);
-+	}
- 
- 	buf = ds1307->regs;
- 	if (i2c_check_functionality(adapter, I2C_FUNC_SMBUS_I2C_BLOCK)) {
--- 
-1.8.3.1
+I would suggest we have two properties that describe the resistor's
+rating and whether or not there is a diode:
+
+trickle-resistor-ohms = <250>
+diode-connected;
+
+That's easy for a human to write and/or validate, we can easily extend
+it in future, requires no proliferation of macros, and describes the
+hardware rather than telling software what to do.
+
+The driver becomes a little more complicated, but gains sanity checking,
+which is a good thing.
+
+I'm still worried that we have no idea what the device is intended to
+charge. Surely that's important?
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
