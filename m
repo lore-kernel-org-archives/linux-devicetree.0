@@ -1,69 +1,97 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
-Date: Fri, 29 Aug 2014 14:03:54 +0100
-Message-ID: <20140829130354.GE21473@leverpostej>
-References: <20140828155157.GB23677@roeck-us.net>
- <20140828161025.GO14650@leverpostej>
- <20140828164825.GA12153@roeck-us.net>
- <20140828172842.GF12769@titan.lakedaemon.net>
- <20140828174034.GC15307@roeck-us.net>
- <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
- <20140829104001.GB19424@leverpostej>
- <20140829122452.GA3683@titan.lakedaemon.net>
- <20140829124216.GD21473@leverpostej>
- <20140829124829.GD3683@titan.lakedaemon.net>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v2 1/3] pinctrl: qcom: Add APQ8084 pinctrl support
+Date: Fri, 29 Aug 2014 16:09:30 +0300
+Message-ID: <54007B8A.50503@mm-sol.com>
+References: <1409057156-1201-1-git-send-email-gdjakov@mm-sol.com> <1409057156-1201-2-git-send-email-gdjakov@mm-sol.com> <20140829060059.GG12494@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140829124829.GD3683-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140829060059.GG12494@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "iivanov@mm-sol.com" <iivanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 01:48:29PM +0100, Jason Cooper wrote:
-> On Fri, Aug 29, 2014 at 01:42:16PM +0100, Mark Rutland wrote:
-> > On Fri, Aug 29, 2014 at 01:24:52PM +0100, Jason Cooper wrote:
-> > > On Fri, Aug 29, 2014 at 11:40:02AM +0100, Mark Rutland wrote:
-> ...
-> Someone wrote:
-> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1307.pdf
-> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1337.pdf
-> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1338.pdf
-> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1339.pdf
-> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1340.pdf
-> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS1388.pdf
-> > > > > > > > http://datasheets.maximintegrated.com/en/ds/DS3231.pdf
-> ...
-> > > > I would suggest we have two properties that describe the resistor's
-> > > > rating and whether or not there is a diode:
-> > > > 
-> > > > trickle-resistor-ohms = <250>
-> > > > diode-connected;
-> > > 
-> > > I much prefer this solution over my own suggestion.  With one small
-> > > change, s/diode-connected/trickle-diode-enable/  Does that sound ok?
-> > 
-> > I'm not too keen on 'enable'; I was under the impression that this
-> > described whether or not there was an external diode. Perhaps I've
-> > misunderstood?
+On 08/29/2014 09:01 AM, Bjorn Andersson wrote:
+> On Tue 26 Aug 05:45 PDT 2014, Georgi Djakov wrote:
 > 
-> iiuc from the link ds1339 ds, the register configuration is enabling
-> internal diodes and resistors for the trickle charge configuration.  I
-> may have read it incorrectly, though.
+> Hi Georgi,
+> 
+> Sorry for missing this before, but I did a quick walkthrough and unfortunately
+> the gpio configuration needs a few updates.
+> 
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-apq8084.c b/drivers/pinctrl/qcom/pinctrl-apq8084.c
+> [...]
+>> +
+>> +#define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7)        \
+>> +       {                                               \
+>> +               .name = "gpio" #id,                     \
+>> +               .pins = gpio##id##_pins,                \
+>> +               .npins = ARRAY_SIZE(gpio##id##_pins),   \
+>> +               .funcs = (int[]){                       \
+>> +                       APQ_MUX_gpio,                   \
+>> +                       APQ_MUX_##f1,                   \
+>> +                       APQ_MUX_##f2,                   \
+>> +                       APQ_MUX_##f3,                   \
+>> +                       APQ_MUX_##f4,                   \
+>> +                       APQ_MUX_##f5,                   \
+>> +                       APQ_MUX_##f6,                   \
+>> +                       APQ_MUX_##f7                    \
+>> +               },                                      \
+>> +               .nfuncs = 8,                            \
+>> +               .ctl_reg = 0x1000 + 0x10 * id,          \
+>> +               .io_reg = 0x1004 + 0x10 * id,           \
+>> +               .intr_cfg_reg = 0x1008 + 0x10 * id,     \
+>> +               .intr_status_reg = 0x100c + 0x10 * id,  \
+>> +               .intr_target_reg = 0x400 + 0x4 * id,    \
+> 
+> The routing of the interrupt is specified in TLMM_GPIO_INTR_CFG(n),
+> i.e: 0x1008 + 0x10 * n
+> 
+> Apparently the HW guys wanted to give us more work, so in 8084 they use 3 to
+> specify routing the interrupts to KPSS, instead of the previous 4. So the
+> static define of INTR_TARGET_PROC_APPS is no longer adequate.
+> 
+> My suggestion is that you create an additional patch and add to your series
+> that moves todays hardcoded 4 into the soc_data for the existing platforms (or
+> include it in this struct).
+> 
+>> +               .mux_bit = 2,                           \
+>> +               .pull_bit = 0,                          \
+>> +               .drv_bit = 6,                           \
+>> +               .oe_bit = 9,                            \
+>> +               .in_bit = 0,                            \
+>> +               .out_bit = 1,                           \
+>> +               .intr_enable_bit = 0,                   \
+>> +               .intr_status_bit = 0,                   \
+>> +               .intr_ack_high = 1,                     \
+> 
+> With the 8084 TLMM chip you ack the interrupt status by clearing this bit, so
+> intr_ack_high should be 0.
+> 
+>> +               .intr_target_bit = 0,                   \
+> 
+> Target bit is 5.
+> 
+>> +               .intr_raw_status_bit = 3,               \
+> 
+> Raw interrupt status bit is 4.
+> 
+>> +               .intr_polarity_bit = 1,                 \
+>> +               .intr_detection_bit = 2,                \
+>> +               .intr_detection_width = 1,              \
+> 
+> You can do level, raise, fall and both edge detection with 8084, so the width
+> of his part is 2.
+> 
+>> +       }
+>> +
+> 
 
-Ok.
+Thanks Bjorn. I'll search for some more information regarding this and will
+update accordingly, including the INTR_TARGET_PROC_APPS for each platform.
+Thanks again for your time!
 
-> In either case, my main point was to prepend 'trickle-' to the property
-> to more accurately describe what it is toggling.
-
-That's fine by me. My only concern was 'enable' due to the
-internal/external confusion.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BR,
+Georgi
