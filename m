@@ -1,135 +1,63 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v2 1/2] Allow DT parsing of secondary devices
-Date: Fri, 29 Aug 2014 17:39:58 +0200
-Message-ID: <54009ECE.7070406@metafoo.de>
-References: <1409325303-15906-1-git-send-email-jean-michel.hautbois@vodalys.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv10 1/2] edac: altera: Add Altera SDRAM EDAC support.
+Date: Fri, 29 Aug 2014 18:02:04 +0200
+Message-ID: <20140829160204.GA8835@nazgul.tnic>
+References: <1407770293-27190-1-git-send-email-tthayer@opensource.altera.com>
+ <1407770293-27190-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1409325303-15906-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, mark.rutland@arm.com
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1407770293-27190-2-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, atull@opensource.altera.com, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, dougthompson@xmission.com, grant.likely@linaro.org, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2014 05:15 PM, Jean-Michel Hautbois wrote:
-> This is based on reg and reg-names in DT.
-> Example:
->
-> reg = <0x10 0x20 0x30>;
-> reg-names = "main", "io", "test";
->
-> This function will create dummy devices io and test
-> with addresses 0x20 and 0x30 respectively.
->
-> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-
-This needs a better description explaining the problem and how it is solved. 
-How about
-"""
-i2c: Add generic support passing secondary devices addresses
-
-Some I2C devices have multiple addresses assigned, for example each address 
-corresponding to a different internal register map page of the device. So 
-far drivers which need support for this have handled this with a driver 
-specific and non-generic implementation, e.g. passing the additional address 
-via platform data.
-
-This patch provides a new helper function called i2c_new_secondary_device() 
-which is intended to provide a generic way to get the secondary address as 
-well as instantiate a struct i2c_client for the secondary address. The 
-function expects a pointer to the primary i2c_client, a name for the 
-secondary address and an optional default address. The name is used as a 
-handle to specify which secondary address to get. The default address is 
-used as a fallback in case no secondary address was explicitly specified. In 
-case no secondary address and no default address were specified the function 
-returns NULL.
-
-For now the function only supports look-up of the secondary address from 
-devicetree, but it can be extended in the future to for example support 
-board files and/or ACPI.
-"""
-
-The patch should also update the I2C devicetree bindings documentation to 
-explain how bindings for devices with multiple addresses work.
-
+On Mon, Aug 11, 2014 at 10:18:12AM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> This patch adds support for the CycloneV and ArriaV SDRAM controllers.
+> Correction and reporting of SBEs, Panic on DBEs.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 > ---
->   drivers/i2c/i2c-core.c | 20 ++++++++++++++++++++
->   include/linux/i2c.h    |  6 ++++++
->   2 files changed, 26 insertions(+)
->
-> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-> index 632057a..5eb414d 100644
-> --- a/drivers/i2c/i2c-core.c
-> +++ b/drivers/i2c/i2c-core.c
-> @@ -798,6 +798,26 @@ struct i2c_client *i2c_new_dummy(struct i2c_adapter *adapter, u16 address)
->   }
->   EXPORT_SYMBOL_GPL(i2c_new_dummy);
->
+> v2: Use the SDRAM controller registers to calculate memory size
+>     instead of the Device Tree. Update To & Cc list. Add maintainer
+>     information.
+> 
+> v3: EDAC driver cleanup based on comments from Mailing list.
+> 
+> v4: Panic on DBE. Add macro around inject-error reads to prevent
+>     them from being optimized out. Remove of_match_ptr since this
+>     will always use Device Tree.
+> 
+> v5: Addition of printk to trigger function to ensure read vars
+>     are not optimized out.
+> 
+> v6: Changes to split out shared SDRAM controller reg (offset 0x00)
+>     as a syscon device and allocate ECC specific SDRAM registers
+>     to EDAC.
+> 
+> v7: No changes. Bump for consistency.
+> 
+> v8: Alphabetize headers.
+> 
+> v9: Changes to support a MFD SDRAM controller with nested EDAC.
+> 
+> v10: Revert to version 5 (syscon) and fix errors found in v5.
 
-The function needs a kernel doc description.
+EDAC bits look ok to me,
 
-> +struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
-> +						const char *name,
-> +						u32 default_addr)
+Acked-by: Borislav Petkov <bp@suse.de>
 
-The I2C framework commonly uses u16 for the type of a I2C address.
+Dinh, please convert that version information above to a nice commit
+message and add it when applying as it is very useful for future
+reference.
 
+Thanks.
 
-> +{
-> +	int i, addr;
-
-addr needs to be u32 here since it is passed to of_property_read_u32_index().
-
-> +	struct device_node *np;
-> +
-> +	np = client->dev.of_node;
-
-of_node can be NULL, this needs to be handled. Ideally by using the default 
-address.
-
-> +	i = of_property_match_string(np, "reg-names", name);
-> +	if (i >= 0)
-> +		of_property_read_u32_index(np, "reg", i, &addr);
-
-of_property_read_u32_index() can fail, this needs to be handled.
-
-> +	else
-> +		addr = default_addr;
-
-If no address was specified and default_addr is 0 the function should return 
-NULL.
-
-> +
-> +	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
-> +	return i2c_new_dummy(client->adapter, addr);
-> +}
-> +EXPORT_SYMBOL_GPL(i2c_new_secondary_device);
-> +
-> +
->   /* ------------------------------------------------------------------------- */
->
->   /* I2C bus adapters -- one roots each I2C or SMBUS segment */
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index a95efeb..2d143d7 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -322,6 +322,12 @@ extern int i2c_probe_func_quick_read(struct i2c_adapter *, unsigned short addr);
->   extern struct i2c_client *
->   i2c_new_dummy(struct i2c_adapter *adap, u16 address);
->
-> +/* Use reg/reg-names in DT in order to get extra addresses */
-
-The comment should go into i2c-core.c and be in proper kernel doc fully 
-explaining the function, its parameters and the behavior.
-
-> +extern struct i2c_client *
-> +i2c_new_secondary_device(struct i2c_client *client,
-> +				const char *name,
-> +				u32 default_addr);
-> +
->   extern void i2c_unregister_device(struct i2c_client *);
->   #endif /* I2C */
->
->
+-- 
+Regards/Gruss,
+    Boris.
+--
