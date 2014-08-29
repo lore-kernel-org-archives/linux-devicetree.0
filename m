@@ -1,171 +1,115 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 2/2] adv7604: Use DT parsing in dummy creation
-Date: Fri, 29 Aug 2014 16:15:16 +0200
-Message-ID: <54008AF4.9050708@xs4all.nl>
-References: <1409318897-12668-1-git-send-email-jean-michel.hautbois@vodalys.com> <1409318897-12668-2-git-send-email-jean-michel.hautbois@vodalys.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] ARM: tegra: Initialize interrupt controller from
+ DT
+Date: Fri, 29 Aug 2014 16:24:10 +0200
+Message-ID: <20140829142408.GA31264@ulmo>
+References: <1409239879-12376-1-git-send-email-thierry.reding@gmail.com>
+ <1409239879-12376-3-git-send-email-thierry.reding@gmail.com>
+ <3056623.fB9uqpleQ5@wuerfel>
+ <20140829073139.GG13106@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1409318897-12668-2-git-send-email-jean-michel.hautbois@vodalys.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-i2c@vger.kernel.org
-Cc: lars@metafoo.de, w.sang@pengutronix.de, laurent.pinchart@ideasonboard.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140829073139.GG13106@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/29/2014 03:28 PM, Jean-Michel Hautbois wrote:
-> This patch uses DT in order to parse addresses for dummy devices of adv7604.
-> If nothing is defined, it uses default addresses.
-> The main prupose is using two adv76xx on the same i2c bus.
-> 
-> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-> ---
->  .../devicetree/bindings/media/i2c/adv7604.txt      |  7 ++-
->  drivers/media/i2c/adv7604.c                        | 56 ++++++++++++++--------
->  2 files changed, 42 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> index c27cede..221b75c 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> @@ -10,6 +10,7 @@ Required Properties:
->  
->    - compatible: Must contain one of the following
->      - "adi,adv7611" for the ADV7611
-> +    - "adi,adv7604" for the ADV7604
->  
->    - reg: I2C slave address
->  
-> @@ -32,6 +33,8 @@ The digital output port node must contain at least one endpoint.
->  Optional Properties:
->  
->    - reset-gpios: Reference to the GPIO connected to the device's reset pin.
-> +  - reg-names : Names of registers to be reprogrammed.
-> +		Refer to source code for possible values.
->  
->  Optional Endpoint Properties:
->  
-> @@ -50,7 +53,9 @@ Example:
->  
->  	hdmi_receiver@4c {
->  		compatible = "adi,adv7611";
-> -		reg = <0x4c>;
-> +		/* edid page will be accessible @ 0x66 on i2c bus*/
-> +		reg = <0x4c 0x66>;
-> +		reg-names = "main", "edid";
->  
->  		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
->  		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
-> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-> index d4fa213..4e660a2 100644
-> --- a/drivers/media/i2c/adv7604.c
-> +++ b/drivers/media/i2c/adv7604.c
-> @@ -326,6 +326,22 @@ static const struct adv7604_video_standards adv7604_prim_mode_hdmi_gr[] = {
->  	{ },
->  };
->  
-> +static const char const *adv7604_secondary_names[] = {
-> +	"main", /* ADV7604_PAGE_IO */
-> +	"avlink", /* ADV7604_PAGE_AVLINK */
-> +	"cec", /* ADV7604_PAGE_CEC */
-> +	"infoframe", /* ADV7604_PAGE_INFOFRAME */
-> +	"esdp", /* ADV7604_PAGE_ESDP */
-> +	"dpp", /* ADV7604_PAGE_DPP */
-> +	"afe", /* ADV7604_PAGE_AFE */
-> +	"rep", /* ADV7604_PAGE_REP */
-> +	"edid", /* ADV7604_PAGE_EDID */
-> +	"hdmi", /* ADV7604_PAGE_HDMI */
-> +	"test", /* ADV7604_PAGE_TEST */
-> +	"cp", /* ADV7604_PAGE_CP */
-> +	"vdp" /* ADV7604_PAGE_VDP */
-> +};
-> +
->  /* ----------------------------------------------------------------------- */
->  
->  static inline struct adv7604_state *to_state(struct v4l2_subdev *sd)
-> @@ -2528,13 +2544,27 @@ static void adv7604_unregister_clients(struct adv7604_state *state)
->  }
->  
->  static struct i2c_client *adv7604_dummy_client(struct v4l2_subdev *sd,
-> -							u8 addr, u8 io_reg)
-> +						unsigned int i)
->  {
->  	struct i2c_client *client = v4l2_get_subdevdata(sd);
-> +	struct adv7604_platform_data *pdata = client->dev.platform_data;
-> +	unsigned int io_reg = 0xf2 + i;
-> +	struct i2c_client *new_client;
-> +
-> +	/* Try to find it in DT */
-> +	new_client = i2c_new_secondary_device(client,
-> +			adv7604_secondary_names[i], io_read(sd, io_reg) >> 1);
 
-Does this work if CONFIG_OF isn't set? I suspect not.
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  
-> -	if (addr)
-> -		io_write(sd, io_reg, addr << 1);
-> -	return i2c_new_dummy(client->adapter, io_read(sd, io_reg) >> 1);
-> +	if (!new_client)
-> +		/* if not defined in DT, use default if available */
-> +		if (pdata && pdata->i2c_addresses[i])
-> +			new_client = i2c_new_dummy(client->adapter,
-> +						pdata->i2c_addresses[i]);
+On Fri, Aug 29, 2014 at 09:31:40AM +0200, Thierry Reding wrote:
+> On Thu, Aug 28, 2014 at 06:10:55PM +0200, Arnd Bergmann wrote:
+> > On Thursday 28 August 2014 17:31:17 Thierry Reding wrote:
+> >=20
+> > >  void __init tegra_init_irq(void)
+> > >  {
+> > > -	int i;
+> > > -	void __iomem *distbase;
+> > > +	unsigned int max_ictlrs =3D ARRAY_SIZE(ictlr_regs), i;
+> > > +	const struct of_device_id *match;
+> > > +	struct device_node *np;
+> > > +	struct resource res;
+> > > +
+> > > +	np =3D of_find_matching_node_and_match(NULL, ictlr_matches, &match);
+> > > +	if (np) {
+> > > +		const struct tegra_ictlr_soc *soc =3D match->data;
+> > > +
+> > > +		for (i =3D 0; i < soc->num_ictlrs; i++) {
+> > > +			if (of_address_to_resource(np, i, &res) < 0)
+> > > +				break;
+> > > +
+> > > +			ictlr_regs[i] =3D res;
+> > > +		}
+> > > +
+> > > +		WARN(i !=3D soc->num_ictlrs,
+> > > +		     "Found %u interrupt controllers in DT; expected %u.\n",
+> > > +		     i, soc->num_ictlrs);
+> > > +
+> > > +		max_ictlrs =3D soc->num_ictlrs;
+> > > +		of_node_put(np);
+> > > +	} else {
+> > > +		/*
+> > > +		 * If no matching device node was found, fall back to using
+> > > +		 * the chip ID.
+> > > +		 */
+> > > +
+> > > +		/* Tegra30 and later have five interrupt controllers, ... */
+> > > +		max_ictlrs =3D ARRAY_SIZE(ictlr_regs);
+> > > +
+> > > +		/* ..., but Tegra20 only has four. */
+> > > +		if (of_machine_is_compatible("nvidia,tegra20"))
+> > > +			max_ictlrs--;
+> > > +	}
+> >=20
+> > How about moving the entire file to drivers/irqchip and using the
+> > IRQCHIP_DECLARE() helper for the DT case?
+> >=20
+> > For the fallback, you can have an entry into that file that just takes
+> > the address and number, which you can call from platform code here.
+>=20
+> I think I did try that at some point, but there were issues that I don't
+> remember. I'll give it another shot.
 
-This is not the same as the original code. If pdata->i2c_addresses[i] == 0,
-then it should use io_read(sd, io_reg) >> 1 as the address for i2c_new_dummy.
+So I got pretty far with this and the system still boots. But for some
+reason suspend/resume is now broken. The difference seems to be that
+earlier the legacy interrupt controller would be registered first, and
+the GIC second. When the legacy interrupt controller is initialized
+after the GIC (which happens when I use IRQCHIP_DECLARE), then suspend
+and resume won't work (for some yet unknown reason). Unfortunately the
+of_irq_init() code is too clever, so I can't even work around it by
+changing link order or device tree order.
 
-This would break existing code that uses platform_data (such as on our PCIe
-board).
+I'll see if I can find out what causes this combination to malfunction
+when initialized in the opposite order.
 
-Regards,
+Thierry
 
-	Hans
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature
 
-> +
-> +	if (new_client)
-> +		io_write(sd, io_reg, new_client->addr << 1);
-> +
-> +	return new_client;
->  }
->  
->  static const struct adv7604_reg_seq adv7604_recommended_settings_afe[] = {
-> @@ -2677,6 +2707,7 @@ MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
->  
->  static struct of_device_id adv7604_of_id[] __maybe_unused = {
->  	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
-> +	{ .compatible = "adi,adv7604", .data = &adv7604_chip_info[ADV7604] },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, adv7604_of_id);
-> @@ -2717,20 +2748,6 @@ static int adv7604_parse_dt(struct adv7604_state *state)
->  	/* Disable the interrupt for now as no DT-based board uses it. */
->  	state->pdata.int1_config = ADV7604_INT1_CONFIG_DISABLED;
->  
-> -	/* Use the default I2C addresses. */
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] = 0x42;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] = 0x40;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] = 0x3e;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] = 0x38;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] = 0x3c;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] = 0x26;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_REP] = 0x32;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] = 0x36;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] = 0x34;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] = 0x30;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_CP] = 0x22;
-> -	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] = 0x24;
-> -
->  	/* Hardcode the remaining platform data fields. */
->  	state->pdata.disable_pwrdnb = 0;
->  	state->pdata.disable_cable_det_rst = 0;
-> @@ -2891,8 +2908,7 @@ static int adv7604_probe(struct i2c_client *client,
->  			continue;
->  
->  		state->i2c_clients[i] =
-> -			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
-> -					     0xf2 + i);
-> +			adv7604_dummy_client(sd, i);
->  		if (state->i2c_clients[i] == NULL) {
->  			err = -ENOMEM;
->  			v4l2_err(sd, "failed to create i2c client %u\n", i);
-> 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUAI0IAAoJEN0jrNd/PrOhlRcP/iOs5546AJjCPcmDRLwm6DJE
+Va+kOhzxWNSlHsMieMsSaa2S9yAXTuiR/m0Qbx2o60jRHEO44jYVupTCQt2b3jyE
+o3bsYfi5oFbnAT0+hdnYlLDOAdfyTKtvuIpGbk/77YXuPU59MDVdRGsP1TAhOTLT
+cquH4RaIojOvtJHxkLXc8x15y4DKucZpbYNXtaRmVROQgwOSmp6kJuOVbwK3VR6B
+MXI6KJqXY2k/O3CraNYbQysu5Xic4OaMCZQt+MqdBTwJ5q5bmf1jgs/jCM/K/iPL
+xRRuak8Opy2z00bMMGm0M02Vqy1maPij+HAu5ZesiRM1zzxDGYslcbrl+il2yIho
+51fJ+wtw6YGXes8PFkR6tKywV6GXJGk52/W74AViPTKILLXn0Ow7shyzsbqe5fhC
+4TQOKMUeimfqwQvoOtTaBJ1erUYCHZez7sBr4bJif4v+XRS7kBuTDTdrGwzN7CNa
+NcMoszkxihWlKOaRz2lT6xTQx4aCd40+V4b0BKka1l8k1Cj4YFQ7AZ7wkfvGd42E
+J1R5q8ZrKidgEkE0UerDa+613qp826CcYdlX9saTRsEypvT0OATC+O09p5drNm1U
+f3WUJR0QmEjTARA92NPvq9QTKG1TQmmdR4kc5cs2y99feDXaKl6CQ2XnWYcI4qjP
+mGKEi4BRxBK9njN4Ol7V
+=hfai
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
