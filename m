@@ -1,86 +1,134 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 03/12] of: Add binding document for MIPS GIC
-Date: Fri, 29 Aug 2014 15:14:30 -0700
-Message-ID: <1409350479-19108-4-git-send-email-abrestic@chromium.org>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH 06/12] MIPS: GIC: Add generic IPI support when using DT
+Date: Fri, 29 Aug 2014 15:14:33 -0700
+Message-ID: <1409350479-19108-7-git-send-email-abrestic@chromium.org>
 References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409350479-19108-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Andrew Bresticker <abrestic@chromium.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Global Interrupt Controller (GIC) present on certain MIPS systems
-can be used to route external interrupts to individual VPEs and CPU
-interrupt vectors.  It also supports a timer and software-generated
-interrupts.
+When DT-based probing is used for the GIC and the GIC is also used
+for IPIs (i.e. MIPS_GIC_IPI=y), set up the last 2 * NR_CPUs GIC
+interrupts as the reschedule and call IPIs.
 
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 ---
- Documentation/devicetree/bindings/mips/gic.txt | 50 ++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
+ arch/mips/kernel/irq-gic.c | 86 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mips/gic.txt b/Documentation/devicetree/bindings/mips/gic.txt
-new file mode 100644
-index 0000000..725f1ef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/gic.txt
-@@ -0,0 +1,50 @@
-+MIPS Global Interrupt Controller (GIC)
+diff --git a/arch/mips/kernel/irq-gic.c b/arch/mips/kernel/irq-gic.c
+index be8bea4..42558eb 100644
+--- a/arch/mips/kernel/irq-gic.c
++++ b/arch/mips/kernel/irq-gic.c
+@@ -10,6 +10,7 @@
+ #include <linux/init.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/sched.h>
+ #include <linux/smp.h>
+ #include <linux/interrupt.h>
+ #include <linux/clocksource.h>
+@@ -417,6 +418,89 @@ static inline int gic_irq_to_cpu_pin(unsigned int hwirq)
+ 		GIC_CPU_PIN_OFFSET;
+ }
+ 
++#ifdef CONFIG_MIPS_GIC_IPI
++static int gic_resched_int_base;
++static int gic_call_int_base;
 +
-+The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-+It also supports a timer and software-generated interrupts which can be
-+used as IPIs.
++unsigned int plat_ipi_resched_int_xlate(unsigned int cpu)
++{
++	return gic_resched_int_base + cpu;
++}
 +
-+Required properties:
-+- compatible : Should be "mti,global-interrupt-controller"
-+- reg : Base address and length of the GIC registers.
-+- interrupts : Core interrupts to which the GIC may route external interrupts.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt specifier.  Should be 3.
-+  - The first cell is the GIC interrupt number.
-+  - The second cell encodes the interrupt flags.
-+    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-+    flags.
-+  - The optional third cell indicates which CPU interrupt vector the GIC
-+    interrupt should be routed to.  It is a 0-based index into the list of
-+    GIC-to-CPU interrupts specified in the "interrupts" property described
-+    above.  For example, a '2' in this cell will route the interrupt to the
-+    3rd core interrupt listed in 'interrupts'.  If omitted, the interrupt will
-+    be routed to the 1st core interrupt.
++unsigned int plat_ipi_call_int_xlate(unsigned int cpu)
++{
++	return gic_call_int_base + cpu;
++}
 +
-+Example:
++static irqreturn_t ipi_resched_interrupt(int irq, void *dev_id)
++{
++	scheduler_ipi();
 +
-+	cpu_intc: interrupt-controller@0 {
-+		compatible = "mti,cpu-interrupt-controller";
++	return IRQ_HANDLED;
++}
 +
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
++static irqreturn_t ipi_call_interrupt(int irq, void *dev_id)
++{
++	smp_call_function_interrupt();
 +
-+	gic: interrupt-controller@1bdc0000 {
-+		compatible = "mti,global-interrupt-controller";
-+		reg = <0x1bdc0000 0x20000>;
++	return IRQ_HANDLED;
++}
 +
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
++static struct irqaction irq_resched = {
++	.handler	= ipi_resched_interrupt,
++	.flags		= IRQF_PERCPU,
++	.name		= "IPI resched"
++};
 +
-+		interrupt-parent = <&cpu_intc>;
-+		interrupts = <3>, <4>;
-+	};
++static struct irqaction irq_call = {
++	.handler	= ipi_call_interrupt,
++	.flags		= IRQF_PERCPU,
++	.name		= "IPI call"
++};
 +
-+	uart@18101400 {
-+		...
-+		interrupt-parent = <&gic>;
-+		interrupts = <24 IRQ_TYPE_LEVEL_HIGH 0>;
-+		...
-+	};
++static __init void gic_ipi_init_one(struct irq_domain *domain,
++				    unsigned int hwirq, int cpu,
++				    struct irqaction *action)
++{
++	int irq = irq_create_mapping(domain, hwirq);
++	int i;
++
++	GIC_SET_POLARITY(hwirq, GIC_POL_POS);
++	GIC_SET_TRIGGER(hwirq, GIC_TRIG_EDGE);
++	GIC_SH_MAP_TO_VPE_SMASK(hwirq, cpu);
++	GICWRITE(GIC_REG_ADDR(SHARED, GIC_SH_MAP_TO_PIN(hwirq)),
++		 GIC_MAP_TO_PIN_MSK | gic_irq_to_cpu_pin(hwirq));
++	GIC_CLR_INTR_MASK(hwirq);
++	gic_irq_flags[hwirq] |= GIC_TRIG_EDGE;
++
++	for (i = 0; i < ARRAY_SIZE(pcpu_masks); i++)
++		clear_bit(hwirq, pcpu_masks[i].pcpu_mask);
++	set_bit(hwirq, pcpu_masks[cpu].pcpu_mask);
++
++	irq_set_chip_and_handler(irq, &gic_irq_controller, handle_percpu_irq);
++	setup_irq(irq, action);
++}
++
++static __init void gic_ipi_init(struct irq_domain *domain)
++{
++	int i;
++
++	/* Use last 2 * NR_CPUS interrupts as IPIs */
++	gic_resched_int_base = GIC_NUM_INTRS - nr_cpu_ids;
++	gic_call_int_base = gic_resched_int_base - nr_cpu_ids;
++
++	for (i = 0; i < nr_cpu_ids; i++) {
++		gic_ipi_init_one(domain, gic_call_int_base + i, i, &irq_call);
++		gic_ipi_init_one(domain, gic_resched_int_base + i, i,
++				 &irq_resched);
++	}
++}
++#else
++static inline void gic_ipi_init(struct irq_domain *domain)
++{
++}
++#endif
++
+ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
+ 			      irq_hw_number_t hw)
+ {
+@@ -515,6 +599,8 @@ int __init gic_of_init(struct device_node *node, struct device_node *parent)
+ 		irq_set_handler_data(gic_cpu_pin[i], domain);
+ 	}
+ 
++	gic_ipi_init(domain);
++
+ 	return 0;
+ }
+ #endif
 -- 
 2.1.0.rc2.206.gedb03e5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
