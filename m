@@ -1,66 +1,51 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 3/5] ARM: tegra: Initialize interrupt controller from DT
-Date: Fri, 29 Aug 2014 21:53:42 +0200
-Message-ID: <3113165.EcqFA5vr07@wuerfel>
-References: <1409239879-12376-1-git-send-email-thierry.reding@gmail.com> <20140829142408.GA31264@ulmo> <20140829150422.GA11035@ulmo>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 0/2] r8a777[89] dtsi sorting
+Date: Fri, 29 Aug 2014 22:03:27 +0200
+Message-ID: <CAMuHMdXZ_drLTdm_912EOL+g+rYqwOmH361NzQgz9+ruDmUEnA@mail.gmail.com>
+References: <1409336201-708-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140829150422.GA11035@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1409336201-708-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 29 August 2014 17:04:28 Thierry Reding wrote:
->         static struct irq_chip *extn;
-> 
->         void gic_arch_register(const struct irqchip *chip)
->         {
->                 if (WARN(extn != NULL))
->                         return;
-> 
->                 gic_chip.flags |= chip->flags;
->                 extn = chip;
->         }
-> 
-> Any preferences, or other ideas? Adding Thomas and Jason, perhaps they
-> can provide more input on how to solve this.
+Hi Uli,
 
-I think the entire gic_arch_extn method is done in a rather odd way
-and we should try to come up with a replacement.
+On Fri, Aug 29, 2014 at 8:16 PM, Ulrich Hecht
+<ulrich.hecht+renesas@gmail.com> wrote:
+> These are the dtsi files for r8a7778 and r8a7779 sorted according to what I
+> imagine to be accepted standards now: sort by address, "compatible" goes
+> first, #include directives before anything else.  The sorting was done using
+> a little script I wrote (https://github.com/uli/dtssort).
 
-These are the users at the moment:
+Nice! (but soon thereafter I got sidetracked by decomp ;-)
 
-arch/arm/mach-exynos/pm.c:      gic_arch_extn.irq_set_wake = exynos_irq_set_wake;
-arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_mask = imx_gpc_irq_mask;
-arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_unmask = imx_gpc_irq_unmask;
-arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_set_wake = imx_gpc_irq_set_wake;
-arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.irq_mask = wakeupgen_mask;
-arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.irq_unmask = wakeupgen_unmask;
-arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_W
-arch/arm/mach-shmobile/intc-sh73a0.c:   gic_arch_extn.irq_set_wake = sh73a0_set_wake;
-arch/arm/mach-shmobile/setup-r8a7779.c: gic_arch_extn.irq_set_wake = r8a7779_set_wake;
-arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_ack = tegra_ack;
-arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_eoi = tegra_eoi;
-arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_mask = tegra_mask;
-arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_unmask = tegra_unmask;
-arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_retrigger = tegra_retrigger;
-arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_set_wake = tegra_set_wake;
-arch/arm/mach-tegra/irq.c:      gic_arch_extn.flags = IRQCHIP_MASK_ON_SUSPEND;
-arch/arm/mach-ux500/cpu.c:      gic_arch_extn.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND;
-arch/arm/mach-zynq/common.c:    gic_arch_extn.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND;
+> I chose these two files because the required changes are relatively small.
+> Doing this for r8a779x yields a gargantuan and entirely unreadable patch due
+> to the random shifting about of large blocks of code.  If anybody knows a
+> tool that makes such things somewhat manageable to review, please speak up.
 
-I have to admit I don't really understand how these work, but what
-I'd expect to work better is a way to turn the gic code into more
-of a library that can be used by specialized drivers. In that
-case you would register a driver for the tegra gic using IRQCHIP_DECLARE
-and that driver would call a variation of gic_of_init() or gic_init_bases()
-with the extra stuff as arguments.
+You more or less gave a solution at the top of your email: split it in multiple
+patches: one to sort the includes, one to sort the properties inside the nodes,
+and one single patch for each node you move.
+Yes, too many patches, but good for the patch statistics ;-)
 
-We'd have to hack around the fact that all these platforms currently
-don't list a specialized compatible string, but at least for the future
-we should be able to do this without special hacks.
+Another approach could be to start considering SoCs as built from multiple
+hardware blocks, not only at the hardware/software level, but also at the DTS
+level. I.e. use macros to instantiate nodes. This makes it easier to avoid
+stupid typos in e.g. the 5th i2c node. In addition, many SoCs are similar, and
+only differ in a few nodes.
 
-	Arnd
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
