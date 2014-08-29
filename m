@@ -1,314 +1,283 @@
-From: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 2/2] rockchip-i2s: add power setting for I2S controller, also fix some bugs
-Date: Fri, 29 Aug 2014 15:09:56 -0700
-Message-ID: <1409350196-17784-1-git-send-email-jay.xu@rock-chips.com>
-References: <1409350027-17604-1-git-send-email-jay.xu@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409350027-17604-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v2] hwspinlock/msm: Add support for Qualcomm MSM HW Mutex block
+Date: Fri, 29 Aug 2014 16:14:23 -0700
+Message-ID: <1409354063-20289-1-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
+Cc: Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-changes:
-* add snd_soc_dai_init_dma_data
-* fix duplicated argument to "I2S_DMACR_TDE_DISABLE"
-* set 1.8v or 3.3v power for I2S controller by GRF interface
-* enable "hclk" always
-* dma maxburst change to 16
+From: Kumar Gala <galak@codeaurora.org>
 
-Requested on RK3XXX I2S controllers, and tested ok on rk3288-pinky board.
+Add driver for Qualcomm MSM Hardware Mutex block that exists on
+newer Qualcomm SoCs.
 
-Change-Id: If17b8022a38c2974f32bfb2dd4b8d16644ec57ac
-Signed-off-by: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Eric Holmberg <eholmber@codeaurora.org>
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+[bjorn: added pm_runtime calls, from Courtney,
+	added sfpb-mutex compatible,
+	updated DT binding documentation formatting]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 ---
- sound/soc/rockchip/rockchip_i2s.c | 93 +++++++++++++++++++++++----------------
- sound/soc/rockchip/rockchip_i2s.h | 13 +++---
- 2 files changed, 63 insertions(+), 43 deletions(-)
 
-diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
-index 8d8e4b5..e07bdbd 100644
---- a/sound/soc/rockchip/rockchip_i2s.c
-+++ b/sound/soc/rockchip/rockchip_i2s.c
-@@ -10,14 +10,15 @@
-  * published by the Free Software Foundation.
-  */
- 
--#include <linux/module.h>
-+#include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/of_gpio.h>
--#include <linux/clk.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
--#include <sound/pcm_params.h>
- #include <sound/dmaengine_pcm.h>
-+#include <sound/pcm_params.h>
- 
- #include "rockchip_i2s.h"
- 
-@@ -25,6 +26,7 @@
- 
- struct rk_i2s_dev {
- 	struct device *dev;
-+	struct regmap *grf;
- 
- 	struct clk *hclk;
- 	struct clk *mclk;
-@@ -66,11 +68,6 @@ static int i2s_runtime_resume(struct device *dev)
- 	return 0;
- }
- 
--static inline struct rk_i2s_dev *to_info(struct snd_soc_dai *dai)
--{
--	return snd_soc_dai_get_drvdata(dai);
--}
--
- static void rockchip_snd_txctrl(struct rk_i2s_dev *i2s, int on)
- {
- 	unsigned int val = 0;
-@@ -79,7 +76,6 @@ static void rockchip_snd_txctrl(struct rk_i2s_dev *i2s, int on)
- 	if (on) {
- 		regmap_update_bits(i2s->regmap, I2S_DMACR,
- 				   I2S_DMACR_TDE_ENABLE, I2S_DMACR_TDE_ENABLE);
--
- 		regmap_update_bits(i2s->regmap, I2S_XFER,
- 				   I2S_XFER_TXS_START | I2S_XFER_RXS_START,
- 				   I2S_XFER_TXS_START | I2S_XFER_RXS_START);
-@@ -159,19 +155,20 @@ static void rockchip_snd_rxctrl(struct rk_i2s_dev *i2s, int on)
- 	}
- }
- 
--static int rockchip_i2s_set_fmt(struct snd_soc_dai *cpu_dai,
-+static int rockchip_i2s_set_fmt(struct snd_soc_dai *dai,
- 				unsigned int fmt)
- {
--	struct rk_i2s_dev *i2s = to_info(cpu_dai);
-+	struct rk_i2s_dev *i2s = snd_soc_dai_get_drvdata(dai);
- 	unsigned int mask = 0, val = 0;
- 
--	mask = I2S_CKR_MSS_SLAVE;
-+	mask = I2S_CKR_MSS_MASK;
- 	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
- 	case SND_SOC_DAIFMT_CBS_CFS:
--		val = I2S_CKR_MSS_SLAVE;
-+		/* Set default source clock in Master mode */
-+		val = I2S_CKR_MSS_MASTER;
- 		break;
- 	case SND_SOC_DAIFMT_CBM_CFM:
--		val = I2S_CKR_MSS_MASTER;
-+		val = I2S_CKR_MSS_SLAVE;
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -220,7 +217,7 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
- 				  struct snd_pcm_hw_params *params,
- 				  struct snd_soc_dai *dai)
- {
--	struct rk_i2s_dev *i2s = to_info(dai);
-+	struct rk_i2s_dev *i2s = snd_soc_dai_get_drvdata(dai);
- 	unsigned int val = 0;
- 
- 	switch (params_format(params)) {
-@@ -243,24 +240,13 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
- 	regmap_update_bits(i2s->regmap, I2S_TXCR, I2S_TXCR_VDW_MASK, val);
- 	regmap_update_bits(i2s->regmap, I2S_RXCR, I2S_RXCR_VDW_MASK, val);
- 
--	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
--		dai->playback_dma_data = &i2s->playback_dma_data;
--		regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_TDL_MASK,
--				   I2S_DMACR_TDL(1) | I2S_DMACR_TDE_ENABLE);
--	} else {
--		dai->capture_dma_data = &i2s->capture_dma_data;
--		regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_RDL_MASK,
--				   I2S_DMACR_RDL(1) | I2S_DMACR_RDE_ENABLE);
--	}
--
- 	return 0;
- }
- 
- static int rockchip_i2s_trigger(struct snd_pcm_substream *substream,
- 				int cmd, struct snd_soc_dai *dai)
- {
--	struct rk_i2s_dev *i2s = to_info(dai);
--	int ret = 0;
-+	struct rk_i2s_dev *i2s = snd_soc_dai_get_drvdata(dai);
- 
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
-@@ -280,17 +266,16 @@ static int rockchip_i2s_trigger(struct snd_pcm_substream *substream,
- 			rockchip_snd_txctrl(i2s, 0);
- 		break;
- 	default:
--		ret = -EINVAL;
--		break;
-+		return -EINVAL;
- 	}
- 
--	return ret;
-+	return 0;
- }
- 
--static int rockchip_i2s_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
-+static int rockchip_i2s_set_sysclk(struct snd_soc_dai *dai, int clk_id,
- 				   unsigned int freq, int dir)
- {
--	struct rk_i2s_dev *i2s = to_info(cpu_dai);
-+	struct rk_i2s_dev *i2s = snd_soc_dai_get_drvdata(dai);
- 	int ret;
- 
- 	ret = clk_set_rate(i2s->mclk, freq);
-@@ -300,6 +285,16 @@ static int rockchip_i2s_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
- 	return ret;
- }
- 
-+static int rockchip_i2s_dai_probe(struct snd_soc_dai *dai)
-+{
-+	struct rk_i2s_dev *i2s = snd_soc_dai_get_drvdata(dai);
+We need this driver to add support for the shared memory manager, so I'm
+reviving Kumars patch from a year ago, with some additional sprinkles on top.
+
+Changes since v1:
+ - Added the pm_runtime calls needed to be able to boot a kernel with
+   pm_runtime and this driver, patch from Courtney.
+ - Added sfpb-mutex compatible, for re-use of the driver in family A platforms.
+ - Updated formatting of DT binding documentation, while adding the extra
+   compatible.
+ - Dropped Stephen Boyds Reviewed-by due to these changes.
+
+ .../devicetree/bindings/hwlock/msm-hwspinlock.txt  |  35 +++++
+ drivers/hwspinlock/Kconfig                         |  11 ++
+ drivers/hwspinlock/Makefile                        |   1 +
+ drivers/hwspinlock/msm_hwspinlock.c                | 155 +++++++++++++++++++++
+ 4 files changed, 202 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwlock/msm-hwspinlock.txt
+ create mode 100644 drivers/hwspinlock/msm_hwspinlock.c
+
+diff --git a/Documentation/devicetree/bindings/hwlock/msm-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/msm-hwspinlock.txt
+new file mode 100644
+index 0000000..65d9ab0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwlock/msm-hwspinlock.txt
+@@ -0,0 +1,35 @@
++Qualcomm MSM Hardware Mutex Block:
 +
-+	dai->capture_dma_data = &i2s->capture_dma_data;
-+	dai->playback_dma_data = &i2s->playback_dma_data;
++The hardware block provides mutexes utilized between different processors
++on the SoC as part of the communication protocol used by these processors.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,sfpb-mutex",
++		    "qcom,tcsr-mutex"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: base address and size of the mutex registers
++
++- reg-names:
++	Usage: required
++	Value type: <string>
++	Definition: must be "mutex-base"
++
++- qcom,num-locks:
++	Usage: required
++	Value type: <u32>
++	Definition: the number of locks/mutex available in this block
++
++Example:
++
++	hwlock@fd484000 {
++		compatible = "qcom,tcsr-mutex";
++		reg = <0xfd484000 0x1000>;
++		reg-names = "mutex-base";
++		qcom,num-locks = <32>;
++	};
+diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
+index 3612cb5..2cd39e2 100644
+--- a/drivers/hwspinlock/Kconfig
++++ b/drivers/hwspinlock/Kconfig
+@@ -8,6 +8,17 @@ config HWSPINLOCK
+ 
+ menu "Hardware Spinlock drivers"
+ 
++config HWSPINLOCK_MSM
++	tristate "MSM Hardware Spinlock device"
++	depends on ARCH_QCOM
++	select HWSPINLOCK
++	help
++	  Say y here to support the MSM Hardware Mutex functionality, which
++	  provides a synchronisation mechanism for the various processors on
++	  the SoC.
++
++	  If unsure, say N.
++
+ config HWSPINLOCK_OMAP
+ 	tristate "OMAP Hardware Spinlock device"
+ 	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX || SOC_AM33XX || SOC_AM43XX
+diff --git a/drivers/hwspinlock/Makefile b/drivers/hwspinlock/Makefile
+index 93eb64b..4074c56 100644
+--- a/drivers/hwspinlock/Makefile
++++ b/drivers/hwspinlock/Makefile
+@@ -3,5 +3,6 @@
+ #
+ 
+ obj-$(CONFIG_HWSPINLOCK)		+= hwspinlock_core.o
++obj-$(CONFIG_HWSPINLOCK_MSM)		+= msm_hwspinlock.o
+ obj-$(CONFIG_HWSPINLOCK_OMAP)		+= omap_hwspinlock.o
+ obj-$(CONFIG_HSEM_U8500)		+= u8500_hsem.o
+diff --git a/drivers/hwspinlock/msm_hwspinlock.c b/drivers/hwspinlock/msm_hwspinlock.c
+new file mode 100644
+index 0000000..9ddd020
+--- /dev/null
++++ b/drivers/hwspinlock/msm_hwspinlock.c
+@@ -0,0 +1,155 @@
++/*
++ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/hwspinlock.h>
++#include <linux/io.h>
++
++#include "hwspinlock_internal.h"
++
++#define SPINLOCK_ID_APPS_PROC	1
++#define BASE_ID			0
++
++static int msm_hwspinlock_trylock(struct hwspinlock *lock)
++{
++	void __iomem *lock_addr = lock->priv;
++
++	writel_relaxed(SPINLOCK_ID_APPS_PROC, lock_addr);
++
++	return readl_relaxed(lock_addr) == SPINLOCK_ID_APPS_PROC;
++}
++
++static void msm_hwspinlock_unlock(struct hwspinlock *lock)
++{
++	u32 lock_owner;
++	void __iomem *lock_addr = lock->priv;
++
++	lock_owner = readl_relaxed(lock_addr);
++	if (lock_owner != SPINLOCK_ID_APPS_PROC) {
++		pr_err("%s: spinlock not owned by us (actual owner is %d)\n",
++				__func__, lock_owner);
++	}
++
++	writel_relaxed(0, lock_addr);
++}
++
++static const struct hwspinlock_ops msm_hwspinlock_ops = {
++	.trylock	= msm_hwspinlock_trylock,
++	.unlock		= msm_hwspinlock_unlock,
++};
++
++static const struct of_device_id msm_hwspinlock_of_match[] = {
++	{ .compatible = "qcom,sfpb-mutex", .data = (void *)0x4 },
++	{ .compatible = "qcom,tcsr-mutex", .data = (void *)0x80 },
++	{ },
++};
++
++static int msm_hwspinlock_probe(struct platform_device *pdev)
++{
++	int ret, i, stride;
++	size_t array_size;
++	u32 num_locks;
++	struct hwspinlock_device *bank;
++	struct hwspinlock *hwlock;
++	struct resource *res;
++	void __iomem *iobase;
++	struct device_node *node = pdev->dev.of_node;
++	const struct of_device_id *match;
++
++	match = of_match_device(msm_hwspinlock_of_match, &pdev->dev);
++	if (!match)
++		return -EINVAL;
++
++	ret = of_property_read_u32(node, "qcom,num-locks", &num_locks);
++	if (ret || num_locks == 0)
++		return -ENODEV;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mutex-base");
++	iobase = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(iobase))
++		return PTR_ERR(iobase);
++
++	array_size = num_locks * sizeof(*hwlock);
++	bank = devm_kzalloc(&pdev->dev, sizeof(*bank) + array_size, GFP_KERNEL);
++	if (!bank)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, bank);
++
++	stride = (int)match->data;
++	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
++		hwlock->priv = iobase + i * stride;
++
++	pm_runtime_enable(&pdev->dev);
++
++	ret = hwspin_lock_register(bank, &pdev->dev, &msm_hwspinlock_ops,
++						BASE_ID, num_locks);
++	if (ret)
++		pm_runtime_disable(&pdev->dev);
++
++	return ret;
++}
++
++static int msm_hwspinlock_remove(struct platform_device *pdev)
++{
++	struct hwspinlock_device *bank = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = hwspin_lock_unregister(bank);
++	if (ret) {
++		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
++		return ret;
++	}
++
++	pm_runtime_disable(&pdev->dev);
 +
 +	return 0;
 +}
 +
- static const struct snd_soc_dai_ops rockchip_i2s_dai_ops = {
- 	.hw_params = rockchip_i2s_hw_params,
- 	.set_sysclk = rockchip_i2s_set_sysclk,
-@@ -308,7 +303,9 @@ static const struct snd_soc_dai_ops rockchip_i2s_dai_ops = {
- };
- 
- static struct snd_soc_dai_driver rockchip_i2s_dai = {
-+	.probe = rockchip_i2s_dai_probe,
- 	.playback = {
-+		.stream_name = "Playback",
- 		.channels_min = 2,
- 		.channels_max = 8,
- 		.rates = SNDRV_PCM_RATE_8000_192000,
-@@ -318,6 +315,7 @@ static struct snd_soc_dai_driver rockchip_i2s_dai = {
- 			    SNDRV_PCM_FMTBIT_S24_LE),
- 	},
- 	.capture = {
-+		.stream_name = "Capture",
- 		.channels_min = 2,
- 		.channels_max = 2,
- 		.rates = SNDRV_PCM_RATE_8000_192000,
-@@ -361,6 +359,8 @@ static bool rockchip_i2s_rd_reg(struct device *dev, unsigned int reg)
- 	case I2S_XFER:
- 	case I2S_CLR:
- 	case I2S_RXDR:
-+	case I2S_FIFOLR:
-+	case I2S_INTSR:
- 		return true;
- 	default:
- 		return false;
-@@ -370,8 +370,8 @@ static bool rockchip_i2s_rd_reg(struct device *dev, unsigned int reg)
- static bool rockchip_i2s_volatile_reg(struct device *dev, unsigned int reg)
- {
- 	switch (reg) {
--	case I2S_FIFOLR:
- 	case I2S_INTSR:
-+	case I2S_CLR:
- 		return true;
- 	default:
- 		return false;
-@@ -381,8 +381,6 @@ static bool rockchip_i2s_volatile_reg(struct device *dev, unsigned int reg)
- static bool rockchip_i2s_precious_reg(struct device *dev, unsigned int reg)
- {
- 	switch (reg) {
--	case I2S_FIFOLR:
--		return true;
- 	default:
- 		return false;
- 	}
-@@ -402,15 +400,20 @@ static const struct regmap_config rockchip_i2s_regmap_config = {
- 
- static int rockchip_i2s_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct rk_i2s_dev *i2s;
- 	struct resource *res;
- 	void __iomem *regs;
- 	int ret;
- 
- 	i2s = devm_kzalloc(&pdev->dev, sizeof(*i2s), GFP_KERNEL);
--	if (!i2s) {
--		dev_err(&pdev->dev, "Can't allocate rk_i2s_dev\n");
-+	if (!i2s)
- 		return -ENOMEM;
++static struct platform_driver msm_hwspinlock_driver = {
++	.probe		= msm_hwspinlock_probe,
++	.remove		= msm_hwspinlock_remove,
++	.driver		= {
++		.name	= "msm_hwspinlock",
++		.owner	= THIS_MODULE,
++		.of_match_table = msm_hwspinlock_of_match,
++	},
++};
 +
-+	i2s->grf = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
-+	if (IS_ERR(i2s->grf)) {
-+		dev_err(&pdev->dev, "Can't retrieve grf property\n");
-+		return PTR_ERR(i2s->grf);
- 	}
- 
- 	/* try to prepare related clocks */
-@@ -419,6 +422,11 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "Can't retrieve i2s bus clock\n");
- 		return PTR_ERR(i2s->hclk);
- 	}
-+	ret = clk_prepare_enable(i2s->hclk);
-+	if (ret) {
-+		dev_err(i2s->dev, "hclock enable failed %d\n", ret);
-+		return ret;
-+	}
- 
- 	i2s->mclk = devm_clk_get(&pdev->dev, "i2s_clk");
- 	if (IS_ERR(i2s->mclk)) {
-@@ -450,6 +458,17 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
- 	i2s->dev = &pdev->dev;
- 	dev_set_drvdata(&pdev->dev, i2s);
- 
-+	if (of_property_read_bool(np, "rockchip,grf-io-vsel"))
-+		ret = regmap_write(i2s->grf, GRF_IO_VSEL,
-+				   BIT(6) << 16 | BIT(6));
-+	else
-+		ret = regmap_write(i2s->grf, GRF_IO_VSEL,
-+				   BIT(6) << 16);
-+	if (ret) {
-+		dev_err(i2s->dev, "Could not write to GRF: %d\n", ret);
-+		return ret;
-+	}
++static int __init msm_hwspinlock_init(void)
++{
++	return platform_driver_register(&msm_hwspinlock_driver);
++}
++/* board init code might need to reserve hwspinlocks for predefined purposes */
++postcore_initcall(msm_hwspinlock_init);
 +
- 	pm_runtime_enable(&pdev->dev);
- 	if (!pm_runtime_enabled(&pdev->dev)) {
- 		ret = i2s_runtime_resume(&pdev->dev);
-diff --git a/sound/soc/rockchip/rockchip_i2s.h b/sound/soc/rockchip/rockchip_i2s.h
-index 89a5d8b..8f9a589 100644
---- a/sound/soc/rockchip/rockchip_i2s.h
-+++ b/sound/soc/rockchip/rockchip_i2s.h
-@@ -201,12 +201,6 @@
- */
- #define I2S_RXDR_MASK	(0xff)
- 
--/* Clock divider id */
--enum {
--	ROCKCHIP_DIV_MCLK = 0,
--	ROCKCHIP_DIV_BCLK,
--};
--
- /* I2S REGS */
- #define I2S_TXCR	(0x0000)
- #define I2S_RXCR	(0x0004)
-@@ -220,4 +214,11 @@ enum {
- #define I2S_TXDR	(0x0024)
- #define I2S_RXDR	(0x0028)
- 
-+/*
-+ * IO voltage select
-+ * 1: I2S controller powerd by 1.8v
-+ * 0: I2S controller powerd by 3.3v (default)
-+*/
-+#define GRF_IO_VSEL (0x380)
++static void __exit msm_hwspinlock_exit(void)
++{
++	platform_driver_unregister(&msm_hwspinlock_driver);
++}
++module_exit(msm_hwspinlock_exit);
 +
- #endif /* _ROCKCHIP_IIS_H */
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Hardware spinlock driver for MSM");
++MODULE_AUTHOR("Kumar Gala <galak@codeaurora.org>");
++MODULE_AUTHOR("Jeffrey Hugo <jhugo@codeaurora.org>");
++MODULE_AUTHOR("Eric Holmberg <eholmber@codeaurora.org>");
 -- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.2
