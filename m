@@ -1,86 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v3 1/2] mfd: arizona: Add support for
- INn_Modec register control
-Date: Fri, 29 Aug 2014 09:17:41 +0100
-Message-ID: <20140829081741.GD24579@lee--X1>
-References: <20140818200003.2ab8aca0@songinha-Samsung-DeskTop-System>
- <20140828113651.GN24579@lee--X1>
- <20140829170230.673ca9ff@songinha-Samsung-DeskTop-System>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] ARM: dts: Add shmobile platform device tree bindings documentation
+Date: Fri, 29 Aug 2014 10:26:01 +0200
+Message-ID: <CAMuHMdXNPk2ACbFsXcPic_zZBDCjF+5j6-jQNgZxGePPcTRUBQ@mail.gmail.com>
+References: <1409213120-5291-1-git-send-email-geert+renesas@glider.be>
+	<20140829003456.GM16165@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140829170230.673ca9ff@songinha-Samsung-DeskTop-System>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inha Song <ideal.song@samsung.com>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, ckeepax@opensource.wolfsonmicro.com, lgirdwood@gmail.com, sameo@linux.intel.com, devicetree@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140829003456.GM16165@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Aug 2014, Inha Song wrote:
+Hi Simon,
 
-> Hi, Lee
-> Thanks for your review.
->=20
-> On Thu, 28 Aug 2014 12:36:51 +0100
-> Lee Jones <lee.jones@linaro.org> wrote:
->=20
-> > On Mon, 18 Aug 2014, Inha Song wrote:
-> >=20
-> > > Some boards need to set the INn_MODE[1:0] register to change
-> > > the input signal patch. This wlf,inmode property is optional.
-> > > If present, values must be specified less than or equal to
-> > > the number of input singals. If values less than the number
-> > > of input signals, elements that has not been specifed are set
-> > > to 0 by default.
-> > >=20
-> > > Example:
-> > >    - wlf,inmode =3D <2 0 2>;	/* IN1, IN3 use DMIC */
-> > >=20
-> > > Signed-off-by: Inha Song <ideal.song@samsung.com>
-> > > ---
-> > >  drivers/mfd/arizona-core.c | 8 +++++++-
-> > >  1 file changed, 7 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-cor=
-e.c
-> > > index 10a0cb9..81e6db8 100644
-> > > --- a/drivers/mfd/arizona-core.c
-> > > +++ b/drivers/mfd/arizona-core.c
-> > > @@ -534,7 +534,7 @@ EXPORT_SYMBOL_GPL(arizona_of_get_named_gpio);
-> > >  static int arizona_of_get_core_pdata(struct arizona *arizona)
-> > >  {
-> > >  	struct arizona_pdata *pdata =3D &arizona->pdata;
-> > > -	int ret, i;
-> > > +	int ret, i, proplen;
-> > > =20
-> > >  	pdata->reset =3D arizona_of_get_named_gpio(arizona, "wlf,reset"=
-, true);
-> > > =20
-> > > @@ -560,6 +560,12 @@ static int arizona_of_get_core_pdata(struct =
-arizona *arizona)
-> > >  			ret);
-> > >  	}
-> > > =20
-> > > +	proplen =3D of_property_count_u32_elems(arizona->dev->of_node,
-> > > +					      "wlf,inmode");
-> > > +	if (proplen > 0 && proplen <=3D ARRAY_SIZE(arizona->pdata.inmod=
-e))
-> > > +		of_property_read_u32_array(arizona->dev->of_node, "wlf,inmode"=
-,
-> > > +					   arizona->pdata.inmode, proplen);
-> >=20
-> > of_property_for_each_u32()?
->=20
-> Is it more clear to use of_property_for_each_u32() instead of
-> of_property_read_u32_array()?
+On Fri, Aug 29, 2014 at 2:34 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Aug 28, 2014 at 10:05:20AM +0200, Geert Uytterhoeven wrote:
+>> Add Renesas SH-Mobile, R-Mobile, and R-Car Platform Device Tree Bindings
+>> Documentation, listing supported SoCs and boards.
+>>
+>> This allows to use checkpatch to validate DTSes referring to Renesas
+>> shmobile SoCs, and boards containing those SoCs.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Thanks Geert, this looks good to me.
+> Is it for me to pick up?
 
-It prevents you from having to use of_property_count_u32_elems() first.
+I think so.
 
-> If so, I will fix in v5.
+> If so I would prefer a slightly re-structured title:
+>
+> ARM: shmobile: Add platform device tree bindings documentation
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Fine for me.
+
+Do you want me to resend, or will you amend yourself?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
