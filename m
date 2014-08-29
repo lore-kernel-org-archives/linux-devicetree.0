@@ -1,90 +1,57 @@
-From: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Subject: Re: [PATCH 9/9] arm64: Add new cpu-return-addr device tree binding
-Date: Fri, 29 Aug 2014 14:45:04 -0700
-Message-ID: <1409348704.21254.95.camel@smoke>
-References: <cover.1408736066.git.geoff@infradead.org>
-	 <4192d403bb9703063c59a052293faa19d38d2f02.1408736066.git.geoff@infradead.org>
-	 <20140827083022.GE6968@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/2] rockchip-i2s: dt: add grf requested properties to set power of I2S controller
+Date: Fri, 29 Aug 2014 15:07:05 -0700
+Message-ID: <1409350027-17604-2-git-send-email-jay.xu@rock-chips.com>
+References: <1409350027-17604-1-git-send-email-jay.xu@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140827083022.GE6968-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1409350027-17604-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Arun Chandran <achandran-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Catalin,
+Add "rockchip,grf" for driver to get physical address of GRF, and "rockchip,grf-io-vsel"
+for driver to set voltage for I2S controller according to hardware request.
 
-On Wed, 2014-08-27 at 09:30 +0100, Catalin Marinas wrote:
-> On Fri, Aug 22, 2014 at 08:49:17PM +0100, Geoff Levand wrote:
-> > Add a new arm64 device tree binding cpu-return-addr.  This binding is recomended
-> > for all ARM v8 CPUs that have an "enable-method" property value of "spin-table".
-> > The value is a 64 bit physical address that secondary CPU execution will transfer
-> > to upon CPU shutdown.
-> > 
-> > Signed-off-by: Geoff Levand <geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.txt | 25 +++++++++++++++++++++++++
-> >  1 file changed, 25 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> > index 1fe72a0..42d5d5f 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> > @@ -201,6 +201,15 @@ nodes to be present and contain the properties described below.
-> >  			  property identifying a 64-bit zero-initialised
-> >  			  memory location.
-> >  
-> > +	- cpu-return-addr
-> > +		Usage: recomended for all ARM v8 CPUs that have an
-> > +		       "enable-method" property value of "spin-table".
-> > +		Value type: <prop-encoded-array>
-> > +		Definition:
-> > +			# On ARM v8 64-bit systems must be a two cell property.
-> > +			The value is a 64 bit physical address that secondary
-> > +			CPU execution will transfer to upon CPU shutdown.
-> 
-> As I've been away for most of the past four weeks, I haven't read all
-> the threads around this topic. But I don't think we ended up with a
-> clearly agreed recommendation for cpu-return-addr. If we do, we also
-> need to be clear on what state the CPU should be in when returned to
-> such address (ELx, MMU, caches).
+Requested by rk3xxx I2S controller and tested ok on rk3288-pinky board.
 
-Regarding the system state, I think what Mark proposed [1] is what we
-should work towards.  I'll add that to the binding's Definition text.
+Change-Id: I2587d15c25e64c569857369326653d8a450bae19
+Signed-off-by: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/rockchip-i2s.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-I have not tried to implement it yet though, but once I get it working
-and tested we'll be able to say that this is what works and should be
-the interface.
-
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/278910.html
-
-> In general, if we need returning to firmware I would strongly recommend
-> PSCI but I know there is the Applied board which does not have EL3, so
-> something like this may work. But we need to get them into discussion as
-> well since I assume cpu-return-addr would be a firmware provided
-> address.
-
-Yes, cpu-return-addr will be (optionally) provided by the firmware.
-
-The current kexec_prepare system call implementation I have checks
-the return of cpu_ops.cpu_disable() for all CPUs.  I have setup the
-spin-table cpu_disable() to check if the device tree defines a
-cpu-return-addr for that CPU.  So if there is no cpu-return-addr
-kexec_prepare will fail and the user will get an error on a kernel
-load from kexec-tools.
-
-Feng Kan of APM has already said that address O will work correctly
-for the APM board [2], and Arun Chandran has tested this.
-
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/273084.html
-
--Geoff
-
-
-
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+index 6c55fcf..b995fe6 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+@@ -9,6 +9,8 @@ Required properties:
+    - "rockchip,rk3066-i2s": for rk3066
+    - "rockchip,rk3188-i2s", "rockchip,rk3066-i2s": for rk3188
+    - "rockchip,rk3288-i2s", "rockchip,rk3066-i2s": for rk3288
++- rockchip,grf: physical base address of GRF.
++- rockchip,grf-io-vsel: select this if I2S controller powerd by 1.8v.
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - interrupts: should contain the I2S interrupt.
+@@ -26,12 +28,14 @@ Example for rk3288 I2S controller:
+ 
+ i2s@ff890000 {
+ 	compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
++	rockchip,grf = <&grf>;
++	rockchip,grf-io-vsel;
+ 	reg = <0xff890000 0x10000>;
+ 	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+ 	dmas = <&pdma1 0>, <&pdma1 1>;
+-	dma-names = "rx", "tx";
++	dma-names = "tx", "rx";
+ 	clock-names = "i2s_hclk", "i2s_clk";
+ 	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
+ };
+-- 
+1.8.3.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
