@@ -1,54 +1,46 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: Re: [PATCH v2] hwspinlock/msm: Add support for Qualcomm MSM HW Mutex
- block
-Date: Fri, 29 Aug 2014 17:47:31 -0700
-Message-ID: <20140830004731.GC25668@sonymobile.com>
-References: <1409354063-20289-1-git-send-email-bjorn.andersson@sonymobile.com>
- <20140829234128.GB25668@sonymobile.com>
- <5401174F.8040508@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5401174F.8040508@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "Andersson, Bj?rn" <Bjorn.Andersson@sonymobile.com>, Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, Suman Anna <s-anna@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Jeffrey Hugo <jhugo@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>
+From: Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [alsa-devel] [PATCH v5 0/2] mfd: arizona: add support for INn_MODE
+ register control
+Date: Sat, 30 Aug 2014 11:27:17 +0900
+Message-ID: <1409365639-5320-1-git-send-email-ideal.song@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Inha Song <ideal.song-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 30, 2014 at 02:14:07AM +0200, Stephen Boyd wrote:
-> On 08/29/14 16:41, Courtney Cavin wrote:
-> > On Sat, Aug 30, 2014 at 01:14:23AM +0200, Bjorn Andersson wrote:
-> >> From: Kumar Gala <galak@codeaurora.org>
-> >>
-> >> Add driver for Qualcomm MSM Hardware Mutex block that exists on
-> >> newer Qualcomm SoCs.
-> >>
-> >> Cc: Jeffrey Hugo <jhugo@codeaurora.org>
-> >> Cc: Eric Holmberg <eholmber@codeaurora.org>
-> >> Cc: Courtney Cavin <courtney.cavin@sonymobile.com>
-> >> Signed-off-by: Kumar Gala <galak@codeaurora.org>
-> >> [bjorn: added pm_runtime calls, from Courtney,
-> >> 	added sfpb-mutex compatible,
-> >> 	updated DT binding documentation formatting]
-> >> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> >> ---
-> > [...]
-> >> diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
-> >> index 3612cb5..2cd39e2 100644
-> >> --- a/drivers/hwspinlock/Kconfig
-> >> +++ b/drivers/hwspinlock/Kconfig
-> >> @@ -8,6 +8,17 @@ config HWSPINLOCK
-> >>  
-> >>  menu "Hardware Spinlock drivers"
-> >>  
-> >> +config HWSPINLOCK_MSM
-> >> +	tristate "MSM Hardware Spinlock device"
-> >> +	depends on ARCH_QCOM
-> > This should also depend on OF, as it won't compile or work without it.
-> 
-> Doesn't ARCH_QCOM imply OF? ARCH_MULTIPLATFORM has a select USE_OF.
+This patch series add support for INn_MODE register control using platform data.
+Each input signal path can be configurated either as a Analogue or Digital using
+the INn_MODE registers.
 
-Hrm.  Apparently.
+Changes for v5
+- Change to use of_property_for_each_u32
 
--Courtney
+Changes for v4
+- Update document content for more clarity
+
+Changes for v3
+- Change to use of_property_read_u32_array
+- Fix a few typos
+- Update commit message
+
+Changes for v2
+- Change to support
+- Update commit message
+- Update document content for more clarity
+
+Inha Song (2):
+  mfd: arizona: Add support for INn_Mode register control
+  mfd: arizona: Update DT binding to support INn_MODE init_data
+
+ Documentation/devicetree/bindings/mfd/arizona.txt |  7 +++++++
+ drivers/mfd/arizona-core.c                        | 13 +++++++++++++
+ 2 files changed, 20 insertions(+)
+
+-- 
+2.0.0.390.gcb682f8
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
