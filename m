@@ -1,139 +1,123 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
-Date: Sat, 30 Aug 2014 10:30:37 +0100
-Message-ID: <540199BD.7000504@kernel.org>
-References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com>	<2852853.mfRZfFVSev@wuerfel>	<20140828143733.GA18084@developer>	<3440260.edal29kzlR@diego>	<2014082909531345696848@rock-chips.com> <CAC-25o-winy6jVjh9_hQ-t2VO2UfxG67pW5DpOve8A2o39EJSw@mail.gmail.com> <54006D4C.2070404@rock-chips.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: adc: ti_am335x_adc: make sample delay, open
+ delay, averaging DT parameters
+Date: Sat, 30 Aug 2014 10:34:10 +0100
+Message-ID: <54019A92.9010907@kernel.org>
+References: <1409141990-29627-1-git-send-email-vigneshr@ti.com> <1409141990-29627-2-git-send-email-vigneshr@ti.com> <20140827135635.GH6364@lee--X1> <53FEBA43.2000607@ti.com> <20140828071123.GE24579@lee--X1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54006D4C.2070404@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Huang Tao <huangtao@rock-chips.com>, "edubezval@gmail.com" <edubezval@gmail.com>, =?UTF-8?B?6LW15Luq5bOw?= <zyf@rock-chips.com>
-Cc: =?UTF-8?B?SGVpa29TdMO8Ym5lcg==?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Caesar Wang <caesar.wang@rock-chips.com>, "rui.zhang" <rui.zhang@intel.com>, "grant.likely" <grant.likely@linaro.org>, robh+dt <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-pm <linux-pm@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-doc <linux-doc@vger.kernel.org>, =?UTF-8?B?6JSh5p6r?= <cf@rock-chips.com>, dianders <dianders@chromium.org>, dtor <dtor@chromium.org>, =?UTF-8?B?6ZKf5YuH5rGq?= <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "dmitry.torokhov" <dmitry.torokhov@gmail.com>, linux-iio <linux-iio@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140828071123.GE24579@lee--X1>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/14 13:08, Huang Tao wrote:
-> Dear Eduardo Bezerra Valentin:
->=20
-> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8829=E6=97=A5 19:39, edubezval@gmail.=
-com =E5=86=99=E9=81=93:
->> Hello Zhao,
->>
->> On Thu, Aug 28, 2014 at 9:54 PM, =E8=B5=B5=E4=BB=AA=E5=B3=B0 <zyf@ro=
-ck-chips.com> wrote:
->>> Hi Heiko=EF=BC=8C
+On 28/08/14 08:11, Lee Jones wrote:
+> On Thu, 28 Aug 2014, Vignesh R wrote:
+>> On Wednesday 27 August 2014 07:26 PM, Lee Jones wrote:
+>>> On Wed, 27 Aug 2014, Vignesh R wrote:
 >>>
->>>    The TS-ADC on RK3288 has two component, a tsadc and a tsadc cont=
-roller.
->>> The tsadc controller is similar like the thermal manager unit on ot=
-her SOCs.
->>> We followed the naming of 3066, but not named as the Thermal Manage=
-r.
+>>>> Number of averaging, open delay, sample delay are made DT parameters.
+>>>> By decreasing averaging and delays more samples can be obtained per
+>>>> second increasing performance of ADC. Previously the number of
+>>>> averages per step was fixed to 16. Making these parameters
+>>>> configurable will help in balancing speed vs accuracy.
+>>>> For each ADC step provide DT based paramters to set open delay,
+>>>> sample delay and number of averaging. One configurable step is
+>>>> used per ADC channel. Since there can be atmost 8 ADC channels,
+>>>> steps 16 to 8 are used for ADC.
+>>>>
+>>>> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>>  .../bindings/input/touchscreen/ti-tsc-adc.txt      |   18 +++++++
+>>>>  drivers/iio/adc/ti_am335x_adc.c                    |   49 +++++++++++++++++---
+>>>>  include/linux/mfd/ti_am335x_tscadc.h               |    3 ++
+>>>>  3 files changed, 63 insertions(+), 7 deletions(-)
 >>>
->>>    Moreover,there is only one set of apb registers to access the ts=
-adc
->>> controller,and the tsadc is controlled by the tsadc controller,coul=
-d not
->>> access directly. If we write a general tsadc driver by accessed tsa=
-dc
->>> controller registers, and it hardly to write a driver for the tsadc
->>> controller.
->> As suggested by Arnd, you can use the generic driver as interface
->> between thermal framework and IIO layer. The driver you are going to
->> write to your ADC is going to be in the IIO subsystem. The only
->> difference is that the generic driver would work for any ADC driver =
-in
->> the IIO subsystem.
->> https://lkml.org/lkml/2014/2/5/810
+>>> [...]
+>>>
+>>>> diff --git a/include/linux/mfd/ti_am335x_tscadc.h b/include/linux/mfd/ti_am335x_tscadc.h
+>>>> index fb96c84..26d3e84 100644
+>>>> --- a/include/linux/mfd/ti_am335x_tscadc.h
+>>>> +++ b/include/linux/mfd/ti_am335x_tscadc.h
+>>>> @@ -82,14 +82,17 @@
+>>>
+>>> There are so many different formats at play here, it's difficult to
+>>> see what's happening where!
 >>
->> In fact, there is already a generic driver. We just need to get it u=
-p
->> to date.  I see some testing has been already done, and results soun=
-d
->> promising.
-> This iio_thermal driver only support get temperature from the ADC IIO
-> channel.
-> It dose not support any advanced feature such as configure the
-> temperature when system should be reset.
-> So if we adapt it, we will access the register form both TSADC IIO
-> driver and  thermal driver.
-> I don't thank this is a good ideal.
+>> I did not understand "different formats". Please explain.
+> 
+> My complaint is with the existing layout, rather than your patch:
+> 
+>> #define STEPCONFIG_INP_AN4     STEPCONFIG_INP(4)
+>> #define STEPCONFIG_INP_ADCREFM STEPCONFIG_INP(8)
+>> #define STEPCONFIG_FIFO1       BIT(26)
+> 
+> Base10 MACROS.
+> 
+> #define STEPCONFIG_AVG_MAX     16
+> 
+> Base10 int.
+> 
+>> /* Delay register */
+>> #define STEPDELAY_OPEN_MASK    (0x3FFFF << 0)
+> 
+> Base16 shift.
+> 
+>> #define STEPDELAY_OPEN(val)    ((val) << 0)
+> 
+> MACRO shift.
+> 
+>> #define STEPCONFIG_OPENDLY     STEPDELAY_OPEN(0x098)
+> 
+> Base16 MACRO.
+> 
+>> #define STEPDELAY_OPEN_MAX     0x3FFFF
+> 
+> Base16 int.
+> 
+>> #define STEPDELAY_SAMPLE_MASK  (0xFF << 24)
+> 
+> Base16 shift.
+> 
+>> #define STEPDELAY_SAMPLE(val)  ((val) << 24)
+> 
+> MACRO shift.
+> 
+>> #define STEPCONFIG_SAMPLEDLY   STEPDELAY_SAMPLE(0)
+> 
+> 24 shift of 0 (still zero?).
+> 
+>> #define STEPDELAY_SAMPLE_MAX   0xFF
+> 
+> Base16 int.
+> 
+> There is no consistency here, it's just a bunch of 'stuff', which
+> makes making sense of them all difficult.
+> 
+>>>>  #define STEPCONFIG_INP_AN4	STEPCONFIG_INP(4)
+>>>>  #define STEPCONFIG_INP_ADCREFM	STEPCONFIG_INP(8)
+>>>>  #define STEPCONFIG_FIFO1	BIT(26)
+>>>> +#define STEPCONFIG_AVG_MAX	16
+>>>>  
+>>>>  /* Delay register */
+>>>>  #define STEPDELAY_OPEN_MASK	(0x3FFFF << 0)
+>>>>  #define STEPDELAY_OPEN(val)	((val) << 0)
+>>>
+>>> What's the point in shifting by zero?
+>>
+>> I agree. But my patch did not add these lines. I can remove them. Do you
+>> want me to do this change as part of current patch or as a separate
+>> cleanup patch?
+> 
+> That's up to Jonathan.
+I'm always happy to take sane cleanups like this.  Separate cleanup patch please.
+That way it's easy to verify that there are no functional changes without it
+getting in the way of the 'interesting' patch.
 
-Interesting bit of functionality.  I agree this doesn't fit overwelming=
-ly well
-into an iio consumer driver as things currently stand.
-
-Looking briefly at your code, this is basically a threshold interrupt?
-If so then we do have threshold type event handling in IIO (simply term=
-ed
-events).  The snag is that it is the one area that doesn't currently ha=
-ve
-any in kernel interfaces.
-
-Such an interface would be similar to that used for the buffered data a=
-ccess (raw
-data stream - we should probably rename that as it isn't always buffere=
-d anymore).
-The nasty bit (as it was with the buffered interface) is writing a reas=
-onably
-efficient demux that can split out the data to those devices that have =
-registered
-their interest in it. It would involve some additional code in iio_push=
-_event and
-some indirection in the code that controls what events are enabled.
-Actually, you could probably skip this an just squirt all events reciev=
-ed out through
-the direct IIO to userspace interface (nothing prevents another process=
- turning
-more on anyway!).  We could event for now specify that any in kernel us=
-ers might
-get other events and it is up to them to sanity check them.
-
-We'd also need to add some basic access functions to set limits etc.
-
-I'm afraid the 'events' bit of IIO is one of our least developed elemen=
-ts and is
-lagging way behind the work done on the main data flows. It's been on t=
-he
-list for a while, particularly as we need it to finish separating the
-userspace interfaces of IIO from the backend.
-
-So, looking at the wider picture, with a few additions to IIO we can su=
-pport
-some ADC based thermal drivers - whether all of them is a bit dependent=
- on
-whether they have weird and wonderful domain specific hardware (which I=
- might
-have missed here, but does not seem to be present).
-
-Note this is based on a rather brief scan read so I may well have misse=
-d some
-important details!
->=20
-> In fact, we should ignore the "ADC" stuff. This sensor use ADC intern=
-al,
-> but it is transparent to software, especially in automatic mode.
-Is this adc ever used for anything else?  If so, then there is your rea=
-son to
-go through the pain of a generic driver.
+Thanks,
 
 Jonathan
-
-p.s. I'd never seen the driver Arnd highlighted.  Could anyone working =
-on
-IIO clients cc linux-iio@vger.kernel.org as it's useful to know what pe=
-ople
-are using the interfaces for (particularly as they might change so it i=
-s
-good to know what is in the pipeline).
->>
->>>    So, I do not agree to write a generic adc driver for the rk3288-=
-tsadc.
->>>
->>> ________________________________
->>> Yifeng Zhao
->>>
->>>
->=20
->=20
+> 
