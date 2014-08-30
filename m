@@ -1,37 +1,79 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gYXBmMjdkZXY6IGFkZCBtYXgxMDI3IGluIHRoZSBkdHM=?=
-Date: Sat, 30 Aug 2014 19:36:28 +0400
-Message-ID: <1409412988.93020165__25349.6091267609$1409413141$gmane$org@f362.i.mail.ru>
-References: <1409404932-12532-1-git-send-email-tremyfr@gmail.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] ARM: tegra: Initialize interrupt controller
+ from DT
+Date: Sat, 30 Aug 2014 11:54:59 -0400
+Message-ID: <20140830155459.GI3683@titan.lakedaemon.net>
+References: <1409239879-12376-1-git-send-email-thierry.reding@gmail.com>
+ <20140829142408.GA31264@ulmo>
+ <20140829150422.GA11035@ulmo>
+ <3113165.EcqFA5vr07@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409404932-12532-1-git-send-email-tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UGhpbGlwcGUgUmV5bmVz?= <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3113165.EcqFA5vr07@wuerfel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U2F0LCAzMCBBdWcgMjAxNCAxNToyMjoxMiArMDIwMCDQvtGCIFBoaWxpcHBlIFJleW5lcyA8dHJl
-bXlmckBnbWFpbC5jb20+Ogo+IAo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFJleW5lcyA8dHJl
-bXlmckBnbWFpbC5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI3LWFwZjI3ZGV2
-LmR0cyB8ICAgMjAgKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlcyBjaGFuZ2VkLCAyMCBp
-bnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9pbXgyNy1hcGYyN2Rldi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyNy1hcGYy
-N2Rldi5kdHMKPiBpbmRleCBiOTgyMzA5Li4yNWI5ZWNkIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2lteDI3LWFwZjI3ZGV2LmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDI3LWFwZjI3ZGV2LmR0cwo+IEBAIC04Miw2ICs4MiwxOSBAQAo+ICAJcGluY3RybC1uYW1lcyA9
-ICJkZWZhdWx0IjsKPiAgCXBpbmN0cmwtMCA9IDwmcGluY3RybF9jc3BpMSAmcGluY3RybF9jc3Bp
-MV9jcz47Cj4gIAlzdGF0dXMgPSAib2theSI7Cj4gKwo+ICsJYWRjQDAgewo+ICsJCWNvbXBhdGli
-bGUgPSAibWF4aW0sbWF4MTAyNyI7Cj4gKwkJcmVnID0gPDA+Owo+ICsJCWludGVycnVwdC1wYXJl
-bnQgPSA8JmdwaW81PjsKPiArCQlpbnRlcnJ1cHRzID0gPDE1IElSUV9UWVBFX0VER0VfRkFMTElO
-Rz47Cj4gKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiArCQlwaW5jdHJsLTAgPSA8JnBp
-bmN0cmxfbWF4MTAyNz47Cj4gKwkJLyogU1BJIG1vZGUgPSAwICovCj4gKwkJc3BpLWNwb2wgPSA8
-MD47Cj4gKwkJc3BpLWNwaGEgPSA8MD47CgpNb2RlMCBpcyBkZWZhdWx0LgpBZmFpayB5b3Ugbm90
-IG5lZWQgdG8gc3BlY2lmeSBTUE9MICYgU1BIQSBmb3IgdGhpcy4gSXMgbm90IGl0PwoKLS0tCgo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Arnd,
+
+On Fri, Aug 29, 2014 at 09:53:42PM +0200, Arnd Bergmann wrote:
+> On Friday 29 August 2014 17:04:28 Thierry Reding wrote:
+> >         static struct irq_chip *extn;
+> > 
+> >         void gic_arch_register(const struct irqchip *chip)
+> >         {
+> >                 if (WARN(extn != NULL))
+> >                         return;
+> > 
+> >                 gic_chip.flags |= chip->flags;
+> >                 extn = chip;
+> >         }
+> > 
+> > Any preferences, or other ideas? Adding Thomas and Jason, perhaps they
+> > can provide more input on how to solve this.
+> 
+> I think the entire gic_arch_extn method is done in a rather odd way
+> and we should try to come up with a replacement.
+> 
+> These are the users at the moment:
+> 
+> arch/arm/mach-exynos/pm.c:      gic_arch_extn.irq_set_wake = exynos_irq_set_wake;
+> arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_mask = imx_gpc_irq_mask;
+> arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_unmask = imx_gpc_irq_unmask;
+> arch/arm/mach-imx/gpc.c:        gic_arch_extn.irq_set_wake = imx_gpc_irq_set_wake;
+> arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.irq_mask = wakeupgen_mask;
+> arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.irq_unmask = wakeupgen_unmask;
+> arch/arm/mach-omap2/omap-wakeupgen.c:   gic_arch_extn.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_W
+> arch/arm/mach-shmobile/intc-sh73a0.c:   gic_arch_extn.irq_set_wake = sh73a0_set_wake;
+> arch/arm/mach-shmobile/setup-r8a7779.c: gic_arch_extn.irq_set_wake = r8a7779_set_wake;
+> arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_ack = tegra_ack;
+> arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_eoi = tegra_eoi;
+> arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_mask = tegra_mask;
+> arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_unmask = tegra_unmask;
+> arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_retrigger = tegra_retrigger;
+> arch/arm/mach-tegra/irq.c:      gic_arch_extn.irq_set_wake = tegra_set_wake;
+> arch/arm/mach-tegra/irq.c:      gic_arch_extn.flags = IRQCHIP_MASK_ON_SUSPEND;
+> arch/arm/mach-ux500/cpu.c:      gic_arch_extn.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND;
+> arch/arm/mach-zynq/common.c:    gic_arch_extn.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_MASK_ON_SUSPEND;
+> 
+> I have to admit I don't really understand how these work, but what
+> I'd expect to work better is a way to turn the gic code into more
+> of a library that can be used by specialized drivers. In that
+> case you would register a driver for the tegra gic using IRQCHIP_DECLARE
+> and that driver would call a variation of gic_of_init() or gic_init_bases()
+> with the extra stuff as arguments.
+> 
+> We'd have to hack around the fact that all these platforms currently
+> don't list a specialized compatible string, but at least for the future
+> we should be able to do this without special hacks.
+
+Thomas was talking about this just the other day:
+
+  https://lkml.kernel.org/r/alpine.DEB.2.10.1408271347210.3323@nanos
+
+thx,
+
+Jason.
