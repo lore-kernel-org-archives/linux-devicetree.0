@@ -1,51 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/4] regulator: add driver for Ricoh RN5T618 regulators
-Date: Sat, 30 Aug 2014 14:11:03 +0100
-Message-ID: <20140830131103.GB29327@sirena.org.uk>
-References: <1409403026-28818-1-git-send-email-b.galvani@gmail.com>
- <1409403026-28818-3-git-send-email-b.galvani@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="q1SX3yAxAkj1z+aD"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409403026-28818-3-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>
+From: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] apf27dev: add max1027 in the dts
+Date: Sat, 30 Aug 2014 15:22:12 +0200
+Message-ID: <1409404932-12532-1-git-send-email-tremyfr@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---q1SX3yAxAkj1z+aD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx27-apf27dev.dts |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
 
-On Sat, Aug 30, 2014 at 02:50:24PM +0200, Beniamino Galvani wrote:
-> This driver supports the 3 DCDC and 7 LDO regulators available on
-> Ricoh RN5T618 PMIC.
+diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
+index b982309..25b9ecd 100644
+--- a/arch/arm/boot/dts/imx27-apf27dev.dts
++++ b/arch/arm/boot/dts/imx27-apf27dev.dts
+@@ -82,6 +82,19 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
+ 	status = "okay";
++
++	adc@0 {
++		compatible = "maxim,max1027";
++		reg = <0>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_max1027>;
++		/* SPI mode = 0 */
++		spi-cpol = <0>;
++		spi-cpha = <0>;
++		spi-max-frequency = <10000000>;
++	};
+ };
+ 
+ &cspi2 {
+@@ -230,6 +243,13 @@
+ 		pinctrl_sdhc2_cd: sdhc2cdgrp {
+ 			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
+ 		};
++
++		pinctrl_max1027: max1027 {
++			 fsl,pins = <
++				 MX27_PAD_UART1_CTS__GPIO5_14 0
++				 MX27_PAD_UART1_RTS__GPIO5_15 0
++			>;
++		};
+ 	};
+ };
+ 
+-- 
+1.7.4.4
 
-Applied, thanks.
-
---q1SX3yAxAkj1z+aD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUAc1kAAoJELSic+t+oim9G+oP/2c+Z9l8SOroMWXDipCQRY71
-Hf97Yuruyvj61lO2sjx6MvgsK5iSUVDci+FieOcCvRSbeoItZ1ZXKvcKqHwHbJIK
-MOq/fy0YQfAlJH0CFZx77iphsfq5fgJYu7DH7AM5eHPrhVuA2q5BZQzI4nTKl3x0
-ozwYqvWivl/j5VG4KURP3kDkJRMcpDxXIB2n1Q6XaymqNLwDFHcwZD8y+JNEutwt
-l+99i2276k5WmEQL/cs7t49km/4ADpJ2eLbDojDxuMi6qja3H3LVYoADrhbE7Sr9
-C6x0V/nkzG4ERv4WYT4cPcHhCRjPb3dKM8lAVhcnVRbWygdmmieMglKv6B9xek5f
-TpUB4DffP4TpAsjLtG9OVbwmd3Wrkf6zKuDxqFXunUF8T3OOvVD+69MCVyvNz8ga
-e4dZWmXQ8HXrU1S9+uTXV2doniqu3JNABNLtUAKyuHBxPQzuf4Kt32GBk0B7Bsku
-70jdXjD6Err3f/pj9k2TdO7yuBDcc/TaS/5I4qn5TmebL1DuhA4SGq3WSf+ayl13
-YiIMDk5kwpFNIyOmZwJk83i9A+0d26avlNcBiuZpYwr30jQFE86psDwLvW4Km7MT
-nDhJ8nZ9yK2/EE+Lgt6X/crLYo/OASkaa8xatShOgkbQiNstQaF2DR0LWv20NVdi
-A67Nx+mqt1QaVsEBAQnM
-=xo90
------END PGP SIGNATURE-----
-
---q1SX3yAxAkj1z+aD--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
