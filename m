@@ -1,92 +1,64 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings: document Rockchip saradc
-Date: Sat, 30 Aug 2014 14:41:33 +0200
-Message-ID: <1737237.SiLPTrUivB@diego>
-References: <1984475.34C1XMW1q3@diego> <8132020.MqcOnlblHg@diego> <53E38A18.5090203@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53E38A18.5090203-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, =?utf-8?B?ZWRkaWUo6JSh5p6rKQ==?= <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] Add support for Ricoh RN5T618 PMIC
+Date: Sat, 30 Aug 2014 14:50:22 +0200
+Message-ID: <1409403026-28818-1-git-send-email-b.galvani@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 7. August 2014, 15:15:52 schrieb Jonathan Cameron:
-> On 23/07/14 22:24, Heiko St=FCbner wrote:
-> > This add the necessary binding documentation for the saradc found i=
-n all
-> > recent processors from Rockchip.
-> >=20
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->=20
-> Applied to the togreg branch of iio.git.
-> I have exercised a small amount of discretion wrt to the standard 3 w=
-eeks
-> as there really is very little different in here from previous versio=
-ns
-> and no one has raised any comments on them.
+Ricoh RN5T618 is a power management IC which includes 3 step-down DCDC
+converters, 7 low-dropout regulators, a Li-ion battery charger, fuel
+gauge, ADC, GPIOs and a watchdog timer.
 
-Did the binding patch make it into any tree? Because when I grep for sa=
-radc in=20
-either linux-next or the iio tree I only get patch 1/2 (the driver itse=
-lf) but=20
-the binding document is somehow missing.
+This series adds a MFD core driver and separate drivers to support the
+regulator and watchdog functionalities.
 
+The patchset has been tested on a Tronsmart Vega S89 Elite TV box on
+top of other patches needed to support the Amlogic Meson SoC. The tree
+with all the changes is available at:
 
-Thanks
-Heiko
+  https://github.com/bengal/linux/tree/rn5t618-v2
 
+Changes since v1:
+  - moved all header file changes to the first patch
+  - mfd: allow modular build
+  - mfd: removed printk after mfd registration
+  - regulator: rebased on regulator/for-next
+  - wdt: initialized heartbeat parameter to 0 instead of -1
+  - wdt: simplified code path in set_timeout function
+  - wdt: fixed module unloading
+  - wdt: made 'time' unsigned in struct rn5t618_wdt_map
 
->=20
-> It's nearly 3 weeks anyway!
->=20
-> J
->=20
-> > ---
-> > changes since v5:
-> > - remove clock-frquency property as described in patch 1/2
-> >=20
-> >  .../bindings/iio/adc/rockchip-saradc.txt           | 24
-> >  ++++++++++++++++++++++ 1 file changed, 24 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt>=20
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-sar=
-adc.txt
-> > b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt new=
- file
-> > mode 100644
-> > index 0000000..5d3ec1d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> > @@ -0,0 +1,24 @@
-> > +Rockchip Successive Approximation Register (SAR) A/D Converter bin=
-dings
-> > +
-> > +Required properties:
-> > +- compatible: Should be "rockchip,saradc"
-> > +- reg: physical base address of the controller and length of memor=
-y
-> > mapped
-> > +       region.
-> > +- interrupts: The interrupt number to the cpu. The interrupt speci=
-fier
-> > format +              depends on the interrupt controller.
-> > +- clocks: Must contain an entry for each entry in clock-names.
-> > +- clock-names: Shall be "saradc" for the converter-clock, and "apb=
-_pclk"
-> > for +               the peripheral clock.
-> > +- vref-supply: The regulator supply ADC reference voltage.
-> > +- #io-channel-cells: Should be 1, see ../iio-bindings.txt
-> > +
-> > +Example:
-> > +	saradc: saradc@2006c000 {
-> > +		compatible =3D "rockchip,saradc";
-> > +		reg =3D <0x2006c000 0x100>;
-> > +		interrupts =3D <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks =3D <&cru SCLK_SARADC>, <&cru PCLK_SARADC>;
-> > +		clock-names =3D "saradc", "apb_pclk";
-> > +		#io-channel-cells =3D <1>;
-> > +		vref-supply =3D <&vcc18>;
-> > +	};
+Beniamino Galvani (4):
+  mfd: Add Ricoh RN5T618 PMIC core driver
+  regulator: add driver for Ricoh RN5T618 regulators
+  watchdog: add driver for Ricoh RN5T618 watchdog
+  mfd: rn5t618: document device tree bindings
+
+ Documentation/devicetree/bindings/mfd/rn5t618.txt |   36 ++++
+ drivers/mfd/Kconfig                               |   11 +
+ drivers/mfd/Makefile                              |    1 +
+ drivers/mfd/rn5t618.c                             |  134 ++++++++++++
+ drivers/regulator/Kconfig                         |    6 +
+ drivers/regulator/Makefile                        |    1 +
+ drivers/regulator/rn5t618-regulator.c             |  143 +++++++++++++
+ drivers/watchdog/Kconfig                          |   11 +
+ drivers/watchdog/Makefile                         |    1 +
+ drivers/watchdog/rn5t618_wdt.c                    |  198 ++++++++++++++++++
+ include/linux/mfd/rn5t618.h                       |  228 +++++++++++++++++++++
+ 11 files changed, 770 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rn5t618.txt
+ create mode 100644 drivers/mfd/rn5t618.c
+ create mode 100644 drivers/regulator/rn5t618-regulator.c
+ create mode 100644 drivers/watchdog/rn5t618_wdt.c
+ create mode 100644 include/linux/mfd/rn5t618.h
+
+-- 
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
