@@ -1,17 +1,17 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gYXBmMjdkZXY6IGFkZCBtYXgxMDI3IGluIHRoZSBkdHM=?=
 Date: Sat, 30 Aug 2014 19:36:28 +0400
-Message-ID: <1409412988.93020165__30436.690679244$1409413131$gmane$org@f362.i.mail.ru>
+Message-ID: <1409412988.93020165__25349.6091267609$1409413141$gmane$org@f362.i.mail.ru>
 References: <1409404932-12532-1-git-send-email-tremyfr@gmail.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409404932-12532-1-git-send-email-tremyfr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UGhpbGlwcGUgUmV5bmVz?= <tremyfr@gmail.com>
-Cc: kernel@pengutronix.de, shawn.guo@freescale.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409404932-12532-1-git-send-email-tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UGhpbGlwcGUgUmV5bmVz?= <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 U2F0LCAzMCBBdWcgMjAxNCAxNToyMjoxMiArMDIwMCDQvtGCIFBoaWxpcHBlIFJleW5lcyA8dHJl
@@ -31,3 +31,7 @@ Rz47Cj4gKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiArCQlwaW5jdHJsLTAgPSA8JnBp
 bmN0cmxfbWF4MTAyNz47Cj4gKwkJLyogU1BJIG1vZGUgPSAwICovCj4gKwkJc3BpLWNwb2wgPSA8
 MD47Cj4gKwkJc3BpLWNwaGEgPSA8MD47CgpNb2RlMCBpcyBkZWZhdWx0LgpBZmFpayB5b3Ugbm90
 IG5lZWQgdG8gc3BlY2lmeSBTUE9MICYgU1BIQSBmb3IgdGhpcy4gSXMgbm90IGl0PwoKLS0tCgo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
