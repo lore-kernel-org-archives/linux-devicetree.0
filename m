@@ -1,49 +1,74 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] rockchip-i2s: add power setting for I2S controller and fix some critical bugs
-Date: Sat, 30 Aug 2014 20:55:12 +0200
-Message-ID: <2985541.F8SvxX1thq@diego>
-References: <1409350027-17604-1-git-send-email-jay.xu@rock-chips.com> <CAD=FV=XPYkDJ2J3rTHZgKzbH_EMBUmCMwHWjpf1Aagnv_mUqGQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=XPYkDJ2J3rTHZgKzbH_EMBUmCMwHWjpf1Aagnv_mUqGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 00/12] clk: sunxi: Improve MMC clocks support
+Date: Sat, 30 Aug 2014 22:02:59 +0200
+Message-ID: <1409428991-2442-1-git-send-email-maxime.ripard@free-electrons.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 29. August 2014, 21:30:43 schrieb Doug Anderson:
-> Jianqun,
-> 
-> On Fri, Aug 29, 2014 at 3:07 PM, Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> > Add optional power setting for i2s controller found on rk3066, rk3168 and
-> > rk3288 processors from rockchip, should according to hardware design.
-> > 
-> > Default setting for I2S controller is powered by 3.3V, there needs this
-> > patch if it's powered by 1.8V by hardware design.
-> > 
-> > Jianqun (2):
-> >   rockchip-i2s: dt: add grf requested properties to set power of I2S
-> >   controller rockchip-i2s: add power setting for I2S controller, also fix
-> >   some bugs>  
-> >  .../devicetree/bindings/sound/rockchip-i2s.txt     |  6 +-
-> >  sound/soc/rockchip/rockchip_i2s.c                  | 93
-> >  +++++++++++++--------- sound/soc/rockchip/rockchip_i2s.h                
-> >   | 13 +--
-> >  3 files changed, 68 insertions(+), 44 deletions(-)
-> 
-> Did the general solution I posted at
-> <https://patchwork.kernel.org/patch/4807821/> not work for you?  ...or
-> did you not see that?
+Hi everyone,
 
-Also, I don't think it's a good idea to set the io voltage bit simply from a 
-dt setting without looking at the actual regulator voltage ... as a 1.8V 
-setting when the regulator supplies 3.3V supposedly is able to damage the 
-chip.
+Here is an attempt at improving the MMC clock support in the Allwinner
+SoCs.
 
+Until now, the MMC clocks were having a custom phase function that was
+directly setting an obscure value in the right register, because we
+were not really having any idea of what these values were.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Now that we have more informations, we can introduce a common function
+call to get and set the phase of a particular clock, and use this in
+both our provider and our client.
+
+Thanks,
+Maxime
+
+Changes from v1:
+  - Dropped the patches to enforce rate boundaries on the clocks. This
+    is partly covered by the Tomeu, and should be based on this
+    whenever it will be merged.
+  - Fixed a few typos here and there
+  - Added a patch to include of.h from clk-provider.h
+
+Maxime Ripard (11):
+  clk: Include of.h in clock-provider.h
+  clk: Add a function to retrieve phase
+  clk: sunxi: factors: Invert the probing logic
+  clk: sunxi: Introduce mbus compatible
+  ARM: sunxi: dt: Switch to the new mbus compatible
+  clk: sunxi: Move mod0 clock to a file of its own
+  clk: sunxi: Move mbus to mod0 file
+  ARM: sunxi: dt: Add sample and output mmc clocks
+  clk: sunxi: mod0: Introduce MMC proper phase handling
+  mmc: sunxi: Convert MMC driver to the standard clock phase API
+  clk: sunxi: Remove custom phase function
+
+Mike Turquette (1):
+  clk: introduce clk_set_phase function & callback
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   3 +
+ .../devicetree/bindings/mmc/sunxi-mmc.txt          |   8 +-
+ arch/arm/boot/dts/sun4i-a10.dtsi                   | 104 +++++++-
+ arch/arm/boot/dts/sun5i-a10s.dtsi                  |  81 +++++-
+ arch/arm/boot/dts/sun5i-a13.dtsi                   |  82 +++++-
+ arch/arm/boot/dts/sun6i-a31.dtsi                   | 104 +++++++-
+ arch/arm/boot/dts/sun7i-a20.dtsi                   | 106 +++++++-
+ drivers/clk/clk.c                                  |  96 ++++++-
+ drivers/clk/sunxi/Makefile                         |   1 +
+ drivers/clk/sunxi/clk-factors.c                    | 101 +++++++-
+ drivers/clk/sunxi/clk-factors.h                    |  16 +-
+ drivers/clk/sunxi/clk-mod0.c                       | 283 +++++++++++++++++++++
+ drivers/clk/sunxi/clk-sunxi.c                      | 189 +-------------
+ drivers/mmc/host/sunxi-mmc.c                       |  72 ++++--
+ include/linux/clk-private.h                        |   1 +
+ include/linux/clk-provider.h                       |  11 +
+ include/linux/clk.h                                |  29 +++
+ include/linux/clk/sunxi.h                          |  22 --
+ 18 files changed, 1019 insertions(+), 290 deletions(-)
+ create mode 100644 drivers/clk/sunxi/clk-mod0.c
+ delete mode 100644 include/linux/clk/sunxi.h
+
+-- 
+2.0.2
+
