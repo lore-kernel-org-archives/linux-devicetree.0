@@ -1,7 +1,7 @@
 From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 3/6] ARM: dts: hix5hd2: add usb node
-Date: Sat, 30 Aug 2014 12:15:39 +0800
-Message-ID: <1409372142-5960-4-git-send-email-zhangfei.gao@linaro.org>
+Subject: [PATCH v3 4/6] ARM: dts: hix5hd2: add sata node
+Date: Sat, 30 Aug 2014 12:15:40 +0800
+Message-ID: <1409372142-5960-5-git-send-email-zhangfei.gao@linaro.org>
 References: <1409372142-5960-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1409372142-5960-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,33 +10,53 @@ To: mark.rutland-5wv7dgnIgG8@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/hisi-x5hd2.dtsi |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/hisi-x5hd2-dkb.dts |    5 +++++
+ arch/arm/boot/dts/hisi-x5hd2.dtsi    |   20 ++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
+diff --git a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
+index 0da3f3b..375a10c 100644
+--- a/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
++++ b/arch/arm/boot/dts/hisi-x5hd2-dkb.dts
+@@ -79,3 +79,8 @@
+ 		reg = <1>;
+ 	};
+ };
++
++&ahci {
++        phys = <&sata_phy>;
++        phy-names = "sata-phy";
++};
 diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-index 802331b..9252264 100644
+index 9252264..18f52f0 100644
 --- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
 +++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -199,5 +199,19 @@
- 			clocks = <&clock HIX5HD2_MAC1_CLK>;
- 			status = "disabled";
+@@ -213,5 +213,25 @@
+ 			interrupts = <0 67 4>;
+ 			clocks = <&clock HIX5HD2_USB_CLK>;
  		};
 +
-+		usb0: ehci@1890000 {
-+		        compatible = "generic-ehci";
-+			reg = <0x1890000 0x1000>;
-+			interrupts = <0 66 4>;
-+			clocks = <&clock HIX5HD2_USB_CLK>;
-+	        };
++		peripheral_ctrl: syscon@a20000 {
++			compatible = "syscon";
++			reg = <0xa20000 0x1000>;
++		};
 +
-+		usb1: ohci@1880000 {
-+			compatible = "generic-ohci";
-+			reg = <0x1880000 0x1000>;
-+			interrupts = <0 67 4>;
-+			clocks = <&clock HIX5HD2_USB_CLK>;
++		sata_phy: phy@1900000 {
++			compatible = "hisilicon,hix5hd2-sata-phy";
++			reg = <0x1900000 0x10000>;
++			#phy-cells = <0>;
++			hisilicon,peripheral-syscon = <&peripheral_ctrl>;
++			hisilicon,power-reg = <0x8 10>;
++		};
++
++		ahci: sata@1900000 {
++                        compatible = "hisilicon,hisi-ahci";
++                        reg = <0x1900000 0x10000>;
++                        interrupts = <0 70 4>;
++                        clocks = <&clock HIX5HD2_SATA_CLK>;
 +		};
  	};
  };
