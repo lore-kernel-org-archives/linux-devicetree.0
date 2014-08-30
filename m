@@ -1,45 +1,47 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 6/6] ARM: dts: hix5hd2: add wdg node
-Date: Sat, 30 Aug 2014 12:15:42 +0800
-Message-ID: <1409372142-5960-7-git-send-email-zhangfei.gao@linaro.org>
-References: <1409372142-5960-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409372142-5960-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mark.rutland-5wv7dgnIgG8@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 0/2] rockchip-i2s: add power setting for
+ I2S controller and fix some critical bugs
+Date: Fri, 29 Aug 2014 21:30:43 -0700
+Message-ID: <CAD=FV=XPYkDJ2J3rTHZgKzbH_EMBUmCMwHWjpf1Aagnv_mUqGQ@mail.gmail.com>
+References: <1409350027-17604-1-git-send-email-jay.xu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1409350027-17604-1-git-send-email-jay.xu@rock-chips.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jianqun <jay.xu@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, tiwai@suse.de, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, yongjun_wei@trendmicro.com.cn, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/hisi-x5hd2.dtsi |    9 +++++++++
- 1 file changed, 9 insertions(+)
+Jianqun,
 
-diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-index 152f3ad..b3a87d7 100644
---- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
-+++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -365,6 +365,15 @@
- 				#interrupt-cells = <2>;
- 				status = "disabled";
- 			};
-+
-+			wdt0: watchdog@a2c000 {
-+				compatible = "arm,sp805", "arm,primecell";
-+				arm,primecell-periphid = <0x00141805>;
-+				reg = <0xa2c000 0x1000>;
-+				interrupts = <0 29 4>;
-+				clocks = <&clock HIX5HD2_WDG0_RST>;
-+				clock-names = "apb_pclk";
-+                       };
- 		};
- 
- 		local_timer@00a00600 {
--- 
-1.7.9.5
+On Fri, Aug 29, 2014 at 3:07 PM, Jianqun <jay.xu@rock-chips.com> wrote:
+> Add optional power setting for i2s controller found on rk3066, rk3168 and rk3288
+> processors from rockchip, should according to hardware design.
+>
+> Default setting for I2S controller is powered by 3.3V, there needs this patch if
+> it's powered by 1.8V by hardware design.
+>
+> Jianqun (2):
+>   rockchip-i2s: dt: add grf requested properties to set power of I2S controller
+>   rockchip-i2s: add power setting for I2S controller, also fix some bugs
+>
+>  .../devicetree/bindings/sound/rockchip-i2s.txt     |  6 +-
+>  sound/soc/rockchip/rockchip_i2s.c                  | 93 +++++++++++++---------
+>  sound/soc/rockchip/rockchip_i2s.h                  | 13 +--
+>  3 files changed, 68 insertions(+), 44 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Did the general solution I posted at
+<https://patchwork.kernel.org/patch/4807821/> not work for you?  ...or
+did you not see that?
+
+-Doug
