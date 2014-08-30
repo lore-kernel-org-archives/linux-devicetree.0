@@ -1,42 +1,57 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 6/9] usb: xhci: Add NVIDIA Tegra xHCI host-controller
- driver
-Date: Sat, 30 Aug 2014 14:15:58 -0700
-Message-ID: <20140830211558.GA13814@kroah.com>
-References: <1408381705-3623-1-git-send-email-abrestic@chromium.org>
- <1408381705-3623-7-git-send-email-abrestic@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Philippe Reynes <tremyfr@gmail.com>
+Subject: [PATCH v2] apf27dev: add max1027 in the dts
+Date: Sun, 31 Aug 2014 00:00:57 +0200
+Message-ID: <1409436057-29729-1-git-send-email-tremyfr@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1408381705-3623-7-git-send-email-abrestic@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: shawn.guo@freescale.com, kernel@pengutronix.de, shc_work@mail.ru, Philippe Reynes <tremyfr@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 18, 2014 at 10:08:22AM -0700, Andrew Bresticker wrote:
-> Add support for the on-chip xHCI host controller present on Tegra SoCs.
-> 
-> The driver is currently very basic: it loads the controller with its
-> firmware, starts the controller, and is able to service messages sent
-> by the controller's firmware.  The hardware supports device mode as
-> well as lower-power operating modes, but support for these is not yet
-> implemented here.
 
-So you are saying the device doesn't really work?  Can it handle USB
-transactions properly?
+Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+---
+ arch/arm/boot/dts/imx27-apf27dev.dts |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
 
-I have a jetson board here, is this the controller for that hardware?
-Can I test this series on that platform, or is it for something else?
+Changelog:
+v2: (thanks Alexander Shiyan for the feedback)
+- spi mode 0 is the default so no need to explicitly define it
 
-> +static const struct tegra_xhci_soc_config tegra124_soc_config = {
-> +	.firmware_file = "nvidia/tegra124/xusb.bin",
-> +};
-> +MODULE_FIRMWARE("nvidia/tegra124/xusb.bin");
-
-Has this file been submitted to the linux-firmware tree?
-
-thanks,
-
-greg k-h
+diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
+index b982309..f2bab73 100644
+--- a/arch/arm/boot/dts/imx27-apf27dev.dts
++++ b/arch/arm/boot/dts/imx27-apf27dev.dts
+@@ -82,6 +82,16 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
+ 	status = "okay";
++
++	adc@0 {
++		compatible = "maxim,max1027";
++		reg = <0>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_max1027>;
++		spi-max-frequency = <10000000>;
++	};
+ };
+ 
+ &cspi2 {
+@@ -230,6 +240,13 @@
+ 		pinctrl_sdhc2_cd: sdhc2cdgrp {
+ 			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
+ 		};
++
++		pinctrl_max1027: max1027 {
++			 fsl,pins = <
++				 MX27_PAD_UART1_CTS__GPIO5_14 0
++				 MX27_PAD_UART1_RTS__GPIO5_15 0
++			>;
++		};
+ 	};
+ };
+ 
+-- 
+1.7.4.4
