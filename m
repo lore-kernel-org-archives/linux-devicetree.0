@@ -1,136 +1,33 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v3 2/3] rc: Introduce hix5hd2 IR transmitter driver
-Date: Sat, 30 Aug 2014 21:58:22 +0800
-Message-ID: <5401D87E.6000804@linaro.org>
-References: <1409238977-19444-1-git-send-email-zhangfei.gao@linaro.org> <1409238977-19444-3-git-send-email-zhangfei.gao@linaro.org> <53FFF675.7020702@gmail.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gYXBmMjdkZXY6IGFkZCBtYXgxMDI3IGluIHRoZSBkdHM=?=
+Date: Sat, 30 Aug 2014 19:36:28 +0400
+Message-ID: <1409412988.93020165__30436.690679244$1409413131$gmane$org@f362.i.mail.ru>
+References: <1409404932-12532-1-git-send-email-tremyfr@gmail.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <53FFF675.7020702@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Varka Bhadram <varkabhadram@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, sean@mess.org, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Guoxiong Yan <yanguoxiong@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409404932-12532-1-git-send-email-tremyfr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?UGhpbGlwcGUgUmV5bmVz?= <tremyfr@gmail.com>
+Cc: kernel@pengutronix.de, shawn.guo@freescale.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/29/2014 11:41 AM, Varka Bhadram wrote:
-> On 08/28/2014 08:46 PM, Zhangfei Gao wrote:
->> From: Guoxiong Yan <yanguoxiong@huawei.com>
->>
->> IR transmitter driver for Hisilicon hix5hd2 soc
->>
->> By default all protocols are disabled.
->> For example nec decoder can be enabled by either
->> 1. ir-keytable -p nec
->> 2. echo nec > /sys/class/rc/rc0/protocols
->> See see Documentation/ABI/testing/sysfs-class-rc
->>
-> (...)
->
->> +static irqreturn_t hix5hd2_ir_rx_interrupt(int irq, void *data)
->> +{
->> +    u32 symb_num, symb_val, symb_time;
->> +    u32 data_l, data_h;
->> +    u32 irq_sr, i;
->> +    struct hix5hd2_ir_priv *priv = data;
->> +
->> +    irq_sr = readl_relaxed(priv->base + IR_INTS);
->> +    if (irq_sr & INTMS_OVERFLOW) {
->> +        /*
->> +         * we must read IR_DATAL first, then we can clean up
->> +         * IR_INTS availably since logic would not clear
->> +         * fifo when overflow, drv do the job
->> +         */
->> +        ir_raw_event_reset(priv->rdev);
->> +        symb_num = readl_relaxed(priv->base + IR_DATAH);
->> +        for (i = 0; i < symb_num; i++)
->> +            readl_relaxed(priv->base + IR_DATAL);
->> +
->> +        writel_relaxed(INT_CLR_OVERFLOW, priv->base + IR_INTC);
->> +        dev_info(priv->dev, "overflow, level=%d\n",
->> +             IR_CFG_INT_THRESHOLD);
->> +    }
->> +
->> +    if ((irq_sr & INTMS_SYMBRCV) || (irq_sr & INTMS_TIMEOUT)) {
->> +        DEFINE_IR_RAW_EVENT(ev);
->> +
->> +        symb_num = readl_relaxed(priv->base + IR_DATAH);
->> +        for (i = 0; i < symb_num; i++) {
->> +            symb_val = readl_relaxed(priv->base + IR_DATAL);
->> +            data_l = ((symb_val & 0xffff) * 10);
->> +            data_h =  ((symb_val >> 16) & 0xffff) * 10;
->> +            symb_time = (data_l + data_h) / 10;
->> +
->> +            ev.duration = US_TO_NS(data_l);
->> +            ev.pulse = true;
->> +            ir_raw_event_store(priv->rdev, &ev);
->> +
->> +            if (symb_time < IR_CFG_SYMBOL_MAXWIDTH) {
->> +                ev.duration = US_TO_NS(data_h);
->> +                ev.pulse = false;
->> +                ir_raw_event_store(priv->rdev, &ev);
->> +            } else {
->> +                hix5hd2_ir_send_lirc_timeout(priv->rdev);
->> +            }
->> +        }
->> +
->> +        if (irq_sr & INTMS_SYMBRCV)
->> +            writel_relaxed(INT_CLR_RCV, priv->base + IR_INTC);
->> +        if (irq_sr & INTMS_TIMEOUT)
->> +            writel_relaxed(INT_CLR_TIMEOUT, priv->base + IR_INTC);
->> +    }
->> +
->> +    /* Empty software fifo */
->> +    ir_raw_event_handle(priv->rdev);
->> +    return IRQ_HANDLED;
->> +}
->> +
->
-> It looks good if the entire ISR() above the probe()/remove()
-> functionalities
-> of the driver. Maximum of the developers follows this structure.
->
-> (...)
->
->> +static struct of_device_id hix5hd2_ir_table[] = {
->> +    { .compatible = "hisilicon,hix5hd2-ir", },
->> +    {},
->> +};
->> +MODULE_DEVICE_TABLE(of, hix5hd2_ir_table);
->> +
->
-> Every driver put these device ids above *struct platform_driver*
-> definition.
-> So that we can see the of_match_table....
->
->> +static int hix5hd2_ir_probe(struct platform_device *pdev)
->> +{
->> +    int ret;
->> +    struct rc_dev *rdev;
->> +    struct device *dev = &pdev->dev;
->> +    struct resource *res;
->> +    struct hix5hd2_ir_priv *priv;
->> +    struct device_node *node = pdev->dev.of_node;
->> +
->> +    priv = devm_kzalloc(dev, sizeof(struct hix5hd2_ir_priv),
->> GFP_KERNEL);
->
-> sizeof(*priv)...?
->
->> +    if (!priv)
->> +        return -ENOMEM;
->> +
->
-> (...)
->
->> +#endif
->> +
->> +static SIMPLE_DEV_PM_OPS(hix5hd2_ir_pm_ops, hix5hd2_ir_suspend,
->> +             hix5hd2_ir_resume);
->> +
->
-> We can move the device ids here....
-
-Thanks Varka, will change sequence accordingly.
+U2F0LCAzMCBBdWcgMjAxNCAxNToyMjoxMiArMDIwMCDQvtGCIFBoaWxpcHBlIFJleW5lcyA8dHJl
+bXlmckBnbWFpbC5jb20+Ogo+IAo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIFJleW5lcyA8dHJl
+bXlmckBnbWFpbC5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDI3LWFwZjI3ZGV2
+LmR0cyB8ICAgMjAgKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlcyBjaGFuZ2VkLCAyMCBp
+bnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
+b290L2R0cy9pbXgyNy1hcGYyN2Rldi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyNy1hcGYy
+N2Rldi5kdHMKPiBpbmRleCBiOTgyMzA5Li4yNWI5ZWNkIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL2lteDI3LWFwZjI3ZGV2LmR0cwo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDI3LWFwZjI3ZGV2LmR0cwo+IEBAIC04Miw2ICs4MiwxOSBAQAo+ICAJcGluY3RybC1uYW1lcyA9
+ICJkZWZhdWx0IjsKPiAgCXBpbmN0cmwtMCA9IDwmcGluY3RybF9jc3BpMSAmcGluY3RybF9jc3Bp
+MV9jcz47Cj4gIAlzdGF0dXMgPSAib2theSI7Cj4gKwo+ICsJYWRjQDAgewo+ICsJCWNvbXBhdGli
+bGUgPSAibWF4aW0sbWF4MTAyNyI7Cj4gKwkJcmVnID0gPDA+Owo+ICsJCWludGVycnVwdC1wYXJl
+bnQgPSA8JmdwaW81PjsKPiArCQlpbnRlcnJ1cHRzID0gPDE1IElSUV9UWVBFX0VER0VfRkFMTElO
+Rz47Cj4gKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiArCQlwaW5jdHJsLTAgPSA8JnBp
+bmN0cmxfbWF4MTAyNz47Cj4gKwkJLyogU1BJIG1vZGUgPSAwICovCj4gKwkJc3BpLWNwb2wgPSA8
+MD47Cj4gKwkJc3BpLWNwaGEgPSA8MD47CgpNb2RlMCBpcyBkZWZhdWx0LgpBZmFpayB5b3Ugbm90
+IG5lZWQgdG8gc3BlY2lmeSBTUE9MICYgU1BIQSBmb3IgdGhpcy4gSXMgbm90IGl0PwoKLS0tCgo=
