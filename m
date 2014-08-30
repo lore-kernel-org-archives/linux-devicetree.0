@@ -1,141 +1,118 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] staging: iio: light: isl29018: add ACPI support
-Date: Sat, 30 Aug 2014 11:39:47 +0100
-Message-ID: <5401A9F3.4090006@kernel.org>
-References: <1409322382-30021-1-git-send-email-laurentiu.palcu@intel.com> <1409322382-30021-4-git-send-email-laurentiu.palcu@intel.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] IO voltage domain support for rk3188 and rk3288
+Date: Sat, 30 Aug 2014 13:27:43 +0200
+Message-ID: <1450179.xJuMFg9Vvn@diego>
+References: <1409254565-10677-1-git-send-email-dianders@chromium.org> <53FF9E93.3040601@ti.com> <CAD=FV=Vcj+tAno92c38Prviyi-v2CmuGSzak1ppETL033KAF4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409322382-30021-4-git-send-email-laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Teodora Baluta <teodora.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=Vcj+tAno92c38Prviyi-v2CmuGSzak1ppETL033KAF4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sandeep_n-l0cyMroinI0@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Linus
 List-Id: devicetree@vger.kernel.org
 
-On 29/08/14 15:26, Laurentiu Palcu wrote:
-> Add support for enumerating the device through ACPI.
->
-> Signed-off-by: Laurentiu Palcu <laurentiu.palcu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Mostly fine, but I'm unclear on why we have a cast to a char * for name.
+Am Freitag, 29. August 2014, 21:51:46 schrieb Doug Anderson:
+> Santosh,
+>=20
+> On Thu, Aug 28, 2014 at 2:26 PM, Santosh Shilimkar
+>=20
+> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+> > On Thursday 28 August 2014 03:36 PM, Doug Anderson wrote:
+> >> These two patches add support for automatically configuring the IO
+> >> voltage domains on rk3188 and rk3288 SoCs.  The first patch adds s=
+ome
+> >> new notification types to the regulator code.  It's used by the se=
+cond
+> >> patch which actually implements the IO voltage domain driver.
+> >>=20
+> >> These two patches were co-developed by Heiko St=FCbner and Doug An=
+derson
+> >> (proof of concept patches were written by Heiko).  They were teste=
+d in
+> >> a private branch on an rk3288 board using rk808 instead of mainlin=
+e
+> >> since rk808 support isn't finalized in mainline yet.
+> >>=20
+> >> (sorry if you got this series twice; my mailer seems unhappy with =
+me)
+> >>=20
+> >> Heiko St=FCbner (2):
+> >>   regulator: core: Add REGULATOR_EVENT_PRE_VOLTAGE_CHANGE (and ABO=
+RT)
+> >>   soc/rockchip: io-domain: add driver handling io domains
+> >=20
+> > Sorry to shot down but your IO domains are nothing but voltage doma=
+ins
+> > and you should really build something in the drivers/power/*
+>=20
+> If everyone agrees that this belongs in drivers/power that's totally
+> OK.  Neither Heiko nor I was confident that it should be in
+> drivers/soc.  I had even though that the code wouldn't be totally out
+> of place in the Rockchip pinctrl driver (adding Linus W since I think
+> some SoCs did add code to handle 3.3V vs. 1.8V in pinctrl).
 
-Maybe I just haven't had enough coffee this morning :)
+a bit of context for Linus ...
 
-Jonathan
-> ---
->  drivers/staging/iio/light/isl29018.c | 46 +++++++++++++++++++++++++++++++-----
->  1 file changed, 40 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/staging/iio/light/isl29018.c b/drivers/staging/iio/light/isl29018.c
-> index b50f126..c54c6ae 100644
-> --- a/drivers/staging/iio/light/isl29018.c
-> +++ b/drivers/staging/iio/light/isl29018.c
-> @@ -30,6 +30,7 @@
->  #include <linux/slab.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> +#include <linux/acpi.h>
->
->  #define CONVERSION_TIME_MS		100
->
-> @@ -656,12 +657,28 @@ static const struct chip_info chip_info_tbl[] = {
->  	},
->  };
->
-> +static char *isl29018_match_acpi_device(struct device *dev, int *data)
-> +{
-> +	const struct acpi_device_id *id;
-> +
-> +	id = acpi_match_device(dev->driver->acpi_match_table, dev);
-> +
-> +	if (!id)
-> +		return NULL;
-> +
-> +	*data = (int) id->driver_data;
-> +
-> +	return (char *) dev_name(dev);
-Silly question, but what is wrong with const char * as the return type?
-Where this name ultimately ends up is a const char * anyway so you cast
-the const away and then back again.
-> +}
-> +
->  static int isl29018_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
->  	struct isl29018_chip *chip;
->  	struct iio_dev *indio_dev;
->  	int err;
-> +	char *name = NULL;
-const char *
+This is essentially the continuation of  the thread "io-domain voltages=
+ as=20
+regulators?" from the beginning of august. After more discussions we fo=
+und out=20
+that the io voltage selection I asked about is not an independent suppl=
+y, but=20
+instead has to reflect the voltage of the real supplying regulator.
 
-> +	int dev_id = 0;
->
->  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*chip));
->  	if (indio_dev == NULL) {
-> @@ -673,9 +690,17 @@ static int isl29018_probe(struct i2c_client *client,
->  	i2c_set_clientdata(client, indio_dev);
->  	chip->dev = &client->dev;
->
-> +	if (id) {
-> +		name = (char *) id->name;
-> +		dev_id = id->driver_data;
-> +	}
-> +
-> +	if (ACPI_HANDLE(&client->dev))
-> +		name = isl29018_match_acpi_device(&client->dev, &dev_id);
-> +
->  	mutex_init(&chip->lock);
->
-> -	chip->type = id->driver_data;
-> +	chip->type = dev_id;
->  	chip->lux_scale = 1;
->  	chip->lux_uscale = 0;
->  	chip->range = 1000;
-> @@ -683,7 +708,7 @@ static int isl29018_probe(struct i2c_client *client,
->  	chip->suspended = false;
->
->  	chip->regmap = devm_regmap_init_i2c(client,
-> -				chip_info_tbl[id->driver_data].regmap_cfg);
-> +				chip_info_tbl[dev_id].regmap_cfg);
->  	if (IS_ERR(chip->regmap)) {
->  		err = PTR_ERR(chip->regmap);
->  		dev_err(chip->dev, "regmap initialization failed: %d\n", err);
-> @@ -694,10 +719,10 @@ static int isl29018_probe(struct i2c_client *client,
->  	if (err)
->  		return err;
->
-> -	indio_dev->info = chip_info_tbl[id->driver_data].indio_info;
-> -	indio_dev->channels = chip_info_tbl[id->driver_data].channels;
-> -	indio_dev->num_channels = chip_info_tbl[id->driver_data].num_channels;
-> -	indio_dev->name = id->name;
-> +	indio_dev->info = chip_info_tbl[dev_id].indio_info;
-> +	indio_dev->channels = chip_info_tbl[dev_id].channels;
-> +	indio_dev->num_channels = chip_info_tbl[dev_id].num_channels;
-> +	indio_dev->name = name;
->  	indio_dev->dev.parent = &client->dev;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  	err = devm_iio_device_register(&client->dev, indio_dev);
-> @@ -747,6 +772,14 @@ static SIMPLE_DEV_PM_OPS(isl29018_pm_ops, isl29018_suspend, isl29018_resume);
->  #define ISL29018_PM_OPS NULL
->  #endif
->
-> +static const struct acpi_device_id isl29018_acpi_match[] = {
-> +	{"ISL29018", isl29018},
-> +	{"ISL29023", isl29023},
-> +	{"ISL29035", isl29035},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(acpi, isl29018_acpi_match);
-> +
->  static const struct i2c_device_id isl29018_id[] = {
->  	{"isl29018", isl29018},
->  	{"isl29023", isl29023},
-> @@ -768,6 +801,7 @@ static struct i2c_driver isl29018_driver = {
->  	.class	= I2C_CLASS_HWMON,
->  	.driver	 = {
->  			.name = "isl29018",
-> +			.acpi_match_table = ACPI_PTR(isl29018_acpi_match),
->  			.pm = ISL29018_PM_OPS,
->  			.owner = THIS_MODULE,
->  			.of_match_table = isl29018_of_match,
->
+And setting the io-voltage setting to 1.8V while the regulator is suppl=
+ying=20
+3.3V for example may actually damage the chip.
+
+
+So in our current approach here, we added a driver that tracks voltage =
+changes =20
+of the supplying regulator via a notifier and sets the register bits=20
+accordingly.
+
+
+>=20
+> > Please have a look at the RFC [1]. You should really go on those
+> > lines and collaborate to make a generic voltage domain layer instea=
+d of
+> > throwing the driver under drivers/soc.
+>=20
+> Trying to base things on a 7-month old RFC that hasn't been touched i=
+s
+> not something I'm going to do.  Maybe that makes me a bad person...
+>=20
+> I would also say that I'm not convinced that we really need a
+> complicated framework here.  Maybe when we're talking about things
+> like ABB and DevFreq and the like then having a nice framework is a
+> good idea.  Really here we're just setting properties associated with
+> IO pins.  There's no decisions about latency, power tradeoffs, etc.
+> If the pin is connected to 1.8V we need to set the 1.8V bit.  If it's
+> connected to 3.3V we need to set the 3.3V bit.  The end.
+>=20
+> The only remotely complicated thing (and why this isn't just a pinctr=
+l
+> property) is what happens with dynamic voltages.  SD Card IO lines ca=
+n
+> change voltage depending on UHS negotiation.  In that case the SD Car=
+d
+> Driver will request that its regulator change from 3.3V to 1.8V.  The
+> bit in the IO domain register needs to update in tandem.
+>=20
+>=20
+> The driver is really quite tiny (333 lines).  If we find that lots of
+> people copy it and they have code that's nearly the same then we
+> should try to abstract things out then.
+>=20
+>=20
+> I'd be interested in hearing other opinions, though.
+>=20
+> -Doug
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
