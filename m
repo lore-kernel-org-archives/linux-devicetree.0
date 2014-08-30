@@ -1,264 +1,198 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH v2 3/4] watchdog: add driver for Ricoh RN5T618 watchdog
-Date: Sat, 30 Aug 2014 14:50:25 +0200
-Message-ID: <1409403026-28818-4-git-send-email-b.galvani@gmail.com>
-References: <1409403026-28818-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409403026-28818-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>, Beniamino Galvani <b.galvani@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] iio: adc: rockchip_saradc: add support for rk3066-tsadc variant
+Date: Sat, 30 Aug 2014 15:07:49 +0200
+Message-ID: <1999284.oRCTeZRSv1@diego>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a driver for the watchdog timer available in Ricoh RN5T618
-PMIC. The device supports a programmable expiration time of 1, 8, 32
-or 128 seconds.
+Older Rockchip SoCs, at least the rk3066, used a slightly modified saradc
+for temperature measurements. This so called tsadc does not contain any
+active parts like temperature interrupts and only supports polling the
+current temperature. The returned voltage can then be converted by a
+suitable thermal driver to and actual temperature and used for thermal
+handling.
 
-Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- drivers/watchdog/Kconfig       |   11 +++
- drivers/watchdog/Makefile      |    1 +
- drivers/watchdog/rn5t618_wdt.c |  198 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 210 insertions(+)
- create mode 100644 drivers/watchdog/rn5t618_wdt.c
+This is a different IP than the rk3288-tsadc Ceasar provided a driver for.
+As the commit messages states, the one used on the rk3066 is just a saradc,
+while the new tsadc in the rk3288 contains active components for thermal
+handling.
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index f57312f..9eba6af 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -309,6 +309,17 @@ config ORION_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called orion_wdt.
+A working example using the pending iio-thermal driver can found on
+https://github.com/mmind/linux-rockchip/commit/c07e02f069d9677d489f254176619fae36f2aad0
+
+ .../bindings/iio/adc/rockchip-saradc.txt           |  2 +-
+ drivers/iio/adc/rockchip_saradc.c                  | 62 +++++++++++++++++-----
+ 2 files changed, 50 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+index 5d3ec1d..a9a5fe1 100644
+--- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+@@ -1,7 +1,7 @@
+ Rockchip Successive Approximation Register (SAR) A/D Converter bindings
  
-+config RN5T618_WATCHDOG
-+	tristate "Ricoh RN5T618 watchdog"
-+	depends on MFD_RN5T618
-+	select WATCHDOG_CORE
-+	help
-+	  If you say yes here you get support for watchdog on the Ricoh
-+	  RN5T618 PMIC.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called rn5t618_wdt.
-+
- config SUNXI_WATCHDOG
- 	tristate "Allwinner SoCs watchdog support"
- 	depends on ARCH_SUNXI
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 468c320..0afa343 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -47,6 +47,7 @@ obj-$(CONFIG_IOP_WATCHDOG) += iop_wdt.o
- obj-$(CONFIG_DAVINCI_WATCHDOG) += davinci_wdt.o
- obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
- obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
-+obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
- obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
- obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
- obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
-diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
-new file mode 100644
-index 0000000..b6d62ac
---- /dev/null
-+++ b/drivers/watchdog/rn5t618_wdt.c
-@@ -0,0 +1,198 @@
-+/*
-+ * Watchdog driver for Ricoh RN5T618 PMIC
-+ *
-+ * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/mfd/rn5t618.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/watchdog.h>
-+
-+#define DRIVER_NAME "rn5t618-wdt"
-+
-+static bool nowayout = WATCHDOG_NOWAYOUT;
-+static unsigned int heartbeat;
-+
-+module_param(heartbeat, int, 0);
-+MODULE_PARM_DESC(heartbeat, "Initial watchdog heartbeat in seconds");
-+
-+module_param(nowayout, bool, 0);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-+		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-+
-+struct rn5t618_wdt {
-+	struct watchdog_device wdt_dev;
-+	struct rn5t618 *rn5t618;
+ Required properties:
+-- compatible: Should be "rockchip,saradc"
++- compatible: Should be "rockchip,saradc" or "rockchip,rk3066-tsadc"
+ - reg: physical base address of the controller and length of memory mapped
+        region.
+ - interrupts: The interrupt number to the cpu. The interrupt specifier format
+diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
+index e074a0b..7effada 100644
+--- a/drivers/iio/adc/rockchip_saradc.c
++++ b/drivers/iio/adc/rockchip_saradc.c
+@@ -18,13 +18,13 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/clk.h>
+ #include <linux/completion.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/iio/iio.h>
+ 
+ #define SARADC_DATA			0x00
+-#define SARADC_DATA_MASK		0x3ff
+ 
+ #define SARADC_STAS			0x04
+ #define SARADC_STAS_BUSY		BIT(0)
+@@ -38,15 +38,22 @@
+ #define SARADC_DLY_PU_SOC		0x0c
+ #define SARADC_DLY_PU_SOC_MASK		0x3f
+ 
+-#define SARADC_BITS			10
+ #define SARADC_TIMEOUT			msecs_to_jiffies(100)
+ 
++struct rockchip_saradc_data {
++	int				num_bits;
++	const struct iio_chan_spec	*channels;
++	int				num_channels;
++	unsigned long			clk_rate;
 +};
 +
-+/*
-+ * This array encodes the values of WDOGTIM field for the supported
-+ * watchdog expiration times. If the watchdog is not accessed before
-+ * the timer expiration, the PMU generates an interrupt and if the CPU
-+ * doesn't clear it within one second the system is restarted.
-+ */
-+static const struct {
-+	u8 reg_val;
-+	unsigned int time;
-+} rn5t618_wdt_map[] = {
-+	{ 0, 1 },
-+	{ 1, 8 },
-+	{ 2, 32 },
-+	{ 3, 128 },
+ struct rockchip_saradc {
+ 	void __iomem		*regs;
+ 	struct clk		*pclk;
+ 	struct clk		*clk;
+ 	struct completion	completion;
+ 	struct regulator	*vref;
++	const struct rockchip_saradc_data *data;
+ 	u16			last_val;
+ };
+ 
+@@ -90,7 +97,7 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
+ 		}
+ 
+ 		*val = ret / 1000;
+-		*val2 = SARADC_BITS;
++		*val2 = info->data->num_bits;
+ 		return IIO_VAL_FRACTIONAL_LOG2;
+ 	default:
+ 		return -EINVAL;
+@@ -103,7 +110,7 @@ static irqreturn_t rockchip_saradc_isr(int irq, void *dev_id)
+ 
+ 	/* Read value */
+ 	info->last_val = readl_relaxed(info->regs + SARADC_DATA);
+-	info->last_val &= SARADC_DATA_MASK;
++	info->last_val &= BIT(info->data->num_bits) - 1;
+ 
+ 	/* Clear irq & power down adc */
+ 	writel_relaxed(0, info->regs + SARADC_CTRL);
+@@ -133,12 +140,44 @@ static const struct iio_chan_spec rockchip_saradc_iio_channels[] = {
+ 	ADC_CHANNEL(2, "adc2"),
+ };
+ 
++static const struct rockchip_saradc_data saradc_data = {
++	.num_bits = 10,
++	.channels = rockchip_saradc_iio_channels,
++	.num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels),
++	.clk_rate = 1000000,
 +};
 +
-+static int rn5t618_wdt_set_timeout(struct watchdog_device *wdt_dev,
-+				   unsigned int timeout)
-+{
-+	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
-+	int ret, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(rn5t618_wdt_map); i++) {
-+		if (rn5t618_wdt_map[i].time + 1 >= timeout)
-+			break;
-+	}
-+
-+	if (i == ARRAY_SIZE(rn5t618_wdt_map))
-+		return -EINVAL;
-+
-+	ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
-+				 RN5T618_WATCHDOG_WDOGTIM_M,
-+				 rn5t618_wdt_map[i].reg_val);
-+	if (!ret)
-+		wdt_dev->timeout = rn5t618_wdt_map[i].time;
-+
-+	return ret;
-+}
-+
-+static int rn5t618_wdt_start(struct watchdog_device *wdt_dev)
-+{
-+	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
-+	int ret;
-+
-+	ret = rn5t618_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
-+	if (ret)
-+		return ret;
-+
-+	/* enable repower-on */
-+	ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_REPCNT,
-+				 RN5T618_REPCNT_REPWRON,
-+				 RN5T618_REPCNT_REPWRON);
-+	if (ret)
-+		return ret;
-+
-+	/* enable watchdog */
-+	ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
-+				 RN5T618_WATCHDOG_WDOGEN,
-+				 RN5T618_WATCHDOG_WDOGEN);
-+	if (ret)
-+		return ret;
-+
-+	/* enable watchdog interrupt */
-+	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_PWRIREN,
-+				  RN5T618_PWRIRQ_IR_WDOG,
-+				  RN5T618_PWRIRQ_IR_WDOG);
-+}
-+
-+static int rn5t618_wdt_stop(struct watchdog_device *wdt_dev)
-+{
-+	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
-+
-+	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
-+				  RN5T618_WATCHDOG_WDOGEN, 0);
-+}
-+
-+static int rn5t618_wdt_ping(struct watchdog_device *wdt_dev)
-+{
-+	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
-+	unsigned int val;
-+	int ret;
-+
-+	/* The counter is restarted after a R/W access to watchdog register */
-+	ret = regmap_read(wdt->rn5t618->regmap, RN5T618_WATCHDOG, &val);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_write(wdt->rn5t618->regmap, RN5T618_WATCHDOG, val);
-+	if (ret)
-+		return ret;
-+
-+	/* Clear pending watchdog interrupt */
-+	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_PWRIRQ,
-+				  RN5T618_PWRIRQ_IR_WDOG, 0);
-+}
-+
-+static struct watchdog_info rn5t618_wdt_info = {
-+	.options	= WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE |
-+			  WDIOF_KEEPALIVEPING,
-+	.identity	= DRIVER_NAME,
++static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels[] = {
++	ADC_CHANNEL(0, "adc0"),
++	ADC_CHANNEL(1, "adc1"),
 +};
 +
-+static struct watchdog_ops rn5t618_wdt_ops = {
-+	.owner          = THIS_MODULE,
-+	.start          = rn5t618_wdt_start,
-+	.stop           = rn5t618_wdt_stop,
-+	.ping           = rn5t618_wdt_ping,
-+	.set_timeout    = rn5t618_wdt_set_timeout,
++static const struct rockchip_saradc_data rk3066_tsadc_data = {
++	.num_bits = 12,
++	.channels = rockchip_rk3066_tsadc_iio_channels,
++	.num_channels = ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
++	.clk_rate = 50000,
 +};
 +
-+static int rn5t618_wdt_probe(struct platform_device *pdev)
-+{
-+	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
-+	struct rn5t618_wdt *wdt;
-+	int min_timeout, max_timeout;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(struct rn5t618_wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	min_timeout = rn5t618_wdt_map[0].time;
-+	max_timeout = rn5t618_wdt_map[ARRAY_SIZE(rn5t618_wdt_map) - 1].time;
-+
-+	wdt->rn5t618 = rn5t618;
-+	wdt->wdt_dev.info = &rn5t618_wdt_info;
-+	wdt->wdt_dev.ops = &rn5t618_wdt_ops;
-+	wdt->wdt_dev.min_timeout = min_timeout;
-+	wdt->wdt_dev.max_timeout = max_timeout;
-+	wdt->wdt_dev.timeout = max_timeout;
-+	wdt->wdt_dev.parent = &pdev->dev;
-+
-+	watchdog_set_drvdata(&wdt->wdt_dev, wdt);
-+	watchdog_init_timeout(&wdt->wdt_dev, heartbeat, &pdev->dev);
-+	watchdog_set_nowayout(&wdt->wdt_dev, nowayout);
-+
-+	platform_set_drvdata(pdev, wdt);
-+
-+	return watchdog_register_device(&wdt->wdt_dev);
-+}
-+
-+static int rn5t618_wdt_remove(struct platform_device *pdev)
-+{
-+	struct rn5t618_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	watchdog_unregister_device(&wdt->wdt_dev);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver rn5t618_wdt_driver = {
-+	.probe = rn5t618_wdt_probe,
-+	.remove = rn5t618_wdt_remove,
-+	.driver = {
-+		.name	= DRIVER_NAME,
++static const struct of_device_id rockchip_saradc_match[] = {
++	{
++		.compatible = "rockchip,saradc",
++		.data = &saradc_data,
++	}, {
++		.compatible = "rockchip,rk3066-tsadc",
++		.data = &rk3066_tsadc_data,
 +	},
++	{},
 +};
++MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
 +
-+module_platform_driver(rn5t618_wdt_driver);
+ static int rockchip_saradc_probe(struct platform_device *pdev)
+ {
+ 	struct rockchip_saradc *info = NULL;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct iio_dev *indio_dev = NULL;
+ 	struct resource	*mem;
++	const struct of_device_id *match;
+ 	int ret;
+ 	int irq;
+ 
+@@ -152,6 +191,9 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	}
+ 	info = iio_priv(indio_dev);
+ 
++	match = of_match_device(rockchip_saradc_match, &pdev->dev);
++	info->data = match->data;
 +
-+MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
-+MODULE_DESCRIPTION("RN5T618 watchdog driver");
-+MODULE_LICENSE("GPL v2");
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	info->regs = devm_ioremap_resource(&pdev->dev, mem);
+ 	if (IS_ERR(info->regs))
+@@ -195,7 +237,7 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	 * Use a default of 1MHz for the converter clock.
+ 	 * This may become user-configurable in the future.
+ 	 */
+-	ret = clk_set_rate(info->clk, 1000000);
++	ret = clk_set_rate(info->clk, info->data->clk_rate);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to set adc clk rate, %d\n", ret);
+ 		return ret;
+@@ -227,8 +269,8 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	indio_dev->info = &rockchip_saradc_iio_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
+-	indio_dev->channels = rockchip_saradc_iio_channels;
+-	indio_dev->num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels);
++	indio_dev->channels = info->data->channels;
++	indio_dev->num_channels = info->data->num_channels;
+ 
+ 	ret = iio_device_register(indio_dev);
+ 	if (ret)
+@@ -296,12 +338,6 @@ static int rockchip_saradc_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(rockchip_saradc_pm_ops,
+ 			 rockchip_saradc_suspend, rockchip_saradc_resume);
+ 
+-static const struct of_device_id rockchip_saradc_match[] = {
+-	{ .compatible = "rockchip,saradc" },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
+-
+ static struct platform_driver rockchip_saradc_driver = {
+ 	.probe		= rockchip_saradc_probe,
+ 	.remove		= rockchip_saradc_remove,
 -- 
-1.7.10.4
+2.0.1
