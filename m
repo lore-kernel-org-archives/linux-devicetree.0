@@ -1,32 +1,139 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 04/12] MIPS: GIC: Move MIPS_GIC_IRQ_BASE into platform irq.h
-Date: Sat, 30 Aug 2014 09:57:33 +0200
-Message-ID: <6179185.bNbDBEC6tl@wuerfel>
-References: <1409350479-19108-1-git-send-email-abrestic@chromium.org> <1409350479-19108-5-git-send-email-abrestic@chromium.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 1/4] thermal: rockchip: add driver for thermal
+Date: Sat, 30 Aug 2014 10:30:37 +0100
+Message-ID: <540199BD.7000504@kernel.org>
+References: <1409187562-12370-1-git-send-email-caesar.wang@rock-chips.com>	<2852853.mfRZfFVSev@wuerfel>	<20140828143733.GA18084@developer>	<3440260.edal29kzlR@diego>	<2014082909531345696848@rock-chips.com> <CAC-25o-winy6jVjh9_hQ-t2VO2UfxG67pW5DpOve8A2o39EJSw@mail.gmail.com> <54006D4C.2070404@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409350479-19108-5-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54006D4C.2070404@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Huang Tao <huangtao@rock-chips.com>, "edubezval@gmail.com" <edubezval@gmail.com>, =?UTF-8?B?6LW15Luq5bOw?= <zyf@rock-chips.com>
+Cc: =?UTF-8?B?SGVpa29TdMO8Ym5lcg==?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, Caesar Wang <caesar.wang@rock-chips.com>, "rui.zhang" <rui.zhang@intel.com>, "grant.likely" <grant.likely@linaro.org>, robh+dt <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-pm <linux-pm@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-doc <linux-doc@vger.kernel.org>, =?UTF-8?B?6JSh5p6r?= <cf@rock-chips.com>, dianders <dianders@chromium.org>, dtor <dtor@chromium.org>, =?UTF-8?B?6ZKf5YuH5rGq?= <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "dmitry.torokhov" <dmitry.torokhov@gmail.com>, linux-iio <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 29 August 2014 15:14:31 Andrew Bresticker wrote:
-> Define a generic MIPS_GIC_IRQ_BASE which is suitable for Malta and
-> the upcoming Danube board in <mach-generic/irq.h>.  Since Sead-3 is
-> different and uses a MIPS_GIC_IRQ_BASE equal to the CPU IRQ base (0),
-> define its MIPS_GIC_IRQ_BASE in <mach-sead3/irq.h>.
-> 
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
+On 29/08/14 13:08, Huang Tao wrote:
+> Dear Eduardo Bezerra Valentin:
+>=20
+> =E5=9C=A8 2014=E5=B9=B408=E6=9C=8829=E6=97=A5 19:39, edubezval@gmail.=
+com =E5=86=99=E9=81=93:
+>> Hello Zhao,
+>>
+>> On Thu, Aug 28, 2014 at 9:54 PM, =E8=B5=B5=E4=BB=AA=E5=B3=B0 <zyf@ro=
+ck-chips.com> wrote:
+>>> Hi Heiko=EF=BC=8C
+>>>
+>>>    The TS-ADC on RK3288 has two component, a tsadc and a tsadc cont=
+roller.
+>>> The tsadc controller is similar like the thermal manager unit on ot=
+her SOCs.
+>>> We followed the naming of 3066, but not named as the Thermal Manage=
+r.
+>>>
+>>>    Moreover,there is only one set of apb registers to access the ts=
+adc
+>>> controller,and the tsadc is controlled by the tsadc controller,coul=
+d not
+>>> access directly. If we write a general tsadc driver by accessed tsa=
+dc
+>>> controller registers, and it hardly to write a driver for the tsadc
+>>> controller.
+>> As suggested by Arnd, you can use the generic driver as interface
+>> between thermal framework and IIO layer. The driver you are going to
+>> write to your ADC is going to be in the IIO subsystem. The only
+>> difference is that the generic driver would work for any ADC driver =
+in
+>> the IIO subsystem.
+>> https://lkml.org/lkml/2014/2/5/810
+>>
+>> In fact, there is already a generic driver. We just need to get it u=
+p
+>> to date.  I see some testing has been already done, and results soun=
+d
+>> promising.
+> This iio_thermal driver only support get temperature from the ADC IIO
+> channel.
+> It dose not support any advanced feature such as configure the
+> temperature when system should be reset.
+> So if we adapt it, we will access the register form both TSADC IIO
+> driver and  thermal driver.
+> I don't thank this is a good ideal.
 
-Why do you actually have to hardwire an IRQ base? Can't you move
-to the linear irqdomain code for DT based MIPS systems yet?
+Interesting bit of functionality.  I agree this doesn't fit overwelming=
+ly well
+into an iio consumer driver as things currently stand.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Looking briefly at your code, this is basically a threshold interrupt?
+If so then we do have threshold type event handling in IIO (simply term=
+ed
+events).  The snag is that it is the one area that doesn't currently ha=
+ve
+any in kernel interfaces.
+
+Such an interface would be similar to that used for the buffered data a=
+ccess (raw
+data stream - we should probably rename that as it isn't always buffere=
+d anymore).
+The nasty bit (as it was with the buffered interface) is writing a reas=
+onably
+efficient demux that can split out the data to those devices that have =
+registered
+their interest in it. It would involve some additional code in iio_push=
+_event and
+some indirection in the code that controls what events are enabled.
+Actually, you could probably skip this an just squirt all events reciev=
+ed out through
+the direct IIO to userspace interface (nothing prevents another process=
+ turning
+more on anyway!).  We could event for now specify that any in kernel us=
+ers might
+get other events and it is up to them to sanity check them.
+
+We'd also need to add some basic access functions to set limits etc.
+
+I'm afraid the 'events' bit of IIO is one of our least developed elemen=
+ts and is
+lagging way behind the work done on the main data flows. It's been on t=
+he
+list for a while, particularly as we need it to finish separating the
+userspace interfaces of IIO from the backend.
+
+So, looking at the wider picture, with a few additions to IIO we can su=
+pport
+some ADC based thermal drivers - whether all of them is a bit dependent=
+ on
+whether they have weird and wonderful domain specific hardware (which I=
+ might
+have missed here, but does not seem to be present).
+
+Note this is based on a rather brief scan read so I may well have misse=
+d some
+important details!
+>=20
+> In fact, we should ignore the "ADC" stuff. This sensor use ADC intern=
+al,
+> but it is transparent to software, especially in automatic mode.
+Is this adc ever used for anything else?  If so, then there is your rea=
+son to
+go through the pain of a generic driver.
+
+Jonathan
+
+p.s. I'd never seen the driver Arnd highlighted.  Could anyone working =
+on
+IIO clients cc linux-iio@vger.kernel.org as it's useful to know what pe=
+ople
+are using the interfaces for (particularly as they might change so it i=
+s
+good to know what is in the pipeline).
+>>
+>>>    So, I do not agree to write a generic adc driver for the rk3288-=
+tsadc.
+>>>
+>>> ________________________________
+>>> Yifeng Zhao
+>>>
+>>>
+>=20
+>=20
