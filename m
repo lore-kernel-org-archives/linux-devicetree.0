@@ -1,270 +1,221 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 3/4] watchdog: add driver for Ricoh RN5T618 watchdog
-Date: Sun, 31 Aug 2014 10:51:21 -0700
-Message-ID: <54036099.2030506@roeck-us.net>
-References: <1409403026-28818-1-git-send-email-b.galvani@gmail.com> <1409403026-28818-4-git-send-email-b.galvani@gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] adv7604: Use DT parsing in dummy creation
+Date: Sun, 31 Aug 2014 20:18:58 +0300
+Message-ID: <2204455.3fKSNVsp04@avalon>
+References: <1409325303-15906-1-git-send-email-jean-michel.hautbois@vodalys.com> <1409325303-15906-2-git-send-email-jean-michel.hautbois@vodalys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409403026-28818-4-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409325303-15906-2-git-send-email-jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/2014 05:50 AM, Beniamino Galvani wrote:
-> This adds a driver for the watchdog timer available in Ricoh RN5T618
-> PMIC. The device supports a programmable expiration time of 1, 8, 32
-> or 128 seconds.
+Hi Jean-Michel,
+
+Thank you for the patch.
+
+On Friday 29 August 2014 17:15:03 Jean-Michel Hautbois wrote:
+> This patch uses DT in order to parse addresses for dummy devices of a=
+dv7604.
+> The ADV7604 has thirteen 256-byte maps that can be accessed via the m=
+ain
+> I=B2C ports. Each map has it own I=B2C address and acts
+> as a standard slave device on the I=B2C bus.
+>=20
+> If nothing is defined, it uses default addresses.
+> The main prupose is using two adv76xx on the same i2c bus.
+>=20
+> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org=
 >
-> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
 > ---
->   drivers/watchdog/Kconfig       |   11 +++
->   drivers/watchdog/Makefile      |    1 +
->   drivers/watchdog/rn5t618_wdt.c |  198 ++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 210 insertions(+)
->   create mode 100644 drivers/watchdog/rn5t618_wdt.c
->
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index f57312f..9eba6af 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -309,6 +309,17 @@ config ORION_WATCHDOG
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called orion_wdt.
->
-> +config RN5T618_WATCHDOG
-> +	tristate "Ricoh RN5T618 watchdog"
-> +	depends on MFD_RN5T618
-> +	select WATCHDOG_CORE
-> +	help
-> +	  If you say yes here you get support for watchdog on the Ricoh
-> +	  RN5T618 PMIC.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called rn5t618_wdt.
-> +
->   config SUNXI_WATCHDOG
->   	tristate "Allwinner SoCs watchdog support"
->   	depends on ARCH_SUNXI
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 468c320..0afa343 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -47,6 +47,7 @@ obj-$(CONFIG_IOP_WATCHDOG) += iop_wdt.o
->   obj-$(CONFIG_DAVINCI_WATCHDOG) += davinci_wdt.o
->   obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
->   obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
-> +obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
->   obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
->   obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
->   obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
-> diff --git a/drivers/watchdog/rn5t618_wdt.c b/drivers/watchdog/rn5t618_wdt.c
-> new file mode 100644
-> index 0000000..b6d62ac
-> --- /dev/null
-> +++ b/drivers/watchdog/rn5t618_wdt.c
-> @@ -0,0 +1,198 @@
-> +/*
-> + * Watchdog driver for Ricoh RN5T618 PMIC
-> + *
-> + * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/mfd/rn5t618.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define DRIVER_NAME "rn5t618-wdt"
-> +
-> +static bool nowayout = WATCHDOG_NOWAYOUT;
-> +static unsigned int heartbeat;
-> +
-> +module_param(heartbeat, int, 0);
-> +MODULE_PARM_DESC(heartbeat, "Initial watchdog heartbeat in seconds");
-> +
-> +module_param(nowayout, bool, 0);
-> +MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-> +		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-> +
-> +struct rn5t618_wdt {
-> +	struct watchdog_device wdt_dev;
-> +	struct rn5t618 *rn5t618;
+>  .../devicetree/bindings/media/i2c/adv7604.txt      | 17 +++++-
+>  drivers/media/i2c/adv7604.c                        | 60 ++++++++++++=
+-------
+>  2 files changed, 55 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt index
+> c27cede..8486b5c 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> @@ -10,8 +10,12 @@ Required Properties:
+>=20
+>    - compatible: Must contain one of the following
+>      - "adi,adv7611" for the ADV7611
+> +    - "adi,adv7604" for the ADV7604
+
+Addition of ADV7604 support is unrelated to the subject and needs to be=
+ split=20
+into a separate patch.
+
+> -  - reg: I2C slave address
+> +  - reg: I2C slave addresses
+> +    The ADV7604 has thirteen 256-byte maps that can be accessed via =
+the
+> main
+> +    I=B2C ports. Each map has it own I=B2C address and acts
+> +    as a standard slave device on the I=B2C bus.
+>=20
+>    - hpd-gpios: References to the GPIOs that control the HDMI hot-plu=
+g
+>      detection pins, one per HDMI input. The active flag indicates th=
+e GPIO
+> @@ -32,6 +36,12 @@ The digital output port node must contain at least=
+ one
+> endpoint. Optional Properties:
+>=20
+>    - reset-gpios: Reference to the GPIO connected to the device's res=
+et pin.
+> +  - reg-names : Names of maps with programmable addresses.
+> +		It can contain any map needing another address than default one.
+> +		Possible maps names are :
+> +ADV7604 : "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe"=
+,
+> "rep",
+> +		"edid", "hdmi", "test", "cp", "vdp"
+> +ADV7611 : "main", "cec", "infoframe", "afe", "rep", "edid", "hdmi", =
+"cp"
+>=20
+>  Optional Endpoint Properties:
+>=20
+> @@ -50,7 +60,10 @@ Example:
+>=20
+>  	hdmi_receiver@4c {
+>  		compatible =3D "adi,adv7611";
+> -		reg =3D <0x4c>;
+> +		/* edid page will be accessible @ 0x66 on i2c bus */
+> +		/* other maps keep their default addresses */
+> +		reg =3D <0x4c 0x66>;
+> +		reg-names =3D "main", "edid";
+>=20
+>  		reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;
+>  		hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.=
+c
+> index d4fa213..56037dd 100644
+> --- a/drivers/media/i2c/adv7604.c
+> +++ b/drivers/media/i2c/adv7604.c
+> @@ -326,6 +326,22 @@ static const struct adv7604_video_standards
+> adv7604_prim_mode_hdmi_gr[] =3D { { },
+>  };
+>=20
+> +static const char const *adv7604_secondary_names[] =3D {
+> +	"main", /* ADV7604_PAGE_IO */
+> +	"avlink", /* ADV7604_PAGE_AVLINK */
+> +	"cec", /* ADV7604_PAGE_CEC */
+> +	"infoframe", /* ADV7604_PAGE_INFOFRAME */
+> +	"esdp", /* ADV7604_PAGE_ESDP */
+> +	"dpp", /* ADV7604_PAGE_DPP */
+> +	"afe", /* ADV7604_PAGE_AFE */
+> +	"rep", /* ADV7604_PAGE_REP */
+> +	"edid", /* ADV7604_PAGE_EDID */
+> +	"hdmi", /* ADV7604_PAGE_HDMI */
+> +	"test", /* ADV7604_PAGE_TEST */
+> +	"cp", /* ADV7604_PAGE_CP */
+> +	"vdp" /* ADV7604_PAGE_VDP */
 > +};
 > +
-> +/*
-> + * This array encodes the values of WDOGTIM field for the supported
-> + * watchdog expiration times. If the watchdog is not accessed before
-> + * the timer expiration, the PMU generates an interrupt and if the CPU
-> + * doesn't clear it within one second the system is restarted.
-> + */
-> +static const struct {
-> +	u8 reg_val;
-> +	unsigned int time;
-> +} rn5t618_wdt_map[] = {
-> +	{ 0, 1 },
-> +	{ 1, 8 },
-> +	{ 2, 32 },
-> +	{ 3, 128 },
-> +};
+>  /* -----------------------------------------------------------------=
+------
+> */
+>=20
+>  static inline struct adv7604_state *to_state(struct v4l2_subdev *sd)
+> @@ -2528,13 +2544,31 @@ static void adv7604_unregister_clients(struct
+> adv7604_state *state) }
+>=20
+>  static struct i2c_client *adv7604_dummy_client(struct v4l2_subdev *s=
+d,
+> -							u8 addr, u8 io_reg)
+> +						unsigned int i)
+>  {
+>  	struct i2c_client *client =3D v4l2_get_subdevdata(sd);
+> +	struct adv7604_platform_data *pdata =3D client->dev.platform_data;
+> +	unsigned int io_reg =3D 0xf2 + i;
+> +	unsigned int default_addr =3D io_read(sd, io_reg) >> 1;
+
+This modifies the behaviour of the driver. It previously used fixed def=
+ault=20
+addresses in the DT case, and now defaults to whatever has been program=
+med in=20
+the chip. This might not be an issue in itself, but it should be docume=
+nted in=20
+the commit message (and possibly split to a separate patch).
+
+> +	struct i2c_client *new_client;
 > +
-> +static int rn5t618_wdt_set_timeout(struct watchdog_device *wdt_dev,
-> +				   unsigned int timeout)
-> +{
-> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
-> +	int ret, i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(rn5t618_wdt_map); i++) {
-> +		if (rn5t618_wdt_map[i].time + 1 >= timeout)
-> +			break;
+> +	if (IS_ENABLED(CONFIG_OF)) {
+> +		/* Try to find it in DT */
+> +		new_client =3D i2c_new_secondary_device(client,
+> +			adv7604_secondary_names[i], default_addr);
+> +	} else if (pdata) {
+> +		if (pdata->i2c_addresses[i])
+> +			new_client =3D i2c_new_dummy(client->adapter,
+> +						pdata->i2c_addresses[i]);
+> +		else
+> +			new_client =3D i2c_new_dummy(client->adapter,
+> +						default_addr);
 > +	}
+>=20
+> -	if (addr)
+> -		io_write(sd, io_reg, addr << 1);
+> -	return i2c_new_dummy(client->adapter, io_read(sd, io_reg) >> 1);
+> +	if (new_client)
+> +		io_write(sd, io_reg, new_client->addr << 1);
 > +
-> +	if (i == ARRAY_SIZE(rn5t618_wdt_map))
-> +		return -EINVAL;
-> +
-> +	ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
-> +				 RN5T618_WATCHDOG_WDOGTIM_M,
-> +				 rn5t618_wdt_map[i].reg_val);
-> +	if (!ret)
-> +		wdt_dev->timeout = rn5t618_wdt_map[i].time;
-> +
-> +	return ret;
-> +}
-> +
-> +static int rn5t618_wdt_start(struct watchdog_device *wdt_dev)
-> +{
-> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
-> +	int ret;
-> +
-> +	ret = rn5t618_wdt_set_timeout(wdt_dev, wdt_dev->timeout);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* enable repower-on */
-> +	ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_REPCNT,
-> +				 RN5T618_REPCNT_REPWRON,
-> +				 RN5T618_REPCNT_REPWRON);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* enable watchdog */
-> +	ret = regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
-> +				 RN5T618_WATCHDOG_WDOGEN,
-> +				 RN5T618_WATCHDOG_WDOGEN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* enable watchdog interrupt */
-> +	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_PWRIREN,
-> +				  RN5T618_PWRIRQ_IR_WDOG,
-> +				  RN5T618_PWRIRQ_IR_WDOG);
-> +}
-> +
-> +static int rn5t618_wdt_stop(struct watchdog_device *wdt_dev)
-> +{
-> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
-> +
-> +	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_WATCHDOG,
-> +				  RN5T618_WATCHDOG_WDOGEN, 0);
-> +}
-> +
-> +static int rn5t618_wdt_ping(struct watchdog_device *wdt_dev)
-> +{
-> +	struct rn5t618_wdt *wdt = watchdog_get_drvdata(wdt_dev);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	/* The counter is restarted after a R/W access to watchdog register */
-> +	ret = regmap_read(wdt->rn5t618->regmap, RN5T618_WATCHDOG, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(wdt->rn5t618->regmap, RN5T618_WATCHDOG, val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Clear pending watchdog interrupt */
-> +	return regmap_update_bits(wdt->rn5t618->regmap, RN5T618_PWRIRQ,
-> +				  RN5T618_PWRIRQ_IR_WDOG, 0);
-> +}
-> +
-> +static struct watchdog_info rn5t618_wdt_info = {
-> +	.options	= WDIOF_SETTIMEOUT | WDIOF_MAGICCLOSE |
-> +			  WDIOF_KEEPALIVEPING,
-> +	.identity	= DRIVER_NAME,
-> +};
-> +
-> +static struct watchdog_ops rn5t618_wdt_ops = {
-> +	.owner          = THIS_MODULE,
-> +	.start          = rn5t618_wdt_start,
-> +	.stop           = rn5t618_wdt_stop,
-> +	.ping           = rn5t618_wdt_ping,
-> +	.set_timeout    = rn5t618_wdt_set_timeout,
-> +};
-> +
-> +static int rn5t618_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct rn5t618 *rn5t618 = dev_get_drvdata(pdev->dev.parent);
-> +	struct rn5t618_wdt *wdt;
-> +	int min_timeout, max_timeout;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(struct rn5t618_wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	min_timeout = rn5t618_wdt_map[0].time;
-> +	max_timeout = rn5t618_wdt_map[ARRAY_SIZE(rn5t618_wdt_map) - 1].time;
-> +
-> +	wdt->rn5t618 = rn5t618;
-> +	wdt->wdt_dev.info = &rn5t618_wdt_info;
-> +	wdt->wdt_dev.ops = &rn5t618_wdt_ops;
-> +	wdt->wdt_dev.min_timeout = min_timeout;
-> +	wdt->wdt_dev.max_timeout = max_timeout;
-> +	wdt->wdt_dev.timeout = max_timeout;
-> +	wdt->wdt_dev.parent = &pdev->dev;
-> +
-> +	watchdog_set_drvdata(&wdt->wdt_dev, wdt);
-> +	watchdog_init_timeout(&wdt->wdt_dev, heartbeat, &pdev->dev);
-> +	watchdog_set_nowayout(&wdt->wdt_dev, nowayout);
-> +
-> +	platform_set_drvdata(pdev, wdt);
-> +
-> +	return watchdog_register_device(&wdt->wdt_dev);
-> +}
-> +
-> +static int rn5t618_wdt_remove(struct platform_device *pdev)
-> +{
-> +	struct rn5t618_wdt *wdt = platform_get_drvdata(pdev);
-> +
-> +	watchdog_unregister_device(&wdt->wdt_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver rn5t618_wdt_driver = {
-> +	.probe = rn5t618_wdt_probe,
-> +	.remove = rn5t618_wdt_remove,
-> +	.driver = {
-> +		.name	= DRIVER_NAME,
-> +	},
-> +};
-> +
-> +module_platform_driver(rn5t618_wdt_driver);
-> +
-> +MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
-> +MODULE_DESCRIPTION("RN5T618 watchdog driver");
-> +MODULE_LICENSE("GPL v2");
->
+> +	return new_client;
+>  }
+>=20
+>  static const struct adv7604_reg_seq adv7604_recommended_settings_afe=
+[] =3D {
+> @@ -2677,6 +2711,7 @@ MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
+>=20
+>  static struct of_device_id adv7604_of_id[] __maybe_unused =3D {
+>  	{ .compatible =3D "adi,adv7611", .data =3D &adv7604_chip_info[ADV76=
+11] },
+> +	{ .compatible =3D "adi,adv7604", .data =3D &adv7604_chip_info[ADV76=
+04] },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, adv7604_of_id);
+> @@ -2717,20 +2752,6 @@ static int adv7604_parse_dt(struct adv7604_sta=
+te
+> *state) /* Disable the interrupt for now as no DT-based board uses it=
+=2E */
+> state->pdata.int1_config =3D ADV7604_INT1_CONFIG_DISABLED;
+>=20
+> -	/* Use the default I2C addresses. */
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] =3D 0x42;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] =3D 0x40;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] =3D 0x3e;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] =3D 0x38;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] =3D 0x3c;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] =3D 0x26;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_REP] =3D 0x32;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] =3D 0x36;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] =3D 0x34;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] =3D 0x30;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_CP] =3D 0x22;
+> -	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] =3D 0x24;
+> -
+>  	/* Hardcode the remaining platform data fields. */
+>  	state->pdata.disable_pwrdnb =3D 0;
+>  	state->pdata.disable_cable_det_rst =3D 0;
+> @@ -2891,8 +2912,7 @@ static int adv7604_probe(struct i2c_client *cli=
+ent,
+>  			continue;
+>=20
+>  		state->i2c_clients[i] =3D
+> -			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
+> -					     0xf2 + i);
+> +			adv7604_dummy_client(sd, i);
+>  		if (state->i2c_clients[i] =3D=3D NULL) {
+>  			err =3D -ENOMEM;
+>  			v4l2_err(sd, "failed to create i2c client %u\n", i);
+
+--=20
+Regards,
+
+Laurent Pinchart
