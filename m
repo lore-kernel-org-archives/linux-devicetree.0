@@ -1,42 +1,107 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2Ml0gYXBmMjdkZXY6IGFkZCBtYXgxMDI3IGluIHRoZSBk?=
- =?UTF-8?B?dHM=?=
-Date: Sun, 31 Aug 2014 10:46:54 +0400
-Message-ID: <1409467614.685837886@f430.i.mail.ru>
-References: <1409436057-29729-1-git-send-email-tremyfr@gmail.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 03/12] clk: Add a function to retrieve phase
+Date: Sun, 31 Aug 2014 12:15:50 +0200
+Message-ID: <5402F5D6.4080100@redhat.com>
+References: <1409428991-2442-1-git-send-email-maxime.ripard@free-electrons.com> <1409428991-2442-4-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409436057-29729-1-git-send-email-tremyfr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UGhpbGlwcGUgUmV5bmVz?= <tremyfr@gmail.com>
-Cc: kernel@pengutronix.de, shawn.guo@freescale.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1409428991-2442-4-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-ClN1biwgMzEgQXVnIDIwMTQgMDA6MDA6NTcgKzAyMDAg0L7RgiBQaGlsaXBwZSBSZXluZXMgPHRy
-ZW15ZnJAZ21haWwuY29tPjoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBSZXluZXMgPHRy
-ZW15ZnJAZ21haWwuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXgyNy1hcGYyN2Rl
-di5kdHMgfCAgIDE3ICsrKysrKysrKysrKysrKysrCj4gIDEgZmlsZXMgY2hhbmdlZCwgMTcgaW5z
-ZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPiAKPiBDaGFuZ2Vsb2c6Cj4gdjI6ICh0aGFua3Mg
-QWxleGFuZGVyIFNoaXlhbiBmb3IgdGhlIGZlZWRiYWNrKQo+IC0gc3BpIG1vZGUgMCBpcyB0aGUg
-ZGVmYXVsdCBzbyBubyBuZWVkIHRvIGV4cGxpY2l0bHkgZGVmaW5lIGl0Cj4gCj4gZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI3LWFwZjI3ZGV2LmR0cyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDI3LWFwZjI3ZGV2LmR0cwo+IGluZGV4IGI5ODIzMDkuLmYyYmFiNzMgMTAwNjQ0Cj4g
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjctYXBmMjdkZXYuZHRzCj4gKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvaW14MjctYXBmMjdkZXYuZHRzCj4gQEAgLTgyLDYgKzgyLDE2IEBACj4gIAlw
-aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICAJcGluY3RybC0wID0gPCZwaW5jdHJsX2NzcGkx
-ICZwaW5jdHJsX2NzcGkxX2NzPjsKPiAgCXN0YXR1cyA9ICJva2F5IjsKPiArCj4gKwlhZGNAMCB7
-Cj4gKwkJY29tcGF0aWJsZSA9ICJtYXhpbSxtYXgxMDI3IjsKPiArCQlyZWcgPSA8MD47Cj4gKwkJ
-aW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzU+Owo+ICsJCWludGVycnVwdHMgPSA8MTUgSVJRX1RZ
-UEVfRURHRV9GQUxMSU5HPjsKPiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsJCXBp
-bmN0cmwtMCA9IDwmcGluY3RybF9tYXgxMDI3PjsKPiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwx
-MDAwMDAwMD47Cj4gKwl9Owo+ICB9Owo+ICAKPiAgJmNzcGkyIHsKPiBAQCAtMjMwLDYgKzI0MCwx
-MyBAQAo+ICAJCXBpbmN0cmxfc2RoYzJfY2Q6IHNkaGMyY2RncnAgewo+ICAJCQlmc2wscGlucyA9
-IDxNWDI3X1BBRF9UT1VUX19HUElPM18xNCAweDA+Owo+ICAJCX07Cj4gKwo+ICsJCXBpbmN0cmxf
-bWF4MTAyNzogbWF4MTAyNyB7Cj4gKwkJCSBmc2wscGlucyA9IDwKPiArCQkJCSBNWDI3X1BBRF9V
-QVJUMV9DVFNfX0dQSU81XzE0IDAKPiArCQkJCSBNWDI3X1BBRF9VQVJUMV9SVFNfX0dQSU81XzE1
-IDAKPiArCQkJPjsKPiArCQl9Owo+ICAJfTsKPiAgfTsKCk9ubHkgb25lIHJlbWFyay4KRnVuY3Rp
-b24gb2YgR1BJTzUuMTQgaXMgdW5jbGVhci4gQ2FuIHlvdSBhZGQgYSBjb21tZW50IGZvciB0aGlz
-PwoKLS0tCgo=
+Hi,
+
+On 08/30/2014 10:03 PM, Maxime Ripard wrote:
+> The current phase API doesn't look into the actual hardware to get the phase
+> value, but will rather get it from a variable only set by the set_phase
+> function.
+> 
+> This will cause issue when the client driver will never call the set_phase
+> function, where we can end up having a reported phase that will not match what
+> the hardware has been programmed to by the bootloader or what phase is
+> programmed out of reset.
+> 
+> Add a new get_phase function for the drivers to implement so that we can get
+> this value.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+>  drivers/clk/clk.c            | 17 ++++++++++++++---
+>  include/linux/clk-provider.h |  5 +++++
+>  2 files changed, 19 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index d87661af0c72..7dbceca694f1 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -1797,8 +1797,8 @@ out:
+>   * clk_get_phase - return the phase shift of a clock signal
+>   * @clk: clock signal source
+>   *
+> - * Returns the phase shift of a clock node in degrees, otherwise returns
+> - * -EERROR.
+> + * Returns the phase shift of a clock node in degrees. Any negative
+> + * values are errors.
+>   */
+>  int clk_get_phase(struct clk *clk)
+>  {
+> @@ -1808,7 +1808,18 @@ int clk_get_phase(struct clk *clk)
+>  		goto out;
+>  
+>  	clk_prepare_lock();
+> -	ret = clk->phase;
+> +
+> +	if (clk->phase) {
+> +		ret = clk->phase;
+> +		goto out_unlock;
+> +	}
+
+0 is a valid phase, so this will cause the phase to
+be read from the hardware each time if the phase is 0.
+
+Perhaps make clk->phase signed (if it is not already), init it
+to -1, and check for it not being -1 ?
+
+Regards,
+
+Hans
+
+
+> +
+> +	if (!clk->ops->get_phase)
+> +		goto out_unlock;
+> +
+> +	ret = clk->ops->get_phase(clk->hw);
+> +
+> +out_unlock:
+>  	clk_prepare_unlock();
+>  
+>  out:
+> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> index 69b20d4c1e1a..abec961092a7 100644
+> --- a/include/linux/clk-provider.h
+> +++ b/include/linux/clk-provider.h
+> @@ -130,6 +130,10 @@ struct dentry;
+>   *		set then clock accuracy will be initialized to parent accuracy
+>   *		or 0 (perfect clock) if clock has no parent.
+>   *
+> + * @get_phase:	Queries the hardware to get the current phase of a clock.
+> + *		Returned values are 0-359 degrees on success, negative
+> + *		error codes on failure.
+> + *
+>   * @set_phase:	Shift the phase this clock signal in degrees specified
+>   *		by the second argument. Valid values for degrees are
+>   *		0-359. Return 0 on success, otherwise -EERROR.
+> @@ -182,6 +186,7 @@ struct clk_ops {
+>  				    unsigned long parent_rate, u8 index);
+>  	unsigned long	(*recalc_accuracy)(struct clk_hw *hw,
+>  					   unsigned long parent_accuracy);
+> +	int		(*get_phase)(struct clk_hw *hw);
+>  	int		(*set_phase)(struct clk_hw *hw, int degrees);
+>  	void		(*init)(struct clk_hw *hw);
+>  	int		(*debug_init)(struct clk_hw *hw, struct dentry *dentry);
+> 
