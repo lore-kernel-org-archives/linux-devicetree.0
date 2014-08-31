@@ -1,57 +1,45 @@
-From: Philippe Reynes <tremyfr@gmail.com>
-Subject: [PATCH v2] apf27dev: add max1027 in the dts
-Date: Sun, 31 Aug 2014 00:00:57 +0200
-Message-ID: <1409436057-29729-1-git-send-email-tremyfr@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: shawn.guo@freescale.com, kernel@pengutronix.de, shc_work@mail.ru, Philippe Reynes <tremyfr@gmail.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v4 0/3] Introduce hix5hd2 IR transmitter driver
+Date: Sun, 31 Aug 2014 10:39:08 +0800
+Message-ID: <1409452751-17463-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <m.chehab@samsung.com>, sean@mess.org, arnd@arndb.de, varkabhadram@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+v4:
+Change sequence and some comments from Sean and Varka
 
-Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
----
- arch/arm/boot/dts/imx27-apf27dev.dts |   17 +++++++++++++++++
- 1 files changed, 17 insertions(+), 0 deletions(-)
+v3:
+Got info from Mauro, 3.17 disable all protocol by default, specific protocol
+can be selected via ir-keytable and /sys/class/rc/rc0/protocols
 
-Changelog:
-v2: (thanks Alexander Shiyan for the feedback)
-- spi mode 0 is the default so no need to explicitly define it
+Got suggestion from Sean, add rdev specific info, like timeout, resoluton.
+Add optional property "linux,rc-map-name", if kernel keymap is used
+otherwise user space keymap will be used.
 
-diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
-index b982309..f2bab73 100644
---- a/arch/arm/boot/dts/imx27-apf27dev.dts
-+++ b/arch/arm/boot/dts/imx27-apf27dev.dts
-@@ -82,6 +82,16 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
- 	status = "okay";
-+
-+	adc@0 {
-+		compatible = "maxim,max1027";
-+		reg = <0>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_max1027>;
-+		spi-max-frequency = <10000000>;
-+	};
- };
- 
- &cspi2 {
-@@ -230,6 +240,13 @@
- 		pinctrl_sdhc2_cd: sdhc2cdgrp {
- 			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
- 		};
-+
-+		pinctrl_max1027: max1027 {
-+			 fsl,pins = <
-+				 MX27_PAD_UART1_CTS__GPIO5_14 0
-+				 MX27_PAD_UART1_RTS__GPIO5_15 0
-+			>;
-+		};
- 	};
- };
- 
+v2:
+Rebase to 3.17-rc1, solve two issues:
+a) rc_set_allowed_protocols is deprecated
+b) rc-ir-raw.c add empty change_protocol, which block using all protocol
+For example, when rdev->map_name = RC_MAP_LIRC, ir-nec-decoder can not be used.
+
+Guoxiong Yan (2):
+  rc: Add DT bindings for hix5hd2
+  rc: Introduce hix5hd2 IR transmitter driver
+
+Zhangfei Gao (1):
+  ARM: dts: hix5hd2: add ir node
+
+ .../devicetree/bindings/media/hix5hd2-ir.txt       |   25 ++
+ arch/arm/boot/dts/hisi-x5hd2.dtsi                  |   10 +-
+ drivers/media/rc/Kconfig                           |   11 +
+ drivers/media/rc/Makefile                          |    1 +
+ drivers/media/rc/ir-hix5hd2.c                      |  343 ++++++++++++++++++++
+ 5 files changed, 389 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/hix5hd2-ir.txt
+ create mode 100644 drivers/media/rc/ir-hix5hd2.c
+
 -- 
-1.7.4.4
+1.7.9.5
