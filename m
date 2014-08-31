@@ -1,46 +1,42 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH v4 3/3] ARM: dts: hix5hd2: add ir node
-Date: Sun, 31 Aug 2014 10:39:11 +0800
-Message-ID: <1409452751-17463-4-git-send-email-zhangfei.gao@linaro.org>
-References: <1409452751-17463-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1409452751-17463-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <m.chehab@samsung.com>, sean@mess.org, arnd@arndb.de, varkabhadram@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2Ml0gYXBmMjdkZXY6IGFkZCBtYXgxMDI3IGluIHRoZSBk?=
+ =?UTF-8?B?dHM=?=
+Date: Sun, 31 Aug 2014 10:46:54 +0400
+Message-ID: <1409467614.685837886@f430.i.mail.ru>
+References: <1409436057-29729-1-git-send-email-tremyfr@gmail.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409436057-29729-1-git-send-email-tremyfr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?UGhpbGlwcGUgUmV5bmVz?= <tremyfr@gmail.com>
+Cc: kernel@pengutronix.de, shawn.guo@freescale.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- arch/arm/boot/dts/hisi-x5hd2.dtsi |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/hisi-x5hd2.dtsi b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-index 7b1cb53..1d7cd04 100644
---- a/arch/arm/boot/dts/hisi-x5hd2.dtsi
-+++ b/arch/arm/boot/dts/hisi-x5hd2.dtsi
-@@ -391,7 +391,7 @@
- 		};
- 
- 		sysctrl: system-controller@00000000 {
--			compatible = "hisilicon,sysctrl";
-+			compatible = "hisilicon,sysctrl", "syscon";
- 			reg = <0x00000000 0x1000>;
- 			reboot-offset = <0x4>;
- 		};
-@@ -476,5 +476,13 @@
-                         interrupts = <0 70 4>;
-                         clocks = <&clock HIX5HD2_SATA_CLK>;
- 		};
-+
-+		ir: ir@001000 {
-+			compatible = "hisilicon,hix5hd2-ir";
-+			reg = <0x001000 0x1000>;
-+			interrupts = <0 47 4>;
-+			clocks = <&clock HIX5HD2_FIXED_24M>;
-+			hisilicon,power-syscon = <&sysctrl>;
-+		};
- 	};
- };
--- 
-1.7.9.5
+ClN1biwgMzEgQXVnIDIwMTQgMDA6MDA6NTcgKzAyMDAg0L7RgiBQaGlsaXBwZSBSZXluZXMgPHRy
+ZW15ZnJAZ21haWwuY29tPjoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBSZXluZXMgPHRy
+ZW15ZnJAZ21haWwuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9pbXgyNy1hcGYyN2Rl
+di5kdHMgfCAgIDE3ICsrKysrKysrKysrKysrKysrCj4gIDEgZmlsZXMgY2hhbmdlZCwgMTcgaW5z
+ZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPiAKPiBDaGFuZ2Vsb2c6Cj4gdjI6ICh0aGFua3Mg
+QWxleGFuZGVyIFNoaXlhbiBmb3IgdGhlIGZlZWRiYWNrKQo+IC0gc3BpIG1vZGUgMCBpcyB0aGUg
+ZGVmYXVsdCBzbyBubyBuZWVkIHRvIGV4cGxpY2l0bHkgZGVmaW5lIGl0Cj4gCj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI3LWFwZjI3ZGV2LmR0cyBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2lteDI3LWFwZjI3ZGV2LmR0cwo+IGluZGV4IGI5ODIzMDkuLmYyYmFiNzMgMTAwNjQ0Cj4g
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjctYXBmMjdkZXYuZHRzCj4gKysrIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvaW14MjctYXBmMjdkZXYuZHRzCj4gQEAgLTgyLDYgKzgyLDE2IEBACj4gIAlw
+aW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICAJcGluY3RybC0wID0gPCZwaW5jdHJsX2NzcGkx
+ICZwaW5jdHJsX2NzcGkxX2NzPjsKPiAgCXN0YXR1cyA9ICJva2F5IjsKPiArCj4gKwlhZGNAMCB7
+Cj4gKwkJY29tcGF0aWJsZSA9ICJtYXhpbSxtYXgxMDI3IjsKPiArCQlyZWcgPSA8MD47Cj4gKwkJ
+aW50ZXJydXB0LXBhcmVudCA9IDwmZ3BpbzU+Owo+ICsJCWludGVycnVwdHMgPSA8MTUgSVJRX1RZ
+UEVfRURHRV9GQUxMSU5HPjsKPiArCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsJCXBp
+bmN0cmwtMCA9IDwmcGluY3RybF9tYXgxMDI3PjsKPiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwx
+MDAwMDAwMD47Cj4gKwl9Owo+ICB9Owo+ICAKPiAgJmNzcGkyIHsKPiBAQCAtMjMwLDYgKzI0MCwx
+MyBAQAo+ICAJCXBpbmN0cmxfc2RoYzJfY2Q6IHNkaGMyY2RncnAgewo+ICAJCQlmc2wscGlucyA9
+IDxNWDI3X1BBRF9UT1VUX19HUElPM18xNCAweDA+Owo+ICAJCX07Cj4gKwo+ICsJCXBpbmN0cmxf
+bWF4MTAyNzogbWF4MTAyNyB7Cj4gKwkJCSBmc2wscGlucyA9IDwKPiArCQkJCSBNWDI3X1BBRF9V
+QVJUMV9DVFNfX0dQSU81XzE0IDAKPiArCQkJCSBNWDI3X1BBRF9VQVJUMV9SVFNfX0dQSU81XzE1
+IDAKPiArCQkJPjsKPiArCQl9Owo+ICAJfTsKPiAgfTsKCk9ubHkgb25lIHJlbWFyay4KRnVuY3Rp
+b24gb2YgR1BJTzUuMTQgaXMgdW5jbGVhci4gQ2FuIHlvdSBhZGQgYSBjb21tZW50IGZvciB0aGlz
+PwoKLS0tCgo=
