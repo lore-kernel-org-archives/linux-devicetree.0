@@ -1,42 +1,41 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
-Date: Sun, 31 Aug 2014 11:34:36 -0700
-Message-ID: <CAL1qeaE1jKLM0kK95efvcaeQwS4qjAR9-77Maa2q8aTJ4TC3jw@mail.gmail.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH 05/12] MIPS: GIC: Add device-tree support
+Date: Sun, 31 Aug 2014 11:42:14 -0700
+Message-ID: <CAL1qeaFFrQJLMyNQtcwWtrYSJ4=_Yf0zuYWPtCPsUu-6OrvKdw@mail.gmail.com>
 References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
-	<1409350479-19108-4-git-send-email-abrestic@chromium.org>
-	<6798670.9zbxUzsGyC@wuerfel>
+	<1409350479-19108-6-git-send-email-abrestic@chromium.org>
+	<15153439.zUXECAnL7k@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6798670.9zbxUzsGyC@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <15153439.zUXECAnL7k@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 30, 2014 at 12:53 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 29 August 2014 15:14:30 Andrew Bresticker wrote:
->> The Global Interrupt Controller (GIC) present on certain MIPS systems
->> can be used to route external interrupts to individual VPEs and CPU
->> interrupt vectors.  It also supports a timer and software-generated
->> interrupts.
+On Sat, Aug 30, 2014 at 12:54 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 29 August 2014 15:14:32 Andrew Bresticker wrote:
+>> Add device-tree support for the MIPS GIC.  With DT, no per-platform
+>> static device interrupt mapping is supplied and instead all device
+>> interrupts are specified through the DT.  The GIC-to-CPU interrupts
+>> must also be specified in the DT.
 >>
->> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Platforms using DT-based probing of the GIC need only supply the
+>> GIC_NUM_INTRS and, if necessary, MIPS_GIC_IRQ_BASE values and
+>> call of_irq_init() with an of_device_id table including the GIC.
+>>
+>> Currenlty only legacy and vecotred interrupt modes are supported.
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 >> ---
->>  Documentation/devicetree/bindings/mips/gic.txt | 50 ++++++++++++++++++++++++++
+>>  arch/mips/include/asm/gic.h |  15 ++++++
+>>  arch/mips/kernel/irq-gic.c  | 122 +++++++++++++++++++++++++++++++++++++++++++-
 >>
 >
-> This may be a stupid question, but is this related to the ARM GIC
-> in any way or does it just share the name?
+>
+> Can you move this to drivers/irqchip and use the IRQCHIP_DECLARE()
+> macro to define the entry point?
 
-There's no relation.  Note that it's also "Global Interrupt
-Controller" vs. "Generic Interrupt Controller".
-
-> In either case the binding belongs into
-> Documentation/devicetree/bindings/interrupt-controller/.
-
-Will do.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sure.  I was planning on doing this later, but I don't see why it
+couldn't be done now though.
