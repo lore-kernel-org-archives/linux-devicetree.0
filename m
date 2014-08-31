@@ -1,457 +1,237 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/4] mfd: Add Ricoh RN5T618 PMIC core driver
-Date: Mon, 1 Sep 2014 09:26:19 +0100
-Message-ID: <20140901082619.GA7374@lee--X1>
-References: <1409403026-28818-1-git-send-email-b.galvani@gmail.com>
- <1409403026-28818-2-git-send-email-b.galvani@gmail.com>
+From: Igal.Liberman <igal.liberman@freescale.com>
+Subject: [PATCH] Freescale Frame Manager Device Tree binding document
+Date: Sun, 31 Aug 2014 14:49:20 +0300
+Message-ID: <1409485760-18844-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409403026-28818-2-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
+Cc: scottwood@freescale.com, Igal Liberman <Igal.Liberman@freescale.com>, Emilian.Medve@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 30 Aug 2014, Beniamino Galvani wrote:
-
-> Ricoh RN5T618 is a power management IC which integrates 3 step-down
-> DCDC converters, 7 low-dropout regulators, a Li-ion battery charger,
-> fuel gauge, ADC, GPIOs and a watchdog timer.
->=20
-> This commit adds a MFD core driver to support the I2C communication
-> with the device.
->=20
-> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
-> ---
->  drivers/mfd/Kconfig         |   11 +++
->  drivers/mfd/Makefile        |    1 +
->  drivers/mfd/rn5t618.c       |  134 +++++++++++++++++++++++++
->  include/linux/mfd/rn5t618.h |  228 +++++++++++++++++++++++++++++++++=
-++++++++++
->  4 files changed, 374 insertions(+)
->  create mode 100644 drivers/mfd/rn5t618.c
->  create mode 100644 include/linux/mfd/rn5t618.h
-
-Applied, thanks.
-
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 8d5fad2..843da5d 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -582,6 +582,17 @@ config MFD_RC5T583
->  	  Additional drivers must be enabled in order to use the
->  	  different functionality of the device.
-> =20
-> +config MFD_RN5T618
-> +	tristate "Ricoh RN5T5618 PMIC"
-> +	depends on I2C
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	help
-> +	  Say yes here to add support for the Ricoh RN5T618 PMIC. This
-> +	  driver provides common support for accessing the device,
-> +	  additional drivers must be enabled in order to use the
-> +	  functionality of the device.
-> +
->  config MFD_SEC_CORE
->  	bool "SAMSUNG Electronics PMIC Series Support"
->  	depends on I2C=3Dy
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index f001487..b945899 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -160,6 +160,7 @@ obj-$(CONFIG_MFD_INTEL_MSIC)	+=3D intel_msic.o
->  obj-$(CONFIG_MFD_PALMAS)	+=3D palmas.o
->  obj-$(CONFIG_MFD_VIPERBOARD)    +=3D viperboard.o
->  obj-$(CONFIG_MFD_RC5T583)	+=3D rc5t583.o rc5t583-irq.o
-> +obj-$(CONFIG_MFD_RN5T618)	+=3D rn5t618.o
->  obj-$(CONFIG_MFD_SEC_CORE)	+=3D sec-core.o sec-irq.o
->  obj-$(CONFIG_MFD_SYSCON)	+=3D syscon.o
->  obj-$(CONFIG_MFD_LM3533)	+=3D lm3533-core.o lm3533-ctrlbank.o
-> diff --git a/drivers/mfd/rn5t618.c b/drivers/mfd/rn5t618.c
-> new file mode 100644
-> index 0000000..6668571
-> --- /dev/null
-> +++ b/drivers/mfd/rn5t618.c
-> @@ -0,0 +1,134 @@
-> +/*
-> + * MFD core driver for Ricoh RN5T618 PMIC
-> + *
-> + * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses=
-/>.
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/rn5t618.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +static const struct mfd_cell rn5t618_cells[] =3D {
-> +	{ .name =3D "rn5t618-regulator" },
-> +	{ .name =3D "rn5t618-wdt" },
-> +};
-> +
-> +static bool rn5t618_volatile_reg(struct device *dev, unsigned int re=
-g)
-> +{
-> +	switch (reg) {
-> +	case RN5T618_WATCHDOGCNT:
-> +	case RN5T618_DCIRQ:
-> +	case RN5T618_ILIMDATAH ... RN5T618_AIN0DATAL:
-> +	case RN5T618_IR_ADC1 ... RN5T618_IR_ADC3:
-> +	case RN5T618_IR_GPR:
-> +	case RN5T618_IR_GPF:
-> +	case RN5T618_MON_IOIN:
-> +	case RN5T618_INTMON:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static const struct regmap_config rn5t618_regmap_config =3D {
-> +	.reg_bits	=3D 8,
-> +	.val_bits	=3D 8,
-> +	.volatile_reg	=3D rn5t618_volatile_reg,
-> +	.max_register	=3D RN5T618_MAX_REG,
-> +	.cache_type	=3D REGCACHE_RBTREE,
-> +};
-> +
-> +static struct rn5t618 *rn5t618_pm_power_off;
-> +
-> +static void rn5t618_power_off(void)
-> +{
-> +	/* disable automatic repower-on */
-> +	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_REPCNT,
-> +			   RN5T618_REPCNT_REPWRON, 0);
-> +	/* start power-off sequence */
-> +	regmap_update_bits(rn5t618_pm_power_off->regmap, RN5T618_SLPCNT,
-> +			   RN5T618_SLPCNT_SWPWROFF, RN5T618_SLPCNT_SWPWROFF);
-> +}
-> +
-> +static int rn5t618_i2c_probe(struct i2c_client *i2c,
-> +			     const struct i2c_device_id *id)
-> +{
-> +	struct rn5t618 *priv;
-> +	int ret;
-> +
-> +	priv =3D devm_kzalloc(&i2c->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(i2c, priv);
-> +
-> +	priv->regmap =3D devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
-> +	if (IS_ERR(priv->regmap)) {
-> +		ret =3D PTR_ERR(priv->regmap);
-> +		dev_err(&i2c->dev, "regmap init failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret =3D mfd_add_devices(&i2c->dev, -1, rn5t618_cells,
-> +			      ARRAY_SIZE(rn5t618_cells), NULL, 0, NULL);
-> +	if (ret) {
-> +		dev_err(&i2c->dev, "failed to add sub-devices: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (!pm_power_off) {
-> +		rn5t618_pm_power_off =3D priv;
-> +		pm_power_off =3D rn5t618_power_off;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int rn5t618_i2c_remove(struct i2c_client *i2c)
-> +{
-> +	struct rn5t618 *priv =3D i2c_get_clientdata(i2c);
-> +
-> +	if (priv =3D=3D rn5t618_pm_power_off) {
-> +		rn5t618_pm_power_off =3D NULL;
-> +		pm_power_off =3D NULL;
-> +	}
-> +
-> +	mfd_remove_devices(&i2c->dev);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rn5t618_of_match[] =3D {
-> +	{ .compatible =3D "ricoh,rn5t618" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, rn5t618_of_match);
-> +
-> +static const struct i2c_device_id rn5t618_i2c_id[] =3D {
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, rn5t618_i2c_id);
-> +
-> +static struct i2c_driver rn5t618_i2c_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "rn5t618",
-> +		.of_match_table =3D of_match_ptr(rn5t618_of_match),
-> +	},
-> +	.probe =3D rn5t618_i2c_probe,
-> +	.remove =3D rn5t618_i2c_remove,
-> +	.id_table =3D rn5t618_i2c_id,
-> +};
-> +
-> +module_i2c_driver(rn5t618_i2c_driver);
-> +
-> +MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
-> +MODULE_DESCRIPTION("Ricoh RN5T618 MFD driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.=
-h
-> new file mode 100644
-> index 0000000..c72d534
-> --- /dev/null
-> +++ b/include/linux/mfd/rn5t618.h
-> @@ -0,0 +1,228 @@
-> +/*
-> + * MFD core driver for Ricoh RN5T618 PMIC
-> + *
-> + * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses=
-/>.
-> + */
-> +
-> +#ifndef __LINUX_MFD_RN5T618_H
-> +#define __LINUX_MFD_RN5T618_H
-> +
-> +#include <linux/regmap.h>
-> +
-> +#define RN5T618_LSIVER			0x00
-> +#define RN5T618_OTPVER			0x01
-> +#define RN5T618_IODAC			0x02
-> +#define RN5T618_VINDAC			0x03
-> +#define RN5T618_CPUCNT			0x06
-> +#define RN5T618_PSWR			0x07
-> +#define RN5T618_PONHIS			0x09
-> +#define RN5T618_POFFHIS			0x0a
-> +#define RN5T618_WATCHDOG		0x0b
-> +#define RN5T618_WATCHDOGCNT		0x0c
-> +#define RN5T618_PWRFUNC			0x0d
-> +#define RN5T618_SLPCNT			0x0e
-> +#define RN5T618_REPCNT			0x0f
-> +#define RN5T618_PWRONTIMSET		0x10
-> +#define RN5T618_NOETIMSETCNT		0x11
-> +#define RN5T618_PWRIREN			0x12
-> +#define RN5T618_PWRIRQ			0x13
-> +#define RN5T618_PWRMON			0x14
-> +#define RN5T618_PWRIRSEL		0x15
-> +#define RN5T618_DC1_SLOT		0x16
-> +#define RN5T618_DC2_SLOT		0x17
-> +#define RN5T618_DC3_SLOT		0x18
-> +#define RN5T618_LDO1_SLOT		0x1b
-> +#define RN5T618_LDO2_SLOT		0x1c
-> +#define RN5T618_LDO3_SLOT		0x1d
-> +#define RN5T618_LDO4_SLOT		0x1e
-> +#define RN5T618_LDO5_SLOT		0x1f
-> +#define RN5T618_PSO0_SLOT		0x25
-> +#define RN5T618_PSO1_SLOT		0x26
-> +#define RN5T618_PSO2_SLOT		0x27
-> +#define RN5T618_PSO3_SLOT		0x28
-> +#define RN5T618_LDORTC1_SLOT		0x2a
-> +#define RN5T618_DC1CTL			0x2c
-> +#define RN5T618_DC1CTL2			0x2d
-> +#define RN5T618_DC2CTL			0x2e
-> +#define RN5T618_DC2CTL2			0x2f
-> +#define RN5T618_DC3CTL			0x30
-> +#define RN5T618_DC3CTL2			0x31
-> +#define RN5T618_DC1DAC			0x36
-> +#define RN5T618_DC2DAC			0x37
-> +#define RN5T618_DC3DAC			0x38
-> +#define RN5T618_DC1DAC_SLP		0x3b
-> +#define RN5T618_DC2DAC_SLP		0x3c
-> +#define RN5T618_DC3DAC_SLP		0x3d
-> +#define RN5T618_DCIREN			0x40
-> +#define RN5T618_DCIRQ			0x41
-> +#define RN5T618_DCIRMON			0x42
-> +#define RN5T618_LDOEN1			0x44
-> +#define RN5T618_LDOEN2			0x45
-> +#define RN5T618_LDODIS			0x46
-> +#define RN5T618_LDO1DAC			0x4c
-> +#define RN5T618_LDO2DAC			0x4d
-> +#define RN5T618_LDO3DAC			0x4e
-> +#define RN5T618_LDO4DAC			0x4f
-> +#define RN5T618_LDO5DAC			0x50
-> +#define RN5T618_LDORTCDAC		0x56
-> +#define RN5T618_LDORTC2DAC		0x57
-> +#define RN5T618_LDO1DAC_SLP		0x58
-> +#define RN5T618_LDO2DAC_SLP		0x59
-> +#define RN5T618_LDO3DAC_SLP		0x5a
-> +#define RN5T618_LDO4DAC_SLP		0x5b
-> +#define RN5T618_LDO5DAC_SLP		0x5c
-> +#define RN5T618_ADCCNT1			0x64
-> +#define RN5T618_ADCCNT2			0x65
-> +#define RN5T618_ADCCNT3			0x66
-> +#define RN5T618_ILIMDATAH		0x68
-> +#define RN5T618_ILIMDATAL		0x69
-> +#define RN5T618_VBATDATAH		0x6a
-> +#define RN5T618_VBATDATAL		0x6b
-> +#define RN5T618_VADPDATAH		0x6c
-> +#define RN5T618_VADPDATAL		0x6d
-> +#define RN5T618_VUSBDATAH		0x6e
-> +#define RN5T618_VUSBDATAL		0x6f
-> +#define RN5T618_VSYSDATAH		0x70
-> +#define RN5T618_VSYSDATAL		0x71
-> +#define RN5T618_VTHMDATAH		0x72
-> +#define RN5T618_VTHMDATAL		0x73
-> +#define RN5T618_AIN1DATAH		0x74
-> +#define RN5T618_AIN1DATAL		0x75
-> +#define RN5T618_AIN0DATAH		0x76
-> +#define RN5T618_AIN0DATAL		0x77
-> +#define RN5T618_ILIMTHL			0x78
-> +#define RN5T618_ILIMTHH			0x79
-> +#define RN5T618_VBATTHL			0x7a
-> +#define RN5T618_VBATTHH			0x7b
-> +#define RN5T618_VADPTHL			0x7c
-> +#define RN5T618_VADPTHH			0x7d
-> +#define RN5T618_VUSBTHL			0x7e
-> +#define RN5T618_VUSBTHH			0x7f
-> +#define RN5T618_VSYSTHL			0x80
-> +#define RN5T618_VSYSTHH			0x81
-> +#define RN5T618_VTHMTHL			0x82
-> +#define RN5T618_VTHMTHH			0x83
-> +#define RN5T618_AIN1THL			0x84
-> +#define RN5T618_AIN1THH			0x85
-> +#define RN5T618_AIN0THL			0x86
-> +#define RN5T618_AIN0THH			0x87
-> +#define RN5T618_EN_ADCIR1		0x88
-> +#define RN5T618_EN_ADCIR2		0x89
-> +#define RN5T618_EN_ADCIR3		0x8a
-> +#define RN5T618_IR_ADC1			0x8c
-> +#define RN5T618_IR_ADC2			0x8d
-> +#define RN5T618_IR_ADC3			0x8e
-> +#define RN5T618_IOSEL			0x90
-> +#define RN5T618_IOOUT			0x91
-> +#define RN5T618_GPEDGE1			0x92
-> +#define RN5T618_GPEDGE2			0x93
-> +#define RN5T618_EN_GPIR			0x94
-> +#define RN5T618_IR_GPR			0x95
-> +#define RN5T618_IR_GPF			0x96
-> +#define RN5T618_MON_IOIN		0x97
-> +#define RN5T618_GPLED_FUNC		0x98
-> +#define RN5T618_INTPOL			0x9c
-> +#define RN5T618_INTEN			0x9d
-> +#define RN5T618_INTMON			0x9e
-> +#define RN5T618_PREVINDAC		0xb0
-> +#define RN5T618_BATDAC			0xb1
-> +#define RN5T618_CHGCTL1			0xb3
-> +#define RN5T618_CHGCTL2			0xb4
-> +#define RN5T618_VSYSSET			0xb5
-> +#define RN5T618_REGISET1		0xb6
-> +#define RN5T618_REGISET2		0xb7
-> +#define RN5T618_CHGISET			0xb8
-> +#define RN5T618_TIMSET			0xb9
-> +#define RN5T618_BATSET1			0xba
-> +#define RN5T618_BATSET2			0xbb
-> +#define RN5T618_DIESET			0xbc
-> +#define RN5T618_CHGSTATE		0xbd
-> +#define RN5T618_CHGCTRL_IRFMASK		0xbe
-> +#define RN5T618_CHGSTAT_IRFMASK1	0xbf
-> +#define RN5T618_CHGSTAT_IRFMASK2	0xc0
-> +#define RN5T618_CHGERR_IRFMASK		0xc1
-> +#define RN5T618_CHGCTRL_IRR		0xc2
-> +#define RN5T618_CHGSTAT_IRR1		0xc3
-> +#define RN5T618_CHGSTAT_IRR2		0xc4
-> +#define RN5T618_CHGERR_IRR		0xc5
-> +#define RN5T618_CHGCTRL_MONI		0xc6
-> +#define RN5T618_CHGSTAT_MONI1		0xc7
-> +#define RN5T618_CHGSTAT_MONI2		0xc8
-> +#define RN5T618_CHGERR_MONI		0xc9
-> +#define RN5T618_CHGCTRL_DETMOD1		0xca
-> +#define RN5T618_CHGCTRL_DETMOD2		0xcb
-> +#define RN5T618_CHGSTAT_DETMOD1		0xcc
-> +#define RN5T618_CHGSTAT_DETMOD2		0xcd
-> +#define RN5T618_CHGSTAT_DETMOD3		0xce
-> +#define RN5T618_CHGERR_DETMOD1		0xcf
-> +#define RN5T618_CHGERR_DETMOD2		0xd0
-> +#define RN5T618_CHGOSCCTL		0xd4
-> +#define RN5T618_CHGOSCSCORESET1		0xd5
-> +#define RN5T618_CHGOSCSCORESET2		0xd6
-> +#define RN5T618_CHGOSCSCORESET3		0xd7
-> +#define RN5T618_CHGOSCFREQSET1		0xd8
-> +#define RN5T618_CHGOSCFREQSET2		0xd9
-> +#define RN5T618_CONTROL			0xe0
-> +#define RN5T618_SOC			0xe1
-> +#define RN5T618_RE_CAP_H		0xe2
-> +#define RN5T618_RE_CAP_L		0xe3
-> +#define RN5T618_FA_CAP_H		0xe4
-> +#define RN5T618_FA_CAP_L		0xe5
-> +#define RN5T618_AGE			0xe6
-> +#define RN5T618_TT_EMPTY_H		0xe7
-> +#define RN5T618_TT_EMPTY_L		0xe8
-> +#define RN5T618_TT_FULL_H		0xe9
-> +#define RN5T618_TT_FULL_L		0xea
-> +#define RN5T618_VOLTAGE_1		0xeb
-> +#define RN5T618_VOLTAGE_0		0xec
-> +#define RN5T618_TEMP_1			0xed
-> +#define RN5T618_TEMP_0			0xee
-> +#define RN5T618_CC_CTRL			0xef
-> +#define RN5T618_CC_COUNT2		0xf0
-> +#define RN5T618_CC_COUNT1		0xf1
-> +#define RN5T618_CC_COUNT0		0xf2
-> +#define RN5T618_CC_SUMREG3		0xf3
-> +#define RN5T618_CC_SUMREG2		0xf4
-> +#define RN5T618_CC_SUMREG1		0xf5
-> +#define RN5T618_CC_SUMREG0		0xf6
-> +#define RN5T618_CC_OFFREG1		0xf7
-> +#define RN5T618_CC_OFFREG0		0xf8
-> +#define RN5T618_CC_GAINREG1		0xf9
-> +#define RN5T618_CC_GAINREG0		0xfa
-> +#define RN5T618_CC_AVEREG1		0xfb
-> +#define RN5T618_CC_AVEREG0		0xfc
-> +#define RN5T618_MAX_REG			0xfc
-> +
-> +#define RN5T618_REPCNT_REPWRON		BIT(0)
-> +#define RN5T618_SLPCNT_SWPWROFF		BIT(0)
-> +#define RN5T618_WATCHDOG_WDOGEN		BIT(2)
-> +#define RN5T618_WATCHDOG_WDOGTIM_M	(BIT(0) | BIT(1))
-> +#define RN5T618_WATCHDOG_WDOGTIM_S	0
-> +#define RN5T618_PWRIRQ_IR_WDOG		BIT(6)
-> +
-> +enum {
-> +	RN5T618_DCDC1,
-> +	RN5T618_DCDC2,
-> +	RN5T618_DCDC3,
-> +	RN5T618_LDO1,
-> +	RN5T618_LDO2,
-> +	RN5T618_LDO3,
-> +	RN5T618_LDO4,
-> +	RN5T618_LDO5,
-> +	RN5T618_LDORTC1,
-> +	RN5T618_LDORTC2,
-> +	RN5T618_REG_NUM,
-> +};
-> +
-> +struct rn5t618 {
-> +	struct regmap *regmap;
-> +};
-> +
-> +#endif /* __LINUX_MFD_RN5T618_H */
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+RnJvbTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBmcmVlc2NhbGUuY29tPgoKVGhlIEZy
+YW1lIE1hbmFnZXIgKEZNYW4pIGNvbWJpbmVzIHRoZSBFdGhlcm5ldCBuZXR3b3JrIGludGVyZmFj
+ZXMgd2l0aCBwYWNrZXQKZGlzdHJpYnV0aW9uIGxvZ2ljIHRvIHByb3ZpZGUgaW50ZWxsaWdlbnQg
+ZGlzdHJpYnV0aW9uIGFuZCBxdWV1aW5nIGRlY2lzaW9ucwpmb3IgaW5jb21pbmcgdHJhZmZpYyBh
+dCBsaW5lIHJhdGUuCgpUaGlzIGJpbmRpbmcgZG9jdW1lbnQgZGVzY3JpYmVzIEZyZWVzY2FsZSdz
+IEZyYW1lIE1hbmFnZXIgaGFyZHdhcmUgYXR0cmlidXRlcwp0aGF0IGFyZSB1c2VkIGJ5IHRoZSBG
+cmFtZSBNYW5hZ2VyIGRyaXZlciBmb3IgaXRzIGJhc2ljIGluaXRpYWxpemF0aW9uIGFuZApjb25m
+aWd1cmF0aW9uLgoKU2lnbmVkLW9mZi1ieTogSWdhbCBMaWJlcm1hbiA8SWdhbC5MaWJlcm1hbkBm
+cmVlc2NhbGUuY29tPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2Zt
+YW4udHh0ICAgICAgIHwgIDQ2MiArKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
+IDQ2MiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2ZtYW4udHh0Cm5ldyBmaWxl
+IG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmNlMDc5M2YKLS0tIC9kZXYvbnVsbAorKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvZm1hbi50eHQKQEAg
+LTAsMCArMSw0NjIgQEAKKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CitGcmVlc2NhbGUgRnJhbWUgTWFu
+YWdlciBEZXZpY2UgQmluZGluZ3MKKworQ09OVEVOVFMKKyAgLSBGTWFuIE5vZGUKKyAgLSBGTWFu
+IFBvcnQgTm9kZQorICAtIEZNYW4gTVVSQU0gTm9kZQorICAtIEZNYW4gZFRTRUMvWEdFQy9tRU1B
+QyBOb2RlCisgIC0gRk1hbiBJRUVFIDE1ODggTm9kZQorICAtIEV4YW1wbGUKKworPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT0KK0ZNYW4gTm9kZQorCitERVNDUklQVElPTgorCitEdWUgdG8gdGhlIGZhY3Qg
+dGhhdCB0aGUgRk1hbiBpcyBhbiBhZ2dyZWdhdGlvbiBvZiBzdWItZW5naW5lcyAocG9ydHMsIE1B
+Q3MsCitldGMuKSB0aGUgRk1hbiBub2RlIHdpbGwgaGF2ZSBjaGlsZCBub2RlcyBmb3IgZWFjaCBv
+ZiB0aGVtLgorCitQUk9QRVJUSUVTCisKKy0gY29tcGF0aWJsZQorCQlVc2FnZTogcmVxdWlyZWQK
+KwkJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+CisJCURlZmluaXRpb246IE11c3QgaW5jbHVkZSAi
+ZnNsLGZtYW4iCisJCUZNYW4gdmVyc2lvbiBjYW4gYmUgZGV0ZXJtaW5lZCB2aWEgRk1fSVBfUkVW
+XzEgcmVnaXN0ZXIgaW4gdGhlCisJCUZNYW4gYmxvY2suIFRoZSBvZmZzZXQgaXMgMHhjNCBmcm9t
+IHRoZSBiZWdpbm5pbmcgb2YgdGhlCisJCUZyYW1lIFByb2Nlc3NpbmcgTWFuYWdlciBtZW1vcnkg
+bWFwICgweGMzMDAwIGZyb20gdGhlCisJCWJlZ2lubmluZyBvZiB0aGUgRk1hbiBub2RlKS4KKwor
+LSBjZWxsLWluZGV4CisJCVVzYWdlOiByZXF1aXJlZAorCQlWYWx1ZSB0eXBlOiA8dTMyPgorCQlE
+ZWZpbml0aW9uOiBTcGVjaWZpZXMgdGhlIGluZGV4IG9mIHRoZSBGTWFuIHVuaXQuCisKKwkJVGhl
+IGNlbGwtaW5kZXggdmFsdWUgbWF5IGJlIHVzZWQsIGZvciBleGFtcGxlLCB0byBkaXNhYmxlIG9y
+CisJCWVuYWJsZSB0aGUgRk1hbiB2aWEgIkRldmljZSBkaXNhYmxlIHJlZ2lzdGVyIDIiCisJCShE
+Q0ZHX0RFVkRJU1IyLCBsb2NhdGVkIGF0IHRoZSBTb0MgcmVmZXJlbmNlIG1hbnVhbCB1bmRlcgor
+CQkiRGV2aWNlIENvbmZpZ3VyYXRpb24gYW5kIFBpbiBDb250cm9sIE1lbW9yeSBNYXAiKS4KKwor
+LSByZWcKKwkJVXNhZ2U6IHJlcXVpcmVkCisJCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJy
+YXk+CisJCURlZmluaXRpb246IEEgc3RhbmRhcmQgcHJvcGVydHkuIFNwZWNpZmllcyB0aGUgb2Zm
+c2V0IG9mIHRoZQorCQlmb2xsb3dpbmcgY29uZmlndXJhdGlvbiByZWdpc3RlcnM6CisJCS0gQk1J
+IGNvbmZpZ3VyYXRpb24gcmVnaXN0ZXJzLgorCQktIFFNSSBjb25maWd1cmF0aW9uIHJlZ2lzdGVy
+cy4KKwkJLSBETUEgY29uZmlndXJhdGlvbiByZWdpc3RlcnMuCisJCS0gRlBNIGNvbmZpZ3VyYXRp
+b24gcmVnaXN0ZXJzLgorCQktIEZNYW4gY29udHJvbGxlciBjb25maWd1cmF0aW9uIHJlZ2lzdGVy
+cy4KKworLSByYW5nZXMKKwkJVXNhZ2U6IHJlcXVpcmVkCisJCVZhbHVlIHR5cGU6IDxwcm9wLWVu
+Y29kZWQtYXJyYXk+CisJCURlZmluaXRpb246IEEgc3RhbmRhcmQgcHJvcGVydHkuCisKKy0gY2xv
+Y2tzCisJCVVzYWdlOiByZXF1aXJlZAorCQlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5
+PgorCQlEZWZpbml0aW9uOiBwaGFuZGxlIGZvciBmbWFuIGNsb2NrLgorCistIGNsb2NrLW5hbWVz
+CisJCXVzYWdlOiBvcHRpb25hbAorCQlWYWx1ZSB0eXBlOiA8c3RyaW5nbGlzdD4KKwkJRGVmaW5p
+dGlvbjogQSBzdGFuZGFyZCBwcm9wZXJ0eQorCistIGludGVycnVwdHMKKwkJVXNhZ2U6IHJlcXVp
+cmVkCisJCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJCURlZmluaXRpb246IEEg
+cGFpciBvZiBJUlFzIGFyZSBzcGVjaWZpZWQgaW4gdGhpcyBwcm9wZXJ0eS4KKwkJVGhlIGZpcnN0
+IGVsZW1lbnQgaXMgYXNzb2NpYXRlZCB3aXRoIHRoZSBldmVudCBpbnRlcnJ1cHRzIGFuZAorCQl0
+aGUgc2Vjb25kIGVsZW1lbnQgaXMgYXNzb2NpYXRlZCB3aXRoIHRoZSBlcnJvciBpbnRlcnJ1cHRz
+LgorCistIGZzbCxxbWFuLWNoYW5uZWwtcmFuZ2UKKwkJVXNhZ2U6IHJlcXVpcmVkCisJCVZhbHVl
+IHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJCURlZmluaXRpb246IFNwZWNpZmllcyB0aGUg
+cmFuZ2VzIG9mIHRoZSBhdmFpbGFibGUgZGVkaWNhdGVkCisJCWNoYW5uZWxzIGluIHRoZSBGTWFu
+LiBUaGUgZmlyc3QgY2VsbCBzcGVjaWZpZXMgdGhlIGJlZ2lubmluZworCQlvZiB0aGUgcmFuZ2Ug
+YW5kIHRoZSBzZWNvbmQgY2VsbCBzcGVjaWZpZXMgdGhlIG51bWJlciBvZgorCQljaGFubmVscy4K
+KwkJRnVydGhlciBpbmZvcm1hdGlvbiBhdmFpbGFibGUgYXQ6CisJCSJXb3JrIFF1ZXVlIChXUSkg
+Q2hhbm5lbCBBc3NpZ25tZW50cyBpbiB0aGUgUU1hbiIgc2VjdGlvbgorCQlpbiBEUEFBIFJlZmVy
+ZW5jZSBNYW51YWwuCisKKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CitGTWFuIE1VUkFNIE5vZGUKKwor
+REVTQ1JJUFRJT04KKworRk1hbiBJbnRlcm5hbCBtZW1vcnkgLSBzaGFyZWQgYmV0d2VlbiBhbGwg
+dGhlIEZNYW4gbW9kdWxlcy4KK0l0IGNvbnRhaW5zIGRhdGEgc3RydWN0dXJlcyB0aGF0IGFyZSBj
+b21tb24gYW5kIHdyaXR0ZW4gdG8gb3IgcmVhZCBieQordGhlIG1vZHVsZXMuCitGTWFuIGludGVy
+bmFsIG1lbW9yeSBpcyBzcGxpdCBpbnRvIHRoZSBmb2xsb3dpbmcgcGFydHM6CisJUGFja2V0IGJ1
+ZmZlcmluZyAoVHgvUnggRklGT3MpCisJRnJhbWVzIGludGVybmFsIGNvbnRleHQKKworUFJPUEVS
+VElFUworCistIGNvbXBhdGlibGUKKwkJVXNhZ2U6IHJlcXVpcmVkCisJCVZhbHVlIHR5cGU6IDxz
+dHJpbmdsaXN0PgorCQlEZWZpbml0aW9uOiBNdXN0IGluY2x1ZGUgImZzbCxmbWFuLW11cmFtIgor
+CistIHJhbmdlcworCQlVc2FnZTogcmVxdWlyZWQKKwkJVmFsdWUgdHlwZTogPHByb3AtZW5jb2Rl
+ZC1hcnJheT4KKwkJRGVmaW5pdGlvbjogQSBzdGFuZGFyZCBwcm9wZXJ0eS4gU3BlY2lmaWVzIHRo
+ZSBwaHlzaWNhbAorCQlhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIEZNYW4gbWVtb3J5IHNwYWNl
+CisKK0VYQU1QTEUKKworbXVyYW1AMCB7CisJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1tdXJhbSI7
+CisJcmFuZ2VzID0gPDAgMHgwMDAwMDAgMHgyODAwMD47Cit9OworCis9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PQorRk1hbiBQb3J0IE5vZGUKKworREVTQ1JJUFRJT04KKworVGhlIEZyYW1lIE1hbmFnZXIg
+KEZNYW4pIHN1cHBvcnRzIHNldmVyYWwgdHlwZXMgb2YgaGFyZHdhcmUgcG9ydHM6CisJRXRoZXJu
+ZXQgcmVjZWl2ZXIgKFJYKQorCUV0aGVybmV0IHRyYW5zbWl0dGVyIChUWCkKKwlPZmZsaW5lL0hv
+c3QgY29tbWFuZCAoTy9IKQorCitQUk9QRVJUSUVTCisKKy0gY29tcGF0aWJsZQorCQlVc2FnZTog
+cmVxdWlyZWQKKwkJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+CisJCURlZmluaXRpb246IEEgc3Rh
+bmRhcmQgcHJvcGVydHkuCisJCU11c3QgaW5jbHVkZSBvbmUgb2YgdGhlIGZvbGxvd2luZzoKKwkJ
+CS0gImZzbCxmbWFuLXYyLXBvcnQtb2giIGZvciBGTWFuVjIgT0ggcG9ydHMKKwkJCS0gImZzbCxm
+bWFuLXYyLXBvcnQtcngiIGZvciBGTWFuVjIgUlggcG9ydHMKKwkJCS0gImZzbCxmbWFuLXYyLXBv
+cnQtdHgiIGZvciBGTWFuVjIgVFggcG9ydHMKKwkJCS0gImZzbCxmbWFuLXYzLXBvcnQtb2giIGZv
+ciBGTWFuVjMgT0ggcG9ydHMKKwkJCS0gImZzbCxmbWFuLXYzLXBvcnQtcngiIGZvciBGTWFuVjMg
+UlggcG9ydHMKKwkJCS0gImZzbCxmbWFuLXYzLXBvcnQtdHgiIGZvciBGTWFuVjMgVFggcG9ydHMK
+KworLSBjZWxsLWluZGV4CisJCVVzYWdlOiByZXF1aXJlZAorCQlWYWx1ZSB0eXBlOiA8dTMyPgor
+CQlEZWZpbml0aW9uOiBTcGVjaWZpZXMgdGhlIGhhcmR3YXJlIHBvcnQgaWQuCisJCUVhY2ggaGFy
+ZHdhcmUgcG9ydCBvbiB0aGUgRk1hbiBoYXMgaXRzIG93biBoYXJkd2FyZSBQb3J0SUQuCisJCVN1
+cGVyIHNldCBvZiBhbGwgaGFyZHdhcmUgUG9ydCBJRHMgYXZhaWxhYmxlIGF0IEZNYW4gUmVmZXJl
+bmNlCisJCU1hbnVhbCB1bmRlciAiRk1hbiBIYXJkd2FyZSBQb3J0cyBpbiBGcmVlc2NhbGUgRGV2
+aWNlcyIgdGFibGUuCisKKwkJRWFjaCBoYXJkd2FyZSBwb3J0IGlzIGFzc2lnbmVkIGEgNEtCLCBw
+b3J0LXNwZWNpZmljIHBhZ2UgaW4KKwkJdGhlIEZNYW4gaGFyZHdhcmUgcG9ydCBtZW1vcnkgcmVn
+aW9uICh3aGljaCBpcyBwYXJ0IG9mIHRoZQorCQlGTWFuIG1lbW9yeSBtYXApLiBUaGUgZmlyc3Qg
+NCBLQiBpbiB0aGUgRk1hbiBoYXJkd2FyZSBwb3J0cworCQltZW1vcnkgcmVnaW9uIGlzIHVzZWQg
+Zm9yIHdoYXQgYXJlIGNhbGxlZCBjb21tb24gcmVnaXN0ZXJzLgorCQlUaGUgc3Vic2VxdWVudCA2
+MyA0S0IgcGFnZXMgYXJlIGFsbG9jYXRlZCB0byB0aGUgaGFyZHdhcmUKKwkJcG9ydHMuCisJCVRo
+ZSBwYWdlIG9mIGEgc3BlY2lmaWMgcG9ydCBpcyBkZXRlcm1pbmVkIGJ5IHRoZSBjZWxsLWluZGV4
+LgorCistIHJlZworCQlVc2FnZTogcmVxdWlyZWQKKwkJVmFsdWUgdHlwZTogPHByb3AtZW5jb2Rl
+ZC1hcnJheT4KKwkJRGVmaW5pdGlvbjogVGhlcmUgaXMgb25lIHJlZyByZWdpb24gZGVzY3JpYmlu
+ZyB0aGUgcG9ydAorCQljb25maWd1cmF0aW9uIHJlZ2lzdGVycy4KKworRVhBTVBMRQorCitwb3J0
+QGE4MDAwIHsKKwljZWxsLWluZGV4ID0gPDB4Mjg+OworCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4t
+djItcG9ydC10eCI7CisJcmVnID0gPDB4YTgwMDAgMHgxMDAwPjsKK307CisKK3BvcnRAODgwMDAg
+eworCWNlbGwtaW5kZXggPSA8MHg4PjsKKwljb21wYXRpYmxlID0gImZzbCxmbWFuLXYyLXBvcnQt
+cngiOworCXJlZyA9IDwweDg4MDAwIDB4MTAwMD47Cit9OworCitwb3J0QDgxMDAwIHsKKwljZWxs
+LWluZGV4ID0gPDB4MT47CisJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi12Mi1wb3J0LW9oIjsKKwly
+ZWcgPSA8MHg4MTAwMCAweDEwMDA+OworfTsKKworPT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KK0ZNYW4g
+ZFRTRUMvWEdFQy9tRU1BQyBOb2RlCisKK0RFU0NSSVBUSU9OCisKK21FTUFDL2RUU0VDL1hHRUMg
+YXJlIHRoZSBFdGhlcm5ldCBuZXR3b3JrIGludGVyZmFjZXMKKworUFJPUEVSVElFUworCistIGNv
+bXBhdGlibGUKKwkJVXNhZ2U6IHJlcXVpcmVkCisJCVZhbHVlIHR5cGU6IDxzdHJpbmdsaXN0Pgor
+CQlEZWZpbml0aW9uOiBBIHN0YW5kYXJkIHByb3BlcnR5LgorCQlNdXN0IGluY2x1ZGUgb25lIG9m
+IHRoZSBmb2xsb3dpbmc6CisJCS0gImZzbCxmbWFuLWR0c2VjIiBmb3IgZFRTRUMgTUFDCisJCS0g
+ImZzbCxmbWFuLXhnZWMiIGZvciBYR0VDIE1BQworCQktICJmc2wsZm1hbi1tZW1hYyBmb3IgbUVN
+QUMgTUFDCisKKy0gY2VsbC1pbmRleAorCQlVc2FnZTogcmVxdWlyZWQKKwkJVmFsdWUgdHlwZTog
+PHUzMj4KKwkJRGVmaW5pdGlvbjogU3BlY2lmaWVzIHRoZSBNQUMgaWQuCisJCVRoaXMgdmFsdWUg
+aXMgdXNlZCB0byBpZGVudGlmeSB0aGUgTUFDIGlkIGluIHNvbWUgcmVnaXN0ZXJzCisJCWluIHRo
+ZSBGTWFuIG1lbW9yeSBtYXAsIGZvciBleGFtcGxlOgorCQlUaGUgRk1hbiBFcnJvciBQZW5kaW5n
+IEludGVycnVwdCBSZWdpc3RlciAoRk1fRVBJKSAtCisJCVRoaXMgcmVnaXN0ZXIgaG9sZHMgYSBi
+aXQgZm9yIGVhY2ggTUFDLgorCistIHJlZworCQlVc2FnZTogcmVxdWlyZWQKKwkJVmFsdWUgdHlw
+ZTogPHByb3AtZW5jb2RlZC1hcnJheT4KKwkJRGVmaW5pdGlvbjogQSBzdGFuZGFyZCBwcm9wZXJ0
+eS4KKworLSBmc2wsZm1hbi1wb3J0cworCQlVc2FnZTogcmVxdWlyZWQKKwkJVmFsdWUgdHlwZTog
+PHByb3AtZW5jb2RlZC1hcnJheT4KKwkJRGVmaW5pdGlvbjogQW4gYXJyYXkgb2YgdHdvIHBoYW5k
+bGVzIC0gdGhlIGZpcnN0IHJlZmVyZW5jZXMgaXMKKwkJdGhlIEZNYW4gUlggcG9ydCBhbmQgdGhl
+IHNlY29uZCBpcyB0aGUgVFggcG9ydCB1c2VkIGJ5IHRoaXMKKwkJTUFDLgorCistIHB0cC10aW1l
+cgorCQlVc2FnZSByZXF1aXJlZAorCQlWYWx1ZSB0eXBlOiA8cGhhbmRsZT4KKwkJRGVmaW5pdGlv
+bjogQSBwaGFuZGxlIGZvciAxRUVFMTU4OCB0aW1lci4KKworRVhBTVBMRQorCitmbWFuMV90eDI4
+OiBwb3J0QGE4MDAwIHsKKwljZWxsLWluZGV4ID0gPDB4Mjg+OworCWNvbXBhdGlibGUgPSAiZnNs
+LGZtYW4tdjItcG9ydC10eCI7CisJcmVnID0gPDB4YTgwMDAgMHgxMDAwPjsKK307CisKK2ZtYW4x
+X3J4ODogcG9ydEA4ODAwMCB7CisJY2VsbC1pbmRleCA9IDwweDg+OworCWNvbXBhdGlibGUgPSAi
+ZnNsLGZtYW4tdjItcG9ydC1yeCI7CisJcmVnID0gPDB4ODgwMDAgMHgxMDAwPjsKK307CisKK3B0
+cC10aW1lcjogcHRwX3RpbWVyQGZlMDAwIHsKKwljb21wYXRpYmxlID0gImZzbCxmbWFuLXB0cC10
+aW1lciI7CisJcmVnID0gPDB4ZmUwMDAgMHgxMDAwPjsKK307CisKK2V0aGVybmV0QGUwMDAwIHsK
+Kwljb21wYXRpYmxlID0gImZzbCxmbWFuLWR0c2VjIjsKKwljZWxsLWluZGV4ID0gPDA+OworCXJl
+ZyA9IDwweGUwMDAwIDB4MTAwMD47CisJZnNsLGZtYW4tcG9ydHMgPSA8JmZtYW4xX3J4OCAmZm1h
+bjFfdHgyOD47CisJcHRwLXRpbWVyID0gPCZwdHAtdGltZXI+OworfTsKKworPT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PQorRk1hbiBJRUVFIDE1ODggTm9kZQorCitERVNDUklQVElPTgorCitUaGUgRk1hbiBp
+bnRlcmZhY2UgdG8gc3VwcG9ydCBJRUVFIDE1ODgKKworCitQUk9QRVJUSUVTCisKKy0gY29tcGF0
+aWJsZQorCQlVc2FnZTogcmVxdWlyZWQKKwkJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+CisJCURl
+ZmluaXRpb246IEEgc3RhbmRhcmQgcHJvcGVydHkuCisJCU11c3QgaW5jbHVkZSAiZnNsLGZtYW4t
+cHRwLXRpbWVyIi4KKworLSByZWcKKwkJVXNhZ2U6IHJlcXVpcmVkCisJCVZhbHVlIHR5cGU6IDxw
+cm9wLWVuY29kZWQtYXJyYXk+CisJCURlZmluaXRpb246IEEgc3RhbmRhcmQgcHJvcGVydHkuCisK
+K0VYQU1QTEUKKworcHRwLXRpbWVyQGZlMDAwIHsKKwljb21wYXRpYmxlID0gImZzbCxmbWFuLXB0
+cC10aW1lciI7CisJcmVnID0gPDB4ZmUwMDAgMHgxMDAwPjsKK307CisKKz09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09CitFeGFtcGxlCisKK2ZtYW5ANDAwMDAwIHsKKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsK
+Kwkjc2l6ZS1jZWxscyA9IDwxPjsKKwljZWxsLWluZGV4ID0gPDE+OworCWNvbXBhdGlibGUgPSAi
+ZnNsLGZtYW4iCisJcmFuZ2VzID0gPDAgMHg0MDAwMDAgMHgxMDAwMDA+OworCXJlZyA9IDwweDQ4
+MDAwMCAweDAwNDAwCisJICAgICAgIDB4NDgwNDAwIDB4MDA0MDAKKwkgICAgICAgMHg0YzIwMDAg
+MHgwMTAwMAorCSAgICAgICAweDRjMzAwMCAweDAxMDAwCisJICAgICAgIDB4NGM0MDAwIDB4MDEw
+MDAKKwkgICAgICAgMHg0YzcwMDAgMHgwMTAwMD47CisJY2xvY2tzID0gPCZmbWFuX2Nsaz47CisJ
+Y2xvY2stbmFtZXMgPSAiZm1hbmNsayI7CisJaW50ZXJydXB0cyA9IDwKKwkJOTYgMiAwIDAKKwkJ
+MTYgMiAxIDE+OworCWZzbCxxbWFuLWNoYW5uZWwtcmFuZ2UgPSA8MHg0MCAweGM+OworCisJbXVy
+YW1AMCB7CisJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tbXVyYW0iOworCQlyZWcgPSA8MHgwIDB4
+MjgwMDA+OworCX07CisKKwlwb3J0QDgxMDAwIHsKKwkJY2VsbC1pbmRleCA9IDwxPjsKKwkJY29t
+cGF0aWJsZSA9ICJmc2wsZm1hbi12Mi1wb3J0LW9oIjsKKwkJcmVnID0gPDB4ODEwMDAgMHgxMDAw
+PjsKKwl9OworCisJcG9ydEA4MjAwMCB7CisJCWNlbGwtaW5kZXggPSA8Mj47CisJCWNvbXBhdGli
+bGUgPSAiZnNsLGZtYW4tdjItcG9ydC1vaCI7CisJCXJlZyA9IDwweDgyMDAwIDB4MTAwMD47CisJ
+fTsKKworCXBvcnRAODMwMDAgeworCQljZWxsLWluZGV4ID0gPDM+OworCQljb21wYXRpYmxlID0g
+ImZzbCxmbWFuLXYyLXBvcnQtb2giOworCQlyZWcgPSA8MHg4MzAwMCAweDEwMDA+OworCX07CisK
+Kwlwb3J0QDg0MDAwIHsKKwkJY2VsbC1pbmRleCA9IDw0PjsKKwkJY29tcGF0aWJsZSA9ICJmc2ws
+Zm1hbi12Mi1wb3J0LW9oIjsKKwkJcmVnID0gPDB4ODQwMDAgMHgxMDAwPjsKKwl9OworCisJcG9y
+dEA4NTAwMCB7CisJCWNlbGwtaW5kZXggPSA8NT47CisJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4t
+djItcG9ydC1vaCI7CisJCXJlZyA9IDwweDg1MDAwIDB4MTAwMD47CisJfTsKKworCXBvcnRAODYw
+MDAgeworCQljZWxsLWluZGV4ID0gPDY+OworCQljb21wYXRpYmxlID0gImZzbCxmbWFuLXYyLXBv
+cnQtb2giOworCQlyZWcgPSA8MHg4NjAwMCAweDEwMDA+OworCX07CisKKwlmbWFuMV9yeF8weDg6
+IHBvcnRAODgwMDAgeworCQljZWxsLWluZGV4ID0gPDB4OD47CisJCWNvbXBhdGlibGUgPSAiZnNs
+LGZtYW4tdjItcG9ydC1yeCI7CisJCXJlZyA9IDwweDg4MDAwIDB4MTAwMD47CisJfTsKKworCWZt
+YW4xX3J4XzB4OTogcG9ydEA4OTAwMCB7CisJCWNlbGwtaW5kZXggPSA8MHg5PjsKKwkJY29tcGF0
+aWJsZSA9ICJmc2wsZm1hbi12Mi1wb3J0LXJ4IjsKKwkJcmVnID0gPDB4ODkwMDAgMHgxMDAwPjsK
+Kwl9OworCisJZm1hbjFfcnhfMHhhOiBwb3J0QDhhMDAwIHsKKwkJY2VsbC1pbmRleCA9IDwweGE+
+OworCQljb21wYXRpYmxlID0gImZzbCxmbWFuLXYyLXBvcnQtcngiOworCQlyZWcgPSA8MHg4YTAw
+MCAweDEwMDA+OworCX07CisKKwlmbWFuMV9yeF8weGI6IHBvcnRAOGIwMDAgeworCQljZWxsLWlu
+ZGV4ID0gPDB4Yj47CisJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tdjItcG9ydC1yeCI7CisJCXJl
+ZyA9IDwweDhiMDAwIDB4MTAwMD47CisJfTsKKworCWZtYW4xX3J4XzB4YzogcG9ydEA4YzAwMCB7
+CisJCWNlbGwtaW5kZXggPSA8MHhjPjsKKwkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi12Mi1wb3J0
+LXJ4IjsKKwkJcmVnID0gPDB4OGMwMDAgMHgxMDAwPjsKKwl9OworCisJZm1hbjFfcnhfMHgxMDog
+cG9ydEA5MDAwMCB7CisJCWNlbGwtaW5kZXggPSA8MHgxMD47CisJCWNvbXBhdGlibGUgPSAiZnNs
+LGZtYW4tdjItcG9ydC1yeCI7CisJCXJlZyA9IDwweDkwMDAwIDB4MTAwMD47CisJfTsKKworCWZt
+YW4xX3R4XzB4Mjg6IHBvcnRAYTgwMDAgeworCQljZWxsLWluZGV4ID0gPDB4Mjg+OworCQljb21w
+YXRpYmxlID0gImZzbCxmbWFuLXYyLXBvcnQtdHgiOworCQlyZWcgPSA8MHhhODAwMCAweDEwMDA+
+OworCX07CisKKwlmbWFuMV90eF8weDI5OiBwb3J0QGE5MDAwIHsKKwkJY2VsbC1pbmRleCA9IDww
+eDI5PjsKKwkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi12Mi1wb3J0LXR4IjsKKwkJcmVnID0gPDB4
+YTkwMDAgMHgxMDAwPjsKKwl9OworCisJZm1hbjFfdHhfMHgyYTogcG9ydEBhYTAwMCB7CisJCWNl
+bGwtaW5kZXggPSA8MHgyYT47CisJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tdjItcG9ydC10eCI7
+CisJCXJlZyA9IDwweGFhMDAwIDB4MTAwMD47CisJfTsKKworCWZtYW4xX3R4XzB4MmI6IHBvcnRA
+YWIwMDAgeworCQljZWxsLWluZGV4ID0gPDB4MmI+OworCQljb21wYXRpYmxlID0gImZzbCxmbWFu
+LXYyLXBvcnQtdHgiOworCQlyZWcgPSA8MHhhYjAwMCAweDEwMDA+OworCX07CisKKwlmbWFuMV90
+eF8weDJjOiBwb3J0QGFjMDAwMCB7CisJCWNlbGwtaW5kZXggPSA8MHgyYz47CisJCWNvbXBhdGli
+bGUgPSAiZnNsLGZtYW4tdjItcG9ydC10eCI7CisJCXJlZyA9IDwweGFjMDAwIDB4MTAwMD47CisJ
+fTsKKworCWZtYW4xX3R4XzB4MzA6IHBvcnRAYjAwMDAgeworCQljZWxsLWluZGV4ID0gPDB4MzA+
+OworCQljb21wYXRpYmxlID0gImZzbCxmbWFuLXYyLXBvcnQtdHgiOworCQlyZWcgPSA8MHhiMDAw
+MCAweDEwMDA+OworCX07CisKKwlldGhlcm5ldEBlMDAwMCB7CisJCWNvbXBhdGlibGUgPSAiZnNs
+LGZtYW4tZHRzZWMiOworCQljZWxsLWluZGV4ID0gPDA+OworCQlyZWcgPSA8MHhlMDAwMCAweDEw
+MDA+OworCQlmc2wsZm1hbi1wb3J0cyA9IDwmZm1hbjFfcnhfMHg4ICZmbWFuMV90eF8weDI4PjsK
+Kwl9OworCisJZXRoZXJuZXRAZTIwMDAgeworCQljb21wYXRpYmxlID0gImZzbCxmbWFuLWR0c2Vj
+IjsKKwkJY2VsbC1pbmRleCA9IDwxPjsKKwkJcmVnID0gPDB4ZTIwMDAgMHgxMDAwPjsKKwkJZnNs
+LGZtYW4tcG9ydHMgPSA8JmZtYW4xX3J4XzB4OSAmZm1hbjFfdHhfMHgyOT47CisJfTsKKworCWV0
+aGVybmV0QGU0MDAwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1kdHNlYyI7CisJCWNlbGwt
+aW5kZXggPSA8Mj47CisJCXJlZyA9IDwweGU0MDAwIDB4MTAwMD47CisJCWZzbCxmbWFuLXBvcnRz
+ID0gPCZmbWFuMV9yeF8weGEgJmZtYW4xX3R4XzB4MmE+OworCX07CisKKwlldGhlcm5ldEBlNjAw
+MCB7CisJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tZHRzZWMiOworCQljZWxsLWluZGV4ID0gPDM+
+OworCQlyZWcgPSA8MHhlNjAwMCAweDEwMDA+OworCQlmc2wsZm1hbi1wb3J0cyA9IDwmZm1hbjFf
+cnhfMHhiICZmbWFuMV90eF8weDJiPjsKKwl9OworCisJZXRoZXJuZXRAZTgwMDAgeworCQljb21w
+YXRpYmxlID0gImZzbCxmbWFuLWR0c2VjIjsKKwkJY2VsbC1pbmRleCA9IDw0PjsKKwkJcmVnID0g
+PDB4ZjAwMDAgMHgxMDAwPjsKKwkJZnNsLGZtYW4tcG9ydHMgPSA8JmZtYW4xX3J4XzB4YyAmZm1h
+bjFfdHhfMHgyYz47CisKKwlldGhlcm5ldEBmMDAwMCB7CisJCWNlbGwtaW5kZXggPSA8OD47CisJ
+CWNvbXBhdGlibGUgPSAiZnNsLGZtYW4teGdlYyI7CisJCXJlZyA9IDwweGYwMDAwIDB4MTAwMD47
+CisJCWZzbCxmbWFuLXBvcnRzID0gPCZmbWFuMV9yeF8weDEwICZmbWFuMV90eF8weDMwPjsKKwl9
+OworCisJcHRwLXRpbWVyQGZlMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi1wdHAtdGlt
+ZXIiOworCQlyZWcgPSA8MHhmZTAwMCAweDEwMDA+OworCX07Cit9OwotLSAKMS43LjkuNQoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2
+IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
+Lm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
