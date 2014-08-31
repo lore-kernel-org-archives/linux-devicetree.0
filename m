@@ -1,78 +1,35 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [RFC][PATCH] ASoC: simple-card: Merge single and muti DAI link
- code.
-Date: Sun, 31 Aug 2014 18:27:25 +0200
-Message-ID: <20140831182725.3135db4f@armhf>
-References: <1409294797-21948-1-git-send-email-Li.Xiubo@freescale.com>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 01/12] MIPS: Provide a generic plat_irq_dispatch
+Date: Sun, 31 Aug 2014 19:34:55 +0200
+Message-ID: <CAOiHx=kKzkSD7fRK+dO97HzrifBuaN4gw8XM-47Af0P077d7TQ@mail.gmail.com>
+References: <1409350479-19108-1-git-send-email-abrestic@chromium.org> <1409350479-19108-2-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409294797-21948-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Jyri Sarha <jsarha@ti.com>, Nicolin Chen <nicoleotsuka@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409350479-19108-2-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 29 Aug 2014 14:46:37 +0800
-Xiubo Li <Li.Xiubo@freescale.com> wrote:
+On Sat, Aug 30, 2014 at 12:14 AM, Andrew Bresticker
+<abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> For platforms which boot with device-tree and use the MIPS CPU interrupt
+> controller binding, a generic plat_irq_dispatch() can be used since all
+> CPU interrupts should be mapped through the CPU IRQ domain.  Implement a
+> plat_irq_dispatch() which simply handles the highest pending interrupt.
+>
+> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-> This patch merge single DAI link and muti-DAI links code together,
-> and simply the simple-card driver code.
->=20
-> And also do some other improvement:
->=20
-> Since from the DAI format micro SND_SOC_DAIFMT_CBx_CFx, the 'CBx'
-> mean Codec's bit clock is as master/slave and the 'CFx' mean Codec's
-> frame clock is as master/slave.
->=20
-> So these same DAI formats should be informed to CPU and CODE DAIs at
-> the same time. For the Codec driver will set the bit clock and frame
-> clock as the DAI formats said, but for the CPU driver, if the the
-> bit clock or frame clock is as Codec master, so it should be set CPU
-> DAI device as bit clock or frame clock as slave, and vice versa.
->=20
-> The old code will cause confusion, and we should be clear that the
-> letter 'C' here mean to Codec.
->=20
-> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
-> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-> Cc: Jean-Francois Moine <moinejf@free.fr>
-> Cc: Jyri Sarha <jsarha@ti.com>
-> Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-> ---
->=20
-> Hi,
->=20
-> This patch will break the old DT, so i just send one RFC version, and
-> will add the old DT patches in next version if this patch can work
-> well.
->=20
-> Any comments and advices are welcome.
+I gave this a short test by hackishly adding IRQ_DOMAIN support to
+bcm63xx and removing the local plat_irq_dispatch, and it booted fine,
+and cascaded interrupts were still working. Therefore
 
-Hi Xiubo,
+Tested-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 
-My DT is
 
-	sound {
-		compatible =3D "simple-audio-card";
-		simple-audio-card,name =3D "Cubox Audio";
-
-		simple-audio-card,dai-link@0 {		/* I2S - HDMI */
-			format =3D "i2s";
-			cpu {
-				sound-dai =3D <&audio1 0>;
-			};
-			codec {
-				sound-dai =3D <&hdmi 0>;
-			};
-		};
-	...
-
-I was getting 0x1001 as the format (codec clk & FRM master and i2s').
-
-With your patch, I get 0x4000 (clk master & frame slave and no format).
-
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
