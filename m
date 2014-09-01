@@ -1,92 +1,62 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 1/2] ASoC:codecs: Add a generic HDMI audio CODEC
-Date: Mon, 1 Sep 2014 17:36:42 +0100
-Message-ID: <20140901163642.GG29327@sirena.org.uk>
-References: <cover.1409490122.git.moinejf@free.fr>
- <080616c48997c53a14910f05a0fcf3f995412315.1409490122.git.moinejf@free.fr>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH] mfd: palmas: Add support for optional wakeup
+Date: Mon, 01 Sep 2014 13:30:09 -0500
+Message-ID: <5404BB31.3060001@ti.com>
+References: <1408457197-30487-1-git-send-email-nm@ti.com> <20140829105619.GH24579@lee--X1> <54007515.5080506@ti.com> <20140901093206.GJ7374@lee--X1>
+Reply-To: nm@ti.com
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="W0QGcccuECrPGiFB"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <080616c48997c53a14910f05a0fcf3f995412315.1409490122.git.moinejf@free.fr>
+In-Reply-To: <20140901093206.GJ7374@lee--X1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Jackson <Andrew.Jackson@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/01/2014 04:32 AM, Lee Jones wrote:
+> On Fri, 29 Aug 2014, Nishanth Menon wrote:
+>> On 08/29/2014 05:56 AM, Lee Jones wrote:
+>>> On Tue, 19 Aug 2014, Nishanth Menon wrote:
+>>>
+>>>> With the recent pinctrl-single changes, omaps can treat wake-up events
+>>>> from deeper idle states as interrupts.
+>>>>
+>>>> Let's add support for the optional second interrupt for wake-up
+>>>> events. And then SoC can wakeup and handle the event using it's
+>>>> regular handler.
+>>>>
+>>>> Finally, to pass the wake-up interrupt in the dts file,
+>>>> interrupts-extended property needs to be passed.
+>>>>
+>>>> This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
+>>>> support for optional wake-up")
+>>>>
+>>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+>>>> ---
+>>>>   Documentation/devicetree/bindings/mfd/palmas.txt |   20 ++++++++
+>>>
+>>> DT Ack please.
+>
+> Please read Documentation/devicetree/bindings/submittingpatches.txt
 
---W0QGcccuECrPGiFB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I assume you wanted me to note the following:
+"
+The Documentation/ portion of the patch should be a separate patch.
+"
 
-On Sun, Aug 31, 2014 at 12:45:39PM +0200, Jean-Francois Moine wrote:
+Many maintainers prefer that when the bindings for the device is new, 
+and when additional properties are added, they prefer it part of same 
+patch.. Anyways.. if the above is what you prefer, I can follow that.
 
->  Documentation/devicetree/bindings/sound/hdmi2.txt |  32 ++++
->  include/sound/hdmi2.h                             |  24 +++
->  sound/soc/codecs/Kconfig                          |   3 +
->  sound/soc/codecs/Makefile                         |   2 +
->  sound/soc/codecs/hdmi2.c                          | 204 ++++++++++++++++=
-++++++
->  5 files changed, 265 insertions(+)
+In short, I assume you'd like three patches:
+a) fix up style of current documentation - palmas to palmas@40
+b) Split documentation for interrupt-extended from the current patch 
+into it's own patch.
+c) remainder of this patch as is..
 
-This is clearly not a good name and it's not clear what the difference
-between this and the existing HDMI stub CODEC is intended to be. =20
+Does that sound right?
 
-> +Required properties:
-> +
-> +  - audio-ports: must contain one or two HDMI transmitter dependant
-> +	values identifying the audio sources.
-> +	The source type is given by the corresponding entry in
-> +	the audio-port-names property.
-> +
-> +  - audio-port-names: must contain entries matching the entries in
-> +	the audio-ports property.
-> +	Each value may be "i2s" or "spdif", giving the type of
-> +	the associated audio port.
-
-It seems hard to see this binding as really generic - I'd expect to see
-other devices which are just able to have fixed audio ports for example.
-
-> +static int hdmi2_probe(struct snd_soc_codec *codec)
-> +{
-> +	struct i2c_client *i2c_client =3D to_i2c_client(codec->dev);
-> +	struct hdmi2_codec *audio =3D i2c_get_clientdata(i2c_client);
-> +	struct device_node *np =3D codec->dev->of_node;
-> +	int i, j, ret;
-> +	const char *p;
-> +
-> +	if (!audio)
-> +		return -ENODEV;
-> +	snd_soc_codec_set_drvdata(codec, audio);
-
-The code also seems pretty device specific.  I think it's probably
-better to leave the binding device specific for now and concentrate on
-sharing inside the kernel, making any generic binding additions be about
-how the devices interface rather than what's going on inside a specific
-device.
-
---W0QGcccuECrPGiFB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUBKCWAAoJELSic+t+oim9z/8QAJByMjItnkLZo3fJgOJH47/2
-T5l5IRlzNs+k9arhmv+T3M1tBFHVi1MNUFG6YeNj2RoHNkYtYCjnAcDBLJ7gdRUq
-sqB7u0IhBhaFQ2lHF3l6h3ccATsb8uOP2E+mAjB+lBwiyhrZM2AIAWihNIWAAPzP
-j3858M8lvSGrUSJdXrSRjmOszO2HhexDzyUAw0X53y9Rl0XAQDwLh5TIVkDFmzOC
-ZYFXdnMTJwJJF+AB4acMhYdICXGFiO5ZawBBcYtwfKAn94OXsRXV7ZUY8Ih5kdkw
-16bSZkXeCkb3DnhGKFUQgjgmiCeQ0L+eLkmeTi9VsT+y8oWk+Wgut+HNGAHEGwHm
-5JNww5H+qGQ5eAPH9Pe5DnvV/c+DkVImvOydLG2xv53UHSD9CIqr1icgJRU/1sUg
-nYw9mfYTeM8PeMdy2bIKe8/FK++/lyiLfcTf3hjoTCL8n1Qg2I+G82xyHa2L8sNY
-39wAQeEgqyzijDfa+pcO3Bv0kp5LscpmNCS13k9k734e0at4eKpEgD/JyB4htSho
-4kHfnj/pxlXl7nc197Z5ovi7959UQjuaK3ZRfAiMfxKuz1l6XghPADgEDLGvNqJL
-KV+EZ+3AEHFFOBQnt83bvsehGvl6wrmR+wE5g4Do/faO61N4+BVfAzsBo6NXiMwx
-lJJuWfvN2Eh5mTt0Fytj
-=E7dD
------END PGP SIGNATURE-----
-
---W0QGcccuECrPGiFB--
+---
+Regards,
+Nishanth Menon
