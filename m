@@ -1,82 +1,65 @@
 From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2.2 1/2] regulator: sky81452: Adding compatible attribute in DT
-Date: Mon,  1 Sep 2014 11:40:17 +0900
-Message-ID: <1409539218-5571-2-git-send-email-jack.yoo@skyworksinc.com>
-References: <20140813190423.GI17528@sirena.org.uk>
- <1409539218-5571-1-git-send-email-jack.yoo@skyworksinc.com>
+Subject: Re: [PATCH v2 5/7] Adding SKY81452 regulator device tree bindings
+ document
+Date: Mon, 1 Sep 2014 11:46:48 +0900
+Message-ID: <20140901024648.GA5615@jack-ThinkPad-T520>
+References: <1409222307-23225-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1409223518-23566-1-git-send-email-jack.yoo@skyworksinc.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409539218-5571-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409223518-23566-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding compatible attriubute in DT.
-Fixed typo.
+Please ingnore 'only' this patch.
 
----
- drivers/regulator/sky81452-regulator.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+When sky81452-regulator driver was applied before,
+The previous version of this document 'sky81452-regulator.txt' was applied.
+I will resubmit the changes as incremental patches against current code of sky81452-regulator.txt.
 
-diff --git a/drivers/regulator/sky81452-regulator.c b/drivers/regulator/sky81452-regulator.c
-index 97aff0c..b9c54c6 100644
---- a/drivers/regulator/sky81452-regulator.c
-+++ b/drivers/regulator/sky81452-regulator.c
-@@ -68,12 +68,11 @@ static const struct regulator_desc sky81452_reg = {
- static struct regulator_init_data *sky81452_reg_parse_dt(struct device *dev)
- {
- 	struct regulator_init_data *init_data;
--	struct device_node *np;
-+	struct device_node *np = of_node_get(dev->of_node);
- 
--	np = of_get_child_by_name(dev->parent->of_node, "regulator");
--	if (unlikely(!np)) {
-+	if (!np) {
- 		dev_err(dev, "regulator node not found");
--		return NULL;
-+		return ERR_PTR(-ENODATA);
- 	}
- 
- 	init_data = of_get_regulator_init_data(dev, np);
-@@ -107,17 +106,28 @@ static int sky81452_reg_probe(struct platform_device *pdev)
- 	config.regmap = dev_get_drvdata(dev->parent);
- 
- 	rdev = devm_regulator_register(dev, &sky81452_reg, &config);
--	if (IS_ERR(rdev))
-+	if (IS_ERR(rdev)) {
-+		dev_err(dev, "failed to register regulator:%d", PTR_ERR(rdev));
- 		return PTR_ERR(rdev);
-+	}
- 
- 	platform_set_drvdata(pdev, rdev);
- 
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id sky81452_reg_of_match[] = {
-+	{ .compatible = "skyworks,sky81452-regulator", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sky81452_reg_of_match);
-+#endif
-+
- static struct platform_driver sky81452_reg_driver = {
- 	.driver = {
- 		.name = "sky81452-regulator",
-+		.of_match_table = of_match_ptr(sky81452_reg_of_match),
- 	},
- 	.probe = sky81452_reg_probe,
- };
-@@ -127,4 +137,4 @@ module_platform_driver(sky81452_reg_driver);
- MODULE_DESCRIPTION("Skyworks SKY81452 Regulator driver");
- MODULE_AUTHOR("Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>");
- MODULE_LICENSE("GPL");
--MODULE_VERSION("1.0");
-+MODULE_VERSION("1.1");
--- 
-1.9.1
+I am sorry for confusiong.
+Thank you.
 
+On Thu, Aug 28, 2014 at 07:58:38PM +0900, Gyungoh Yoo wrote:
+> v2:
+> Added 'compatible' attribute in child drivers
+> 
+> ---
+>  .../bindings/regulator/sky81452-regulator.txt          | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
+> new file mode 100644
+> index 0000000..7b9ff18
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
+> @@ -0,0 +1,18 @@
+> +SKY81452 voltage regulator
+> +
+> +Required properties:
+> +- compatible	: Must be "skyworks,sky81452-regulator"
+> +- any required generic properties defined in regulator.txt
+> +
+> +Optional properties:
+> +- any available generic properties defined in regulator.txt
+> +
+> +Example:
+> +
+> +	regulator {
+> +		compatible = "skyworks,sky81452-regulator";
+> +		/* generic regulator properties */
+> +		regulator-name = "touch_en";
+> +		regulator-min-microvolt = <4500000>;
+> +		regulator-max-microvolt = <8000000>;
+> +	};
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
