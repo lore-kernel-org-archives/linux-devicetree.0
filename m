@@ -1,35 +1,52 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
-Date: Mon, 1 Sep 2014 13:11:48 +0100
-Message-ID: <54046284.5000707@imgtec.com>
-References: <1409350479-19108-1-git-send-email-abrestic@chromium.org> <1409350479-19108-4-git-send-email-abrestic@chromium.org> <20140901110119.GB6617@leverpostej>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 6/6 v4] ARM: realview: basic device tree implementation
+Date: Mon, 01 Sep 2014 14:11:12 +0200
+Message-ID: <5409848.tU8vLO6RTd@wuerfel>
+References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org> <9626823.572BIYcQL9@wuerfel> <20140901120313.GI30401@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140901110119.GB6617@leverpostej>
+In-Reply-To: <20140901120313.GI30401-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/14 12:01, Mark Rutland wrote:
-> On Fri, Aug 29, 2014 at 11:14:30PM +0100, Andrew Bresticker wrote:
->> +Required properties:
->> +- compatible : Should be "mti,global-interrupt-controller"
+On Monday 01 September 2014 13:03:13 Russell King - ARM Linux wrote:
+> On Fri, Jul 25, 2014 at 05:58:24PM +0200, Arnd Bergmann wrote:
+> > On Friday 25 July 2014 16:50:10 Russell King - ARM Linux wrote:
+> > > 
+> > > I toyed with the idea of adding the standard cache size specifications
+> > > to the L2C code, it sounds like there's a reason to do that now.
+> > > 
+> > > Let's not mess around with adding stuff like the above to work around
+> > > the L2 code not parsing the appropriate specs from DT, let's do the
+> > > right thing and add bindings to allow DT to provide the cache geometry.
+> > 
+> > Yes, please!
+> > 
+> > That would actually reduce the realview to just the dma_zone_size
+> > definition, and I think someone also posted a patch to get that from
+> > DT recently. Having realview booting with an empty board file would
+> > be ideal.
 > 
-> I couldn't find "mti" in vendor-prefixes.txt (as of v3.17-rc3). If
-> there's not a patch to add it elsewhere, would you mind providing one
-> with this series?
+> I did have a patch in my L2C cleanup series to provide these properties,
+> but it got discarded - even though we have existing platforms which
+> provide these values.
+> 
+> The reason for that was because requiring new properties causes a DT
+> breakage - previous versions of the DT suddenly stop working because
+> the values necessary to setup the L2C have been removed from the
+> kernel, and the older DT files do not contain the neccessary values
+> either.
 
-It should be noted that there does already exist an "img" prefix in that
-file which may be more suitable (mti stands for MIPS Technologies Inc.).
+But in case of realview or any other platform that does not have
+mainline DT support, nothing would break. There is no need to remove
+the settings from the kernel, I would just prefer not to add any
+other ones.
 
-Though of course it appears the mti prefix is already in use, like
-"mti,cpu-interrupt-controller" in the binding example.
-
-Cheers
-James
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
