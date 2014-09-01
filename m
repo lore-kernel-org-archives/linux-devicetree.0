@@ -1,86 +1,80 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v2 03/12] clk: Add a function to retrieve phase
-Date: Mon, 01 Sep 2014 13:27:28 +0200
-Message-ID: <54045820.7080102@redhat.com>
-References: <1409428991-2442-1-git-send-email-maxime.ripard@free-electrons.com> <1409428991-2442-4-git-send-email-maxime.ripard@free-electrons.com> <5402F5D6.4080100@redhat.com> <20140901102026.GL15297@lukather>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] iommu/arm-smmu: Allow size of stage 1 output to max
+	possible value for sateg 2 bypass
+Date: Mon, 1 Sep 2014 12:42:38 +0100
+Message-ID: <20140901114238.GB24594@arm.com>
+References: <1409162541-3940-1-git-send-email-c.tirumalesh@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140901102026.GL15297@lukather>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409162541-3940-1-git-send-email-c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Tirumalesh,
 
-On 09/01/2014 12:20 PM, Maxime Ripard wrote:
-> Hi,
+On Wed, Aug 27, 2014 at 07:02:21PM +0100, c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 > 
-> On Sun, Aug 31, 2014 at 12:15:50PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 08/30/2014 10:03 PM, Maxime Ripard wrote:
->>> The current phase API doesn't look into the actual hardware to get the phase
->>> value, but will rather get it from a variable only set by the set_phase
->>> function.
->>>
->>> This will cause issue when the client driver will never call the set_phase
->>> function, where we can end up having a reported phase that will not match what
->>> the hardware has been programmed to by the bootloader or what phase is
->>> programmed out of reset.
->>>
->>> Add a new get_phase function for the drivers to implement so that we can get
->>> this value.
->>>
->>> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->>> ---
->>>  drivers/clk/clk.c            | 17 ++++++++++++++---
->>>  include/linux/clk-provider.h |  5 +++++
->>>  2 files changed, 19 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->>> index d87661af0c72..7dbceca694f1 100644
->>> --- a/drivers/clk/clk.c
->>> +++ b/drivers/clk/clk.c
->>> @@ -1797,8 +1797,8 @@ out:
->>>   * clk_get_phase - return the phase shift of a clock signal
->>>   * @clk: clock signal source
->>>   *
->>> - * Returns the phase shift of a clock node in degrees, otherwise returns
->>> - * -EERROR.
->>> + * Returns the phase shift of a clock node in degrees. Any negative
->>> + * values are errors.
->>>   */
->>>  int clk_get_phase(struct clk *clk)
->>>  {
->>> @@ -1808,7 +1808,18 @@ int clk_get_phase(struct clk *clk)
->>>  		goto out;
->>>  
->>>  	clk_prepare_lock();
->>> -	ret = clk->phase;
->>> +
->>> +	if (clk->phase) {
->>> +		ret = clk->phase;
->>> +		goto out_unlock;
->>> +	}
->>
->> 0 is a valid phase, so this will cause the phase to
->> be read from the hardware each time if the phase is 0.
->>
->> Perhaps make clk->phase signed (if it is not already), init it
->> to -1, and check for it not being -1 ?
+> This patch modifes output_mask calculation logic for stage 1 and allow
+> max possible value supported by SMMU implementaions for translations,
+> where stage 2 is bypassed.
 > 
-> Yeah, I'm not really proud of this code either, but yours would expose
-> this -1 into debugfs, so I'm not sure it's really better :) 
-> 
-> (with -1 being a valid phase too)
+> Erlier it is not possible to access full supported PA address with stage 1,
+> even if it is supported by SMMU and stage 2 is bypass.
 
-According to the comments in the patch adding the original phase functions
-valid values are 0 - 359. And you could use clk_get_phase from the debugfs
-code.
+I'm trying to understand what you're getting at here. Essentially, you want
+to use the full stage-1 output range for a stage-1 only MMU, right?
 
-Regards,
+The code is currently structured to truncate that to the stage-2 input size
+for nested translation. However, I think that's better solved by faking the
+ID registers in the virtual SMMU instead of posing these restrictions on the
+host as well.
 
-Hans
+Assuming I understand the problem correctly, why not simply remove the
+truncation from the existing code (untested patch below)? Does that not
+work for you?
+
+Will
+
+--->8
+
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 2b1271658bfa..a02d05793a73 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1917,21 +1917,7 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+        /* ID2 */
+        id = readl_relaxed(gr0_base + ARM_SMMU_GR0_ID2);
+        size = arm_smmu_id_size_to_bits((id >> ID2_IAS_SHIFT) & ID2_IAS_MASK);
+-
+-       /*
+-        * Stage-1 output limited by stage-2 input size due to pgd
+-        * allocation (PTRS_PER_PGD).
+-        */
+-       if (smmu->features & ARM_SMMU_FEAT_TRANS_NESTED) {
+-#ifdef CONFIG_64BIT
+-               smmu->s1_output_size = min_t(unsigned long, VA_BITS, size);
+-#else
+-               smmu->s1_output_size = min(32UL, size);
+-#endif
+-       } else {
+-               smmu->s1_output_size = min_t(unsigned long, PHYS_MASK_SHIFT,
+-                                            size);
+-       }
++       smmu->s1_output_size = min_t(unsigned long, PHYS_MASK_SHIFT, size);
+ 
+        /* The stage-2 output mask is also applied for bypass */
+        size = arm_smmu_id_size_to_bits((id >> ID2_OAS_SHIFT) & ID2_OAS_MASK);
