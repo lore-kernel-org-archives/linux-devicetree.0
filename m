@@ -1,34 +1,34 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH] ARM: dts: vf610-twr: remove useless property for sound
- card.
-Date: Mon, 1 Sep 2014 16:34:38 +0800
-Message-ID: <20140901083435.GA22559@dragon>
-References: <1409278941-16975-1-git-send-email-Li.Xiubo@freescale.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] ARM: tegra: Initialize interrupt controller from DT
+Date: Mon, 01 Sep 2014 10:45:52 +0200
+Message-ID: <4149432.nxIqEBW8Gp@wuerfel>
+References: <1409239879-12376-1-git-send-email-thierry.reding@gmail.com> <3113165.EcqFA5vr07@wuerfel> <20140830155459.GI3683@titan.lakedaemon.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1409278941-16975-1-git-send-email-Li.Xiubo@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140830155459.GI3683-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 10:22:21AM +0800, Xiubo Li wrote:
-> This was added by:
-> Commit 8128c4f36 ("ARM: dts: vf610-twr: Add simple-card support.")
+On Saturday 30 August 2014 11:54:59 Jason Cooper wrote:
+> > I have to admit I don't really understand how these work, but what
+> > I'd expect to work better is a way to turn the gic code into more
+> > of a library that can be used by specialized drivers. In that
+> > case you would register a driver for the tegra gic using IRQCHIP_DECLARE
+> > and that driver would call a variation of gic_of_init() or gic_init_bases()
+> > with the extra stuff as arguments.
+> > 
+> > We'd have to hack around the fact that all these platforms currently
+> > don't list a specialized compatible string, but at least for the future
+> > we should be able to do this without special hacks.
 > 
-> This useless property may cause some confusions for users.
+> Thomas was talking about this just the other day:
 > 
-> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+>   https://lkml.kernel.org/r/alpine.DEB.2.10.1408271347210.3323@nanos
 
-Applied, thanks.
+Ah, cool. That seems better than what I had in mind. Yes, let's do that.
+
+	Arnd
