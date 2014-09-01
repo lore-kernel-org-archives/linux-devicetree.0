@@ -1,60 +1,43 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv1 1/7] ASoC: simple-card: Merge single and muti DAI link
- code.
-Date: Mon, 1 Sep 2014 16:13:56 +0100
-Message-ID: <20140901151356.GB29327@sirena.org.uk>
-References: <1409545781-20530-1-git-send-email-Li.Xiubo@freescale.com>
- <1409545781-20530-2-git-send-email-Li.Xiubo@freescale.com>
- <20140901133412.GA11312@lunn.ch>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] iommu/arm-smmu: Allow size of stage 1 output to max
+	possible value for sateg 2 bypass
+Date: Mon, 1 Sep 2014 16:12:34 +0100
+Message-ID: <20140901151234.GE24594@arm.com>
+References: <1409162541-3940-1-git-send-email-c.tirumalesh@gmail.com>
+	<20140901114238.GB24594@arm.com>
+	<CALuQcNn-d3_fQaygtObzeZL7OxU8BsstKMmCmpQMHEOF31b1RA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WnjMQ0y5QpAQNNgT"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140901133412.GA11312@lunn.ch>
-Sender: linux-sh-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Xiubo Li <Li.Xiubo@freescale.com>, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, kuninori.morimoto.gx@renesas.com, moinejf@free.fr, jsarha@ti.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, alsa-devel@alsa-project.org, shawn.guo@freescale.com, linux-kernel@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>
+In-Reply-To: <CALuQcNn-d3_fQaygtObzeZL7OxU8BsstKMmCmpQMHEOF31b1RA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: tirumalesh chalamarla <c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 01, 2014 at 02:49:58PM +0100, tirumalesh chalamarla wrote:
+> On Mon, Sep 1, 2014 at 4:42 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > Assuming I understand the problem correctly, why not simply remove the
+> > truncation from the existing code (untested patch below)? Does that not
+> > work for you?
+> >
+> 
+> This will not restrict stage 1 out put to VA_BITS, even for two level
+> translations. this results in non debuggable problems
+> if we configure incorrectly.  there is no harm in checking the
+> condition for nested translations, as i did in my patch.
 
---WnjMQ0y5QpAQNNgT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Right, but restricting stage-1 output to VA_BITS doesn't make sense;
+remember it's not the same kernel writing the stage-1 and stage-2 tables.
 
-On Mon, Sep 01, 2014 at 03:34:12PM +0200, Andrew Lunn wrote:
-> On Mon, Sep 01, 2014 at 12:29:35PM +0800, Xiubo Li wrote:
-> > This patch merge single DAI link and muti-DAI links code together,
-> > and simply the simple-card driver code.
-
-> It would be good to note that this breaks the Binary API with DT
-> blobs. Old blobs will not work with this new C code.
-
-That's not on, we need to maintian compatibility with the old DTs unless
-there's a very strong reason not to.  Revising the binding is one option
-for doing this, keeping the old binding in place and making a v2 binding
-with the new functionality.
-
---WnjMQ0y5QpAQNNgT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUBI0xAAoJELSic+t+oim9z7IP/RoOAxgrSgXiS0mfFZwRC1Y0
-WalauVxeKhP+mO36WOOxw9ZRx3u8BLIZQfKstRm+yypXmaOw9K6PF6Vde2KbhtL5
-1ZtvVRHA1eLb07xKoPbZzlf3MmGxuKqjmS8j/vHLO2V0tb8iK0wGRAPrbl+/zSvw
-DO10krrG/NlzGDw7ol6eM/WJFvDd7XdZbNStILVg+pVekoxMXwwYAZrJRI/HcHZf
-9zu7dZcbNxRpadVh+/+0qhTHu9HhQ8Y6R1FJjRASTbs4sB0RPJ9iMF6iWDycXIsW
-g7/OTg+lFiBxICEYQfxamfG0SDIPoDkWgnLOyU8Z6Xd1pWr0VCYCNICUOukYmIt6
-SzDKj3QLvy0Q5VIi8l7kPw7j7BgWXxq0HQ2G22rl7Vs4JAf1txUcJkBBkgHjJyqy
-BsWqcym7mU9Jt7ymLqsJvnsJxs2UkQ1yn8Y7kP7qvW3W8Rydqv6H527hSjSCkfZ6
-ex21VZlKYGh/FraX7VLk0NTfqSK3E/qQ48K3eb43DGbOktnb48f8T17zqWRNlQeL
-tkFIZILgzxSApuGlcbf5p8j6AXw8vebNFRT6xVKToKcwyemR58iVziHDnnXg3dHn
-rjA3ExkOzAuSyuxM2K+s8oW2wZXHzMfXRvcTYsGjbB9N25bHln5jDpZV6voUMWs8
-zeN1szFASOijgyUQimyh
-=Zl56
------END PGP SIGNATURE-----
-
---WnjMQ0y5QpAQNNgT--
+Will
