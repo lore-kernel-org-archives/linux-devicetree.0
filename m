@@ -1,18 +1,18 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
 Subject: Re: [PATCH v2 1/4] mfd: Add Ricoh RN5T618 PMIC core driver
-Date: Mon, 1 Sep 2014 09:25:27 +0100
-Message-ID: <20140901082527.GD6226@lee--X1>
+Date: Mon, 1 Sep 2014 09:26:19 +0100
+Message-ID: <20140901082619.GA7374@lee--X1>
 References: <1409403026-28818-1-git-send-email-b.galvani@gmail.com>
  <1409403026-28818-2-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1409403026-28818-2-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1409403026-28818-2-git-send-email-b.galvani@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>
 List-Id: devicetree@vger.kernel.org
 
 On Sat, 30 Aug 2014, Beniamino Galvani wrote:
@@ -24,7 +24,7 @@ On Sat, 30 Aug 2014, Beniamino Galvani wrote:
 > This commit adds a MFD core driver to support the I2C communication
 > with the device.
 >=20
-> Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 > ---
 >  drivers/mfd/Kconfig         |   11 +++
 >  drivers/mfd/Makefile        |    1 +
@@ -35,7 +35,7 @@ On Sat, 30 Aug 2014, Beniamino Galvani wrote:
 >  create mode 100644 drivers/mfd/rn5t618.c
 >  create mode 100644 include/linux/mfd/rn5t618.h
 
-Applied thanks.
+Applied, thanks.
 
 > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
 > index 8d5fad2..843da5d 100644
@@ -80,7 +80,7 @@ Applied thanks.
 > +/*
 > + * MFD core driver for Ricoh RN5T618 PMIC
 > + *
-> + * Copyright (C) 2014 Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
 > + *
 > + * This program is free software; you can redistribute it and/or
 > + * modify it under the terms of the GNU General Public License
@@ -210,7 +210,7 @@ g)
 > +
 > +module_i2c_driver(rn5t618_i2c_driver);
 > +
-> +MODULE_AUTHOR("Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> +MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
 > +MODULE_DESCRIPTION("Ricoh RN5T618 MFD driver");
 > +MODULE_LICENSE("GPL v2");
 > diff --git a/include/linux/mfd/rn5t618.h b/include/linux/mfd/rn5t618.=
@@ -223,7 +223,7 @@ h
 > +/*
 > + * MFD core driver for Ricoh RN5T618 PMIC
 > + *
-> + * Copyright (C) 2014 Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + * Copyright (C) 2014 Beniamino Galvani <b.galvani@gmail.com>
 > + *
 > + * This program is free software; you can redistribute it and/or
 > + * modify it under the terms of the GNU General Public License
@@ -455,8 +455,3 @@ Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
