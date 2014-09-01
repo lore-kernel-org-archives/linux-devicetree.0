@@ -1,41 +1,27 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v7 0/5] Add rockchip RK808 pmic driver
-Date: Mon,  1 Sep 2014 17:07:43 +0800
-Message-ID: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, heiko@sntech.de
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, a.zummo@towertech.it, mturquette@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v7 1/5] dt-bindings: Add RK808 device tree bindings document
+Date: Mon,  1 Sep 2014 17:07:44 +0800
+Message-ID: <1409562468-16586-2-git-send-email-zyw@rock-chips.com>
+References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409562468-16586-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the initial version of the RK808 PMIC. This is a power management IC
-for multimedia products.
+Add device tree bindings documentation and a header file
+for rockchip's RK808 pmic.
 
-It provides regulators that are able to supply power to processor cores
-and other components. The chip provides other modules including RTC, Clockout
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+---
 
 Changes in v7:
 Advices by Mark Rutland
 - modify description about clock-cells
 - update the example
-Adviced by Lee Jones
-- coding style
-- remove rk808_pre_init function
-Adviced by Doug
-- add "&& OF" to the dependencies
-- add .init_ack_masked = true in rk808_irq_chip
-Adviced by doug
-- read rtc time from shadowed registers
-Adviced by Dmitry
-- use CONFIG_PM_SLEEP replace CONFIG_PM
-- use SIMPLE_DEV_PM_OPS replace dev_pm_ops
-- fix dev_warn
-- coding style
-Adviced by Heiko
-- remove rtc_ctl
-Adviced by doug
--fix coding style problems
-- remove pdata struct from header file, add rk808_regulator struct
 
 Changes in v6:
 Advices by Mark Rutland
@@ -43,89 +29,219 @@ Advices by Mark Rutland
 Advices by Doug
 - modify description about regulator
 - remove pinctrl description
-Adviced by Lee Jones in v2
-- rk808_i2c_client instead of g_rk808
-- remove pdata form struct rk808
-Adviced by doug
-- move RTC_READSEL setting into probe
-Adviced by doug
-- use correct argument call of_clk_add_provider in probe
-- remove the redundant code
 
 Changes in v5:
 Advices by Mark Brown
 - add description about regulator valid name.
 - add a header file "rockchip,rk808".
-- fixed a bug about set_time failed
-Adviced by doug
-- add some error checking in probe
-- move "rockchip,rk808.h" into the patch about dt-bindings
-- re-edit base on Mark's branch
 
 Changes in v4:
 Advices by Doug
 - add a "#clock-cells" propertiy
 - update the example
-Adviced by Lee Jones in v2
-- modify the description in Kconfig
-- remove some unnecessary header files
-- remove dev from struct rk808
-- use enum for define RK808_ID...
-- use &client->dev replace rk808->dev
-Adviced by doug
-- add "clock-output-names" propertiey
-- add a header file "rockchip,rk808.h"
-- use &client->dev replace rk808->dev
 
-Changes in v3:
-- fix compile err
-- fix compile err
+Changes in v3: None
+Changes in v2: None
 
-Changes in v2:
-Adviced by Mark Browm:
-- use defines for register setting value
-- remove rtc alarm disable in shutdown
-- remove while(1) in shutdown
-- remove read 0x2f in probe
-Adviced by javier.martinez
-- Add a separate clock driver, rather than in RTC driver
-Adviced by javier.martinez
-- separated from rtc-rk808.c
-Adviced by Mark Browm:
-- change of_find_node_by_name to find_child_by_name
-- use RK808_NUM_REGULATORS as the name of the constant
-- create a pdata when missing platform data
-- use the rk808_reg name to supply_regulator name
-- replace regulator_register with devm_regulator_register
-- some other problem with coding style
-
-Chris Zhong (5):
-  dt-bindings: Add RK808 device tree bindings document
-  MFD: RK808: Add new mfd driver for RK808
-  RTC: RK808: add RTC driver for RK808
-  clk: RK808: Add clkout driver for RK808
-  regulator: RK808: Remove pdata from the regulator
-
- Documentation/devicetree/bindings/mfd/rk808.txt |  166 +++++++++
- drivers/clk/Kconfig                             |    9 +
- drivers/clk/Makefile                            |    1 +
- drivers/clk/clk-rk808.c                         |  160 +++++++++
- drivers/mfd/Kconfig                             |   13 +
- drivers/mfd/Makefile                            |    1 +
- drivers/mfd/rk808.c                             |  243 +++++++++++++
- drivers/regulator/rk808-regulator.c             |   52 ++-
- drivers/rtc/Kconfig                             |   10 +
- drivers/rtc/Makefile                            |    1 +
- drivers/rtc/rtc-rk808.c                         |  419 +++++++++++++++++++++++
- include/dt-bindings/clock/rockchip,rk808.h      |   11 +
- include/linux/mfd/rk808.h                       |  196 +++++++++++
- 13 files changed, 1250 insertions(+), 32 deletions(-)
+ Documentation/devicetree/bindings/mfd/rk808.txt |  166 +++++++++++++++++++++++
+ include/dt-bindings/clock/rockchip,rk808.h      |   11 ++
+ 2 files changed, 177 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
- create mode 100644 drivers/clk/clk-rk808.c
- create mode 100644 drivers/mfd/rk808.c
- create mode 100644 drivers/rtc/rtc-rk808.c
  create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
- create mode 100644 include/linux/mfd/rk808.h
 
+diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+new file mode 100644
+index 0000000..f8932ac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+@@ -0,0 +1,166 @@
++RK808 Power Management Integrated Circuit
++
++Required properties:
++- compatible: "rockchip,rk808"
++- reg: I2C slave address
++- interrupt-parent: The parent interrupt controller.
++- interrupts: the interrupt outputs of the controller.
++- #clock-cells: from common clock binding; shall be set to 1 (multiple clock
++  outputs)
++
++Optional properties:
++- clock-output-names: From common clock binding to override the
++  default output clock name
++- rockchip,system-power-controller: Telling whether or not this pmic is controlling
++  the system power.
++
++Regulators: All the regulators of RK808 to be instantiated shall be
++listed in a child node named 'regulators'. Each regulator is represented
++by a child node of the 'regulators' node.
++
++	regulator-name {
++		/* standard regulator bindings here */
++	};
++
++Following regulators of the RK808 PMIC block are supported. Note that
++the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
++number as described in RK808 datasheet.
++
++	- DCDC_REGn
++		- valid values for n are 1 to 4.
++	- LDO_REGn
++		- valid values for n are 1 to 8.
++	- SWITCH_REGn
++		- valid values for n are 1 to 2
++
++Standard regulator bindings are used inside regulator subnodes. Check
++  Documentation/devicetree/bindings/regulator/regulator.txt
++for more details
++
++Example:
++	rk808: pmic@1b {
++		compatible = "rockchip,rk808";
++		clock-output-names = "xin32k", "rk808-clkout2";
++		interrupt-parent = <&gpio0>;
++		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_int>;
++		reg = <0x1b>;
++		rockchip,system-power-controller;
++		wakeup-source;
++		#clock-cells = <1>;
++
++		vcc8-supply = <&vcc_18>;
++		vcc9-supply = <&vcc_io>;
++		vcc10-supply = <&vcc_io>;
++		vcc12-supply = <&vcc_io>;
++		vddio-supply = <&vccio_pmu>;
++
++		regulators {
++			vdd_cpu: DCDC_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <1300000>;
++				regulator-name = "vdd_arm";
++			};
++
++			vdd_gpu: DCDC_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <1250000>;
++				regulator-name = "vdd_gpu";
++			};
++
++			vcc_ddr: DCDC_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc_ddr";
++			};
++
++			vcc_io: DCDC_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_io";
++			};
++
++			vccio_pmu: LDO_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vccio_pmu";
++			};
++
++			vcc_tp: LDO_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcc_tp";
++			};
++
++			vdd_10: LDO_REG3 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-name = "vdd_10";
++			};
++
++			vcc18_lcd: LDO_REG4 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc18_lcd";
++			};
++
++			vccio_sd: LDO_REG5 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vccio_sd";
++			};
++
++			vdd10_lcd: LDO_REG6 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <1000000>;
++				regulator-name = "vdd10_lcd";
++			};
++
++			vcc_18: LDO_REG7 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-name = "vcc_18";
++			};
++
++			vcca_codec: LDO_REG8 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-name = "vcca_codec";
++			};
++
++			vcc_wl: SWITCH_REG1 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc_wl";
++			};
++
++			vcc_lcd: SWITCH_REG2 {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-name = "vcc_lcd";
++			};
++		};
++	};
+diff --git a/include/dt-bindings/clock/rockchip,rk808.h b/include/dt-bindings/clock/rockchip,rk808.h
+new file mode 100644
+index 0000000..1a87343
+--- /dev/null
++++ b/include/dt-bindings/clock/rockchip,rk808.h
+@@ -0,0 +1,11 @@
++/*
++ * This header provides constants clk index RK808 pmic clkout
++ */
++#ifndef _CLK_ROCKCHIP_RK808
++#define _CLK_ROCKCHIP_RK808
++
++/* CLOCKOUT index */
++#define RK808_CLKOUT0		0
++#define RK808_CLKOUT1		1
++
++#endif
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
