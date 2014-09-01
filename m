@@ -1,141 +1,80 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Mon, 1 Sep 2014 11:09:22 +0100
-Message-ID: <20140901100922.GL7374@lee--X1>
-References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
- <1409564384-18380-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409564384-18380-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Subject: [PATCH] drm/panel: simple: Add AUO B116XW03 panel support
+Date: Mon, 01 Sep 2014 15:40:02 +0530
+Message-ID: <1409566202-7946-1-git-send-email-ajaykumar.rs@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: thierry.reding@gmail.com, seanpaul@google.com, ajaynumb@gmail.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 01 Sep 2014, Chris Zhong wrote:
+The AUO B116XW03 is a 11.6" HD TFT LCD panel connecting to a LVDS
+interface and with an integrated LED backlight unit.
 
-> The RK808 chip is a power management IC for multimedia and handheld
-> devices. It contains the following components:
->=20
-> - Regulators
-> - RTC
-> - Clkout
->=20
-> The RK808 core driver is registered as a platform driver and provides
-> communication through I2C with the host device for the different
-> components.
->=20
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+This panel is used on the Samsung Chromebook(XE303C12).
 
-Couple of nits.  Once fixed you can apply my:
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+---
+ .../devicetree/bindings/panel/auo,b116xw03.txt     |    7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               |   25 ++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/auo,b116xw03.txt
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-[...]
-
-> +/*
-> + * MFD core driver for Rockchip RK808
-> + *
-> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-
-Author?
-
-> + * This program is free software; you can redistribute it and/or mod=
-ify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WI=
-THOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILIT=
-Y or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lic=
-ense for
-> + * more details.
-> + */
-
-[...]
-
-> +static int rk808_probe(struct i2c_client *client,
-> +		       const struct i2c_device_id *id)
-> +{
-> +	int i;
-> +	int ret;
-> +	int pm_off =3D 0;
-> +	struct rk808 *rk808;
-> +	struct device_node *np =3D client->dev.of_node;
-
-Reverse these declarations please, structs at the top etc.
-
-[...]
-
-> +	rk808->i2c =3D client;
-> +	i2c_set_clientdata(client, rk808);
-
-'\n' here.
-
-> +	ret =3D mfd_add_devices(&client->dev, -1,
-> +			      rk808s, ARRAY_SIZE(rk808s),
-> +			      NULL, 0, regmap_irq_get_domain(rk808->irq_data));
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to add MFD devices %d\n", ret);
-> +		goto err_irq;
-> +	}
-> +
-> +	if (np) {
-
-There has to be an 'np'.  The driver depends on OF.
-
-> +		pm_off =3D of_property_read_bool(np,
-> +					"rockchip,system-power-controller");
-> +		if (pm_off && !pm_power_off) {
-> +			rk808_i2c_client =3D client;
-> +			pm_power_off =3D rk808_device_shutdown;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +err_irq:
-> +	regmap_del_irq_chip(client->irq, rk808->irq_data);
-> +	return ret;
-> +}
-
-[...]
-
-> +static struct i2c_driver rk808_i2c_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "rk808",
-> +		.of_match_table =3D of_match_ptr(rk808_of_match),
-
-No need to use of_match_ptr() now that you depend on OF.
-
-> +	},
-> +	.probe    =3D rk808_probe,
-> +	.remove   =3D rk808_remove,
-> +	.id_table =3D rk808_ids,
-> +};
-> +
-> +module_i2c_driver(rk808_i2c_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-> +MODULE_AUTHOR("Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-> +MODULE_DESCRIPTION("RK808 PMIC driver");
-
-[...]
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/panel/auo,b116xw03.txt b/Documentation/devicetree/bindings/panel/auo,b116xw03.txt
+new file mode 100644
+index 0000000..690d0a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/auo,b116xw03.txt
+@@ -0,0 +1,7 @@
++AU Optronics Corporation 11.6" HD (1366x768) color TFT-LCD panel
++
++Required properties:
++- compatible: should be "auo,b116xw03"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 4ce1db0..51566e0 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -352,6 +352,28 @@ static const struct panel_desc auo_b101aw03 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode auo_b116xw03_mode = {
++	.clock = 70589,
++	.hdisplay = 1366,
++	.hsync_start = 1366 + 40,
++	.hsync_end = 1366 + 40 + 40,
++	.htotal = 1366 + 40 + 40 + 32,
++	.vdisplay = 768,
++	.vsync_start = 768 + 10,
++	.vsync_end = 768 + 10 + 12,
++	.vtotal = 768 + 10 + 12 + 6,
++	.vrefresh = 60,
++};
++
++static const struct panel_desc auo_b116xw03 = {
++	.modes = &auo_b116xw03_mode,
++	.num_modes = 1,
++	.size = {
++		.width = 256,
++		.height = 144,
++	},
++};
++
+ static const struct drm_display_mode auo_b133xtn01_mode = {
+ 	.clock = 69500,
+ 	.hdisplay = 1366,
+@@ -616,6 +638,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "auo,b101aw03",
+ 		.data = &auo_b101aw03,
+ 	}, {
++		.compatible = "auo,b116xw03",
++		.data = &auo_b116xw03,
++	}, {
+ 		.compatible = "auo,b133htn01",
+ 		.data = &auo_b133htn01,
+ 	}, {
+-- 
+1.7.9.5
