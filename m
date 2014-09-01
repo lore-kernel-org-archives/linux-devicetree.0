@@ -1,72 +1,77 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] drivers: mfd: exynos-pmu: Add support for Exynos7
-Date: Mon, 1 Sep 2014 09:22:43 +0100
-Message-ID: <20140901082243.GC6226@lee--X1>
-References: <1409544769-2695-1-git-send-email-a.kesavan@samsung.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v3] apf27dev: add max1027 in the dts
+Date: Mon, 1 Sep 2014 16:24:14 +0800
+Message-ID: <20140901082413.GE3135@dragon>
+References: <1409517629-5918-1-git-send-email-tremyfr@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1409544769-2695-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Eunseok Choi <es10.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1409517629-5918-1-git-send-email-tremyfr@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Reynes <tremyfr@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@pengutronix.de, shc_work@mail.ru
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 01 Sep 2014, Abhilash Kesavan wrote:
-
-> Add intial PMU settings for exynos7. This is required for
-> future suspend-to-ram and cpuidle support.
->=20
-> Signed-off-by: Eunseok Choi <es10.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Sun, Aug 31, 2014 at 10:40:29PM +0200, Philippe Reynes wrote:
+> 
+> Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
 > ---
-> This patch has been tested on an Exynos7 espresso board and is based
-> on Kgene's tree (for-next branch).
->=20
-> Following are the dependencies:
-> 1) Support 64bit Cortex A57 based Exynos7 SoC
-> http://www.spinics.net/lists/arm-kernel/msg357380.html
-> 2) mfd: syscon: Decouple syscon interface from syscon devices
-> http://www.spinics.net/lists/linux-samsung-soc/msg35906.html
-> 3) ARM: EXYNOS: Add platform driver support for Exynos PMU
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/27567=
-5.html
-> 4) ARM: EXYNOS: Move PMU specific definitions from common.h
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/27065=
-5.html
-> 5) ARM: EXYNOS: Move pmu specific header files under "linux/mfd/samsu=
-ng"
-> https://lkml.org/lkml/2014/4/28/217
-> 6) drivers: mfd: Add support for Exynos PMU driver
-> https://lkml.org/lkml/2014/4/28/332
->=20
-> NOTE: The above dependencies are not final yet, especially the
-> movement of exynos pmu driver to the mfd directory. I will re-work
-> this patch when the final location for exynos PMU driver is decided.
+>  arch/arm/boot/dts/imx27-apf27dev.dts |   17 +++++++++++++++++
+>  1 files changed, 17 insertions(+), 0 deletions(-)
+> 
+> Changelog:
+> v3: (thanks Alexander Shiyan for the feedback)
+> - add datasheet pin name as comment
+> 
+> v2: (thanks Alexander Shiyan for the feedback)
+> - spi mode 0 is the default so no need to explicitly define it
+> 
+> diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
+> index b982309..0c08fbb 100644
+> --- a/arch/arm/boot/dts/imx27-apf27dev.dts
+> +++ b/arch/arm/boot/dts/imx27-apf27dev.dts
+> @@ -82,6 +82,16 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
+>  	status = "okay";
+> +
+> +	adc@0 {
+> +		compatible = "maxim,max1027";
+> +		reg = <0>;
+> +		interrupt-parent = <&gpio5>;
+> +		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_max1027>;
+> +		spi-max-frequency = <10000000>;
+> +	};
+>  };
+>  
+>  &cspi2 {
+> @@ -230,6 +240,13 @@
+>  		pinctrl_sdhc2_cd: sdhc2cdgrp {
+>  			fsl,pins = <MX27_PAD_TOUT__GPIO3_14 0x0>;
+>  		};
+> +
+> +		pinctrl_max1027: max1027 {
 
-Let me know when this patch is ready to go in and I'll review.
+The pinctrl entries are alphabetically sorted in there.  Can you also do
+that for your addition?
 
->  .../devicetree/bindings/arm/samsung/pmu.txt        |    1 +
->  arch/arm64/boot/dts/exynos7.dtsi                   |    5 +
->  drivers/mfd/exynos-pmu.c                           |  285 ++++++++++=
-++++++++++
->  include/linux/mfd/samsung/exynos-regs-pmu.h        |  212 ++++++++++=
-+++++
->  4 files changed, 503 insertions(+)
+> +			 fsl,pins = <
+> +				 MX27_PAD_UART1_CTS__GPIO5_14 0 /* CNVST */
+> +				 MX27_PAD_UART1_RTS__GPIO5_15 0 /* EOC */
 
-This all needs to be broken up into seperate patches.
+Can you follow the convention to use hex value for the config cell,
+i.e. s/0/0x0?
 
-Also, see: Documentation/devicetree/bindings/submitting-patches.txt.
+Shawn
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +			>;
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 1.7.4.4
+> 
