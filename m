@@ -1,103 +1,120 @@
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
-Subject: [PATCH V3 2/2] ARM: dts: Add DT changes for display on peach_pit
-Date: Mon, 01 Sep 2014 16:06:32 +0530
-Message-ID: <1409567792-8281-2-git-send-email-ajaykumar.rs@samsung.com>
-References: <1409567792-8281-1-git-send-email-ajaykumar.rs@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1409567792-8281-1-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, thierry.reding@gmail.com, seanpaul@google.com, ajaynumb@gmail.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
+Date: Mon, 1 Sep 2014 12:01:19 +0100
+Message-ID: <20140901110119.GB6617@leverpostej>
+References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
+ <1409350479-19108-4-git-send-email-abrestic@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409350479-19108-4-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT nodes for ps8622 bridge chip and panel.
-Add backlight power supply for pwm-backlight.
-Also add bridge phandle needed by dp to enable display on peach_pit.
+On Fri, Aug 29, 2014 at 11:14:30PM +0100, Andrew Bresticker wrote:
+> The Global Interrupt Controller (GIC) present on certain MIPS systems
+> can be used to route external interrupts to individual VPEs and CPU
+> interrupt vectors.  It also supports a timer and software-generated
+> interrupts.
+> 
+> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mips/gic.txt | 50 ++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mips/gic.txt b/Documentation/devicetree/bindings/mips/gic.txt
+> new file mode 100644
+> index 0000000..725f1ef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mips/gic.txt
+> @@ -0,0 +1,50 @@
+> +MIPS Global Interrupt Controller (GIC)
+> +
+> +The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
+> +It also supports a timer and software-generated interrupts which can be
+> +used as IPIs.
+> +
+> +Required properties:
+> +- compatible : Should be "mti,global-interrupt-controller"
 
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
----
-Changes since V1:
-	-- Remove "simple-panel" compatible string.
-	-- Use GPIO_ACTIVE_HIGH instead of 0.
-	-- Change panel node naming from "panel-simple" to "panel".
+I couldn't find "mti" in vendor-prefixes.txt (as of v3.17-rc3). If
+there's not a patch to add it elsewhere, would you mind providing one
+with this series?
 
-Changes since V2:
-	-- Use proper compatible string: "auo,b116xw03"
+> +- reg : Base address and length of the GIC registers.
+> +- interrupts : Core interrupts to which the GIC may route external interrupts.
 
- arch/arm/boot/dts/exynos5420-peach-pit.dts |   36 +++++++++++++++-------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+How many? in any order?
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 228a6b1..1070a31 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -30,11 +30,12 @@
- 		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
- 	};
- 
--	backlight {
-+	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm 0 1000000 0>;
- 		brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
- 		default-brightness-level = <7>;
-+		power-supply = <&tps65090_fet1>;
- 		pinctrl-0 = <&pwm0_out>;
- 		pinctrl-names = "default";
- 	};
-@@ -100,6 +101,12 @@
- 		regulator-boot-on;
- 		regulator-always-on;
- 	};
-+
-+	panel: panel {
-+		compatible = "auo,b116xw03";
-+		power-supply = <&tps65090_fet6>;
-+		backlight = <&backlight>;
-+	};
- };
- 
- &dp {
-@@ -113,22 +120,7 @@
- 	samsung,link-rate = <0x06>;
- 	samsung,lane-count = <2>;
- 	samsung,hpd-gpio = <&gpx2 6 0>;
--
--	display-timings {
--		native-mode = <&timing1>;
--
--		timing1: timing@1 {
--			clock-frequency = <70589280>;
--			hactive = <1366>;
--			vactive = <768>;
--			hfront-porch = <40>;
--			hback-porch = <40>;
--			hsync-len = <32>;
--			vback-porch = <10>;
--			vfront-porch = <12>;
--			vsync-len = <6>;
--		};
--	};
-+	bridge = <&ps8625>;
- };
- 
- &fimd {
-@@ -155,6 +147,16 @@
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&max98090_irq>;
- 	};
-+
-+	ps8625: lvds-bridge@48 {
-+		compatible = "parade,ps8625";
-+		reg = <0x48>;
-+		sleep-gpios = <&gpx3 5 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpy7 7 GPIO_ACTIVE_HIGH>;
-+		lane-count = <2>;
-+		panel = <&panel>;
-+		use-external-pwm;
-+	};
- };
- 
- &hsi2c_9 {
--- 
-1.7.9.5
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> +  interrupt specifier.  Should be 3.
+> +  - The first cell is the GIC interrupt number.
+> +  - The second cell encodes the interrupt flags.
+> +    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
+> +    flags.
+
+Are all the flags valid for this interrupt controller?
+
+> +  - The optional third cell indicates which CPU interrupt vector the GIC
+> +    interrupt should be routed to.  It is a 0-based index into the list of
+> +    GIC-to-CPU interrupts specified in the "interrupts" property described
+> +    above.  For example, a '2' in this cell will route the interrupt to the
+> +    3rd core interrupt listed in 'interrupts'.  If omitted, the interrupt will
+> +    be routed to the 1st core interrupt.
+
+I don't follow why this should be in the DT. Why is this necessary?
+
+I also don't follow how this can be ommitted, given interrupt-cells is
+required to be three by the wording above.
+
+> +
+> +Example:
+> +
+> +	cpu_intc: interrupt-controller@0 {
+
+Nit: there's no reg on this node, so there shouldn't be a unit-address.
+
+Thanks,
+Mark.
+
+> +		compatible = "mti,cpu-interrupt-controller";
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +	};
+> +
+> +	gic: interrupt-controller@1bdc0000 {
+> +		compatible = "mti,global-interrupt-controller";
+> +		reg = <0x1bdc0000 0x20000>;
+> +
+> +		interrupt-controller;
+> +		#interrupt-cells = <3>;
+> +
+> +		interrupt-parent = <&cpu_intc>;
+> +		interrupts = <3>, <4>;
+> +	};
+> +
+> +	uart@18101400 {
+> +		...
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <24 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		...
+> +	};
+> -- 
+> 2.1.0.rc2.206.gedb03e5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
