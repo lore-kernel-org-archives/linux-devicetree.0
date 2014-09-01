@@ -1,29 +1,58 @@
 From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 2/3] GPIO: gpio-dwapb: Support Debounce
-Date: Mon, 1 Sep 2014 03:03:05 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E981925@SHSMSX101.ccr.corp.intel.com>
+Subject: RE: [PATCH 3/3] GPIO: gpio-dwapb: Suspend & Resume PM enabling
+Date: Mon, 1 Sep 2014 03:20:00 +0000
+Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E981942@SHSMSX101.ccr.corp.intel.com>
 References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
-	 <1409161588-19417-3-git-send-email-alvin.chen@intel.com>
-	 <alpine.DEB.2.02.1408281007290.26299@atx-linux-37>
- <1409297883.30155.29.camel@intel.com>
+ <1409161588-19417-4-git-send-email-alvin.chen@intel.com>
+ <alpine.DEB.2.02.1408280955560.26299@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1409297883.30155.29.camel@intel.com>
+In-Reply-To: <alpine.DEB.2.02.1408280955560.26299@atx-linux-37>
 Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
-To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>
+To: atull <atull@opensource.altera.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-PiA+DQo+ID4gSSBkb24ndCB1bmRlcnN0YW5kIHRoZSByZWFzb24gZm9yIGFkZGluZyBkd2FwYl9y
-ZWFkIGFuZCBkd2FwYl93cml0ZSBoZXJlLg0KPiA+IFRoZSByZXN0IG9mIHRoZSBkcml2ZXIgaXMg
-dXNpbmcgcmVhZGwgYW5kIHdyaXRlbC4gIEknZCByYXRoZXIgbm90IHNlZQ0KPiA+IHR3byBkaWZm
-ZXJlbnQgbWV0aG9kcyBiZWluZyB1c2VkIGluIHRoZSBzYW1lIGRyaXZlciBmb3IgcmVnaXN0ZXIg
-YWNjZXNzLg0KPiA+IE1heWJlIEknbSBtaXNzaW5nIHNvbWV0aGluZywgYnV0IGlmIHdlIG5lZWQg
-dG8gYWRkIGR3YXBiX3JlYWQvd3JpdGUsDQo+ID4gdGhlbiBpdCBzaG91bGQgYmUgdXNlZCBmb3Ig
-YWxsIHJlZ2lzdGVyIGFjY2Vzcy4NCj4gDQo+IEFsYW4sIGl0IHdhcyBteSBwcm9wb3NhbC4gSSBy
-YXRoZXIgYWdyZWUgdGhhdCBpcyBiZXR0ZXIgdG8gY29udmVydCBhbGwgYWNjZXNzZXMgdG8NCj4g
-dGhhdC4NCk9LLCBJIHdpbGwgY29udmVydCBhbGwgcmVhZGwmd3JpdGVsIHRvIGR3YXBiX3JlYWQm
-ZHdhcGJfd3JpdGUuDQo=
+> > +/* Store GPIO context across system-wide suspend/resume transitions
+> > +*/ static struct gpio_saved_regs {
+> > +	unsigned long data;
+> > +	unsigned long dir;
+> > +	unsigned long int_en;
+> > +	unsigned long int_mask;
+> > +	unsigned long int_type;
+> > +	unsigned long int_pol;
+> > +	unsigned long int_deb;
+> > +} saved_regs;
+> > +
+> > +static int dwapb_gpio_suspend(struct device *dev) {
+> > +	struct platform_device *pdev = to_platform_device(dev);
+> > +	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
+> > +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&bgc->lock, flags);
+> > +
+> > +	saved_regs.int_mask	= dwapb_read(gpio, GPIO_INTMASK);
+> > +	saved_regs.int_en	= dwapb_read(gpio, GPIO_INTEN);
+> > +	saved_regs.int_deb	= dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
+> > +	saved_regs.int_pol	= dwapb_read(gpio, GPIO_INT_POLARITY);
+> > +	saved_regs.int_type	= dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
+> > +	saved_regs.dir		= dwapb_read(gpio, GPIO_SWPORTA_DDR);
+> > +	saved_regs.data		= dwapb_read(gpio, GPIO_SWPORTA_DR);
+> 
+> Hello,
+> 
+> The DesignWare GPIO IP can be configured to have ports a, b, c, and d. So you
+> will need to save and restore any ports that are present.  I think that *some*
+> configurations of the IP include a register that can tell us how it was configured,
+> but that register is also optional :)  I don't have confidence that we can
+> read/write the registers blindly whether they are known to be there or not.
+> So you may be stuck with looking at the device tree or platform data to know
+> whether banks b, c, or d exist.
+>
+>From the code, the device node has one property for port index. If the index is '0', then it is port A.
+So I think we can store the status according to the port index.
+
