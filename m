@@ -1,66 +1,88 @@
-From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] Adding SKY81452 regulator device tree bindings
- document
-Date: Mon, 1 Sep 2014 11:46:48 +0900
-Message-ID: <20140901024648.GA5615@jack-ThinkPad-T520>
-References: <1409222307-23225-1-git-send-email-jack.yoo@skyworksinc.com>
- <1409223518-23566-1-git-send-email-jack.yoo@skyworksinc.com>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: Re: [RFC][PATCH] ASoC: simple-card: Merge single and
+ muti DAI link code.
+Date: Mon, 1 Sep 2014 02:57:05 +0000
+Message-ID: <1330150cda9f47eb88497fc10fb2b045@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1409294797-21948-1-git-send-email-Li.Xiubo@freescale.com>
+ <20140831182725.3135db4f@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409223518-23566-1-git-send-email-jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140831182725.3135db4f@armhf>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>, Nicolin Chen <nicoleotsuka@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Please ingnore 'only' this patch.
-
-When sky81452-regulator driver was applied before,
-The previous version of this document 'sky81452-regulator.txt' was applied.
-I will resubmit the changes as incremental patches against current code of sky81452-regulator.txt.
-
-I am sorry for confusiong.
-Thank you.
-
-On Thu, Aug 28, 2014 at 07:58:38PM +0900, Gyungoh Yoo wrote:
-> v2:
-> Added 'compatible' attribute in child drivers
+> > ---
+> >
+> > Hi,
+> >
+> > This patch will break the old DT, so i just send one RFC version, and
+> > will add the old DT patches in next version if this patch can work
+> > well.
+> >
+> > Any comments and advices are welcome.
 > 
-> ---
->  .../bindings/regulator/sky81452-regulator.txt          | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
+> Hi Xiubo,
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-> new file mode 100644
-> index 0000000..7b9ff18
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/sky81452-regulator.txt
-> @@ -0,0 +1,18 @@
-> +SKY81452 voltage regulator
-> +
-> +Required properties:
-> +- compatible	: Must be "skyworks,sky81452-regulator"
-> +- any required generic properties defined in regulator.txt
-> +
-> +Optional properties:
-> +- any available generic properties defined in regulator.txt
-> +
-> +Example:
-> +
-> +	regulator {
-> +		compatible = "skyworks,sky81452-regulator";
-> +		/* generic regulator properties */
-> +		regulator-name = "touch_en";
-> +		regulator-min-microvolt = <4500000>;
-> +		regulator-max-microvolt = <8000000>;
-> +	};
-> -- 
-> 1.9.1
+> My DT is
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 	sound {
+> 		compatible = "simple-audio-card";
+> 		simple-audio-card,name = "Cubox Audio";
+> 
+> 		simple-audio-card,dai-link@0 {		/* I2S - HDMI */
+> 			format = "i2s";
+> 			cpu {
+> 				sound-dai = <&audio1 0>;
+> 			};
+> 			codec {
+> 				sound-dai = <&hdmi 0>;
+> 			};
+> 		};
+> 	...
+> 
+> I was getting 0x1001 as the format (codec clk & FRM master and i2s').
+> 
+> With your patch, I get 0x4000 (clk master & frame slave and no format).
+> 
+
+Well, yes, If your DAI link's bit clock & frame using the CODEC as master,
+You should specify it in your DAI link node like:
+
+> 	sound {
+> 		compatible = "simple-audio-card";
+> 		simple-audio-card,name = "Cubox Audio";
+> 
+> 		simple-audio-card,dai-link@0 {		/* I2S - HDMI */
+> 			format = "i2s";
+> 			cpu {
+> 				sound-dai = <&audio1 0>;
+> 			};
+> 			codec {
+> 				sound-dai = <&hdmi 0>;
+> 			};
+
+			bitclock-master;
+			frame-master;
+> 		};
+> 	...
+
+And the reason for cannot parsing the "i2s" format is that there is one bug
+in this patch and I will fix it in next version.
+
+Thanks very much for your comment.
+
+BRs
+Xiubo
