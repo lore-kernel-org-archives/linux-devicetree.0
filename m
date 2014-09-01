@@ -1,164 +1,141 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] adv7604: Use DT parsing in dummy creation
-Date: Mon, 1 Sep 2014 12:08:31 +0200
-Message-ID: <CAL8zT=jjEsTt4NPs_quiFB4hosOc7r=OiPC5RyvTNOaOW+uG8g@mail.gmail.com>
-References: <1409325303-15906-1-git-send-email-jean-michel.hautbois@vodalys.com>
- <1409325303-15906-2-git-send-email-jean-michel.hautbois@vodalys.com> <2204455.3fKSNVsp04@avalon>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Mon, 1 Sep 2014 11:09:22 +0100
+Message-ID: <20140901100922.GL7374@lee--X1>
+References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
+ <1409564384-18380-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2204455.3fKSNVsp04@avalon>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409564384-18380-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-08-31 19:18 GMT+02:00 Laurent Pinchart <laurent.pinchart@ideasonbo=
-ard.com>:
-> Hi Jean-Michel,
->
-> Thank you for the patch.
->
-> On Friday 29 August 2014 17:15:03 Jean-Michel Hautbois wrote:
->> This patch uses DT in order to parse addresses for dummy devices of =
-adv7604.
->> The ADV7604 has thirteen 256-byte maps that can be accessed via the =
-main
->> I=C2=B2C ports. Each map has it own I=C2=B2C address and acts
->> as a standard slave device on the I=C2=B2C bus.
->>
->> If nothing is defined, it uses default addresses.
->> The main prupose is using two adv76xx on the same i2c bus.
->>
->> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDaIwRZHo2/mJg@public.gmane.org=
-m>
->> ---
->>  .../devicetree/bindings/media/i2c/adv7604.txt      | 17 +++++-
->>  drivers/media/i2c/adv7604.c                        | 60 +++++++++++=
-+-------
->>  2 files changed, 55 insertions(+), 22 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt index
->> c27cede..8486b5c 100644
->> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
->> @@ -10,8 +10,12 @@ Required Properties:
->>
->>    - compatible: Must contain one of the following
->>      - "adi,adv7611" for the ADV7611
->> +    - "adi,adv7604" for the ADV7604
->
-> Addition of ADV7604 support is unrelated to the subject and needs to =
-be split
-> into a separate patch.
+On Mon, 01 Sep 2014, Chris Zhong wrote:
 
-OK, I will do that.
+> The RK808 chip is a power management IC for multimedia and handheld
+> devices. It contains the following components:
+>=20
+> - Regulators
+> - RTC
+> - Clkout
+>=20
+> The RK808 core driver is registered as a platform driver and provides
+> communication through I2C with the host device for the different
+> components.
+>=20
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
->> -  - reg: I2C slave address
->> +  - reg: I2C slave addresses
->> +    The ADV7604 has thirteen 256-byte maps that can be accessed via=
- the
->> main
->> +    I=C2=B2C ports. Each map has it own I=C2=B2C address and acts
->> +    as a standard slave device on the I=C2=B2C bus.
->>
->>    - hpd-gpios: References to the GPIOs that control the HDMI hot-pl=
-ug
->>      detection pins, one per HDMI input. The active flag indicates t=
-he GPIO
->> @@ -32,6 +36,12 @@ The digital output port node must contain at leas=
-t one
->> endpoint. Optional Properties:
->>
->>    - reset-gpios: Reference to the GPIO connected to the device's re=
-set pin.
->> +  - reg-names : Names of maps with programmable addresses.
->> +             It can contain any map needing another address than de=
-fault one.
->> +             Possible maps names are :
->> +ADV7604 : "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe=
-",
->> "rep",
->> +             "edid", "hdmi", "test", "cp", "vdp"
->> +ADV7611 : "main", "cec", "infoframe", "afe", "rep", "edid", "hdmi",=
- "cp"
->>
->>  Optional Endpoint Properties:
->>
->> @@ -50,7 +60,10 @@ Example:
->>
->>       hdmi_receiver@4c {
->>               compatible =3D "adi,adv7611";
->> -             reg =3D <0x4c>;
->> +             /* edid page will be accessible @ 0x66 on i2c bus */
->> +             /* other maps keep their default addresses */
->> +             reg =3D <0x4c 0x66>;
->> +             reg-names =3D "main", "edid";
->>
->>               reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;
->>               hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;
->> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604=
-=2Ec
->> index d4fa213..56037dd 100644
->> --- a/drivers/media/i2c/adv7604.c
->> +++ b/drivers/media/i2c/adv7604.c
->> @@ -326,6 +326,22 @@ static const struct adv7604_video_standards
->> adv7604_prim_mode_hdmi_gr[] =3D { { },
->>  };
->>
->> +static const char const *adv7604_secondary_names[] =3D {
->> +     "main", /* ADV7604_PAGE_IO */
->> +     "avlink", /* ADV7604_PAGE_AVLINK */
->> +     "cec", /* ADV7604_PAGE_CEC */
->> +     "infoframe", /* ADV7604_PAGE_INFOFRAME */
->> +     "esdp", /* ADV7604_PAGE_ESDP */
->> +     "dpp", /* ADV7604_PAGE_DPP */
->> +     "afe", /* ADV7604_PAGE_AFE */
->> +     "rep", /* ADV7604_PAGE_REP */
->> +     "edid", /* ADV7604_PAGE_EDID */
->> +     "hdmi", /* ADV7604_PAGE_HDMI */
->> +     "test", /* ADV7604_PAGE_TEST */
->> +     "cp", /* ADV7604_PAGE_CP */
->> +     "vdp" /* ADV7604_PAGE_VDP */
->> +};
->> +
->>  /* ----------------------------------------------------------------=
--------
->> */
->>
->>  static inline struct adv7604_state *to_state(struct v4l2_subdev *sd=
-)
->> @@ -2528,13 +2544,31 @@ static void adv7604_unregister_clients(struc=
-t
->> adv7604_state *state) }
->>
->>  static struct i2c_client *adv7604_dummy_client(struct v4l2_subdev *=
-sd,
->> -                                                     u8 addr, u8 io=
-_reg)
->> +                                             unsigned int i)
->>  {
->>       struct i2c_client *client =3D v4l2_get_subdevdata(sd);
->> +     struct adv7604_platform_data *pdata =3D client->dev.platform_d=
-ata;
->> +     unsigned int io_reg =3D 0xf2 + i;
->> +     unsigned int default_addr =3D io_read(sd, io_reg) >> 1;
->
-> This modifies the behaviour of the driver. It previously used fixed d=
-efault
-> addresses in the DT case, and now defaults to whatever has been progr=
-ammed in
-> the chip. This might not be an issue in itself, but it should be docu=
-mented in
-> the commit message (and possibly split to a separate patch).
+Couple of nits.  Once fixed you can apply my:
 
-Then, let's decide if this is a problem or not :) ? I naively thought
-that it would be good to have default address, if defined in platform
-data, use this one instead, and if it is in DT, it should be the prior
-address to use (priority on DT and not on platform data).
-But this is probably ideal for me but not for others ?
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Thanks,
-JM
+[...]
+
+> +/*
+> + * MFD core driver for Rockchip RK808
+> + *
+> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+
+Author?
+
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WI=
+THOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILIT=
+Y or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lic=
+ense for
+> + * more details.
+> + */
+
+[...]
+
+> +static int rk808_probe(struct i2c_client *client,
+> +		       const struct i2c_device_id *id)
+> +{
+> +	int i;
+> +	int ret;
+> +	int pm_off =3D 0;
+> +	struct rk808 *rk808;
+> +	struct device_node *np =3D client->dev.of_node;
+
+Reverse these declarations please, structs at the top etc.
+
+[...]
+
+> +	rk808->i2c =3D client;
+> +	i2c_set_clientdata(client, rk808);
+
+'\n' here.
+
+> +	ret =3D mfd_add_devices(&client->dev, -1,
+> +			      rk808s, ARRAY_SIZE(rk808s),
+> +			      NULL, 0, regmap_irq_get_domain(rk808->irq_data));
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to add MFD devices %d\n", ret);
+> +		goto err_irq;
+> +	}
+> +
+> +	if (np) {
+
+There has to be an 'np'.  The driver depends on OF.
+
+> +		pm_off =3D of_property_read_bool(np,
+> +					"rockchip,system-power-controller");
+> +		if (pm_off && !pm_power_off) {
+> +			rk808_i2c_client =3D client;
+> +			pm_power_off =3D rk808_device_shutdown;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err_irq:
+> +	regmap_del_irq_chip(client->irq, rk808->irq_data);
+> +	return ret;
+> +}
+
+[...]
+
+> +static struct i2c_driver rk808_i2c_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "rk808",
+> +		.of_match_table =3D of_match_ptr(rk808_of_match),
+
+No need to use of_match_ptr() now that you depend on OF.
+
+> +	},
+> +	.probe    =3D rk808_probe,
+> +	.remove   =3D rk808_remove,
+> +	.id_table =3D rk808_ids,
+> +};
+> +
+> +module_i2c_driver(rk808_i2c_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+> +MODULE_AUTHOR("Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+> +MODULE_DESCRIPTION("RK808 PMIC driver");
+
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
