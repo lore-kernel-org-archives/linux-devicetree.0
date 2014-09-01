@@ -1,58 +1,78 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 3/3] GPIO: gpio-dwapb: Suspend & Resume PM enabling
-Date: Mon, 1 Sep 2014 03:20:00 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E981942@SHSMSX101.ccr.corp.intel.com>
-References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
- <1409161588-19417-4-git-send-email-alvin.chen@intel.com>
- <alpine.DEB.2.02.1408280955560.26299@atx-linux-37>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v4 1/2] rc: Add DT bindings for hix5hd2
+Date: Mon, 01 Sep 2014 09:19:03 +0530
+Message-ID: <5403ECAF.1040506@gmail.com>
+References: <1409452751-17463-1-git-send-email-zhangfei.gao@linaro.org> <1409452751-17463-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1408280955560.26299@atx-linux-37>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: atull <atull@opensource.altera.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1409452751-17463-2-git-send-email-zhangfei.gao@linaro.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>, sean@mess.org, arnd@arndb.de, haifeng.yan@linaro.org, jchxue@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, Guoxiong Yan <yanguoxiong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-> > +/* Store GPIO context across system-wide suspend/resume transitions
-> > +*/ static struct gpio_saved_regs {
-> > +	unsigned long data;
-> > +	unsigned long dir;
-> > +	unsigned long int_en;
-> > +	unsigned long int_mask;
-> > +	unsigned long int_type;
-> > +	unsigned long int_pol;
-> > +	unsigned long int_deb;
-> > +} saved_regs;
-> > +
-> > +static int dwapb_gpio_suspend(struct device *dev) {
-> > +	struct platform_device *pdev = to_platform_device(dev);
-> > +	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
-> > +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&bgc->lock, flags);
-> > +
-> > +	saved_regs.int_mask	= dwapb_read(gpio, GPIO_INTMASK);
-> > +	saved_regs.int_en	= dwapb_read(gpio, GPIO_INTEN);
-> > +	saved_regs.int_deb	= dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
-> > +	saved_regs.int_pol	= dwapb_read(gpio, GPIO_INT_POLARITY);
-> > +	saved_regs.int_type	= dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
-> > +	saved_regs.dir		= dwapb_read(gpio, GPIO_SWPORTA_DDR);
-> > +	saved_regs.data		= dwapb_read(gpio, GPIO_SWPORTA_DR);
-> 
-> Hello,
-> 
-> The DesignWare GPIO IP can be configured to have ports a, b, c, and d. So you
-> will need to save and restore any ports that are present.  I think that *some*
-> configurations of the IP include a register that can tell us how it was configured,
-> but that register is also optional :)  I don't have confidence that we can
-> read/write the registers blindly whether they are known to be there or not.
-> So you may be stuck with looking at the device tree or platform data to know
-> whether banks b, c, or d exist.
+On 08/31/2014 08:09 AM, Zhangfei Gao wrote:
+> From: Guoxiong Yan <yanguoxiong@huawei.com>
 >
->From the code, the device node has one property for port index. If the index is '0', then it is port A.
-So I think we can store the status according to the port index.
+> Signed-off-by: Guoxiong Yan <yanguoxiong@huawei.com>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>   .../devicetree/bindings/media/hix5hd2-ir.txt       |   25 ++++++++++++++++++++
+>   1 file changed, 25 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/media/hix5hd2-ir.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/hix5hd2-ir.txt b/Documentation/devicetree/bindings/media/hix5hd2-ir.txt
+> new file mode 100644
+> index 0000000..fb5e760
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/hix5hd2-ir.txt
+> @@ -0,0 +1,25 @@
+> +Device-Tree bindings for hix5hd2 ir IP
+> +
+> +Required properties:
+> +	- compatible: Should contain "hisilicon,hix5hd2-ir".
+> +	- reg: Base physical address of the controller and length of memory
+> +	  mapped region.
+> +	- interrupts: interrupt-specifier for the sole interrupt generated by
+> +	  the device. The interrupt specifier format depends on the interrupt
+> +	  controller parent.
+> +	- clocks: clock phandle and specifier pair.
+> +	- hisilicon,power-syscon: phandle of syscon used to control power.
+> +
 
+No need of tab space before -compatible.... Give tab spaces after properties...
+
+ex:
+  
+Required properties:
+- compatible		: Should contain "hisilicon,hix5hd2-ir".
+- reg			: Base physical address of the controller and length of memory
+			  mapped region.
+
+...
+
+Its not standard, but in my view it is understandable. Now every one following this
+one.
+
+Thanks..
+
+> +Optional properties:
+> +	- linux,rc-map-name : Remote control map name.
+> +
+> +Example node:
+> +
+> +	ir: ir@f8001000 {
+> +		compatible = "hisilicon,hix5hd2-ir";
+> +		reg = <0xf8001000 0x1000>;
+> +		interrupts = <0 47 4>;
+> +		clocks = <&clock HIX5HD2_FIXED_24M>;
+> +		hisilicon,power-syscon = <&sysctrl>;
+> +		linux,rc-map-name = "rc-tivo";
+> +	};
+
+
+-- 
+Regards,
+Varka Bhadram.
