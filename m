@@ -1,51 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 6/6 v4] ARM: realview: basic device tree implementation
-Date: Mon, 1 Sep 2014 13:44:45 +0100
-Message-ID: <20140901124445.GA7624@leverpostej>
-References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
- <1406294628-16079-7-git-send-email-linus.walleij@linaro.org>
- <20140725152401.GA21830@leverpostej>
- <CACRpkdaugAmVt5CF194xd+eVyz=Yfir6Jz0k9h4VSvSWLkKPRQ@mail.gmail.com>
- <20140901121700.GC6617@leverpostej>
- <CACRpkdYoqhiLqVMqrrUxZEq-c63NuDT--FVWs3j_5b1BC24FeA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYoqhiLqVMqrrUxZEq-c63NuDT--FVWs3j_5b1BC24FeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Anders Berg <anders.berg@avagotech.com>
+Subject: [PATCH 2/2] Documentation: DT bindings for AXM55xx SSP CS
+Date: Mon,  1 Sep 2014 14:53:41 +0200
+Message-ID: <1409576021-24828-3-git-send-email-anders.berg@avagotech.com>
+References: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Anders Berg <anders.berg@avagotech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 01, 2014 at 01:27:17PM +0100, Linus Walleij wrote:
-> On Mon, Sep 1, 2014 at 2:17 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Mon, Sep 01, 2014 at 12:52:49PM +0100, Linus Walleij wrote:
-> 
-> >> Should use the string "arm,arm1176jzf-devchip-gic"?
-> >
-> > That sounds fine to me.
-> >
-> > The document you've linked to says the GIC is derived from the MPCore
-> > GIC, so I'd place "arm,arm11mp-gic" as a fallback entry in the
-> > compatible list. Until we need to distinguish the two the driver
-> > shouldn't need to be updated.
-> 
-> Well the driver doesn't have a IRQCHIP_DECLARE() for arm11mp-gic
-> either so I'll have to add that instead.
+Bindings and documentation for AXM55xx SSP chip select controller.
 
-Sorry, I's assumed that because it was documented the driver already
-supported it. I should know better ;)
+Signed-off-by: Anders Berg <anders.berg@avagotech.com>
+---
+ .../devicetree/bindings/gpio/gpio-axxia-sspcs.txt  | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-axxia-sspcs.txt
 
-let's add an IRQCHIP_DECLARE for both "arm,arm1176jzf-devchip-gic" and
-"arm,arm11mp-gic" (given it was already documented), so as to make
-things less painful.
-
-Thanks,
-
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-axxia-sspcs.txt b/Documentation/devicetree/bindings/gpio/gpio-axxia-sspcs.txt
+new file mode 100644
+index 0000000..a64c695
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-axxia-sspcs.txt
+@@ -0,0 +1,36 @@
++* Axxia SSP GPIO chip-select driver
++
++The Axxia device has a ARM PL022 Prime Cell SSP controller with an extension of
++five chip select signals that may be controlled by software. This driver
++exports them as GPIOs.
++
++Required properties:
++
++  * compatible: should be "lsi,ssp-gpio"
++  * reg: address of the chip select control register.
++  * gpio-controller: mark the device as gpio controller
++  * #gpio-cells: should be 1 and this field specifies the chip select number
++
++Example:
++-------
++
++	spics: sspgpio@2010088030 {
++		compatible = "lsi,ssp-gpio";
++		#gpio-cells = <1>;
++		reg = <0x20 0x10088030 0x00 0x4>;
++		gpio-controller;
++	};
++
++	spi0: ssp@2010088000 {
++		compatible = "arm,pl022", "arm,primecell";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x20 0x10088000 0x00 0x1000>;
++		num-cs = <5>;
++		cs-gpios = <&spics 0>,
++			   <&spics 1>,
++			   <&spics 2>,
++			   <&spics 3>,
++			   <&spics 4>;
++		...
++      };
+-- 
+1.9.1
