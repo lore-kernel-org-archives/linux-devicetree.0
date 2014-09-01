@@ -1,120 +1,87 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
-Date: Mon, 1 Sep 2014 12:01:19 +0100
-Message-ID: <20140901110119.GB6617@leverpostej>
-References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
- <1409350479-19108-4-git-send-email-abrestic@chromium.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2] ARM: zynq: DT: Add LEDs to zc702 DT
+Date: Mon, 01 Sep 2014 13:08:40 +0200
+Message-ID: <540453B8.90403@monstr.eu>
+References: <1409323117-21711-1-git-send-email-soren.brinkmann@xilinx.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409350479-19108-4-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="b4jQF8svN7fMfSR2aV3PhEiDVcFaQs3tW"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409323117-21711-1-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: Ezra Savard <ezras@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Ezra Savard <ezra.savard@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 29, 2014 at 11:14:30PM +0100, Andrew Bresticker wrote:
-> The Global Interrupt Controller (GIC) present on certain MIPS systems
-> can be used to route external interrupts to individual VPEs and CPU
-> interrupt vectors.  It also supports a timer and software-generated
-> interrupts.
-> 
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--b4jQF8svN7fMfSR2aV3PhEiDVcFaQs3tW
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
+
+On 08/29/2014 04:38 PM, Soren Brinkmann wrote:
+> From: Ezra Savard <ezra.savard@xilinx.com>
+>=20
+> Adds LEDs to the zc702 devicetree for use with the leds-gpio driver.
+>=20
+> Signed-off-by: Ezra Savard <ezra.savard@xilinx.com>
+> Reviewed-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
 > ---
->  Documentation/devicetree/bindings/mips/gic.txt | 50 ++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mips/gic.txt b/Documentation/devicetree/bindings/mips/gic.txt
-> new file mode 100644
-> index 0000000..725f1ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/gic.txt
-> @@ -0,0 +1,50 @@
-> +MIPS Global Interrupt Controller (GIC)
+> v2:
+>  - fix node names
+> ---
+>  arch/arm/boot/dts/zynq-zc702.dts | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-=
+zc702.dts
+> index 835c3089c61c..b29e0f97e764 100644
+> --- a/arch/arm/boot/dts/zynq-zc702.dts
+> +++ b/arch/arm/boot/dts/zynq-zc702.dts
+> @@ -27,6 +27,15 @@
+>  		bootargs =3D "console=3DttyPS0,115200 earlyprintk";
+>  	};
+> =20
+> +	leds {
+> +		compatible =3D "gpio-leds";
 > +
-> +The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> +It also supports a timer and software-generated interrupts which can be
-> +used as IPIs.
-> +
-> +Required properties:
-> +- compatible : Should be "mti,global-interrupt-controller"
+> +		ds23 {
+> +			label =3D "ds23";
+> +			gpios =3D <&gpio0 10 0>;
+> +			linux,default-trigger =3D "heartbeat";
+> +		};
+> +	};
+>  };
+> =20
+>  &can0 {
+>=20
 
-I couldn't find "mti" in vendor-prefixes.txt (as of v3.17-rc3). If
-there's not a patch to add it elsewhere, would you mind providing one
-with this series?
-
-> +- reg : Base address and length of the GIC registers.
-> +- interrupts : Core interrupts to which the GIC may route external interrupts.
-
-How many? in any order?
-
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +  interrupt specifier.  Should be 3.
-> +  - The first cell is the GIC interrupt number.
-> +  - The second cell encodes the interrupt flags.
-> +    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-> +    flags.
-
-Are all the flags valid for this interrupt controller?
-
-> +  - The optional third cell indicates which CPU interrupt vector the GIC
-> +    interrupt should be routed to.  It is a 0-based index into the list of
-> +    GIC-to-CPU interrupts specified in the "interrupts" property described
-> +    above.  For example, a '2' in this cell will route the interrupt to the
-> +    3rd core interrupt listed in 'interrupts'.  If omitted, the interrupt will
-> +    be routed to the 1st core interrupt.
-
-I don't follow why this should be in the DT. Why is this necessary?
-
-I also don't follow how this can be ommitted, given interrupt-cells is
-required to be three by the wording above.
-
-> +
-> +Example:
-> +
-> +	cpu_intc: interrupt-controller@0 {
-
-Nit: there's no reg on this node, so there shouldn't be a unit-address.
+Applied.
 
 Thanks,
-Mark.
+Michal
 
-> +		compatible = "mti,cpu-interrupt-controller";
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +	};
-> +
-> +	gic: interrupt-controller@1bdc0000 {
-> +		compatible = "mti,global-interrupt-controller";
-> +		reg = <0x1bdc0000 0x20000>;
-> +
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +
-> +		interrupt-parent = <&cpu_intc>;
-> +		interrupts = <3>, <4>;
-> +	};
-> +
-> +	uart@18101400 {
-> +		...
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <24 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		...
-> +	};
-> -- 
-> 2.1.0.rc2.206.gedb03e5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--b4jQF8svN7fMfSR2aV3PhEiDVcFaQs3tW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlQEU7gACgkQykllyylKDCGRUgCfYQc93eQKjc3In6mtW9oA2ia4
+dBIAoIn1Cy1bWBsmQHwaz3bfbjlylDKN
+=OOof
+-----END PGP SIGNATURE-----
+
+--b4jQF8svN7fMfSR2aV3PhEiDVcFaQs3tW--
