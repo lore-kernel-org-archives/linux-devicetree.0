@@ -1,55 +1,48 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [PATCH 6/6 v4] ARM: realview: basic device tree implementation
-Date: Mon, 1 Sep 2014 13:52:49 +0200
-Message-ID: <CACRpkdaugAmVt5CF194xd+eVyz=Yfir6Jz0k9h4VSvSWLkKPRQ@mail.gmail.com>
-References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
-	<1406294628-16079-7-git-send-email-linus.walleij@linaro.org>
-	<20140725152401.GA21830@leverpostej>
+Date: Mon, 1 Sep 2014 13:03:13 +0100
+Message-ID: <20140901120313.GI30401@n2100.arm.linux.org.uk>
+References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org> <20140725152401.GA21830@leverpostej> <20140725155010.GP21766@n2100.arm.linux.org.uk> <9626823.572BIYcQL9@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140725152401.GA21830@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <9626823.572BIYcQL9@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some ARM1176JZF confusion in as separate thread...
+On Fri, Jul 25, 2014 at 05:58:24PM +0200, Arnd Bergmann wrote:
+> On Friday 25 July 2014 16:50:10 Russell King - ARM Linux wrote:
+> > 
+> > I toyed with the idea of adding the standard cache size specifications
+> > to the L2C code, it sounds like there's a reason to do that now.
+> > 
+> > Let's not mess around with adding stuff like the above to work around
+> > the L2 code not parsing the appropriate specs from DT, let's do the
+> > right thing and add bindings to allow DT to provide the cache geometry.
+> 
+> Yes, please!
+> 
+> That would actually reduce the realview to just the dma_zone_size
+> definition, and I think someone also posted a patch to get that from
+> DT recently. Having realview booting with an empty board file would
+> be ideal.
 
-On Fri, Jul 25, 2014 at 5:24 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Fri, Jul 25, 2014 at 02:23:48PM +0100, Linus Walleij wrote:
+I did have a patch in my L2C cleanup series to provide these properties,
+but it got discarded - even though we have existing platforms which
+provide these values.
 
->> +               /* Primary DevChip GIC synthesized with the CPU */
->> +               intc_dc1176: interrupt-controller@10120000 {
->> +                       compatible = "arm,arm1176jzf-gic";
->
-> As far as I am aware, the JZF flags haven nothing to do with the GIC
-> implementation. I think they can be dropped from this string (following
-> the example of "arm,arm1176-pmu").
+The reason for that was because requiring new properties causes a DT
+breakage - previous versions of the DT suddenly stop working because
+the values necessary to setup the L2C have been removed from the
+kernel, and the older DT files do not contain the neccessary values
+either.
 
-FWIW I changed the string to "arm,arm1176-gic"
-
-But this isn't about the CPU actually. It is the ARM1176JZF development
-chip. See:
-http://infocenter.arm.com/help/topic/com.arm.doc.ddi0375a/DDI0375A_arm1176jzf_dev_chip_r0p0_trm.pdf
-
-I know it is confusingly named as a name of a SoC that has this
-CPU inside it but what can I do ... some guys named ARM came
-up with this.
-
-Should use the string "arm,arm1176jzf-devchip-gic"?
-
->> +               /* This GIC on the board is cascaded off the DevChip GIC */
->> +               intc_pb1176: interrupt-controller@10040000 {
->> +                       compatible = "arm,arm1176jzf-gic";
->
-> And this isn't part of the CPU, so that string doesn't look right. I'd
-> at least like to see an additional string earlier in the list
-
-This seems to be a follow-on to the above confusion.
-
-Yours,
-Linus Walleij
+-- 
+FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
