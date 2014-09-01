@@ -1,80 +1,120 @@
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
-Subject: [PATCH] drm/panel: simple: Add AUO B116XW03 panel support
-Date: Mon, 01 Sep 2014 15:40:02 +0530
-Message-ID: <1409566202-7946-1-git-send-email-ajaykumar.rs@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: thierry.reding@gmail.com, seanpaul@google.com, ajaynumb@gmail.com, joshi@samsung.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 03/12] clk: Add a function to retrieve phase
+Date: Mon, 1 Sep 2014 12:20:26 +0200
+Message-ID: <20140901102026.GL15297@lukather>
+References: <1409428991-2442-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1409428991-2442-4-git-send-email-maxime.ripard@free-electrons.com>
+ <5402F5D6.4080100@redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="A+KMS/Wu1IRpMDFu"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5402F5D6.4080100@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The AUO B116XW03 is a 11.6" HD TFT LCD panel connecting to a LVDS
-interface and with an integrated LED backlight unit.
 
-This panel is used on the Samsung Chromebook(XE303C12).
+--A+KMS/Wu1IRpMDFu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
----
- .../devicetree/bindings/panel/auo,b116xw03.txt     |    7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               |   25 ++++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/auo,b116xw03.txt
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/panel/auo,b116xw03.txt b/Documentation/devicetree/bindings/panel/auo,b116xw03.txt
-new file mode 100644
-index 0000000..690d0a5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/panel/auo,b116xw03.txt
-@@ -0,0 +1,7 @@
-+AU Optronics Corporation 11.6" HD (1366x768) color TFT-LCD panel
-+
-+Required properties:
-+- compatible: should be "auo,b116xw03"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 4ce1db0..51566e0 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -352,6 +352,28 @@ static const struct panel_desc auo_b101aw03 = {
- 	},
- };
- 
-+static const struct drm_display_mode auo_b116xw03_mode = {
-+	.clock = 70589,
-+	.hdisplay = 1366,
-+	.hsync_start = 1366 + 40,
-+	.hsync_end = 1366 + 40 + 40,
-+	.htotal = 1366 + 40 + 40 + 32,
-+	.vdisplay = 768,
-+	.vsync_start = 768 + 10,
-+	.vsync_end = 768 + 10 + 12,
-+	.vtotal = 768 + 10 + 12 + 6,
-+	.vrefresh = 60,
-+};
-+
-+static const struct panel_desc auo_b116xw03 = {
-+	.modes = &auo_b116xw03_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 256,
-+		.height = 144,
-+	},
-+};
-+
- static const struct drm_display_mode auo_b133xtn01_mode = {
- 	.clock = 69500,
- 	.hdisplay = 1366,
-@@ -616,6 +638,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "auo,b101aw03",
- 		.data = &auo_b101aw03,
- 	}, {
-+		.compatible = "auo,b116xw03",
-+		.data = &auo_b116xw03,
-+	}, {
- 		.compatible = "auo,b133htn01",
- 		.data = &auo_b133htn01,
- 	}, {
--- 
-1.7.9.5
+On Sun, Aug 31, 2014 at 12:15:50PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 08/30/2014 10:03 PM, Maxime Ripard wrote:
+> > The current phase API doesn't look into the actual hardware to get the =
+phase
+> > value, but will rather get it from a variable only set by the set_phase
+> > function.
+> >=20
+> > This will cause issue when the client driver will never call the set_ph=
+ase
+> > function, where we can end up having a reported phase that will not mat=
+ch what
+> > the hardware has been programmed to by the bootloader or what phase is
+> > programmed out of reset.
+> >=20
+> > Add a new get_phase function for the drivers to implement so that we ca=
+n get
+> > this value.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >  drivers/clk/clk.c            | 17 ++++++++++++++---
+> >  include/linux/clk-provider.h |  5 +++++
+> >  2 files changed, 19 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index d87661af0c72..7dbceca694f1 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -1797,8 +1797,8 @@ out:
+> >   * clk_get_phase - return the phase shift of a clock signal
+> >   * @clk: clock signal source
+> >   *
+> > - * Returns the phase shift of a clock node in degrees, otherwise retur=
+ns
+> > - * -EERROR.
+> > + * Returns the phase shift of a clock node in degrees. Any negative
+> > + * values are errors.
+> >   */
+> >  int clk_get_phase(struct clk *clk)
+> >  {
+> > @@ -1808,7 +1808,18 @@ int clk_get_phase(struct clk *clk)
+> >  		goto out;
+> > =20
+> >  	clk_prepare_lock();
+> > -	ret =3D clk->phase;
+> > +
+> > +	if (clk->phase) {
+> > +		ret =3D clk->phase;
+> > +		goto out_unlock;
+> > +	}
+>=20
+> 0 is a valid phase, so this will cause the phase to
+> be read from the hardware each time if the phase is 0.
+>=20
+> Perhaps make clk->phase signed (if it is not already), init it
+> to -1, and check for it not being -1 ?
+
+Yeah, I'm not really proud of this code either, but yours would expose
+this -1 into debugfs, so I'm not sure it's really better :)=20
+
+(with -1 being a valid phase too)
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--A+KMS/Wu1IRpMDFu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUBEhqAAoJEBx+YmzsjxAgp68P/12C8ZcHgyYv01hoKEU7tmLN
+KQ6gJuwg4fmgN+6ixYJDcLPJYGeKhqj9xMm95ZjT06cYNZ7OAaEPJb/QyuwUyD05
+H3WEbRO6YVqKpchLcKkIUq0mO96AMU8l4msISrdfyANjq0kwkmcR7MGU5w1XWGJ7
+NMnK+NRX714kx2Xb1sK5VG5FAI3rSz3ScxF1RgDN35bgntH0lWOTkbgICHz4cHQF
+avsx85qwS/8r8sxRzzEtL+6Fo/q9t9wI8BhC29Un/d9lTFU0qPp1okqdnFFceKTg
+FavjRAS4lIE1B1l5tm+2tyoPE+OmQxCGWnRsOg1q8/5tf3d8YZ7aSNWcwE/p/AGh
+rmmi37vzzbtK9ZFfTR0nQp8kORUloVPCo/3THcL7GACbemSPcw7cm8E9LPxaFuG0
+VK+PSMY/hQsBKXwQ25FXLD7kE+Nb1QKbRC3rUXRueE+QFitWMxqN7aBCeYBiSBWv
+l61G2uBkE63IFdunOkGAj4JO0TIVniu956vWzeJE30Ulcgqp9u7ZJyN4y8jmw2Rt
+HUasirOiqsIdl2KI3dS/HuZDGsAEnEhqpyimdUQLAs1yljzbIhYAYettbt9PxhDM
+wPKHBC/IrQTMhqy8qPGh9esm9P8/V137HglM2Xv6+z44ITxmYv8DPYrnB6JegBYt
+OMvyhMKXLvcOeZ+0CjGA
+=OKzg
+-----END PGP SIGNATURE-----
+
+--A+KMS/Wu1IRpMDFu--
