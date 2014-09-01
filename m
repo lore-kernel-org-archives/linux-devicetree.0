@@ -1,265 +1,122 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 10/12] clk: sunxi: mod0: Introduce MMC proper phase handling
-Date: Mon, 01 Sep 2014 14:39:45 -0700
-Message-ID: <20140901213945.5251.37105@quantum>
-References: <1409428991-2442-1-git-send-email-maxime.ripard@free-electrons.com>
- <1409428991-2442-11-git-send-email-maxime.ripard@free-electrons.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 4/5] clk: RK808: Add clkout driver for RK808
+Date: Mon, 01 Sep 2014 14:55:55 -0700
+Message-ID: <20140901215555.5251.33484@quantum>
+References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
+ <1409564800-18477-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1409428991-2442-11-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409564800-18477-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Maxime Ripard (2014-08-30 13:03:09)
-> The MMC clock we thought we had until now are actually not one but three
-> different clocks.
+Quoting Chris Zhong (2014-09-01 02:46:40)
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> The main one is unchanged, and will have three outputs:
->   - The clock fed into the MMC
->   - a sample and output clocks, to deal with when should we output/sample data
->     to/from the MMC bus
 > 
-> The phase control we had are actually controlling the two latter clocks, but
-> the main MMC one is unchanged.
-> 
-> We can adjust the phase with a 3 bits value, from 0 to 7, 0 meaning a 180 phase
-> shift, and the other values being the number of periods from the MMC parent
-> clock to outphase the clock of.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-Looks good. Thanks a lot for revisiting this after talking to your
-hardware team!
+Hello Chris,
 
-Regards,
+Thanks for submitting this patch. Could you fill in a proper changelog?
+Also you should reorder the tags like so:
+
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+<snip>
+
+> +static int rk808_clkout2_control(struct clk_hw *hw, bool enable)
+> +{
+> +       struct rk808_clkout *rk808_clkout = container_of(hw,
+> +                                                        struct rk808_clkout,
+> +                                                        clkout2_hw);
+> +       struct rk808 *rk808 = rk808_clkout->rk808;
+> +
+> +       return regmap_update_bits(rk808->regmap, RK808_CLK32OUT_REG,
+> +                                 CLK32KOUT2_EN, enable ? CLK32KOUT2_EN : 0);
+> +}
+
+Nitpick: can you rename "control" to "enable" or "ungate"? That makes it
+more obvious what the function is doing without having to inspect the
+code in the function body.
+
+<snip>
+
+> +static int rk808_clkout_probe(struct platform_device *pdev)
+> +{
+> +       struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+> +       struct i2c_client *client = rk808->i2c;
+> +       struct device_node *node = client->dev.of_node;
+> +       struct clk_init_data init = {};
+> +       struct clk **clk_table;
+> +       struct rk808_clkout *rk808_clkout;
+> +
+> +       rk808_clkout = devm_kzalloc(&client->dev,
+> +                                   sizeof(*rk808_clkout), GFP_KERNEL);
+> +       if (!rk808_clkout)
+> +               return -ENOMEM;
+> +
+> +       rk808_clkout->rk808 = rk808;
+> +
+> +       clk_table = devm_kzalloc(&client->dev,
+> +                                2 * sizeof(struct clk *), GFP_KERNEL);
+
+Better to use devm_kcalloc. Also good to define a constant like:
+
+#define RK808_NR_OUTPUT 2
+
+... and then use RK8808_NR_OUTPUT instead of hard-coding the value 2 in
+the driver.
+
+> +       if (!clk_table)
+> +               return -ENOMEM;
+> +
+> +       init.flags = CLK_IS_ROOT;
+> +       init.parent_names = NULL;
+> +       init.num_parents = 0;
+> +       init.name = "rk808-clkout1";
+> +       init.ops = &rk808_clkout1_ops;
+> +       rk808_clkout->clkout1_hw.init = &init;
+> +
+> +       /* optional override of the clockname */
+> +       of_property_read_string_index(node, "clock-output-names",
+> +                                     0, &init.name);
+> +
+> +       clk_table[0] = devm_clk_register(&client->dev,
+> +                                        &rk808_clkout->clkout1_hw);
+> +       if (IS_ERR(clk_table[0]))
+> +               return PTR_ERR(clk_table[0]);
+> +
+> +       init.name = "rk808-clkout2";
+> +       init.ops = &rk808_clkout2_ops;
+> +       rk808_clkout->clkout2_hw.init = &init;
+> +
+> +       /* optional override of the clockname */
+> +       of_property_read_string_index(node, "clock-output-names",
+> +                                     1, &init.name);
+> +
+> +       clk_table[1] = devm_clk_register(&client->dev,
+> +                                        &rk808_clkout->clkout2_hw);
+> +       if (IS_ERR(clk_table[1]))
+> +               return PTR_ERR(clk_table[1]);
+> +
+> +       rk808_clkout->clk_data.clks = clk_table;
+> +       rk808_clkout->clk_data.clk_num = 2;
+
+Again, here you can use RK808_NR_OUTPUT.
+
+Otherwise the driver looks pretty good to me.
+
+Thanks,
 Mike
-
-> ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |   2 +
->  drivers/clk/sunxi/clk-mod0.c                      | 189 ++++++++++++++++++++++
->  2 files changed, 191 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-> index b938a990602a..eb690ed92a53 100644
-> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> @@ -47,6 +47,8 @@ Required properties:
->         "allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
->         "allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
->         "allwinner,sun5i-a13-mbus-clk" - for the MBUS clock on A13
-> +       "allwinner,sun4i-a10-mmc-output-clk" - for the MMC output clock on A10
-> +       "allwinner,sun4i-a10-mmc-sample-clk" - for the MMC sample clock on A10
->         "allwinner,sun4i-a10-mod0-clk" - for the module 0 family of clocks
->         "allwinner,sun7i-a20-out-clk" - for the external output clocks
->         "allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
-> diff --git a/drivers/clk/sunxi/clk-mod0.c b/drivers/clk/sunxi/clk-mod0.c
-> index 8a7f7036aea3..4a563850ee6e 100644
-> --- a/drivers/clk/sunxi/clk-mod0.c
-> +++ b/drivers/clk/sunxi/clk-mod0.c
-> @@ -16,6 +16,7 @@
->  
->  #include <linux/clk-provider.h>
->  #include <linux/clkdev.h>
-> +#include <linux/of_address.h>
->  
->  #include "clk-factors.h"
->  
-> @@ -92,3 +93,191 @@ static void __init sun5i_a13_mbus_setup(struct device_node *node)
->         clk_prepare_enable(mbus);
->  }
->  CLK_OF_DECLARE(sun5i_a13_mbus, "allwinner,sun5i-a13-mbus-clk", sun5i_a13_mbus_setup);
-> +
-> +struct mmc_phase_data {
-> +       u8      offset;
-> +};
-> +
-> +struct mmc_phase {
-> +       struct clk_hw           hw;
-> +       void __iomem            *reg;
-> +       struct mmc_phase_data   *data;
-> +       spinlock_t              *lock;
-> +};
-> +
-> +#define to_mmc_phase(_hw) container_of(_hw, struct mmc_phase, hw)
-> +
-> +static int mmc_get_phase(struct clk_hw *hw)
-> +{
-> +       struct clk *mmc, *mmc_parent, *clk = hw->clk;
-> +       struct mmc_phase *phase = to_mmc_phase(hw);
-> +       unsigned int mmc_rate, mmc_parent_rate;
-> +       u16 step, mmc_div;
-> +       u32 value;
-> +       u8 delay;
-> +
-> +       value = readl(phase->reg);
-> +       delay = (value >> phase->data->offset) & 0x3;
-> +
-> +       if (!delay)
-> +               return 180;
-> +
-> +       /* Get the main MMC clock */
-> +       mmc = clk_get_parent(clk);
-> +       if (!mmc)
-> +               return -EINVAL;
-> +
-> +       /* And its rate */
-> +       mmc_rate = clk_get_rate(mmc);
-> +       if (!mmc_rate)
-> +               return -EINVAL;
-> +
-> +       /* Now, get the MMC parent (most likely some PLL) */
-> +       mmc_parent = clk_get_parent(mmc);
-> +       if (!mmc_parent)
-> +               return -EINVAL;
-> +
-> +       /* And its rate */
-> +       mmc_parent_rate = clk_get_rate(mmc_parent);
-> +       if (!mmc_parent_rate)
-> +               return -EINVAL;
-> +
-> +       /* Get MMC clock divider */
-> +       mmc_div = mmc_parent_rate / mmc_rate;
-> +
-> +       step = DIV_ROUND_CLOSEST(360, mmc_div);
-> +       return delay * step;
-> +}
-> +
-> +static int mmc_set_phase(struct clk_hw *hw, int degrees)
-> +{
-> +       struct clk *mmc, *mmc_parent, *clk = hw->clk;
-> +       struct mmc_phase *phase = to_mmc_phase(hw);
-> +       unsigned int mmc_rate, mmc_parent_rate;
-> +       unsigned long flags;
-> +       u32 value;
-> +       u8 delay;
-> +
-> +       /* Get the main MMC clock */
-> +       mmc = clk_get_parent(clk);
-> +       if (!mmc)
-> +               return -EINVAL;
-> +
-> +       /* And its rate */
-> +       mmc_rate = clk_get_rate(mmc);
-> +       if (!mmc_rate)
-> +               return -EINVAL;
-> +
-> +       /* Now, get the MMC parent (most likely some PLL) */
-> +       mmc_parent = clk_get_parent(mmc);
-> +       if (!mmc_parent)
-> +               return -EINVAL;
-> +
-> +       /* And its rate */
-> +       mmc_parent_rate = clk_get_rate(mmc_parent);
-> +       if (!mmc_parent_rate)
-> +               return -EINVAL;
-> +
-> +       if (degrees != 180) {
-> +               u16 step, mmc_div;
-> +
-> +               /* Get MMC clock divider */
-> +               mmc_div = mmc_parent_rate / mmc_rate;
-> +
-> +               /*
-> +                * We can only outphase the clocks by multiple of the
-> +                * PLL's period.
-> +                *
-> +                * Since the MMC clock in only a divider, and the
-> +                * formula to get the outphasing in degrees is deg =
-> +                * 360 * delta / period
-> +                *
-> +                * If we simplify this formula, we can see that the
-> +                * only thing that we're concerned about is the number
-> +                * of period we want to outphase our clock from, and
-> +                * the divider set by the MMC clock.
-> +                */
-> +               step = DIV_ROUND_CLOSEST(360, mmc_div);
-> +               delay = DIV_ROUND_CLOSEST(degrees, step);
-> +       } else {
-> +               delay = 0;
-> +       }
-> +
-> +       spin_lock_irqsave(phase->lock, flags);
-> +       value = readl(phase->reg);
-> +       value &= ~GENMASK(phase->data->offset + 3, phase->data->offset);
-> +       value |= delay << phase->data->offset;
-> +       writel(value, phase->reg);
-> +       spin_unlock_irqrestore(phase->lock, flags);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct clk_ops mmc_clk_ops = {
-> +       .get_phase      = mmc_get_phase,
-> +       .set_phase      = mmc_set_phase,
-> +};
-> +
-> +static void __init sun4i_a10_mmc_phase_setup(struct device_node *node,
-> +                                            struct mmc_phase_data *data)
-> +{
-> +       const char *parent_names[1] = { of_clk_get_parent_name(node, 0) };
-> +       struct clk_init_data init = {
-> +               .num_parents    = 1,
-> +               .parent_names   = parent_names,
-> +               .ops            = &mmc_clk_ops,
-> +       };
-> +
-> +       struct mmc_phase *phase;
-> +       struct clk *clk;
-> +
-> +       phase = kmalloc(sizeof(*phase), GFP_KERNEL);
-> +       if (!phase)
-> +               return;
-> +
-> +       phase->hw.init = &init;
-> +
-> +       phase->reg = of_iomap(node, 0);
-> +       if (!phase->reg)
-> +               goto err_free;
-> +
-> +       phase->data = data;
-> +       phase->lock = &sun4i_a10_mod0_lock;
-> +
-> +       if (of_property_read_string(node, "clock-output-names", &init.name))
-> +               init.name = node->name;
-> +
-> +       clk = clk_register(NULL, &phase->hw);
-> +       if (IS_ERR(clk))
-> +               goto err_unmap;
-> +
-> +       of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +
-> +       return;
-> +
-> +err_unmap:
-> +       iounmap(phase->reg);
-> +err_free:
-> +       kfree(phase);
-> +}
-> +
-> +
-> +static struct mmc_phase_data mmc_output_clk = {
-> +       .offset = 8,
-> +};
-> +
-> +static struct mmc_phase_data mmc_sample_clk = {
-> +       .offset = 20,
-> +};
-> +
-> +static void __init sun4i_a10_mmc_output_setup(struct device_node *node)
-> +{
-> +       sun4i_a10_mmc_phase_setup(node, &mmc_output_clk);
-> +}
-> +CLK_OF_DECLARE(sun4i_a10_mmc_output, "allwinner,sun4i-a10-mmc-output-clk", sun4i_a10_mmc_output_setup);
-> +
-> +static void __init sun4i_a10_mmc_sample_setup(struct device_node *node)
-> +{
-> +       sun4i_a10_mmc_phase_setup(node, &mmc_sample_clk);
-> +}
-> +CLK_OF_DECLARE(sun4i_a10_mmc_sample, "allwinner,sun4i-a10-mmc-sample-clk", sun4i_a10_mmc_sample_setup);
-> -- 
-> 2.0.2
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
