@@ -1,62 +1,69 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] mfd: palmas: Add support for optional wakeup
-Date: Mon, 01 Sep 2014 13:30:09 -0500
-Message-ID: <5404BB31.3060001@ti.com>
-References: <1408457197-30487-1-git-send-email-nm@ti.com> <20140829105619.GH24579@lee--X1> <54007515.5080506@ti.com> <20140901093206.GJ7374@lee--X1>
-Reply-To: nm@ti.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140901093206.GJ7374@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4] apf27dev: add max1027 in the dts
+Date: Mon,  1 Sep 2014 20:44:32 +0200
+Message-ID: <1409597072-29196-1-git-send-email-tremyfr@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shc_work-JGs/UdohzUI@public.gmane.org, Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/01/2014 04:32 AM, Lee Jones wrote:
-> On Fri, 29 Aug 2014, Nishanth Menon wrote:
->> On 08/29/2014 05:56 AM, Lee Jones wrote:
->>> On Tue, 19 Aug 2014, Nishanth Menon wrote:
->>>
->>>> With the recent pinctrl-single changes, omaps can treat wake-up events
->>>> from deeper idle states as interrupts.
->>>>
->>>> Let's add support for the optional second interrupt for wake-up
->>>> events. And then SoC can wakeup and handle the event using it's
->>>> regular handler.
->>>>
->>>> Finally, to pass the wake-up interrupt in the dts file,
->>>> interrupts-extended property needs to be passed.
->>>>
->>>> This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
->>>> support for optional wake-up")
->>>>
->>>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>>> ---
->>>>   Documentation/devicetree/bindings/mfd/palmas.txt |   20 ++++++++
->>>
->>> DT Ack please.
->
-> Please read Documentation/devicetree/bindings/submittingpatches.txt
 
-I assume you wanted me to note the following:
-"
-The Documentation/ portion of the patch should be a separate patch.
-"
-
-Many maintainers prefer that when the bindings for the device is new, 
-and when additional properties are added, they prefer it part of same 
-patch.. Anyways.. if the above is what you prefer, I can follow that.
-
-In short, I assume you'd like three patches:
-a) fix up style of current documentation - palmas to palmas@40
-b) Split documentation for interrupt-extended from the current patch 
-into it's own patch.
-c) remainder of this patch as is..
-
-Does that sound right?
-
+Signed-off-by: Philippe Reynes <tremyfr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-Regards,
-Nishanth Menon
+ arch/arm/boot/dts/imx27-apf27dev.dts |   17 +++++++++++++++++
+ 1 files changed, 17 insertions(+), 0 deletions(-)
+
+Changelog:
+v4: (thanks Shawn Guo for the feedback)
+- put max1027 pinctl in the right place
+- use 0x0 instead of 0
+
+v3: (thanks Alexander Shiyan for the feedback)
+- add datasheet pin name as comment
+
+v2: (thanks Alexander Shiyan for the feedback)
+- spi mode 0 is the default so no need to explicitly define it
+
+diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
+index b982309..bba3f41 100644
+--- a/arch/arm/boot/dts/imx27-apf27dev.dts
++++ b/arch/arm/boot/dts/imx27-apf27dev.dts
+@@ -82,6 +82,16 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
+ 	status = "okay";
++
++	adc@0 {
++		compatible = "maxim,max1027";
++		reg = <0>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_max1027>;
++		spi-max-frequency = <10000000>;
++	};
+ };
+ 
+ &cspi2 {
+@@ -210,6 +220,13 @@
+ 			>;
+ 		};
+ 
++		pinctrl_max1027: max1027 {
++			 fsl,pins = <
++				 MX27_PAD_UART1_CTS__GPIO5_14 0x0 /* CNVST */
++				 MX27_PAD_UART1_RTS__GPIO5_15 0x0 /* EOC */
++			>;
++		};
++
+ 		pinctrl_pwm: pwmgrp {
+ 			fsl,pins = <
+ 				MX27_PAD_PWMO__PWMO 0x0
+-- 
+1.7.4.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
