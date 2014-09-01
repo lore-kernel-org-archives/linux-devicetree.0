@@ -1,51 +1,54 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: Specifying the console device using an alias
-Date: Mon, 1 Sep 2014 13:08:10 -0700
-Message-ID: <CAPnjgZ0W3NQFBheb4YhERnhzhtv+NJWKX6w3vkZEMvMnHyb=ow@mail.gmail.com>
-References: <CAPnjgZ2A=DkGSnFLy1En8bH0pZAUAEWCWz_jQ941g3QQEUN9NQ@mail.gmail.com>
-	<CAPnjgZ1S-HVZJ7kzt=YKT+jjZEtLdmZSnr6kmNVf+paGKdrgoQ@mail.gmail.com>
-	<20140818191909.GA5352@pengutronix.de>
-	<CAPnjgZ3YU8zy48UrxByZjY5rkK3mK7Quvi6O3kWtBfW6ttG6VA@mail.gmail.com>
-	<CAOMZO5BcMjSV+cgLq1+AF8+n+rzTtSm51yu7Guw+z+Bs6s=EGA@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v7 2/5] MFD: RK808: Add new mfd driver for RK808
+Date: Mon, 1 Sep 2014 14:35:54 -0700
+Message-ID: <CAD=FV=WUOk1dUUH5R11ONshkckS8QDa-6C_14VRTtRwQPZTv4Q@mail.gmail.com>
+References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
+	<1409564384-18380-1-git-send-email-zyw@rock-chips.com>
+	<20140901100922.GL7374@lee--X1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5BcMjSV+cgLq1+AF8+n+rzTtSm51yu7Guw+z+Bs6s=EGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Devicetree Discuss <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140901100922.GL7374@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Olof Johansson <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Dmitry Torokhov <dtor@chromium.>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Hi,
 
-On 20 August 2014 10:39, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Aug 20, 2014 at 2:25 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+On Mon, Sep 1, 2014 at 3:09 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Mon, 01 Sep 2014, Chris Zhong wrote:
 >
->> Yes, I see that, but linux doesn't use it AFAICT. Are you suggesting
->> that U-Boot should? Or should we use 'u-boot,stdout-path' in /chosen?
->> See my question immediately above about /chosen.
+>> The RK808 chip is a power management IC for multimedia and handheld
+>> devices. It contains the following components:
+>>
+>> - Regulators
+>> - RTC
+>> - Clkout
+>>
+>> The RK808 core driver is registered as a platform driver and provides
+>> communication through I2C with the host device for the different
+>> components.
+>>
+>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>> Signed-off-by: Zhang Qing <zhangqing@rock-chips.com>
 >
-> Linux use stdout-path property specified, without linux prefix.
+> Couple of nits.  Once fixed you can apply my:
 >
-> Check for example:
-> https://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable.git/tree/arch/arm/boot/dts/imx6qdl-sabresd.dtsi?id=refs/tags/v3.16.1
+> Acked-by: Lee Jones <lee.jones@linaro.org>
 >
-> / {
-> chosen {
-> stdout-path = &uart1;
-> };
+> [...]
+>
+>> +/*
+>> + * MFD core driver for Rockchip RK808
+>> + *
+>> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+>
+> Author?
 
-OK great. This seems to have happened very recently in Linux. I was
-looking at 3.14 but I see that in the current master about half of the
-.dts files have droped the 'linux' prefix.
+I asked Chris to remove the author in my response to an earlier
+version since it's at the bottom (MODULE_AUTHOR) and it seems extra
+duplication.  You are the boss though, so if it should go both places
+then Chris should add this back.  Sorry for the bad advice, Chris.
 
-So assuming that the U-Boot console should be the same as Linux, then
-it sounds like it is OK to use this feature. That's good enough to get
-me going.
-
-Thanks,
-Simon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Doug
