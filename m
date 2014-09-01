@@ -1,80 +1,56 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] iommu/arm-smmu: Allow size of stage 1 output to max
-	possible value for sateg 2 bypass
-Date: Mon, 1 Sep 2014 12:42:38 +0100
-Message-ID: <20140901114238.GB24594@arm.com>
-References: <1409162541-3940-1-git-send-email-c.tirumalesh@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6 v4] ARM: realview: basic device tree implementation
+Date: Mon, 1 Sep 2014 13:52:49 +0200
+Message-ID: <CACRpkdaugAmVt5CF194xd+eVyz=Yfir6Jz0k9h4VSvSWLkKPRQ@mail.gmail.com>
+References: <1406294628-16079-1-git-send-email-linus.walleij@linaro.org>
+	<1406294628-16079-7-git-send-email-linus.walleij@linaro.org>
+	<20140725152401.GA21830@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409162541-3940-1-git-send-email-c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <Prasun.Kapoor-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org" <tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140725152401.GA21830@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tirumalesh,
+Some ARM1176JZF confusion in as separate thread...
 
-On Wed, Aug 27, 2014 at 07:02:21PM +0100, c.tirumalesh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Tirumalesh Chalamarla <tchalamarla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> 
-> This patch modifes output_mask calculation logic for stage 1 and allow
-> max possible value supported by SMMU implementaions for translations,
-> where stage 2 is bypassed.
-> 
-> Erlier it is not possible to access full supported PA address with stage 1,
-> even if it is supported by SMMU and stage 2 is bypass.
+On Fri, Jul 25, 2014 at 5:24 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Fri, Jul 25, 2014 at 02:23:48PM +0100, Linus Walleij wrote:
 
-I'm trying to understand what you're getting at here. Essentially, you want
-to use the full stage-1 output range for a stage-1 only MMU, right?
+>> +               /* Primary DevChip GIC synthesized with the CPU */
+>> +               intc_dc1176: interrupt-controller@10120000 {
+>> +                       compatible = "arm,arm1176jzf-gic";
+>
+> As far as I am aware, the JZF flags haven nothing to do with the GIC
+> implementation. I think they can be dropped from this string (following
+> the example of "arm,arm1176-pmu").
 
-The code is currently structured to truncate that to the stage-2 input size
-for nested translation. However, I think that's better solved by faking the
-ID registers in the virtual SMMU instead of posing these restrictions on the
-host as well.
+FWIW I changed the string to "arm,arm1176-gic"
 
-Assuming I understand the problem correctly, why not simply remove the
-truncation from the existing code (untested patch below)? Does that not
-work for you?
+But this isn't about the CPU actually. It is the ARM1176JZF development
+chip. See:
+http://infocenter.arm.com/help/topic/com.arm.doc.ddi0375a/DDI0375A_arm1176jzf_dev_chip_r0p0_trm.pdf
 
-Will
+I know it is confusingly named as a name of a SoC that has this
+CPU inside it but what can I do ... some guys named ARM came
+up with this.
 
---->8
+Should use the string "arm,arm1176jzf-devchip-gic"?
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 2b1271658bfa..a02d05793a73 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1917,21 +1917,7 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
-        /* ID2 */
-        id = readl_relaxed(gr0_base + ARM_SMMU_GR0_ID2);
-        size = arm_smmu_id_size_to_bits((id >> ID2_IAS_SHIFT) & ID2_IAS_MASK);
--
--       /*
--        * Stage-1 output limited by stage-2 input size due to pgd
--        * allocation (PTRS_PER_PGD).
--        */
--       if (smmu->features & ARM_SMMU_FEAT_TRANS_NESTED) {
--#ifdef CONFIG_64BIT
--               smmu->s1_output_size = min_t(unsigned long, VA_BITS, size);
--#else
--               smmu->s1_output_size = min(32UL, size);
--#endif
--       } else {
--               smmu->s1_output_size = min_t(unsigned long, PHYS_MASK_SHIFT,
--                                            size);
--       }
-+       smmu->s1_output_size = min_t(unsigned long, PHYS_MASK_SHIFT, size);
- 
-        /* The stage-2 output mask is also applied for bypass */
-        size = arm_smmu_id_size_to_bits((id >> ID2_OAS_SHIFT) & ID2_OAS_MASK);
+>> +               /* This GIC on the board is cascaded off the DevChip GIC */
+>> +               intc_pb1176: interrupt-controller@10040000 {
+>> +                       compatible = "arm,arm1176jzf-gic";
+>
+> And this isn't part of the CPU, so that string doesn't look right. I'd
+> at least like to see an additional string earlier in the list
+
+This seems to be a follow-on to the above confusion.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
