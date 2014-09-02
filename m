@@ -1,40 +1,81 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 5/8] ARM: l2x0: move DT parsing for cache props
-Date: Tue, 2 Sep 2014 13:43:26 +0100
-Message-ID: <20140902124326.GP30401@n2100.arm.linux.org.uk>
-References: <1409659354-23553-1-git-send-email-linus.walleij@linaro.org> <1409659354-23553-6-git-send-email-linus.walleij@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Formal license ambiguity in arch/arm/boot/dts/sun?i-a*.dts
+Date: Tue, 2 Sep 2014 14:51:16 +0200
+Message-ID: <20140902125116.GW15297@lukather>
+References: <20140731192016.GA6869@excalibur.cnev.de>
+ <20140803130430.GY3952@lukather>
+ <201408031959.27607.arnd@arndb.de>
+ <20140804192510.GF3952@lukather>
+ <20140804212317.GL30282@n2100.arm.linux.org.uk>
+ <20140807132023.GG15297@lukather>
+ <20140902102206.GU15297@lukather>
+ <20140902104002.GN30401@n2100.arm.linux.org.uk>
+ <20140902122716.GV15297@lukather>
+ <5405B986.2080407@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+GPapXTpahFv7+Fr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1409659354-23553-6-git-send-email-linus.walleij@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>
+In-Reply-To: <5405B986.2080407-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 02, 2014 at 02:02:31PM +0200, Linus Walleij wrote:
-> The current diagnostic prints in the l2x0 driver will print
-> warnings like this if the AUX register i modified by the
-> mask and set words passed to the l2x0_init() function:
-> 
-> L2C: platform modifies aux control register: 0x02020fff -> 0x02730fff
-> L2C: DT/platform modifies aux control register: 0x02020fff -> 0x02730fff
 
-Notice that there are two here.
+--+GPapXTpahFv7+Fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The first means that the platform passed values which resulted in an
-actual modification to the control register.  This happens in
-l2x0_of_init() to identify values of aux_mask/aux_val which result
-in manipulation of the control register by hard-coded platform values.
+On Tue, Sep 02, 2014 at 02:35:18PM +0200, Hans de Goede wrote:
+> > So I guess like Chen-Yu suggested that we should change the license of
+> > the DTSI first, and then the DTS. Otherwise, it wouldn't work very
+> > well, I guess you can't really relicense a GPL-only file.
+>=20
+> IANAL, but mixing MIT (which I suggest use as the other license) and GPL
+> files in one binary (the generated dtb file) is fine AFAIK, this happens
+> all the time. The resulting binary is simple GPL licensed. So it would
+> make sense to start with dual licensing new boards right away even before
+> the dtsi has been relicensed. It won't make any practical difference
+> until the dtsi is relicensed, but it means less work later on.
 
-The second means that the platform _or_ the DT resulted in an actual
-modification of the control register.  This happens in __l2c_init(),
-after the DT has been parsed, or after the non-DT code paths to identify
-any remaining modifications.
+So you're allowed to licence derivative work of a GPL-licenced file
+under both the GPL and another licence?
 
-I don't see any point to this patch.
+And as far as MIT vs BSD is concerned, I don't really have an
+opinion. Arnd? Russell?
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--+GPapXTpahFv7+Fr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUBb1EAAoJEBx+YmzsjxAgILUQALFEbJ75oEEexI75qpLxOHuV
+luE9YTILsMTLEDWTzhuXjU8E6i00xO7z6Lj/Z3GyiEdcdA7J+AgZNNesJIQjNEY1
+mzjAtqiOK2aDQtERPquxM3dvraaaKRzIWtZrS29xgT+sus5i6KeNPZ0OAmorXT4Y
+b4zBmWXBE/5JyG0dxKT9x7TH0Hfbcr50MfilpRBtZ2vHOjQe0ILrHfKP6SSsUuMT
+Pqx5EhCSK/scVyLTexc6s6zY8gmUOJ2i71g0LfeqPFocvzKBn7s0sFDSaCpAvkqC
+3q4OJyzYoKAlbIUwdOK5fz+PUO6/CRmzLUXCAHeHF0cwsUZSnlKYYrR9q4rIGI2f
+Dpdqqe0R3sHVsQJazfnej2JIwwaSsiByP/K+t84a66vOcljci2fJTRWAKC47yHXT
+tYD22ZwD6fIL8QmxOUEYdj6cju60ksGkjGI0/ND4J7dlywVz3mniDiy7+gP+o1uG
+AGZZodA/Xx8Iucpr2uVQrHiFpiuYTZx7Q/pd6gui1IIxWiHxzV9iKGE2lll4BccD
+kAyBy0uApcHhfJ+NB7AFn0J9BfxcqJI+1yy5O1+Yp9qDj8ylXSjSUQ0YSLmnjUBv
+1Hx0L/3AHIXQoOKJW7MzSzYyxfuduZ/t3htG9p+v9KlEQP7Exky675XSko3vpXlh
+EldgdHjqzBlx6WIbjuJh
+=oeMz
+-----END PGP SIGNATURE-----
+
+--+GPapXTpahFv7+Fr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
