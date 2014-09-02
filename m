@@ -1,37 +1,91 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCHv2 4/4] ASoC: simple-card: binding: update
- binding to support the new style.
-Date: Tue, 2 Sep 2014 12:41:14 +0200
-Message-ID: <20140902124114.6d95e0c5@armhf>
-References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
- <1409649969-15759-5-git-send-email-Li.Xiubo@freescale.com>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: Re: [PATCH 1/5] usb: dwc3: exynos: Add support for SCLK present on
+ Exynos7
+Date: Tue, 2 Sep 2014 16:09:08 +0530
+Message-ID: <CAFp+6iHLSaUjHqaKXXX0QLiRd3h+O67DRSQdExag-KUH0dnpag@mail.gmail.com>
+References: <1409212920-28526-1-git-send-email-gautam.vivek@samsung.com>
+ <1409212920-28526-2-git-send-email-gautam.vivek@samsung.com>
+ <20140828184847.GA18464@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1409649969-15759-5-git-send-email-Li.Xiubo@freescale.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: mark.rutland@arm.com, andrew@lunn.ch, alsa-devel@alsa-project.org, pawel.moll@arm.com, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org, tiwai@suse.de, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, jsarha@ti.com, robh+dt@kernel.org, broonie@kernel.org, galak@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140828184847.GA18464@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, "kishon@ti.com" <kishon@ti.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyIFNlcCAyMDE0IDE3OjI2OjA5ICswODAwClhpdWJvIExpIDxMaS5YaXVib0BmcmVl
-c2NhbGUuY29tPiB3cm90ZToKCj4gK0V4YW1wbGUgNCAtIG1hbnkgREFJIGxpbmtzOgo+ICBzb3Vu
-ZCB7Cj4gIAljb21wYXRpYmxlID0gInNpbXBsZS1hdWRpby1jYXJkIjsKPiAgCXNpbXBsZS1hdWRp
-by1jYXJkLG5hbWUgPSAiQ3Vib3ggQXVkaW8iOwo+IEBAIC0xMjgsNiArMTk1LDcgQEAgc291bmQg
-ewo+ICAJCX07Cj4gIAkJY29kZWMgewo+ICAJCQlzb3VuZC1kYWkgPSA8JnRkYTk5OHggMD47Cj4g
-KwkJCWZyYW1lLWludmVyc2lvbjsKPiAgCQl9Owo+ICAJfTsKClRoaXMgaXMgbm90IHVzZWZ1bDog
-dGhlcmUgaXMgbm8gY2xvY2svZnJhbWUgaGFuZGxpbmcgaW4gdGhlIGtpcmt3b29kCmF1ZGlvIGNv
-bnRyb2xsZXIuCgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJyZWl6aCBoYSBMaW51
-eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0
-CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qu
-b3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Hi,
+
+
+On Fri, Aug 29, 2014 at 12:18 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Aug 28, 2014 at 09:01:56AM +0100, Vivek Gautam wrote:
+>> Exynos7 also has a separate special gate clock going to the IP
+>> apart from the usual AHB clock. So add support for the same.
+>>
+>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> ---
+>>  drivers/usb/dwc3/dwc3-exynos.c |   16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
+>> index f9fb8ad..bab6395 100644
+>> --- a/drivers/usb/dwc3/dwc3-exynos.c
+>> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+>> @@ -35,6 +35,7 @@ struct dwc3_exynos {
+>>       struct device           *dev;
+>>
+>>       struct clk              *clk;
+>> +     struct clk              *sclk;
+>>       struct regulator        *vdd33;
+>>       struct regulator        *vdd10;
+>>  };
+>> @@ -141,10 +142,17 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
+>>               return -EINVAL;
+>>       }
+>>
+>> +     /* Exynos7 has a special gate clock going to this IP */
+>> +     exynos->sclk = devm_clk_get(dev, "usbdrd30_sclk");
+>> +     if (IS_ERR(exynos->sclk))
+>> +             dev_warn(dev, "couldn't get sclk\n");
+>
+> Doesn't this introduce a pointless warning for Exynos SoCs other than
+> Exynos7?
+
+True, it will introduce an unnecessary warning for non-Exynos7 systems.
+I initially thought of introducing a compatible check for Exynos7-dwc3, but that
+way we may end up adding such checks for future SoCs which have similar
+controller but have some clock difference or some other small change, no ?
+
+>
+>> +
+>>       exynos->dev     = dev;
+>>       exynos->clk     = clk;
+>>
+>>       clk_prepare_enable(exynos->clk);
+>> +     if (!IS_ERR(exynos->sclk))
+>> +             clk_prepare_enable(exynos->sclk);
+>
+> If you replaced the returned err value with NULL you could avoid these
+> IS_ERR cases.
+
+Right, point taken.
+
+[snip]
+
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
