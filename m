@@ -1,228 +1,54 @@
-From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH] iio: adc: rockchip_saradc: add support for rk3066-tsadc
- variant
-Date: Wed, 03 Sep 2014 00:20:58 +0200
-Message-ID: <540642CA.9080007@gmx.de>
-References: <1999284.oRCTeZRSv1@diego>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH 04/12] MIPS: GIC: Move MIPS_GIC_IRQ_BASE into platform irq.h
+Date: Tue, 2 Sep 2014 15:22:31 -0700
+Message-ID: <CAL1qeaETzZ3EaC8RVXm3K4GLZbknk5iMUR1X2naaAboon4s6fQ@mail.gmail.com>
+References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
+	<6179185.bNbDBEC6tl@wuerfel>
+	<CAL1qeaEEo6-LZz3Kex7oPUfz=Z56nvKoDnqu051rGhhi3ZFTDQ@mail.gmail.com>
+	<3341001.1Jsp173xyM@wuerfel>
+	<CAL1qeaHryi7noBMiHxJPybByuvVts23reuiiQbV9mCQj+Ngqjw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1999284.oRCTeZRSv1@diego>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaHryi7noBMiHxJPybByuvVts23reuiiQbV9mCQj+Ngqjw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Heiko St=FCbner schrieb:
-> Older Rockchip SoCs, at least the rk3066, used a slightly modified sa=
-radc
-> for temperature measurements. This so called tsadc does not contain a=
-ny
-> active parts like temperature interrupts and only supports polling th=
-e
-> current temperature. The returned voltage can then be converted by a
-> suitable thermal driver to and actual temperature and used for therma=
-l
-> handling.
+On Mon, Sep 1, 2014 at 5:08 PM, Andrew Bresticker <abrestic@chromium.org> wrote:
+> On Mon, Sep 1, 2014 at 1:34 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Sunday 31 August 2014 11:54:04 Andrew Bresticker wrote:
+>>> On Sat, Aug 30, 2014 at 12:57 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> > On Friday 29 August 2014 15:14:31 Andrew Bresticker wrote:
+>>> >> Define a generic MIPS_GIC_IRQ_BASE which is suitable for Malta and
+>>> >> the upcoming Danube board in <mach-generic/irq.h>.  Since Sead-3 is
+>>> >> different and uses a MIPS_GIC_IRQ_BASE equal to the CPU IRQ base (0),
+>>> >> define its MIPS_GIC_IRQ_BASE in <mach-sead3/irq.h>.
+>>> >>
+>>> >> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+>>> >>
+>>> >
+>>> > Why do you actually have to hardwire an IRQ base? Can't you move
+>>> > to the linear irqdomain code for DT based MIPS systems yet?
+>>>
+>>> Neither Malta nor SEAD-3 use device-tree for interrupts yet, so they
+>>> still require a hard-coded IRQ base.  For boards using device-tree, I
+>>> stuck with a legacy IRQ domain as it allows most of the existing GIC
+>>> irqchip code to be reused.
+>>
+>> I see. Note that we now have irq_domain_add_simple(), which should
+>> do the right think in either case: use a legacy domain when a
+>> nonzero base is provided for the old boards, but use the simple
+>> domain when probed from DT without an irq base.
+>>
+>> This makes the latter case more memory efficient (it avoids
+>> allocating the irq descriptors for every possibly but unused
+>> IRQ number) and helps ensure that you don't accidentally rely
+>> on hardcoded IRQ numbers for the DT based machines, which would
+>> be considered a bug.
 >
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
-Looks mostly good to me, just some minor style issues inline.
-> This is a different IP than the rk3288-tsadc Ceasar provided a driver=
- for.
-> As the commit messages states, the one used on the rk3066 is just a s=
-aradc,
-> while the new tsadc in the rk3288 contains active components for ther=
-mal
-> handling.
->
-> A working example using the pending iio-thermal driver can found on
-> https://github.com/mmind/linux-rockchip/commit/c07e02f069d9677d489f25=
-4176619fae36f2aad0
->
->  .../bindings/iio/adc/rockchip-saradc.txt           |  2 +-
->  drivers/iio/adc/rockchip_saradc.c                  | 62 ++++++++++++=
-+++++-----
->  2 files changed, 50 insertions(+), 14 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-sarad=
-c.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> index 5d3ec1d..a9a5fe1 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> @@ -1,7 +1,7 @@
->  Rockchip Successive Approximation Register (SAR) A/D Converter bindi=
-ngs
-> =20
->  Required properties:
-> -- compatible: Should be "rockchip,saradc"
-> +- compatible: Should be "rockchip,saradc" or "rockchip,rk3066-tsadc"
->  - reg: physical base address of the controller and length of memory =
-mapped
->         region.
->  - interrupts: The interrupt number to the cpu. The interrupt specifi=
-er format
-> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rock=
-chip_saradc.c
-> index e074a0b..7effada 100644
-> --- a/drivers/iio/adc/rockchip_saradc.c
-> +++ b/drivers/iio/adc/rockchip_saradc.c
-> @@ -18,13 +18,13 @@
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/clk.h>
->  #include <linux/completion.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/iio/iio.h>
-> =20
->  #define SARADC_DATA			0x00
-> -#define SARADC_DATA_MASK		0x3ff
-> =20
->  #define SARADC_STAS			0x04
->  #define SARADC_STAS_BUSY		BIT(0)
-> @@ -38,15 +38,22 @@
->  #define SARADC_DLY_PU_SOC		0x0c
->  #define SARADC_DLY_PU_SOC_MASK		0x3f
-> =20
-> -#define SARADC_BITS			10
->  #define SARADC_TIMEOUT			msecs_to_jiffies(100)
-> =20
-> +struct rockchip_saradc_data {
-> +	int				num_bits;
-> +	const struct iio_chan_spec	*channels;
-> +	int				num_channels;
-> +	unsigned long			clk_rate;
-> +};
-> +
->  struct rockchip_saradc {
->  	void __iomem		*regs;
->  	struct clk		*pclk;
->  	struct clk		*clk;
->  	struct completion	completion;
->  	struct regulator	*vref;
-> +	const struct rockchip_saradc_data *data;
->  	u16			last_val;
->  };
-The alignment of the whole block should be adjusted to fit with the new=
- element.
-> =20
-> @@ -90,7 +97,7 @@ static int rockchip_saradc_read_raw(struct iio_dev =
-*indio_dev,
->  		}
-> =20
->  		*val =3D ret / 1000;
-> -		*val2 =3D SARADC_BITS;
-> +		*val2 =3D info->data->num_bits;
->  		return IIO_VAL_FRACTIONAL_LOG2;
->  	default:
->  		return -EINVAL;
-> @@ -103,7 +110,7 @@ static irqreturn_t rockchip_saradc_isr(int irq, v=
-oid *dev_id)
-> =20
->  	/* Read value */
->  	info->last_val =3D readl_relaxed(info->regs + SARADC_DATA);
-> -	info->last_val &=3D SARADC_DATA_MASK;
-> +	info->last_val &=3D BIT(info->data->num_bits) - 1;
-I think using GENMASK would reflect the intention better, that you want=
- to mask out your data.
-> =20
->  	/* Clear irq & power down adc */
->  	writel_relaxed(0, info->regs + SARADC_CTRL);
-> @@ -133,12 +140,44 @@ static const struct iio_chan_spec rockchip_sara=
-dc_iio_channels[] =3D {
->  	ADC_CHANNEL(2, "adc2"),
->  };
-> =20
-> +static const struct rockchip_saradc_data saradc_data =3D {
-> +	.num_bits =3D 10,
-> +	.channels =3D rockchip_saradc_iio_channels,
-> +	.num_channels =3D ARRAY_SIZE(rockchip_saradc_iio_channels),
-> +	.clk_rate =3D 1000000,
-> +};
-> +
-> +static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels=
-[] =3D {
-> +	ADC_CHANNEL(0, "adc0"),
-> +	ADC_CHANNEL(1, "adc1"),
-> +};
-> +
-> +static const struct rockchip_saradc_data rk3066_tsadc_data =3D {
-> +	.num_bits =3D 12,
-> +	.channels =3D rockchip_rk3066_tsadc_iio_channels,
-> +	.num_channels =3D ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
-> +	.clk_rate =3D 50000,
-> +};
-> +
-> +static const struct of_device_id rockchip_saradc_match[] =3D {
-> +	{
-> +		.compatible =3D "rockchip,saradc",
-> +		.data =3D &saradc_data,
-> +	}, {
-> +		.compatible =3D "rockchip,rk3066-tsadc",
-> +		.data =3D &rk3066_tsadc_data,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
-> +
->  static int rockchip_saradc_probe(struct platform_device *pdev)
->  {
->  	struct rockchip_saradc *info =3D NULL;
->  	struct device_node *np =3D pdev->dev.of_node;
->  	struct iio_dev *indio_dev =3D NULL;
->  	struct resource	*mem;
-> +	const struct of_device_id *match;
->  	int ret;
->  	int irq;
-> =20
-> @@ -152,6 +191,9 @@ static int rockchip_saradc_probe(struct platform_=
-device *pdev)
->  	}
->  	info =3D iio_priv(indio_dev);
-> =20
-> +	match =3D of_match_device(rockchip_saradc_match, &pdev->dev);
-> +	info->data =3D match->data;
-> +
->  	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	info->regs =3D devm_ioremap_resource(&pdev->dev, mem);
->  	if (IS_ERR(info->regs))
-> @@ -195,7 +237,7 @@ static int rockchip_saradc_probe(struct platform_=
-device *pdev)
->  	 * Use a default of 1MHz for the converter clock.
->  	 * This may become user-configurable in the future.
->  	 */
-> -	ret =3D clk_set_rate(info->clk, 1000000);
-> +	ret =3D clk_set_rate(info->clk, info->data->clk_rate);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "failed to set adc clk rate, %d\n", ret);
->  		return ret;
-> @@ -227,8 +269,8 @@ static int rockchip_saradc_probe(struct platform_=
-device *pdev)
->  	indio_dev->info =3D &rockchip_saradc_iio_info;
->  	indio_dev->modes =3D INDIO_DIRECT_MODE;
-> =20
-> -	indio_dev->channels =3D rockchip_saradc_iio_channels;
-> -	indio_dev->num_channels =3D ARRAY_SIZE(rockchip_saradc_iio_channels=
-);
-> +	indio_dev->channels =3D info->data->channels;
-> +	indio_dev->num_channels =3D info->data->num_channels;
-> =20
->  	ret =3D iio_device_register(indio_dev);
->  	if (ret)
-> @@ -296,12 +338,6 @@ static int rockchip_saradc_resume(struct device =
-*dev)
->  static SIMPLE_DEV_PM_OPS(rockchip_saradc_pm_ops,
->  			 rockchip_saradc_suspend, rockchip_saradc_resume);
-> =20
-> -static const struct of_device_id rockchip_saradc_match[] =3D {
-> -	{ .compatible =3D "rockchip,saradc" },
-> -	{},
-> -};
-> -MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
-> -
->  static struct platform_driver rockchip_saradc_driver =3D {
->  	.probe		=3D rockchip_saradc_probe,
->  	.remove		=3D rockchip_saradc_remove,
+> Ah, ok.  It looks like add_simple() is what I want then.
+
+Actually, never mind.  To re-use the existing GIC irqchip code I want
+a legacy IRQ domain.
