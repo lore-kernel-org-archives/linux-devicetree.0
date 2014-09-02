@@ -1,134 +1,48 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
-Date: Mon, 1 Sep 2014 17:53:18 -0700
-Message-ID: <CAL1qeaH97fL3x689-FwOxRZWS2-6CDzzzJX3xEKdvULHoxjMLA@mail.gmail.com>
-References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
-	<1409350479-19108-4-git-send-email-abrestic@chromium.org>
-	<20140901110119.GB6617@leverpostej>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv1 1/7] ASoC: simple-card: Merge single and muti DAI link
+ code.
+Date: Tue, 2 Sep 2014 03:22:24 +0000
+Message-ID: <1b29c16ac3944bb19940da886bf7da3a@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1409545781-20530-1-git-send-email-Li.Xiubo@freescale.com>
+ <1409545781-20530-2-git-send-email-Li.Xiubo@freescale.com>
+ <20140901133412.GA11312@lunn.ch> <20140901151356.GB29327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140901110119.GB6617@leverpostej>
+In-Reply-To: <20140901151356.GB29327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org" <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "moinejf-GANU6spQydw@public.gmane.org" <moinejf-GANU6spQydw@public.gmane.org>, "jsarha-l0cyMroinI0@public.gmane.org" <jsarha-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 1, 2014 at 4:01 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Fri, Aug 29, 2014 at 11:14:30PM +0100, Andrew Bresticker wrote:
->> The Global Interrupt Controller (GIC) present on certain MIPS systems
->> can be used to route external interrupts to individual VPEs and CPU
->> interrupt vectors.  It also supports a timer and software-generated
->> interrupts.
->>
->> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mips/gic.txt | 50 ++++++++++++++++++++++++++
->>  1 file changed, 50 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mips/gic.txt b/Documentation/devicetree/bindings/mips/gic.txt
->> new file mode 100644
->> index 0000000..725f1ef
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mips/gic.txt
->> @@ -0,0 +1,50 @@
->> +MIPS Global Interrupt Controller (GIC)
->> +
->> +The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
->> +It also supports a timer and software-generated interrupts which can be
->> +used as IPIs.
->> +
->> +Required properties:
->> +- compatible : Should be "mti,global-interrupt-controller"
->
-> I couldn't find "mti" in vendor-prefixes.txt (as of v3.17-rc3). If
-> there's not a patch to add it elsewhere, would you mind providing one
-> with this series?
+> 
+> On Mon, Sep 01, 2014 at 03:34:12PM +0200, Andrew Lunn wrote:
+> > On Mon, Sep 01, 2014 at 12:29:35PM +0800, Xiubo Li wrote:
+> > > This patch merge single DAI link and muti-DAI links code together,
+> > > and simply the simple-card driver code.
+> 
+> > It would be good to note that this breaks the Binary API with DT
+> > blobs. Old blobs will not work with this new C code.
+> 
+> That's not on, we need to maintian compatibility with the old DTs unless
+> there's a very strong reason not to.  Revising the binding is one option
+> for doing this, keeping the old binding in place and making a v2 binding
+> with the new functionality.
 
-Sure.  As James points out, "img" could also be used but I chose "mti"
-since the CPU interrupt controller also uses "mti" and I believe the
-GIC IP was developed before the acquisition by Imagination (though I'm
-not sure if that actually matters).
+Yes, agree.
 
->> +- reg : Base address and length of the GIC registers.
->> +- interrupts : Core interrupts to which the GIC may route external interrupts.
->
-> How many?
+Actually, the current code is a bit more complicated that we should keep in mind
+of two styles of single DAI link and muti-DAI links. And the binding document and
+code are a little unreadable.
 
-Up to 6, one for each of the possible core hardware interrupts (i.e.
-interrupt vectors 2 - 7).  Which ones are available to the GIC depend
-on the system, for example Malta has an i8259 PIC hooked up to CPU
-interrupt vector 2, so that vector should not be used by the GIC.
+For others must read the simple card code carefully to add one DT node.
 
-> In any order?
+Thanks,
 
-They can technically be in any order, but when in strictly
-increasing/decreasing order they can be used along with the 3rd cell
-(described below) to prioritize interrupts.
+BRs
 
->> +- interrupt-controller : Identifies the node as an interrupt controller
->> +- #interrupt-cells : Specifies the number of cells needed to encode an
->> +  interrupt specifier.  Should be 3.
->> +  - The first cell is the GIC interrupt number.
->> +  - The second cell encodes the interrupt flags.
->> +    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
->> +    flags.
->
-> Are all the flags valid for this interrupt controller?
-
-Yes.
-
->> +  - The optional third cell indicates which CPU interrupt vector the GIC
->> +    interrupt should be routed to.  It is a 0-based index into the list of
->> +    GIC-to-CPU interrupts specified in the "interrupts" property described
->> +    above.  For example, a '2' in this cell will route the interrupt to the
->> +    3rd core interrupt listed in 'interrupts'.  If omitted, the interrupt will
->> +    be routed to the 1st core interrupt.
->
-> I don't follow why this should be in the DT. Why is this necessary?
-
-Since the GIC can route external interrupts to any of the CPU hardware
-interrupt vectors, it can be used to assign priorities to external
-interrupts.  If the CPU is in vectored interrupt mode, the highest
-numbered interrupt vector (7) has the highest priority.  An example:
-
-gic: interrupt-controller@1bdc0000 {
-        ...
-        interrupts = <3>, <4>;
-        ...
-};
-
-uart {
-        ...
-        interrupt-parent = <&gic>;
-        interrupts = <24 IRQ_TYPE_LEVEL_HIGH 1>;
-        ...
-};
-
-i2c {
-        ...
-        interrupt-parent = <&gic>;
-        interrupts = <33 IRQ_TYPE_LEVEL_HIGH 0>;
-        ...
-};
-
-Since the third cell for the UART is '1', it maps to CPU interrupt
-vector 4 and thus has a higher priority than the I2C (whose third cell
-is 0, mapping to CPU interrupt vector 3).
-
-Perhaps, though, this is an instance of software policy being
-specified in device-tree.  Other options would be to a) evenly
-distribute the GIC external interrupts across the CPU interrupt
-vectors available to the GIC, or b) just map all GIC external
-interrupts to a single interrupt vector.
-
-> I also don't follow how this can be ommitted, given interrupt-cells is
-> required to be three by the wording above.
-
-If it's absent, the interrupt will be routed to the first CPU
-interrupt vector in the list.  It's equivalent to the third cell being
-0.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
