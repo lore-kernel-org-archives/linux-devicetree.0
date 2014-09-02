@@ -1,110 +1,41 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Formal license ambiguity in arch/arm/boot/dts/sun?i-a*.dts
-Date: Tue, 2 Sep 2014 12:22:06 +0200
-Message-ID: <20140902102206.GU15297@lukather>
-References: <20140731192016.GA6869@excalibur.cnev.de>
- <20140803130430.GY3952@lukather>
- <201408031959.27607.arnd@arndb.de>
- <20140804192510.GF3952@lukather>
- <20140804212317.GL30282@n2100.arm.linux.org.uk>
- <20140807132023.GG15297@lukather>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCHv2 1/4] ASoC: simple-card: add
+ asoc_simple_card_fmt_master() to simplify the code.
+Date: Tue, 2 Sep 2014 12:38:48 +0200
+Message-ID: <20140902123848.78c4c62a@armhf>
+References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
+ <1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>
+ <54059A35.3020303@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y3m32dcgE5dp77SC"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140807132023.GG15297@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <54059A35.3020303@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Varka Bhadram <varkabhadram@gmail.com>
+Cc: mark.rutland@arm.com, andrew@lunn.ch, alsa-devel@alsa-project.org, pawel.moll@arm.com, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org, tiwai@suse.de, Xiubo Li <Li.Xiubo@freescale.com>, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, jsarha@ti.com, robh+dt@kernel.org, broonie@kernel.org, galak@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---Y3m32dcgE5dp77SC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Aug 07, 2014 at 03:20:23PM +0200, Maxime Ripard wrote:
-> Hi Russell,
->=20
-> On Mon, Aug 04, 2014 at 10:23:17PM +0100, Russell King - ARM Linux wrote:
-> > On Mon, Aug 04, 2014 at 09:25:10PM +0200, Maxime Ripard wrote:
-> > > On Sun, Aug 03, 2014 at 07:59:27PM +0200, Arnd Bergmann wrote:
-> > > > I would actually prefer if we could migrate a lot of these files to=
- BSD license,
-> > > > provided the original authors agree. We want the dtb blobs to be em=
-beddable into
-> > > > boot loaders of any license.
-> > >=20
-> > > Even though I'd be open to having my contributions to DTBs under the
-> > > BSD, is this really a thing?
-> > >=20
-> > > I mean, for all I know, an OS/Bootloader would just parse a documented
-> > > binary file, and I don't see any derivative work there.
-> >=20
-> > How does the OS/Bootloader end up with that binary file?
-> >=20
-> > For the sake of argument, let's say that the BSDs want to move to DT on
-> > ARM.  Great, they convert over to parsing our DT blobs.
-> >=20
-> > However, they can't distribute the binary DT blobs to their users witho=
-ut
-> > coming up against the problems of the GPL wrt binary distribution.
-> >=20
-> > They could distribute the source files, but remember that many of those
-> > are currently GPL licensed, so they'd probably end up having to package
-> > them entirely separately, if they're willing to do that at all.
-> >=20
-> > Or they could decide to ignore us altogether, and do their own DT stuff,
-> > maybe partially implementing our properties, or maybe coming up with
-> > different and/or incompatible properties - which would be bad because
-> > we now end up with two ways to describe the same hardware in active use.
-> >=20
-> > I suspect the final option is the one they'd choose, and it's in our
-> > interest that _that_ doesn't happen.
->=20
-> Ah, yes, it's not really about a fear of a GPL-spread, but rather a
-> concern about the source distribution. Makes sense.
->=20
-> How should we deal with such relicensing?
-
-Ping?
-
-Are we doing this on a per platform basis? Should we enforce this dual
-licensing for the future DTS patches? If so, starting from when?
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---Y3m32dcgE5dp77SC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUBZpOAAoJEBx+YmzsjxAg9PcP/jdNbQRUZI7be+OtXbqFT9GK
-80kXBQT99dlej67vhT5AvlMofw2Ne5vUIf/QseBPjk5P0SGzm24lTCGNdKOtfCSo
-RPv84YdL81RPc8gUtji41ovqg/v1OIfvTtgUfWPeFZka1T8uQtdhm8M4Fo6y7neM
-QdD81758P6L0TV1sfALaUoiAjq7fVJ4TSE9JI5rs6KbqCKZdc2Op+ygwq/xsYG88
-h6NJtoMSYptjZXwY9HgqBNthUmjXAmYLsifiA6xu6rT0RUeHBYiWwyRAn4T1P/ZB
-K3bF7XPdl32uytF+KZkXIbhpHN+y2XSXeUGfzIJGxLkb7ZNtnb8VtJZ0L3DfeY4/
-1kUj1DYqk4d05oGDYnVHRK5zLVG7GYg+M1u9fu0+a0dWmBgCfIOAtl4DrjUjuW9H
-0kbyjJ8IUMsRLgCG914iKu0fGAo/DszvP6whQ7CEmlGegHFdPI3tDVELNR4GRMTO
-enmLinXYH5Udl+HgeslyCmJ72T11KqQ8lHN0S8p7Imoo/PSFhfHyPVDWkCapJI5v
-HoiheN79ddEW/vIac6S3A2bf514kMV2RcC7cKd7WIvcNUZF5hP/kBkqV2glIJyC+
-rs+0qFHmoR3C41a4e47VAURXZ6h45F45kzYrAOO45mfIIpbcSdhLIlA8DiaKuKsQ
-CnYO+GDzrfvxJTxTnog7
-=nORi
------END PGP SIGNATURE-----
-
---Y3m32dcgE5dp77SC--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCAwMiBTZXAgMjAxNCAxNTo1MTo0MSArMDUzMApWYXJrYSBCaGFkcmFtIDx2YXJrYWJo
+YWRyYW1AZ21haWwuY29tPiB3cm90ZToKCj4gPiArCXN3aXRjaCAoKChucCA9PSBiaXRjbGttYXN0
+ZXIpIDw8IDQpIHwgKG5wID09IGZyYW1lbWFzdGVyKSkgewo+ID4gKwljYXNlIDB4MTE6Cj4gPiAr
+CQlyZXR1cm4gU05EX1NPQ19EQUlGTVRfQ0JTX0NGUzsKPiA+ICsJY2FzZSAweDEwOgo+ID4gKwkJ
+cmV0dXJuIFNORF9TT0NfREFJRk1UX0NCU19DRk07Cj4gPiArCWNhc2UgMHgwMToKPiA+ICsJCXJl
+dHVybiBTTkRfU09DX0RBSUZNVF9DQk1fQ0ZTOwo+ID4gKwlkZWZhdWx0Ogo+ID4gKwkJcmV0dXJu
+IFNORF9TT0NfREFJRk1UX0NCTV9DRk07Cj4gPiArCX0KPiA+ICsKPiA+ICsJLyogU2hvdWxkbid0
+IGJlIGhlcmUgKi8KPiA+ICsJcmV0dXJuIC1FSU5WQUw7Cj4gPiArfSAgCj4gCj4gSXQgd2lsbCBi
+ZSBuaWNlIGlmIHdlIGRlY2xhcmUgdGhlIHN3aXRjaCBjYXNlIG51bWJlcnMgYXMgbWFjcm9zIChz
+cGVjaWZpYyBuYW1lKS4uLgoKSSBkb24ndCBzZWUgd2hpY2ggbWFjcm9zOiB0aGUgdmFsdWVzIGFy
+ZSBqdXN0IDIgYm9vbGVhbnMuCgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJyZWl6
+aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFp
+bGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNh
+LXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
