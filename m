@@ -1,71 +1,51 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-Subject: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from DT
-Date: Tue,  2 Sep 2014 17:49:37 +0200
-Message-ID: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: rmk+kernel@arm.linux.org.uk, shawn.guo@linaro.org, b29396@freescale.com, peter.griffin@linaro.org, tgih.jun@samsung.com, h80.chung@samsung.com, ulf.hansson@linaro.org, chris@printf.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 0/3] ARM: dts: qcom: Add initial IFC6540 board support
+Date: Tue, 2 Sep 2014 10:54:30 -0500
+Message-ID: <18B16782-6CB7-4F62-A0AA-422A796A7F9E@codeaurora.org>
+References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com
 List-Id: devicetree@vger.kernel.org
 
-This property is useful when we don't want to access boot partitions on eMMC
 
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
----
- Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
- drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
- include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
- 3 files changed, 10 insertions(+)
+On Sep 2, 2014, at 10:40 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 431716e..59cc854 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -40,6 +40,7 @@ Optional properties:
- - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
- - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
- - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
-+- no-boot-part : when preset, tells to access boot partitions
+> Add basic support for the IFC6540 single-board computer boards, that are
+> based on the APQ8084 SoC. The first patch adds the initial device tree.
+> The second enables the serial console. The third adds the SDHC nodes and
+> enables the eMMC.
+> 
+> Should go through the qcom/arm-soc tree.
+> 
+> Changes since v1:
+> - This time add linux-arm-msm list to the CC.
+> - Include a third patch for enabling the eMMC.
+> 
+> Georgi Djakov (3):
+>  ARM: dts: qcom: Add initial IFC6540 board device tree
+>  ARM: dts: qcom: Enable serial port on IFC6540 boards
+>  ARM: dts: qcom: Add SDHC nodes for APQ8084 platform
+> 
+> arch/arm/boot/dts/Makefile                 |    1 +
+> arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |   23 +++++++++++++++++++++++
+> arch/arm/boot/dts/qcom-apq8084.dtsi        |   23 +++++++++++++++++++++++
+> 3 files changed, 47 insertions(+)
+> create mode 100644 arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+> 
+> -- 
+> 1.7.9.5
+> 
 
- *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
- polarity properties, we have to fix the meaning of the "normal" and "inverted"
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index ccec0e3..439e663 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
-	if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
-		boarddata->delay_line = 0;
+Thanks, there is really no reason for these to be 3 patches, can you squash them down into one.
 
-+	if (of_find_property(np, "no-boot-part", NULL))
-+		boarddata->access_boot_part = false;
-+	else
-+		boarddata->access_boot_part = true;
-+
-	return 0;
- }
- #else
-@@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
-		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-	}
+- k
 
-+	if (!boarddata->access_boot_part)
-+		host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
-+
-	err = sdhci_add_host(host);
-	if (err)
-		goto disable_clk;
-diff --git a/include/linux/platform_data/mmc-esdhc-imx.h b/include/linux/platform_data/mmc-esdhc-imx.h
-index 75f70f6..a34ee9e 100644
---- a/include/linux/platform_data/mmc-esdhc-imx.h
-+++ b/include/linux/platform_data/mmc-esdhc-imx.h
-@@ -46,5 +46,6 @@ struct esdhc_platform_data {
-	unsigned int f_max;
-	bool support_vsel;
-	unsigned int delay_line;
-+	bool access_boot_part;
- };
- #endif /* __ASM_ARCH_IMX_ESDHC_H */
-
-2.0.4
-
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
