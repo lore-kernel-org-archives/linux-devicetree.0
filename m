@@ -1,83 +1,85 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] mfd: palmas: Add support for optional wakeup
-Date: Tue, 2 Sep 2014 08:28:46 +0100
-Message-ID: <20140902072846.GC17117@lee--X1>
-References: <1408457197-30487-1-git-send-email-nm@ti.com>
- <20140829105619.GH24579@lee--X1>
- <54007515.5080506@ti.com>
- <20140901093206.GJ7374@lee--X1>
- <5404BB31.3060001@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 10/12] clk: sunxi: mod0: Introduce MMC proper phase
+ handling
+Date: Tue, 2 Sep 2014 09:52:34 +0200
+Message-ID: <20140902075234.GO15297@lukather>
+References: <1409428991-2442-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1409428991-2442-11-git-send-email-maxime.ripard@free-electrons.com>
+ <20140901213945.5251.37105@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dMUnVF4nlYq3B90P"
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5404BB31.3060001@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20140901213945.5251.37105@quantum>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, kevin.z.m.zh@gmail.com, sunny@allwinnertech.com, shuge@allwinnertech.com, zhuzhenhua@allwinnertech.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 01 Sep 2014, Nishanth Menon wrote:
 
-> On 09/01/2014 04:32 AM, Lee Jones wrote:
-> >On Fri, 29 Aug 2014, Nishanth Menon wrote:
-> >>On 08/29/2014 05:56 AM, Lee Jones wrote:
-> >>>On Tue, 19 Aug 2014, Nishanth Menon wrote:
-> >>>
-> >>>>With the recent pinctrl-single changes, omaps can treat wake-up e=
-vents
-> >>>>from deeper idle states as interrupts.
-> >>>>
-> >>>>Let's add support for the optional second interrupt for wake-up
-> >>>>events. And then SoC can wakeup and handle the event using it's
-> >>>>regular handler.
-> >>>>
-> >>>>Finally, to pass the wake-up interrupt in the dts file,
-> >>>>interrupts-extended property needs to be passed.
-> >>>>
-> >>>>This is similar in approach to commit 2a0b965cfb6e ("serial: omap=
-: Add
-> >>>>support for optional wake-up")
-> >>>>
-> >>>>Signed-off-by: Nishanth Menon <nm@ti.com>
-> >>>>---
-> >>>>  Documentation/devicetree/bindings/mfd/palmas.txt |   20 +++++++=
-+
-> >>>
-> >>>DT Ack please.
-> >
-> >Please read Documentation/devicetree/bindings/submittingpatches.txt
+--dMUnVF4nlYq3B90P
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Sep 01, 2014 at 02:39:45PM -0700, Mike Turquette wrote:
+> Quoting Maxime Ripard (2014-08-30 13:03:09)
+> > The MMC clock we thought we had until now are actually not one but three
+> > different clocks.
+> >=20
+> > The main one is unchanged, and will have three outputs:
+> >   - The clock fed into the MMC
+> >   - a sample and output clocks, to deal with when should we output/samp=
+le data
+> >     to/from the MMC bus
+> >=20
+> > The phase control we had are actually controlling the two latter clocks=
+, but
+> > the main MMC one is unchanged.
+> >=20
+> > We can adjust the phase with a 3 bits value, from 0 to 7, 0 meaning a 1=
+80 phase
+> > shift, and the other values being the number of periods from the MMC pa=
+rent
+> > clock to outphase the clock of.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 >=20
-> I assume you wanted me to note the following:
-> "
-> The Documentation/ portion of the patch should be a separate patch.
-> "
->=20
-> Many maintainers prefer that when the bindings for the device is
-> new, and when additional properties are added, they prefer it part
-> of same patch.. Anyways.. if the above is what you prefer, I can
-> follow that.
+> Looks good. Thanks a lot for revisiting this after talking to your
+> hardware team!
 
-I tend to like it done properly please.
+It's not *our* hardware team, but I'll let them know :)
 
-> In short, I assume you'd like three patches:
-> a) fix up style of current documentation - palmas to palmas@40
-> b) Split documentation for interrupt-extended from the current patch
-> into it's own patch.
-> c) remainder of this patch as is..
->=20
-> Does that sound right?
-
-That does, thanks.
+Maxime
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--dMUnVF4nlYq3B90P
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUBXdCAAoJEBx+YmzsjxAgfMQP/RN3s/DNUsrNwryKlgk8GVDj
+pPXo+F8A6IZtVXrXQUZbBeYE08HD889WKzvB8YwWAbHehEOLTan1TALOb7i20Pmc
+WPGSiy106Z4oeRnRwuMzhJjF/h4Jl7/eRerSHbdjrp3OC2ebK6VQlhUHpP4K/LD5
+W7MVTorHrnCuOfMGZYDcqrxDyHDy5SzPAu28+Zgl4FN3hNnPr8TIMQTZT7C08NmK
+oT+xyK9xoUPpw+XokpIHpocNnPk37cjPzdMvbKYwTzmUmn5pa18pfgHlJRxDtZtf
+wzh7+Uq3cdacc77R/bXB+rmNoG8eLWsawHQITE0/uX3pl99gN8VdKWjPq9gH8ZQN
+Acr7MAdBCbPOn9ZVG7g7alEEiq0vwSHYTChUSfSzQ0KDtG0MDCbQH6khZS5PZhXj
+u2ew72Yx9ZTAtvElVW4dR5Fx1LKkPfDmGJgA3SKq5o++/4ayctt2o1ucrtiUfVe/
+NXNUx8vfA2orW/M2oCQ3OpOltx1k5ML4m4cacTgmeyTyNftYlD6HcGl8Avy+2yS+
+8o5ieRPt1dA4wPFnpePzHcsauLxTfhMxmW2kA2HUNV2GAu70vO1n7ZTkzkyZrGoo
+hHTODrWau08cbEonUFCnUQ13f0WIl/t8PWafzqxZoMZpgqnN0MKhAnoVmpLkULzW
+M6ZYtDGjp4fQUSAmlany
+=04mW
+-----END PGP SIGNATURE-----
+
+--dMUnVF4nlYq3B90P--
