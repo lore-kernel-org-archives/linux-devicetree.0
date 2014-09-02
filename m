@@ -1,62 +1,75 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 2/5] MFD: RK808: Add new mfd driver for RK808
-Date: Tue, 2 Sep 2014 08:24:37 +0100
-Message-ID: <20140902072437.GA17117@lee--X1>
-References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
- <1409564384-18380-1-git-send-email-zyw@rock-chips.com>
- <20140901100922.GL7374@lee--X1>
- <CAD=FV=WUOk1dUUH5R11ONshkckS8QDa-6C_14VRTtRwQPZTv4Q@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] mfd: palmas: Add support for optional wakeup
+Date: Tue, 2 Sep 2014 08:28:46 +0100
+Message-ID: <20140902072846.GC17117@lee--X1>
+References: <1408457197-30487-1-git-send-email-nm@ti.com>
+ <20140829105619.GH24579@lee--X1>
+ <54007515.5080506@ti.com>
+ <20140901093206.GJ7374@lee--X1>
+ <5404BB31.3060001@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=WUOk1dUUH5R11ONshkckS8QDa-6C_14VRTtRwQPZTv4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dtor@chromiu>
+In-Reply-To: <5404BB31.3060001@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 01 Sep 2014, Doug Anderson wrote:
-> On Mon, Sep 1, 2014 at 3:09 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
-e:
-> > On Mon, 01 Sep 2014, Chris Zhong wrote:
-> >
-> >> The RK808 chip is a power management IC for multimedia and handhel=
-d
-> >> devices. It contains the following components:
-> >>
-> >> - Regulators
-> >> - RTC
-> >> - Clkout
-> >>
-> >> The RK808 core driver is registered as a platform driver and provi=
-des
-> >> communication through I2C with the host device for the different
-> >> components.
-> >>
-> >> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >
-> > Couple of nits.  Once fixed you can apply my:
-> >
-> > Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > [...]
-> >
-> >> +/*
-> >> + * MFD core driver for Rockchip RK808
-> >> + *
-> >> + * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-> >
-> > Author?
->=20
-> I asked Chris to remove the author in my response to an earlier
-> version since it's at the bottom (MODULE_AUTHOR) and it seems extra
-> duplication.  You are the boss though, so if it should go both places
-> then Chris should add this back.  Sorry for the bad advice, Chris.
+On Mon, 01 Sep 2014, Nishanth Menon wrote:
 
-Yes, both places please.  They do different things.
+> On 09/01/2014 04:32 AM, Lee Jones wrote:
+> >On Fri, 29 Aug 2014, Nishanth Menon wrote:
+> >>On 08/29/2014 05:56 AM, Lee Jones wrote:
+> >>>On Tue, 19 Aug 2014, Nishanth Menon wrote:
+> >>>
+> >>>>With the recent pinctrl-single changes, omaps can treat wake-up e=
+vents
+> >>>>from deeper idle states as interrupts.
+> >>>>
+> >>>>Let's add support for the optional second interrupt for wake-up
+> >>>>events. And then SoC can wakeup and handle the event using it's
+> >>>>regular handler.
+> >>>>
+> >>>>Finally, to pass the wake-up interrupt in the dts file,
+> >>>>interrupts-extended property needs to be passed.
+> >>>>
+> >>>>This is similar in approach to commit 2a0b965cfb6e ("serial: omap=
+: Add
+> >>>>support for optional wake-up")
+> >>>>
+> >>>>Signed-off-by: Nishanth Menon <nm@ti.com>
+> >>>>---
+> >>>>  Documentation/devicetree/bindings/mfd/palmas.txt |   20 +++++++=
++
+> >>>
+> >>>DT Ack please.
+> >
+> >Please read Documentation/devicetree/bindings/submittingpatches.txt
+>=20
+> I assume you wanted me to note the following:
+> "
+> The Documentation/ portion of the patch should be a separate patch.
+> "
+>=20
+> Many maintainers prefer that when the bindings for the device is
+> new, and when additional properties are added, they prefer it part
+> of same patch.. Anyways.. if the above is what you prefer, I can
+> follow that.
+
+I tend to like it done properly please.
+
+> In short, I assume you'd like three patches:
+> a) fix up style of current documentation - palmas to palmas@40
+> b) Split documentation for interrupt-extended from the current patch
+> into it's own patch.
+> c) remainder of this patch as is..
+>=20
+> Does that sound right?
+
+That does, thanks.
 
 --=20
 Lee Jones
@@ -64,7 +77,7 @@ Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
