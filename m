@@ -1,104 +1,169 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [alsa-devel] [PATCHv1 1/7] ASoC: simple-card: Merge single and
- muti	DAI link code.
-Date: Tue, 2 Sep 2014 09:15:54 +0000
-Message-ID: <6ebdb2b0dcec46ef95084d2fc578b7b8@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1409545781-20530-1-git-send-email-Li.Xiubo@freescale.com>
-	<1409545781-20530-2-git-send-email-Li.Xiubo@freescale.com>
- <87tx4rzszx.wl%kuninori.morimoto.gx@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
+Date: Tue, 2 Sep 2014 10:33:30 +0100
+Message-ID: <20140902093330.GA6595@leverpostej>
+References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
+ <1409350479-19108-4-git-send-email-abrestic@chromium.org>
+ <20140901110119.GB6617@leverpostej>
+ <CAL1qeaH97fL3x689-FwOxRZWS2-6CDzzzJX3xEKdvULHoxjMLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87tx4rzszx.wl%kuninori.morimoto.gx@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "perex@perex.cz" <perex@perex.cz>, "tiwai@suse.de" <tiwai@suse.de>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "moinejf@free.fr" <moinejf@free.fr>, "andrew@lunn.ch" <andrew@lunn.ch>, "jsarha@ti.com" <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Shawn Guo <Shawn.Guo@freescale.com>, Nicolin Chen <nicoleotsuka@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL1qeaH97fL3x689-FwOxRZWS2-6CDzzzJX3xEKdvULHoxjMLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kuninori-san
-
-This patch series will break the old DTs, and I will follow Mark's
-Advice to maintain compatibility with the old DTs.
-
-I will send another version, please help me to review it. And I will also
-split the update patch series to many small ones.
-
-Thanks very much,
-
-BRs
-Xiubo
-
-> -----Original Message-----
-> From: Kuninori Morimoto [mailto:kuninori.morimoto.gx@gmail.com]
-> Sent: Monday, September 01, 2014 3:43 PM
-> To: Xiubo Li-B47053
-> Cc: broonie@kernel.org; lgirdwood@gmail.com; perex@perex.cz; tiwai@suse.de;
-> kuninori.morimoto.gx@renesas.com; moinejf@free.fr; andrew@lunn.ch;
-> jsarha@ti.com; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-sh@vger.kernel.org; alsa-devel@alsa-
-> project.org; Guo Shawn-R65073; Nicolin Chen; linux-kernel@vger.kernel.org
-> Subject: Re: [alsa-devel] [PATCHv1 1/7] ASoC: simple-card: Merge single and
-> muti DAI link code.
-> 
-> 
-> Hi Xiubo
-> 
-> Thank you for your patch.
-> This clean-up is very nice for me.
-> But, I have 1 small comment
-> 
-> >  asoc_simple_card_sub_parse_of(struct device_node *np,
-> >  			      struct asoc_simple_dai *dai,
-> >  			      struct device_node **p_node,
-> > -			      const char **name)
-> > +			      const char **name,
-> > +			      unsigned int *daifmt)
-> >  {
-> >  	struct device_node *node;
-> >  	struct clk *clk;
-> >  	u32 val;
-> >  	int ret;
+On Tue, Sep 02, 2014 at 01:53:18AM +0100, Andrew Bresticker wrote:
+> On Mon, Sep 1, 2014 at 4:01 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Fri, Aug 29, 2014 at 11:14:30PM +0100, Andrew Bresticker wrote:
+> >> The Global Interrupt Controller (GIC) present on certain MIPS systems
+> >> can be used to route external interrupts to individual VPEs and CPU
+> >> interrupt vectors.  It also supports a timer and software-generated
+> >> interrupts.
+> >>
+> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/mips/gic.txt | 50 ++++++++++++++++++++++++++
+> >>  1 file changed, 50 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mips/gic.txt b/Documentation/devicetree/bindings/mips/gic.txt
+> >> new file mode 100644
+> >> index 0000000..725f1ef
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mips/gic.txt
+> >> @@ -0,0 +1,50 @@
+> >> +MIPS Global Interrupt Controller (GIC)
+> >> +
+> >> +The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
+> >> +It also supports a timer and software-generated interrupts which can be
+> >> +used as IPIs.
+> >> +
+> >> +Required properties:
+> >> +- compatible : Should be "mti,global-interrupt-controller"
 > >
-> > +	if (!daifmt)
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * Parse format, bitclock-inversion and frame-inversion
-> > +	 * for DAI each device.
-> > +	 */
-> > +	*daifmt = snd_soc_of_parse_daifmt(np, NULL, NULL, NULL);
-> > +	*daifmt &= ~(SND_SOC_DAIFMT_MASTER_MASK | SND_SOC_DAIFMT_FORMAT_MASK);
-> (snip)
-> >  	ret = asoc_simple_card_sub_parse_of(np, &dai_props->cpu_dai,
-> >  					    &dai_link->cpu_of_node,
-> > -					    &dai_link->cpu_dai_name);
-> > +					    &dai_link->cpu_dai_name,
-> > +					    &daifmt);
-> (snip)
-> > +	dai_props->cpu_dai.fmt |= daifmt;
-> (snip)
-> >  	ret = asoc_simple_card_sub_parse_of(np, &dai_props->codec_dai,
-> >  					    &dai_link->codec_of_node,
-> > -					    &dai_link->codec_dai_name);
-> > +					    &dai_link->codec_dai_name,
-> > +					    &daifmt);
-> (snip)
-> > +	dai_props->codec_dai.fmt |= daifmt;
+> > I couldn't find "mti" in vendor-prefixes.txt (as of v3.17-rc3). If
+> > there's not a patch to add it elsewhere, would you mind providing one
+> > with this series?
 > 
-> These are using
+> Sure.  As James points out, "img" could also be used but I chose "mti"
+> since the CPU interrupt controller also uses "mti" and I believe the
+> GIC IP was developed before the acquisition by Imagination (though I'm
+> not sure if that actually matters).
+
+Using 'mti' sounds like the right choice to me given both of those
+points.
+
+> >> +- reg : Base address and length of the GIC registers.
+> >> +- interrupts : Core interrupts to which the GIC may route external interrupts.
+> >
+> > How many?
 > 
->       asoc_simple_card_sub_parse_of(np, &dai_props->cpu_dai, xxx)
->       asoc_simple_card_sub_parse_of(np, &dai_props->codec_dai, xxx)
+> Up to 6, one for each of the possible core hardware interrupts (i.e.
+> interrupt vectors 2 - 7).  Which ones are available to the GIC depend
+> on the system, for example Malta has an i8259 PIC hooked up to CPU
+> interrupt vector 2, so that vector should not be used by the GIC.
 > 
-> I guess, asoc_simple_card_sub_parse_of() can update
-> below inside function
+> > In any order?
 > 
-> 	dai_props->cpu_dai.fmt |= daifmt;
-> 	dai_props->codec_dai.fmt |= daifmt;
+> They can technically be in any order, but when in strictly
+> increasing/decreasing order they can be used along with the 3rd cell
+> (described below) to prioritize interrupts.
+
+Ok. Could you try to place that into the property description?
+
+> >> +- interrupt-controller : Identifies the node as an interrupt controller
+> >> +- #interrupt-cells : Specifies the number of cells needed to encode an
+> >> +  interrupt specifier.  Should be 3.
+> >> +  - The first cell is the GIC interrupt number.
+> >> +  - The second cell encodes the interrupt flags.
+> >> +    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
+> >> +    flags.
+> >
+> > Are all the flags valid for this interrupt controller?
 > 
+> Yes.
+
+Ok.
+
+> >> +  - The optional third cell indicates which CPU interrupt vector the GIC
+> >> +    interrupt should be routed to.  It is a 0-based index into the list of
+> >> +    GIC-to-CPU interrupts specified in the "interrupts" property described
+> >> +    above.  For example, a '2' in this cell will route the interrupt to the
+> >> +    3rd core interrupt listed in 'interrupts'.  If omitted, the interrupt will
+> >> +    be routed to the 1st core interrupt.
+> >
+> > I don't follow why this should be in the DT. Why is this necessary?
 > 
-> Best regards
-> ---
-> Kuninori Morimoto
+> Since the GIC can route external interrupts to any of the CPU hardware
+> interrupt vectors, it can be used to assign priorities to external
+> interrupts.  If the CPU is in vectored interrupt mode, the highest
+> numbered interrupt vector (7) has the highest priority.  An example:
+> 
+> gic: interrupt-controller@1bdc0000 {
+>         ...
+>         interrupts = <3>, <4>;
+>         ...
+> };
+> 
+> uart {
+>         ...
+>         interrupt-parent = <&gic>;
+>         interrupts = <24 IRQ_TYPE_LEVEL_HIGH 1>;
+>         ...
+> };
+> 
+> i2c {
+>         ...
+>         interrupt-parent = <&gic>;
+>         interrupts = <33 IRQ_TYPE_LEVEL_HIGH 0>;
+>         ...
+> };
+> 
+> Since the third cell for the UART is '1', it maps to CPU interrupt
+> vector 4 and thus has a higher priority than the I2C (whose third cell
+> is 0, mapping to CPU interrupt vector 3).
+> 
+> Perhaps, though, this is an instance of software policy being
+> specified in device-tree.  Other options would be to a) evenly
+> distribute the GIC external interrupts across the CPU interrupt
+> vectors available to the GIC, or b) just map all GIC external
+> interrupts to a single interrupt vector.
+
+As a user I don't see why the DT author should be in charge of whether
+my UART gets higher priority than my I2C controller. That priority is
+not a fixed property of the interrupt (as the line and flags are).
+
+That said, this is a grey area. Are there any cases where this
+prioritisation is critical on existing devices?
+
+> > I also don't follow how this can be ommitted, given interrupt-cells is
+> > required to be three by the wording above.
+> 
+> If it's absent, the interrupt will be routed to the first CPU
+> interrupt vector in the list.  It's equivalent to the third cell being
+> 0.
+
+My point is that the wording implies that the third cell is optional on
+a per-interrupt basis, when in reality it depends on the GIC node's
+#interrupt-cells and affect all devices with GIC interrupts.
+
+If &gic/#interrupt-cells = <3>, the third cell can't be absent.
+
+If &gic/interrupt-cells = <2>, the third cell can't be present.
+
+So it would be better to describe as something like:
+
+  When interrupt-cells = <3>, the third cell specifies the priority (in
+  the range X to Y). When #interrupt-cells = <2> all interrupts are
+  assigned the same priority (Z).
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
