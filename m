@@ -1,38 +1,190 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RESEND PATCH] arm64: dts: add <dt-bindings/> symlink
-Date: Tue, 2 Sep 2014 09:42:14 +0100
-Message-ID: <20140902084214.GE25379@arm.com>
-References: <1409629756-14304-1-git-send-email-pankaj.dubey@samsung.com>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [RFC][PATCH] ASoC: simple-card: Merge single and muti DAI link
+ code.
+Date: Tue, 2 Sep 2014 09:05:37 +0000
+Message-ID: <6df8b3abd4ef45b093e15010ca3fd156@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1409294797-21948-1-git-send-email-Li.Xiubo@freescale.com>
+ <54043EBE.9020808@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409629756-14304-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <54043EBE.9020808-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "naushad-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <naushad-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 02, 2014 at 04:49:16AM +0100, Pankaj Dubey wrote:
-> Add symlink to include/dt-bindings from arch/arm64/boot/dts/include/ to
-> match the ones in ARM architectures so that preprocessed device
-> tree files can include various useful constant definitions.
-> 
-> See commit c58299aa8754 ("kbuild: create an "include chroot" for DT bindings")
-> merged in v3.10-rc1 for details.
-> 
-> CC: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> 
-> Resubmitting this change as now it will be required for Samsung ARM64
-> based SoC.
+Hi Jyri,
 
-Just include this change in the series adding a .dts that needs it -- it
-doesn't really make sense in isolation (unless somebody desperately wants
-this in?).
+I'll follow Mark's advice of maintaining compatibility with the old DTs.
 
-Will
+Thanks very much for your comments, and this is very important for me.
+
+And I will also update the binding documet for simple card, please help
+me review it, any comment and advice are welcome.
+
+The goal is to simplify the simple card code and make it more readable and
+Easier to add muti DAI links support from the single DAI link DTs, this will
+Be very useful on my LS1+ SoCs in the future.
+
+
+BRs
+Xiubo
+
+
+
+> -----Original Message-----
+> From: Jyri Sarha [mailto:jsarha-l0cyMroinI0@public.gmane.org]
+> Sent: Monday, September 01, 2014 5:39 PM
+> To: Xiubo Li-B47053; broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Kuninori
+> Morimoto; Jean-Francois Moine; Nicolin Chen
+> Subject: Re: [RFC][PATCH] ASoC: simple-card: Merge single and muti DAI link
+> code.
+> 
+> This patch would break the current syntax without introducing any
+> improvements over it (actually the opposite, see bellow). So in its
+> current form I don't like this patch at all.
+> 
+> On 08/29/2014 09:46 AM, Xiubo Li wrote:
+>  > This patch merge single DAI link and muti-DAI links code together,
+>  > and simply the simple-card driver code.
+>  >
+>  > And also do some other improvement:
+>  >
+>  > Since from the DAI format micro SND_SOC_DAIFMT_CBx_CFx, the 'CBx'
+>  > mean Codec's bit clock is as master/slave and the 'CFx' mean Codec's
+>  > frame clock is as master/slave.
+>  >
+>  > So these same DAI formats should be informed to CPU and CODE DAIs at
+>  > the same time. For the Codec driver will set the bit clock and frame
+>  > clock as the DAI formats said, but for the CPU driver, if the the
+>  > bit clock or frame clock is as Codec master, so it should be set CPU
+>  > DAI device as bit clock or frame clock as slave, and vice versa.
+>  >
+> 
+> But there is no such problem with the current code any more. The new
+> preferred way is to indicate bitclock and frame master with phandles
+> that refer to the master DAI on the link (see the examples bellow).
+> 
+>  > The old code will cause confusion, and we should be clear that the
+>  > letter 'C' here mean to Codec.
+>  >
+>  > Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>  > Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>  > Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+>  > Cc: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+>  > Cc: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>  > ---
+>  >
+>  > Hi,
+>  >
+>  > This patch will break the old DT, so i just send one RFC version, and
+>  > will add the old DT patches in next version if this patch can work
+>  > well.
+> 
+> I do not object in getting rid of this simplified description for a
+> single dailink card:
+> 
+> (example 1)
+> sound {
+> 	compatible = "simple-audio-card";
+> ...
+> 	simple-audio-card,format = "left_j";
+> 	simple-audio-card,bitclock-master = <&dailink0_master>;
+> 	simple-audio-card,frame-master = <&dailink0_master>;
+> 	simple-audio-card,cpu {
+> 		sound-dai = <&sh_fsi2 0>;
+> 	};
+> 
+> 	dailink0_master: simple-audio-card,codec {
+> 		sound-dai = <&ak4648>;
+> 		clocks = <&osc>;
+> 	};
+> };
+> 
+> and describing the DAI-links always like this:
+> 
+> (example 2)
+> sound {
+> 	compatible = "simple-audio-card";
+> ...
+> 	simple-audio-card,dai-link@0 {
+> 		format = "i2s";
+> 		bitclock-master = <&dailink0_master>;
+> 		frame-master = <&dailink0_master>;
+> 		dailink0_master: cpu {
+> 			sound-dai = <&audio1 0>;
+> 		};
+> 		codec {
+> 			sound-dai = <&tda998x 0>;
+> 		};
+> 	};
+> };
+> 
+> But I do object going back to the old syntax exclusively and
+> describing the bitclock and frame master always with simple boolean
+> properties, like this:
+> 
+> (example 3)
+> sound {
+> 	compatible = "simple-audio-card";
+> ...
+> 	simple-audio-card,dai-link@0 {
+> 		format = "i2s";
+> 		dailink0_master: cpu {
+> 			sound-dai = <&audio1 0>;
+> 		};
+> 		codec {
+> 			sound-dai = <&tda998x 0>;
+> 			bitclock-master;
+> 			frame-master;
+> 		};
+> 	};
+> };
+> 
+> In my opinion we should rather get rid of this syntax than move
+> exclusively to it.
+> 
+> The syntax of example 2 is simply superior to the syntax of example
+> 3. With the syntax on example 2 it is possible to describe TDM setups
+> where there is multiple codecs on a single i2s bus. The syntax of
+> example 3 simply can not describe that kind of setup.
+> 
+> If you need to have the backwards compatibility syntax describing the
+> clock masters to work also in the multilink mode (example 3), then do
+> just that (it is simple enough [1]). But please do not break the new
+> phandle based syntax!!!
+> 
+> Best regards,
+> Jyri
+> 
+> [1] To enable legacy syntax in multilink mode just apply this patch:
+> 
+> diff --git a/sound/soc/generic/simple-card.c
+> b/sound/soc/generic/simple-card.c
+> index 8dd7957..aed3423 100644
+> --- a/sound/soc/generic/simple-card.c
+> +++ b/sound/soc/generic/simple-card.c
+> @@ -242,10 +242,10 @@ static int simple_card_dai_link_of(struct
+> device_node *node,
+>          if (ret < 0)
+>                  goto dai_link_of_err;
+> 
+> -       if (strlen(prefix) && !bitclkmaster && !framemaster) {
+> -               /* No dai-link level and master setting was not found from
+> -                  sound node level, revert back to legacy DT parsing and
+> -                  take the settings from codec node. */
+> +       if (!bitclkmaster && !framemaster) {
+> +               /* No dai-link level master setting was found, revert
+> +                  back to legacy DT parsing and take the settings
+> +                  from the codec node boolean properties. */
+>                  dev_dbg(dev, "%s: Revert to legacy daifmt parsing\n",
+>                          __func__);
+>                  dai_props->cpu_dai.fmt = dai_props->codec_dai.fmt =
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
