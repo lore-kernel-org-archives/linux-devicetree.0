@@ -1,233 +1,93 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 1/3] usb: dwc3: add ST dwc3 glue layer to manage dwc3
- HC
-Date: Tue, 2 Sep 2014 10:12:11 -0500
-Message-ID: <20140902151211.GG16872@saruman.home>
-References: <1406734091-16202-1-git-send-email-peter.griffin@linaro.org>
- <1406734091-16202-2-git-send-email-peter.griffin@linaro.org>
- <20140820180850.GV24500@saruman.home>
- <20140902111812.GA28857@griffinp-ThinkPad-X1-Carbon-2nd>
-Reply-To: <balbi@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Formal license ambiguity in arch/arm/boot/dts/sun?i-a*.dts
+Date: Tue, 2 Sep 2014 17:18:08 +0200
+Message-ID: <20140902151808.GY15297@lukather>
+References: <201408031959.27607.arnd@arndb.de>
+ <20140804192510.GF3952@lukather>
+ <20140804212317.GL30282@n2100.arm.linux.org.uk>
+ <20140807132023.GG15297@lukather>
+ <20140902102206.GU15297@lukather>
+ <20140902104002.GN30401@n2100.arm.linux.org.uk>
+ <20140902122716.GV15297@lukather>
+ <5405B986.2080407@redhat.com>
+ <20140902125116.GW15297@lukather>
+ <5405D74B.8090409@redhat.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JkW1gnuWHDypiMFO"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="ZoVy78VzjVQLn2aH"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140902111812.GA28857@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Felipe Balbi <balbi@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, lee.jones@linaro.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
+In-Reply-To: <5405D74B.8090409-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---JkW1gnuWHDypiMFO
+
+--ZoVy78VzjVQLn2aH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Tue, Sep 02, 2014 at 12:18:12PM +0100, Peter Griffin wrote:
-> Hi Felipe,
+On Tue, Sep 02, 2014 at 04:42:19PM +0200, Hans de Goede wrote:
+> Hi,
 >=20
-> Sorry for the delay in replying to this mail, I've been trying to get
-> answers to the suspend/resume questions you had.
-
-np
-
-> > > +config USB_DWC3_ST
-> > > +	tristate "STMicroelectronics Platforms"
-> > > +	depends on ARCH_STI && OF
-> > > +	default USB_DWC3_HOST
+> On 09/02/2014 02:51 PM, Maxime Ripard wrote:
+> > On Tue, Sep 02, 2014 at 02:35:18PM +0200, Hans de Goede wrote:
+> >>> So I guess like Chen-Yu suggested that we should change the license of
+> >>> the DTSI first, and then the DTS. Otherwise, it wouldn't work very
+> >>> well, I guess you can't really relicense a GPL-only file.
+> >>
+> >> IANAL, but mixing MIT (which I suggest use as the other license) and G=
+PL
+> >> files in one binary (the generated dtb file) is fine AFAIK, this happe=
+ns
+> >> all the time. The resulting binary is simple GPL licensed. So it would
+> >> make sense to start with dual licensing new boards right away even bef=
+ore
+> >> the dtsi has been relicensed. It won't make any practical difference
+> >> until the dtsi is relicensed, but it means less work later on.
 > >=20
-> > this seems wrong as USB_DWC3_{HOST,GADGET,DUAL_ROLE} are booleans and
-> > USB_DWC3_ST is a tristate. Better to stick with defaulting to USB_DWC3
-> > instead like all the others.
+> > So you're allowed to licence derivative work of a GPL-licenced file
+> > under both the GPL and another licence?
 >=20
-> Ok will fix.
+> Since the board files do not start as copies of the dtsi file, but
+> merely include it they are not derivative (IANAL), the resulting
+> dtb file however very much is and as such is GPL only.
 
-tks
-
-> > > +static inline void st_dwc3_writel(void __iomem *base, u32 offset, u3=
-2 value)
-> > > +{
-> > > +	writel_relaxed(value, base + offset);
-> >=20
-> > why relaxed ?
->=20
-> The writel and readl implementations on ARM are quite expensive.
->=20
-> The writel, does a memory barrier, and also a outer_sync(), which
-> involves taking a spinlock, and draining the cache store buffers.
-> The readl also does a memory barrier.
->=20
-> These barriers / cache operations are unnecessary here as the
-> peripheral memory has been ioremap'ed as device memory, and it is only
-> one device we are writing to, so the writel/readl_relaxed variants are
-> good enough as the ARM arch guarentees they will arrive in program
-> order.
-
-good point :-)
-
-> There is some more info about this here
-> http://permalink.gmane.org/gmane.linux.ports.arm.kernel/117658
->=20
-> Note: It's only possible when we know the driver is not being used on
-> other architectures which may have different constraints.
-> However for this driver, we know this IP (st glue logic) has only been
-> used on ARM based SoC's.
-
-alright :-)
-
-> > > +}
-> > > +
-> > > +/**
-> > > + * st_dwc3_drd_init: program the port
-> > > + * @dwc3_data: driver private structure
-> > > + * Description: this function is to program the port as either host =
-or device
-> > > + * according to the static configuration passed from devicetree.
-> > > + * OTG and dual role are not yet supported!
-> > > + */
-> > > +static int st_dwc3_drd_init(struct st_dwc3 *dwc3_data)
-> > > +{
-> > > +	u32 val;
-> > > +	int err;
-> > > +
-> > > +	err =3D regmap_read(dwc3_data->regmap, dwc3_data->syscfg_reg_off, &=
-val);
-> > > +	if (err)
-> > > +		return err;
-> > > +
-> > > +	switch (dwc3_data->dr_mode) {
-> > > +	case USB_DR_MODE_PERIPHERAL:
-> > > +		val |=3D USB_SET_PORT_DEVICE;
-> > > +		dev_dbg(dwc3_data->dev, "Configuring as Device\n");
-> > > +		break;
-> > > +
-> > > +	case USB_DR_MODE_HOST:
-> > > +		val &=3D USB_HOST_DEFAULT_MASK;
-> >=20
-> > are you missing a ~ here ? Also, shouldn't you mask off the bits before
-> > this switch ?
->=20
-> Yes your right, good spot! In the next iteration I've defined macros
-> for the bits in this control register and explitcitly set/clear them
-> for both cases, also adding a comment regarding the
-> USB3_DELAY_VBUSVALID bit.
-
-ok, cool.
-
-> By chance host mode still worked with this bug present as the reset
-> value of the register on this SoC is OK to have working host mode.
-
-heh :-)
-
-> > > +		dev_dbg(dwc3_data->dev, "Configuring as Host\n");
-> > > +		break;
-> > > +
-> > > +	default:
-> > > +		dev_err(dwc3_data->dev, "Unsupported mode of operation %d\n",
-> > > +			dwc3_data->dr_mode);
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	return regmap_write(dwc3_data->regmap, dwc3_data->syscfg_reg_off, v=
-al);
-> > > +}
-> > > +
-> > > +/**
-> > > + * st_dwc3_init: init the controller via glue logic
-> > > + * @dwc3_data: driver private structure
-> > > + */
-> > > +static void st_dwc3_init(struct st_dwc3 *dwc3_data)
-> > > +{
-> > > +
-> >=20
-> > this blank line isn't necessary.
->=20
-> Ok, removed in next iteration
->=20
-> <snip>
->=20
-> > > +
-> > > +	res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "syscfg-=
-reg");
-> > > +	if (!res) {
-> > > +		ret =3D -ENXIO;
-> > > +		goto undo_platform_dev_alloc;
-> > > +	}
-> > > +
-> > > +	dwc3_data->syscfg_reg_off =3D res->start;
-> > > +
-> > > +	dev_dbg(&pdev->dev, "glue-logic addr 0x%p, syscfg-reg offset 0x%x\n=
-",
-> > > +		dwc3_data->glue_base, dwc3_data->syscfg_reg_off);
-> >=20
-> > looks like this message would be more of a dev_vdbg().
->=20
-> Ok, changed to dev_vdbg in next iteration
->=20
-> <snip>
->=20
-> > > +
-> > > +#ifdef CONFIG_PM_SLEEP
-> > > +static int st_dwc3_suspend(struct device *dev)
-> > > +{
-> > > +	struct st_dwc3 *dwc3_data =3D dev_get_drvdata(dev);
-> > > +
-> > > +	reset_control_assert(dwc3_data->rstc_pwrdn);
-> > > +	reset_control_assert(dwc3_data->rstc_rst);
-> >=20
-> > Two questions:
-> >=20
-> > 1) how would you handle the case when this device is a wakeup source ?
->=20
-> I've confirmed with ST the usb3 IP can't be a wakeup source on this SoC.
->=20
-> > 2) when resuming, wouldn't you have to reinitialize the entire core ?
->=20
-> I asked ST to test this, as a full working suspend / resume setup
-> involves some firmware for the standby controller which I don't
-> currently have access to (and it is only with the SBC running that all
-> power will be removed from this part of the SoC). They have confirmed
-> that the usb3 port works after a suspend / resume and devices are
-> correctly enumerated etc after a resume with the code as it was
-> submitted.
->=20
-> What I did notice though after re-reading it, is that we are not
-> re-configuring the ST glue logic registers on a resume. So the
-> controller could end up with the vbus mux configured differently. So
-> in the next iteration I've fixed this, and call st_dwc3_drd_init and
-> st_dwc3_init in the resume path.
->=20
-> Although ST confirmed that suspend / resume works with or without this
-> change applied.
-
-alright, thanks a lot for confirming.
+My understanding was that inclusion does qualify as a derivative
+work. Otherwise we wouldn't need either the LGPL or the GCC licence
+exception.
 
 --=20
-balbi
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
---JkW1gnuWHDypiMFO
+--ZoVy78VzjVQLn2aH
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUBd5LAAoJEIaOsuA1yqRE4xgQALXNvkeO2+e/FtRB37LfOfqt
-vQnEuIEKIYHjG+MuFP4B7bF4l6aP1TH8CHpMEQVc/4iupc5P6hu+IsgN1FtXwW8p
-apyt4MGkCpYhkW/Nk+UplNWHQSpz7DAo1RhCQBjri9+HOAVc1Qda6TmvB/L9A1hU
-skohs+WoBJXxw5SZV2m472em6dXra990c/KlcnMemDTrJY/ZD2oxA5hOcEj3tSdQ
-p2+x04aM7YOOEF+vs+apZR80K9Dm00wyUgWXAzdBUrZi47N6XWPRdsmmgAs+GEyA
-rJVK09oiNihWapm7826ck7TROsPDOJyV3lynR9BYwbZ/vh9Wp9iYuZ0lK+OkEPd3
-p2KeHNw5bpJEbZaMBEywR0vABZJhrBi9XLXVOuBILXNvGEplk8YT3aOeHv/bJ6wI
-qdBXYQJhLsagW5Wn3Pz7/57MF2tWTUI2LxYTXeRKteQ7FxVeEN1g0RwkVPYaaUj0
-pgSsY5PEBChJMZziIOnMtvb6dFYNEEAjueeOcc7VSsh8o8tYgnYfAhd7G94KdCJ2
-cXAsHTmGl1UYYaMP8ES5Ql5Y3H9Fk+76eSw4C432KRuloEtPKgCh+5DBFEJD63ft
-G1YYyBFKBKHRKBgHfPOb29HH/XemDodP9w1wXy9G9WrIdN9ccMuwE0Fv7okbXwV1
-2E9JbXtH4El6SD0IqRaI
-=ifqe
+iQIcBAEBAgAGBQJUBd+wAAoJEBx+YmzsjxAgAkgQAIoBIS2BUljaeUrm7xld3/Zx
+D9kbuVzYMJMN9Uzq7TIdR20kainmCVDM0jiDtDwuICIjO3iRL+XnF7sidhs8ruPP
+fGPR/Ye4c+1tWQlboFAMw3isS5BWu3rEI2QHs7YwVIvAhZP2en5ux1Ltb8ofzvW0
+XkrQW9gMmekdx6nLPcYxv04wXA6S/x7Jct0+gwAU+wPixTGe14pp+fmZ1ob7Wevq
+sgSw6ccrij6ya4G6RQ9jA9Sz4ExKn34L5SJgd6agcipUqCqjYi2znoURH8J8funY
+NK/m05UtJDLcf5ZwQ92eS1VBKEbhaJLnxuVYXnhzUjqA6sf7bk7lAcUhv1sfogRC
+vrh6lkwdTWvJjkZWWNn0GvLc0vzY9QLDssTP5d6X513AMHqzxWDtaipSnBCsmpv3
+qFVI8ezHXdS5iUxo9J7sH/7+vDI2OhnJoWnlnl85Nur2BiTtlFhmsSBZqnZCUTH9
+1BmRg97e1Gom7S05XME5OhznssNrwSkI7gWevBiuY4uWuSPR5RmGPtLdfJK+12MN
+u5or8jWUsLWAA0BvjJekWS3dy6FUiOp1AVWj3e0lWTXm5x3sL2sAY4Q5B5oU1ZSp
+ksstgM7k8PiUVVQgLrzV3iH4gADVmj5PNgOgWKn9ZX88M5hXU+mv+N1PzcfLwAKl
+0TXldwnE+ZwvAUjn1Ey5
+=9Ys0
 -----END PGP SIGNATURE-----
 
---JkW1gnuWHDypiMFO--
+--ZoVy78VzjVQLn2aH--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
