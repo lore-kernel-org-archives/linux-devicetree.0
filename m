@@ -1,38 +1,36 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH v2 6/7] tty/serial: samsung: enable usage for 64-bit Exynos
- platforms
-Date: Tue, 02 Sep 2014 21:05:42 +0530
-Message-ID: <1409672143-8574-7-git-send-email-ch.naveen@samsung.com>
-References: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: [PATCH v2 2/3] ARM: dts: qcom: Enable serial port on IFC6540 boards
+Date: Tue,  2 Sep 2014 18:40:42 +0300
+Message-ID: <1409672443-4289-3-git-send-email-gdjakov@mm-sol.com>
+References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: galak@codeaurora.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com, Georgi Djakov <gdjakov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-Allow Samsung serial driver to be usable on Exynos 64-bit SoC based
-platforms.
+Enable the serial port on the IFC6540 boards.
 
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
 ---
- drivers/tty/serial/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 26cec64..3383744 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -220,7 +220,7 @@ config SERIAL_CLPS711X_CONSOLE
- 
- config SERIAL_SAMSUNG
- 	tristate "Samsung SoC serial support"
--	depends on PLAT_SAMSUNG
-+	depends on PLAT_SAMSUNG || ARCH_EXYNOS
- 	select SERIAL_CORE
- 	help
- 	  Support for the on-chip UARTs on the Samsung S3C24XX series CPUs,
+diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+index 4603e91..e41cb8a 100644
+--- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
++++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+@@ -3,4 +3,10 @@
+ / {
+ 	model = "Qualcomm APQ8084/IFC6540";
+ 	compatible = "qcom,apq8084-ifc6540", "qcom,apq8084";
++
++	soc {
++		serial@f995e000 {
++			status = "okay";
++		};
++	};
+ };
 -- 
 1.7.9.5
