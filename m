@@ -1,72 +1,37 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCHv2 1/4] ASoC: simple-card: add
- asoc_simple_card_fmt_master() to simplify the code.
-Date: Tue, 2 Sep 2014 14:32:00 +0300
-Message-ID: <5405AAB0.5030000@ti.com>
-References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>	<1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>	<54059A35.3020303@gmail.com>	<20140902123848.78c4c62a@armhf>	<54059F20.4080509@gmail.com>
- <20140902130912.65c5b750@armhf>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4 1/2] tty: serial: 8250: Add Mediatek UART driver
+Date: Tue, 2 Sep 2014 12:35:30 +0100
+Message-ID: <20140902113530.GC7241@leverpostej>
+References: <1407852737-17265-1-git-send-email-matthias.bgg@gmail.com>
+ <1407852737-17265-2-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140902130912.65c5b750@armhf>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Francois Moine <moinejf@free.fr>, Varka Bhadram <varkabhadram@gmail.com>
-Cc: mark.rutland@arm.com, andrew@lunn.ch, alsa-devel@alsa-project.org, pawel.moll@arm.com, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org, tiwai@suse.de, Xiubo Li <Li.Xiubo@freescale.com>, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, galak@codeaurora.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1407852737-17265-2-git-send-email-matthias.bgg@gmail.com>
+Content-Language: en-US
+Sender: linux-serial-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jslaby@suse.cz" <jslaby@suse.cz>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "alan@linux.intel.com" <alan@linux.intel.com>, "varkabhadram@gmail.com" <varkabhadram@gmail.com>, "tklauser@distanz.ch" <tklauser@distanz.ch>, "heiko@sntech.de" <heiko@sntech.de>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2014 02:09 PM, Jean-Francois Moine wrote:
-> On Tue, 02 Sep 2014 16:12:40 +0530
-> Varka Bhadram <varkabhadram@gmail.com> wrote:
->
->>>>> +	switch (((np == bitclkmaster) << 4) | (np == framemaster)) {
->>>>> +	case 0x11:
->>>>> +		return SND_SOC_DAIFMT_CBS_CFS;
->>>>> +	case 0x10:
->>>>> +		return SND_SOC_DAIFMT_CBS_CFM;
->>>>> +	case 0x01:
->>>>> +		return SND_SOC_DAIFMT_CBM_CFS;
->>>>> +	default:
->>>>> +		return SND_SOC_DAIFMT_CBM_CFM;
->>>>> +	}
->>>>> +
->>>>> +	/* Shouldn't be here */
->>>>> +	return -EINVAL;
->>>>> +}
->>>> It will be nice if we declare the switch case numbers as macros (specific name)...
->>> I don't see which macros: the values are just 2 booleans.
->>>
->> I am talking about 0x11, 0x10, 0x01 values.. We can give any understandable
->> names to those...?
->
-> #define TRUE_TRUE 0x11
-> #define TRUE_FALSE 0x10
-> #define FALSE_TRUE 0x01
->
-> or
->
-> 	case ((TRUE << 4) | TRUE:
-> 		...
-> 	case ((TRUE << 4) | FALSE:
-> 		...
-> 	case ((FALSE << 4) | TRUE:
-> 		...
->
+[...]
 
-I would vote for this. Even over the options suggested by Takashi, but 
-then again this really a matter of taste.
+> +static int mtk8250_probe_of(struct platform_device *pdev, struct uart_port *p,
+> +			   struct mtk8250_data *data)
+> +{
+> +	int err;
+> +	struct device_node *np = pdev->dev.of_node;
+> +
+> +	data->clk = of_clk_get(np, 0);
+> +	if (IS_ERR(data->clk)) {
+> +		dev_warn(&pdev->dev, "Can't get timer clock\n");
+> +		return PTR_ERR(data->clk);
+> +	}
 
-The fact that frame and bit-clock master boolean values are bundled into 
-a single "enum" field, instead of two dedicated bits, makes all options 
-bit inconvenient.
+Elsewhere you use devm_ interfaces. Can we not use devm_clk_get?
 
-Best regards,
-Jyri
+You might need to give the clock a name, but that's generally a good
+thing -- it helps if a future revision has multiple clocks.
+
+Mark.
