@@ -1,36 +1,50 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: [PATCH v2 2/3] ARM: dts: qcom: Enable serial port on IFC6540 boards
-Date: Tue,  2 Sep 2014 18:40:42 +0300
-Message-ID: <1409672443-4289-3-git-send-email-gdjakov@mm-sol.com>
-References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com, Georgi Djakov <gdjakov@mm-sol.com>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH v2 7/7] arm64: exynos7: Enable ARMv8 based Exynos7 (SoC) support
+Date: Tue, 02 Sep 2014 21:05:43 +0530
+Message-ID: <1409672143-8574-8-git-send-email-ch.naveen@samsung.com>
+References: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com, Alim Akhtar <alim.akhtar@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable the serial port on the IFC6540 boards.
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+This patch adds the necessary Kconfig entries to enable
+support for the ARMv8 based Exynos7 SoC.
+
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |    6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/Kconfig |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-index 4603e91..e41cb8a 100644
---- a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-+++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-@@ -3,4 +3,10 @@
- / {
- 	model = "Qualcomm APQ8084/IFC6540";
- 	compatible = "qcom,apq8084-ifc6540", "qcom,apq8084";
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index fd4e81a..b4d1dc2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -134,6 +134,18 @@ source "kernel/Kconfig.freezer"
+ 
+ menu "Platform selection"
+ 
++config ARCH_EXYNOS
++	bool
++	help
++	  This enables support for Samsung Exynos SoC family
 +
-+	soc {
-+		serial@f995e000 {
-+			status = "okay";
-+		};
-+	};
- };
++config ARCH_EXYNOS7
++	bool "ARMv8 based Samsung Exynos7"
++	select ARCH_EXYNOS
++	select COMMON_CLK_SAMSUNG
++	help
++	  This enables support for Samsung Exynos7 SoC family
++
+ config ARCH_VEXPRESS
+ 	bool "ARMv8 software model (Versatile Express)"
+ 	select ARCH_REQUIRE_GPIOLIB
 -- 
 1.7.9.5
