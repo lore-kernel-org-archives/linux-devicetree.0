@@ -1,48 +1,248 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: [PATCH v2 1/3] ARM: dts: qcom: Add initial IFC6540 board device tree
-Date: Tue,  2 Sep 2014 18:40:41 +0300
-Message-ID: <1409672443-4289-2-git-send-email-gdjakov@mm-sol.com>
-References: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409672443-4289-1-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com, Georgi Djakov <gdjakov@mm-sol.com>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH v2 5/7] arm64: dts: Add initial device tree support for EXYNOS7
+Date: Tue, 02 Sep 2014 21:05:41 +0530
+Message-ID: <1409672143-8574-6-git-send-email-ch.naveen@samsung.com>
+References: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, t.figa@samsung.com, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add initial device tree for the IFC6540 Snapdragon 805 pico-itx
-single-board computer.
+Add initial device tree nodes for EXYNOS7 SoC and board dts file
+to support Espresso board based on Exynos7 SoC.
 
-Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm/boot/dts/Makefile                 |    1 +
- arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |    6 ++++++
- 2 files changed, 7 insertions(+)
- create mode 100644 arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+ arch/arm64/boot/dts/Makefile                    |    1 +
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts |   31 +++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi         |  168 +++++++++++++++++++++++
+ 3 files changed, 200 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b022972..df8453a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -345,6 +345,7 @@ dtb-$(CONFIG_ARCH_PRIMA2) += prima2-evb.dtb
- dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8064-ifc6410.dtb \
- 	qcom-apq8074-dragonboard.dtb \
-+	qcom-apq8084-ifc6540.dtb \
- 	qcom-apq8084-mtp.dtb \
- 	qcom-msm8660-surf.dtb \
- 	qcom-msm8960-cdp.dtb
-diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index c52bdb0..a3bc18a 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -1,3 +1,4 @@
++dtb-$(CONFIG_ARCH_EXYNOS7) += exynos/exynos7-espresso.dtb
+ dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+ dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+ 
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
 new file mode 100644
-index 0000000..4603e91
+index 0000000..f6a8879
 --- /dev/null
-+++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
-@@ -0,0 +1,6 @@
-+#include "qcom-apq8084.dtsi"
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -0,0 +1,31 @@
++/*
++ * SAMSUNG Exynos7 Espresso board device tree source
++ *
++ * Copyright (c) 2014 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
++
++/dts-v1/;
++#include "exynos7.dtsi"
 +
 +/ {
-+	model = "Qualcomm APQ8084/IFC6540";
-+	compatible = "qcom,apq8084-ifc6540", "qcom,apq8084";
++	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
++	compatible = "samsung,exynos7-espresso", "samsung,exynos7";
++
++	chosen {
++		linux,stdout-path = &serial_2;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x0 0x40000000 0x0 0xC0000000>;
++	};
++};
++
++&serial_2 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+new file mode 100644
+index 0000000..e593af55
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -0,0 +1,168 @@
++/*
++ * SAMSUNG EXYNOS7 SoC device tree source
++ *
++ * Copyright (c) 2014 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <dt-bindings/clock/exynos7-clk.h>
++
++/ {
++	compatible = "samsung,exynos7";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	aliases {
++		serial0 = &serial_0;
++		serial1 = &serial_1;
++		serial2 = &serial_2;
++		serial3 = &serial_3;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57", "arm,armv8";
++			enable-method = "psci";
++			reg = <0x0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57", "arm,armv8";
++			enable-method = "psci";
++			reg = <0x1>;
++		};
++
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57", "arm,armv8";
++			enable-method = "psci";
++			reg = <0x2>;
++		};
++
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57", "arm,armv8";
++			enable-method = "psci";
++			reg = <0x3>;
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	soc: soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0 0x18000000>;
++
++		chipid@10000000 {
++			compatible = "samsung,exynos4210-chipid";
++			reg = <0x10000000 0x100>;
++		};
++
++		fin_pll: xxti {
++			compatible = "fixed-clock";
++			clock-frequency = <24000000>;
++			clock-output-names = "fin_pll";
++			#clock-cells = <0>;
++		};
++
++		gic: interrupt-controller@11001000 {
++			compatible = "arm,gic-400";
++			#interrupt-cells = <3>;
++			#address-cells = <0>;
++			interrupt-controller;
++			reg =	<0x11001000 0x1000>,
++				<0x11002000 0x1000>,
++				<0x11004000 0x2000>,
++				<0x11006000 0x2000>;
++		};
++
++		clock_topc: clock-controller@10570000 {
++			compatible = "samsung,exynos7-clock-topc";
++			reg = <0x10570000 0x10000>;
++			#clock-cells = <1>;
++		};
++
++		clock_top0: clock-controller@105d0000 {
++			compatible = "samsung,exynos7-clock-top0";
++			reg = <0x105d0000 0xb000>;
++			#clock-cells = <1>;
++		};
++
++		clock_peric0: clock-controller@13610000 {
++			compatible = "samsung,exynos7-clock-peric0";
++			reg = <0x13610000 0xd00>;
++			#clock-cells = <1>;
++		};
++
++		clock_peric1: clock-controller@14C80000 {
++			compatible = "samsung,exynos7-clock-peric1";
++			reg = <0x14c80000 0xd00>;
++			#clock-cells = <1>;
++		};
++
++		clock_peris: clock-controller@10040000 {
++			compatible = "samsung,exynos7-clock-peris";
++			reg = <0x10040000 0xd00>;
++			#clock-cells = <1>;
++		};
++
++		serial_0: serial@13630000 {
++			compatible = "samsung,exynos4210-uart";
++			reg = <0x13630000 0x100>;
++			interrupts = <0 440 0>;
++			clocks = <&clock_peric0 PCLK_UART0>, <&clock_peric0 SCLK_UART0>;
++			clock-names = "uart", "clk_uart_baud0";
++			status = "disabled";
++		};
++
++		serial_1: serial@14c20000 {
++			compatible = "samsung,exynos4210-uart";
++			reg = <0x14c20000 0x100>;
++			interrupts = <0 456 0>;
++			clocks = <&clock_peric1 PCLK_UART1>, <&clock_peric1 SCLK_UART1>;
++			clock-names = "uart", "clk_uart_baud0";
++			status = "disabled";
++		};
++
++		serial_2: serial@14c30000 {
++			compatible = "samsung,exynos4210-uart";
++			reg = <0x14c30000 0x100>;
++			interrupts = <0 457 0>;
++			clocks = <&clock_peric1 PCLK_UART2>, <&clock_peric1 SCLK_UART2>;
++			clock-names = "uart", "clk_uart_baud0";
++			status = "disabled";
++		};
++
++		serial_3: serial@14c40000 {
++			compatible = "samsung,exynos4210-uart";
++			reg = <0x14c40000 0x100>;
++			interrupts = <0 458 0>;
++			clocks = <&clock_peric1 PCLK_UART3>, <&clock_peric1 SCLK_UART3>;
++			clock-names = "uart", "clk_uart_baud0";
++			status = "disabled";
++		};
++
++		timer {
++			compatible = "arm,armv8-timer";
++			interrupts = <1 13 0xff01>,
++				     <1 14 0xff01>,
++				     <1 11 0xff01>,
++				     <1 10 0xff01>;
++		};
++	};
 +};
 -- 
 1.7.9.5
