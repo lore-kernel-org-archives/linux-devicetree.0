@@ -1,76 +1,59 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v4] apf27dev: add max1027 in the dts
-Date: Tue, 2 Sep 2014 21:53:05 +0800
-Message-ID: <20140902135303.GK3135@dragon>
-References: <1409597072-29196-1-git-send-email-tremyfr@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/8 v2] leds: add device tree bindings for register bit LEDs
+Date: Tue, 2 Sep 2014 16:22:59 +0200
+Message-ID: <CAMuHMdXB_6vJpTeDgr4iiA=T_3bK7nQ3anF-HSdnEz=2QqYzaw@mail.gmail.com>
+References: <1409659354-23553-1-git-send-email-linus.walleij@linaro.org>
+	<1409659354-23553-3-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409597072-29196-1-git-send-email-tremyfr@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Reynes <tremyfr@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@pengutronix.de, shc_work@mail.ru
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1409659354-23553-3-git-send-email-linus.walleij@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 01, 2014 at 08:44:32PM +0200, Philippe Reynes wrote:
-> 
-> Signed-off-by: Philippe Reynes <tremyfr@gmail.com>
+Hi Linus,
 
-Added "ARM: dts: " as the patch subject prefix, and applied the patch.
-
-Shawn
-
-> ---
->  arch/arm/boot/dts/imx27-apf27dev.dts |   17 +++++++++++++++++
->  1 files changed, 17 insertions(+), 0 deletions(-)
-> 
-> Changelog:
-> v4: (thanks Shawn Guo for the feedback)
-> - put max1027 pinctl in the right place
-> - use 0x0 instead of 0
-> 
-> v3: (thanks Alexander Shiyan for the feedback)
-> - add datasheet pin name as comment
-> 
-> v2: (thanks Alexander Shiyan for the feedback)
-> - spi mode 0 is the default so no need to explicitly define it
-> 
-> diff --git a/arch/arm/boot/dts/imx27-apf27dev.dts b/arch/arm/boot/dts/imx27-apf27dev.dts
-> index b982309..bba3f41 100644
-> --- a/arch/arm/boot/dts/imx27-apf27dev.dts
-> +++ b/arch/arm/boot/dts/imx27-apf27dev.dts
-> @@ -82,6 +82,16 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_cspi1 &pinctrl_cspi1_cs>;
->  	status = "okay";
+On Tue, Sep 2, 2014 at 2:02 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> +LED sub-node properties:
 > +
-> +	adc@0 {
-> +		compatible = "maxim,max1027";
-> +		reg = <0>;
-> +		interrupt-parent = <&gpio5>;
-> +		interrupts = <15 IRQ_TYPE_EDGE_FALLING>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_max1027>;
-> +		spi-max-frequency = <10000000>;
-> +	};
->  };
->  
->  &cspi2 {
-> @@ -210,6 +220,13 @@
->  			>;
->  		};
->  
-> +		pinctrl_max1027: max1027 {
-> +			 fsl,pins = <
-> +				 MX27_PAD_UART1_CTS__GPIO5_14 0x0 /* CNVST */
-> +				 MX27_PAD_UART1_RTS__GPIO5_15 0x0 /* EOC */
-> +			>;
-> +		};
+> +Required properties:
+> +- compatible : must be "register-bit-led"
+> +- offset : register offset to the register controlling this LED
+> +- mask : bit mask for the bit controlling this LED in the register
+
+Why don't you use a "reg" property with "#address-cells = <2>" and
+"#size-cells = <1>", so you can store offset and mask there?
+
+> +syscon: syscon@10000000 {
+> +       compatible = "arm,realview-pb1176-syscon", "syscon";
+> +       reg = <0x10000000 0x1000>;
 > +
->  		pinctrl_pwm: pwmgrp {
->  			fsl,pins = <
->  				MX27_PAD_PWMO__PWMO 0x0
-> -- 
-> 1.7.4.4
-> 
+> +       led@08.0 {
+> +               compatible = "register-bit-led";
+> +               offset = <0x08>;
+> +               mask = <0x01>;
+> +               label = "versatile:0";
+> +               linux,default-trigger = "heartbeat";
+> +               default-state = "on";
+> +       };
+
+ePAPR v1.1 says:
+
+"The unit-address must match the first address specified in the reg property
+ of the node. If the node has no reg property, the @ and unit-address must
+ be omitted ..."
+
+So you cannot have the "@8.0" without a "reg" property.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
