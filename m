@@ -1,103 +1,107 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v2] hwspinlock/msm: Add support for Qualcomm MSM HW Mutex
- block
-Date: Tue, 2 Sep 2014 11:48:54 -0700
-Message-ID: <20140902184853.GQ12494@sonymobile.com>
-References: <1409354063-20289-1-git-send-email-bjorn.andersson@sonymobile.com>
- <5405FE42.90809@codeaurora.org>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
+Date: Tue, 2 Sep 2014 12:36:35 -0700
+Message-ID: <CAL1qeaHcV_4Z9n_THEN_aST3smgaW1vwn81SkmbU0AUJ_rdB1Q@mail.gmail.com>
+References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
+	<1409350479-19108-4-git-send-email-abrestic@chromium.org>
+	<5405FE07.4030400@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5405FE42.90809@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, Suman Anna <s-anna@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Eric Holmberg <eholmber@codeaurora.org>, "Cavin, Courtney" <Courtney.Cavin@sonymobile.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5405FE07.4030400@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 02 Sep 10:28 PDT 2014, Jeffrey Hugo wrote:
+On Tue, Sep 2, 2014 at 10:27 AM, David Daney <ddaney.cavm@gmail.com> wrote:
+> On 08/29/2014 03:14 PM, Andrew Bresticker wrote:
+>>
+>> The Global Interrupt Controller (GIC) present on certain MIPS systems
+>> can be used to route external interrupts to individual VPEs and CPU
+>> interrupt vectors.  It also supports a timer and software-generated
+>> interrupts.
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+>> ---
+>>   Documentation/devicetree/bindings/mips/gic.txt | 50
+>> ++++++++++++++++++++++++++
+>>   1 file changed, 50 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mips/gic.txt
+>> b/Documentation/devicetree/bindings/mips/gic.txt
+>> new file mode 100644
+>> index 0000000..725f1ef
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mips/gic.txt
+>> @@ -0,0 +1,50 @@
+>> +MIPS Global Interrupt Controller (GIC)
+>> +
+>> +The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
+>> +It also supports a timer and software-generated interrupts which can be
+>> +used as IPIs.
+>> +
+>> +Required properties:
+>> +- compatible : Should be "mti,global-interrupt-controller"
+>> +- reg : Base address and length of the GIC registers.
+>> +- interrupts : Core interrupts to which the GIC may route external
+>> interrupts.
+>
+>
+> This doesn't make sense to me.  The GIC can, and does, route interrupts to
+> all CPU cores in a SMP system.  How can there be a concept of only
+> associating it with several interrupt lines on a single CPU in the system?
+> That is not what the GIC does, is it?  It is a Global interrupts controller,
+> not local.  So specifying device tree bindings that don't show its Global
+> nature seems wrong.
 
-> > diff --git a/drivers/hwspinlock/msm_hwspinlock.c b/drivers/hwspinlock/msm_hwspinlock.c
-[..]
-> > + * Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> 
-> Should the copyright range be updated to include your changes which I 
-> presume were authored in 2014?
-> 
+While the GIC can route external interrupts to any HW interrupt vector
+it may not make sense to actually use all those vectors.  For example,
+the CP0 timer is usually hooked up to HW vector 5 (it could be treated
+as a GIC local interrupt, though it may still be fixed to HW vector
+5).  BTW, the Malta example about the i8259 I gave before was wrong -
+it appears that it actually gets chained with the GIC.
 
-That would be expected by people on my side, will update.
+What would you suggest instead?  Route all GIC interrupts to a single
+vector?  Attempt to distribute them over all 6 vectors?
 
-[..]
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/hwspinlock.h>
-> > +#include <linux/io.h>
-> 
-> Could these be put in alphabetical order?  I vaguely recall a few 
-> maintainers expressing this preference to avoid merge issues.
-> 
+>> +- interrupt-controller : Identifies the node as an interrupt controller
+>> +- #interrupt-cells : Specifies the number of cells needed to encode an
+>> +  interrupt specifier.  Should be 3.
+>> +  - The first cell is the GIC interrupt number.
+>> +  - The second cell encodes the interrupt flags.
+>> +    See <include/dt-bindings/interrupt-controller/irq.h> for a list of
+>> valid
+>> +    flags.
+>> +  - The optional third cell indicates which CPU interrupt vector the GIC
+>> +    interrupt should be routed to.  It is a 0-based index into the list
+>> of
+>> +    GIC-to-CPU interrupts specified in the "interrupts" property
+>> described
+>> +    above.  For example, a '2' in this cell will route the interrupt to
+>> the
+>> +    3rd core interrupt listed in 'interrupts'.  If omitted, the interrupt
+>> will
+>> +    be routed to the 1st core interrupt.
+>> +
+>
+>
+> This seems like a really convoluted way of doing things that really goes
+> against the device tree model.
+>
+> The routing of interrupts through the GIC to a core interrupt is controlled
+> entirely within the GIC hardware and therefore should be a property of the
+> GIC itself, not all the random devices connected upstream to the GIC.
+>
+> It also places policy about the priority of the various interrupts into the
+> device tree.  Typically the device tree would contain only information about
+> the topology of the hardware blocks, not arbitrary policy decisions that
+> software could change and still have a perfectly functional system.
+>
+> Therefore I would recommend removing the third cell from the interrupt
+> specifier.
 
-I think we can clean some of them out at least, will have a look.
-
-[..]
-> > +static int msm_hwspinlock_probe(struct platform_device *pdev)
-> > +{
-[..]
-> > +	match = of_match_device(msm_hwspinlock_of_match, &pdev->dev);
-> > +	if (!match)
-> > +		return -EINVAL;
-> 
-> This seems redundant.  It is my understanding that probe will only be 
-> called for a matching device.  What are we attempting to accomplish here?
-> 
-
-Yeah, if anything it would catch static bugs.
-
-And with the modification below I'll just drop it.
-
-[..]
-> > +	stride = (int)match->data;
-> > +	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
-> > +		hwlock->priv = iobase + i * stride;
-> 
-> I am not a fan of this method for determining the stride.  We already 
-> have 0x4 and 0x80 in this driver, and will soon need 0x1000 for some of 
-> the current chips (still listed as TCSR too).  The stride is completely 
-> up to our hardware designers, and it seems like encoding stride in this 
-> manner will require constant updates and maintenance.  I prefer 
-> calculating stride by dividing the reg size by num_locks since that will 
-> automatically adjust for whatever the hardware designers decide to use 
-> next month.  If you wanted to, with the reg size calculation, you could 
-> remove the "qcom,sfpb-mutex" since there is no functional difference 
-> other than stride.  What are your thoughts?
-> 
-
-I was thinking about this before and with your addition of tcsr having
-different strides on different platforms we could either make the compatibles
-more specifc (e.g. include platform name) or encode the stride in some other
-way.
-
-As you say there's no real technical difference in how we interact with the
-current sfpb and tcsr mutex registers, so I would say making the compatibles
-more specifc doesn't add any value.
-
-I'll update this and follow your recommendation.
-
-
-
-When we started hacking on this we found it very confusing that the caf driver
-for tcsr is called sfpb, so I will keep both compatibles for clarity...
-
-Thanks for your input!
-
-Regards,
-Bjorn
+As Mark mentioned, putting priority policy in the DT is a bit of a
+gray area.  Since I don't see any need for it currently, I've decided
+to drop it.
