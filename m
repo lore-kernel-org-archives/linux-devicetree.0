@@ -1,56 +1,157 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: Add input supplies to rk808 bindings
-Date: Tue, 2 Sep 2014 17:31:05 +0100
-Message-ID: <20140902163105.GY29327@sirena.org.uk>
-References: <1409674469-12123-1-git-send-email-dianders@chromium.org>
- <1409674469-12123-3-git-send-email-dianders@chromium.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
+Date: Tue, 2 Sep 2014 09:36:30 -0700
+Message-ID: <CAL1qeaFwaMkZ-960ON2doHFXBHJdg-obHopfiDOXCskKbMZppg@mail.gmail.com>
+References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
+	<1409350479-19108-4-git-send-email-abrestic@chromium.org>
+	<20140901110119.GB6617@leverpostej>
+	<CAL1qeaH97fL3x689-FwOxRZWS2-6CDzzzJX3xEKdvULHoxjMLA@mail.gmail.com>
+	<20140902093330.GA6595@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+1tcKVLXPU0QafK6"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409674469-12123-3-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20140902093330.GA6595@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 2, 2014 at 2:33 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Sep 02, 2014 at 01:53:18AM +0100, Andrew Bresticker wrote:
+>> On Mon, Sep 1, 2014 at 4:01 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > On Fri, Aug 29, 2014 at 11:14:30PM +0100, Andrew Bresticker wrote:
+>> >> The Global Interrupt Controller (GIC) present on certain MIPS systems
+>> >> can be used to route external interrupts to individual VPEs and CPU
+>> >> interrupt vectors.  It also supports a timer and software-generated
+>> >> interrupts.
+>> >>
+>> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> >> ---
+>> >>  Documentation/devicetree/bindings/mips/gic.txt | 50 ++++++++++++++++++++++++++
+>> >>  1 file changed, 50 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/mips/gic.txt b/Documentation/devicetree/bindings/mips/gic.txt
+>> >> new file mode 100644
+>> >> index 0000000..725f1ef
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/mips/gic.txt
+>> >> @@ -0,0 +1,50 @@
+>> >> +MIPS Global Interrupt Controller (GIC)
+>> >> +
+>> >> +The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
+>> >> +It also supports a timer and software-generated interrupts which can be
+>> >> +used as IPIs.
+>> >> +
+>> >> +Required properties:
+>> >> +- compatible : Should be "mti,global-interrupt-controller"
+>> >
+>> > I couldn't find "mti" in vendor-prefixes.txt (as of v3.17-rc3). If
+>> > there's not a patch to add it elsewhere, would you mind providing one
+>> > with this series?
+>>
+>> Sure.  As James points out, "img" could also be used but I chose "mti"
+>> since the CPU interrupt controller also uses "mti" and I believe the
+>> GIC IP was developed before the acquisition by Imagination (though I'm
+>> not sure if that actually matters).
+>
+> Using 'mti' sounds like the right choice to me given both of those
+> points.
+>
+>> >> +- reg : Base address and length of the GIC registers.
+>> >> +- interrupts : Core interrupts to which the GIC may route external interrupts.
+>> >
+>> > How many?
+>>
+>> Up to 6, one for each of the possible core hardware interrupts (i.e.
+>> interrupt vectors 2 - 7).  Which ones are available to the GIC depend
+>> on the system, for example Malta has an i8259 PIC hooked up to CPU
+>> interrupt vector 2, so that vector should not be used by the GIC.
+>>
+>> > In any order?
+>>
+>> They can technically be in any order, but when in strictly
+>> increasing/decreasing order they can be used along with the 3rd cell
+>> (described below) to prioritize interrupts.
+>
+> Ok. Could you try to place that into the property description?
+>
+>> >> +- interrupt-controller : Identifies the node as an interrupt controller
+>> >> +- #interrupt-cells : Specifies the number of cells needed to encode an
+>> >> +  interrupt specifier.  Should be 3.
+>> >> +  - The first cell is the GIC interrupt number.
+>> >> +  - The second cell encodes the interrupt flags.
+>> >> +    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
+>> >> +    flags.
+>> >
+>> > Are all the flags valid for this interrupt controller?
+>>
+>> Yes.
+>
+> Ok.
+>
+>> >> +  - The optional third cell indicates which CPU interrupt vector the GIC
+>> >> +    interrupt should be routed to.  It is a 0-based index into the list of
+>> >> +    GIC-to-CPU interrupts specified in the "interrupts" property described
+>> >> +    above.  For example, a '2' in this cell will route the interrupt to the
+>> >> +    3rd core interrupt listed in 'interrupts'.  If omitted, the interrupt will
+>> >> +    be routed to the 1st core interrupt.
+>> >
+>> > I don't follow why this should be in the DT. Why is this necessary?
+>>
+>> Since the GIC can route external interrupts to any of the CPU hardware
+>> interrupt vectors, it can be used to assign priorities to external
+>> interrupts.  If the CPU is in vectored interrupt mode, the highest
+>> numbered interrupt vector (7) has the highest priority.  An example:
+>>
+>> gic: interrupt-controller@1bdc0000 {
+>>         ...
+>>         interrupts = <3>, <4>;
+>>         ...
+>> };
+>>
+>> uart {
+>>         ...
+>>         interrupt-parent = <&gic>;
+>>         interrupts = <24 IRQ_TYPE_LEVEL_HIGH 1>;
+>>         ...
+>> };
+>>
+>> i2c {
+>>         ...
+>>         interrupt-parent = <&gic>;
+>>         interrupts = <33 IRQ_TYPE_LEVEL_HIGH 0>;
+>>         ...
+>> };
+>>
+>> Since the third cell for the UART is '1', it maps to CPU interrupt
+>> vector 4 and thus has a higher priority than the I2C (whose third cell
+>> is 0, mapping to CPU interrupt vector 3).
+>>
+>> Perhaps, though, this is an instance of software policy being
+>> specified in device-tree.  Other options would be to a) evenly
+>> distribute the GIC external interrupts across the CPU interrupt
+>> vectors available to the GIC, or b) just map all GIC external
+>> interrupts to a single interrupt vector.
+>
+> As a user I don't see why the DT author should be in charge of whether
+> my UART gets higher priority than my I2C controller. That priority is
+> not a fixed property of the interrupt (as the line and flags are).
+>
+> That said, this is a grey area. Are there any cases where this
+> prioritisation is critical on existing devices?
 
---+1tcKVLXPU0QafK6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I am not aware of any boards for which this is critical.  Malta and
+SEAD-3 are development boards and do not appear to need any sort of
+prioritization of GIC interrupts.  John Crispin is working on a
+Mediatek board which has a GIC, but it looks like all external
+interrupts are routed to a single CPU vector.  It's possible that it
+could be useful on the platform I'm working on, though it's looking
+more and more unlikely.
 
-On Tue, Sep 02, 2014 at 09:14:29AM -0700, Doug Anderson wrote:
-> The original bindings for rk808 didn't include input supplies.  Add
-> them.
-
-Acked-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-You probably want to send this to Lee...
-
---+1tcKVLXPU0QafK6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUBfDGAAoJELSic+t+oim9WG4P/1Xq4YJpZJdp04srl/v3YgUP
-4SjEN3iM+QDQpf6L3AromyqspVOKU9FYpUuqWMyvfiRjPJilS6s+dWaDf+xWdIT5
-Mqx7nc9dOXN3wLYxkC/Lhju8Nib0/gMFI9FmrfqaQ+PyABiIQLm2LHQ2Pj4fCO7+
-+Q4hZZMNpkHfRUbLg02cyWIgaUse5OPyfjaGkGLqjdcgDCp+1ylOMcv+fD1Q5tja
-VURysDkP1DKRiluV2oBGnOgtQvEp+n12kCJo8D+zUs7HwTp795eypt4qxgq9AaFZ
-R8ZyJQzVe6EWl+koFDycWMC57WiKJdpcvGBMNWv4eiPAeW9LEn9Y+ahzKtuyfFgQ
-/k6DR0068o2ts69DW0hdCGIyULKvp/8N6MfALW11r1GE6FF2EqQkDY3pTC/t3e4B
-J7bt3VeNS8OJ0oyeL8m/+4Eo7C5BDeo+ZKV99jv+DcuLlyuEZNrFPtqzeJpfcws3
-PYxtsuMCPnrueSiX9onkYWydPqCFOFo4v3Wd5OZMqvzi6/AZADyHUwYhi6Y+F4CP
-+HyMFn35p8zRu01xjy87GFS6bTTgzkBrukVrPZtxN0n8Iqa440K/iZNzf60Qxjzq
-GZ2r1PyhyYC2UuukMJrSGQO+dTzqZ063XcbJ/zzOSJgXEau3y3AZhtvjchLEMRwI
-3hBPwIpkkHQwyV2gM6bE
-=sJgB
------END PGP SIGNATURE-----
-
---+1tcKVLXPU0QafK6--
+Given all that, perhaps it's better to stick with the 2-cell
+(no-prioritization) binding for now and add the 3-cell binding later
+if necessary.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
