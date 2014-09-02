@@ -1,37 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 1/2] tty: serial: 8250: Add Mediatek UART driver
-Date: Tue, 2 Sep 2014 12:35:30 +0100
-Message-ID: <20140902113530.GC7241@leverpostej>
-References: <1407852737-17265-1-git-send-email-matthias.bgg@gmail.com>
- <1407852737-17265-2-git-send-email-matthias.bgg@gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: Trickle charging for rtc-bq32k
+Date: Tue, 2 Sep 2014 13:51:20 +0200
+Message-ID: <20140902115119.GG1266@katana>
+References: <20140822131150.GA26724@amd>
+ <20140822142852.GA1545@katana>
+ <20140822143853.GA28820@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V32M1hWVjliPHW+c"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1407852737-17265-2-git-send-email-matthias.bgg@gmail.com>
-Content-Language: en-US
-Sender: linux-serial-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jslaby@suse.cz" <jslaby@suse.cz>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "alan@linux.intel.com" <alan@linux.intel.com>, "varkabhadram@gmail.com" <varkabhadram@gmail.com>, "tklauser@distanz.ch" <tklauser@distanz.ch>, "heiko@sntech.de" <heiko@sntech.de>, "yingjoe.chen@gmail.com" <yingjoe.chen@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+In-Reply-To: <20140822143853.GA28820@amd>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
 
-> +static int mtk8250_probe_of(struct platform_device *pdev, struct uart_port *p,
-> +			   struct mtk8250_data *data)
-> +{
-> +	int err;
-> +	struct device_node *np = pdev->dev.of_node;
-> +
-> +	data->clk = of_clk_get(np, 0);
-> +	if (IS_ERR(data->clk)) {
-> +		dev_warn(&pdev->dev, "Can't get timer clock\n");
-> +		return PTR_ERR(data->clk);
-> +	}
+--V32M1hWVjliPHW+c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Elsewhere you use devm_ interfaces. Can we not use devm_clk_get?
 
-You might need to give the clock a name, but that's generally a good
-thing -- it helps if a future revision has multiple clocks.
+> Do you have example how to acces of_ from i2c driver?
+>=20
+> Platform drivers do:
+>=20
+>         if (pdev->dev.of_node) {
 
-Mark.
+As I said, this is basically the same. Just use the node from the
+client's device. Nothing special here.
+
+
+--V32M1hWVjliPHW+c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUBa83AAoJEBQN5MwUoCm2mL4QALWt1oJmwN+i0IlvBLBtueza
+ulnmP4+ErZc/gdXwDru9LM1DNAw3/kv/addoWLJEi7ffHOJ4EBzN/aZ/fWD2wmae
+fcqeMm+8t5yfmUvwhDH4WMcfPMNqSuckkyrefISeoMxJYliHRuy6Za6PN7pidCf3
+ZJSYnv7cSAZZ7m5NrrQ4qFBJjVPAcrFFvNGGIL9t7HoaCvRo3XRsLgmE6v7zSExt
+EkFurjLspv4tsgj43Y4DxDNbFrk/ICBeBFQluJV4NlAT5aO9zjeNpY7bM7TF78GI
+ulFHNoM7kxSGvt3FM2W6RL4QXxhYxybGOyKurUdVRaWpzK7vvUZ8XE+Dx5XFDZzt
+9GAjN9hENn/RBG993QiQD/zQz1EYEAeIfTf9ZiW1jj+p8MX/2OEMz8ryyxODNKZi
+9l9wNrn4DUhbRwWAmNBm7T1z+xRBSIMRJDAZ1s5ywgzbcNhLKc4Kkq6yKnodiFb5
+ye6r1uoUVNPrVow/CMaJRzEZ1EUip4ig1POO+1JVYEIGeDAbM4PtjrPvUA+KmLW3
+FL3GMZ9lhKaZvCSocoO40i00/lWjFaQfrhvT9Yk+uIsSLN/jnU/crTEBi/DMwqBd
+27lfYYiM8rwaGaM3FsFnYpQa/LsF5L8iJFKt2tdiGHtpe4rixvrF/5JS2Pxtnn+g
+R3y+ZdBQlCoa48sDhIdO
+=1co6
+-----END PGP SIGNATURE-----
+
+--V32M1hWVjliPHW+c--
