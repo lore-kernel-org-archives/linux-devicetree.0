@@ -1,188 +1,59 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v3 4/4] pinctrl: qcom: Make the target processor value
- configurable
-Date: Tue, 2 Sep 2014 09:58:59 -0700
-Message-ID: <20140902165858.GN12494@sonymobile.com>
-References: <1409663625-3185-1-git-send-email-gdjakov@mm-sol.com>
- <1409663625-3185-5-git-send-email-gdjakov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409663625-3185-5-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "agross@codeaurora.org" <agross@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "iivanov@mm-sol.com" <iivanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v5 0/3] Add ST dwc3 glue layer driver
+Date: Tue,  2 Sep 2014 18:08:46 +0100
+Message-ID: <1409677729-6922-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, lee.jones@linaro.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, peppe.cavallaro@st.com
+Cc: peter.griffin@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 02 Sep 06:13 PDT 2014, Georgi Djakov wrote:
+This series adds support for the ST glue logic which wraps the DWC3 controller
+on STiH407 SoC family chipsets.
 
-> Currently the value used for specify that interrupts from the gpio should
-> be routed to the application processor is hardcoded for all Qualcomm SoCs.
-> But the new APQ8084 SoC uses a different value. To resolve this, we make
-> this value configurable for each SoC. For all existing SoCs we continue
-> to use the current value, and only for APQ8084 we use the new value.
-> 
-> Suggested-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+Changes since v4
+ - Fix bug with setting bits in usb control register
+ - Remove superflous '\n'
+ - Change default Kconfig to make default same as other platforms
+ - Update dt doc example so that both usb2 and usb3 phys are using generic drivers/phy instead of drivers/usb/phy
+ - Reconfigure ST glue logic regs in resume callback
 
-Looks good.
+Changes since v3
+ - Various formating nits
 
-Acked-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Changes since v2
+ - Use dr_mode for host/device static configuration
+ - Manage shared reset signal to usbss to avoid hang if probing before usb3 phy
+ - Remove DT checks and make driver depend on OF
+ - Change some #define to use BIT macro
+ - Make some comments clearer
+ - Use kerneldoc for struct documentation
+ - Remove udelay
+ - Let DT create platform_devices, and remove legacy alloc
+ - Change some logging levels to dev_dbg
+ - Various whitespace and formatting cleanup
+ - Use SIMPLE_DEV_PM_OPS()
+ - Add const to of_device struct
+ - Reorder header files alphabetically
+ - Use devm_ioremap_resource instead of devm_request_and_ioremap
+ - Remove of_match_ptr()
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-apq8064.c |    2 ++
->  drivers/pinctrl/qcom/pinctrl-apq8084.c |    2 ++
->  drivers/pinctrl/qcom/pinctrl-ipq8064.c |    2 ++
->  drivers/pinctrl/qcom/pinctrl-msm.c     |    4 +---
->  drivers/pinctrl/qcom/pinctrl-msm.h     |    3 +++
->  drivers/pinctrl/qcom/pinctrl-msm8960.c |    2 ++
->  drivers/pinctrl/qcom/pinctrl-msm8x74.c |    2 ++
->  7 files changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-apq8064.c b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-> index feb6f15..f877aed 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-apq8064.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-apq8064.c
-> @@ -258,6 +258,7 @@ static const unsigned int sdc3_data_pins[] = { 95 };
->  		.intr_status_bit = 0,			\
->  		.intr_ack_high = 1,			\
->  		.intr_target_bit = 0,			\
-> +		.intr_target_kpss_val = 4,		\
->  		.intr_raw_status_bit = 3,		\
->  		.intr_polarity_bit = 1,			\
->  		.intr_detection_bit = 2,		\
-> @@ -283,6 +284,7 @@ static const unsigned int sdc3_data_pins[] = { 95 };
->  		.intr_enable_bit = -1,			\
->  		.intr_status_bit = -1,			\
->  		.intr_target_bit = -1,			\
-> +		.intr_target_kpss_val = -1,		\
->  		.intr_raw_status_bit = -1,		\
->  		.intr_polarity_bit = -1,		\
->  		.intr_detection_bit = -1,		\
-> diff --git a/drivers/pinctrl/qcom/pinctrl-apq8084.c b/drivers/pinctrl/qcom/pinctrl-apq8084.c
-> index 5362959..138cbf6 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-apq8084.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-apq8084.c
-> @@ -371,6 +371,7 @@ static const unsigned int sdc2_data_pins[] = { 152 };
->  		.intr_status_bit = 0,			\
->  		.intr_ack_high = 0,			\
->  		.intr_target_bit = 5,			\
-> +		.intr_target_kpss_val = 3,		\
->  		.intr_raw_status_bit = 4,		\
->  		.intr_polarity_bit = 1,			\
->  		.intr_detection_bit = 2,		\
-> @@ -396,6 +397,7 @@ static const unsigned int sdc2_data_pins[] = { 152 };
->  		.intr_enable_bit = -1,                  \
->  		.intr_status_bit = -1,                  \
->  		.intr_target_bit = -1,                  \
-> +		.intr_target_kpss_val = -1,		\
->  		.intr_raw_status_bit = -1,              \
->  		.intr_polarity_bit = -1,                \
->  		.intr_detection_bit = -1,               \
-> diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8064.c b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-> index 767cf11..81f49a9 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-> @@ -211,6 +211,7 @@ static const unsigned int sdc3_data_pins[] = { 71 };
->  		.intr_status_bit = 0,			\
->  		.intr_ack_high = 1,			\
->  		.intr_target_bit = 0,			\
-> +		.intr_target_kpss_val = 4,		\
->  		.intr_raw_status_bit = 3,		\
->  		.intr_polarity_bit = 1,			\
->  		.intr_detection_bit = 2,		\
-> @@ -236,6 +237,7 @@ static const unsigned int sdc3_data_pins[] = { 71 };
->  		.intr_enable_bit = -1,                  \
->  		.intr_status_bit = -1,                  \
->  		.intr_target_bit = -1,                  \
-> +		.intr_target_kpss_val = -1,		\
->  		.intr_raw_status_bit = -1,              \
->  		.intr_polarity_bit = -1,                \
->  		.intr_detection_bit = -1,               \
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 2738108..592c6fc 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -649,8 +649,6 @@ static void msm_gpio_irq_ack(struct irq_data *d)
->  	spin_unlock_irqrestore(&pctrl->lock, flags);
->  }
->  
-> -#define INTR_TARGET_PROC_APPS    4
-> -
->  static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> @@ -674,7 +672,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
->  	/* Route interrupts to application cpu */
->  	val = readl(pctrl->regs + g->intr_target_reg);
->  	val &= ~(7 << g->intr_target_bit);
-> -	val |= INTR_TARGET_PROC_APPS << g->intr_target_bit;
-> +	val |= g->intr_target_kpss_val << g->intr_target_bit;
->  	writel(val, pctrl->regs + g->intr_target_reg);
->  
->  	/* Update configuration for gpio.
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index 7b2a227..b952c4b 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -53,6 +53,8 @@ struct msm_function {
->   * @intr_status_bit:      Offset in @intr_status_reg for reading and acking the interrupt
->   *                        status.
->   * @intr_target_bit:      Offset in @intr_target_reg for configuring the interrupt routing.
-> + * @intr_target_kpss_val: Value in @intr_target_bit for specifying that the interrupt from
-> + *                        this gpio should get routed to the KPSS processor.
->   * @intr_raw_status_bit:  Offset in @intr_cfg_reg for the raw status bit.
->   * @intr_polarity_bit:    Offset in @intr_cfg_reg for specifying polarity of the interrupt.
->   * @intr_detection_bit:   Offset in @intr_cfg_reg for specifying interrupt type.
-> @@ -88,6 +90,7 @@ struct msm_pingroup {
->  	unsigned intr_ack_high:1;
->  
->  	unsigned intr_target_bit:5;
-> +	unsigned intr_target_kpss_val:5;
->  	unsigned intr_raw_status_bit:5;
->  	unsigned intr_polarity_bit:5;
->  	unsigned intr_detection_bit:5;
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm8960.c b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-> index 3504703..2ab21ce 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm8960.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm8960.c
-> @@ -384,6 +384,7 @@ static const unsigned int sdc3_data_pins[] = { 157 };
->  		.intr_status_bit = 0,			\
->  		.intr_ack_high = 1,			\
->  		.intr_target_bit = 0,			\
-> +		.intr_target_kpss_val = 4,		\
->  		.intr_raw_status_bit = 3,		\
->  		.intr_polarity_bit = 1,			\
->  		.intr_detection_bit = 2,		\
-> @@ -409,6 +410,7 @@ static const unsigned int sdc3_data_pins[] = { 157 };
->  		.intr_enable_bit = -1,			\
->  		.intr_status_bit = -1,			\
->  		.intr_target_bit = -1,			\
-> +		.intr_target_kpss_val = -1,		\
->  		.intr_raw_status_bit = -1,		\
->  		.intr_polarity_bit = -1,		\
->  		.intr_detection_bit = -1,		\
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm8x74.c b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-> index 8c97201..3c85838 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm8x74.c
-> @@ -366,6 +366,7 @@ static const unsigned int sdc2_data_pins[] = { 151 };
->  		.intr_enable_bit = 0,			\
->  		.intr_status_bit = 0,			\
->  		.intr_target_bit = 5,			\
-> +		.intr_target_kpss_val = 4,		\
->  		.intr_raw_status_bit = 4,		\
->  		.intr_polarity_bit = 1,			\
->  		.intr_detection_bit = 2,		\
-> @@ -391,6 +392,7 @@ static const unsigned int sdc2_data_pins[] = { 151 };
->  		.intr_enable_bit = -1,			\
->  		.intr_status_bit = -1,			\
->  		.intr_target_bit = -1,			\
-> +		.intr_target_kpss_val = -1,		\
->  		.intr_raw_status_bit = -1,		\
->  		.intr_polarity_bit = -1,		\
->  		.intr_detection_bit = -1,		\
-> -- 
-> 1.7.9.5
-> 
+Changes since v1
+ - Fix Kconfig mistake
+
+Peter Griffin (3):
+  usb: dwc3: add ST dwc3 glue layer to manage dwc3 HC
+  usb: dwc3: dwc3-st: Add st-dwc3 devicetree bindings documentation
+  MAINTAINERS: Add dwc3-st.c file to ARCH/STI architecture
+
+ Documentation/devicetree/bindings/usb/dwc3-st.txt |  68 ++++
+ MAINTAINERS                                       |   1 +
+ drivers/usb/dwc3/Kconfig                          |   9 +
+ drivers/usb/dwc3/Makefile                         |   1 +
+ drivers/usb/dwc3/dwc3-st.c                        | 377 ++++++++++++++++++++++
+ 5 files changed, 456 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3-st.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-st.c
+
+-- 
+1.9.1
