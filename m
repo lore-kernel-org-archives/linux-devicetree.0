@@ -1,49 +1,42 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH 04/12] MIPS: GIC: Move MIPS_GIC_IRQ_BASE into platform irq.h
-Date: Mon, 1 Sep 2014 17:08:24 -0700
-Message-ID: <CAL1qeaHryi7noBMiHxJPybByuvVts23reuiiQbV9mCQj+Ngqjw@mail.gmail.com>
-References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
-	<6179185.bNbDBEC6tl@wuerfel>
-	<CAL1qeaEEo6-LZz3Kex7oPUfz=Z56nvKoDnqu051rGhhi3ZFTDQ@mail.gmail.com>
-	<3341001.1Jsp173xyM@wuerfel>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v4] clk: shmobile: div6: support selectable-input clocks
+Date: Mon, 01 Sep 2014 17:23:29 -0700
+Message-ID: <20140902002329.5251.82127@quantum>
+References: <1409238671-30452-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3341001.1Jsp173xyM@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1409238671-30452-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Ulrich Hecht <ulrich.hecht@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 1, 2014 at 1:34 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Sunday 31 August 2014 11:54:04 Andrew Bresticker wrote:
->> On Sat, Aug 30, 2014 at 12:57 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Friday 29 August 2014 15:14:31 Andrew Bresticker wrote:
->> >> Define a generic MIPS_GIC_IRQ_BASE which is suitable for Malta and
->> >> the upcoming Danube board in <mach-generic/irq.h>.  Since Sead-3 is
->> >> different and uses a MIPS_GIC_IRQ_BASE equal to the CPU IRQ base (0),
->> >> define its MIPS_GIC_IRQ_BASE in <mach-sead3/irq.h>.
->> >>
->> >> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->> >>
->> >
->> > Why do you actually have to hardwire an IRQ base? Can't you move
->> > to the linear irqdomain code for DT based MIPS systems yet?
->>
->> Neither Malta nor SEAD-3 use device-tree for interrupts yet, so they
->> still require a hard-coded IRQ base.  For boards using device-tree, I
->> stuck with a legacy IRQ domain as it allows most of the existing GIC
->> irqchip code to be reused.
->
-> I see. Note that we now have irq_domain_add_simple(), which should
-> do the right think in either case: use a legacy domain when a
-> nonzero base is provided for the old boards, but use the simple
-> domain when probed from DT without an irq base.
->
-> This makes the latter case more memory efficient (it avoids
-> allocating the irq descriptors for every possibly but unused
-> IRQ number) and helps ensure that you don't accidentally rely
-> on hardcoded IRQ numbers for the DT based machines, which would
-> be considered a bug.
+Quoting Ulrich Hecht (2014-08-28 08:11:11)
+> From: Ulrich Hecht <ulrich.hecht@gmail.com>
+> 
+> Support for setting the parent at initialization time based on the current
+> hardware configuration in DIV6 clocks with selectable parents as found in
+> the r8a73a4, r8a7740, sh73a0, and other SoCs.
 
-Ah, ok.  It looks like add_simple() is what I want then.
+<snip>
+
+> -       parent_name = of_clk_get_parent_name(np, 0);
+> +       if (!of_property_read_u32(np, "renesas,src-shift", &src_shift)) {
+> +               if (!of_property_read_u32(np, "renesas,src-width",
+> +                                       &src_width)) {
+> +                       unsigned int parent_idx =
+> +                               (clk_readl(clock->reg) >> src_shift) &
+> +                               (BIT(src_width) - 1);
+> +                       parent_name = of_clk_get_parent_name(np, parent_idx);
+
+Can the clock source be selected at run-time? Is there a use case for
+this?
+
+If so it is probably better to actually model these clocks as
+multiplexers with the corresponding .get_parent and .set_parent
+callbacks.
+
+Regards,
+Mike
