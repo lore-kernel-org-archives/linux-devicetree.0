@@ -1,59 +1,105 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/8 v2] leds: add device tree bindings for register bit LEDs
-Date: Tue, 2 Sep 2014 16:22:59 +0200
-Message-ID: <CAMuHMdXB_6vJpTeDgr4iiA=T_3bK7nQ3anF-HSdnEz=2QqYzaw@mail.gmail.com>
-References: <1409659354-23553-1-git-send-email-linus.walleij@linaro.org>
-	<1409659354-23553-3-git-send-email-linus.walleij@linaro.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/5] usb: dwc3: exynos: Add support for SCLK present on
+ Exynos7
+Date: Tue, 2 Sep 2014 09:35:39 -0500
+Message-ID: <20140902143539.GC16872@saruman.home>
+References: <1409212920-28526-1-git-send-email-gautam.vivek@samsung.com>
+ <1409212920-28526-2-git-send-email-gautam.vivek@samsung.com>
+ <20140828184847.GA18464@leverpostej>
+ <CAFp+6iHLSaUjHqaKXXX0QLiRd3h+O67DRSQdExag-KUH0dnpag@mail.gmail.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1409659354-23553-3-git-send-email-linus.walleij@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="32u276st3Jlj2kUU"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iHLSaUjHqaKXXX0QLiRd3h+O67DRSQdExag-KUH0dnpag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+--32u276st3Jlj2kUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 2, 2014 at 2:02 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> +LED sub-node properties:
-> +
-> +Required properties:
-> +- compatible : must be "register-bit-led"
-> +- offset : register offset to the register controlling this LED
-> +- mask : bit mask for the bit controlling this LED in the register
+On Tue, Sep 02, 2014 at 04:09:08PM +0530, Vivek Gautam wrote:
+> Hi,
+>=20
+>=20
+> On Fri, Aug 29, 2014 at 12:18 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wro=
+te:
+> > On Thu, Aug 28, 2014 at 09:01:56AM +0100, Vivek Gautam wrote:
+> >> Exynos7 also has a separate special gate clock going to the IP
+> >> apart from the usual AHB clock. So add support for the same.
+> >>
+> >> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >> ---
+> >>  drivers/usb/dwc3/dwc3-exynos.c |   16 ++++++++++++++++
+> >>  1 file changed, 16 insertions(+)
+> >>
+> >> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-ex=
+ynos.c
+> >> index f9fb8ad..bab6395 100644
+> >> --- a/drivers/usb/dwc3/dwc3-exynos.c
+> >> +++ b/drivers/usb/dwc3/dwc3-exynos.c
+> >> @@ -35,6 +35,7 @@ struct dwc3_exynos {
+> >>       struct device           *dev;
+> >>
+> >>       struct clk              *clk;
+> >> +     struct clk              *sclk;
+> >>       struct regulator        *vdd33;
+> >>       struct regulator        *vdd10;
+> >>  };
+> >> @@ -141,10 +142,17 @@ static int dwc3_exynos_probe(struct platform_dev=
+ice *pdev)
+> >>               return -EINVAL;
+> >>       }
+> >>
+> >> +     /* Exynos7 has a special gate clock going to this IP */
+> >> +     exynos->sclk =3D devm_clk_get(dev, "usbdrd30_sclk");
+> >> +     if (IS_ERR(exynos->sclk))
+> >> +             dev_warn(dev, "couldn't get sclk\n");
+> >
+> > Doesn't this introduce a pointless warning for Exynos SoCs other than
+> > Exynos7?
+>=20
+> True, it will introduce an unnecessary warning for non-Exynos7 systems.
+> I initially thought of introducing a compatible check for Exynos7-dwc3, b=
+ut that
+> way we may end up adding such checks for future SoCs which have similar
+> controller but have some clock difference or some other small change, no ?
 
-Why don't you use a "reg" property with "#address-cells = <2>" and
-"#size-cells = <1>", so you can store offset and mask there?
+maybe dev_dbg() is what you want ? :-)
 
-> +syscon: syscon@10000000 {
-> +       compatible = "arm,realview-pb1176-syscon", "syscon";
-> +       reg = <0x10000000 0x1000>;
-> +
-> +       led@08.0 {
-> +               compatible = "register-bit-led";
-> +               offset = <0x08>;
-> +               mask = <0x01>;
-> +               label = "versatile:0";
-> +               linux,default-trigger = "heartbeat";
-> +               default-state = "on";
-> +       };
+--=20
+balbi
 
-ePAPR v1.1 says:
+--32u276st3Jlj2kUU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-"The unit-address must match the first address specified in the reg property
- of the node. If the node has no reg property, the @ and unit-address must
- be omitted ..."
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-So you cannot have the "@8.0" without a "reg" property.
+iQIcBAEBAgAGBQJUBdW7AAoJEIaOsuA1yqRER9MP/Rfxiw14D8S0v1u0+6i+UUp0
+EHmL8AcwmVDX+BVPIr9sE9NsA+odnmE3YlZ8Bt599lEcqj/CZVMe0A2pWrWY/c7D
+R2iUgZsXj0GIuptziznCEqDV9uzkdHK7sAqbExk2TSBGhq2CIC8O25jneRr7cblr
+dHkTh/i/6hr0+2wY7RHWR4K7OUAlDF0CCcsRbAvibWd07r6E8sIkS9+5rTFtCALJ
+tQF45y5RdRYBdt+kxelpVwCbO4Rp1Dr6Wbz2aJLHCs4Ea1HZKWaTIYe2JP77gUb1
+WYzL6qfIHTeHvrXO58HsVA1tUrCE2BqmxW/Q4f4E0wltcGHWl82KxPeEULHYBiuM
+1bvyrx5jT7qeul4Aqz2Ojm6D9rZpkr2rhZFjnAK94ivbQMsmgqlsXBZqzLiDakZg
+rkExqDVqddKucfrrJpPj0vgo3/1FQFR1fvvyGUntEj0UcnhkFpFprz8nu6vPUGoZ
+r0cFdPS4v9QqSJxGi/G2zdAOBma6ZWFvN7I3tmh8IKfHvS+W3F/M/qQpmgG6VllP
+1KYfboLLwwZIRS9Wk72n77CWYaZTUgXMI7lhZKroeFrzkBwixjTZsHuyUrdZdSf2
+UbRWpXbRg8mPi9mS5UId580ljB01qw3yCpoc0bdmhlKosomDVH8ZB9r0GPw+K9QF
+lEjoMXx/Z3dYwAKXmCIf
+=klBf
+-----END PGP SIGNATURE-----
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+--32u276st3Jlj2kUU--
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
