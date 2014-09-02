@@ -1,87 +1,68 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH v2 5/9] ARM: zynq: Remove invalidate cache for cpu die
-Date: Tue,  2 Sep 2014 14:19:10 -0700
-Message-ID: <1409692754-13437-6-git-send-email-soren.brinkmann@xilinx.com>
-References: <1409692754-13437-1-git-send-email-soren.brinkmann@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1409692754-13437-1-git-send-email-soren.brinkmann@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <michal.simek@xilinx.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, linux-pm@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH v3 1/9] of: Add NVIDIA Tegra XUSB mailbox binding
+Date: Tue,  2 Sep 2014 14:34:53 -0700
+Message-ID: <1409693701-16520-2-git-send-email-abrestic@chromium.org>
+References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org
+Cc: Andrew Bresticker <abrestic@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Add device-tree bindings for the Tegra XUSB mailbox which will be used
+for communication between the Tegra xHCI controller's firmware and the
+host processor.
 
-As there is no Power management unit on this board, it is not possible to power
-down a core, just WFI is allowed. There is no point to invalidate the cache and
-exit coherency.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Reviewed-and-tested-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 ---
- arch/arm/mach-zynq/hotplug.c | 32 +-------------------------------
- 1 file changed, 1 insertion(+), 31 deletions(-)
+Changes from v2:
+ - Dropped channel specifier.
+ - Added pointer to mailbox documentation.
+Changes from v1:
+ - Updated to use common mailbox bindings.
+---
+ .../bindings/mailbox/nvidia,tegra124-xusb-mbox.txt | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
 
-diff --git a/arch/arm/mach-zynq/hotplug.c b/arch/arm/mach-zynq/hotplug.c
-index 5052c70326e4..366f46c91365 100644
---- a/arch/arm/mach-zynq/hotplug.c
-+++ b/arch/arm/mach-zynq/hotplug.c
-@@ -10,35 +10,7 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  */
--#include <linux/kernel.h>
--#include <linux/errno.h>
--#include <linux/smp.h>
--
--#include <asm/cacheflush.h>
--#include <asm/cp15.h>
--#include "common.h"
--
--static inline void zynq_cpu_enter_lowpower(void)
--{
--	unsigned int v;
--
--	flush_cache_all();
--	asm volatile(
--	"	mcr	p15, 0, %1, c7, c5, 0\n"
--	"	dsb\n"
--	/*
--	 * Turn off coherency
--	 */
--	"	mrc	p15, 0, %0, c1, c0, 1\n"
--	"	bic	%0, %0, #0x40\n"
--	"	mcr	p15, 0, %0, c1, c0, 1\n"
--	"	mrc	p15, 0, %0, c1, c0, 0\n"
--	"	bic	%0, %0, %2\n"
--	"	mcr	p15, 0, %0, c1, c0, 0\n"
--	  : "=&r" (v)
--	  : "r" (0), "Ir" (CR_C)
--	  : "cc");
--}
-+#include <asm/proc-fns.h>
- 
- /*
-  * platform-specific code to shutdown a CPU
-@@ -47,8 +19,6 @@ static inline void zynq_cpu_enter_lowpower(void)
-  */
- void zynq_platform_cpu_die(unsigned int cpu)
- {
--	zynq_cpu_enter_lowpower();
--
- 	/*
- 	 * there is no power-control hardware on this platform, so all
- 	 * we can do is put the core into WFI; this is safe as the calling
+diff --git a/Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt b/Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
+new file mode 100644
+index 0000000..b35ea6e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
+@@ -0,0 +1,32 @@
++NVIDIA Tegra XUSB mailbox
++=========================
++
++The Tegra XUSB mailbox is used by the Tegra xHCI controller's firmware to
++communicate requests to the host and PHY drivers.
++
++Refer to ./mailbox.txt for generic information about mailbox device-tree
++bindings.
++
++Required properties:
++--------------------
++ - compatible: Should be "nvidia,tegra124-xusb-mbox".
++ - reg: Address and length of the XUSB FPCI registers.
++ - interrupts: XUSB mailbox interrupt.
++ - #mbox-cells: Should be 0.  There is only one physical channel.
++
++Example:
++--------
++	xusb_mbox: mailbox@0,70098000 {
++		compatible = "nvidia,tegra124-xusb-mbox";
++		reg = <0x0 0x70098000 0x0 0x1000>;
++		interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
++
++		#mbox-cells = <0>;
++	};
++
++	usb@0,70090000 {
++		...
++		mboxes = <&xusb_mbox>;
++		mbox-names = "xusb";
++		...
++	};
 -- 
-2.1.0.1.g27b9230
+2.1.0.rc2.206.gedb03e5
