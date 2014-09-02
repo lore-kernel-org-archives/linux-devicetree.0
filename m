@@ -1,70 +1,126 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] tty: serial: Add mediatek UART driver
-Date: Tue, 2 Sep 2014 12:08:40 +0200
-Message-ID: <CABuKBeKBr_-riVqDzhepE9goosuaNocHH0K=5XsONEEvSXPi_w@mail.gmail.com>
-References: <1407852737-17265-1-git-send-email-matthias.bgg@gmail.com>
+From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCHv2 1/4] ASoC: simple-card: add asoc_simple_card_fmt_master() to simplify the code.
+Date: Tue, 2 Sep 2014 17:26:06 +0800
+Message-ID: <1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>
+References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1407852737-17265-1-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1409649969-15759-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, jslaby-AlSwsSmVLrQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Yingjoe Chen <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-08-12 16:12 GMT+02:00 Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> This patch set adds support for the UART found in Mediatek SoCs.
-> The chip is a changed version of a 8250 controller.
-> Especially it introduces a new register called highspeed. The value
-> in this register has to be set depending on the baudrate. The value
-> in the register influences the way the divisor has to be calculated.
->
-> The patch series is build against v3.16-rc1 and tested on mt6589. Should
-> work as well on mt6577 and mt6582.
->
-> Thanks,
-> Matthias
+Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ sound/soc/generic/simple-card.c | 61 ++++++++++++++++++++---------------------
+ 1 file changed, 29 insertions(+), 32 deletions(-)
 
-Ping: Does anyone has any comment on this series?
-Sorry, last mail was HTML by accident.
-
->
-> Changes for v4:
-> - delete owner in platform driver instance
-> - pass plattform_device to mtk8250_probe_of
-> - reorganise probe function to error out early
-> - Fix DTS documentation
->
-> Changes for v3:
-> - use dev_warn instead of pr_warn
-> - use 8250_core function to update termios
->
-> Changes for v2:
-> - drop 8250_core capability extension for the chip
-> - encapsulate set_termios in the driver method
->
-> ---
->
-> Matthias Brugger (2):
->   tty: serial: 8250: Add Mediatek UART driver
->   DTS: serial: Add bindings documention for the Mediatek UARTs
->
->  .../devicetree/bindings/serial/mtk-uart.txt        |   20 ++
->  drivers/tty/serial/8250/8250_mtk.c                 |  294 ++++++++++++++++++++
->  drivers/tty/serial/8250/Kconfig                    |    7 +
->  drivers/tty/serial/8250/Makefile                   |    1 +
->  4 files changed, 322 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/mtk-uart.txt
->  create mode 100644 drivers/tty/serial/8250/8250_mtk.c
->
-> --
-> 1.7.9.5
->
-
-
-
+diff --git a/sound/soc/generic/simple-card.c b/sound/soc/generic/simple-card.c
+index 986d2c7..cad2b30 100644
+--- a/sound/soc/generic/simple-card.c
++++ b/sound/soc/generic/simple-card.c
+@@ -163,6 +163,26 @@ asoc_simple_card_sub_parse_of(struct device_node *np,
+ 	return 0;
+ }
+ 
++static inline unsigned int
++asoc_simple_card_fmt_master(struct device_node *np,
++			    struct device_node *bitclkmaster,
++			    struct device_node *framemaster)
++{
++	switch (((np == bitclkmaster) << 4) | (np == framemaster)) {
++	case 0x11:
++		return SND_SOC_DAIFMT_CBS_CFS;
++	case 0x10:
++		return SND_SOC_DAIFMT_CBS_CFM;
++	case 0x01:
++		return SND_SOC_DAIFMT_CBM_CFS;
++	default:
++		return SND_SOC_DAIFMT_CBM_CFM;
++	}
++
++	/* Shouldn't be here */
++	return -EINVAL;
++}
++
+ static int asoc_simple_card_dai_link_of(struct device_node *node,
+ 					struct device *dev,
+ 					struct snd_soc_dai_link *dai_link,
+@@ -172,7 +192,7 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
+ 	struct device_node *np = NULL;
+ 	struct device_node *bitclkmaster = NULL;
+ 	struct device_node *framemaster = NULL;
+-	unsigned int daifmt;
++	unsigned int daifmt, fmt;
+ 	char *name;
+ 	char prop[128];
+ 	char *prefix = "";
+@@ -185,6 +205,7 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
+ 					 &bitclkmaster, &framemaster);
+ 	daifmt &= ~SND_SOC_DAIFMT_MASTER_MASK;
+ 
++	/* Parse CPU DAI sub-node */
+ 	snprintf(prop, sizeof(prop), "%scpu", prefix);
+ 	np = of_get_child_by_name(node, prop);
+ 	if (!np) {
+@@ -199,23 +220,11 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
+ 	if (ret < 0)
+ 		goto dai_link_of_err;
+ 
+-	dai_props->cpu_dai.fmt = daifmt;
+-	switch (((np == bitclkmaster) << 4) | (np == framemaster)) {
+-	case 0x11:
+-		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBS_CFS;
+-		break;
+-	case 0x10:
+-		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBS_CFM;
+-		break;
+-	case 0x01:
+-		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBM_CFS;
+-		break;
+-	default:
+-		dai_props->cpu_dai.fmt |= SND_SOC_DAIFMT_CBM_CFM;
+-		break;
+-	}
+-
++	fmt = asoc_simple_card_fmt_master(np, bitclkmaster, framemaster);
++	dai_props->cpu_dai.fmt = daifmt | fmt;
+ 	of_node_put(np);
++
++	/* Parse CODEC DAI sub-node */
+ 	snprintf(prop, sizeof(prop), "%scodec", prefix);
+ 	np = of_get_child_by_name(node, prop);
+ 	if (!np) {
+@@ -240,21 +249,9 @@ static int asoc_simple_card_dai_link_of(struct device_node *node,
+ 			snd_soc_of_parse_daifmt(np, NULL, NULL, NULL) |
+ 			(daifmt & ~SND_SOC_DAIFMT_CLOCK_MASK);
+ 	} else {
+-		dai_props->codec_dai.fmt = daifmt;
+-		switch (((np == bitclkmaster) << 4) | (np == framemaster)) {
+-		case 0x11:
+-			dai_props->codec_dai.fmt |= SND_SOC_DAIFMT_CBM_CFM;
+-			break;
+-		case 0x10:
+-			dai_props->codec_dai.fmt |= SND_SOC_DAIFMT_CBM_CFS;
+-			break;
+-		case 0x01:
+-			dai_props->codec_dai.fmt |= SND_SOC_DAIFMT_CBS_CFM;
+-			break;
+-		default:
+-			dai_props->codec_dai.fmt |= SND_SOC_DAIFMT_CBS_CFS;
+-			break;
+-		}
++		fmt = asoc_simple_card_fmt_master(np, bitclkmaster,
++						  framemaster);
++		dai_props->codec_dai.fmt = daifmt | fmt;
+ 	}
+ 
+ 	if (!dai_link->cpu_dai_name || !dai_link->codec_dai_name) {
 -- 
-motzblog.wordpress.com
+1.8.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
