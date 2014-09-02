@@ -1,169 +1,126 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
-Date: Tue, 2 Sep 2014 10:33:30 +0100
-Message-ID: <20140902093330.GA6595@leverpostej>
-References: <1409350479-19108-1-git-send-email-abrestic@chromium.org>
- <1409350479-19108-4-git-send-email-abrestic@chromium.org>
- <20140901110119.GB6617@leverpostej>
- <CAL1qeaH97fL3x689-FwOxRZWS2-6CDzzzJX3xEKdvULHoxjMLA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 03/12] clk: Add a function to retrieve phase
+Date: Tue, 2 Sep 2014 11:34:28 +0200
+Message-ID: <20140902093428.GS15297@lukather>
+References: <1409428991-2442-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1409428991-2442-4-git-send-email-maxime.ripard@free-electrons.com>
+ <20140901190054.5251.56409@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zVHGwpeVr3D20HrI"
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL1qeaH97fL3x689-FwOxRZWS2-6CDzzzJX3xEKdvULHoxjMLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140901190054.5251.56409@quantum>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 02, 2014 at 01:53:18AM +0100, Andrew Bresticker wrote:
-> On Mon, Sep 1, 2014 at 4:01 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Fri, Aug 29, 2014 at 11:14:30PM +0100, Andrew Bresticker wrote:
-> >> The Global Interrupt Controller (GIC) present on certain MIPS systems
-> >> can be used to route external interrupts to individual VPEs and CPU
-> >> interrupt vectors.  It also supports a timer and software-generated
-> >> interrupts.
-> >>
-> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/mips/gic.txt | 50 ++++++++++++++++++++++++++
-> >>  1 file changed, 50 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mips/gic.txt b/Documentation/devicetree/bindings/mips/gic.txt
-> >> new file mode 100644
-> >> index 0000000..725f1ef
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mips/gic.txt
-> >> @@ -0,0 +1,50 @@
-> >> +MIPS Global Interrupt Controller (GIC)
-> >> +
-> >> +The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
-> >> +It also supports a timer and software-generated interrupts which can be
-> >> +used as IPIs.
-> >> +
-> >> +Required properties:
-> >> +- compatible : Should be "mti,global-interrupt-controller"
-> >
-> > I couldn't find "mti" in vendor-prefixes.txt (as of v3.17-rc3). If
-> > there's not a patch to add it elsewhere, would you mind providing one
-> > with this series?
-> 
-> Sure.  As James points out, "img" could also be used but I chose "mti"
-> since the CPU interrupt controller also uses "mti" and I believe the
-> GIC IP was developed before the acquisition by Imagination (though I'm
-> not sure if that actually matters).
 
-Using 'mti' sounds like the right choice to me given both of those
-points.
+--zVHGwpeVr3D20HrI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >> +- reg : Base address and length of the GIC registers.
-> >> +- interrupts : Core interrupts to which the GIC may route external interrupts.
-> >
-> > How many?
-> 
-> Up to 6, one for each of the possible core hardware interrupts (i.e.
-> interrupt vectors 2 - 7).  Which ones are available to the GIC depend
-> on the system, for example Malta has an i8259 PIC hooked up to CPU
-> interrupt vector 2, so that vector should not be used by the GIC.
-> 
-> > In any order?
-> 
-> They can technically be in any order, but when in strictly
-> increasing/decreasing order they can be used along with the 3rd cell
-> (described below) to prioritize interrupts.
+Hi,
 
-Ok. Could you try to place that into the property description?
+On Mon, Sep 01, 2014 at 12:00:54PM -0700, Mike Turquette wrote:
+> Quoting Maxime Ripard (2014-08-30 13:03:02)
+> > The current phase API doesn't look into the actual hardware to get the =
+phase
+> > value, but will rather get it from a variable only set by the set_phase
+> > function.
+> >=20
+> > This will cause issue when the client driver will never call the set_ph=
+ase
+> > function, where we can end up having a reported phase that will not mat=
+ch what
+> > the hardware has been programmed to by the bootloader or what phase is
+> > programmed out of reset.
+> >=20
+> > Add a new get_phase function for the drivers to implement so that we ca=
+n get
+> > this value.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >  drivers/clk/clk.c            | 17 ++++++++++++++---
+> >  include/linux/clk-provider.h |  5 +++++
+> >  2 files changed, 19 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index d87661af0c72..7dbceca694f1 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -1797,8 +1797,8 @@ out:
+> >   * clk_get_phase - return the phase shift of a clock signal
+> >   * @clk: clock signal source
+> >   *
+> > - * Returns the phase shift of a clock node in degrees, otherwise retur=
+ns
+> > - * -EERROR.
+> > + * Returns the phase shift of a clock node in degrees. Any negative
+> > + * values are errors.
+> >   */
+> >  int clk_get_phase(struct clk *clk)
+> >  {
+> > @@ -1808,7 +1808,18 @@ int clk_get_phase(struct clk *clk)
+> >                 goto out;
+> > =20
+> >         clk_prepare_lock();
+> > -       ret =3D clk->phase;
+> > +
+> > +       if (clk->phase) {
+>=20
+> So if a phase is zero, then we fall through and query the hardware?
+> Seems like this case might be hit a lot for clocks that implement
+> .get_phase but never have their phase shifted, and accesses to the
+> registers may be much slower than to memory.
 
-> >> +- interrupt-controller : Identifies the node as an interrupt controller
-> >> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> >> +  interrupt specifier.  Should be 3.
-> >> +  - The first cell is the GIC interrupt number.
-> >> +  - The second cell encodes the interrupt flags.
-> >> +    See <include/dt-bindings/interrupt-controller/irq.h> for a list of valid
-> >> +    flags.
-> >
-> > Are all the flags valid for this interrupt controller?
-> 
-> Yes.
+Yep, which is exactly why I'm not that proud of it :)
 
-Ok.
+> Do you expect the phase to be changed behind our backs? E.g. firmware
+> changes it, or coming in and out of idle state, etc. If not then we can
+> store the phase at clock registration time and use a cached value.
 
-> >> +  - The optional third cell indicates which CPU interrupt vector the GIC
-> >> +    interrupt should be routed to.  It is a 0-based index into the list of
-> >> +    GIC-to-CPU interrupts specified in the "interrupts" property described
-> >> +    above.  For example, a '2' in this cell will route the interrupt to the
-> >> +    3rd core interrupt listed in 'interrupts'.  If omitted, the interrupt will
-> >> +    be routed to the 1st core interrupt.
-> >
-> > I don't follow why this should be in the DT. Why is this necessary?
-> 
-> Since the GIC can route external interrupts to any of the CPU hardware
-> interrupt vectors, it can be used to assign priorities to external
-> interrupts.  If the CPU is in vectored interrupt mode, the highest
-> numbered interrupt vector (7) has the highest priority.  An example:
-> 
-> gic: interrupt-controller@1bdc0000 {
->         ...
->         interrupts = <3>, <4>;
->         ...
-> };
-> 
-> uart {
->         ...
->         interrupt-parent = <&gic>;
->         interrupts = <24 IRQ_TYPE_LEVEL_HIGH 1>;
->         ...
-> };
-> 
-> i2c {
->         ...
->         interrupt-parent = <&gic>;
->         interrupts = <33 IRQ_TYPE_LEVEL_HIGH 0>;
->         ...
-> };
-> 
-> Since the third cell for the UART is '1', it maps to CPU interrupt
-> vector 4 and thus has a higher priority than the I2C (whose third cell
-> is 0, mapping to CPU interrupt vector 3).
-> 
-> Perhaps, though, this is an instance of software policy being
-> specified in device-tree.  Other options would be to a) evenly
-> distribute the GIC external interrupts across the CPU interrupt
-> vectors available to the GIC, or b) just map all GIC external
-> interrupts to a single interrupt vector.
+This is exactly what happens in our case. Since in order to use the
+MMC, you have to change the phase of the output and sample clocks,
+every time the firmware will have to use the MMC, it will change these
+clocks phase. Which happens pretty much all the time.
 
-As a user I don't see why the DT author should be in charge of whether
-my UART gets higher priority than my I2C controller. That priority is
-not a fixed property of the interrupt (as the line and flags are).
+> See how the CLK_GET_RATE_NOCACHE and CLK_GET_ACCURACY_NOCACHE flags are
+> used for details on how we can handle the case where the phase might
+> change behind our back.
 
-That said, this is a grey area. Are there any cases where this
-prioritisation is critical on existing devices?
+Ah, yes, of course. Thanks!
 
-> > I also don't follow how this can be ommitted, given interrupt-cells is
-> > required to be three by the wording above.
-> 
-> If it's absent, the interrupt will be routed to the first CPU
-> interrupt vector in the list.  It's equivalent to the third cell being
-> 0.
+Maxime
 
-My point is that the wording implies that the third cell is optional on
-a per-interrupt basis, when in reality it depends on the GIC node's
-#interrupt-cells and affect all devices with GIC interrupts.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-If &gic/#interrupt-cells = <3>, the third cell can't be absent.
+--zVHGwpeVr3D20HrI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-If &gic/interrupt-cells = <2>, the third cell can't be present.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-So it would be better to describe as something like:
+iQIcBAEBAgAGBQJUBY8kAAoJEBx+YmzsjxAgFvAP/iBy2TuOu89Ml4jQV1gshfAW
+NkGGtzAkrAzdfsmLVLPQphHU74fQvUxRcD1mK+/XkfIDUTy3bCd+K+gSmZpg9u3y
+SmyBvVrebxu/HVh0KDN3lU+8tP7ZyB3/bggNyeuAeCLQ4BrqVmrbPZdpcqKj3saj
+/h+g1ovzjVovOEVBoRjXn6G0yn8x7ByR1AMtfyckLQ8ZYm8eWraakpkPDS44JlFR
+gu5U97nUIUdGiWSvm/xFp4vJJTvLJkKTXpSnuKI4etT2J9I0sdJQmNY0wM4wlHZA
+JXPfYB0H9pyDRKUjNRcTdyTk7EYA6KBSPQ+h8G+ljJcS3fzr1m0hlnyR+7ja+JJW
+tffqebg7xLGRFZWMzLAKoJ8kOrGoseoFsurWmvDu55d8XwBJypUs5C9lGF/KCXSW
+K2k4MjU+oJEBprjjEf37LQEd0OFL6rIyURfXzpe6+uU05Ne70+9q9gjJG4NqAwhR
+K7McBgLu+jEjKOezaShvrBOMin2XcR3z3c5xlN9VtEM+z8oa96jMe4UHRFgPQlGJ
+Zq/zm9IJhwY9Lr+NKx8+pm/+4JW57z2UI9VE8L/InOqR1tVYa/9TuaObSH470iLA
+4cdJscFKg5ok8L5qQDf0PS3QdWV5nJHSB9g13suqxCN93fN8+jmK2Nxv0xTy+RuR
+s6IuFw9tbHjFIm5ywTvs
+=Nltr
+-----END PGP SIGNATURE-----
 
-  When interrupt-cells = <3>, the third cell specifies the priority (in
-  the range X to Y). When #interrupt-cells = <2> all interrupts are
-  assigned the same priority (Z).
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--zVHGwpeVr3D20HrI--
