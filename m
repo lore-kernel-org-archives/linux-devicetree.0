@@ -1,149 +1,284 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v7 0/5] Add rockchip RK808 pmic driver
-Date: Tue, 02 Sep 2014 21:40:24 +0200
-Message-ID: <5901915.IMKhU0yJur@diego>
-References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH v3] hwspinlock: qcom: Add support for Qualcomm HW Mutex block
+Date: Tue, 2 Sep 2014 13:04:06 -0700
+Message-ID: <1409688246-16530-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409562468-16586-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ohad Ben-Cohen <ohad@wizery.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>
+Cc: Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>, Eric Holmberg <eholmber@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 1. September 2014, 17:07:43 schrieb Chris Zhong:
-> This is the initial version of the RK808 PMIC. This is a power management IC
-> for multimedia products.
-> 
-> It provides regulators that are able to supply power to processor cores
-> and other components. The chip provides other modules including RTC,
-> Clockout
+From: Kumar Gala <galak@codeaurora.org>
 
-The whole series on a 3-17-rc1 with the already applied regulator commits 
-pulled in and used by my pending cpufreq patches to set the core voltage
+Add driver for Qualcomm Hardware Mutex block that exists on newer
+Qualcomm SoCs.
 
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Eric Holmberg <eholmber@codeaurora.org>
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+[bjorn: added pm_runtime calls, from Courtney,
+	added sfpb-mutex compatible,
+	updated DT binding documentation formatting,
+	based stride on resource size instead of hardcoded values,
+	replaced msm prefix with qcom,
+	cleaned up includes]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
 
+We need this driver to add support for the shared memory manager, so I'm
+reviving Kumars patch from a year ago, with some additional sprinkles on top.
 
+Changes since v2:
+ - MODULE_DEVICE_TABLE
+ - Changed prefix to qcom
+ - Cleaned up includes
+ - Rely on reg and num-locks to figure out stride, instead of of_match data
 
-> 
-> Changes in v7:
-> Advices by Mark Rutland
-> - modify description about clock-cells
-> - update the example
-> Adviced by Lee Jones
-> - coding style
-> - remove rk808_pre_init function
-> Adviced by Doug
-> - add "&& OF" to the dependencies
-> - add .init_ack_masked = true in rk808_irq_chip
-> Adviced by doug
-> - read rtc time from shadowed registers
-> Adviced by Dmitry
-> - use CONFIG_PM_SLEEP replace CONFIG_PM
-> - use SIMPLE_DEV_PM_OPS replace dev_pm_ops
-> - fix dev_warn
-> - coding style
-> Adviced by Heiko
-> - remove rtc_ctl
-> Adviced by doug
-> -fix coding style problems
-> - remove pdata struct from header file, add rk808_regulator struct
-> 
-> Changes in v6:
-> Advices by Mark Rutland
-> - add description about clock-cells
-> Advices by Doug
-> - modify description about regulator
-> - remove pinctrl description
-> Adviced by Lee Jones in v2
-> - rk808_i2c_client instead of g_rk808
-> - remove pdata form struct rk808
-> Adviced by doug
-> - move RTC_READSEL setting into probe
-> Adviced by doug
-> - use correct argument call of_clk_add_provider in probe
-> - remove the redundant code
-> 
-> Changes in v5:
-> Advices by Mark Brown
-> - add description about regulator valid name.
-> - add a header file "rockchip,rk808".
-> - fixed a bug about set_time failed
-> Adviced by doug
-> - add some error checking in probe
-> - move "rockchip,rk808.h" into the patch about dt-bindings
-> - re-edit base on Mark's branch
-> 
-> Changes in v4:
-> Advices by Doug
-> - add a "#clock-cells" propertiy
-> - update the example
-> Adviced by Lee Jones in v2
-> - modify the description in Kconfig
-> - remove some unnecessary header files
-> - remove dev from struct rk808
-> - use enum for define RK808_ID...
-> - use &client->dev replace rk808->dev
-> Adviced by doug
-> - add "clock-output-names" propertiey
-> - add a header file "rockchip,rk808.h"
-> - use &client->dev replace rk808->dev
-> 
-> Changes in v3:
-> - fix compile err
-> - fix compile err
-> 
-> Changes in v2:
-> Adviced by Mark Browm:
-> - use defines for register setting value
-> - remove rtc alarm disable in shutdown
-> - remove while(1) in shutdown
-> - remove read 0x2f in probe
-> Adviced by javier.martinez
-> - Add a separate clock driver, rather than in RTC driver
-> Adviced by javier.martinez
-> - separated from rtc-rk808.c
-> Adviced by Mark Browm:
-> - change of_find_node_by_name to find_child_by_name
-> - use RK808_NUM_REGULATORS as the name of the constant
-> - create a pdata when missing platform data
-> - use the rk808_reg name to supply_regulator name
-> - replace regulator_register with devm_regulator_register
-> - some other problem with coding style
-> 
-> Chris Zhong (5):
->   dt-bindings: Add RK808 device tree bindings document
->   MFD: RK808: Add new mfd driver for RK808
->   RTC: RK808: add RTC driver for RK808
->   clk: RK808: Add clkout driver for RK808
->   regulator: RK808: Remove pdata from the regulator
-> 
->  Documentation/devicetree/bindings/mfd/rk808.txt |  166 +++++++++
->  drivers/clk/Kconfig                             |    9 +
->  drivers/clk/Makefile                            |    1 +
->  drivers/clk/clk-rk808.c                         |  160 +++++++++
->  drivers/mfd/Kconfig                             |   13 +
->  drivers/mfd/Makefile                            |    1 +
->  drivers/mfd/rk808.c                             |  243 +++++++++++++
->  drivers/regulator/rk808-regulator.c             |   52 ++-
->  drivers/rtc/Kconfig                             |   10 +
->  drivers/rtc/Makefile                            |    1 +
->  drivers/rtc/rtc-rk808.c                         |  419
-> +++++++++++++++++++++++ include/dt-bindings/clock/rockchip,rk808.h      |  
-> 11 +
->  include/linux/mfd/rk808.h                       |  196 +++++++++++
->  13 files changed, 1250 insertions(+), 32 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/rk808.txt
->  create mode 100644 drivers/clk/clk-rk808.c
->  create mode 100644 drivers/mfd/rk808.c
->  create mode 100644 drivers/rtc/rtc-rk808.c
->  create mode 100644 include/dt-bindings/clock/rockchip,rk808.h
->  create mode 100644 include/linux/mfd/rk808.h
+Changes since v1:
+ - Added the pm_runtime calls needed to be able to boot a kernel with
+   pm_runtime and this driver, patch from Courtney.
+ - Added sfpb-mutex compatible, for re-use of the driver in family A platforms.
+ - Updated formatting of DT binding documentation, while adding the extra
+   compatible.
+ - Dropped Stephen Boyds Reviewed-by due to these changes.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/hwlock/qcom-hwspinlock.txt |   35 +++++
+ drivers/hwspinlock/Kconfig                         |   11 ++
+ drivers/hwspinlock/Makefile                        |    1 +
+ drivers/hwspinlock/qcom_hwspinlock.c               |  147 ++++++++++++++++++++
+ 4 files changed, 194 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+ create mode 100644 drivers/hwspinlock/qcom_hwspinlock.c
+
+diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+new file mode 100644
+index 0000000..27c7c80
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
+@@ -0,0 +1,35 @@
++Qualcomm Hardware Mutex Block:
++
++The hardware block provides mutexes utilized between different processors
++on the SoC as part of the communication protocol used by these processors.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,sfpb-mutex",
++		    "qcom,tcsr-mutex"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: base address and size of the mutex registers
++
++- reg-names:
++	Usage: required
++	Value type: <string>
++	Definition: must be "mutex-base"
++
++- qcom,num-locks:
++	Usage: required
++	Value type: <u32>
++	Definition: the number of locks/mutex available in this block
++
++Example:
++
++	hwlock@fd484000 {
++		compatible = "qcom,tcsr-mutex";
++		reg = <0xfd484000 0x1000>;
++		reg-names = "mutex-base";
++		qcom,num-locks = <32>;
++	};
+diff --git a/drivers/hwspinlock/Kconfig b/drivers/hwspinlock/Kconfig
+index 3612cb5..af4c7e6 100644
+--- a/drivers/hwspinlock/Kconfig
++++ b/drivers/hwspinlock/Kconfig
+@@ -8,6 +8,17 @@ config HWSPINLOCK
+ 
+ menu "Hardware Spinlock drivers"
+ 
++config HWSPINLOCK_QCOM
++	tristate "Qualcomm Hardware Spinlock device"
++	depends on ARCH_QCOM
++	select HWSPINLOCK
++	help
++	  Say y here to support the Qualcomm Hardware Mutex functionality, which
++	  provides a synchronisation mechanism for the various processors on
++	  the SoC.
++
++	  If unsure, say N.
++
+ config HWSPINLOCK_OMAP
+ 	tristate "OMAP Hardware Spinlock device"
+ 	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX || SOC_AM33XX || SOC_AM43XX
+diff --git a/drivers/hwspinlock/Makefile b/drivers/hwspinlock/Makefile
+index 93eb64b..f3bff48 100644
+--- a/drivers/hwspinlock/Makefile
++++ b/drivers/hwspinlock/Makefile
+@@ -3,5 +3,6 @@
+ #
+ 
+ obj-$(CONFIG_HWSPINLOCK)		+= hwspinlock_core.o
++obj-$(CONFIG_HWSPINLOCK_QCOM)		+= qcom_hwspinlock.o
+ obj-$(CONFIG_HWSPINLOCK_OMAP)		+= omap_hwspinlock.o
+ obj-$(CONFIG_HSEM_U8500)		+= u8500_hsem.o
+diff --git a/drivers/hwspinlock/qcom_hwspinlock.c b/drivers/hwspinlock/qcom_hwspinlock.c
+new file mode 100644
+index 0000000..a9e5fa4
+--- /dev/null
++++ b/drivers/hwspinlock/qcom_hwspinlock.c
+@@ -0,0 +1,147 @@
++/*
++ * Copyright (c) 2013, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2014, Sony Mobile Communications AB
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/hwspinlock.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++
++#include "hwspinlock_internal.h"
++
++#define SPINLOCK_ID_APPS_PROC	1
++#define BASE_ID			0
++
++static int qcom_hwspinlock_trylock(struct hwspinlock *lock)
++{
++	void __iomem *lock_addr = lock->priv;
++
++	writel_relaxed(SPINLOCK_ID_APPS_PROC, lock_addr);
++
++	return readl_relaxed(lock_addr) == SPINLOCK_ID_APPS_PROC;
++}
++
++static void qcom_hwspinlock_unlock(struct hwspinlock *lock)
++{
++	void __iomem *lock_addr = lock->priv;
++	u32 lock_owner;
++
++	lock_owner = readl_relaxed(lock_addr);
++	if (lock_owner != SPINLOCK_ID_APPS_PROC) {
++		pr_err("%s: spinlock not owned by us (actual owner is %d)\n",
++				__func__, lock_owner);
++	}
++
++	writel_relaxed(0, lock_addr);
++}
++
++static const struct hwspinlock_ops qcom_hwspinlock_ops = {
++	.trylock	= qcom_hwspinlock_trylock,
++	.unlock		= qcom_hwspinlock_unlock,
++};
++
++static const struct of_device_id qcom_hwspinlock_of_match[] = {
++	{ .compatible = "qcom,sfpb-mutex" },
++	{ .compatible = "qcom,tcsr-mutex" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, qcom_hwspinlock_of_match);
++
++static int qcom_hwspinlock_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct hwspinlock_device *bank;
++	struct hwspinlock *hwlock;
++	struct resource *res;
++	void __iomem *iobase;
++	size_t array_size;
++	long stride, i;
++	u32 num_locks;
++	int ret;
++
++	ret = of_property_read_u32(node, "qcom,num-locks", &num_locks);
++	if (ret || num_locks == 0)
++		return -ENODEV;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mutex-base");
++	iobase = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(iobase))
++		return PTR_ERR(iobase);
++
++	array_size = num_locks * sizeof(*hwlock);
++	bank = devm_kzalloc(&pdev->dev, sizeof(*bank) + array_size, GFP_KERNEL);
++	if (!bank)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, bank);
++
++	stride = (long)resource_size(res) / num_locks;
++	for (i = 0, hwlock = &bank->lock[0]; i < num_locks; i++, hwlock++)
++		hwlock->priv = iobase + i * stride;
++
++	pm_runtime_enable(&pdev->dev);
++
++	ret = hwspin_lock_register(bank, &pdev->dev, &qcom_hwspinlock_ops,
++						BASE_ID, num_locks);
++	if (ret)
++		pm_runtime_disable(&pdev->dev);
++
++	return ret;
++}
++
++static int qcom_hwspinlock_remove(struct platform_device *pdev)
++{
++	struct hwspinlock_device *bank = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = hwspin_lock_unregister(bank);
++	if (ret) {
++		dev_err(&pdev->dev, "%s failed: %d\n", __func__, ret);
++		return ret;
++	}
++
++	pm_runtime_disable(&pdev->dev);
++
++	return 0;
++}
++
++static struct platform_driver qcom_hwspinlock_driver = {
++	.probe		= qcom_hwspinlock_probe,
++	.remove		= qcom_hwspinlock_remove,
++	.driver		= {
++		.name	= "qcom_hwspinlock",
++		.of_match_table = qcom_hwspinlock_of_match,
++	},
++};
++
++static int __init qcom_hwspinlock_init(void)
++{
++	return platform_driver_register(&qcom_hwspinlock_driver);
++}
++/* board init code might need to reserve hwspinlocks for predefined purposes */
++postcore_initcall(qcom_hwspinlock_init);
++
++static void __exit qcom_hwspinlock_exit(void)
++{
++	platform_driver_unregister(&qcom_hwspinlock_driver);
++}
++module_exit(qcom_hwspinlock_exit);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Hardware spinlock driver for Qualcomm SoCs");
++MODULE_AUTHOR("Kumar Gala <galak@codeaurora.org>");
++MODULE_AUTHOR("Jeffrey Hugo <jhugo@codeaurora.org>");
++MODULE_AUTHOR("Eric Holmberg <eholmber@codeaurora.org>");
+-- 
+1.7.9.5
