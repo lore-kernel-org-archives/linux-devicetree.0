@@ -1,58 +1,91 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: Trickle charging for rtc-bq32k
-Date: Tue, 2 Sep 2014 13:51:20 +0200
-Message-ID: <20140902115119.GG1266@katana>
-References: <20140822131150.GA26724@amd>
- <20140822142852.GA1545@katana>
- <20140822143853.GA28820@amd>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Formal license ambiguity in arch/arm/boot/dts/sun?i-a*.dts
+Date: Tue, 2 Sep 2014 19:54:43 +0800
+Message-ID: <CAGb2v65oOWF_gf4EQAx+4NYWCQYpPHaZ5ng=p780OFeDba0QKA@mail.gmail.com>
+References: <20140731192016.GA6869@excalibur.cnev.de> <20140803130430.GY3952@lukather>
+ <201408031959.27607.arnd@arndb.de> <20140804192510.GF3952@lukather>
+ <20140804212317.GL30282@n2100.arm.linux.org.uk> <20140807132023.GG15297@lukather>
+ <20140902102206.GU15297@lukather> <20140902104002.GN30401@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V32M1hWVjliPHW+c"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140822143853.GA28820@amd>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140902104002.GN30401-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 2, 2014 at 6:40 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Tue, Sep 02, 2014 at 12:22:06PM +0200, Maxime Ripard wrote:
+>> On Thu, Aug 07, 2014 at 03:20:23PM +0200, Maxime Ripard wrote:
+>> > Hi Russell,
+>> >
+>> > On Mon, Aug 04, 2014 at 10:23:17PM +0100, Russell King - ARM Linux wrote:
+>> > > On Mon, Aug 04, 2014 at 09:25:10PM +0200, Maxime Ripard wrote:
+>> > > > On Sun, Aug 03, 2014 at 07:59:27PM +0200, Arnd Bergmann wrote:
+>> > > > > I would actually prefer if we could migrate a lot of these files to BSD license,
+>> > > > > provided the original authors agree. We want the dtb blobs to be embeddable into
+>> > > > > boot loaders of any license.
+>> > > >
+>> > > > Even though I'd be open to having my contributions to DTBs under the
+>> > > > BSD, is this really a thing?
+>> > > >
+>> > > > I mean, for all I know, an OS/Bootloader would just parse a documented
+>> > > > binary file, and I don't see any derivative work there.
+>> > >
+>> > > How does the OS/Bootloader end up with that binary file?
+>> > >
+>> > > For the sake of argument, let's say that the BSDs want to move to DT on
+>> > > ARM.  Great, they convert over to parsing our DT blobs.
+>> > >
+>> > > However, they can't distribute the binary DT blobs to their users without
+>> > > coming up against the problems of the GPL wrt binary distribution.
+>> > >
+>> > > They could distribute the source files, but remember that many of those
+>> > > are currently GPL licensed, so they'd probably end up having to package
+>> > > them entirely separately, if they're willing to do that at all.
+>> > >
+>> > > Or they could decide to ignore us altogether, and do their own DT stuff,
+>> > > maybe partially implementing our properties, or maybe coming up with
+>> > > different and/or incompatible properties - which would be bad because
+>> > > we now end up with two ways to describe the same hardware in active use.
+>> > >
+>> > > I suspect the final option is the one they'd choose, and it's in our
+>> > > interest that _that_ doesn't happen.
+>> >
+>> > Ah, yes, it's not really about a fear of a GPL-spread, but rather a
+>> > concern about the source distribution. Makes sense.
+>> >
+>> > How should we deal with such relicensing?
+>>
+>> Ping?
+>>
+>> Are we doing this on a per platform basis? Should we enforce this dual
+>> licensing for the future DTS patches? If so, starting from when?
+>
+> I have no answers to your questions - I put the question a number of
+> times to Grant directly, and have been totally ignored.
+>
+> So, I think we just do whatever we think is the correct approach.
+>
+> Remember, when you change the licensing on something which has had
+> multiple contributors, you need to seek the permission from everyone
+> how contributed to it - so it will have to be done on a per platform
+> and per-SoC basis.
 
---V32M1hWVjliPHW+c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is there any particular order for any platform or SoC?
+Maybe we have to do the dependencies (dtsi) first?
 
+It seems skeleton.dtsi and skeleton64.dtsi don't have explicit license
+headers. Do these 2 need to be addressed as well?
 
-> Do you have example how to acces of_ from i2c driver?
->=20
-> Platform drivers do:
->=20
->         if (pdev->dev.of_node) {
+ChenYu
 
-As I said, this is basically the same. Just use the node from the
-client's device. Nothing special here.
-
-
---V32M1hWVjliPHW+c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUBa83AAoJEBQN5MwUoCm2mL4QALWt1oJmwN+i0IlvBLBtueza
-ulnmP4+ErZc/gdXwDru9LM1DNAw3/kv/addoWLJEi7ffHOJ4EBzN/aZ/fWD2wmae
-fcqeMm+8t5yfmUvwhDH4WMcfPMNqSuckkyrefISeoMxJYliHRuy6Za6PN7pidCf3
-ZJSYnv7cSAZZ7m5NrrQ4qFBJjVPAcrFFvNGGIL9t7HoaCvRo3XRsLgmE6v7zSExt
-EkFurjLspv4tsgj43Y4DxDNbFrk/ICBeBFQluJV4NlAT5aO9zjeNpY7bM7TF78GI
-ulFHNoM7kxSGvt3FM2W6RL4QXxhYxybGOyKurUdVRaWpzK7vvUZ8XE+Dx5XFDZzt
-9GAjN9hENn/RBG993QiQD/zQz1EYEAeIfTf9ZiW1jj+p8MX/2OEMz8ryyxODNKZi
-9l9wNrn4DUhbRwWAmNBm7T1z+xRBSIMRJDAZ1s5ywgzbcNhLKc4Kkq6yKnodiFb5
-ye6r1uoUVNPrVow/CMaJRzEZ1EUip4ig1POO+1JVYEIGeDAbM4PtjrPvUA+KmLW3
-FL3GMZ9lhKaZvCSocoO40i00/lWjFaQfrhvT9Yk+uIsSLN/jnU/crTEBi/DMwqBd
-27lfYYiM8rwaGaM3FsFnYpQa/LsF5L8iJFKt2tdiGHtpe4rixvrF/5JS2Pxtnn+g
-R3y+ZdBQlCoa48sDhIdO
-=1co6
------END PGP SIGNATURE-----
-
---V32M1hWVjliPHW+c--
+> I would also strongly suggest that future DTS files should be dual
+> licensed from the start, and that we require contributions for the
+> DTS files to be under both licenses.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
