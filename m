@@ -1,77 +1,72 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] DTS: serial: Add bindings documention for the
- Mediatek UARTs
-Date: Tue, 2 Sep 2014 12:31:44 +0100
-Message-ID: <20140902113144.GB7241@leverpostej>
-References: <1407852737-17265-1-git-send-email-matthias.bgg@gmail.com>
- <1407852737-17265-3-git-send-email-matthias.bgg@gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCHv2 1/4] ASoC: simple-card: add
+ asoc_simple_card_fmt_master() to simplify the code.
+Date: Tue, 2 Sep 2014 14:32:00 +0300
+Message-ID: <5405AAB0.5030000@ti.com>
+References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>	<1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>	<54059A35.3020303@gmail.com>	<20140902123848.78c4c62a@armhf>	<54059F20.4080509@gmail.com>
+ <20140902130912.65c5b750@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1407852737-17265-3-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "jslaby-AlSwsSmVLrQ@public.gmane.org" <jslaby-AlSwsSmVLrQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org" <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140902130912.65c5b750@armhf>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>, Varka Bhadram <varkabhadram@gmail.com>
+Cc: mark.rutland@arm.com, andrew@lunn.ch, alsa-devel@alsa-project.org, pawel.moll@arm.com, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org, tiwai@suse.de, Xiubo Li <Li.Xiubo@freescale.com>, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, galak@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 12, 2014 at 03:12:17PM +0100, Matthias Brugger wrote:
-> This patch adds the devicetree documentation for the Mediatek UART.
-> 
-> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/serial/mtk-uart.txt        |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/mtk-uart.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-> new file mode 100644
-> index 0000000..6ca0e15
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-> @@ -0,0 +1,20 @@
-> +* Mediatek Universal Asynchronous Receiver/Transmitter (UART)
-> +
-> +Required properties:
-> +- compatible: "mediatek,mt6577-uart"
-> +  Compatibility with mt6577, mt6589, mt6582
-> +
-> +- reg: The base address of the UART register bank.
-> +
-> +- interrupts: A single interrupt specifier.
-> +
-> +- clocks: Clock driving the hardware.
-> +
-> +Example:
-> +
-> +	uart0: serial@11006000 {
-> +		compatible = "mediatek,mt6577-uart";
-> +		reg = <0x11006000 0x400>;
-> +		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&uart_clk>;
-> +	};
+On 09/02/2014 02:09 PM, Jean-Francois Moine wrote:
+> On Tue, 02 Sep 2014 16:12:40 +0530
+> Varka Bhadram <varkabhadram@gmail.com> wrote:
+>
+>>>>> +	switch (((np == bitclkmaster) << 4) | (np == framemaster)) {
+>>>>> +	case 0x11:
+>>>>> +		return SND_SOC_DAIFMT_CBS_CFS;
+>>>>> +	case 0x10:
+>>>>> +		return SND_SOC_DAIFMT_CBS_CFM;
+>>>>> +	case 0x01:
+>>>>> +		return SND_SOC_DAIFMT_CBM_CFS;
+>>>>> +	default:
+>>>>> +		return SND_SOC_DAIFMT_CBM_CFM;
+>>>>> +	}
+>>>>> +
+>>>>> +	/* Shouldn't be here */
+>>>>> +	return -EINVAL;
+>>>>> +}
+>>>> It will be nice if we declare the switch case numbers as macros (specific name)...
+>>> I don't see which macros: the values are just 2 booleans.
+>>>
+>> I am talking about 0x11, 0x10, 0x01 values.. We can give any understandable
+>> names to those...?
+>
+> #define TRUE_TRUE 0x11
+> #define TRUE_FALSE 0x10
+> #define FALSE_TRUE 0x01
+>
+> or
+>
+> 	case ((TRUE << 4) | TRUE:
+> 		...
+> 	case ((TRUE << 4) | FALSE:
+> 		...
+> 	case ((FALSE << 4) | TRUE:
+> 		...
+>
 
-This looks generally sane to me. It's simple and doesn't seem to have
-any of the usual problems bindings have.
+I would vote for this. Even over the options suggested by Takashi, but 
+then again this really a matter of taste.
 
-For the mt6577, mt6589, and mt6582, Do you expect to have specific
-strings like:
+The fact that frame and bit-clock master boolean values are bundled into 
+a single "enum" field, instead of two dedicated bits, makes all options 
+bit inconvenient.
 
-compatible = "mediatek,mt6589-uart", "mediatek,mt6577-uart";
-
-If so, could you update the compatible description to something like:
-
-- compatible: should contain:
-  * "mediatek,mt6589-uart" for ...
-  * "mediatek,mt6582-uart" for ...
-  * "mediatek,mt6577-uart" for all compatible UARTS (mt6589,mt6582,mt6577)
-
-That way the driver just needs to recognise "mediatek,mt6577-uart" for
-now but can have quirks later if we discover integration differences.
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jyri
