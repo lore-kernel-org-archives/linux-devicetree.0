@@ -1,44 +1,52 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv2 3/4] ASoC: simple-card: Adjust the comments of simple
- card.
-Date: Wed, 3 Sep 2014 01:55:38 +0000
-Message-ID: <37e5ba204cb340bc9fe01b7473721a9d@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
-	<1409649969-15759-4-git-send-email-Li.Xiubo@freescale.com>
- <20140902124438.36da4b85@armhf>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] RTC: RK808: add RTC driver for RK808
+Date: Wed, 03 Sep 2014 10:01:24 +0800
+Message-ID: <54067674.3040007@rock-chips.com>
+References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>	<1409564586-18421-1-git-send-email-zyw@rock-chips.com> <CAD=FV=X-hSHKe4_QRxFLejok-qVYM_FyXO7L7X6AzW8sTaVPnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140902124438.36da4b85@armhf>
-Content-Language: en-US
+In-Reply-To: <CAD=FV=X-hSHKe4_QRxFLejok-qVYM_FyXO7L7X6AzW8sTaVPnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org" <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "jsarha-l0cyMroinI0@public.gmane.org" <jsarha-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dtor@chromiu>
 List-Id: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIdjIgMy80XSBBU29DOiBzaW1wbGUtY2FyZDogQWRqdXN0IHRo
-ZSBjb21tZW50cyBvZiBzaW1wbGUNCj4gY2FyZC4NCj4gDQo+IE9uIFR1ZSwgMiBTZXAgMjAxNCAx
-NzoyNjowOCArMDgwMA0KPiBYaXVibyBMaSA8TGkuWGl1Ym9AZnJlZXNjYWxlLmNvbT4gd3JvdGU6
-DQo+IA0KPiA+IEBAIC0yODUsMTEgKzI4NywxMSBAQCBzdGF0aWMgaW50IGFzb2Nfc2ltcGxlX2Nh
-cmRfZGFpX2xpbmtfb2Yoc3RydWN0DQo+IGRldmljZV9ub2RlICpub2RlLA0KPiA+ICAJCWRhaV9w
-cm9wcy0+Y29kZWNfZGFpLnN5c2Nsayk7DQo+ID4NCj4gPiAgCS8qDQo+ID4gLQkgKiBzb2NfYmlu
-ZF9kYWlfbGluaygpIHdpbGwgY2hlY2sgY3B1IG5hbWUNCj4gPiAtCSAqIGFmdGVyIG9mX25vZGUg
-bWF0Y2hpbmcgaWYgZGFpX2xpbmsgaGFzIGNwdV9kYWlfbmFtZS4NCj4gPiAtCSAqIGJ1dCwgaXQg
-d2lsbCBuZXZlciBtYXRjaCBpZiBuYW1lIHdhcyBjcmVhdGVkIGJ5IGZtdF9zaW5nbGVfbmFtZSgp
-DQo+ID4gLQkgKiByZW1vdmUgY3B1X2RhaV9uYW1lIHRvIGVzY2FwZSBuYW1lIG1hdGNoaW5nLg0K
-PiA+IC0JICogc2VlDQo+ID4gKwkgKiBJbiBzb2NfYmluZF9kYWlfbGluaygpIHdpbGwgY2hlY2sg
-Y3B1IG5hbWUgYWZ0ZXINCj4gPiArCSAqIG9mX25vZGUgbWF0Y2hpbmcgaWYgZGFpX2xpbmsgaGFz
-IGNwdV9kYWlfbmFtZS4NCj4gPiArCSAqIGJ1dCwgaXQgd2lsbCBuZXZlciBtYXRjaCBpZiBuYW1l
-IHdhcyBjcmVhdGVkIGJ5DQo+ID4gKwkgKiBmbXRfc2luZ2xlX25hbWUoKSByZW1vdmUgY3B1X2Rh
-aV9uYW1lIHRvIGVzY2FwZQ0KPiA+ICsJICogbmFtZSBtYXRjaGluZy4gUGxlYXNlIHNlZToNCj4g
-PiAgCSAqCWZtdF9zaW5nbGVfbmFtZSgpDQo+ID4gIAkgKglmbXRfbXVsdGlwbGVfbmFtZSgpDQo+
-ID4gIAkgKi8NCj4gDQo+IFRoZSBwYXRjaCBkb25lIGJ5IEt1bmlub3JpLCBzZXR0aW5nIHRoZSBj
-cHVfZGFpX25hbWUgdG8gTlVMTCBpbiBhbGwNCj4gY2FzZXMsIGRvZXMgbm90IHdvcmsuIFRoaXMg
-c2VxdWVuY2Ugc2hvdWxkIGJlIHJlcGxhY2VkIHdoZXJlIGlzIHdhcw0KPiBwcmV2aW91c2x5Lg0K
-PiANCg0KSWYgc28sIGl0IHNob3VsZCBiZSBhbm90aGVyIGlzc3VlIGhlcmUsIHNob3VsZCB3ZSBz
-ZW5kIGFub3RoZXIgcGF0Y2ggZm9yDQpJdCA/DQoNCg0KVGhhbmtzLA0KDQpCUnMNClhpdWJvDQoN
-Cg==
+
+On 09/02/2014 11:58 AM, Doug Anderson wrote:
+>> +static int rk808_rtc_probe(struct platform_device *pdev)
+>> >+{
+>> >+       struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+>> >+       struct rk808_rtc *rk808_rtc;
+>> >+       struct rtc_time tm;
+>> >+       int ret;
+>> >+
+>> >+       rk808_rtc = devm_kzalloc(&pdev->dev, sizeof(*rk808_rtc), GFP_KERNEL);
+>> >+       if (rk808_rtc == NULL)
+>> >+               return -ENOMEM;
+>> >+
+>> >+       platform_set_drvdata(pdev, rk808_rtc);
+>> >+       rk808_rtc->rk808 = rk808;
+>> >+
+>> >+       /* start rtc running by default, and use shadowed timer. */
+>> >+       ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
+>> >+                                BIT_RTC_CTRL_REG_STOP_RTC_M |
+>> >+                                BIT_RTC_CTRL_REG_RTC_READSEL_M,
+>> >+                                BIT_RTC_CTRL_REG_RTC_READSEL_M);
+> I think this should still be setting to 0, not to
+> BIT_RTC_CTRL_REG_RTC_READSEL_M.  Otherwise the first read of the time
+> will return that time that was frozen at probe time, right?  AKA: if
+> probe happens at 11:00:00 and then we read the time at 11:00:05 we'll
+> still read 11:00:00 the first time.
+>
+  Sorry, I did not describe correctly, in the previous mail.
+  Actually, RK808 has a "GET_TIME" switch bit. When "GET_TIME" bit rising thansiton to 1,
+  the current time will save in a shadowed register.
+  If "READSEL" = 1, read rtc time register, return the frozen time.
+  If we need the real time, clr this "READSEL" bit.
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
