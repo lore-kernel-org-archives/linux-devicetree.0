@@ -1,17 +1,38 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [Patch net-next 00/11] net: fec: imx6sx multiqueue support
-Date: Wed, 3 Sep 2014 16:02:14 -0500
-Message-ID: <CAHrpEqSKBGGyeKPoM702=NqK0qAr8w2Tq84zktEbZ-PKDiKA9g@mail.gmail.com>
-References: <5407807e.c26c460a.65d3.71b9SMTPIN_ADDED_BROKEN@mx.google.com>
+From: <y@shlinux1.ap.freescale.net>
+Subject: [Patch net-next 11/11] ARM: dts: imx6sx: add multi-queue support enet
+Date: Thu, 4 Sep 2014 04:34:46 +0800
+Message-ID: <27690.8531123356$1409778664@news.gmane.org>
+References: <1409776486-1403-1-git-send-email-y>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5407807e.c26c460a.65d3.71b9SMTPIN_ADDED_BROKEN@mx.google.com>
+In-Reply-To: <1409776486-1403-1-git-send-email-y>
 Sender: netdev-owner@vger.kernel.org
-Cc: Duan Fugang-B38611 <b38611@freescale.com>, David Miller <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>
+To: b38611@freescale.com, davem@davemloft.net, netdev@vger.kernel.org, lznuaa@gmail.com
+Cc: shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 3, 2014 at 3:34 PM,  <y@shlinux1.ap.freescale.net> wrote:
->
->
-Sorry! Sent out with wrong sender email address.
+From: Frank Li <Frank.Li@freescale.com>
+
+Enable 3 queues suppport for ethernet
+
+Signed-off-by: Frank Li <Frank.Li@freescale.com>
+---
+ arch/arm/boot/dts/imx6sx.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index f4b9da6..1722748 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -776,6 +776,8 @@
+ 					 <&clks IMX6SX_CLK_ENET_PTP>;
+ 				clock-names = "ipg", "ahb", "ptp",
+ 					      "enet_clk_ref", "enet_out";
++				fsl,num_tx_queues=<3>;
++				fsl,num_rx_queues=<3>;
+ 				status = "disabled";
+                         };
+ 
+-- 
+1.9.1
