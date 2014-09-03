@@ -1,110 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 5/7] arm64: dts: Add initial device tree support for EXYNOS7
-Date: Wed, 03 Sep 2014 18:22:28 +0200
-Message-ID: <3382034.5ADO0F7naY@wuerfel>
-References: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com> <1409672143-8574-6-git-send-email-ch.naveen@samsung.com> <036a01cfc792$422271e0$c66755a0$@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 6/9] usb: xhci: Add NVIDIA Tegra xHCI host-controller
+ driver
+Date: Wed, 03 Sep 2014 10:17:27 -0600
+Message-ID: <54073F17.2050507@wwwdotorg.org>
+References: <1409693701-16520-1-git-send-email-abrestic@chromium.org> <1409693701-16520-7-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <036a01cfc792$422271e0$c66755a0$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Naveen Krishna Chatradhi' <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org, naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, t.figa@samsung.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409693701-16520-7-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 04 September 2014 01:15:20 Kukjin Kim wrote:
-> Naveen Krishna Chatradhi wrote:
+On 09/02/2014 03:34 PM, Andrew Bresticker wrote:
+> Add support for the on-chip xHCI host controller present on Tegra SoCs.
 >
-> > diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-
-> > espresso.dts
-> > new file mode 100644
-> > index 0000000..f6a8879
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-> > @@ -0,0 +1,31 @@
-> > +/*
-> > + * SAMSUNG Exynos7 Espresso board device tree source
-> > + *
-> > + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-> > + *		http://www.samsung.com
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > +*/
-> > +
-> > +/dts-v1/;
-> > +#include "exynos7.dtsi"
-> > +
-> > +/ {
-> > +	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
-> > +	compatible = "samsung,exynos7-espresso", "samsung,exynos7";
-> > +
-> > +	chosen {
-> > +		linux,stdout-path = &serial_2;
-> 
-> Well...
-> 
-> > +	};
-> > +
-> > +	memory@40000000 {
-> > +		device_type = "memory";
-> > +		reg = <0x0 0x40000000 0x0 0xC0000000>;
-> 
-> The base address of system memory is depending on each board, actually some of
-> them are 0x20000000.
+> The driver is currently very basic: it loads the controller with its
+> firmware, starts the controller, and is able to service messages sent
+> by the controller's firmware.  The hardware also supports device mode
+> as well as powergating of the SuperSpeed and host-controller logic
+> when not in use, but support for these is not yet implemented.
 
-This is the board specific file, so it seems ok.
+> diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
 
-> > +#include <dt-bindings/clock/exynos7-clk.h>
-> > +
-> > +/ {
-> > +	compatible = "samsung,exynos7";
-> > +	interrupt-parent = <&gic>;
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	aliases {
-> > +		serial0 = &serial_0;
-> > +		serial1 = &serial_1;
-> > +		serial2 = &serial_2;
-> > +		serial3 = &serial_3;
-> 
-> There are exynos7 SoC is having 3 serial IPs...
+> +static bool is_host_mbox_message(u32 cmd)
+> +{
+> +	switch (cmd) {
+> +	case MBOX_CMD_INC_SSPI_CLOCK:
+> +	case MBOX_CMD_DEC_SSPI_CLOCK:
+> +	case MBOX_CMD_INC_FALC_CLOCK:
+> +	case MBOX_CMD_DEC_FALC_CLOCK:
+> +		return true;
+> +	case MBOX_CMD_SET_BW:
+> +		/*
+> +		 * TODO: Request bandwidth once EMC scaling is supported.
+> +		 * Ignore for now since ACK/NAK is not required for SET_BW
+> +		 * messages.
+> +		 */
 
-These aliases should just go into the board file as well, and
-since it seems to have only one uart, the best way is to list
-that as serial0:
-
-	serial0 = &serial_2;
-
-> > +
-> > +	psci {
-> > +		compatible = "arm,psci-0.2";
-> > +		method = "smc";
-> > +	};
-> > +
-> > +	soc: soc {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges = <0 0 0 0x18000000>;
-> > +
-> > +		chipid@10000000 {
-> > +			compatible = "samsung,exynos4210-chipid";
-> > +			reg = <0x10000000 0x100>;
-> > +		};
-> > +
-> > +		fin_pll: xxti {
-> > +			compatible = "fixed-clock";
-> > +			clock-frequency = <24000000>;
-> 
-> It's wrong on some exynos7 SoCs...
-> 
-
-Is this an external clock input? If so, the frequency should
-also go into the board file, otherwise into the soc-specific
-one.
-
-	Arnd
+I think that TODO belongs inside tegra_xhci_mbox_work() where the 
+message would actually be handled, if implemented.
