@@ -1,44 +1,61 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 6/9] usb: xhci: Add NVIDIA Tegra xHCI host-controller
- driver
-Date: Wed, 03 Sep 2014 10:17:27 -0600
-Message-ID: <54073F17.2050507@wwwdotorg.org>
-References: <1409693701-16520-1-git-send-email-abrestic@chromium.org> <1409693701-16520-7-git-send-email-abrestic@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409693701-16520-7-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: [PATCH v4 0/4] pinctrl: qcom: Add APQ8084 pinctrl support
+Date: Wed,  3 Sep 2014 19:28:12 +0300
+Message-ID: <1409761696-15435-1-git-send-email-gdjakov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linus.walleij@linaro.org, galak@codeaurora.org, bjorn.andersson@sonymobile.com, agross@codeaurora.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, grant.likely@linaro.org, sboyd@codeaurora.org, iivanov@mm-sol.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Georgi Djakov <gdjakov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2014 03:34 PM, Andrew Bresticker wrote:
-> Add support for the on-chip xHCI host controller present on Tegra SoCs.
->
-> The driver is currently very basic: it loads the controller with its
-> firmware, starts the controller, and is able to service messages sent
-> by the controller's firmware.  The hardware also supports device mode
-> as well as powergating of the SuperSpeed and host-controller logic
-> when not in use, but support for these is not yet implemented.
+This set of patches adds pinctrl support for the Qualcomm APQ8084 platform.
+The first patch adds the pin definitions. The second patch contains the
+devicetree binding documentation. The third patch adds the DT node.
+The last patch makes the INTR_TARGET_PROC_APPS value configurable and
+defines it for each existing SoC.
 
-> diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
+Tested on IFC6540 board.
 
-> +static bool is_host_mbox_message(u32 cmd)
-> +{
-> +	switch (cmd) {
-> +	case MBOX_CMD_INC_SSPI_CLOCK:
-> +	case MBOX_CMD_DEC_SSPI_CLOCK:
-> +	case MBOX_CMD_INC_FALC_CLOCK:
-> +	case MBOX_CMD_DEC_FALC_CLOCK:
-> +		return true;
-> +	case MBOX_CMD_SET_BW:
-> +		/*
-> +		 * TODO: Request bandwidth once EMC scaling is supported.
-> +		 * Ignore for now since ACK/NAK is not required for SET_BW
-> +		 * messages.
-> +		 */
+Changes since v3:
+ - Fixed the sdc valid pin values in the binding documentation - sdc2 
+   instead of sdc3. (suggested by Bjorn Andersson)
 
-I think that TODO belongs inside tegra_xhci_mbox_work() where the 
-message would actually be handled, if implemented.
+Changes since v2:
+ - Fixed some incorrect bits and offsets. (suggested by Bjorn Andersson)
+ - Updated binding documentation to follow the format of msm8960.
+   (suggested by Bjorn Andersson)
+ - Added fourth patch, which removes the hardcoded INTR_TARGET_PROC_APPS
+   value and makes it configurable. Also we keep the current value for
+   existing SoCs. (suggested by Bjorn Andersson)
+
+Changes since v1:
+ - Updated the total number of pins (suggested by Bjorn Andersson)
+ - Added the missing pin info (provided by Andy Gross)
+ - Updated groups and functions to be consistent with other pinctrls.
+   (suggested by Andy Gross)
+ - Removed unused functions, qdss and test pins. (suggested by Andy Gross)
+ - Updated the documentation with the possible functions.
+
+Georgi Djakov (4):
+  pinctrl: qcom: Add APQ8084 pinctrl support
+  dt: Document Qualcomm APQ8084 pinctrl binding
+  ARM: dts: qcom: Add TLMM DT node for APQ8084
+  pinctrl: qcom: Make the target processor value configurable
+
+ .../bindings/pinctrl/qcom,apq8084-pinctrl.txt      |  179 +++
+ arch/arm/boot/dts/qcom-apq8084.dtsi                |   10 +
+ drivers/pinctrl/qcom/Kconfig                       |    8 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-apq8064.c             |    2 +
+ drivers/pinctrl/qcom/pinctrl-apq8084.c             | 1245 ++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-ipq8064.c             |    2 +
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |    4 +-
+ drivers/pinctrl/qcom/pinctrl-msm.h                 |    3 +
+ drivers/pinctrl/qcom/pinctrl-msm8960.c             |    2 +
+ drivers/pinctrl/qcom/pinctrl-msm8x74.c             |    2 +
+ 11 files changed, 1455 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,apq8084-pinctrl.txt
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-apq8084.c
+
+-- 
+1.7.9.5
