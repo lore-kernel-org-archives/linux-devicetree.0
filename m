@@ -1,57 +1,51 @@
-From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Subject: Re: [PATCH 08/14] i2c: exynos5: Add Kconfig dependencies
-Date: Wed, 3 Sep 2014 13:13:21 +0530
-Message-ID: <CAHfPSqBTskQxC_HktLyPF=4cmmzZvVZO2u_Y4tXkftA1qtsR4g@mail.gmail.com>
-References: <1409132740-1954-1-git-send-email-ch.naveen@samsung.com>
- <1409132740-1954-2-git-send-email-ch.naveen@samsung.com> <20140828040311.GD4972@localhost>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v4 03/12] ARM: Berlin: select the reset controller
+Date: Wed,  3 Sep 2014 09:48:22 +0200
+Message-ID: <1409730511-16101-4-git-send-email-antoine.tenart@free-electrons.com>
+References: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140828040311.GD4972@localhost>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, cpgs@samsung.com, broonie@kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
+Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+The Marvell Berlin SoCs now has a reset controller. Add the needed
+configuration.
 
-On 28 August 2014 09:33, Olof Johansson <olof@lixom.net> wrote:
-> On Wed, Aug 27, 2014 at 03:15:40PM +0530, Naveen Krishna Chatradhi wrote:
->> The i2c-exynos5.c driver can be reused for the HSI2C controller
->> on Exynos7 SoCs from Samsung.
->>
->> This patch adds the Kconfig dependency to choose i2c-exynos5.c
->> for CONFIG_ARCH_EXYNOS7.
->>
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> To: linux-i2c@vger.kernel.org
->> Cc: Wolfram Sang <wsa@the-dreams.de>
->> ---
->>  drivers/i2c/busses/Kconfig |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
->> index 2ac87fa..bd18fa6 100644
->> --- a/drivers/i2c/busses/Kconfig
->> +++ b/drivers/i2c/busses/Kconfig
->> @@ -465,7 +465,7 @@ config I2C_EG20T
->>
->>  config I2C_EXYNOS5
->>       tristate "Exynos5 high-speed I2C driver"
->> -     depends on ARCH_EXYNOS5 && OF
->> +     depends on (ARCH_EXYNOS5 || ARCH_EXYNOS7) && OF
->
-> Ick, this will keep growing. Please use ARCH_EXYNOS instead. Yes,
-> this means you need to add it to the arm64 Kconfig and select it from
-> ARCH_EXYNOS7.
+Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+---
+ arch/arm/mach-berlin/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Ok, will repost with ARCH_EXYNOS. Thanks.
-
->
->
->
-> -Olof
-
+diff --git a/arch/arm/mach-berlin/Kconfig b/arch/arm/mach-berlin/Kconfig
+index 24f85be71671..5803f773a065 100644
+--- a/arch/arm/mach-berlin/Kconfig
++++ b/arch/arm/mach-berlin/Kconfig
+@@ -1,11 +1,13 @@
+ menuconfig ARCH_BERLIN
+ 	bool "Marvell Berlin SoCs" if ARCH_MULTI_V7
++	select ARCH_HAS_RESET_CONTROLLER
+ 	select ARCH_REQUIRE_GPIOLIB
+ 	select ARM_GIC
+ 	select GENERIC_IRQ_CHIP
+ 	select DW_APB_ICTL
+ 	select DW_APB_TIMER_OF
+ 	select PINCTRL
++	select RESET_CONTROLLER
+ 
+ if ARCH_BERLIN
+ 
 -- 
-Shine bright,
-(: Nav :)
+1.9.1
