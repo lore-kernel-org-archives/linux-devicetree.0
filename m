@@ -1,102 +1,54 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3 2/2] usb: renesas_usbhs: Add device tree support for R-Car
- H2 and M2
-Date: Wed, 3 Sep 2014 14:25:56 +0900
-Message-ID: <5406A664.2050501@renesas.com>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [alsa-devel] [PATCHv2 1/4] ASoC: simple-card: add
+	asoc_simple_card_fmt_master() to simplify the code.
+Date: Wed, 3 Sep 2014 05:33:56 +0000
+Message-ID: <fa9b9bf4a2fc45da818d8627b3408b8e@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
+	<1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>
+	<87egvt7dmd.wl%kuninori.morimoto.gx@gmail.com>
+	<df7936d5863948b0a0a33aa8283d6a67@BY2PR0301MB0613.namprd03.prod.outlook.com>
+ <87wq9l5ojn.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Ulrich Hecht <ulrich.hecht@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87wq9l5ojn.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "moinejf-GANU6spQydw@public.gmane.org" <moinejf-GANU6spQydw@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org" <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "jsarha-l0cyMroinI0@public.gmane.org" <jsarha-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver supports other SoCs, but they need boards/Soc depend code.
-So, this patch adds device tree support for R-Car H2 and M2 initially.
+> Subject: Re: [alsa-devel] [PATCHv2 1/4] ASoC: simple-card: add
+> asoc_simple_card_fmt_master() to simplify the code.
+> 
+> 
+> Hi Xiubo
+> 
+> > Yes your patch has fixed the bug Jyri has pointed out.
+> >
+> > So I has discard my [PATCHv2 1/4] patch.
+> >
+> > Please send your patch out to replace this one.
+> (snip)
+> > Please send it out of your local patch.
+> >
+> > Please also consider the ideas about Jyri, Jean-Francios, Varka and
+> > Takashi's advice as previous emails about my patch.
+> 
+> OK, will do.
+> To avoid confusion/conflict, I will post it after Mark applied it.
+> Because many simple-card patches are posted in these days...
+> 
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
----
- drivers/usb/renesas_usbhs/common.c |   44 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Yes, Get it.
 
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 1b9bf8d..b3b6813 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -18,6 +18,8 @@
- #include <linux/gpio.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
-@@ -438,6 +440,43 @@ static int usbhsc_drvcllbck_notify_hotplug(struct platform_device *pdev)
- /*
-  *		platform functions
-  */
-+static const struct of_device_id usbhs_of_match[] = {
-+	{
-+		.compatible = "renesas,usbhs-r8a7790",
-+		.data = (void *)USBHS_TYPE_R8A7790,
-+	},
-+	{
-+		.compatible = "renesas,usbhs-r8a7791",
-+		.data = (void *)USBHS_TYPE_R8A7791,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, usbhs_of_match);
-+
-+static struct renesas_usbhs_platform_info *usbhs_parse_dt(struct device *dev)
-+{
-+	struct renesas_usbhs_platform_info *info;
-+	struct renesas_usbhs_driver_param *dparam;
-+	const struct of_device_id *of_id = of_match_device(usbhs_of_match, dev);
-+	u32 tmp;
-+	int gpio;
-+
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return NULL;
-+
-+	dparam = &info->driver_param;
-+	dparam->type = of_id ? (u32)of_id->data : 0;
-+	if (!of_property_read_u32(dev->of_node, "renesas,buswait", &tmp))
-+		dparam->buswait_bwait = tmp;
-+	gpio = of_get_named_gpio_flags(dev->of_node, "renesas,enable-gpio", 0,
-+				       NULL);
-+	if (gpio > 0)
-+		dparam->enable_gpio = gpio;
-+
-+	return info;
-+}
-+
- static int usbhs_probe(struct platform_device *pdev)
- {
- 	struct renesas_usbhs_platform_info *info = dev_get_platdata(&pdev->dev);
-@@ -446,6 +485,10 @@ static int usbhs_probe(struct platform_device *pdev)
- 	struct resource *res, *irq_res;
- 	int ret;
+Thanks,
 
-+	/* check device node */
-+	if (pdev->dev.of_node)
-+		info = pdev->dev.platform_data = usbhs_parse_dt(&pdev->dev);
-+
- 	/* check platform information */
- 	if (!info) {
- 		dev_err(&pdev->dev, "no platform information\n");
-@@ -689,6 +732,7 @@ static struct platform_driver renesas_usbhs_driver = {
- 	.driver		= {
- 		.name	= "renesas_usbhs",
- 		.pm	= &usbhsc_pm_ops,
-+		.of_match_table = of_match_ptr(usbhs_of_match),
- 	},
- 	.probe		= usbhs_probe,
- 	.remove		= usbhs_remove,
--- 
-1.7.9.5
+BRs
+Xiubo
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
