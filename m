@@ -1,32 +1,36 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [alsa-devel] [PATCHv2 1/4] ASoC: simple-card: add
- asoc_simple_card_fmt_master() to simplify the code.
-Date: Wed, 3 Sep 2014 08:48:14 +0200
-Message-ID: <20140903084814.0949534c@armhf>
-References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
-	<1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>
-	<87egvt7dmd.wl%kuninori.morimoto.gx@gmail.com>
-	<df7936d5863948b0a0a33aa8283d6a67@BY2PR0301MB0613.namprd03.prod.outlook.com>
-	<87wq9l5ojn.wl%kuninori.morimoto.gx@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] GPIO: gpio-dwapb: Enable platform driver binding to
+ MFD driver
+Date: Wed, 3 Sep 2014 08:57:33 +0200
+Message-ID: <CACRpkdYA2QeqLefJN3zVW3QJATP+wEvfPtSyPTqvaFZc6D3FUw@mail.gmail.com>
+References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
+	<1409161588-19417-2-git-send-email-alvin.chen@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87wq9l5ojn.wl%kuninori.morimoto.gx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
-Cc: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "tiwai@suse.de" <tiwai@suse.de>, "andrew@lunn.ch" <andrew@lunn.ch>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "jsarha@ti.com" <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409161588-19417-2-git-send-email-alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boon Leong Ong <boon.leong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andriy Shevchenko <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mika Westerberg <mika.westerberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hock Leong Kweh <hock.leong.kweh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 02 Sep 2014 21:13:52 -0700 (PDT)
-Kuninori Morimoto <kuninori.morimoto.gx@gmail.com> wrote:
+On Wed, Aug 27, 2014 at 7:46 PM, Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
 
-> OK, will do.
-> To avoid confusion/conflict, I will post it after Mark applied it.
-> Because many simple-card patches are posted in these days...
+> The Synopsys DesignWare APB GPIO driver only supports open firmware devices.
+> But, like Intel Quark X1000 SOC, which has a single PCI function exporting
+> a GPIO and an I2C controller, it is a Multifunction device. This patch is
+> to enable the current Synopsys DesignWare APB GPIO driver to support the
+> Multifunction device which exports the designware GPIO controller.
+>
+> Reviewed-by: Hock Leong Kweh <hock.leong.kweh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Shevchenko, Andriy <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-Yes, I have one more awaiting, about multi-CODECs...
+Sebastian, Jamie: can either of you take a look at this patch?
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
