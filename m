@@ -1,41 +1,42 @@
-From: Naoki FUKAUMI <naobsd@gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Enable emac node on the rk3188-radxarock boards
-Date: Thu, 4 Sep 2014 00:29:28 +0900
-Message-ID: <CAFnsNoSmHwN3nJ5ZJL5fc_-kaECCoLBvpdBYQxkyLcUzLx5MTw@mail.gmail.com>
-References: <1409740036-8117-1-git-send-email-romain.perier@gmail.com>
-	<1409740036-8117-4-git-send-email-romain.perier@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1409740036-8117-4-git-send-email-romain.perier@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v2 2/8] phy: miphy28lp: Add MiPHY28lp header file for DT x Driver defines
+Date: Wed,  3 Sep 2014 17:37:11 +0200
+Message-ID: <1409758637-28654-3-git-send-email-gabriel.fernandez@linaro.org>
+References: <1409758637-28654-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409758637-28654-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Gabriel Fernandez <gabriel.fernandez@linaro.org>, alexandre torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 3, 2014 at 7:27 PM, Romain Perier <romain.perier@gmail.com> wrote:
-> This enables EMAC Rockchip support on radxa rock boards.
->
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> ---
->  arch/arm/boot/dts/rk3188-radxarock.dts | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
-> index 5e4e3c23..e1358d3 100644
-> --- a/arch/arm/boot/dts/rk3188-radxarock.dts
-> +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
-> @@ -76,6 +76,24 @@
->         };
->  };
->
-> +&emac {
-> +       status = "okay";
-> +       compatible = "rockchip,rk3188-emac";
-> +
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&phy_int>;
-> +
-> +       mac-address = [ c6 ef 91 8e 60 4b ];
+This provides the shared header file which will be reference from both
+the MiPHY28lp driver and its associated Device Tree node(s).
 
-is "mac-address" required?
+Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ include/dt-bindings/phy/phy-miphy.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 include/dt-bindings/phy/phy-miphy.h
+
+diff --git a/include/dt-bindings/phy/phy-miphy.h b/include/dt-bindings/phy/phy-miphy.h
+new file mode 100644
+index 0000000..9bc49b9
+--- /dev/null
++++ b/include/dt-bindings/phy/phy-miphy.h
+@@ -0,0 +1,12 @@
++/*
++ * This header provides constants for the phy framework
++ * based on the STMicroelectronics miphxxxx.
++ */
++#ifndef _DT_BINDINGS_PHY_MIPHY
++#define _DT_BINDINGS_PHY_MIPHY
++
++#define MIPHY_TYPE_SATA		1
++#define MIPHY_TYPE_PCIE		2
++#define MIPHY_TYPE_USB		3
++
++#endif /* _DT_BINDINGS_PHY_MIPHY */
+-- 
+1.9.1
