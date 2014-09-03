@@ -1,77 +1,55 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA7: Add PMU nodes
-Date: Wed, 3 Sep 2014 08:39:08 -0500
-Message-ID: <540719FC.5070803@ti.com>
-References: <1408456440-30171-1-git-send-email-nm@ti.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 3/9] ARM: zynq: DT: Add DDRC node
+Date: Wed, 03 Sep 2014 15:49:47 +0200
+Message-ID: <54071C7B.4090805@linaro.org>
+References: <1409692754-13437-1-git-send-email-soren.brinkmann@xilinx.com> <1409692754-13437-4-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408456440-30171-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1409692754-13437-4-git-send-email-soren.brinkmann@xilinx.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: Russell King <linux@arm.linux.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/19/2014 08:54 AM, Nishanth Menon wrote:
-> From: Lucas Weaver <l-weaver-l0cyMroinI0@public.gmane.org>
-> 
-> DRA74x and DRA72x family of processors vary slightly in the number
-> of CPUs. So, add different instances of PMU for each of these processor
-> groups. Further, since the interrupts bypass crossbar and are directly
-> connected to GIC, mark the dts nodes with relevant information.
-> 
-> Tested with perf utility.
-> 
-> Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Lucas Weaver <l-weaver-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+On 09/02/2014 11:19 PM, Soren Brinkmann wrote:
+> Add the DDR controller to the Zynq devicetree.
+>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
 > ---
-Hi,
-Gentle ping..
-
-Regards,
-Nishanth Menon
->  arch/arm/boot/dts/dra72x.dtsi |    5 +++++
->  arch/arm/boot/dts/dra74x.dtsi |    6 ++++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
-> index f1ec22f..e5a3d23 100644
-> --- a/arch/arm/boot/dts/dra72x.dtsi
-> +++ b/arch/arm/boot/dts/dra72x.dtsi
-> @@ -22,4 +22,9 @@
->  			reg = <0>;
->  		};
->  	};
+>   arch/arm/boot/dts/zynq-7000.dtsi | 5 +++++
+>   1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zyn=
+q-7000.dtsi
+> index 6cc83d4c6c76..587cadcf7001 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -146,6 +146,11 @@
+>   			cache-level =3D <2>;
+>   		};
+>
+> +		memory-controller@f8006000 {
+> +			compatible =3D "xlnx,zynq-ddrc-a05";
+> +			reg =3D <0xf8006000 0x1000>;
+> +		} ;
 > +
-> +	pmu {
-> +		compatible = "arm,cortex-a15-pmu";
-> +		interrupts = <GIC_SPI DIRECT_IRQ(131) IRQ_TYPE_LEVEL_HIGH>;
-> +	};
->  };
-> diff --git a/arch/arm/boot/dts/dra74x.dtsi b/arch/arm/boot/dts/dra74x.dtsi
-> index a4e8bb9..3be544c 100644
-> --- a/arch/arm/boot/dts/dra74x.dtsi
-> +++ b/arch/arm/boot/dts/dra74x.dtsi
-> @@ -38,4 +38,10 @@
->  			reg = <1>;
->  		};
->  	};
-> +
-> +	pmu {
-> +		compatible = "arm,cortex-a15-pmu";
-> +		interrupts = <GIC_SPI DIRECT_IRQ(131) IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_SPI DIRECT_IRQ(132) IRQ_TYPE_LEVEL_HIGH>;
-> +	};
->  };
-> 
+>   		uart0: serial@e0000000 {
+>   			compatible =3D "xlnx,xuartps", "cdns,uart-r1p8";
+>   			status =3D "disabled";
+>
 
 
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
