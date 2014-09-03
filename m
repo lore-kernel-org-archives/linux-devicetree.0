@@ -1,94 +1,42 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv2 1/4] ASoC: simple-card: add
- asoc_simple_card_fmt_master() to simplify the code.
-Date: Wed, 3 Sep 2014 08:39:53 +0000
-Message-ID: <b1d8cfcf6cfa48fa83dc06016ae2ff70@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
- <1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>
- <5405A598.4050208@ti.com>
- <707d1400a4514be9b599d4b7a6449ba7@BY2PR0301MB0613.namprd03.prod.outlook.com>
- <5406D317.5000403@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5406D317.5000403-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "moinejf-GANU6spQydw@public.gmane.org" <moinejf-GANU6spQydw@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org" <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH 2/5] rtc: at91sam9: use standard readl/writel functions instead of raw versions
+Date: Wed,  3 Sep 2014 10:45:31 +0200
+Message-ID: <1409733934-14465-3-git-send-email-boris.brezillon@free-electrons.com>
+References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+---
+ drivers/rtc/rtc-at91sam9.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-> Subject: Re: [PATCHv2 1/4] ASoC: simple-card: add asoc_simple_card_fmt_master()
-> to simplify the code.
-> 
-> On 09/03/2014 05:37 AM, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> >> Subject: Re: [PATCHv2 1/4] ASoC: simple-card: add
-> asoc_simple_card_fmt_master()
-> ...
-> >>
-> >> This won't work. The logic for cpu node needs to be negated for codec node.
-> >>
-> >
-> > Yes, actually it should be.
-> >
-> > As my previous patches about this:
-> > ----
-> > Since from the DAI format micro SND_SOC_DAIFMT_CBx_CFx, the 'CBx'
-> > mean Codec's bit clock is as master/slave and the 'CFx' mean Codec's
-> > frame clock is as master/slave.
-> >
-> > So these same DAI formats should be informed to CPU and CODE DAIs at
-> > the same time. For the Codec driver will set the bit clock and frame
-> > clock as the DAI formats said, but for the CPU driver, if the the
-> > bit clock or frame clock is as Codec master, so it should be set CPU
-> > DAI device as bit clock or frame clock as slave, and vice versa.
-> >
-> > The old code will cause confusion, and we should be clear that the
-> > letter 'C' here mean to Codec.
-> > ----
-> >
-> > For the master format, no matter for CPU or CODEC, it always means Codec
-> > is master or slave for bit/frame clock, not means the local DAI device's
-> > bit/frame clock as master or slave.
-> >
-> > So your CPU DAI device driver should negate this locally as the existed
-> > Ones do.
-> >
-> 
-> 
-> Yes, but there is double negation in this patch. The switch-case
-> assignments depend on whether the bitclkmaster and framemaster
-> DT-node pointers are compared to a cpu-dai-node or
-> codec-dai-node. When your patch compares the codec-node, it does
-> the decisions like it was a cpu-node, which produces inverted CBM
-> and CFM setting.
-> 
-> However, Kurinori-san's patch fixes this problem because it just
-> uses the daifmt generated by comparing to codec node for both cpu
-> and codec nodes.
-> 
-> The reason why I did the comparison per node basis, was to make
-> the code more ready for tdm setups with multiple codecs on a same
-> wire. But writing code for something that is not really needed
-> yet is usually a bad idea, like it was this time too.
-> 
-> Kurinori-san's version of the fix should be fine and it cleans up
-> the code quite nicely.
-> 
-
-Yes, agree.
-
-So I just removed this patch from my patch series list.
-
-Kuninori-san will post his local patch about this later.
-
-Thanks,
-
-BRs
-Xiubo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index 51f0038..74a9ca0 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -77,14 +77,14 @@ struct sam9_rtc {
+ };
+ 
+ #define rtt_readl(rtc, field) \
+-	__raw_readl((rtc)->rtt + AT91_RTT_ ## field)
++	readl((rtc)->rtt + AT91_RTT_ ## field)
+ #define rtt_writel(rtc, field, val) \
+-	__raw_writel((val), (rtc)->rtt + AT91_RTT_ ## field)
++	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
+ 
+ #define gpbr_readl(rtc) \
+-	__raw_readl((rtc)->gpbr)
++	readl((rtc)->gpbr)
+ #define gpbr_writel(rtc, val) \
+-	__raw_writel((val), (rtc)->gpbr)
++	writel((val), (rtc)->gpbr)
+ 
+ /*
+  * Read current time and date in RTC
+-- 
+1.9.1
