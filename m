@@ -1,60 +1,77 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH 3/5] rtc: at91sam9: add DT support
-Date: Wed,  3 Sep 2014 10:45:32 +0200
-Message-ID: <1409733934-14465-4-git-send-email-boris.brezillon@free-electrons.com>
-References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from
+ DT
+Date: Wed, 03 Sep 2014 12:02:58 +0300
+Message-ID: <5406D942.4080405@intel.com>
+References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com> <CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <b29396@freescale.com>, Peter Griffin <peter.griffin@linaro.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, h80.chung@samsung.com, Chris Ball <chris@printf.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add of_match_table to the existing driver so that rtc nodes defined in at91
-DTs can be attached to this driver.
+On 09/03/2014 11:30 AM, Ulf Hansson wrote:
+> On 2 September 2014 17:49, Jean-Michel Hautbois
+> <jean-michel.hautbois@vodalys.com> wrote:
+>> This property is useful when we don't want to access boot partitions on eMMC
+>>
+>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
+>>  drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
+>>  include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
+>>  3 files changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+>> index 431716e..59cc854 100644
+>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+>> @@ -40,6 +40,7 @@ Optional properties:
+>>  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
+>>  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
+>>  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
+>> +- no-boot-part : when preset, tells to access boot partitions
+>>
+>>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
+>> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+>> index ccec0e3..439e663 100644
+>> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+>> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+>> @@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
+>>         if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
+>>                 boarddata->delay_line = 0;
+>>
+>> +       if (of_find_property(np, "no-boot-part", NULL))
+>> +               boarddata->access_boot_part = false;
+>> +       else
+>> +               boarddata->access_boot_part = true;
+>> +
+>>         return 0;
+>>  }
+>>  #else
+>> @@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
+>>                 host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+>>         }
+>>
+>> +       if (!boarddata->access_boot_part)
+>> +               host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
+>> +
+> 
+> Hmm, I don't think MMC_CAP2_BOOTPART_NOACC should have a DT binding.
+> Does it describe the hardware in some form?
+> 
+> Actually I would like to question why MMC_CAP2_BOOTPART_NOACC exists
+> at all. If there are cards that don't supports the BOOT area,
+> shouldn't we have a card quirk for it instead of a host cap? Maybe
+> Adrian Hunter, how originally wrote the patch for adding
+> MMC_CAP2_BOOTPART_NOACC, could help me understand the reasons behind
+> it!?
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
----
- drivers/rtc/rtc-at91sam9.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-index 74a9ca0..57014b7 100644
---- a/drivers/rtc/rtc-at91sam9.c
-+++ b/drivers/rtc/rtc-at91sam9.c
-@@ -454,6 +454,14 @@ static int at91_rtc_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(at91_rtc_pm_ops, at91_rtc_suspend, at91_rtc_resume);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id at91_rtc_dt_ids[] = {
-+	{ .compatible = "atmel,at91sam9260-rtt" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, at91_rtc_dt_ids);
-+#endif
-+
- static struct platform_driver at91_rtc_driver = {
- 	.probe		= at91_rtc_probe,
- 	.remove		= at91_rtc_remove,
-@@ -462,6 +470,7 @@ static struct platform_driver at91_rtc_driver = {
- 		.name	= "rtc-at91sam9",
- 		.owner	= THIS_MODULE,
- 		.pm	= &at91_rtc_pm_ops,
-+		.of_match_table = of_match_ptr(at91_rtc_dt_ids),
- 	},
- };
- 
--- 
-1.9.1
+It was added because platform firmware was able to prevent access to the
+boot partitions (for security I think), so attempts to access them would
+fail messily.  It was not related to any specific card.
