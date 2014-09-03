@@ -1,73 +1,71 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from DT
-Date: Wed, 3 Sep 2014 10:30:56 +0200
-Message-ID: <CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
-References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCHv2 1/4] ASoC: simple-card: add asoc_simple_card_fmt_master()
+ to simplify the code.
+Date: Wed, 3 Sep 2014 11:36:39 +0300
+Message-ID: <5406D317.5000403@ti.com>
+References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com> <1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com> <5405A598.4050208@ti.com> <707d1400a4514be9b599d4b7a6449ba7@BY2PR0301MB0613.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <b29396@freescale.com>, Peter Griffin <peter.griffin@linaro.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, h80.chung@samsung.com, Chris Ball <chris@printf.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <707d1400a4514be9b599d4b7a6449ba7@BY2PR0301MB0613.namprd03.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "broonie@kernel.org" <broonie@kernel.org>, "perex@perex.cz" <perex@perex.cz>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "tiwai@suse.de" <tiwai@suse.de>, "moinejf@free.fr" <moinejf@free.fr>, "andrew@lunn.ch" <andrew@lunn.ch>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 September 2014 17:49, Jean-Michel Hautbois
-<jean-michel.hautbois@vodalys.com> wrote:
-> This property is useful when we don't want to access boot partitions on eMMC
+On 09/03/2014 05:37 AM, Li.Xiubo@freescale.com wrote:
+>> Subject: Re: [PATCHv2 1/4] ASoC: simple-card: add asoc_simple_card_fmt_master()
+...
+>>
+>> This won't work. The logic for cpu node needs to be negated for codec node.
+>>
 >
-> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
->  drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
->  include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
->  3 files changed, 10 insertions(+)
+> Yes, actually it should be.
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 431716e..59cc854 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -40,6 +40,7 @@ Optional properties:
->  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
->  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
->  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
-> +- no-boot-part : when preset, tells to access boot partitions
+> As my previous patches about this:
+> ----
+> Since from the DAI format micro SND_SOC_DAIFMT_CBx_CFx, the 'CBx'
+> mean Codec's bit clock is as master/slave and the 'CFx' mean Codec's
+> frame clock is as master/slave.
 >
->  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
->  polarity properties, we have to fix the meaning of the "normal" and "inverted"
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index ccec0e3..439e663 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
->         if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
->                 boarddata->delay_line = 0;
+> So these same DAI formats should be informed to CPU and CODE DAIs at
+> the same time. For the Codec driver will set the bit clock and frame
+> clock as the DAI formats said, but for the CPU driver, if the the
+> bit clock or frame clock is as Codec master, so it should be set CPU
+> DAI device as bit clock or frame clock as slave, and vice versa.
 >
-> +       if (of_find_property(np, "no-boot-part", NULL))
-> +               boarddata->access_boot_part = false;
-> +       else
-> +               boarddata->access_boot_part = true;
-> +
->         return 0;
->  }
->  #else
-> @@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
->                 host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
->         }
+> The old code will cause confusion, and we should be clear that the
+> letter 'C' here mean to Codec.
+> ----
 >
-> +       if (!boarddata->access_boot_part)
-> +               host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
-> +
+> For the master format, no matter for CPU or CODEC, it always means Codec
+> is master or slave for bit/frame clock, not means the local DAI device's
+> bit/frame clock as master or slave.
+>
+> So your CPU DAI device driver should negate this locally as the existed
+> Ones do.
+>
 
-Hmm, I don't think MMC_CAP2_BOOTPART_NOACC should have a DT binding.
-Does it describe the hardware in some form?
 
-Actually I would like to question why MMC_CAP2_BOOTPART_NOACC exists
-at all. If there are cards that don't supports the BOOT area,
-shouldn't we have a card quirk for it instead of a host cap? Maybe
-Adrian Hunter, how originally wrote the patch for adding
-MMC_CAP2_BOOTPART_NOACC, could help me understand the reasons behind
-it!?
+Yes, but there is double negation in this patch. The switch-case
+assignments depend on whether the bitclkmaster and framemaster
+DT-node pointers are compared to a cpu-dai-node or
+codec-dai-node. When your patch compares the codec-node, it does
+the decisions like it was a cpu-node, which produces inverted CBM
+and CFM setting.
 
-Kind regards
-Uffe
+However, Kurinori-san's patch fixes this problem because it just
+uses the daifmt generated by comparing to codec node for both cpu
+and codec nodes.
+
+The reason why I did the comparison per node basis, was to make
+the code more ready for tdm setups with multiple codecs on a same
+wire. But writing code for something that is not really needed
+yet is usually a bad idea, like it was this time too.
+
+Kurinori-san's version of the fix should be fine and it cleans up
+the code quite nicely.
+
+Best regards,
+Jyri
