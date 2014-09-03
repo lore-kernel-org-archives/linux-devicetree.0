@@ -1,37 +1,35 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/3]  Add picoPHY usb phy driver found on stih407 family SoC's
-Date: Wed,  3 Sep 2014 11:27:56 +0100
-Message-ID: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH 3/3] MAINTAINERS: Add phy-stih407-usb.c file to ARCH/STI architecture
+Date: Wed,  3 Sep 2014 11:27:59 +0100
+Message-ID: <1409740079-16554-4-git-send-email-peter.griffin@linaro.org>
+References: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, kishon@ti.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for the picoPHY usb phy which is used by the usb2
-and usb3 host controllers when controlling usb2/1.1 devices. It is found on
-stih407 family SoC's from the consumer electronics devision of STMicroelectronics.
+This patch adds the new phy-stih407-usb.c usb phy driver found on
+STMicroelectronics stih407 consumer electronics SoC's into the STI
+arch section of the maintainers file.
 
-Peter Griffin (3):
-  phy: phy-stih407-usb: Add usb picoPHY driver found on stih407 SoC
-    family
-  phy: phy-stih407-usb: Add dt documentation for USB picophy found on
-    stih407 SoC family
-  MAINTAINERS: Add phy-stih407-usb.c file to ARCH/STI architecture
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../devicetree/bindings/phy/phy-stih407-usb.txt    |  37 +++++
- MAINTAINERS                                        |   1 +
- drivers/phy/Kconfig                                |   8 +
- drivers/phy/Makefile                               |   2 +
- drivers/phy/phy-stih407-usb.c                      | 185 +++++++++++++++++++++
- 5 files changed, 233 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
- create mode 100644 drivers/phy/phy-stih407-usb.c
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 55381955..0d0818a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1399,6 +1399,7 @@ F:	drivers/i2c/busses/i2c-st.c
+ F:	drivers/tty/serial/st-asc.c
+ F:	drivers/mmc/host/sdhci-st.c
+ F:	drivers/usb/dwc3/dwc3-st.c
++F:	drivers/phy/phy-stih407-usb.c
+ 
+ ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+ M:	Lennert Buytenhek <kernel@wantstofly.org>
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
