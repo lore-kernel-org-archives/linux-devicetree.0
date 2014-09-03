@@ -1,56 +1,182 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v4 06/12] Documentation: bindings: add doc for the Berlin USB
- PHY
-Date: Wed,  3 Sep 2014 09:48:25 +0200
-Message-ID: <1409730511-16101-7-git-send-email-antoine.tenart@free-electrons.com>
+Subject: [PATCH v4 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Wed,  3 Sep 2014 09:48:26 +0200
+Message-ID: <1409730511-16101-8-git-send-email-antoine.tenart@free-electrons.com>
 References: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings of the Marvell Berlin USB PHY driver.
+Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+and DMA mask, to support USB2 ChipIdea controllers that don't need
+specific functions.
+
+Tested on the Marvell Berlin SoCs USB controllers.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
 ---
- Documentation/devicetree/bindings/phy/berlin-usb-phy.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
+ drivers/usb/chipidea/Makefile       |   1 +
+ drivers/usb/chipidea/ci_hdrc_usb2.c | 137 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 138 insertions(+)
+ create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
 
-diff --git a/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt b/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
+diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+index 2f099c7df7b5..1fc86a2ca22d 100644
+--- a/drivers/usb/chipidea/Makefile
++++ b/drivers/usb/chipidea/Makefile
+@@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
+ 
+ # Glue/Bridge layers go here
+ 
++obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
+ obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
+ obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
+ 
+diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
 new file mode 100644
-index 000000000000..be33780f668e
+index 000000000000..75bdbfa362b9
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
-@@ -0,0 +1,16 @@
-+* Marvell Berlin USB PHY
++++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
+@@ -0,0 +1,137 @@
++/*
++ * Copyright (C) 2014 Marvell Technology Group Ltd.
++ *
++ * Antoine Tenart <antoine.tenart@free-electrons.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
-+Required properties:
-+- compatible: "marvell,berlin2-usb-phy" or "marvell,berlin2cd-usb-phy"
-+- reg: base address and length of the registers
-+- #phys-cells: should be 0
-+- resets: reference to the reset controller
++#include <linux/clk.h>
++#include <linux/dma-mapping.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/usb/chipidea.h>
++#include <linux/usb/hcd.h>
++#include <linux/usb/ulpi.h>
 +
-+Example:
++#include "ci.h"
 +
-+	usb-phy@f774000 {
-+		compatible = "marvell,berlin2-usb-phy";
-+		reg = <0xf774000 0x128>;
-+		#phy-cells = <0>;
-+		resets = <&chip 0x104 14>;
-+	};
++struct ci_hdrc_usb2_priv {
++	struct platform_device	*ci_pdev;
++	struct clk		*clk;
++};
++
++static int ci_hdrc_usb2_dt_probe(struct device *dev,
++				 struct ci_hdrc_platform_data *ci_pdata)
++{
++	ci_pdata->phy = of_phy_get(dev->of_node, 0);
++	if (IS_ERR(ci_pdata->phy)) {
++		if (PTR_ERR(ci_pdata->phy) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		/* PHY is optional */
++		ci_pdata->phy = NULL;
++	}
++
++	return 0;
++}
++
++static struct ci_hdrc_platform_data ci_default_pdata = {
++	.capoffset	= DEF_CAPOFFSET,
++	.flags		= CI_HDRC_REQUIRE_TRANSCEIVER |
++			  CI_HDRC_DISABLE_STREAMING,
++};
++
++static int ci_hdrc_usb2_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct ci_hdrc_usb2_priv *priv;
++	struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(&pdev->dev);
++	int ret;
++
++	if (!ci_pdata)
++		ci_pdata = &ci_default_pdata;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->clk = devm_clk_get(dev, NULL);
++	if (!IS_ERR(priv->clk)) {
++		ret = clk_prepare_enable(priv->clk);
++		if (ret) {
++			dev_err(dev, "failed to enable the clock: %d\n", ret);
++			return ret;
++		}
++	}
++
++	if (dev->of_node) {
++		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
++		if (ret)
++			return ret;
++	} else {
++		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++		if (ret)
++			return ret;
++	}
++
++	ci_pdata->name = dev_name(&pdev->dev);
++
++	priv->ci_pdev = ci_hdrc_add_device(dev, pdev->resource,
++					   pdev->num_resources, ci_pdata);
++	if (IS_ERR(priv->ci_pdev)) {
++		ret = PTR_ERR(priv->ci_pdev);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev,
++				"failed to register ci_hdrc platform device: %d\n",
++				ret);
++		goto clk_err;
++	}
++
++	platform_set_drvdata(pdev, priv);
++
++	pm_runtime_no_callbacks(dev);
++	pm_runtime_enable(dev);
++
++	return 0;
++
++clk_err:
++	if (!IS_ERR(priv->clk))
++		clk_disable_unprepare(priv->clk);
++	return ret;
++}
++
++static int ci_hdrc_usb2_remove(struct platform_device *pdev)
++{
++	struct ci_hdrc_usb2_priv *priv = platform_get_drvdata(pdev);
++
++	pm_runtime_disable(&pdev->dev);
++	ci_hdrc_remove_device(priv->ci_pdev);
++	clk_disable_unprepare(priv->clk);
++
++	return 0;
++}
++
++static const struct of_device_id ci_hdrc_usb2_of_match[] = {
++	{ .compatible = "chipidea,usb2" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
++
++static struct platform_driver ci_hdrc_usb2_driver = {
++	.probe	= ci_hdrc_usb2_probe,
++	.remove	= ci_hdrc_usb2_remove,
++	.driver	= {
++		.name		= "chipidea-usb2",
++		.owner		= THIS_MODULE,
++		.of_match_table	= of_match_ptr(ci_hdrc_usb2_of_match),
++	},
++};
++module_platform_driver(ci_hdrc_usb2_driver);
++
++MODULE_DESCRIPTION("ChipIdea HDRC USB2 binding for ci13xxx");
++MODULE_AUTHOR("Antoine Tenart <antoine.tenart@free-electrons.com>");
++MODULE_LICENSE("GPL");
 -- 
 1.9.1
