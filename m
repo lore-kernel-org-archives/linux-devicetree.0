@@ -1,210 +1,68 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 2/2] Documentation: bcm7120-l2: Add Broadcom BCM7120-style
- L2 binding
-Date: Wed, 03 Sep 2014 09:59:58 -0700
-Message-ID: <5407490E.7060505@gmail.com>
-References: <1409265326-7579-1-git-send-email-f.fainelli@gmail.com> <1409265326-7579-3-git-send-email-f.fainelli@gmail.com> <alpine.DEB.2.10.1409031410580.3333@nanos> <20140903124317.GB3127@leverpostej>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH v3 0/4] gpio: syscon: reuse for keystone 2 socs
+Date: Wed, 3 Sep 2014 20:05:31 +0300
+Message-ID: <1409763935-5713-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140903124317.GB3127@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, santosh.shilimkar@ti.com, shc_work@mail.ru, linux-gpio@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/2014 05:43 AM, Mark Rutland wrote:
-> On Wed, Sep 03, 2014 at 01:13:02PM +0100, Thomas Gleixner wrote:
->> You forgot to CC the device tree dudes. We want an ack on the bindings
->> before they materialize in Linus tree.
-> 
-> Thanks for the Cc.
-> 
-> Florian, in future could you please Cc for both the binding and driver?
-> So long as it's obvious which patch introduces the binding other can
-> choose to ignore the driver, but for me it's useful context.
-> 
->>
->> Thanks,
->>
->> 	tglx
->>
->> On Thu, 28 Aug 2014, Florian Fainelli wrote:
->>
->>> This patch adds the Device Tree binding document for the Broadcom
->>> BCM7120-style Set-top-box Level 2 interrupt controller hardware.
->>>
->>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>> ---
->>>  .../interrupt-controller/brcm,bcm7120-l2-intc.txt  | 44 ++++++++++++++++++++++
->>>  1 file changed, 44 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
->>> new file mode 100644
->>> index 000000000000..3818ffed7347
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
->>> @@ -0,0 +1,44 @@
->>> +Broadcom BCM7120-style Level 2 interrupt controller
->>> +
->>> +Required properties:
->>> +
->>> +- compatible: should be "brcm,bcm7120-l2-intc"
-> 
-> Is this a custom block for the bcm7120?
+This series intended to integrate Keystone 2 DSP GPIO controller functionality
+into gpio-syscon driver (drivers/gpio/gpio-syscon.c) as requested
+by Linus Walleij in [1].
 
-This is a custom block that started being used with bcm7120 and that we
-inherited, unmodified, in newer BCM7xxx designs since then, hence the
-name we picked up.
+On Keystone SOCs, ARM host can send interrupts to DSP cores using the
+DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
+each DSP core. This is one of the component used by the IPC mechanism used
+on Keystone SOCs.
 
-> 
-> Does the IP block not have a more specific name?
+Keystone 2 DSP GPIO controller has specific features:
+- each GPIO can be configured only as output pin;
+- setting GPIO value to 1 causes IRQ generation on target DSP core;
+- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
+  pending.
 
-I wish there was one, I had to dig through the verilog sources to find
-which chip this interrupt controller first started to appear, and the
-filename was not too helpful either.
+The gpio-syscon driver was need to be updated to satisfy Keystone 2 SoC
+requirements:
+1) special sequence of operations need to be used to assign output GPIO value.
+   As result, first patch introduces SoC specific callback .set() to configure
+   output GPIO value.
 
-> 
->>> +- reg: specifies the base physical address and size of the registers
->>> +- interrupt-controller: identifies the node as an interrupt controller
->>> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
->>> +  source, should be 1.
-> 
-> ... and valid values are?
+2) - eight (8) GPIO banks should be supported, but current gpio-syscon driver
+   supports only one.
+   - there can be more than on syscon devices per SoC and GPIO specific registers 
+   can be placed any where. More over, number of syscon devices and their
+   configuration can vary even between two versions of the same SoC. 
+   As result, second patch introduces new DT property for gpio-syscon devices:
+ 	gpio,syscon-dev = <&syscon_dev data_reg_offset [direction_reg_offset]>;
+   which allows to specify syscon node and data/direction registers offsets in DT.
 
-0 to 31, this is the interrupt number, will fix that.
+Also, patch 4 is added to illustrate DSP GPIO configuration in DT used by Keystone 2.
 
-> 
->>> +- interrupt-parent: specifies the phandle to the parent interrupt controller
->>> +  this one is cascaded from
->>> +- interrupts: specifies the interrupt line(s) in the interrupt-parent domain
->>> +  to be used for cascading
-> 
-> The domain is a software construct, so I don't think it needs to be
-> mentuioned in the binding doc. All that this proeprty describes is the
-> lines.
+Related discussions:
+ [1] https://lkml.org/lkml/2014/7/16/170
+ [2] https://lkml.org/lkml/2014/7/23/352
 
-Will fix that.
+v1:
+ https://www.mail-archive.com/devicetree@vger.kernel.org/msg37812.html
+v2:
+ https://www.mail-archive.com/devicetree@vger.kernel.org/msg38755.html
 
-> 
->>> +- brcm,int-map-mask: 32-bits bit mask describing how the interrupts
->>> at this level
->>> +  map to their respective parents. Should match exactly the number of interrupts
->>> +  specified in the 'interrupts' property.
-> 
-> I don't follow.
-> 
-> Surely this should be static, and we know the 1-1 mapping, or this is
-> dynamic and should be SW-configured?
+Grygorii Strashko (4):
+  gpio: syscon: add soc specific callback to assign output value
+  gpio: syscon: retrive syscon node and regs offsets from dt
+  gpio: syscon: reuse for keystone 2 socs
+  ARM: dts: keystone-k2hk: add dsp gpio controllers nodes
 
-This is static for a given instance of this interrupt controller on a
-particular brcmstb chip. BCM7445 will have something different here than
-e.g: BCM7366 or BCM7439 which are also from the same family.
+ .../devicetree/bindings/gpio/gpio-dsp-keystone.txt | 39 +++++++++
+ arch/arm/boot/dts/k2hk.dtsi                        | 56 +++++++++++++
+ drivers/gpio/gpio-syscon.c                         | 94 +++++++++++++++++++---
+ 3 files changed, 179 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
 
-Not all 32 bits within this interrupt controller will map to wired
-interrupts, so the point of this bitmask is to:
+-- 
+1.9.1
 
-- tell how many valid interrupt sources there are
-- tell how a given bitmask maps to its corresponding L1 interrupt line
-number
-
-So this is not much to know the 1:1, but to know the the 1:many mapping,
-the example might make it a little clearer how this works
-
-> 
->>> +Optional properties:
->>> +
->>> +- interrupt-names: if present, the litteral names for the parent interrupts
->>> +  specified in the 'interrupts' property.
-> 
-> If you use the interrupt-names property, it should contain the names of
-> the interrupts from the POV of this device. Those names must be
-> specified in the binding doc.
-
-Since this also varies on a per-chip basis, I can certainly add each
-valid names for each chips out there, but that does not sound useful,
-maybe let's just drop that property, we don't use it anyway since we
-perform lookups by indexes, and that is safe to do.
-
-> 
-> This is useless as-is.
-> 
->>> +- brcm,irq-can-wake: if present, this means the L2 controller can be used as a
->>> +  wakeup source for system suspend/resume.
-> 
-> How variable is this?
-
-There's two instances of this interrupt controller on most SoCs, one
-that can wake up the system, one that cannot, see below.
-
-> 
-> I realise have properties like this elsewhere, but it seems to be
-> hacking around the lack of a decent power domain interface for figuring
-> this out.
-
-Humm, I kind of see your point here with the power domains, I don't see
-a big problem with specifying that property though, at most this becomes
-redundant when we have a power domain representation (which will be very
-simple: always-on and everything else).
-
-> 
->>> +- brcm,int-fwd-mask: if present, a 32-bits bit mask describing the interrupts
->>> +  which need to be enabled in this controller to flow to the higher level
->>> +  interrupt controller. This is typically needed for the UARTs interrupts to
->>> +  flow through the top-level interrupt controller (e.g: ARM GIC on ARM-based
->>> +  platforms).
->>> +
-> 
-> I don't follow why this property is needed at all. Is this a mechanism
-> to bypass this controller entirely? Why should this be described as a
-> fixed HW property?
-
-This interrupt controller has traditionally (not necessarily for good
-reasons) been the placeholder for special bits that control whether our
-UARTs level 1 interrupts (wired to the ARM GIC) will flow to the L1
-interrupt.
-
-We discussed initially with Arnd Bergman about how to best approach
-this, and he was happy with a bitmask since:
-
-a) that is a one-time initialization thing that can happen anywhere in
-the kernel before UART interrupts get used (so before user-space gets
-scheduled)
-
-b) we need to save/restore that bitmask during suspend/resume
-
-c) this is not a real interrupt bit, we need to set this bit, but we
-will not get any interrupt at this particular interrupt controller level
-for UARTs, so this is totally transparent for the UART driver
-
-Once again, the bitmask values varies on a per-chip basis, though the
-fundamentals are the same.
-
-> 
-> Thanks,
-> Mark.
-> 
->>> +Example:
->>> +
->>> +irq0_intc: interrupt-controller@f0406800 {
->>> +	compatible = "brcm,bcm7120-l2-intc";
->>> +	interrupt-parent = <&intc>;
->>> +	#interrupt-cells = <1>;
->>> +	reg = <0xf0406800 0x8>;
->>> +	interrupt-controller;
->>> +	interrupts = <0x0 0x42 0x0>, <0x0 0x40 0x0>;
->>> +	interrupt-names = "upg_main", "upg_bsc";
->>> +	brcm,int-map-mask = <0xeb8>, <0x140>;
->>> +	brcm,int-fwd-mask = <0x7>;
->>> +};
->>> -- 
->>> 1.9.1
->>>
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
