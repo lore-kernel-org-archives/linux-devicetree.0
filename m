@@ -1,167 +1,72 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH v8 4/8] arm64: kernel: introduce cpu_init_idle CPU
- operation
-Date: Wed, 3 Sep 2014 13:16:01 -0600
-Message-ID: <20140903191601.GJ92149@ilina-mac.local>
-References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1409585324-3678-5-git-send-email-lorenzo.pieralisi@arm.com>
- <20140903173437.GI92149@ilina-mac.local>
- <20140903174645.GK1824@e102568-lin.cambridge.arm.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 0/1] ARM: OMAP: add external clock provider support
+Date: Wed, 03 Sep 2014 12:28:19 -0700
+Message-ID: <20140903192819.11368.52343@quantum>
+References: <1406898948-26113-1-git-send-email-t-kristo@ti.com>
+ <53DF7094.7050601@ti.com> <53DF7E43.2060907@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140903174645.GK1824@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@sam>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53DF7E43.2060907@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-omap@vger.kernel.org, sassmann@kpanic.de, jsarha@ti.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 03 2014 at 11:46 -0600, Lorenzo Pieralisi wrote:
->On Wed, Sep 03, 2014 at 06:34:37PM +0100, Lina Iyer wrote:
->> On Mon, Sep 01 2014 at 09:28 -0600, Lorenzo Pieralisi wrote:
->> >The CPUidle subsystem on ARM64 machines requires the idle states
->> >implementation back-end to initialize idle states parameter upon
->> >boot. This patch adds a hook in the CPU operations structure that
->> >should be initialized by the CPU operations back-end in order to
->> >provide a function that initializes cpu idle states.
->> >
->> >This patch also adds the infrastructure to arm64 kernel required
->> >to export the CPU operations based initialization interface, so
->> >that drivers (ie CPUidle) can use it when they are initialized
->> >at probe time.
->> >
->> I like the change for ARM64.
->> However, that raises a question, how do I have the same driver that
->> should get probed by a platform device (on 32 bit ARM) and getting called
->> from cpu_init_idle on ARM64?
->
->I am not following you sorry. The ARM64 CPUidle driver calls the arm64
->cpu_init_idle hooks to initialize idle states (in a generic way from
->a driver perspective), not the other way around.
->
->On ARM64 your idle driver rely on an arm64 suspend back-end (eg PSCI) to
->enter idle states, it works in a different way from ARM, on purpose.
->
->Have a look at what the code does, it won't be the same driver that's
->for certain, since on arm64 I do not want to cope with per-platform
->CPUidle state enter functions anymore, the arm64 cpu_ops suspend hook
->implements the idle state enter method.
+Quoting Tero Kristo (2014-08-04 05:36:19)
+> On 08/04/2014 02:37 PM, Peter Ujfalusi wrote:
+> > On 08/01/2014 04:15 PM, Tero Kristo wrote:
+> >> Hi,
+> >>
+> >> This patch adds possibility to register external clocks (outside the main
+> >> SoC) on TI boards through device tree. Clock sources as such include for
+> >> example twl-6030 / twl-6040 chips and variants which can be used to clock
+> >> for example audio / WLAN chips.
+> >
+> > Just one question to Mike and Tero:
+> > would it be possible to have generic binding for such an external clocks?
+> > We have the palmas clock driver already upstream which handles the 32K clocks
+> > from the PMIC. Palmas class of PMICs can be used with TI/nVidia(/Intel?)
+> > platforms. We use Palmas on omap5-uevm, DRA7-EVM also uses Palmas compatible
+> > PMIC and some nVidia platform also uses this class of devices (and they all
+> > need to have control over the 32K clock(s)).
+> 
+> Other platforms initialize their clocks in different manner, they can 
+> use generic of_clk_init I believe. If they can't use that for some 
+> reason, then they need to implement something similar to this.
 
-Ah, I was working on the premise that I may be using the same cpuidle
-driver for ARM64. I guess I will worry about ARM64 with non-PSCI drivers
-when and if I have to. Thanks!
+Right. To answer Peter's question, we do have a generic binding, it is
+the clock binding ;-)
 
->
->Lorenzo
->
->> >Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
->> >Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> >---
->> > arch/arm64/include/asm/cpu_ops.h |  3 +++
->> > arch/arm64/include/asm/cpuidle.h | 13 +++++++++++++
->> > arch/arm64/kernel/Makefile       |  1 +
->> > arch/arm64/kernel/cpuidle.c      | 31 +++++++++++++++++++++++++++++++
->> > 4 files changed, 48 insertions(+)
->> > create mode 100644 arch/arm64/include/asm/cpuidle.h
->> > create mode 100644 arch/arm64/kernel/cpuidle.c
->> >
->> >diff --git a/arch/arm64/include/asm/cpu_ops.h b/arch/arm64/include/asm/cpu_ops.h
->> >index d7b4b38..47dfa31 100644
->> >--- a/arch/arm64/include/asm/cpu_ops.h
->> >+++ b/arch/arm64/include/asm/cpu_ops.h
->> >@@ -28,6 +28,8 @@ struct device_node;
->> >  *		enable-method property.
->> >  * @cpu_init:	Reads any data necessary for a specific enable-method from the
->> >  *		devicetree, for a given cpu node and proposed logical id.
->> >+ * @cpu_init_idle: Reads any data necessary to initialize CPU idle states from
->> >+ *		devicetree, for a given cpu node and proposed logical id.
->> >  * @cpu_prepare: Early one-time preparation step for a cpu. If there is a
->> >  *		mechanism for doing so, tests whether it is possible to boot
->> >  *		the given CPU.
->> >@@ -47,6 +49,7 @@ struct device_node;
->> > struct cpu_operations {
->> > 	const char	*name;
->> > 	int		(*cpu_init)(struct device_node *, unsigned int);
->> >+	int		(*cpu_init_idle)(struct device_node *, unsigned int);
->> > 	int		(*cpu_prepare)(unsigned int);
->> > 	int		(*cpu_boot)(unsigned int);
->> > 	void		(*cpu_postboot)(void);
->> >diff --git a/arch/arm64/include/asm/cpuidle.h b/arch/arm64/include/asm/cpuidle.h
->> >new file mode 100644
->> >index 0000000..b52a993
->> >--- /dev/null
->> >+++ b/arch/arm64/include/asm/cpuidle.h
->> >@@ -0,0 +1,13 @@
->> >+#ifndef __ASM_CPUIDLE_H
->> >+#define __ASM_CPUIDLE_H
->> >+
->> >+#ifdef CONFIG_CPU_IDLE
->> >+extern int cpu_init_idle(unsigned int cpu);
->> >+#else
->> >+static inline int cpu_init_idle(unsigned int cpu)
->> >+{
->> >+	return -EOPNOTSUPP;
->> >+}
->> >+#endif
->> >+
->> >+#endif
->> >diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
->> >index 383d81d..be78980 100644
->> >--- a/arch/arm64/kernel/Makefile
->> >+++ b/arch/arm64/kernel/Makefile
->> >@@ -27,6 +27,7 @@ arm64-obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o
->> > arm64-obj-$(CONFIG_HW_PERF_EVENTS)	+= perf_event.o
->> > arm64-obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
->> > arm64-obj-$(CONFIG_ARM64_CPU_SUSPEND)	+= sleep.o suspend.o
->> >+arm64-obj-$(CONFIG_CPU_IDLE)		+= cpuidle.o
->> > arm64-obj-$(CONFIG_JUMP_LABEL)		+= jump_label.o
->> > arm64-obj-$(CONFIG_KGDB)		+= kgdb.o
->> > arm64-obj-$(CONFIG_EFI)			+= efi.o efi-stub.o efi-entry.o
->> >diff --git a/arch/arm64/kernel/cpuidle.c b/arch/arm64/kernel/cpuidle.c
->> >new file mode 100644
->> >index 0000000..19d17f5
->> >--- /dev/null
->> >+++ b/arch/arm64/kernel/cpuidle.c
->> >@@ -0,0 +1,31 @@
->> >+/*
->> >+ * ARM64 CPU idle arch support
->> >+ *
->> >+ * Copyright (C) 2014 ARM Ltd.
->> >+ * Author: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> >+ *
->> >+ * This program is free software; you can redistribute it and/or modify
->> >+ * it under the terms of the GNU General Public License version 2 as
->> >+ * published by the Free Software Foundation.
->> >+ */
->> >+
->> >+#include <linux/of.h>
->> >+#include <linux/of_device.h>
->> >+
->> >+#include <asm/cpuidle.h>
->> >+#include <asm/cpu_ops.h>
->> >+
->> >+int cpu_init_idle(unsigned int cpu)
->> >+{
->> >+	int ret = -EOPNOTSUPP;
->> >+	struct device_node *cpu_node = of_cpu_device_node_get(cpu);
->> >+
->> >+	if (!cpu_node)
->> >+		return -ENODEV;
->> >+
->> >+	if (cpu_ops[cpu] && cpu_ops[cpu]->cpu_init_idle)
->> >+		ret = cpu_ops[cpu]->cpu_init_idle(cpu_node, cpu);
->> >+
->> >+	of_node_put(cpu_node);
->> >+	return ret;
->> >+}
->> >--
->> >1.9.1
->> >
->> >
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->
+Even the idea of having a "TI clock provider" isn't really a good way to
+do things. IP blocks that generate clocks are clock providers, not
+companies. As such if Palmas or Gaia or whatever generate clocks then we
+don't need any new infrastructure in the clock core to accomodate this.
+Those drivers simply need to include clk-provider.h and register their
+clocks with the framework.
+
+Some good examples of this are the omap3-isp.c driver, and qcom's hdmi
+phy driver (sorry, don't have the path handy) which both consume clocks
+generated by other clock providers, and they provide their own clocks
+which are generated within their own IP/module.
+
+A big part of the design of the ccf (and later, the DT bindings) is that
+we do not need a centralized place to store every piece of clock
+generation knowledge and clock routing knowledge.
+
+Regards,
+Mike
+
+> 
+> -Tero
+> 
+> >
+> >> This patch can be queued once someone has a use-case + patches that requires
+> >> usage of such clocks.
+> >>
+> >> -Tero
+> >>
+> >
+> >
+> 
