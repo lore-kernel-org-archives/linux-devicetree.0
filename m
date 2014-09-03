@@ -1,50 +1,27 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: correct of_console_check()'s return value
-Date: Wed,  3 Sep 2014 11:06:43 -0700
-Message-ID: <1409767603-3290-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 1/4] ethernet: arc: Add support for Rockchip SoC layer device tree bindings
+Date: Wed, 03 Sep 2014 20:17:37 +0200
+Message-ID: <8915336.1DB5xPOmil@wuerfel>
+References: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Romain Perier <romain.perier@gmail.com>, heiko@sntech.de, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The comments above of_console_check() say that it will return TRUE if it
-registers a preferred console, but add_preferred_console() uses a
-0-equals-success convention, so ths leaves of_console_check() with an
-inconsistent policy for its return values.
+On Wednesday 03 September 2014 16:52:42 Romain Perier wrote:
+> This patch defines a platform glue layer for Rockchip SoCs which
+> support arc-emac driver. It ensures that regulator for the rmii is on
+> before trying to connect to the ethernet controller. It applies right
+> speed and mode changes to the grf when ethernet settings change.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+> 
 
-Fortunately, nobody was actually checking the return value of
-of_console_check(), so this isn't significant at the moment.
+Whole series
 
-But let's match the comments, so we're doing what we say.
-
-Fixes: 3482f2c52b77 ('of: Create of_console_check() for selecting a console specified in /chosen')
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-This is one way to fix it. Another possibility includes changing
-of_console_check() to use 0-as-success
-
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d8574adf0d62..bcfd08c2795c 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1986,7 +1986,7 @@ bool of_console_check(struct device_node *dn, char *name, int index)
- {
- 	if (!dn || dn != of_stdout || console_set_on_cmdline)
- 		return false;
--	return add_preferred_console(name, index, NULL);
-+	return !add_preferred_console(name, index, NULL);
- }
- EXPORT_SYMBOL_GPL(of_console_check);
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
