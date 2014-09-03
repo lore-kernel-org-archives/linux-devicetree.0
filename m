@@ -1,53 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/4] ethernet: arc: Add support for Rockchip SoC layer device tree bindings
-Date: Wed, 03 Sep 2014 14:50:22 +0200
-Message-ID: <3545574.7Z5WmaTlg0@wuerfel>
-References: <1409740036-8117-1-git-send-email-romain.perier@gmail.com> <3774938.44qiV4hEoE@wuerfel> <12261801.xhz3LcucGs@diego>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: PFUZE100 regulator not going off when PWRON is 0
+Date: Wed, 3 Sep 2014 13:52:48 +0100
+Message-ID: <20140903125248.GK29327@sirena.org.uk>
+References: <CAL8zT=hNnRU3gbprVXOMt6FC9veRvQKRmS9gSeCm5-DNfGv-xg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <12261801.xhz3LcucGs@diego>
-Sender: netdev-owner@vger.kernel.org
-To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: linux-arm-kernel@lists.infradead.org, Romain Perier <romain.perier@gmail.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HHj6mHPeUinss9N+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL8zT=hNnRU3gbprVXOMt6FC9veRvQKRmS9gSeCm5-DNfGv-xg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, lgirdwood@gmail.com, devicetree@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, Robin Gong <b38343@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 September 2014 14:20:50 Heiko St=FCbner wrote:
-> >=20
-> > One last question: is this the location given as .grf_offset the
-> > only thing in grf that is potentially of concern to this driver?
-> >=20
-> > If it is, you can change the binding to include the register number
-> > in the syscon reference, like
-> >=20
-> >       rockchip,grf =3D <&grf 0x154>;
-> >=20
-> > and then read it from there, to simplify the code needed to get the
-> > number from the device id.
->=20
-> I would disagree here=20
->=20
-> Specific to the emac, there also exists a second register in the grf =
-(0xa8 for=20
-> the rk3188) that contains a field=20
->=20
-> ----
-> emac_newrcv_en - the selection of RMII receive selection
-> 0: don't support the data package without header
-> 1: support the data package without header
-> ----
->=20
-> which we don't handle currently but somebody might want to in the fut=
-ure.
-> [There also is no documentation of this at all]
 
-Ok, fair enough. If there is a chance that there would be more of these
-fields that we may want to support in the future, the table approach
-seems reasonable.
+--HHj6mHPeUinss9N+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The main advantage of putting the register number into the syscon
-reference is to support future models without driver changes, but
-it's not clear if that's worth it.
+On Wed, Sep 03, 2014 at 11:44:22AM +0200, Jean-Michel Hautbois wrote:
 
-	Arnd
+> I have a custom i.MX6 based board, but PMIC part is exactly the same
+> as the Freescale SabreSD board.
+> I have a reset button, which makes the PWRON signal on PFUZE100 go from 1=
+ to 0.
+> I thought this would reset the chip, and thus all voltages would go to
+> 0, but this is not the case. It seems that SWxOMODE registers are
+> involved in this process, accorgind to the datasheet, but I don't
+> think this is implemented right now.
+>=20
+> I also removed regulator-always-on for my SW2 pin in order to get it
+> off, but this has no effect.
+
+You should really contact someone who worked on the driver or Freescale
+about this - I don't think anyone on the CC list knows anything about
+the part.  In general if you're asking about a specific driver this is a
+good approach.  I've CCed Robin Gong who was the original author.
+
+--HHj6mHPeUinss9N+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUBw8dAAoJELSic+t+oim9RqIQAIxH5/Ee3sAAZHFwp3TsvdoM
+0ocRbFMvdXIkJmToBPoo/GCLsCBgVFkOMNKEmeS+f7AKh5yF0zTkJQfydyK7B53u
+wibLQqQ7SKNMdsv7gZqqqCSal6Vf/VcHnLZIZ2iwtqLGUw2tato3g08vzGg42DkY
+d0bYqIg0pS5jKgqIgLHIcs/kEX0ZKF9+GY0dv6AVtQ1FVDtrbq0TMM8XVVWJ80mX
+iALR3AZYLk8xj8jBFIltikMpg5IjtmpU1mfG0HqjJlI4Ms7qgDWpzbwgdhdATVtx
+GhGkHX1WThIcKKNJiL9xg7zZaGdWgjiSARQJXgFe9yjTvdCB1sSbcB0xRlKxuPMO
+BXKjl+/bdmTZYkKemlrul7+V1EELCojM0ObcoT2w7XlAmFyTv3HbKHUxwq2qlCK0
+55hmgz65DVmjq3aDyGCFod0VBnPJJZoEaqfWLc8m3Svz9QycxUl9WO+oSga/y+pl
+tZ2ozzS/f/csbkVStWDNn/Qyu0y28PAPGXqRF4jt4n1TdtZNl+KyOzfSU7W1Fb8B
+T1zZzi6cI+xXwx1Wof0BusJH/eo3o9Ob9Z+UzwDrOxQVuFlYU1h+OKo2vmd8+VhR
+QhrqtfLD+j10B5+TkLI1RW2dlRmxP9hLeUAWcD0MwCEu7L3HPDpSyuSxhv5ZrI3m
+qQjvH0h2NEBHZ3H4XiRV
+=/7pG
+-----END PGP SIGNATURE-----
+
+--HHj6mHPeUinss9N+--
