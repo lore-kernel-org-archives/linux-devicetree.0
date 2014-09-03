@@ -1,182 +1,275 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v4 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Wed,  3 Sep 2014 09:48:26 +0200
-Message-ID: <1409730511-16101-8-git-send-email-antoine.tenart@free-electrons.com>
-References: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 11/14] arm64: dts: Add initial device tree support for EXYNOS7
+Date: Wed, 3 Sep 2014 13:25:02 +0530
+Message-ID: <CAHfPSqB1_ovDYSBU4trPaEZ7PYGuqFkeOw07mQLkgTU+iv_Ymw@mail.gmail.com>
+References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com>
+ <1409132660-1898-3-git-send-email-ch.naveen@samsung.com> <53FDC155.1070506@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53FDC155.1070506@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: tomasz.figa@gmail.com
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, catalin.marinas@arm.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, cpgs@samsung.com, Thomas Abraham <thomas.ab@samsung.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
-and DMA mask, to support USB2 ChipIdea controllers that don't need
-specific functions.
+Hi Tomasz,
 
-Tested on the Marvell Berlin SoCs USB controllers.
+On 27 August 2014 17:00, Tomasz Figa <t.figa@samsung.com> wrote:
+> Hi Naveen,
+>
+> Please see my comments inline.
+>
+> On 27.08.2014 11:44, Naveen Krishna Chatradhi wrote:
+>> Add initial device tree nodes for EXYNOS7 SoC.
+>> Also, includes the dt-binding definitions for clock ids.
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>> Cc: Thomas Abraham <thomas.ab@samsung.com>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> ---
+>>  arch/arm64/boot/dts/exynos7.dtsi |  553 ++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 553 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/exynos7.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/exynos7.dtsi b/arch/arm64/boot/dts/exynos7.dtsi
+>> new file mode 100644
+>> index 0000000..6b9eaf4
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/exynos7.dtsi
+>> @@ -0,0 +1,553 @@
+>> +/*
+>> + * SAMSUNG EXYNOS7 SoC device tree source
+>> + *
+>> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+>> + *           http://www.samsung.com
+>> + *
+>> + * SAMSUNG EXYNOS7 SoC device nodes are listed in this file.
+>> + * EXYNOS7 based board files can include this file and provide
+>> + * values for board specfic bindings.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <dt-bindings/clock/exynos7-clk.h>
+>> +
+>> +/ {
+>> +     compatible = "samsung,exynos7";
+>> +     interrupt-parent = <&gic>;
+>> +     #address-cells = <1>;
+>> +     #size-cells = <1>;
+>> +
+>> +     aliases {
+>> +             pinctrl0 = &pinctrl_0;
+>> +             pinctrl1 = &pinctrl_1;
+>> +             pinctrl2 = &pinctrl_2;
+>> +             pinctrl3 = &pinctrl_3;
+>> +             pinctrl4 = &pinctrl_4;
+>> +             pinctrl5 = &pinctrl_5;
+>> +             pinctrl6 = &pinctrl_6;
+>> +             pinctrl7 = &pinctrl_7;
+>> +             pinctrl8 = &pinctrl_8;
+>> +             pinctrl9 = &pinctrl_9;
+>> +             mshc0 = &mmc_0;
+>> +             mshc2 = &mmc_2;
+>
+> Please add aliases for serial controllers. Refer to relevant DT binding
+> documentation for more information.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
----
- drivers/usb/chipidea/Makefile       |   1 +
- drivers/usb/chipidea/ci_hdrc_usb2.c | 137 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 138 insertions(+)
- create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
+Ok.
 
-diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-index 2f099c7df7b5..1fc86a2ca22d 100644
---- a/drivers/usb/chipidea/Makefile
-+++ b/drivers/usb/chipidea/Makefile
-@@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
- 
- # Glue/Bridge layers go here
- 
-+obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
- obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
- obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
- 
-diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
-new file mode 100644
-index 000000000000..75bdbfa362b9
---- /dev/null
-+++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
-@@ -0,0 +1,137 @@
-+/*
-+ * Copyright (C) 2014 Marvell Technology Group Ltd.
-+ *
-+ * Antoine Tenart <antoine.tenart@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/usb/chipidea.h>
-+#include <linux/usb/hcd.h>
-+#include <linux/usb/ulpi.h>
-+
-+#include "ci.h"
-+
-+struct ci_hdrc_usb2_priv {
-+	struct platform_device	*ci_pdev;
-+	struct clk		*clk;
-+};
-+
-+static int ci_hdrc_usb2_dt_probe(struct device *dev,
-+				 struct ci_hdrc_platform_data *ci_pdata)
-+{
-+	ci_pdata->phy = of_phy_get(dev->of_node, 0);
-+	if (IS_ERR(ci_pdata->phy)) {
-+		if (PTR_ERR(ci_pdata->phy) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		/* PHY is optional */
-+		ci_pdata->phy = NULL;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct ci_hdrc_platform_data ci_default_pdata = {
-+	.capoffset	= DEF_CAPOFFSET,
-+	.flags		= CI_HDRC_REQUIRE_TRANSCEIVER |
-+			  CI_HDRC_DISABLE_STREAMING,
-+};
-+
-+static int ci_hdrc_usb2_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ci_hdrc_usb2_priv *priv;
-+	struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(&pdev->dev);
-+	int ret;
-+
-+	if (!ci_pdata)
-+		ci_pdata = &ci_default_pdata;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->clk = devm_clk_get(dev, NULL);
-+	if (!IS_ERR(priv->clk)) {
-+		ret = clk_prepare_enable(priv->clk);
-+		if (ret) {
-+			dev_err(dev, "failed to enable the clock: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (dev->of_node) {
-+		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
-+		if (ret)
-+			return ret;
-+	} else {
-+		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ci_pdata->name = dev_name(&pdev->dev);
-+
-+	priv->ci_pdev = ci_hdrc_add_device(dev, pdev->resource,
-+					   pdev->num_resources, ci_pdata);
-+	if (IS_ERR(priv->ci_pdev)) {
-+		ret = PTR_ERR(priv->ci_pdev);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev,
-+				"failed to register ci_hdrc platform device: %d\n",
-+				ret);
-+		goto clk_err;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	pm_runtime_no_callbacks(dev);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+
-+clk_err:
-+	if (!IS_ERR(priv->clk))
-+		clk_disable_unprepare(priv->clk);
-+	return ret;
-+}
-+
-+static int ci_hdrc_usb2_remove(struct platform_device *pdev)
-+{
-+	struct ci_hdrc_usb2_priv *priv = platform_get_drvdata(pdev);
-+
-+	pm_runtime_disable(&pdev->dev);
-+	ci_hdrc_remove_device(priv->ci_pdev);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ci_hdrc_usb2_of_match[] = {
-+	{ .compatible = "chipidea,usb2" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
-+
-+static struct platform_driver ci_hdrc_usb2_driver = {
-+	.probe	= ci_hdrc_usb2_probe,
-+	.remove	= ci_hdrc_usb2_remove,
-+	.driver	= {
-+		.name		= "chipidea-usb2",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(ci_hdrc_usb2_of_match),
-+	},
-+};
-+module_platform_driver(ci_hdrc_usb2_driver);
-+
-+MODULE_DESCRIPTION("ChipIdea HDRC USB2 binding for ci13xxx");
-+MODULE_AUTHOR("Antoine Tenart <antoine.tenart@free-electrons.com>");
-+MODULE_LICENSE("GPL");
+>
+>> +     };
+>> +
+>> +     chipid@10000000 {
+>> +             compatible = "samsung,exynos4210-chipid";
+>> +             reg = <0x10000000 0x100>;
+>> +     };
+>
+> Please put SoC components (except cpus node) under a simple-bus node
+> called "soc". Please see exynos5260.dtsi as an example.
+
+Ok.
+
+>
+>> +
+>> +     cpus {
+>> +             #address-cells = <2>;
+>> +             #size-cells = <0>;
+>> +
+>> +             cpu@0 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "arm,cortex-a57", "arm,armv8";
+>> +                     reg = <0x0 0x0>;
+>> +             };
+>
+> Does this SoC really has only one CPU or this is a workaround for things
+> like missing CPU bring-up code?
+>
+>> +     };
+>
+> [snip]
+>
+>> +     mct@101C0000 {
+>> +             compatible = "samsung,exynos4210-mct";
+>> +             reg = <0x101C0000 0x800>;
+>> +             interrupt-controller;
+>> +             #interrupt-cells = <1>;
+>
+> MCT is not an interrupt controller.
+>
+>> +             interrupt-parent = <&mct_map>;
+>> +             interrupts =    <0>, <1>, <2>, <3>,
+>> +                             <4>, <5>, <6>, <7>,
+>> +                             <8>, <9>, <10>, <11>;
+>> +             clocks = <&fin_pll>, <&clock_peris PCLK_MCT>;
+>> +             clock-names = "fin_pll", "mct";
+>> +
+>> +             mct_map: mct-map {
+>> +                     #interrupt-cells = <1>;
+>> +                     #address-cells = <0>;
+>> +                     #size-cells = <0>;
+>> +                     interrupt-map = <0 &gic 0 112 0>,
+>> +                                     <1 &gic 0 113 0>,
+>> +                                     <2 &gic 0 114 0>,
+>> +                                     <3 &gic 0 115 0>,
+>> +                                     <4 &gic 0 116 0>,
+>> +                                     <5 &gic 0 117 0>,
+>> +                                     <6 &gic 0 118 0>,
+>> +                                     <7 &gic 0 119 0>,
+>> +                                     <8 &gic 0 120 0>,
+>> +                                     <9 &gic 0 121 0>,
+>> +                                     <10 &gic 0 122 0>,
+>> +                                     <11 &gic 0 123 0>;
+>
+> All inputs of this interrupt map come from the same interrupt
+> controller. What's the point of this map then?
+>
+>> +             };
+>> +     };
+>> +
+>> +     mmc_0: mmc@15740000 {
+>> +             compatible = "samsung,exynos7-dw-mshc-smu";
+>> +             interrupts = <0 201 0>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             reg = <0x15740000 0x2000>;
+>> +             clocks = <&clock_fsys1 ACLK_MMC0>,
+>> +                     <&clock_top1 CLK_SCLK_MMC0>;
+>> +             clock-names = "biu", "ciu";
+>> +             fifo-depth = <0x40>;
+>> +             status = "disabled";
+>> +     };
+>> +
+>> +     mmc_2: mmc@15560000 {
+>> +             compatible = "samsung,exynos7-dw-mshc-smu";
+>> +             interrupts = <0 216 0>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             reg = <0x15560000 0x2000>;
+>> +             clocks = <&clock_fsys0 ACLK_MMC2>,
+>> +                     <&clock_top1 CLK_SCLK_MMC2>;
+>> +             clock-names = "biu", "ciu";
+>> +             fifo-depth = <0x40>;
+>> +             status = "disabled";
+>> +     };
+>> +
+>> +     pinctrl_0: pinctrl@10580000 {
+>> +             compatible = "samsung,exynos7-pinctrl";
+>> +             reg = <0x10580000 0x1000>;
+>> +             interrupts = <0 0 0>, <0 1 0>, <0 2 0>, <0 3 0>,
+>> +                             <0 4 0>, <0 5 0>, <0 6 0>, <0 7 0>,
+>> +                             <0 8 0>, <0 9 0>, <0 10 0>, <0 11 0>,
+>> +                             <0 12 0>, <0 13 0>, <0 14 0>, <0 15 0>;
+>
+> According to patch 5/14, this bank supports only wake-up interrupts.
+> Their interrupt specifiers should be specified either in the wake-up
+> interrupt controller node (for muxed wake-up interrupts) or in nodes of
+> respective banks (for direct wake-up interrupts).
+
+Ok, will fix.
+
+>
+>> +             wakeup-interrupt-controller {
+>> +                     compatible = "samsung,exynos4210-wakeup-eint";
+>> +                     interrupt-parent = <&gic>;
+>> +                     interrupts = <0 16 0>;
+>> +             };
+>> +     };
+>
+> [snip]
+>
+>> +     serial@13630000 {
+>> +             compatible = "samsung,exynos4210-uart";
+>> +             reg = <0x13630000 0x100>;
+>> +             interrupts = <0 440 0>;
+>> +             clocks = <&clock_peric0 PCLK_UART0>, <&clock_peric0 SCLK_UART0>;
+>> +             clock-names = "uart", "clk_uart_baud0";
+>> +             status = "okay";
+>
+> No need to explicitly specify the status as "okay" in top level dtsi file.
+
+Ok. Fixed.
+
+>
+>> +     };
+>> +
+>> +     serial@14C20000 {
+>> +             compatible = "samsung,exynos4210-uart";
+>> +             reg = <0x14C20000 0x100>;
+>> +             interrupts = <0 456 0>;
+>> +             clocks = <&clock_peric1 PCLK_UART1>, <&clock_peric1 SCLK_UART1>;
+>> +             clock-names = "uart", "clk_uart_baud1";
+>
+> The "clk_uart_baud1" clock doesn't seem right. The N in "clk_uart_baudN"
+> stands for the input of internal clock source mux, not index of the IP
+> block in the SoC. Please make sure this is defined correctly.
+
+Right. That was a mistake. This is fixed.
+
+>
+>> +             status = "okay";
+>
+> Ditto.
+>
+>> +     };
+>> +
+>> +     serial@14C30000 {
+>> +             compatible = "samsung,exynos4210-uart";
+>> +             reg = <0x14C30000 0x100>;
+>> +             interrupts = <0 457 0>;
+>> +             clocks = <&clock_peric1 PCLK_UART2>, <&clock_peric1 SCLK_UART2>;
+>> +             clock-names = "uart", "clk_uart_baud2";
+>
+> Ditto.
+>
+>> +             status = "okay";
+>
+> Ditto.
+>
+>> +     };
+>> +
+>> +     serial@14C40000 {
+>> +             compatible = "samsung,exynos4210-uart";
+>> +             reg = <0x14C40000 0x100>;
+>> +             interrupts = <0 458 0>;
+>> +             clocks = <&clock_peric1 PCLK_UART3>, <&clock_peric1 SCLK_UART3>;
+>> +             clock-names = "uart", "clk_uart_baud3";
+>
+> Ditto.
+>
+>> +             status = "okay";
+>
+> Ditto.
+>
+> Best regards,
+> Tomasz
+
+Thanks for your comments.
+
 -- 
-1.9.1
+Shine bright,
+(: Nav :)
