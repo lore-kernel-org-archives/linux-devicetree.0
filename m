@@ -1,91 +1,70 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] Documentation: bcm7120-l2: Add Broadcom BCM7120-style
- L2 binding
-Date: Wed, 3 Sep 2014 14:13:02 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1409031410580.3333@nanos>
-References: <1409265326-7579-1-git-send-email-f.fainelli@gmail.com> <1409265326-7579-3-git-send-email-f.fainelli@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 1/4] ethernet: arc: Add support for Rockchip SoC layer device tree bindings
+Date: Wed, 03 Sep 2014 14:20:50 +0200
+Message-ID: <12261801.xhz3LcucGs@diego>
+References: <1409740036-8117-1-git-send-email-romain.perier@gmail.com> <3774938.44qiV4hEoE@wuerfel>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409265326-7579-3-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <3774938.44qiV4hEoE@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Romain Perier <romain.perier@gmail.com>, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-You forgot to CC the device tree dudes. We want an ack on the bindings
-before they materialize in Linus tree.
-
-Thanks,
-
-	tglx
-
-On Thu, 28 Aug 2014, Florian Fainelli wrote:
-
-> This patch adds the Device Tree binding document for the Broadcom
-> BCM7120-style Set-top-box Level 2 interrupt controller hardware.
+Am Mittwoch, 3. September 2014, 13:14:54 schrieb Arnd Bergmann:
+> On Wednesday 03 September 2014 10:27:13 Romain Perier wrote:
+> > +static const struct emac_rockchip_soc_data emac_rockchip_dt_data[] = {
+> > +       { .grf_offset = 0x154 }, /* rk3066 */
+> > +       { .grf_offset = 0x0a4 }, /* rk3188 */
+> > +};
+> > +
+> > +static const struct of_device_id emac_rockchip_dt_ids[] = {
+> > +       { .compatible = "rockchip,rk3066-emac", .data =
+> > &emac_rockchip_dt_data[0] }, +       { .compatible =
+> > "rockchip,rk3188-emac", .data = &emac_rockchip_dt_data[1] }, +       { /*
+> > Sentinel */ }
+> > +};
+> > +
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../interrupt-controller/brcm,bcm7120-l2-intc.txt  | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+> One last question: is this the location given as .grf_offset the
+> only thing in grf that is potentially of concern to this driver?
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
-> new file mode 100644
-> index 000000000000..3818ffed7347
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
-> @@ -0,0 +1,44 @@
-> +Broadcom BCM7120-style Level 2 interrupt controller
-> +
-> +Required properties:
-> +
-> +- compatible: should be "brcm,bcm7120-l2-intc"
-> +- reg: specifies the base physical address and size of the registers
-> +- interrupt-controller: identifies the node as an interrupt controller
-> +- #interrupt-cells: specifies the number of cells needed to encode an interrupt
-> +  source, should be 1.
-> +- interrupt-parent: specifies the phandle to the parent interrupt controller
-> +  this one is cascaded from
-> +- interrupts: specifies the interrupt line(s) in the interrupt-parent domain
-> +  to be used for cascading
-> +- brcm,int-map-mask: 32-bits bit mask describing how the interrupts at this level
-> +  map to their respective parents. Should match exactly the number of interrupts
-> +  specified in the 'interrupts' property.
-> +
-> +Optional properties:
-> +
-> +- interrupt-names: if present, the litteral names for the parent interrupts
-> +  specified in the 'interrupts' property.
-> +
-> +- brcm,irq-can-wake: if present, this means the L2 controller can be used as a
-> +  wakeup source for system suspend/resume.
-> +
-> +- brcm,int-fwd-mask: if present, a 32-bits bit mask describing the interrupts
-> +  which need to be enabled in this controller to flow to the higher level
-> +  interrupt controller. This is typically needed for the UARTs interrupts to
-> +  flow through the top-level interrupt controller (e.g: ARM GIC on ARM-based
-> +  platforms).
-> +
-> +Example:
-> +
-> +irq0_intc: interrupt-controller@f0406800 {
-> +	compatible = "brcm,bcm7120-l2-intc";
-> +	interrupt-parent = <&intc>;
-> +	#interrupt-cells = <1>;
-> +	reg = <0xf0406800 0x8>;
-> +	interrupt-controller;
-> +	interrupts = <0x0 0x42 0x0>, <0x0 0x40 0x0>;
-> +	interrupt-names = "upg_main", "upg_bsc";
-> +	brcm,int-map-mask = <0xeb8>, <0x140>;
-> +	brcm,int-fwd-mask = <0x7>;
-> +};
-> -- 
-> 1.9.1
+> If it is, you can change the binding to include the register number
+> in the syscon reference, like
 > 
+> 	rockchip,grf = <&grf 0x154>;
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> and then read it from there, to simplify the code needed to get the
+> number from the device id.
+
+I would disagree here :-)
+
+Specific to the emac, there also exists a second register in the grf (0xa8 for 
+the rk3188) that contains a field 
+
+----
+emac_newrcv_en - the selection of RMII receive selection
+0: don't support the data package without header
+1: support the data package without header
+----
+
+which we don't handle currently but somebody might want to in the future.
+[There also is no documentation of this at all]
+
+
+The dt maintainers also generally suggest to define compatibles for the 
+individual socs anyway, even if only one is matched, so I don't see the 
+necessity to encode this 2 times
+	compatible = "rockchip,rk3188-emac", "rockchip,rk3066-emac";
+	rockchip,grf = <&grf 0xa4>;
+
+instead of the more flexible
+	compatible = "rockchip,rk3188-emac";
+	rockchip,grf = <&grf>;
+
+which other rockchip drivers already use in this form.
+
+
+Heiko
