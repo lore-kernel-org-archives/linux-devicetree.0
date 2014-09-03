@@ -1,45 +1,32 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: mfd: twl4030-power: Use
- the standard 'ti,system-power-controller' to mark power control
-Date: Wed, 3 Sep 2014 15:31:44 -0500
-Message-ID: <CAGo_u6qkjb0N05XYGHrR6ag8eBCG=b+5NtSeA8E9SdgTw07A1A@mail.gmail.com>
-References: <1409771208-21867-1-git-send-email-nm@ti.com>
-	<1409771208-21867-2-git-send-email-nm@ti.com>
-	<20140903195317.GA678@earth.universe>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140903195317.GA678@earth.universe>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-omap <linux-omap@vger.kernel.org>, dt list <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 0/3] SPI Fixes for spi-rockchip
+Date: Wed,  3 Sep 2014 13:44:24 -0700
+Message-ID: <1409777067-17422-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 3, 2014 at 2:53 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> On Wed, Sep 03, 2014 at 02:06:47PM -0500, Nishanth Menon wrote:
+These three patches are random SPI fixes for spi-rockchip.  They are
+unrelated and can be applied / NAKed separately.  They've been tested
+in PIO mode on an rk3288 board (since SPI DMA isn't currently working
+for some unknown reason).
 
->>  Optional properties:
->> -- ti,use_poweroff: With this flag, the chip will initiates an ACTIVE-to-OFF or
->> -                SLEEP-to-OFF transition when the system poweroffs.
->> +
->> +- ti,system-power-controller OR ti,use_poweroff: This indicates that
->> +  TWL4030 is the power supply master of the system. With this flag, the
->> +  chip will initiates an ACTIVE-to-OFF or SLEEP-to-OFF transition when
->> +  the system poweroffs.
->
-> I suggest the following wording:
->
-> - ti,system-power-controller: This indicates that TWL4030 is the
->   power supply master of the system. With this flag, the chip will
->   initiates an ACTIVE-to-OFF or SLEEP-to-OFF transition when the
->   system poweroffs.
->
-> - ti,use_poweroff: Deprecated name for ti,system-power-controller
 
-Yes, this does indeed sound better. if no one has a different opinion
-or further comments, will update this patch tomorrow.
+Doug Anderson (3):
+  spi/rockchip: Fix the wait_for_idle() timeout
+  spi/rockchip: Don't warn if SPI is busy but disabled
+  dt-bindings: spi/rockchip: Mark DMA as optional
+
+ Documentation/devicetree/bindings/spi/spi-rockchip.txt | 8 ++++++--
+ drivers/spi/spi-rockchip.c                             | 5 +++--
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
 -- 
----
-Regards,
-Nishanth Menon
+2.1.0.rc2.206.gedb03e5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
