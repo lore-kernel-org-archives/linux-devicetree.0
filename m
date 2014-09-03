@@ -1,52 +1,42 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [Patch net-next 04/11] net:fec: add multiqueue support
-Date: Wed, 03 Sep 2014 14:27:21 -0700
-Message-ID: <540787B9.8090504@gmail.com>
-References: <1409776697-1536-1-git-send-email-Frank.Li@freescale.com> <1409776697-1536-5-git-send-email-Frank.Li@freescale.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8 3/5] RTC: RK808: add RTC driver for RK808
+Date: Wed, 3 Sep 2014 14:30:36 -0700
+Message-ID: <CAD=FV=XPUEJDUKg-A+sJZY-Y71D6LkXogpKpNjc0JL+QjAT0Dg@mail.gmail.com>
+References: <1409752307-29044-1-git-send-email-zyw@rock-chips.com>
+	<1409763853-29778-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1409776697-1536-5-git-send-email-Frank.Li@freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: Frank Li <Frank.Li@freescale.com>, b38611@freescale.com, davem@davemloft.net, netdev@vger.kernel.org, lznuaa@gmail.com
-Cc: shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409763853-29778-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/2014 01:38 PM, Frank Li wrote:
-> From: Fugang Duan <B38611@freescale.com>
-> 
-> Add multiqueue support, which is compatible with previous single queue
-> driver for FEC/ENET IPs.
-> 
-> By default, the tx/rx queue number is 1, user can config the queue number
-> at DTS file like this:
-> 	fsl,num_tx_queues=<3>;
-> 	fsl,num_rx_queues=<3>;
-> 
-> Ethernet multiqueue mechanism can improve performance in SMP system.
-> For single hw queue, multiqueue can balance cpu loading.
-> For multi hw queues, multiple cores can process network packets in parallel,
-> and refer the article for the detail advantage for multiqueue:
-> http://vger.kernel.org/~davem/davem_nyc09.pdf
+Chris,
 
-You should probably split that patch in a minimum of two, or more
-different parts.
+On Wed, Sep 3, 2014 at 10:04 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> +       rk808_rtc->irq = platform_get_irq(pdev, 0);
+> +       if (rk808_rtc->irq <= 0) {
+> +               dev_err(&pdev->dev, "Wake up is not possible as irq = %d\n",
+> +                       rk808_rtc->irq);
+> +               return -ENXIO;
+> +       }
 
-Two parts:
+You missed some of my feedback (though your changelog says otherwise).
+Note: it would probably be good to also only print if it's not
+EPROBE_DEFER.
 
-- add TX multiqueue support
-- add RX multiqueue support
+Thus, the above should be:
 
-More parts:
-
-- prepare for TX multiqueue (introduce queue structure, definitions)
-- transition TX path to use queue 0
-- add support for the two other TX queues
-- prepare for RX multiqueue (introduce queue structure, definitions)
-- prepare for multiqueue, hardcode RX path to use queue 0
-- add support for the two other RX queues
-
-The number of changes are extremely hard to review...
+       rk808_rtc->irq = platform_get_irq(pdev, 0);
+       if (rk808_rtc->irq < 0) {
+               if (rk808_rtc->irq != -EPROBE_DEFER)
+                   dev_err(&pdev->dev, "Wake up is not possible as irq = %d\n",
+                           rk808_rtc->irq);
+               return rk808_rtc->irq;
+       }
 --
-Florian
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
