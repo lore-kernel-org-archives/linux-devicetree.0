@@ -1,116 +1,98 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 03/12] of: Add binding document for MIPS GIC
-Date: Tue, 02 Sep 2014 17:50:02 -0700
-Message-ID: <540665BA.3080702@gmail.com>
-References: <1409350479-19108-1-git-send-email-abrestic@chromium.org> <1409350479-19108-4-git-send-email-abrestic@chromium.org> <5405FE07.4030400@gmail.com> <CAL1qeaHcV_4Z9n_THEN_aST3smgaW1vwn81SkmbU0AUJ_rdB1Q@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/3 repost] clocksource: sh_mtu2: Document r7s72100
+ binding
+Date: Wed, 3 Sep 2014 10:02:01 +0900
+Message-ID: <20140903010201.GA2903@verge.net.au>
+References: <1409117300-2133-1-git-send-email-horms+renesas@verge.net.au>
+ <1409117300-2133-3-git-send-email-horms+renesas@verge.net.au>
+ <20140827095240.GC7295@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaHcV_4Z9n_THEN_aST3smgaW1vwn81SkmbU0AUJ_rdB1Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140827095240.GC7295@leverpostej>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2014 12:36 PM, Andrew Bresticker wrote:
-> On Tue, Sep 2, 2014 at 10:27 AM, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 08/29/2014 03:14 PM, Andrew Bresticker wrote:
->>>
->>> The Global Interrupt Controller (GIC) present on certain MIPS systems
->>> can be used to route external interrupts to individual VPEs and CPU
->>> interrupt vectors.  It also supports a timer and software-generated
->>> interrupts.
->>>
->>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> ---
->>>    Documentation/devicetree/bindings/mips/gic.txt | 50
->>> ++++++++++++++++++++++++++
->>>    1 file changed, 50 insertions(+)
->>>    create mode 100644 Documentation/devicetree/bindings/mips/gic.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/mips/gic.txt
->>> b/Documentation/devicetree/bindings/mips/gic.txt
->>> new file mode 100644
->>> index 0000000..725f1ef
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/mips/gic.txt
->>> @@ -0,0 +1,50 @@
->>> +MIPS Global Interrupt Controller (GIC)
->>> +
->>> +The MIPS GIC routes external interrupts to individual VPEs and IRQ pins.
->>> +It also supports a timer and software-generated interrupts which can be
->>> +used as IPIs.
->>> +
->>> +Required properties:
->>> +- compatible : Should be "mti,global-interrupt-controller"
->>> +- reg : Base address and length of the GIC registers.
->>> +- interrupts : Core interrupts to which the GIC may route external
->>> interrupts.
->>
->>
->> This doesn't make sense to me.  The GIC can, and does, route interrupts to
->> all CPU cores in a SMP system.  How can there be a concept of only
->> associating it with several interrupt lines on a single CPU in the system?
->> That is not what the GIC does, is it?  It is a Global interrupts controller,
->> not local.  So specifying device tree bindings that don't show its Global
->> nature seems wrong.
->
-> While the GIC can route external interrupts to any HW interrupt vector
-> it may not make sense to actually use all those vectors.  For example,
-> the CP0 timer is usually hooked up to HW vector 5 (it could be treated
-> as a GIC local interrupt, though it may still be fixed to HW vector
-> 5).  BTW, the Malta example about the i8259 I gave before was wrong -
-> it appears that it actually gets chained with the GIC.
+On Wed, Aug 27, 2014 at 10:52:40AM +0100, Mark Rutland wrote:
+> On Wed, Aug 27, 2014 at 06:28:19AM +0100, Simon Horman wrote:
+> > In general Renesas hardware is not documented to the extent
+> > where the relationship between IP blocks on different SoCs can be assumed
+> > although they may appear to operate the same way. Furthermore the
+> > documentation typically does not specify a version for individual
+> > IP blocks. For these reasons a convention of using the SoC name in place
+> > of a version and providing SoC-specific compat strings has been adopted.
+> > 
+> > Although not universally liked this convention is used in the bindings
+> > for the drivers a number of drivers for Renesas hardware. The purpose
+> > of this patch is to update the Renesas R-Car Multi-Function Timer Pulse
+> > Unit 2 (MTU2) driver to follow this convention.
+> > 
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > 
+> > ---
+> > * I plan to follow up with a patch patch to use the new binding in the
+> >   dtsi files for the r7s72100 SoC.
+> > ---
+> >  Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> > index 917453f..ec4d334 100644
+> > --- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> > +++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
+> > @@ -8,7 +8,9 @@ are independent. The MTU2 hardware supports five channels indexed from 0 to 4.
+> >  
+> >  Required Properties:
+> >  
+> > -  - compatible: must contain "renesas,mtu2"
+> > +  - compatible: must be one of the following.
+> 
+> Surely "one or more", follwing the example?
 
-Your comments don't really make sense to me in the context of my 
-knowledge of the GIC.
+Thanks, yes, it should be "one or more".
 
-Of course all the CP0 timer and performance counter interrupts are 
-per-CPU and routed directly to the corresponding CP0_Cause[IP7..IP2] 
-bits.  We are don't need to give them further consideration.
+> > +    - "renesas,mtu2" for generic MTU2
+> 
+> s/generic/any/ to make it clearer this should be present in all lists
+> for the moment?
 
+Sure.
 
-Here is the scenario you should consider:
+> > +    - "renesas,mtu2-r7s72100" for R7S72100 MTU2
+> 
+> It might make sense to move this above the "renesas,mtu2" entry to make
+> the ordering a bit clearer.
 
-   o 16 CPU cores.
-   o 1 GIC routing interrupts from external sources to the 16 CPUs.
-   o 2 network controllers each with an interrupt line routed to the GIC.
+Sure.
 
-Q: What would the GIC "interrupts" property look like?
-
-Note that the GIC doesn't have a single "interrupt-parent", as it can 
-route interrupts to *all* 16 CPUs.
-
-I propose that the GIC have neither an "interrupt-parent", nor 
-"interrupts".  The fact that it is an "mti,global-interrupt-controller", 
-means that the software drivers for the GIC already know how to route 
-interrupts, and any information the device tree could contain is redundant.
-
- >
- > What would you suggest instead?  Route all GIC interrupts to a single
- > vector?
-
-Yes.  The OCTEON interrupt controllers although architecturally 
-distinct, have many of the same features as the GIC, and this is what we 
-do there.  You could route the IPI interrupts to IP2, and device 
-interrupts to IP3, or some similar arrangement.
-
-But the main point is that the hardware is very flexible in how the 
-interrupt signals are routed.  Somehow encoding a single simple and very 
-restricted topology into the device-tree doesn't seem useful to me.
-
-It may be the case that only certain of the CP0_Cause[IP7..IP2] bits 
-should  be used by the GIC in a particular system (if they are used by 
-timer or profiling hardware for example).  If that is the case, then we 
-would have to have some way to specify that.  But it wouldn't be done 
-via the "interrupts" property.
-
-
- >  Attempt to distribute them over all 6 vectors?
-
-No.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Cheers,
+> Mark.
+> 
+> >  
+> >    - reg: base address and length of the registers block for the timer module.
+> >  
+> > @@ -26,7 +28,7 @@ Required Properties:
+> >  Example: R7S72100 (RZ/A1H) MTU2 node
+> >  
+> >  	mtu2: timer@fcff0000 {
+> > -		compatible = "renesas,mtu2";
+> > +		compatible = "renesas,mtu2-r7s72100", "renesas,mtu2";
+> >  		reg = <0xfcff0000 0x400>;
+> >  		interrupts = <0 139 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <0 146 IRQ_TYPE_LEVEL_HIGH>,
+> > -- 
+> > 2.0.1
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
