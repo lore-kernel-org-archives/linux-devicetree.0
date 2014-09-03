@@ -1,56 +1,163 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v8 5/5] regulator: RK808: Remove pdata from the regulator
-Date: Wed, 3 Sep 2014 14:51:38 -0700
-Message-ID: <CAD=FV=Xzz=SCHC1T5K1s1BcoLZGhUvYf+QMFUEyaPFZsHtSwfA@mail.gmail.com>
-References: <1409752307-29044-1-git-send-email-zyw@rock-chips.com>
-	<1409763974-29854-1-git-send-email-zyw@rock-chips.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4] ARM: dts: Add sdio0 and sdio1 to the rk3288
+Date: Thu, 04 Sep 2014 00:56:08 +0200
+Message-ID: <1974115.XyT5SIvn66@diego>
+References: <1408436126-23390-1-git-send-email-addy.ke@rock-chips.com> <1408443668-23933-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409763974-29854-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408443668-23933-1-git-send-email-addy.ke@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Addy Ke <addy.ke@rock-chips.com>
+Cc: dianders@chromium.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+Am Dienstag, 19. August 2014, 18:21:08 schrieb Addy Ke:
+> This patch requires that <https://patchwork.kernel.org/patch/4701721/>
+> land in order to compile.
+> 
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
 
-On Wed, Sep 3, 2014 at 10:06 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> Tested-by: Heiko <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+I've added the patch to my v3.18-next/dts branch
+
+
 > ---
->
-> Changes in v8:
-> Adviced by Doug
-> - remove rk808_regulator_dts() function
-> - remove the check about "client->dev.of_node"
-
-Nice, this cleaned this up a lot.  Thanks!
-
-
->  static int rk808_regulator_probe(struct platform_device *pdev)
->  {
->         struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
->         struct i2c_client *client = rk808->i2c;
-> -       struct rk808_board *pdata = dev_get_platdata(&client->dev);
->         struct regulator_config config = {};
->         struct regulator_dev *rk808_rdev;
-> -       struct regulator_init_data *reg_data;
-> -       int i = 0;
-
-As Heiko mentioned, you need "struct device_node *np, *reg_np;" here.
-
->         int ret = 0;
-> +       int i = 0;
-
-nit: I think neither "ret" nor "i" needs to be initted here.
-
-
-Otherwise I agree that this looks really good!
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Changes in v2:
+> - repost patch to match what's in Heiko's "wip/v3.18-next/dts" tree
+>   for the other dwmmc controllers
+> - add "cd" and "int" line, suggested by Doug Anderson
+> - fix up sdio1 configuration error
+> 
+> Changes in v3:
+> - sort sdio0 and sdio1 by pin number, suggested by Doug Anderson
+> - add "ro" and "bkpwr" line, suggested by Doug Anderson
+> 
+> Changes in v4:
+> - change "sdiox_ro" to "sdiox_wp", suggested by Doug Anderson
+> 
+>  arch/arm/boot/dts/rk3288.dtsi | 102
+> ++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 102
+> insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 36be7bb..1fcc20e 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -88,6 +88,26 @@
+>  		status = "disabled";
+>  	};
+> 
+> +	sdio0: dwmmc@ff0d0000 {
+> +		compatible = "rockchip,rk3288-dw-mshc";
+> +		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>;
+> +		clock-names = "biu", "ciu";
+> +		fifo-depth = <0x100>;
+> +		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg = <0xff0d0000 0x4000>;
+> +		status = "disabled";
+> +	};
+> +
+> +	sdio1: dwmmc@ff0e0000 {
+> +		compatible = "rockchip,rk3288-dw-mshc";
+> +		clocks = <&cru HCLK_SDIO1>, <&cru SCLK_SDIO1>;
+> +		clock-names = "biu", "ciu";
+> +		fifo-depth = <0x100>;
+> +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg = <0xff0e0000 0x4000>;
+> +		status = "disabled";
+> +	};
+> +
+>  	emmc: dwmmc@ff0f0000 {
+>  		compatible = "rockchip,rk3288-dw-mshc";
+>  		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
+> @@ -508,6 +528,88 @@
+>  			};
+>  		};
+> 
+> +		sdio0 {
+> +			sdio0_bus1: sdio0-bus1 {
+> +				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio0_bus4: sdio0-bus4 {
+> +				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>,
+> +						<4 21 RK_FUNC_1 &pcfg_pull_up>,
+> +						<4 22 RK_FUNC_1 &pcfg_pull_up>,
+> +						<4 23 RK_FUNC_1 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio0_cmd: sdio0-cmd {
+> +				rockchip,pins = <4 24 RK_FUNC_1 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio0_clk: sdio0-clk {
+> +				rockchip,pins = <4 25 RK_FUNC_1 &pcfg_pull_none>;
+> +			};
+> +
+> +			sdio0_cd: sdio0-cd {
+> +				rockchip,pins = <4 26 RK_FUNC_1 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio0_wp: sdio0-wp {
+> +				rockchip,pins = <4 27 RK_FUNC_1 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio0_pwr: sdio0-pwr {
+> +				rockchip,pins = <4 28 RK_FUNC_1 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio0_bkpwr: sdio0-bkpwr {
+> +				rockchip,pins = <4 29 RK_FUNC_1 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio0_int: sdio0-int {
+> +				rockchip,pins = <4 30 RK_FUNC_1 &pcfg_pull_up>;
+> +			};
+> +		};
+> +
+> +		sdio1 {
+> +			sdio1_bus1: sdio1-bus1 {
+> +				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio1_bus4: sdio1-bus4 {
+> +				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>,
+> +						<3 25 RK_FUNC_4 &pcfg_pull_up>,
+> +						<3 26 RK_FUNC_4 &pcfg_pull_up>,
+> +						<3 27 RK_FUNC_4 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio1_cd: sdio1-cd {
+> +				rockchip,pins = <3 28 RK_FUNC_4 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio1_wp: sdio1-wp {
+> +				rockchip,pins = <3 29 RK_FUNC_4 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio1_bkpwr: sdio1-bkpwr {
+> +				rockchip,pins = <3 30 RK_FUNC_4 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio1_int: sdio1-int {
+> +				rockchip,pins = <3 31 RK_FUNC_4 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio1_cmd: sdio1-cmd {
+> +				rockchip,pins = <4 6 RK_FUNC_4 &pcfg_pull_up>;
+> +			};
+> +
+> +			sdio1_clk: sdio1-clk {
+> +				rockchip,pins = <4 7 RK_FUNC_4 &pcfg_pull_none>;
+> +			};
+> +
+> +			sdio1_pwr: sdio1-pwr {
+> +				rockchip,pins = <4 9 RK_FUNC_4 &pcfg_pull_up>;
+> +			};
+> +		};
+> +
+>  		emmc {
+>  			emmc_clk: emmc-clk {
+>  				rockchip,pins = <3 18 RK_FUNC_2 &pcfg_pull_none>;
