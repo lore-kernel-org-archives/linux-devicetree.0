@@ -1,113 +1,31 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend 1/4] clk: hix5hd2: add complex clk
-Date: Wed, 03 Sep 2014 10:37:53 -0700
-Message-ID: <20140903173753.11368.10916@quantum>
-References: <1409031970-4821-1-git-send-email-zhangfei.gao@linaro.org>
- <1409031970-4821-2-git-send-email-zhangfei.gao@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 4/4] ARM: dts: Enable emac node on the rk3188-radxarock boards
+Date: Wed, 03 Sep 2014 19:45:50 +0200
+Message-ID: <2909336.qILuPbXDGe@wuerfel>
+References: <1409740036-8117-1-git-send-email-romain.perier@gmail.com> <CAFnsNoSmHwN3nJ5ZJL5fc_-kaECCoLBvpdBYQxkyLcUzLx5MTw@mail.gmail.com> <CABgxDoJOJ9bM2CgXyXjPvsv2DN_QO+HPAzCwfjdyKFDpUAOtOw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409031970-4821-2-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CABgxDoJOJ9bM2CgXyXjPvsv2DN_QO+HPAzCwfjdyKFDpUAOtOw@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: PERIER Romain <romain.perier@gmail.com>, Naoki FUKAUMI <naobsd@gmail.com>, devicetree <devicetree@vger.kernel.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, netdev <netdev@vger.kernel.org>, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Zhangfei Gao (2014-08-25 22:46:07)
-> +static int clk_ether_enable(struct clk_hw *hw)
-> +{
-> +       struct hix5hd2_clk_complex *clk = to_complex_clk(hw);
-> +       u32 val;
-> +
-> +       val = readl_relaxed(clk->ctrl_reg);
-> +       val |= clk->ctrl_clk_mask | clk->ctrl_rst_mask;
-> +       writel_relaxed(val, clk->ctrl_reg);
-> +       val &= ~(clk->ctrl_rst_mask);
-> +       writel_relaxed(val, clk->ctrl_reg);
-> +
-> +       val = readl_relaxed(clk->phy_reg);
-> +       val |= clk->phy_clk_mask;
-> +       val &= ~(clk->phy_rst_mask);
-> +       writel_relaxed(val, clk->phy_reg);
-> +       mdelay(10);
-> +
-> +       val &= ~(clk->phy_clk_mask);
-> +       val |= clk->phy_rst_mask;
-> +       writel_relaxed(val, clk->phy_reg);
-> +       mdelay(10);
-> +
-> +       val |= clk->phy_clk_mask;
-> +       val &= ~(clk->phy_rst_mask);
-> +       writel_relaxed(val, clk->phy_reg);
-> +       mdelay(30);
+On Wednesday 03 September 2014 18:37:16 PERIER Romain wrote:
+> It is an optional property used by arc-emac (the core driver), if it
+> is not present the core driver generates one for you.
+> Problem being that with this property two radxa rock boards connected
+> on the same local network might have the same mac address.
+> 
+> In this case it would be probably better to remove this property. What
+> do you think ?
+> 
 
-With all of these mdelays, I wonder if you should use .prepare and
-.unprepare instead? Does the Ethernet driver call clk_{en|dis}able from
-interrupt context?
+It would typically be filled in by the boot loader, and be all-zeroes
+in the kernel-supplied dts file. I don't see a point in hardcoding
+a particular MAC address in the dts file, since that won't work
+unless it's the only device of that type in the network segment.
 
-> +       return 0;
-> +}
-> +
-> +static void clk_ether_disable(struct clk_hw *hw)
-> +{
-> +       struct hix5hd2_clk_complex *clk = to_complex_clk(hw);
-> +       u32 val;
-> +
-> +       val = readl_relaxed(clk->ctrl_reg);
-> +       val &= ~(clk->ctrl_clk_mask);
-> +       writel_relaxed(val, clk->ctrl_reg);
-> +}
-> +
-> +static struct clk_ops clk_ether_ops = {
-> +       .enable = clk_ether_enable,
-> +       .disable = clk_ether_disable,
-> +};
-> +
-> +static int clk_complex_enable(struct clk_hw *hw)
-> +{
-> +       struct hix5hd2_clk_complex *clk = to_complex_clk(hw);
-> +       u32 val;
-> +
-> +       val = readl_relaxed(clk->ctrl_reg);
-> +       val |= clk->ctrl_clk_mask;
-> +       val &= ~(clk->ctrl_rst_mask);
-> +       writel_relaxed(val, clk->ctrl_reg);
-> +
-> +       val = readl_relaxed(clk->phy_reg);
-> +       val |= clk->phy_clk_mask;
-> +       val &= ~(clk->phy_rst_mask);
-> +       writel_relaxed(val, clk->phy_reg);
-> +
-> +       return 0;
-> +}
-> +
-> +static void clk_complex_disable(struct clk_hw *hw)
-> +{
-> +       struct hix5hd2_clk_complex *clk = to_complex_clk(hw);
-> +       u32 val;
-> +
-> +       val = readl_relaxed(clk->ctrl_reg);
-> +       val |= clk->ctrl_rst_mask;
-> +       val &= ~(clk->ctrl_clk_mask);
-> +       writel_relaxed(val, clk->ctrl_reg);
-> +
-> +       val = readl_relaxed(clk->phy_reg);
-> +       val |= clk->phy_rst_mask;
-> +       val &= ~(clk->phy_clk_mask);
-> +       writel_relaxed(val, clk->phy_reg);
-> +}
-> +
-> +static struct clk_ops clk_complex_ops = {
-> +       .enable = clk_complex_enable,
-> +       .disable = clk_complex_disable,
-> +};
-
-These enable/disable callbacks look good, with no delays.
-
-Regards,
-Mike
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
