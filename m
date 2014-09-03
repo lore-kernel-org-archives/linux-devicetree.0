@@ -1,92 +1,80 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access
- from DT
-Date: Wed, 3 Sep 2014 10:59:48 +0800
-Message-ID: <20140903025944.GA18325@shlinux1.ap.freescale.net>
-References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] Freescale Frame Manager Device Tree binding document
+Date: Tue, 2 Sep 2014 22:27:35 -0500
+Message-ID: <1409714855.24184.110.camel@snotra.buserror.net>
+References: <1409485760-18844-1-git-send-email-igal.liberman@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, rmk+kernel@arm.linux.org.uk, shawn.guo@linaro.org, peter.griffin@linaro.org, tgih.jun@samsung.com, h80.chung@samsung.com, ulf.hansson@linaro.org, chris@printf.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1409485760-18844-1-git-send-email-igal.liberman@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "Igal.Liberman" <igal.liberman@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Emilian.Medve@freescale.com, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 02, 2014 at 05:49:37PM +0200, Jean-Michel Hautbois wrote:
-> This property is useful when we don't want to access boot partitions on eMMC
-> 
-
-Any special reason why not access boot partitions on eMMC?
-Not allow user to access it?
-
-> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
->  drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
->  include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
->  3 files changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 431716e..59cc854 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -40,6 +40,7 @@ Optional properties:
->  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
->  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
->  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
-> +- no-boot-part : when preset, tells to access boot partitions
-
-The file you changed is common mmc binding doc.
-You may also want to add the support in mmc_of_parse.
-
-And since sdhci-esdhc-imx is not using mmc_of_parse currently, maybe it's time
-to convert to it.
-
-Regards
-Dong Aisheng
-
-> 
->  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
->  polarity properties, we have to fix the meaning of the "normal" and "inverted"
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index ccec0e3..439e663 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
-> 	if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
-> 		boarddata->delay_line = 0;
-> 
-> +	if (of_find_property(np, "no-boot-part", NULL))
-> +		boarddata->access_boot_part = false;
-> +	else
-> +		boarddata->access_boot_part = true;
-> +
-> 	return 0;
->  }
->  #else
-> @@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
-> 		host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
-> 	}
-> 
-> +	if (!boarddata->access_boot_part)
-> +		host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
-> +
-> 	err = sdhci_add_host(host);
-> 	if (err)
-> 		goto disable_clk;
-> diff --git a/include/linux/platform_data/mmc-esdhc-imx.h b/include/linux/platform_data/mmc-esdhc-imx.h
-> index 75f70f6..a34ee9e 100644
-> --- a/include/linux/platform_data/mmc-esdhc-imx.h
-> +++ b/include/linux/platform_data/mmc-esdhc-imx.h
-> @@ -46,5 +46,6 @@ struct esdhc_platform_data {
-> 	unsigned int f_max;
-> 	bool support_vsel;
-> 	unsigned int delay_line;
-> +	bool access_boot_part;
->  };
->  #endif /* __ASM_ARCH_IMX_ESDHC_H */
-> 
-> 2.0.4
-> 
+T24gU3VuLCAyMDE0LTA4LTMxIGF0IDE0OjQ5ICswMzAwLCBJZ2FsLkxpYmVybWFuIHdyb3RlOgo+
+ICstIGNlbGwtaW5kZXgKPiArCQlVc2FnZTogcmVxdWlyZWQKPiArCQlWYWx1ZSB0eXBlOiA8dTMy
+Pgo+ICsJCURlZmluaXRpb246IFNwZWNpZmllcyB0aGUgaW5kZXggb2YgdGhlIEZNYW4gdW5pdC4K
+PiArCj4gKwkJVGhlIGNlbGwtaW5kZXggdmFsdWUgbWF5IGJlIHVzZWQsIGZvciBleGFtcGxlLCB0
+byBkaXNhYmxlIG9yCj4gKwkJZW5hYmxlIHRoZSBGTWFuIHZpYSAiRGV2aWNlIGRpc2FibGUgcmVn
+aXN0ZXIgMiIKPiArCQkoRENGR19ERVZESVNSMiwgbG9jYXRlZCBhdCB0aGUgU29DIHJlZmVyZW5j
+ZSBtYW51YWwgdW5kZXIKPiArCQkiRGV2aWNlIENvbmZpZ3VyYXRpb24gYW5kIFBpbiBDb250cm9s
+IE1lbW9yeSBNYXAiKS4KCk9LLCBidXQgd2hhdCBpcyB0aGUgc3BlY2lmaWMgY2VsbC1pbmRleCB2
+YWx1ZT8gIEkgZG9uJ3QgdGhpbmsgaXQncyB0aGUKYml0IHBvc2l0aW9uIHdpdGhpbiBERVZESVNS
+Mi4gIElzIHRoaXMgdXNlZCBhbnl3aGVyZSBvdGhlciB0aGFuIERFVkRJU1IyCmFuZCBzaW1pbGFy
+IHJlZ2lzdGVycyBsaWtlIElQUERFWFBDUj8gIEknbSBub3Qgc3VyZSBob3cgaGVscGZ1bCB0aGlz
+IGlzCmZvciB0aG9zZSByZWdpc3RlcnMsIGFzIHlvdSBnZW5lcmFsbHkgbmVlZCB0byBrbm93IGVu
+b3VnaCBhYm91dCB0aGUKc3BlY2lmaWMgU29DIHRvIHVzZSB0aGVtIHRoYXQgeW91J2QgYmUgYWJs
+ZSB0byBtYWtlIHRoZSBjb3JyZXNwb25kZW5jZQpiYXNlZCBvbiByZWdpc3RlciBhZGRyZXNzLgoK
+PiArLSBmc2wscW1hbi1jaGFubmVsLXJhbmdlCj4gKwkJVXNhZ2U6IHJlcXVpcmVkCj4gKwkJVmFs
+dWUgdHlwZTogPHByb3AtZW5jb2RlZC1hcnJheT4KPiArCQlEZWZpbml0aW9uOiBTcGVjaWZpZXMg
+dGhlIHJhbmdlcyBvZiB0aGUgYXZhaWxhYmxlIGRlZGljYXRlZAo+ICsJCWNoYW5uZWxzIGluIHRo
+ZSBGTWFuLiAKCnMvcmFuZ2VzL3JhbmdlLyB1bmxlc3MgaXQncyBwb3NzaWJsZSB0byBsaXN0IG11
+bHRpcGxlIHJhbmdlcy4KCj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4gK0ZNYW4gTVVSQU0gTm9k
+ZQo+ICsKPiArREVTQ1JJUFRJT04KPiArCj4gK0ZNYW4gSW50ZXJuYWwgbWVtb3J5IC0gc2hhcmVk
+IGJldHdlZW4gYWxsIHRoZSBGTWFuIG1vZHVsZXMuCj4gK0l0IGNvbnRhaW5zIGRhdGEgc3RydWN0
+dXJlcyB0aGF0IGFyZSBjb21tb24gYW5kIHdyaXR0ZW4gdG8gb3IgcmVhZCBieQo+ICt0aGUgbW9k
+dWxlcy4KPiArRk1hbiBpbnRlcm5hbCBtZW1vcnkgaXMgc3BsaXQgaW50byB0aGUgZm9sbG93aW5n
+IHBhcnRzOgo+ICsJUGFja2V0IGJ1ZmZlcmluZyAoVHgvUnggRklGT3MpCj4gKwlGcmFtZXMgaW50
+ZXJuYWwgY29udGV4dAo+ICsKPiArUFJPUEVSVElFUwo+ICsKPiArLSBjb21wYXRpYmxlCj4gKwkJ
+VXNhZ2U6IHJlcXVpcmVkCj4gKwkJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+Cj4gKwkJRGVmaW5p
+dGlvbjogTXVzdCBpbmNsdWRlICJmc2wsZm1hbi1tdXJhbSIKPiArCj4gKy0gcmFuZ2VzCj4gKwkJ
+VXNhZ2U6IHJlcXVpcmVkCj4gKwkJVmFsdWUgdHlwZTogPHByb3AtZW5jb2RlZC1hcnJheT4KPiAr
+CQlEZWZpbml0aW9uOiBBIHN0YW5kYXJkIHByb3BlcnR5LiBTcGVjaWZpZXMgdGhlIHBoeXNpY2Fs
+Cj4gKwkJYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBGTWFuIG1lbW9yeSBzcGFjZQoKSXQncyB0
+aGUgb2Zmc2V0IHdpdGhpbiBGTWFuLCBub3QgdGhlIHBoeXNpY2FsIGFkZHJlc3MuICBBcyB3aXRo
+IG90aGVyCm5vZGVzLCBqdXN0IHNheSB0aGF0IHRoZXJlIGlzIG9uZSByZWcgcmVnaW9uIGRlc2Ny
+aWJpbmcgdGhlIG11bHRpLXVzZXIKbWVtb3J5LgoKPiArLSBjZWxsLWluZGV4Cj4gKwkJVXNhZ2U6
+IHJlcXVpcmVkCj4gKwkJVmFsdWUgdHlwZTogPHUzMj4KPiArCQlEZWZpbml0aW9uOiBTcGVjaWZp
+ZXMgdGhlIE1BQyBpZC4KPiArCQlUaGlzIHZhbHVlIGlzIHVzZWQgdG8gaWRlbnRpZnkgdGhlIE1B
+QyBpZCBpbiBzb21lIHJlZ2lzdGVycwo+ICsJCWluIHRoZSBGTWFuIG1lbW9yeSBtYXAsIGZvciBl
+eGFtcGxlOgo+ICsJCVRoZSBGTWFuIEVycm9yIFBlbmRpbmcgSW50ZXJydXB0IFJlZ2lzdGVyIChG
+TV9FUEkpIC0KPiArCQlUaGlzIHJlZ2lzdGVyIGhvbGRzIGEgYml0IGZvciBlYWNoIE1BQy4KCkkg
+ZG9uJ3Qgc2VlIGEgYml0IGZvciBlYWNoIE1BQyBpbiBGTV9FUEkgaW4gRFBBQVJNIC0tIGFuZCBp
+biBhbnkgY2FzZSwKYXMgd2l0aCBERVZESVNSMiwgdGhpcyBkb2Vzbid0IHRlbGwgbWUgaG93IHRv
+IHR1cm4gdGhhdCByZWdpc3RlcgpkZXNjcmlwdGlvbiBpbnRvIGEgY2VsbC1pbmRleCB2YWx1ZS4K
+Cj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09Cj4gK0V4YW1wbGUKPiArCj4gK2ZtYW5ANDAwMDAwIHsK
+PiArCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJI3NpemUtY2VsbHMgPSA8MT47Cj4gKwljZWxs
+LWluZGV4ID0gPDE+Owo+ICsJY29tcGF0aWJsZSA9ICJmc2wsZm1hbiIKPiArCXJhbmdlcyA9IDww
+IDB4NDAwMDAwIDB4MTAwMDAwPjsKPiArCXJlZyA9IDwweDQ4MDAwMCAweDAwNDAwCj4gKwkgICAg
+ICAgMHg0ODA0MDAgMHgwMDQwMAo+ICsJICAgICAgIDB4NGMyMDAwIDB4MDEwMDAKPiArCSAgICAg
+ICAweDRjMzAwMCAweDAxMDAwCj4gKwkgICAgICAgMHg0YzQwMDAgMHgwMTAwMAo+ICsJICAgICAg
+IDB4NGM3MDAwIDB4MDEwMDA+OwoKWW91J3ZlIGdvdCBzaXggcmVnaW9ucyBoZXJlIGJ1dCB5b3Ug
+b25seSBkb2N1bWVudGVkIGZpdmUuCgpJJ20gd29uZGVyaW5nIGlmIHRoZXJlJ3MgYW55IHZhbHVl
+IHRvIHNwbGl0dGluZyB0aGVzZSByZWdpb25zIG91dCwKdmVyc3VzIGhhdmluZyByZWcgY292ZXIg
+dGhlIGVudGlyZSB0aGluZyAoYW5kIG92ZXJsYXAgd2l0aCB0aGUgY2hpbGQKcmVncykuCgotU2Nv
+dHQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51
+eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBz
+Oi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
