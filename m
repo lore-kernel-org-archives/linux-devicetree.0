@@ -1,52 +1,89 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [alsa-devel] [PATCHv2 1/4] ASoC: simple-card: add
-	asoc_simple_card_fmt_master() to simplify the code.
-Date: Wed, 3 Sep 2014 03:41:50 +0000
-Message-ID: <e79f0dc1c43145f093b2497aed680056@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
-	<1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>
-	<87egvt7dmd.wl%kuninori.morimoto.gx@gmail.com>
-	<b0ce0040e47a4ea8ab00ae7e113ecb41@BY2PR0301MB0613.namprd03.prod.outlook.com>
- <87y4u15qa2.wl%kuninori.morimoto.gx@gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 3/5] RTC: RK808: add RTC driver for RK808
+Date: Tue, 2 Sep 2014 20:52:17 -0700
+Message-ID: <CAD=FV=Xq+EaSX=wqkpRVKg5e5Rf-CMWD8ZBJ_-SZqoo-KrX0LA@mail.gmail.com>
+References: <1409562468-16586-1-git-send-email-zyw@rock-chips.com>
+	<1409564586-18421-1-git-send-email-zyw@rock-chips.com>
+	<CAD=FV=X-hSHKe4_QRxFLejok-qVYM_FyXO7L7X6AzW8sTaVPnQ@mail.gmail.com>
+	<54067674.3040007@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87y4u15qa2.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <54067674.3040007-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "moinejf-GANU6spQydw@public.gmane.org" <moinejf-GANU6spQydw@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org" <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "jsarha-l0cyMroinI0@public.gmane.org" <jsarha-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dtor@chromium.>
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [alsa-devel] [PATCHv2 1/4] ASoC: simple-card: add
-> asoc_simple_card_fmt_master() to simplify the code.
-> 
-> 
-> Hi Xiubo
-> 
-> > Yes, I think it make sense to set all fmt in one function, and will
-> > Be more readable.
-> >
-> > I agree with you, could you please just wait, because there has many
-> > Replications and good Ideas about this patch, and I will revise it.
-> > Then you can improve it as your patch blow.
-> 
-> Thank you for your help
-> I don't care so much about my local patch.
-> You can re-use it if you want.
-> Of course I can do it if you want
-> 
+Chris,
 
-Please send it out of your local patch.
+On Tue, Sep 2, 2014 at 7:01 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>
+> On 09/02/2014 11:58 AM, Doug Anderson wrote:
+>>>
+>>> +static int rk808_rtc_probe(struct platform_device *pdev)
+>>> >+{
+>>> >+       struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+>>> >+       struct rk808_rtc *rk808_rtc;
+>>> >+       struct rtc_time tm;
+>>> >+       int ret;
+>>> >+
+>>> >+       rk808_rtc = devm_kzalloc(&pdev->dev, sizeof(*rk808_rtc),
+>>> > GFP_KERNEL);
+>>> >+       if (rk808_rtc == NULL)
+>>> >+               return -ENOMEM;
+>>> >+
+>>> >+       platform_set_drvdata(pdev, rk808_rtc);
+>>> >+       rk808_rtc->rk808 = rk808;
+>>> >+
+>>> >+       /* start rtc running by default, and use shadowed timer. */
+>>> >+       ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
+>>> >+                                BIT_RTC_CTRL_REG_STOP_RTC_M |
+>>> >+                                BIT_RTC_CTRL_REG_RTC_READSEL_M,
+>>> >+                                BIT_RTC_CTRL_REG_RTC_READSEL_M);
+>>
+>> I think this should still be setting to 0, not to
+>> BIT_RTC_CTRL_REG_RTC_READSEL_M.  Otherwise the first read of the time
+>> will return that time that was frozen at probe time, right?  AKA: if
+>> probe happens at 11:00:00 and then we read the time at 11:00:05 we'll
+>> still read 11:00:00 the first time.
+>>
+>  Sorry, I did not describe correctly, in the previous mail.
+>  Actually, RK808 has a "GET_TIME" switch bit. When "GET_TIME" bit rising
+> thansiton to 1,
+>  the current time will save in a shadowed register.
+>  If "READSEL" = 1, read rtc time register, return the frozen time.
+>  If we need the real time, clr this "READSEL" bit.
 
-Please also consider the ideas about Jyri, Jean-Francios, Varka and
-Takashi's advice as previous emails about my patch.
+Ohhhhh!  I see.  I clearly didn't look closely enough at the whole
+register description in the user manual.  I think you've got it right,
+then.
 
+I think this would be more obvious if you added a comment and you set
+both the high and low bits at the same time.  AKA:
 
-BRs
-Xiubo
++       /* Force an update of the shadowed registers right now */
++       ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++                                BIT_RTC_CTRL_REG_RTC_GET_TIME,
++                                BIT_RTC_CTRL_REG_RTC_GET_TIME);
++       if (ret) {
++               dev_err(dev, "Failed to update bits rtc_ctrl: %d\n", ret);
++               return ret;
++       }
++
++       ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++                                BIT_RTC_CTRL_REG_RTC_GET_TIME,
++                                BIT_RTC_CTRL_REG_RTC_GET_TIME);
++       if (ret) {
++               dev_err(dev, "Failed to update bits rtc_ctrl: %d\n", ret);
++               return ret;
++       }
 
+...doing them both at the same time makes it obvious that this is a
+one-time copy triggered by the "rising edge" of this bit.  It also
+means you don't need any "goto" for error handling.
+
+-Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
