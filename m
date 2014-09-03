@@ -1,7 +1,7 @@
 From: Romain Perier <romain.perier@gmail.com>
-Subject: [PATCH v2 4/4] ARM: dts: Enable emac node on the rk3188-radxarock boards
-Date: Wed,  3 Sep 2014 16:52:45 +0000
-Message-ID: <1409763165-16461-4-git-send-email-romain.perier@gmail.com>
+Subject: [PATCH 3/4] ARM: dts: Add emac nodes to the rk3188 device tree
+Date: Wed,  3 Sep 2014 16:52:44 +0000
+Message-ID: <1409763165-16461-3-git-send-email-romain.perier@gmail.com>
 References: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
@@ -10,53 +10,70 @@ To: heiko@sntech.de
 Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-This enables EMAC Rockchip support on radxa rock boards.
+This adds support for EMAC Rockchip driver on RK3188 SoCs.
 
 Signed-off-by: Romain Perier <romain.perier@gmail.com>
 ---
- arch/arm/boot/dts/rk3188-radxarock.dts | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm/boot/dts/rk3188.dtsi | 18 ++++++++++++++++++
+ arch/arm/boot/dts/rk3xxx.dtsi | 17 +++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
-index 5e4e3c23..c27543d 100644
---- a/arch/arm/boot/dts/rk3188-radxarock.dts
-+++ b/arch/arm/boot/dts/rk3188-radxarock.dts
-@@ -76,6 +76,23 @@
- 	};
- };
- 
-+&emac {
-+	status = "okay";
-+	compatible = "rockchip,rk3188-emac";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&phy_int>;
-+
-+	phy = <&phy0>;
-+	phy-supply = <&vcc_rmii>;
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 	clock-frequency = <400000>;
-@@ -201,6 +218,12 @@
+diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+index ee801a9..a182713 100644
+--- a/arch/arm/boot/dts/rk3188.dtsi
++++ b/arch/arm/boot/dts/rk3188.dtsi
+@@ -147,6 +147,24 @@
+ 			bias-disable;
  		};
+ 
++		emac {
++			emac_xfer: emac-xfer {
++				rockchip,pins = <RK_GPIO3 16 RK_FUNC_2 &pcfg_pull_none>, //tx_en
++						<RK_GPIO3 17 RK_FUNC_2 &pcfg_pull_none>, //txd1
++						<RK_GPIO3 18 RK_FUNC_2 &pcfg_pull_none>, //txd0
++						<RK_GPIO3 19 RK_FUNC_2 &pcfg_pull_none>, //rxd0
++						<RK_GPIO3 20 RK_FUNC_2 &pcfg_pull_none>, //rxd1
++						<RK_GPIO3 21 RK_FUNC_2 &pcfg_pull_none>, //mac_clk
++						<RK_GPIO3 22 RK_FUNC_2 &pcfg_pull_none>, //rx_err
++						<RK_GPIO3 23 RK_FUNC_2 &pcfg_pull_none>; //crs_dvalid
++			};
++
++			emac_mdio: emac-mdio {
++				rockchip,pins = <RK_GPIO3 24 RK_FUNC_2 &pcfg_pull_none>,
++						<RK_GPIO3 25 RK_FUNC_2 &pcfg_pull_none>;
++			};
++		};
++
+ 		i2c0 {
+ 			i2c0_xfer: i2c0-xfer {
+ 				rockchip,pins = <RK_GPIO1 24 RK_FUNC_1 &pcfg_pull_none>,
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 8caf85d..208b1df 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -91,6 +91,23 @@
+ 		status = "disabled";
  	};
  
-+	lan8720a  {
-+		phy_int: phy-int {
-+			rockchip,pins = <RK_GPIO3 26 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
++	emac: ethernet@10204000 {
++		compatible = "snps,arc-emac";
++		reg = <0x10204000 0x3c>;
++		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		rockchip,grf = <&grf>;
++
++		clocks = <&cru HCLK_EMAC>, <&cru SCLK_MAC>;
++		clock-names = "hclk", "macref";
++		max-speed = <100>;
++		phy-mode = "rmii";
++
++		status = "disabled";
 +	};
 +
- 	ir-receiver {
- 		ir_recv_pin: ir-recv-pin {
- 			rockchip,pins = <RK_GPIO0 10 RK_FUNC_GPIO &pcfg_pull_none>;
+ 	mmc0: dwmmc@10214000 {
+ 		compatible = "rockchip,rk2928-dw-mshc";
+ 		reg = <0x10214000 0x1000>;
 -- 
 1.9.1
