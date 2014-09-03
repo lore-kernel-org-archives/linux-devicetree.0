@@ -1,8 +1,7 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v4 04/12] ARM: dts: berlin: add a required reset property in
- the chip controller node
-Date: Wed,  3 Sep 2014 09:48:23 +0200
-Message-ID: <1409730511-16101-5-git-send-email-antoine.tenart@free-electrons.com>
+Subject: [PATCH v4 09/12] ARM: dts: berlin: add BG2Q nodes for USB support
+Date: Wed,  3 Sep 2014 09:48:28 +0200
+Message-ID: <1409730511-16101-10-git-send-email-antoine.tenart@free-electrons.com>
 References: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,52 +21,89 @@ To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.z
 Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The chip controller node now also describes the Marvell Berlin reset
-controller. Add the required 'reset-cells' property.
+Adds nodes describing the Marvell Berlin BG2Q USB PHY and USB. The BG2Q
+SoC has 3 USB host controller, compatible with ChipIdea.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/boot/dts/berlin2.dtsi   | 1 +
- arch/arm/boot/dts/berlin2cd.dtsi | 1 +
- arch/arm/boot/dts/berlin2q.dtsi  | 1 +
- 3 files changed, 3 insertions(+)
+ arch/arm/boot/dts/berlin2q.dtsi | 52 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
-index 9d7c810ebd0b..d7e81e124de0 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -249,6 +249,7 @@
- 		chip: chip-control@ea0000 {
- 			compatible = "marvell,berlin2-chip-ctrl";
- 			#clock-cells = <1>;
-+			#reset-cells = <2>;
- 			reg = <0xea0000 0x400>;
- 			clocks = <&refclk>;
- 			clock-names = "refclk";
-diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
-index cc1df65da504..68f7032b4686 100644
---- a/arch/arm/boot/dts/berlin2cd.dtsi
-+++ b/arch/arm/boot/dts/berlin2cd.dtsi
-@@ -231,6 +231,7 @@
- 		chip: chip-control@ea0000 {
- 			compatible = "marvell,berlin2cd-chip-ctrl";
- 			#clock-cells = <1>;
-+			#reset-cells = <2>;
- 			reg = <0xea0000 0x400>;
- 			clocks = <&refclk>;
- 			clock-names = "refclk";
 diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
-index 400c40fceccc..ffba5c3bdab8 100644
+index ffba5c3bdab8..faf7cbe2af20 100644
 --- a/arch/arm/boot/dts/berlin2q.dtsi
 +++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -332,6 +332,7 @@
- 		chip: chip-control@ea0000 {
- 			compatible = "marvell,berlin2q-chip-ctrl";
- 			#clock-cells = <1>;
-+			#reset-cells = <2>;
- 			reg = <0xea0000 0x400>, <0xdd0170 0x10>;
- 			clocks = <&refclk>;
- 			clock-names = "refclk";
+@@ -114,6 +114,39 @@
+ 			#interrupt-cells = <3>;
+ 		};
+ 
++		usb_phy2: phy@a2f400 {
++			compatible = "marvell,berlin2-usb-phy";
++			reg = <0xa2f400 0x128>;
++			#phy-cells = <0>;
++			resets = <&chip 0x104 14>;
++			status = "disabled";
++		};
++
++		usb2: usb@a30000 {
++			compatible = "chipidea,usb2";
++			reg = <0xa30000 0x10000>;
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&chip CLKID_USB2>;
++			phys = <&usb_phy2>;
++			status = "disabled";
++		};
++
++		usb_phy0: phy@b74000 {
++			compatible = "marvell,berlin2-usb-phy";
++			reg = <0xb74000 0x128>;
++			#phy-cells = <0>;
++			resets = <&chip 0x104 12>;
++			status = "disabled";
++		};
++
++		usb_phy1: phy@b78000 {
++			compatible = "marvell,berlin2-usb-phy";
++			reg = <0xb78000 0x128>;
++			#phy-cells = <0>;
++			resets = <&chip 0x104 13>;
++			status = "disabled";
++		};
++
+ 		cpu-ctrl@dd0000 {
+ 			compatible = "marvell,berlin-cpu-ctrl";
+ 			reg = <0xdd0000 0x10000>;
+@@ -348,6 +381,24 @@
+ 			};
+ 		};
+ 
++		usb0: usb@ed0000 {
++			compatible = "chipidea,usb2";
++			reg = <0xed0000 0x10000>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&chip CLKID_USB0>;
++			phys = <&usb_phy0>;
++			status = "disabled";
++		};
++
++		usb1: usb@ee0000 {
++			compatible = "chipidea,usb2";
++			reg = <0xee0000 0x10000>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&chip CLKID_USB1>;
++			phys = <&usb_phy1>;
++			status = "disabled";
++		};
++
+ 		apb@fc0000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+@@ -440,5 +491,6 @@
+ 				interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 		};
++
+ 	};
+ };
 -- 
 1.9.1
