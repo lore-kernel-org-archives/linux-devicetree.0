@@ -1,42 +1,53 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v2 2/8] phy: miphy28lp: Add MiPHY28lp header file for DT x Driver defines
-Date: Wed,  3 Sep 2014 17:37:11 +0200
-Message-ID: <1409758637-28654-3-git-send-email-gabriel.fernandez@linaro.org>
-References: <1409758637-28654-1-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v2 0/8] phy: miphy28lp: Introduce support for MiPHY28lp
+Date: Wed,  3 Sep 2014 17:37:09 +0200
+Message-ID: <1409758637-28654-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409758637-28654-1-git-send-email-gabriel.fernandez@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@arm.linux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Gabriel Fernandez <gabriel.fernandez@linaro.org>, alexandre torgue <alexandre.torgue@st.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This provides the shared header file which will be reference from both
-the MiPHY28lp driver and its associated Device Tree node(s).
+Changes in v2:
+from Kishon
+ - create a common file for phy
+ - cosmetic correction in phy-miphy28lp.txt file
+ - change initialization of the registers
+from Srinivas
+ - rename and simplify a procedure
+ - Add Tx impedance and SSC support for SATA and PCI
 
-Signed-off-by: alexandre torgue <alexandre.torgue@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- include/dt-bindings/phy/phy-miphy.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Hi Kishon,
+
+The goal of this series is to add the support of MiPHY28lp Generic PHY.
+I tried to be as close as possible to the MiPHY365x Lee Jones proposal.
+
+Best Regards
+Gabriel.
+
+Gabriel Fernandez (8):
+  phy: miphy28lp: Add Device Tree bindings for the MiPHY28lp
+  phy: miphy28lp: Add MiPHY28lp header file for DT x Driver defines
+  phy: miphy28lp: Provide support for the MiPHY28lp Generic PHY
+  ARM: DT: STi: STiH407: Add DT node for MiPHY28lp
+  ARM: multi_v7_defconfig: Enable MiPHY28lp - ST's Generic (SATA, PCIe &
+    USB3) PHY
+  phy: miphy28lp: Add SSC support for SATA
+  phy: miphy28lp: Add SSC support for PCIE
+  phy: miphy28lp: Tune tx impedance across Soc cuts
+
+ .../devicetree/bindings/phy/phy-miphy28lp.txt      |  128 +++
+ arch/arm/boot/dts/stih407-b2120.dts                |   11 +
+ arch/arm/boot/dts/stih407.dtsi                     |   65 ++
+ arch/arm/configs/multi_v7_defconfig                |    1 +
+ drivers/phy/Kconfig                                |    8 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-miphy28lp.c                        | 1076 ++++++++++++++++++++
+ include/dt-bindings/phy/phy-miphy.h                |   12 +
+ 8 files changed, 1302 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+ create mode 100644 drivers/phy/phy-miphy28lp.c
  create mode 100644 include/dt-bindings/phy/phy-miphy.h
 
-diff --git a/include/dt-bindings/phy/phy-miphy.h b/include/dt-bindings/phy/phy-miphy.h
-new file mode 100644
-index 0000000..9bc49b9
---- /dev/null
-+++ b/include/dt-bindings/phy/phy-miphy.h
-@@ -0,0 +1,12 @@
-+/*
-+ * This header provides constants for the phy framework
-+ * based on the STMicroelectronics miphxxxx.
-+ */
-+#ifndef _DT_BINDINGS_PHY_MIPHY
-+#define _DT_BINDINGS_PHY_MIPHY
-+
-+#define MIPHY_TYPE_SATA		1
-+#define MIPHY_TYPE_PCIE		2
-+#define MIPHY_TYPE_USB		3
-+
-+#endif /* _DT_BINDINGS_PHY_MIPHY */
 -- 
 1.9.1
