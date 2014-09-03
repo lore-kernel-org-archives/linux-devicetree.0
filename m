@@ -1,101 +1,88 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 2/4] dt-bindings: Document EMAC Rockchip
-Date: Wed, 03 Sep 2014 16:26:48 +0200
-Message-ID: <10602790.aE60xYj4zP@diego>
-References: <1409740036-8117-1-git-send-email-romain.perier@gmail.com> <1409740036-8117-2-git-send-email-romain.perier@gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 5/5] phy: exynos5-usbdrd: Adding Kconfig dependency for
+ Exynos7
+Date: Wed, 3 Sep 2014 09:46:11 -0500
+Message-ID: <20140903144611.GE31855@saruman.home>
+References: <1409212920-28526-1-git-send-email-gautam.vivek@samsung.com>
+ <1409212920-28526-6-git-send-email-gautam.vivek@samsung.com>
+ <CAN_we7MQAqEsRaQc_pkRE_KXx9zZNLDBR2aHUrazM30Nv3udmQ@mail.gmail.com>
+ <CAFp+6iHsfg6Ru0LBN=JviV=-mSdmuSo9Te3EXYF+X8jssD_BYQ@mail.gmail.com>
+ <20140902143711.GD16872@saruman.home>
+ <CAFp+6iE4V4bWHGasr2qNC14mGNAfjQbgerCDMLLatnQQJ86NuA@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1409740036-8117-2-git-send-email-romain.perier@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Romain Perier <romain.perier@gmail.com>
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SNIs70sCzqvszXB4"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iE4V4bWHGasr2qNC14mGNAfjQbgerCDMLLatnQQJ86NuA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Felipe Balbi <balbi@ti.com>, Daniele Forsi <dforsi@gmail.com>, USB list <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kishon <kishon@ti.com>, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 3. September 2014, 10:27:14 schrieb Romain Perier:
-> This adds the necessary binding documentation for the EMAC Rockchip platform
-> driver found in RK3066 and RK3188 SoCs.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
-> ---
->  .../devicetree/bindings/net/emac_rockchip.txt      | 53
-> ++++++++++++++++++++++ 1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/emac_rockchip.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/emac_rockchip.txt
-> b/Documentation/devicetree/bindings/net/emac_rockchip.txt new file mode
-> 100644
-> index 0000000..d3242e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/emac_rockchip.txt
-> @@ -0,0 +1,53 @@
-> +* ARC EMAC 10/100 Ethernet platform driver for Rockchip Rk3066/RK3188 SoCs
-> +
-> +Required properties:
-> +- compatible: Should be "rockchip,rk3066-emac" or "rockchip,rk3188-emac"
-> +  according to the target SoC.
-> +- reg: Address and length of the register set for the device
-> +- interrupts: Should contain the EMAC interrupts
-> +- pinctrl-names: pin control state name ("default").
-> +- pinctrl-0: pin control group list of phandle. It must contain
-> +  pin control groups for communication with the phy and for the mii bus.
+--SNIs70sCzqvszXB4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-pinctrl is normally not supposed to be part of the binding doc, as it is a 
-property of the board and not the controller IP itself
+On Wed, Sep 03, 2014 at 09:32:14AM +0530, Vivek Gautam wrote:
+> On Tue, Sep 2, 2014 at 8:07 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > On Mon, Sep 01, 2014 at 01:30:21PM +0530, Vivek Gautam wrote:
+> >> On Thu, Aug 28, 2014 at 8:36 PM, Daniele Forsi <dforsi@gmail.com> wrot=
+e:
+> >> > 2014-08-28 10:02 GMT+02:00 Vivek Gautam:
+> >> >
+> >> >> This USB 3.0 PHY controller is also present on Exynos7
+> >> >> platform, so adding the dependency on ARCH_EXYNOS7 for this driver.
+> >> >
+> >> >> +++ b/drivers/phy/Kconfig
+> >> >> @@ -186,7 +186,7 @@ config PHY_EXYNOS5250_USB2
+> >> >>
+> >> >>  config PHY_EXYNOS5_USBDRD
+> >> >>         tristate "Exynos5 SoC series USB DRD PHY driver"
+> >> >> -       depends on ARCH_EXYNOS5 && OF
+> >> >> +       depends on (ARCH_EXYNOS5 || ARCH_EXYNOS7) && OF
+> >> >
+> >> > shouldn't that prompt and its help text be updated to mention also E=
+xynos7?
+> >>
+> >> Right, even that has to be updated accordingly. Will update the same i=
+n next
+> >> version of the patch. Thanks for pointing this.
+> >
+> > I would rather change that to ARCH_EXYNOS, unless Kishon doesn't like
+> > that idea. The thing is that this will likely need to be patches for
+> > exynos8, 9, 10, 11...
+>=20
+> Yes, after we have the 2nd version of Exynos7 support patches, it makes
+> more sense to keep dependency on ARCH_EXYNOS.
 
+thank you, that'll help new silicon wakeup; one less thing to patch :-p
 
-> +- rockchip,grf: phandle to the syscon grf used to control speed and mode
-> +  for emac.
-> +- phy: see ethernet.txt file in the same directory.
-> +- phy-mode: see ethernet.txt file in the same directory.
-> +
-> +Optional properties:
-> +- phy-supply: phandle to a regulator if the PHY needs one
-> +
-> +Clock handling:
-> +- The host clock is needed to calculate and set polling period of EMAC.
-> +  It must be provided by the clock "hclk".
-> +- The reference clock is needed to get/set data from phy at the right
-> frequency,
-> +  according to its "phy-mode". It must be provided by the clock
-> "macref".
+--=20
+balbi
 
-I think a more often used scheme is something like
+--SNIs70sCzqvszXB4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-- clocks: Must contain an entry for each entry in clock-names.
-- clock-names: Shall be "hclk" for the host clock needed to calculate and
-			set polling period of EMAC and "macref" for the reference
-			clock needed to transfer data to and from the phy.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iQIcBAEBAgAGBQJUBymzAAoJEIaOsuA1yqREYaEQAJ9dKi8ErbHY2N98fpeo3a3W
+pqe496n8nmczlK3x1mCcEYwqPQcX95mDI11iKArSfCnaSQA5shMoGel3tjWFS6yQ
+3nCVpoi78PLvgwCu6HDPOuCCa74HRnW1eRS+gnnnEoVA2oufxU76G/f8WkYJFQkm
+EyMUZ+4nn1XrdXyudpaf8hWzVu7Ru2TvUx4HTe0QLRmFr1uxpfN/sAKAcjmx+Kn1
+zITKZ22qYt1RlN+mB3YqpENZzF9LV57AWHvy+RtJarFbMtHBJsbYruXKoxLbHbHK
+Q9qtDHNNq27cNAWlLsjFVAXMgAfUNkVfX/9qsH0NCidGVf4yD/SlM8QALaH5fKHX
+/JjBvjWU9qTScXCa3IcQxv8uOcgQdAioePEHQ7cvU2aVZzvRC3rbbXgsW46AtJqO
+0niicdNmkhv2E0ImlSWgc3ZvG9z440AaeMKJuqH22utUNUR6I0hngf1jlyJUa59P
+m5yrWXkYJVnSwKkW9I/KhDPGWYbygAcMVsS9ReN0p5I+fXAiqi0BfQlcNgrCyJfs
+QPQ6snXCFdQJMkz5xDC0rumxgdLELMNuMd83HeHuOfRZaurHkXswS76rsI8yVRQ5
++eIuSDB2/XGrrWlTo5YThB32dd+Ak54g0rtpl1Yqg13gSbmnmQif7fByGJ7RxHIp
+eqrAfEoXvlxElVLR6bSu
+=ASkT
+-----END PGP SIGNATURE-----
 
-> +
-> +Child nodes of the driver are the individual PHY devices connected to the
-> +MDIO bus. They must have a "reg" property given the PHY address on the MDIO
-> bus. +
-> +Examples:
-> +
-> +ethernet@10204000 {
-> +	compatible = "rockchip,rk3188-emac";
-> +	reg = <0xc0fc2000 0x3c>;
-> +	interrupts = <6>;
-> +	mac-address = [ 00 11 22 33 44 55 ];
-> +
-> +	clocks = <&cru HCLK_EMAC>, <&cru SCLK_MAC>;
-> +	clock-names = "hclk", "macref";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&emac_xfer>, <&emac_mdio>, <&phy_int>;
-> +
-> +	rockchip,grf = <&grf>;
-> +
-> +	phy = <&phy0>;
-> +	phy-mode = "rmii";
-> +	phy-supply = <&vcc_rmii>;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	phy0: ethernet-phy@0 {
-> +	      reg = <1>;
-> +	};
-> +};
+--SNIs70sCzqvszXB4--
