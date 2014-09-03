@@ -1,162 +1,61 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/3 repost] clocksource: sh_cmt: Document SoC specific
- bindings
-Date: Wed, 3 Sep 2014 10:17:50 +0100
-Message-ID: <20140903091750.GA8322@leverpostej>
-References: <1409117300-2133-1-git-send-email-horms+renesas@verge.net.au>
- <1409117300-2133-2-git-send-email-horms+renesas@verge.net.au>
- <20140827095103.GB7295@leverpostej>
- <20140903012724.GE2903@verge.net.au>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/5] rtc: at91sam9: add DT support
+Date: Wed, 3 Sep 2014 11:31:57 +0200
+Message-ID: <20140903113157.45822fbb@bbrezillon>
+References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140903012724.GE2903@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409733934-14465-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 03, 2014 at 02:27:25AM +0100, Simon Horman wrote:
-> Hi Mark,
-> 
-> On Wed, Aug 27, 2014 at 10:51:03AM +0100, Mark Rutland wrote:
-> > Hi Simon,
-> > 
-> > On Wed, Aug 27, 2014 at 06:28:18AM +0100, Simon Horman wrote:
-> > > In general Renesas hardware is not documented to the extent
-> > > where the relationship between IP blocks on different SoCs can be assumed
-> > > although they may appear to operate the same way. Furthermore the
-> > > documentation typically does not specify a version for individual
-> > > IP blocks. For these reasons a convention of using the SoC name in place
-> > > of a version and providing SoC-specific compat strings has been adopted.
-> > > 
-> > > Although not universally liked this convention is used in the bindings
-> > > for the drivers a number of drivers for Renesas hardware. The purpose
-> > > of this patch is to update the Renesas R-Car Compare Match Timer (CMT)
-> > > driver to follow this convention.
-> > 
-> > Having really specific strings to give us the flexibility if necessary
-> > makes sense, so I the addition of the strings below is fine.
-> > 
-> > I see in the example update the existing "renesas,cmt-48-gen2" string
-> > remains. I take it we expect that as a fallback in the compatible list
-> > for all of the new strings, and the driver can jsut match on that for
-> > the moment?
-> > 
-> > If so, it would be nice to be more explicit as to what we expect as
-> > fallback compatible entries.
-> 
-> Yes, that is the desired behaviour.
-> Would this address your concerns?
-> It incorporates some suggestions made by Geert Uytterhoeven
-> and explicitly talks about fallback entries.
-> 
-> From: Simon Horman <horms+renesas@verge.net.au>
-> 
-> [PATCH v1.1] clocksource: sh_cmt: Document SoC specific bindings
-> 
-> In general Renesas hardware is not documented to the extent
-> where the relationship between IP blocks on different SoCs can be assumed
-> although they may appear to operate the same way. Furthermore the
-> documentation typically does not specify a version for individual
-> IP blocks. For these reasons a convention of using the SoC name in place
-> of a version and providing SoC-specific compat strings has been adopted.
-> 
-> Although not universally liked this convention is used in the bindings for
-> a number of drivers for Renesas hardware. The purpose of this patch is to
-> update the Renesas R-Car Compare Match Timer (CMT) driver to follow this
-> convention.
-> 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed,  3 Sep 2014 10:45:29 +0200
+Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-I'm happy with this.
+> Hello,
+> 
+> This patch series adds DT support to the atmel at91sam9 RTC driver.
+> 
+> It also removes any machine specific inclusions to prepare the migration
+> to multi platform kernel support, and retain the slow clock to prevent
+> the CCF from disabling it at the end of boot.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Oops, just noticed there already was a proposal adding DT support to
+this driver [1].
+Adding Johan and Douglas in Cc.
 
-Mark.
+[1]http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/160453.html
 
 > 
-> ---
-> * I plan to follow up with patches to use these new bindings in the
->   dtsi files for the affected SoCs.
+> Best Regards,
 > 
-> v2
-> * Reorder compat entries so more-specific entries and their fallbacks
->   are grouped with the fallback entry coming last.
-> * Explicitly document fallback
-> ---
->  .../devicetree/bindings/timer/renesas,cmt.txt      | 44 +++++++++++++++++++---
->  1 file changed, 38 insertions(+), 6 deletions(-)
+> Boris
 > 
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> index a17418b..7b44f4b 100644
-> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-> @@ -11,15 +11,47 @@ datasheets.
->  
->  Required Properties:
->  
-> -  - compatible: must contain one of the following.
-> -    - "renesas,cmt-32" for the 32-bit CMT
-> +  - compatible: must contain one or more of the following:
-> +    - "renesas,cmt-32-r8a7740" for the R8a7740 32-bit CMT
-> +		(CMT0)
-> +    - "renesas,cmt-32-sh7372" for the SH7372 32-bit CMT
-> +		(CMT0)
-> +    - "renesas,cmt-32-sh73a0" for the SH73a0 32-bit CMT
-> +		(CMT0)
-> +    - "renesas,cmt-32" for all 32-bit CMT without fast clock support
->  		(CMT0 on sh7372, sh73a0 and r8a7740)
-> -    - "renesas,cmt-32-fast" for the 32-bit CMT with fast clock support
-> +		This is a fallback for the above renesas,cmt-32-* entries.
-> +
-> +    - "renesas,cmt-32-fast-r8a7740" for the R8A7740 32-bit CMT with fast
-> +		clock support (CMT[234])
-> +    - "renesas,cmt-32-fast-sh7372" for the SH7372 32-bit CMT with fast
-> +		clock support (CMT[234])
-> +    - "renesas,cmt-32-fast-sh73a0" for the SH73A0 32-bit CMT with fast
-> +		clock support (CMT[234])
-> +    - "renesas,cmt-32-fast" for all 32-bit CMT with fast clock support
->  		(CMT[234] on sh7372, sh73a0 and r8a7740)
-> -    - "renesas,cmt-48" for the 48-bit CMT
-> +		This is a fallback for the above renesas,cmt-32-fast-* entries.
-> +
-> +    - "renesas,cmt-48-sh7372" for the SH7372 48-bit CMT
-> +		(CMT1)
-> +    - "renesas,cmt-48-sh73a0" for the SH73A0 48-bit CMT
-> +		(CMT1)
-> +    - "renesas,cmt-48-r8a7740" for the R8A7740 48-bit CMT
-> +		(CMT1)
-> +    - "renesas,cmt-48" for all non-second generation 48-bit CMT
->  		(CMT1 on sh7372, sh73a0 and r8a7740)
-> -    - "renesas,cmt-48-gen2" for the second generation 48-bit CMT
-> +		This is a fallback for the above renesas,cmt-48-* entries.
-> +
-> +    - "renesas,cmt-48-r8a73a4" for the R8A73A4 48-bit CMT
-> +		(CMT[01])
-> +    - "renesas,cmt-48-r8a7790" for the R8A7790 48-bit CMT
-> +		(CMT[01])
-> +    - "renesas,cmt-48-r8a7791" for the R8A7791 48-bit CMT
-> +		(CMT[01])
-> +    - "renesas,cmt-48-gen2" for all second generation 48-bit CMT
->  		(CMT[01] on r8a73a4, r8a7790 and r8a7791)
-> +		This is a fallback for the renesas,cmt-48-r8a73a4,
-> +		renesas,cmt-48-r8a7790 and renesas,cmt-48-gen2 entries.
->  
->    - reg: base address and length of the registers block for the timer module.
->    - interrupts: interrupt-specifier for the timer, one per channel.
-> @@ -36,7 +68,7 @@ Example: R8A7790 (R-Car H2) CMT0 node
->  	them channels 0 and 1 in the documentation.
->  
->  	cmt0: timer@ffca0000 {
-> -		compatible = "renesas,cmt-48-gen2";
-> +		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
->  		reg = <0 0xffca0000 0 0x1004>;
->  		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
-> -- 
-> 2.0.1
+> Boris BREZILLON (5):
+>   rtc: at91sam9: remove references to mach specific headers
+>   rtc: at91sam9: use standard readl/writel functions instead of raw
+>     versions
+>   rtc: at91sam9: add DT support
+>   rtc: at91sam9: retain slow clock and check its rate
+>   rtc: at91sam9: add DT bindings documentation
 > 
+>  .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 20 +++++++
+>  drivers/rtc/rtc-at91sam9.c                         | 63 +++++++++++++++++++---
+>  2 files changed, 75 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
 > 
+
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
