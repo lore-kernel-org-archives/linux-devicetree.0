@@ -1,89 +1,286 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH] ARM: dts: am335x-bone*: Fix model name and update compatibility information
-Date: Wed, 3 Sep 2014 11:03:10 -0500
-Message-ID: <1409760190-17275-1-git-send-email-nm@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v2 5/7] arm64: dts: Add initial device tree support for
+ EXYNOS7
+Date: Thu, 04 Sep 2014 01:15:20 +0900
+Message-ID: <036a01cfc792$422271e0$c66755a0$@samsung.com>
+References: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
+ <1409672143-8574-6-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
-Cc: Tom Rini <trini@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1409672143-8574-6-git-send-email-ch.naveen@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Naveen Krishna Chatradhi' <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org
+Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Beaglebone white and beaglebone black differ in tiny little aspects.
-This is the reason why we maintain seperate dts for these platforms.
-However, there is no real way to decode from dtb which platform it is
-since compatible and model name are the same for both platforms.
+Naveen Krishna Chatradhi wrote:
+> 
+> Add initial device tree nodes for EXYNOS7 SoC and board dts file
+> to support Espresso board based on Exynos7 SoC.
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
 
-Fix this so that beaglebone black and beaglebone are identifiable,
-while maintaining compatibility for older zImages which might use old
-beaglebone compatible flag for black as well.
+NAK.
 
-Reported-by: Tom Rini <trini@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-Based on v3.17-rc1:
-Before:
-beaglebone-black:  Boot PASS: http://paste.ubuntu.org.cn/1473558
-beaglebone:  Boot PASS: http://paste.ubuntu.org.cn/1473559
+There are several exynos7 SoCs which cannot be supported with one dt file. I
+mean just one exynos7 cannot represent all of exynos7 SoCs... 
 
-After:
-beaglebone-black:  Boot PASS: http://paste.ubuntu.org.cn/1473480
-beaglebone:  Boot PASS: http://paste.ubuntu.org.cn/1473481
+> ---
+>  arch/arm64/boot/dts/Makefile                    |    1 +
+>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts |   31 +++++
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi         |  168 +++++++++++++++++++++++
+>  3 files changed, 200 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+> index c52bdb0..a3bc18a 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -1,3 +1,4 @@
+> +dtb-$(CONFIG_ARCH_EXYNOS7) += exynos/exynos7-espresso.dtb
+>  dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+>  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-
+> espresso.dts
+> new file mode 100644
+> index 0000000..f6a8879
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> @@ -0,0 +1,31 @@
+> +/*
+> + * SAMSUNG Exynos7 Espresso board device tree source
+> + *
+> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> +*/
+> +
+> +/dts-v1/;
+> +#include "exynos7.dtsi"
+> +
+> +/ {
+> +	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
+> +	compatible = "samsung,exynos7-espresso", "samsung,exynos7";
+> +
+> +	chosen {
+> +		linux,stdout-path = &serial_2;
 
-Side notes: Sorry, new IT policies, new paste website needed :(
+Well...
 
- arch/arm/boot/dts/am335x-bone-common.dtsi |    3 ---
- arch/arm/boot/dts/am335x-bone.dts         |    5 +++++
- arch/arm/boot/dts/am335x-boneblack.dts    |    5 +++++
- 3 files changed, 10 insertions(+), 3 deletions(-)
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x40000000 0x0 0xC0000000>;
 
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index bde1777..d9d9869 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -7,9 +7,6 @@
-  */
- 
- / {
--	model = "TI AM335x BeagleBone";
--	compatible = "ti,am335x-bone", "ti,am33xx";
--
- 	cpus {
- 		cpu@0 {
- 			cpu0-supply = <&dcdc2_reg>;
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index 94ee427..83d40f7 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -10,6 +10,11 @@
- #include "am33xx.dtsi"
- #include "am335x-bone-common.dtsi"
- 
-+/ {
-+	model = "TI AM335x BeagleBone";
-+	compatible = "ti,am335x-bone", "ti,am33xx";
-+};
-+
- &ldo3_reg {
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <3300000>;
-diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index 305975d..901739f 100644
---- a/arch/arm/boot/dts/am335x-boneblack.dts
-+++ b/arch/arm/boot/dts/am335x-boneblack.dts
-@@ -10,6 +10,11 @@
- #include "am33xx.dtsi"
- #include "am335x-bone-common.dtsi"
- 
-+/ {
-+	model = "TI AM335x BeagleBone Black";
-+	compatible = "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
-+};
-+
- &ldo3_reg {
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <1800000>;
--- 
-1.7.9.5
+The base address of system memory is depending on each board, actually some of
+them are 0x20000000.
 
+> +	};
+> +};
+> +
+> +&serial_2 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> new file mode 100644
+> index 0000000..e593af55
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -0,0 +1,168 @@
+> +/*
+> + * SAMSUNG EXYNOS7 SoC device tree source
+> + *
+> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <dt-bindings/clock/exynos7-clk.h>
+> +
+> +/ {
+> +	compatible = "samsung,exynos7";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &serial_0;
+> +		serial1 = &serial_1;
+> +		serial2 = &serial_2;
+> +		serial3 = &serial_3;
+
+There are exynos7 SoC is having 3 serial IPs...
+
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57", "arm,armv8";
+> +			enable-method = "psci";
+> +			reg = <0x0>;
+> +		};
+> +
+> +		cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57", "arm,armv8";
+> +			enable-method = "psci";
+> +			reg = <0x1>;
+> +		};
+> +
+> +		cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57", "arm,armv8";
+> +			enable-method = "psci";
+> +			reg = <0x2>;
+> +		};
+> +
+> +		cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a57", "arm,armv8";
+> +			enable-method = "psci";
+> +			reg = <0x3>;
+> +		};
+> +	};
+
+Naveen, please don't assume all of exynos7 SoCs are having quad a57s...
+
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	soc: soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0x18000000>;
+> +
+> +		chipid@10000000 {
+> +			compatible = "samsung,exynos4210-chipid";
+> +			reg = <0x10000000 0x100>;
+> +		};
+> +
+> +		fin_pll: xxti {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <24000000>;
+
+It's wrong on some exynos7 SoCs...
+
+> +			clock-output-names = "fin_pll";
+> +			#clock-cells = <0>;
+> +		};
+> +
+
+Unfortunately the addresses are different on each exynos7 SoCs...
+
+> +		gic: interrupt-controller@11001000 {
+> +			compatible = "arm,gic-400";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <0>;
+> +			interrupt-controller;
+> +			reg =	<0x11001000 0x1000>,
+> +				<0x11002000 0x1000>,
+> +				<0x11004000 0x2000>,
+> +				<0x11006000 0x2000>;
+> +		};
+> +
+> +		clock_topc: clock-controller@10570000 {
+> +			compatible = "samsung,exynos7-clock-topc";
+> +			reg = <0x10570000 0x10000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		clock_top0: clock-controller@105d0000 {
+> +			compatible = "samsung,exynos7-clock-top0";
+> +			reg = <0x105d0000 0xb000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		clock_peric0: clock-controller@13610000 {
+> +			compatible = "samsung,exynos7-clock-peric0";
+> +			reg = <0x13610000 0xd00>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		clock_peric1: clock-controller@14C80000 {
+> +			compatible = "samsung,exynos7-clock-peric1";
+> +			reg = <0x14c80000 0xd00>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		clock_peris: clock-controller@10040000 {
+> +			compatible = "samsung,exynos7-clock-peris";
+> +			reg = <0x10040000 0xd00>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+> +		serial_0: serial@13630000 {
+> +			compatible = "samsung,exynos4210-uart";
+> +			reg = <0x13630000 0x100>;
+> +			interrupts = <0 440 0>;
+> +			clocks = <&clock_peric0 PCLK_UART0>, <&clock_peric0 SCLK_UART0>;
+> +			clock-names = "uart", "clk_uart_baud0";
+> +			status = "disabled";
+> +		};
+> +
+> +		serial_1: serial@14c20000 {
+> +			compatible = "samsung,exynos4210-uart";
+> +			reg = <0x14c20000 0x100>;
+> +			interrupts = <0 456 0>;
+> +			clocks = <&clock_peric1 PCLK_UART1>, <&clock_peric1 SCLK_UART1>;
+> +			clock-names = "uart", "clk_uart_baud0";
+> +			status = "disabled";
+> +		};
+> +
+> +		serial_2: serial@14c30000 {
+> +			compatible = "samsung,exynos4210-uart";
+> +			reg = <0x14c30000 0x100>;
+> +			interrupts = <0 457 0>;
+> +			clocks = <&clock_peric1 PCLK_UART2>, <&clock_peric1 SCLK_UART2>;
+> +			clock-names = "uart", "clk_uart_baud0";
+> +			status = "disabled";
+> +		};
+> +
+> +		serial_3: serial@14c40000 {
+> +			compatible = "samsung,exynos4210-uart";
+> +			reg = <0x14c40000 0x100>;
+> +			interrupts = <0 458 0>;
+> +			clocks = <&clock_peric1 PCLK_UART3>, <&clock_peric1 SCLK_UART3>;
+> +			clock-names = "uart", "clk_uart_baud0";
+> +			status = "disabled";
+> +		};
+> +
+> +		timer {
+> +			compatible = "arm,armv8-timer";
+> +			interrupts = <1 13 0xff01>,
+> +				     <1 14 0xff01>,
+> +				     <1 11 0xff01>,
+> +				     <1 10 0xff01>;
+> +		};
+> +	};
+> +};
+> --
+> 1.7.9.5
+
+So this is not acceptable...
+
+- Kukjin
