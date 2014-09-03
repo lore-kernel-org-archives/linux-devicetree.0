@@ -1,54 +1,135 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [alsa-devel] [PATCHv2 1/4] ASoC: simple-card: add
-	asoc_simple_card_fmt_master() to simplify the code.
-Date: Wed, 3 Sep 2014 05:33:56 +0000
-Message-ID: <fa9b9bf4a2fc45da818d8627b3408b8e@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1409649969-15759-1-git-send-email-Li.Xiubo@freescale.com>
-	<1409649969-15759-2-git-send-email-Li.Xiubo@freescale.com>
-	<87egvt7dmd.wl%kuninori.morimoto.gx@gmail.com>
-	<df7936d5863948b0a0a33aa8283d6a67@BY2PR0301MB0613.namprd03.prod.outlook.com>
- <87wq9l5ojn.wl%kuninori.morimoto.gx@gmail.com>
+From: Srikanth Thokala <sthokal@xilinx.com>
+Subject: Re: [PATCH v3 2/2] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Wed, 3 Sep 2014 12:17:43 +0530
+Message-ID: <CA+mB=1L14Os=ZdJzj8_+XXa+oq4ZOS_kadQHpKQ2yws2tqGVSQ@mail.gmail.com>
+References: <1406549869-24422-1-git-send-email-sthokal@xilinx.com>
+	<1406549869-24422-2-git-send-email-sthokal@xilinx.com>
+	<20140819170346.GS13288@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87wq9l5ojn.wl%kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "moinejf-GANU6spQydw@public.gmane.org" <moinejf-GANU6spQydw@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org" <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "jsarha-l0cyMroinI0@public.gmane.org" <jsarha-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140819170346.GS13288@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, "Williams, Dan J" <dan.j.williams@intel.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Levente Kurusa <levex@linux.com>, Jassi Brar <jassisinghbrar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, anirudh@xilinx.com, svemula@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [alsa-devel] [PATCHv2 1/4] ASoC: simple-card: add
-> asoc_simple_card_fmt_master() to simplify the code.
-> 
-> 
-> Hi Xiubo
-> 
-> > Yes your patch has fixed the bug Jyri has pointed out.
-> >
-> > So I has discard my [PATCHv2 1/4] patch.
-> >
-> > Please send your patch out to replace this one.
-> (snip)
-> > Please send it out of your local patch.
-> >
-> > Please also consider the ideas about Jyri, Jean-Francios, Varka and
-> > Takashi's advice as previous emails about my patch.
-> 
-> OK, will do.
-> To avoid confusion/conflict, I will post it after Mark applied it.
-> Because many simple-card patches are posted in these days...
-> 
+Hi Vinod,
 
-Yes, Get it.
+Apologies for the delay.
 
-Thanks,
+On Tue, Aug 19, 2014 at 10:33 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Mon, Jul 28, 2014 at 05:47:49PM +0530, Srikanth Thokala wrote:
+>> +struct xilinx_dma_chan {
+>> +     struct xilinx_dma_device *xdev;
+>> +     u32 ctrl_offset;
+>> +     spinlock_t lock;
+>> +     struct list_head pending_list;
+>> +     struct xilinx_dma_tx_descriptor *active_desc;
+>> +     struct xilinx_dma_tx_descriptor *allocated_desc;
+>> +     struct list_head done_list;
+>> +     struct list_head free_seg_list;
+>> +     struct dma_chan common;
+>> +     struct xilinx_dma_tx_segment *seg_v;
+>> +     dma_addr_t seg_p;
+>> +     struct device *dev;
+>> +     int irq;
+>> +     int id;
+>> +     enum dma_transfer_direction direction;
+> This looks suspect. Why should channel have direction, for a descriptor it
+> makes sense though.
 
-BRs
-Xiubo
+The channel only supports transfers in one direction. Either from memory to
+peripheral or from peripheral to memory, that's fixed and can't be changed
+at runtime.  So, the driver needs to know which direction the channel supports
+and hence it can reject transfers with the wrong direction.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +static enum dma_status xilinx_dma_tx_status(struct dma_chan *dchan,
+>> +                                         dma_cookie_t cookie,
+>> +                                         struct dma_tx_state *txstate)
+>> +{
+>> +     struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
+>> +     enum dma_status ret;
+>> +     unsigned long flags;
+>> +
+>> +     ret = dma_cookie_status(dchan, cookie, txstate);
+>> +     if (ret != DMA_COMPLETE) {
+>> +             spin_lock_irqsave(&chan->lock, flags);
+>> +             dma_set_residue(txstate, chan->residue);
+>> +             spin_unlock_irqrestore(&chan->lock, flags);
+>> +     }
+> No residue reporting?
+
+I will fix this, thanks.
+
+>
+>> +static int xilinx_dma_device_control(struct dma_chan *dchan,
+>> +                                  enum dma_ctrl_cmd cmd, unsigned long arg)
+>> +{
+>> +     struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
+>> +     unsigned long flags;
+>> +
+>> +     if (cmd != DMA_TERMINATE_ALL)
+>> +             return -ENXIO;
+>> +
+>> +     /* Halt the DMA engine */
+>> +     xilinx_dma_halt(chan);
+>> +
+>> +     spin_lock_irqsave(&chan->lock, flags);
+>> +
+>> +     /* Remove and free all of the descriptors in the lists */
+>> +     xilinx_dma_free_desc_list(chan, &chan->pending_list);
+>> +     xilinx_dma_free_desc_list(chan, &chan->done_list);
+>
+>> +
+>> +     spin_unlock_irqrestore(&chan->lock, flags);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_dma_channel_set_config - Configure DMA channel
+>> + * @dchan: DMA channel
+>> + * @cfg: DMA device configuration pointer
+>> + *
+>> + * Return: '0' on success and failure value on error
+>> + */
+>> +int xilinx_dma_channel_set_config(struct dma_chan *dchan,
+>> +                               struct xilinx_dma_config *cfg)
+>> +{
+>> +     struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
+>> +     u32 reg = dma_ctrl_read(chan, XILINX_DMA_REG_CONTROL);
+>> +
+>> +     if (cfg->reset)
+>> +             return xilinx_dma_reset(chan);
+>> +
+>> +     if (cfg->coalesc <= XILINX_DMA_CR_COALESCE_MAX)
+>> +             reg |= cfg->coalesc << XILINX_DMA_CR_COALESCE_SHIFT;
+>> +
+>> +     if (cfg->delay <= XILINX_DMA_CR_DELAY_MAX)
+>> +             reg |= cfg->delay << XILINX_DMA_CR_DELAY_SHIFT;
+>> +
+>> +     dma_ctrl_write(chan, XILINX_DMA_REG_CONTROL, reg);
+> You aren't checking if a transaction is already running on this channel.
+> Also don't you need other slave parameters, I see you have removed the
+> dma_slave_config entirely
+
+All the parameters that are required for this DMA engine are provided by
+SG list, so I don't see the need of dma_slave_config.  There are some
+specific IP parameters that are not part of dma_slave_config and these
+are being set by 'dma_channel_set_config' which is exported to slave
+drivers.
+
+Thanks for the reveiw,
+Srikanth
+
+>
+> --
+> ~Vinod
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
