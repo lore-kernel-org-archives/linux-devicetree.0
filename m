@@ -1,163 +1,100 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4] ARM: dts: Add sdio0 and sdio1 to the rk3288
-Date: Thu, 04 Sep 2014 00:56:08 +0200
-Message-ID: <1974115.XyT5SIvn66@diego>
-References: <1408436126-23390-1-git-send-email-addy.ke@rock-chips.com> <1408443668-23933-1-git-send-email-addy.ke@rock-chips.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [1/2, v3] powerpc/fsl-booke: Add initial T1040/T1042 RDB board
+ support
+Date: Wed, 3 Sep 2014 18:01:06 -0500
+Message-ID: <20140903230106.GA5830@home.buserror.net>
+References: <1407741488-2661-1-git-send-email-Priyanka.Jain@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408443668-23933-1-git-send-email-addy.ke@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Addy Ke <addy.ke@rock-chips.com>
-Cc: dianders@chromium.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net, hj@rock-chips.com, kever.yang@rock-chips.com, xjq@rock-chips.com, huangtao@rock-chips.com, zyw@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, hl@rock-chips.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1407741488-2661-1-git-send-email-Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 19. August 2014, 18:21:08 schrieb Addy Ke:
-> This patch requires that <https://patchwork.kernel.org/patch/4701721/>
-> land in order to compile.
-> 
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Signed-off-by: Addy Ke <addy.ke@rock-chips.com>
-
-I've added the patch to my v3.18-next/dts branch
-
-
+On Mon, Aug 11, 2014 at 12:48:08PM +0530, Priyanka Jain wrote:
+> T1040/T1042RDB is Freescale Reference Design Board.
+> The board can support both T1040/T1042 QorIQ Power Architecture=E2=84=
+=A2 processor.
+>=20
+> T1040/T1042RDB board Overview
+> -----------------------
+> - SERDES Connections, 8 lanes supporting:
+> 	- PCI
+> 	- SGMII
+>     	- QSGMII
+>     	- SATA 2.0
+> - DDR Controller
+>     	- Supports rates of up to 1600 MHz data-rate
+>     	- Supports one DDR3LP UDIMM
+> -IFC/Local Bus
+>     	- NAND flash: 1GB 8-bit NAND flash
+>     	- NOR: 128MB 16-bit NOR Flash
+> - Ethernet
+>     	- Two on-board RGMII 10/100/1G ethernet ports.
+>     	- PHY #0 remains powered up during deep-sleep
+> - CPLD
+> - Clocks
+>     	- System and DDR clock (SYSCLK, =E2=80=9CDDRCLK=E2=80=9D)
+>     	- SERDES clocks
+> - Power Supplies
+> - USB
+>     	- Supports two USB 2.0 ports with integrated PHYs
+>     	- Two type A ports with 5V@1.5A per port.
+> - SDHC
+>     	- SDHC/SDXC connector
+> - SPI
+>     	- On-board 64MB SPI flash
+> - I2C
+>     	- Devices connected: EEPROM, thermal monitor, VID controller
+> - Other IO
+>     	- Two Serial ports
+>     	- ProfiBus port
+>=20
+> Add support for T1040/T1042 RDB board:
+>     -add device tree
+>     -add entry in Kconfig to build
+>     -Add entry in corenet_generic.c, as it is similar to other corene=
+t platforms
+>=20
+> Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
-> Changes in v2:
-> - repost patch to match what's in Heiko's "wip/v3.18-next/dts" tree
->   for the other dwmmc controllers
-> - add "cd" and "int" line, suggested by Doug Anderson
-> - fix up sdio1 configuration error
-> 
-> Changes in v3:
-> - sort sdio0 and sdio1 by pin number, suggested by Doug Anderson
-> - add "ro" and "bkpwr" line, suggested by Doug Anderson
-> 
-> Changes in v4:
-> - change "sdiox_ro" to "sdiox_wp", suggested by Doug Anderson
-> 
->  arch/arm/boot/dts/rk3288.dtsi | 102
-> ++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 102
-> insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 36be7bb..1fcc20e 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -88,6 +88,26 @@
->  		status = "disabled";
->  	};
-> 
-> +	sdio0: dwmmc@ff0d0000 {
-> +		compatible = "rockchip,rk3288-dw-mshc";
-> +		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>;
-> +		clock-names = "biu", "ciu";
-> +		fifo-depth = <0x100>;
-> +		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg = <0xff0d0000 0x4000>;
-> +		status = "disabled";
-> +	};
+> changes for v3: Incorporated Scott comments on moving cpld compatible
+>  field to board specific file as cpld binaries are different
+[snip]
+> diff --git a/arch/powerpc/boot/dts/t1042rdb.dts b/arch/powerpc/boot/d=
+ts/t1042rdb.dts
+> new file mode 100644
+> index 0000000..228a635
+> --- /dev/null
+> +++ b/arch/powerpc/boot/dts/t1042rdb.dts
+[snip]
+> +/include/ "fsl/t104xsi-pre.dtsi"
+> +/include/ "t104xrdb.dtsi"
 > +
-> +	sdio1: dwmmc@ff0e0000 {
-> +		compatible = "rockchip,rk3288-dw-mshc";
-> +		clocks = <&cru HCLK_SDIO1>, <&cru SCLK_SDIO1>;
-> +		clock-names = "biu", "ciu";
-> +		fifo-depth = <0x100>;
-> +		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg = <0xff0e0000 0x4000>;
-> +		status = "disabled";
-> +	};
-> +
->  	emmc: dwmmc@ff0f0000 {
->  		compatible = "rockchip,rk3288-dw-mshc";
->  		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>;
-> @@ -508,6 +528,88 @@
->  			};
->  		};
-> 
-> +		sdio0 {
-> +			sdio0_bus1: sdio0-bus1 {
-> +				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio0_bus4: sdio0-bus4 {
-> +				rockchip,pins = <4 20 RK_FUNC_1 &pcfg_pull_up>,
-> +						<4 21 RK_FUNC_1 &pcfg_pull_up>,
-> +						<4 22 RK_FUNC_1 &pcfg_pull_up>,
-> +						<4 23 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio0_cmd: sdio0-cmd {
-> +				rockchip,pins = <4 24 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio0_clk: sdio0-clk {
-> +				rockchip,pins = <4 25 RK_FUNC_1 &pcfg_pull_none>;
-> +			};
-> +
-> +			sdio0_cd: sdio0-cd {
-> +				rockchip,pins = <4 26 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio0_wp: sdio0-wp {
-> +				rockchip,pins = <4 27 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio0_pwr: sdio0-pwr {
-> +				rockchip,pins = <4 28 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio0_bkpwr: sdio0-bkpwr {
-> +				rockchip,pins = <4 29 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio0_int: sdio0-int {
-> +				rockchip,pins = <4 30 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
+> +/ {
+> +	model =3D "fsl,T1042RDB";
+> +	compatible =3D "fsl,T1042RDB";
+> +	ifc: localbus@ffe124000 {
+> +		cpld@3,0 {
+> +			compatible =3D "fsl,t1040rdb-cpld";
 > +		};
-> +
-> +		sdio1 {
-> +			sdio1_bus1: sdio1-bus1 {
-> +				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio1_bus4: sdio1-bus4 {
-> +				rockchip,pins = <3 24 RK_FUNC_4 &pcfg_pull_up>,
-> +						<3 25 RK_FUNC_4 &pcfg_pull_up>,
-> +						<3 26 RK_FUNC_4 &pcfg_pull_up>,
-> +						<3 27 RK_FUNC_4 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio1_cd: sdio1-cd {
-> +				rockchip,pins = <3 28 RK_FUNC_4 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio1_wp: sdio1-wp {
-> +				rockchip,pins = <3 29 RK_FUNC_4 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio1_bkpwr: sdio1-bkpwr {
-> +				rockchip,pins = <3 30 RK_FUNC_4 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio1_int: sdio1-int {
-> +				rockchip,pins = <3 31 RK_FUNC_4 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio1_cmd: sdio1-cmd {
-> +				rockchip,pins = <4 6 RK_FUNC_4 &pcfg_pull_up>;
-> +			};
-> +
-> +			sdio1_clk: sdio1-clk {
-> +				rockchip,pins = <4 7 RK_FUNC_4 &pcfg_pull_none>;
-> +			};
-> +
-> +			sdio1_pwr: sdio1-pwr {
-> +				rockchip,pins = <4 9 RK_FUNC_4 &pcfg_pull_up>;
-> +			};
-> +		};
-> +
->  		emmc {
->  			emmc_clk: emmc-clk {
->  				rockchip,pins = <3 18 RK_FUNC_2 &pcfg_pull_none>;
+> +	};
+> +};
+
+The point of moving the cpld compatible is so that they can match the
+exact CPLD binary being used.  The above does not match.
+
+Likewise in patch 2/2
+
+-Scott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
