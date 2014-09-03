@@ -1,84 +1,92 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from DT
-Date: Wed, 3 Sep 2014 11:09:02 +0200
-Message-ID: <CAPDyKFrnF4biUGkLgkzz2RNdY1yLp2_bfvoWMM55yx-_TG6ENw@mail.gmail.com>
-References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
-	<CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
-	<5406D942.4080405@intel.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/8] pinctrl: add driver for MB86S7x
+Date: Wed, 3 Sep 2014 11:17:52 +0200
+Message-ID: <CACRpkda1X-7Cspp9qrfQLsmwNFiqKAUifQizvY-wD_FYb8uANQ@mail.gmail.com>
+References: <1405233067-4725-1-git-send-email-mollie.wu@linaro.org>
+	<CACRpkdb_NC7j=XkbMPv8YYLSeEd1AOpFqmD8x+ohC7ds3cPCfg@mail.gmail.com>
+	<CAJe_Zhe2VuzHtkojm9nxvDTjT4AL7Znvma+5T7JTadvFJ1vAJQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5406D942.4080405@intel.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <b29396@freescale.com>, Peter Griffin <peter.griffin@linaro.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, h80.chung@samsung.com, Chris Ball <chris@printf.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_Zhe2VuzHtkojm9nxvDTjT4AL7Znvma+5T7JTadvFJ1vAJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, FanWu <fwu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 September 2014 11:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
-> On 09/03/2014 11:30 AM, Ulf Hansson wrote:
->> On 2 September 2014 17:49, Jean-Michel Hautbois
->> <jean-michel.hautbois@vodalys.com> wrote:
->>> This property is useful when we don't want to access boot partitions on eMMC
->>>
->>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
->>> ---
->>>  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
->>>  drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
->>>  include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
->>>  3 files changed, 10 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
->>> index 431716e..59cc854 100644
->>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->>> @@ -40,6 +40,7 @@ Optional properties:
->>>  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
->>>  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
->>>  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
->>> +- no-boot-part : when preset, tells to access boot partitions
->>>
->>>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
->>>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
->>> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
->>> index ccec0e3..439e663 100644
->>> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
->>> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
->>> @@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
->>>         if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
->>>                 boarddata->delay_line = 0;
->>>
->>> +       if (of_find_property(np, "no-boot-part", NULL))
->>> +               boarddata->access_boot_part = false;
->>> +       else
->>> +               boarddata->access_boot_part = true;
+On Fri, Aug 22, 2014 at 9:46 AM, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 22 July 2014 21:41, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Sun, Jul 13, 2014 at 8:31 AM, Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+
+>>> +static void
+>>> +mb86s70_pmx_disable(struct pinctrl_dev *pctl,
+>>> +                   unsigned func_selector, unsigned group_selector)
+>>> +{
+>>> +       struct mb86s70_pmux_chip *pchip = pinctrl_dev_get_drvdata(pctl);
+>>> +       unsigned long flags;
+>>> +       const unsigned *pins;
+>>> +       int i, j;
 >>> +
->>>         return 0;
->>>  }
->>>  #else
->>> @@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
->>>                 host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
->>>         }
->>>
->>> +       if (!boarddata->access_boot_part)
->>> +               host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
+>>> +       if (group_selector >= grp_count) {
+>>> +               pr_err("%s:%d\n", __func__, __LINE__);
+>>> +               return;
+>>> +       }
 >>> +
+>>> +       j = mb86s7x_pgrps[group_selector].num_pins;
+>>> +       pins = mb86s7x_pgrps[group_selector].pins;
+>>> +
+>>> +       pr_debug("Going to disable %s on pins -",
+>>> +                mb86s7x_pmx_funcs[func_selector].name);
+>>> +       spin_lock_irqsave(&pchip->lock, flags);
+>>> +       for (i = 0; i < j; i++) {
+>>> +               pr_debug(" %d", pins[i]);
+>>> +               pchip->pin_busy[pins[i]] = false;
+>>> +       }
+>>> +       spin_unlock_irqrestore(&pchip->lock, flags);
+>>> +       pr_debug("\n");
+>>> +}
 >>
->> Hmm, I don't think MMC_CAP2_BOOTPART_NOACC should have a DT binding.
->> Does it describe the hardware in some form?
+>> Remove this function. The .disable member is gone from
+>> struct pinmux_ops, as it was ambiguous, see commit
+>> 2243a87d90b42eb38bc281957df3e57c712b5e56
+>> "pinctrl: avoid duplicated calling enable_pinmux_setting for a pin"
 >>
->> Actually I would like to question why MMC_CAP2_BOOTPART_NOACC exists
->> at all. If there are cards that don't supports the BOOT area,
->> shouldn't we have a card quirk for it instead of a host cap? Maybe
->> Adrian Hunter, how originally wrote the patch for adding
->> MMC_CAP2_BOOTPART_NOACC, could help me understand the reasons behind
->> it!?
+> Hmm... I just got bitten by this while updating the patchset. Sorry I
+> missed the patch review.
 >
-> It was added because platform firmware was able to prevent access to the
-> boot partitions (for security I think), so attempts to access them would
-> fail messily.  It was not related to any specific card.
+> The reasons given in changelog are
+>   (1) 'Fix' desc->mux_usecount
+>   (2) The .disable callback is not useful for any of the existing platforms.
+>
+> Well, for (2) I think it is only reasonable for the provider to need
+> to know when some resource is released by a user just as when it was
+> requested.
 
-Adrian, appreciate your clarification. After all it seems like adding
-a DT binding for it should be appropriate.
+Well the .enable() callback is probably badly named. It's not like
+it's requesting a resource, it's just setting the hardware into some
+defined state. It should maybe be named .set_mux() or something.
 
-Kind regards
-Uffe
+The .disable() call is then pointless because the mux is always
+set up in some way, there is no "unmuxed" state.
+
+>    Even if the core ensures only one user is provided access to a pin,
+> the controller driver may still need to know when a pin is no more in
+> use. For ex, within consecutive 4 pins my controller can not enable a
+> pin for some function if any in the bunch is already
+> enabled/configured. So I need to know if the pin has been
+> disabled/released, so I can go ahead enabling the 'neighbor' pin for
+> some other role.
+
+But should not that other role of that pin come from some state
+transition in the pin control system anyway?
+
+It is of course possible to add an optional .pin_became_free()
+callback down to the driver if I can just wrap my head around
+the use case.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
