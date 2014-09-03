@@ -1,27 +1,57 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 1/4] ethernet: arc: Add support for Rockchip SoC layer device tree bindings
-Date: Wed, 03 Sep 2014 20:17:37 +0200
-Message-ID: <8915336.1DB5xPOmil@wuerfel>
-References: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
+Subject: Re: [PATCH v2 5/7] arm64: dts: Add initial device tree support for EXYNOS7
+Date: Wed, 03 Sep 2014 20:28:42 +0200
+Message-ID: <118816680.lTOkj0TsFJ@wuerfel>
+References: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com> <3382034.5ADO0F7naY@wuerfel> <043401cfc794$7f228650$7d6792f0$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Romain Perier <romain.perier@gmail.com>, heiko@sntech.de, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, netdev@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <043401cfc794$7f228650$7d6792f0$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: 'Naveen Krishna Chatradhi' <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org, naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 September 2014 16:52:42 Romain Perier wrote:
-> This patch defines a platform glue layer for Rockchip SoCs which
-> support arc-emac driver. It ensures that regulator for the rmii is on
-> before trying to connect to the ethernet controller. It applies right
-> speed and mode changes to the grf when ethernet settings change.
-> 
-> Signed-off-by: Romain Perier <romain.perier@gmail.com>
+On Thursday 04 September 2014 01:31:21 Kukjin Kim wrote:
+> > This is the board specific file, so it seems ok.
+> > 
+> I mean there are many espresso boards are having different exynos7
+> SoC. I mean exynos7-espresso cannot represent all of espresso boards.
 > 
 
-Whole series
+Ah, I see, that makes sense.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+We definitely need a top-level .dts file for each board that is different
+in a nondiscoverable way then.
+
+If the mmc settings and possibly some other nodes (to be added later)
+are common across them, those can be in a board specific .dtsi file.
+
+For the memory node, I would actually expect that to be filled by
+the boot loader, so we could leave it out entirely. The same applies
+to the command line: the parts that are in there at the moment (
+"console=ttySAC2,115200n8 root=/dev/ram0 ramdisk=16384 initrd=0x42000000,16M")
+clearly don't belong into a generic dts file and none of them should be
+set that way.
+
+For the initial version, that would mean that the file comes down to having
+as its only contents
+
+/dts-v1/;
+#include <dt-bindings/gpio/gpio.h>
+#include "exynos7123.dtsi"
+#include "exynos7-espresso.dtsi" // for the mmc nodes
+
+/ {
+       model = "Samsung ESPRESSO board based on EXYNOS7123";
+       compatible = "samsung,espresso", "samsung,exynos7123", "samsung,exynos7";
+};
+
+One more thing I just noticed is the GPL statement in the dts files.
+Can we please change that to a permissive license in order to allow
+including it in non-GPL boot loaders and operating systems?
+
+Dual GPL+MIT or GPL+BSD would make most sense here.
+
+	Arnd
