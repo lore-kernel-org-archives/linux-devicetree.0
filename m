@@ -1,7 +1,7 @@
 From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v3 3/4] gpio: syscon: reuse for keystone 2 socs
-Date: Wed, 3 Sep 2014 20:05:34 +0300
-Message-ID: <1409763935-5713-4-git-send-email-grygorii.strashko@ti.com>
+Subject: [PATCH v3 2/4] gpio: syscon: retrive syscon node and regs offsets from dt
+Date: Wed, 3 Sep 2014 20:05:33 +0300
+Message-ID: <1409763935-5713-3-git-send-email-grygorii.strashko@ti.com>
 References: <1409763935-5713-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,125 +12,134 @@ To: Linus Walleij <linus.walleij@linaro.org>, santosh.shilimkar@ti.com, shc_work
 Cc: Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Keystone SOCs, ARM host can send interrupts to DSP cores using the
-DSP GPIO controller IP. Each DSP GPIO controller provides 28 IRQ signals for
-each DSP core. This is one of the component used by the IPC mechanism used
-on Keystone SOCs.
+This patch adds handling of new "gpio,syscon-dev" DT property,
+which allows to specify syscon node and data/direction registers
+offsets in DT.
 
-Keystone 2 DSP GPIO controller has specific features:
-- each GPIO can be configured only as output pin;
-- setting GPIO value to 1 causes IRQ generation on target DSP core;
-- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
-  pending.
+"gpio,syscon-dev" has following format:
+	gpio,syscon-dev = <&syscon_dev data_reg_offset [direction_reg_offset]>;
 
-This patch updates gpio-syscon driver to be reused by Keystone 2 SoCs,
-because the Keystone 2 DSP GPIO controller is controlled through Syscon
-devices and, as requested by Linus Walleij, such kind of GPIO controllers
-should be integrated with drivers/gpio/gpio-syscon.c driver.
+where
+ - syscon_dev - phandle on syscon node
+ - data_reg_offset - offset of data register (in bytes)
+ - direction_reg_offset - offset of dirrection register (optional, in bytes)
+
+for example:
+	gpio,syscon-dev = <&devctrl 0x254>;
+
+In such way, the support of multiple Syscon GPIO devices is added.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- .../devicetree/bindings/gpio/gpio-dsp-keystone.txt | 39 ++++++++++++++++++++++
- drivers/gpio/gpio-syscon.c                         | 35 +++++++++++++++++++
- 2 files changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
+ drivers/gpio/gpio-syscon.c | 51 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 43 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt b/Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
-new file mode 100644
-index 0000000..6c7e6c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
-@@ -0,0 +1,39 @@
-+Keystone 2 DSP GPIO controller bindings
-+
-+HOST OS userland running on ARM can send interrupts to DSP cores using
-+the DSP GPIO controller IP. It provides 28 IRQ signals per each DSP core.
-+This is one of the component used by the IPC mechanism used on Keystone SOCs.
-+
-+For example TCI6638K2K SoC has 8 DSP GPIO controllers:
-+ - 8 for C66x CorePacx CPUs 0-7
-+
-+Keystone 2 DSP GPIO controller has specific features:
-+- each GPIO can be configured only as output pin;
-+- setting GPIO value to 1 causes IRQ generation on target DSP core;
-+- reading pin value returns 0 - if IRQ was handled or 1 - IRQ is still
-+  pending.
-+
-+Required Properties:
-+- compatible: should be "ti,keystone-dsp-gpio"
-+- ti,syscon-dev: phandle/offset pair. The phandle to syscon used to
-+  access device state control registers and the offset of device's specific
-+  registers within device state control registers range.
-+- gpio-controller: Marks the device node as a gpio controller.
-+- #gpio-cells: Should be 2.
-+
-+Please refer to gpio.txt in this directory for details of the common GPIO
-+bindings used by client devices.
-+
-+Example:
-+	dspgpio0: keystone_dsp_gpio@02620240 {
-+		compatible = "ti,keystone-dsp-gpio";
-+		ti,syscon-dev = <&devctrl 0x240>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	dsp0: dsp0 {
-+		compatible = "linux,rproc-user";
-+		...
-+		kick-gpio = <&dspgpio0 27>;
-+	};
 diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
-index 049391b..e82fde4 100644
+index d50ff93..049391b 100644
 --- a/drivers/gpio/gpio-syscon.c
 +++ b/drivers/gpio/gpio-syscon.c
-@@ -140,11 +140,46 @@ static const struct syscon_gpio_data clps711x_mctrl_gpio = {
- 	.dat_bit_offset	= 0x40 * 8 + 8,
+@@ -55,6 +55,8 @@ struct syscon_gpio_priv {
+ 	struct gpio_chip		chip;
+ 	struct regmap			*syscon;
+ 	const struct syscon_gpio_data	*data;
++	u32				dreg_offset;
++	u32				dir_reg_offset;
  };
  
-+#define KEYSTONE_LOCK_BIT BIT(0)
-+
-+static void keystone_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
-+{
-+	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
-+	unsigned int offs;
-+	int ret;
-+
+ static inline struct syscon_gpio_priv *to_syscon_gpio(struct gpio_chip *chip)
+@@ -65,9 +67,11 @@ static inline struct syscon_gpio_priv *to_syscon_gpio(struct gpio_chip *chip)
+ static int syscon_gpio_get(struct gpio_chip *chip, unsigned offset)
+ {
+ 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
+-	unsigned int val, offs = priv->data->dat_bit_offset + offset;
++	unsigned int val, offs;
+ 	int ret;
+ 
 +	offs = priv->dreg_offset + priv->data->dat_bit_offset + offset;
 +
-+	if (!val)
-+		return;
+ 	ret = regmap_read(priv->syscon,
+ 			  (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE, &val);
+ 	if (ret)
+@@ -79,7 +83,9 @@ static int syscon_gpio_get(struct gpio_chip *chip, unsigned offset)
+ static void syscon_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
+ {
+ 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
+-	unsigned int offs = priv->data->dat_bit_offset + offset;
++	unsigned int offs;
 +
-+	ret = regmap_update_bits(
-+			priv->syscon,
-+			(offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
-+			BIT(offs % SYSCON_REG_BITS) | KEYSTONE_LOCK_BIT,
-+			BIT(offs % SYSCON_REG_BITS) | KEYSTONE_LOCK_BIT);
-+	if (ret < 0)
-+		dev_err(chip->dev, "gpio write failed ret(%d)\n", ret);
-+}
++	offs = priv->dreg_offset + priv->data->dat_bit_offset + offset;
+ 
+ 	regmap_update_bits(priv->syscon,
+ 			   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
+@@ -92,7 +98,10 @@ static int syscon_gpio_dir_in(struct gpio_chip *chip, unsigned offset)
+ 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
+ 
+ 	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
+-		unsigned int offs = priv->data->dir_bit_offset + offset;
++		unsigned int offs;
 +
-+static const struct syscon_gpio_data keystone_dsp_gpio = {
-+	/* ARM Keystone 2 */
-+	.compatible	= NULL,
-+	.flags		= GPIO_SYSCON_FEAT_OUT,
-+	.bit_count	= 28,
-+	.dat_bit_offset	= 4,
-+	.set		= keystone_gpio_set,
-+};
++		offs = priv->dir_reg_offset +
++		       priv->data->dir_bit_offset + offset;
+ 
+ 		regmap_update_bits(priv->syscon,
+ 				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
+@@ -107,7 +116,10 @@ static int syscon_gpio_dir_out(struct gpio_chip *chip, unsigned offset, int val)
+ 	struct syscon_gpio_priv *priv = to_syscon_gpio(chip);
+ 
+ 	if (priv->data->flags & GPIO_SYSCON_FEAT_DIR) {
+-		unsigned int offs = priv->data->dir_bit_offset + offset;
++		unsigned int offs;
 +
- static const struct of_device_id syscon_gpio_ids[] = {
- 	{
- 		.compatible	= "cirrus,clps711x-mctrl-gpio",
- 		.data		= &clps711x_mctrl_gpio,
- 	},
-+	{
-+		.compatible	= "ti,keystone-dsp-gpio",
-+		.data		= &keystone_dsp_gpio,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, syscon_gpio_ids);
++		offs = priv->dir_reg_offset +
++		       priv->data->dir_bit_offset + offset;
+ 
+ 		regmap_update_bits(priv->syscon,
+ 				   (offs / SYSCON_REG_BITS) * SYSCON_REG_SIZE,
+@@ -142,6 +154,8 @@ static int syscon_gpio_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	const struct of_device_id *of_id = of_match_device(syscon_gpio_ids, dev);
+ 	struct syscon_gpio_priv *priv;
++	struct device_node *np = dev->of_node;
++	int ret;
+ 
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+@@ -149,10 +163,31 @@ static int syscon_gpio_probe(struct platform_device *pdev)
+ 
+ 	priv->data = of_id->data;
+ 
+-	priv->syscon =
+-		syscon_regmap_lookup_by_compatible(priv->data->compatible);
+-	if (IS_ERR(priv->syscon))
+-		return PTR_ERR(priv->syscon);
++	if (priv->data->compatible) {
++		priv->syscon = syscon_regmap_lookup_by_compatible(
++					priv->data->compatible);
++		if (IS_ERR(priv->syscon))
++			return PTR_ERR(priv->syscon);
++	} else {
++		priv->syscon =
++			syscon_regmap_lookup_by_phandle(np, "gpio,syscon-dev");
++		if (IS_ERR(priv->syscon))
++			return PTR_ERR(priv->syscon);
++
++		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 1,
++						 &priv->dreg_offset);
++		if (ret)
++			dev_err(dev, "can't read the data register offset!\n");
++
++		priv->dreg_offset <<= 3;
++
++		ret = of_property_read_u32_index(np, "gpio,syscon-dev", 2,
++						 &priv->dir_reg_offset);
++		if (ret)
++			dev_err(dev, "can't read the dir register offset!\n");
++
++		priv->dir_reg_offset <<= 3;
++	}
+ 
+ 	priv->chip.dev = dev;
+ 	priv->chip.owner = THIS_MODULE;
 -- 
 1.9.1
 
