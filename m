@@ -1,22 +1,35 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 0/3] move gpt per clk parent for ipg_per to OSC
-Date: Wed, 3 Sep 2014 15:36:42 +0800
-Message-ID: <1409729805-9741-1-git-send-email-b20788@freescale.com>
+From: Anson Huang <b20788@freescale.com>
+Subject: [PATCH 3/3] ARM: imx: source gpt per clk from OSC for system timer
+Date: Wed, 3 Sep 2014 15:36:45 +0800
+Message-ID: <1409729805-9741-4-git-send-email-b20788@freescale.com>
+References: <1409729805-9741-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1409729805-9741-1-git-send-email-b20788@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@freescale.com, kernel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, gpt timer's clock is from ipg_per, and ipg_per clock is from ipg
-on most of i.MX6 series SOCs, but ipg's rate may be scaled when system enters
-low bus mode for saving power, then gpt timer's clock rate will be scaled as
-well, as system timer should be kept stable and NOT drift, better to keep gpt
-timer's clk at fixed rate, on i.MX6Q TO > 1.0, i.MX6DL and i.MX6SX, there is
-OSC clk available for gpt timer, we should enable this feature, the hardware
-design is as below:
+On i.MX6Q TO > 1.0, i.MX6DL and i.MX6SX, gpt per clock
+can be from OSC instead of ipg_per, as ipg_per's rate
+may be scaled when system enter low bus mode, to keep
+system timer NOT drift, better to make gpt per clock
+at fixed rate, here add support for gpt per clock to
+be from OSC which is at fixed rate always.
+
+There are some difference on this implementation of
+gpt per clock source, see below for details:
 
 i.MX6Q TO > 1.0: GPT_CR_CLKSRC, 3b'101 selects fix clock
     of OSC / 8 for gpt per clk;
@@ -28,22 +41,69 @@ i.MX6DL and i.MX6SX: GPT_CR_CLKSRC, 3b'101 selects OSC
 i.MX6SL: ipg_per can be from OSC directly, so no need to
     implement this new clk source for gpt per.
 
-Anson Huang (3):
-  ARM: imx: add gpt_3m clk for i.mx6qdl
-  ARM: dts: imx6: change gpt per clk to gpt_3m on i.mx6qdl and i.mx6sx
-  ARM: imx: source gpt per clk from OSC for system timer
+Signed-off-by: Anson Huang <b20788@freescale.com>
+---
+ arch/arm/mach-imx/time.c |   29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
- arch/arm/boot/dts/imx6qdl.dtsi            |    2 +-
- arch/arm/boot/dts/imx6sx.dtsi             |    2 +-
- arch/arm/mach-imx/clk-imx6q.c             |    1 +
- arch/arm/mach-imx/time.c                  |   29 ++++++++++++++++++++++++-----
- include/dt-bindings/clock/imx6qdl-clock.h |    3 ++-
- 5 files changed, 29 insertions(+), 8 deletions(-)
-
+diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c
+index bf92e5a..54d23c7 100644
+--- a/arch/arm/mach-imx/time.c
++++ b/arch/arm/mach-imx/time.c
+@@ -60,11 +60,15 @@
+ #define MX2_TSTAT_CAPT		(1 << 1)
+ #define MX2_TSTAT_COMP		(1 << 0)
+ 
+-/* MX31, MX35, MX25, MX5 */
++/* MX31, MX35, MX25, MX5, MX6 */
+ #define V2_TCTL_WAITEN		(1 << 3) /* Wait enable mode */
+ #define V2_TCTL_CLK_IPG		(1 << 6)
+ #define V2_TCTL_CLK_PER		(2 << 6)
++#define V2_TCTL_CLK_OSC_DIV8	(5 << 6)
++#define V2_TCTL_CLK_OSC		(7 << 6)
+ #define V2_TCTL_FRR		(1 << 9)
++#define V2_TCTL_24MEN		(1 << 10)
++#define V2_TPRER_PRE24M		12
+ #define V2_IR			0x0c
+ #define V2_TSTAT		0x08
+ #define V2_TSTAT_OF1		(1 << 0)
+@@ -293,7 +297,7 @@ static int __init mxc_clockevent_init(struct clk *timer_clk)
+ static void __init _mxc_timer_init(int irq,
+ 				   struct clk *clk_per, struct clk *clk_ipg)
+ {
+-	uint32_t tctl_val;
++	uint32_t tctl_val, tprer_val;
+ 
+ 	if (IS_ERR(clk_per)) {
+ 		pr_err("i.MX timer: unable to get clk\n");
+@@ -312,10 +316,25 @@ static void __init _mxc_timer_init(int irq,
+ 	__raw_writel(0, timer_base + MXC_TCTL);
+ 	__raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
+ 
+-	if (timer_is_v2())
+-		tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
+-	else
++	if (timer_is_v2()) {
++		if ((cpu_is_imx6q() && imx_get_soc_revision() >
++			IMX_CHIP_REVISION_1_0) || cpu_is_imx6dl() ||
++			cpu_is_imx6sx()) {
++			tctl_val = V2_TCTL_CLK_OSC_DIV8 | V2_TCTL_FRR |
++				V2_TCTL_WAITEN | MXC_TCTL_TEN;
++			if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
++				/* 24 / 8 = 3 MHz */
++				tprer_val = 7 << V2_TPRER_PRE24M;
++				__raw_writel(tprer_val, timer_base + MXC_TPRER);
++				tctl_val |= V2_TCTL_24MEN;
++			}
++		} else {
++			tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR |
++				V2_TCTL_WAITEN | MXC_TCTL_TEN;
++		}
++	} else {
+ 		tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
++	}
+ 
+ 	__raw_writel(tctl_val, timer_base + MXC_TCTL);
+ 
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
