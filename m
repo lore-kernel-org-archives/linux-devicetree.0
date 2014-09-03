@@ -1,109 +1,57 @@
-From: Anson Huang <b20788@freescale.com>
-Subject: [PATCH 3/3] ARM: imx: source gpt per clk from OSC for system timer
-Date: Wed, 3 Sep 2014 15:36:45 +0800
-Message-ID: <1409729805-9741-4-git-send-email-b20788@freescale.com>
-References: <1409729805-9741-1-git-send-email-b20788@freescale.com>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 08/14] i2c: exynos5: Add Kconfig dependencies
+Date: Wed, 3 Sep 2014 13:13:21 +0530
+Message-ID: <CAHfPSqBTskQxC_HktLyPF=4cmmzZvVZO2u_Y4tXkftA1qtsR4g@mail.gmail.com>
+References: <1409132740-1954-1-git-send-email-ch.naveen@samsung.com>
+ <1409132740-1954-2-git-send-email-ch.naveen@samsung.com> <20140828040311.GD4972@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1409729805-9741-1-git-send-email-b20788@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@freescale.com, kernel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140828040311.GD4972@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, cpgs@samsung.com, broonie@kernel.org, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6Q TO > 1.0, i.MX6DL and i.MX6SX, gpt per clock
-can be from OSC instead of ipg_per, as ipg_per's rate
-may be scaled when system enter low bus mode, to keep
-system timer NOT drift, better to make gpt per clock
-at fixed rate, here add support for gpt per clock to
-be from OSC which is at fixed rate always.
+Hi Olof,
 
-There are some difference on this implementation of
-gpt per clock source, see below for details:
+On 28 August 2014 09:33, Olof Johansson <olof@lixom.net> wrote:
+> On Wed, Aug 27, 2014 at 03:15:40PM +0530, Naveen Krishna Chatradhi wrote:
+>> The i2c-exynos5.c driver can be reused for the HSI2C controller
+>> on Exynos7 SoCs from Samsung.
+>>
+>> This patch adds the Kconfig dependency to choose i2c-exynos5.c
+>> for CONFIG_ARCH_EXYNOS7.
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>> To: linux-i2c@vger.kernel.org
+>> Cc: Wolfram Sang <wsa@the-dreams.de>
+>> ---
+>>  drivers/i2c/busses/Kconfig |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+>> index 2ac87fa..bd18fa6 100644
+>> --- a/drivers/i2c/busses/Kconfig
+>> +++ b/drivers/i2c/busses/Kconfig
+>> @@ -465,7 +465,7 @@ config I2C_EG20T
+>>
+>>  config I2C_EXYNOS5
+>>       tristate "Exynos5 high-speed I2C driver"
+>> -     depends on ARCH_EXYNOS5 && OF
+>> +     depends on (ARCH_EXYNOS5 || ARCH_EXYNOS7) && OF
+>
+> Ick, this will keep growing. Please use ARCH_EXYNOS instead. Yes,
+> this means you need to add it to the arm64 Kconfig and select it from
+> ARCH_EXYNOS7.
 
-i.MX6Q TO > 1.0: GPT_CR_CLKSRC, 3b'101 selects fix clock
-    of OSC / 8 for gpt per clk;
-i.MX6DL and i.MX6SX: GPT_CR_CLKSRC, 3b'101 selects OSC
-    for gpt per clk, and we must enable GPT_CR_24MEM to
-    enable OSC clk source for gpt per, GPT_PR_PRESCALER24M
-    is for pre-scaling of this OSC clk, here set it to 8
-    to make gpt per clk is 3MHz;
-i.MX6SL: ipg_per can be from OSC directly, so no need to
-    implement this new clk source for gpt per.
+Ok, will repost with ARCH_EXYNOS. Thanks.
 
-Signed-off-by: Anson Huang <b20788@freescale.com>
----
- arch/arm/mach-imx/time.c |   29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+>
+>
+>
+> -Olof
 
-diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c
-index bf92e5a..54d23c7 100644
---- a/arch/arm/mach-imx/time.c
-+++ b/arch/arm/mach-imx/time.c
-@@ -60,11 +60,15 @@
- #define MX2_TSTAT_CAPT		(1 << 1)
- #define MX2_TSTAT_COMP		(1 << 0)
- 
--/* MX31, MX35, MX25, MX5 */
-+/* MX31, MX35, MX25, MX5, MX6 */
- #define V2_TCTL_WAITEN		(1 << 3) /* Wait enable mode */
- #define V2_TCTL_CLK_IPG		(1 << 6)
- #define V2_TCTL_CLK_PER		(2 << 6)
-+#define V2_TCTL_CLK_OSC_DIV8	(5 << 6)
-+#define V2_TCTL_CLK_OSC		(7 << 6)
- #define V2_TCTL_FRR		(1 << 9)
-+#define V2_TCTL_24MEN		(1 << 10)
-+#define V2_TPRER_PRE24M		12
- #define V2_IR			0x0c
- #define V2_TSTAT		0x08
- #define V2_TSTAT_OF1		(1 << 0)
-@@ -293,7 +297,7 @@ static int __init mxc_clockevent_init(struct clk *timer_clk)
- static void __init _mxc_timer_init(int irq,
- 				   struct clk *clk_per, struct clk *clk_ipg)
- {
--	uint32_t tctl_val;
-+	uint32_t tctl_val, tprer_val;
- 
- 	if (IS_ERR(clk_per)) {
- 		pr_err("i.MX timer: unable to get clk\n");
-@@ -312,10 +316,25 @@ static void __init _mxc_timer_init(int irq,
- 	__raw_writel(0, timer_base + MXC_TCTL);
- 	__raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
- 
--	if (timer_is_v2())
--		tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
--	else
-+	if (timer_is_v2()) {
-+		if ((cpu_is_imx6q() && imx_get_soc_revision() >
-+			IMX_CHIP_REVISION_1_0) || cpu_is_imx6dl() ||
-+			cpu_is_imx6sx()) {
-+			tctl_val = V2_TCTL_CLK_OSC_DIV8 | V2_TCTL_FRR |
-+				V2_TCTL_WAITEN | MXC_TCTL_TEN;
-+			if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
-+				/* 24 / 8 = 3 MHz */
-+				tprer_val = 7 << V2_TPRER_PRE24M;
-+				__raw_writel(tprer_val, timer_base + MXC_TPRER);
-+				tctl_val |= V2_TCTL_24MEN;
-+			}
-+		} else {
-+			tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR |
-+				V2_TCTL_WAITEN | MXC_TCTL_TEN;
-+		}
-+	} else {
- 		tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
-+	}
- 
- 	__raw_writel(tctl_val, timer_base + MXC_TCTL);
- 
 -- 
-1.7.9.5
+Shine bright,
+(: Nav :)
