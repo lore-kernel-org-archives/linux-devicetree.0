@@ -1,98 +1,221 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: mfd: twl4030-power: Use
- the standard 'ti,system-power-controller' to mark power control
-Date: Wed, 3 Sep 2014 21:53:18 +0200
-Message-ID: <20140903195317.GA678@earth.universe>
-References: <1409771208-21867-1-git-send-email-nm@ti.com>
- <1409771208-21867-2-git-send-email-nm@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v8 5/5] regulator: RK808: Remove pdata from the regulator
+Date: Wed, 03 Sep 2014 22:00:13 +0200
+Message-ID: <2162052.iucaQxK73z@diego>
+References: <1409752307-29044-1-git-send-email-zyw@rock-chips.com> <1409763974-29854-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409771208-21867-2-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409763974-29854-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, a.zummo@towertech.it, mturquette@linaro.org, akpm@linux-foundation.org, dianders@chromium.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-
---AqsLC8rIMeq19msA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Sep 03, 2014 at 02:06:47PM -0500, Nishanth Menon wrote:
-> ti,system-power-controller is more or less the standard way of
-> indicating that the PMIC is the system wide power controller and hence
-> may be used to switch off the system. Almost ALL TI PMIC drivers and
-> many Maxim PMIC drivers follow the same style.
->=20
-> So support 'ti,system-power-controller' in addition to the usual
-> 'ti,use_poweroff' to indicate that the PMIC instance has control for
-> switching off the system.
->=20
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Am Donnerstag, 4. September 2014, 01:06:14 schrieb Chris Zhong:
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> 
+> Tested-by: Heiko <heiko@sntech.de>
 > ---
->  .../devicetree/bindings/mfd/twl4030-power.txt      |    7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/twl4030-power.txt b/Do=
-cumentation/devicetree/bindings/mfd/twl4030-power.txt
-> index b9ee7b9..e1dff57 100644
-> --- a/Documentation/devicetree/bindings/mfd/twl4030-power.txt
-> +++ b/Documentation/devicetree/bindings/mfd/twl4030-power.txt
-> @@ -23,8 +23,11 @@ down during off-idle. Note that this does not work on =
-all boards
->  depending on how the external oscillator is wired.
-> =20
->  Optional properties:
-> -- ti,use_poweroff: With this flag, the chip will initiates an ACTIVE-to-=
-OFF or
-> -		   SLEEP-to-OFF transition when the system poweroffs.
+> 
+> Changes in v8:
+> Adviced by Doug
+> - remove rk808_regulator_dts() function
+> - remove the check about "client->dev.of_node"
+> 
+> Changes in v7:
+> - remove pdata struct from header file, add rk808_regulator struct
+> 
+> Changes in v6:
+> - remove the redundant code
+> 
+> Changes in v5:
+> - re-edit base on Mark's branch
+> 
+> Changes in v4:
+> - use &client->dev replace rk808->dev
+> 
+> Changes in v3: None
+> Changes in v2:
+> Adviced by Mark Browm:
+> - change of_find_node_by_name to find_child_by_name
+> - use RK808_NUM_REGULATORS as the name of the constant
+> - create a pdata when missing platform data
+> - use the rk808_reg name to supply_regulator name
+> - replace regulator_register with devm_regulator_register
+> - some other problem with coding style
+> 
+>  drivers/regulator/rk808-regulator.c |   89
+> +++++++---------------------------- 1 file changed, 17 insertions(+), 72
+> deletions(-)
+> 
+> diff --git a/drivers/regulator/rk808-regulator.c
+> b/drivers/regulator/rk808-regulator.c index e372008..1f6d108 100644
+> --- a/drivers/regulator/rk808-regulator.c
+> +++ b/drivers/regulator/rk808-regulator.c
+> @@ -3,8 +3,8 @@
+>   *
+>   * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+>   *
+> - * Author: Chris Zhong <zyw@rock-chips.com>
+> - * Author: Zhang Qing <zhangqing@rock-chips.com>
+> + * Author: Chris Zhong<zyw@rock-chips.com>
+> + * Author: Zhang Qing<zhanqging@rock-chips.com>
+>   *
+>   * This program is free software; you can redistribute it and/or modify it
+>   * under the terms and conditions of the GNU General Public License,
+> @@ -14,24 +14,16 @@
+>   * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>   * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+> for * more details.
+> - *
+>   */
+> 
+>  #include <linux/module.h>
+> -#include <linux/init.h>
+>  #include <linux/i2c.h>
+> -#include <linux/err.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/mfd/rk808.h>
+> -#include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/regulator/driver.h>
+>  #include <linux/regulator/of_regulator.h>
+> -#include <linux/regmap.h>
+> -#include <linux/slab.h>
+> -/*
+> - * Field Definitions.
+> - */
 > +
-> +- ti,system-power-controller OR ti,use_poweroff: This indicates that
-> +  TWL4030 is the power supply master of the system. With this flag, the
-> +  chip will initiates an ACTIVE-to-OFF or SLEEP-to-OFF transition when
-> +  the system poweroffs.
+> +/* Field Definitions */
+>  #define RK808_BUCK_VSEL_MASK	0x3f
+>  #define RK808_BUCK4_VSEL_MASK	0xf
+>  #define RK808_LDO_VSEL_MASK	0x1f
+> @@ -50,10 +42,6 @@ static const int buck_contr_base_addr[] = {
+>  	RK808_BUCK4_CONFIG_REG,
+>  };
+> 
+> -#define rk808_BUCK_SET_VOL_REG(x) (buck_set_vol_base_addr[x])
+> -#define rk808_BUCK_CONTR_REG(x) (buck_contr_base_addr[x])
+> -#define rk808_LDO_SET_VOL_REG(x) (ldo_set_vol_base_addr[x])
+> -
+>  static const int ldo_set_vol_base_addr[] = {
+>  	RK808_LDO1_ON_VSEL_REG,
+>  	RK808_LDO2_ON_VSEL_REG,
+> @@ -65,9 +53,7 @@ static const int ldo_set_vol_base_addr[] = {
+>  	RK808_LDO8_ON_VSEL_REG,
+>  };
+> 
+> -/*
+> - * rk808 voltage number
+> - */
+> +/* rk808 voltage number */
+>  static const struct regulator_linear_range rk808_buck_voltage_ranges[] = {
+>  	REGULATOR_LINEAR_RANGE(700000, 0, 63, 12500),
+>  };
+> @@ -308,77 +294,35 @@ static struct of_regulator_match rk808_reg_matches[] =
+> { [RK808_ID_SWITCH2]	= { .name = "SWITCH_REG2" },
+>  };
+> 
+> -static int rk808_regulator_dts(struct i2c_client *client,
+> -			       struct rk808_board *pdata)
+> -{
+> -	struct device_node *np, *reg_np;
+> -	int i, ret;
+> -
+> -	np = client->dev.of_node;
+> -	if (!np) {
+> -		dev_err(&client->dev, "could not find pmic sub-node\n");
+> -		return -ENXIO;
+> -	}
+> -
+> -	reg_np = of_get_child_by_name(np, "regulators");
+> -	if (!reg_np)
+> -		return -ENXIO;
+> -
+> -	ret = of_regulator_match(&client->dev, reg_np, rk808_reg_matches,
+> -				 RK808_NUM_REGULATORS);
+> -	if (ret < 0) {
+> -		dev_err(&client->dev,
+> -			"failed to parse regulator data: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	for (i = 0; i < RK808_NUM_REGULATORS; i++) {
+> -		if (!rk808_reg_matches[i].init_data ||
+> -		    !rk808_reg_matches[i].of_node)
+> -			continue;
+> -
+> -		pdata->rk808_init_data[i] = rk808_reg_matches[i].init_data;
+> -		pdata->of_node[i] = rk808_reg_matches[i].of_node;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int rk808_regulator_probe(struct platform_device *pdev)
+>  {
+>  	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
+>  	struct i2c_client *client = rk808->i2c;
+> -	struct rk808_board *pdata = dev_get_platdata(&client->dev);
+>  	struct regulator_config config = {};
+>  	struct regulator_dev *rk808_rdev;
+> -	struct regulator_init_data *reg_data;
+> -	int i = 0;
+>  	int ret = 0;
+> +	int i = 0;
+> 
+> -	if (!pdata) {
+> -		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> -		if (!pdata)
+> -			return -ENOMEM;
+> -	}
+> +	reg_np = of_get_child_by_name(np, "regulators");
 
-I suggest the following wording:
+It looks like an error happened while moving that block of code, because with 
+this applied both "reg_np" and "np" are not defined - thus producing compile 
+errors.
 
-- ti,system-power-controller: This indicates that TWL4030 is the
-  power supply master of the system. With this flag, the chip will
-  initiates an ACTIVE-to-OFF or SLEEP-to-OFF transition when the
-  system poweroffs.
 
-- ti,use_poweroff: Deprecated name for ti,system-power-controller
+Heiko
 
--- Sebastian
 
---AqsLC8rIMeq19msA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJUB3GtAAoJENju1/PIO/qaz3MP/0I+AAUY4/f+13Lat1nw8uNX
-V9IbOh/x2FjfKx4riW6guCC+wJw1UKoNLKs1F8T0a1ZmlifYW+xQ26Bt5hoaX03T
-++/FhOV/LwIHTU0n2JPYBEmFJlJ5/e4+rEVJKFGv7RKxocqekkiiArrIndtNY8rD
-zo22iZSBr0AaQdIBhkXM+W0Us3zwInIaOQrmoAj/zlFM4oM6eBua62czl+PK6V5a
-1zQGRFIcV1Y19D758PNs10WJAf7rv6ol/u6jg6Kbw0vip3opPjisfpjMdPiNth97
-j62Dmi3HcdzF2w8gyZd8H5Xb2LsyAiNUhg+oZs5eZ3Wk1+/ZHEsu+G9T4D9rxa1q
-KC49DORkf37D8C7sN85aL9ceIwdURLfEyZnzh9nDnpM+kB+AcWUax18KlUjOOtEF
-Wqa5Msoa55kerw6OIVK7ThpQRhzBummccOGNpkeDMSEZSQARpjasMdVhZ+Sh7Qfg
-sSLJK8FS+At7kEqC9DFJOcGnaGYSyKF24fXV7geEc1OdrV9j7Mpq6z9nn/9JznUp
-YF2X3Dyj5r6iiO9j80xVXcvt7NvOZzG+FEBJ7E95YdguMw6kX9UqV7vRxS/8GbaO
-1TAYxpANldA97G5tspfvz3ytj3KHB9zwKu8BVA+56Q85ptU+CLSD/egJGlqtIlmq
-sMCeej6hgVMWkVBCidaa
-=vA3i
------END PGP SIGNATURE-----
-
---AqsLC8rIMeq19msA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	if (!reg_np)
+> +		return -ENXIO;
+> 
+> -	ret = rk808_regulator_dts(client, pdata);
+> -	if (ret)
+> +	ret = of_regulator_match(&client->dev, reg_np, rk808_reg_matches,
+> +				 RK808_NUM_REGULATORS);
+> +	if (ret < 0)
+>  		return ret;
+> 
+>  	/* Instantiate the regulators */
+>  	for (i = 0; i < RK808_NUM_REGULATORS; i++) {
+> -		reg_data = pdata->rk808_init_data[i];
+> -		if (!reg_data)
+> +		if (!rk808_reg_matches[i].init_data ||
+> +		    !rk808_reg_matches[i].of_node)
+>  			continue;
+> 
+>  		config.dev = &client->dev;
+>  		config.driver_data = rk808;
+>  		config.regmap = rk808->regmap;
+> -
+> -		if (client->dev.of_node)
+> -			config.of_node = pdata->of_node[i];
+> -
+> -		config.init_data = reg_data;
+> +		config.of_node = rk808_reg_matches[i].of_node;
+> +		config.init_data = rk808_reg_matches[i].init_data;
+> 
+>  		rk808_rdev = devm_regulator_register(&pdev->dev,
+>  						     &rk808_reg[i], &config);
+> @@ -388,6 +332,7 @@ static int rk808_regulator_probe(struct platform_device
+> *pdev) return PTR_ERR(rk808_rdev);
+>  		}
+>  	}
+> +
+>  	return 0;
+>  }
