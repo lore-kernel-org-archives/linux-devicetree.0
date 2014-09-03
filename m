@@ -1,93 +1,73 @@
-From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Subject: Re: [PATCH 13/14] arm64: exynos7: Enable ARMv8 based Exynos7 (SoC) support
-Date: Wed, 3 Sep 2014 13:44:11 +0530
-Message-ID: <CAHfPSqBDJwOtZhoS7OC1N72Sa=YgdZKcnw+mczCEmVTrYvUF4A@mail.gmail.com>
-References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com>
- <1409132660-1898-5-git-send-email-ch.naveen@samsung.com> <20140827110927.GC7773@leverpostej>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from DT
+Date: Wed, 3 Sep 2014 10:30:56 +0200
+Message-ID: <CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
+References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140827110927.GC7773@leverpostej>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cpgs@samsung.com" <cpgs@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <b29396@freescale.com>, Peter Griffin <peter.griffin@linaro.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, h80.chung@samsung.com, Chris Ball <chris@printf.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On 27 August 2014 16:39, Mark Rutland <mark.rutland@arm.com> wrote:
-> Hi,
+On 2 September 2014 17:49, Jean-Michel Hautbois
+<jean-michel.hautbois@vodalys.com> wrote:
+> This property is useful when we don't want to access boot partitions on eMMC
 >
-> On Wed, Aug 27, 2014 at 10:44:20AM +0100, Naveen Krishna Chatradhi wrote:
->> From: Alim Akhtar <alim.akhtar@samsung.com>
->>
->> This patch adds the necessary Kconfig entries to enable
->> support for the ARMv8 based Exynos7 SoC.
->>
->> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> ---
->>  arch/arm64/Kconfig |   17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index fd4e81a..d555558 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -134,6 +134,23 @@ source "kernel/Kconfig.freezer"
->>
->>  menu "Platform selection"
->>
->> +config ARCH_EXYNOS7
->> +     bool "ARMv8 based SAMSUNG EXYNOS7"
->> +     select HAVE_S3C2410_WATCHDOG if WATCHDOG
->> +     select CLKSRC_OF
+> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
+>  drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
+>  include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
+>  3 files changed, 10 insertions(+)
 >
-> This seems to be implied by ARM_ARCH_TIMER in the core arm64 Kconfig, so
-> I'm not sure this is necessary.
-
-Ok.
-
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 431716e..59cc854 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -40,6 +40,7 @@ Optional properties:
+>  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
+>  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
+>  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
+> +- no-boot-part : when preset, tells to access boot partitions
 >
->> +     select COMMON_CLK_SAMSUNG
->> +     select GPIOLIB
+>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
+> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+> index ccec0e3..439e663 100644
+> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> @@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
+>         if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
+>                 boarddata->delay_line = 0;
 >
-> You select ARCH_REQUIRE_GPIOLIB below, so is this necessary?
-
-Yes, this is not required. Will remove.
-
+> +       if (of_find_property(np, "no-boot-part", NULL))
+> +               boarddata->access_boot_part = false;
+> +       else
+> +               boarddata->access_boot_part = true;
+> +
+>         return 0;
+>  }
+>  #else
+> @@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
+>                 host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+>         }
 >
->> +     select PINCTRL
->> +     select PINCTRL_EXYNOS
->> +     select RTC_CLASS
->> +     select HAVE_S3C_RTC
->> +     select GENERIC_GPIO
->> +     select ARCH_REQUIRE_GPIOLIB
->> +     select HAVE_CLK
->
-> Isn't this selected already through the core arm64 Kconfig?
->
-> It looks like we have COMMON_CLK, which selects CLKDEV_LOOKUP, which
-> selects HAVE_CLK.
+> +       if (!boarddata->access_boot_part)
+> +               host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
+> +
 
-Ok.
+Hmm, I don't think MMC_CAP2_BOOTPART_NOACC should have a DT binding.
+Does it describe the hardware in some form?
 
->
->> +     select HAVE_SMP
->
-> I may have missed something, but I didn't see any SMP support in this
-> series.
+Actually I would like to question why MMC_CAP2_BOOTPART_NOACC exists
+at all. If there are cards that don't supports the BOOT area,
+shouldn't we have a card quirk for it instead of a host cap? Maybe
+Adrian Hunter, how originally wrote the patch for adding
+MMC_CAP2_BOOTPART_NOACC, could help me understand the reasons behind
+it!?
 
-As Catalin suggested, will remove this.
-
->
-> Thanks,
-> Mark.
-
-Thanks for your comments.
-
--- 
-Shine bright,
-(: Nav :)
+Kind regards
+Uffe
