@@ -1,8 +1,7 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v4 08/12] Documentation: bindings: add doc for the USB2
- ChipIdea USB driver
-Date: Wed,  3 Sep 2014 09:48:27 +0200
-Message-ID: <1409730511-16101-9-git-send-email-antoine.tenart@free-electrons.com>
+Subject: [PATCH v4 10/12] ARM: dts: Berlin: enable USB on the BG2Q DMP
+Date: Wed,  3 Sep 2014 09:48:29 +0200
+Message-ID: <1409730511-16101-11-git-send-email-antoine.tenart@free-electrons.com>
 References: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,41 +21,88 @@ To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.z
 Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the USB2 ChipIdea driver (ci13xxx) bindings.
+Enable the 2 available USB PHY and USB nodes on the Marvell Berlin BG2Q
+DMP.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
 ---
- .../devicetree/bindings/usb/ci-hdrc-usb2.txt       | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 53 ++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-new file mode 100644
-index 000000000000..8dd6d8285dab
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-@@ -0,0 +1,22 @@
-+* USB2 ChipIdea USB controller for ci13xxx
+diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+index a357ce02a64e..663aedb173e0 100644
+--- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
++++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+@@ -7,6 +7,8 @@
+  */
+ 
+ /dts-v1/;
 +
-+Required properties:
-+- compatible: should be "chipidea,usb2"
-+- reg: base address and length of the registers
-+- interrupts: interrupt for the USB controller
++#include <dt-bindings/gpio/gpio.h>
+ #include "berlin2q.dtsi"
+ 
+ / {
+@@ -21,6 +23,39 @@
+ 	choosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
+ 	};
 +
-+Optional properties:
-+- clocks: reference to the USB clock
-+- phys: reference to the USB PHY
-+- vbus-supply: reference to the VBUS regulator
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+Example:
++		reg_usb0_vbus: regulator@0 {
++			compatible = "regulator-fixed";
++			regulator-name = "usb0_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&portb 8 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
 +
-+	usb@f7ed0000 {
-+		compatible = "chipidea,usb2";
-+		reg = <0xf7ed0000 0x10000>;
-+		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&chip CLKID_USB0>;
-+		phys = <&usb_phy0>;
-+		vbus-supply = <&reg_usb0_vbus>;
++		reg_usb1_vbus: regulator@1 {
++			compatible = "regulator-fixed";
++			regulator-name = "usb1_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&portb 10 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
++
++		reg_usb2_vbus: regulator@2 {
++			compatible = "regulator-fixed";
++			regulator-name = "usb2_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			gpio = <&portb 12 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
 +	};
+ };
+ 
+ &sdhci1 {
+@@ -45,3 +80,21 @@
+ &uart0 {
+ 	status = "okay";
+ };
++
++&usb_phy0 {
++	status = "okay";
++};
++
++&usb_phy2 {
++	status = "okay";
++};
++
++&usb0 {
++	vbus-supply = <&reg_usb0_vbus>;
++	status = "okay";
++};
++
++&usb2 {
++	vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
 -- 
 1.9.1
