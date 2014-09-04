@@ -1,32 +1,52 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v9 3/3] regulator: RK808: Remove pdata from the regulator
-Date: Thu, 4 Sep 2014 12:07:16 -0700
-Message-ID: <CAD=FV=VhB93xOTYB3LoZhq2bsjRh8uZp4ehyPLzU_A+=f8NV0w@mail.gmail.com>
-References: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
-	<1409793159-2573-4-git-send-email-zyw@rock-chips.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
+Date: Thu, 04 Sep 2014 12:29:43 -0700
+Message-ID: <20140904192943.11368.83896@quantum>
+References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
+ <201408241408.19861.arnd@arndb.de> <20140903184956.11368.47800@quantum>
+ <3966110.RPrxdc8FBm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409793159-2573-4-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3966110.RPrxdc8FBm@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <zonque@gmail.com>, arm@kernel.org, olof@lixom.net, Eric Miao <eric.y.miao@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Quoting Arnd Bergmann (2014-09-03 12:33:31)
+> On Wednesday 03 September 2014 11:49:56 Mike Turquette wrote:
+> > > Right, makes sense. We have in the past done it either way for other
+> > > platforms. When merging the patches through the clk subsystem, it still
+> > > makes sense to let us know of those plans and ask for an Ack from
+> > > the arm-soc maintainers, to be sure we can plan ahead in case there
+> > > are other (conflicting) patch sets that are sent through arm-soc.
+> > 
+> > Do I have your Ack for the arch/arm patches?
+> > 
+> > [0] https://lkml.kernel.org/r/<1409758148-20104-1-git-send-email-tomeu.vizoso@collabora.com>
+> 
+> I have no objection to the change, but we might need to be careful in
+> case we get a lot of conflicts.
+> 
+> How about making it a shared branch that you plan to send upstream
+> but that we can also include in arm-soc to avoid conflicts if necessary?
 
-On Wed, Sep 3, 2014 at 6:12 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+Sounds good. I'll probably need to perform a bit of surgery on my tree
+and rebase it in order to have the minimum set of patches that get
+pulled into arm-soc.
 
-> - * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> - * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> + * Author: Chris Zhong<zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> + * Author: Zhang Qing<zhanqging-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Regards,
+Mike
 
-As Dmitry pointed out, you probably shouldn't have changed these
-lines--they were good like they were.
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>         Arnd
