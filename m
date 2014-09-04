@@ -1,50 +1,27 @@
-From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 0/3] move gpt per clk parent for ipg_per to OSC
-Date: Thu, 4 Sep 2014 23:37:21 +0000
-Message-ID: <9B0C19C6-6C3B-47DC-9DC4-5BD42CE294A4@freescale.com>
-References: <1409729805-9741-1-git-send-email-b20788@freescale.com>,<CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w@mail.gmail.com>
+Date: Thu, 4 Sep 2014 20:42:14 -0300
+Message-ID: <CAOMZO5AyiTkYMAEX17_2=c1PKmRG2ujjaAM3H-BJO8O+6-vJ9g@mail.gmail.com>
+References: <1409729805-9741-1-git-send-email-b20788@freescale.com>
+	<CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w@mail.gmail.com>
+	<9B0C19C6-6C3B-47DC-9DC4-5BD42CE294A4@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: zh-CN
+In-Reply-To: <9B0C19C6-6C3B-47DC-9DC4-5BD42CE294A4-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIEZhYmlvDQogICAgICAgIGNhbiBJIGtub3cgd2h5IHlvdSB3YW50IHRvIHJ1biB0aGUgbmV3
-IGtlcm5lbCB3aXRoIG9sZCBkdGI/DQoNClNlbnQgZnJvbSBBbnNvbidzIGlQaG9uZQ0KDQo+INTa
-IDIwMTTE6jnUwjXI1aOsNjo1MKOsIkZhYmlvIEVzdGV2YW0iIDxmZXN0ZXZhbUBnbWFpbC5jb20+
-INC0tcCjug0KPiANCj4+IE9uIFdlZCwgU2VwIDMsIDIwMTQgYXQgNDozNiBBTSwgQW5zb24gSHVh
-bmcgPGIyMDc4OEBmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4+IEN1cnJlbnRseSwgZ3B0IHRpbWVy
-J3MgY2xvY2sgaXMgZnJvbSBpcGdfcGVyLCBhbmQgaXBnX3BlciBjbG9jayBpcyBmcm9tIGlwZw0K
-Pj4gb24gbW9zdCBvZiBpLk1YNiBzZXJpZXMgU09DcywgYnV0IGlwZydzIHJhdGUgbWF5IGJlIHNj
-YWxlZCB3aGVuIHN5c3RlbSBlbnRlcnMNCj4+IGxvdyBidXMgbW9kZSBmb3Igc2F2aW5nIHBvd2Vy
-LCB0aGVuIGdwdCB0aW1lcidzIGNsb2NrIHJhdGUgd2lsbCBiZSBzY2FsZWQgYXMNCj4+IHdlbGws
-IGFzIHN5c3RlbSB0aW1lciBzaG91bGQgYmUga2VwdCBzdGFibGUgYW5kIE5PVCBkcmlmdCwgYmV0
-dGVyIHRvIGtlZXAgZ3B0DQo+PiB0aW1lcidzIGNsayBhdCBmaXhlZCByYXRlLCBvbiBpLk1YNlEg
-VE8gPiAxLjAsIGkuTVg2REwgYW5kIGkuTVg2U1gsIHRoZXJlIGlzDQo+PiBPU0MgY2xrIGF2YWls
-YWJsZSBmb3IgZ3B0IHRpbWVyLCB3ZSBzaG91bGQgZW5hYmxlIHRoaXMgZmVhdHVyZSwgdGhlIGhh
-cmR3YXJlDQo+PiBkZXNpZ24gaXMgYXMgYmVsb3c6DQo+PiANCj4+IGkuTVg2USBUTyA+IDEuMDog
-R1BUX0NSX0NMS1NSQywgM2InMTAxIHNlbGVjdHMgZml4IGNsb2NrDQo+PiAgICBvZiBPU0MgLyA4
-IGZvciBncHQgcGVyIGNsazsNCj4+IGkuTVg2REwgYW5kIGkuTVg2U1g6IEdQVF9DUl9DTEtTUkMs
-IDNiJzEwMSBzZWxlY3RzIE9TQw0KPj4gICAgZm9yIGdwdCBwZXIgY2xrLCBhbmQgd2UgbXVzdCBl
-bmFibGUgR1BUX0NSXzI0TUVNIHRvDQo+PiAgICBlbmFibGUgT1NDIGNsayBzb3VyY2UgZm9yIGdw
-dCBwZXIsIEdQVF9QUl9QUkVTQ0FMRVIyNE0NCj4+ICAgIGlzIGZvciBwcmUtc2NhbGluZyBvZiB0
-aGlzIE9TQyBjbGssIGhlcmUgc2V0IGl0IHRvIDgNCj4+ICAgIHRvIG1ha2UgZ3B0IHBlciBjbGsg
-aXMgM01IejsNCj4+IGkuTVg2U0w6IGlwZ19wZXIgY2FuIGJlIGZyb20gT1NDIGRpcmVjdGx5LCBz
-byBubyBuZWVkIHRvDQo+PiAgICBpbXBsZW1lbnQgdGhpcyBuZXcgY2xrIHNvdXJjZSBmb3IgZ3B0
-IHBlci4NCj4+IA0KPj4gQW5zb24gSHVhbmcgKDMpOg0KPj4gIEFSTTogaW14OiBhZGQgZ3B0XzNt
-IGNsayBmb3IgaS5teDZxZGwNCj4+ICBBUk06IGR0czogaW14NjogY2hhbmdlIGdwdCBwZXIgY2xr
-IHRvIGdwdF8zbSBvbiBpLm14NnFkbCBhbmQgaS5teDZzeA0KPj4gIEFSTTogaW14OiBzb3VyY2Ug
-Z3B0IHBlciBjbGsgZnJvbSBPU0MgZm9yIHN5c3RlbSB0aW1lcg0KPiANCj4gVGhpcyBwYXRjaCBz
-ZXJpZXMgd29ya3MgZmluZSBpZiB3ZSB1c2UgdGhlIG5ldyBkdGIgYW5kIG5ldyBrZXJuZWwuDQo+
-IA0KPiBIb3dldmVyLCBib290aW5nIGEga2VybmVsIHdpdGggdGhlc2Ugc2VyaWVzIGFwcGxpZWQg
-YW5kIHVzaW5nIGFuIG9sZA0KPiBkdGIgd2UgZ2V0IGEgc3lzdGVtIHdpdGggYnJva2VuIHRpbWVy
-Lg0KPiANCj4gJ3NsZWVwIDEnIHRha2VzIHNvbWV0aGluZyBsaWtlIDIwIHNlY29uZHMgaW4gdGhp
-cyBjYXNlLg0K
+Hi Anson,
+
+On Thu, Sep 4, 2014 at 8:37 PM, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+<Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> Hi, Fabio
+>         can I know why you want to run the new kernel with old dtb?
+
+We can not break old dtb functionality.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
