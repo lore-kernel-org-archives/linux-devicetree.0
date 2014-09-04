@@ -1,25 +1,61 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 0/3] move gpt per clk parent for ipg_per to OSC
-Date: Thu, 4 Sep 2014 11:56:40 +0800
-Message-ID: <20140904035639.GC10809@dragon>
-References: <1409729805-9741-1-git-send-email-b20788@freescale.com>
+From: "Chao Xie" <xiechao_mail-9Onoh4P/yGk@public.gmane.org>
+Subject: Re:Re: [PATCH 06/12] clk: mmp: add mmp private gate clock
+Date: Thu, 4 Sep 2014 12:02:11 +0800 (CST)
+Message-ID: <479e7ccf.16dee.1483ed3a882.Coremail.xiechao_mail@163.com>
+References: <1409027904-21859-1-git-send-email-chao.xie@marvell.com>
+ <1409027904-21859-7-git-send-email-chao.xie@marvell.com>
+ <20140903175537.11368.98589@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=GBK
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409729805-9741-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20140903175537.11368.98589@quantum>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 03, 2014 at 03:36:42PM +0800, Anson Huang wrote:
-> Anson Huang (3):
->   ARM: imx: add gpt_3m clk for i.mx6qdl
->   ARM: dts: imx6: change gpt per clk to gpt_3m on i.mx6qdl and i.mx6sx
->   ARM: imx: source gpt per clk from OSC for system timer
-
-Applied all, thanks.
+CgpBdCAyMDE0LTA5LTA0IDAxOjU1OjM3LCAiTWlrZSBUdXJxdWV0dGUiIDxtdHVycXVldHRlQGxp
+bmFyby5vcmc+IHdyb3RlOgo+UXVvdGluZyBDaGFvIFhpZSAoMjAxNC0wOC0yNSAyMTozODoxOCkK
+Pj4gRnJvbTogQ2hhbyBYaWUgPGNoYW8ueGllQG1hcnZlbGwuY29tPgo+PiAKPj4gU29tZSBTT0Nl
+cyBoYXZlIHRoaXMga2luZCBvZiB0aGUgZ2F0ZSBjbG9jawo+PiAxLiBUaGVyZSBhcmUgc29tZSBi
+aXRzIHRvIGNvbnRyb2wgdGhlIGdhdGUgbm90IG9ubHkgb25lIGJpdC4KPj4gMi4gU29tZSBjbG9j
+a3MgaGFzIG9wZXJhdGlvbnMgb2YgIm91dCBvZiByZXNldCIgYW5kICJlbmFibGUiLgo+PiAgICBU
+byBlbmFibGUgY2xvY2ssIHdlIG5lZWQgZG8gIm91dCBvZiByZXNldCIgYW5kICJlbmFibGUiLgo+
+PiAgICBUbyBkaXNhYmxlIGNsb2NrLCB3ZSBtYXkgbm90IG5lZWQgInNldCB0byByZXNldCIuIEl0
+IGRlcGVuZHMKPj4gICAgb24gdGhlIFNPQ2VzJyBkZXNpZ24uCj4KPkFyZSB0aGVyZSBhbnkgb3Ro
+ZXIgSVAgYmxvY2tzIGFmZmVjdGVkIGJ5IHRoZSAib3V0IG9mIHJlc2V0IiBhbmQgInNldCB0bwo+
+cmVzZXQiIHN0YXRlcz8gSSB3b25kZXIgaWYgeW91IG1pZ2h0IGJlbmVmaXQgZnJvbSB0aGUgcmVz
+ZXQgY29udHJvbGxlcgo+ZnJhbWV3b3JrPyAgRm9yIGV4YW1wbGUgc2VlLAo+Cj5kcml2ZXJzL2Ns
+ay9xY29tL2djYy1hcHE4MDg0LmMKPgo+PHNuaXA+Cgo+ClRoYW5rcyB0byBwb2ludCBpdCBvdXQu
+ClRvIHVzZSB0aGUgcmVzZXQgZnJhbWV3b3JrLCB0aGVyZSBhcmUgc29tZSBwcm9ibGVtLgoxLiB0
+aGUgcmVzZXQgYml0IGlzIGNvbWJpbmVkIHdpdGggdGhlIGNsb2NrcyBkaXNhYmxlL2VuYWJsZSBi
+aXRzIGluIHNhbWUgcmVnaXN0ZXIuIFNlcGVyYXRpbmcgc2V0dGluZyB0aGVtIG1lYW5zIHNwaW5s
+b2NrCnByb3RlY3Rpb24gYW5kIDIgb3BlcmF0aW9ucyBmb3IgcmVhZC11cGRhdGUgdGhlIGJpdHMu
+CgoKZXhjZXB0IHRoYXQsIGkgdGhpbmsgcmVzZXQgZnJhbWV3b3JrIGNhbiBicmluZyBzb21lIGJl
+bmVmaXRzLgoKCkV2ZW4gd2l0aG91dCB0aGUgcmVzZXQgYml0LCB3ZSBzdGlsbCBuZWVkIHRoZSBn
+YXRlIGNsb2Nrcy4KVGhlIGVuYWJsZS9kaXNhYmxlIGlzIG5vdCBhIGJpdCBvcGVyYXRpb24sIGFu
+ZCBpdCBpcyBiaXRzIG9wZXJhdGlvbiBmb3Igc29tZSBkZXZpY2VzLgpJbiBmYWN0IGkgd2FudCB0
+byB1c2UgaXQgdG8gcmVwbGFjZSB0aGUgb2xkIGNsay1hcGJjIGFuZCBjbGstYXBtdSBjbG9ja3Mu
+IAoKPj4gK3N0YXRpYyBpbnQgbW1wX2Nsa19nYXRlX2VuYWJsZShzdHJ1Y3QgY2xrX2h3ICpodykK
+Pj4gK3sKPj4gKyAgICAgICBzdHJ1Y3QgbW1wX2Nsa19nYXRlICpnYXRlID0gdG9fY2xrX21tcF9n
+YXRlKGh3KTsKPj4gKyAgICAgICBzdHJ1Y3QgY2xrICpjbGsgPSBody0+Y2xrOwo+PiArICAgICAg
+IHVuc2lnbmVkIGxvbmcgZmxhZ3MgPSAwOwo+PiArICAgICAgIHVuc2lnbmVkIGxvbmcgcmF0ZTsK
+Pj4gKyAgICAgICB1MzIgdG1wOwo+PiArCj4+ICsgICAgICAgaWYgKGdhdGUtPmxvY2spCj4+ICsg
+ICAgICAgICAgICAgICBzcGluX2xvY2tfaXJxc2F2ZShnYXRlLT5sb2NrLCBmbGFncyk7Cj4+ICsK
+Pj4gKyAgICAgICB0bXAgPSByZWFkbChnYXRlLT5yZWcpOwo+PiArICAgICAgIHRtcCAmPSB+Z2F0
+ZS0+bWFzazsKPj4gKyAgICAgICB0bXAgfD0gZ2F0ZS0+dmFsX2VuYWJsZTsKPj4gKyAgICAgICB3
+cml0ZWwodG1wLCBnYXRlLT5yZWcpOwo+PiArCj4+ICsgICAgICAgaWYgKGdhdGUtPmxvY2spCj4+
+ICsgICAgICAgICAgICAgICBzcGluX3VubG9ja19pcnFyZXN0b3JlKGdhdGUtPmxvY2ssIGZsYWdz
+KTsKPj4gKwo+PiArICAgICAgIGlmIChnYXRlLT5mbGFncyAmIE1NUF9DTEtfR0FURV9ORUVEX0RF
+TEFZKSB7Cj4+ICsgICAgICAgICAgICAgICByYXRlID0gX19jbGtfZ2V0X3JhdGUoY2xrKTsKPj4g
+KyAgICAgICAgICAgICAgIC8qIE5lZWQgZGVsYXkgMiBjeWNsZXMuICovCj4+ICsgICAgICAgICAg
+ICAgICB1ZGVsYXkoMjAwMDAwMC9yYXRlKTsKPgo+SG93IGxvbmcgYXJlIHRoZXNlIGRlbGF5cz8g
+TG9uZyBlbm91Z2ggdG8gd2FycmFudCB1c2luZyBjbGtfcHJlcGFyZQo+aW5zdGVhZCBvZiBjbGtf
+ZW5hYmxlPyBBcmUgdGhlc2UgY2xvY2tzIGVuYWJsZWQgZnJvbSBpbnRlcnJ1cHQgY29udGV4dD8K
+Cj4KRm9yIHBvd2VyIG9wdGltaXphdGlvbiwgc29tZSBjbG9ja3MgbmVlZCB0byBiZSBlbmFibGVk
+L2Rpc2FibGUgaW4gaW50ZXJydXB0IGNvbnRleHQuClRoZSB3b3JzdCBkZWxheSBpcyByYXRlPTMy
+S0haLCBzbyB0aGUgZGVsYXkgaXMgNjIuNXVzLgoKPlJlZ2FyZHMsCj5NaWtlCgoK
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
