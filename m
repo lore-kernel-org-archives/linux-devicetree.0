@@ -1,93 +1,127 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Thu, 4 Sep 2014 12:06:13 +0530
-Message-ID: <20140904063613.GD1610@intel.com>
-References: <1406549869-24422-1-git-send-email-sthokal@xilinx.com>
- <1406549869-24422-2-git-send-email-sthokal@xilinx.com>
- <20140819170346.GS13288@intel.com>
- <CA+mB=1L14Os=ZdJzj8_+XXa+oq4ZOS_kadQHpKQ2yws2tqGVSQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/3] clocksource: sh_cmt: Document SoC specific bindings
+Date: Thu, 04 Sep 2014 09:58:40 +0300
+Message-ID: <6240436.VfJ5CJaKOx@avalon>
+References: <1409792121-28912-1-git-send-email-horms+renesas@verge.net.au> <1409792121-28912-2-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CA+mB=1L14Os=ZdJzj8_+XXa+oq4ZOS_kadQHpKQ2yws2tqGVSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1409792121-28912-2-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 03, 2014 at 12:17:43PM +0530, Srikanth Thokala wrote:
-> Hi Vinod,
-> 
-> Apologies for the delay.
-> 
-> On Tue, Aug 19, 2014 at 10:33 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> > On Mon, Jul 28, 2014 at 05:47:49PM +0530, Srikanth Thokala wrote:
-> >> +struct xilinx_dma_chan {
-> >> +     struct xilinx_dma_device *xdev;
-> >> +     u32 ctrl_offset;
-> >> +     spinlock_t lock;
-> >> +     struct list_head pending_list;
-> >> +     struct xilinx_dma_tx_descriptor *active_desc;
-> >> +     struct xilinx_dma_tx_descriptor *allocated_desc;
-> >> +     struct list_head done_list;
-> >> +     struct list_head free_seg_list;
-> >> +     struct dma_chan common;
-> >> +     struct xilinx_dma_tx_segment *seg_v;
-> >> +     dma_addr_t seg_p;
-> >> +     struct device *dev;
-> >> +     int irq;
-> >> +     int id;
-> >> +     enum dma_transfer_direction direction;
-> > This looks suspect. Why should channel have direction, for a descriptor it
-> > makes sense though.
-> 
-> The channel only supports transfers in one direction. Either from memory to
-> peripheral or from peripheral to memory, that's fixed and can't be changed
-> at runtime.  So, the driver needs to know which direction the channel supports
-> and hence it can reject transfers with the wrong direction.
-But you already have this information in descriptor so why duplicate?
+Hi Simon,
 
-> >> +/**
-> >> + * xilinx_dma_channel_set_config - Configure DMA channel
-> >> + * @dchan: DMA channel
-> >> + * @cfg: DMA device configuration pointer
-> >> + *
-> >> + * Return: '0' on success and failure value on error
-> >> + */
-> >> +int xilinx_dma_channel_set_config(struct dma_chan *dchan,
-> >> +                               struct xilinx_dma_config *cfg)
-> >> +{
-> >> +     struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
-> >> +     u32 reg = dma_ctrl_read(chan, XILINX_DMA_REG_CONTROL);
-> >> +
-> >> +     if (cfg->reset)
-> >> +             return xilinx_dma_reset(chan);
-> >> +
-> >> +     if (cfg->coalesc <= XILINX_DMA_CR_COALESCE_MAX)
-> >> +             reg |= cfg->coalesc << XILINX_DMA_CR_COALESCE_SHIFT;
-> >> +
-> >> +     if (cfg->delay <= XILINX_DMA_CR_DELAY_MAX)
-> >> +             reg |= cfg->delay << XILINX_DMA_CR_DELAY_SHIFT;
-> >> +
-> >> +     dma_ctrl_write(chan, XILINX_DMA_REG_CONTROL, reg);
-> > You aren't checking if a transaction is already running on this channel.
-> > Also don't you need other slave parameters, I see you have removed the
-> > dma_slave_config entirely
+A couple of other small issues I've missed.
+
+On Thursday 04 September 2014 09:55:19 Simon Horman wrote:
+> In general Renesas hardware is not documented to the extent
+> where the relationship between IP blocks on different SoCs can be assumed
+> although they may appear to operate the same way. Furthermore the
+> documentation typically does not specify a version for individual
+> IP blocks. For these reasons a convention of using the SoC name in place
+> of a version and providing SoC-specific compat strings has been adopted.
 > 
-> All the parameters that are required for this DMA engine are provided by
-> SG list, so I don't see the need of dma_slave_config.  There are some
-> specific IP parameters that are not part of dma_slave_config and these
-> are being set by 'dma_channel_set_config' which is exported to slave
-> drivers.
-And that means you dont have any common parameters between dma_slave_config
-right?
+> Although not universally liked this convention is used in the bindings for
+> a number of drivers for Renesas hardware. The purpose of this patch is to
+> update the Renesas R-Car Compare Match Timer (CMT) driver to follow this
+> convention.
+> 
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> ---
+> * I plan to follow up with patches to use these new bindings in the
+>   dtsi files for the affected SoCs.
+> 
+> v2
+> * Reorder compat entries so more-specific entries and their fallbacks
+>   are grouped with the fallback entry coming last.
+> * Explicitly document fallback
+> ---
+>  .../devicetree/bindings/timer/renesas,cmt.txt      | 44 ++++++++++++++++---
+>  1 file changed, 38 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+> b/Documentation/devicetree/bindings/timer/renesas,cmt.txt index
+> a17418b..7b44f4b 100644
+> --- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+> +++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+> @@ -11,15 +11,47 @@ datasheets.
+> 
+>  Required Properties:
+> 
+> -  - compatible: must contain one of the following.
+> -    - "renesas,cmt-32" for the 32-bit CMT
+> +  - compatible: must contain one or more of the following:
+> +    - "renesas,cmt-32-r8a7740" for the R8a7740 32-bit CMT
+
+s/R8a7740/R8A7740/
+
+> +		(CMT0)
+> +    - "renesas,cmt-32-sh7372" for the SH7372 32-bit CMT
+> +		(CMT0)
+> +    - "renesas,cmt-32-sh73a0" for the SH73a0 32-bit CMT
+
+s/SH73a0/SH73A0/
+
+> +		(CMT0)
+> +    - "renesas,cmt-32" for all 32-bit CMT without fast clock support
+>  		(CMT0 on sh7372, sh73a0 and r8a7740)
+> -    - "renesas,cmt-32-fast" for the 32-bit CMT with fast clock support
+> +		This is a fallback for the above renesas,cmt-32-* entries.
+> +
+> +    - "renesas,cmt-32-fast-r8a7740" for the R8A7740 32-bit CMT with fast
+> +		clock support (CMT[234])
+> +    - "renesas,cmt-32-fast-sh7372" for the SH7372 32-bit CMT with fast
+> +		clock support (CMT[234])
+> +    - "renesas,cmt-32-fast-sh73a0" for the SH73A0 32-bit CMT with fast
+> +		clock support (CMT[234])
+> +    - "renesas,cmt-32-fast" for all 32-bit CMT with fast clock support
+>  		(CMT[234] on sh7372, sh73a0 and r8a7740)
+> -    - "renesas,cmt-48" for the 48-bit CMT
+> +		This is a fallback for the above renesas,cmt-32-fast-* entries.
+> +
+> +    - "renesas,cmt-48-sh7372" for the SH7372 48-bit CMT
+> +		(CMT1)
+> +    - "renesas,cmt-48-sh73a0" for the SH73A0 48-bit CMT
+> +		(CMT1)
+> +    - "renesas,cmt-48-r8a7740" for the R8A7740 48-bit CMT
+> +		(CMT1)
+> +    - "renesas,cmt-48" for all non-second generation 48-bit CMT
+>  		(CMT1 on sh7372, sh73a0 and r8a7740)
+> -    - "renesas,cmt-48-gen2" for the second generation 48-bit CMT
+> +		This is a fallback for the above renesas,cmt-48-* entries.
+> +
+> +    - "renesas,cmt-48-r8a73a4" for the R8A73A4 48-bit CMT
+> +		(CMT[01])
+> +    - "renesas,cmt-48-r8a7790" for the R8A7790 48-bit CMT
+> +		(CMT[01])
+> +    - "renesas,cmt-48-r8a7791" for the R8A7791 48-bit CMT
+> +		(CMT[01])
+> +    - "renesas,cmt-48-gen2" for all second generation 48-bit CMT
+>  		(CMT[01] on r8a73a4, r8a7790 and r8a7791)
+> +		This is a fallback for the renesas,cmt-48-r8a73a4,
+> +		renesas,cmt-48-r8a7790 and renesas,cmt-48-gen2 entries.
+> 
+>    - reg: base address and length of the registers block for the timer
+> module. - interrupts: interrupt-specifier for the timer, one per channel.
+> @@ -36,7 +68,7 @@ Example: R8A7790 (R-Car H2) CMT0 node
+>  	them channels 0 and 1 in the documentation.
+> 
+>  	cmt0: timer@ffca0000 {
+> -		compatible = "renesas,cmt-48-gen2";
+> +		compatible = "renesas,cmt-48-r8a7790", "renesas,cmt-48-gen2";
+>  		reg = <0 0xffca0000 0 0x1004>;
+>  		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
 
 -- 
-~Vinod
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
