@@ -1,52 +1,83 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
-Date: Thu, 04 Sep 2014 12:29:43 -0700
-Message-ID: <20140904192943.11368.83896@quantum>
-References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
- <201408241408.19861.arnd@arndb.de> <20140903184956.11368.47800@quantum>
- <3966110.RPrxdc8FBm@wuerfel>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH v5 1/4] ethernet: arc: Add support for Rockchip SoC layer
+ device tree bindings
+Date: Thu, 4 Sep 2014 21:30:33 +0200
+Message-ID: <20140904192934.GB14583@gmail.com>
+References: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
+ <20140903211220.GA16962@gmail.com>
+ <CABgxDoLWqqwGUUt9hWuJdHT_VF0c6-7xeAwgfeH7TwJmu1BN9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3966110.RPrxdc8FBm@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <zonque@gmail.com>, arm@kernel.org, olof@lixom.net, Eric Miao <eric.y.miao@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CABgxDoLWqqwGUUt9hWuJdHT_VF0c6-7xeAwgfeH7TwJmu1BN9w@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: PERIER Romain <romain.perier@gmail.com>
+Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Arnd Bergmann (2014-09-03 12:33:31)
-> On Wednesday 03 September 2014 11:49:56 Mike Turquette wrote:
-> > > Right, makes sense. We have in the past done it either way for other
-> > > platforms. When merging the patches through the clk subsystem, it still
-> > > makes sense to let us know of those plans and ask for an Ack from
-> > > the arm-soc maintainers, to be sure we can plan ahead in case there
-> > > are other (conflicting) patch sets that are sent through arm-soc.
-> > 
-> > Do I have your Ack for the arch/arm patches?
-> > 
-> > [0] https://lkml.kernel.org/r/<1409758148-20104-1-git-send-email-tomeu.vizoso@collabora.com>
+On Thu, Sep 04, 2014 at 10:45:35AM +0200, PERIER Romain wrote:
+> Hi Beniamino,
 > 
-> I have no objection to the change, but we might need to be careful in
-> case we get a lot of conflicts.
+> I will investigate. Could you please :
 > 
-> How about making it a shared branch that you plan to send upstream
-> but that we can also include in arm-soc to avoid conflicts if necessary?
+> - Load the module
+> - Show me the output of lsmod
+> - Use your ethernet a bit
+> - Try to unload the module
+> - If your board did not freeze or if your kernel did not panic , show
+> me your dmesg (if it is impossible show me the dmesg before unloading
+> the module)
+> 
+> Perhaps, we could continue this discussion in private (by email or
+> IRC). What do you think ?
+> 
+> I will investigate this evening and tomorrow. Thanks for your feedbacks .
 
-Sounds good. I'll probably need to perform a bit of surgery on my tree
-and rebase it in order to have the minimum set of patches that get
-pulled into arm-soc.
+Hi Romain,
 
-Regards,
-Mike
+the freeze happens in clk_disable_unprepare(), which disables the
+macref clock parents up to the dpll, needed by the DDR.
+
+As suggested by Heiko on IRC, the patch "clk: rockchip: protect
+critical clocks from getting disabled" [1], modified to include ddrphy
+in the list of critical clocks, solves the problem.
+
+During the module unload, if you move the call to arc_emac_remove()
+before clk_disable_unprepare() you can avoid a delay of 4-5 seconds
+caused by the timeout of the function phy_disconnect(). In any case:
+
+Tested-by: Beniamino Galvani <b.galvani@gmail.com>
+
+[1] https://git.linaro.org/people/mike.turquette/linux.git/commit/fe94f974e9c8b820640a5873d81589ab67380516
 
 > 
->         Arnd
+> 
+> 2014-09-03 23:12 GMT+02:00 Beniamino Galvani <b.galvani@gmail.com>:
+> > On Wed, Sep 03, 2014 at 04:52:42PM +0000, Romain Perier wrote:
+> >> This patch defines a platform glue layer for Rockchip SoCs which
+> >> support arc-emac driver. It ensures that regulator for the rmii is on
+> >> before trying to connect to the ethernet controller. It applies right
+> >> speed and mode changes to the grf when ethernet settings change.
+> >
+> > Hi Romain,
+> >
+> > on a Radxa Rock when I try to remove the emac_rockchip module the
+> > board locks up when calling clk_disable_unprepare(priv->refclk). The
+> > tree is a net-next + your series, I don't know if I need some other
+> > patches.
+> >
+> > There is also the following build warning due to the emac dependency
+> > on REGULATOR which in principle seems correct, but looking at other
+> > drivers I wonder why they use the regulator APIs but don't have the
+> > same dependency.
+> >
+> > drivers/regulator/Kconfig:1:error: recursive dependency detected!
+> > drivers/regulator/Kconfig:1:       symbol REGULATOR is selected by MDIO_SUN4I
+> > drivers/net/phy/Kconfig:159:       symbol MDIO_SUN4I depends on PHYLIB
+> > drivers/net/phy/Kconfig:5:         symbol PHYLIB is selected by ARC_EMAC_CORE
+> > drivers/net/ethernet/arc/Kconfig:20:      symbol ARC_EMAC_CORE is selected by EMAC_ROCKCHIP
+> > drivers/net/ethernet/arc/Kconfig:35:      symbol EMAC_ROCKCHIP depends on REGULATOR
+> >
+> > Regards,
+> > Beniamino
