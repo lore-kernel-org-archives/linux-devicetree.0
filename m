@@ -1,97 +1,85 @@
 From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [Patch net-next 04/11] net:fec: add multiqueue support
-Date: Thu, 4 Sep 2014 09:02:59 -0500
-Message-ID: <CAHrpEqSEG6qMCVnaLvB25dM+oEAMCSL6-pcTw9t2varL39wEmw@mail.gmail.com>
+Subject: Re: [Patch net-next 08/11] net:fec: change FEC alignment to 64 bytes
+ for ARM platform
+Date: Thu, 4 Sep 2014 09:17:20 -0500
+Message-ID: <CAHrpEqQYUTL8ux9dwnzogihdVXhDs=W25nZthpjBAVzcEEzXUw@mail.gmail.com>
 References: <1409776697-1536-1-git-send-email-Frank.Li@freescale.com>
-	<1409776697-1536-5-git-send-email-Frank.Li@freescale.com>
-	<540787B9.8090504@gmail.com>
-	<CAHrpEqRSGg9=B8nk-PFkayP1kN8eQ5UnBvjikR5svub-wD-d6w@mail.gmail.com>
-	<CAGVrzcaB=7qkXzZ46-86-obMJBTOZQ01N7PROdi9RrkiDnE2zQ@mail.gmail.com>
+	<1409776697-1536-9-git-send-email-Frank.Li@freescale.com>
+	<063D6719AE5E284EB5DD2968C1650D6D17487196@AcuExch.aculab.com>
+	<e50c6383dc184566846e190026d1186a@BLUPR03MB373.namprd03.prod.outlook.com>
+	<063D6719AE5E284EB5DD2968C1650D6D174872BE@AcuExch.aculab.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcaB=7qkXzZ46-86-obMJBTOZQ01N7PROdi9RrkiDnE2zQ@mail.gmail.com>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D174872BE@AcuExch.aculab.com>
 Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Frank Li <Frank.Li@freescale.com>, Duan Fugang-B38611 <b38611@freescale.com>, David Miller <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: David Laight <David.Laight@aculab.com>
+Cc: "fugang.duan@freescale.com" <fugang.duan@freescale.com>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 3, 2014 at 11:09 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> 2014-09-03 20:41 GMT-07:00 Zhi Li <lznuaa@gmail.com>:
->> On Wed, Sep 3, 2014 at 4:27 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>> On 09/03/2014 01:38 PM, Frank Li wrote:
->>>> From: Fugang Duan <B38611@freescale.com>
->>>>
->>>> Add multiqueue support, which is compatible with previous single queue
->>>> driver for FEC/ENET IPs.
->>>>
->>>> By default, the tx/rx queue number is 1, user can config the queue number
->>>> at DTS file like this:
->>>>       fsl,num_tx_queues=<3>;
->>>>       fsl,num_rx_queues=<3>;
->>>>
->>>> Ethernet multiqueue mechanism can improve performance in SMP system.
->>>> For single hw queue, multiqueue can balance cpu loading.
->>>> For multi hw queues, multiple cores can process network packets in parallel,
->>>> and refer the article for the detail advantage for multiqueue:
->>>> http://vger.kernel.org/~davem/davem_nyc09.pdf
->>>
->>> You should probably split that patch in a minimum of two, or more
->>> different parts.
->>>
->>> Two parts:
->>>
->>> - add TX multiqueue support
->>> - add RX multiqueue support
->>>
+On Thu, Sep 4, 2014 at 4:18 AM, David Laight <David.Laight@aculab.com> wrote:
+> From: fugang.duan@freescale.com
+>> >From: Frank Li
+>> >> From: Fugang Duan <B38611@freescale.com>
+>> >>
+>> >> Since enet-avb has 64 bytes alignment limitation for rx DMA transfer.
+>> >> The previous enet IP for ARM platform has 16 bytes alignment for tx
+>> >> DMA transfer.
+>> >
+>> >Do you mean rx or tx here? or both??
+>> >
+>> >And can we beat up the hardware designers to stop these restrictions on rx
+>> >(in particular) ethernet buffer alignments?
+>> >A device isn't suitable for ethernet unless is can write the destination
+>> >mac address to a 4n+2 boundary.
+>> >
+>> >     David
+>> >
+>> Hi, David,
 >>
->> I understood your concern.
->> We also need consider logical integration.
->
-> Sure, hence the reason why I suggest you make it happen in different
-> parts, what you can do is make sure that you parse "fsl,num_tx_queues"
-> and "fsl,num_rx_queues" as one of the last patches in this patch
-> series. That way, we achieve a logical breakdown of the changes and
-> only support and enable multiqueue when the driver is ready.
-
-I can remove this part to "net:fec: add enet-avb IP support", last
-patch just change DT file,
-which come into difference maintainer.
-
-But RX and TX is difficult to separate because RX and TX share some
-function, such as
-fec_enet_get_nextdesc
-
-If I change TX part,  fec_enet_get_nextdesc will add a parameter. If
-that, all RX part need be
-changed.
-
->
+>> For previous enet IP there has 16 bytes data buffer alignment limitation for tx & rx DMA transfer.
+>> For imx6sx enet-avb IP, there has 64 bytes data buffer alignment limitation for rx DMA transfer, byte
+>> alignment for tx data
+>> Buffer for DMA transfer.
 >>
->> Separate this patch just reduce changed lines in a patch.
+>> I think rx data buffer alignment limitation don't introduce performance drop, is not complex for sw
+>> implemention. Anyway,
+>> We can request IC designer to remove the limitation for future chips.
 >
-> That is exactly my point, right now there is too much churn to make a
-> reviewer able to spot potential problems.
+> The 'problem' is that you need the IP header to be 32bit aligned.
+> If the dma buffer has to be aligned then the code either has to do an expensive
+> misaligned copy of the entire frame (at some point the entire frame is almost
+> certainly all copied into an aligned buffer), or take the hit of misaligned
+> memory accesses (which might have to be emulated with byte transfers).
 >
->> Most of this patch change is from fep-> to txq-> or rxq->
->>
->> best regards
->> Frank Li
->>
->>> More parts:
->>>
->>> - prepare for TX multiqueue (introduce queue structure, definitions)
->>> - transition TX path to use queue 0
->>> - add support for the two other TX queues
->>> - prepare for RX multiqueue (introduce queue structure, definitions)
->>> - prepare for multiqueue, hardcode RX path to use queue 0
->>> - add support for the two other RX queues
->>>
->>> The number of changes are extremely hard to review...
->>> --
->>> Florian
+> The rx buffer can be aligned provided the hardware skips (or writes junk to)
+> the first two bytes.
+
+ENET IP have feature to add additional 2 byte when save data to memory.
+
+RX FIFO Shift-16
+When this field is set, the actual frame data starts at bit 16 of the
+first word read from the RX FIFO aligning
+the Ethernet payload on a 32-bit boundary.
+NOTE: This function only affects the FIFO storage and has no influence
+on the statistics, which use the
+actual length of the frame received.
+0 Disabled.
+1 Instructs the MAC to write two additional bytes in front of each
+frame received into the RX FIFO.
+
+i.MX6SX,
+          Remove TX alignment requirement.
+          But RX and DMA BD address is 64byte aligment.
+
+
+best regards
+Frank Li
+
+
+
+>
+>         David
 >
 >
 >
-> --
-> Florian
