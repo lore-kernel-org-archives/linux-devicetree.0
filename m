@@ -1,86 +1,86 @@
-Return-Path: <alvin.chen@intel.com>
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 1/3] GPIO: gpio-dwapb: Enable platform driver binding to
+Return-Path: <sebastian@breakpoint.cc>
+Date: Thu, 4 Sep 2014 09:30:27 +0200
+From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Subject: Re: [PATCH 1/3] GPIO: gpio-dwapb: Enable platform driver binding to
  MFD driver
-Date: Thu, 4 Sep 2014 10:38:07 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E982558@SHSMSX101.ccr.corp.intel.com>
+Message-ID: <20140904073027.GA3336@breakpoint.cc>
 References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
  <1409161588-19417-2-git-send-email-alvin.chen@intel.com>
  <20140903200302.GA7673@breakpoint.cc>
  <4656BEB6164FC34F8171C6538F1A595B2E982384@SHSMSX101.ccr.corp.intel.com>
- <20140904073027.GA3336@breakpoint.cc>
-In-Reply-To: <20140904073027.GA3336@breakpoint.cc>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Cc: Darren Hart <dvhart@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "Grant Likely  <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E982384@SHSMSX101.ccr.corp.intel.com>
+To: "Chen, Alvin" <alvin.chen@intel.com>
+Cc: Darren Hart <dvhart@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-DQo+ID4gU2luY2Ugd2UgZW5hYmxlIHRoaXMgbW9kdWxlIG5vdCBvbmx5IHN1cHBvcnQgT0YgZGV2
-aWNlcywgYnV0IGFsc28gc3VwcG9ydA0KPiBNRkQgZGV2aWNlcywgc28gd2UgcmVtb3ZlIE9GX0dQ
-SU8gZGVwZW5kZW5jDQo+ID4gRm9yICdQQ0knLCB0aGUgb3JpZ2luYWwgY29kZSBpcyBhbHNvIG5v
-dCBkZXBlbmRlZCBvbiBQQ0ksIGFuZCB0aGlzIHBhdGNoIGFsc28NCj4gbm90LCBkbyB5b3UgdGhp
-bmsgaXQgaXMgbmVjZXNzYXJ5Pw0KPiANCj4gaWYgbm90IFBDSSB0aGVuIHlvdSBzaG91bGQgYWRk
-IHNvbWV0aGluZyBsaWt3ZQ0KPiAJImRlcGVuZHMgb24gT0ZfR1BJTyB8fCBNRkQiDQo+IA0KPiBs
-b29raW5nIGZ1cnRoZXIsIHlvdSBuZWVkIGFsc28gSEFTX0lPTUVNIGZvciB0aGluZ3MgbGlrZQ0K
-PiBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoKS4gTGludXMsIHdvdWxkbid0IGl0IG1ha2Ugc2Vuc2Ug
-dG8gZ3JvdXAgdGhpcyBkcml2ZXINCj4gYW5kIG1ha2UgdGhlIGJsb2NrIGRlcGVuZCBvbiBpdD8N
-Cj4gDQpJIGNhbiBhZGQgImRlcGVuZHMgb24gT0ZfR1BJTyB8fCBJTlRFTF9RVUFSS19JMkNfR1BJ
-T19NRkQiLCBzaW5jZSBub3cgdGhlIE1GRCBwYXRoIG9ubHkgc3VwcG9ydCBJbnRlbCBRdWFyay4N
-Cg0KQW5kcml5LCBob3cgZG8geW91IHRoaW5rPw0KDQo+ID4gPiA+ICBzdHJ1Y3QgZHdhcGJfZ3Bp
-byB7DQo+ID4gPiA+ICAJc3RydWN0CWRldmljZQkJKmRldjsNCj4gPiA+ID4gIAl2b2lkIF9faW9t
-ZW0JCSpyZWdzOw0KPiA+ID4gPiAgCXN0cnVjdCBkd2FwYl9ncGlvX3BvcnQJKnBvcnRzOw0KPiA+
-ID4gPiAtCXVuc2lnbmVkIGludAkJbnJfcG9ydHM7DQo+ID4gPiB5b3UgY291bGQga2VlcCB0aGlz
-IHRoZSB3YXkgaXQgaXMNCj4gPiBJdCBoYXMgYmVlbiBtb3ZlZCB0byAncGRhdGEnLg0KPiANCj4g
-SSBzYXcgdGhhdC4gQnV0IHRoZXJlIGlzIG5vIG5lZWQga2VlcCBhIHBvaW50ZXIgdG8gcGRhdGEg
-YWNyb3NzIHRoZSB3aG9sZSBkcml2ZXINCj4gc2luY2Ugb25seSBuZWVkIG5yX3BvcnRzIGluIHRo
-ZSBkcml2ZXIgcmVtb3ZhbCBwYXJ0IG9mIHRoZSB3aG9sZSBkcml2ZXIuDQpHb3QgeW91ciBpZGVh
-LiBTbyBjYW4gSSBqdXN0IHVzZSBhIGdsb2JhbCBzdGF0aWMgcGRhdGEgcG9pbnRlciBpbnN0ZWFk
-IG9mIGFkZGluZyBpdCBhcyBhIG1lbWJlciBvZiAnIHN0cnVjdCBkd2FwYl9ncGlvJz8NClNpbmNl
-IHBkYXRhIGlzIHVzZWQgaW4gYWxsICdwcm9iZScgZnVuY3Rpb25zLCBhbmQgbWFrZSBwZGF0YSBh
-cyBnbG9iYWwgc3RhdGljIG1ha2UgcHJvZ3JhbW1pbmcgbW9yZSBlYXN5Lg0KDQo+IA0KPiA+ID4g
-PiAgCXN0cnVjdCBpcnFfZG9tYWluCSpkb21haW47DQo+ID4gPiA+ICsJY29uc3Qgc3RydWN0IGR3
-YXBiX2dwaW9fcGxhdGZvcm1fZGF0YQkqcGRhdGE7DQo+ID4gPg0KPiA+ID4gYW5kIG5vdCBtYWtp
-bmcgdGhpcyBhIG1lbWJlciBvZiB0aGlzIHN0cnVjdC4gSSd2ZSBiZWVuIGdvaW5nIHVwIGFuZA0K
-PiA+ID4gZG93biB0aGUgc291cmNlIGFuZCBJIGRvbid0IHNlZSB0aGUgbmVlZCB0byBtYXJyeSBk
-d2FwYl9ncGlvIHRvDQo+ID4gPiBkd2FwYl9ncGlvX3BsYXRmb3JtX2RhdGEuDQo+ID4gPiBUaGF0
-IGR3YXBiX2dwaW9fcG9ydF9wcm9wZXJ0eSB0aGluZyBoYXMgYSBsb25nIG5hbWUuIENvdWxkIHlv
-dSBqdXN0DQo+ID4gPiBzZXQgaXQgdXAsIHBhc3MgaXQgZm9yIHJlZ2lzdHJhdGlvbiBhbmQgdGhl
-IGZyZWUgaXQ/IFlvdSBjYW4ndCBmcmVlDQo+ID4gPiB0aGUgcGRhdGEgZm9yIHRoZSBub24tT0Yg
-dHJlZSBidXQgZm9yIHRoZSBPRiBjYXNlIHlvdSBrZWVwIHRoYXQgc3RydWN0DQo+IGFyb3VuZCBm
-b3Igbm8gcmVhc29uLg0KPiA+ID4gWW91IGNvdWxkIHNhZmUgc29tZSBtZW1vcnkgYW5kIHVzZSBw
-ZGF0YSBkaXJlY3RseSBmb3Igc2V0dXAuDQo+ID4gSGVyZSwgJ3BkYXRhJyBpcyB1c2VkIGZvciBi
-b3RoIE9GIGFuZCBNRkQuIEZvciBNRkQsICdwZGF0YScgaXMgcGFzc2VkIGZyb20NCj4gTUZELg0K
-PiA+IEZvciBPRiwgJ3BkYXRhJyBpcyBnZXR0aW5nIGZyb20gZGV2aWNlIG5vZGVzIHByb3BlcnRp
-ZXMuIFdoeSBkbyB3ZQ0KPiA+IGhhdmUgc3VjaCBkZXNpZ24/IEJlY2F1c2UgaXQgY2FuIG1ha2Ug
-dGhlIGhhbmRsaW5nIG1vcmUgZWFzeSBmb3INCj4gPiBmbG93aW5nIHJvdXRpbmUuIEFsbCBuZWNl
-c3NhcnkgcHJvcGVydGllcyBnZXQgZnJvbSAncGRhdGEnLCBuZXZlciBjYXJlIGl0IGlzDQo+IGZy
-b20gT0Ygb3IgTUZELiBBbmQgc29tZW9uZSBhcmUgd29ya2luZyBvbiByZXBsYWNpbmcgT0YgaW50
-ZXJmYWNlIHdpdGggYQ0KPiBmaXJtd2FyZSBhZ25vc3RpYyBkZXZpY2VfcHJvcGVydHkqIGludGVy
-ZmFjZSB3aGljaCB3aWxsIHdvcmsgd2l0aCBib3RoIE9GIGFuZA0KPiBBQ1BJLg0KPiA+IE1vcmUg
-aW5mb3JtYXRpb24gZm9yIHRoaXMgZGVzaWduLCBwbGVhc2UgY29udGFjdCBEYXJyZW4gSGFydA0K
-PiA8ZHZoYXJ0QGxpbnV4LmludGVsLmNvbT4uIERhcnJlbiBIYXJ0IHdyb3RlIHRvIG1lOg0KPiA+
-ICJHZW5lcmFsbHkgc3BlYWtpbmcsIHJhdGhlciB0aGFuIGlmL2Vsc2UgYmxvY2tzIHRocm91Z2hv
-dXQgdGhlIGNvZGUNCj4gPiBjaGVja2luZyBpZiBpdCBpcyBlbnVtZXJhdGVkIHZpYSBvcGVuIGZp
-cm13YXJlIG9yIGFzIGEgcGxhdGZvcm0gZGV2aWNlLCBhDQo+IGNsZWFuZXIgYXBwcm9hY2ggaXMg
-dG8gY2hlY2sgaWYgdGhlIHBkYXRhIGlzIG51bGwsIGFuZCBpZiBzbywgcG9wdWxhdGUgdGhlIHBk
-YXRhDQo+IGZyb20gdGhlIG9wZW4gZmlybXdhcmUgZGVzY3JpcHRpb24gaWYgcHJlc2VudC4NCj4g
-PiBUaGVuIHVzZSB0aGUgcGRhdGEgdGhyb3VnaG91dCB0aGUgZHJpdmVyLg0KPiANCj4gQnV0IGlz
-bid0IGl0IGVub3VnaCB0byBob2xkIG9uIHRvIHRoaXMgcGRhdGEgdGhpbmcgdGhyb3VnaCB0aGUg
-cHJvYmUgZnVuY3Rpb24NCj4gb25seT8gQWZ0ZXIgcHJvYmUgaXMgZG9uZSB5b3UgY291bGQgZHJv
-cCB0aGF0IG1lbW9yeSBpbiB0aGUgT0YtY2FzZSwgcmlnaHQ/DQpPSy4gSWYgaXQgaXMgT0YtY2Fz
-ZSwgcGRhdGEgY2FuIGJlIGZyZWVkIGluIHRoZSBlbmQgb2YgcHJvYmUuDQoNCg0KPiA+ID4gPiAr
-CWlycV9zZXRfaGFuZGxlcl9kYXRhKHBvcnQtPnBwLT5pcnEsIGdwaW8pOw0KPiA+ID4NCj4gPiA+
-IFRoaXMgZG9lcyBub3QgbG9vayBsaWtlIGl0IGJlbG9uZ3MgaGVyZS4gSXQgc2hvdWxkIG9ubHkg
-YmUgdXNlZA0KPiA+ID4gdG9nZXRoZXIgd2l0aA0KPiA+ID4gaXJxX3NldF9jaGFpbmVkX2hhbmRs
-ZXIoKSBvciBhbSBJIG1pc3NpbmcgaGVyZSBzb21ldGhpbmc/DQo+ID4gVGhpcyBwYXRjaCByZXVz
-ZWQgJyBkd2FwYl9pcnFfaGFuZGxlcicsIGl0IG5lZWRzIHRoZSBpcnEgaGFuZGxlciBkYXRhLiBG
-b3IgJw0KPiBpcnFfc2V0X2hhbmRsZXJfZGF0YScsIGl0IGp1c3Qgc2V0cyB0aGUgaXJxIGRhdGEu
-DQo+ID4gV2h5IGRvIHlvdSB0aGluayBpdCBtdXN0IGJlIHVzZWQgdG9nZXRoZXIgd2l0aCAnIGly
-cV9zZXRfY2hhaW5lZF9oYW5kbGVyJz8NCj4gDQo+IGJlY2F1c2UgeW91IGRvIHJlcXVlc3RfaXJx
-KOKApiwgZHJpdmVyX2RhdGEpLiBJZiB5b3UgeW91IGxvb2sgY2xvc2UgdG8NCj4gaXJxX3NldF9j
-aGFpbmVkX2hhbmRsZXIoKSBpdCBkb2VzIG5vdCBoYXZlIHN1Y2ggYSBtZW1iZXIuIFRodXMgaXQg
-dXNlcw0KPiBpcnFfc2V0X2hhbmRsZXJfZGF0YSgpIGZvciB0aGF0IHNhbWUgcHVycG9zZS4NCj4g
-DQpPSy4gSSBjYW4gaW1wcm92ZSBpdC4NCg==
+On 2014-09-04 02:00:03 [+0000], Chen, Alvin wrote:
+> > 
+> > > --- a/drivers/gpio/Kconfig
+> > > +++ b/drivers/gpio/Kconfig
+> > > @@ -136,7 +136,6 @@ config GPIO_DWAPB
+> > >  	tristate "Synopsys DesignWare APB GPIO driver"
+> > >  	select GPIO_GENERIC
+> > >  	select GENERIC_IRQ_CHIP
+> > > -	depends on OF_GPIO
+> > you need either OF_GPIO or PCI
+> Since we enable this module not only support OF devices, but also support MFD devices, so we remove OF_GPIO dependency.
+> For 'PCI', the original code is also not depended on PCI, and this patch also not, do you think it is necessary?
+
+if not PCI then you should add something likwe 
+	"depends on OF_GPIO || MFD"
+
+looking further, you need also HAS_IOMEM for things like
+devm_ioremap_resource(). Linus, wouldn't it make sense to group this
+driver and make the block depend on it?
+
+> > >  struct dwapb_gpio {
+> > >  	struct	device		*dev;
+> > >  	void __iomem		*regs;
+> > >  	struct dwapb_gpio_port	*ports;
+> > > -	unsigned int		nr_ports;
+> > you could keep this the way it is
+> It has been moved to 'pdata'.
+
+I saw that. But there is no need keep a pointer to pdata across the
+whole driver since only need nr_ports in the driver removal part of the
+whole driver.
+
+> > >  	struct irq_domain	*domain;
+> > > +	const struct dwapb_gpio_platform_data	*pdata;
+> > 
+> > and not making this a member of this struct. I've been going up and down the
+> > source and I don't see the need to marry dwapb_gpio to
+> > dwapb_gpio_platform_data.
+> > That dwapb_gpio_port_property thing has a long name. Could you just set it up,
+> > pass it for registration and the free it? You can't free the pdata for the non-OF
+> > tree but for the OF case you keep that struct around for no reason.
+> > You could safe some memory and use pdata directly for setup.
+> Here, 'pdata' is used for both OF and MFD. For MFD, 'pdata' is passed from MFD.
+> For OF, 'pdata' is getting from device nodes properties. Why do we have such design? Because it can make the handling
+> more easy for flowing routine. All necessary properties get from 'pdata', never care it is from OF or MFD. And someone
+> are working on replacing OF interface with a firmware agnostic device_property* interface which will work with both OF and ACPI.
+> More information for this design, please contact Darren Hart <dvhart@linux.intel.com>. Darren Hart wrote to me:
+> "Generally speaking, rather than if/else blocks throughout the code checking if it is enumerated via open firmware or as a platform device,
+> a cleaner approach is to check if the pdata is null, and if so, populate the pdata from the open firmware description if present.
+> Then use the pdata throughout the driver.
+
+But isn't it enough to hold on to this pdata thing through the probe
+function only? After probe is done you could drop that memory in the
+OF-case, right?
+ 
+> > > +	irq_set_handler_data(port->pp->irq, gpio);
+> > 
+> > This does not look like it belongs here. It should only be used together with
+> > irq_set_chained_handler() or am I missing here something?
+> This patch reused ' dwapb_irq_handler', it needs the irq handler data. For ' irq_set_handler_data', it just sets the irq data.
+> Why do you think it must be used together with ' irq_set_chained_handler'?
+
+because you do request_irq(…, driver_data). If you you look close to
+irq_set_chained_handler() it does not have such a member. Thus it uses
+irq_set_handler_data() for that same purpose.
+
+Sebastian
