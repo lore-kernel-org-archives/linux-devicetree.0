@@ -1,63 +1,57 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v9 3/3] regulator: RK808: Remove pdata from the regulator
-Date: Wed, 3 Sep 2014 21:21:21 -0700
-Message-ID: <CAD=FV=VpJtc+t7qsofjyDncTsVZS3VCuAn0SvKsTjGhxMtyw3Q@mail.gmail.com>
-References: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
-	<1409793159-2573-4-git-send-email-zyw@rock-chips.com>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: RE: [RESEND PATCH] arm64: dts: add <dt-bindings/> symlink
+Date: Thu, 04 Sep 2014 10:35:28 +0530
+Message-ID: <002801cfc7fd$d9c5b5a0$8d5120e0$@samsung.com>
+References: <1409629756-14304-1-git-send-email-pankaj.dubey@samsung.com>
+ <20140902084214.GE25379@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409793159-2573-4-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20140902084214.GE25379@arm.com>
+Content-language: en-us
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Will Deacon' <will.deacon@arm.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, naushad@samsung.com, 'Catalin Marinas' <Catalin.Marinas@arm.com>, robh+dt@kernel.org, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Chris,
 
-On Wed, Sep 3, 2014 at 6:12 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->
-> Changes in v9:
-> Adviced by Doug
-> - add reg_np
->
-> Changes in v8:
-> Adviced by Doug
-> - remove rk808_regulator_dts() function
-> - remove the check about "client->dev.of_node"
->
-> Changes in v7:
-> - remove pdata struct from header file, add rk808_regulator struct
->
-> Changes in v6:
-> - remove the redundant code
->
-> Changes in v5:
-> - re-edit base on Mark's branch
->
-> Changes in v4:
-> - use &client->dev replace rk808->dev
->
-> Changes in v3: None
-> Changes in v2:
-> Adviced by Mark Browm:
-> - change of_find_node_by_name to find_child_by_name
-> - use RK808_NUM_REGULATORS as the name of the constant
-> - create a pdata when missing platform data
-> - use the rk808_reg name to supply_regulator name
-> - replace regulator_register with devm_regulator_register
-> - some other problem with coding style
->
->  drivers/regulator/rk808-regulator.c |   91 +++++++----------------------------
->  1 file changed, 18 insertions(+), 73 deletions(-)
 
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -----Original Message-----
+> From: Will Deacon [mailto:will.deacon@arm.com]
+> Sent: Tuesday, September 02, 2014 2:12 PM
+> To: Pankaj Dubey
+> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; naushad@samsung.com; Catalin Marinas;
+> robh+dt@kernel.org; thomas.ab@samsung.com
+> Subject: Re: [RESEND PATCH] arm64: dts: add <dt-bindings/> symlink
+> 
+> On Tue, Sep 02, 2014 at 04:49:16AM +0100, Pankaj Dubey wrote:
+> > Add symlink to include/dt-bindings from arch/arm64/boot/dts/include/
+> > to match the ones in ARM architectures so that preprocessed device
+> > tree files can include various useful constant definitions.
+> >
+> > See commit c58299aa8754 ("kbuild: create an "include chroot" for DT
+> > bindings") merged in v3.10-rc1 for details.
+> >
+> > CC: Catalin Marinas <catalin.marinas@arm.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > ---
+> >
+> > Resubmitting this change as now it will be required for Samsung ARM64
+> > based SoC.
+> 
+> Just include this change in the series adding a .dts that needs it -- it
+doesn't really
+> make sense in isolation (unless somebody desperately wants this in?).
+> 
+
+OK, we will include this patch in series adding a .dts that needs it in next
+respin.
+
+@Naveen: Please include this patch whenever you are respinning Exynos7 dts
+patches.
+
+Thanks,
+Pankaj Dubey
+> Will
