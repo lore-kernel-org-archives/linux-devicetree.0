@@ -1,95 +1,206 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/2] IO voltage domain support for rk3188 and rk3288
-Date: Thu, 4 Sep 2014 18:51:47 +0200
-Message-ID: <CACRpkda-XS0XLSkAZ-16=JvD8FbRJNuN4UVL4dMyV71bfU5T2A@mail.gmail.com>
-References: <1409254565-10677-1-git-send-email-dianders@chromium.org>
-	<53FF9E93.3040601@ti.com>
-	<CAD=FV=Vcj+tAno92c38Prviyi-v2CmuGSzak1ppETL033KAF4w@mail.gmail.com>
-	<1450179.xJuMFg9Vvn@diego>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] gpio: Add driver for AXM55xx SSP chip selects
+Date: Thu, 4 Sep 2014 19:04:44 +0200
+Message-ID: <CACRpkdby4H-fivNn_kG2uL0EjsCGAc+t6OyFi0+VcNGf2Z9NQA@mail.gmail.com>
+References: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com>
+	<1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1450179.xJuMFg9Vvn@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Anders Berg <anders.berg@avagotech.com>, Mark Brown <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 30, 2014 at 1:27 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
-rote:
-> Am Freitag, 29. August 2014, 21:51:46 schrieb Doug Anderson:
->> On Thu, Aug 28, 2014 at 2:26 PM, Santosh Shilimkar
->>
->> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
->> > On Thursday 28 August 2014 03:36 PM, Doug Anderson wrote:
->> >> These two patches add support for automatically configuring the I=
-O
->> >> voltage domains on rk3188 and rk3288 SoCs.  The first patch adds =
-some
->> >> new notification types to the regulator code.  It's used by the s=
-econd
->> >> patch which actually implements the IO voltage domain driver.
->> >>
->> >> These two patches were co-developed by Heiko St=C3=BCbner and Dou=
-g Anderson
->> >> (proof of concept patches were written by Heiko).  They were test=
-ed in
->> >> a private branch on an rk3288 board using rk808 instead of mainli=
-ne
->> >> since rk808 support isn't finalized in mainline yet.
->> >>
->> >> (sorry if you got this series twice; my mailer seems unhappy with=
- me)
->> >>
->> >> Heiko St=C3=BCbner (2):
->> >>   regulator: core: Add REGULATOR_EVENT_PRE_VOLTAGE_CHANGE (and AB=
-ORT)
->> >>   soc/rockchip: io-domain: add driver handling io domains
->> >
->> > Sorry to shot down but your IO domains are nothing but voltage dom=
-ains
->> > and you should really build something in the drivers/power/*
->>
->> If everyone agrees that this belongs in drivers/power that's totally
->> OK.  Neither Heiko nor I was confident that it should be in
->> drivers/soc.  I had even though that the code wouldn't be totally ou=
-t
->> of place in the Rockchip pinctrl driver (adding Linus W since I thin=
-k
->> some SoCs did add code to handle 3.3V vs. 1.8V in pinctrl).
->
-> a bit of context for Linus ...
->
-> This is essentially the continuation of  the thread "io-domain voltag=
-es as
-> regulators?" from the beginning of august. After more discussions we =
-found out
-> that the io voltage selection I asked about is not an independent sup=
-ply, but
-> instead has to reflect the voltage of the real supplying regulator.
->
-> And setting the io-voltage setting to 1.8V while the regulator is sup=
-plying
-> 3.3V for example may actually damage the chip.
->
->
-> So in our current approach here, we added a driver that tracks voltag=
-e changes
-> of the supplying regulator via a notifier and sets the register bits
-> accordingly.
+I need an ACK from Mark Brown on this before I apply.
+The driver seems to do what it should, but I need Mark to
+be OK with exporting the CS signals from an SSP/SPI block
+to be exposed to Linux as GPIOs.
 
-I feel I'm not smart enough for this. You need the PM people to look
-at this stuff, like Rafael Wysocki, Kevin Hilman and Ulf Hansson.
-
-Since it is also MMC/SD UHS-related, Ulf should know better than
-most what is needed, plus he's working on generic power domains
-right now.
+(Top-posting and quoting patch verbatim so Mark gets it.)
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On Mon, Sep 1, 2014 at 2:53 PM, Anders Berg <anders.berg@avagotech.com> wrote:
+> The AXM55xx device has a ARM PL022 SSP controller with an extension that
+> enables the control of up to five chip select signals. This driver implements
+> the logic to control these signals and exports them as GPIOs.
+>
+> Signed-off-by: Anders Berg <anders.berg@avagotech.com>
+> ---
+>  drivers/gpio/Kconfig          |   8 +++
+>  drivers/gpio/Makefile         |   1 +
+>  drivers/gpio/gpio-axxia-ssp.c | 128 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 137 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-axxia-ssp.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 9de1515..c2f2686 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -112,6 +112,14 @@ config GPIO_MAX730X
+>
+>  comment "Memory mapped GPIO drivers:"
+>
+> +config GPIO_AXXIA_SSP
+> +       tristate "AXM55xx SSP chip select pins as GPIO"
+> +       depends on ARCH_AXXIA
+> +       default y if SPI_MASTER
+> +       select GPIO_GENERIC
+> +       help
+> +         Say yes here to get GPIO interface for AXM55xx SSP chip select signals.
+> +
+>  config GPIO_CLPS711X
+>         tristate "CLPS711X GPIO support"
+>         depends on ARCH_CLPS711X || COMPILE_TEST
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 5d024e3..01e1869 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -18,6 +18,7 @@ obj-$(CONFIG_GPIO_ADP5520)    += gpio-adp5520.o
+>  obj-$(CONFIG_GPIO_ADP5588)     += gpio-adp5588.o
+>  obj-$(CONFIG_GPIO_AMD8111)     += gpio-amd8111.o
+>  obj-$(CONFIG_GPIO_ARIZONA)     += gpio-arizona.o
+> +obj-$(CONFIG_GPIO_AXXIA_SSP)   += gpio-axxia-ssp.o
+>  obj-$(CONFIG_GPIO_BCM_KONA)    += gpio-bcm-kona.o
+>  obj-$(CONFIG_GPIO_BT8XX)       += gpio-bt8xx.o
+>  obj-$(CONFIG_GPIO_CLPS711X)    += gpio-clps711x.o
+> diff --git a/drivers/gpio/gpio-axxia-ssp.c b/drivers/gpio/gpio-axxia-ssp.c
+> new file mode 100644
+> index 0000000..5884206
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-axxia-ssp.c
+> @@ -0,0 +1,128 @@
+> +/*
+> + * GPIO interface for SSP chip select outputs.
+> + *
+> + * Copyright (C) 2013 LSI Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/bitops.h>
+> +#include <linux/init.h>
+> +#include <linux/gpio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +
+> +struct gpio_dev {
+> +       void __iomem    *reg;
+> +       struct gpio_chip gpio_chip;
+> +};
+> +
+> +static int ssp_gpio_direction_out(struct gpio_chip *chip,
+> +                                 unsigned offset, int value)
+> +{
+> +       /* Always outputs */
+> +       return 0;
+> +}
+> +
+> +static int ssp_gpio_direction_in(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       return -ENXIO;
+> +}
+> +
+> +static int ssp_gpio_get(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       struct gpio_dev *priv = dev_get_drvdata(chip->dev);
+> +       u32 tmp;
+> +
+> +       tmp = readl(priv->reg);
+> +       return !!(tmp & BIT(offset));
+> +}
+> +
+> +static void ssp_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+> +{
+> +       struct gpio_dev *priv = dev_get_drvdata(chip->dev);
+> +       u32 tmp;
+> +
+> +       tmp = readl(priv->reg);
+> +       if (value)
+> +               tmp |= BIT(offset);
+> +       else
+> +               tmp &= ~BIT(offset);
+> +       writel(tmp, priv->reg);
+> +}
+> +
+> +static int ssp_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct gpio_dev *priv;
+> +       struct resource *io;
+> +       struct gpio_chip *chip;
+> +       int ret;
+> +
+> +       priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       priv->reg = devm_ioremap(&pdev->dev, io->start, resource_size(io));
+> +       if (!priv->reg)
+> +               return -ENXIO;
+> +
+> +       platform_set_drvdata(pdev, priv);
+> +
+> +       chip = &priv->gpio_chip;
+> +       chip->dev = &pdev->dev;
+> +#ifdef CONFIG_OF_GPIO
+> +       chip->of_node = pdev->dev.of_node;
+> +#endif
+> +       chip->direction_input = ssp_gpio_direction_in;
+> +       chip->direction_output = ssp_gpio_direction_out;
+> +       chip->get = ssp_gpio_get;
+> +       chip->set = ssp_gpio_set;
+> +       chip->label = "ssp-gpio";
+> +       chip->owner = THIS_MODULE;
+> +       chip->base = -1;
+> +       chip->ngpio = 5;
+> +
+> +       /* Set all 5 chip-selects high (de-asserted) by default */
+> +       writel(0x1f, priv->reg);
+> +
+> +       ret = gpiochip_add(chip);
+> +       if (ret < 0)
+> +               dev_err(&pdev->dev, "failed to register chip, %d\n", ret);
+> +
+> +       return ret;
+> +}
+> +
+> +static int ssp_gpio_remove(struct platform_device *pdev)
+> +{
+> +       struct gpio_dev *priv = dev_get_drvdata(&pdev->dev);
+> +
+> +       return gpiochip_remove(&priv->gpio_chip);
+> +}
+> +
+> +static const struct of_device_id ssp_gpio_id_table[] = {
+> +       { .compatible = "lsi,ssp-gpio" },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(platform, ssp_gpio_id_table);
+> +
+> +static struct platform_driver ssp_gpio_driver = {
+> +       .driver = {
+> +               .name = "ssp-gpio",
+> +               .owner = THIS_MODULE,
+> +               .of_match_table = ssp_gpio_id_table
+> +       },
+> +       .probe = ssp_gpio_probe,
+> +       .remove = ssp_gpio_remove,
+> +};
+> +
+> +module_platform_driver(ssp_gpio_driver);
+> +
+> +MODULE_AUTHOR("LSI Corporation");
+> +MODULE_DESCRIPTION("GPIO interface for SSP chip selects");
+> +MODULE_LICENSE("GPL");
+> --
+> 1.9.1
+>
