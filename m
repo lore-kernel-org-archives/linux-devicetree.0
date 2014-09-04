@@ -1,55 +1,50 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-bindings: spi/rockchip: Mark DMA as optional
-Date: Thu, 4 Sep 2014 23:54:47 +0100
-Message-ID: <20140904225447.GZ29327@sirena.org.uk>
-References: <1409777067-17422-1-git-send-email-dianders@chromium.org>
- <1409777067-17422-4-git-send-email-dianders@chromium.org>
+From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 0/3] move gpt per clk parent for ipg_per to OSC
+Date: Thu, 4 Sep 2014 23:37:21 +0000
+Message-ID: <9B0C19C6-6C3B-47DC-9DC4-5BD42CE294A4@freescale.com>
+References: <1409729805-9741-1-git-send-email-b20788@freescale.com>,<CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Sg+dTrkCjluZnrMn"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409777067-17422-4-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: zh-CN
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Alexandru Stan <amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---Sg+dTrkCjluZnrMn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Sep 03, 2014 at 01:44:27PM -0700, Doug Anderson wrote:
-> The Rockchip SPI controller works fine without DMA (aside from a few
-> warnings).  The DMA property even implies this, saying:
-
-Applied all, thanks.  Please use subject bindings matching the style for
-the subsystem.
-
---Sg+dTrkCjluZnrMn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUCO2zAAoJELSic+t+oim9CTEP/Rf44WtOb/2Vx7JHJA2+h3UX
-35cBi+EM8jfJ2Gs5bSL8bdErUkzd7FcVjaI+FCpn2BEc8uepPFFVrmG6RtZRspoT
-wWpc+44c0Je9GlqLepcSx2lReGtaOTJk5fpVlkf+3qseHcGMpqruoUrVpGn6ACqn
-H6Yi7JvxaLPeZ4MVvb6zfyy2GkvK0kSc5uFA5/AfBIeBUn0A+jQLQ8EuaUwhjdKf
-9zWOmGIQ6LhjdTWuVU5F9W4pwpbRKE7hy7Csac3/8KZXaAdHIcz83fnjvXxdbnJc
-hB/Zif6aNi/DEI0Ml7pKbl1LkrivtthbEzd5S1B4fBhfeqWCD/SKlCd0+4wbRkez
-HlEfYNhm6doj6W39qRBmhCx+1QO4UdZ1muzUsAiYFESWbKyWg5U0UB5MfVTnktMc
-yxkW6ZG+J+KkyEMCCCMT8Wk/gxmwTbDw5VFuhwv7evSng0bShl3bwW7zN5tNeGh+
-8uZx2S/lZBDEkQUO3ePsse7+sXD8Hg1H9NY+/WQd1QLIT915Bcw0NNAm38tw1G0l
-RMwalQakZlIvNWISCPFWINrSjeLeVz3+ppyPoU2DVMCyMsmVzMZ3ISNxevy58L+E
-L4zilvlEzLQFkZN57Uqfzg7eXXEd4LuYupCFtPMIZvMmXkITLIXEZsw0ndEQWQmi
-oJTVgZWn9vi9/PxCvpDp
-=MFC6
------END PGP SIGNATURE-----
-
---Sg+dTrkCjluZnrMn--
+SGksIEZhYmlvDQogICAgICAgIGNhbiBJIGtub3cgd2h5IHlvdSB3YW50IHRvIHJ1biB0aGUgbmV3
+IGtlcm5lbCB3aXRoIG9sZCBkdGI/DQoNClNlbnQgZnJvbSBBbnNvbidzIGlQaG9uZQ0KDQo+INTa
+IDIwMTTE6jnUwjXI1aOsNjo1MKOsIkZhYmlvIEVzdGV2YW0iIDxmZXN0ZXZhbUBnbWFpbC5jb20+
+INC0tcCjug0KPiANCj4+IE9uIFdlZCwgU2VwIDMsIDIwMTQgYXQgNDozNiBBTSwgQW5zb24gSHVh
+bmcgPGIyMDc4OEBmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4+IEN1cnJlbnRseSwgZ3B0IHRpbWVy
+J3MgY2xvY2sgaXMgZnJvbSBpcGdfcGVyLCBhbmQgaXBnX3BlciBjbG9jayBpcyBmcm9tIGlwZw0K
+Pj4gb24gbW9zdCBvZiBpLk1YNiBzZXJpZXMgU09DcywgYnV0IGlwZydzIHJhdGUgbWF5IGJlIHNj
+YWxlZCB3aGVuIHN5c3RlbSBlbnRlcnMNCj4+IGxvdyBidXMgbW9kZSBmb3Igc2F2aW5nIHBvd2Vy
+LCB0aGVuIGdwdCB0aW1lcidzIGNsb2NrIHJhdGUgd2lsbCBiZSBzY2FsZWQgYXMNCj4+IHdlbGws
+IGFzIHN5c3RlbSB0aW1lciBzaG91bGQgYmUga2VwdCBzdGFibGUgYW5kIE5PVCBkcmlmdCwgYmV0
+dGVyIHRvIGtlZXAgZ3B0DQo+PiB0aW1lcidzIGNsayBhdCBmaXhlZCByYXRlLCBvbiBpLk1YNlEg
+VE8gPiAxLjAsIGkuTVg2REwgYW5kIGkuTVg2U1gsIHRoZXJlIGlzDQo+PiBPU0MgY2xrIGF2YWls
+YWJsZSBmb3IgZ3B0IHRpbWVyLCB3ZSBzaG91bGQgZW5hYmxlIHRoaXMgZmVhdHVyZSwgdGhlIGhh
+cmR3YXJlDQo+PiBkZXNpZ24gaXMgYXMgYmVsb3c6DQo+PiANCj4+IGkuTVg2USBUTyA+IDEuMDog
+R1BUX0NSX0NMS1NSQywgM2InMTAxIHNlbGVjdHMgZml4IGNsb2NrDQo+PiAgICBvZiBPU0MgLyA4
+IGZvciBncHQgcGVyIGNsazsNCj4+IGkuTVg2REwgYW5kIGkuTVg2U1g6IEdQVF9DUl9DTEtTUkMs
+IDNiJzEwMSBzZWxlY3RzIE9TQw0KPj4gICAgZm9yIGdwdCBwZXIgY2xrLCBhbmQgd2UgbXVzdCBl
+bmFibGUgR1BUX0NSXzI0TUVNIHRvDQo+PiAgICBlbmFibGUgT1NDIGNsayBzb3VyY2UgZm9yIGdw
+dCBwZXIsIEdQVF9QUl9QUkVTQ0FMRVIyNE0NCj4+ICAgIGlzIGZvciBwcmUtc2NhbGluZyBvZiB0
+aGlzIE9TQyBjbGssIGhlcmUgc2V0IGl0IHRvIDgNCj4+ICAgIHRvIG1ha2UgZ3B0IHBlciBjbGsg
+aXMgM01IejsNCj4+IGkuTVg2U0w6IGlwZ19wZXIgY2FuIGJlIGZyb20gT1NDIGRpcmVjdGx5LCBz
+byBubyBuZWVkIHRvDQo+PiAgICBpbXBsZW1lbnQgdGhpcyBuZXcgY2xrIHNvdXJjZSBmb3IgZ3B0
+IHBlci4NCj4+IA0KPj4gQW5zb24gSHVhbmcgKDMpOg0KPj4gIEFSTTogaW14OiBhZGQgZ3B0XzNt
+IGNsayBmb3IgaS5teDZxZGwNCj4+ICBBUk06IGR0czogaW14NjogY2hhbmdlIGdwdCBwZXIgY2xr
+IHRvIGdwdF8zbSBvbiBpLm14NnFkbCBhbmQgaS5teDZzeA0KPj4gIEFSTTogaW14OiBzb3VyY2Ug
+Z3B0IHBlciBjbGsgZnJvbSBPU0MgZm9yIHN5c3RlbSB0aW1lcg0KPiANCj4gVGhpcyBwYXRjaCBz
+ZXJpZXMgd29ya3MgZmluZSBpZiB3ZSB1c2UgdGhlIG5ldyBkdGIgYW5kIG5ldyBrZXJuZWwuDQo+
+IA0KPiBIb3dldmVyLCBib290aW5nIGEga2VybmVsIHdpdGggdGhlc2Ugc2VyaWVzIGFwcGxpZWQg
+YW5kIHVzaW5nIGFuIG9sZA0KPiBkdGIgd2UgZ2V0IGEgc3lzdGVtIHdpdGggYnJva2VuIHRpbWVy
+Lg0KPiANCj4gJ3NsZWVwIDEnIHRha2VzIHNvbWV0aGluZyBsaWtlIDIwIHNlY29uZHMgaW4gdGhp
+cyBjYXNlLg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
