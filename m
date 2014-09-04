@@ -1,133 +1,107 @@
-From: Markus Niebel <Markus.Niebel@tq-group.com>
-Subject: [PATCH] ARM: DT: imx53: fix lvds channel 1 port
-Date: Thu,  4 Sep 2014 14:05:05 +0200
-Message-ID: <1409832305-24255-1-git-send-email-Markus.Niebel@tq-group.com>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 1/3] GPIO: gpio-dwapb: Enable platform driver binding to
+ MFD driver
+Date: Thu, 4 Sep 2014 12:01:22 +0000
+Message-ID: <1409832078.30155.80.camel@intel.com>
+References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
+	 <1409161588-19417-2-git-send-email-alvin.chen@intel.com>
+	 <20140903200302.GA7673@breakpoint.cc>
+	 <4656BEB6164FC34F8171C6538F1A595B2E982384@SHSMSX101.ccr.corp.intel.com>
+	 <20140904073027.GA3336@breakpoint.cc>
+	 <4656BEB6164FC34F8171C6538F1A595B2E982558@SHSMSX101.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Markus Niebel <Markus.Niebel@tq-group.com>, devicetree@vger.kernel.org, festevam@gmail.com, shawn.guo@freescale.com, p.zabel@pengutronix.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E982558@SHSMSX101.ccr.corp.intel.com>
+Content-Language: en-US
+Content-ID: <E684FAA9DB49924C991BF71905AB9111@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Chen, Alvin" <alvin.chen@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-using LVDS channel 1 on an i.MX53 leads to following error:
+T24gVGh1LCAyMDE0LTA5LTA0IGF0IDEwOjM4ICswMDAwLCBDaGVuLCBBbHZpbiB3cm90ZToNCj4g
+DQo+ID4gPiBTaW5jZSB3ZSBlbmFibGUgdGhpcyBtb2R1bGUgbm90IG9ubHkgc3VwcG9ydCBPRiBk
+ZXZpY2VzLCBidXQgYWxzbyBzdXBwb3J0DQo+ID4gTUZEIGRldmljZXMsIHNvIHdlIHJlbW92ZSBP
+Rl9HUElPIGRlcGVuZGVuYw0KPiA+ID4gRm9yICdQQ0knLCB0aGUgb3JpZ2luYWwgY29kZSBpcyBh
+bHNvIG5vdCBkZXBlbmRlZCBvbiBQQ0ksIGFuZCB0aGlzIHBhdGNoIGFsc28NCj4gPiBub3QsIGRv
+IHlvdSB0aGluayBpdCBpcyBuZWNlc3Nhcnk/DQo+ID4gDQo+ID4gaWYgbm90IFBDSSB0aGVuIHlv
+dSBzaG91bGQgYWRkIHNvbWV0aGluZyBsaWt3ZQ0KPiA+IAkiZGVwZW5kcyBvbiBPRl9HUElPIHx8
+IE1GRCINCj4gPiANCj4gPiBsb29raW5nIGZ1cnRoZXIsIHlvdSBuZWVkIGFsc28gSEFTX0lPTUVN
+IGZvciB0aGluZ3MgbGlrZQ0KPiA+IGRldm1faW9yZW1hcF9yZXNvdXJjZSgpLiBMaW51cywgd291
+bGRuJ3QgaXQgbWFrZSBzZW5zZSB0byBncm91cCB0aGlzIGRyaXZlcg0KPiA+IGFuZCBtYWtlIHRo
+ZSBibG9jayBkZXBlbmQgb24gaXQ/DQo+ID4gDQo+IEkgY2FuIGFkZCAiZGVwZW5kcyBvbiBPRl9H
+UElPIHx8IElOVEVMX1FVQVJLX0kyQ19HUElPX01GRCIsIHNpbmNlIG5vdyB0aGUgTUZEIHBhdGgg
+b25seSBzdXBwb3J0IEludGVsIFF1YXJrLg0KPiANCj4gQW5kcml5LCBob3cgZG8geW91IHRoaW5r
+Pw0KDQpJIHRoaW5rIHdlIGRvbid0IG5lZWQgdGhhdCBkZXBlbmRlbmN5IGF0IGFsbCBzaW5jZSBP
+Rl9HUElPIGhhcyBzdHVicyBmb3INCm5vbi1PRiBjYXNlLiBBbSBJIG1pc3Npbmcgc29tZXRoaW5n
+Pw0KDQpHUElPTElCIGRlcGVuZGVuY3kgaXMgaW1wbGllZCBpbiBLY29uZmlnLCBieSB0aGUgd2F5
+Lg0KDQpQLlMuIFNlZSwgZm9yIGV4YW1wbGUsIGxlZHMtZ3Bpby5jDQoNCj4gDQo+ID4gPiA+ID4g
+IHN0cnVjdCBkd2FwYl9ncGlvIHsNCj4gPiA+ID4gPiAgCXN0cnVjdAlkZXZpY2UJCSpkZXY7DQo+
+ID4gPiA+ID4gIAl2b2lkIF9faW9tZW0JCSpyZWdzOw0KPiA+ID4gPiA+ICAJc3RydWN0IGR3YXBi
+X2dwaW9fcG9ydAkqcG9ydHM7DQo+ID4gPiA+ID4gLQl1bnNpZ25lZCBpbnQJCW5yX3BvcnRzOw0K
+PiA+ID4gPiB5b3UgY291bGQga2VlcCB0aGlzIHRoZSB3YXkgaXQgaXMNCj4gPiA+IEl0IGhhcyBi
+ZWVuIG1vdmVkIHRvICdwZGF0YScuDQo+ID4gDQo+ID4gSSBzYXcgdGhhdC4gQnV0IHRoZXJlIGlz
+IG5vIG5lZWQga2VlcCBhIHBvaW50ZXIgdG8gcGRhdGEgYWNyb3NzIHRoZSB3aG9sZSBkcml2ZXIN
+Cj4gPiBzaW5jZSBvbmx5IG5lZWQgbnJfcG9ydHMgaW4gdGhlIGRyaXZlciByZW1vdmFsIHBhcnQg
+b2YgdGhlIHdob2xlIGRyaXZlci4NCj4gR290IHlvdXIgaWRlYS4gU28gY2FuIEkganVzdCB1c2Ug
+YSBnbG9iYWwgc3RhdGljIHBkYXRhIHBvaW50ZXIgaW5zdGVhZCBvZiBhZGRpbmcgaXQgYXMgYSBt
+ZW1iZXIgb2YgJyBzdHJ1Y3QgZHdhcGJfZ3Bpbyc/DQo+IFNpbmNlIHBkYXRhIGlzIHVzZWQgaW4g
+YWxsICdwcm9iZScgZnVuY3Rpb25zLCBhbmQgbWFrZSBwZGF0YSBhcyBnbG9iYWwgc3RhdGljIG1h
+a2UgcHJvZ3JhbW1pbmcgbW9yZSBlYXN5Lg0KPiANCj4gPiANCj4gPiA+ID4gPiAgCXN0cnVjdCBp
+cnFfZG9tYWluCSpkb21haW47DQo+ID4gPiA+ID4gKwljb25zdCBzdHJ1Y3QgZHdhcGJfZ3Bpb19w
+bGF0Zm9ybV9kYXRhCSpwZGF0YTsNCj4gPiA+ID4NCj4gPiA+ID4gYW5kIG5vdCBtYWtpbmcgdGhp
+cyBhIG1lbWJlciBvZiB0aGlzIHN0cnVjdC4gSSd2ZSBiZWVuIGdvaW5nIHVwIGFuZA0KPiA+ID4g
+PiBkb3duIHRoZSBzb3VyY2UgYW5kIEkgZG9uJ3Qgc2VlIHRoZSBuZWVkIHRvIG1hcnJ5IGR3YXBi
+X2dwaW8gdG8NCj4gPiA+ID4gZHdhcGJfZ3Bpb19wbGF0Zm9ybV9kYXRhLg0KPiA+ID4gPiBUaGF0
+IGR3YXBiX2dwaW9fcG9ydF9wcm9wZXJ0eSB0aGluZyBoYXMgYSBsb25nIG5hbWUuIENvdWxkIHlv
+dSBqdXN0DQo+ID4gPiA+IHNldCBpdCB1cCwgcGFzcyBpdCBmb3IgcmVnaXN0cmF0aW9uIGFuZCB0
+aGUgZnJlZSBpdD8gWW91IGNhbid0IGZyZWUNCj4gPiA+ID4gdGhlIHBkYXRhIGZvciB0aGUgbm9u
+LU9GIHRyZWUgYnV0IGZvciB0aGUgT0YgY2FzZSB5b3Uga2VlcCB0aGF0IHN0cnVjdA0KPiA+IGFy
+b3VuZCBmb3Igbm8gcmVhc29uLg0KPiA+ID4gPiBZb3UgY291bGQgc2FmZSBzb21lIG1lbW9yeSBh
+bmQgdXNlIHBkYXRhIGRpcmVjdGx5IGZvciBzZXR1cC4NCj4gPiA+IEhlcmUsICdwZGF0YScgaXMg
+dXNlZCBmb3IgYm90aCBPRiBhbmQgTUZELiBGb3IgTUZELCAncGRhdGEnIGlzIHBhc3NlZCBmcm9t
+DQo+ID4gTUZELg0KPiA+ID4gRm9yIE9GLCAncGRhdGEnIGlzIGdldHRpbmcgZnJvbSBkZXZpY2Ug
+bm9kZXMgcHJvcGVydGllcy4gV2h5IGRvIHdlDQo+ID4gPiBoYXZlIHN1Y2ggZGVzaWduPyBCZWNh
+dXNlIGl0IGNhbiBtYWtlIHRoZSBoYW5kbGluZyBtb3JlIGVhc3kgZm9yDQo+ID4gPiBmbG93aW5n
+IHJvdXRpbmUuIEFsbCBuZWNlc3NhcnkgcHJvcGVydGllcyBnZXQgZnJvbSAncGRhdGEnLCBuZXZl
+ciBjYXJlIGl0IGlzDQo+ID4gZnJvbSBPRiBvciBNRkQuIEFuZCBzb21lb25lIGFyZSB3b3JraW5n
+IG9uIHJlcGxhY2luZyBPRiBpbnRlcmZhY2Ugd2l0aCBhDQo+ID4gZmlybXdhcmUgYWdub3N0aWMg
+ZGV2aWNlX3Byb3BlcnR5KiBpbnRlcmZhY2Ugd2hpY2ggd2lsbCB3b3JrIHdpdGggYm90aCBPRiBh
+bmQNCj4gPiBBQ1BJLg0KPiA+ID4gTW9yZSBpbmZvcm1hdGlvbiBmb3IgdGhpcyBkZXNpZ24sIHBs
+ZWFzZSBjb250YWN0IERhcnJlbiBIYXJ0DQo+ID4gPGR2aGFydEBsaW51eC5pbnRlbC5jb20+LiBE
+YXJyZW4gSGFydCB3cm90ZSB0byBtZToNCj4gPiA+ICJHZW5lcmFsbHkgc3BlYWtpbmcsIHJhdGhl
+ciB0aGFuIGlmL2Vsc2UgYmxvY2tzIHRocm91Z2hvdXQgdGhlIGNvZGUNCj4gPiA+IGNoZWNraW5n
+IGlmIGl0IGlzIGVudW1lcmF0ZWQgdmlhIG9wZW4gZmlybXdhcmUgb3IgYXMgYSBwbGF0Zm9ybSBk
+ZXZpY2UsIGENCj4gPiBjbGVhbmVyIGFwcHJvYWNoIGlzIHRvIGNoZWNrIGlmIHRoZSBwZGF0YSBp
+cyBudWxsLCBhbmQgaWYgc28sIHBvcHVsYXRlIHRoZSBwZGF0YQ0KPiA+IGZyb20gdGhlIG9wZW4g
+ZmlybXdhcmUgZGVzY3JpcHRpb24gaWYgcHJlc2VudC4NCj4gPiA+IFRoZW4gdXNlIHRoZSBwZGF0
+YSB0aHJvdWdob3V0IHRoZSBkcml2ZXIuDQo+ID4gDQo+ID4gQnV0IGlzbid0IGl0IGVub3VnaCB0
+byBob2xkIG9uIHRvIHRoaXMgcGRhdGEgdGhpbmcgdGhyb3VnaCB0aGUgcHJvYmUgZnVuY3Rpb24N
+Cj4gPiBvbmx5PyBBZnRlciBwcm9iZSBpcyBkb25lIHlvdSBjb3VsZCBkcm9wIHRoYXQgbWVtb3J5
+IGluIHRoZSBPRi1jYXNlLCByaWdodD8NCj4gT0suIElmIGl0IGlzIE9GLWNhc2UsIHBkYXRhIGNh
+biBiZSBmcmVlZCBpbiB0aGUgZW5kIG9mIHByb2JlLg0KPiANCj4gDQo+ID4gPiA+ID4gKwlpcnFf
+c2V0X2hhbmRsZXJfZGF0YShwb3J0LT5wcC0+aXJxLCBncGlvKTsNCj4gPiA+ID4NCj4gPiA+ID4g
+VGhpcyBkb2VzIG5vdCBsb29rIGxpa2UgaXQgYmVsb25ncyBoZXJlLiBJdCBzaG91bGQgb25seSBi
+ZSB1c2VkDQo+ID4gPiA+IHRvZ2V0aGVyIHdpdGgNCj4gPiA+ID4gaXJxX3NldF9jaGFpbmVkX2hh
+bmRsZXIoKSBvciBhbSBJIG1pc3NpbmcgaGVyZSBzb21ldGhpbmc/DQo+ID4gPiBUaGlzIHBhdGNo
+IHJldXNlZCAnIGR3YXBiX2lycV9oYW5kbGVyJywgaXQgbmVlZHMgdGhlIGlycSBoYW5kbGVyIGRh
+dGEuIEZvciAnDQo+ID4gaXJxX3NldF9oYW5kbGVyX2RhdGEnLCBpdCBqdXN0IHNldHMgdGhlIGly
+cSBkYXRhLg0KPiA+ID4gV2h5IGRvIHlvdSB0aGluayBpdCBtdXN0IGJlIHVzZWQgdG9nZXRoZXIg
+d2l0aCAnIGlycV9zZXRfY2hhaW5lZF9oYW5kbGVyJz8NCj4gPiANCj4gPiBiZWNhdXNlIHlvdSBk
+byByZXF1ZXN0X2lycSjigKYsIGRyaXZlcl9kYXRhKS4gSWYgeW91IHlvdSBsb29rIGNsb3NlIHRv
+DQo+ID4gaXJxX3NldF9jaGFpbmVkX2hhbmRsZXIoKSBpdCBkb2VzIG5vdCBoYXZlIHN1Y2ggYSBt
+ZW1iZXIuIFRodXMgaXQgdXNlcw0KPiA+IGlycV9zZXRfaGFuZGxlcl9kYXRhKCkgZm9yIHRoYXQg
+c2FtZSBwdXJwb3NlLg0KPiA+IA0KPiBPSy4gSSBjYW4gaW1wcm92ZSBpdC4NCg0KDQotLSANCkFu
+ZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AaW50ZWwuY29tPg0KSW50ZWwgRmlubGFu
+ZCBPeQ0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tCkludGVsIEZpbmxhbmQgT3kKUmVnaXN0ZXJlZCBBZGRyZXNzOiBQ
+TCAyODEsIDAwMTgxIEhlbHNpbmtpIApCdXNpbmVzcyBJZGVudGl0eSBDb2RlOiAwMzU3NjA2IC0g
+NCAKRG9taWNpbGVkIGluIEhlbHNpbmtpIAoKVGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50
+cyBtYXkgY29udGFpbiBjb25maWRlbnRpYWwgbWF0ZXJpYWwgZm9yCnRoZSBzb2xlIHVzZSBvZiB0
+aGUgaW50ZW5kZWQgcmVjaXBpZW50KHMpLiBBbnkgcmV2aWV3IG9yIGRpc3RyaWJ1dGlvbgpieSBv
+dGhlcnMgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVk
+CnJlY2lwaWVudCwgcGxlYXNlIGNvbnRhY3QgdGhlIHNlbmRlciBhbmQgZGVsZXRlIGFsbCBjb3Bp
+ZXMuCg==
 
-imx-ldb 53fa8008.ldb: unable to set di0 parent clock to ldb_di1
-
-This comes from imx_ldb_set_clock with mux = 0. Mux parameter must be "1" for
-reparenting di1 clock to ldb_di1. The value of the mux param comes from device
-tree port settings.
-
-On i.MX5, the internal two-input-multiplexer is used. Due to hardware limitations,
-only one port (port@[0,1]) can be used for each channel (lvds-channel@[0,1],
-respectively)
-
-Documentation update suggested by Philipp Zabel <p.zabel@pengutronix.de>
-
-Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
----
- Documentation/devicetree/bindings/staging/imx-drm/ldb.txt | 15 +++++++++++++--
- arch/arm/boot/dts/imx53.dtsi                              | 12 ++++++++++--
- 2 files changed, 23 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-index 578a1fc..443bcb6 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-@@ -56,6 +56,9 @@ Required properties:
-  - fsl,data-width : should be <18> or <24>
-  - port: A port node with endpoint definitions as defined in
-    Documentation/devicetree/bindings/media/video-interfaces.txt.
-+   On i.MX5, the internal two-input-multiplexer is used.
-+   Due to hardware limitations, only one port (port@[0,1])
-+   can be used for each channel (lvds-channel@[0,1], respectively)
-    On i.MX6, there should be four ports (port@[0-3]) that correspond
-    to the four LVDS multiplexer inputs.
- 
-@@ -78,6 +81,8 @@ ldb: ldb@53fa8008 {
- 		      "di0", "di1";
- 
- 	lvds-channel@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		reg = <0>;
- 		fsl,data-mapping = "spwg";
- 		fsl,data-width = <24>;
-@@ -86,7 +91,9 @@ ldb: ldb@53fa8008 {
- 			/* ... */
- 		};
- 
--		port {
-+		port@0 {
-+			reg = <0>;
-+
- 			lvds0_in: endpoint {
- 				remote-endpoint = <&ipu_di0_lvds0>;
- 			};
-@@ -94,6 +101,8 @@ ldb: ldb@53fa8008 {
- 	};
- 
- 	lvds-channel@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		reg = <1>;
- 		fsl,data-mapping = "spwg";
- 		fsl,data-width = <24>;
-@@ -102,7 +111,9 @@ ldb: ldb@53fa8008 {
- 			/* ... */
- 		};
- 
--		port {
-+		port@1 {
-+			reg = <1>;
-+
- 			lvds1_in: endpoint {
- 				remote-endpoint = <&ipu_di1_lvds1>;
- 			};
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 6456a00..1a2202d 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -419,10 +419,14 @@
- 				status = "disabled";
- 
- 				lvds-channel@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
- 					reg = <0>;
- 					status = "disabled";
- 
--					port {
-+					port@0 {
-+						reg = <0>;
-+
- 						lvds0_in: endpoint {
- 							remote-endpoint = <&ipu_di0_lvds0>;
- 						};
-@@ -430,10 +434,14 @@
- 				};
- 
- 				lvds-channel@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
- 					reg = <1>;
- 					status = "disabled";
- 
--					port {
-+					port@1 {
-+						reg = <1>;
-+
- 						lvds1_in: endpoint {
- 							remote-endpoint = <&ipu_di1_lvds1>;
- 						};
--- 
-2.1.0
