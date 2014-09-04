@@ -1,29 +1,52 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: Re: [PATCH 3/4] watchdog: add driver for Ricoh RN5T618 watchdog
-Date: Thu, 4 Sep 2014 19:35:01 +0200
-Message-ID: <20140904173501.GA14583@gmail.com>
-References: <1409091237-16722-1-git-send-email-b.galvani@gmail.com>
- <1409091237-16722-4-git-send-email-b.galvani@gmail.com>
- <20140904091917.GA1397@lee--X1>
- <20140904172503.GA25404@roeck-us.net>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 2/3] clk: RK808: Add clkout driver for RK808
+Date: Thu, 4 Sep 2014 10:40:24 -0700
+Message-ID: <20140904174024.GD10224@core.coreip.homeip.net>
+References: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
+ <1409793159-2573-3-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140904172503.GA25404@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Carlo Caione <carlo@caione.org>
+In-Reply-To: <1409793159-2573-3-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 04, 2014 at 10:25:03AM -0700, Guenter Roeck wrote:
-> On Thu, Sep 04, 2014 at 10:19:17AM +0100, Lee Jones wrote:
-> > Wim,
-> > 
-> > Still waiting on a Watchdog Ack, so I can take this set in.
-> > 
-> Wasn't there a more recent version of this patch ?
+Hi Chris,
 
-Yes, this is superseded by v2.
+On Thu, Sep 04, 2014 at 09:12:38AM +0800, Chris Zhong wrote:
+> +	rk808_clkout->clk_data.clks = clk_table;
+> +	rk808_clkout->clk_data.clk_num = RK808_NR_OUTPUT;
+> +
+> +	return of_clk_add_provider(node, of_clk_src_onecell_get,
+> +				   &rk808_clkout->clk_data);
+> +}
+> +
+> +static struct platform_driver rk808_clkout_driver = {
+> +	.probe = rk808_clkout_probe,
+> +	.driver		= {
+> +		.name	= "rk808-clkout",
+> +	},
+> +};
 
-Beniamino
+Shouldn't there also be:
+
+static int rk808_clkout_probe(struct platform_device *pdev)
+{
+	of_clk_del_provider(pdev->dev.of_node);
+
+	/* The rest of resources are managed ones */
+
+	return 0;
+}
+
+Thanks.
+
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
