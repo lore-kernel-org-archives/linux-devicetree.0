@@ -1,115 +1,55 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 3/3] ARM: DTS: AM335x: Drop TSC's wire-config parameters
-Date: Thu,  4 Sep 2014 16:39:15 +0200
-Message-ID: <1409841555-11336-3-git-send-email-bigeasy@linutronix.de>
-References: <1409841555-11336-1-git-send-email-bigeasy@linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1409841555-11336-1-git-send-email-bigeasy@linutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, Jeff Lance <j-lance1@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 3/4] watchdog: st_wdt: Provide binding documentation for ST's LPC Watchdog driver
+Date: Thu,  4 Sep 2014 15:39:50 +0100
+Message-ID: <1409841592-18890-4-git-send-email-lee.jones@linaro.org>
+References: <1409841592-18890-1-git-send-email-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409841592-18890-1-git-send-email-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: lee.jones@linaro.org, kernel@stlinux.com, wim@iguana.be, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, David Paris <david.paris@st.com>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Jeff Lance <j-lance1@ti.com>
-
-The TSC driver is beeing updated, the parameter is not used anymore. Th=
-e
-AIN lines can not be muxed. All boards use the same value.
-This patch updates the Documentation and dts files.
-
-Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
 Cc: devicetree@vger.kernel.org
-Signed-off-by: Jeff Lance <j-lance1@ti.com>
-[bigeasy: split, add .dts files to the removal]
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: David Paris <david.paris@st.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt       | 10 --=
---------
- arch/arm/boot/dts/am335x-evm.dts                               |  1 -
- arch/arm/boot/dts/am335x-evmsk.dts                             |  1 -
- arch/arm/boot/dts/am335x-pepper.dts                            |  1 -
- 4 files changed, 13 deletions(-)
+ .../devicetree/bindings/watchdog/st-lpc-wdt.txt    | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc=
--adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-a=
-dc.txt
-index 878549ba814d..eeaf065563c9 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.tx=
-t
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.tx=
-t
-@@ -15,15 +15,6 @@
- 				Y and 2 for Z (always). This utilises 12
- 				of the 16 software steps available. The
- 				remaining 4 can be used by the ADC.
--	ti,wire-config: Different boards could have a different order for
--			connecting wires on touchscreen. We need to provide an
--			8 bit number where in the 1st four bits represent the
--			analog lines and the next 4 bits represent positive/
--			negative terminal on that input line. Notations to
--			represent the input lines and terminals resoectively
--			is as follows:
--			AIN0 =3D 0, AIN1 =3D 1 and so on till AIN7 =3D 7.
--			XP  =3D 0, XN =3D 1, YP =3D 2, YN =3D 3.
- - child "adc"
- 	ti,adc-channels: List of analog inputs available for ADC.
- 			 AIN0 =3D 0, AIN1 =3D 1 and so on till AIN7 =3D 7.
-@@ -35,7 +26,6 @@
- 			ti,wires =3D <4>;
- 			ti,x-plate-resistance =3D <200>;
- 			ti,coordiante-readouts =3D <5>;
--			ti,wire-config =3D <0x00 0x11 0x22 0x33>;
- 		};
-=20
- 		adc {
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335=
-x-evm.dts
-index e2156a583de7..4c0a5eab5ef2 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -640,7 +640,6 @@
- 		ti,wires =3D <4>;
- 		ti,x-plate-resistance =3D <200>;
- 		ti,coordinate-readouts =3D <5>;
--		ti,wire-config =3D <0x00 0x11 0x22 0x33>;
- 	};
-=20
- 	adc {
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am3=
-35x-evmsk.dts
-index df5fee6b6b4b..88d83b25089a 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -671,7 +671,6 @@
- 		ti,wires =3D <4>;
- 		ti,x-plate-resistance =3D <200>;
- 		ti,coordinate-readouts =3D <5>;
--		ti,wire-config =3D <0x00 0x11 0x22 0x33>;
- 	};
- };
-=20
-diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am=
-335x-pepper.dts
-index 0d35ab64641c..0939ded7eea5 100644
---- a/arch/arm/boot/dts/am335x-pepper.dts
-+++ b/arch/arm/boot/dts/am335x-pepper.dts
-@@ -502,7 +502,6 @@
- 		ti,wires =3D <4>;
- 		ti,x-plate-resistance =3D <200>;
- 		ti,coordinate-readouts =3D <5>;
--		ti,wire-config =3D <0x00 0x11 0x22 0x33>;
- 	};
-=20
- 	adc {
---=20
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
+new file mode 100644
+index 0000000..f0e57ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/st-lpc-wdt.txt
+@@ -0,0 +1,27 @@
++STMicroelectronics LPC Watchdog
++===============================
++
++Required properties
++
++- compatible 	: "st,<soc>-watchdog"
++- reg		: LPC registers base address + range
++- reg-names	: Register map "base" and "syscfg-en" are compulsory "type" is
++		  platform dependent and not required for the STiH407.
++- clock-names 	: Should be "lpc_wdt"
++- clocks	: Clock used by LPC device
++- timeout-sec	: Qatchdog timeout in seconds
++- st,syscfg	: Syscfg node used to configure cpu reset type and mask
++- st,warm_reset	: If present, reset type will be 'warm'. If not, it will be cold
++
++Example:
++	watchdog@fde05000 {
++		compatible	= "st,stih416-lpc-watchdog";
++		reg		= <0xfde05000 0x1000> <0x204 0x4>;
++		reg-names	= "base", "syscfg-en"
++		clock-names	= "lpc_wdt";
++		clocks 		= <&clk_s_d3_flexgen CLK_LPC_0>;
++		timeout-sec	= <600>;
++		st,syscfg	= <&syscfg_core>;
++		st,warm_reset;
++	};
++
+-- 
+1.9.1
