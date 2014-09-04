@@ -1,244 +1,236 @@
 Return-Path: <lee.jones@linaro.org>
-Date: Thu, 4 Sep 2014 10:43:36 +0100
+Date: Thu, 4 Sep 2014 10:28:44 +0100
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 2/3] mfd: Add hi6421 PMIC core driver
-Message-ID: <20140904094336.GD1397@lee--X1>
-References: <1409560115-30646-1-git-send-email-guodong.xu@linaro.org>
- <1409560115-30646-3-git-send-email-guodong.xu@linaro.org>
+Subject: Re: [PATCH v2.1 1/7] Adding Skyworks SKY81452 MFD driver
+Message-ID: <20140904092844.GB1397@lee--X1>
+References: <1409222631-23293-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1409277801-28588-1-git-send-email-jack.yoo@skyworksinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1409560115-30646-3-git-send-email-guodong.xu@linaro.org>
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: sameo@linux.intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, khilman@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhangnian@huawei.com
+In-Reply-To: <1409277801-28588-1-git-send-email-jack.yoo@skyworksinc.com>
+To: Gyungoh Yoo <gyungoh@gmail.com>
+Cc: sameo@linux.intel.com, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, Gyungoh Yoo <jack.yoo@skyworksinc.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, 01 Sep 2014, Guodong Xu wrote:
+You need a nice commit log here.
 
-> This adds driver to support HiSilicon Hi6421 PMIC. Hi6421 includes multi-
-> functions, such as regulators, codec, ADCs, Coulomb counter, etc.
-> This driver includes core APIs _only_.
-> 
-> Drivers for individul components, like voltage regulators, are
-> implemented in corresponding driver directories and files.
-> 
-> Registers in Hi6421 are memory mapped, so using regmap-mmio API.
-> 
-> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+> v2.1:
+> Clear mfd_cells to zero before setting.
+> Added of_compatible into mfd_cells
+
+The changelog should be below the '---' so it doesn't appear in the
+commit log.
+
 > ---
->  drivers/mfd/Kconfig             |  13 +++++
->  drivers/mfd/Makefile            |   1 +
->  drivers/mfd/hi6421-pmic-core.c  | 113 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/hi6421-pmic.h |  41 +++++++++++++++
->  4 files changed, 168 insertions(+)
->  create mode 100644 drivers/mfd/hi6421-pmic-core.c
->  create mode 100644 include/linux/mfd/hi6421-pmic.h
-
-Applied, thanks.
-
+>  drivers/mfd/Kconfig          |  12 +++++
+>  drivers/mfd/Makefile         |   1 +
+>  drivers/mfd/sky81452.c       | 111 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/sky81452.h |  32 +++++++++++++
+>  4 files changed, 156 insertions(+)
+>  create mode 100644 drivers/mfd/sky81452.c
+>  create mode 100644 include/linux/mfd/sky81452.h
+> 
 > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index de5abf2..2de4919 100644
+> index de5abf2..6962b4e 100644
 > --- a/drivers/mfd/Kconfig
 > +++ b/drivers/mfd/Kconfig
-> @@ -210,6 +210,19 @@ config MFD_MC13XXX_I2C
->  	help
->  	  Select this if your MC13xxx is connected via an I2C bus.
+> @@ -626,6 +626,18 @@ config MFD_SM501_GPIO
+>  	 lines on the SM501. The platform data is used to supply the
+>  	 base number for the first GPIO line to register.
 >  
-> +config MFD_HI6421_PMIC
-> +	tristate "HiSilicon Hi6421 PMU/Codec IC"
-> +	depends on OF
+> +config MFD_SKY81452
+> +	tristate "Skyworks Solutions SKY81452"
 > +	select MFD_CORE
-> +	select REGMAP_MMIO
+> +	select REGMAP_I2C
+> +	depends on I2C
 > +	help
-> +	  Add support for HiSilicon Hi6421 PMIC. Hi6421 includes multi-
-> +	  functions, such as regulators, RTC, codec, Coulomb counter, etc.
-> +	  This driver includes core APIs _only_. You have to select
-> +	  individul components like voltage regulators under corresponding
-> +	  menus in order to enable them.
-> +	  We communicate with the Hi6421 via memory-mapped I/O.
+> +	  This is the core driver for the Skyworks SKY81452 backlight and
+> +	  voltage regulator device.
 > +
->  config HTC_EGPIO
->  	bool "HTC EGPIO support"
->  	depends on GPIOLIB && ARM
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called sky81452.
+> +
+>  config MFD_SMSC
+>         bool "SMSC ECE1099 series chips"
+>         depends on I2C=y
 > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index f001487..dc59efd 100644
+> index f001487..6c2f317 100644
 > --- a/drivers/mfd/Makefile
 > +++ b/drivers/mfd/Makefile
 > @@ -169,6 +169,7 @@ obj-$(CONFIG_MFD_AS3711)	+= as3711.o
 >  obj-$(CONFIG_MFD_AS3722)	+= as3722.o
 >  obj-$(CONFIG_MFD_STW481X)	+= stw481x.o
 >  obj-$(CONFIG_MFD_IPAQ_MICRO)	+= ipaq-micro.o
-> +obj-$(CONFIG_MFD_HI6421_PMIC)	+= hi6421-pmic-core.o
+> +obj-$(CONFIG_MFD_SKY81452)		+= sky81452.o
 >  
 >  intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
 >  obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
-> diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-core.c
+> diff --git a/drivers/mfd/sky81452.c b/drivers/mfd/sky81452.c
 > new file mode 100644
-> index 0000000..321a265
+> index 0000000..e91b928
 > --- /dev/null
-> +++ b/drivers/mfd/hi6421-pmic-core.c
-> @@ -0,0 +1,113 @@
+> +++ b/drivers/mfd/sky81452.c
+> @@ -0,0 +1,111 @@
 > +/*
-> + * Device driver for Hi6421 IC
+> + * sky81452.c	SKY81452 MFD driver
 > + *
-> + * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
-> + *              http://www.hisilicon.com
-> + * Copyright (c) <2013-2014> Linaro Ltd.
-> + *              http://www.linaro.org
+> + * Copyright 2014 Skyworks Solutions Inc.
+> + * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
 > + *
-> + * Author: Guodong Xu <guodong.xu@linaro.org>
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; either version 2, or (at your option) any
+> + * later version.
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
+> + * This program is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> + * General Public License for more details.
 > + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
 > + */
 > +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/mfd/core.h>
+> +#include <linux/kernel.h>
 > +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
+> +#include <linux/init.h>
+> +#include <linux/err.h>
+> +#include <linux/slab.h>
+> +#include <linux/i2c.h>
 > +#include <linux/regmap.h>
-> +#include <linux/mfd/hi6421-pmic.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/sky81452.h>
 > +
-> +static const struct mfd_cell hi6421_devs[] = {
-> +	{ .name = "hi6421-regulator", },
-> +};
-> +
-> +static struct regmap_config hi6421_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
+> +static const struct regmap_config sky81452_config = {
+> +	.reg_bits = 8,
 > +	.val_bits = 8,
-> +	.max_register = HI6421_REG_TO_BUS_ADDR(HI6421_REG_MAX),
 > +};
 > +
-> +static int hi6421_pmic_probe(struct platform_device *pdev)
+> +static int sky81452_probe(struct i2c_client *client,
+> +				const struct i2c_device_id *id)
 > +{
-> +	struct hi6421_pmic *pmic;
-> +	struct resource *res;
-> +	void __iomem *base;
+> +	struct device *dev = &client->dev;
+> +	const struct sky81452_platform_data *pdata = dev_get_platdata(dev);
+> +	struct mfd_cell cells[2];
+> +	struct regmap *regmap;
 > +	int ret;
 > +
-> +	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
-> +	if (!pmic)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	pmic->regmap = devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
-> +						 &hi6421_regmap_config);
-> +	if (IS_ERR(pmic->regmap)) {
-> +		dev_err(&pdev->dev,
-> +			"regmap init failed: %ld\n", PTR_ERR(pmic->regmap));
-> +		return PTR_ERR(pmic->regmap);
+> +	if (!pdata) {
+> +		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +		if (!pdata)
+> +			return -ENOMEM;
 > +	}
 > +
-> +	/* set over-current protection debounce 8ms */
-> +	regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
-> +				(HI6421_OCP_DEB_SEL_MASK
-> +				 | HI6421_OCP_EN_DEBOUNCE_MASK
-> +				 | HI6421_OCP_AUTO_STOP_MASK),
-> +				(HI6421_OCP_DEB_SEL_8MS
-> +				 | HI6421_OCP_EN_DEBOUNCE_ENABLE));
-> +
-> +	platform_set_drvdata(pdev, pmic);
-> +
-> +	ret = mfd_add_devices(&pdev->dev, 0, hi6421_devs,
-> +			ARRAY_SIZE(hi6421_devs), NULL, 0, NULL);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
-> +		return ret;
+> +	regmap = devm_regmap_init_i2c(client, &sky81452_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(dev, "failed to initialize I2C:%d", PTR_ERR(regmap));
+
+Put a space before %d, or else it looks like a dodgy I2C address.
+
+> +		return PTR_ERR(regmap);
 > +	}
 > +
-> +	return 0;
+> +	i2c_set_clientdata(client, regmap);
+> +
+> +	memset(cells, 0, sizeof(cells));
+> +	cells[0].name = "sky81452-bl";
+> +	cells[0].of_compatible = "skyworks,sky81452-backlight";
+> +	cells[0].platform_data = pdata->bl_pdata;
+> +	cells[0].pdata_size = sizeof(*pdata->bl_pdata);
+> +	cells[1].name = "sky81452-regulator";
+> +	cells[1].of_compatible = "skyworks,sky81452-regulator";
+> +	cells[1].platform_data = pdata->regulator_init_data;
+> +	cells[1].pdata_size = sizeof(*pdata->regulator_init_data);
+> +
+> +	ret = mfd_add_devices(dev, -1, cells, ARRAY_SIZE(cells), NULL, 0, NULL);
+> +	if (IS_ERR_VALUE(ret))
+
+Just use if (ret).
+
+> +		dev_err(dev, "failed to add child device:%d", ret);
+
+s/device/devices
+
+> +
+> +	return ret;
 > +}
 > +
-> +static int hi6421_pmic_remove(struct platform_device *pdev)
+> +static int sky81452_remove(struct i2c_client *client)
 > +{
-> +	mfd_remove_devices(&pdev->dev);
-> +
+> +	mfd_remove_devices(&client->dev);
 > +	return 0;
 > +}
 > +
-> +static struct of_device_id of_hi6421_pmic_match_tbl[] = {
-> +	{ .compatible = "hisilicon,hi6421-pmic", },
-> +	{ },
+> +static const struct i2c_device_id sky81452_ids[] = {
+> +	{ "sky81452" },
+> +	{ }
 > +};
+> +MODULE_DEVICE_TABLE(i2c, sky81452_ids);
 > +
-> +static struct platform_driver hi6421_pmic_driver = {
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id sky81452_of_match[] = {
+> +	{ .compatible = "skyworks,sky81452", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sky81452_of_match);
+> +#endif
+> +
+> +static struct i2c_driver sky81452_driver = {
 > +	.driver = {
-> +		.name	= "hi6421_pmic",
-> +		.of_match_table = of_hi6421_pmic_match_tbl,
+> +		.name = "sky81452",
+> +		.of_match_table = of_match_ptr(sky81452_of_match),
 > +	},
-> +	.probe	= hi6421_pmic_probe,
-> +	.remove	= hi6421_pmic_remove,
+> +	.probe = sky81452_probe,
+> +	.remove = sky81452_remove,
+> +	.id_table = sky81452_ids,
 > +};
-> +module_platform_driver(hi6421_pmic_driver);
 > +
-> +MODULE_AUTHOR("Guodong Xu <guodong.xu@linaro.org>");
-> +MODULE_DESCRIPTION("Hi6421 PMIC driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421-pmic.h
+> +module_i2c_driver(sky81452_driver);
+> +
+> +MODULE_DESCRIPTION("Skyworks SKY81452 MFD driver");
+> +MODULE_AUTHOR("Gyungoh Yoo <jack.yoo@skyworksinc.com>");
+> +MODULE_LICENSE("GPL");
+> +MODULE_VERSION("1.1");
+> diff --git a/include/linux/mfd/sky81452.h b/include/linux/mfd/sky81452.h
 > new file mode 100644
-> index 0000000..587273e
+> index 0000000..142f762
 > --- /dev/null
-> +++ b/include/linux/mfd/hi6421-pmic.h
-> @@ -0,0 +1,41 @@
+> +++ b/include/linux/mfd/sky81452.h
+> @@ -0,0 +1,32 @@
 > +/*
-> + * Header file for device driver Hi6421 PMIC
+> + * sky81452.h	SKY81452 MFD driver
 > + *
-> + * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
-> + *              http://www.hisilicon.com
-> + * Copyright (c) <2013-2014> Linaro Ltd.
-> + *              http://www.linaro.org
+> + * Copyright 2014 Skyworks Solutions Inc.
+> + * Author : Gyungoh Yoo <jack.yoo@skyworksinc.com>
 > + *
-> + * Author: Guodong Xu <guodong.xu@linaro.org>
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; either version 2, or (at your option) any
+> + * later version.
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * This program is distributed in the hope that it will be useful, but
+> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> + * General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
 > + */
 > +
-> +#ifndef	__HI6421_PMIC_H
-> +#define	__HI6421_PMIC_H
+> +#ifndef _SKY81452_H
+> +#define _SKY81452_H
 > +
-> +/* Hi6421 registers are mapped to memory bus in 4 bytes stride */
-> +#define HI6421_REG_TO_BUS_ADDR(x)	(x << 2)
+> +#include <linux/sky81452-backlight.h>
+> +#include <linux/regulator/machine.h>
 > +
-> +/* Hi6421 maximum register number */
-> +#define HI6421_REG_MAX			0xFF
-> +
-> +/* Hi6421 OCP (over current protection) and DEB (debounce) control register */
-> +#define	HI6421_OCP_DEB_CTRL_REG		HI6421_REG_TO_BUS_ADDR(0x51)
-> +#define	HI6421_OCP_DEB_SEL_MASK		0x0C
-> +#define HI6421_OCP_DEB_SEL_8MS		0x00
-> +#define HI6421_OCP_DEB_SEL_16MS		0x04
-> +#define HI6421_OCP_DEB_SEL_32MS		0x08
-> +#define HI6421_OCP_DEB_SEL_64MS		0x0C
-> +#define HI6421_OCP_EN_DEBOUNCE_MASK	0x02
-> +#define HI6421_OCP_EN_DEBOUNCE_ENABLE	0x02
-> +#define HI6421_OCP_AUTO_STOP_MASK	0x01
-> +#define HI6421_OCP_AUTO_STOP_ENABLE	0x01
-> +
-> +struct hi6421_pmic {
-> +	struct regmap		*regmap;
+> +struct sky81452_platform_data {
+> +	struct sky81452_bl_platform_data *bl_pdata;
+> +	struct regulator_init_data *regulator_init_data;
 > +};
 > +
-> +#endif		/* __HI6421_PMIC_H */
+> +#endif
 
 -- 
 Lee Jones
