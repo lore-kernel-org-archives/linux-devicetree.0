@@ -1,35 +1,107 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH] ARM: STi: DT: STiH407: Fix: clk-tmds-hdmi clock is missing
-Date: Thu,  4 Sep 2014 14:59:38 +0200
-Message-ID: <1409835579-23541-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH] ARM: STi: DT: STiH407: Add all defines for STiH407 DT clocks
+Date: Thu,  4 Sep 2014 14:59:39 +0200
+Message-ID: <1409835579-23541-2-git-send-email-gabriel.fernandez@linaro.org>
+References: <1409835579-23541-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409835579-23541-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, olof@lixom.net
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/stih407-clock.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch adds all clock defines for clockgen C0,D0,D2 and D3
 
-diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
-index b4318e1..d8488c0 100644
---- a/arch/arm/boot/dts/stih407-clock.dtsi
-+++ b/arch/arm/boot/dts/stih407-clock.dtsi
-@@ -272,7 +272,7 @@
- 						     "clk-pix-dvo",
- 						     "clk-dvo",
- 						     "clk-pix-hdmi",
--						     "",
-+						     "clk-tmds-hdmi",
- 						     "clk-ref-hdmiphy";
- 						     };
- 		};
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ include/dt-bindings/clock/stih407-clks.h | 75 ++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+
+diff --git a/include/dt-bindings/clock/stih407-clks.h b/include/dt-bindings/clock/stih407-clks.h
+index 1f9bfe0..7af2b71 100644
+--- a/include/dt-bindings/clock/stih407-clks.h
++++ b/include/dt-bindings/clock/stih407-clks.h
+@@ -6,6 +6,81 @@
+ #define _DT_BINDINGS_CLK_STIH407
+ 
+ /* CLOCKGEN C0 */
++#define CLK_ICN_GPU		0
++#define CLK_FDMA		1
++#define CLK_NAND		2
++#define CLK_HVA			3
++#define CLK_PROC_STFE		4
++#define CLK_PROC_TP		5
++#define CLK_RX_ICN_DMU		6
++#define CLK_RX_ICN_DISP_0	6
++#define CLK_RX_ICN_DISP_1	6
++#define CLK_RX_ICN_HVA		7
++#define CLK_RX_ICN_TS		7
++#define CLK_ICN_CPU		8
++#define CLK_TX_ICN_DMU		9
++#define CLK_TX_ICN_HVA		9
++#define CLK_TX_ICN_TS		9
++#define CLK_ICN_COMPO		9
++#define CLK_MMC_0		10
++#define CLK_MMC_1		11
++#define CLK_JPEGDEC		12
++#define CLK_ICN_REG		13
++#define CLK_TRACE_A9		13
++#define CLK_PTI_STM		13
+ #define CLK_EXT2F_A9		13
++#define CLK_IC_BDISP_0		14
++#define CLK_IC_BDISP_1		15
++#define CLK_PP_DMU		16
++#define CLK_VID_DMU		17
++#define CLK_DSS_LPC		18
++#define CLK_ST231_AUD_0		19
++#define CLK_ST231_GP_0		19
++#define CLK_ST231_GP_1		20
++#define CLK_ST231_DMU		21
++#define CLK_ICN_LMI		22
++#define CLK_TX_ICN_DISP_0	23
++#define CLK_TX_ICN_DISP_1	23
++#define CLK_ICN_SBC		24
++#define CLK_STFE_FRC2		25
++#define CLK_ETH_PHY		26
++#define CLK_ETH_REF_PHYCLK	27
++#define CLK_FLASH_PROMIP	28
++#define CLK_MAIN_DISP		29
++#define CLK_AUX_DISP		30
++#define CLK_COMPO_DVP		31
+ 
++/* CLOCKGEN D0 */
++#define CLK_PCM_0		0
++#define CLK_PCM_1		1
++#define CLK_PCM_2		2
++#define CLK_SPDIFF		3
++
++/* CLOCKGEN D2 */
++#define CLK_PIX_MAIN_DISP	0
++#define CLK_PIX_PIP		1
++#define CLK_PIX_GDP1		2
++#define CLK_PIX_GDP2		3
++#define CLK_PIX_GDP3		4
++#define CLK_PIX_GDP4		5
++#define CLK_PIX_AUX_DISP	6
++#define CLK_DENC		7
++#define CLK_PIX_HDDAC		8
++#define CLK_HDDAC		9
++#define CLK_SDDAC		10
++#define CLK_PIX_DVO		11
++#define CLK_DVO			12
++#define CLK_PIX_HDMI		13
++#define CLK_TMDS_HDMI		14
++#define CLK_REF_HDMIPHY		15
++
++/* CLOCKGEN D3 */
++#define CLK_STFE_FRC1		0
++#define CLK_TSOUT_0		1
++#define CLK_TSOUT_1		2
++#define CLK_MCHI		3
++#define CLK_VSENS_COMPO		4
++#define CLK_FRC1_REMOTE		5
++#define CLK_LPC_0		6
++#define CLK_LPC_1		7
+ #endif
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
