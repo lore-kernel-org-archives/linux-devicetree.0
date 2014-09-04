@@ -1,67 +1,117 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v2 2/3] clocksource: sh_mtu2: Document r7s72100 binding
-Date: Thu,  4 Sep 2014 09:55:20 +0900
-Message-ID: <1409792121-28912-3-git-send-email-horms+renesas@verge.net.au>
-References: <1409792121-28912-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409792121-28912-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms+renesas@verge.net.au>
+From: Hsin-Hsiang Tseng <hsinhsiangtseng@gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from DT
+Date: Thu, 4 Sep 2014 08:59:42 +0800
+Message-ID: <CAC1bqKjV1kEb2vL=Vo_tO9XqPh11OdPGwpUooETnK0yXOYw6SQ@mail.gmail.com>
+References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
+	<CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
+	<5406D942.4080405@intel.com>
+	<CAPDyKFrnF4biUGkLgkzz2RNdY1yLp2_bfvoWMM55yx-_TG6ENw@mail.gmail.com>
+	<CAL8zT=j0TfC=RaA5L+Zm3ACk=D57tb+k6HNrQnSjd4JY_iupCQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAL8zT=j0TfC=RaA5L+Zm3ACk=D57tb+k6HNrQnSjd4JY_iupCQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <b29396@freescale.com>, Peter Griffin <peter.griffin@linaro.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, h80.chung@samsung.com, Chris Ball <chris@printf.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-In general Renesas hardware is not documented to the extent
-where the relationship between IP blocks on different SoCs can be assumed
-although they may appear to operate the same way. Furthermore the
-documentation typically does not specify a version for individual
-IP blocks. For these reasons a convention of using the SoC name in place
-of a version and providing SoC-specific compat strings has been adopted.
+Hi, Jean-Michel
+Some platforms which using Samsung exynos SoC, we write u-boot related
+bin files in boot partitions(in my case boot partition 1) to boot on
+eMMC.
+Some platforms which using Qualcomm SoC, written at logical address
+0(User Data Area) and they use a-boot not u-boot.
+BTW, rpmb partition is not wide use now. As i know, some Intel
+platforms have use rpmb partition.
 
-Although not universally liked this convention is used in the bindings
-for a number of drivers for Renesas hardware. The purpose of this patch is
-to update the Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2) driver
-to follow this convention.
+Thanks,
+Hsinhsiang
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
----
-* I plan to follow up with a patch patch to use the new binding in the
-  dtsi files for the r7s72100 SoC.
-
-v2
-* Suggestions by Mark Rutland and Sergei Shtylyov
-  - Compatible strings should be "one or more" not "one" of those listed
-  - Describe the generic binding as covering any MTU2 device
-  - Re-order compat strings from most to least specific
----
- Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-index 917453f..defe2a1 100644
---- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-@@ -8,7 +8,9 @@ are independent. The MTU2 hardware supports five channels indexed from 0 to 4.
- 
- Required Properties:
- 
--  - compatible: must contain "renesas,mtu2"
-+  - compatible: must be one or more of the following:
-+    - "renesas,mtu2-r7s72100" for R7S72100 MTU2
-+    - "renesas,mtu2" for any MTU2
- 
-   - reg: base address and length of the registers block for the timer module.
- 
-@@ -26,7 +28,7 @@ Required Properties:
- Example: R7S72100 (RZ/A1H) MTU2 node
- 
- 	mtu2: timer@fcff0000 {
--		compatible = "renesas,mtu2";
-+		compatible = "renesas,mtu2-r7s72100", "renesas,mtu2";
- 		reg = <0xfcff0000 0x400>;
- 		interrupts = <0 139 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 146 IRQ_TYPE_LEVEL_HIGH>,
--- 
-2.0.1
-
+2014-09-03 21:08 GMT+08:00 Jean-Michel Hautbois
+<jean-michel.hautbois@vodalys.com>:
+> 2014-09-03 11:09 GMT+02:00 Ulf Hansson <ulf.hansson@linaro.org>:
+>> On 3 September 2014 11:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>> On 09/03/2014 11:30 AM, Ulf Hansson wrote:
+>>>> On 2 September 2014 17:49, Jean-Michel Hautbois
+>>>> <jean-michel.hautbois@vodalys.com> wrote:
+>>>>> This property is useful when we don't want to access boot partitions on eMMC
+>>>>>
+>>>>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
+>>>>>  drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
+>>>>>  include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
+>>>>>  3 files changed, 10 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+>>>>> index 431716e..59cc854 100644
+>>>>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+>>>>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+>>>>> @@ -40,6 +40,7 @@ Optional properties:
+>>>>>  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
+>>>>>  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
+>>>>>  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
+>>>>> +- no-boot-part : when preset, tells to access boot partitions
+>>>>>
+>>>>>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>>>>>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
+>>>>> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+>>>>> index ccec0e3..439e663 100644
+>>>>> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+>>>>> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+>>>>> @@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
+>>>>>         if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
+>>>>>                 boarddata->delay_line = 0;
+>>>>>
+>>>>> +       if (of_find_property(np, "no-boot-part", NULL))
+>>>>> +               boarddata->access_boot_part = false;
+>>>>> +       else
+>>>>> +               boarddata->access_boot_part = true;
+>>>>> +
+>>>>>         return 0;
+>>>>>  }
+>>>>>  #else
+>>>>> @@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
+>>>>>                 host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
+>>>>>         }
+>>>>>
+>>>>> +       if (!boarddata->access_boot_part)
+>>>>> +               host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
+>>>>> +
+>>>>
+>>>> Hmm, I don't think MMC_CAP2_BOOTPART_NOACC should have a DT binding.
+>>>> Does it describe the hardware in some form?
+>>>>
+>>>> Actually I would like to question why MMC_CAP2_BOOTPART_NOACC exists
+>>>> at all. If there are cards that don't supports the BOOT area,
+>>>> shouldn't we have a card quirk for it instead of a host cap? Maybe
+>>>> Adrian Hunter, how originally wrote the patch for adding
+>>>> MMC_CAP2_BOOTPART_NOACC, could help me understand the reasons behind
+>>>> it!?
+>>>
+>>> It was added because platform firmware was able to prevent access to the
+>>> boot partitions (for security I think), so attempts to access them would
+>>> fail messily.  It was not related to any specific card.
+>>
+>> Adrian, appreciate your clarification. After all it seems like adding
+>> a DT binding for it should be appropriate.
+>>
+>> Kind regards
+>> Uffe
+>
+> Thanks Adrian :).
+> Well, there is boot partitions and rpmb partition, and maybe should we
+> have a binding to prevent access to both of them ?
+> Something else came to my mind, when you want to boot on eMMC, do you
+> need to write u-boot in boot partitions or is it written at the
+> logical adress 0 which is what fdisk uses as start ?
+> Because, if this is not usuable but just scanned I can't see why we
+> bother doing it... ?
+>
+> Thanks,
+> JM
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
