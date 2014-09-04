@@ -1,135 +1,67 @@
-From: Markus Niebel <list-09_linux_arm@tqsc.de>
-Subject: [PATCH] ARM: DT: imx53: fix lvds channel 1 port
-Date: Thu,  4 Sep 2014 18:43:05 +0200
-Message-ID: <1409848985-16140-1-git-send-email-list-09_linux_arm@tqsc.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] GPIO: gpio-dwapb: Suspend & Resume PM enabling
+Date: Thu, 4 Sep 2014 18:45:02 +0200
+Message-ID: <CACRpkdZJSf+EfYN=hHxRnpjQZGuqroBL0c+08Ng=dRkS0GZySA@mail.gmail.com>
+References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
+	<1409161588-19417-4-git-send-email-alvin.chen@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Markus Niebel <Markus.Niebel@tq-group.com>, devicetree@vger.kernel.org, festevam@gmail.com, shawn.guo@freescale.com, p.zabel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409161588-19417-4-git-send-email-alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boon Leong Ong <boon.leong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andriy Shevchenko <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mika Westerberg <mika.westerberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hock Leong Kweh <hock.leong.kweh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Niebel <Markus.Niebel@tq-group.com>
+On Wed, Aug 27, 2014 at 7:46 PM, Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
 
-using LVDS channel 1 on an i.MX53 leads to following error:
+> This patch enables suspend and resume mode for the power management, and
+> it is based on Josef Ahmad's previous work.
+>
+> Reviewed-by: Hock Leong Kweh <hock.leong.kweh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Shevchenko, Andriy <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-imx-ldb 53fa8008.ldb: unable to set di0 parent clock to ldb_di1
+(...)
 
-This comes from imx_ldb_set_clock with mux = 0. Mux parameter must be "1" for
-reparenting di1 clock to ldb_di1. The value of the mux param comes from device
-tree port settings.
+> +#if defined CONFIG_PM_SLEEP
 
-On i.MX5, the internal two-input-multiplexer is used. Due to hardware limitations,
-only one port (port@[0,1]) can be used for each channel (lvds-channel@[0,1],
-respectively)
+I wonder whether it's worth #ifdef:in out such things, it clutters
+the place.
 
-Documentation update suggested by Philipp Zabel <p.zabel@pengutronix.de>
+> +/* Store GPIO context across system-wide suspend/resume transitions */
+> +static struct gpio_saved_regs {
 
-Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
----
- Documentation/devicetree/bindings/staging/imx-drm/ldb.txt | 15 +++++++++++++--
- arch/arm/boot/dts/imx53.dtsi                              | 12 ++++++++++--
- 2 files changed, 23 insertions(+), 4 deletions(-)
+Call the struct:
 
-diff --git a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-index 578a1fc..443bcb6 100644
---- a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-+++ b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
-@@ -56,6 +56,9 @@ Required properties:
-  - fsl,data-width : should be <18> or <24>
-  - port: A port node with endpoint definitions as defined in
-    Documentation/devicetree/bindings/media/video-interfaces.txt.
-+   On i.MX5, the internal two-input-multiplexer is used.
-+   Due to hardware limitations, only one port (port@[0,1])
-+   can be used for each channel (lvds-channel@[0,1], respectively)
-    On i.MX6, there should be four ports (port@[0-3]) that correspond
-    to the four LVDS multiplexer inputs.
- 
-@@ -78,6 +81,8 @@ ldb: ldb@53fa8008 {
- 		      "di0", "di1";
- 
- 	lvds-channel@0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		reg = <0>;
- 		fsl,data-mapping = "spwg";
- 		fsl,data-width = <24>;
-@@ -86,7 +91,9 @@ ldb: ldb@53fa8008 {
- 			/* ... */
- 		};
- 
--		port {
-+		port@0 {
-+			reg = <0>;
-+
- 			lvds0_in: endpoint {
- 				remote-endpoint = <&ipu_di0_lvds0>;
- 			};
-@@ -94,6 +101,8 @@ ldb: ldb@53fa8008 {
- 	};
- 
- 	lvds-channel@1 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 		reg = <1>;
- 		fsl,data-mapping = "spwg";
- 		fsl,data-width = <24>;
-@@ -102,7 +111,9 @@ ldb: ldb@53fa8008 {
- 			/* ... */
- 		};
- 
--		port {
-+		port@1 {
-+			reg = <1>;
-+
- 			lvds1_in: endpoint {
- 				remote-endpoint = <&ipu_di1_lvds1>;
- 			};
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 6456a00..1a2202d 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -419,10 +419,14 @@
- 				status = "disabled";
- 
- 				lvds-channel@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
- 					reg = <0>;
- 					status = "disabled";
- 
--					port {
-+					port@0 {
-+						reg = <0>;
-+
- 						lvds0_in: endpoint {
- 							remote-endpoint = <&ipu_di0_lvds0>;
- 						};
-@@ -430,10 +434,14 @@
- 				};
- 
- 				lvds-channel@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
- 					reg = <1>;
- 					status = "disabled";
- 
--					port {
-+					port@1 {
-+						reg = <1>;
-+
- 						lvds1_in: endpoint {
- 							remote-endpoint = <&ipu_di1_lvds1>;
- 						};
--- 
-2.1.0
+struct dwapb_context
+
+because that is easier to understand.
+
+> +       unsigned long data;
+> +       unsigned long dir;
+> +       unsigned long int_en;
+> +       unsigned long int_mask;
+> +       unsigned long int_type;
+> +       unsigned long int_pol;
+> +       unsigned long int_deb;
+> +} saved_regs;
+
+Singleton huh?
+
+Insert this into the dynamically allocated per-port or chip struct
+instead.
+
++       dwapb_write(gpio, GPIO_SWPORTA_DR, saved_regs.data);
++       dwapb_write(gpio, GPIO_SWPORTA_DDR, saved_regs.dir);
+
+And port B, C, D?
+
+This looks like a crude hack.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
