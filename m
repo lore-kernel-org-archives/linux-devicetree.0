@@ -1,93 +1,41 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 06/12] clk: mmp: add mmp private gate clock
-Date: Thu, 4 Sep 2014 12:16:09 +0800
-Message-ID: <CAGb2v65NbK+WT0dVsr6sMkFG0wwPXeFanyp17PdvqG0AGJ1DPg@mail.gmail.com>
-References: <1409027904-21859-1-git-send-email-chao.xie@marvell.com>
- <1409027904-21859-7-git-send-email-chao.xie@marvell.com> <20140903175537.11368.98589@quantum>
- <479e7ccf.16dee.1483ed3a882.Coremail.xiechao_mail@163.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v9 1/3] RTC: RK808: add RTC driver for RK808
+Date: Wed, 3 Sep 2014 21:18:42 -0700
+Message-ID: <CAD=FV=U8XK945vJTnsY8FG3+WasOrMnoCYOF+b360HTyXVccfw@mail.gmail.com>
+References: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
+	<1409793159-2573-2-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <479e7ccf.16dee.1483ed3a882.Coremail.xiechao_mail-9Onoh4P/yGk@public.gmane.org>
+In-Reply-To: <1409793159-2573-2-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chao Xie <xiechao_mail-9Onoh4P/yGk@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 4, 2014 at 12:02 PM, Chao Xie <xiechao_mail-9Onoh4P/yGk@public.gmane.org> wrote:
->
->
-> At 2014-09-04 01:55:37, "Mike Turquette" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>Quoting Chao Xie (2014-08-25 21:38:18)
->>> From: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->>>
->>> Some SOCes have this kind of the gate clock
->>> 1. There are some bits to control the gate not only one bit.
->>> 2. Some clocks has operations of "out of reset" and "enable".
->>>    To enable clock, we need do "out of reset" and "enable".
->>>    To disable clock, we may not need "set to reset". It depends
->>>    on the SOCes' design.
->>
->>Are there any other IP blocks affected by the "out of reset" and "set to
->>reset" states? I wonder if you might benefit from the reset controller
->>framework?  For example see,
->>
->>drivers/clk/qcom/gcc-apq8084.c
->>
->><snip>
->
->>
-> Thanks to point it out.
-> To use the reset framework, there are some problem.
-> 1. the reset bit is combined with the clocks disable/enable bits in same register. Seperating setting them means spinlock
-> protection and 2 operations for read-update the bits.
->
->
-> except that, i think reset framework can bring some benefits.
+Chris,
 
-Check out the sunxi gates clk
-(drivers/clk/sunxi/clk-sunxi.c:sunxi_gates_clk_setup())
-In particular, the usb gate clk, which has gates and reset controls
-in the same register. The driver registers separate clk gates and reset
-controls for each bit, but uses the same spinlock for all bits.
+On Wed, Sep 3, 2014 at 6:12 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Adding RTC driver for supporting RTC device present inside RK808 PMIC.
+>
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
 
-ChenYu
+> +       rk808_rtc->irq = platform_get_irq(pdev, 0);
+> +       if (rk808_rtc->irq < 0) {
+> +               dev_err(&pdev->dev, "Wake up is not possible as irq = %d\n",
+> +                       rk808_rtc->irq);
 
-> Even without the reset bit, we still need the gate clocks.
-> The enable/disable is not a bit operation, and it is bits operation for some devices.
-> In fact i want to use it to replace the old clk-apbc and clk-apmu clocks.
->
->>> +static int mmp_clk_gate_enable(struct clk_hw *hw)
->>> +{
->>> +       struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
->>> +       struct clk *clk = hw->clk;
->>> +       unsigned long flags = 0;
->>> +       unsigned long rate;
->>> +       u32 tmp;
->>> +
->>> +       if (gate->lock)
->>> +               spin_lock_irqsave(gate->lock, flags);
->>> +
->>> +       tmp = readl(gate->reg);
->>> +       tmp &= ~gate->mask;
->>> +       tmp |= gate->val_enable;
->>> +       writel(tmp, gate->reg);
->>> +
->>> +       if (gate->lock)
->>> +               spin_unlock_irqrestore(gate->lock, flags);
->>> +
->>> +       if (gate->flags & MMP_CLK_GATE_NEED_DELAY) {
->>> +               rate = __clk_get_rate(clk);
->>> +               /* Need delay 2 cycles. */
->>> +               udelay(2000000/rate);
->>
->>How long are these delays? Long enough to warrant using clk_prepare
->>instead of clk_enable? Are these clocks enabled from interrupt context?
->
->>
-> For power optimization, some clocks need to be enabled/disable in interrupt context.
-> The worst delay is rate=32KHZ, so the delay is 62.5us.
+Technically you shouldn't print the error if it's -EPROBE_DEFER.
+...but I think that's really unlikely here (I can't imagine any real
+cases where the interrupt parent for RK808 would actually be deferred)
+so I won't push it.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
