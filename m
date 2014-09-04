@@ -1,100 +1,44 @@
-Return-Path: <glikely@secretlab.ca>
+Return-Path: <lee.jones@linaro.org>
+Date: Thu, 4 Sep 2014 10:39:44 +0100
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
+Message-ID: <20140904093944.GC1397@lee--X1>
+References: <1409029109-28769-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1409029109-28769-3-git-send-email-bjorn.andersson@sonymobile.com>
 MIME-Version: 1.0
-Sender: glikely@secretlab.ca
-In-Reply-To: <20140925235322.GW1193@ld-irv-0074>
-References: <1409767603-3290-1-git-send-email-computersforpeace@gmail.com>
-	<20140908104238.C7B3DC40AB2@trevor.secretlab.ca>
-	<20140925235322.GW1193@ld-irv-0074>
-Date: Sun, 28 Sep 2014 09:55:32 +0100
-Message-ID: <CACxGe6s0eQS3Cfq7BwHcDZwpJCgt-X8Yc-1-4KPuA6n6Y-n4rQ@mail.gmail.com>
-Subject: Re: [PATCH] of: correct of_console_check()'s return value
-From: Grant Likely <grant.likely@linaro.org>
-Content-Type: multipart/alternative; boundary=047d7bacbe6a151d0505041c5089
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1409029109-28769-3-git-send-email-bjorn.andersson@sonymobile.com>
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---047d7bacbe6a151d0505041c5089
-Content-Type: text/plain; charset=ISO-8859-1
+On Mon, 25 Aug 2014, Bjorn Andersson wrote:
 
-It got merged into mainline on Thursday.
+> Driver for the Resource Power Manager (RPM) found in Qualcomm 8660, 8960
+> and 8064 based devices. The driver exposes resources that child drivers
+> can operate on; to implementing regulator, clock and bus frequency
+> drivers.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>  drivers/mfd/Kconfig          |   14 +
+>  drivers/mfd/Makefile         |    1 +
+>  drivers/mfd/qcom_rpm.c       |  580 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/qcom_rpm.h |   10 +
+>  4 files changed, 605 insertions(+)
+>  create mode 100644 drivers/mfd/qcom_rpm.c
+>  create mode 100644 include/linux/mfd/qcom_rpm.h
 
-g.
-On 26 Sep 2014 00:53, "Brian Norris" <computersforpeace@gmail.com> wrote:
+I'd like to take this in with the other MFD patch.
 
-> Hi Grant,
->
-> On Mon, Sep 08, 2014 at 11:42:38AM +0100, Grant Likely wrote:
-> > On Wed,  3 Sep 2014 11:06:43 -0700, Brian Norris <
-> computersforpeace@gmail.com> wrote:
-> > > The comments above of_console_check() say that it will return TRUE if
-> it
-> > > registers a preferred console, but add_preferred_console() uses a
-> > > 0-equals-success convention, so ths leaves of_console_check() with an
-> > > inconsistent policy for its return values.
-> > >
-> > > Fortunately, nobody was actually checking the return value of
-> > > of_console_check(), so this isn't significant at the moment.
-> > >
-> > > But let's match the comments, so we're doing what we say.
-> > >
-> > > Fixes: 3482f2c52b77 ('of: Create of_console_check() for selecting a
-> console specified in /chosen')
-> > > Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-> > > Cc: Grant Likely <grant.likely@linaro.org>
-> >
-> > Good catch. Applied, thanks.
->
-> Applied to what? I don't see it in linux-next.
->
-> Regards,
-> Brian
->
+Is the regulator one okay to go in on it's own?
 
---047d7bacbe6a151d0505041c5089
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-<p dir=3D"ltr">It got merged into mainline on Thursday.</p>
-<p dir=3D"ltr">g.</p>
-<div class=3D"gmail_quote">On 26 Sep 2014 00:53, &quot;Brian Norris&quot; &=
-lt;<a href=3D"mailto:computersforpeace@gmail.com">computersforpeace@gmail.c=
-om</a>&gt; wrote:<br type=3D"attribution"><blockquote class=3D"gmail_quote"=
- style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi=
- Grant,<br>
-<br>
-On Mon, Sep 08, 2014 at 11:42:38AM +0100, Grant Likely wrote:<br>
-&gt; On Wed,=A0 3 Sep 2014 11:06:43 -0700, Brian Norris &lt;<a href=3D"mail=
-to:computersforpeace@gmail.com">computersforpeace@gmail.com</a>&gt; wrote:<=
-br>
-&gt; &gt; The comments above of_console_check() say that it will return TRU=
-E if it<br>
-&gt; &gt; registers a preferred console, but add_preferred_console() uses a=
-<br>
-&gt; &gt; 0-equals-success convention, so ths leaves of_console_check() wit=
-h an<br>
-&gt; &gt; inconsistent policy for its return values.<br>
-&gt; &gt;<br>
-&gt; &gt; Fortunately, nobody was actually checking the return value of<br>
-&gt; &gt; of_console_check(), so this isn&#39;t significant at the moment.<=
-br>
-&gt; &gt;<br>
-&gt; &gt; But let&#39;s match the comments, so we&#39;re doing what we say.=
-<br>
-&gt; &gt;<br>
-&gt; &gt; Fixes: 3482f2c52b77 (&#39;of: Create of_console_check() for selec=
-ting a console specified in /chosen&#39;)<br>
-&gt; &gt; Signed-off-by: Brian Norris &lt;<a href=3D"mailto:computersforpea=
-ce@gmail.com">computersforpeace@gmail.com</a>&gt;<br>
-&gt; &gt; Cc: Grant Likely &lt;<a href=3D"mailto:grant.likely@linaro.org">g=
-rant.likely@linaro.org</a>&gt;<br>
-&gt;<br>
-&gt; Good catch. Applied, thanks.<br>
-<br>
-Applied to what? I don&#39;t see it in linux-next.<br>
-<br>
-Regards,<br>
-Brian<br>
-</blockquote></div>
-
---047d7bacbe6a151d0505041c5089--
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
