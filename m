@@ -1,123 +1,529 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 1/3] GPIO: gpio-dwapb: Enable platform driver binding to
- MFD driver
-Date: Thu, 4 Sep 2014 02:00:03 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E982384@SHSMSX101.ccr.corp.intel.com>
-References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
- <1409161588-19417-2-git-send-email-alvin.chen@intel.com>
- <20140903200302.GA7673@breakpoint.cc>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20140903200302.GA7673@breakpoint.cc>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v9 1/3] RTC: RK808: add RTC driver for RK808
+Date: Thu,  4 Sep 2014 09:12:37 +0800
+Message-ID: <1409793159-2573-2-git-send-email-zyw@rock-chips.com>
+References: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dianders@chromium.org, heiko@sntech.de
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, lgirdwood@gmail.com, a.zummo@towertech.it, mturquette@linaro.org, akpm@linux-foundation.org, broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, grant.likely@linaro.org, hl@rock-chips.com, huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, xxx@rock-chips.com, olof@lixom.net, sonnyrao@chromium.org, dtor@chromium.org, javier.martinez@collabora.co.uk, kever.yang@rock-chips.com, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-PiANCj4gPiAtLS0gYS9kcml2ZXJzL2dwaW8vS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvZ3Bp
-by9LY29uZmlnDQo+ID4gQEAgLTEzNiw3ICsxMzYsNiBAQCBjb25maWcgR1BJT19EV0FQQg0KPiA+
-ICAJdHJpc3RhdGUgIlN5bm9wc3lzIERlc2lnbldhcmUgQVBCIEdQSU8gZHJpdmVyIg0KPiA+ICAJ
-c2VsZWN0IEdQSU9fR0VORVJJQw0KPiA+ICAJc2VsZWN0IEdFTkVSSUNfSVJRX0NISVANCj4gPiAt
-CWRlcGVuZHMgb24gT0ZfR1BJTw0KPiB5b3UgbmVlZCBlaXRoZXIgT0ZfR1BJTyBvciBQQ0kNClNp
-bmNlIHdlIGVuYWJsZSB0aGlzIG1vZHVsZSBub3Qgb25seSBzdXBwb3J0IE9GIGRldmljZXMsIGJ1
-dCBhbHNvIHN1cHBvcnQgTUZEIGRldmljZXMsIHNvIHdlIHJlbW92ZSBPRl9HUElPIGRlcGVuZGVu
-Y3kuDQpGb3IgJ1BDSScsIHRoZSBvcmlnaW5hbCBjb2RlIGlzIGFsc28gbm90IGRlcGVuZGVkIG9u
-IFBDSSwgYW5kIHRoaXMgcGF0Y2ggYWxzbyBub3QsIGRvIHlvdSB0aGluayBpdCBpcyBuZWNlc3Nh
-cnk/DQoNCj4gPg0KPiA+ICBzdHJ1Y3QgZHdhcGJfZ3BpbyB7DQo+ID4gIAlzdHJ1Y3QJZGV2aWNl
-CQkqZGV2Ow0KPiA+ICAJdm9pZCBfX2lvbWVtCQkqcmVnczsNCj4gPiAgCXN0cnVjdCBkd2FwYl9n
-cGlvX3BvcnQJKnBvcnRzOw0KPiA+IC0JdW5zaWduZWQgaW50CQlucl9wb3J0czsNCj4geW91IGNv
-dWxkIGtlZXAgdGhpcyB0aGUgd2F5IGl0IGlzDQpJdCBoYXMgYmVlbiBtb3ZlZCB0byAncGRhdGEn
-Lg0KDQo+ID4gIAlzdHJ1Y3QgaXJxX2RvbWFpbgkqZG9tYWluOw0KPiA+ICsJY29uc3Qgc3RydWN0
-IGR3YXBiX2dwaW9fcGxhdGZvcm1fZGF0YQkqcGRhdGE7DQo+IA0KPiBhbmQgbm90IG1ha2luZyB0
-aGlzIGEgbWVtYmVyIG9mIHRoaXMgc3RydWN0LiBJJ3ZlIGJlZW4gZ29pbmcgdXAgYW5kIGRvd24g
-dGhlDQo+IHNvdXJjZSBhbmQgSSBkb24ndCBzZWUgdGhlIG5lZWQgdG8gbWFycnkgZHdhcGJfZ3Bp
-byB0bw0KPiBkd2FwYl9ncGlvX3BsYXRmb3JtX2RhdGEuDQo+IFRoYXQgZHdhcGJfZ3Bpb19wb3J0
-X3Byb3BlcnR5IHRoaW5nIGhhcyBhIGxvbmcgbmFtZS4gQ291bGQgeW91IGp1c3Qgc2V0IGl0IHVw
-LA0KPiBwYXNzIGl0IGZvciByZWdpc3RyYXRpb24gYW5kIHRoZSBmcmVlIGl0PyBZb3UgY2FuJ3Qg
-ZnJlZSB0aGUgcGRhdGEgZm9yIHRoZSBub24tT0YNCj4gdHJlZSBidXQgZm9yIHRoZSBPRiBjYXNl
-IHlvdSBrZWVwIHRoYXQgc3RydWN0IGFyb3VuZCBmb3Igbm8gcmVhc29uLg0KPiBZb3UgY291bGQg
-c2FmZSBzb21lIG1lbW9yeSBhbmQgdXNlIHBkYXRhIGRpcmVjdGx5IGZvciBzZXR1cC4NCkhlcmUs
-ICdwZGF0YScgaXMgdXNlZCBmb3IgYm90aCBPRiBhbmQgTUZELiBGb3IgTUZELCAncGRhdGEnIGlz
-IHBhc3NlZCBmcm9tIE1GRC4NCkZvciBPRiwgJ3BkYXRhJyBpcyBnZXR0aW5nIGZyb20gZGV2aWNl
-IG5vZGVzIHByb3BlcnRpZXMuIFdoeSBkbyB3ZSBoYXZlIHN1Y2ggZGVzaWduPyBCZWNhdXNlIGl0
-IGNhbiBtYWtlIHRoZSBoYW5kbGluZw0KbW9yZSBlYXN5IGZvciBmbG93aW5nIHJvdXRpbmUuIEFs
-bCBuZWNlc3NhcnkgcHJvcGVydGllcyBnZXQgZnJvbSAncGRhdGEnLCBuZXZlciBjYXJlIGl0IGlz
-IGZyb20gT0Ygb3IgTUZELiBBbmQgc29tZW9uZQ0KYXJlIHdvcmtpbmcgb24gcmVwbGFjaW5nIE9G
-IGludGVyZmFjZSB3aXRoIGEgZmlybXdhcmUgYWdub3N0aWMgZGV2aWNlX3Byb3BlcnR5KiBpbnRl
-cmZhY2Ugd2hpY2ggd2lsbCB3b3JrIHdpdGggYm90aCBPRiBhbmQgQUNQSS4NCk1vcmUgaW5mb3Jt
-YXRpb24gZm9yIHRoaXMgZGVzaWduLCBwbGVhc2UgY29udGFjdCBEYXJyZW4gSGFydCA8ZHZoYXJ0
-QGxpbnV4LmludGVsLmNvbT4uIERhcnJlbiBIYXJ0IHdyb3RlIHRvIG1lOg0KIkdlbmVyYWxseSBz
-cGVha2luZywgcmF0aGVyIHRoYW4gaWYvZWxzZSBibG9ja3MgdGhyb3VnaG91dCB0aGUgY29kZSBj
-aGVja2luZyBpZiBpdCBpcyBlbnVtZXJhdGVkIHZpYSBvcGVuIGZpcm13YXJlIG9yIGFzIGEgcGxh
-dGZvcm0gZGV2aWNlLA0KYSBjbGVhbmVyIGFwcHJvYWNoIGlzIHRvIGNoZWNrIGlmIHRoZSBwZGF0
-YSBpcyBudWxsLCBhbmQgaWYgc28sIHBvcHVsYXRlIHRoZSBwZGF0YSBmcm9tIHRoZSBvcGVuIGZp
-cm13YXJlIGRlc2NyaXB0aW9uIGlmIHByZXNlbnQuDQpUaGVuIHVzZSB0aGUgcGRhdGEgdGhyb3Vn
-aG91dCB0aGUgZHJpdmVyLg0KDQpTb21ldGhpbmcgdG8ga2VlcCBpbiBtaW5kIGlzIHRoYXQgd2Ug
-YXJlIHdvcmtpbmcgdG8gcmVwbGFjZSB0aGUgb2ZfKiBpbnRlcmZhY2Ugd2l0aCBhIGZpcm13YXJl
-IGFnbm9zdGljIGRldmljZV9wcm9wZXJ0eSogaW50ZXJmYWNlDQp3aGljaCB3aWxsIHdvcmsgd2l0
-aCBib3RoIE9GIGFuZCBBQ1BJLiBQYXRjaGVzIHRvIGhpdCBMS01MIHRoaXMgd2VlayBmb3IgdGhl
-IGFjcGkgYW5kIGRyaXZlciBjb3JlLiANCk9yZ2FuaXppbmcgdGhlIGNvZGUgYXMgZGVzY3JpYmVk
-IGFib3ZlIHdpbGwgYmV0dGVyIGVuY2Fwc3VsYXRlIHRoZSBmaXJtd2FyZS1jb25maWcgbG9naWMg
-YW5kIG1ha2UgaXQgZWFzaWVyIHRvIHVwZGF0ZS4iDQoNCkFuZCB5b3UgY2FuIGFsc28gcmVmZXIg
-dGhlIGNvZGUgJ2RyaXZlci9pbnB1dC9rZXlib2FyZC9ncGlvX2tleXMuYycsIGFuZCB0aGlzIHBh
-dGNoIHRha2VzIGl0IGFzIGFuIGV4YW1wbGUuDQoNCg0KPiA+ICB9Ow0KPiA+DQo+ID4gIHN0YXRp
-YyBpbnQgZHdhcGJfZ3Bpb190b19pcnEoc3RydWN0IGdwaW9fY2hpcCAqZ2MsIHVuc2lnbmVkIG9m
-ZnNldCkNCj4gPiBAQCAtMjA3LDIyICsyMDksMjQgQEAgc3RhdGljIGludCBkd2FwYl9pcnFfc2V0
-X3R5cGUoc3RydWN0IGlycV9kYXRhICpkLA0KPiB1MzIgdHlwZSkNCj4gPiAgCXJldHVybiAwOw0K
-PiA+ICB9DQo+ID4NCj4gPiArc3RhdGljIGlycXJldHVybl90IGR3YXBiX2lycV9oYW5kbGVyX21m
-ZChpbnQgaXJxLCB2b2lkICpkZXZfaWQpIHsNCj4gPiArCXN0cnVjdCBpcnFfZGVzYyAqZGVzYyA9
-IGlycV90b19kZXNjKGlycSk7DQo+ID4gKw0KPiA+ICsJZHdhcGJfaXJxX2hhbmRsZXIoaXJxLCBk
-ZXNjKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gSVJRX0hBTkRMRUQ7DQo+IA0KPiBJIHN1Z2dlc3Qg
-dG8gdGVhY2ggZHdhcGJfaXJxX2hhbmRsZXIoKSB0byByZXR1cm4gc29tZXRoaW5nIHRoYXQgbWFr
-ZXMgeW91DQo+IGRlY2lkZSB3aGV0aGVyIG9yIG5vdCBJUlFfSEFORExFRCBpcyB0aGUgdGhpbmcg
-dG8gZG8gaGVyZS4gSWYgc29tZXRoaW5nIGdvZXMNCj4gY3JhenkgdGhlIGNvcmUgaGFzIG5vIHdh
-eSBvZiBrbm93aW5nIGFuZCBzaHV0dGluZyB5b3UgZG93bi4NCj4gQWxzbyBpbnZva2luZyAtPmly
-cV9lb2koKSBfYmVmb3JlXyB5b3VyIHNoYXJlZCB3YXMgaW52b2tlZCBtaWdodCBub3Qgc21hcnQu
-DQo+IFdoYXQgeW91IHdhbnQgaXMgc29tZXRoaW5nIGxpa2UNCj4gDQo+ICBzdGF0aWMgdTMyIF9k
-d2FwYl9pcnFfaGFuZGxlcihzdHJ1Y3QgZHdhcGJfZ3BpbyAqZ3BpbywgIHN0cnVjdCBpcnFfY2hp
-cA0KPiAqY2hpcCkgIHsNCj4gICAgICAgICAgdTMyIGlycV9zdGF0dXMgPSByZWFkbF9yZWxheGVk
-KGdwaW8tPnJlZ3MgKyBHUElPX0lOVFNUQVRVUyk7DQo+IAkgdTMyIHJldCA9IGlycV9zdGF0dXM7
-DQo+IA0KPiAgICAgICAgICB3aGlsZSAoaXJxX3N0YXR1cykgew0KPiAgICAgICAgICAgICAgICAg
-IGludCBod2lycSA9IGZscyhpcnFfc3RhdHVzKSAtIDE7DQo+ICAgICAgICAgICAgICAgICAgaW50
-IGdwaW9faXJxID0gaXJxX2ZpbmRfbWFwcGluZyhncGlvLT5kb21haW4sIGh3aXJxKTsNCj4gDQo+
-ICAgICAgICAgICAgICAgICAgZ2VuZXJpY19oYW5kbGVfaXJxKGdwaW9faXJxKTsNCj4gICAgICAg
-ICAgICAgICAgICBpcnFfc3RhdHVzICY9IH5CSVQoaHdpcnEpOw0KPiANCj4gICAgICAgICAgICAg
-ICAgICBpZiAoKGlycV9nZXRfdHJpZ2dlcl90eXBlKGdwaW9faXJxKSAmDQo+IElSUV9UWVBFX1NF
-TlNFX01BU0spDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICA9PSBJUlFfVFlQRV9FREdFX0JP
-VEgpDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICBkd2FwYl90b2dnbGVfdHJpZ2dlcihncGlv
-LCBod2lycSk7DQo+ICAgICAgICAgIH0NCj4gCSByZXR1cm4gcmV0Ow0KPiAgfQ0KPiANCj4gIHN0
-YXRpYyB2b2lkIGR3YXBiX2lycV9oYW5kbGVyKHUzMiBpcnEsIHN0cnVjdCBpcnFfZGVzYyAqZGVz
-YykgIHsNCj4gICAgICAgICAgc3RydWN0IGR3YXBiX2dwaW8gKmdwaW8gPSBpcnFfZ2V0X2hhbmRs
-ZXJfZGF0YShpcnEpOw0KPiAgICAgICAgICBzdHJ1Y3QgaXJxX2NoaXAgKmNoaXAgPSBpcnFfZGVz
-Y19nZXRfY2hpcChkZXNjKTsNCj4gDQo+IAlfZHdhcGJfaXJxX2hhbmRsZXIoZ3BpbywgY2hpcCk7
-DQo+IA0KPiAgICAgICAgICBpZiAoY2hpcC0+aXJxX2VvaSkNCj4gICAgICAgICAgICAgICAgICBj
-aGlwLT5pcnFfZW9pKGlycV9kZXNjX2dldF9pcnFfZGF0YShkZXNjKSk7DQo+ICB9DQo+IA0KPiAg
-c3RhdGljIGlycXJldHVybl90IGR3YXBiX2lycV9oYW5kbGVyX21mZChpbnQgaXJxLCB2b2lkICpk
-ZXZfaWQpICB7DQo+ICAJc3RydWN0IGlycV9kZXNjICpkZXNjID0gaXJxX3RvX2Rlc2MoaXJxKTsN
-Cj4gCXN0cnVjdCBpcnFfY2hpcCAqY2hpcCA9IGlycV9kZXNjX2dldF9jaGlwKGRlc2MpOw0KPiAJ
-aW50IHdvcmtlZDsNCj4gDQo+ICAJd29ya2VkID0gZHdhcGJfaXJxX2hhbmRsZXIoZGV2X2lkLCBj
-aGlwKTsNCj4gCWlmICh3b3JrZWQpDQo+IAkJcmV0dXJuIElSUV9IQU5ETEVEOw0KPiAJZWxzZQ0K
-PiAJCXJldHVybiBJUlFfTk9ORTsNCj4gIH0NCj4gDQo+IEhvdyBhYm91dCBpdD8NCk9LLCBJIHdp
-bGwgaW1wcm92ZSBpdCBhcyB5b3VyIHN1Z2dlc3Rpb24uDQoNCg0KPiA+ICsJaXJxX3NldF9oYW5k
-bGVyX2RhdGEocG9ydC0+cHAtPmlycSwgZ3Bpbyk7DQo+IA0KPiBUaGlzIGRvZXMgbm90IGxvb2sg
-bGlrZSBpdCBiZWxvbmdzIGhlcmUuIEl0IHNob3VsZCBvbmx5IGJlIHVzZWQgdG9nZXRoZXIgd2l0
-aA0KPiBpcnFfc2V0X2NoYWluZWRfaGFuZGxlcigpIG9yIGFtIEkgbWlzc2luZyBoZXJlIHNvbWV0
-aGluZz8NClRoaXMgcGF0Y2ggcmV1c2VkICcgZHdhcGJfaXJxX2hhbmRsZXInLCBpdCBuZWVkcyB0
-aGUgaXJxIGhhbmRsZXIgZGF0YS4gRm9yICcgaXJxX3NldF9oYW5kbGVyX2RhdGEnLCBpdCBqdXN0
-IHNldHMgdGhlIGlycSBkYXRhLg0KV2h5IGRvIHlvdSB0aGluayBpdCBtdXN0IGJlIHVzZWQgdG9n
-ZXRoZXIgd2l0aCAnIGlycV9zZXRfY2hhaW5lZF9oYW5kbGVyJz8NCg0KPiA+ICAJLyoNCj4gPiAg
-CSAqIE9ubHkgcG9ydCBBIGNhbiBwcm92aWRlIGludGVycnVwdHMgaW4gYWxsIGNvbmZpZ3VyYXRp
-b25zIG9mIHRoZSBJUC4NCj4gPiAgCSAqLw0KPiBTbyB3ZSBoYWQgYSBwb3J0X2lkeCBjaGVjayB3
-aGljaCB3YXMgcmVmZXJlZCBieSB0aGUgY29tbWVudC4gTm93IHdlIGhhdmUgYQ0KPiBjb21tZW50
-IGFuZCBubyBjaGVjayBmb3IgaXQuIFlvdSBjb3VsZCBkbyB0aGF0IGxvb3Agb3ZlciB0aGF0IGFy
-cmF5IGhlcmUgYW5kDQo+IGtlZXAgdGhhdCBjaGVjay4NCkxldCBtZSBtb3ZlIGl0IHRvICdkd2Fw
-Yl9ncGlvX2dldF9wZGF0YV9vZicuDQoNCj4gPg0KPiA+ICsvKg0KPiA+ICsgKiBIYW5kbGVycyBm
-b3IgYWx0ZXJuYXRpdmUgc291cmNlcyBvZiBwbGF0Zm9ybV9kYXRhICAqLw0KPiANCj4gVGhvc2Ug
-YWJ2aW91cyBjb21tZW50c+KApg0KPiANCj4gPiArDQo+ID4gKyNpZmRlZiBDT05GSUdfT0ZfR1BJ
-Tw0KPiA+ICsvKg0KPiA+ICsgKiBUcmFuc2xhdGUgT3BlbkZpcm13YXJlIG5vZGUgcHJvcGVydGll
-cyBpbnRvIHBsYXRmb3JtX2RhdGEgICovDQo+IOKApiBhcmUgbm90IHJlYWxseSBoZWxwaW5nDQpM
-ZXQgbWUgcmVtb3ZlIHRoZW0uDQoNCj4gPiArc3RhdGljIHN0cnVjdCBkd2FwYl9ncGlvX3BsYXRm
-b3JtX2RhdGEgKg0KPiANCj4gU2ViYXN0aWFuDQo=
+Adding RTC driver for supporting RTC device present inside RK808 PMIC.
+
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Signed-off-by: Zhang Qing <zhangqing@rock-chips.com>
+
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+---
+
+Changes in v9:
+Adviced by Dmitry
+- if(rk808_rtc->irq < 0), return rk808_rtc->irq
+
+Changes in v8:
+Adviced by Doug
+- coding style
+- fix regmap_update_bits()
+- if(rk808_rtc->irq < 0) return err num
+
+Changes in v7:
+Adviced by doug
+- read rtc time from shadowed registers
+Adviced by Dmitry
+- use CONFIG_PM_SLEEP replace CONFIG_PM
+- use SIMPLE_DEV_PM_OPS replace dev_pm_ops
+- fix dev_warn
+- coding style
+Adviced by Heiko
+- remove rtc_ctl
+
+Changes in v6:
+Adviced by doug
+- move RTC_READSEL setting into probe
+
+Changes in v5:
+- fixed a bug about set_time failed
+
+Changes in v4:
+- use &client->dev replace rk808->dev
+
+Changes in v3: None
+Changes in v2:
+Adviced by javier.martinez
+- Add a separate clock driver, rather than in RTC driver
+
+ drivers/rtc/Kconfig     |   10 ++
+ drivers/rtc/Makefile    |    1 +
+ drivers/rtc/rtc-rk808.c |  426 +++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 437 insertions(+)
+ create mode 100644 drivers/rtc/rtc-rk808.c
+
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index a168e96..aeab9d9 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -288,6 +288,16 @@ config RTC_DRV_MAX77686
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-max77686.
+ 
++config RTC_DRV_RK808
++	tristate "Rockchip RK808 RTC"
++	depends on MFD_RK808
++	help
++	  If you say yes here you will get support for the
++	  RTC of RK808 PMIC.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called rk808-rtc.
++
+ config RTC_DRV_RS5C372
+ 	tristate "Ricoh R2025S/D, RS5C372A/B, RV5C386, RV5C387A"
+ 	help
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 56f061c..91fe4647 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -109,6 +109,7 @@ obj-$(CONFIG_RTC_DRV_PUV3)	+= rtc-puv3.o
+ obj-$(CONFIG_RTC_DRV_PXA)	+= rtc-pxa.o
+ obj-$(CONFIG_RTC_DRV_R9701)	+= rtc-r9701.o
+ obj-$(CONFIG_RTC_DRV_RC5T583)	+= rtc-rc5t583.o
++obj-$(CONFIG_RTC_DRV_RK808)	+= rtc-rk808.o
+ obj-$(CONFIG_RTC_DRV_RP5C01)	+= rtc-rp5c01.o
+ obj-$(CONFIG_RTC_DRV_RS5C313)	+= rtc-rs5c313.o
+ obj-$(CONFIG_RTC_DRV_RS5C348)	+= rtc-rs5c348.o
+diff --git a/drivers/rtc/rtc-rk808.c b/drivers/rtc/rtc-rk808.c
+new file mode 100644
+index 0000000..b8cd399
+--- /dev/null
++++ b/drivers/rtc/rtc-rk808.c
+@@ -0,0 +1,426 @@
++/*
++ * RTC driver for Rockchip RK808
++ *
++ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
++ *
++ * Author: Chris Zhong <zyw@rock-chips.com>
++ * Author: Zhang Qing <zhanqging@rock-chips.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/rtc.h>
++#include <linux/bcd.h>
++#include <linux/mfd/rk808.h>
++#include <linux/platform_device.h>
++#include <linux/i2c.h>
++
++/* RTC_CTRL_REG bitfields */
++#define BIT_RTC_CTRL_REG_STOP_RTC_M		BIT(0)
++
++/* RK808 has a shadowed register for saving a "frozen" RTC time.
++ * When user setting "GET_TIME" to 1, the time will save in this shadowed
++ * register. If set "READSEL" to 1, user read rtc time register, actually
++ * get the time of that moment. If we need the real time, clr this bit.
++ */
++#define BIT_RTC_CTRL_REG_RTC_GET_TIME		BIT(6)
++#define BIT_RTC_CTRL_REG_RTC_READSEL_M		BIT(7)
++#define BIT_RTC_INTERRUPTS_REG_IT_ALARM_M	BIT(3)
++#define RTC_STATUS_MASK		0xFE
++
++#define SECONDS_REG_MSK		0x7F
++#define MINUTES_REG_MAK		0x7F
++#define HOURS_REG_MSK		0x3F
++#define DAYS_REG_MSK		0x3F
++#define MONTHS_REG_MSK		0x1F
++#define YEARS_REG_MSK		0xFF
++#define WEEKS_REG_MSK		0x7
++
++/* REG_SECONDS_REG through REG_YEARS_REG is how many registers? */
++
++#define NUM_TIME_REGS	(RK808_WEEKS_REG - RK808_SECONDS_REG + 1)
++#define NUM_ALARM_REGS	(RK808_ALARM_YEARS_REG - RK808_ALARM_SECONDS_REG + 1)
++
++struct rk808_rtc {
++	struct rk808 *rk808;
++	struct rtc_device *rtc;
++	int irq;
++};
++
++/* Read current time and date in RTC */
++static int rk808_rtc_readtime(struct device *dev, struct rtc_time *tm)
++{
++	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
++	struct rk808 *rk808 = rk808_rtc->rk808;
++	u8 rtc_data[NUM_TIME_REGS];
++	int ret;
++
++	/* Force an update of the shadowed registers right now */
++	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
++				 0);
++	if (ret) {
++		dev_err(dev, "Failed to update bits rtc_ctrl: %d\n", ret);
++		return ret;
++	}
++
++	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++				 BIT_RTC_CTRL_REG_RTC_GET_TIME,
++				 BIT_RTC_CTRL_REG_RTC_GET_TIME);
++	if (ret) {
++		dev_err(dev, "Failed to update bits rtc_ctrl: %d\n", ret);
++		return ret;
++	}
++
++	ret = regmap_bulk_read(rk808->regmap, RK808_SECONDS_REG,
++			       rtc_data, NUM_TIME_REGS);
++	if (ret) {
++		dev_err(dev, "Failed to bulk read rtc_data: %d\n", ret);
++		return ret;
++	}
++
++	tm->tm_sec = bcd2bin(rtc_data[0] & SECONDS_REG_MSK);
++	tm->tm_min = bcd2bin(rtc_data[1] & MINUTES_REG_MAK);
++	tm->tm_hour = bcd2bin(rtc_data[2] & HOURS_REG_MSK);
++	tm->tm_mday = bcd2bin(rtc_data[3] & DAYS_REG_MSK);
++	tm->tm_mon = (bcd2bin(rtc_data[4] & MONTHS_REG_MSK)) - 1;
++	tm->tm_year = (bcd2bin(rtc_data[5] & YEARS_REG_MSK)) + 100;
++	tm->tm_wday = bcd2bin(rtc_data[6] & WEEKS_REG_MSK);
++	dev_dbg(dev, "RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
++		1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
++		tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
++
++	return ret;
++}
++
++/* Set current time and date in RTC */
++static int rk808_rtc_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
++	struct rk808 *rk808 = rk808_rtc->rk808;
++	u8 rtc_data[NUM_TIME_REGS];
++	int ret;
++
++	rtc_data[0] = bin2bcd(tm->tm_sec);
++	rtc_data[1] = bin2bcd(tm->tm_min);
++	rtc_data[2] = bin2bcd(tm->tm_hour);
++	rtc_data[3] = bin2bcd(tm->tm_mday);
++	rtc_data[4] = bin2bcd(tm->tm_mon + 1);
++	rtc_data[5] = bin2bcd(tm->tm_year - 100);
++	rtc_data[6] = bin2bcd(tm->tm_wday);
++	dev_dbg(dev, "set RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
++		1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
++		tm->tm_wday, tm->tm_hour , tm->tm_min, tm->tm_sec);
++
++	/* Stop RTC while updating the RTC registers */
++	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++				 BIT_RTC_CTRL_REG_STOP_RTC_M,
++				 BIT_RTC_CTRL_REG_STOP_RTC_M);
++	if (ret) {
++		dev_err(dev, "Failed to update RTC control: %d\n", ret);
++		return ret;
++	}
++
++	ret = regmap_bulk_write(rk808->regmap, RK808_SECONDS_REG,
++				rtc_data, NUM_TIME_REGS);
++	if (ret) {
++		dev_err(dev, "Failed to bull write rtc_data: %d\n", ret);
++		return ret;
++	}
++	/* Start RTC again */
++	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++				 BIT_RTC_CTRL_REG_STOP_RTC_M, 0);
++	if (ret) {
++		dev_err(dev, "Failed to update RTC control: %d\n", ret);
++		return ret;
++	}
++	return 0;
++}
++
++/* Read alarm time and date in RTC */
++static int rk808_rtc_readalarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
++	struct rk808 *rk808 = rk808_rtc->rk808;
++	u8 alrm_data[NUM_ALARM_REGS];
++	uint32_t int_reg;
++	int ret;
++
++	ret = regmap_bulk_read(rk808->regmap, RK808_ALARM_SECONDS_REG,
++			       alrm_data, NUM_ALARM_REGS);
++
++	alrm->time.tm_sec = bcd2bin(alrm_data[0] & SECONDS_REG_MSK);
++	alrm->time.tm_min = bcd2bin(alrm_data[1] & MINUTES_REG_MAK);
++	alrm->time.tm_hour = bcd2bin(alrm_data[2] & HOURS_REG_MSK);
++	alrm->time.tm_mday = bcd2bin(alrm_data[3] & DAYS_REG_MSK);
++	alrm->time.tm_mon = (bcd2bin(alrm_data[4] & MONTHS_REG_MSK)) - 1;
++	alrm->time.tm_year = (bcd2bin(alrm_data[5] & YEARS_REG_MSK)) + 100;
++
++	ret = regmap_read(rk808->regmap, RK808_RTC_INT_REG, &int_reg);
++	if (ret) {
++		dev_err(dev, "Failed to read RTC INT REG: %d\n", ret);
++		return ret;
++	}
++
++	dev_dbg(dev, "alrm read RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
++		1900 + alrm->time.tm_year, alrm->time.tm_mon + 1,
++		alrm->time.tm_mday, alrm->time.tm_wday, alrm->time.tm_hour,
++		alrm->time.tm_min, alrm->time.tm_sec);
++
++	alrm->enabled = (int_reg & BIT_RTC_INTERRUPTS_REG_IT_ALARM_M) ? 1 : 0;
++
++	return 0;
++}
++
++static int rk808_rtc_stop_alarm(struct rk808_rtc *rk808_rtc)
++{
++	struct rk808 *rk808 = rk808_rtc->rk808;
++	int ret;
++
++	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
++				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M, 0);
++
++	return ret;
++}
++
++static int rk808_rtc_start_alarm(struct rk808_rtc *rk808_rtc)
++{
++	struct rk808 *rk808 = rk808_rtc->rk808;
++	int ret;
++
++	ret = regmap_update_bits(rk808->regmap, RK808_RTC_INT_REG,
++				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M,
++				 BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
++
++	return ret;
++}
++
++static int rk808_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
++{
++	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
++	struct rk808 *rk808 = rk808_rtc->rk808;
++	u8 alrm_data[NUM_ALARM_REGS];
++	int ret;
++
++	ret = rk808_rtc_stop_alarm(rk808_rtc);
++	if (ret) {
++		dev_err(dev, "Failed to stop alarm: %d\n", ret);
++		return ret;
++	}
++	dev_dbg(dev, "alrm set RTC date/time %4d-%02d-%02d(%d) %02d:%02d:%02d\n",
++		1900 + alrm->time.tm_year, alrm->time.tm_mon + 1,
++		alrm->time.tm_mday, alrm->time.tm_wday, alrm->time.tm_hour,
++		alrm->time.tm_min, alrm->time.tm_sec);
++
++	alrm_data[0] = bin2bcd(alrm->time.tm_sec);
++	alrm_data[1] = bin2bcd(alrm->time.tm_min);
++	alrm_data[2] = bin2bcd(alrm->time.tm_hour);
++	alrm_data[3] = bin2bcd(alrm->time.tm_mday);
++	alrm_data[4] = bin2bcd(alrm->time.tm_mon + 1);
++	alrm_data[5] = bin2bcd(alrm->time.tm_year - 100);
++
++	ret = regmap_bulk_write(rk808->regmap, RK808_ALARM_SECONDS_REG,
++				alrm_data, NUM_ALARM_REGS);
++	if (ret) {
++		dev_err(dev, "Failed to bulk write: %d\n", ret);
++		return ret;
++	}
++	if (alrm->enabled) {
++		ret = rk808_rtc_start_alarm(rk808_rtc);
++		if (ret) {
++			dev_err(dev, "Failed to start alarm: %d\n", ret);
++			return ret;
++		}
++	}
++	return 0;
++}
++
++static int rk808_rtc_alarm_irq_enable(struct device *dev,
++				      unsigned int enabled)
++{
++	struct rk808_rtc *rk808_rtc = dev_get_drvdata(dev);
++
++	if (enabled)
++		return rk808_rtc_start_alarm(rk808_rtc);
++
++	return rk808_rtc_stop_alarm(rk808_rtc);
++}
++
++/*
++ * We will just handle setting the frequency and make use the framework for
++ * reading the periodic interupts.
++ *
++ * @freq: Current periodic IRQ freq:
++ * bit 0: every second
++ * bit 1: every minute
++ * bit 2: every hour
++ * bit 3: every day
++ */
++static irqreturn_t rk808_alarm_irq(int irq, void *data)
++{
++	struct rk808_rtc *rk808_rtc = data;
++	struct rk808 *rk808 = rk808_rtc->rk808;
++	struct i2c_client *client = rk808->i2c;
++	int ret;
++
++	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
++			   RTC_STATUS_MASK);
++	if (ret) {
++		dev_err(&client->dev,
++			"%s:Failed to update RTC status: %d\n", __func__, ret);
++		return ret;
++	}
++
++	rtc_update_irq(rk808_rtc->rtc, 1, RTC_IRQF | RTC_AF);
++	dev_dbg(&client->dev,
++		 "%s:irq=%d\n", __func__, irq);
++	return IRQ_HANDLED;
++}
++
++static const struct rtc_class_ops rk808_rtc_ops = {
++	.read_time = rk808_rtc_readtime,
++	.set_time = rk808_rtc_set_time,
++	.read_alarm = rk808_rtc_readalarm,
++	.set_alarm = rk808_rtc_setalarm,
++	.alarm_irq_enable = rk808_rtc_alarm_irq_enable,
++};
++
++#ifdef CONFIG_PM_SLEEP
++/* Turn off the alarm if it should not be a wake source. */
++static int rk808_rtc_suspend(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct rk808_rtc *rk808_rtc = dev_get_drvdata(&pdev->dev);
++
++	if (device_may_wakeup(dev))
++		enable_irq_wake(rk808_rtc->irq);
++
++	return 0;
++}
++
++/* Enable the alarm if it should be enabled (in case it was disabled to
++ * prevent use as a wake source).
++ */
++static int rk808_rtc_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct rk808_rtc *rk808_rtc = dev_get_drvdata(&pdev->dev);
++
++	if (device_may_wakeup(dev))
++		disable_irq_wake(rk808_rtc->irq);
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(rk808_rtc_pm_ops,
++	rk808_rtc_suspend, rk808_rtc_resume);
++
++/* 2014.1.1 12:00:00 Saturday */
++struct rtc_time tm_def = {
++			.tm_wday = 6,
++			.tm_year = 114,
++			.tm_mon = 0,
++			.tm_mday = 1,
++			.tm_hour = 12,
++			.tm_min = 0,
++			.tm_sec = 0,
++};
++
++static int rk808_rtc_probe(struct platform_device *pdev)
++{
++	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
++	struct rk808_rtc *rk808_rtc;
++	struct rtc_time tm;
++	int ret;
++
++	rk808_rtc = devm_kzalloc(&pdev->dev, sizeof(*rk808_rtc), GFP_KERNEL);
++	if (rk808_rtc == NULL)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, rk808_rtc);
++	rk808_rtc->rk808 = rk808;
++
++	/* start rtc running by default, and use shadowed timer. */
++	ret = regmap_update_bits(rk808->regmap, RK808_RTC_CTRL_REG,
++				 BIT_RTC_CTRL_REG_STOP_RTC_M |
++				 BIT_RTC_CTRL_REG_RTC_READSEL_M,
++				 BIT_RTC_CTRL_REG_RTC_READSEL_M);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"Failed to update RTC control: %d\n", ret);
++		return ret;
++	}
++
++	ret = regmap_write(rk808->regmap, RK808_RTC_STATUS_REG,
++			   RTC_STATUS_MASK);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"Failed to write RTC status: %d\n", ret);
++			return ret;
++	}
++
++	/* set init time */
++	ret = rk808_rtc_readtime(&pdev->dev, &tm);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to read RTC time\n");
++		return ret;
++	}
++	ret = rtc_valid_tm(&tm);
++	if (ret) {
++		dev_warn(&pdev->dev, "invalid date/time and init time\n");
++		rk808_rtc_set_time(&pdev->dev, &tm_def);
++	}
++
++	device_init_wakeup(&pdev->dev, 1);
++
++	rk808_rtc->rtc = devm_rtc_device_register(&pdev->dev, "rk808-rtc",
++						  &rk808_rtc_ops, THIS_MODULE);
++	if (IS_ERR(rk808_rtc->rtc)) {
++		ret = PTR_ERR(rk808_rtc->rtc);
++		return ret;
++	}
++
++	rk808_rtc->irq = platform_get_irq(pdev, 0);
++	if (rk808_rtc->irq < 0) {
++		dev_err(&pdev->dev, "Wake up is not possible as irq = %d\n",
++			rk808_rtc->irq);
++		return rk808_rtc->irq;
++	}
++
++	/* request alarm irq of rk808 */
++	ret = devm_request_threaded_irq(&pdev->dev, rk808_rtc->irq, NULL,
++					rk808_alarm_irq, 0,
++					"RTC alarm", rk808_rtc);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to request alarm IRQ %d: %d\n",
++			rk808_rtc->irq, ret);
++	}
++
++	return ret;
++}
++
++static struct platform_driver rk808_rtc_driver = {
++	.probe = rk808_rtc_probe,
++	.driver = {
++		.name = "rk808-rtc",
++		.pm = &rk808_rtc_pm_ops,
++	},
++};
++
++module_platform_driver(rk808_rtc_driver);
++
++MODULE_DESCRIPTION("RTC driver for the rk808 series PMICs");
++MODULE_AUTHOR("Chris Zhong <zyw@rock-chips.com>");
++MODULE_AUTHOR("Zhang Qing <zhanqging@rock-chips.com>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:rk808-rtc");
+-- 
+1.7.9.5
