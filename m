@@ -1,24 +1,51 @@
-From: Dmitry Lifshitz <lifshitz@compulab.co.il>
-Subject: [PATCH 0/2] fix cm-t54 serial console power supply
-Date: Thu,  4 Sep 2014 16:02:51 +0300
-Message-ID: <1409835773-22782-1-git-send-email-lifshitz@compulab.co.il>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Paul Walmsley <paul@pwsan.com>, Dmitry Lifshitz <lifshitz@compulab.co.il>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [Patch net-next 10/11] ARM: Documentation: Update fec dts binding
+ doc
+Date: Thu, 04 Sep 2014 17:03:51 +0400
+Message-ID: <54086337.2050602@cogentembedded.com>
+References: <1409776486-1403-1-git-send-email-y> <54078488.68c1420a.3020.7c0dSMTPIN_ADDED_BROKEN@mx.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <54078488.68c1420a.3020.7c0dSMTPIN_ADDED_BROKEN@mx.google.com>
+Sender: netdev-owner@vger.kernel.org
+To: b38611@freescale.com, davem@davemloft.net, netdev@vger.kernel.org, lznuaa@gmail.com
+Cc: shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Frank Li <Frank.Li@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Essential fix of CM-T54 serial console power supply and
-minor update of SBC-T54 DT model property.
+Hello.
 
-Dmitry Lifshitz (2):
-  ARM: dts: cm-t54: fix serial console power supply.
-  ARM: dts: sbc-t54: fix model property
+    [Resending since the previous message bounced from the FSL address...]
 
- arch/arm/boot/dts/omap5-cm-t54.dts  |    5 ++---
- arch/arm/boot/dts/omap5-sbc-t54.dts |    4 ++--
- 2 files changed, 4 insertions(+), 5 deletions(-)
+On 9/4/2014 12:34 AM, y@shlinux1.ap.freescale.net wrote:
 
--- 
-1.7.5.4
+> From: Frank Li <Frank.Li@freescale.com>
 
+>      This patch update fec devicetree binding doc that add Optional
+>      properties "fsl,num_tx_queues" and "fsl,num_rx_queues".
+
+> Signed-off-by: Fugang Duan <B38611@freescale.com>
+> Signed-off-by: Frank Li <Frank.Li@freescale.com>
+> ---
+>   Documentation/devicetree/bindings/net/fsl-fec.txt | 6 ++++++
+>   1 file changed, 6 insertions(+)
+
+> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> index 8a2c7b5..4da148d 100644
+> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
+> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+> @@ -16,6 +16,12 @@ Optional properties:
+>   - phy-handle : phandle to the PHY device connected to this device.
+>   - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+>     Use instead of phy-handle.
+> +- fsl,num_tx_queues : The property is valid for enet-avb IP, which supports
+> +  hw multi queues. Should specify the tx queue number, otherwise set tx queue
+> +  number to 1.
+> +- fsl,num_rx_queues : The property is valid for enet-avb IP, which supports
+> +  hw multi queues. Should specify the rx queue number, otherwise set rx queue
+> +  number to 1.
+
+    Hyphens are preferred to underscores in the prop names.
+
+WBR, Sergei
