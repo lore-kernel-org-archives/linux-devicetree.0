@@ -1,83 +1,40 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: Re: [PATCH v5 1/4] ethernet: arc: Add support for Rockchip SoC layer
- device tree bindings
-Date: Thu, 4 Sep 2014 21:30:33 +0200
-Message-ID: <20140904192934.GB14583@gmail.com>
-References: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
- <20140903211220.GA16962@gmail.com>
- <CABgxDoLWqqwGUUt9hWuJdHT_VF0c6-7xeAwgfeH7TwJmu1BN9w@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: dra7-evm: fixes for mux and VTT control
+Date: Thu, 4 Sep 2014 12:49:52 -0700
+Message-ID: <20140904194951.GB14698@atomide.com>
+References: <1409837008-32144-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CABgxDoLWqqwGUUt9hWuJdHT_VF0c6-7xeAwgfeH7TwJmu1BN9w@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: PERIER Romain <romain.perier@gmail.com>
-Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+In-Reply-To: <1409837008-32144-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 04, 2014 at 10:45:35AM +0200, PERIER Romain wrote:
-> Hi Beniamino,
+* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [140904 06:24]:
+> Hi,
 > 
-> I will investigate. Could you please :
+> The following series was inspired in part by http://marc.info/?l=linux-omap&m=140974309205295&w=2
+> causing me to try and do an audit of pinctrl configurations on the platform.
 > 
-> - Load the module
-> - Show me the output of lsmod
-> - Use your ethernet a bit
-> - Try to unload the module
-> - If your board did not freeze or if your kernel did not panic , show
-> me your dmesg (if it is impossible show me the dmesg before unloading
-> the module)
+> Further, failures on latest board updates in the automated farm also
+> caused identification of a fix which was yet to be send to upstream
+> from product kernel. Slightly unrelated patches in this series.
 > 
-> Perhaps, we could continue this discussion in private (by email or
-> IRC). What do you think ?
-> 
-> I will investigate this evening and tomorrow. Thanks for your feedbacks .
+> So here they are..
+> based on v3.17-rc1:
+> before-dra7xx-evm:  Boot FAIL: http://paste.ubuntu.org.cn/1477597
+> (fails can be at different times though.. random crashes without VTT is usual)..
+> after-dra7xx-evm:  Boot PASS: http://paste.ubuntu.org.cn/1477596
 
-Hi Romain,
+Thanks applying both into omap-for-v3.17/fixes-v2.
 
-the freeze happens in clk_disable_unprepare(), which disables the
-macref clock parents up to the dpll, needed by the DDR.
+Regards,
 
-As suggested by Heiko on IRC, the patch "clk: rockchip: protect
-critical clocks from getting disabled" [1], modified to include ddrphy
-in the list of critical clocks, solves the problem.
-
-During the module unload, if you move the call to arc_emac_remove()
-before clk_disable_unprepare() you can avoid a delay of 4-5 seconds
-caused by the timeout of the function phy_disconnect(). In any case:
-
-Tested-by: Beniamino Galvani <b.galvani@gmail.com>
-
-[1] https://git.linaro.org/people/mike.turquette/linux.git/commit/fe94f974e9c8b820640a5873d81589ab67380516
-
-> 
-> 
-> 2014-09-03 23:12 GMT+02:00 Beniamino Galvani <b.galvani@gmail.com>:
-> > On Wed, Sep 03, 2014 at 04:52:42PM +0000, Romain Perier wrote:
-> >> This patch defines a platform glue layer for Rockchip SoCs which
-> >> support arc-emac driver. It ensures that regulator for the rmii is on
-> >> before trying to connect to the ethernet controller. It applies right
-> >> speed and mode changes to the grf when ethernet settings change.
-> >
-> > Hi Romain,
-> >
-> > on a Radxa Rock when I try to remove the emac_rockchip module the
-> > board locks up when calling clk_disable_unprepare(priv->refclk). The
-> > tree is a net-next + your series, I don't know if I need some other
-> > patches.
-> >
-> > There is also the following build warning due to the emac dependency
-> > on REGULATOR which in principle seems correct, but looking at other
-> > drivers I wonder why they use the regulator APIs but don't have the
-> > same dependency.
-> >
-> > drivers/regulator/Kconfig:1:error: recursive dependency detected!
-> > drivers/regulator/Kconfig:1:       symbol REGULATOR is selected by MDIO_SUN4I
-> > drivers/net/phy/Kconfig:159:       symbol MDIO_SUN4I depends on PHYLIB
-> > drivers/net/phy/Kconfig:5:         symbol PHYLIB is selected by ARC_EMAC_CORE
-> > drivers/net/ethernet/arc/Kconfig:20:      symbol ARC_EMAC_CORE is selected by EMAC_ROCKCHIP
-> > drivers/net/ethernet/arc/Kconfig:35:      symbol EMAC_ROCKCHIP depends on REGULATOR
-> >
-> > Regards,
-> > Beniamino
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
