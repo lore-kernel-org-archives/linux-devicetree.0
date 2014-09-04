@@ -1,117 +1,108 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
-Date: Thu, 04 Sep 2014 09:02:08 +0800
-Message-ID: <5407BA10.2030402@rock-chips.com>
-References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com> <1409710239-19941-3-git-send-email-caesar.wang@rock-chips.com> <11280986.L6lv82O8Qv@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11280986.L6lv82O8Qv@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com, zhaoyifeng <zyf@rock-chips.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v9 0/3] Add rockchip RK808 pmic driver
+Date: Thu,  4 Sep 2014 09:12:36 +0800
+Message-ID: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This is the initial version of the RK808 PMIC. This is a power management IC
+for multimedia products.
 
-=E5=9C=A8 2014=E5=B9=B409=E6=9C=8803=E6=97=A5 16:07, Heiko St=C3=BCbner=
- =E5=86=99=E9=81=93:
-> Am Mittwoch, 3. September 2014, 10:10:37 schrieb Caesar Wang:
->> This add the necessary binding documentation for the thermal
->> found on Rockchip SoCs
->>
->> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
->> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
->> ---
->>   .../devicetree/bindings/thermal/rockchip-thermal.txt | 20
->> ++++++++++++++++++++ 1 file changed, 20 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
-mal.txt
->> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt new=
- file
->> mode 100644
->> index 0000000..1ed4d4c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->> @@ -0,0 +1,20 @@
->> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
->> +
->> +Required properties:
->> +- compatible: "rockchip,rk3288-tsadc"
->> +- reg: physical base address of the controller and length of memory=
- mapped
->> +       region.
->> +- interrupts: The interrupt number to the cpu. The interrupt specif=
-ier
->> format +	      depends on the interrupt controller.
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +- clock-names: Shall be "tsadc" for the converter-clock, and "apb_p=
-clk" for
->> +	       the peripheral clock.
-> You're using the passive-temp, critical-temp and force-shut-temp prop=
-erties in
-> your driver without declaring them here.
+It provides regulators that are able to supply power to processor cores
+and other components. The chip provides other modules including RTC, Clockout
 
-frankly,the about are need be declared. but  there are 4 types[0] for=20
-trip in thermal framework,
-there is no force-shut for me. So I want to change it three additional=20
-properties in [PATCH V4 4/4],
+Changes in v9:
+Adviced by Dmitry
+- if(rk808_rtc->irq < 0), return rk808_rtc->irq
+Adviced by Doug
+- add reg_np
 
+Changes in v8:
+Adviced by Doug
+- coding style
+- fix regmap_update_bits()
+- if(rk808_rtc->irq < 0) return err num
+Adviced by Mike
+-rename "control" to "enable"
+-define RK808_NR_OUTPUT 2
+Adviced by Doug
+- remove rk808_regulator_dts() function
+- remove the check about "client->dev.of_node"
 
-[0]
-{
-     THERMAL_TRIP_CRITICAL,
-     THERMAL_TRIP_HOT,
-     THERMAL_TRIP_PASSIVE,
-     THERMAL_TRIP_ACTIVE,
-}
+Changes in v7:
+Adviced by doug
+- read rtc time from shadowed registers
+Adviced by Dmitry
+- use CONFIG_PM_SLEEP replace CONFIG_PM
+- use SIMPLE_DEV_PM_OPS replace dev_pm_ops
+- fix dev_warn
+- coding style
+Adviced by Heiko
+- remove rtc_ctl
+Adviced by doug
+-fix coding style problems
+- remove pdata struct from header file, add rk808_regulator struct
 
-> But more importantly, please use the generic trip-points for this. I =
-guess it
-> shouldn't be a problem to introduce a "forced-shutdown" trippoint [0]=
- for the
-> additional trip-point you have - thermal maintainers, please shout if=
- I'm
-> wrong :-)
+Changes in v6:
+Adviced by doug
+- move RTC_READSEL setting into probe
+Adviced by doug
+- use correct argument call of_clk_add_provider in probe
+- remove the redundant code
 
-It's a good option.
-I can send a patch,but I don't know whether the thermal maintainers wil=
-l=20
-accept it.
+Changes in v5:
+- fixed a bug about set_time failed
+Adviced by doug
+- add some error checking in probe
+- move "rockchip,rk808.h" into the patch about dt-bindings
+- re-edit base on Mark's branch
 
-Maybe,they have a better way to suggest it.:-)
+Changes in v4:
+- use &client->dev replace rk808->dev
+Adviced by doug
+- add "clock-output-names" propertiey
+- add a header file "rockchip,rk808.h"
+- use &client->dev replace rk808->dev
 
+Changes in v3:
+- fix compile err
 
-PS:I will sent a new patch If I still have no received their suggestion=
-s=20
-in two days.
+Changes in v2:
+Adviced by javier.martinez
+- Add a separate clock driver, rather than in RTC driver
+Adviced by javier.martinez
+- separated from rtc-rk808.c
+Adviced by Mark Browm:
+- change of_find_node_by_name to find_child_by_name
+- use RK808_NUM_REGULATORS as the name of the constant
+- create a pdata when missing platform data
+- use the rk808_reg name to supply_regulator name
+- replace regulator_register with devm_regulator_register
+- some other problem with coding style
 
->
-> Heiko
->
->
-> [0] in a separate patch, changing
-> - thermal_trip_type enum in include/linux/thermal.h
-> - trip_types mapping in drivers/thermal/of-thermal.c
-> - Documentation/devicetree/bindings/thermal/thermal.txt
->
->> +
->> +Example:
->> +tsadc: tsadc@ff280000 {
->> +	compatible =3D "rockchip,rk3288-tsadc";
->> +	reg =3D <0xff280000 0x100>;
->> +	interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->> +	clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
->> +	clock-names =3D "tsadc", "apb_pclk";
->> +};
->
->
->
+Chris Zhong (3):
+  RTC: RK808: add RTC driver for RK808
+  clk: RK808: Add clkout driver for RK808
+  regulator: RK808: Remove pdata from the regulator
 
---=20
-Best regards,
-Caesar
+ drivers/clk/Kconfig                 |    9 +
+ drivers/clk/Makefile                |    1 +
+ drivers/clk/clk-rk808.c             |  164 ++++++++++++++
+ drivers/regulator/rk808-regulator.c |   91 ++------
+ drivers/rtc/Kconfig                 |   10 +
+ drivers/rtc/Makefile                |    1 +
+ drivers/rtc/rtc-rk808.c             |  426 +++++++++++++++++++++++++++++++++++
+ 7 files changed, 629 insertions(+), 73 deletions(-)
+ create mode 100644 drivers/clk/clk-rk808.c
+ create mode 100644 drivers/rtc/rtc-rk808.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
