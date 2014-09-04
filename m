@@ -1,86 +1,57 @@
-Return-Path: <sebastian@breakpoint.cc>
-Date: Thu, 4 Sep 2014 09:30:27 +0200
-From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Subject: Re: [PATCH 1/3] GPIO: gpio-dwapb: Enable platform driver binding to
- MFD driver
-Message-ID: <20140904073027.GA3336@breakpoint.cc>
-References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
- <1409161588-19417-2-git-send-email-alvin.chen@intel.com>
- <20140903200302.GA7673@breakpoint.cc>
- <4656BEB6164FC34F8171C6538F1A595B2E982384@SHSMSX101.ccr.corp.intel.com>
+Return-Path: <jhautbois@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E982384@SHSMSX101.ccr.corp.intel.com>
-To: "Chen, Alvin" <alvin.chen@intel.com>
-Cc: Darren Hart <dvhart@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>
+Sender: jhautbois@gmail.com
+In-Reply-To: <CAL8zT=i-T9DHd1F5=YpovM9i0LwpUswm6am1Qyf6kG_g3Xj2Qg@mail.gmail.com>
+References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
+ <CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
+ <5406D942.4080405@intel.com> <CAPDyKFrnF4biUGkLgkzz2RNdY1yLp2_bfvoWMM55yx-_TG6ENw@mail.gmail.com>
+ <CAL8zT=j0TfC=RaA5L+Zm3ACk=D57tb+k6HNrQnSjd4JY_iupCQ@mail.gmail.com>
+ <CAPDyKFoe6Zkr+QLZRc3azn8JvpsQXdSNLHTLmy5O-nnbVy9C1A@mail.gmail.com> <CAL8zT=i-T9DHd1F5=YpovM9i0LwpUswm6am1Qyf6kG_g3Xj2Qg@mail.gmail.com>
+From: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
+Date: Thu, 4 Sep 2014 12:33:18 +0200
+Message-ID: <CAL8zT=hkvFvnrswRnQRV4LXHOUxHqTVUQDjhDnhBcRRSEFjEhA@mail.gmail.com>
+Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from DT
+Content-Type: text/plain; charset=UTF-8
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <b29396@freescale.com>, Peter Griffin <peter.griffin@linaro.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, Chris Ball <chris@printf.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 2014-09-04 02:00:03 [+0000], Chen, Alvin wrote:
-> > 
-> > > --- a/drivers/gpio/Kconfig
-> > > +++ b/drivers/gpio/Kconfig
-> > > @@ -136,7 +136,6 @@ config GPIO_DWAPB
-> > >  	tristate "Synopsys DesignWare APB GPIO driver"
-> > >  	select GPIO_GENERIC
-> > >  	select GENERIC_IRQ_CHIP
-> > > -	depends on OF_GPIO
-> > you need either OF_GPIO or PCI
-> Since we enable this module not only support OF devices, but also support MFD devices, so we remove OF_GPIO dependency.
-> For 'PCI', the original code is also not depended on PCI, and this patch also not, do you think it is necessary?
+2014-09-04 11:37 GMT+02:00 Jean-Michel Hautbois
+<jean-michel.hautbois@vodalys.com>:
+> Hi Ulf,
+>
+>> I am not sure adding a DT binding for non access to rpmb would be
+>> needed. At least until we heard of a similar case as Adrian describes
+>> but for rpmb.
+>>
+>> BTW, I just posted a patch which disabled partition scan of the boot
+>> area, what to you think about that?
+>> http://marc.info/?l=linux-mmc&m=140973496402028&w=2
+>>
+>> Finally I am also wondering whether we could and thus should, handle
+>> these situations entirely without using a host cap. In principle what
+>> we need is a more sophisticated error handling when the switch errors
+>> occurs, while trying to switch to the boot area/rpmb partitions. Could
+>> you maybe investigate that option, before we decide to add a new DT
+>> binding?
+>
+> According to me and what Hsin-Hsiang Tseng wrote, it seems that we
+> should be able to have access to boot partitions if we want to give a
+> possibility of writing u-boot in one (or both) of them. This is the
+> way the i.MX6 will boot on a eMMC if I read the reference manual
+> correctly, but I didn't tested it yet.
+> But there is no need to scan those partitions at boot, as there will
+> probably never be a partition table inside, as you said.
+> All we need is providing access to mmc[n]blkpboot0 and mmc[n]blkpboot1
+> and a way to tell which one is used as default boot partition.
+>
+> This is my point of view, but I didn't read JESD84-A441 so I don't
+> know if this is the good way.
+>
+> Regards,
+> JM
 
-if not PCI then you should add something likwe 
-	"depends on OF_GPIO || MFD"
+BTW, here is an interesting commit from Freescale tree :
+http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/commit/?h=imx_3.10.17_1.0.0_ga&id=28774b788ae0de5d88045dd60cac3656c305821d
 
-looking further, you need also HAS_IOMEM for things like
-devm_ioremap_resource(). Linus, wouldn't it make sense to group this
-driver and make the block depend on it?
-
-> > >  struct dwapb_gpio {
-> > >  	struct	device		*dev;
-> > >  	void __iomem		*regs;
-> > >  	struct dwapb_gpio_port	*ports;
-> > > -	unsigned int		nr_ports;
-> > you could keep this the way it is
-> It has been moved to 'pdata'.
-
-I saw that. But there is no need keep a pointer to pdata across the
-whole driver since only need nr_ports in the driver removal part of the
-whole driver.
-
-> > >  	struct irq_domain	*domain;
-> > > +	const struct dwapb_gpio_platform_data	*pdata;
-> > 
-> > and not making this a member of this struct. I've been going up and down the
-> > source and I don't see the need to marry dwapb_gpio to
-> > dwapb_gpio_platform_data.
-> > That dwapb_gpio_port_property thing has a long name. Could you just set it up,
-> > pass it for registration and the free it? You can't free the pdata for the non-OF
-> > tree but for the OF case you keep that struct around for no reason.
-> > You could safe some memory and use pdata directly for setup.
-> Here, 'pdata' is used for both OF and MFD. For MFD, 'pdata' is passed from MFD.
-> For OF, 'pdata' is getting from device nodes properties. Why do we have such design? Because it can make the handling
-> more easy for flowing routine. All necessary properties get from 'pdata', never care it is from OF or MFD. And someone
-> are working on replacing OF interface with a firmware agnostic device_property* interface which will work with both OF and ACPI.
-> More information for this design, please contact Darren Hart <dvhart@linux.intel.com>. Darren Hart wrote to me:
-> "Generally speaking, rather than if/else blocks throughout the code checking if it is enumerated via open firmware or as a platform device,
-> a cleaner approach is to check if the pdata is null, and if so, populate the pdata from the open firmware description if present.
-> Then use the pdata throughout the driver.
-
-But isn't it enough to hold on to this pdata thing through the probe
-function only? After probe is done you could drop that memory in the
-OF-case, right?
- 
-> > > +	irq_set_handler_data(port->pp->irq, gpio);
-> > 
-> > This does not look like it belongs here. It should only be used together with
-> > irq_set_chained_handler() or am I missing here something?
-> This patch reused ' dwapb_irq_handler', it needs the irq handler data. For ' irq_set_handler_data', it just sets the irq data.
-> Why do you think it must be used together with ' irq_set_chained_handler'?
-
-because you do request_irq(…, driver_data). If you you look close to
-irq_set_chained_handler() it does not have such a member. Thus it uses
-irq_set_handler_data() for that same purpose.
-
-Sebastian
+JM
