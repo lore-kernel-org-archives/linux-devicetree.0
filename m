@@ -1,47 +1,75 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] move gpt per clk parent for ipg_per to OSC
-Date: Thu, 4 Sep 2014 19:50:35 -0300
-Message-ID: <CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w@mail.gmail.com>
-References: <1409729805-9741-1-git-send-email-b20788@freescale.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv4 2/2] dt-bindings: regulator: Add regulator suspend
+ state for PM state
+Date: Thu, 4 Sep 2014 23:53:03 +0100
+Message-ID: <20140904225303.GY29327@sirena.org.uk>
+References: <1408343223-4043-1-git-send-email-cw00.choi@samsung.com>
+ <1408343223-4043-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3/zQ9zHZ+bvXaNu1"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409729805-9741-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1408343223-4043-3-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 3, 2014 at 4:36 AM, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Currently, gpt timer's clock is from ipg_per, and ipg_per clock is from ipg
-> on most of i.MX6 series SOCs, but ipg's rate may be scaled when system enters
-> low bus mode for saving power, then gpt timer's clock rate will be scaled as
-> well, as system timer should be kept stable and NOT drift, better to keep gpt
-> timer's clk at fixed rate, on i.MX6Q TO > 1.0, i.MX6DL and i.MX6SX, there is
-> OSC clk available for gpt timer, we should enable this feature, the hardware
-> design is as below:
->
-> i.MX6Q TO > 1.0: GPT_CR_CLKSRC, 3b'101 selects fix clock
->     of OSC / 8 for gpt per clk;
-> i.MX6DL and i.MX6SX: GPT_CR_CLKSRC, 3b'101 selects OSC
->     for gpt per clk, and we must enable GPT_CR_24MEM to
->     enable OSC clk source for gpt per, GPT_PR_PRESCALER24M
->     is for pre-scaling of this OSC clk, here set it to 8
->     to make gpt per clk is 3MHz;
-> i.MX6SL: ipg_per can be from OSC directly, so no need to
->     implement this new clk source for gpt per.
->
-> Anson Huang (3):
->   ARM: imx: add gpt_3m clk for i.mx6qdl
->   ARM: dts: imx6: change gpt per clk to gpt_3m on i.mx6qdl and i.mx6sx
->   ARM: imx: source gpt per clk from OSC for system timer
 
-This patch series works fine if we use the new dtb and new kernel.
+--3/zQ9zHZ+bvXaNu1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-However, booting a kernel with these series applied and using an old
-dtb we get a system with broken timer.
+On Mon, Aug 18, 2014 at 03:27:03PM +0900, Chanwoo Choi wrote:
 
-'sleep 1' takes something like 20 seconds in this case.
+> +- regulator-initial-state: initial state for suspend state, cnd set initial
+> +  state among following defined suspend states:
+> +  <3>: PM_SUSPEND_MEM - Setup regulator according to regulator-state-mem
+> +  <4>: PM_SUSPEND_MAX - Setup regulator according to regulator-state-disk
+
+Please add defines for these in include/dt-bindings.  Probably worth
+pointing out that if absent the state is the hardware default (same for
+most of these.
+
+> +- regulator-state-[mem/disk] node has following common properties:
+> +	- regulator-volt: voltage consumers may set in suspend state.
+
+We use -uV rather than -volt in other bits of the bindings.
+
+> +	- regulator-on-in-suspend: regulator should be on in suspend state.
+> +	- regulator-off-in-suspend: regulator should be off in suspend state.
+> +	If node don't include regulator-[on/off]-in-suspend, can't change
+> +	regulator state in suspend mode and only should sustain the regulator
+> +	state of normal state.
+
+Probably better to say that the OS will not manage the state here -
+otherwise we have to explicitly override any hardware default that's
+there which drivers and the core don't do right now.
+
+--3/zQ9zHZ+bvXaNu1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUCO1LAAoJELSic+t+oim9kesP/RxL0PT3dxAqHvcFfGEiNEH1
+Y//oOEi769lZ56Zl3M87Ipbjg65cWhsCtGMH4Q5MsqbYR0oReAfRYb5GdP3e1JSV
+jrsI95mATlJwkvbe+Ob/GXqdejpLiCPzwp0bNUMD6nFTFnUryqrUlnR4kz78U88t
+rE+DN9/0ys4XtDzhSeRlVTF1vYWYekEtZJdyx7etbdXRUUQC3nQqdQ8VpnTGFWU9
+JTxdQBh7QOzwOD3ARgHx0CQbN51M8t0zSs6egXwzuTx/aGu8tNFaaRADO/3fKhqJ
+CVqoMq6dkhy+LZXenETjm6HAlls3p3j/UqTknrD0sOMVVhOW79AKngB0V+2hl1+E
+O6/RJpKWZZAEN3vpH9P95MZwV92iJ056LnL6nVv13rUs92qID9bWyNrN9AxmKeO7
+n8ushSmPM57FE9qnktFoeUZInwCfQaZNSLafk5eHeBwAe18H7JfkMsQDHesAL078
+2VNeTX079xcWk9EEbNdWRIOCwSTB6xHEOOkoWekWpeD/CvP9hgnALRha82l6DtqS
+fN//3G1ByezGUJIvo64jz45Ax9AXEVYtHq2VKyTkeaVyYWiJ0Q0w2Mk/Sgk0k2tZ
+zT/+fyDmx0za1jj20eC1B8gYMXsqop9+AyfzYXXyWPV7Z5OmQCzf92UtmDCeA3uB
+0RVerig2nblIW09wYY77
+=fyzw
+-----END PGP SIGNATURE-----
+
+--3/zQ9zHZ+bvXaNu1--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
