@@ -1,65 +1,53 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 1/3] RTC: RK808: add RTC driver for RK808
-Date: Thu, 4 Sep 2014 13:08:44 -0700
-Message-ID: <20140904200843.GF10224@core.coreip.homeip.net>
-References: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
- <1409793159-2573-2-git-send-email-zyw@rock-chips.com>
- <CAD=FV=U8XK945vJTnsY8FG3+WasOrMnoCYOF+b360HTyXVccfw@mail.gmail.com>
- <20140904173300.GC10224@core.coreip.homeip.net>
- <CAD=FV=VDG=PteMYCkju1GGpK1CNLZeY8precPJkgxYY4udD-eg@mail.gmail.com>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH v5 1/4] ethernet: arc: Add support for Rockchip SoC layer
+ device tree bindings
+Date: Thu, 4 Sep 2014 23:38:21 +0200
+Message-ID: <20140904213821.GA13511@gmail.com>
+References: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
+ <20140903211220.GA16962@gmail.com>
+ <3809311.80Auz8fbHu@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=VDG=PteMYCkju1GGpK1CNLZeY8precPJkgxYY4udD-eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xx
+In-Reply-To: <3809311.80Auz8fbHu@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Romain Perier <romain.perier@gmail.com>, heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 04, 2014 at 12:04:11PM -0700, Doug Anderson wrote:
-> Dmitry,
+On Thu, Sep 04, 2014 at 11:33:38AM +0200, Arnd Bergmann wrote:
+> This is a recurring problem: 
 > 
-> On Thu, Sep 4, 2014 at 10:33 AM, Dmitry Torokhov
-> <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Wed, Sep 03, 2014 at 09:18:42PM -0700, Doug Anderson wrote:
-> >> Chris,
-> >>
-> >> On Wed, Sep 3, 2014 at 6:12 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> >> > Adding RTC driver for supporting RTC device present inside RK808 PMIC.
-> >> >
-> >> > Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> > Signed-off-by: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> >
-> >> > Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> >>
-> >> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >> Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >>
-> >>
-> >> > +       rk808_rtc->irq = platform_get_irq(pdev, 0);
-> >> > +       if (rk808_rtc->irq < 0) {
-> >> > +               dev_err(&pdev->dev, "Wake up is not possible as irq = %d\n",
-> >> > +                       rk808_rtc->irq);
-> >>
-> >> Technically you shouldn't print the error if it's -EPROBE_DEFER.
-> >> ...but I think that's really unlikely here (I can't imagine any real
-> >> cases where the interrupt parent for RK808 would actually be deferred)
-> >> so I won't push it.
-> >
-> > Doug, platform_get_irq() simply iterates through IRQ resources assigned to the
-> > device, which are populated at platform device creation time. The only error it
-> > returns ever is -ENXIO, so we are fine here.
+> driver a depends on x and selects y
+> driver b depends on y and selects x
 > 
-> I think maybe you're looking at older source code?  The source code I
-> have for mainline Linux specifically includes code handling
-> EPROBE_DEFER in platform_get_irq().
+> Maybe we should teach Kconfig to not worry about it when x and y are
+> both user-selectable as well.
+> 
+> However, a nicer solution would be if we could agree for each symbol
+> on who is supposed to 'select' or 'depends on' it. In particular,
+> we are inconsistent about CONFIG_REGULATOR:
+> 
+> MDIO_SUN4I probably should not 'select' it but instead 'depends on'
+> this symbol if anything. It would be nice if someone could submit
+> a patch to that effect. EMAC_ROCKCHIP could also drop the dependency
+> on REGULATOR: you can still build the driver without that subsystem
+> being enabled, but then all the regulators have to be set up by
+> the boot loader.
 
-Ah, indeed. That -EPROBE_DEFER monstrosity keeps spreading :(
+Thanks, things are clearer now. 
 
--- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If I understand correctly the dependency of MDIO_SUN4I on REGULATOR
+can be dropped as well for the same reason; I will send a patch for
+that.
+
+Beniamino
+
+> 
+> There isn't much we can do about the PHYLIB dependency, unless we
+> turn it into a silent symbol that gets selected by all phy drivers,
+> or we change all network drivers that currently 'select' it to
+> 'depends on'. I don't really want to get involved in that discussion ;-)
+> 
+> 	Arnd
