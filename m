@@ -1,119 +1,247 @@
-Return-Path: <ulf.hansson@linaro.org>
+Return-Path: <lee.jones@linaro.org>
+Date: Thu, 4 Sep 2014 10:43:36 +0100
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 2/3] mfd: Add hi6421 PMIC core driver
+Message-ID: <20140904094336.GD1397@lee--X1>
+References: <1409560115-30646-1-git-send-email-guodong.xu@linaro.org>
+ <1409560115-30646-3-git-send-email-guodong.xu@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CAL8zT=j0TfC=RaA5L+Zm3ACk=D57tb+k6HNrQnSjd4JY_iupCQ@mail.gmail.com>
-References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
-	<CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
-	<5406D942.4080405@intel.com>
-	<CAPDyKFrnF4biUGkLgkzz2RNdY1yLp2_bfvoWMM55yx-_TG6ENw@mail.gmail.com>
-	<CAL8zT=j0TfC=RaA5L+Zm3ACk=D57tb+k6HNrQnSjd4JY_iupCQ@mail.gmail.com>
-Date: Thu, 4 Sep 2014 10:58:41 +0200
-Message-ID: <CAPDyKFoe6Zkr+QLZRc3azn8JvpsQXdSNLHTLmy5O-nnbVy9C1A@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from DT
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <b29396@freescale.com>, Peter Griffin <peter.griffin@linaro.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, h80.chung@samsung.com, Chris Ball <chris@printf.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1409560115-30646-3-git-send-email-guodong.xu@linaro.org>
+To: Guodong Xu <guodong.xu@linaro.org>
+Cc: sameo@linux.intel.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org, khilman@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhangnian@huawei.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi
+On Mon, 01 Sep 2014, Guodong Xu wrote:
 
-On 3 September 2014 15:08, Jean-Michel Hautbois
-<jean-michel.hautbois@vodalys.com> wrote:
-> 2014-09-03 11:09 GMT+02:00 Ulf Hansson <ulf.hansson@linaro.org>:
->> On 3 September 2014 11:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>> On 09/03/2014 11:30 AM, Ulf Hansson wrote:
->>>> On 2 September 2014 17:49, Jean-Michel Hautbois
->>>> <jean-michel.hautbois@vodalys.com> wrote:
->>>>> This property is useful when we don't want to access boot partitions on eMMC
->>>>>
->>>>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
->>>>>  drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
->>>>>  include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
->>>>>  3 files changed, 10 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> index 431716e..59cc854 100644
->>>>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> @@ -40,6 +40,7 @@ Optional properties:
->>>>>  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
->>>>>  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
->>>>>  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
->>>>> +- no-boot-part : when preset, tells to access boot partitions
->>>>>
->>>>>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
->>>>>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
->>>>> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
->>>>> index ccec0e3..439e663 100644
->>>>> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
->>>>> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
->>>>> @@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
->>>>>         if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
->>>>>                 boarddata->delay_line = 0;
->>>>>
->>>>> +       if (of_find_property(np, "no-boot-part", NULL))
->>>>> +               boarddata->access_boot_part = false;
->>>>> +       else
->>>>> +               boarddata->access_boot_part = true;
->>>>> +
->>>>>         return 0;
->>>>>  }
->>>>>  #else
->>>>> @@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
->>>>>                 host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
->>>>>         }
->>>>>
->>>>> +       if (!boarddata->access_boot_part)
->>>>> +               host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
->>>>> +
->>>>
->>>> Hmm, I don't think MMC_CAP2_BOOTPART_NOACC should have a DT binding.
->>>> Does it describe the hardware in some form?
->>>>
->>>> Actually I would like to question why MMC_CAP2_BOOTPART_NOACC exists
->>>> at all. If there are cards that don't supports the BOOT area,
->>>> shouldn't we have a card quirk for it instead of a host cap? Maybe
->>>> Adrian Hunter, how originally wrote the patch for adding
->>>> MMC_CAP2_BOOTPART_NOACC, could help me understand the reasons behind
->>>> it!?
->>>
->>> It was added because platform firmware was able to prevent access to the
->>> boot partitions (for security I think), so attempts to access them would
->>> fail messily.  It was not related to any specific card.
->>
->> Adrian, appreciate your clarification. After all it seems like adding
->> a DT binding for it should be appropriate.
->>
->> Kind regards
->> Uffe
->
-> Thanks Adrian :).
-> Well, there is boot partitions and rpmb partition, and maybe should we
-> have a binding to prevent access to both of them ?
-> Something else came to my mind, when you want to boot on eMMC, do you
-> need to write u-boot in boot partitions or is it written at the
-> logical adress 0 which is what fdisk uses as start ?
-> Because, if this is not usuable but just scanned I can't see why we
-> bother doing it... ?
+> This adds driver to support HiSilicon Hi6421 PMIC. Hi6421 includes multi-
+> functions, such as regulators, codec, ADCs, Coulomb counter, etc.
+> This driver includes core APIs _only_.
+> 
+> Drivers for individul components, like voltage regulators, are
+> implemented in corresponding driver directories and files.
+> 
+> Registers in Hi6421 are memory mapped, so using regmap-mmio API.
+> 
+> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+> ---
+>  drivers/mfd/Kconfig             |  13 +++++
+>  drivers/mfd/Makefile            |   1 +
+>  drivers/mfd/hi6421-pmic-core.c  | 113 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/hi6421-pmic.h |  41 +++++++++++++++
+>  4 files changed, 168 insertions(+)
+>  create mode 100644 drivers/mfd/hi6421-pmic-core.c
+>  create mode 100644 include/linux/mfd/hi6421-pmic.h
 
-Hi Jean-Michel,
+Applied, thanks.
 
-I am not sure adding a DT binding for non access to rpmb would be
-needed. At least until we heard of a similar case as Adrian describes
-but for rpmb.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index de5abf2..2de4919 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -210,6 +210,19 @@ config MFD_MC13XXX_I2C
+>  	help
+>  	  Select this if your MC13xxx is connected via an I2C bus.
+>  
+> +config MFD_HI6421_PMIC
+> +	tristate "HiSilicon Hi6421 PMU/Codec IC"
+> +	depends on OF
+> +	select MFD_CORE
+> +	select REGMAP_MMIO
+> +	help
+> +	  Add support for HiSilicon Hi6421 PMIC. Hi6421 includes multi-
+> +	  functions, such as regulators, RTC, codec, Coulomb counter, etc.
+> +	  This driver includes core APIs _only_. You have to select
+> +	  individul components like voltage regulators under corresponding
+> +	  menus in order to enable them.
+> +	  We communicate with the Hi6421 via memory-mapped I/O.
+> +
+>  config HTC_EGPIO
+>  	bool "HTC EGPIO support"
+>  	depends on GPIOLIB && ARM
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f001487..dc59efd 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -169,6 +169,7 @@ obj-$(CONFIG_MFD_AS3711)	+= as3711.o
+>  obj-$(CONFIG_MFD_AS3722)	+= as3722.o
+>  obj-$(CONFIG_MFD_STW481X)	+= stw481x.o
+>  obj-$(CONFIG_MFD_IPAQ_MICRO)	+= ipaq-micro.o
+> +obj-$(CONFIG_MFD_HI6421_PMIC)	+= hi6421-pmic-core.o
+>  
+>  intel-soc-pmic-objs		:= intel_soc_pmic_core.o intel_soc_pmic_crc.o
+>  obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
+> diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-core.c
+> new file mode 100644
+> index 0000000..321a265
+> --- /dev/null
+> +++ b/drivers/mfd/hi6421-pmic-core.c
+> @@ -0,0 +1,113 @@
+> +/*
+> + * Device driver for Hi6421 IC
+> + *
+> + * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
+> + *              http://www.hisilicon.com
+> + * Copyright (c) <2013-2014> Linaro Ltd.
+> + *              http://www.linaro.org
+> + *
+> + * Author: Guodong Xu <guodong.xu@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/hi6421-pmic.h>
+> +
+> +static const struct mfd_cell hi6421_devs[] = {
+> +	{ .name = "hi6421-regulator", },
+> +};
+> +
+> +static struct regmap_config hi6421_regmap_config = {
+> +	.reg_bits = 32,
+> +	.reg_stride = 4,
+> +	.val_bits = 8,
+> +	.max_register = HI6421_REG_TO_BUS_ADDR(HI6421_REG_MAX),
+> +};
+> +
+> +static int hi6421_pmic_probe(struct platform_device *pdev)
+> +{
+> +	struct hi6421_pmic *pmic;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
+> +	if (!pmic)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	pmic->regmap = devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
+> +						 &hi6421_regmap_config);
+> +	if (IS_ERR(pmic->regmap)) {
+> +		dev_err(&pdev->dev,
+> +			"regmap init failed: %ld\n", PTR_ERR(pmic->regmap));
+> +		return PTR_ERR(pmic->regmap);
+> +	}
+> +
+> +	/* set over-current protection debounce 8ms */
+> +	regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
+> +				(HI6421_OCP_DEB_SEL_MASK
+> +				 | HI6421_OCP_EN_DEBOUNCE_MASK
+> +				 | HI6421_OCP_AUTO_STOP_MASK),
+> +				(HI6421_OCP_DEB_SEL_8MS
+> +				 | HI6421_OCP_EN_DEBOUNCE_ENABLE));
+> +
+> +	platform_set_drvdata(pdev, pmic);
+> +
+> +	ret = mfd_add_devices(&pdev->dev, 0, hi6421_devs,
+> +			ARRAY_SIZE(hi6421_devs), NULL, 0, NULL);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int hi6421_pmic_remove(struct platform_device *pdev)
+> +{
+> +	mfd_remove_devices(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id of_hi6421_pmic_match_tbl[] = {
+> +	{ .compatible = "hisilicon,hi6421-pmic", },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver hi6421_pmic_driver = {
+> +	.driver = {
+> +		.name	= "hi6421_pmic",
+> +		.of_match_table = of_hi6421_pmic_match_tbl,
+> +	},
+> +	.probe	= hi6421_pmic_probe,
+> +	.remove	= hi6421_pmic_remove,
+> +};
+> +module_platform_driver(hi6421_pmic_driver);
+> +
+> +MODULE_AUTHOR("Guodong Xu <guodong.xu@linaro.org>");
+> +MODULE_DESCRIPTION("Hi6421 PMIC driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421-pmic.h
+> new file mode 100644
+> index 0000000..587273e
+> --- /dev/null
+> +++ b/include/linux/mfd/hi6421-pmic.h
+> @@ -0,0 +1,41 @@
+> +/*
+> + * Header file for device driver Hi6421 PMIC
+> + *
+> + * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
+> + *              http://www.hisilicon.com
+> + * Copyright (c) <2013-2014> Linaro Ltd.
+> + *              http://www.linaro.org
+> + *
+> + * Author: Guodong Xu <guodong.xu@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef	__HI6421_PMIC_H
+> +#define	__HI6421_PMIC_H
+> +
+> +/* Hi6421 registers are mapped to memory bus in 4 bytes stride */
+> +#define HI6421_REG_TO_BUS_ADDR(x)	(x << 2)
+> +
+> +/* Hi6421 maximum register number */
+> +#define HI6421_REG_MAX			0xFF
+> +
+> +/* Hi6421 OCP (over current protection) and DEB (debounce) control register */
+> +#define	HI6421_OCP_DEB_CTRL_REG		HI6421_REG_TO_BUS_ADDR(0x51)
+> +#define	HI6421_OCP_DEB_SEL_MASK		0x0C
+> +#define HI6421_OCP_DEB_SEL_8MS		0x00
+> +#define HI6421_OCP_DEB_SEL_16MS		0x04
+> +#define HI6421_OCP_DEB_SEL_32MS		0x08
+> +#define HI6421_OCP_DEB_SEL_64MS		0x0C
+> +#define HI6421_OCP_EN_DEBOUNCE_MASK	0x02
+> +#define HI6421_OCP_EN_DEBOUNCE_ENABLE	0x02
+> +#define HI6421_OCP_AUTO_STOP_MASK	0x01
+> +#define HI6421_OCP_AUTO_STOP_ENABLE	0x01
+> +
+> +struct hi6421_pmic {
+> +	struct regmap		*regmap;
+> +};
+> +
+> +#endif		/* __HI6421_PMIC_H */
 
-BTW, I just posted a patch which disabled partition scan of the boot
-area, what to you think about that?
-http://marc.info/?l=linux-mmc&m=140973496402028&w=2
-
-Finally I am also wondering whether we could and thus should, handle
-these situations entirely without using a host cap. In principle what
-we need is a more sophisticated error handling when the switch errors
-occurs, while trying to switch to the boot area/rpmb partitions. Could
-you maybe investigate that option, before we decide to add a new DT
-binding?
-
-Kind regards
-Uffe
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
