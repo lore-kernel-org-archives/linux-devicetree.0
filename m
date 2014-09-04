@@ -1,47 +1,80 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
-Date: Thu, 4 Sep 2014 23:49:30 +0200
-Message-ID: <201409042349.31210.arnd@arndb.de>
-References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr> <3966110.RPrxdc8FBm@wuerfel> <20140904192943.11368.83896@quantum>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH] IBM Akebono: Remove obsolete config select
+Date: Fri, 05 Sep 2014 00:20:42 +0200
+Message-ID: <1409869242.5546.119.camel@x220>
+References: <1398998002.2925.15.camel@pasglop>
+	 <1399018005-23136-1-git-send-email-alistair@popple.id.au>
+	 <1402660592.28881.22.camel@x220> <1774195.a1B25gz7RT@mexican>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140904192943.11368.83896@quantum>
+In-Reply-To: <1774195.a1B25gz7RT@mexican>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+To: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 04 September 2014, Mike Turquette wrote:
-> Quoting Arnd Bergmann (2014-09-03 12:33:31)
-> > On Wednesday 03 September 2014 11:49:56 Mike Turquette wrote:
-> > > > Right, makes sense. We have in the past done it either way for other
-> > > > platforms. When merging the patches through the clk subsystem, it still
-> > > > makes sense to let us know of those plans and ask for an Ack from
-> > > > the arm-soc maintainers, to be sure we can plan ahead in case there
-> > > > are other (conflicting) patch sets that are sent through arm-soc.
-> > > 
-> > > Do I have your Ack for the arch/arm patches?
-> > > 
-> > > [0] https://lkml.kernel.org/r/<1409758148-20104-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> > 
-> > I have no objection to the change, but we might need to be careful in
-> > case we get a lot of conflicts.
-> > 
-> > How about making it a shared branch that you plan to send upstream
-> > but that we can also include in arm-soc to avoid conflicts if necessary?
+On Fri, 2014-06-20 at 10:10 +1000, Alistair Popple wrote:
+> Hi Ben,
 > 
-> Sounds good. I'll probably need to perform a bit of surgery on my tree
-> and rebase it in order to have the minimum set of patches that get
-> pulled into arm-soc.
+> It looks like we may have missed this trivial fix? Can you please apply it to 
+> your tree?
+> 
+> Regards,
+> 
+> Alistair
+> 
+> On Fri, 13 Jun 2014 13:56:32 Paul Bolle wrote:
+> > On Fri, 2014-05-02 at 18:06 +1000, Alistair Popple wrote:
+> > > The original implementation of MMC support for Akebono introduced a
+> > > new configuration symbol (MMC_SDHCI_OF_476GTR). This symbol has been
+> > > dropped in favour of using the generic platform driver however the
+> > > select for this symbol was mistakenly left in the platform
+> > > configuration.
+> > > 
+> > > This patch removes the obsolete symbol selection.
+> > > 
+> > > Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+> > 
+> > This patch hasn't yet entered linux-next nor Linus' tree. Is it queued
+> > somewhere? If not, would a
+> >     Acked-by: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+> > 
+> > help to get this trivial patch queued for either of those trees?
+> > 
+> > 
+> > Paul Bolle
+> > 
+> > > ---
+> > > 
+> > >  arch/powerpc/platforms/44x/Kconfig | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > > 
+> > > diff --git a/arch/powerpc/platforms/44x/Kconfig
+> > > b/arch/powerpc/platforms/44x/Kconfig index 8beec7d..908bf11 100644
+> > > --- a/arch/powerpc/platforms/44x/Kconfig
+> > > +++ b/arch/powerpc/platforms/44x/Kconfig
+> > > @@ -220,7 +220,6 @@ config AKEBONO
+> > > 
+> > >  	select USB_EHCI_HCD_PLATFORM
+> > >  	select MMC_SDHCI
+> > >  	select MMC_SDHCI_PLTFM
+> > > 
+> > > -	select MMC_SDHCI_OF_476GTR
+> > > 
+> > >  	select ATA
+> > >  	select SATA_AHCI_PLATFORM
+> > >  	help
 
-Ok, I see. We might not pull it in right away, because it's possible that there
-are no actual conflicts and we don't need them, but it's definitely good
-if your branch is ready in case we do.
+This trivial cleanup is still not in linux-next nor in Linus' tree.
+Could someone else please have a look at it?
 
-	Arnd
+Thanks,
+
+
+Paul Bolle
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
