@@ -1,117 +1,117 @@
-From: Hsin-Hsiang Tseng <hsinhsiangtseng@gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: Enable boot partition access from DT
-Date: Thu, 4 Sep 2014 08:59:42 +0800
-Message-ID: <CAC1bqKjV1kEb2vL=Vo_tO9XqPh11OdPGwpUooETnK0yXOYw6SQ@mail.gmail.com>
-References: <1409672977-26972-1-git-send-email-jean-michel.hautbois@vodalys.com>
-	<CAPDyKFrwCzQJvbpbue4T=HWLmbq5sZOP3RXwiupKvXe71uboUw@mail.gmail.com>
-	<5406D942.4080405@intel.com>
-	<CAPDyKFrnF4biUGkLgkzz2RNdY1yLp2_bfvoWMM55yx-_TG6ENw@mail.gmail.com>
-	<CAL8zT=j0TfC=RaA5L+Zm3ACk=D57tb+k6HNrQnSjd4JY_iupCQ@mail.gmail.com>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
+Date: Thu, 04 Sep 2014 09:02:08 +0800
+Message-ID: <5407BA10.2030402@rock-chips.com>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com> <1409710239-19941-3-git-send-email-caesar.wang@rock-chips.com> <11280986.L6lv82O8Qv@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAL8zT=j0TfC=RaA5L+Zm3ACk=D57tb+k6HNrQnSjd4JY_iupCQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@arm.linux.org.uk>, Shawn Guo <shawn.guo@linaro.org>, Dong Aisheng <b29396@freescale.com>, Peter Griffin <peter.griffin@linaro.org>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, h80.chung@samsung.com, Chris Ball <chris@printf.net>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11280986.L6lv82O8Qv@diego>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Jean-Michel
-Some platforms which using Samsung exynos SoC, we write u-boot related
-bin files in boot partitions(in my case boot partition 1) to boot on
-eMMC.
-Some platforms which using Qualcomm SoC, written at logical address
-0(User Data Area) and they use a-boot not u-boot.
-BTW, rpmb partition is not wide use now. As i know, some Intel
-platforms have use rpmb partition.
 
-Thanks,
-Hsinhsiang
+=E5=9C=A8 2014=E5=B9=B409=E6=9C=8803=E6=97=A5 16:07, Heiko St=C3=BCbner=
+ =E5=86=99=E9=81=93:
+> Am Mittwoch, 3. September 2014, 10:10:37 schrieb Caesar Wang:
+>> This add the necessary binding documentation for the thermal
+>> found on Rockchip SoCs
+>>
+>> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>> ---
+>>   .../devicetree/bindings/thermal/rockchip-thermal.txt | 20
+>> ++++++++++++++++++++ 1 file changed, 20 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-ther=
+mal.txt
+>> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt new=
+ file
+>> mode 100644
+>> index 0000000..1ed4d4c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>> @@ -0,0 +1,20 @@
+>> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+>> +
+>> +Required properties:
+>> +- compatible: "rockchip,rk3288-tsadc"
+>> +- reg: physical base address of the controller and length of memory=
+ mapped
+>> +       region.
+>> +- interrupts: The interrupt number to the cpu. The interrupt specif=
+ier
+>> format +	      depends on the interrupt controller.
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +- clock-names: Shall be "tsadc" for the converter-clock, and "apb_p=
+clk" for
+>> +	       the peripheral clock.
+> You're using the passive-temp, critical-temp and force-shut-temp prop=
+erties in
+> your driver without declaring them here.
 
-2014-09-03 21:08 GMT+08:00 Jean-Michel Hautbois
-<jean-michel.hautbois@vodalys.com>:
-> 2014-09-03 11:09 GMT+02:00 Ulf Hansson <ulf.hansson@linaro.org>:
->> On 3 September 2014 11:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>> On 09/03/2014 11:30 AM, Ulf Hansson wrote:
->>>> On 2 September 2014 17:49, Jean-Michel Hautbois
->>>> <jean-michel.hautbois@vodalys.com> wrote:
->>>>> This property is useful when we don't want to access boot partitions on eMMC
->>>>>
->>>>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
->>>>>  drivers/mmc/host/sdhci-esdhc-imx.c            | 8 ++++++++
->>>>>  include/linux/platform_data/mmc-esdhc-imx.h   | 1 +
->>>>>  3 files changed, 10 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> index 431716e..59cc854 100644
->>>>> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->>>>> @@ -40,6 +40,7 @@ Optional properties:
->>>>>  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
->>>>>  - mmc-hs400-1_8v: eMMC HS400 mode(1.8V I/O) is supported
->>>>>  - mmc-hs400-1_2v: eMMC HS400 mode(1.2V I/O) is supported
->>>>> +- no-boot-part : when preset, tells to access boot partitions
->>>>>
->>>>>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
->>>>>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
->>>>> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
->>>>> index ccec0e3..439e663 100644
->>>>> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
->>>>> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
->>>>> @@ -942,6 +942,11 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
->>>>>         if (of_property_read_u32(np, "fsl,delay-line", &boarddata->delay_line))
->>>>>                 boarddata->delay_line = 0;
->>>>>
->>>>> +       if (of_find_property(np, "no-boot-part", NULL))
->>>>> +               boarddata->access_boot_part = false;
->>>>> +       else
->>>>> +               boarddata->access_boot_part = true;
->>>>> +
->>>>>         return 0;
->>>>>  }
->>>>>  #else
->>>>> @@ -1119,6 +1124,9 @@ static int sdhci_esdhc_imx_probe(struct platform_device *pdev)
->>>>>                 host->quirks2 |= SDHCI_QUIRK2_NO_1_8_V;
->>>>>         }
->>>>>
->>>>> +       if (!boarddata->access_boot_part)
->>>>> +               host->mmc->caps2 |= MMC_CAP2_BOOTPART_NOACC;
->>>>> +
->>>>
->>>> Hmm, I don't think MMC_CAP2_BOOTPART_NOACC should have a DT binding.
->>>> Does it describe the hardware in some form?
->>>>
->>>> Actually I would like to question why MMC_CAP2_BOOTPART_NOACC exists
->>>> at all. If there are cards that don't supports the BOOT area,
->>>> shouldn't we have a card quirk for it instead of a host cap? Maybe
->>>> Adrian Hunter, how originally wrote the patch for adding
->>>> MMC_CAP2_BOOTPART_NOACC, could help me understand the reasons behind
->>>> it!?
->>>
->>> It was added because platform firmware was able to prevent access to the
->>> boot partitions (for security I think), so attempts to access them would
->>> fail messily.  It was not related to any specific card.
->>
->> Adrian, appreciate your clarification. After all it seems like adding
->> a DT binding for it should be appropriate.
->>
->> Kind regards
->> Uffe
+frankly,the about are need be declared. but  there are 4 types[0] for=20
+trip in thermal framework,
+there is no force-shut for me. So I want to change it three additional=20
+properties in [PATCH V4 4/4],
+
+
+[0]
+{
+     THERMAL_TRIP_CRITICAL,
+     THERMAL_TRIP_HOT,
+     THERMAL_TRIP_PASSIVE,
+     THERMAL_TRIP_ACTIVE,
+}
+
+> But more importantly, please use the generic trip-points for this. I =
+guess it
+> shouldn't be a problem to introduce a "forced-shutdown" trippoint [0]=
+ for the
+> additional trip-point you have - thermal maintainers, please shout if=
+ I'm
+> wrong :-)
+
+It's a good option.
+I can send a patch,but I don't know whether the thermal maintainers wil=
+l=20
+accept it.
+
+Maybe,they have a better way to suggest it.:-)
+
+
+PS:I will sent a new patch If I still have no received their suggestion=
+s=20
+in two days.
+
 >
-> Thanks Adrian :).
-> Well, there is boot partitions and rpmb partition, and maybe should we
-> have a binding to prevent access to both of them ?
-> Something else came to my mind, when you want to boot on eMMC, do you
-> need to write u-boot in boot partitions or is it written at the
-> logical adress 0 which is what fdisk uses as start ?
-> Because, if this is not usuable but just scanned I can't see why we
-> bother doing it... ?
+> Heiko
 >
-> Thanks,
-> JM
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> [0] in a separate patch, changing
+> - thermal_trip_type enum in include/linux/thermal.h
+> - trip_types mapping in drivers/thermal/of-thermal.c
+> - Documentation/devicetree/bindings/thermal/thermal.txt
+>
+>> +
+>> +Example:
+>> +tsadc: tsadc@ff280000 {
+>> +	compatible =3D "rockchip,rk3288-tsadc";
+>> +	reg =3D <0xff280000 0x100>;
+>> +	interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>> +	clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+>> +	clock-names =3D "tsadc", "apb_pclk";
+>> +};
+>
+>
+>
+
+--=20
+Best regards,
+Caesar
