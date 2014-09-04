@@ -1,31 +1,135 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 4/4] pinctrl: qcom: Make the target processor value configurable
-Date: Thu, 4 Sep 2014 18:20:01 +0200
-Message-ID: <CACRpkdZQouNk0z1AQHbjULJXdRK07-kZDXLcnx0Xayew0fnocA@mail.gmail.com>
-References: <1409761696-15435-1-git-send-email-gdjakov@mm-sol.com>
-	<1409761696-15435-5-git-send-email-gdjakov@mm-sol.com>
+From: Markus Niebel <list-09_linux_arm@tqsc.de>
+Subject: [PATCH] ARM: DT: imx53: fix lvds channel 1 port
+Date: Thu,  4 Sep 2014 18:43:05 +0200
+Message-ID: <1409848985-16140-1-git-send-email-list-09_linux_arm@tqsc.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1409761696-15435-5-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Markus Niebel <Markus.Niebel@tq-group.com>, devicetree@vger.kernel.org, festevam@gmail.com, shawn.guo@freescale.com, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 3, 2014 at 6:28 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+From: Markus Niebel <Markus.Niebel@tq-group.com>
 
-> Currently the value used to specify that interrupts from the gpio should
-> be routed to the application processor is hardcoded for all Qualcomm SoCs.
-> But the new APQ8084 SoC uses a different value. To resolve this, we make
-> this value configurable for each SoC. For all existing SoCs we continue
-> to use the current value, and only for APQ8084 we use the new value.
->
-> Suggested-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Acked-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+using LVDS channel 1 on an i.MX53 leads to following error:
 
-Patch applied.
+imx-ldb 53fa8008.ldb: unable to set di0 parent clock to ldb_di1
 
-Yours,
-Linus Walleij
+This comes from imx_ldb_set_clock with mux = 0. Mux parameter must be "1" for
+reparenting di1 clock to ldb_di1. The value of the mux param comes from device
+tree port settings.
+
+On i.MX5, the internal two-input-multiplexer is used. Due to hardware limitations,
+only one port (port@[0,1]) can be used for each channel (lvds-channel@[0,1],
+respectively)
+
+Documentation update suggested by Philipp Zabel <p.zabel@pengutronix.de>
+
+Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
+---
+ Documentation/devicetree/bindings/staging/imx-drm/ldb.txt | 15 +++++++++++++--
+ arch/arm/boot/dts/imx53.dtsi                              | 12 ++++++++++--
+ 2 files changed, 23 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
+index 578a1fc..443bcb6 100644
+--- a/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
++++ b/Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
+@@ -56,6 +56,9 @@ Required properties:
+  - fsl,data-width : should be <18> or <24>
+  - port: A port node with endpoint definitions as defined in
+    Documentation/devicetree/bindings/media/video-interfaces.txt.
++   On i.MX5, the internal two-input-multiplexer is used.
++   Due to hardware limitations, only one port (port@[0,1])
++   can be used for each channel (lvds-channel@[0,1], respectively)
+    On i.MX6, there should be four ports (port@[0-3]) that correspond
+    to the four LVDS multiplexer inputs.
+ 
+@@ -78,6 +81,8 @@ ldb: ldb@53fa8008 {
+ 		      "di0", "di1";
+ 
+ 	lvds-channel@0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		reg = <0>;
+ 		fsl,data-mapping = "spwg";
+ 		fsl,data-width = <24>;
+@@ -86,7 +91,9 @@ ldb: ldb@53fa8008 {
+ 			/* ... */
+ 		};
+ 
+-		port {
++		port@0 {
++			reg = <0>;
++
+ 			lvds0_in: endpoint {
+ 				remote-endpoint = <&ipu_di0_lvds0>;
+ 			};
+@@ -94,6 +101,8 @@ ldb: ldb@53fa8008 {
+ 	};
+ 
+ 	lvds-channel@1 {
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		reg = <1>;
+ 		fsl,data-mapping = "spwg";
+ 		fsl,data-width = <24>;
+@@ -102,7 +111,9 @@ ldb: ldb@53fa8008 {
+ 			/* ... */
+ 		};
+ 
+-		port {
++		port@1 {
++			reg = <1>;
++
+ 			lvds1_in: endpoint {
+ 				remote-endpoint = <&ipu_di1_lvds1>;
+ 			};
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index 6456a00..1a2202d 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -419,10 +419,14 @@
+ 				status = "disabled";
+ 
+ 				lvds-channel@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
+ 					reg = <0>;
+ 					status = "disabled";
+ 
+-					port {
++					port@0 {
++						reg = <0>;
++
+ 						lvds0_in: endpoint {
+ 							remote-endpoint = <&ipu_di0_lvds0>;
+ 						};
+@@ -430,10 +434,14 @@
+ 				};
+ 
+ 				lvds-channel@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
+ 					reg = <1>;
+ 					status = "disabled";
+ 
+-					port {
++					port@1 {
++						reg = <1>;
++
+ 						lvds1_in: endpoint {
+ 							remote-endpoint = <&ipu_di1_lvds1>;
+ 						};
+-- 
+2.1.0
