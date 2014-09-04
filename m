@@ -1,85 +1,115 @@
-From: Zhi Li <lznuaa@gmail.com>
-Subject: Re: [Patch net-next 08/11] net:fec: change FEC alignment to 64 bytes
- for ARM platform
-Date: Thu, 4 Sep 2014 09:17:20 -0500
-Message-ID: <CAHrpEqQYUTL8ux9dwnzogihdVXhDs=W25nZthpjBAVzcEEzXUw@mail.gmail.com>
-References: <1409776697-1536-1-git-send-email-Frank.Li@freescale.com>
-	<1409776697-1536-9-git-send-email-Frank.Li@freescale.com>
-	<063D6719AE5E284EB5DD2968C1650D6D17487196@AcuExch.aculab.com>
-	<e50c6383dc184566846e190026d1186a@BLUPR03MB373.namprd03.prod.outlook.com>
-	<063D6719AE5E284EB5DD2968C1650D6D174872BE@AcuExch.aculab.com>
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 3/3] ARM: DTS: AM335x: Drop TSC's wire-config parameters
+Date: Thu,  4 Sep 2014 16:39:15 +0200
+Message-ID: <1409841555-11336-3-git-send-email-bigeasy@linutronix.de>
+References: <1409841555-11336-1-git-send-email-bigeasy@linutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6D174872BE@AcuExch.aculab.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Laight <David.Laight@aculab.com>
-Cc: "fugang.duan@freescale.com" <fugang.duan@freescale.com>, "Frank.Li@freescale.com" <Frank.Li@freescale.com>, "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1409841555-11336-1-git-send-email-bigeasy@linutronix.de>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, Jeff Lance <j-lance1@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 4, 2014 at 4:18 AM, David Laight <David.Laight@aculab.com> wrote:
-> From: fugang.duan@freescale.com
->> >From: Frank Li
->> >> From: Fugang Duan <B38611@freescale.com>
->> >>
->> >> Since enet-avb has 64 bytes alignment limitation for rx DMA transfer.
->> >> The previous enet IP for ARM platform has 16 bytes alignment for tx
->> >> DMA transfer.
->> >
->> >Do you mean rx or tx here? or both??
->> >
->> >And can we beat up the hardware designers to stop these restrictions on rx
->> >(in particular) ethernet buffer alignments?
->> >A device isn't suitable for ethernet unless is can write the destination
->> >mac address to a 4n+2 boundary.
->> >
->> >     David
->> >
->> Hi, David,
->>
->> For previous enet IP there has 16 bytes data buffer alignment limitation for tx & rx DMA transfer.
->> For imx6sx enet-avb IP, there has 64 bytes data buffer alignment limitation for rx DMA transfer, byte
->> alignment for tx data
->> Buffer for DMA transfer.
->>
->> I think rx data buffer alignment limitation don't introduce performance drop, is not complex for sw
->> implemention. Anyway,
->> We can request IC designer to remove the limitation for future chips.
->
-> The 'problem' is that you need the IP header to be 32bit aligned.
-> If the dma buffer has to be aligned then the code either has to do an expensive
-> misaligned copy of the entire frame (at some point the entire frame is almost
-> certainly all copied into an aligned buffer), or take the hit of misaligned
-> memory accesses (which might have to be emulated with byte transfers).
->
-> The rx buffer can be aligned provided the hardware skips (or writes junk to)
-> the first two bytes.
+=46rom: Jeff Lance <j-lance1@ti.com>
 
-ENET IP have feature to add additional 2 byte when save data to memory.
+The TSC driver is beeing updated, the parameter is not used anymore. Th=
+e
+AIN lines can not be muxed. All boards use the same value.
+This patch updates the Documentation and dts files.
 
-RX FIFO Shift-16
-When this field is set, the actual frame data starts at bit 16 of the
-first word read from the RX FIFO aligning
-the Ethernet payload on a 32-bit boundary.
-NOTE: This function only affects the FIFO storage and has no influence
-on the statistics, which use the
-actual length of the frame received.
-0 Disabled.
-1 Instructs the MAC to write two additional bytes in front of each
-frame received into the RX FIFO.
+Cc: "Beno=C3=AEt Cousson" <bcousson@baylibre.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Jeff Lance <j-lance1@ti.com>
+[bigeasy: split, add .dts files to the removal]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt       | 10 --=
+--------
+ arch/arm/boot/dts/am335x-evm.dts                               |  1 -
+ arch/arm/boot/dts/am335x-evmsk.dts                             |  1 -
+ arch/arm/boot/dts/am335x-pepper.dts                            |  1 -
+ 4 files changed, 13 deletions(-)
 
-i.MX6SX,
-          Remove TX alignment requirement.
-          But RX and DMA BD address is 64byte aligment.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc=
+-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-a=
+dc.txt
+index 878549ba814d..eeaf065563c9 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.tx=
+t
++++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.tx=
+t
+@@ -15,15 +15,6 @@
+ 				Y and 2 for Z (always). This utilises 12
+ 				of the 16 software steps available. The
+ 				remaining 4 can be used by the ADC.
+-	ti,wire-config: Different boards could have a different order for
+-			connecting wires on touchscreen. We need to provide an
+-			8 bit number where in the 1st four bits represent the
+-			analog lines and the next 4 bits represent positive/
+-			negative terminal on that input line. Notations to
+-			represent the input lines and terminals resoectively
+-			is as follows:
+-			AIN0 =3D 0, AIN1 =3D 1 and so on till AIN7 =3D 7.
+-			XP  =3D 0, XN =3D 1, YP =3D 2, YN =3D 3.
+ - child "adc"
+ 	ti,adc-channels: List of analog inputs available for ADC.
+ 			 AIN0 =3D 0, AIN1 =3D 1 and so on till AIN7 =3D 7.
+@@ -35,7 +26,6 @@
+ 			ti,wires =3D <4>;
+ 			ti,x-plate-resistance =3D <200>;
+ 			ti,coordiante-readouts =3D <5>;
+-			ti,wire-config =3D <0x00 0x11 0x22 0x33>;
+ 		};
+=20
+ 		adc {
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335=
+x-evm.dts
+index e2156a583de7..4c0a5eab5ef2 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -640,7 +640,6 @@
+ 		ti,wires =3D <4>;
+ 		ti,x-plate-resistance =3D <200>;
+ 		ti,coordinate-readouts =3D <5>;
+-		ti,wire-config =3D <0x00 0x11 0x22 0x33>;
+ 	};
+=20
+ 	adc {
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am3=
+35x-evmsk.dts
+index df5fee6b6b4b..88d83b25089a 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -671,7 +671,6 @@
+ 		ti,wires =3D <4>;
+ 		ti,x-plate-resistance =3D <200>;
+ 		ti,coordinate-readouts =3D <5>;
+-		ti,wire-config =3D <0x00 0x11 0x22 0x33>;
+ 	};
+ };
+=20
+diff --git a/arch/arm/boot/dts/am335x-pepper.dts b/arch/arm/boot/dts/am=
+335x-pepper.dts
+index 0d35ab64641c..0939ded7eea5 100644
+--- a/arch/arm/boot/dts/am335x-pepper.dts
++++ b/arch/arm/boot/dts/am335x-pepper.dts
+@@ -502,7 +502,6 @@
+ 		ti,wires =3D <4>;
+ 		ti,x-plate-resistance =3D <200>;
+ 		ti,coordinate-readouts =3D <5>;
+-		ti,wire-config =3D <0x00 0x11 0x22 0x33>;
+ 	};
+=20
+ 	adc {
+--=20
+2.1.0
 
-
-best regards
-Frank Li
-
-
-
->
->         David
->
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
