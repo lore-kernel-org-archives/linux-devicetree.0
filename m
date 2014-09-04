@@ -1,107 +1,336 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 1/3] GPIO: gpio-dwapb: Enable platform driver binding to
- MFD driver
-Date: Thu, 4 Sep 2014 12:01:22 +0000
-Message-ID: <1409832078.30155.80.camel@intel.com>
-References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
-	 <1409161588-19417-2-git-send-email-alvin.chen@intel.com>
-	 <20140903200302.GA7673@breakpoint.cc>
-	 <4656BEB6164FC34F8171C6538F1A595B2E982384@SHSMSX101.ccr.corp.intel.com>
-	 <20140904073027.GA3336@breakpoint.cc>
-	 <4656BEB6164FC34F8171C6538F1A595B2E982558@SHSMSX101.ccr.corp.intel.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v5 1/4] ethernet: arc: Add support for Rockchip SoC layer
+ device tree bindings
+Date: Thu, 04 Sep 2014 14:05:33 +0200
+Message-ID: <13303426.CnNG9VQfuK@diego>
+References: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E982558@SHSMSX101.ccr.corp.intel.com>
-Content-Language: en-US
-Content-ID: <E684FAA9DB49924C991BF71905AB9111@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Chen, Alvin" <alvin.chen@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1409763165-16461-1-git-send-email-romain.perier@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Romain Perier <romain.perier@gmail.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDE0LTA5LTA0IGF0IDEwOjM4ICswMDAwLCBDaGVuLCBBbHZpbiB3cm90ZToNCj4g
-DQo+ID4gPiBTaW5jZSB3ZSBlbmFibGUgdGhpcyBtb2R1bGUgbm90IG9ubHkgc3VwcG9ydCBPRiBk
-ZXZpY2VzLCBidXQgYWxzbyBzdXBwb3J0DQo+ID4gTUZEIGRldmljZXMsIHNvIHdlIHJlbW92ZSBP
-Rl9HUElPIGRlcGVuZGVuYw0KPiA+ID4gRm9yICdQQ0knLCB0aGUgb3JpZ2luYWwgY29kZSBpcyBh
-bHNvIG5vdCBkZXBlbmRlZCBvbiBQQ0ksIGFuZCB0aGlzIHBhdGNoIGFsc28NCj4gPiBub3QsIGRv
-IHlvdSB0aGluayBpdCBpcyBuZWNlc3Nhcnk/DQo+ID4gDQo+ID4gaWYgbm90IFBDSSB0aGVuIHlv
-dSBzaG91bGQgYWRkIHNvbWV0aGluZyBsaWt3ZQ0KPiA+IAkiZGVwZW5kcyBvbiBPRl9HUElPIHx8
-IE1GRCINCj4gPiANCj4gPiBsb29raW5nIGZ1cnRoZXIsIHlvdSBuZWVkIGFsc28gSEFTX0lPTUVN
-IGZvciB0aGluZ3MgbGlrZQ0KPiA+IGRldm1faW9yZW1hcF9yZXNvdXJjZSgpLiBMaW51cywgd291
-bGRuJ3QgaXQgbWFrZSBzZW5zZSB0byBncm91cCB0aGlzIGRyaXZlcg0KPiA+IGFuZCBtYWtlIHRo
-ZSBibG9jayBkZXBlbmQgb24gaXQ/DQo+ID4gDQo+IEkgY2FuIGFkZCAiZGVwZW5kcyBvbiBPRl9H
-UElPIHx8IElOVEVMX1FVQVJLX0kyQ19HUElPX01GRCIsIHNpbmNlIG5vdyB0aGUgTUZEIHBhdGgg
-b25seSBzdXBwb3J0IEludGVsIFF1YXJrLg0KPiANCj4gQW5kcml5LCBob3cgZG8geW91IHRoaW5r
-Pw0KDQpJIHRoaW5rIHdlIGRvbid0IG5lZWQgdGhhdCBkZXBlbmRlbmN5IGF0IGFsbCBzaW5jZSBP
-Rl9HUElPIGhhcyBzdHVicyBmb3INCm5vbi1PRiBjYXNlLiBBbSBJIG1pc3Npbmcgc29tZXRoaW5n
-Pw0KDQpHUElPTElCIGRlcGVuZGVuY3kgaXMgaW1wbGllZCBpbiBLY29uZmlnLCBieSB0aGUgd2F5
-Lg0KDQpQLlMuIFNlZSwgZm9yIGV4YW1wbGUsIGxlZHMtZ3Bpby5jDQoNCj4gDQo+ID4gPiA+ID4g
-IHN0cnVjdCBkd2FwYl9ncGlvIHsNCj4gPiA+ID4gPiAgCXN0cnVjdAlkZXZpY2UJCSpkZXY7DQo+
-ID4gPiA+ID4gIAl2b2lkIF9faW9tZW0JCSpyZWdzOw0KPiA+ID4gPiA+ICAJc3RydWN0IGR3YXBi
-X2dwaW9fcG9ydAkqcG9ydHM7DQo+ID4gPiA+ID4gLQl1bnNpZ25lZCBpbnQJCW5yX3BvcnRzOw0K
-PiA+ID4gPiB5b3UgY291bGQga2VlcCB0aGlzIHRoZSB3YXkgaXQgaXMNCj4gPiA+IEl0IGhhcyBi
-ZWVuIG1vdmVkIHRvICdwZGF0YScuDQo+ID4gDQo+ID4gSSBzYXcgdGhhdC4gQnV0IHRoZXJlIGlz
-IG5vIG5lZWQga2VlcCBhIHBvaW50ZXIgdG8gcGRhdGEgYWNyb3NzIHRoZSB3aG9sZSBkcml2ZXIN
-Cj4gPiBzaW5jZSBvbmx5IG5lZWQgbnJfcG9ydHMgaW4gdGhlIGRyaXZlciByZW1vdmFsIHBhcnQg
-b2YgdGhlIHdob2xlIGRyaXZlci4NCj4gR290IHlvdXIgaWRlYS4gU28gY2FuIEkganVzdCB1c2Ug
-YSBnbG9iYWwgc3RhdGljIHBkYXRhIHBvaW50ZXIgaW5zdGVhZCBvZiBhZGRpbmcgaXQgYXMgYSBt
-ZW1iZXIgb2YgJyBzdHJ1Y3QgZHdhcGJfZ3Bpbyc/DQo+IFNpbmNlIHBkYXRhIGlzIHVzZWQgaW4g
-YWxsICdwcm9iZScgZnVuY3Rpb25zLCBhbmQgbWFrZSBwZGF0YSBhcyBnbG9iYWwgc3RhdGljIG1h
-a2UgcHJvZ3JhbW1pbmcgbW9yZSBlYXN5Lg0KPiANCj4gPiANCj4gPiA+ID4gPiAgCXN0cnVjdCBp
-cnFfZG9tYWluCSpkb21haW47DQo+ID4gPiA+ID4gKwljb25zdCBzdHJ1Y3QgZHdhcGJfZ3Bpb19w
-bGF0Zm9ybV9kYXRhCSpwZGF0YTsNCj4gPiA+ID4NCj4gPiA+ID4gYW5kIG5vdCBtYWtpbmcgdGhp
-cyBhIG1lbWJlciBvZiB0aGlzIHN0cnVjdC4gSSd2ZSBiZWVuIGdvaW5nIHVwIGFuZA0KPiA+ID4g
-PiBkb3duIHRoZSBzb3VyY2UgYW5kIEkgZG9uJ3Qgc2VlIHRoZSBuZWVkIHRvIG1hcnJ5IGR3YXBi
-X2dwaW8gdG8NCj4gPiA+ID4gZHdhcGJfZ3Bpb19wbGF0Zm9ybV9kYXRhLg0KPiA+ID4gPiBUaGF0
-IGR3YXBiX2dwaW9fcG9ydF9wcm9wZXJ0eSB0aGluZyBoYXMgYSBsb25nIG5hbWUuIENvdWxkIHlv
-dSBqdXN0DQo+ID4gPiA+IHNldCBpdCB1cCwgcGFzcyBpdCBmb3IgcmVnaXN0cmF0aW9uIGFuZCB0
-aGUgZnJlZSBpdD8gWW91IGNhbid0IGZyZWUNCj4gPiA+ID4gdGhlIHBkYXRhIGZvciB0aGUgbm9u
-LU9GIHRyZWUgYnV0IGZvciB0aGUgT0YgY2FzZSB5b3Uga2VlcCB0aGF0IHN0cnVjdA0KPiA+IGFy
-b3VuZCBmb3Igbm8gcmVhc29uLg0KPiA+ID4gPiBZb3UgY291bGQgc2FmZSBzb21lIG1lbW9yeSBh
-bmQgdXNlIHBkYXRhIGRpcmVjdGx5IGZvciBzZXR1cC4NCj4gPiA+IEhlcmUsICdwZGF0YScgaXMg
-dXNlZCBmb3IgYm90aCBPRiBhbmQgTUZELiBGb3IgTUZELCAncGRhdGEnIGlzIHBhc3NlZCBmcm9t
-DQo+ID4gTUZELg0KPiA+ID4gRm9yIE9GLCAncGRhdGEnIGlzIGdldHRpbmcgZnJvbSBkZXZpY2Ug
-bm9kZXMgcHJvcGVydGllcy4gV2h5IGRvIHdlDQo+ID4gPiBoYXZlIHN1Y2ggZGVzaWduPyBCZWNh
-dXNlIGl0IGNhbiBtYWtlIHRoZSBoYW5kbGluZyBtb3JlIGVhc3kgZm9yDQo+ID4gPiBmbG93aW5n
-IHJvdXRpbmUuIEFsbCBuZWNlc3NhcnkgcHJvcGVydGllcyBnZXQgZnJvbSAncGRhdGEnLCBuZXZl
-ciBjYXJlIGl0IGlzDQo+ID4gZnJvbSBPRiBvciBNRkQuIEFuZCBzb21lb25lIGFyZSB3b3JraW5n
-IG9uIHJlcGxhY2luZyBPRiBpbnRlcmZhY2Ugd2l0aCBhDQo+ID4gZmlybXdhcmUgYWdub3N0aWMg
-ZGV2aWNlX3Byb3BlcnR5KiBpbnRlcmZhY2Ugd2hpY2ggd2lsbCB3b3JrIHdpdGggYm90aCBPRiBh
-bmQNCj4gPiBBQ1BJLg0KPiA+ID4gTW9yZSBpbmZvcm1hdGlvbiBmb3IgdGhpcyBkZXNpZ24sIHBs
-ZWFzZSBjb250YWN0IERhcnJlbiBIYXJ0DQo+ID4gPGR2aGFydEBsaW51eC5pbnRlbC5jb20+LiBE
-YXJyZW4gSGFydCB3cm90ZSB0byBtZToNCj4gPiA+ICJHZW5lcmFsbHkgc3BlYWtpbmcsIHJhdGhl
-ciB0aGFuIGlmL2Vsc2UgYmxvY2tzIHRocm91Z2hvdXQgdGhlIGNvZGUNCj4gPiA+IGNoZWNraW5n
-IGlmIGl0IGlzIGVudW1lcmF0ZWQgdmlhIG9wZW4gZmlybXdhcmUgb3IgYXMgYSBwbGF0Zm9ybSBk
-ZXZpY2UsIGENCj4gPiBjbGVhbmVyIGFwcHJvYWNoIGlzIHRvIGNoZWNrIGlmIHRoZSBwZGF0YSBp
-cyBudWxsLCBhbmQgaWYgc28sIHBvcHVsYXRlIHRoZSBwZGF0YQ0KPiA+IGZyb20gdGhlIG9wZW4g
-ZmlybXdhcmUgZGVzY3JpcHRpb24gaWYgcHJlc2VudC4NCj4gPiA+IFRoZW4gdXNlIHRoZSBwZGF0
-YSB0aHJvdWdob3V0IHRoZSBkcml2ZXIuDQo+ID4gDQo+ID4gQnV0IGlzbid0IGl0IGVub3VnaCB0
-byBob2xkIG9uIHRvIHRoaXMgcGRhdGEgdGhpbmcgdGhyb3VnaCB0aGUgcHJvYmUgZnVuY3Rpb24N
-Cj4gPiBvbmx5PyBBZnRlciBwcm9iZSBpcyBkb25lIHlvdSBjb3VsZCBkcm9wIHRoYXQgbWVtb3J5
-IGluIHRoZSBPRi1jYXNlLCByaWdodD8NCj4gT0suIElmIGl0IGlzIE9GLWNhc2UsIHBkYXRhIGNh
-biBiZSBmcmVlZCBpbiB0aGUgZW5kIG9mIHByb2JlLg0KPiANCj4gDQo+ID4gPiA+ID4gKwlpcnFf
-c2V0X2hhbmRsZXJfZGF0YShwb3J0LT5wcC0+aXJxLCBncGlvKTsNCj4gPiA+ID4NCj4gPiA+ID4g
-VGhpcyBkb2VzIG5vdCBsb29rIGxpa2UgaXQgYmVsb25ncyBoZXJlLiBJdCBzaG91bGQgb25seSBi
-ZSB1c2VkDQo+ID4gPiA+IHRvZ2V0aGVyIHdpdGgNCj4gPiA+ID4gaXJxX3NldF9jaGFpbmVkX2hh
-bmRsZXIoKSBvciBhbSBJIG1pc3NpbmcgaGVyZSBzb21ldGhpbmc/DQo+ID4gPiBUaGlzIHBhdGNo
-IHJldXNlZCAnIGR3YXBiX2lycV9oYW5kbGVyJywgaXQgbmVlZHMgdGhlIGlycSBoYW5kbGVyIGRh
-dGEuIEZvciAnDQo+ID4gaXJxX3NldF9oYW5kbGVyX2RhdGEnLCBpdCBqdXN0IHNldHMgdGhlIGly
-cSBkYXRhLg0KPiA+ID4gV2h5IGRvIHlvdSB0aGluayBpdCBtdXN0IGJlIHVzZWQgdG9nZXRoZXIg
-d2l0aCAnIGlycV9zZXRfY2hhaW5lZF9oYW5kbGVyJz8NCj4gPiANCj4gPiBiZWNhdXNlIHlvdSBk
-byByZXF1ZXN0X2lycSjigKYsIGRyaXZlcl9kYXRhKS4gSWYgeW91IHlvdSBsb29rIGNsb3NlIHRv
-DQo+ID4gaXJxX3NldF9jaGFpbmVkX2hhbmRsZXIoKSBpdCBkb2VzIG5vdCBoYXZlIHN1Y2ggYSBt
-ZW1iZXIuIFRodXMgaXQgdXNlcw0KPiA+IGlycV9zZXRfaGFuZGxlcl9kYXRhKCkgZm9yIHRoYXQg
-c2FtZSBwdXJwb3NlLg0KPiA+IA0KPiBPSy4gSSBjYW4gaW1wcm92ZSBpdC4NCg0KDQotLSANCkFu
-ZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AaW50ZWwuY29tPg0KSW50ZWwgRmlubGFu
-ZCBPeQ0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tCkludGVsIEZpbmxhbmQgT3kKUmVnaXN0ZXJlZCBBZGRyZXNzOiBQ
-TCAyODEsIDAwMTgxIEhlbHNpbmtpIApCdXNpbmVzcyBJZGVudGl0eSBDb2RlOiAwMzU3NjA2IC0g
-NCAKRG9taWNpbGVkIGluIEhlbHNpbmtpIAoKVGhpcyBlLW1haWwgYW5kIGFueSBhdHRhY2htZW50
-cyBtYXkgY29udGFpbiBjb25maWRlbnRpYWwgbWF0ZXJpYWwgZm9yCnRoZSBzb2xlIHVzZSBvZiB0
-aGUgaW50ZW5kZWQgcmVjaXBpZW50KHMpLiBBbnkgcmV2aWV3IG9yIGRpc3RyaWJ1dGlvbgpieSBv
-dGhlcnMgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVk
-CnJlY2lwaWVudCwgcGxlYXNlIGNvbnRhY3QgdGhlIHNlbmRlciBhbmQgZGVsZXRlIGFsbCBjb3Bp
-ZXMuCg==
+Am Mittwoch, 3. September 2014, 16:52:42 schrieb Romain Perier:
+> This patch defines a platform glue layer for Rockchip SoCs which
+> support arc-emac driver. It ensures that regulator for the rmii is on
+> before trying to connect to the ethernet controller. It applies right
+> speed and mode changes to the grf when ethernet settings change.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
 
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+> ---
+>  drivers/net/ethernet/arc/Kconfig         |  10 ++
+>  drivers/net/ethernet/arc/Makefile        |   1 +
+>  drivers/net/ethernet/arc/emac.h          |   4 +-
+>  drivers/net/ethernet/arc/emac_main.c     |   2 +
+>  drivers/net/ethernet/arc/emac_rockchip.c | 228
+> +++++++++++++++++++++++++++++++ 5 files changed, 244 insertions(+), 1
+> deletion(-)
+>  create mode 100644 drivers/net/ethernet/arc/emac_rockchip.c
+> 
+> diff --git a/drivers/net/ethernet/arc/Kconfig
+> b/drivers/net/ethernet/arc/Kconfig index 89e04fd..8e262e2 100644
+> --- a/drivers/net/ethernet/arc/Kconfig
+> +++ b/drivers/net/ethernet/arc/Kconfig
+> @@ -32,4 +32,14 @@ config ARC_EMAC
+>  	  non-standard on-chip ethernet device ARC EMAC 10/100 is used.
+>  	  Say Y here if you have such a board.  If unsure, say N.
+> 
+> +config EMAC_ROCKCHIP
+> +	tristate "Rockchip EMAC support"
+> +	select ARC_EMAC_CORE
+> +	depends on OF_IRQ && OF_NET && REGULATOR
+> +	---help---
+> +	  Support for Rockchip RK3066/RK3188 EMAC ethernet controllers.
+> +	  This selects Rockchip SoC glue layer support for the
+> +	  emac device driver. This driver is used for RK3066/RK3188
+> +	  EMAC ethernet controller.
+> +
+>  endif # NET_VENDOR_ARC
+> diff --git a/drivers/net/ethernet/arc/Makefile
+> b/drivers/net/ethernet/arc/Makefile index 241bb80..79108af 100644
+> --- a/drivers/net/ethernet/arc/Makefile
+> +++ b/drivers/net/ethernet/arc/Makefile
+> @@ -5,3 +5,4 @@
+>  arc_emac-objs := emac_main.o emac_mdio.o
+>  obj-$(CONFIG_ARC_EMAC_CORE) += arc_emac.o
+>  obj-$(CONFIG_ARC_EMAC) += emac_arc.o
+> +obj-$(CONFIG_EMAC_ROCKCHIP) += emac_rockchip.o
+> diff --git a/drivers/net/ethernet/arc/emac.h
+> b/drivers/net/ethernet/arc/emac.h index eb2ba67..dae1ac3 100644
+> --- a/drivers/net/ethernet/arc/emac.h
+> +++ b/drivers/net/ethernet/arc/emac.h
+> @@ -123,9 +123,11 @@ struct buffer_state {
+>   * @speed:	PHY's last set speed.
+>   */
+>  struct arc_emac_priv {
+> -	/* Devices */
+>  	const char *drv_name;
+>  	const char *drv_version;
+> +	void (*set_mac_speed)(void *priv, unsigned int speed);
+> +
+> +	/* Devices */
+>  	struct device *dev;
+>  	struct phy_device *phy_dev;
+>  	struct mii_bus *bus;
+> diff --git a/drivers/net/ethernet/arc/emac_main.c
+> b/drivers/net/ethernet/arc/emac_main.c index b35c69e..a08f343 100644
+> --- a/drivers/net/ethernet/arc/emac_main.c
+> +++ b/drivers/net/ethernet/arc/emac_main.c
+> @@ -48,6 +48,8 @@ static void arc_emac_adjust_link(struct net_device *ndev)
+>  	if (priv->speed != phy_dev->speed) {
+>  		priv->speed = phy_dev->speed;
+>  		state_changed = 1;
+> +		if (priv->set_mac_speed)
+> +			priv->set_mac_speed(priv, priv->speed);
+>  	}
+> 
+>  	if (priv->duplex != phy_dev->duplex) {
+> diff --git a/drivers/net/ethernet/arc/emac_rockchip.c
+> b/drivers/net/ethernet/arc/emac_rockchip.c new file mode 100644
+> index 0000000..51d0585
+> --- /dev/null
+> +++ b/drivers/net/ethernet/arc/emac_rockchip.c
+> @@ -0,0 +1,228 @@
+> +/**
+> + * emac-rockchip.c - Rockchip EMAC specific glue layer
+> + *
+> + * Copyright (C) 2014 Romain Perier <romain.perier@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/etherdevice.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_net.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include "emac.h"
+> +
+> +#define DRV_NAME        "rockchip_emac"
+> +#define DRV_VERSION     "1.0"
+> +
+> +#define GRF_MODE_MII		(1UL << 0)
+> +#define GRF_MODE_RMII		(0UL << 0)
+> +#define GRF_SPEED_10M		(0UL << 1)
+> +#define GRF_SPEED_100M		(1UL << 1)
+> +#define GRF_SPEED_ENABLE_BIT	(1UL << 17)
+> +#define GRF_MODE_ENABLE_BIT	(1UL << 16)
+> +
+> +struct emac_rockchip_soc_data {
+> +	int grf_offset;
+> +};
+> +
+> +struct rockchip_priv_data {
+> +	struct arc_emac_priv emac;
+> +	struct regmap *grf;
+> +	const struct emac_rockchip_soc_data *soc_data;
+> +	struct regulator *regulator;
+> +	struct clk *refclk;
+> +};
+> +
+> +static void emac_rockchip_set_mac_speed(void *priv, unsigned int speed)
+> +{
+> +	struct rockchip_priv_data *emac = priv;
+> +	u32 data;
+> +	int err = 0;
+> +
+> +	/* write-enable bits */
+> +	data = GRF_SPEED_ENABLE_BIT;
+> +
+> +	switch(speed) {
+> +	case 10:
+> +		data |= GRF_SPEED_10M;
+> +		break;
+> +	case 100:
+> +		data |= GRF_SPEED_100M;
+> +		break;
+> +	default:
+> +		pr_err("speed %u not supported\n", speed);
+> +		return;
+> +	}
+> +
+> +	err = regmap_write(emac->grf, emac->soc_data->grf_offset, data);
+> +	if (err)
+> +		pr_err("unable to apply speed %u to grf (%d)\n", speed, err);
+> +}
+> +
+> +static const struct emac_rockchip_soc_data emac_rockchip_dt_data[] = {
+> +	{ .grf_offset = 0x154 }, /* rk3066 */
+> +	{ .grf_offset = 0x0a4 }, /* rk3188 */
+> +};
+> +
+> +static const struct of_device_id emac_rockchip_dt_ids[] = {
+> +	{ .compatible = "rockchip,rk3066-emac", .data = &emac_rockchip_dt_data[0]
+> }, +	{ .compatible = "rockchip,rk3188-emac", .data =
+> &emac_rockchip_dt_data[1] }, +	{ /* Sentinel */ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, emac_rockchip_dt_ids);
+> +
+> +static int emac_rockchip_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct net_device *ndev;
+> +	struct rockchip_priv_data *priv;
+> +	const struct of_device_id *match;
+> +	u32 data;
+> +	int err, interface;
+> +
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
+> +
+> +	ndev = alloc_etherdev(sizeof(struct rockchip_priv_data));
+> +	if (!ndev)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, ndev);
+> +	SET_NETDEV_DEV(ndev, dev);
+> +
+> +	priv = netdev_priv(ndev);
+> +	priv->emac.drv_name = DRV_NAME;
+> +	priv->emac.drv_version = DRV_VERSION;
+> +	priv->emac.set_mac_speed = emac_rockchip_set_mac_speed;
+> +
+> +	interface = of_get_phy_mode(dev->of_node);
+> +
+> +	/* RK3066 and RK3188 SoCs only support RMII */
+> +	if (interface != PHY_INTERFACE_MODE_RMII) {
+> +		dev_err(dev, "unsupported phy interface mode %d\n", interface);
+> +		err = -ENOTSUPP;
+> +		goto out_netdev;
+> +	}
+> +
+> +	priv->grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
+> +	if (IS_ERR(priv->grf)) {
+> +		dev_err(dev, "failed to retrieve global register file (%ld)\n",
+> PTR_ERR(priv->grf)); +		err = PTR_ERR(priv->grf);
+> +		goto out_netdev;
+> +	}
+> +
+> +	match = of_match_node(emac_rockchip_dt_ids, dev->of_node);
+> +	priv->soc_data = match->data;
+> +
+> +	priv->emac.clk = devm_clk_get(dev, "hclk");
+> +	if (IS_ERR(priv->emac.clk)) {
+> +		dev_err(dev, "failed to retrieve host clock (%ld)\n",
+> PTR_ERR(priv->emac.clk)); +		err = PTR_ERR(priv->emac.clk);
+> +		goto out_netdev;
+> +	}
+> +
+> +	priv->refclk = devm_clk_get(dev, "macref");
+> +	if (IS_ERR(priv->refclk)) {
+> +		dev_err(dev, "failed to retrieve reference clock (%ld)\n",
+> PTR_ERR(priv->refclk)); +		err = PTR_ERR(priv->refclk);
+> +		goto out_netdev;
+> +	}
+> +
+> +	err = clk_prepare_enable(priv->refclk);
+> +	if (err) {
+> +		dev_err(dev, "failed to enable reference clock (%d)\n", err);
+> +		goto out_netdev;
+> +	}
+> +
+> +	/* Optional regulator for PHY */
+> +	priv->regulator = devm_regulator_get_optional(dev, "phy");
+> +	if (IS_ERR(priv->regulator)) {
+> +		if (PTR_ERR(priv->regulator) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +		dev_err(dev, "no regulator found\n");
+> +		priv->regulator = NULL;
+> +	}
+> +
+> +	if (priv->regulator) {
+> +		err = regulator_enable(priv->regulator);
+> +		if (err) {
+> +			dev_err(dev, "failed to enable phy-supply (%d)\n", err);
+> +			goto out_clk_disable;
+> +		}
+> +	}
+> +
+> +	err = arc_emac_probe(ndev, interface);
+> +	if (err)
+> +		goto out_regulator_disable;
+> +
+> +	/* write-enable bits */
+> +	data = GRF_MODE_ENABLE_BIT | GRF_SPEED_ENABLE_BIT;
+> +
+> +	data |= GRF_SPEED_100M;
+> +	data |= GRF_MODE_RMII;
+> +
+> +	err = regmap_write(priv->grf, priv->soc_data->grf_offset, data);
+> +	if (err) {
+> +		dev_err(dev, "unable to apply initial settings to grf (%d)\n", err);
+> +		goto out_regulator_disable;
+> +	}
+> +
+> +	/* RMII interface needs always a rate of 50MHz */
+> +	err = clk_set_rate(priv->refclk, 50000000);
+> +	if (err)
+> +		dev_err(dev, "failed to change reference clock rate (%d)\n", err);
+> +	return 0;
+> +
+> +out_regulator_disable:
+> +	if (priv->regulator)
+> +		regulator_disable(priv->regulator);
+> +out_clk_disable:
+> +	clk_disable_unprepare(priv->refclk);
+> +out_netdev:
+> +	free_netdev(ndev);
+> +	return err;
+> +}
+> +
+> +static int emac_rockchip_remove(struct platform_device *pdev)
+> +{
+> +	struct net_device *ndev = platform_get_drvdata(pdev);
+> +	struct rockchip_priv_data *priv = netdev_priv(ndev);
+> +	int err;
+> +
+> +	clk_disable_unprepare(priv->refclk);
+> +
+> +	if (priv->regulator)
+> +		regulator_disable(priv->regulator);
+> +
+> +	err = arc_emac_remove(ndev);
+> +	free_netdev(ndev);
+> +	return err;
+> +}
+> +
+> +static struct platform_driver emac_rockchip_driver = {
+> +	.probe = emac_rockchip_probe,
+> +	.remove = emac_rockchip_remove,
+> +	.driver = {
+> +		.name = DRV_NAME,
+> +		.of_match_table  = emac_rockchip_dt_ids,
+> +	},
+> +};
+> +
+> +module_platform_driver(emac_rockchip_driver);
+> +
+> +MODULE_AUTHOR("Romain Perier <romain.perier@gmail.com>");
+> +MODULE_DESCRIPTION("Rockchip EMAC platform driver");
+> +MODULE_LICENSE("GPL");
