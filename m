@@ -1,68 +1,458 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2] spi: orion: support armada extended baud rates
-Date: Fri, 5 Sep 2014 09:36:22 +0200
-Message-ID: <CAMuHMdWf6_yBhpNgK=wJcQqzLNJvTnC95SrqrcZyRH+jGL93vA@mail.gmail.com>
-References: <1409835268-29555-1-git-send-email-gerg@uclinux.org>
-	<CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A@mail.gmail.com>
-	<5409057A.6090900@uclinux.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5409057A.6090900-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Cc: linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Robert Richter <rric@kernel.org>
+Subject: [PATCH v2 2/4] arm64, thunder: Add initial dts for Cavium Thunder SoC
+Date: Fri,  5 Sep 2014 09:46:43 +0200
+Message-ID: <1409903205-2762-3-git-send-email-rric@kernel.org>
+References: <1409903205-2762-1-git-send-email-rric@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409903205-2762-1-git-send-email-rric@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+From: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
 
-On Fri, Sep 5, 2014 at 2:36 AM, Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org> wrote:
->> Are the Orion rates and register bits a subset of the Armada ones?
->> I.e. does the Armada work with the Orion setup?
->
-> The bits used by the orion are a subset (bits 0-4 of the SPI
-> configuration register) of those used by the armada (bits 0-4 and
-> 6-7).
->
-> In practice the defined prescalar values for the orion do give
-> the same divisor for the same bits set on armada. The extra bits
-> on the armada let you get to lower SPI baudrates (which is more of
-> a problem on the armada with its higher core clocks).
+Add initial device tree nodes for Cavium Thunder SoCs with support of
+48 cores and gicv3. The dts file requires further changes, esp. for
+pci, gicv3-its and smmu. This changes will be added later together
+with the device drivers.
 
-OK, so the answer is yes.
+Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
+Signed-off-by: Robert Richter <rrichter@cavium.com>
+---
+ arch/arm64/boot/dts/Makefile         |   1 +
+ arch/arm64/boot/dts/thunder-88xx.dts | 414 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 415 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/thunder-88xx.dts
 
->>> This change introduces a new device tree compatible device name
->>> "armada-spi". This is used in place of "orion-spi" on the Armada SoC
->>> parts.
->>
->>> -                               compatible = "marvell,orion-spi";
->>> +                               compatible = "marvell,armada-spi";
->>
->> If the answer to my above question is yes, you want to keep
->> "marvell,orion-spi" as a fallback.
->
-> Do you mean like this?
->
->   compatible = "marvell,orion-spi", "marvell,armada-spi";
-
-No, the other way around (from most-specific to least-specific):
-
-    compatible = "marvell,armada-spi", "marvell,orion-spi"
-
-So the Armada version is used if available, and the Orion version
-is used as a fallback.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
+index c52bdb051f66..f8001a62029c 100644
+--- a/arch/arm64/boot/dts/Makefile
++++ b/arch/arm64/boot/dts/Makefile
+@@ -1,3 +1,4 @@
++dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
+ dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+ dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
+ 
+diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
+new file mode 100644
+index 000000000000..4cc1d059d2d9
+--- /dev/null
++++ b/arch/arm64/boot/dts/thunder-88xx.dts
+@@ -0,0 +1,414 @@
++/*
++ * Cavium Thunder DTS file
++ *
++ * Copyright (C) 2014, Cavium Inc.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++/ {
++	model = "Cavium ThunderX CN88XX Family";
++	compatible = "cavium,thunder-88xx";
++	interrupt-parent = <&gic0>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	aliases {
++		serial0 = &uaa0;
++		serial1 = &uaa1;
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu@000 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x000>;
++			enable-method = "psci";
++		};
++		cpu@001 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x001>;
++			enable-method = "psci";
++		};
++		cpu@002 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x002>;
++			enable-method = "psci";
++		};
++		cpu@003 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x003>;
++			enable-method = "psci";
++		};
++		cpu@004 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x004>;
++			enable-method = "psci";
++		};
++		cpu@005 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x005>;
++			enable-method = "psci";
++		};
++		cpu@006 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x006>;
++			enable-method = "psci";
++		};
++		cpu@007 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x007>;
++			enable-method = "psci";
++		};
++		cpu@008 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x008>;
++			enable-method = "psci";
++		};
++		cpu@009 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x009>;
++			enable-method = "psci";
++		};
++		cpu@00a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00a>;
++			enable-method = "psci";
++		};
++		cpu@00b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00b>;
++			enable-method = "psci";
++		};
++		cpu@00c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00c>;
++			enable-method = "psci";
++		};
++		cpu@00d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00d>;
++			enable-method = "psci";
++		};
++		cpu@00e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00e>;
++			enable-method = "psci";
++		};
++		cpu@00f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x00f>;
++			enable-method = "psci";
++		};
++		cpu@100 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x100>;
++			enable-method = "psci";
++		};
++		cpu@101 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x101>;
++			enable-method = "psci";
++		};
++		cpu@102 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x102>;
++			enable-method = "psci";
++		};
++		cpu@103 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x103>;
++			enable-method = "psci";
++		};
++		cpu@104 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x104>;
++			enable-method = "psci";
++		};
++		cpu@105 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x105>;
++			enable-method = "psci";
++		};
++		cpu@106 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x106>;
++			enable-method = "psci";
++		};
++		cpu@107 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x107>;
++			enable-method = "psci";
++		};
++		cpu@108 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x108>;
++			enable-method = "psci";
++		};
++		cpu@109 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x109>;
++			enable-method = "psci";
++		};
++		cpu@10a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10a>;
++			enable-method = "psci";
++		};
++		cpu@10b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10b>;
++			enable-method = "psci";
++		};
++		cpu@10c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10c>;
++			enable-method = "psci";
++		};
++		cpu@10d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10d>;
++			enable-method = "psci";
++		};
++		cpu@10e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10e>;
++			enable-method = "psci";
++		};
++		cpu@10f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x10f>;
++			enable-method = "psci";
++		};
++		cpu@200 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x200>;
++			enable-method = "psci";
++		};
++		cpu@201 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x201>;
++			enable-method = "psci";
++		};
++		cpu@202 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x202>;
++			enable-method = "psci";
++		};
++		cpu@203 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x203>;
++			enable-method = "psci";
++		};
++		cpu@204 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x204>;
++			enable-method = "psci";
++		};
++		cpu@205 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x205>;
++			enable-method = "psci";
++		};
++		cpu@206 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x206>;
++			enable-method = "psci";
++		};
++		cpu@207 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x207>;
++			enable-method = "psci";
++		};
++		cpu@208 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x208>;
++			enable-method = "psci";
++		};
++		cpu@209 {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x209>;
++			enable-method = "psci";
++		};
++		cpu@20a {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20a>;
++			enable-method = "psci";
++		};
++		cpu@20b {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20b>;
++			enable-method = "psci";
++		};
++		cpu@20c {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20c>;
++			enable-method = "psci";
++		};
++		cpu@20d {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20d>;
++			enable-method = "psci";
++		};
++		cpu@20e {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20e>;
++			enable-method = "psci";
++		};
++		cpu@20f {
++			device_type = "cpu";
++			compatible = "cavium,thunder", "arm,armv8";
++			reg = <0x0 0x20f>;
++			enable-method = "psci";
++		};
++	};
++
++	memory@00000000 {
++		device_type = "memory";
++		reg = <0x0 0x00000000 0x0 0x80000000>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <1 13 0xff01>,
++		             <1 14 0xff01>,
++		             <1 11 0xff01>,
++		             <1 10 0xff01>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		refclk50mhz: refclk50mhz {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <50000000>;
++			clock-output-names = "refclk50mhz";
++		};
++
++		gic0: interrupt-controller@8010,00000000 {
++			compatible = "arm,gic-v3";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x8010 0x00000000 0x0 0x010000>, /* GICD */
++			      <0x8010 0x80000000 0x0 0x200000>; /* GICR */
++			interrupts = <1 9 0xf04>;
++		};
++
++		uaa0: serial@87e0,24000000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x87e0 0x24000000 0x0 0x1000>;
++			interrupts = <1 21 4>;
++			clocks = <&refclk50mhz>;
++			clock-names = "apb_pclk";
++		};
++
++		uaa1: serial@87e0,25000000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x87e0 0x25000000 0x0 0x1000>;
++			interrupts = <1 22 4>;
++			clocks = <&refclk50mhz>;
++			clock-names = "apb_pclk";
++		};
++	};
++};
+-- 
+2.0.1
