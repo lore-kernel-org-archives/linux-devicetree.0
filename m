@@ -1,28 +1,58 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/2] gpio: Add driver for AXM55xx SSP chip selects
-Date: Fri, 5 Sep 2014 10:47:47 +0100
-Message-ID: <20140905094747.GE30401@n2100.arm.linux.org.uk>
-References: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com> <1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
+From: "Chen, Alvin" <alvin.chen@intel.com>
+Subject: RE: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding
+ to MFD driver
+Date: Fri, 5 Sep 2014 10:20:53 +0000
+Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E9829DA@SHSMSX101.ccr.corp.intel.com>
+References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
+	 <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
+ <1409908917.30155.84.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anders Berg <anders.berg@avagotech.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1409908917.30155.84.camel@intel.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 01, 2014 at 02:53:40PM +0200, Anders Berg wrote:
-> The AXM55xx device has a ARM PL022 SSP controller with an extension that
-> enables the control of up to five chip select signals. This driver implements
-> the logic to control these signals and exports them as GPIOs.
-> 
-> Signed-off-by: Anders Berg <anders.berg@avagotech.com>
-
-So, what happens if the GPIO driver binds first, followed by the SSP
-device?  Please test that scenario out before this patch gets merged.
-
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
+PiA+IC1zdGF0aWMgdm9pZCBkd2FwYl9pcnFfaGFuZGxlcih1MzIgaXJxLCBzdHJ1Y3QgaXJxX2Rl
+c2MgKmRlc2MpDQo+ID4gK3N0YXRpYyB1MzIgX2R3YXBiX2lycV9oYW5kbGVyKHN0cnVjdCBkd2Fw
+Yl9ncGlvICpncGlvKQ0KPiANCj4gV2hhdCBhYm91dCBkd2FwYl9kb19pcnEoKSA/DQpPSywgSSB3
+aWxsIGltcHJvdmUgaXQuDQoNCj4gPiArc3RhdGljIGlycXJldHVybl90IGR3YXBiX2lycV9oYW5k
+bGVyX21mZChpbnQgaXJxLCB2b2lkICpkZXZfaWQpIHsNCj4gPiArCXUzMiB3b3JrZWQ7DQo+ID4g
+KwlzdHJ1Y3QgZHdhcGJfZ3BpbyAqZ3BpbyA9IChzdHJ1Y3QgZHdhcGJfZ3BpbyAqKWRldl9pZDsN
+Cj4gDQo+IE5vIG5lZWQgdG8gY2FzdCBleHBsaWNpdGx5IGZyb20gdm9pZCAqLg0KT0suDQoNCg0K
+PiA+IC0JcG9ydC0+YmdjLmdjLm5ncGlvID0gbmdwaW87DQo+ID4gLQlwb3J0LT5iZ2MuZ2Mub2Zf
+bm9kZSA9IHBvcnRfbnA7DQo+ID4gKyNpZmRlZiBDT05GSUdfT0ZfR1BJTw0KPiANCj4gRG8gd2Ug
+cmVhbGx5IG5lZWQgdGhpcyAjaWZkZWYgPw0KPiBvZl9ub2RlIHdpbGwgYmUgTlVMTCBhbnl3YXks
+IG9yIEkgbWlzc2VkIHNvbWV0aGluZz8NClllcywgb3RoZXJ3aXNlLCBjYW4ndCBjb21waWxlIGl0
+LiBQbGVhc2UgcmVmZXIgJ3N0cnVjdCBncGlvX2NoaXAnLCAnZ2Mub2Zfbm9kZScgaXMgaW4gT0Zf
+R1BJTyBtaWNybyBhbHNvLg0KDQo+ID4gKwlpZiAocHAtPmlycSkNCj4gDQo+IGlycSA9PSAwIGlz
+IGEgdmFsaWQgaHdpcnEgKGhhcmR3YXJlIGlycSkgbnVtYmVyLiBZZXMsIHRoZXJlIGlzIHVubGlr
+ZWx5IHdlIGhhdmUgaXQNCj4gc29tZXdoZXJlLCBidXQgc3RpbGwgaXQncyBwb3NzaWJsZS4gQW5k
+IHllcywgSVJRIGZyYW1ld29yayBkb2Vzbid0IHdvcmsgd2l0aA0KPiB2aXJxID09IDAgKCp2aXJ0
+dWFsKiBpcnEpLCBidXQgYWNjZXB0cyBod2lycSA9PSAwLiBJIHJlY29tbWVuZCB0byB1c2UgaW50
+IHR5cGUgZm9yDQo+IGlycSBsaW5lIG51bWJlciwgYW5kIHJlY29nbml6ZSBuZWdhdGl2ZSB2YWx1
+ZSAodXN1YWxseSAtMSkgYXMgbm8gaXJxIG5lZWRlZCAvDQo+IGZvdW5kLg0KVW5kZXJzdGFuZC4g
+QnV0IGlmIHlvdSByZWZlciB0aGUgb3JpZ2luYWwgY29kZSwgeW91IGNhbiBzZWU6DQppcnEgPSBp
+cnFfb2ZfcGFyc2VfYW5kX21hcChub2RlLCAwKTsNCklmICghaXJxKSB7DQouLi4uLi4NCnJldHVy
+bjsNCn0NCkZyb20gYWJvdmUgY29kZSwgaWYgaXJxPTAsIGl0IGluZGljYXRlcyBpcnEgaXMgbm90
+IHN1cHBvcnRlZCBmb3IgT0YgZGV2aWNlcy4gSWYgd2UgdXNlICctMScgdG8gaW5kaWNhdGUgaXJx
+IGlzIG5vdCBzdXBwb3J0ZWQuIFRvIG1ha2UgT0Ygd29yaywgdGhlbiBvdXIgY29kZSBzaG91bGQg
+YmU6DQoNCmlycSA9IGlycV9vZl9wYXJzZV9hbmRfbWFwKG5vZGUsIDApOw0KSWYgKCFpcnEpIHsN
+CnBwLT5pcnEgPSAtMTsNCnJldHVybjsNCn0gZWxzZSB7DQpwcC0+aXJxID0gaXJxOw0KfQ0KVGhl
+biB0aGUgY29kZSBsb29rcyBzdHJhbmdlLg0KDQpIb3cgZG8geW91IHRoaW5rPw0KDQo+ID4gKwli
+b29sIGlzX29mOw0KPiANCj4gaXNfcGRhdGFfYWxsb2MgKGl0IG1pZ2h0IGJlIG5vdCBvbmx5IE9G
+IGNhc2UgaW4gZnV0dXJlKS4NCj4gDQpPSw0KDQoNCj4gPiArCWlmICghcGRhdGEpIHsNCj4gDQo+
+ICgqKQ0KDQo+ID4gKwkJcGRhdGEgPSBkd2FwYl9ncGlvX2dldF9wZGF0YV9vZihkZXYpOw0KPiA+
+ICsJCWlmIChJU19FUlIocGRhdGEpKQ0KPiA+ICsJCQlyZXR1cm4gUFRSX0VSUihwZGF0YSk7DQo+
+IA0KPiA+ICsJCWlzX29mID0gdHJ1ZTsNCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJaXNfb2YgPSBm
+YWxzZTsNCj4gDQo+IEluc3RlYWQgb2YgYWJvdmUgdGhyZWUgbGluZXMsIGhvdyBhYm91dA0KPiBi
+b29sIGlzX3BkYXRhX2FsbG9jID0gIXBkYXRhOw0KPiANCj4gQW5kICgqKSBpZiAoaXNfcGRhdGFf
+YWxsb2MpIC4uLg0KPiANCk9LLiBJIHdpbGwgaW1wcm92ZSB0aGlzIHBhcnQuDQoNCj4gPiArCWlm
+IChpc19vZikgew0KPiA+ICsJCWR3YXBiX2ZyZWVfcGRhdGFfb2YoZGV2LCBwZGF0YSk7DQo+ID4g
+KwkJcGRhdGEgPSBOVUxMOw0KPiANCj4gQmVzaWRlcyB0aGF0IHBkYXRhIGFzc2lnbm1lbnQgaXMg
+cHJvYmFibHkgcmVkdW5kYW50LCB5b3UgbWF5IHVzZSBwbGFpbg0KPiBrbWFsbG9jL2tmcmVlIGFu
+ZCBhdm9pZCB1bm5lY2Vzc2FyeSBkZXZtXyogY2FsbHMuDQo+IA0KT0suDQoNCg==
