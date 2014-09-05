@@ -1,7 +1,7 @@
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 16/18] arm: dts: am33xx: add DMA properties for UART
-Date: Fri,  5 Sep 2014 21:02:51 +0200
-Message-ID: <1409943773-7874-17-git-send-email-bigeasy@linutronix.de>
+Subject: [PATCH 17/18] arm: dts: dra7: add DMA properties for UART
+Date: Fri,  5 Sep 2014 21:02:52 +0200
+Message-ID: <1409943773-7874-18-git-send-email-bigeasy@linutronix.de>
 References: <1409943773-7874-1-git-send-email-bigeasy@linutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1409943773-7874-1-git-send-email-bigeasy@linutronix.de>
@@ -13,39 +13,66 @@ List-Id: devicetree@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- arch/arm/boot/dts/am33xx.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/dra7.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 3a0a161342ba..078a760a4a21 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -200,6 +200,8 @@
- 			reg = <0x44e09000 0x2000>;
- 			interrupts = <72>;
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index d678152db4cb..f273e3811f75 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -332,6 +332,8 @@
+ 			ti,hwmods = "uart1";
+ 			clock-frequency = <48000000>;
  			status = "disabled";
-+			dmas = <&edma 26>, <&edma 27>;
++			dmas = <&sdma 49>, <&sdma 50>;
 +			dma-names = "tx", "rx";
  		};
  
- 		uart1: serial@48022000 {
-@@ -209,6 +211,8 @@
- 			reg = <0x48022000 0x2000>;
- 			interrupts = <73>;
+ 		uart2: serial@4806c000 {
+@@ -341,6 +343,8 @@
+ 			ti,hwmods = "uart2";
+ 			clock-frequency = <48000000>;
  			status = "disabled";
-+			dmas = <&edma 28>, <&edma 29>;
++			dmas = <&sdma 51>, <&sdma 52>;
 +			dma-names = "tx", "rx";
  		};
  
- 		uart2: serial@48024000 {
-@@ -218,6 +222,8 @@
- 			reg = <0x48024000 0x2000>;
- 			interrupts = <74>;
+ 		uart3: serial@48020000 {
+@@ -350,6 +354,8 @@
+ 			ti,hwmods = "uart3";
+ 			clock-frequency = <48000000>;
  			status = "disabled";
-+			dmas = <&edma 30>, <&edma 31>;
++			dmas = <&sdma 53>, <&sdma 54>;
 +			dma-names = "tx", "rx";
  		};
  
- 		uart3: serial@481a6000 {
+ 		uart4: serial@4806e000 {
+@@ -359,6 +365,8 @@
+ 			ti,hwmods = "uart4";
+ 			clock-frequency = <48000000>;
+                         status = "disabled";
++			dmas = <&sdma 55>, <&sdma 56>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart5: serial@48066000 {
+@@ -368,6 +376,8 @@
+ 			ti,hwmods = "uart5";
+ 			clock-frequency = <48000000>;
+ 			status = "disabled";
++			dmas = <&sdma 63>, <&sdma 64>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart6: serial@48068000 {
+@@ -377,6 +387,8 @@
+ 			ti,hwmods = "uart6";
+ 			clock-frequency = <48000000>;
+ 			status = "disabled";
++			dmas = <&sdma 79>, <&sdma 80>;
++			dma-names = "tx", "rx";
+ 		};
+ 
+ 		uart7: serial@48420000 {
 -- 
 2.1.0
