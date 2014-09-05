@@ -1,55 +1,56 @@
-From: Robert Richter <rric@kernel.org>
-Subject: [PATCH v2 3/4] arm64, thunder: Document devicetree bindings for Cavium Thunder SoC
-Date: Fri,  5 Sep 2014 09:46:44 +0200
-Message-ID: <1409903205-2762-4-git-send-email-rric@kernel.org>
-References: <1409903205-2762-1-git-send-email-rric@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409903205-2762-1-git-send-email-rric@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] GPIO: gpio-dwapb: Suspend & Resume PM enabling
+Date: Fri, 5 Sep 2014 10:00:51 +0200
+Message-ID: <CACRpkdYZ0W4+iGyP5bbARAAfrqcrG77PVCHKcGhnBXvpCHoqxw@mail.gmail.com>
+References: <1409161588-19417-1-git-send-email-alvin.chen@intel.com>
+	<1409161588-19417-4-git-send-email-alvin.chen@intel.com>
+	<CACRpkdZJSf+EfYN=hHxRnpjQZGuqroBL0c+08Ng=dRkS0GZySA@mail.gmail.com>
+	<4656BEB6164FC34F8171C6538F1A595B2E9826A6@SHSMSX101.ccr.corp.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E9826A6@SHSMSX101.ccr.corp.intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Chen, Alvin" <alvin.chen@intel.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
+On Fri, Sep 5, 2014 at 4:09 AM, Chen, Alvin <alvin.chen@intel.com> wrote:
 
-This patch adds documentation for the devicetree bindings used by the
-DT files of Cavium Thunder SoC platforms.
+>> > +       unsigned long data;
+>> > +       unsigned long dir;
+>> > +       unsigned long int_en;
+>> > +       unsigned long int_mask;
+>> > +       unsigned long int_type;
+>> > +       unsigned long int_pol;
+>> > +       unsigned long int_deb;
+>> > +} saved_regs;
+>>
+>> Singleton huh?
+>>
+>> Insert this into the dynamically allocated per-port or chip struct instead.
+>>
+> How about the following?
+>
+> static struct dwapb_context {
+>         u32 data[DWAPB_MAX_PORTS];
+>         u32 dir[DWAPB_MAX_PORTS];
+>         u32 ext[DWAPB_MAX_PORTS];
+>         u32 int_en;
+>         u32 int_mask;
+>         u32 int_type;
+>         u32 int_pol;
+>         u32 int_deb;
+> } dwapb_context;
 
-Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
-Signed-off-by: Robert Richter <rrichter@cavium.com>
----
- Documentation/devicetree/bindings/arm/cavium-thunder.txt | 10 ++++++++++
- Documentation/devicetree/bindings/arm/cpus.txt           |  1 +
- 2 files changed, 11 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder.txt
+NO because this is still a singleton variable. Put it into the
+dynamically allocated structs.
 
-diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder.txt b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-new file mode 100644
-index 000000000000..6f63a5866902
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-@@ -0,0 +1,10 @@
-+Cavium Thunder platform device tree bindings
-+--------------------------------------------
-+
-+Boards with Cavium's Thunder SoC shall have following properties.
-+
-+Root Node
-+---------
-+Required root node properties:
-+
-+  - compatible = "cavium,thunder-88xx";
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 298e2f6b33c6..578796a2cfa9 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -166,6 +166,7 @@ nodes to be present and contain the properties described below.
- 			    "arm,cortex-r5"
- 			    "arm,cortex-r7"
- 			    "brcm,brahma-b15"
-+			    "cavium,thunder"
- 			    "faraday,fa526"
- 			    "intel,sa110"
- 			    "intel,sa1100"
--- 
-2.0.1
+> Comparing to allocate for each port
+> dynamically, it is more directly and easy to understand.
+
+No, I disagree. The overall design pattern in the kernel is to
+allocate all state containers dynamically.
+
+Yours,
+Linus Walleij
