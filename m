@@ -1,72 +1,31 @@
-From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2] spi: orion: support armada extended baud rates
-Date: Fri, 05 Sep 2014 23:11:38 +1000
-Message-ID: <5409B68A.7010604@uclinux.org>
-References: <1409835268-29555-1-git-send-email-gerg@uclinux.org>	<CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A@mail.gmail.com>	<5409057A.6090900@uclinux.org> <CAMuHMdWf6_yBhpNgK=wJcQqzLNJvTnC95SrqrcZyRH+jGL93vA@mail.gmail.com>
+From: Anders Berg <anders.berg@avagotech.com>
+Subject: Re: [PATCH 1/2] gpio: Add driver for AXM55xx SSP chip selects
+Date: Fri, 5 Sep 2014 15:40:44 +0200
+Message-ID: <CAE0=X_1CZkSjmde4o1707scjJtdzZdXokaS--3VjEuE4XTac-Q@mail.gmail.com>
+References: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com>
+	<1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
+	<20140905094747.GE30401@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWf6_yBhpNgK=wJcQqzLNJvTnC95SrqrcZyRH+jGL93vA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20140905094747.GE30401@n2100.arm.linux.org.uk>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On 05/09/14 17:36, Geert Uytterhoeven wrote:
-> Hi Greg,
->
-> On Fri, Sep 5, 2014 at 2:36 AM, Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org> wrote:
->>> Are the Orion rates and register bits a subset of the Armada ones?
->>> I.e. does the Armada work with the Orion setup?
->> The bits used by the orion are a subset (bits 0-4 of the SPI
->> configuration register) of those used by the armada (bits 0-4 and
->> 6-7).
+On Fri, Sep 5, 2014 at 11:47 AM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> On Mon, Sep 01, 2014 at 02:53:40PM +0200, Anders Berg wrote:
+>> The AXM55xx device has a ARM PL022 SSP controller with an extension that
+>> enables the control of up to five chip select signals. This driver implements
+>> the logic to control these signals and exports them as GPIOs.
 >>
->> In practice the defined prescalar values for the orion do give
->> the same divisor for the same bits set on armada. The extra bits
->> on the armada let you get to lower SPI baudrates (which is more of
->> a problem on the armada with its higher core clocks).
-> OK, so the answer is yes.
+>> Signed-off-by: Anders Berg <anders.berg@avagotech.com>
 >
->>>> This change introduces a new device tree compatible device name
->>>> "armada-spi". This is used in place of "orion-spi" on the Armada SoC
->>>> parts.
->>>> -                               compatible = "marvell,orion-spi";
->>>> +                               compatible = "marvell,armada-spi";
->>> If the answer to my above question is yes, you want to keep
->>> "marvell,orion-spi" as a fallback.
->> Do you mean like this?
->>
->>    compatible = "marvell,orion-spi", "marvell,armada-spi";
-> No, the other way around (from most-specific to least-specific):
->
->      compatible = "marvell,armada-spi", "marvell,orion-spi"
->
-> So the Armada version is used if available, and the Orion version
-> is used as a fallback.
-
-Ok, got it. Thanks.
-
-Regards
-Greg
-
-
-> Gr{oetje,eeting}s,
->
->                          Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                  -- Linus Torvalds
+> So, what happens if the GPIO driver binds first, followed by the SSP
+> device?  Please test that scenario out before this patch gets merged.
 >
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Both scenarios work.
+/Anders
