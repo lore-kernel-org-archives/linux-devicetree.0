@@ -1,40 +1,35 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 2/3] clk: RK808: Add clkout driver for RK808
-Date: Thu, 04 Sep 2014 18:35:13 -0700
-Message-ID: <20140905013513.11368.8329@quantum>
-References: <1409793159-2573-1-git-send-email-zyw@rock-chips.com>
- <1409793159-2573-3-git-send-email-zyw@rock-chips.com>
+From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2.2 2/2] dt-bindings: Adding compatible attribute for
+ SKY81452 regulator
+Date: Fri, 5 Sep 2014 10:55:07 +0900
+Message-ID: <20140905015507.GA2636@jack-ThinkPad-T520>
+References: <20140813190423.GI17528@sirena.org.uk>
+ <1409539218-5571-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1409539218-5571-3-git-send-email-jack.yoo@skyworksinc.com>
+ <20140901103158.GO29327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409793159-2573-3-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140901103158.GO29327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Chris Zhong (2014-09-03 18:12:38)
-> +static int rk808_clkout1_is_prepared(struct clk_hw *hw)
-> +{
-> +       return 1;
-> +}
-> +
+On Mon, Sep 01, 2014 at 11:31:58AM +0100, Mark Brown wrote:
+> On Mon, Sep 01, 2014 at 11:40:18AM +0900, Gyungoh Yoo wrote:
+> > Adding compatible attribute for SKY81452 regulator driver.
+> 
+> >  Required properties:
+> > +- compatible	: Must be "skyworks,sky81452-regulator"
+> 
+> Why is this a good idea - can this driver be used for anything other
+> than a sky81452?
 
-<snip>
+Thank you for the answer.
 
-> +static const struct clk_ops rk808_clkout1_ops = {
-> +       .is_prepared = rk808_clkout1_is_prepared,
-> +       .recalc_rate = rk808_clkout_recalc_rate,
-> +};
-
-Hi Chris,
-
-I do not see a need clkout1 to have a .is_prepared callback. You should
-be fine only having a .recalc_rate.
-
-Regards,
-Mike
+Yes. There is a possibility that this driver will be used by similar device with SKY81452.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
