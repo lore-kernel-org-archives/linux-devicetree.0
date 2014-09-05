@@ -1,64 +1,72 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] usb: gadget: pxa27x_udc: add devicetree support
-Date: Fri, 5 Sep 2014 10:58:32 -0500
-Message-ID: <20140905155832.GG24449@saruman.home>
-References: <1409511732-15259-1-git-send-email-robert.jarzmik@free.fr>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v3] ARM: dts: qcom: Add initial IFC6540 board device tree
+Date: Fri, 05 Sep 2014 18:59:10 +0300
+Message-ID: <5409DDCE.7080106@mm-sol.com>
+References: <1409763031-16873-1-git-send-email-gdjakov@mm-sol.com> <5409C803.8060007@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Y+xroYBkGM9OatJL"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409511732-15259-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-15;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <5409C803.8060007@suse.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>, galak@codeaurora.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com
 List-Id: devicetree@vger.kernel.org
 
---Y+xroYBkGM9OatJL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi
 
-Hi,
+On 09/05/2014 05:26 PM, Andreas F=E4rber wrote:
+<...>
+>> +			reg-names =3D "hc_mem", "core_mem";
+>> +			interrupts =3D <0 123 0>, <0 138 0>;
+>
+> I see that you've used GPIO_ACTIVE_* above. Is the trailing zero here
+> possibly IRQ_TYPE_NONE?
+>
 
-On Sun, Aug 31, 2014 at 09:02:09PM +0200, Robert Jarzmik wrote:
-> Add support for device-tree device discovery. If devicetree is not
-> provided, fallback to legacy platform data "discovery".
->=20
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Yes, it is. Will update it. Thanks!
 
-please split this patch. First add udc->gpio and fix all the gpio
-details, then add devicetree.
+>> +			interrupt-names =3D "hc_irq", "pwr_irq";
+>> +			clocks =3D <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+>> +			clock-names =3D "core", "iface";
+>> +			status =3D "disabled";
+>> +		};
+>> +
+>> +		sdhci@f98a4900 {
+>> +			compatible =3D "qcom,sdhci-msm-v4";
+>> +			reg =3D <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+>> +			reg-names =3D "hc_mem", "core_mem";
+>> +			interrupts =3D <0 125 0>, <0 221 0>;
+>> +			interrupt-names =3D "hc_irq", "pwr_irq";
+>> +			clocks =3D <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
+>> +			clock-names =3D "core", "iface";
+>> +			status =3D "disabled";
+>> +		};
+>
+> If you assign labels to these two nodes, you can reference them in th=
+e
+> .dts as &labelname {...};. Same for the uart node. That avoids
+> duplicating the hierarchy, detects spelling mistakes at compile time =
+and
+> reduces indentation. Cf. the recent ifc6410 patch.
 
---=20
-balbi
+Sure, adding a label will not hurt.
 
---Y+xroYBkGM9OatJL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>
+> Also, is sdhci the best node name here? Usually it's not supposed to
+> reflect the exact interface used (e.g., usb vs. ehci).
+>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Ok, I'll figure out something better.
 
-iQIcBAEBAgAGBQJUCd2oAAoJEIaOsuA1yqREauAP/3FYogGek5l07kRm2wxKXeWy
-Zro9LULc5xZoZTf8jnm35k3P5lPUBNEJLUZwqsw9ZQTfuMU9a9z9cV6Zb/wyZzGh
-z821Qczta5KC6xBRpQlGaakZ+yPZY9iOp4VpRr55oE7/GUX+peKbFtCxZomOw65r
-U7PdjPamtNTl/nlmznPuqHNl7iLfNvdXCMIYAhNit/09a8ihQ+ODc+c7Po0ugQS/
-kUBnzbrnOvAY9kH62BFDK1dXRJLgVr4SZPf86zXRrCGmSWd/DFtV4dLfgOgn1ZOg
-SHstR0ncvN8i/naGlwnX5HXShwGIRBPLWZskb5A6Dnr/gDkHH7na3x4xaPoHbxPJ
-nn/DQSTKkvTOSmdd2iNrbIAY0w3XtJkRnncysSglrj7wkbAn3ii5bj3xy8Y3w9Nt
-vaKX1VdkMzZ65itkBqyro21GpvNpfnObRXWwRShSeU40Sm/ow45+oRVIXV4Iw1+M
-nF/ORqP1BxfvYN/YdXsSdBjhQ6hQOQoxfygv+dIO1bXveQKZ96VpG4Hg5aDjm96O
-2kfxSFnkTVTvvyXF/YIa04nhuJ4e7XSOK8QkcUCgDM0/gAdS4TPUjSRILjLY0wgz
-YhxKBV5Vb6cnZEAnaJvK9M/7oTHhVUCfHSqR8NnexI2PTTDe9MIzX/ntCxmAIiB0
-rE5ChY2SYRG6B0SbaxLe
-=aNKe
------END PGP SIGNATURE-----
+>>   	};
+>>   };
+>
+> Otherwise looks good.
+>
 
---Y+xroYBkGM9OatJL--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for reviewing!
+
+BR,
+Georgi
