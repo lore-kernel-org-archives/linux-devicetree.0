@@ -1,100 +1,54 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] arm64, thunder: Add initial dts for Cavium Thunder SoC
-Date: Fri, 05 Sep 2014 13:21:48 +0200
-Message-ID: <5017180.kZRPNE71Sv@wuerfel>
-References: <1409903205-2762-1-git-send-email-rric@kernel.org> <1409903205-2762-3-git-send-email-rric@kernel.org>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v7 1/5] Documentation: Add device tree bindings for
+ Freescale i.MX GPC
+Date: Fri, 5 Sep 2014 13:47:08 +0200
+Message-ID: <CAMuHMdUqbk+OZiBMUsebQ_==7jCan+dHsfJLhi+CPUE=xc6yRA@mail.gmail.com>
+References: <1409060791-23167-1-git-send-email-p.zabel@pengutronix.de>
+	<1409060791-23167-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409903205-2762-3-git-send-email-rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1409060791-23167-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 September 2014 09:46:43 Robert Richter wrote:
-> diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
-> new file mode 100644
-> index 000000000000..4cc1d059d2d9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/thunder-88xx.dts
+Hi Philipp,
 
-Most people end up having a soc.dtsi file and a board.dsi file including
-the former and adding the machine-specific properties.
+On Tue, Aug 26, 2014 at 3:46 PM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> @@ -0,0 +1,54 @@
 
-It is likely that you will end up needing the same, so you might want to
-start that way.
+> +IP cores belonging to a power domain should contain a 'power-domain' property
 
-> +/ {
-> +	model = "Cavium ThunderX CN88XX Family";
-> +	compatible = "cavium,thunder-88xx";
+power-domains
 
-As mentioned by Mark already, you should not include 'xx' in the
-compatible string, but instead use the real soc ID.
-
-Normally, each SoC has some slight differences anyway, so you would
-override these in the specialized dtsi file.
-
-The "model" property should go into the board specific file.
-
-> +	interrupt-parent = <&gic0>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
+> +that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
+> +the power domain the device belongs to.
 > +
-> +	aliases {
-> +		serial0 = &uaa0;
-> +		serial1 = &uaa1;
-> +	};
+> +Example of a device that is part of the PU power domain:
 > +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
+> +       vpu: vpu@02040000 {
+> +               reg = <0x02040000 0x3c000>;
+> +               /* ... */
+> +               power-domain = <&gpc 1>;
 
-The aliases node should go into the board file as well, since it's
-possible that e.g. the first uart is not connected and you need
-something like
+power-domains
 
-	aliases {
-		serial0 = &uaa1;
-	};
+> +               /* ... */
+> +       };
 
-The psci node (according to a discussion we just had for the freescale
-dts files) should ideally get filled out by the boot loader that
-implements the psci code, to ensure the version matches.
+Gr{oetje,eeting}s,
 
-> +
-> +	memory@00000000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x00000000 0x0 0x80000000>;
-> +	};
+                        Geert
 
-memory should also go into the board specific file, or get filled by
-the boot loader if it is detected at boot time and user serviceable.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-I assume that your machines have NUMA properties, in that case it
-makes sense to split up the memory device nodes by topology. I think
-there are some standard properties to describe the topology further,
-but I don't remember how it's done at the moment.
-
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		refclk50mhz: refclk50mhz {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <50000000>;
-> +			clock-output-names = "refclk50mhz";
-> +		};
-
-If the reference clock is generated outside of the SoC, I would put the device
-node for it on the top level.
-
-	Arnd
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
