@@ -1,65 +1,96 @@
 From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v2 15/16] MIPS: GIC: Use local interrupts for timer
-Date: Fri, 5 Sep 2014 21:08:57 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1409052108090.5472@nanos>
-References: <1409938218-9026-1-git-send-email-abrestic@chromium.org> <1409938218-9026-16-git-send-email-abrestic@chromium.org>
+Subject: Re: [PATCH 2/2] Documentation: bcm7120-l2: Add Broadcom BCM7120-style
+ L2 binding
+Date: Fri, 5 Sep 2014 21:21:36 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1409052113210.5472@nanos>
+References: <1409265326-7579-1-git-send-email-f.fainelli@gmail.com> <1409265326-7579-3-git-send-email-f.fainelli@gmail.com> <alpine.DEB.2.10.1409031410580.3333@nanos> <20140903124317.GB3127@leverpostej> <5407490E.7060505@gmail.com> <20140905090528.GG2172@leverpostej>
+ <5409FA82.6000703@gmail.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409938218-9026-16-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <5409FA82.6000703-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Sep 2014, Andrew Bresticker wrote:
+On Fri, 5 Sep 2014, Florian Fainelli wrote:
+> On 09/05/2014 02:05 AM, Mark Rutland wrote:
+> >>>>> +- brcm,irq-can-wake: if present, this means the L2 controller can be used as a
+> >>>>> +  wakeup source for system suspend/resume.
+> >>>
+> >>> How variable is this?
+> >>
+> >> There's two instances of this interrupt controller on most SoCs, one
+> >> that can wake up the system, one that cannot, see below.
+> >>
+> >>>
+> >>> I realise have properties like this elsewhere, but it seems to be
+> >>> hacking around the lack of a decent power domain interface for figuring
+> >>> this out.
+> >>
+> >> Humm, I kind of see your point here with the power domains, I don't see
+> >> a big problem with specifying that property though, at most this becomes
+> >> redundant when we have a power domain representation (which will be very
+> >> simple: always-on and everything else).
+> > 
+> > Sure, we seem to have done that elsewhere.
+> > 
+> >>>>> +- brcm,int-fwd-mask: if present, a 32-bits bit mask describing the interrupts
+> >>>>> +  which need to be enabled in this controller to flow to the higher level
+> >>>>> +  interrupt controller. This is typically needed for the UARTs interrupts to
+> >>>>> +  flow through the top-level interrupt controller (e.g: ARM GIC on ARM-based
+> >>>>> +  platforms).
+> >>>>> +
+> >>>
+> >>> I don't follow why this property is needed at all. Is this a mechanism
+> >>> to bypass this controller entirely? Why should this be described as a
+> >>> fixed HW property?
+> >>
+> >> This interrupt controller has traditionally (not necessarily for good
+> >> reasons) been the placeholder for special bits that control whether our
+> >> UARTs level 1 interrupts (wired to the ARM GIC) will flow to the L1
+> >> interrupt.
+> > 
+> > So basically setting these bits unmasks some irq lines inpout to the
+> > GIC?
+> 
+> Right, this is what happens. We prefer to use the GIC interrupts because
+> that provides more flexibility.
+> 
+> > 
+> >> We discussed initially with Arnd Bergman about how to best approach
+> >> this, and he was happy with a bitmask since:
+> >>
+> >> a) that is a one-time initialization thing that can happen anywhere in
+> >> the kernel before UART interrupts get used (so before user-space gets
+> >> scheduled)
+> > 
+> > That feels a little dodgy to me, but perhaps that's ok.
+> 
+> The other approach was to use the "interrupt-extended" property for the
+> UART nodes and have them reference both their GIC interrupt, and the
+> BCM7120-L2 interrupt, but that also requires UART driver/platform
+> modifications to account for that extra "interrupt", on which we are
+> only ever going to call enable_irq() and nothing more.
+> 
+> So, in the end, this turned out to be simpler to just read the
+> "brcm,irq-fwd-mask" property and apply it to the relevant register.
 
-> Instead of using GIC interrupt 0 for the timer (which was not even
-> handled correctly by the GIC irqchip code and could conflict with an
-> actual external interrupt), use the designated local interrupt for
-> the GIC timer.
-> 
-> Also, since the timer is a per-CPU interrupt, initialize it with
-> setup_percpu_irq() and enable it with enable_percpu_irq() instead
-> of using direct register writes.
-> 
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> No changes from v1.
-> ---
->  arch/mips/kernel/cevt-gic.c | 16 +++++++---------
->  1 file changed, 7 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/mips/kernel/cevt-gic.c b/arch/mips/kernel/cevt-gic.c
-> index 6093716..cae72a4 100644
-> --- a/arch/mips/kernel/cevt-gic.c
-> +++ b/arch/mips/kernel/cevt-gic.c
-> @@ -68,7 +68,7 @@ int gic_clockevent_init(void)
->  	if (!cpu_has_counter || !gic_frequency)
->  		return -ENXIO;
->  
-> -	irq = MIPS_GIC_IRQ_BASE;
-> +	irq = MIPS_GIC_LOCAL_IRQ_BASE + GIC_LOCAL_INTR_COMPARE;
->  
->  	cd = &per_cpu(gic_clockevent_device, cpu);
->  
-> @@ -91,15 +91,13 @@ int gic_clockevent_init(void)
->  
->  	clockevents_register_device(cd);
->  
-> -	GICWRITE(GIC_REG(VPE_LOCAL, GIC_VPE_COMPARE_MAP), 0x80000002);
-> -	GICWRITE(GIC_REG(VPE_LOCAL, GIC_VPE_SMASK), GIC_VPE_SMASK_CMP_MSK);
-> +	if (!gic_timer_irq_installed) {
-> +		setup_percpu_irq(irq, &gic_compare_irqaction);
-> +		irq_set_handler(irq, handle_percpu_irq);
-> +		gic_timer_irq_installed = 1;
-> +	}
->  
-> -	if (gic_timer_irq_installed)
-> -		return 0;
-> +	enable_percpu_irq(irq, 0);
+So if I understand correctly what you have is:
 
-Please use a proper IRQ_TYPE constant instead of 0
+                          /- GIC------------->   
+ Device-irq ---- [routing]
+                          \- BC irq chip ---->
+
+and you implement it as
+
+ Device-irq ---- [BC irq chip] ---- [GIC] --->
+                            |
+                            ----------------->
+
+And the fwd mask is to tell the BC chip to use the GIC and which irq
+of the GIC, so it can fiddle with the GIC under the hood, right?
 
 Thanks,
 
