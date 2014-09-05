@@ -1,59 +1,52 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] PCI: keystone: update to support multiple pci ports
-Date: Fri, 05 Sep 2014 21:00:19 +0200
-Message-ID: <3654923.JrIGV2dJ70@wuerfel>
-References: <1409938782-31460-1-git-send-email-m-karicheri2@ti.com> <7260053.FoBVhTXVfj@wuerfel> <540A0212.6060303@ti.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v2 14/16] irqchip: mips-gic: Support local interrupts
+Date: Fri, 5 Sep 2014 21:05:50 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1409052056400.5472@nanos>
+References: <1409938218-9026-1-git-send-email-abrestic@chromium.org> <1409938218-9026-15-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <540A0212.6060303-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409938218-9026-15-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 September 2014 14:33:54 Murali Karicheri wrote:
-> > This looks like it's a shared register of some sort that doesn't
-> > really belong into the registers of a particular port. Could it
-> > be that it's actually for the PHY?
-> >
-> This a shared device configuration register between the two ports the 
-> desciption states it is bootstrap configuration of the PCIe module as 
-> Endpoint or Root complex and Not Phy. Hope below text will help.
+On Fri, 5 Sep 2014, Andrew Bresticker wrote:
+>  static void gic_mask_irq(struct irq_data *d)
+>  {
+> -	GIC_CLR_INTR_MASK(d->irq - gic_irq_base);
+> +	unsigned int irq = d->irq - gic_irq_base;
+> +
+> +	if (gic_is_local_irq(irq)) {
+> +		GICWRITE(GIC_REG(VPE_LOCAL, GIC_VPE_RMASK),
+> +			 1 << GIC_INTR_BIT(gic_hw_to_local_irq(irq)));
+> +	} else {
+> +		GIC_CLR_INTR_MASK(irq);
+> +	}
+>  }
+>  
+>  static void gic_unmask_irq(struct irq_data *d)
+>  {
+> -	GIC_SET_INTR_MASK(d->irq - gic_irq_base);
+> +	unsigned int irq = d->irq - gic_irq_base;
+> +
+> +	if (gic_is_local_irq(irq)) {
+> +		GICWRITE(GIC_REG(VPE_LOCAL, GIC_VPE_SMASK),
+> +			 1 << GIC_INTR_BIT(gic_hw_to_local_irq(irq)));
+> +	} else {
+> +		GIC_SET_INTR_MASK(irq);
+> +	}
 
-Ok. Why do you want to have this user-selectable though? Can't it
-just be set by the boot loader before starting Linux?
+Why are you adding a conditional in all these functions instead of
+having two interrupt chips with separate callbacks and irqdata?
 
-	Arnd
+And looking at GIC_SET_INTR_MASK(irq) makes me shudder even more. The
+whole thing can be replaced with the generic interrupt chip functions.
 
-> Table 3-23 Device Configuration Register (DEVCFG)
-> 
-> 
-> PCIESSMODE[1:0] 00b PCIESSMODE is used to control the
-> functionality of PCIESS module out of
-> reset. This MMR output is connected to
-> DEVTYPE input of PCIESS
-> (Changes from
-> Nysh) : Note that in Nysh this value came
-> from a bootstrap pin.
-> 00 : Endpoint
-> 01 : Legacy Endpoint
-> 10 : Rootcomplex
-> 11 : Reserved
-> PCIESS_1_MODE[1:0
-> ]
-> 00b PCIESSMODE is used to control the
-> functionality of PCIE_1 module out of
-> reset. This MMR output is connected to
-> DEVTYPE input of PCIE_1
-> 00 : Endpoint
-> 01 : Legacy Endpoint
-> 10 : Rootcomplex
-> 11 : Reserv
-> 
+If you set it up proper, then there is not a single conditional or
+runtime calculation of bitmasks, address offsets etc.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+
+	tglx
