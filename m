@@ -1,141 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5] phy: Renesas R-Car Gen2 PHY driver
-Date: Fri, 05 Sep 2014 22:46:29 +0400
-Message-ID: <540A0505.5060008@cogentembedded.com>
-References: <201407222327.15179.sergei.shtylyov@cogentembedded.com> <53F4B3E7.3030700@ti.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH v2 01/16] MIPS: Provide a generic plat_irq_dispatch
+Date: Fri, 5 Sep 2014 20:51:59 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1409052051240.5472@nanos>
+References: <1409938218-9026-1-git-send-email-abrestic@chromium.org> <1409938218-9026-2-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53F4B3E7.3030700@ti.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409938218-9026-2-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Fri, 5 Sep 2014, Andrew Bresticker wrote:
+> For platforms which boot with device-tree and use the MIPS CPU interrupt
+> controller binding, a generic plat_irq_dispatch() can be used since all
+> CPU interrupts should be mapped through the CPU IRQ domain.  Implement a
+> plat_irq_dispatch() which simply handles the highest pending interrupt.
+> 
+> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Tested-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> ---
+> No changes from v1.
+> ---
+>  arch/mips/kernel/irq_cpu.c | 28 +++++++++++++++++++++++-----
+>  1 file changed, 23 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/mips/kernel/irq_cpu.c b/arch/mips/kernel/irq_cpu.c
+> index e498f2b..9cf8459 100644
+> --- a/arch/mips/kernel/irq_cpu.c
+> +++ b/arch/mips/kernel/irq_cpu.c
+> @@ -116,6 +116,24 @@ void __init mips_cpu_irq_init(void)
+>  }
+>  
+>  #ifdef CONFIG_IRQ_DOMAIN
+> +static struct irq_domain *mips_intc_domain;
+> +
+> +asmlinkage void __weak plat_irq_dispatch(void)
+> +{
+> +	unsigned int pending = read_c0_cause() & read_c0_status() & ST0_IM;
+> +	unsigned int hw;
+> +	int irq;
+> +
+> +	if (!pending) {
+> +		spurious_interrupt();
+> +		return;
+> +	}
+> +
+> +	hw = fls(pending) - CAUSEB_IP - 1;
+> +	irq = irq_linear_revmap(mips_intc_domain, hw);
+> +	do_IRQ(irq);
 
-On 08/20/2014 06:42 PM, Kishon Vijay Abraham I wrote:
+Why are you not handling all pending interrupts in a loop?
 
-    Sorry for the delayed reply, I was busy in other kernel areas. Should have 
-replied yesterday though...
+Thanks,
 
-[...]
-
->> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
->> ===================================================================
->> --- /dev/null
->> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
->> @@ -0,0 +1,341 @@
->> +/*
->> + * Renesas R-Car Gen2 PHY driver
->> + *
->> + * Copyright (C) 2014 Renesas Solutions Corp.
->> + * Copyright (C) 2014 Cogent Embedded, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/io.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/phy/phy.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/spinlock.h>
->> +
->> +#include <asm/cmpxchg.h>
->> +
->> +#define USBHS_LPSTS			0x02
->> +#define USBHS_UGCTRL			0x80
->> +#define USBHS_UGCTRL2			0x84
->> +#define USBHS_UGSTS			0x88	/* The manuals have 0x90 */
->> +
->> +/* Low Power Status register (LPSTS) */
->> +#define USBHS_LPSTS_SUSPM		0x4000
->> +
->> +/* USB General control register (UGCTRL) */
->> +#define USBHS_UGCTRL_CONNECT		0x00000004
->> +#define USBHS_UGCTRL_PLLRESET		0x00000001
->> +
->> +/* USB General control register 2 (UGCTRL2) */
->> +#define USBHS_UGCTRL2_USB2SEL		0x80000000
->> +#define USBHS_UGCTRL2_USB2SEL_PCI	0x00000000
->> +#define USBHS_UGCTRL2_USB2SEL_USB30	0x80000000
->> +#define USBHS_UGCTRL2_USB0SEL		0x00000030
->> +#define USBHS_UGCTRL2_USB0SEL_PCI	0x00000010
->> +#define USBHS_UGCTRL2_USB0SEL_HS_USB	0x00000030
->> +
->> +/* USB General status register (UGSTS) */
->> +#define USBHS_UGSTS_LOCK		0x00000300 /* The manuals have 0x3 */
->> +
->> +#define PHYS_PER_CHANNEL	2
->> +
->> +struct rcar_gen2_phy {
->> +	struct phy *phy;
->> +	struct rcar_gen2_channel *channel;
->> +	int number;
->> +	u32 select_value;
->> +};
->> +
->> +struct rcar_gen2_channel {
->> +	struct device_node *of_node;
->> +	struct rcar_gen2_phy_driver *drv;
->> +	struct rcar_gen2_phy phys[PHYS_PER_CHANNEL];
->> +	int selected_phy;
->> +	u32 select_mask;
->> +};
->> +
->> +struct rcar_gen2_phy_driver {
->> +	void __iomem *base;
->> +	struct clk *clk;
->> +	spinlock_t lock;
->> +	int num_channels;
->> +	struct rcar_gen2_channel *channels;
->> +};
->> +
->> +static int rcar_gen2_phy_init(struct phy *p)
->> +{
->> +	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
->> +	struct rcar_gen2_channel *channel = phy->channel;
->> +	struct rcar_gen2_phy_driver *drv = channel->drv;
->> +	unsigned long flags;
->> +	u32 ugctrl2;
->> +
->> +	/*
->> +	 * Try to acquire exclusive access to PHY.  The first driver calling
->> +	 * phy_init()  on a given channel wins, and all attempts  to use another
->> +	 * PHY on this channel will fail until phy_exit() is called by the first
->> +	 * driver.   Achieving this with cmpxcgh() should be SMP-safe.
->> +	 */
->> +	if (cmpxchg(&channel->selected_phy, -1, phy->number) != -1)
->> +		return -EBUSY;
-
-> This should be done in phy_get no?
-
-    No, if you mean the of_xlate() method: I need a place to release the lock 
-which I wouldn't have in this case.
-    If you mean modifying _of_phy_get(), it has no notion of channels and 
-probably shouldn't have since the channels are a special case for this driver 
-(and maybe some others) ...
-
-> Can we add this in phy-core? There might be other users who want to have
-> exclusive access within the same phy provider.
-
-    The exclusive access is not within the provider in my case, it's within a 
-channel (each of which has a corresponding DT subnode), so I don't think it's 
-well representable in the phy-core. I'm not using your suggested 
-subnode-per-PHY representation since it doesn't really fit my case well...
-
-> Rest of it looks fine to me.
-
-    Thanks.
-
-> Thanks
-> Kishon
-
-WBR, Sergei
-
+	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
