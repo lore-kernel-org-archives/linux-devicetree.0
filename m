@@ -1,47 +1,39 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] PCI: keystone: update to support multiple pci ports
-Date: Fri, 05 Sep 2014 23:11:47 +0200
-Message-ID: <5769746.NkKjYOOUiv@wuerfel>
-References: <1409938782-31460-1-git-send-email-m-karicheri2@ti.com> <3654923.JrIGV2dJ70@wuerfel> <540A1F05.80706@ti.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH V2 3/3] mfd: palmas: Add support for optional wakeup
+Date: Fri, 5 Sep 2014 23:13:38 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1409052311210.5472@nanos>
+References: <1409950311-25236-1-git-send-email-nm@ti.com> <1409950311-25236-4-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <540A1F05.80706@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409950311-25236-4-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 September 2014 16:37:25 Murali Karicheri wrote:
-> On 09/05/2014 03:00 PM, Arnd Bergmann wrote:
-> > On Friday 05 September 2014 14:33:54 Murali Karicheri wrote:
-> >>> This looks like it's a shared register of some sort that doesn't
-> >>> really belong into the registers of a particular port. Could it
-> >>> be that it's actually for the PHY?
-> >>>
-> >> This a shared device configuration register between the two ports the
-> >> desciption states it is bootstrap configuration of the PCIe module as
-> >> Endpoint or Root complex and Not Phy. Hope below text will help.
-> >
-> > Ok. Why do you want to have this user-selectable though? Can't it
-> > just be set by the boot loader before starting Linux?
-> 
-> Arnd,
-> 
-> As the driver is responsible for configuring the device to support the 
-> device functionality, it make sense to do this in the device driver. The 
-> driver enables clock to the IP and this is an addition thing to be 
-> configured so that when the device is powered up, it should function as 
-> RC. The IP can be configured to work as Root Complex or Endpoint. So not 
-> sure why you want to me to move this functionality to boot loader.
+On Fri, 5 Sep 2014, Nishanth Menon wrote:
+> +	if (!palmas->wakeirq)
+> +		goto no_wake_irq;
+> +
+> +	ret = devm_request_irq(palmas->dev, palmas->wakeirq,
+> +			       palmas_wake_irq,
+> +			       IRQF_ONESHOT | pdata->irq_flags,
 
-But the driver can only do root complex mode, and we would probably
-want a completely different driver if we were to start supporting
-endpoint mode.
+Why is this marked IRQF_ONESHOT?
 
-This also implies that the firmware has to pass a different DT for
-endpoint mode, so it should be responsible for setting up the hardware
-to match the DT.
+> +			       dev_name(palmas->dev),
+> +			       &palmas);
+> +	if (ret < 0)
+> +		goto err_i2c;
 
-	Arnd
+Why err and not doing the obvious clearing of palmas->wakeirq and
+keep at least the i2c functional?
+
+Thanks,
+
+	tglx
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
