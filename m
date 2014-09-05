@@ -1,185 +1,80 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 2/6] dts, kbuild: Factor out dtbs install rules to Makefile.dtbinst
-Date: Fri, 5 Sep 2014 07:48:30 -0500
-Message-ID: <CAL_Jsq+NYU9c0Jw8DX_iH6G5_9tom9DGcP548q4tKQsdkb-s0A@mail.gmail.com>
-References: <1409899692-1455-1-git-send-email-rric@kernel.org> <1409899692-1455-3-git-send-email-rric@kernel.org>
+From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system
+ timer
+Date: Fri, 5 Sep 2014 12:58:28 +0000
+Message-ID: <5E619FDB-56BB-486E-B627-9D2A9D4F9F54@freescale.com>
+References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
+	<1409887606-22388-4-git-send-email-b20788@freescale.com>,<CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1409899692-1455-3-git-send-email-rric@kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Robert Richter <rric@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Michal Marek <mmarek@suse.cz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: zh-CN
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 5, 2014 at 1:48 AM, Robert Richter <rric@kernel.org> wrote:
-> From: Robert Richter <rrichter@cavium.com>
->
-> Move dtbs install rules to Makefile.dtbinst. This change is needed to
-> implement support for dts vendor subdirs. The change makes Makefiles
-> easier and smaller as no longer the dtbs_install rule needs to be
-> defined. Another advantage is that install goals are not encoded in
-> targets anymore (%.dtb_dtbinst_).
->
-> Signed-off-by: Robert Richter <rrichter@cavium.com>
-> ---
->  arch/arm/Makefile            |  6 +++++-
->  arch/arm/boot/dts/Makefile   |  2 --
->  arch/arm64/Makefile          |  6 +++++-
->  arch/arm64/boot/dts/Makefile |  2 --
->  scripts/Kbuild.include       |  6 ++++++
->  scripts/Makefile.dtbinst     | 38 ++++++++++++++++++++++++++++++++++++++
->  scripts/Makefile.lib         | 12 ------------
->  7 files changed, 54 insertions(+), 18 deletions(-)
->  create mode 100644 scripts/Makefile.dtbinst
->
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 0ce9d0f71f2a..1963d9a9a2c4 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -313,9 +313,13 @@ $(BOOT_TARGETS): vmlinux
->         $(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
->
->  PHONY += dtbs dtbs_install
-> -dtbs dtbs_install: prepare scripts
-> +
-> +dtbs: prepare scripts
->         $(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
->
-> +dtbs_install:
-> +       $(Q)$(MAKE) $(dtbinst)=$(boot)/dts MACHINE=$(MACHINE)
-
-Can't you get rid of MACHINE here, too?
-
-Rob
-
-> +
->  # We use MRPROPER_FILES and CLEAN_FILES now
->  archclean:
->         $(Q)$(MAKE) $(clean)=$(boot)
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b8c5cd3ddeb9..ab40afb87fb2 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -502,5 +502,3 @@ dtbs: $(addprefix $(obj)/, $(dtb-y))
->         $(Q)rm -f $(obj)/../*.dtb
->
->  clean-files := *.dtb
-> -
-> -dtbs_install: $(addsuffix _dtbinst_, $(dtb-y))
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index e0a8292bc832..1627861e9bbd 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -72,9 +72,13 @@ zinstall install: vmlinux
->         $(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
->
->  PHONY += dtbs dtbs_install
-> -dtbs dtbs_install: prepare scripts
-> +
-> +dtbs: prepare scripts
->         $(Q)$(MAKE) $(build)=$(boot)/dts $@
->
-> +dtbs_install:
-> +       $(Q)$(MAKE) $(dtbinst)=$(boot)/dts
-> +
->  PHONY += vdso_install
->  vdso_install:
->         $(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso $@
-> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-> index 82e1c4cf8780..0a14c3828301 100644
-> --- a/arch/arm64/boot/dts/Makefile
-> +++ b/arch/arm64/boot/dts/Makefile
-> @@ -7,5 +7,3 @@ targets += $(dtb-y)
->  dtbs: $(addprefix $(obj)/, $(dtb-y))
->
->  clean-files := *.dtb
-> -
-> -dtbs_install: $(addsuffix _dtbinst_, $(dtb-y))
-> diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-> index 8a9a4e1c7eab..861f5b4d48a2 100644
-> --- a/scripts/Kbuild.include
-> +++ b/scripts/Kbuild.include
-> @@ -179,6 +179,12 @@ build := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.build obj
->  # $(Q)$(MAKE) $(modbuiltin)=dir
->  modbuiltin := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.modbuiltin obj
->
-> +###
-> +# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.dtbinst obj=
-> +# Usage:
-> +# $(Q)$(MAKE) $(dtbinst)=dir
-> +dtbinst := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.dtbinst obj
-> +
->  # Prefix -I with $(srctree) if it is not an absolute path.
->  # skip if -I has no parameter
->  addtree = $(if $(patsubst -I%,%,$(1)), \
-> diff --git a/scripts/Makefile.dtbinst b/scripts/Makefile.dtbinst
-> new file mode 100644
-> index 000000000000..54286cccc289
-> --- /dev/null
-> +++ b/scripts/Makefile.dtbinst
-> @@ -0,0 +1,38 @@
-> +# ==========================================================================
-> +# Installing dtb files
-> +#
-> +# Installs all dtb files listed in $(dtb-y) either in the
-> +# INSTALL_DTBS_PATH directory or the default location:
-> +#
-> +#   $INSTALL_PATH/dtbs/$KERNELRELEASE
-> +#
-> +# ==========================================================================
-> +
-> +src := $(obj)
-> +
-> +PHONY := __dtbs_install
-> +__dtbs_install:
-> +
-> +include include/config/auto.conf
-> +include scripts/Kbuild.include
-> +include $(srctree)/$(obj)/Makefile
-> +
-> +PHONY += __dtbs_install_prep
-> +__dtbs_install_prep:
-> +       $(Q)if [ -d $(INSTALL_DTBS_PATH).old ]; then rm -rf $(INSTALL_DTBS_PATH).old; fi
-> +       $(Q)if [ -d $(INSTALL_DTBS_PATH) ]; then mv $(INSTALL_DTBS_PATH) $(INSTALL_DTBS_PATH).old; fi
-> +       $(Q)mkdir -p $(INSTALL_DTBS_PATH)
-> +
-> +dtbinst-files  := $(dtb-y)
-> +
-> +# Helper targets for Installing DTBs into the boot directory
-> +quiet_cmd_dtb_install =        INSTALL $<
-> +      cmd_dtb_install =        cp $< $(2)
-> +
-> +$(dtbinst-files): %.dtb: $(obj)/%.dtb | __dtbs_install_prep
-> +       $(call cmd,dtb_install,$(INSTALL_DTBS_PATH))
-> +
-> +PHONY += $(dtbinst-files)
-> +__dtbs_install: $(dtbinst-files)
-> +
-> +.PHONY: $(PHONY)
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 260bf8acfce9..83a453794266 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -274,18 +274,6 @@ $(obj)/%.dtb: $(src)/%.dts FORCE
->
->  dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
->
-> -# Helper targets for Installing DTBs into the boot directory
-> -quiet_cmd_dtb_install =        INSTALL $<
-> -      cmd_dtb_install =        cp $< $(2)
-> -
-> -_dtbinst_pre_:
-> -       $(Q)if [ -d $(INSTALL_DTBS_PATH).old ]; then rm -rf $(INSTALL_DTBS_PATH).old; fi
-> -       $(Q)if [ -d $(INSTALL_DTBS_PATH) ]; then mv $(INSTALL_DTBS_PATH) $(INSTALL_DTBS_PATH).old; fi
-> -       $(Q)mkdir -p $(INSTALL_DTBS_PATH)
-> -
-> -%.dtb_dtbinst_: $(obj)/%.dtb _dtbinst_pre_
-> -       $(call cmd,dtb_install,$(INSTALL_DTBS_PATH))
-> -
->  # Bzip2
->  # ---------------------------------------------------------------------------
->
-> --
-> 2.0.1
->
+DQoNClNlbnQgZnJvbSBteSBpUGFkDQoNCtTaIDIwMTQtOS01o6wyMDowOaOsIkZhYmlvIEVzdGV2
+YW0iIDxmZXN0ZXZhbUBnbWFpbC5jb20+INC0tcCjug0KDQo+IE9uIEZyaSwgU2VwIDUsIDIwMTQg
+YXQgMTI6MjYgQU0sIEFuc29uIEh1YW5nIDxiMjA3ODhAZnJlZXNjYWxlLmNvbT4gd3JvdGU6DQo+
+PiBPbiBpLk1YNlEgVE8gPiAxLjAsIGkuTVg2REwgYW5kIGkuTVg2U1gsIGdwdCBwZXIgY2xvY2sN
+Cj4+IGNhbiBiZSBmcm9tIE9TQyBpbnN0ZWFkIG9mIGlwZ19wZXIsIGFzIGlwZ19wZXIncyByYXRl
+DQo+PiBtYXkgYmUgc2NhbGVkIHdoZW4gc3lzdGVtIGVudGVyIGxvdyBidXMgbW9kZSwgdG8ga2Vl
+cA0KPj4gc3lzdGVtIHRpbWVyIE5PVCBkcmlmdCwgYmV0dGVyIHRvIG1ha2UgZ3B0IHBlciBjbG9j
+aw0KPj4gYXQgZml4ZWQgcmF0ZSwgaGVyZSBhZGQgc3VwcG9ydCBmb3IgZ3B0IHBlciBjbG9jayB0
+bw0KPj4gYmUgZnJvbSBPU0Mgd2hpY2ggaXMgYXQgZml4ZWQgcmF0ZSBhbHdheXMuDQo+PiANCj4+
+IFRoZXJlIGFyZSBzb21lIGRpZmZlcmVuY2Ugb24gdGhpcyBpbXBsZW1lbnRhdGlvbiBvZg0KPj4g
+Z3B0IHBlciBjbG9jayBzb3VyY2UsIHNlZSBiZWxvdyBmb3IgZGV0YWlsczoNCj4+IA0KPj4gaS5N
+WDZRIFRPID4gMS4wOiBHUFRfQ1JfQ0xLU1JDLCAzYicxMDEgc2VsZWN0cyBmaXggY2xvY2sNCj4+
+ICAgIG9mIE9TQyAvIDggZm9yIGdwdCBwZXIgY2xrOw0KPiANCj4gWW91IG1lYW4gIjViJzEwMSBz
+ZWxlY3RzIGZpeCBjbG9jay4uLiINCj4gDQo+PiBpLk1YNkRMIGFuZCBpLk1YNlNYOiBHUFRfQ1Jf
+Q0xLU1JDLCAzYicxMDEgc2VsZWN0cyBPU0MNCj4gDQo+IFNhbWUgaGVyZTogIjViJzEwMSINCg0K
+W0Fuc29uXSBJIHRob3VnaHQgM2InMTAxIG1lYW5zIDMgYml0cywgdmFsdWUgMTAxLi4uIE1heWJl
+IG15IHVuZGVyc3RhbmRpbmcgaXMgaW5jb3JyZWN0LCB3aWxsIGNvcnJlY3QgaXQgbiB2My4NCj4g
+DQo+PiBAQCAtMjkzLDcgKzI5OSw3IEBAIHN0YXRpYyBpbnQgX19pbml0IG14Y19jbG9ja2V2ZW50
+X2luaXQoc3RydWN0IGNsayAqdGltZXJfY2xrKQ0KPj4gc3RhdGljIHZvaWQgX19pbml0IF9teGNf
+dGltZXJfaW5pdChpbnQgaXJxLA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHN0cnVjdCBjbGsgKmNsa19wZXIsIHN0cnVjdCBjbGsgKmNsa19pcGcpDQo+PiB7DQo+PiAtICAg
+ICAgIHVpbnQzMl90IHRjdGxfdmFsOw0KPj4gKyAgICAgICB1aW50MzJfdCB0Y3RsX3ZhbCwgdHBy
+ZXJfdmFsOw0KPj4gDQo+PiAgICAgICAgaWYgKElTX0VSUihjbGtfcGVyKSkgew0KPj4gICAgICAg
+ICAgICAgICAgcHJfZXJyKCJpLk1YIHRpbWVyOiB1bmFibGUgdG8gZ2V0IGNsa1xuIik7DQo+PiBA
+QCAtMzEyLDEwICszMTgsMjYgQEAgc3RhdGljIHZvaWQgX19pbml0IF9teGNfdGltZXJfaW5pdChp
+bnQgaXJxLA0KPj4gICAgICAgIF9fcmF3X3dyaXRlbCgwLCB0aW1lcl9iYXNlICsgTVhDX1RDVEwp
+Ow0KPj4gICAgICAgIF9fcmF3X3dyaXRlbCgwLCB0aW1lcl9iYXNlICsgTVhDX1RQUkVSKTsgLyog
+c2VlIGRhdGFzaGVldCBub3RlICovDQo+PiANCj4+IC0gICAgICAgaWYgKHRpbWVyX2lzX3YyKCkp
+DQo+PiAtICAgICAgICAgICAgICAgdGN0bF92YWwgPSBWMl9UQ1RMX0NMS19QRVIgfCBWMl9UQ1RM
+X0ZSUiB8IFYyX1RDVExfV0FJVEVOIHwgTVhDX1RDVExfVEVOOw0KPj4gLSAgICAgICBlbHNlDQo+
+PiArICAgICAgIGlmICh0aW1lcl9pc192MigpKSB7DQo+PiArICAgICAgICAgICAgICAgaWYgKCgo
+Y3B1X2lzX2lteDZxKCkgJiYgaW14X2dldF9zb2NfcmV2aXNpb24oKSA+DQo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICBJTVhfQ0hJUF9SRVZJU0lPTl8xXzApIHx8IGNwdV9pc19pbXg2ZGwoKSB8
+fA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgY3B1X2lzX2lteDZzeCgpKSAmJiAoY2xrX2dl
+dF9yYXRlKGNsa19wZXIpID09DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBWMl9USU1FUl9S
+QVRFX09TQ19ESVY4KSkgew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgdGN0bF92YWwgPSBW
+Ml9UQ1RMX0NMS19PU0NfRElWOCB8IFYyX1RDVExfRlJSIHwNCj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgVjJfVENUTF9XQUlURU4gfCBNWENfVENUTF9URU47DQo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICBpZiAoY3B1X2lzX2lteDZkbCgpIHx8IGNwdV9pc19pbXg2c3goKSkg
+ew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvKiAyNCAvIDggPSAzIE1IeiAq
+Lw0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cHJlcl92YWwgPSA3IDw8IFYy
+X1RQUkVSX1BSRTI0TTsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19yYXdf
+d3JpdGVsKHRwcmVyX3ZhbCwgdGltZXJfYmFzZSArIE1YQ19UUFJFUik7DQo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHRjdGxfdmFsIHw9IFYyX1RDVExfMjRNRU47DQo+PiArICAg
+ICAgICAgICAgICAgICAgICAgICB9DQo+PiArICAgICAgICAgICAgICAgfSBlbHNlIHsNCj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIHRjdGxfdmFsID0gVjJfVENUTF9DTEtfUEVSIHwgVjJfVENU
+TF9GUlIgfA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBWMl9UQ1RMX1dBSVRF
+TiB8IE1YQ19UQ1RMX1RFTjsNCj4+ICsgICAgICAgICAgICAgICB9DQo+PiArICAgICAgIH0gZWxz
+ZSB7DQo+PiAgICAgICAgICAgICAgICB0Y3RsX3ZhbCA9IE1YMV8yX1RDVExfRlJSIHwgTVgxXzJf
+VENUTF9DTEtfUENMSzEgfCBNWENfVENUTF9URU47DQo+PiArICAgICAgIH0NCj4gDQo+IENhbiB0
+aGlzIGJsb2NrIGJlIHJlYXJyYW5nZWQgYSBiaXQgc28gdGhhdCBpdCBiZWNvbWVzIGVhc2llciB0
+byByZWFkPw0KDQpJIGhhdmUgdG8gY29uc2lkZXIgdjEsIHYyLCBhbmQgb24gdjIsIE1YNlEncyBp
+bXBsZW1lbnRhdGlvbiBpcyBkaWZmZXJlbnQgZnJvbSBNWDZETCBhbmQgTVg2U1gsIE1YNlNMIGhh
+cyBpdHMgc3BlY2lhbCBpbXBsZW1lbnRhdGlvbiwgYW5kIE1YNlEgaGFzIGRpZmZlcmVuY2UgYmV0
+d2VlbiBUTzEuMCBhbmQgb3RoZXIgVE9zLCBhbHNvLCB3ZSBoYXZlIHRvIGNvbnNpZGVyIHRoZSBv
+bGQgZHRiIGNhc2UuIFNvLCB0aGVyZSBhcmUgbW9yZSB0aGFuIDYgZGlmZmVyZW50IGNhc2VzIHdl
+IG5lZWQgdG8gY29uc2lkZXIsIEkgdGhvdWdodCBpdCB3YXMgdGhlIGJlc3Qgd2F5IEkgY2FuIGZp
+Z3VyZSBvdXQsIGNvdWxkIHlvdSBhZHZpY2UgaWYgeW91IGhhdmUgYmV0dGVyIGlkZWE/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
