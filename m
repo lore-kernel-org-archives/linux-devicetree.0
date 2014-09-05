@@ -1,77 +1,32 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system timer
-Date: Fri, 5 Sep 2014 09:09:36 -0300
-Message-ID: <CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ@mail.gmail.com>
-References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
-	<1409887606-22388-4-git-send-email-b20788@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409887606-22388-4-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/2] Intial support for voltage ADC
+Date: Fri,  5 Sep 2014 15:14:32 +0300
+Message-ID: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 5, 2014 at 12:26 AM, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On i.MX6Q TO > 1.0, i.MX6DL and i.MX6SX, gpt per clock
-> can be from OSC instead of ipg_per, as ipg_per's rate
-> may be scaled when system enter low bus mode, to keep
-> system timer NOT drift, better to make gpt per clock
-> at fixed rate, here add support for gpt per clock to
-> be from OSC which is at fixed rate always.
->
-> There are some difference on this implementation of
-> gpt per clock source, see below for details:
->
-> i.MX6Q TO > 1.0: GPT_CR_CLKSRC, 3b'101 selects fix clock
->     of OSC / 8 for gpt per clk;
+Introduce inital support for VADC inside Qualcomm SPMI PMICs.
+The vadc driver is reworked version of the same downstream
+driver but now it is implemented through Industrial IO core.
 
-You mean "5b'101 selects fix clock..."
+Comments are welcome!
 
-> i.MX6DL and i.MX6SX: GPT_CR_CLKSRC, 3b'101 selects OSC
+regards,
+Stan
 
-Same here: "5b'101"
+Stanimir Varbanov (2):
+  iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+  DT: iio: vadc: document dt binding
 
-> @@ -293,7 +299,7 @@ static int __init mxc_clockevent_init(struct clk *timer_clk)
->  static void __init _mxc_timer_init(int irq,
->                                    struct clk *clk_per, struct clk *clk_ipg)
->  {
-> -       uint32_t tctl_val;
-> +       uint32_t tctl_val, tprer_val;
->
->         if (IS_ERR(clk_per)) {
->                 pr_err("i.MX timer: unable to get clk\n");
-> @@ -312,10 +318,26 @@ static void __init _mxc_timer_init(int irq,
->         __raw_writel(0, timer_base + MXC_TCTL);
->         __raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
->
-> -       if (timer_is_v2())
-> -               tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
-> -       else
-> +       if (timer_is_v2()) {
-> +               if (((cpu_is_imx6q() && imx_get_soc_revision() >
-> +                       IMX_CHIP_REVISION_1_0) || cpu_is_imx6dl() ||
-> +                       cpu_is_imx6sx()) && (clk_get_rate(clk_per) ==
-> +                       V2_TIMER_RATE_OSC_DIV8)) {
-> +                       tctl_val = V2_TCTL_CLK_OSC_DIV8 | V2_TCTL_FRR |
-> +                               V2_TCTL_WAITEN | MXC_TCTL_TEN;
-> +                       if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
-> +                               /* 24 / 8 = 3 MHz */
-> +                               tprer_val = 7 << V2_TPRER_PRE24M;
-> +                               __raw_writel(tprer_val, timer_base + MXC_TPRER);
-> +                               tctl_val |= V2_TCTL_24MEN;
-> +                       }
-> +               } else {
-> +                       tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR |
-> +                               V2_TCTL_WAITEN | MXC_TCTL_TEN;
-> +               }
-> +       } else {
->                 tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
-> +       }
-
-Can this block be rearranged a bit so that it becomes easier to read?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  110 ++
+ drivers/iio/adc/Kconfig                            |   11 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/qcom-spmi-vadc.c                   | 1275 ++++++++++++++++++++
+ include/dt-bindings/iio/qcom,spmi-pmic-vadc.h      |  119 ++
+ 5 files changed, 1516 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+ create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
