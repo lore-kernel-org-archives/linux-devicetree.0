@@ -1,64 +1,42 @@
-From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2] spi: orion: support armada extended baud rates
-Date: Fri, 05 Sep 2014 10:36:10 +1000
-Message-ID: <5409057A.6090900@uclinux.org>
-References: <1409835268-29555-1-git-send-email-gerg@uclinux.org> <CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A@mail.gmail.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 0/3] move gpt per clk parent for ipg_per to OSC
+Date: Fri, 5 Sep 2014 08:35:25 +0800
+Message-ID: <20140905003523.GD10809@dragon>
+References: <1409729805-9741-1-git-send-email-b20788@freescale.com>
+ <CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Anson Huang <b20788@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On 04/09/14 23:17, Geert Uytterhoeven wrote:
-> On Thu, Sep 4, 2014 at 2:54 PM,  <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org> wrote:
->> The Armada SoC family implementation of this SPI hardware module has
->> extended the configuration register to allow for a wider range of SPI
->> clock rates. Specifically the Serial Baud Rate Pre-selection bits in the
->> SPI Interface Configuration Register now also use bits 6 and 7 as well.
->>
->> Modify the baud rate calculation to handle these differences for the
->> Armada case. Potentially a baud rate can be setup using a number of
->> different pre-scalar and scalar combinations. This code tries all
->> possible pre-scalar divisors (8 in total) to try and find the most
->> accuate set.
+On Thu, Sep 04, 2014 at 07:50:35PM -0300, Fabio Estevam wrote:
+> This patch series works fine if we use the new dtb and new kernel.
 > 
-> Are the Orion rates and register bits a subset of the Armada ones?
-> I.e. does the Armada work with the Orion setup?
-
-The bits used by the orion are a subset (bits 0-4 of the SPI
-configuration register) of those used by the armada (bits 0-4 and
-6-7).
-
-In practice the defined prescalar values for the orion do give
-the same divisor for the same bits set on armada. The extra bits
-on the armada let you get to lower SPI baudrates (which is more of
-a problem on the armada with its higher core clocks).
-
-
->> This change introduces a new device tree compatible device name
->> "armada-spi". This is used in place of "orion-spi" on the Armada SoC
->> parts.
+> However, booting a kernel with these series applied and using an old
+> dtb we get a system with broken timer.
 > 
->> -                               compatible = "marvell,orion-spi";
->> +                               compatible = "marvell,armada-spi";
-> 
-> If the answer to my above question is yes, you want to keep
-> "marvell,orion-spi" as a fallback.
+> 'sleep 1' takes something like 20 seconds in this case.
 
-Do you mean like this?
+Oh, yes.  It breaks the compatibility with existing DTB.  Dropped the
+patches for now.
 
-  compatible = "marvell,orion-spi", "marvell,armada-spi";
+Anson,
 
-Regards
-Greg
+We may need to query the clock rate and then decide how to set up those
+register bits?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
