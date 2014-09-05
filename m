@@ -1,180 +1,101 @@
-From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/2][v4] powerpc/fsl-booke: Add initial T1042RDB_PI board support
-Date: Fri, 5 Sep 2014 16:15:00 +0530
-Message-ID: <1409913900-21638-1-git-send-email-Priyanka.Jain@freescale.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] arm64, thunder: Add initial dts for Cavium Thunder SoC
+Date: Fri, 05 Sep 2014 13:21:48 +0200
+Message-ID: <5017180.kZRPNE71Sv@wuerfel>
+References: <1409903205-2762-1-git-send-email-rric@kernel.org> <1409903205-2762-3-git-send-email-rric@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409903205-2762-3-git-send-email-rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T1042RDB_PI is Freescale Reference Design Board supporting the T1042
-QorIQ Power Architecture=E2=84=A2 processor. T1042 is a reduced persona=
-lity
-of T1040 SoC without Integrated 8-port Gigabit. The board is designed
-with low power features targeted for Printing Image Market.
+On Friday 05 September 2014 09:46:43 Robert Richter wrote:
+> diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
+> new file mode 100644
+> index 000000000000..4cc1d059d2d9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/thunder-88xx.dts
 
-T1042RDB_PI is  similar to T1040RDB board with few differences like
-it has video interface, supports T1042 personality only
+Most people end up having a soc.dtsi file and a board.dsi file including
+the former and adding the machine-specific properties.
 
-T1042RDB_PI board Overview
------------------------
-- SERDES Connections, 8 lanes supporting:
-    	- PCI
-    	- SATA 2.0
-- DDR Controller
-    	- Supports rates of up to 1600 MHz data-rate
-    	- Supports one DDR3LP UDIMM
--IFC/Local Bus
-    	- NAND flash: 1GB 8-bit NAND flash
-    	- NOR: 128MB 16-bit NOR Flash
-- Ethernet
-    	- Two on-board RGMII 10/100/1G ethernet ports.
-    	- PHY #0 remains powered up during deep-sleep
-- CPLD
-- Clocks
-    	- System and DDR clock (SYSCLK, =E2=80=9CDDRCLK=E2=80=9D)
-    	- SERDES clocks
-- Power Supplies
-- USB
-    	- Supports two USB 2.0 ports with integrated PHYs
-    	- Two type A ports with 5V@1.5A per port.
-- SDHC
-    	- SDHC/SDXC connector
-- SPI
-    	- On-board 64MB SPI flash
-- I2C
-    	- Device connected: EEPROM, thermal monitor, VID controller, RTC
-- Other IO
-    	- Two Serial ports
-    	- ProfiBus port
+It is likely that you will end up needing the same, so you might want to
+start that way.
 
-Add support for T1042RDB_PI board:
-    -add device tree
-    -Add entry in corenet_generic.c, as it is similar to other corenet =
-platforms
+> +/ {
+> +	model = "Cavium ThunderX CN88XX Family";
+> +	compatible = "cavium,thunder-88xx";
 
-Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-changes for v4: Updated cpld compatible string field
+As mentioned by Mark already, you should not include 'xx' in the
+compatible string, but instead use the real soc ID.
 
-changes for v3: Incorporated Scott comments on moving cpld compatible
- field to board specific file as cpld binaries are different
+Normally, each SoC has some slight differences anyway, so you would
+override these in the specialized dtsi file.
 
-changes for v2: Incorporated Scott comments on using common name
- for compatible string for cpld as register set is same
+The "model" property should go into the board specific file.
 
- arch/powerpc/boot/dts/t1042rdb_pi.dts         |   57 +++++++++++++++++=
-++++++++
- arch/powerpc/platforms/85xx/corenet_generic.c |    1 +
- 2 files changed, 58 insertions(+), 0 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/t1042rdb_pi.dts
+> +	interrupt-parent = <&gic0>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &uaa0;
+> +		serial1 = &uaa1;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
 
-diff --git a/arch/powerpc/boot/dts/t1042rdb_pi.dts b/arch/powerpc/boot/=
-dts/t1042rdb_pi.dts
-new file mode 100644
-index 0000000..b9d0877
---- /dev/null
-+++ b/arch/powerpc/boot/dts/t1042rdb_pi.dts
-@@ -0,0 +1,57 @@
-+/*
-+ * T1042RDB_PI Device Tree Source
-+ *
-+ * Copyright 2014 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions =
-are met:
-+ *     * Redistributions of source code must retain the above copyrigh=
-t
-+ *	 notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyr=
-ight
-+ *	 notice, this list of conditions and the following disclaimer in th=
-e
-+ *	 documentation and/or other materials provided with the distributio=
-n.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *	 names of its contributors may be used to endorse or promote produc=
-ts
-+ *	 derived from this software without specific prior written permissi=
-on.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of =
-the
-+ * GNU General Public License ("GPL") as published by the Free Softwar=
-e
-+ * Foundation, either version 2 of that License or (at your option) an=
-y
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
-Y
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
-MPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
-ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
- ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
-DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
-SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
-USED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
-OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
-SE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/include/ "fsl/t104xsi-pre.dtsi"
-+/include/ "t104xrdb.dtsi"
-+
-+/ {
-+	model =3D "fsl,T1042RDB_PI";
-+	compatible =3D "fsl,T1042RDB_PI";
-+	ifc: localbus@ffe124000 {
-+		cpld@3,0 {
-+			compatible =3D "fsl,t1042rdb_pi-cpld";
-+		};
-+	};
-+	soc: soc@ffe000000 {
-+		i2c@118000 {
-+			rtc@68 {
-+				compatible =3D "dallas,ds1337";
-+				reg =3D <0x68>;
-+				interrupts =3D <0x2 0x1 0 0>;
-+			};
-+		};
-+	};
-+};
-+
-+/include/ "fsl/t1042si-post.dtsi"
-diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/power=
-pc/platforms/85xx/corenet_generic.c
-index c268f89..100e80d 100644
---- a/arch/powerpc/platforms/85xx/corenet_generic.c
-+++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-@@ -130,6 +130,7 @@ static const char * const boards[] __initconst =3D =
-{
- 	"fsl,T1042QDS",
- 	"fsl,T1040RDB",
- 	"fsl,T1042RDB",
-+	"fsl,T1042RDB_PI",
- 	"keymile,kmcoge4",
- 	NULL
- };
+The aliases node should go into the board file as well, since it's
+possible that e.g. the first uart is not connected and you need
+something like
 
+	aliases {
+		serial0 = &uaa1;
+	};
+
+The psci node (according to a discussion we just had for the freescale
+dts files) should ideally get filled out by the boot loader that
+implements the psci code, to ensure the version matches.
+
+> +
+> +	memory@00000000 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x00000000 0x0 0x80000000>;
+> +	};
+
+memory should also go into the board specific file, or get filled by
+the boot loader if it is detected at boot time and user serviceable.
+
+I assume that your machines have NUMA properties, in that case it
+makes sense to split up the memory device nodes by topology. I think
+there are some standard properties to describe the topology further,
+but I don't remember how it's done at the moment.
+
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		refclk50mhz: refclk50mhz {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <50000000>;
+> +			clock-output-names = "refclk50mhz";
+> +		};
+
+If the reference clock is generated outside of the SoC, I would put the device
+node for it on the top level.
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
