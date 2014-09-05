@@ -1,80 +1,72 @@
-From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system
- timer
-Date: Fri, 5 Sep 2014 12:58:28 +0000
-Message-ID: <5E619FDB-56BB-486E-B627-9D2A9D4F9F54@freescale.com>
-References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
-	<1409887606-22388-4-git-send-email-b20788@freescale.com>,<CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ@mail.gmail.com>
+From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v2] spi: orion: support armada extended baud rates
+Date: Fri, 05 Sep 2014 23:11:38 +1000
+Message-ID: <5409B68A.7010604@uclinux.org>
+References: <1409835268-29555-1-git-send-email-gerg@uclinux.org>	<CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A@mail.gmail.com>	<5409057A.6090900@uclinux.org> <CAMuHMdWf6_yBhpNgK=wJcQqzLNJvTnC95SrqrcZyRH+jGL93vA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: zh-CN
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWf6_yBhpNgK=wJcQqzLNJvTnC95SrqrcZyRH+jGL93vA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNClNlbnQgZnJvbSBteSBpUGFkDQoNCtTaIDIwMTQtOS01o6wyMDowOaOsIkZhYmlvIEVzdGV2
-YW0iIDxmZXN0ZXZhbUBnbWFpbC5jb20+INC0tcCjug0KDQo+IE9uIEZyaSwgU2VwIDUsIDIwMTQg
-YXQgMTI6MjYgQU0sIEFuc29uIEh1YW5nIDxiMjA3ODhAZnJlZXNjYWxlLmNvbT4gd3JvdGU6DQo+
-PiBPbiBpLk1YNlEgVE8gPiAxLjAsIGkuTVg2REwgYW5kIGkuTVg2U1gsIGdwdCBwZXIgY2xvY2sN
-Cj4+IGNhbiBiZSBmcm9tIE9TQyBpbnN0ZWFkIG9mIGlwZ19wZXIsIGFzIGlwZ19wZXIncyByYXRl
-DQo+PiBtYXkgYmUgc2NhbGVkIHdoZW4gc3lzdGVtIGVudGVyIGxvdyBidXMgbW9kZSwgdG8ga2Vl
-cA0KPj4gc3lzdGVtIHRpbWVyIE5PVCBkcmlmdCwgYmV0dGVyIHRvIG1ha2UgZ3B0IHBlciBjbG9j
-aw0KPj4gYXQgZml4ZWQgcmF0ZSwgaGVyZSBhZGQgc3VwcG9ydCBmb3IgZ3B0IHBlciBjbG9jayB0
-bw0KPj4gYmUgZnJvbSBPU0Mgd2hpY2ggaXMgYXQgZml4ZWQgcmF0ZSBhbHdheXMuDQo+PiANCj4+
-IFRoZXJlIGFyZSBzb21lIGRpZmZlcmVuY2Ugb24gdGhpcyBpbXBsZW1lbnRhdGlvbiBvZg0KPj4g
-Z3B0IHBlciBjbG9jayBzb3VyY2UsIHNlZSBiZWxvdyBmb3IgZGV0YWlsczoNCj4+IA0KPj4gaS5N
-WDZRIFRPID4gMS4wOiBHUFRfQ1JfQ0xLU1JDLCAzYicxMDEgc2VsZWN0cyBmaXggY2xvY2sNCj4+
-ICAgIG9mIE9TQyAvIDggZm9yIGdwdCBwZXIgY2xrOw0KPiANCj4gWW91IG1lYW4gIjViJzEwMSBz
-ZWxlY3RzIGZpeCBjbG9jay4uLiINCj4gDQo+PiBpLk1YNkRMIGFuZCBpLk1YNlNYOiBHUFRfQ1Jf
-Q0xLU1JDLCAzYicxMDEgc2VsZWN0cyBPU0MNCj4gDQo+IFNhbWUgaGVyZTogIjViJzEwMSINCg0K
-W0Fuc29uXSBJIHRob3VnaHQgM2InMTAxIG1lYW5zIDMgYml0cywgdmFsdWUgMTAxLi4uIE1heWJl
-IG15IHVuZGVyc3RhbmRpbmcgaXMgaW5jb3JyZWN0LCB3aWxsIGNvcnJlY3QgaXQgbiB2My4NCj4g
-DQo+PiBAQCAtMjkzLDcgKzI5OSw3IEBAIHN0YXRpYyBpbnQgX19pbml0IG14Y19jbG9ja2V2ZW50
-X2luaXQoc3RydWN0IGNsayAqdGltZXJfY2xrKQ0KPj4gc3RhdGljIHZvaWQgX19pbml0IF9teGNf
-dGltZXJfaW5pdChpbnQgaXJxLA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IHN0cnVjdCBjbGsgKmNsa19wZXIsIHN0cnVjdCBjbGsgKmNsa19pcGcpDQo+PiB7DQo+PiAtICAg
-ICAgIHVpbnQzMl90IHRjdGxfdmFsOw0KPj4gKyAgICAgICB1aW50MzJfdCB0Y3RsX3ZhbCwgdHBy
-ZXJfdmFsOw0KPj4gDQo+PiAgICAgICAgaWYgKElTX0VSUihjbGtfcGVyKSkgew0KPj4gICAgICAg
-ICAgICAgICAgcHJfZXJyKCJpLk1YIHRpbWVyOiB1bmFibGUgdG8gZ2V0IGNsa1xuIik7DQo+PiBA
-QCAtMzEyLDEwICszMTgsMjYgQEAgc3RhdGljIHZvaWQgX19pbml0IF9teGNfdGltZXJfaW5pdChp
-bnQgaXJxLA0KPj4gICAgICAgIF9fcmF3X3dyaXRlbCgwLCB0aW1lcl9iYXNlICsgTVhDX1RDVEwp
-Ow0KPj4gICAgICAgIF9fcmF3X3dyaXRlbCgwLCB0aW1lcl9iYXNlICsgTVhDX1RQUkVSKTsgLyog
-c2VlIGRhdGFzaGVldCBub3RlICovDQo+PiANCj4+IC0gICAgICAgaWYgKHRpbWVyX2lzX3YyKCkp
-DQo+PiAtICAgICAgICAgICAgICAgdGN0bF92YWwgPSBWMl9UQ1RMX0NMS19QRVIgfCBWMl9UQ1RM
-X0ZSUiB8IFYyX1RDVExfV0FJVEVOIHwgTVhDX1RDVExfVEVOOw0KPj4gLSAgICAgICBlbHNlDQo+
-PiArICAgICAgIGlmICh0aW1lcl9pc192MigpKSB7DQo+PiArICAgICAgICAgICAgICAgaWYgKCgo
-Y3B1X2lzX2lteDZxKCkgJiYgaW14X2dldF9zb2NfcmV2aXNpb24oKSA+DQo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICBJTVhfQ0hJUF9SRVZJU0lPTl8xXzApIHx8IGNwdV9pc19pbXg2ZGwoKSB8
-fA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgY3B1X2lzX2lteDZzeCgpKSAmJiAoY2xrX2dl
-dF9yYXRlKGNsa19wZXIpID09DQo+PiArICAgICAgICAgICAgICAgICAgICAgICBWMl9USU1FUl9S
-QVRFX09TQ19ESVY4KSkgew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgdGN0bF92YWwgPSBW
-Ml9UQ1RMX0NMS19PU0NfRElWOCB8IFYyX1RDVExfRlJSIHwNCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgVjJfVENUTF9XQUlURU4gfCBNWENfVENUTF9URU47DQo+PiArICAgICAg
-ICAgICAgICAgICAgICAgICBpZiAoY3B1X2lzX2lteDZkbCgpIHx8IGNwdV9pc19pbXg2c3goKSkg
-ew0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvKiAyNCAvIDggPSAzIE1IeiAq
-Lw0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0cHJlcl92YWwgPSA3IDw8IFYy
-X1RQUkVSX1BSRTI0TTsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19yYXdf
-d3JpdGVsKHRwcmVyX3ZhbCwgdGltZXJfYmFzZSArIE1YQ19UUFJFUik7DQo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHRjdGxfdmFsIHw9IFYyX1RDVExfMjRNRU47DQo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICB9DQo+PiArICAgICAgICAgICAgICAgfSBlbHNlIHsNCj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIHRjdGxfdmFsID0gVjJfVENUTF9DTEtfUEVSIHwgVjJfVENU
-TF9GUlIgfA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBWMl9UQ1RMX1dBSVRF
-TiB8IE1YQ19UQ1RMX1RFTjsNCj4+ICsgICAgICAgICAgICAgICB9DQo+PiArICAgICAgIH0gZWxz
-ZSB7DQo+PiAgICAgICAgICAgICAgICB0Y3RsX3ZhbCA9IE1YMV8yX1RDVExfRlJSIHwgTVgxXzJf
-VENUTF9DTEtfUENMSzEgfCBNWENfVENUTF9URU47DQo+PiArICAgICAgIH0NCj4gDQo+IENhbiB0
-aGlzIGJsb2NrIGJlIHJlYXJyYW5nZWQgYSBiaXQgc28gdGhhdCBpdCBiZWNvbWVzIGVhc2llciB0
-byByZWFkPw0KDQpJIGhhdmUgdG8gY29uc2lkZXIgdjEsIHYyLCBhbmQgb24gdjIsIE1YNlEncyBp
-bXBsZW1lbnRhdGlvbiBpcyBkaWZmZXJlbnQgZnJvbSBNWDZETCBhbmQgTVg2U1gsIE1YNlNMIGhh
-cyBpdHMgc3BlY2lhbCBpbXBsZW1lbnRhdGlvbiwgYW5kIE1YNlEgaGFzIGRpZmZlcmVuY2UgYmV0
-d2VlbiBUTzEuMCBhbmQgb3RoZXIgVE9zLCBhbHNvLCB3ZSBoYXZlIHRvIGNvbnNpZGVyIHRoZSBv
-bGQgZHRiIGNhc2UuIFNvLCB0aGVyZSBhcmUgbW9yZSB0aGFuIDYgZGlmZmVyZW50IGNhc2VzIHdl
-IG5lZWQgdG8gY29uc2lkZXIsIEkgdGhvdWdodCBpdCB3YXMgdGhlIGJlc3Qgd2F5IEkgY2FuIGZp
-Z3VyZSBvdXQsIGNvdWxkIHlvdSBhZHZpY2UgaWYgeW91IGhhdmUgYmV0dGVyIGlkZWE/
+Hi Geert,
+
+On 05/09/14 17:36, Geert Uytterhoeven wrote:
+> Hi Greg,
+>
+> On Fri, Sep 5, 2014 at 2:36 AM, Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org> wrote:
+>>> Are the Orion rates and register bits a subset of the Armada ones?
+>>> I.e. does the Armada work with the Orion setup?
+>> The bits used by the orion are a subset (bits 0-4 of the SPI
+>> configuration register) of those used by the armada (bits 0-4 and
+>> 6-7).
+>>
+>> In practice the defined prescalar values for the orion do give
+>> the same divisor for the same bits set on armada. The extra bits
+>> on the armada let you get to lower SPI baudrates (which is more of
+>> a problem on the armada with its higher core clocks).
+> OK, so the answer is yes.
+>
+>>>> This change introduces a new device tree compatible device name
+>>>> "armada-spi". This is used in place of "orion-spi" on the Armada SoC
+>>>> parts.
+>>>> -                               compatible = "marvell,orion-spi";
+>>>> +                               compatible = "marvell,armada-spi";
+>>> If the answer to my above question is yes, you want to keep
+>>> "marvell,orion-spi" as a fallback.
+>> Do you mean like this?
+>>
+>>    compatible = "marvell,orion-spi", "marvell,armada-spi";
+> No, the other way around (from most-specific to least-specific):
+>
+>      compatible = "marvell,armada-spi", "marvell,orion-spi"
+>
+> So the Armada version is used if available, and the Orion version
+> is used as a fallback.
+
+Ok, got it. Thanks.
+
+Regards
+Greg
+
+
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                  -- Linus Torvalds
+>
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
