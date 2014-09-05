@@ -1,159 +1,149 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v9 7/8] drivers: cpuidle: initialize big.LITTLE driver through DT
-Date: Fri,  5 Sep 2014 18:34:56 +0100
-Message-ID: <1409938498-17984-8-git-send-email-lorenzo.pieralisi@arm.com>
-References: <1409938498-17984-1-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409938498-17984-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Chander Kashyap <k.chander-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Charles Garcia Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antti Miettinen <ananaza-X3B1VOXEql0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Capella <sebcape-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Geoff
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH] PCI: keystone: update to support multiple pci ports
+Date: Fri, 5 Sep 2014 13:39:42 -0400
+Message-ID: <1409938782-31460-1-git-send-email-m-karicheri2@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-With the introduction of DT based idle states, CPUidle drivers for ARM
-can now initialize idle states data through properties in the device tree.
+K2E SoC has two PCI ports. The SATA controller is connected to second
+PCI port (port 1). This patch enhances the driver to support multiple
+ports.
 
-This patch adds code to the big.LITTLE CPUidle driver to dynamically
-initialize idle states data through the updated device tree source file.
+Update the DT Documentation for the new attribute, ti,pcie-port and
+remove the note for bootargs as this is no longer needed.
 
-Cc: Chander Kashyap <k.chander-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Pawel Moll <pawel.moll@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: Bjorn Helgaas <bhelgaas@google.com>
+CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
 ---
- arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts | 23 +++++++++++++++++++++++
- drivers/cpuidle/Kconfig.arm                |  1 +
- drivers/cpuidle/cpuidle-big_little.c       | 19 +++++++++++++++++++
- 3 files changed, 43 insertions(+)
+ .../devicetree/bindings/pci/pci-keystone.txt       |    8 ++++---
+ drivers/pci/host/pci-keystone.c                    |   23 ++++++++++++++------
+ drivers/pci/host/pci-keystone.h                    |    4 ++--
+ 3 files changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts=
-/vexpress-v2p-ca15_a7.dts
-index a25c262..322fd15 100644
---- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-+++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-@@ -38,6 +38,7 @@
- =09=09=09compatible =3D "arm,cortex-a15";
- =09=09=09reg =3D <0>;
- =09=09=09cci-control-port =3D <&cci_control1>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_BIG>;
- =09=09};
-=20
- =09=09cpu1: cpu@1 {
-@@ -45,6 +46,7 @@
- =09=09=09compatible =3D "arm,cortex-a15";
- =09=09=09reg =3D <1>;
- =09=09=09cci-control-port =3D <&cci_control1>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_BIG>;
- =09=09};
-=20
- =09=09cpu2: cpu@2 {
-@@ -52,6 +54,7 @@
- =09=09=09compatible =3D "arm,cortex-a7";
- =09=09=09reg =3D <0x100>;
- =09=09=09cci-control-port =3D <&cci_control2>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_LITTLE>;
- =09=09};
-=20
- =09=09cpu3: cpu@3 {
-@@ -59,6 +62,7 @@
- =09=09=09compatible =3D "arm,cortex-a7";
- =09=09=09reg =3D <0x101>;
- =09=09=09cci-control-port =3D <&cci_control2>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_LITTLE>;
- =09=09};
-=20
- =09=09cpu4: cpu@4 {
-@@ -66,6 +70,25 @@
- =09=09=09compatible =3D "arm,cortex-a7";
- =09=09=09reg =3D <0x102>;
- =09=09=09cci-control-port =3D <&cci_control2>;
-+=09=09=09cpu-idle-states =3D <&CLUSTER_SLEEP_LITTLE>;
-+=09=09};
+diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+index ceb3e24..e279143 100644
+--- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
++++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+@@ -58,11 +58,13 @@ Optional properties:-
+ 	phy-names: name of the Generic Keystine SerDes phy for PCI
+ 	  - If boot loader already does PCI link establishment, then phys and
+ 	    phy-names shouldn't be present.
++	ti,pcie-port: PCI port number. This is used to configure the PCI port
++	    number. For example K2E SoC supports 2 PCI ports and PCI bindings
++	    for the second port adds ti,pcie-port = <1> to identify second port
++	    and driver uses this to configure the PCI mode register for second
++	    port. If not present, port number 0 is assumed.
+ 
+ Designware DT Properties not applicable for Keystone PCI
+ 
+ 1. pcie_bus clock-names not used.  Instead, a phandle to phys is used.
+ 
+-Note for PCI driver usage
+-=========================
+-Driver requires pci=pcie_bus_perf in the bootargs for proper functioning.
+diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
+index a132622..b4831e8 100644
+--- a/drivers/pci/host/pci-keystone.c
++++ b/drivers/pci/host/pci-keystone.c
+@@ -252,8 +252,8 @@ static int keystone_pcie_fault(unsigned long addr, unsigned int fsr,
+ 
+ static void __init ks_pcie_host_init(struct pcie_port *pp)
+ {
+-	u32 vendor_device_id, val;
+ 	struct keystone_pcie *ks_pcie = to_keystone_pcie(pp);
++	u32 val;
+ 
+ 	ks_pcie_establish_link(ks_pcie);
+ 	ks_dw_pcie_setup_rc_app_regs(ks_pcie);
+@@ -262,8 +262,7 @@ static void __init ks_pcie_host_init(struct pcie_port *pp)
+ 			pp->dbi_base + PCI_IO_BASE);
+ 
+ 	/* update the Vendor ID */
+-	vendor_device_id = readl(ks_pcie->va_reg_pciid);
+-	writew((vendor_device_id >> 16), pp->dbi_base + PCI_DEVICE_ID);
++	writew(ks_pcie->device_id, pp->dbi_base + PCI_DEVICE_ID);
+ 
+ 	/* update the DEV_STAT_CTRL to publish right mrrs */
+ 	val = readl(pp->dbi_base + PCIE_CAP_BASE + PCI_EXP_DEVCTL);
+@@ -344,12 +343,13 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
+ static int __init ks_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	struct keystone_pcie *ks_pcie;
++	int ret = 0, port_id = 0;
+ 	struct pcie_port *pp;
+ 	struct resource *res;
+ 	void __iomem *reg_p;
+ 	struct phy *phy;
+-	int ret = 0;
+ 	u32 val;
+ 
+ 	ks_pcie = devm_kzalloc(&pdev->dev, sizeof(*ks_pcie),
+@@ -360,17 +360,24 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	}
+ 	pp = &ks_pcie->pp;
+ 
++	/* read the PCI port id */
++	of_property_read_u32(np, "ti,pcie-port", &port_id);
 +
-+=09=09idle-states {
-+=09=09=09CLUSTER_SLEEP_BIG: cluster-sleep-big {
-+=09=09=09=09compatible =3D "arm,idle-state";
-+=09=09=09=09local-timer-stop;
-+=09=09=09=09entry-latency-us =3D <1000>;
-+=09=09=09=09exit-latency-us =3D <700>;
-+=09=09=09=09min-residency-us =3D <2000>;
-+=09=09=09};
+ 	/* index 2 is the devcfg register for RC mode settings */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+ 	reg_p = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(reg_p))
+ 		return PTR_ERR(reg_p);
+ 
 +
-+=09=09=09CLUSTER_SLEEP_LITTLE: cluster-sleep-little {
-+=09=09=09=09compatible =3D "arm,idle-state";
-+=09=09=09=09local-timer-stop;
-+=09=09=09=09entry-latency-us =3D <1000>;
-+=09=09=09=09exit-latency-us =3D <500>;
-+=09=09=09=09min-residency-us =3D <2500>;
-+=09=09=09};
- =09=09};
- =09};
-=20
-diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
-index 38cff69..e339c7f 100644
---- a/drivers/cpuidle/Kconfig.arm
-+++ b/drivers/cpuidle/Kconfig.arm
-@@ -7,6 +7,7 @@ config ARM_BIG_LITTLE_CPUIDLE
- =09depends on MCPM
- =09select ARM_CPU_SUSPEND
- =09select CPU_IDLE_MULTIPLE_DRIVERS
-+=09select DT_IDLE_STATES
- =09help
- =09  Select this option to enable CPU idle driver for big.LITTLE based
- =09  ARM systems. Driver manages CPUs coordination through MCPM and
-diff --git a/drivers/cpuidle/cpuidle-big_little.c b/drivers/cpuidle/cpuidle=
--big_little.c
-index ef94c3b..85d09bc 100644
---- a/drivers/cpuidle/cpuidle-big_little.c
-+++ b/drivers/cpuidle/cpuidle-big_little.c
-@@ -24,6 +24,8 @@
- #include <asm/smp_plat.h>
- #include <asm/suspend.h>
-=20
-+#include "dt_idle_states.h"
-+
- static int bl_enter_powerdown(struct cpuidle_device *dev,
- =09=09=09      struct cpuidle_driver *drv, int idx);
-=20
-@@ -73,6 +75,12 @@ static struct cpuidle_driver bl_idle_little_driver =3D {
- =09.state_count =3D 2,
- };
-=20
-+static const struct of_device_id bl_idle_state_match[] __initconst =3D {
-+=09{ .compatible =3D "arm,idle-state",
-+=09  .data =3D bl_enter_powerdown },
-+=09{ },
-+};
-+
- static struct cpuidle_driver bl_idle_big_driver =3D {
- =09.name =3D "big_idle",
- =09.owner =3D THIS_MODULE,
-@@ -190,6 +198,17 @@ static int __init bl_idle_init(void)
- =09if (ret)
- =09=09goto out_uninit_little;
-=20
-+=09/* Start at index 1, index 0 standard WFI */
-+=09ret =3D dt_init_idle_driver(&bl_idle_big_driver, bl_idle_state_match, 1=
-);
-+=09if (ret < 0)
-+=09=09goto out_uninit_big;
-+
-+=09/* Start at index 1, index 0 standard WFI */
-+=09ret =3D dt_init_idle_driver(&bl_idle_little_driver,
-+=09=09=09=09  bl_idle_state_match, 1);
-+=09if (ret < 0)
-+=09=09goto out_uninit_big;
-+
- =09ret =3D cpuidle_register(&bl_idle_little_driver, NULL);
- =09if (ret)
- =09=09goto out_uninit_big;
---=20
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ 	/* enable RC mode in devcfg */
+ 	val = readl(reg_p);
+-	val &= ~PCIE_MODE_MASK;
+-	val |= PCIE_RC_MODE;
++	port_id <<= 1;
++	val &= ~(PCIE_MODE_MASK << port_id);
++	val |= (PCIE_RC_MODE << port_id);
+ 	writel(val, reg_p);
++	devm_iounmap(dev, reg_p);
++	devm_release_mem_region(dev, res->start, resource_size(res));
+ 
+ 	/* initialize SerDes Phy if present */
+ 	phy = devm_phy_get(dev, "pcie-phy");
+@@ -385,7 +392,9 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	reg_p = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(reg_p))
+ 		return PTR_ERR(reg_p);
+-	ks_pcie->va_reg_pciid = reg_p;
++	ks_pcie->device_id = readl(reg_p) >> 16;
++	devm_iounmap(dev, reg_p);
++	devm_release_mem_region(dev, res->start, resource_size(res));
+ 
+ 	pp->dev = dev;
+ 	platform_set_drvdata(pdev, ks_pcie);
+diff --git a/drivers/pci/host/pci-keystone.h b/drivers/pci/host/pci-keystone.h
+index 729ea7d..80cfa8e 100644
+--- a/drivers/pci/host/pci-keystone.h
++++ b/drivers/pci/host/pci-keystone.h
+@@ -19,8 +19,8 @@
+ struct keystone_pcie {
+ 	struct	clk		*clk;
+ 	struct	pcie_port	pp;
+-	void __iomem		*va_reg_pciid;
+-
++	/* PCI Device ID */
++	u32			device_id;
+ 	int			num_legacy_host_irqs;
+ 	int			legacy_host_irqs[MAX_LEGACY_HOST_IRQS];
+ 	struct			device_node *legacy_intc_np;
+-- 
+1.7.9.5
