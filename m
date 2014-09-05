@@ -1,81 +1,151 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2 V4] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-Date: Fri, 05 Sep 2014 17:15:44 +0100
-Message-ID: <5409E1B0.5060703@arm.com>
-References: <1407942041-3291-1-git-send-email-suravee.suthikulpanit@amd.com> <1407942041-3291-2-git-send-email-suravee.suthikulpanit@amd.com> <87fvgxrgte.fsf@approximate.cambridge.arm.com> <53FEEF7C.1090902@amd.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53FEEF7C.1090902-5C7GfCeVMHo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suravee Suthikulpanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Harish.Kasiviswanathan-5C7GfCeVMHo@public.gmane.org" <Harish.Kasiviswanathan-5C7GfCeVMHo@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH] ARM: dts: Add SPI nodes to rk3288
+Date: Fri,  5 Sep 2014 09:53:11 -0700
+Message-ID: <1409935991-15067-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: hl@rock-chips.com, Addy Ke <addy.ke@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, Alexandru Stan <amstan@chromium.org>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/08/14 09:59, Suravee Suthikulpanit wrote:
-> 
-> 
-> On 08/15/2014 09:03 AM, Marc Zyngier wrote:
->>> +
->>> +static struct irq_chip gicv2m_chip;
->>> +
->>> +#ifdef CONFIG_OF
->>
->> Is there any reason why this should be guarded by CONFIG_OF? Surely the
->> v2m capability should only be enabled if OF is.
-> 
-> [Suravee]
-> We are also planning to support ACPI in the future also, which will be 
-> using a different init function.  Also, there is the same #ifdef in the 
-> irq-gic.c for the gic_of_init().  So, I am just trying to be consistent 
-> here.
-> 
-> 
->>> +
->>> +       memcpy(&gicv2m_chip, gic->irq_chip, sizeof(struct irq_chip));
->>> +       gicv2m_chip.name = "GICv2m",
->>> +       gicv2m_chip.irq_mask = gicv2m_mask_irq;
->>> +       gicv2m_chip.irq_unmask = gicv2m_unmask_irq;
->>> +       gic->irq_chip = &gicv2m_chip;
->>
->> I liked it until this last line. You're overriding the irq_chip for the
->> whole GIC. I was expecting you'd only use it for the MSI range
->> (basically return a range to the caller, together with your brand new
->> irq_chip).
-> 
-> [Suravee]
-> I'm not sure if I understand you point here. Actually, I don't see the 
-> whole point of the need to have a whole different irq_chip for v2m 
-> stuff.  All I need is just a way to overwrite the irq_chip.irq_mask() 
-> and irq_chip.irq_unmask() with the v2m version which should check for 
-> MSI before calling mask/unmask_msi_irq(). I should be able to just do:
-> 
-> 	gic->irq_chip.irq_mask = gicv2m_mask_irq;
-> 	gic->irq_chip.irq_unmask = gicv2m_unmask_irq;
+From: huang lin <hl@rock-chips.com>
 
-You should only do it for the few interrupts that are actually routed
-via the v2m widget, not inflict the overhead on all interrupts.
+This adds basic SPI nodes to the base rk3288 device tree file.
 
-This is why I insist on having a separate irqchip, and for this irqchip
-to be only used for the MSI-generated interrupts.
+A few notes:
+* It's assumed that most users of the SPI ports are using chip select
+  0.  Thus the default pinctrl for the ports enables chip select 0
+  (but not chip select 1 on ports that have it).  If a board wants to
+  use chip select 1 or wants a GPIO chip select the board should
+  override the pinctrl (just like boards can override UART pinctrl if
+  they have hardware flow control).
+* Since SPI DMA support appears broken and the SPI works fine without
+  DMA we don't include the DMA references.  That can come in a later
+  change.
 
-Have a look at what I do for GICv3:
-http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/tree/drivers/irqchip/irq-gic-v3.c?h=gicv3/its-split&id=b717e532c4312a410a8ee0cb2349baa2769c6b94#n712
+Signed-off-by: huang lin <hl@rock-chips.com>
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+---
 
-and how this gets used when routing the interrupts:
-http://git.kernel.org/cgit/linux/kernel/git/maz/arm-platforms.git/tree/drivers/irqchip/irq-gic-v3.c?h=gicv3/its-split&id=b717e532c4312a410a8ee0cb2349baa2769c6b94#n589
+ arch/arm/boot/dts/rk3288.dtsi | 92 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
 
-The ITS gets its own irqchip, entirely separate from the rest of the
-GIC. This gives you the flexibility you require, and let the other
-interrupts free of any overhead.
-
-Thanks,
-
-	M.
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 5f866e0..75d1f4c 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -34,6 +34,9 @@
+ 		serial2 = &uart2;
+ 		serial3 = &uart3;
+ 		serial4 = &uart4;
++		spi0 = &spi0;
++		spi1 = &spi1;
++		spi2 = &spi2;
+ 	};
+ 
+ 	cpus {
+@@ -128,6 +131,45 @@
+ 		status = "disabled";
+ 	};
+ 
++	spi0: spi@ff110000 {
++		compatible = "rockchip,rk3066-spi";
++		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
++		clock-names = "spiclk", "apb_pclk";
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0>;
++		reg = <0xff110000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi1: spi@ff120000 {
++		compatible = "rockchip,rk3066-spi";
++		clocks = <&cru SCLK_SPI1>, <&cru PCLK_SPI1>;
++		clock-names = "spiclk", "apb_pclk";
++		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spi1_clk &spi1_tx &spi1_rx &spi1_cs0>;
++		reg = <0xff120000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	spi2: spi@ff130000 {
++		compatible = "rockchip,rk3066-spi";
++		clocks = <&cru SCLK_SPI2>, <&cru PCLK_SPI2>;
++		clock-names = "spiclk", "apb_pclk";
++		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spi2_clk &spi2_tx &spi2_rx &spi2_cs0>;
++		reg = <0xff130000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	i2c1: i2c@ff140000 {
+ 		compatible = "rockchip,rk3288-i2c";
+ 		reg = <0xff140000 0x1000>;
+@@ -700,6 +742,56 @@
+ 			};
+ 		};
+ 
++		spi0 {
++			spi0_clk: spi0-clk {
++				rockchip,pins = <5 12 RK_FUNC_1 &pcfg_pull_up>;
++			};
++			spi0_cs0: spi0-cs0 {
++				rockchip,pins = <5 13 RK_FUNC_1 &pcfg_pull_up>;
++			};
++			spi0_tx: spi0-tx {
++				rockchip,pins = <5 14 RK_FUNC_1 &pcfg_pull_up>;
++			};
++			spi0_rx: spi0-rx {
++				rockchip,pins = <5 15 RK_FUNC_1 &pcfg_pull_up>;
++			};
++			spi0_cs1: spi0-cs1 {
++				rockchip,pins = <5 16 RK_FUNC_1 &pcfg_pull_up>;
++			};
++		};
++		spi1 {
++			spi1_clk: spi1-clk {
++				rockchip,pins = <7 12 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi1_cs0: spi1-cs0 {
++				rockchip,pins = <7 13 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi1_rx: spi1-rx {
++				rockchip,pins = <7 14 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi1_tx: spi1-tx {
++				rockchip,pins = <7 15 RK_FUNC_2 &pcfg_pull_up>;
++			};
++		};
++
++		spi2 {
++			spi2_cs1: spi2-cs1 {
++				rockchip,pins = <8 3 RK_FUNC_1 &pcfg_pull_up>;
++			};
++			spi2_clk: spi2-clk {
++				rockchip,pins = <8 6 RK_FUNC_1 &pcfg_pull_up>;
++			};
++			spi2_cs0: spi2-cs0 {
++				rockchip,pins = <8 7 RK_FUNC_1 &pcfg_pull_up>;
++			};
++			spi2_rx: spi2-rx {
++				rockchip,pins = <8 8 RK_FUNC_1 &pcfg_pull_up>;
++			};
++			spi2_tx: spi2-tx {
++				rockchip,pins = <8 9 RK_FUNC_1 &pcfg_pull_up>;
++			};
++		};
++
+ 		uart0 {
+ 			uart0_xfer: uart0-xfer {
+ 				rockchip,pins = <4 16 RK_FUNC_1 &pcfg_pull_up>,
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0.rc2.206.gedb03e5
