@@ -1,186 +1,135 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] Documentation: bcm7120-l2: Add Broadcom
- BCM7120-style L2 binding
-Date: Fri, 5 Sep 2014 10:05:28 +0100
-Message-ID: <20140905090528.GG2172@leverpostej>
-References: <1409265326-7579-1-git-send-email-f.fainelli@gmail.com>
- <1409265326-7579-3-git-send-email-f.fainelli@gmail.com>
- <alpine.DEB.2.10.1409031410580.3333@nanos>
- <20140903124317.GB3127@leverpostej>
- <5407490E.7060505@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] Disabling OF functions that use sysfs if CONFIG_SYSFS disabled
+Date: Fri,  5 Sep 2014 02:06:36 -0700
+Message-ID: <1409907996-3849-1-git-send-email-gaurav.minocha.os@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5407490E.7060505-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 03, 2014 at 05:59:58PM +0100, Florian Fainelli wrote:
-> On 09/03/2014 05:43 AM, Mark Rutland wrote:
-> > On Wed, Sep 03, 2014 at 01:13:02PM +0100, Thomas Gleixner wrote:
-> >> You forgot to CC the device tree dudes. We want an ack on the bindings
-> >> before they materialize in Linus tree.
-> > 
-> > Thanks for the Cc.
-> > 
-> > Florian, in future could you please Cc for both the binding and driver?
-> > So long as it's obvious which patch introduces the binding other can
-> > choose to ignore the driver, but for me it's useful context.
-> > 
-> >>
-> >> Thanks,
-> >>
-> >> 	tglx
-> >>
-> >> On Thu, 28 Aug 2014, Florian Fainelli wrote:
-> >>
-> >>> This patch adds the Device Tree binding document for the Broadcom
-> >>> BCM7120-style Set-top-box Level 2 interrupt controller hardware.
-> >>>
-> >>> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> ---
-> >>>  .../interrupt-controller/brcm,bcm7120-l2-intc.txt  | 44 ++++++++++++++++++++++
-> >>>  1 file changed, 44 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
-> >>> new file mode 100644
-> >>> index 000000000000..3818ffed7347
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
-> >>> @@ -0,0 +1,44 @@
-> >>> +Broadcom BCM7120-style Level 2 interrupt controller
-> >>> +
-> >>> +Required properties:
-> >>> +
-> >>> +- compatible: should be "brcm,bcm7120-l2-intc"
-> > 
-> > Is this a custom block for the bcm7120?
-> 
-> This is a custom block that started being used with bcm7120 and that we
-> inherited, unmodified, in newer BCM7xxx designs since then, hence the
-> name we picked up.
+This patch is to the fix the recent runtime bug in kernel
+reported by <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-Ok.
+Mail Subject: [OF test] BUG: unable to handle kernel NULL
+ pointer dereference at 00000038
 
-> > 
-> > Does the IP block not have a more specific name?
-> 
-> I wish there was one, I had to dig through the verilog sources to find
-> which chip this interrupt controller first started to appear, and the
-> filename was not too helpful either.
+Tested on x86 and arm architecture
+---
+ drivers/of/base.c    |   29 +++++++++++++++++++++++++++++
+ drivers/of/dynamic.c |    7 +++++++
+ 2 files changed, 36 insertions(+)
 
-Fair enough.
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d8574ad..1d4d74e 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -131,6 +131,7 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
+ 	return name;
+ }
+ 
++#if defined(CONFIG_SYSFS)
+ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ {
+ 	int rc;
+@@ -151,7 +152,14 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ 	WARN(rc, "error adding attribute %s to node %s\n", pp->name, np->full_name);
+ 	return rc;
+ }
++#else
++int __of_add_property_sysfs(struct device_node *np, struct property *pp)
++{
++	return 0;
++}
++#endif
+ 
++#if defined(CONFIG_SYSFS)
+ int __of_attach_node_sysfs(struct device_node *np)
+ {
+ 	const char *name;
+@@ -181,6 +189,12 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 
+ 	return 0;
+ }
++#else
++int __of_attach_node_sysfs(struct device_node *np)
++{
++	return 0;
++}
++#endif
+ 
+ static int __init of_init(void)
+ {
+@@ -1711,12 +1725,19 @@ int __of_remove_property(struct device_node *np, struct property *prop)
+ 	return 0;
+ }
+ 
++#if defined(CONFIG_SYSFS)
+ void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
+ {
+ 	/* at early boot, bail here and defer setup to of_init() */
+ 	if (of_kset && of_node_is_attached(np))
+ 		sysfs_remove_bin_file(&np->kobj, &prop->attr);
+ }
++#else
++void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
++{
++
++}
++#endif
+ 
+ /**
+  * of_remove_property - Remove a property from a node.
+@@ -1774,6 +1795,7 @@ int __of_update_property(struct device_node *np, struct property *newprop,
+ 	return 0;
+ }
+ 
++#if defined(CONFIG_SYSFS)
+ void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
+ 		struct property *oldprop)
+ {
+@@ -1785,6 +1807,13 @@ void __of_update_property_sysfs(struct device_node *np, struct property *newprop
+ 		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+ 	__of_add_property_sysfs(np, newprop);
+ }
++#else
++void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
++		struct property *oldprop)
++{
++
++}
++#endif
+ 
+ /*
+  * of_update_property - Update a property in a node, if the property does
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 54fecc4..c3d9eae 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -41,6 +41,7 @@ void of_node_put(struct device_node *node)
+ }
+ EXPORT_SYMBOL(of_node_put);
+ 
++#if defined(CONFIG_SYSFS)
+ void __of_detach_node_sysfs(struct device_node *np)
+ {
+ 	struct property *pp;
+@@ -59,6 +60,12 @@ void __of_detach_node_sysfs(struct device_node *np)
+ 	/* finally remove the kobj_init ref */
+ 	of_node_put(np);
+ }
++#else
++void __of_detach_node_sysfs(struct device_node *np)
++{
++
++}
++#endif
+ 
+ static BLOCKING_NOTIFIER_HEAD(of_reconfig_chain);
+ 
+-- 
+1.7.9.5
 
-[...]
-
-> >>> +- brcm,int-map-mask: 32-bits bit mask describing how the interrupts
-> >>> at this level
-> >>> +  map to their respective parents. Should match exactly the number of interrupts
-> >>> +  specified in the 'interrupts' property.
-> > 
-> > I don't follow.
-> > 
-> > Surely this should be static, and we know the 1-1 mapping, or this is
-> > dynamic and should be SW-configured?
-> 
-> This is static for a given instance of this interrupt controller on a
-> particular brcmstb chip. BCM7445 will have something different here than
-> e.g: BCM7366 or BCM7439 which are also from the same family.
-> 
-> Not all 32 bits within this interrupt controller will map to wired
-> interrupts, so the point of this bitmask is to:
-> 
-> - tell how many valid interrupt sources there are
-> - tell how a given bitmask maps to its corresponding L1 interrupt line
-> number
-> 
-> So this is not much to know the 1:1, but to know the the 1:many mapping,
-> the example might make it a little clearer how this works
-
-I'll have to give the example another scan, it's not immediately clear
-how the latter portion works.
-
-> >>> +Optional properties:
-> >>> +
-> >>> +- interrupt-names: if present, the litteral names for the parent interrupts
-> >>> +  specified in the 'interrupts' property.
-> > 
-> > If you use the interrupt-names property, it should contain the names of
-> > the interrupts from the POV of this device. Those names must be
-> > specified in the binding doc.
-> 
-> Since this also varies on a per-chip basis, I can certainly add each
-> valid names for each chips out there, but that does not sound useful,
-> maybe let's just drop that property, we don't use it anyway since we
-> perform lookups by indexes, and that is safe to do.
-
-Ok. It sounds like the index would be the thing to use here.
-
-> >>> +- brcm,irq-can-wake: if present, this means the L2 controller can be used as a
-> >>> +  wakeup source for system suspend/resume.
-> > 
-> > How variable is this?
-> 
-> There's two instances of this interrupt controller on most SoCs, one
-> that can wake up the system, one that cannot, see below.
-> 
-> > 
-> > I realise have properties like this elsewhere, but it seems to be
-> > hacking around the lack of a decent power domain interface for figuring
-> > this out.
-> 
-> Humm, I kind of see your point here with the power domains, I don't see
-> a big problem with specifying that property though, at most this becomes
-> redundant when we have a power domain representation (which will be very
-> simple: always-on and everything else).
-
-Sure, we seem to have done that elsewhere.
-
-> >>> +- brcm,int-fwd-mask: if present, a 32-bits bit mask describing the interrupts
-> >>> +  which need to be enabled in this controller to flow to the higher level
-> >>> +  interrupt controller. This is typically needed for the UARTs interrupts to
-> >>> +  flow through the top-level interrupt controller (e.g: ARM GIC on ARM-based
-> >>> +  platforms).
-> >>> +
-> > 
-> > I don't follow why this property is needed at all. Is this a mechanism
-> > to bypass this controller entirely? Why should this be described as a
-> > fixed HW property?
-> 
-> This interrupt controller has traditionally (not necessarily for good
-> reasons) been the placeholder for special bits that control whether our
-> UARTs level 1 interrupts (wired to the ARM GIC) will flow to the L1
-> interrupt.
-
-So basically setting these bits unmasks some irq lines inpout to the
-GIC?
-
-> We discussed initially with Arnd Bergman about how to best approach
-> this, and he was happy with a bitmask since:
-> 
-> a) that is a one-time initialization thing that can happen anywhere in
-> the kernel before UART interrupts get used (so before user-space gets
-> scheduled)
-
-That feels a little dodgy to me, but perhaps that's ok.
-
-> 
-> b) we need to save/restore that bitmask during suspend/resume
-> 
-> c) this is not a real interrupt bit, we need to set this bit, but we
-> will not get any interrupt at this particular interrupt controller level
-> for UARTs, so this is totally transparent for the UART driver
-> 
-> Once again, the bitmask values varies on a per-chip basis, though the
-> fundamentals are the same.
-
-Thanks for the explanation.
-
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
