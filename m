@@ -1,78 +1,52 @@
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH 17/18] arm: dts: dra7: add DMA properties for UART
-Date: Fri,  5 Sep 2014 21:02:52 +0200
-Message-ID: <1409943773-7874-18-git-send-email-bigeasy@linutronix.de>
-References: <1409943773-7874-1-git-send-email-bigeasy@linutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409943773-7874-1-git-send-email-bigeasy@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tony@atomide.com, balbi@ti.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, devicetree@vger.kernel.org
+From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Subject: Re: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding
+ to MFD driver
+Date: Fri, 5 Sep 2014 21:37:36 +0200
+Message-ID: <20140905193736.GA7981@breakpoint.cc>
+References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
+ <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
+ <3465722.Gc9y01nQRe@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3465722.Gc9y01nQRe@wuerfel>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Weike Chen <alvin.chen@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- arch/arm/boot/dts/dra7.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On 2014-09-05 13:50:06 [+0200], Arnd Bergmann wrote:
+> On Friday 05 September 2014 07:53:16 Weike Chen wrote:
+> >  
+> > -	irq_set_chained_handler(irq, dwapb_irq_handler);
+> > -	irq_set_handler_data(irq, gpio);
+> > +	if (!pp->irq_shared) {
+> > +		irq_set_chained_handler(pp->irq, dwapb_irq_handler);
+> > +		irq_set_handler_data(pp->irq, gpio);
+> > +	} else {
+> > +		/*
+> > +		 * Request a shared IRQ since where MFD would have devices
+> > +		 * using the same irq pin
+> > +		 */
+> > +		err = devm_request_irq(gpio->dev, pp->irq,
+> > +				       dwapb_irq_handler_mfd,
+> > +				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
+> > +		if (err) {
+> > +			dev_err(gpio->dev, "error requesting IRQ\n");
+> > +			irq_domain_remove(gpio->domain);
+> > +			gpio->domain = NULL;
+> > +			return;
+> > +		}
+> > +	}
+> >
+> 
+> I think this need some better documentation. Why is it safe to use
+> devm_request_irq rather than irq_set_chained_handler here?
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index d678152db4cb..f273e3811f75 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -332,6 +332,8 @@
- 			ti,hwmods = "uart1";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-+			dmas = <&sdma 49>, <&sdma 50>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart2: serial@4806c000 {
-@@ -341,6 +343,8 @@
- 			ti,hwmods = "uart2";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-+			dmas = <&sdma 51>, <&sdma 52>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart3: serial@48020000 {
-@@ -350,6 +354,8 @@
- 			ti,hwmods = "uart3";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-+			dmas = <&sdma 53>, <&sdma 54>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart4: serial@4806e000 {
-@@ -359,6 +365,8 @@
- 			ti,hwmods = "uart4";
- 			clock-frequency = <48000000>;
-                         status = "disabled";
-+			dmas = <&sdma 55>, <&sdma 56>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart5: serial@48066000 {
-@@ -368,6 +376,8 @@
- 			ti,hwmods = "uart5";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-+			dmas = <&sdma 63>, <&sdma 64>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart6: serial@48068000 {
-@@ -377,6 +387,8 @@
- 			ti,hwmods = "uart6";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-+			dmas = <&sdma 79>, <&sdma 80>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart7: serial@48420000 {
--- 
-2.1.0
+Usually it is preferred to use irq_set_chained_handler() for the chained
+handler so the handler does not show up in /proc/interrupts.
+This requires an exclusive non-shared handler which is not the case on
+the intel platform. So they have to use devm_request_irq() instead.
+
+Sebastian
