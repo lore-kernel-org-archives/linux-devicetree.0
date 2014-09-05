@@ -1,125 +1,64 @@
-From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
-Subject: Re: [PATCH] ARM: MVEBU: Netgear RN102: Use Hardware BCH ECC
-Date: Fri, 05 Sep 2014 22:49:58 +0200
-Message-ID: <87ha0l23nt.fsf@natisbad.org>
-References: <1409898233-9273-1-git-send-email-klightspeed@killerwolves.net>
-	<20140905154140.GA1377@arch.hh.imgtec.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 01/16] MIPS: Provide a generic plat_irq_dispatch
+Date: Fri, 5 Sep 2014 14:02:38 -0700
+Message-ID: <CAL1qeaFDBU6bB-OmSW8DqMWGtpNDL9H-WB6F0ZBg7hEz6c1vBQ@mail.gmail.com>
+References: <1409938218-9026-1-git-send-email-abrestic@chromium.org>
+	<1409938218-9026-2-git-send-email-abrestic@chromium.org>
+	<alpine.DEB.2.10.1409052051240.5472@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.10.1409052051240.5472@nanos>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
-
-> (Fixing Cc list: dropping devicetree guys, and adding Brian and MTD instead)
+On Fri, Sep 5, 2014 at 11:51 AM, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
+> On Fri, 5 Sep 2014, Andrew Bresticker wrote:
+>> For platforms which boot with device-tree and use the MIPS CPU interrupt
+>> controller binding, a generic plat_irq_dispatch() can be used since all
+>> CPU interrupts should be mapped through the CPU IRQ domain.  Implement a
+>> plat_irq_dispatch() which simply handles the highest pending interrupt.
+>>
+>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Tested-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+>> ---
+>> No changes from v1.
+>> ---
+>>  arch/mips/kernel/irq_cpu.c | 28 +++++++++++++++++++++++-----
+>>  1 file changed, 23 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/mips/kernel/irq_cpu.c b/arch/mips/kernel/irq_cpu.c
+>> index e498f2b..9cf8459 100644
+>> --- a/arch/mips/kernel/irq_cpu.c
+>> +++ b/arch/mips/kernel/irq_cpu.c
+>> @@ -116,6 +116,24 @@ void __init mips_cpu_irq_init(void)
+>>  }
+>>
+>>  #ifdef CONFIG_IRQ_DOMAIN
+>> +static struct irq_domain *mips_intc_domain;
+>> +
+>> +asmlinkage void __weak plat_irq_dispatch(void)
+>> +{
+>> +     unsigned int pending = read_c0_cause() & read_c0_status() & ST0_IM;
+>> +     unsigned int hw;
+>> +     int irq;
+>> +
+>> +     if (!pending) {
+>> +             spurious_interrupt();
+>> +             return;
+>> +     }
+>> +
+>> +     hw = fls(pending) - CAUSEB_IP - 1;
+>> +     irq = irq_linear_revmap(mips_intc_domain, hw);
+>> +     do_IRQ(irq);
 >
-> On 05 Sep 04:23 PM, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
->> The bootloader on the Netgear ReadyNAS RN102 uses Hardware BCH ECC
->> (strength = 4), while the pxa3xx NAND driver by default uses 
->> Hamming ECC (strength = 1).
->> 
->
-> Hm, I guess the device (Hynix H27U1G8F2BTR) does not support ONFI,
-> and the kernel is just taking the legacy ECC. The flash specs makes no
-> mention to ONFI, so probably no ONFI here.
->
->> This patch changes the ECC mode on these machines to match that
->> of the bootloader and of the stock firmware, so that for example
->> updating the kernel is possible without requiring a serial
->> connection.
->> 
->> This patch depends on commit 5b3e507 (mtd: nand: pxa3xx: Use ECC
->> strength and step size devicetree binding)
->> 
->> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
->
-> Looks good to me, since Arnaud reports this is the correct ECC scheme:
-> http://natisbad.org/NAS2/index.html#hw-nand
->
-> Acked-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> Thanks for the fix,
+> Why are you not handling all pending interrupts in a loop?
 
-w/o the patch, you can write data to the flash using userland tools from
-mtd-utils package (flash_erase and nandwrite); data can then be read
-again using userland tools (say using dd). But - as reported by Ben - if
-you nandwrite an uImage from userland, here is what you indeed get from
-u-boot when you try and boot that image:
-
-  root@humble:~# flash_erase /dev/mtd2 0 0
-  Erasing 128 Kibyte @ 5e0000 -- 100 % complete 
-  
-  root@humble:~# nandwrite -p /dev/mtd2 /tmp/uImage-3.16.1.rn102
-  Writing data to block 0 at offset 0x0
-  Writing data to block 1 at offset 0x20000
-  Writing data to block 2 at offset 0x40000
-  Writing data to block 3 at offset 0x60000
-  Writing data to block 4 at offset 0x80000
-  
-  ...
-  
-  reboot 
-  
-  ...
-  
-  Marvell>> nand read 0x1200000 0x200000 0x600000
-  
-  NAND read: device 0 offset 0x200000, size 0x600000
-   6291456 bytes read: OK
-  
-  Marvell>> bootm 0x1200000
-  ## Booting kernel from Legacy Image at 01200000 ...
-     Image Name:   Linux-3.16.1.rn102
-     Created:      2014-08-14  13:33:46 UTC
-     Image Type:   ARM Linux Kernel Image (uncompressed)
-     Data Size:    4423998 Bytes =  4.2 MB
-     Load Address: 00008000
-     Entry Point:  00008000
-     Verifying Checksum ... Bad Data CRC
-  ERROR: can't get kernel image!
-  
-
-Now, w/ the patch submitted by Ben, here is what you get:
-
-  With the patch applied, this indeed works has 
-  ## Booting kernel from Legacy Image at 01200000 ...
-     Image Name:   Linux-3.16.1.rn102
-     Created:      2014-09-05  20:25:34 UTC
-     Image Type:   ARM Linux Kernel Image (uncompressed)
-     Data Size:    4424067 Bytes =  4.2 MB
-     Load Address: 00008000
-     Entry Point:  00008000
-     Verifying Checksum ... OK
-     Loading Kernel Image ... OK
-  OK
-  
-  Starting kernel ...
-
-i.e. it works.  
-
-So, thanks for reporting this, Ben. I must confess I got used to update
-my kernels from u-boot and did not take enough attention to that
-aspect when I updated the .dts to add access to NAND after Ezequiel
-wrote the NAND driver. I will take a look at RN104 and RN2120 to check
-if something similar is needed for those two.
-
-FWIW, you can add my:
-
- Tested-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
- 
-Additionally, Ezequiel, would anything prevent pushing the patch to
-stable team (nand entry in .dts was added in 3.14):
-
- Fixes: 92beaccd8b49 ("ARM: mvebu: Enable NAND controller in ReadyNAS 102 .dts file")
-
-Cheers,
-
-a+
+Nearly all of the existing plat_irq_dispatch()es handle only a single
+pending interrupt.  I suppose it doesn't hurt to handle all pending
+interrupts though.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
