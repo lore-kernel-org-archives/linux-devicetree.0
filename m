@@ -1,61 +1,58 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH v2 01/16] MIPS: Provide a generic plat_irq_dispatch
-Date: Fri, 5 Sep 2014 20:51:59 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1409052051240.5472@nanos>
-References: <1409938218-9026-1-git-send-email-abrestic@chromium.org> <1409938218-9026-2-git-send-email-abrestic@chromium.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] PCI: keystone: update to support multiple pci ports
+Date: Fri, 05 Sep 2014 21:00:19 +0200
+Message-ID: <3654923.JrIGV2dJ70@wuerfel>
+References: <1409938782-31460-1-git-send-email-m-karicheri2@ti.com> <7260053.FoBVhTXVfj@wuerfel> <540A0212.6060303@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409938218-9026-2-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <540A0212.6060303-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Sep 2014, Andrew Bresticker wrote:
-> For platforms which boot with device-tree and use the MIPS CPU interrupt
-> controller binding, a generic plat_irq_dispatch() can be used since all
-> CPU interrupts should be mapped through the CPU IRQ domain.  Implement a
-> plat_irq_dispatch() which simply handles the highest pending interrupt.
+On Friday 05 September 2014 14:33:54 Murali Karicheri wrote:
+> > This looks like it's a shared register of some sort that doesn't
+> > really belong into the registers of a particular port. Could it
+> > be that it's actually for the PHY?
+> >
+> This a shared device configuration register between the two ports the 
+> desciption states it is bootstrap configuration of the PCIe module as 
+> Endpoint or Root complex and Not Phy. Hope below text will help.
+
+Ok. Why do you want to have this user-selectable though? Can't it
+just be set by the boot loader before starting Linux?
+
+	Arnd
+
+> Table 3-23 Device Configuration Register (DEVCFG)
 > 
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Tested-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> ---
-> No changes from v1.
-> ---
->  arch/mips/kernel/irq_cpu.c | 28 +++++++++++++++++++++++-----
->  1 file changed, 23 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/mips/kernel/irq_cpu.c b/arch/mips/kernel/irq_cpu.c
-> index e498f2b..9cf8459 100644
-> --- a/arch/mips/kernel/irq_cpu.c
-> +++ b/arch/mips/kernel/irq_cpu.c
-> @@ -116,6 +116,24 @@ void __init mips_cpu_irq_init(void)
->  }
->  
->  #ifdef CONFIG_IRQ_DOMAIN
-> +static struct irq_domain *mips_intc_domain;
-> +
-> +asmlinkage void __weak plat_irq_dispatch(void)
-> +{
-> +	unsigned int pending = read_c0_cause() & read_c0_status() & ST0_IM;
-> +	unsigned int hw;
-> +	int irq;
-> +
-> +	if (!pending) {
-> +		spurious_interrupt();
-> +		return;
-> +	}
-> +
-> +	hw = fls(pending) - CAUSEB_IP - 1;
-> +	irq = irq_linear_revmap(mips_intc_domain, hw);
-> +	do_IRQ(irq);
+> PCIESSMODE[1:0] 00b PCIESSMODE is used to control the
+> functionality of PCIESS module out of
+> reset. This MMR output is connected to
+> DEVTYPE input of PCIESS
+> (Changes from
+> Nysh) : Note that in Nysh this value came
+> from a bootstrap pin.
+> 00 : Endpoint
+> 01 : Legacy Endpoint
+> 10 : Rootcomplex
+> 11 : Reserved
+> PCIESS_1_MODE[1:0
+> ]
+> 00b PCIESSMODE is used to control the
+> functionality of PCIE_1 module out of
+> reset. This MMR output is connected to
+> DEVTYPE input of PCIE_1
+> 00 : Endpoint
+> 01 : Legacy Endpoint
+> 10 : Rootcomplex
+> 11 : Reserv
+> 
 
-Why are you not handling all pending interrupts in a loop?
-
-Thanks,
-
-	tglx
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
