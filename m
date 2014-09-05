@@ -1,63 +1,62 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 5/8] drivers: cpuidle: implement DT based idle states
- infrastructure
-Date: Fri, 5 Sep 2014 22:36:00 +0100
-Message-ID: <20140905213600.GJ29327@sirena.org.uk>
-References: <1409938498-17984-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1409938498-17984-6-git-send-email-lorenzo.pieralisi@arm.com>
- <7hlhpxygzv.fsf@paris.lan>
- <20140905212908.GA28626@e102568-lin.cambridge.arm.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 14/16] irqchip: mips-gic: Support local interrupts
+Date: Fri, 5 Sep 2014 14:50:02 -0700
+Message-ID: <CAL1qeaH5ZQA8Y=n3uVSy9e+vEweCi_RT2s-ZGRfyJTAcbguyoA@mail.gmail.com>
+References: <1409938218-9026-1-git-send-email-abrestic@chromium.org>
+	<1409938218-9026-15-git-send-email-abrestic@chromium.org>
+	<alpine.DEB.2.10.1409052056400.5472@nanos>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RAJzu4PW+u81FKHr"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140905212908.GA28626@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Kevin Hilman <khilman@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Sebastian Capella <sebcape@>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.10.1409052056400.5472@nanos>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 5, 2014 at 12:05 PM, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
+> On Fri, 5 Sep 2014, Andrew Bresticker wrote:
+>>  static void gic_mask_irq(struct irq_data *d)
+>>  {
+>> -     GIC_CLR_INTR_MASK(d->irq - gic_irq_base);
+>> +     unsigned int irq = d->irq - gic_irq_base;
+>> +
+>> +     if (gic_is_local_irq(irq)) {
+>> +             GICWRITE(GIC_REG(VPE_LOCAL, GIC_VPE_RMASK),
+>> +                      1 << GIC_INTR_BIT(gic_hw_to_local_irq(irq)));
+>> +     } else {
+>> +             GIC_CLR_INTR_MASK(irq);
+>> +     }
+>>  }
+>>
+>>  static void gic_unmask_irq(struct irq_data *d)
+>>  {
+>> -     GIC_SET_INTR_MASK(d->irq - gic_irq_base);
+>> +     unsigned int irq = d->irq - gic_irq_base;
+>> +
+>> +     if (gic_is_local_irq(irq)) {
+>> +             GICWRITE(GIC_REG(VPE_LOCAL, GIC_VPE_SMASK),
+>> +                      1 << GIC_INTR_BIT(gic_hw_to_local_irq(irq)));
+>> +     } else {
+>> +             GIC_SET_INTR_MASK(irq);
+>> +     }
+>
+> Why are you adding a conditional in all these functions instead of
+> having two interrupt chips with separate callbacks and irqdata?
 
---RAJzu4PW+u81FKHr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok, I'll use a separate irqchip.
 
-On Fri, Sep 05, 2014 at 10:29:08PM +0100, Lorenzo Pieralisi wrote:
-> On Fri, Sep 05, 2014 at 09:00:52PM +0100, Kevin Hilman wrote:
+> And looking at GIC_SET_INTR_MASK(irq) makes me shudder even more. The
+> whole thing can be replaced with the generic interrupt chip functions.
+>
+> If you set it up proper, then there is not a single conditional or
+> runtime calculation of bitmasks, address offsets etc.
 
-> (3) Add an optional property to the DT bindings to describe the state
-
-> (3) I am not extremely keen at this stage to re-patch the DT bindings,
-> it has been an awful lot of work to make everyone agree so I would avoid
-> any changes, I hope you understand (and I am not even sure DT maintainers
-> would accept that, so even less keen on changing the DT bindings at this
-> stage).
-
-Just do it as an incremental patch if you're worried - we've got
-precendents for this like regulator-name which exists solely to make
-diagnostics more descriptive.
-
---RAJzu4PW+u81FKHr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUCiy8AAoJELSic+t+oim93X4P/06zj2WIuJP4At6ip2gePBiD
-0Lv1krt7CuH7uaUGBMT4wJ82+NYHj8UTdi9oMj8Qk+tY/VQyNrOnWKwW0Ch4+Ktb
-uXfEXI215fhZBMareTucbBe8N+RUElcw8ZOqbWmqXvlULI+Y7lL5ep99cdoDFr22
-s2SaNQxlHWNLe1PFm8FEFw9kCZoCdvMmz8P6e1YR6me8jUkQbb7vXUJn1zF3spxD
-bRw3rArPOCriU89tJxbhNHndASX/zuqryI2ZDn9a/xci5k0io4R17dZqEVcXsh2M
-HVeM/zqctpcWqImNbtDQkpi0dz4ti3wTs25XW+0Og336s20ZtsB/1fNp4u8ruH8F
-Sq1pxk2CBxoTwKo7TRc9/lycFoD5sLtqmBWBfOM9tBVlZk4x+Bo+gsaDwSm4lpqJ
-LhxYZLC0GCYiPC3VZZGIoBaLAYUV+JLEX02Aa6P1WIwDxzN16zCpFIN4M1fJq6Zs
-RXFe97t0YTcf6NaxKoe86XBwtlLpCV6ZALLXm5bFOLfto5BZN4fFm/mmK5f2LfrQ
-6O5Masbdm4HRUe8k13lEuEWg4Pps3+f5KanKo/Zc4k/+6uT8lFy+59mwzOKhJr5H
-nbjdAL41U8T7dP5v5DKHdYlkhxMLuVin6uYvqbIrMgjpEB98caxQewJCjWcXAUvP
-rcTFPfNJ82pfG9FKXsAI
-=vXYK
------END PGP SIGNATURE-----
-
---RAJzu4PW+u81FKHr--
+Yes, I'd like to use the generic irqchip library here, but Malta and
+SEAD-3 will need to be converted over to using irq domains.  Perhaps
+I'll do that first - it should get rid of a lot of the other ugliness
+here as well.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
