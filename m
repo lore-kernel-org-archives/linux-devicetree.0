@@ -1,58 +1,445 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Fri, 5 Sep 2014 10:20:53 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E9829DA@SHSMSX101.ccr.corp.intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
-	 <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
- <1409908917.30155.84.camel@intel.com>
+From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/2][v4] powerpc/fsl-booke: Add initial T1040/T1042 RDB board support
+Date: Fri, 5 Sep 2014 16:14:40 +0530
+Message-ID: <1409913880-21603-1-git-send-email-Priyanka.Jain@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1409908917.30155.84.camel@intel.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiA+IC1zdGF0aWMgdm9pZCBkd2FwYl9pcnFfaGFuZGxlcih1MzIgaXJxLCBzdHJ1Y3QgaXJxX2Rl
-c2MgKmRlc2MpDQo+ID4gK3N0YXRpYyB1MzIgX2R3YXBiX2lycV9oYW5kbGVyKHN0cnVjdCBkd2Fw
-Yl9ncGlvICpncGlvKQ0KPiANCj4gV2hhdCBhYm91dCBkd2FwYl9kb19pcnEoKSA/DQpPSywgSSB3
-aWxsIGltcHJvdmUgaXQuDQoNCj4gPiArc3RhdGljIGlycXJldHVybl90IGR3YXBiX2lycV9oYW5k
-bGVyX21mZChpbnQgaXJxLCB2b2lkICpkZXZfaWQpIHsNCj4gPiArCXUzMiB3b3JrZWQ7DQo+ID4g
-KwlzdHJ1Y3QgZHdhcGJfZ3BpbyAqZ3BpbyA9IChzdHJ1Y3QgZHdhcGJfZ3BpbyAqKWRldl9pZDsN
-Cj4gDQo+IE5vIG5lZWQgdG8gY2FzdCBleHBsaWNpdGx5IGZyb20gdm9pZCAqLg0KT0suDQoNCg0K
-PiA+IC0JcG9ydC0+YmdjLmdjLm5ncGlvID0gbmdwaW87DQo+ID4gLQlwb3J0LT5iZ2MuZ2Mub2Zf
-bm9kZSA9IHBvcnRfbnA7DQo+ID4gKyNpZmRlZiBDT05GSUdfT0ZfR1BJTw0KPiANCj4gRG8gd2Ug
-cmVhbGx5IG5lZWQgdGhpcyAjaWZkZWYgPw0KPiBvZl9ub2RlIHdpbGwgYmUgTlVMTCBhbnl3YXks
-IG9yIEkgbWlzc2VkIHNvbWV0aGluZz8NClllcywgb3RoZXJ3aXNlLCBjYW4ndCBjb21waWxlIGl0
-LiBQbGVhc2UgcmVmZXIgJ3N0cnVjdCBncGlvX2NoaXAnLCAnZ2Mub2Zfbm9kZScgaXMgaW4gT0Zf
-R1BJTyBtaWNybyBhbHNvLg0KDQo+ID4gKwlpZiAocHAtPmlycSkNCj4gDQo+IGlycSA9PSAwIGlz
-IGEgdmFsaWQgaHdpcnEgKGhhcmR3YXJlIGlycSkgbnVtYmVyLiBZZXMsIHRoZXJlIGlzIHVubGlr
-ZWx5IHdlIGhhdmUgaXQNCj4gc29tZXdoZXJlLCBidXQgc3RpbGwgaXQncyBwb3NzaWJsZS4gQW5k
-IHllcywgSVJRIGZyYW1ld29yayBkb2Vzbid0IHdvcmsgd2l0aA0KPiB2aXJxID09IDAgKCp2aXJ0
-dWFsKiBpcnEpLCBidXQgYWNjZXB0cyBod2lycSA9PSAwLiBJIHJlY29tbWVuZCB0byB1c2UgaW50
-IHR5cGUgZm9yDQo+IGlycSBsaW5lIG51bWJlciwgYW5kIHJlY29nbml6ZSBuZWdhdGl2ZSB2YWx1
-ZSAodXN1YWxseSAtMSkgYXMgbm8gaXJxIG5lZWRlZCAvDQo+IGZvdW5kLg0KVW5kZXJzdGFuZC4g
-QnV0IGlmIHlvdSByZWZlciB0aGUgb3JpZ2luYWwgY29kZSwgeW91IGNhbiBzZWU6DQppcnEgPSBp
-cnFfb2ZfcGFyc2VfYW5kX21hcChub2RlLCAwKTsNCklmICghaXJxKSB7DQouLi4uLi4NCnJldHVy
-bjsNCn0NCkZyb20gYWJvdmUgY29kZSwgaWYgaXJxPTAsIGl0IGluZGljYXRlcyBpcnEgaXMgbm90
-IHN1cHBvcnRlZCBmb3IgT0YgZGV2aWNlcy4gSWYgd2UgdXNlICctMScgdG8gaW5kaWNhdGUgaXJx
-IGlzIG5vdCBzdXBwb3J0ZWQuIFRvIG1ha2UgT0Ygd29yaywgdGhlbiBvdXIgY29kZSBzaG91bGQg
-YmU6DQoNCmlycSA9IGlycV9vZl9wYXJzZV9hbmRfbWFwKG5vZGUsIDApOw0KSWYgKCFpcnEpIHsN
-CnBwLT5pcnEgPSAtMTsNCnJldHVybjsNCn0gZWxzZSB7DQpwcC0+aXJxID0gaXJxOw0KfQ0KVGhl
-biB0aGUgY29kZSBsb29rcyBzdHJhbmdlLg0KDQpIb3cgZG8geW91IHRoaW5rPw0KDQo+ID4gKwli
-b29sIGlzX29mOw0KPiANCj4gaXNfcGRhdGFfYWxsb2MgKGl0IG1pZ2h0IGJlIG5vdCBvbmx5IE9G
-IGNhc2UgaW4gZnV0dXJlKS4NCj4gDQpPSw0KDQoNCj4gPiArCWlmICghcGRhdGEpIHsNCj4gDQo+
-ICgqKQ0KDQo+ID4gKwkJcGRhdGEgPSBkd2FwYl9ncGlvX2dldF9wZGF0YV9vZihkZXYpOw0KPiA+
-ICsJCWlmIChJU19FUlIocGRhdGEpKQ0KPiA+ICsJCQlyZXR1cm4gUFRSX0VSUihwZGF0YSk7DQo+
-IA0KPiA+ICsJCWlzX29mID0gdHJ1ZTsNCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJaXNfb2YgPSBm
-YWxzZTsNCj4gDQo+IEluc3RlYWQgb2YgYWJvdmUgdGhyZWUgbGluZXMsIGhvdyBhYm91dA0KPiBi
-b29sIGlzX3BkYXRhX2FsbG9jID0gIXBkYXRhOw0KPiANCj4gQW5kICgqKSBpZiAoaXNfcGRhdGFf
-YWxsb2MpIC4uLg0KPiANCk9LLiBJIHdpbGwgaW1wcm92ZSB0aGlzIHBhcnQuDQoNCj4gPiArCWlm
-IChpc19vZikgew0KPiA+ICsJCWR3YXBiX2ZyZWVfcGRhdGFfb2YoZGV2LCBwZGF0YSk7DQo+ID4g
-KwkJcGRhdGEgPSBOVUxMOw0KPiANCj4gQmVzaWRlcyB0aGF0IHBkYXRhIGFzc2lnbm1lbnQgaXMg
-cHJvYmFibHkgcmVkdW5kYW50LCB5b3UgbWF5IHVzZSBwbGFpbg0KPiBrbWFsbG9jL2tmcmVlIGFu
-ZCBhdm9pZCB1bm5lY2Vzc2FyeSBkZXZtXyogY2FsbHMuDQo+IA0KT0suDQoNCg==
+T1040/T1042RDB is Freescale Reference Design Board.
+The board can support both T1040/T1042 QorIQ Power Architecture=E2=84=A2=
+ processor.
+
+T1040/T1042RDB board Overview
+-----------------------
+- SERDES Connections, 8 lanes supporting:
+	- PCI
+	- SGMII
+    	- QSGMII
+    	- SATA 2.0
+- DDR Controller
+    	- Supports rates of up to 1600 MHz data-rate
+    	- Supports one DDR3LP UDIMM
+-IFC/Local Bus
+    	- NAND flash: 1GB 8-bit NAND flash
+    	- NOR: 128MB 16-bit NOR Flash
+- Ethernet
+    	- Two on-board RGMII 10/100/1G ethernet ports.
+    	- PHY #0 remains powered up during deep-sleep
+- CPLD
+- Clocks
+    	- System and DDR clock (SYSCLK, =E2=80=9CDDRCLK=E2=80=9D)
+    	- SERDES clocks
+- Power Supplies
+- USB
+    	- Supports two USB 2.0 ports with integrated PHYs
+    	- Two type A ports with 5V@1.5A per port.
+- SDHC
+    	- SDHC/SDXC connector
+- SPI
+    	- On-board 64MB SPI flash
+- I2C
+    	- Devices connected: EEPROM, thermal monitor, VID controller
+- Other IO
+    	- Two Serial ports
+    	- ProfiBus port
+
+Add support for T1040/T1042 RDB board:
+    -add device tree
+    -add entry in Kconfig to build
+    -Add entry in corenet_generic.c, as it is similar to other corenet =
+platforms
+
+Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Poonam Aggrwal <poonam.aggrwal-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+changes for v4: Updated cpld compatible string field
+
+changes for v3: Incorporated Scott comments on moving cpld compatible
+ field to board specific file as cpld binaries are different
+
+changes for v2: Incorporated Scott comments on using common name
+ for compatible string for cpld as register set is same
+
+ arch/powerpc/boot/dts/t1040rdb.dts            |   48 ++++++++
+ arch/powerpc/boot/dts/t1042rdb.dts            |   48 ++++++++
+ arch/powerpc/boot/dts/t104xrdb.dtsi           |  156 +++++++++++++++++=
+++++++++
+ arch/powerpc/platforms/85xx/Kconfig           |    2 +-
+ arch/powerpc/platforms/85xx/corenet_generic.c |    2 +
+ 5 files changed, 255 insertions(+), 1 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/t1040rdb.dts
+ create mode 100644 arch/powerpc/boot/dts/t1042rdb.dts
+ create mode 100644 arch/powerpc/boot/dts/t104xrdb.dtsi
+
+diff --git a/arch/powerpc/boot/dts/t1040rdb.dts b/arch/powerpc/boot/dts=
+/t1040rdb.dts
+new file mode 100644
+index 0000000..79a0bed
+--- /dev/null
++++ b/arch/powerpc/boot/dts/t1040rdb.dts
+@@ -0,0 +1,48 @@
++/*
++ * T1040RDB Device Tree Source
++ *
++ * Copyright 2014 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions =
+are met:
++ *     * Redistributions of source code must retain the above copyrigh=
+t
++ *	 notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyr=
+ight
++ *	 notice, this list of conditions and the following disclaimer in th=
+e
++ *	 documentation and/or other materials provided with the distributio=
+n.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *	 names of its contributors may be used to endorse or promote produc=
+ts
++ *	 derived from this software without specific prior written permissi=
+on.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of =
+the
++ * GNU General Public License ("GPL") as published by the Free Softwar=
+e
++ * Foundation, either version 2 of that License or (at your option) an=
+y
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
+Y
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
+MPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
+ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
+ ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
+DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
+SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
+USED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
+OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
+SE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/include/ "fsl/t104xsi-pre.dtsi"
++/include/ "t104xrdb.dtsi"
++
++/ {
++	model =3D "fsl,T1040RDB";
++	compatible =3D "fsl,T1040RDB";
++	ifc: localbus@ffe124000 {
++		cpld@3,0 {
++			compatible =3D "fsl,t1040rdb-cpld";
++		};
++	};
++};
++
++/include/ "fsl/t1040si-post.dtsi"
+diff --git a/arch/powerpc/boot/dts/t1042rdb.dts b/arch/powerpc/boot/dts=
+/t1042rdb.dts
+new file mode 100644
+index 0000000..228a635
+--- /dev/null
++++ b/arch/powerpc/boot/dts/t1042rdb.dts
+@@ -0,0 +1,48 @@
++/*
++ * T1042RDB Device Tree Source
++ *
++ * Copyright 2014 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions =
+are met:
++ *     * Redistributions of source code must retain the above copyrigh=
+t
++ *	 notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyr=
+ight
++ *	 notice, this list of conditions and the following disclaimer in th=
+e
++ *	 documentation and/or other materials provided with the distributio=
+n.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *	 names of its contributors may be used to endorse or promote produc=
+ts
++ *	 derived from this software without specific prior written permissi=
+on.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of =
+the
++ * GNU General Public License ("GPL") as published by the Free Softwar=
+e
++ * Foundation, either version 2 of that License or (at your option) an=
+y
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
+Y
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
+MPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
+ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
+ ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
+DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
+SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
+USED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
+OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
+SE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/include/ "fsl/t104xsi-pre.dtsi"
++/include/ "t104xrdb.dtsi"
++
++/ {
++	model =3D "fsl,T1042RDB";
++	compatible =3D "fsl,T1042RDB";
++	ifc: localbus@ffe124000 {
++		cpld@3,0 {
++			compatible =3D "fsl,t1042rdb-cpld";
++		};
++	};
++};
++
++/include/ "fsl/t1042si-post.dtsi"
+diff --git a/arch/powerpc/boot/dts/t104xrdb.dtsi b/arch/powerpc/boot/dt=
+s/t104xrdb.dtsi
+new file mode 100644
+index 0000000..1cf0f3c
+--- /dev/null
++++ b/arch/powerpc/boot/dts/t104xrdb.dtsi
+@@ -0,0 +1,156 @@
++/*
++ * T1040RDB/T1042RDB Device Tree Source
++ *
++ * Copyright 2014 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions =
+are met:
++ *     * Redistributions of source code must retain the above copyrigh=
+t
++ *	 notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyr=
+ight
++ *	 notice, this list of conditions and the following disclaimer in th=
+e
++ *	 documentation and/or other materials provided with the distributio=
+n.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *	 names of its contributors may be used to endorse or promote produc=
+ts
++ *	 derived from this software without specific prior written permissi=
+on.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of =
+the
++ * GNU General Public License ("GPL") as published by the Free Softwar=
+e
++ * Foundation, either version 2 of that License or (at your option) an=
+y
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor "AS IS" AND AN=
+Y
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE I=
+MPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE =
+ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR=
+ ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL =
+DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR =
+SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CA=
+USED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, =
+OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE U=
+SE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/ {
++
++	ifc: localbus@ffe124000 {
++		reg =3D <0xf 0xfe124000 0 0x2000>;
++		ranges =3D <0 0 0xf 0xe8000000 0x08000000
++			  2 0 0xf 0xff800000 0x00010000
++			  3 0 0xf 0xffdf0000 0x00008000>;
++
++		nor@0,0 {
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			compatible =3D "cfi-flash";
++			reg =3D <0x0 0x0 0x8000000>;
++			bank-width =3D <2>;
++			device-width =3D <1>;
++		};
++
++		nand@2,0 {
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			compatible =3D "fsl,ifc-nand";
++			reg =3D <0x2 0x0 0x10000>;
++		};
++
++		cpld@3,0 {
++			reg =3D <3 0 0x300>;
++		};
++	};
++
++	memory {
++		device_type =3D "memory";
++	};
++
++	dcsr: dcsr@f00000000 {
++		ranges =3D <0x00000000 0xf 0x00000000 0x01072000>;
++	};
++
++	soc: soc@ffe000000 {
++		ranges =3D <0x00000000 0xf 0xfe000000 0x1000000>;
++		reg =3D <0xf 0xfe000000 0 0x00001000>;
++
++		spi@110000 {
++			flash@0 {
++				#address-cells =3D <1>;
++				#size-cells =3D <1>;
++				compatible =3D "micron,n25q512a";
++				reg =3D <0>;
++				spi-max-frequency =3D <10000000>; /* input clock */
++			};
++		};
++
++		i2c@118100 {
++			pca9546@77 {
++				compatible =3D "nxp,pca9546";
++				reg =3D <0x77>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++			};
++		};
++
++	};
++
++	pci0: pcie@ffe240000 {
++		reg =3D <0xf 0xfe240000 0 0x10000>;
++		ranges =3D <0x02000000 0 0xe0000000 0xc 0x00000000 0x0 0x10000000
++			  0x01000000 0 0x00000000 0xf 0xf8000000 0x0 0x00010000>;
++		pcie@0 {
++			ranges =3D <0x02000000 0 0xe0000000
++				  0x02000000 0 0xe0000000
++				  0 0x10000000
++
++				  0x01000000 0 0x00000000
++				  0x01000000 0 0x00000000
++				  0 0x00010000>;
++		};
++	};
++
++	pci1: pcie@ffe250000 {
++		reg =3D <0xf 0xfe250000 0 0x10000>;
++		ranges =3D <0x02000000 0x0 0xe0000000 0xc 0x10000000 0x0 0x10000000
++			  0x01000000 0x0 0x00000000 0xf 0xf8010000 0x0 0x00010000>;
++		pcie@0 {
++			ranges =3D <0x02000000 0 0xe0000000
++				  0x02000000 0 0xe0000000
++				  0 0x10000000
++
++				  0x01000000 0 0x00000000
++				  0x01000000 0 0x00000000
++				  0 0x00010000>;
++		};
++	};
++
++	pci2: pcie@ffe260000 {
++		reg =3D <0xf 0xfe260000 0 0x10000>;
++		ranges =3D <0x02000000 0 0xe0000000 0xc 0x20000000 0 0x10000000
++			  0x01000000 0 0x00000000 0xf 0xf8020000 0 0x00010000>;
++		pcie@0 {
++			ranges =3D <0x02000000 0 0xe0000000
++				  0x02000000 0 0xe0000000
++				  0 0x10000000
++
++				  0x01000000 0 0x00000000
++				  0x01000000 0 0x00000000
++				  0 0x00010000>;
++		};
++	};
++
++	pci3: pcie@ffe270000 {
++		reg =3D <0xf 0xfe270000 0 0x10000>;
++		ranges =3D <0x02000000 0 0xe0000000 0xc 0x30000000 0 0x10000000
++			  0x01000000 0 0x00000000 0xf 0xf8030000 0 0x00010000>;
++		pcie@0 {
++			ranges =3D <0x02000000 0 0xe0000000
++				  0x02000000 0 0xe0000000
++				  0 0x10000000
++
++				  0x01000000 0 0x00000000
++				  0x01000000 0 0x00000000
++				  0 0x00010000>;
++		};
++	};
++};
+diff --git a/arch/powerpc/platforms/85xx/Kconfig b/arch/powerpc/platfor=
+ms/85xx/Kconfig
+index 5063696..157a1a4 100644
+--- a/arch/powerpc/platforms/85xx/Kconfig
++++ b/arch/powerpc/platforms/85xx/Kconfig
+@@ -276,7 +276,7 @@ config CORENET_GENERIC
+ 	  For 64bit kernel, the following boards are supported:
+ 	    T208x QDS, T4240 QDS/RDB and B4 QDS
+ 	  The following boards are supported for both 32bit and 64bit kernel:
+-	    P5020 DS, P5040 DS and T104xQDS
++	    P5020 DS, P5040 DS and T104xQDS/RDB
+=20
+ endif # FSL_SOC_BOOKE
+=20
+diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/power=
+pc/platforms/85xx/corenet_generic.c
+index 4f22ad1..c268f89 100644
+--- a/arch/powerpc/platforms/85xx/corenet_generic.c
++++ b/arch/powerpc/platforms/85xx/corenet_generic.c
+@@ -128,6 +128,8 @@ static const char * const boards[] __initconst =3D =
+{
+ 	"fsl,B4220QDS",
+ 	"fsl,T1040QDS",
+ 	"fsl,T1042QDS",
++	"fsl,T1040RDB",
++	"fsl,T1042RDB",
+ 	"keymile,kmcoge4",
+ 	NULL
+ };
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
