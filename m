@@ -1,136 +1,51 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] Disabling OF functions that use sysfs if CONFIG_SYSFS disabled
-Date: Fri,  5 Sep 2014 02:06:36 -0700
-Message-ID: <1409907996-3849-1-git-send-email-gaurav.minocha.os@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
+Date: Fri, 5 Sep 2014 10:21:20 +0100
+Message-ID: <20140905092120.GG13515@arm.com>
+References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140903173740.GJ1824@e102568-lin.cambridge.arm.com>
+ <20140904160320.GB22354@arm.com>
+ <20140904172909.GA14822@e102568-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140904172909.GA14822@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Tomasz Figa <t.figa@samsung.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to the fix the recent runtime bug in kernel
-reported by <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+On Thu, Sep 04, 2014 at 06:29:10PM +0100, Lorenzo Pieralisi wrote:
+> On Thu, Sep 04, 2014 at 05:03:20PM +0100, Catalin Marinas wrote:
+> > On Wed, Sep 03, 2014 at 06:37:40PM +0100, Lorenzo Pieralisi wrote:
+> > > This patch should be ready to go too, is it ok if I split the series
+> > > in arm64 arch specific patches (will ask Catalin to pull) and CPUidle ones
+> > > (inclusive of DT bindings and !!this patch!!) and send two separate pull
+> > > requests ?
+> > 
+> > If Daniel/Rafael don't have any objection, I can take the whole series
+> > through the arm64 tree (it seems that patches have been already acked by
+> > Daniel).
+> 
+> Thanks a lot Catalin. Since this one is a brand new CPUidle driver and it
+> follows a different pattern from arm legacy drivers I would like to get
+> Daniel's ack on this patch too before pushing it. For the records I have
+> just added two pr_err to signal driver probing error, ultraminor changes
+> that do not justify a repost.
+> 
+> If Samsung guys do not manifest themselves I would drop patch 8 from
+> the series till it gets tested and its patch dependency queued too.
 
-Mail Subject: [OF test] BUG: unable to handle kernel NULL
- pointer dereference at 00000038
+The last patch also has a dependency, as you mentioned to Daniel. I think
+we can certainly merge the arm64 parts, and if Daniel doesn't object, then
+we can take the driver stuff too but leaving the exynos bits out (i.e. drop
+the last patch).
 
-Tested on x86 and arm architecture
----
- drivers/of/base.c    |   29 +++++++++++++++++++++++++++++
- drivers/of/dynamic.c |    7 +++++++
- 2 files changed, 36 insertions(+)
+Anyway, if you could repost with the acks you've collected and rearrange it
+so the arm64 patches are first in the series, that would be great.
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d8574ad..1d4d74e 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -131,6 +131,7 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
- 	return name;
- }
- 
-+#if defined(CONFIG_SYSFS)
- int __of_add_property_sysfs(struct device_node *np, struct property *pp)
- {
- 	int rc;
-@@ -151,7 +152,14 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
- 	WARN(rc, "error adding attribute %s to node %s\n", pp->name, np->full_name);
- 	return rc;
- }
-+#else
-+int __of_add_property_sysfs(struct device_node *np, struct property *pp)
-+{
-+	return 0;
-+}
-+#endif
- 
-+#if defined(CONFIG_SYSFS)
- int __of_attach_node_sysfs(struct device_node *np)
- {
- 	const char *name;
-@@ -181,6 +189,12 @@ int __of_attach_node_sysfs(struct device_node *np)
- 
- 	return 0;
- }
-+#else
-+int __of_attach_node_sysfs(struct device_node *np)
-+{
-+	return 0;
-+}
-+#endif
- 
- static int __init of_init(void)
- {
-@@ -1711,12 +1725,19 @@ int __of_remove_property(struct device_node *np, struct property *prop)
- 	return 0;
- }
- 
-+#if defined(CONFIG_SYSFS)
- void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
- {
- 	/* at early boot, bail here and defer setup to of_init() */
- 	if (of_kset && of_node_is_attached(np))
- 		sysfs_remove_bin_file(&np->kobj, &prop->attr);
- }
-+#else
-+void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
-+{
-+
-+}
-+#endif
- 
- /**
-  * of_remove_property - Remove a property from a node.
-@@ -1774,6 +1795,7 @@ int __of_update_property(struct device_node *np, struct property *newprop,
- 	return 0;
- }
- 
-+#if defined(CONFIG_SYSFS)
- void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
- 		struct property *oldprop)
- {
-@@ -1785,6 +1807,13 @@ void __of_update_property_sysfs(struct device_node *np, struct property *newprop
- 		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
- 	__of_add_property_sysfs(np, newprop);
- }
-+#else
-+void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
-+		struct property *oldprop)
-+{
-+
-+}
-+#endif
- 
- /*
-  * of_update_property - Update a property in a node, if the property does
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 54fecc4..c3d9eae 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -41,6 +41,7 @@ void of_node_put(struct device_node *node)
- }
- EXPORT_SYMBOL(of_node_put);
- 
-+#if defined(CONFIG_SYSFS)
- void __of_detach_node_sysfs(struct device_node *np)
- {
- 	struct property *pp;
-@@ -59,6 +60,12 @@ void __of_detach_node_sysfs(struct device_node *np)
- 	/* finally remove the kobj_init ref */
- 	of_node_put(np);
- }
-+#else
-+void __of_detach_node_sysfs(struct device_node *np)
-+{
-+
-+}
-+#endif
- 
- static BLOCKING_NOTIFIER_HEAD(of_reconfig_chain);
- 
--- 
-1.7.9.5
+Cheers,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
