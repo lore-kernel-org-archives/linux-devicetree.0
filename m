@@ -1,66 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding to MFD driver
-Date: Fri, 05 Sep 2014 13:50:06 +0200
-Message-ID: <3465722.Gc9y01nQRe@wuerfel>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com> <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 2/3 v2] GPIO: gpio-dwapb: Support Debounce
+Date: Fri, 5 Sep 2014 12:03:41 +0000
+Message-ID: <1409918621.30155.90.camel@intel.com>
+References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
+	 <1409928798-31895-3-git-send-email-alvin.chen@intel.com>
+	 <1409908999.30155.85.camel@intel.com>
+	 <4656BEB6164FC34F8171C6538F1A595B2E98298B@SHSMSX101.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E98298B@SHSMSX101.ccr.corp.intel.com>
+Content-Language: en-US
+Content-ID: <9D13CE650961014F84335F080D1C19F3@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Chen, Alvin" <alvin.chen@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 September 2014 07:53:16 Weike Chen wrote:
->  
-> -	irq_set_chained_handler(irq, dwapb_irq_handler);
-> -	irq_set_handler_data(irq, gpio);
-> +	if (!pp->irq_shared) {
-> +		irq_set_chained_handler(pp->irq, dwapb_irq_handler);
-> +		irq_set_handler_data(pp->irq, gpio);
-> +	} else {
-> +		/*
-> +		 * Request a shared IRQ since where MFD would have devices
-> +		 * using the same irq pin
-> +		 */
-> +		err = devm_request_irq(gpio->dev, pp->irq,
-> +				       dwapb_irq_handler_mfd,
-> +				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
-> +		if (err) {
-> +			dev_err(gpio->dev, "error requesting IRQ\n");
-> +			irq_domain_remove(gpio->domain);
-> +			gpio->domain = NULL;
-> +			return;
-> +		}
-> +	}
->
+T24gRnJpLCAyMDE0LTA5LTA1IGF0IDA5OjM1ICswMDAwLCBDaGVuLCBBbHZpbiB3cm90ZToNCj4g
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMyB2Ml0gR1BJTzogZ3Bpby1kd2FwYjogU3VwcG9ydCBE
+ZWJvdW5jZQ0KPiA+IA0KPiA+IE9uIEZyaSwgMjAxNC0wOS0wNSBhdCAwNzo1MyAtMDcwMCwgV2Vp
+a2UgQ2hlbiB3cm90ZToNCj4gPiA+IFRoaXMgcGF0Y2ggZW5hYmxlcyAnZGVib3VuY2UnIGZvciB0
+aGUgZGVzaWdud2FyZSBHUElPLCBhbmQgaXQgaXMgYmFzZWQNCj4gPiA+IG9uIEpvc2VmIEFobWFk
+J3MgcHJldmlvdXMgd29yay4NCj4gPiANCj4gPiBDYW4gd2Ugc3BsaXQgZHdhcGJfcmVhZC93cml0
+ZSBpbnRyb2R1Y2luZyBhbmQgY2hhbmdpbmcgZnJvbSB0aGlzIHBhdGNoIHRvIGENCj4gPiBzZXBh
+cmF0ZSBvbmU/DQo+ID4gDQo+IFNpbmNlIHRoZSAnZGVib3VuY2UnIGZlYXR1cmUgYWxzbyBuZWVk
+cyByZWFkL3dyaXRlLCBpZiB3ZSBzcGxpdGUgdGhpcyBwYXRjaCwgdGhlbiBmb3IgJ2RlYm91bmNl
+JywNCj4gT25lIHBhdGNoIHVzZSByZWFkbC93cml0ZWwsIGFuZCBhbm90aGVyIHBhdGNoIGNoYW5n
+ZSB0byBkd2FwYl9yZWFkL3dyaXRlLiBJdCBzZWVtcyBkdXBsaWNhdGUgc2luY2UNCj4gdGhlIHBy
+ZXZpb3VzIHBhdGNoIHVzZSByZWFkbC93cml0ZWwgYW5kIHRoZSBmbGxvd2luZyBvbmUgY2hhbmdl
+IGl0IGltbWVkaWF0ZWx5Lg0KPiBTaW5jZSB0aGlzIHBhdGNoIGlzIHNtYWxsLCBjb3VsZCB3ZSBq
+dXN0IG1ha2UgdGhlbSB0b2dldGhlcj8gSG93IGRvIHlvdSB0aGluaz8NCg0KTWFrZSB0aGUgZHdh
+cGJfd3JpdGVsL3JlYWRsIHBhdGNoIGdvZXMgZmlyc3QgaW4gdGhlIHNlcmllcy4NCg0KLS0gDQpB
+bmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGludGVsLmNvbT4NCkludGVsIEZpbmxh
+bmQgT3kNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQpJbnRlbCBGaW5sYW5kIE95ClJlZ2lzdGVyZWQgQWRkcmVzczog
+UEwgMjgxLCAwMDE4MSBIZWxzaW5raSAKQnVzaW5lc3MgSWRlbnRpdHkgQ29kZTogMDM1NzYwNiAt
+IDQgCkRvbWljaWxlZCBpbiBIZWxzaW5raSAKClRoaXMgZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVu
+dHMgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG1hdGVyaWFsIGZvcgp0aGUgc29sZSB1c2Ugb2Yg
+dGhlIGludGVuZGVkIHJlY2lwaWVudChzKS4gQW55IHJldmlldyBvciBkaXN0cmlidXRpb24KYnkg
+b3RoZXJzIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRl
+ZApyZWNpcGllbnQsIHBsZWFzZSBjb250YWN0IHRoZSBzZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29w
+aWVzLgo=
 
-I think this need some better documentation. Why is it safe to use
-devm_request_irq rather than irq_set_chained_handler here?
-
-
->  
-> +#ifdef CONFIG_OF_GPIO
-> +
-> +static struct dwapb_platform_data *
-> +dwapb_gpio_get_pdata_of(struct device *dev)
-> +{
-> +	struct device_node *node, *port_np;
-> +	struct dwapb_platform_data *pdata;
-> +	struct dwapb_port_property *pp;
-> +	int nports;
-> +	int i;
-> +
-> +	node = dev->of_node;
-> +	if (!node)
-> +		return ERR_PTR(-ENODEV);
-
-Please replace the #ifdef above with 
-
-	if (!IS_ENABLED(CONFIG_OF_GPIO) || !node)
-
-here so get you proper compile-time coverage of the DT code path.
-
-	Arnd
