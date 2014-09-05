@@ -1,93 +1,86 @@
 From: Robert Richter <rric@kernel.org>
-Subject: [PATCH 4/6] dts, kbuild: Implement support for dtb vendor subdirs
-Date: Fri,  5 Sep 2014 08:48:10 +0200
-Message-ID: <1409899692-1455-5-git-send-email-rric@kernel.org>
+Subject: [PATCH 1/6] dts, arm64: Add dtbs_install make target
+Date: Fri,  5 Sep 2014 08:48:07 +0200
+Message-ID: <1409899692-1455-2-git-send-email-rric@kernel.org>
 References: <1409899692-1455-1-git-send-email-rric@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1409899692-1455-1-git-send-email-rric@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Michal Marek <mmarek@suse.cz>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>
+Cc: Robert Richter <rrichter@cavium.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Robert Richter <rrichter@cavium.com>
 
-This patch adds support of vendor sub directories for dtb files.
-Subdirectories can be specified in $(dts-dirs). Kbuild traverses over
-all directories while building and installing dtb files. The directory
-tree is also reflected in the install path.
+This adds the dtbs_install make target to arm64. The target has been
+introduced already to arch/arm with the following commit:
+
+ f4d4ffc03efc kbuild: dtbs_install: new make target
+
+Implementation for arm64 is the same as for arm.
+
+With 'dtbs_install' all config enabled dtb files are installed to
+either the INSTALL_DTBS_PATH directory or the default location:
+
+ $INSTALL_PATH/dtbs/$KERNELRELEASE
 
 Signed-off-by: Robert Richter <rrichter@cavium.com>
 ---
- arch/arm64/boot/dts/Makefile |  1 +
- scripts/Makefile.dtbinst     | 23 ++++++++++++++++++-----
- 2 files changed, 19 insertions(+), 5 deletions(-)
+ arch/arm64/Makefile          | 6 ++++--
+ arch/arm64/boot/dts/Makefile | 4 +++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 2df5e5daeebe..e0a8292bc832 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -71,8 +71,9 @@ zinstall install: vmlinux
+ %.dtb: scripts
+ 	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
+ 
+-dtbs: scripts
+-	$(Q)$(MAKE) $(build)=$(boot)/dts dtbs
++PHONY += dtbs dtbs_install
++dtbs dtbs_install: prepare scripts
++	$(Q)$(MAKE) $(build)=$(boot)/dts $@
+ 
+ PHONY += vdso_install
+ vdso_install:
+@@ -86,6 +87,7 @@ define archhelp
+   echo  '* Image.gz      - Compressed kernel image (arch/$(ARCH)/boot/Image.gz)'
+   echo  '  Image         - Uncompressed kernel image (arch/$(ARCH)/boot/Image)'
+   echo  '* dtbs          - Build device tree blobs for enabled boards'
++  echo  '  dtbs_install  - Install dtbs to $(INSTALL_DTBS_PATH)'
+   echo  '  install       - Install uncompressed kernel'
+   echo  '  zinstall      - Install compressed kernel'
+   echo  '                  Install using (your) ~/bin/installkernel or'
 diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index d116da5f2f20..9b8622532068 100644
+index c52bdb051f66..82e1c4cf8780 100644
 --- a/arch/arm64/boot/dts/Makefile
 +++ b/arch/arm64/boot/dts/Makefile
-@@ -2,4 +2,5 @@ dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
+@@ -1,9 +1,11 @@
+ dtb-$(CONFIG_ARCH_VEXPRESS) += rtsm_ve-aemv8a.dtb foundation-v8.dtb
  dtb-$(CONFIG_ARCH_XGENE) += apm-mustang.dtb
  
- always		:= $(dtb-y)
-+subdir-y	:= $(dts-dirs)
- clean-files	:= *.dtb
-diff --git a/scripts/Makefile.dtbinst b/scripts/Makefile.dtbinst
-index 54286cccc289..909ed7a2ac61 100644
---- a/scripts/Makefile.dtbinst
-+++ b/scripts/Makefile.dtbinst
-@@ -6,6 +6,7 @@
- #
- #   $INSTALL_PATH/dtbs/$KERNELRELEASE
- #
-+# Traverse through subdirectories listed in $(dts-dirs).
- # ==========================================================================
+-targets += dtbs
++targets += dtbs dtbs_install
+ targets += $(dtb-y)
  
- src := $(obj)
-@@ -13,26 +14,38 @@ src := $(obj)
- PHONY := __dtbs_install
- __dtbs_install:
+ dtbs: $(addprefix $(obj)/, $(dtb-y))
  
-+export dtbinst-root ?= $(obj)
+ clean-files := *.dtb
 +
- include include/config/auto.conf
- include scripts/Kbuild.include
- include $(srctree)/$(obj)/Makefile
- 
- PHONY += __dtbs_install_prep
- __dtbs_install_prep:
-+ifeq ("$(dtbinst-root)", "$(obj)")
- 	$(Q)if [ -d $(INSTALL_DTBS_PATH).old ]; then rm -rf $(INSTALL_DTBS_PATH).old; fi
- 	$(Q)if [ -d $(INSTALL_DTBS_PATH) ]; then mv $(INSTALL_DTBS_PATH) $(INSTALL_DTBS_PATH).old; fi
- 	$(Q)mkdir -p $(INSTALL_DTBS_PATH)
-+endif
- 
- dtbinst-files	:= $(dtb-y)
-+dtbinst-dirs	:= $(dts-dirs)
- 
- # Helper targets for Installing DTBs into the boot directory
- quiet_cmd_dtb_install =	INSTALL $<
--      cmd_dtb_install =	cp $< $(2)
-+      cmd_dtb_install =	mkdir -p $(2); cp $< $(2)
-+
-+install-dir = $(patsubst $(dtbinst-root)%,$(INSTALL_DTBS_PATH)%,$(obj))
-+
-+$(dtbinst-files) $(dtbinst-dirs): | __dtbs_install_prep
-+
-+$(dtbinst-files): %.dtb: $(obj)/%.dtb
-+	$(call cmd,dtb_install,$(install-dir))
- 
--$(dtbinst-files): %.dtb: $(obj)/%.dtb | __dtbs_install_prep
--	$(call cmd,dtb_install,$(INSTALL_DTBS_PATH))
-+$(dtbinst-dirs):
-+	$(Q)$(MAKE) $(dtbinst)=$(obj)/$@
- 
--PHONY += $(dtbinst-files)
--__dtbs_install: $(dtbinst-files)
-+PHONY += $(dtbinst-files) $(dtbinst-dirs)
-+__dtbs_install: $(dtbinst-files) $(dtbinst-dirs)
- 
- .PHONY: $(PHONY)
++dtbs_install: $(addsuffix _dtbinst_, $(dtb-y))
 -- 
 2.0.1
