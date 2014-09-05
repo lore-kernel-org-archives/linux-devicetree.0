@@ -1,36 +1,68 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v4 4/4] pinctrl: qcom: Make the target processor value
- configurable
-Date: Fri, 05 Sep 2014 10:20:57 +0300
-Message-ID: <54096459.7020201@mm-sol.com>
-References: <1409761696-15435-1-git-send-email-gdjakov@mm-sol.com>	<1409761696-15435-5-git-send-email-gdjakov@mm-sol.com> <CACRpkdZQouNk0z1AQHbjULJXdRK07-kZDXLcnx0Xayew0fnocA@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2] spi: orion: support armada extended baud rates
+Date: Fri, 5 Sep 2014 09:36:22 +0200
+Message-ID: <CAMuHMdWf6_yBhpNgK=wJcQqzLNJvTnC95SrqrcZyRH+jGL93vA@mail.gmail.com>
+References: <1409835268-29555-1-git-send-email-gerg@uclinux.org>
+	<CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A@mail.gmail.com>
+	<5409057A.6090900@uclinux.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZQouNk0z1AQHbjULJXdRK07-kZDXLcnx0Xayew0fnocA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5409057A.6090900-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+Cc: linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/2014 07:20 PM, Linus Walleij wrote:
-> On Wed, Sep 3, 2014 at 6:28 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
-> 
->> Currently the value used to specify that interrupts from the gpio should
->> be routed to the application processor is hardcoded for all Qualcomm SoCs.
->> But the new APQ8084 SoC uses a different value. To resolve this, we make
->> this value configurable for each SoC. For all existing SoCs we continue
->> to use the current value, and only for APQ8084 we use the new value.
->>
->> Suggested-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->> Acked-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
->> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
-> 
-> Patch applied.
-> 
-> Yours,
-> Linus Walleij
-> 
+Hi Greg,
 
-Thank you, Bjorn and Linus!
+On Fri, Sep 5, 2014 at 2:36 AM, Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org> wrote:
+>> Are the Orion rates and register bits a subset of the Armada ones?
+>> I.e. does the Armada work with the Orion setup?
+>
+> The bits used by the orion are a subset (bits 0-4 of the SPI
+> configuration register) of those used by the armada (bits 0-4 and
+> 6-7).
+>
+> In practice the defined prescalar values for the orion do give
+> the same divisor for the same bits set on armada. The extra bits
+> on the armada let you get to lower SPI baudrates (which is more of
+> a problem on the armada with its higher core clocks).
+
+OK, so the answer is yes.
+
+>>> This change introduces a new device tree compatible device name
+>>> "armada-spi". This is used in place of "orion-spi" on the Armada SoC
+>>> parts.
+>>
+>>> -                               compatible = "marvell,orion-spi";
+>>> +                               compatible = "marvell,armada-spi";
+>>
+>> If the answer to my above question is yes, you want to keep
+>> "marvell,orion-spi" as a fallback.
+>
+> Do you mean like this?
+>
+>   compatible = "marvell,orion-spi", "marvell,armada-spi";
+
+No, the other way around (from most-specific to least-specific):
+
+    compatible = "marvell,armada-spi", "marvell,orion-spi"
+
+So the Armada version is used if available, and the Orion version
+is used as a fallback.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
