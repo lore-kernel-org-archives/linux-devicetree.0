@@ -1,55 +1,66 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] Documentation: Add device tree bindings for
- Freescale i.MX GPC
-Date: Fri, 5 Sep 2014 13:47:08 +0200
-Message-ID: <CAMuHMdUqbk+OZiBMUsebQ_==7jCan+dHsfJLhi+CPUE=xc6yRA@mail.gmail.com>
-References: <1409060791-23167-1-git-send-email-p.zabel@pengutronix.de>
-	<1409060791-23167-2-git-send-email-p.zabel@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding to MFD driver
+Date: Fri, 05 Sep 2014 13:50:06 +0200
+Message-ID: <3465722.Gc9y01nQRe@wuerfel>
+References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com> <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409060791-23167-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Weike Chen <alvin.chen@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Friday 05 September 2014 07:53:16 Weike Chen wrote:
+>  
+> -	irq_set_chained_handler(irq, dwapb_irq_handler);
+> -	irq_set_handler_data(irq, gpio);
+> +	if (!pp->irq_shared) {
+> +		irq_set_chained_handler(pp->irq, dwapb_irq_handler);
+> +		irq_set_handler_data(pp->irq, gpio);
+> +	} else {
+> +		/*
+> +		 * Request a shared IRQ since where MFD would have devices
+> +		 * using the same irq pin
+> +		 */
+> +		err = devm_request_irq(gpio->dev, pp->irq,
+> +				       dwapb_irq_handler_mfd,
+> +				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
+> +		if (err) {
+> +			dev_err(gpio->dev, "error requesting IRQ\n");
+> +			irq_domain_remove(gpio->domain);
+> +			gpio->domain = NULL;
+> +			return;
+> +		}
+> +	}
+>
 
-On Tue, Aug 26, 2014 at 3:46 PM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> @@ -0,0 +1,54 @@
+I think this need some better documentation. Why is it safe to use
+devm_request_irq rather than irq_set_chained_handler here?
 
-> +IP cores belonging to a power domain should contain a 'power-domain' property
 
-power-domains
-
-> +that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
-> +the power domain the device belongs to.
+>  
+> +#ifdef CONFIG_OF_GPIO
 > +
-> +Example of a device that is part of the PU power domain:
+> +static struct dwapb_platform_data *
+> +dwapb_gpio_get_pdata_of(struct device *dev)
+> +{
+> +	struct device_node *node, *port_np;
+> +	struct dwapb_platform_data *pdata;
+> +	struct dwapb_port_property *pp;
+> +	int nports;
+> +	int i;
 > +
-> +       vpu: vpu@02040000 {
-> +               reg = <0x02040000 0x3c000>;
-> +               /* ... */
-> +               power-domain = <&gpc 1>;
+> +	node = dev->of_node;
+> +	if (!node)
+> +		return ERR_PTR(-ENODEV);
 
-power-domains
+Please replace the #ifdef above with 
 
-> +               /* ... */
-> +       };
+	if (!IS_ENABLED(CONFIG_OF_GPIO) || !node)
 
-Gr{oetje,eeting}s,
+here so get you proper compile-time coverage of the DT code path.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
