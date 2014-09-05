@@ -1,64 +1,77 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Fri, 5 Sep 2014 12:02:01 +0000
-Message-ID: <1409918522.30155.89.camel@intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
-	 <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
-	 <1409908917.30155.84.camel@intel.com>
-	 <4656BEB6164FC34F8171C6538F1A595B2E9829DA@SHSMSX101.ccr.corp.intel.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system timer
+Date: Fri, 5 Sep 2014 09:09:36 -0300
+Message-ID: <CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ@mail.gmail.com>
+References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
+	<1409887606-22388-4-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E9829DA@SHSMSX101.ccr.corp.intel.com>
-Content-Language: en-US
-Content-ID: <4716A4D10706B54DB49DB39C9F341257@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Chen, Alvin" <alvin.chen@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409887606-22388-4-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE0LTA5LTA1IGF0IDEwOjIwICswMDAwLCBDaGVuLCBBbHZpbiB3cm90ZToNCj4g
-PiA+IC0JcG9ydC0+YmdjLmdjLm5ncGlvID0gbmdwaW87DQo+ID4gPiAtCXBvcnQtPmJnYy5nYy5v
-Zl9ub2RlID0gcG9ydF9ucDsNCj4gPiA+ICsjaWZkZWYgQ09ORklHX09GX0dQSU8NCj4gPiANCj4g
-PiBEbyB3ZSByZWFsbHkgbmVlZCB0aGlzICNpZmRlZiA/DQo+ID4gb2Zfbm9kZSB3aWxsIGJlIE5V
-TEwgYW55d2F5LCBvciBJIG1pc3NlZCBzb21ldGhpbmc/DQo+IFllcywgb3RoZXJ3aXNlLCBjYW4n
-dCBjb21waWxlIGl0LiBQbGVhc2UgcmVmZXIgJ3N0cnVjdCBncGlvX2NoaXAnLCAnZ2Mub2Zfbm9k
-ZScgaXMgaW4gT0ZfR1BJTyBtaWNybyBhbHNvLg0KDQpBaCwgb2theS4gVGh1cywgaXQgZGVwZW5k
-cyB0byBMaW51cyBvcGluaW9uLCBzaW5jZSBJLCBmb3IgZXhhbXBsZSwgd291bGQNCmxpa2UgdG8g
-c2VlIHRoaXMgZmllbGQgcHJlc2VudCBpbiB0aGUgc3RydWN0dXJlIGluZGVwZW5kZW50bHkgb2YN
-Ck9GX0dQSU8uDQoNCj4gDQo+ID4gPiArCWlmIChwcC0+aXJxKQ0KPiA+IA0KPiA+IGlycSA9PSAw
-IGlzIGEgdmFsaWQgaHdpcnEgKGhhcmR3YXJlIGlycSkgbnVtYmVyLiBZZXMsIHRoZXJlIGlzIHVu
-bGlrZWx5IHdlIGhhdmUgaXQNCj4gPiBzb21ld2hlcmUsIGJ1dCBzdGlsbCBpdCdzIHBvc3NpYmxl
-LiBBbmQgeWVzLCBJUlEgZnJhbWV3b3JrIGRvZXNuJ3Qgd29yayB3aXRoDQo+ID4gdmlycSA9PSAw
-ICgqdmlydHVhbCogaXJxKSwgYnV0IGFjY2VwdHMgaHdpcnEgPT0gMC4gSSByZWNvbW1lbmQgdG8g
-dXNlIGludCB0eXBlIGZvcg0KPiA+IGlycSBsaW5lIG51bWJlciwgYW5kIHJlY29nbml6ZSBuZWdh
-dGl2ZSB2YWx1ZSAodXN1YWxseSAtMSkgYXMgbm8gaXJxIG5lZWRlZCAvDQo+ID4gZm91bmQuDQo+
-IFVuZGVyc3RhbmQuIEJ1dCBpZiB5b3UgcmVmZXIgdGhlIG9yaWdpbmFsIGNvZGUsIHlvdSBjYW4g
-c2VlOg0KPiBpcnEgPSBpcnFfb2ZfcGFyc2VfYW5kX21hcChub2RlLCAwKTsNCj4gSWYgKCFpcnEp
-IHsNCj4gLi4uLi4uDQo+IHJldHVybjsNCj4gfQ0KPiBGcm9tIGFib3ZlIGNvZGUsIGlmIGlycT0w
-LCBpdCBpbmRpY2F0ZXMgaXJxIGlzIG5vdCBzdXBwb3J0ZWQgZm9yIE9GIGRldmljZXMuIElmIHdl
-IHVzZSAnLTEnIHRvIGluZGljYXRlIGlycSBpcyBub3Qgc3VwcG9ydGVkLiBUbyBtYWtlIE9GIHdv
-cmssIHRoZW4gb3VyIGNvZGUgc2hvdWxkIGJlOg0KDQpZZXMsIGxpa2UgSSBzYWlkIGFib3ZlLiBZ
-b3UgaW50cm9kdWNlIGh3IGlycSBpbiB0aGUgcGRhdGEsIHdoaWNoIGNvdWxkDQpiZSAwLg0KDQoN
-Cj4gaXJxID0gaXJxX29mX3BhcnNlX2FuZF9tYXAobm9kZSwgMCk7DQo+IElmICghaXJxKSB7DQo+
-IHBwLT5pcnEgPSAtMTsNCj4gcmV0dXJuOw0KPiB9IGVsc2Ugew0KPiBwcC0+aXJxID0gaXJxOw0K
-PiB9DQo+IFRoZW4gdGhlIGNvZGUgbG9va3Mgc3RyYW5nZS4NCj4gDQo+IEhvdyBkbyB5b3UgdGhp
-bms/DQoNCklmIEkgdW5kZXJzdG9vZCBjb3JyZWN0bHkgeW91IG1lc3NlZCB1cCB3aXRoIGh3aXJx
-IHZzLiB2aXJxLg0KT3RoZXJ3aXNlIHlvdSBoYXZlIG1lbnRpb24gdGhhdCB5b3UgYXJlIHVzaW5n
-IHZpcnEgZXZlcnl3aGVyZSAoSSBndWVzcw0KeW91IG1heSByZW5hbWUgdGhlIGZpZWxkIGluIHRo
-ZSBzdHJ1Y3R1cmUpLCBidXQgaW4gdGhpcyBjYXNlIHRoZSBmaWVsZA0KaW4gdGhlIHBsYXRmb3Jt
-X2RhdGEgbG9va3MgYSBiaXQgc3RyYW5nZS4gTGludXMsIHdoYXQgZG8geW91IHRoaW5rPw0KDQoN
-ClAuUy4gUGxlYXNlLCByZW1vdmUgbXkgUmV2aWV3ZWQtYnkgdGFnIHNpbmNlIGNvZGUgaXMgY2hh
-bmdlZCBlbm91Z2guDQoNCi0tIA0KQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0Bp
-bnRlbC5jb20+DQpJbnRlbCBGaW5sYW5kIE95DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KSW50ZWwgRmlubGFuZCBP
-eQpSZWdpc3RlcmVkIEFkZHJlc3M6IFBMIDI4MSwgMDAxODEgSGVsc2lua2kgCkJ1c2luZXNzIElk
-ZW50aXR5IENvZGU6IDAzNTc2MDYgLSA0IApEb21pY2lsZWQgaW4gSGVsc2lua2kgCgpUaGlzIGUt
-bWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIG1heSBjb250YWluIGNvbmZpZGVudGlhbCBtYXRlcmlh
-bCBmb3IKdGhlIHNvbGUgdXNlIG9mIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykuIEFueSByZXZp
-ZXcgb3IgZGlzdHJpYnV0aW9uCmJ5IG90aGVycyBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5
-b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQKcmVjaXBpZW50LCBwbGVhc2UgY29udGFjdCB0aGUgc2Vu
-ZGVyIGFuZCBkZWxldGUgYWxsIGNvcGllcy4K
+On Fri, Sep 5, 2014 at 12:26 AM, Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On i.MX6Q TO > 1.0, i.MX6DL and i.MX6SX, gpt per clock
+> can be from OSC instead of ipg_per, as ipg_per's rate
+> may be scaled when system enter low bus mode, to keep
+> system timer NOT drift, better to make gpt per clock
+> at fixed rate, here add support for gpt per clock to
+> be from OSC which is at fixed rate always.
+>
+> There are some difference on this implementation of
+> gpt per clock source, see below for details:
+>
+> i.MX6Q TO > 1.0: GPT_CR_CLKSRC, 3b'101 selects fix clock
+>     of OSC / 8 for gpt per clk;
 
+You mean "5b'101 selects fix clock..."
+
+> i.MX6DL and i.MX6SX: GPT_CR_CLKSRC, 3b'101 selects OSC
+
+Same here: "5b'101"
+
+> @@ -293,7 +299,7 @@ static int __init mxc_clockevent_init(struct clk *timer_clk)
+>  static void __init _mxc_timer_init(int irq,
+>                                    struct clk *clk_per, struct clk *clk_ipg)
+>  {
+> -       uint32_t tctl_val;
+> +       uint32_t tctl_val, tprer_val;
+>
+>         if (IS_ERR(clk_per)) {
+>                 pr_err("i.MX timer: unable to get clk\n");
+> @@ -312,10 +318,26 @@ static void __init _mxc_timer_init(int irq,
+>         __raw_writel(0, timer_base + MXC_TCTL);
+>         __raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
+>
+> -       if (timer_is_v2())
+> -               tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
+> -       else
+> +       if (timer_is_v2()) {
+> +               if (((cpu_is_imx6q() && imx_get_soc_revision() >
+> +                       IMX_CHIP_REVISION_1_0) || cpu_is_imx6dl() ||
+> +                       cpu_is_imx6sx()) && (clk_get_rate(clk_per) ==
+> +                       V2_TIMER_RATE_OSC_DIV8)) {
+> +                       tctl_val = V2_TCTL_CLK_OSC_DIV8 | V2_TCTL_FRR |
+> +                               V2_TCTL_WAITEN | MXC_TCTL_TEN;
+> +                       if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
+> +                               /* 24 / 8 = 3 MHz */
+> +                               tprer_val = 7 << V2_TPRER_PRE24M;
+> +                               __raw_writel(tprer_val, timer_base + MXC_TPRER);
+> +                               tctl_val |= V2_TCTL_24MEN;
+> +                       }
+> +               } else {
+> +                       tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR |
+> +                               V2_TCTL_WAITEN | MXC_TCTL_TEN;
+> +               }
+> +       } else {
+>                 tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
+> +       }
+
+Can this block be rearranged a bit so that it becomes easier to read?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
