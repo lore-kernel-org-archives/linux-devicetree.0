@@ -1,177 +1,148 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: davinci: support adding delay between
-	transmission
-Date: Fri, 5 Sep 2014 17:21:56 +0300
-Message-ID: <5409C704.5070303@ti.com>
-References: <1408634706-5762-1-git-send-email-grygorii.strashko@ti.com>
-	<1408634706-5762-3-git-send-email-grygorii.strashko@ti.com>
-	<20140821182035.GM24407@sirena.org.uk> <53F74695.3010902@ti.com>
-	<20140822150644.GX24407@sirena.org.uk>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3] ARM: dts: qcom: Add initial IFC6540 board device tree
+Date: Fri, 05 Sep 2014 16:26:11 +0200
+Message-ID: <5409C803.8060007@suse.de>
+References: <1409763031-16873-1-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <20140822150644.GX24407-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1409763031-16873-1-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>, galak@codeaurora.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi,
 
-I'm very sorry for delayed replay.
+Am 03.09.2014 18:50, schrieb Georgi Djakov:
+> Add basic support for the IFC6540 single-board computer boards, that =
+are
+> based on the APQ8084 SoC. This patch adds the initial device tree and=
+ the
+> neccessary nodes required for enabling the serial port and eMMC.
+>=20
+> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+> ---
+> Changes since v2:
+>  - Squashed all patches into one. (suggested by Kumar Gala)
+>=20
+> Changes since v1:
+>  - This time add linux-arm-msm list to the CC.
+>  - Include a third patch for enabling the eMMC.
+>=20
+>  arch/arm/boot/dts/Makefile                 |    1 +
+>  arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |   23 ++++++++++++++++++=
++++++
+>  arch/arm/boot/dts/qcom-apq8084.dtsi        |   23 ++++++++++++++++++=
++++++
+>  3 files changed, 47 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+>=20
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b022972..df8453a 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -345,6 +345,7 @@ dtb-$(CONFIG_ARCH_PRIMA2) +=3D prima2-evb.dtb
+>  dtb-$(CONFIG_ARCH_QCOM) +=3D \
+>  	qcom-apq8064-ifc6410.dtb \
+>  	qcom-apq8074-dragonboard.dtb \
+> +	qcom-apq8084-ifc6540.dtb \
+>  	qcom-apq8084-mtp.dtb \
+>  	qcom-msm8660-surf.dtb \
+>  	qcom-msm8960-cdp.dtb
+> diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/bo=
+ot/dts/qcom-apq8084-ifc6540.dts
+> new file mode 100644
+> index 0000000..c9ff108
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
+> @@ -0,0 +1,23 @@
+> +#include "qcom-apq8084.dtsi"
+> +
+> +/ {
+> +	model =3D "Qualcomm APQ8084/IFC6540";
+> +	compatible =3D "qcom,apq8084-ifc6540", "qcom,apq8084";
+> +
+> +	soc {
+> +		serial@f995e000 {
+> +			status =3D "okay";
+> +		};
+> +
+> +		sdhci@f9824900 {
+> +			bus-width =3D <8>;
+> +			non-removable;
+> +			status =3D "okay";
+> +		};
+> +
+> +		sdhci@f98a4900 {
+> +			cd-gpios =3D <&tlmm 122 GPIO_ACTIVE_LOW>;
+> +			bus-width =3D <4>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/=
+qcom-apq8084.dtsi
+> index 21d01e5..1f130bc 100644
+> --- a/arch/arm/boot/dts/qcom-apq8084.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+> @@ -3,6 +3,7 @@
+>  #include "skeleton.dtsi"
+> =20
+>  #include <dt-bindings/clock/qcom,gcc-apq8084.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> =20
+>  / {
+>  	model =3D "Qualcomm APQ 8084";
+> @@ -203,5 +204,27 @@
+>  			clock-names =3D "core", "iface";
+>  			status =3D "disabled";
+>  		};
+> +
+> +		sdhci@f9824900 {
+> +			compatible =3D "qcom,sdhci-msm-v4";
+> +			reg =3D <0xf9824900 0x11c>, <0xf9824000 0x800>;
+> +			reg-names =3D "hc_mem", "core_mem";
+> +			interrupts =3D <0 123 0>, <0 138 0>;
 
-On 08/22/2014 06:06 PM, Mark Brown wrote:
-> On Fri, Aug 22, 2014 at 04:33:09PM +0300, Grygorii Strashko wrote:
->> On 08/21/2014 09:20 PM, Mark Brown wrote:
->>> On Thu, Aug 21, 2014 at 06:25:06PM +0300, Grygorii Strashko wrote:
-> 
->>>> +- ti,davinci-spi-wdelay : delay between transmissions.
-> 
->>> I don't understand why this is here - there is already standard support
->>> in the SPI core for client drivers specifying inter-transfer delays.  If
->>> there is a need to provide platform configuration for this in addition
->>> to that then it should also be a standard property, there is nothing
->>> device specific about these.
-> 
->> Sorry, may be I've missed smth, because I was not able to find such common
->> property in SPI bindings document and code. Could you point me on, pls?
-> 
-> It's not a property, it's what the delay_usecs in the transfer does.
-> There is no obvious reason to apply something like this unconditionally
-> on every transfer in DT - either it's needed only at particular points
-> in the transfer for device reasons (in which case the device driver
-> needs to know about it) or we need some sort of association with what
-> the device is doing since the way the client driver splits up transfers
-> is entirely up to it.
+I see that you've used GPIO_ACTIVE_* above. Is the trailing zero here
+possibly IRQ_TYPE_NONE?
 
-I think we have some misunderstanding here :(
-1) All new properties a optional and should be specified for SPI Slave devices
-2) Seems we are talking using different terms:
-- you referring to the term "transfers" - sequence of packets.
-  Each packet is one transfer (array of words).
-- while these new properties affect on "transmissions" - sequence of words.
-  Each word is one transmission.
+> +			interrupt-names =3D "hc_irq", "pwr_irq";
+> +			clocks =3D <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+> +			clock-names =3D "core", "iface";
+> +			status =3D "disabled";
+> +		};
+> +
+> +		sdhci@f98a4900 {
+> +			compatible =3D "qcom,sdhci-msm-v4";
+> +			reg =3D <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
+> +			reg-names =3D "hc_mem", "core_mem";
+> +			interrupts =3D <0 125 0>, <0 221 0>;
+> +			interrupt-names =3D "hc_irq", "pwr_irq";
+> +			clocks =3D <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
+> +			clock-names =3D "core", "iface";
+> +			status =3D "disabled";
+> +		};
 
-Below is timing diagram which shows, in general, how these new parameters affect
-on words transmission over Keystone/Davinci SPI bus:
+If you assign labels to these two nodes, you can reference them in the
+=2Edts as &labelname {...};. Same for the uart node. That avoids
+duplicating the hierarchy, detects spelling mistakes at compile time an=
+d
+reduces indentation. Cf. the recent ifc6410 patch.
 
-             +-+ +-+ +-+ +-+ +-+                           +-+ +-+ +-+ 
-SPI_CLK      | | | | | | | | | |                           | | | | | | 
-  +----------+ +-+ +-+ +-+ +-+ +---------------------------+ +-+ +-+ +-
-                                                                       
-SPI_SOMI/SIMO+-----------------+                           +-----------
-  +----------+ word1           +---------------------------+word2      
-             +-----------------+                           +-----------
-                                          WDELAY                       
-                                         <--------->                   
-                                        +           +                  
-SPI_CS                                  |           |                  
-  +----+                                +-----------+                  
-       |                                |           |                  
-       +-----+-----------------+--------+           +-----+------------
-       |     |                 |        |           |     |            
-       +     +                 +        |           +     +            
-        <--->                   <------>             <--->             
-       C2TDELAY                 T2CDELAY            C2TDELAY           
+Also, is sdhci the best node name here? Usually it's not supposed to
+reflect the exact interface used (e.g., usb vs. ehci).
 
-Where:
-        WDELAY - Delay in between transmissions
-	C2TDELAY - Chip-select-active-to-transmit-start-delay
-	T2CDELAY - Transmit-end-to-chip-select-inactive-delay
+>  	};
+>  };
 
+Otherwise looks good.
 
-Also, below is additional information about properties which
-are used in 5-pin mode (SPI_READY) to improve error detection
-[OMAP-L138/da830 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf]:
+Regards,
+Andreas
 
->- ti,davinci-spi-t2e-delay: t2e delay
-
-Transmit-data-finished-to-SPIx_ENA-pin-inactive-time-out.
-T2EDELAY is used in master mode only. It defines a time-out value
-as a multiple of SPI clock before the SPIx_ENA signal has to become
-inactive and after the CS becomes inactive. The SPI clock depends
-on which data format is selected. If the slave device is missing
-one or more clock edges, it is becoming desynchronized. Although
-the master has finished the data transfer the slave is still
-waiting for the missed clock pulses and the SPIx_ENA signal is
-not disabled. The T2EDELAY defines a time-out value that triggers
-the DESYNC flag, if the SPIx_ENA signal is not deactivated in time.
-The DESYNC flag is set to indicate that the slave device did not
-deassert its SPIx_ENA pin in time to acknowledge that it has
-received all the bits of the sent character. The DESYNC flag is
-also set if the SPI detects a deassertion of the SPIx_ENA pin even
-before the end of the transmission.
-
->- ti,davinci-spi-c2e-delay: c2e delay
-
-Chip-select-active-to-SPIx_ENA-signal-active-time-out. C2EDELAY
-is used only in master mode and it applies only if the addressed
-slave generates an SPIx_ENA signal as a hardware handshake response.
-C2EDELAY defines the maximum time between the SPI activates the chip
-select signal and the addressed slave has to respond by activating
-the SPIx_ENA signal. 
-
-
-> 
->>>> +- ti,davinci-spi-odd-parity : odd partity enabled
->>>> +   OR
->>>> +  ti,davinci-spi-even-parity : even parity enabled
-> 
->>> What do these mean?
-> 
->> Supported by OMAP-L138/da830:
->> "
->> SPIFMTn[23].PARPOL - Parity polarity: even or odd. PARPOL can be modified in privilege mode only.
->>   0 An even parity flag is added at the end of the transmit data stream.
->>   1 An odd parity flag is added at the end of the transmit data stream.
-> 
-> Why would these be specified in DT and not with runtime flags enabled by
-> the device?  It looks like they affect the data stream generated by the
-> controller so the client device needs to know about them; I'd expect
-> that it's device driver would be controlling when they are enabled if
-> the controller supports them.
-> 
-
-Could you clarify, pls - Do you mean that struct spi_device.mode and 
-common SPI DT bindings should be extended to support this?
-
-
->>>> +- ti,davinci-spi-io-type: io type (check platform_data/spi-davinci.h)
-> 
->>> The bindings should be independent of the kernel, the values need to be
->>> included here (and the defines moved to include/dt-bindings so they can
->>> be used when writing DTs).
-> 
->> Allowed values here are:
->> #define SPI_IO_TYPE_INTR	0
->> #define SPI_IO_TYPE_POLL	1
->> #define SPI_IO_TYPE_DMA		2
-> 
->> I'll update.
-> 
-> Now I see these it's not at all clear why this is configurable at all -
-> I would expect the controller driver to automatically select the most
-> appropriate scheme for the transfers it's doing in order to obtain the
-> best performance rather than having a global switch for this.  For
-> almost all devices the best results will be obtained by doing a mix of
-> these modes.
-> 
-> Typically for each level of transfer there will be some minimal size
-> below which it doesn't make sense to use that control type, for example
-> it's common to only DMA if there's more than a FIFO worth of data to
-> transfer.
-> 
-
-Ok. It can be dropped from DT
-
-Best regards,
--grygorii
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
