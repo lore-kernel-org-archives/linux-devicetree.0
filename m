@@ -1,79 +1,72 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] usb: dwc3: add ST dwc3 glue layer to manage dwc3
- HC
-Date: Fri, 5 Sep 2014 11:56:43 -0500
-Message-ID: <20140905165642.GI24449@saruman.home>
-References: <1409931392-22340-1-git-send-email-peter.griffin@linaro.org>
- <1409931392-22340-2-git-send-email-peter.griffin@linaro.org>
- <20140905154700.GE24449@saruman.home>
- <20140905155321.GF24449@saruman.home>
- <20140905165520.GA25253@griffinp-ThinkPad-X1-Carbon-2nd>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FUFe+yI/t+r3nyH4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140905165520.GA25253@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH RESEND v5 0/5]  Add EHCI and OHCI drivers for STi SoC's
+Date: Fri,  5 Sep 2014 18:23:44 +0100
+Message-ID: <1409937829-23708-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, arnd@arndb.de
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---FUFe+yI/t+r3nyH4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Fri, Sep 05, 2014 at 05:55:20PM +0100, Peter Griffin wrote:
-> Hi Felipe,
->=20
-> On Fri, 05 Sep 2014, Felipe Balbi wrote:
-> > > > +
-> > > > +	device_for_each_child(&pdev->dev, NULL, st_dwc3_remove_child);
-> > >=20
-> > > same as before, of_platform_depopulate(). I can fix this one myself t=
-his
-> > > time.
->=20
-> Oh sorry, not sure what happened there, thanks for fixing it up:-)
+As part of the RESEND I've rebased this series on top of 3.17-rc3. I believe all
+feedback has been addressed.
 
-no problem, it was small enough
+The series was re-worked from v2 onwards to split out the ehci and ohci parts
+into their own drivers / devices like most other ARM platforms based on
+feedback from Arnd Bergmann (see here http://www.spinics.net/lists/linux-usb/msg111124.html. 
 
-> > it's in my testign/next branch, please make sure it looks alright.
->=20
-> Just checked and it looks good.
+The ehci-platform & ohci-platform have been used as a basis for this in case we
+wish to merge the drivers again in the future.
 
-cool thanks, I'll run some extra build testing and move it to next
-soonish.
+Changes since v4:
+ - Ensure suspend / resume callbacks are wrapped in #ifdef CONFIG_PM_SLEEP as otherwise we
+   will get linker 'unused function' warnings when this option is disabled.
+ - Only declare and reference pm_ops struct if CONFIG_PM_SLEEP is enabled, this saves a few bytes
 
---=20
-balbi
+Changes since v3:
+ - Make reset / power, clocks etc non optional dt options to simplify code
+ - Get rid of non DT boot code left over from *hci-platform drivers
+ - Remove DMA mask code
+ - Remove pre_setup func ptr and configure ahb2st bus convertor in ehci_platform_reset
+ - Unabstract and remove usb-st-common.c
+ - Have one kconfig which enables both ehci-st & ohci-st drivers
 
---FUFe+yI/t+r3nyH4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes since v2:
+ - Based on Arnd Berghman feedback, split out into 2 devices / drivers
+ - Base drivers oh ehci-platform.c & ohci-platform.c with required extensions
+   to allow possible re-merge in the furture.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Changes since v1:
+ - Correct s/OCHI/OHCI/ spelling
+ - Improve kconfig help message
+ - Various formating / spelling nits identified by Lee Jones
+ - Make driver depend on OF & remove node checks in code
+ - Use devm_ioremap_resource
+ - Remove unnecessary header files
 
-iQIcBAEBAgAGBQJUCetKAAoJEIaOsuA1yqREP5wP/1n8vrT8LcwXIdpN0Cb+Y0Xm
-upqsFNc2Rjz6+2XuU6qjlw6UAvdCMrkbknLrl6ctZ+6TsHc8dj5c5lDc00YMlTQT
-v3wFS7txCnmMOyG0xILrlb8x5bxpoXB7P3Rj5MdZx4iPcpTd5/gCo+vQOm8iDASj
-EgUVvy2eu32WPse/TxoNjs/McfiGrOy5kIEQprt52mLJHfw8ot2T5Llo5i3+8Y8W
-JvrGs/aRDWkWxBeAhY9VufzPyT1A5WQ/GIaJo8QRLepDk6G3cYuCJMJMvUjSjQhn
-qaA8wOHnE3+dv7FEboCxHrADKXFMEold1UaYE+0tcfx2U3ewxEwqXSpPAO3BJ8SU
-PDV3uj12iSCY6zvAamseLGVKZjWjMcUKMWENyPaGqLr9J9pHwdo3SqpI+PTeYgkM
-V6VrFlkckM3B+WmNPu6+UD98C/25EoR0Cy3UjoCNMdYr/G9IU/gEz6ZY5kA9mMih
-wdy3Q9T4x9p+lHSVpMIznY/eFTsEz0HePxDI2zC0z90CVCZ3MemDO8e4+YQxY+Fg
-bCuPLafwbQ338CCVbMX6Lm5uk0Xc3trWtw7LAi2ncTIiCTPRO0Q/rgsAUMfzhsnx
-MkZjmnbq9CxkT8n7bzMZB7cJdbbkCH6ULTz5eGRIAx2n/0TuTSs7RUWzNtxfx6Ij
-G30EkQCPYP8B2i9MybXs
-=XG+P
------END PGP SIGNATURE-----
+Peter Griffin (5):
+  usb: host: ehci-st: Add EHCI support for ST STB devices
+  usb: host: ohci-st: Add OHCI driver support for ST STB devices
+  usb: host: ehci-st: Add ehci-st devicetree bindings documentation
+  usb: host: ohci-st: Add ohci-st devicetree bindings documentation
+  MAINTAINERS: Add ehci-st.c and ohci-st.c to ARCH/STI architecture
 
---FUFe+yI/t+r3nyH4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/usb/ehci-st.txt |  39 +++
+ Documentation/devicetree/bindings/usb/ohci-st.txt |  37 +++
+ MAINTAINERS                                       |   2 +
+ drivers/usb/host/Kconfig                          |   8 +
+ drivers/usb/host/Makefile                         |   1 +
+ drivers/usb/host/ehci-st.c                        | 365 ++++++++++++++++++++++
+ drivers/usb/host/ohci-st.c                        | 339 ++++++++++++++++++++
+ drivers/usb/host/usb-st-common.h                  |  31 ++
+ 8 files changed, 822 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ehci-st.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ohci-st.txt
+ create mode 100644 drivers/usb/host/ehci-st.c
+ create mode 100644 drivers/usb/host/ohci-st.c
+ create mode 100644 drivers/usb/host/usb-st-common.h
+
+-- 
+1.9.1
