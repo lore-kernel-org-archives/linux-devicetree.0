@@ -1,168 +1,64 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v3] ARM: dts: qcom: Add initial IFC6540 board device tree
-Date: Fri, 5 Sep 2014 10:20:18 -0500
-Message-ID: <070D3E01-139E-4EC2-928F-31B8CA5E1BD7@codeaurora.org>
-References: <1409763031-16873-1-git-send-email-gdjakov@mm-sol.com> <5409C803.8060007@suse.de>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5409C803.8060007@suse.de>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Cc: Georgi Djakov <gdjakov@mm-sol.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, iivanov@mm-sol.com
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
+Date: Fri, 5 Sep 2014 16:34:57 +0100
+Message-ID: <20140905153457.GA26306@e102568-lin.cambridge.arm.com>
+References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140903173740.GJ1824@e102568-lin.cambridge.arm.com>
+ <20140904160320.GB22354@arm.com>
+ <20140904172909.GA14822@e102568-lin.cambridge.arm.com>
+ <20140905092120.GG13515@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140905092120.GG13515@arm.com>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijv>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 05, 2014 at 10:21:20AM +0100, Will Deacon wrote:
+> On Thu, Sep 04, 2014 at 06:29:10PM +0100, Lorenzo Pieralisi wrote:
+> > On Thu, Sep 04, 2014 at 05:03:20PM +0100, Catalin Marinas wrote:
+> > > On Wed, Sep 03, 2014 at 06:37:40PM +0100, Lorenzo Pieralisi wrote:
+> > > > This patch should be ready to go too, is it ok if I split the series
+> > > > in arm64 arch specific patches (will ask Catalin to pull) and CPUidle ones
+> > > > (inclusive of DT bindings and !!this patch!!) and send two separate pull
+> > > > requests ?
+> > > 
+> > > If Daniel/Rafael don't have any objection, I can take the whole series
+> > > through the arm64 tree (it seems that patches have been already acked by
+> > > Daniel).
+> > 
+> > Thanks a lot Catalin. Since this one is a brand new CPUidle driver and it
+> > follows a different pattern from arm legacy drivers I would like to get
+> > Daniel's ack on this patch too before pushing it. For the records I have
+> > just added two pr_err to signal driver probing error, ultraminor changes
+> > that do not justify a repost.
+> > 
+> > If Samsung guys do not manifest themselves I would drop patch 8 from
+> > the series till it gets tested and its patch dependency queued too.
+> 
+> The last patch also has a dependency, as you mentioned to Daniel. I think
+> we can certainly merge the arm64 parts, and if Daniel doesn't object, then
+> we can take the driver stuff too but leaving the exynos bits out (i.e. drop
+> the last patch).
+> 
+> Anyway, if you could repost with the acks you've collected and rearrange it
+> so the arm64 patches are first in the series, that would be great.
 
-On Sep 5, 2014, at 9:26 AM, Andreas F=E4rber <afaerber@suse.de> wrote:
+I can repost it with the acks and rearrange the patches, but for the
+pull request I have to know what code can be merged, since there are
+some arm64 patches (PSCI and CPUidle arm64 back-end) that are strictly
+tied to the arm64 CPUidle driver, so I *have* to know if the arm64
+CPUidle driver (this patch) can get merged and that requires an ack.
 
-> Hi,
->=20
-> Am 03.09.2014 18:50, schrieb Georgi Djakov:
->> Add basic support for the IFC6540 single-board computer boards, that=
- are
->> based on the APQ8084 SoC. This patch adds the initial device tree an=
-d the
->> neccessary nodes required for enabling the serial port and eMMC.
->>=20
->> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
->> ---
->> Changes since v2:
->> - Squashed all patches into one. (suggested by Kumar Gala)
->>=20
->> Changes since v1:
->> - This time add linux-arm-msm list to the CC.
->> - Include a third patch for enabling the eMMC.
->>=20
->> arch/arm/boot/dts/Makefile                 |    1 +
->> arch/arm/boot/dts/qcom-apq8084-ifc6540.dts |   23 ++++++++++++++++++=
-+++++
->> arch/arm/boot/dts/qcom-apq8084.dtsi        |   23 ++++++++++++++++++=
-+++++
->> 3 files changed, 47 insertions(+)
->> create mode 100644 arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
->>=20
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index b022972..df8453a 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -345,6 +345,7 @@ dtb-$(CONFIG_ARCH_PRIMA2) +=3D prima2-evb.dtb
->> dtb-$(CONFIG_ARCH_QCOM) +=3D \
->> 	qcom-apq8064-ifc6410.dtb \
->> 	qcom-apq8074-dragonboard.dtb \
->> +	qcom-apq8084-ifc6540.dtb \
->> 	qcom-apq8084-mtp.dtb \
->> 	qcom-msm8660-surf.dtb \
->> 	qcom-msm8960-cdp.dtb
->> diff --git a/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts b/arch/arm/b=
-oot/dts/qcom-apq8084-ifc6540.dts
->> new file mode 100644
->> index 0000000..c9ff108
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/qcom-apq8084-ifc6540.dts
->> @@ -0,0 +1,23 @@
->> +#include "qcom-apq8084.dtsi"
->> +
->> +/ {
->> +	model =3D "Qualcomm APQ8084/IFC6540";
->> +	compatible =3D "qcom,apq8084-ifc6540", "qcom,apq8084";
->> +
->> +	soc {
->> +		serial@f995e000 {
->> +			status =3D "okay";
->> +		};
->> +
->> +		sdhci@f9824900 {
->> +			bus-width =3D <8>;
->> +			non-removable;
->> +			status =3D "okay";
->> +		};
->> +
->> +		sdhci@f98a4900 {
->> +			cd-gpios =3D <&tlmm 122 GPIO_ACTIVE_LOW>;
->> +			bus-width =3D <4>;
->> +		};
->> +	};
->> +};
->> diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts=
-/qcom-apq8084.dtsi
->> index 21d01e5..1f130bc 100644
->> --- a/arch/arm/boot/dts/qcom-apq8084.dtsi
->> +++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
->> @@ -3,6 +3,7 @@
->> #include "skeleton.dtsi"
->>=20
->> #include <dt-bindings/clock/qcom,gcc-apq8084.h>
->> +#include <dt-bindings/gpio/gpio.h>
->>=20
->> / {
->> 	model =3D "Qualcomm APQ 8084";
->> @@ -203,5 +204,27 @@
->> 			clock-names =3D "core", "iface";
->> 			status =3D "disabled";
->> 		};
->> +
->> +		sdhci@f9824900 {
->> +			compatible =3D "qcom,sdhci-msm-v4";
->> +			reg =3D <0xf9824900 0x11c>, <0xf9824000 0x800>;
->> +			reg-names =3D "hc_mem", "core_mem";
->> +			interrupts =3D <0 123 0>, <0 138 0>;
->=20
-> I see that you've used GPIO_ACTIVE_* above. Is the trailing zero here
-> possibly IRQ_TYPE_NONE?
->=20
->> +			interrupt-names =3D "hc_irq", "pwr_irq";
->> +			clocks =3D <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
->> +			clock-names =3D "core", "iface";
->> +			status =3D "disabled";
->> +		};
->> +
->> +		sdhci@f98a4900 {
->> +			compatible =3D "qcom,sdhci-msm-v4";
->> +			reg =3D <0xf98a4900 0x11c>, <0xf98a4000 0x800>;
->> +			reg-names =3D "hc_mem", "core_mem";
->> +			interrupts =3D <0 125 0>, <0 221 0>;
->> +			interrupt-names =3D "hc_irq", "pwr_irq";
->> +			clocks =3D <&gcc GCC_SDCC2_APPS_CLK>, <&gcc GCC_SDCC2_AHB_CLK>;
->> +			clock-names =3D "core", "iface";
->> +			status =3D "disabled";
->> +		};
->=20
-> If you assign labels to these two nodes, you can reference them in th=
-e
-> .dts as &labelname {...};. Same for the uart node. That avoids
-> duplicating the hierarchy, detects spelling mistakes at compile time =
-and
-> reduces indentation. Cf. the recent ifc6410 patch.
+If I do not hear from Samsung guys I will drop patch 8.
 
-Got no issues with introducing the labels, but I=92d like to keep the h=
-ierarchy in the .dts file.
+I will wait till Monday (ie -rc4) and repost, I hope that's acceptable.
 
-> Also, is sdhci the best node name here? Usually it's not supposed to
-> reflect the exact interface used (e.g., usb vs. ehci).
+Thank you !
+Lorenzo
 
-probably just use sdhc
-
->=20
->> 	};
->> };
->=20
-> Otherwise looks good.
->=20
-> Regards,
-> Andreas
->=20
-> --=20
-> SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-> GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FC=
-rnberg
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-m=
-sm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
---=20
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
-ed by The Linux Foundation
