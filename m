@@ -1,60 +1,138 @@
-From: Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH v2 3/4] arm64, thunder: Document devicetree bindings for
- Cavium Thunder SoC
-Date: Fri, 5 Sep 2014 11:32:22 +0200
-Message-ID: <20140905093222.GS4703@rric.localhost>
-References: <1409903205-2762-1-git-send-email-rric@kernel.org>
- <1409903205-2762-4-git-send-email-rric@kernel.org>
- <20140905084200.GE13515@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140905084200.GE13515@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] Disabling OF functions that use sysfs if CONFIG_SYSFS disabled
+Date: Fri,  5 Sep 2014 02:32:44 -0700
+Message-ID: <1409909564-4243-1-git-send-email-gaurav.minocha.os@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05.09.14 09:42:00, Will Deacon wrote:
-> On Fri, Sep 05, 2014 at 08:46:44AM +0100, Robert Richter wrote:
-> > From: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
-> > 
-> > This patch adds documentation for the devicetree bindings used by the
-> > DT files of Cavium Thunder SoC platforms.
-> > 
-> > Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
-> > Signed-off-by: Robert Richter <rrichter@cavium.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cavium-thunder.txt | 10 ++++++++++
-> >  Documentation/devicetree/bindings/arm/cpus.txt           |  1 +
-> >  2 files changed, 11 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder.txt b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> > new file mode 100644
-> > index 000000000000..6f63a5866902
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> > @@ -0,0 +1,10 @@
-> > +Cavium Thunder platform device tree bindings
-> > +--------------------------------------------
-> > +
-> > +Boards with Cavium's Thunder SoC shall have following properties.
-> > +
-> > +Root Node
-> > +---------
-> > +Required root node properties:
-> > +
-> > +  - compatible = "cavium,thunder-88xx";
-> 
-> Is this file necessary? We don't have one for xgene afaict.
+This patch is to the fix the recent runtime bug in kernel
+reported by <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-Hmm, looking at Documentation/devicetree/bindings/arm/calxeda.txt
-there is something similar.
+Mail Subject: [OF test] BUG: unable to handle kernel NULL
+ pointer dereference at 00000038
 
-I am fine with both, keeping or removing it.
+Tested on x86 and arm architecture
 
-Would leave this to the DT maintainers.
+Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/of/base.c    |   29 +++++++++++++++++++++++++++++
+ drivers/of/dynamic.c |    7 +++++++
+ 2 files changed, 36 insertions(+)
 
--Robert
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d8574ad..1d4d74e 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -131,6 +131,7 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
+ 	return name;
+ }
+ 
++#if defined(CONFIG_SYSFS)
+ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ {
+ 	int rc;
+@@ -151,7 +152,14 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ 	WARN(rc, "error adding attribute %s to node %s\n", pp->name, np->full_name);
+ 	return rc;
+ }
++#else
++int __of_add_property_sysfs(struct device_node *np, struct property *pp)
++{
++	return 0;
++}
++#endif
+ 
++#if defined(CONFIG_SYSFS)
+ int __of_attach_node_sysfs(struct device_node *np)
+ {
+ 	const char *name;
+@@ -181,6 +189,12 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 
+ 	return 0;
+ }
++#else
++int __of_attach_node_sysfs(struct device_node *np)
++{
++	return 0;
++}
++#endif
+ 
+ static int __init of_init(void)
+ {
+@@ -1711,12 +1725,19 @@ int __of_remove_property(struct device_node *np, struct property *prop)
+ 	return 0;
+ }
+ 
++#if defined(CONFIG_SYSFS)
+ void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
+ {
+ 	/* at early boot, bail here and defer setup to of_init() */
+ 	if (of_kset && of_node_is_attached(np))
+ 		sysfs_remove_bin_file(&np->kobj, &prop->attr);
+ }
++#else
++void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
++{
++
++}
++#endif
+ 
+ /**
+  * of_remove_property - Remove a property from a node.
+@@ -1774,6 +1795,7 @@ int __of_update_property(struct device_node *np, struct property *newprop,
+ 	return 0;
+ }
+ 
++#if defined(CONFIG_SYSFS)
+ void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
+ 		struct property *oldprop)
+ {
+@@ -1785,6 +1807,13 @@ void __of_update_property_sysfs(struct device_node *np, struct property *newprop
+ 		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+ 	__of_add_property_sysfs(np, newprop);
+ }
++#else
++void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
++		struct property *oldprop)
++{
++
++}
++#endif
+ 
+ /*
+  * of_update_property - Update a property in a node, if the property does
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 54fecc4..c3d9eae 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -41,6 +41,7 @@ void of_node_put(struct device_node *node)
+ }
+ EXPORT_SYMBOL(of_node_put);
+ 
++#if defined(CONFIG_SYSFS)
+ void __of_detach_node_sysfs(struct device_node *np)
+ {
+ 	struct property *pp;
+@@ -59,6 +60,12 @@ void __of_detach_node_sysfs(struct device_node *np)
+ 	/* finally remove the kobj_init ref */
+ 	of_node_put(np);
+ }
++#else
++void __of_detach_node_sysfs(struct device_node *np)
++{
++
++}
++#endif
+ 
+ static BLOCKING_NOTIFIER_HEAD(of_reconfig_chain);
+ 
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
