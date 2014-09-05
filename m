@@ -1,124 +1,83 @@
-Return-Path: <zhang.lyra@gmail.com>
+Return-Path: <khilman@kernel.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v9 5/8] drivers: cpuidle: implement DT based idle states infrastructure
+References: <1409938498-17984-1-git-send-email-lorenzo.pieralisi@arm.com>
+	<1409938498-17984-6-git-send-email-lorenzo.pieralisi@arm.com>
+Date: Fri, 05 Sep 2014 13:00:52 -0700
+In-Reply-To: <1409938498-17984-6-git-send-email-lorenzo.pieralisi@arm.com>
+	(Lorenzo Pieralisi's message of "Fri, 5 Sep 2014 18:34:54 +0100")
+Message-ID: <7hlhpxygzv.fsf@paris.lan>
 MIME-Version: 1.0
-In-Reply-To: <3268049.TolhrmBCZA@wuerfel>
-References: <1411992293-7729-1-git-send-email-zhang.lyra@gmail.com>
-	<1411992293-7729-7-git-send-email-zhang.lyra@gmail.com>
-	<3268049.TolhrmBCZA@wuerfel>
-Date: Tue, 30 Sep 2014 15:05:46 +0800
-Message-ID: <CAAfSe-uBKJHef1bQ5H1dKqhtm998Hy=CwaAqCvrxa7JaoqL=DQ@mail.gmail.com>
-Subject: Re: [PATCH 6/6] Documentation: Add entry for Spreadtrum's Shark64 SoC
-From: Lyra Zhang <zhang.lyra@gmail.com>
-Content-Type: multipart/alternative; boundary=e89a8f502e74329eb2050443033b
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: catalin.marinas@arm.com, gregkh@linuxfoundation.org, ijc+devicetree@hellion.org.uk, jslaby@suse.cz, galak@codeaurora.org, broonie@linaro.org, mark.rutland@arm.com, m-karicheri2@ti.com, pawel.moll@arm.com, artagnon@gmail.com, rrichter@cavium.com, robh+dt@kernel.org, will.deacon@arm.com, Orson Zhai <orsonzhai@gmail.com>, geng.ren@spreadtrum.com, "zhizhou.zhang" <zhizhou.zhang@spreadtrum.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
+Content-Type: text/plain
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Paul Walmsley <paul@pwsan.com>, Chander Kashyap <k.chander@samsung.com>, Geoff Levand <geoff@infradead.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Ashwin Chaugule <ashwin.chau gule@linaro.org>, Lina Iyer <lina.iyer@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
---e89a8f502e74329eb2050443033b
-Content-Type: text/plain; charset=UTF-8
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
 
-Hi, Arnd
-
-Thank you very much for your review in detail so carefully. I'll address
-these changes which you mentioned in this patch set in V2, but the days
-from tomorrow to 10.7 are Chinese holidays, I'm going to send PATCHv2 a few
-days later.
-
-I'm also sorry that make you confused about my name, I'll solve this
-problem in the next submit.
-
-Thanks,
-Chunyan
-
-2014-09-29 21:59 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-
-> On Monday 29 September 2014 20:04:53 zhang.lyra@gmail.com wrote:
-> > From: "chunyan.zhang" <chunyan.zhang@spreadtrum.com>
-> >
-> > Adds a devicetree binding documentation for Spreadtrum's Shark64 SoC.
-> >
-> > Signed-off-by: chunyan.zhang <chunyan.zhang@spreadtrum.com>
+> On most common ARM systems, the low-power states a CPU can be put into are
+> not discoverable in HW and require device tree bindings to describe
+> power down suspend operations and idle states parameters.
 >
-> One more thing: The email addresses look wrong, please use the form in
-> which you normally write the names, such as
+> In order to enable DT based idle states and configure idle drivers, this
+> patch implements the bulk infrastructure required to parse the device tree
+> idle states bindings and initialize the corresponding CPUidle driver states
+> data.
 >
-> Signed-off-by: Zhang Chunyan <chunyan.zhang@spreadtrum.com>
+> The parsing API accepts a start index that defines the first idle state
+> that should be initialized by the parsing code in order to give new and
+> legacy driver flexibility over which states should be parsed using the
+> new DT mechanism.
 >
-> You can set the user name that git will add using the
-> 'git config --global user.name ...'.
+> The idle states node(s) is obtained from the phandle list of the first cpu
+> in the driver cpumask;  the kernel checks that the idle state node phandle
+> is the same for all CPUs in the driver cpumask before declaring the idle state
+> as valid and start parsing its content.
 >
-> Also, I notice that the email from which the patch is sent does not
-> match the last 'Signed-off-by' line. If Chunyan and Lyra are both
-> your names, better pick one that you use for both the email and the
-> signoff. If you are Lyra and are posting a patch from Chunyan, please
-> add your own line below hers, like
+> The idle state enter function pointer is initialized through DT match
+> structures passed in by the CPUidle driver, so that ARM legacy code can
+> cope with platform specific idle entry method based on compatible
+> string matching and the code used to initialize the enter function pointer
+> can be moved to the DT generic layer.
 >
-> Signed-off-by: Zhang Chunyan <chunyan.zhang@spreadtrum.com>
-> Signed-off-by: Zhang Lyra <zhang.lyra@gmail.com>
->
-> so that you include everybody who was involved in sending the
-> patch, but have your own list last.
->
->         Arnd
->
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
---e89a8f502e74329eb2050443033b
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-<div dir=3D"ltr">Hi, <span><font color=3D"#888888">Arnd<br><br></font></spa=
-n><span><font color=3D"#888888">Thank
- you very much for your review in detail so carefully. I&#39;ll address=20
-these changes which you mentioned in this patch set in V2, but the days=20
-from tomorrow to 10.7 are Chinese holidays, I&#39;m going to send PATCHv2 a=
-=20
-few days later.<br></font></span><div><span><font color=3D"#888888"><br></f=
-ont></span></div><div><span><font color=3D"#888888">I&#39;m also sorry that=
- make you confused about my name, I&#39;ll solve this problem in the next s=
-ubmit.<br><br></font></span></div><span><font color=3D"#888888">Thanks,<br>=
-Chunyan</font></span></div><div class=3D"gmail_extra"><br><div class=3D"gma=
-il_quote">2014-09-29 21:59 GMT+08:00 Arnd Bergmann <span dir=3D"ltr">&lt;<a=
- href=3D"mailto:arnd@arndb.de" target=3D"_blank">arnd@arndb.de</a>&gt;</spa=
-n>:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-=
-left:1px #ccc solid;padding-left:1ex"><span class=3D"">On Monday 29 Septemb=
-er 2014 20:04:53 <a href=3D"mailto:zhang.lyra@gmail.com">zhang.lyra@gmail.c=
-om</a> wrote:<br>
-</span><span class=3D"">&gt; From: &quot;chunyan.zhang&quot; &lt;<a href=3D=
-"mailto:chunyan.zhang@spreadtrum.com">chunyan.zhang@spreadtrum.com</a>&gt;<=
-br>
-&gt;<br>
-&gt; Adds a devicetree binding documentation for Spreadtrum&#39;s Shark64 S=
-oC.<br>
-&gt;<br>
-&gt; Signed-off-by: chunyan.zhang &lt;<a href=3D"mailto:chunyan.zhang@sprea=
-dtrum.com">chunyan.zhang@spreadtrum.com</a>&gt;<br>
-<br>
-</span>One more thing: The email addresses look wrong, please use the form =
-in<br>
-which you normally write the names, such as<br>
-<br>
-Signed-off-by: Zhang Chunyan &lt;<a href=3D"mailto:chunyan.zhang@spreadtrum=
-.com">chunyan.zhang@spreadtrum.com</a>&gt;<br>
-<br>
-You can set the user name that git will add using the<br>
-&#39;git config --global <a href=3D"http://user.name" target=3D"_blank">use=
-r.name</a> ...&#39;.<br>
-<br>
-Also, I notice that the email from which the patch is sent does not<br>
-match the last &#39;Signed-off-by&#39; line. If Chunyan and Lyra are both<b=
-r>
-your names, better pick one that you use for both the email and the<br>
-signoff. If you are Lyra and are posting a patch from Chunyan, please<br>
-add your own line below hers, like<br>
-<br>
-Signed-off-by: Zhang Chunyan &lt;<a href=3D"mailto:chunyan.zhang@spreadtrum=
-.com">chunyan.zhang@spreadtrum.com</a>&gt;<br>
-Signed-off-by: Zhang Lyra &lt;<a href=3D"mailto:zhang.lyra@gmail.com">zhang=
-.lyra@gmail.com</a>&gt;<br>
-<br>
-so that you include everybody who was involved in sending the<br>
-patch, but have your own list last.<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 Arnd<br>
-</font></span></blockquote></div><br></div>
+> +	idle_state->flags = CPUIDLE_FLAG_TIME_VALID;
+> +	if (of_property_read_bool(state_node, "local-timer-stop"))
+> +		idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> +	/*
+> +	 * TODO:
+> +	 *	replace with kstrdup and pointer assignment when name
+> +	 *	and desc become string pointers
+> +	 */
+> +	strncpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN - 1);
+> +	strncpy(idle_state->desc, state_node->name, CPUIDLE_DESC_LEN - 1);
 
---e89a8f502e74329eb2050443033b--
+This is a very minor concern, and shouldn't hold back this series,
+but...
+
+I was playing with this series in order to test out the qcom cpuidle
+driver from Lina, and noticed that the state name and descriptions were
+not terribly helpful:
+
+/sys/devices/system/cpu/cpu0/cpuidle # cat state?/name
+cpu-idle-state-
+cpu-idle-state-
+/sys/devices/system/cpu/cpu0/cpuidle # cat state?/desc
+cpu-idle-state-0
+cpu-idle-state-1
+
+Turns out these strings come from the node name itself, and truncated in
+the case of state->name, but this can be fixed in the DTS itself (c.f.
+reply to Lina's driver.)
+
+However, seeing that the node name is used to populate both the
+state->name and ->, made me wonder if there should better way to set the
+state->desc field to a more useful string.  Tools like powertop actually
+use that field and it can be quite useful.
+
+Kevin
