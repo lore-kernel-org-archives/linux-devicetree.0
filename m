@@ -1,72 +1,41 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH RESEND v5 0/5]  Add EHCI and OHCI drivers for STi SoC's
-Date: Fri,  5 Sep 2014 18:23:44 +0100
-Message-ID: <1409937829-23708-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, arnd@arndb.de
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND v5 5/5] MAINTAINERS: Add ehci-st.c and ohci-st.c to ARCH/STI architecture
+Date: Fri,  5 Sep 2014 18:23:49 +0100
+Message-ID: <1409937829-23708-6-git-send-email-peter.griffin@linaro.org>
+References: <1409937829-23708-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409937829-23708-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds the ehci-st.c and ohci-st.c files for the usb 2.0
+& usb1.1 host controller drivers found on stih41x and stih4xx STMicroelectronics
+SoC's into the STI arch section of the maintainers file.
 
-As part of the RESEND I've rebased this series on top of 3.17-rc3. I believe all
-feedback has been addressed.
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The series was re-worked from v2 onwards to split out the ehci and ohci parts
-into their own drivers / devices like most other ARM platforms based on
-feedback from Arnd Bergmann (see here http://www.spinics.net/lists/linux-usb/msg111124.html. 
-
-The ehci-platform & ohci-platform have been used as a basis for this in case we
-wish to merge the drivers again in the future.
-
-Changes since v4:
- - Ensure suspend / resume callbacks are wrapped in #ifdef CONFIG_PM_SLEEP as otherwise we
-   will get linker 'unused function' warnings when this option is disabled.
- - Only declare and reference pm_ops struct if CONFIG_PM_SLEEP is enabled, this saves a few bytes
-
-Changes since v3:
- - Make reset / power, clocks etc non optional dt options to simplify code
- - Get rid of non DT boot code left over from *hci-platform drivers
- - Remove DMA mask code
- - Remove pre_setup func ptr and configure ahb2st bus convertor in ehci_platform_reset
- - Unabstract and remove usb-st-common.c
- - Have one kconfig which enables both ehci-st & ohci-st drivers
-
-Changes since v2:
- - Based on Arnd Berghman feedback, split out into 2 devices / drivers
- - Base drivers oh ehci-platform.c & ohci-platform.c with required extensions
-   to allow possible re-merge in the furture.
-
-Changes since v1:
- - Correct s/OCHI/OHCI/ spelling
- - Improve kconfig help message
- - Various formating / spelling nits identified by Lee Jones
- - Make driver depend on OF & remove node checks in code
- - Use devm_ioremap_resource
- - Remove unnecessary header files
-
-Peter Griffin (5):
-  usb: host: ehci-st: Add EHCI support for ST STB devices
-  usb: host: ohci-st: Add OHCI driver support for ST STB devices
-  usb: host: ehci-st: Add ehci-st devicetree bindings documentation
-  usb: host: ohci-st: Add ohci-st devicetree bindings documentation
-  MAINTAINERS: Add ehci-st.c and ohci-st.c to ARCH/STI architecture
-
- Documentation/devicetree/bindings/usb/ehci-st.txt |  39 +++
- Documentation/devicetree/bindings/usb/ohci-st.txt |  37 +++
- MAINTAINERS                                       |   2 +
- drivers/usb/host/Kconfig                          |   8 +
- drivers/usb/host/Makefile                         |   1 +
- drivers/usb/host/ehci-st.c                        | 365 ++++++++++++++++++++++
- drivers/usb/host/ohci-st.c                        | 339 ++++++++++++++++++++
- drivers/usb/host/usb-st-common.h                  |  31 ++
- 8 files changed, 822 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ehci-st.txt
- create mode 100644 Documentation/devicetree/bindings/usb/ohci-st.txt
- create mode 100644 drivers/usb/host/ehci-st.c
- create mode 100644 drivers/usb/host/ohci-st.c
- create mode 100644 drivers/usb/host/usb-st-common.h
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cf24bb5..5abd281 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1398,6 +1398,8 @@ F:	drivers/media/rc/st_rc.c
+ F:	drivers/i2c/busses/i2c-st.c
+ F:	drivers/tty/serial/st-asc.c
+ F:	drivers/mmc/host/sdhci-st.c
++F:	drivers/usb/host/ehci-st.c
++F:	drivers/usb/host/ohci-st.c
+ 
+ ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+ M:	Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
