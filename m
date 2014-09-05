@@ -1,55 +1,40 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] arm64, thunder: Document devicetree bindings for
- Cavium Thunder SoC
-Date: Fri, 5 Sep 2014 09:42:00 +0100
-Message-ID: <20140905084200.GE13515@arm.com>
-References: <1409903205-2762-1-git-send-email-rric@kernel.org>
- <1409903205-2762-4-git-send-email-rric@kernel.org>
+From: Anders Berg <anders.berg@avagotech.com>
+Subject: Re: [PATCH 1/2] gpio: Add driver for AXM55xx SSP chip selects
+Date: Fri, 5 Sep 2014 11:05:37 +0200
+Message-ID: <CAE0=X_3QO5p26M=FS7joKS3zD6LAM_moFutHNcyE1-CjauL3Rw@mail.gmail.com>
+References: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com>
+	<1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
+	<CACRpkdby4H-fivNn_kG2uL0EjsCGAc+t6OyFi0+VcNGf2Z9NQA@mail.gmail.com>
+	<20140904170630.GL29327@sirena.org.uk>
+	<CACRpkdZEoBan=Lqr1T-iY41U9NfMA_MCLX3LA=juw7X4pmRvSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409903205-2762-4-git-send-email-rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZEoBan=Lqr1T-iY41U9NfMA_MCLX3LA=juw7X4pmRvSQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 05, 2014 at 08:46:44AM +0100, Robert Richter wrote:
-> From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> 
-> This patch adds documentation for the devicetree bindings used by the
-> DT files of Cavium Thunder SoC platforms.
-> 
-> Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/cavium-thunder.txt | 10 ++++++++++
->  Documentation/devicetree/bindings/arm/cpus.txt           |  1 +
->  2 files changed, 11 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder.txt b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> new file mode 100644
-> index 000000000000..6f63a5866902
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> @@ -0,0 +1,10 @@
-> +Cavium Thunder platform device tree bindings
-> +--------------------------------------------
-> +
-> +Boards with Cavium's Thunder SoC shall have following properties.
-> +
-> +Root Node
-> +---------
-> +Required root node properties:
-> +
-> +  - compatible = "cavium,thunder-88xx";
+> On Thu, Sep 4, 2014 at 7:06 PM, Mark Brown <broonie@kernel.org> wrote:
+>> On Thu, Sep 04, 2014 at 07:04:44PM +0200, Linus Walleij wrote:
+>>> I need an ACK from Mark Brown on this before I apply.
+>>> The driver seems to do what it should, but I need Mark to
+>>> be OK with exporting the CS signals from an SSP/SPI block
+>>> to be exposed to Linux as GPIOs.
+>>>
+>>> (Top-posting and quoting patch verbatim so Mark gets it.)
+>>
+>> I don't see any sort of reasoning for this?
+>
+> Maybe there was some earlier, but this is an excellent opportunity
+> to repeat it... So Anders: why do you want to do this?
+>
 
-Is this file necessary? We don't have one for xgene afaict.
+Well, the problem with adding this to the spi-pl022 driver (as a
+vendor specific extension) is that this IP block unfortunately isn't
+distinguishable from the standard ARM PL022 implementation (same
+values in the PrimeCell identification registers). That's why I went
+down the GPIO path...
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+/Anders
