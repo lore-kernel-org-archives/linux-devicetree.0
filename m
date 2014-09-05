@@ -1,58 +1,154 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Fri, 05 Sep 2014 14:26:14 +0200
-Message-ID: <3495079.hWGRuSPgx7@wuerfel>
-References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com> <1409919274-13419-2-git-send-email-svarbanov@mm-sol.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Disabling OF functions that use sysfs if CONFIG_SYSFS disabled
+Date: Fri, 5 Sep 2014 07:31:57 -0500
+Message-ID: <CAL_JsqJ_ssoDVK6LtVuVPwqEVZir_YCRi9KkB49MDQTSejstZg@mail.gmail.com>
+References: <1409909564-4243-1-git-send-email-gaurav.minocha.os@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1409919274-13419-2-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collins>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409909564-4243-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 September 2014 15:14:33 Stanimir Varbanov wrote:
-> +       VADC_CHAN(LR_MUX1_BAT_THERM, 0)                 /* 0x30 */
-> +       VADC_CHAN(LR_MUX2_BAT_ID, 0)
-> +       VADC_CHAN(LR_MUX3_XO_THERM, 0)
-> +       VADC_CHAN(LR_MUX4_AMUX_THM1, 0)
-> +       VADC_CHAN(LR_MUX5_AMUX_THM2, 0)
-> +       VADC_CHAN(LR_MUX6_AMUX_THM3, 0)
-> +       VADC_CHAN(LR_MUX7_HW_ID, 0)
-> +       VADC_CHAN(LR_MUX8_AMUX_THM4, 0)
-> +       VADC_CHAN(LR_MUX9_AMUX_THM5, 0)
-> +       VADC_CHAN(AMUX_PU1, 0)
-> +       VADC_CHAN(AMUX_PU2, 0)
-> +       VADC_CHAN(LR_MUX3_BUF_XO_THERM_BUF, 0)          /* 0x3c */
+On Fri, Sep 5, 2014 at 4:32 AM, Gaurav Minocha
+<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch is to the fix the recent runtime bug in kernel
+> reported by <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>
+> Mail Subject: [OF test] BUG: unable to handle kernel NULL
+>  pointer dereference at 00000038
+>
+> Tested on x86 and arm architecture
+>
+> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/of/base.c    |   29 +++++++++++++++++++++++++++++
+>  drivers/of/dynamic.c |    7 +++++++
+>  2 files changed, 36 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d8574ad..1d4d74e 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -131,6 +131,7 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
+>         return name;
+>  }
+>
+> +#if defined(CONFIG_SYSFS)
+>  int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+>  {
+>         int rc;
+
+Instead of ifdef, you can do:
+
+if (!IS_ENABLED(CONFIG_SYSFS)
+   return 0;
+
+> @@ -151,7 +152,14 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+>         WARN(rc, "error adding attribute %s to node %s\n", pp->name, np->full_name);
+>         return rc;
+>  }
+> +#else
+> +int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+> +{
+> +       return 0;
+> +}
+> +#endif
+>
+> +#if defined(CONFIG_SYSFS)
+>  int __of_attach_node_sysfs(struct device_node *np)
+>  {
+>         const char *name;
+> @@ -181,6 +189,12 @@ int __of_attach_node_sysfs(struct device_node *np)
+>
+>         return 0;
+>  }
+> +#else
+> +int __of_attach_node_sysfs(struct device_node *np)
+> +{
+> +       return 0;
+> +}
+> +#endif
+>
+>  static int __init of_init(void)
+>  {
+> @@ -1711,12 +1725,19 @@ int __of_remove_property(struct device_node *np, struct property *prop)
+>         return 0;
+>  }
+>
+> +#if defined(CONFIG_SYSFS)
+>  void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
+>  {
+>         /* at early boot, bail here and defer setup to of_init() */
+>         if (of_kset && of_node_is_attached(np))
+>                 sysfs_remove_bin_file(&np->kobj, &prop->attr);
+>  }
+> +#else
+> +void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
+> +{
 > +
-> +       VADC_CHAN(LR_MUX1_PU1_BAT_THERM, 0)             /* 0x70 */
-> +       VADC_CHAN(LR_MUX2_PU1_BAT_ID, 0)
-> +       VADC_CHAN(LR_MUX3_PU1_XO_THERM, 0)
-> +       VADC_CHAN(LR_MUX4_PU1_AMUX_THM1, 0)
-> +       VADC_CHAN(LR_MUX5_PU1_AMUX_THM2, 0)
-> +       VADC_CHAN(LR_MUX6_PU1_AMUX_THM3, 0)
-> +       VADC_CHAN(LR_MUX7_PU1_AMUX_HW_ID, 0)
-> +       VADC_CHAN(LR_MUX8_PU1_AMUX_THM4, 0)
-> +       VADC_CHAN(LR_MUX9_PU1_AMUX_THM5, 0)
-> +       VADC_CHAN(LR_MUX10_PU1_AMUX_USB_ID, 0)          /* 0x79 */
-> +       VADC_CHAN(LR_MUX3_BUF_PU1_XO_THERM_BUF, 0)      /* 0x7c */
-> 
-
-These numbers all look hardware specific, so why put macros into the
-device tree rather than using them directly?
-
-If you want to make up your own macro namespace, I would suggest
-using consecutive numbers and turning the above into
-
-	...
-	[LR_MUX3_BUF_XO_THERM_BUF] = VADC_CHAN(0x3c, 0),
-	[LR_MUX1_PU1_BAT_THERM]    = VADC_CHAN(0x70, 0),
-	[LR_MUX1_PU1_BAT_ID]       = VADC_CHAN(0x71, 0),
-	...
-
-but I don't see that really improving the DT, since you then
-need to look up the values in the header rather than the data sheet.
-
-	Arnd
+> +}
+> +#endif
+>
+>  /**
+>   * of_remove_property - Remove a property from a node.
+> @@ -1774,6 +1795,7 @@ int __of_update_property(struct device_node *np, struct property *newprop,
+>         return 0;
+>  }
+>
+> +#if defined(CONFIG_SYSFS)
+>  void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
+>                 struct property *oldprop)
+>  {
+> @@ -1785,6 +1807,13 @@ void __of_update_property_sysfs(struct device_node *np, struct property *newprop
+>                 sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+>         __of_add_property_sysfs(np, newprop);
+>  }
+> +#else
+> +void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
+> +               struct property *oldprop)
+> +{
+> +
+> +}
+> +#endif
+>
+>  /*
+>   * of_update_property - Update a property in a node, if the property does
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index 54fecc4..c3d9eae 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -41,6 +41,7 @@ void of_node_put(struct device_node *node)
+>  }
+>  EXPORT_SYMBOL(of_node_put);
+>
+> +#if defined(CONFIG_SYSFS)
+>  void __of_detach_node_sysfs(struct device_node *np)
+>  {
+>         struct property *pp;
+> @@ -59,6 +60,12 @@ void __of_detach_node_sysfs(struct device_node *np)
+>         /* finally remove the kobj_init ref */
+>         of_node_put(np);
+>  }
+> +#else
+> +void __of_detach_node_sysfs(struct device_node *np)
+> +{
+> +
+> +}
+> +#endif
+>
+>  static BLOCKING_NOTIFIER_HEAD(of_reconfig_chain);
+>
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
