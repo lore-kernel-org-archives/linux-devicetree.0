@@ -1,139 +1,42 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: [PATCH v2 07/16] irqchip: mips-gic: Implement irq_set_type callback
-Date: Fri,  5 Sep 2014 10:30:09 -0700
-Message-ID: <1409938218-9026-8-git-send-email-abrestic@chromium.org>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 09/16] irqchip: mips-gic: Fix gic_set_affinity() return value
+Date: Fri,  5 Sep 2014 10:30:11 -0700
+Message-ID: <1409938218-9026-10-git-send-email-abrestic@chromium.org>
 References: <1409938218-9026-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1409938218-9026-1-git-send-email-abrestic@chromium.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Bresticker <abrestic@chromium.org>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409938218-9026-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffrey Deans <jeffrey.deans-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Markos Chandras <markos.chandras-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Implement an irq_set_type callback for the GIC which is used to set
-the polarity and trigger type of GIC interrupts.
+If the online CPU check in gic_set_affinity() fails, return a proper
+errno value instead of -1.
 
-Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-Changes from v1:
- - fixed polarity setting for edge-triggered interrupts
+No changes from v1.
 ---
- arch/mips/include/asm/gic.h    |  9 +++++++
- drivers/irqchip/irq-mips-gic.c | 53 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 62 insertions(+)
+ drivers/irqchip/irq-mips-gic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/gic.h b/arch/mips/include/asm/gic.h
-index d7699cf..3beb4eb 100644
---- a/arch/mips/include/asm/gic.h
-+++ b/arch/mips/include/asm/gic.h
-@@ -23,6 +23,8 @@
- #define GIC_POL_NEG			0
- #define GIC_TRIG_EDGE			1
- #define GIC_TRIG_LEVEL			0
-+#define GIC_TRIG_DUAL_ENABLE		1
-+#define GIC_TRIG_DUAL_DISABLE		0
- 
- #define MSK(n) ((1 << (n)) - 1)
- #define REG32(addr)		(*(volatile unsigned int *) (addr))
-@@ -179,6 +181,13 @@
- 		GIC_INTR_OFS(intr)), (1 << GIC_INTR_BIT(intr)), \
- 		(trig) << GIC_INTR_BIT(intr))
- 
-+/* Dual edge triggering : Reset Value is always 0 */
-+#define GIC_SH_SET_DUAL_OFS		0x0200
-+#define GIC_SET_DUAL(intr, dual) \
-+	GICBIS(GIC_REG_ADDR(SHARED, GIC_SH_SET_DUAL_OFS + \
-+		GIC_INTR_OFS(intr)), (1 << GIC_INTR_BIT(intr)), \
-+		(dual) << GIC_INTR_BIT(intr))
-+
- /* Mask manipulation */
- #define GIC_SH_SMASK_OFS		0x0380
- #define GIC_SET_INTR_MASK(intr) \
 diff --git a/drivers/irqchip/irq-mips-gic.c b/drivers/irqchip/irq-mips-gic.c
-index 9e9d8b9..f29bb4e 100644
+index 0549768..c0ff749 100644
 --- a/drivers/irqchip/irq-mips-gic.c
 +++ b/drivers/irqchip/irq-mips-gic.c
-@@ -44,6 +44,8 @@ static struct gic_pcpu_mask pcpu_masks[NR_CPUS];
- static struct gic_pending_regs pending_regs[NR_CPUS];
- static struct gic_intrmask_regs intrmask_regs[NR_CPUS];
+@@ -316,7 +316,7 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *cpumask,
  
-+static struct irq_chip gic_irq_controller;
-+
- #if defined(CONFIG_CSRC_GIC) || defined(CONFIG_CEVT_GIC)
- cycle_t gic_read_count(void)
- {
-@@ -237,6 +239,56 @@ static void gic_unmask_irq(struct irq_data *d)
- 	GIC_SET_INTR_MASK(d->irq - gic_irq_base);
- }
+ 	cpumask_and(&tmp, cpumask, cpu_online_mask);
+ 	if (cpus_empty(tmp))
+-		return -1;
++		return -EINVAL;
  
-+static int gic_set_type(struct irq_data *d, unsigned int type)
-+{
-+	unsigned int irq = d->irq - gic_irq_base;
-+	bool is_edge;
-+
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_FALLING:
-+		GIC_SET_POLARITY(irq, GIC_POL_NEG);
-+		GIC_SET_TRIGGER(irq, GIC_TRIG_EDGE);
-+		GIC_SET_DUAL(irq, GIC_TRIG_DUAL_DISABLE);
-+		is_edge = true;
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+		GIC_SET_POLARITY(irq, GIC_POL_POS);
-+		GIC_SET_TRIGGER(irq, GIC_TRIG_EDGE);
-+		GIC_SET_DUAL(irq, GIC_TRIG_DUAL_DISABLE);
-+		is_edge = true;
-+		break;
-+	case IRQ_TYPE_EDGE_BOTH:
-+		/* polarity is irrelevant in this case */
-+		GIC_SET_TRIGGER(irq, GIC_TRIG_EDGE);
-+		GIC_SET_DUAL(irq, GIC_TRIG_DUAL_ENABLE);
-+		is_edge = true;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		GIC_SET_POLARITY(irq, GIC_POL_NEG);
-+		GIC_SET_TRIGGER(irq, GIC_TRIG_LEVEL);
-+		GIC_SET_DUAL(irq, GIC_TRIG_DUAL_DISABLE);
-+		is_edge = false;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+	default:
-+		GIC_SET_POLARITY(irq, GIC_POL_POS);
-+		GIC_SET_TRIGGER(irq, GIC_TRIG_LEVEL);
-+		GIC_SET_DUAL(irq, GIC_TRIG_DUAL_DISABLE);
-+		is_edge = false;
-+		break;
-+	}
-+
-+	if (is_edge) {
-+		gic_irq_flags[irq] |= GIC_TRIG_EDGE;
-+		__irq_set_handler_locked(d->irq, handle_edge_irq);
-+	} else {
-+		gic_irq_flags[irq] &= ~GIC_TRIG_EDGE;
-+		__irq_set_handler_locked(d->irq, handle_level_irq);
-+	}
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_SMP
- static DEFINE_SPINLOCK(gic_lock);
- 
-@@ -277,6 +329,7 @@ static struct irq_chip gic_irq_controller = {
- 	.irq_mask_ack		=	gic_mask_irq,
- 	.irq_unmask		=	gic_unmask_irq,
- 	.irq_eoi		=	gic_finish_irq,
-+	.irq_set_type		=	gic_set_type,
- #ifdef CONFIG_SMP
- 	.irq_set_affinity	=	gic_set_affinity,
- #endif
+ 	/* Assumption : cpumask refers to a single CPU */
+ 	spin_lock_irqsave(&gic_lock, flags);
 -- 
 2.1.0.rc2.206.gedb03e5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
