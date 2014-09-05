@@ -1,8 +1,7 @@
-From: Jingchang Lu <jingchang.lu@freescale.com>
-Subject: [PATCH] doc: dt-binding: of-serial: add Freescale 64-byte FIFO mode
- uart binding
-Date: Fri, 5 Sep 2014 10:35:14 +0800
-Message-ID: <1409884514-24705-1-git-send-email-jingchang.lu@freescale.com>
+From: Anson Huang <b20788@freescale.com>
+Subject: [PATCH V2 0/3] move gpt per clk parent from ipg_per to OSC
+Date: Fri, 5 Sep 2014 11:26:43 +0800
+Message-ID: <1409887606-22388-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,28 +15,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jingchang Lu <jingchang.lu@freescale.com>
+To: shawn.guo@linaro.org, festevam@gmail.com, kernel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This add the 64-byte FIFO mode device tree binding for Freescale DUART.
+Currently, gpt timer's clock is from ipg_per, and ipg_per clock is from ipg
+on most of i.MX6 series SOCs, but ipg's rate may be scaled when system enters
+low bus mode for saving power, then gpt timer's clock rate will be scaled as
+well, as system timer should be kept stable and NOT drift, better to keep gpt
+timer's clk at fixed rate, on i.MX6Q TO > 1.0, i.MX6DL and i.MX6SX, there is
+OSC clk available for gpt timer, we should enable this feature, the hardware
+design is as below:
 
-Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
----
- Documentation/devicetree/bindings/serial/of-serial.txt | 1 +
- 1 file changed, 1 insertion(+)
+i.MX6Q TO > 1.0: GPT_CR_CLKSRC, 3b'101 selects fix clock
+    of OSC / 8 for gpt per clk;
+i.MX6DL and i.MX6SX: GPT_CR_CLKSRC, 3b'101 selects OSC
+    for gpt per clk, and we must enable GPT_CR_24MEM to
+    enable OSC clk source for gpt per, GPT_PR_PRESCALER24M
+    is for pre-scaling of this OSC clk, here set it to 8
+    to make gpt per clk is 3MHz;
+i.MX6SL: ipg_per can be from OSC directly, so no need to
+    implement this new clk source for gpt per.
 
-diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
-index 7705477..7b132eb 100644
---- a/Documentation/devicetree/bindings/serial/of-serial.txt
-+++ b/Documentation/devicetree/bindings/serial/of-serial.txt
-@@ -14,6 +14,7 @@ Required properties:
- 	- "altr,16550-FIFO32"
- 	- "altr,16550-FIFO64"
- 	- "altr,16550-FIFO128"
-+	- "fsl,16550-FIFO64"
- 	- "serial" if the port type is unknown.
- - reg : offset and length of the register set for the device.
- - interrupts : should contain uart interrupt.
+As we still need to make it work on i.MX6Q TO1.0 which has no OSC clock source
+for gpt per, so we add a soc_per clock for i.MX6Q, other SoCs all have OSC
+clock source available for gpt per, so we can just replace the original gpt
+per clk with gpt_3m clock.
+
+Anson Huang (3):
+  ARM: imx: add gpt_3m clk for i.mx6qdl
+  ARM: dts: imx6: make gpt per clock can be from OSC
+  ARM: imx: source gpt per clk from OSC for system timer
+
+ arch/arm/boot/dts/imx6qdl.dtsi            |    5 ++--
+ arch/arm/boot/dts/imx6sx.dtsi             |    2 +-
+ arch/arm/mach-imx/clk-imx6q.c             |    1 +
+ arch/arm/mach-imx/time.c                  |   41 ++++++++++++++++++++++++-----
+ include/dt-bindings/clock/imx6qdl-clock.h |    3 ++-
+ 5 files changed, 42 insertions(+), 10 deletions(-)
+
 -- 
-1.8.0
+1.7.9.5
