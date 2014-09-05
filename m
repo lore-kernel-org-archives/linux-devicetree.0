@@ -1,64 +1,67 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
-Date: Fri, 5 Sep 2014 16:34:57 +0100
-Message-ID: <20140905153457.GA26306@e102568-lin.cambridge.arm.com>
-References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com>
- <20140903173740.GJ1824@e102568-lin.cambridge.arm.com>
- <20140904160320.GB22354@arm.com>
- <20140904172909.GA14822@e102568-lin.cambridge.arm.com>
- <20140905092120.GG13515@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140905092120.GG13515@arm.com>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijv>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v6 0/3]  Add ST dwc3 glue layer driver
+Date: Fri,  5 Sep 2014 16:36:29 +0100
+Message-ID: <1409931392-22340-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 05, 2014 at 10:21:20AM +0100, Will Deacon wrote:
-> On Thu, Sep 04, 2014 at 06:29:10PM +0100, Lorenzo Pieralisi wrote:
-> > On Thu, Sep 04, 2014 at 05:03:20PM +0100, Catalin Marinas wrote:
-> > > On Wed, Sep 03, 2014 at 06:37:40PM +0100, Lorenzo Pieralisi wrote:
-> > > > This patch should be ready to go too, is it ok if I split the series
-> > > > in arm64 arch specific patches (will ask Catalin to pull) and CPUidle ones
-> > > > (inclusive of DT bindings and !!this patch!!) and send two separate pull
-> > > > requests ?
-> > > 
-> > > If Daniel/Rafael don't have any objection, I can take the whole series
-> > > through the arm64 tree (it seems that patches have been already acked by
-> > > Daniel).
-> > 
-> > Thanks a lot Catalin. Since this one is a brand new CPUidle driver and it
-> > follows a different pattern from arm legacy drivers I would like to get
-> > Daniel's ack on this patch too before pushing it. For the records I have
-> > just added two pr_err to signal driver probing error, ultraminor changes
-> > that do not justify a repost.
-> > 
-> > If Samsung guys do not manifest themselves I would drop patch 8 from
-> > the series till it gets tested and its patch dependency queued too.
-> 
-> The last patch also has a dependency, as you mentioned to Daniel. I think
-> we can certainly merge the arm64 parts, and if Daniel doesn't object, then
-> we can take the driver stuff too but leaving the exynos bits out (i.e. drop
-> the last patch).
-> 
-> Anyway, if you could repost with the acks you've collected and rearrange it
-> so the arm64 patches are first in the series, that would be great.
+This series adds support for the ST glue logic which wraps the DWC3 controller
+on STiH407 SoC family chipsets.
 
-I can repost it with the acks and rearrange the patches, but for the
-pull request I have to know what code can be merged, since there are
-some arm64 patches (PSCI and CPUidle arm64 back-end) that are strictly
-tied to the arm64 CPUidle driver, so I *have* to know if the arm64
-CPUidle driver (this patch) can get merged and that requires an ack.
+Changes since v5
+ - Use of_platform_depopulate
 
-If I do not hear from Samsung guys I will drop patch 8.
+Changes since v4
+ - Fix bug with setting bits in usb control register
+ - Remove superflous '\n'
+ - Change default Kconfig to make default same as other platforms
+ - Update dt doc example so that both usb2 and usb3 phys are using generic drivers/phy instead of drivers/usb/phy
+ - Reconfigure ST glue logic regs in resume callback
 
-I will wait till Monday (ie -rc4) and repost, I hope that's acceptable.
+Changes since v3
+ - Various formating nits
 
-Thank you !
-Lorenzo
+Changes since v2
+ - Use dr_mode for host/device static configuration
+ - Manage shared reset signal to usbss to avoid hang if probing before usb3 phy
+ - Remove DT checks and make driver depend on OF
+ - Change some #define to use BIT macro
+ - Make some comments clearer
+ - Use kerneldoc for struct documentation
+ - Remove udelay
+ - Let DT create platform_devices, and remove legacy alloc
+ - Change some logging levels to dev_dbg
+ - Various whitespace and formatting cleanup
+ - Use SIMPLE_DEV_PM_OPS()
+ - Add const to of_device struct
+ - Reorder header files alphabetically
+ - Use devm_ioremap_resource instead of devm_request_and_ioremap
+ - Remove of_match_ptr()
 
+Changes since v1
+ - Fix Kconfig mistake
+
+Peter Griffin (3):
+  usb: dwc3: add ST dwc3 glue layer to manage dwc3 HC
+  usb: dwc3: dwc3-st: Add st-dwc3 devicetree bindings documentation
+  MAINTAINERS: Add dwc3-st.c file to ARCH/STI architecture
+
+ Documentation/devicetree/bindings/usb/dwc3-st.txt |  68 ++++
+ MAINTAINERS                                       |   1 +
+ drivers/usb/dwc3/Kconfig                          |   9 +
+ drivers/usb/dwc3/Makefile                         |   1 +
+ drivers/usb/dwc3/dwc3-st.c                        | 377 ++++++++++++++++++++++
+ 5 files changed, 456 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3-st.txt
+ create mode 100644 drivers/usb/dwc3/dwc3-st.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
