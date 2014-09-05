@@ -1,115 +1,60 @@
-From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Subject: Re: [PATCH 3/3 v2] GPIO: gpio-dwapb: Suspend & Resume PM enabling
-Date: Fri, 5 Sep 2014 09:24:42 +0000
-Message-ID: <1409909082.30155.86.camel@intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
-	 <1409928798-31895-4-git-send-email-alvin.chen@intel.com>
+From: Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH v2 3/4] arm64, thunder: Document devicetree bindings for
+ Cavium Thunder SoC
+Date: Fri, 5 Sep 2014 11:32:22 +0200
+Message-ID: <20140905093222.GS4703@rric.localhost>
+References: <1409903205-2762-1-git-send-email-rric@kernel.org>
+ <1409903205-2762-4-git-send-email-rric@kernel.org>
+ <20140905084200.GE13515@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1409928798-31895-4-git-send-email-alvin.chen@intel.com>
-Content-Language: en-US
-Content-ID: <19A51FCC913AFA45A7583E8A1C64529D@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Chen, Alvin" <alvin.chen@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140905084200.GE13515@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE0LTA5LTA1IGF0IDA3OjUzIC0wNzAwLCBXZWlrZSBDaGVuIHdyb3RlOg0KPiBU
-aGlzIHBhdGNoIGVuYWJsZXMgc3VzcGVuZCBhbmQgcmVzdW1lIG1vZGUgZm9yIHRoZSBwb3dlciBt
-YW5hZ2VtZW50LCBhbmQNCj4gaXQgaXMgYmFzZWQgb24gSm9zZWYgQWhtYWQncyBwcmV2aW91cyB3
-b3JrLg0KPiANCj4gUmV2aWV3ZWQtYnk6IEhvY2sgTGVvbmcgS3dlaCA8aG9jay5sZW9uZy5rd2Vo
-QGludGVsLmNvbT4NCj4gUmV2aWV3ZWQtYnk6IFNoZXZjaGVua28sIEFuZHJpeSA8YW5kcml5LnNo
-ZXZjaGVua29AaW50ZWwuY29tPg0KDQpJIGhhdmUgdG8gcmVjYWxsIG15IHJldml3ZWQtYnkgdGFn
-IHNpbmNlIHBhdGNoIGlzIHF1aXRlIGNoYW5nZWQgYW5kIGFzIEkNCnVuZGVyc3Rvb2QgTGludXMg
-aXMgY29udGludWluZyB0byBiZSBjaGFuZ2VkLg0KDQo+IFNpZ25lZC1vZmYtYnk6IFdlaWtlIENo
-ZW4gPGFsdmluLmNoZW5AaW50ZWwuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvZ3Bpby9ncGlvLWR3
-YXBiLmMgfCAgMTAyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Kw0KPiAgMSBmaWxlIGNoYW5nZWQsIDEwMiBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncGlvL2dwaW8tZHdhcGIuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLWR3YXBiLmMN
-Cj4gaW5kZXggNmRiNzUwMS4uYTEwM2RlZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncGlvL2dw
-aW8tZHdhcGIuYw0KPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1kd2FwYi5jDQo+IEBAIC01NCw2
-ICs1NCw3IEBAIHN0cnVjdCBkd2FwYl9ncGlvX3BvcnQgew0KPiAgCXN0cnVjdCBiZ3Bpb19jaGlw
-CWJnYzsNCj4gIAlib29sCQkJaXNfcmVnaXN0ZXJlZDsNCj4gIAlzdHJ1Y3QgZHdhcGJfZ3Bpbwkq
-Z3BpbzsNCj4gKwl1bnNpZ25lZCBpbnQJCWlkeDsNCj4gIH07DQo+ICANCj4gIHN0cnVjdCBkd2Fw
-Yl9ncGlvIHsNCj4gQEAgLTM3Niw2ICszNzcsNyBAQCBzdGF0aWMgaW50IGR3YXBiX2dwaW9fYWRk
-X3BvcnQoc3RydWN0IGR3YXBiX2dwaW8gKmdwaW8sDQo+ICANCj4gIAlwb3J0ID0gJmdwaW8tPnBv
-cnRzW29mZnNdOw0KPiAgCXBvcnQtPmdwaW8gPSBncGlvOw0KPiArCXBvcnQtPmlkeCA9IHBwLT5p
-ZHg7DQo+ICANCj4gIAlkYXQgPSBncGlvLT5yZWdzICsgR1BJT19FWFRfUE9SVEEgKyAocHAtPmlk
-eCAqIEdQSU9fRVhUX1BPUlRfU0laRSk7DQo+ICAJc2V0ID0gZ3Bpby0+cmVncyArIEdQSU9fU1dQ
-T1JUQV9EUiArIChwcC0+aWR4ICogR1BJT19TV1BPUlRfRFJfU0laRSk7DQo+IEBAIC01OTQsMTAg
-KzU5NiwxMTAgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZHdhcGJfb2ZfbWF0
-Y2hbXSA9IHsNCj4gIH07DQo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBkd2FwYl9vZl9tYXRj
-aCk7DQo+ICANCj4gKyNpZmRlZiBDT05GSUdfUE1fU0xFRVANCj4gKy8qIFN0b3JlIEdQSU8gY29u
-dGV4dCBhY3Jvc3Mgc3lzdGVtLXdpZGUgc3VzcGVuZC9yZXN1bWUgdHJhbnNpdGlvbnMgKi8NCj4g
-K3N0YXRpYyBzdHJ1Y3QgZHdhcGJfY29udGV4dCB7DQo+ICsJdTMyIGRhdGFbRFdBUEJfTUFYX1BP
-UlRTXTsNCj4gKwl1MzIgZGlyW0RXQVBCX01BWF9QT1JUU107DQo+ICsJdTMyIGV4dFtEV0FQQl9N
-QVhfUE9SVFNdOw0KPiArCXUzMiBpbnRfZW47DQo+ICsJdTMyIGludF9tYXNrOw0KPiArCXUzMiBp
-bnRfdHlwZTsNCj4gKwl1MzIgaW50X3BvbDsNCj4gKwl1MzIgaW50X2RlYjsNCj4gK30gZHdhcGJf
-Y29udGV4dDsNCj4gKw0KPiArc3RhdGljIGludCBkd2FwYl9ncGlvX3N1c3BlbmQoc3RydWN0IGRl
-dmljZSAqZGV2KQ0KPiArew0KPiArCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19w
-bGF0Zm9ybV9kZXZpY2UoZGV2KTsNCj4gKwlzdHJ1Y3QgZHdhcGJfZ3BpbyAqZ3BpbyA9IHBsYXRm
-b3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KPiArCXN0cnVjdCBiZ3Bpb19jaGlwICpiZ2MJPSAmZ3Bp
-by0+cG9ydHNbMF0uYmdjOw0KPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ICsJaW50IGk7DQo+
-ICsNCj4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmYmdjLT5sb2NrLCBmbGFncyk7DQo+ICsJZm9yIChp
-ID0gMDsgaSA8IGdwaW8tPm5yX3BvcnRzOyBpKyspIHsNCj4gKwkJdW5zaWduZWQgaW50IG9mZnNl
-dDsNCj4gKwkJdW5zaWduZWQgaW50IGlkeCA9IGdwaW8tPnBvcnRzW2ldLmlkeDsNCj4gKw0KPiAr
-CQlvZmZzZXQgPSBHUElPX1NXUE9SVEFfRERSICsgKGlkeCAqIEdQSU9fU1dQT1JUX0REUl9TSVpF
-KTsNCj4gKwkJZHdhcGJfY29udGV4dC5kaXJbaV0JPSBkd2FwYl9yZWFkKGdwaW8sIG9mZnNldCk7
-DQo+ICsNCj4gKwkJb2Zmc2V0ID0gR1BJT19TV1BPUlRBX0RSICsgKGlkeCAqIEdQSU9fU1dQT1JU
-X0RSX1NJWkUpOw0KPiArCQlkd2FwYl9jb250ZXh0LmRhdGFbaV0JPSBkd2FwYl9yZWFkKGdwaW8s
-IG9mZnNldCk7DQo+ICsNCj4gKwkJb2Zmc2V0ID0gR1BJT19FWFRfUE9SVEEgKyAoaWR4ICogR1BJ
-T19FWFRfUE9SVF9TSVpFKTsNCj4gKwkJZHdhcGJfY29udGV4dC5leHRbaV0JPSBkd2FwYl9yZWFk
-KGdwaW8sIG9mZnNldCk7DQo+ICsNCj4gKwkJaWYgKGlkeCA9PSAwKSB7DQo+ICsJCQlkd2FwYl9j
-b250ZXh0LmludF9tYXNrID0gZHdhcGJfcmVhZChncGlvLCBHUElPX0lOVE1BU0spOw0KPiArCQkJ
-ZHdhcGJfY29udGV4dC5pbnRfZW4gPSBkd2FwYl9yZWFkKGdwaW8sIEdQSU9fSU5URU4pOw0KPiAr
-CQkJZHdhcGJfY29udGV4dC5pbnRfcG9sID0NCj4gKwkJCQkJZHdhcGJfcmVhZChncGlvLCBHUElP
-X0lOVF9QT0xBUklUWSk7DQo+ICsJCQlkd2FwYl9jb250ZXh0LmludF90eXBlID0NCj4gKwkJCQkJ
-ZHdhcGJfcmVhZChncGlvLCBHUElPX0lOVFRZUEVfTEVWRUwpOw0KPiArCQkJZHdhcGJfY29udGV4
-dC5pbnRfZGViID0NCj4gKwkJCQkJZHdhcGJfcmVhZChncGlvLCBHUElPX1BPUlRBX0RFQk9VTkNF
-KTsNCj4gKw0KPiArCQkJLyogTWFzayBvdXQgaW50ZXJydXB0cyAqLw0KPiArCQkJZHdhcGJfd3Jp
-dGUoZ3BpbywgR1BJT19JTlRNQVNLLCAweGZmZmZmZmZmKTsNCj4gKwkJfQ0KPiArCX0NCj4gKwlz
-cGluX3VubG9ja19pcnFyZXN0b3JlKCZiZ2MtPmxvY2ssIGZsYWdzKTsNCj4gKw0KPiArCXJldHVy
-biAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IGR3YXBiX2dwaW9fcmVzdW1lKHN0cnVjdCBk
-ZXZpY2UgKmRldikNCj4gK3sNCj4gKwlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gdG9f
-cGxhdGZvcm1fZGV2aWNlKGRldik7DQo+ICsJc3RydWN0IGR3YXBiX2dwaW8gKmdwaW8gPSBwbGF0
-Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gKwlzdHJ1Y3QgYmdwaW9fY2hpcCAqYmdjCT0gJmdw
-aW8tPnBvcnRzWzBdLmJnYzsNCj4gKwl1bnNpZ25lZCBsb25nIGZsYWdzOw0KPiArCWludCBpOw0K
-PiArDQo+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJmJnYy0+bG9jaywgZmxhZ3MpOw0KPiArCWZvciAo
-aSA9IDA7IGkgPCBncGlvLT5ucl9wb3J0czsgaSsrKSB7DQo+ICsJCXVuc2lnbmVkIGludCBvZmZz
-ZXQ7DQo+ICsJCXVuc2lnbmVkIGludCBpZHggPSBncGlvLT5wb3J0c1tpXS5pZHg7DQo+ICsNCj4g
-KwkJb2Zmc2V0ID0gR1BJT19TV1BPUlRBX0RSICsgKGlkeCAqIEdQSU9fU1dQT1JUX0RSX1NJWkUp
-Ow0KPiArCQlkd2FwYl93cml0ZShncGlvLCBvZmZzZXQsIGR3YXBiX2NvbnRleHQuZGF0YVtpXSk7
-DQo+ICsNCj4gKwkJb2Zmc2V0ID0gR1BJT19TV1BPUlRBX0REUiArIChpZHggKiBHUElPX1NXUE9S
-VF9ERFJfU0laRSk7DQo+ICsJCWR3YXBiX3dyaXRlKGdwaW8sIG9mZnNldCwgZHdhcGJfY29udGV4
-dC5kaXJbaV0pOw0KPiArDQo+ICsJCW9mZnNldCA9IEdQSU9fRVhUX1BPUlRBICsgKGlkeCAqIEdQ
-SU9fRVhUX1BPUlRfU0laRSk7DQo+ICsJCWR3YXBiX3dyaXRlKGdwaW8sIG9mZnNldCwgZHdhcGJf
-Y29udGV4dC5leHRbaV0pOw0KPiArDQo+ICsJCWlmIChpZHggPT0gMCkgew0KPiArCQkJZHdhcGJf
-d3JpdGUoZ3BpbywgR1BJT19JTlRUWVBFX0xFVkVMLA0KPiArCQkJCSAgICBkd2FwYl9jb250ZXh0
-LmludF90eXBlKTsNCj4gKwkJCWR3YXBiX3dyaXRlKGdwaW8sIEdQSU9fSU5UX1BPTEFSSVRZLA0K
-PiArCQkJCSAgICBkd2FwYl9jb250ZXh0LmludF9wb2wpOw0KPiArCQkJZHdhcGJfd3JpdGUoZ3Bp
-bywgR1BJT19QT1JUQV9ERUJPVU5DRSwNCj4gKwkJCQkgICAgZHdhcGJfY29udGV4dC5pbnRfZGVi
-KTsNCj4gKwkJCWR3YXBiX3dyaXRlKGdwaW8sIEdQSU9fSU5URU4sIGR3YXBiX2NvbnRleHQuaW50
-X2VuKTsNCj4gKwkJCWR3YXBiX3dyaXRlKGdwaW8sIEdQSU9fSU5UTUFTSywgZHdhcGJfY29udGV4
-dC5pbnRfbWFzayk7DQo+ICsNCj4gKwkJCS8qIENsZWFyIG91dCBzcHVyaW91cyBpbnRlcnJ1cHRz
-ICovDQo+ICsJCQlkd2FwYl93cml0ZShncGlvLCBHUElPX1BPUlRBX0VPSSwgMHhmZmZmZmZmZik7
-DQo+ICsJCX0NCj4gKwl9DQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmYmdjLT5sb2NrLCBm
-bGFncyk7DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKyNlbmRpZg0KPiArDQo+ICtzdGF0
-aWMgU0lNUExFX0RFVl9QTV9PUFMoZHdhcGJfZ3Bpb19wbV9vcHMsIGR3YXBiX2dwaW9fc3VzcGVu
-ZCwNCj4gKwkJCSBkd2FwYl9ncGlvX3Jlc3VtZSk7DQo+ICsNCj4gIHN0YXRpYyBzdHJ1Y3QgcGxh
-dGZvcm1fZHJpdmVyIGR3YXBiX2dwaW9fZHJpdmVyID0gew0KPiAgCS5kcml2ZXIJCT0gew0KPiAg
-CQkubmFtZQk9ICJncGlvLWR3YXBiIiwNCj4gIAkJLm93bmVyCT0gVEhJU19NT0RVTEUsDQo+ICsJ
-CS5wbQk9ICZkd2FwYl9ncGlvX3BtX29wcywNCj4gIAkJLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0
-Y2hfcHRyKGR3YXBiX29mX21hdGNoKSwNCj4gIAl9LA0KPiAgCS5wcm9iZQkJPSBkd2FwYl9ncGlv
-X3Byb2JlLA0KDQoNCi0tIA0KQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BpbnRl
-bC5jb20+DQpJbnRlbCBGaW5sYW5kIE95DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KSW50ZWwgRmlubGFuZCBPeQpS
-ZWdpc3RlcmVkIEFkZHJlc3M6IFBMIDI4MSwgMDAxODEgSGVsc2lua2kgCkJ1c2luZXNzIElkZW50
-aXR5IENvZGU6IDAzNTc2MDYgLSA0IApEb21pY2lsZWQgaW4gSGVsc2lua2kgCgpUaGlzIGUtbWFp
-bCBhbmQgYW55IGF0dGFjaG1lbnRzIG1heSBjb250YWluIGNvbmZpZGVudGlhbCBtYXRlcmlhbCBm
-b3IKdGhlIHNvbGUgdXNlIG9mIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykuIEFueSByZXZpZXcg
-b3IgZGlzdHJpYnV0aW9uCmJ5IG90aGVycyBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5b3Ug
-YXJlIG5vdCB0aGUgaW50ZW5kZWQKcmVjaXBpZW50LCBwbGVhc2UgY29udGFjdCB0aGUgc2VuZGVy
-IGFuZCBkZWxldGUgYWxsIGNvcGllcy4K
+On 05.09.14 09:42:00, Will Deacon wrote:
+> On Fri, Sep 05, 2014 at 08:46:44AM +0100, Robert Richter wrote:
+> > From: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
+> > 
+> > This patch adds documentation for the devicetree bindings used by the
+> > DT files of Cavium Thunder SoC platforms.
+> > 
+> > Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla@cavium.com>
+> > Signed-off-by: Robert Richter <rrichter@cavium.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/cavium-thunder.txt | 10 ++++++++++
+> >  Documentation/devicetree/bindings/arm/cpus.txt           |  1 +
+> >  2 files changed, 11 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder.txt b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
+> > new file mode 100644
+> > index 000000000000..6f63a5866902
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
+> > @@ -0,0 +1,10 @@
+> > +Cavium Thunder platform device tree bindings
+> > +--------------------------------------------
+> > +
+> > +Boards with Cavium's Thunder SoC shall have following properties.
+> > +
+> > +Root Node
+> > +---------
+> > +Required root node properties:
+> > +
+> > +  - compatible = "cavium,thunder-88xx";
+> 
+> Is this file necessary? We don't have one for xgene afaict.
 
+Hmm, looking at Documentation/devicetree/bindings/arm/calxeda.txt
+there is something similar.
+
+I am fine with both, keeping or removing it.
+
+Would leave this to the DT maintainers.
+
+-Robert
