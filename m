@@ -1,33 +1,32 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] PCI: keystone: update to support multiple pci ports
-Date: Fri, 05 Sep 2014 19:54:58 +0200
-Message-ID: <7260053.FoBVhTXVfj@wuerfel>
-References: <1409938782-31460-1-git-send-email-m-karicheri2@ti.com>
+Subject: Re: [PATCH RESEND v5 1/5] usb: host: ehci-st: Add EHCI support for ST STB devices
+Date: Fri, 05 Sep 2014 19:57:28 +0200
+Message-ID: <202755915.brE74x99uQ@wuerfel>
+References: <1409937829-23708-1-git-send-email-peter.griffin@linaro.org> <1409937829-23708-2-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409938782-31460-1-git-send-email-m-karicheri2@ti.com>
+In-Reply-To: <1409937829-23708-2-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 September 2014 13:39:42 Murali Karicheri wrote:
-> +
->         /* enable RC mode in devcfg */
->         val = readl(reg_p);
-> -       val &= ~PCIE_MODE_MASK;
-> -       val |= PCIE_RC_MODE;
-> +       port_id <<= 1;
-> +       val &= ~(PCIE_MODE_MASK << port_id);
-> +       val |= (PCIE_RC_MODE << port_id);
->         writel(val, reg_p);
-> +       devm_iounmap(dev, reg_p);
-> +       devm_release_mem_region(dev, res->start, resource_size(res));
+On Friday 05 September 2014 18:23:45 Peter Griffin wrote:
+> +struct st_platform_priv {
+> +       struct clk *clks[USB_MAX_CLKS];
+> +       struct clk *clk48;
+> +       struct reset_control *rst;
+> +       struct reset_control *pwr;
+> +       struct phy *phy;
+> +};
 
-This looks like it's a shared register of some sort that doesn't
-really belong into the registers of a particular port. Could it
-be that it's actually for the PHY?
+Any reason why this is in a shared header file? It looks like
+duplicating the structure under two different names would
+actually be shorter and keep the drivers more readable as they'd
+be self-contained, even when they have the exact same structure.
+
+Do both drivers use all fields?
 
 	Arnd
