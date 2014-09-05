@@ -1,111 +1,78 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v6 2/3] usb: dwc3: dwc3-st: Add st-dwc3 devicetree bindings
- documentation
-Date: Fri,  5 Sep 2014 16:36:31 +0100
-Message-ID: <1409931392-22340-3-git-send-email-peter.griffin@linaro.org>
-References: <1409931392-22340-1-git-send-email-peter.griffin@linaro.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH v3 0/9] PM / Domains: Generic OF-based support
+Date: Fri, 05 Sep 2014 08:39:07 -0700
+Message-ID: <7h61h2yt44.fsf@paris.lan>
+References: <1409838756-31963-1-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1409931392-22340-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, peter.griffin@linaro.org, peppe.cavallaro@st.com, linux-omap@vger.kernel.org, lee.jones@linaro.org
+Content-Type: text/plain
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1409838756-31963-1-git-send-email-ulf.hansson@linaro.org> (Ulf
+	Hansson's message of "Thu, 4 Sep 2014 15:52:27 +0200")
+Sender: linux-acpi-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the device tree documentation required for
-the ST usb3 controller glue layer found in STiH407 devices.
+Ulf Hansson <ulf.hansson@linaro.org> writes:
 
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/devicetree/bindings/usb/dwc3-st.txt | 68 +++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/dwc3-st.txt
+> Changes in v3:
+> 	- Aligned on terminology, now using "PM domain" in comments and commit
+> 	- messages/headers.
+> 	- Improved English and grammar in comments and commit messages/headers.
+> 	- Adopted proposal from Geert, to have compile-time-check wrapper
+> 	  functions for the API that adds xlate_simple and xlate_onecell
+> 	  providers.
+>  	- Renamed "domain_num" to "num_domains", in genpd_onecell_data struct.
+> 	- Handle non-contiguous arrays for onecell PM domain providers.
+> 	- Rebased the Exynos patch to follow the new genpd API changes.
+>
+>
+> Changes in v2:
+> 	- Fix the ACPI patch, it didn't even compile for CONFIG_ACPI.
+> 	- Updated some comments in code and in commit messages.
+> 	- Fixed the dev_pm_domain_attach API to handle EPROBE_DEFER properly.
+> 	- Rebased the ARM Exynos patch.
+> 	- Added some Tested-by tags.
+>
+>
+> This patchset has a bit of a history and some parts of it has been posted
+> earlier.
+>
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/262725.html
+>
+> In the first revision I intentially didn't increase version number of the
+> patches, since I think it would have cause more confusion than clarity.
+>
+> A summary of changes in V1 and since the last patchset, from the link above:
+> 	- Instead of letting driver core handling the device to power domain
+> 	binding/unbinding, follow the behavior of how the ACPI power domain
+> 	is handled.
+>
+>
+> This is a summary of what these patches are intended to do:
+>
+> 1)
+> Add generic power domain OF-based support which also includes APIs to handle
+> attach/detach of generic power domains to devices.
+>
+> 2)
+> Adding a common API to attach/detach power domains and include support for the
+> ACPI and the generic power domain in there.
+>
+> 3)
+> From subsystem level code, at probe/remove, convert from invoking the ACPI
+> specific power domain attach/detach functions to the new common attach/detach
+> APIs.
+>
+> 4)
+> Add support for the AMBA bus to attach/detach power domains, using the new
+> common APIs.
+>
+> 5)
+> Convert Exynos to use the new generic power domain OF support.
+>
+> Obviously, there are dependencies througout this patchset, which means if they
+> get accepted the all need to go together. It might also be convenient to share
+> them through an immutable branch.
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3-st.txt b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-new file mode 100644
-index 0000000..f9d7025
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/dwc3-st.txt
-@@ -0,0 +1,68 @@
-+ST DWC3 glue logic
-+
-+This file documents the parameters for the dwc3-st driver.
-+This driver controls the glue logic used to configure the dwc3 core on
-+STiH407 based platforms.
-+
-+Required properties:
-+ - compatible	: must be "st,stih407-dwc3"
-+ - reg		: glue logic base address and USB syscfg ctrl register offset
-+ - reg-names	: should be "reg-glue" and "syscfg-reg"
-+ - st,syscon	: should be phandle to system configuration node which
-+		  encompasses the glue registers
-+ - resets	: list of phandle and reset specifier pairs. There should be two entries, one
-+		  for the powerdown and softreset lines of the usb3 IP
-+ - reset-names	: list of reset signal names. Names should be "powerdown" and "softreset"
-+See: Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
-+See: Documentation/devicetree/bindings/reset/reset.txt
-+
-+ - #address-cells, #size-cells : should be '1' if the device has sub-nodes
-+   with 'reg' property
-+
-+ - pinctl-names	: A pinctrl state named "default" must be defined
-+See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+
-+ - pinctrl-0	: Pin control group
-+See: Documentation/devicetree/bindings/pinctrl/pinctrl-binding.txt
-+
-+ - ranges	: allows valid 1:1 translation between child's address space and
-+		  parent's address space
-+
-+Sub-nodes:
-+The dwc3 core should be added as subnode to ST DWC3 glue as shown in the
-+example below. The DT binding details of dwc3 can be found in:
-+Documentation/devicetree/bindings/usb/dwc3.txt
-+
-+NB: The dr_mode property described in [1] is NOT optional for this driver, as the default value
-+is "otg", which isn't supported by this SoC. Valid dr_mode values for dwc3-st are either "host"
-+or "device".
-+
-+[1] Documentation/devicetree/bindings/usb/generic.txt
-+
-+Example:
-+
-+st_dwc3: dwc3@8f94000 {
-+	status		= "disabled";
-+	compatible	= "st,stih407-dwc3";
-+	reg		= <0x08f94000 0x1000>, <0x110 0x4>;
-+	reg-names	= "reg-glue", "syscfg-reg";
-+	st,syscfg	= <&syscfg_core>;
-+	resets		= <&powerdown STIH407_USB3_POWERDOWN>,
-+			  <&softreset STIH407_MIPHY2_SOFTRESET>;
-+	reset-names	= "powerdown",
-+			  "softreset";
-+	#address-cells	= <1>;
-+	#size-cells	= <1>;
-+	pinctrl-names	= "default";
-+	pinctrl-0	= <&pinctrl_usb3>;
-+	ranges;
-+
-+	dwc3: dwc3@9900000 {
-+		compatible	= "snps,dwc3";
-+		reg		= <0x09900000 0x100000>;
-+		interrupts	= <GIC_SPI 155 IRQ_TYPE_NONE>;
-+		dr_mode		= "host";
-+		phys-names      = "usb2-phy", "usb3-phy";
-+		phys            = <&usb2_picophy2>, <&phy_port2 MIPHY_TYPE_USB>;
-+	};
-+};
--- 
-1.9.1
+Reviewed-by: Kevin Hilman <khilman@linaro.org>
