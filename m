@@ -1,124 +1,36 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv2] watchdog: imx2_wdt: Convert to use regmap framework's
- endianness method.
-Date: Fri, 5 Sep 2014 07:11:31 +0000
-Message-ID: <54446636ab294eed83c4a4e3d405dfe7@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1408953277-2069-1-git-send-email-Li.Xiubo@freescale.com>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v4 4/4] pinctrl: qcom: Make the target processor value
+ configurable
+Date: Fri, 05 Sep 2014 10:20:57 +0300
+Message-ID: <54096459.7020201@mm-sol.com>
+References: <1409761696-15435-1-git-send-email-gdjakov@mm-sol.com>	<1409761696-15435-5-git-send-email-gdjakov@mm-sol.com> <CACRpkdZQouNk0z1AQHbjULJXdRK07-kZDXLcnx0Xayew0fnocA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1408953277-2069-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZQouNk0z1AQHbjULJXdRK07-kZDXLcnx0Xayew0fnocA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Andy Gross <agross@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 09/04/2014 07:20 PM, Linus Walleij wrote:
+> On Wed, Sep 3, 2014 at 6:28 PM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+> 
+>> Currently the value used to specify that interrupts from the gpio should
+>> be routed to the application processor is hardcoded for all Qualcomm SoCs.
+>> But the new APQ8084 SoC uses a different value. To resolve this, we make
+>> this value configurable for each SoC. For all existing SoCs we continue
+>> to use the current value, and only for APQ8084 we use the new value.
+>>
+>> Suggested-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>> Acked-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+> 
+> Patch applied.
+> 
+> Yours,
+> Linus Walleij
+> 
 
-Ping :)
-
-Thanks,
-
-BRs
-Xiubo
-
-
-> -----Original Message-----
-> From: Xiubo Li [mailto:Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
-> Sent: Monday, August 25, 2014 3:55 PM
-> To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org; linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org; mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; linux-
-> watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Xiubo Li-B47053
-> Subject: [PATCHv2] watchdog: imx2_wdt: Convert to use regmap framework's
-> endianness method.
-> 
-> Regmap framework will contain some patches to handle endianess, and there
-> does not need any parsing of endianness DT properties of individual driver,
-> so we can savely remove it here.
-> 
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> ---
-> 
-> Changes in v2:
-> - Remove useless header file.
-> 
-> 
-> 
-> 
->  Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt | 4 ++--
->  drivers/watchdog/imx2_wdt.c                                | 9 +--------
->  2 files changed, 3 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> index e52ba2d..9e1ebe2 100644
-> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> @@ -6,8 +6,8 @@ Required properties:
->  - interrupts : Should contain WDT interrupt
-> 
->  Optional property:
-> -- big-endian: If present the watchdog device's registers are implemented
-> -  in big endian mode, otherwise in little mode.
-> +- big-endian: Boolean property, required if all the i.MX WDT registers
-> +  are big-endian rather than little-endian.
-> 
->  Examples:
-> 
-> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-> index 68c3d37..afc8738 100644
-> --- a/drivers/watchdog/imx2_wdt.c
-> +++ b/drivers/watchdog/imx2_wdt.c
-> @@ -28,7 +28,6 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/moduleparam.h>
-> -#include <linux/of_address.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/timer.h>
-> @@ -182,7 +181,7 @@ static struct watchdog_ops imx2_wdt_ops = {
->  	.set_timeout = imx2_wdt_set_timeout,
->  };
-> 
-> -static struct regmap_config imx2_wdt_regmap_config = {
-> +static const struct regmap_config imx2_wdt_regmap_config = {
->  	.reg_bits = 16,
->  	.reg_stride = 2,
->  	.val_bits = 16,
-> @@ -191,12 +190,10 @@ static struct regmap_config imx2_wdt_regmap_config = {
-> 
->  static int __init imx2_wdt_probe(struct platform_device *pdev)
->  {
-> -	struct device_node *np = pdev->dev.of_node;
->  	struct imx2_wdt_device *wdev;
->  	struct watchdog_device *wdog;
->  	struct resource *res;
->  	void __iomem *base;
-> -	bool big_endian;
->  	int ret;
->  	u32 val;
-> 
-> @@ -204,10 +201,6 @@ static int __init imx2_wdt_probe(struct platform_device
-> *pdev)
->  	if (!wdev)
->  		return -ENOMEM;
-> 
-> -	big_endian = of_property_read_bool(np, "big-endian");
-> -	if (big_endian)
-> -		imx2_wdt_regmap_config.val_format_endian = REGMAP_ENDIAN_BIG;
-> -
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	base = devm_ioremap_resource(&pdev->dev, res);
->  	if (IS_ERR(base))
-> --
-> 1.8.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you, Bjorn and Linus!
