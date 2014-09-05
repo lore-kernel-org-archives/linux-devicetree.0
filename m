@@ -1,31 +1,75 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 2/3 v2] GPIO: gpio-dwapb: Support Debounce
-Date: Fri, 5 Sep 2014 09:35:24 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E98298B@SHSMSX101.ccr.corp.intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
-	 <1409928798-31895-3-git-send-email-alvin.chen@intel.com>
- <1409908999.30155.85.camel@intel.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] arm64, thunder: Document devicetree bindings for
+ Cavium Thunder SoC
+Date: Fri, 5 Sep 2014 10:39:33 +0100
+Message-ID: <20140905093932.GI2172@leverpostej>
+References: <1409903205-2762-1-git-send-email-rric@kernel.org>
+ <1409903205-2762-4-git-send-email-rric@kernel.org>
+ <20140905084200.GE13515@arm.com>
+ <20140905093222.GS4703@rric.localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409908999.30155.85.camel@intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140905093222.GS4703-vWBEXY7mpu73kLQC+b9v0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMyB2Ml0gR1BJTzogZ3Bpby1kd2FwYjogU3VwcG9ydCBE
-ZWJvdW5jZQ0KPiANCj4gT24gRnJpLCAyMDE0LTA5LTA1IGF0IDA3OjUzIC0wNzAwLCBXZWlrZSBD
-aGVuIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggZW5hYmxlcyAnZGVib3VuY2UnIGZvciB0aGUgZGVz
-aWdud2FyZSBHUElPLCBhbmQgaXQgaXMgYmFzZWQNCj4gPiBvbiBKb3NlZiBBaG1hZCdzIHByZXZp
-b3VzIHdvcmsuDQo+IA0KPiBDYW4gd2Ugc3BsaXQgZHdhcGJfcmVhZC93cml0ZSBpbnRyb2R1Y2lu
-ZyBhbmQgY2hhbmdpbmcgZnJvbSB0aGlzIHBhdGNoIHRvIGENCj4gc2VwYXJhdGUgb25lPw0KPiAN
-ClNpbmNlIHRoZSAnZGVib3VuY2UnIGZlYXR1cmUgYWxzbyBuZWVkcyByZWFkL3dyaXRlLCBpZiB3
-ZSBzcGxpdGUgdGhpcyBwYXRjaCwgdGhlbiBmb3IgJ2RlYm91bmNlJywNCk9uZSBwYXRjaCB1c2Ug
-cmVhZGwvd3JpdGVsLCBhbmQgYW5vdGhlciBwYXRjaCBjaGFuZ2UgdG8gZHdhcGJfcmVhZC93cml0
-ZS4gSXQgc2VlbXMgZHVwbGljYXRlIHNpbmNlDQp0aGUgcHJldmlvdXMgcGF0Y2ggdXNlIHJlYWRs
-L3dyaXRlbCBhbmQgdGhlIGZsbG93aW5nIG9uZSBjaGFuZ2UgaXQgaW1tZWRpYXRlbHkuDQpTaW5j
-ZSB0aGlzIHBhdGNoIGlzIHNtYWxsLCBjb3VsZCB3ZSBqdXN0IG1ha2UgdGhlbSB0b2dldGhlcj8g
-SG93IGRvIHlvdSB0aGluaz8NCg==
+On Fri, Sep 05, 2014 at 10:32:22AM +0100, Robert Richter wrote:
+> On 05.09.14 09:42:00, Will Deacon wrote:
+> > On Fri, Sep 05, 2014 at 08:46:44AM +0100, Robert Richter wrote:
+> > > From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > > 
+> > > This patch adds documentation for the devicetree bindings used by the
+> > > DT files of Cavium Thunder SoC platforms.
+> > > 
+> > > Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > > Signed-off-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/cavium-thunder.txt | 10 ++++++++++
+> > >  Documentation/devicetree/bindings/arm/cpus.txt           |  1 +
+> > >  2 files changed, 11 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder.txt b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
+> > > new file mode 100644
+> > > index 000000000000..6f63a5866902
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
+> > > @@ -0,0 +1,10 @@
+> > > +Cavium Thunder platform device tree bindings
+> > > +--------------------------------------------
+> > > +
+> > > +Boards with Cavium's Thunder SoC shall have following properties.
+> > > +
+> > > +Root Node
+> > > +---------
+> > > +Required root node properties:
+> > > +
+> > > +  - compatible = "cavium,thunder-88xx";
+> > 
+> > Is this file necessary? We don't have one for xgene afaict.
+> 
+> Hmm, looking at Documentation/devicetree/bindings/arm/calxeda.txt
+> there is something similar.
+> 
+> I am fine with both, keeping or removing it.
+> 
+> Would leave this to the DT maintainers.
+
+Having a required root node compatible is fine, though I would only
+expect it to be necessary for errata workarounds if we have no other way
+of detecting things.
+
+That said, compatible strings shouldn't have wildcards, so
+"cavium,thunder-88xx" should be replaced with something more specific.
+Later boards can claim compatibility with that (but should have their
+own strings too).
+
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
