@@ -1,41 +1,74 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v9 04/12] PCI: OF: Fix the conversion of IO ranges into
- IO resources.
-Date: Fri, 5 Sep 2014 16:11:31 -0600
-Message-ID: <20140905221131.GJ8080@google.com>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
- <1407860725-25202-5-git-send-email-Liviu.Dudau@arm.com>
- <CAL_JsqJm6qWNdrJ2F8xddFUj46y42n6hQVu1nkTaA-5Tbg--XQ@mail.gmail.com>
- <20140822130640.GM13147@bart.dudau.co.uk>
- <CAL_JsqLGa3em5Phct-H0Q=vB5AnA78h19uA=4xi3xHA1rCVq+A@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] RFC: add function for localbus address
+Date: Fri, 05 Sep 2014 16:29:36 -0700
+Message-ID: <540A4760.8060105@codeaurora.org>
+References: <20140729234522.E9FF1C40738@trevor.secretlab.ca> <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLGa3em5Phct-H0Q=vB5AnA78h19uA=4xi3xHA1rCVq+A@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Liviu Dudau <liviu@dudau.co.uk>, Liviu Dudau <Liviu.Dudau@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 24, 2014 at 06:27:48PM -0500, Rob Herring wrote:
-> On Fri, Aug 22, 2014 at 8:06 AM, Liviu Dudau <liviu@dudau.co.uk> wrote:
-> > mips is doing the same thing and I believe is not affected, pci-host-generic.c
-> > was adjusting the returned values afterwards so that will not be needed and Lorenzo
-> > has a patch for the driver to adapt it to this series anyway.
-> >
-> > pcie-designware.c also recalculates the io.start and io.end values, so that's fine
-> > for now. The only ones that I believe are still affected are pci-tegra.c and
-> > pcie-rcar.c for which I will need to provide a patch similar to integrator unless
-> > the code gets converted to the new range parsing.
-> 
-> Well, the latter would be nice, but they certainly have to be fixed.
-> Now that I think about it, this needs to be handled in a bisectable
-> way. So I think you need to fix all affected platforms in this patch
-> rather than a separate patch as you have done.
+On 09/02/14 08:45, Stanimir Varbanov wrote:
+> Hi Grant,
+>
+> I came down to this. Could you review? Is that
+> implementation closer to the suggestion made by you.
 
-Yep, I was about to complain that the "ARM: integrator: Correct usage of
-of_pci_range_to_resource()" patch needs to be squashed into whatever broke
-it, but I see Rob already caught that.
+I like this patch (but I'm biased because I want it to exist). Feel free
+to add my Tested-by.
 
-Bjorn
+
+> ---
+>  drivers/of/address.c       |   49 ++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/of/platform.c      |   20 ++++++++++++++---
+>  include/linux/of_address.h |   19 +++++++++++++++++
+>  3 files changed, 84 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index e371825..86c2166 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -601,6 +601,32 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+>  }
+>  EXPORT_SYMBOL(of_get_address);
+>  
+> +const __be32 *of_get_localbus_address(struct device_node *np, int index,
+> +				      u64 *size)
+> +{
+> +	struct device_node *root, *parent;
+> +	const __be32 *ranges, *prop = NULL;
+> +
+> +	parent = of_get_parent(np);
+> +	if (!parent)
+> +		return NULL;
+> +
+> +	root = of_find_node_by_path("/");
+> +
+> +	if (parent == root) {
+> +		of_node_put(parent);
+> +		return NULL;
+> +	}
+
+I don't get this part though. Perhaps it needs a comment to say why we
+don't allow the node to live in the root.
+
+> +
+> +	ranges = of_get_property(parent, "ranges", NULL);
+> +	of_node_put(parent);
+> +
+> +	if (!ranges)
+> +		prop = of_get_address(np, index, size, NULL);
+> +
+> +	return prop;
+> +}
+> +
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
