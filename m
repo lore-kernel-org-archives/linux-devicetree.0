@@ -1,13 +1,16 @@
-From: Anson Huang <b20788@freescale.com>
-Subject: [PATCH V2 2/3] ARM: dts: imx6: make gpt per clock can be from OSC
-Date: Fri, 5 Sep 2014 11:26:45 +0800
-Message-ID: <1409887606-22388-3-git-send-email-b20788@freescale.com>
-References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
+From: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Subject: RE: [PATCH 0/3] move gpt per clk parent for ipg_per to OSC
+Date: Fri, 5 Sep 2014 03:32:14 +0000
+Message-ID: <7e5aa554087e4809895cf7648ac224c0@BN1PR0301MB0628.namprd03.prod.outlook.com>
+References: <1409729805-9741-1-git-send-email-b20788@freescale.com>
+ <CAOMZO5BOfsvrH3ijxKwyGemEW-B60n-+4wpDZ5xfC98efM469w@mail.gmail.com>
+ <20140905003523.GD10809@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1409887606-22388-1-git-send-email-b20788@freescale.com>
+In-Reply-To: <20140905003523.GD10809@dragon>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,60 +20,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@linaro.org, festevam@gmail.com, kernel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Shawn Guo <Shawn.Guo@freescale.com>, Fabio Estevam <festevam@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Original gpt per clk parent is from ipg_per clk which
-may be scaled when system enter low bus mode, as ipg
-clk will be lower in low bus mode, to keep system clk
-NOT drift, select gpt per clk parent from OSC which
-is at fixed freq always.
+Hi, Shawn and Fabio
+	Thanks for advice, I have sent out V2 patch, please help review.
 
-On i.mx6qdl, add a osc_per clk source for i.mx6q
-TO > 1.0 and all i.MX6dl SoC.
+Best regards!
+Anson Huang
 
-On i.mx6sx, just make gpt per clk from OSC.
 
-Signed-off-by: Anson Huang <b20788@freescale.com>
----
-change log from v1 -> v2
-	on i.mx6q TO1.0, there is no OSC clk source for
-	gpt per, so I have to add a new clk source of
-	osc_per for gpt to cover i.mx6q TO1.0.
+-----Original Message-----
+From: Shawn Guo [mailto:shawn.guo@freescale.com] 
+Sent: 2014-09-05 8:35 AM
+To: Fabio Estevam
+Cc: Huang Yongcai-B20788; Sascha Hauer; devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 0/3] move gpt per clk parent for ipg_per to OSC
 
- arch/arm/boot/dts/imx6qdl.dtsi |    5 +++--
- arch/arm/boot/dts/imx6sx.dtsi  |    2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+On Thu, Sep 04, 2014 at 07:50:35PM -0300, Fabio Estevam wrote:
+> This patch series works fine if we use the new dtb and new kernel.
+> 
+> However, booting a kernel with these series applied and using an old 
+> dtb we get a system with broken timer.
+> 
+> 'sleep 1' takes something like 20 seconds in this case.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 70d7207..8de2801 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -401,8 +401,9 @@
- 				reg = <0x02098000 0x4000>;
- 				interrupts = <0 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6QDL_CLK_GPT_IPG>,
--					 <&clks IMX6QDL_CLK_GPT_IPG_PER>;
--				clock-names = "ipg", "per";
-+					 <&clks IMX6QDL_CLK_GPT_IPG_PER>,
-+					 <&clks IMX6QDL_CLK_GPT_3M>;
-+				clock-names = "ipg", "per", "osc_per";
- 			};
- 
- 			gpio1: gpio@0209c000 {
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 63d9d82..b5d8252 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -421,7 +421,7 @@
- 				reg = <0x02098000 0x4000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
--					 <&clks IMX6SX_CLK_GPT_SERIAL>;
-+					 <&clks IMX6SX_CLK_GPT_3M>;
- 				clock-names = "ipg", "per";
- 			};
- 
--- 
-1.7.9.5
+Oh, yes.  It breaks the compatibility with existing DTB.  Dropped the patches for now.
+
+Anson,
+
+We may need to query the clock rate and then decide how to set up those register bits?
+
+Shawn
