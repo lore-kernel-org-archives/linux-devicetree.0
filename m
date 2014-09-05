@@ -1,43 +1,64 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v4 1/4] thermal: rockchip: add driver for thermal
-Date: Fri, 05 Sep 2014 08:33:23 +0800
-Message-ID: <540904D3.1070004@rock-chips.com>
-References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com> <1409710239-19941-2-git-send-email-caesar.wang@rock-chips.com> <20140904170559.GB10224@core.coreip.homeip.net>
+From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v2] spi: orion: support armada extended baud rates
+Date: Fri, 05 Sep 2014 10:36:10 +1000
+Message-ID: <5409057A.6090900@uclinux.org>
+References: <1409835268-29555-1-git-send-email-gerg@uclinux.org> <CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140904170559.GB10224@core.coreip.homeip.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, zhaoyifeng <zyf@rock-chips.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Geert,
 
-=E5=9C=A8 2014=E5=B9=B409=E6=9C=8805=E6=97=A5 01:06, Dmitry Torokhov =E5=
-=86=99=E9=81=93:
-> Hi Caesar,
->
-> On Wed, Sep 03, 2014 at 10:10:36AM +0800, Caesar Wang wrote:
->> +static int rockchip_thermal_remove(struct platform_device *pdev)
->> +{
->> +	struct rockchip_thermal_data *data =3D platform_get_drvdata(pdev);
->> +
->> +	rockchip_thermal_control(data, false);
->> +
->> +	thermal_zone_device_unregister(data->tz);
->> +	cpufreq_cooling_unregister(data->cdev);
->> +	cpufreq_cooling_unregister(data->cdev);
-> It looks like we are unregistering the same cooling device one too ma=
-ny times.
->
-> Thanks.
->
-yes,I made a stupid mistake.  Thanks~
+On 04/09/14 23:17, Geert Uytterhoeven wrote:
+> On Thu, Sep 4, 2014 at 2:54 PM,  <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org> wrote:
+>> The Armada SoC family implementation of this SPI hardware module has
+>> extended the configuration register to allow for a wider range of SPI
+>> clock rates. Specifically the Serial Baud Rate Pre-selection bits in the
+>> SPI Interface Configuration Register now also use bits 6 and 7 as well.
+>>
+>> Modify the baud rate calculation to handle these differences for the
+>> Armada case. Potentially a baud rate can be setup using a number of
+>> different pre-scalar and scalar combinations. This code tries all
+>> possible pre-scalar divisors (8 in total) to try and find the most
+>> accuate set.
+> 
+> Are the Orion rates and register bits a subset of the Armada ones?
+> I.e. does the Armada work with the Orion setup?
 
---=20
-Best regards,
-Caesar
+The bits used by the orion are a subset (bits 0-4 of the SPI
+configuration register) of those used by the armada (bits 0-4 and
+6-7).
+
+In practice the defined prescalar values for the orion do give
+the same divisor for the same bits set on armada. The extra bits
+on the armada let you get to lower SPI baudrates (which is more of
+a problem on the armada with its higher core clocks).
 
 
+>> This change introduces a new device tree compatible device name
+>> "armada-spi". This is used in place of "orion-spi" on the Armada SoC
+>> parts.
+> 
+>> -                               compatible = "marvell,orion-spi";
+>> +                               compatible = "marvell,armada-spi";
+> 
+> If the answer to my above question is yes, you want to keep
+> "marvell,orion-spi" as a fallback.
+
+Do you mean like this?
+
+  compatible = "marvell,orion-spi", "marvell,armada-spi";
+
+Regards
+Greg
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
