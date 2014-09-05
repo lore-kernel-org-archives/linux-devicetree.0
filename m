@@ -1,180 +1,126 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 3/3] mfd: palmas: Add support for optional wakeup
-Date: Fri, 5 Sep 2014 15:51:51 -0500
-Message-ID: <1409950311-25236-4-git-send-email-nm@ti.com>
-References: <1409950311-25236-1-git-send-email-nm@ti.com>
+From: arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org (Arnaud Ebalard)
+Subject: Re: [PATCH] ARM: MVEBU: Netgear RN102: Use Hardware BCH ECC
+Date: Fri, 05 Sep 2014 22:49:58 +0200
+Message-ID: <87ha0l23nt.fsf@natisbad.org>
+References: <1409898233-9273-1-git-send-email-klightspeed@killerwolves.net>
+	<20140905154140.GA1377@arch.hh.imgtec.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1409950311-25236-1-git-send-email-nm@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@linaro.org>, Tony Lindgren <tony@atomide.com>, Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the recent pinctrl-single changes, omaps can treat wake-up events
-from deeper power  states as interrupts.
+Hi,
 
-This is to handle the case where the system needs two interrupt
-sources when SoC is in deep sleep(1 to exit from deep power mode such
-as sleep, and other from the module handling the actual event during
-system active state). This is not the same as threaded interrupts as the
-wakeup interrupt source is used only as part of deeper power saving
-mode.
+Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
 
-Let's add support for the optional second interrupt for wake-up
-events. And then SoC can wakeup and handle the event using it's
-regular handler.
+> (Fixing Cc list: dropping devicetree guys, and adding Brian and MTD instead)
+>
+> On 05 Sep 04:23 PM, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
+>> The bootloader on the Netgear ReadyNAS RN102 uses Hardware BCH ECC
+>> (strength = 4), while the pxa3xx NAND driver by default uses 
+>> Hamming ECC (strength = 1).
+>> 
+>
+> Hm, I guess the device (Hynix H27U1G8F2BTR) does not support ONFI,
+> and the kernel is just taking the legacy ECC. The flash specs makes no
+> mention to ONFI, so probably no ONFI here.
+>
+>> This patch changes the ECC mode on these machines to match that
+>> of the bootloader and of the stock firmware, so that for example
+>> updating the kernel is possible without requiring a serial
+>> connection.
+>> 
+>> This patch depends on commit 5b3e507 (mtd: nand: pxa3xx: Use ECC
+>> strength and step size devicetree binding)
+>> 
+>> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+>
+> Looks good to me, since Arnaud reports this is the correct ECC scheme:
+> http://natisbad.org/NAS2/index.html#hw-nand
+>
+> Acked-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> Thanks for the fix,
 
-This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
-support for optional wake-up")
+w/o the patch, you can write data to the flash using userland tools from
+mtd-utils package (flash_erase and nandwrite); data can then be read
+again using userland tools (say using dd). But - as reported by Ben - if
+you nandwrite an uImage from userland, here is what you indeed get from
+u-boot when you try and boot that image:
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- drivers/mfd/palmas.c       |   59 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/palmas.h |    2 ++
- 2 files changed, 61 insertions(+)
+  root@humble:~# flash_erase /dev/mtd2 0 0
+  Erasing 128 Kibyte @ 5e0000 -- 100 % complete 
+  
+  root@humble:~# nandwrite -p /dev/mtd2 /tmp/uImage-3.16.1.rn102
+  Writing data to block 0 at offset 0x0
+  Writing data to block 1 at offset 0x20000
+  Writing data to block 2 at offset 0x40000
+  Writing data to block 3 at offset 0x60000
+  Writing data to block 4 at offset 0x80000
+  
+  ...
+  
+  reboot 
+  
+  ...
+  
+  Marvell>> nand read 0x1200000 0x200000 0x600000
+  
+  NAND read: device 0 offset 0x200000, size 0x600000
+   6291456 bytes read: OK
+  
+  Marvell>> bootm 0x1200000
+  ## Booting kernel from Legacy Image at 01200000 ...
+     Image Name:   Linux-3.16.1.rn102
+     Created:      2014-08-14  13:33:46 UTC
+     Image Type:   ARM Linux Kernel Image (uncompressed)
+     Data Size:    4423998 Bytes =  4.2 MB
+     Load Address: 00008000
+     Entry Point:  00008000
+     Verifying Checksum ... Bad Data CRC
+  ERROR: can't get kernel image!
+  
 
-diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
-index 28cb048..11186ab 100644
---- a/drivers/mfd/palmas.c
-+++ b/drivers/mfd/palmas.c
-@@ -24,6 +24,7 @@
- #include <linux/mfd/core.h>
- #include <linux/mfd/palmas.h>
- #include <linux/of_device.h>
-+#include <linux/of_irq.h>
+Now, w/ the patch submitted by Ben, here is what you get:
+
+  With the patch applied, this indeed works has 
+  ## Booting kernel from Legacy Image at 01200000 ...
+     Image Name:   Linux-3.16.1.rn102
+     Created:      2014-09-05  20:25:34 UTC
+     Image Type:   ARM Linux Kernel Image (uncompressed)
+     Data Size:    4424067 Bytes =  4.2 MB
+     Load Address: 00008000
+     Entry Point:  00008000
+     Verifying Checksum ... OK
+     Loading Kernel Image ... OK
+  OK
+  
+  Starting kernel ...
+
+i.e. it works.  
+
+So, thanks for reporting this, Ben. I must confess I got used to update
+my kernels from u-boot and did not take enough attention to that
+aspect when I updated the .dts to add access to NAND after Ezequiel
+wrote the NAND driver. I will take a look at RN104 and RN2120 to check
+if something similar is needed for those two.
+
+FWIW, you can add my:
+
+ Tested-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
  
- static const struct regmap_config palmas_regmap_config[PALMAS_NUM_CLIENTS] = {
- 	{
-@@ -326,6 +327,16 @@ static struct regmap_irq_chip tps65917_irq_chip = {
- 			PALMAS_INT1_MASK),
- };
- 
-+static irqreturn_t palmas_wake_irq(int irq, void *_palmas)
-+{
-+	/*
-+	 * Return Not handled so that interrupt is disabled.
-+	 * Level event ensures that the event is eventually handled
-+	 * by the appropriate chip handler already registered
-+	 */
-+	return IRQ_NONE;
-+}
-+
- int palmas_ext_control_req_config(struct palmas *palmas,
- 	enum palmas_external_requestor_id id,  int ext_ctrl, bool enable)
- {
-@@ -409,6 +420,7 @@ static void palmas_dt_to_pdata(struct i2c_client *i2c,
- 		pdata->mux_from_pdata = 1;
- 		pdata->pad2 = prop;
- 	}
-+	pdata->wakeirq = irq_of_parse_and_map(node, 1);
- 
- 	/* The default for this register is all masked */
- 	ret = of_property_read_u32(node, "ti,power-ctrl", &prop);
-@@ -521,6 +533,7 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
- 	i2c_set_clientdata(i2c, palmas);
- 	palmas->dev = &i2c->dev;
- 	palmas->irq = i2c->irq;
-+	palmas->wakeirq = pdata->wakeirq;
- 
- 	match = of_match_device(of_palmas_match_tbl, &i2c->dev);
- 
-@@ -587,6 +600,22 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
- 	if (ret < 0)
- 		goto err_i2c;
- 
-+	if (!palmas->wakeirq)
-+		goto no_wake_irq;
-+
-+	ret = devm_request_irq(palmas->dev, palmas->wakeirq,
-+			       palmas_wake_irq,
-+			       IRQF_ONESHOT | pdata->irq_flags,
-+			       dev_name(palmas->dev),
-+			       &palmas);
-+	if (ret < 0)
-+		goto err_i2c;
-+
-+	/* We use wakeirq only during suspend-resume path */
-+	device_set_wakeup_capable(palmas->dev, true);
-+	disable_irq_nosync(palmas->wakeirq);
-+
-+no_wake_irq:
- no_irq:
- 	slave = PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
- 	addr = PALMAS_BASE_TO_REG(PALMAS_PU_PD_OD_BASE,
-@@ -706,6 +735,34 @@ static int palmas_i2c_remove(struct i2c_client *i2c)
- 	return 0;
- }
- 
-+static int palmas_i2c_suspend(struct i2c_client *i2c,  pm_message_t mesg)
-+{
-+	struct palmas *palmas = i2c_get_clientdata(i2c);
-+	struct device *dev = &i2c->dev;
-+
-+	if (!palmas->wakeirq)
-+		return 0;
-+
-+	if (device_may_wakeup(dev))
-+		enable_irq(palmas->wakeirq);
-+
-+	return 0;
-+}
-+
-+static int palmas_i2c_resume(struct i2c_client *i2c)
-+{
-+	struct palmas *palmas = i2c_get_clientdata(i2c);
-+	struct device *dev = &i2c->dev;
-+
-+	if (!palmas->wakeirq)
-+		return 0;
-+
-+	if (device_may_wakeup(dev))
-+		disable_irq_nosync(palmas->wakeirq);
-+
-+	return 0;
-+}
-+
- static const struct i2c_device_id palmas_i2c_id[] = {
- 	{ "palmas", },
- 	{ "twl6035", },
-@@ -721,6 +778,8 @@ static struct i2c_driver palmas_i2c_driver = {
- 		   .of_match_table = of_palmas_match_tbl,
- 		   .owner = THIS_MODULE,
- 	},
-+	.suspend = palmas_i2c_suspend,
-+	.resume = palmas_i2c_resume,
- 	.probe = palmas_i2c_probe,
- 	.remove = palmas_i2c_remove,
- 	.id_table = palmas_i2c_id,
-diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
-index fb0390a..e8cf4c2 100644
---- a/include/linux/mfd/palmas.h
-+++ b/include/linux/mfd/palmas.h
-@@ -75,6 +75,7 @@ struct palmas {
- 	/* IRQ Data */
- 	int irq;
- 	u32 irq_mask;
-+	int wakeirq;
- 	struct mutex irq_lock;
- 	struct regmap_irq_chip_data *irq_data;
- 
-@@ -377,6 +378,7 @@ struct palmas_clk_platform_data {
- 
- struct palmas_platform_data {
- 	int irq_flags;
-+	int wakeirq;
- 	int gpio_base;
- 
- 	/* bit value to be loaded to the POWER_CTRL register */
--- 
-1.7.9.5
+Additionally, Ezequiel, would anything prevent pushing the patch to
+stable team (nand entry in .dts was added in 3.14):
+
+ Fixes: 92beaccd8b49 ("ARM: mvebu: Enable NAND controller in ReadyNAS 102 .dts file")
+
+Cheers,
+
+a+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
