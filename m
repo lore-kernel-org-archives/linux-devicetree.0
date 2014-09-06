@@ -1,59 +1,62 @@
-From: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: pxa: dts: fix mmc controller compatible string
-Date: Sat, 06 Sep 2014 17:55:34 +0200
-Message-ID: <540B2E76.9000105@zonque.org>
-References: <1408009573-24523-1-git-send-email-zonque@gmail.com> <CAOesGMh6sc7U6XRjGWBUPszaD9K66Ek=3xdMyGdh7bEAMXVG4g@mail.gmail.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v2] thermal: rcar: Add binding docs for new R-Car Gen2
+ SoCs
+Date: Sat, 6 Sep 2014 12:13:59 -0400
+Message-ID: <20140906161357.GA3573@developer>
+References: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMh6sc7U6XRjGWBUPszaD9K66Ek=3xdMyGdh7bEAMXVG4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
 
-Sorry for the late reply.
+Hello Geert,
 
-On 08/28/2014 12:01 AM, Olof Johansson wrote:
-> On Thu, Aug 14, 2014 at 2:46 AM, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> The vendor prefix was renamed from "mrvl" to "marvell". Follow this
->> change in the dts file.
->>
->> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/pxa2xx.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/pxa2xx.dtsi b/arch/arm/boot/dts/pxa2xx.dtsi
->> index febd391..f188f8c 100644
->> --- a/arch/arm/boot/dts/pxa2xx.dtsi
->> +++ b/arch/arm/boot/dts/pxa2xx.dtsi
->> @@ -128,7 +128,7 @@
->>                 };
->>
->>                 mmc0: mmc@41100000 {
->> -                       compatible = "mrvl,pxa-mmc";
->> +                       compatible = "marvell,pxa-mmc";
+
+On Thu, Aug 28, 2014 at 10:12:32AM +0200, Geert Uytterhoeven wrote:
+>   - r8a7792 (R-Car V2H)
+>   - r8a7793 (R-Car M2-N)
+>   - r8a7794 (R-Car E2)
 > 
-> It seems that the driver was changed without consideration to
-> backwards compatibility. The driver should still handle both the old
-> and the new prefix (since we keep this a stable ABI). The old one
-> should be deprecated but still accepted.
->
-> I.e. this is an OK change, but it's fine to hold off as a cleanup
-> until 3.18. The driver has a regression though, that needs to be fixed
-> for 3.17.
+> r8a7791 is now called "R-Car M2-W".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Hmm, no. The driver never actuall supported that string. It was my bad
-when I submitted the original version of pxa2xx.dtsi. Still, given that
-it went unnoticed for so long, it can well wait for 3.18.
+I don't have any concerns on this patch and will be adding to my next
+branch. But before that, I have one simple question. Although the
+binding description mention about soc types, the rcar thermal driver do
+not differentiate soc types, only supports the "renesas,rcar-thermal"
+compatible. 
 
-Thanks,
-Daniel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Do you care explaining why we need the soc specific compatibles?
+
+> ---
+> v2: Drop RFC
+> ---
+>  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> index 0ef00be44b01..43404b197933 100644
+> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> @@ -7,7 +7,10 @@ Required properties:
+>  			    - "renesas,thermal-r8a73a4" (R-Mobile AP6)
+>  			    - "renesas,thermal-r8a7779" (R-Car H1)
+>  			    - "renesas,thermal-r8a7790" (R-Car H2)
+> -			    - "renesas,thermal-r8a7791" (R-Car M2)
+> +			    - "renesas,thermal-r8a7791" (R-Car M2-W)
+> +			    - "renesas,thermal-r8a7792" (R-Car V2H)
+> +			    - "renesas,thermal-r8a7793" (R-Car M2-N)
+> +			    - "renesas,thermal-r8a7794" (R-Car E2)
+>  - reg			: Address range of the thermal registers.
+>  			  The 1st reg will be recognized as common register
+>  			  if it has "interrupts".
+> -- 
+> 1.9.1
+> 
