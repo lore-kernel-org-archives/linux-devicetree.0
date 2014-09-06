@@ -1,7 +1,7 @@
 From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 1/2] ARM: mvebu: Netgear RN104: Use Hardware BCH ECC
-Date: Sat, 06 Sep 2014 22:49:25 +0200
-Message-ID: <920c7e7169dc6aaaa3eb4bced2336d38e77b8864.1410035142.git.arno@natisbad.org>
+Subject: [PATCH 2/2] ARM: mvebu: Netgear RN2120: Use Hardware BCH ECC
+Date: Sat, 06 Sep 2014 22:49:38 +0200
+Message-ID: <61f6a1b7ad0adc57a0e201b9680bc2e5f214a317.1410035142.git.arno@natisbad.org>
 References: <cover.1410035142.git.arno@natisbad.org>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,7 +13,7 @@ Cc: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, linux-arm
 List-Id: devicetree@vger.kernel.org
 
 
-The bootloader on the Netgear ReadyNAS RN104 uses Hardware BCH
+The bootloader on the Netgear ReadyNAS RN2120 uses Hardware BCH
 ECC (strength = 4), while the pxa3xx NAND driver by default uses
 Hamming ECC (strength = 1).
 
@@ -24,21 +24,21 @@ standard tools from mtd-utils package); u-boot will happily
 load and boot it.
 
 The issue was initially reported and fixed by Ben Pedell for
-RN102. The RN104 shares the same Hynix H27U1G8F2BTR NAND
+RN102. The RN2120 shares the same Hynix H27U1G8F2BTR NAND
 flash and setup. This patch is based on Ben's fix for RN102.
 
-Fixes: 0373a558bd79 ("ARM: mvebu: Enable NAND controller in ReadyNAS 104 .dts file")
+Fixes: ad51eddd95ad ("ARM: mvebu: Enable NAND controller in ReadyNAS 2120 .dts file")
 Depends-on: 5b3e507820c6 ("mtd: nand: pxa3xx: Use ECC strength and step size devicetree binding")
 Signed-off-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-netgear-rn104.dts | 4 ++++
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-index f7eb110f43d4..d49e8f24a1c9 100644
---- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-+++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
-@@ -165,6 +165,10 @@
+diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+index 0cf999abc4ed..c5ed85a70ed9 100644
+--- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
++++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+@@ -223,6 +223,10 @@
  				marvell,nand-enable-arbiter;
  				nand-on-flash-bbt;
  
@@ -51,7 +51,6 @@ index f7eb110f43d4..d49e8f24a1c9 100644
  					reg = <0x0000000 0x180000>;  /* 1.5MB */
 -- 
 2.1.0
-
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
