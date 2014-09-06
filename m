@@ -1,172 +1,53 @@
-From: Evgeny Boger <boger@contactless.ru>
-Subject: [PATCH v2] Add support for always enabled watchdog timers to gpio_wdt driver
-Date: Sat,  6 Sep 2014 20:47:44 +0400
-Message-ID: <1410022064-15308-1-git-send-email-boger@contactless.ru>
-References: <53F8CC58.2030406@roeck-us.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53F8CC58.2030406@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-watchdog@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Evgeny Boger <boger@contactless.ru>
+From: Alexey Charkov <alchark@gmail.com>
+Subject: [PATCH 0/4] tty: vt8500_serial: Changes for -next
+Date: Sat,  6 Sep 2014 21:21:11 +0400
+Message-ID: <1410024075-1354-1-git-send-email-alchark@gmail.com>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tony Prisk <linux@prisktech.co.nz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
+Cc: Alexey Charkov <alchark@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Evgeny Boger <boger@contactless.ru>
+Hi all,
 
-Add option to use with watchdog timers which are always enabled
-in hardware, i.e. there is no way to enable/disable it via GPIO pin.
-The driver will start pinging WDT immediately upon loading
-and will continue to do so even after stopping the watchdog.
+This series introduces a bit of clean-up (reduce magic numbers) and
+new features for the VT8500 serial driver.
 
-Signed-off-by: Evgeny Boger <boger@contactless.ru>
----
+Firstly, in a new generation of WonderMedia SoC's the UART module
+changed slightly, and now requires one more bit to be set in its
+line control register to function properly. This is handled in the
+first patch by adding a new DT 'compatible' string for the new chips.
 
-Changes since v1:
-* fixed typos and indentation
-* gpio_wdt_start_timer renamed to gpio_wdt_start_hwping. 
-  This function actually starts the timer to ping hardware.
-  I personally find both proposed gpio_wdt_enable and __gpio_wdt_start 
-  names discouraging in this context.
-* fixed broken error handling for register_reboot_notifier
+Secondly, a couple of ommissions from the initial driver version are
+now filled, namely RTS setting (second patch) and correct calculation
+of baud rate predivisors, divisors etc. for any given input clock
+(third patch). Initial version implicitly assumed input clock to be
+always 24MHz and predivisor to be /2 (which holds for current chips,
+but doesn't need to hold in general).
 
- .../devicetree/bindings/watchdog/gpio-wdt.txt      | 14 ++++++-
- drivers/watchdog/gpio_wdt.c                        | 46 +++++++++++++++++-----
- 2 files changed, 50 insertions(+), 10 deletions(-)
+Thirdly, polled console functions are now implemented (fourth patch)
+to support KGDB over VT8500 UART.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-index 37afec1..047fe3f 100644
---- a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-@@ -12,8 +12,11 @@ Required Properties:
-     the opposite level disables the WDT. Active level is determined
-     by the GPIO flags.
- - hw_margin_ms: Maximum time to reset watchdog circuit (milliseconds).
-+- always-enabled: Use with watchdog timer which is always enabled
-+  in hardware, i.e. there is no way to enable/disable it via GPIO pin.
-+  Driver will start pinging WDT immediately upon loading.
- 
--Example:
-+Examples:
- 	watchdog: watchdog {
- 		/* ADM706 */
- 		compatible = "linux,wdt-gpio";
-@@ -21,3 +24,12 @@ Example:
- 		hw_algo = "toggle";
- 		hw_margin_ms = <1600>;
- 	};
-+
-+	watchdog: watchdog {
-+		/* TPS3813 */
-+		compatible = "linux,wdt-gpio";
-+		gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
-+		hw_algo = "toggle";
-+		hw_margin_ms = <10000>;
-+		always-enabled;
-+	};
-diff --git a/drivers/watchdog/gpio_wdt.c b/drivers/watchdog/gpio_wdt.c
-index 220a9e0..b6ab6e7 100644
---- a/drivers/watchdog/gpio_wdt.c
-+++ b/drivers/watchdog/gpio_wdt.c
-@@ -37,6 +37,8 @@ struct gpio_wdt_priv {
- 	struct notifier_block	notifier;
- 	struct timer_list	timer;
- 	struct watchdog_device	wdd;
-+	bool		always_enabled;
-+	bool		started;
- };
- 
- static void gpio_wdt_disable(struct gpio_wdt_priv *priv)
-@@ -48,10 +50,8 @@ static void gpio_wdt_disable(struct gpio_wdt_priv *priv)
- 		gpio_direction_input(priv->gpio);
- }
- 
--static int gpio_wdt_start(struct watchdog_device *wdd)
-+static int gpio_wdt_start_hwping(struct gpio_wdt_priv *priv)
- {
--	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
--
- 	priv->state = priv->active_low;
- 	gpio_direction_output(priv->gpio, priv->state);
- 	priv->last_jiffies = jiffies;
-@@ -60,12 +60,30 @@ static int gpio_wdt_start(struct watchdog_device *wdd)
- 	return 0;
- }
- 
-+static int gpio_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-+
-+	priv->started = true;
-+	if (priv->always_enabled) {
-+		/* hardware ping timer is already enabled */
-+		priv->last_jiffies = jiffies;
-+	} else {
-+		gpio_wdt_start_hwping(priv);
-+	}
-+
-+	return 0;
-+}
-+
- static int gpio_wdt_stop(struct watchdog_device *wdd)
- {
- 	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
- 
--	mod_timer(&priv->timer, 0);
--	gpio_wdt_disable(priv);
-+	priv->started = false;
-+	if (!priv->always_enabled) {
-+		mod_timer(&priv->timer, 0);
-+		gpio_wdt_disable(priv);
-+	}
- 
- 	return 0;
- }
-@@ -91,8 +109,9 @@ static void gpio_wdt_hwping(unsigned long data)
- 	struct watchdog_device *wdd = (struct watchdog_device *)data;
- 	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
- 
--	if (time_after(jiffies, priv->last_jiffies +
--		       msecs_to_jiffies(wdd->timeout * 1000))) {
-+	if (priv->started &&
-+		time_after(jiffies, priv->last_jiffies +
-+			       msecs_to_jiffies(wdd->timeout * 1000))) {
- 		dev_crit(wdd->dev, "Timer expired. System will reboot soon!\n");
- 		return;
- 	}
-@@ -197,6 +216,9 @@ static int gpio_wdt_probe(struct platform_device *pdev)
- 	/* Use safe value (1/2 of real timeout) */
- 	priv->hw_margin = msecs_to_jiffies(hw_margin / 2);
- 
-+	priv->always_enabled = of_property_read_bool(pdev->dev.of_node,
-+						"always-enabled");
-+
- 	watchdog_set_drvdata(&priv->wdd, priv);
- 
- 	priv->wdd.info		= &gpio_wdt_ident;
-@@ -207,6 +229,7 @@ static int gpio_wdt_probe(struct platform_device *pdev)
- 	if (watchdog_init_timeout(&priv->wdd, 0, &pdev->dev) < 0)
- 		priv->wdd.timeout = SOFT_TIMEOUT_DEF;
- 
-+	priv->started = false;
- 	setup_timer(&priv->timer, gpio_wdt_hwping, (unsigned long)&priv->wdd);
- 
- 	ret = watchdog_register_device(&priv->wdd);
-@@ -215,10 +238,15 @@ static int gpio_wdt_probe(struct platform_device *pdev)
- 
- 	priv->notifier.notifier_call = gpio_wdt_notify_sys;
- 	ret = register_reboot_notifier(&priv->notifier);
--	if (ret)
-+	if (ret) {
- 		watchdog_unregister_device(&priv->wdd);
-+		return ret;
-+	}
- 
--	return ret;
-+	if (priv->always_enabled)
-+		gpio_wdt_start_hwping(priv);
-+
-+	return 0;
- }
- 
- static int gpio_wdt_remove(struct platform_device *pdev)
+These changes have been tested on a WonderMedia WM8880 netbook (all),
+and on a VIA Springboard (WM8950) (all except KGDB).
+
+Greg, could you please merge these for -next, if they look fine?
+
+Thanks a lot,
+Alexey
+
+Alexey Charkov (4):
+  tty: vt8500_serial: add support for UART in WM8880 chips
+  tty: vt8500_serial: add missing support for RTS setting
+  tty: vt8500_serial: explicitly calculate base baud rate
+  tty: vt8500_serial: add polled console functions
+
+ .../devicetree/bindings/serial/via,vt8500-uart.txt |  17 ---
+ .../devicetree/bindings/serial/vt8500-uart.txt     |   3 +-
+ drivers/tty/serial/vt8500_serial.c                 | 136 ++++++++++++++++++---
+ 3 files changed, 118 insertions(+), 38 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/serial/via,vt8500-uart.txt
+
 -- 
-1.9.1
+2.0.0
+
