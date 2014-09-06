@@ -1,74 +1,48 @@
 From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v3 2/3] clocksource: sh_mtu2: Document r7s72100 binding
-Date: Sat,  6 Sep 2014 10:26:29 +0900
-Message-ID: <1409966790-17683-3-git-send-email-horms+renesas@verge.net.au>
-References: <1409966790-17683-1-git-send-email-horms+renesas@verge.net.au>
+Subject: [PATCH v3 0/3] clocksource: Document Renesas SoC specific bindings
+Date: Sat,  6 Sep 2014 10:26:27 +0900
+Message-ID: <1409966790-17683-1-git-send-email-horms+renesas@verge.net.au>
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1409966790-17683-1-git-send-email-horms+renesas@verge.net.au>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-In general Renesas hardware is not documented to the extent
-where the relationship between IP blocks on different SoCs can be assumed
-although they may appear to operate the same way. Furthermore the
-documentation typically does not specify a version for individual
-IP blocks. For these reasons a convention of using the SoC name in place
-of a version and providing SoC-specific compat strings has been adopted.
+In general Renesas hardware is not documented to the extent where the
+relationship between IP blocks on different SoCs can be assumed although
+they may appear to operate the same way. Furthermore the documentation
+typically does not specify a version for individual IP blocks. For these
+reasons a convention of using the SoC name in place of a version and
+providing SoC-specific compat strings has been adopted.
 
-Although not universally liked this convention is used in the bindings
-for a number of drivers for Renesas hardware. The purpose of this patch is
-to update the Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2) driver
-to follow this convention.
+Although not universally liked this convention is used in the bindings for
+a number of drivers for Renesas hardware. The purpose of this patch is to
+update the Renesas clocksource drivers to follow this convention.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+I plan to follow up with patches to use these new bindings in the
+dtsi files for the affected SoCs.
 
----
-* I plan to follow up with a patch patch to use the new binding in the
-  dtsi files for the r7s72100 SoC.
+Changes between v1 and v2:
 
-v2
-* Suggestions by Mark Rutland and Sergei Shtylyov
-  - Compatible strings should be "one or more" not "one" of those listed
-  - Describe the generic binding as covering any MTU2 device
-  - Re-order compat strings from most to least specific
+* Addressed feedback from Sergei Shtylyov, Geert Uytterhoeven and
+  Mark Rutland: corrected editing errors and generally made
+  things clearer.
 
-v3
-* Suggested by Laurent Pinchart
-  - Reword compat documentation for consistency with a more extensive
-    CMT change
----
- Documentation/devicetree/bindings/timer/renesas,mtu2.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+* Addressed feedback from Laruent Pinchart to
+  - remove fallback loop for renesas,cmt-48-gen2
+  - Use consistent case for SoC names
+  - Document fallback for MTU2 and TMU
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-index 917453f..d9a8d5a 100644
---- a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-@@ -8,7 +8,10 @@ are independent. The MTU2 hardware supports five channels indexed from 0 to 4.
- 
- Required Properties:
- 
--  - compatible: must contain "renesas,mtu2"
-+  - compatible: must be one or more of the following:
-+    - "renesas,mtu2-r7s72100" for the r7s72100 MTU2
-+    - "renesas,mtu2" for any MTU2
-+      This is a fallback for the above renesas,mtu2-* entries
- 
-   - reg: base address and length of the registers block for the timer module.
- 
-@@ -26,7 +29,7 @@ Required Properties:
- Example: R7S72100 (RZ/A1H) MTU2 node
- 
- 	mtu2: timer@fcff0000 {
--		compatible = "renesas,mtu2";
-+		compatible = "renesas,mtu2-r7s72100", "renesas,mtu2";
- 		reg = <0xfcff0000 0x400>;
- 		interrupts = <0 139 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 146 IRQ_TYPE_LEVEL_HIGH>,
+Simon Horman (3):
+  clocksource: sh_cmt: Document SoC specific bindings
+  clocksource: sh_mtu2: Document r7s72100 binding
+  clocksource: sh_tmu: Document r8a7779 binding
+
+ .../devicetree/bindings/timer/renesas,cmt.txt      | 44 +++++++++++++++++++---
+ .../devicetree/bindings/timer/renesas,mtu2.txt     |  7 +++-
+ .../devicetree/bindings/timer/renesas,tmu.txt      |  7 +++-
+ 3 files changed, 48 insertions(+), 10 deletions(-)
+
 -- 
 2.0.1
 
