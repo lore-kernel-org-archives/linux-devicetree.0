@@ -1,62 +1,172 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v2] thermal: rcar: Add binding docs for new R-Car Gen2
- SoCs
-Date: Sat, 6 Sep 2014 12:13:59 -0400
-Message-ID: <20140906161357.GA3573@developer>
-References: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org
+From: Evgeny Boger <boger@contactless.ru>
+Subject: [PATCH v2] Add support for always enabled watchdog timers to gpio_wdt driver
+Date: Sat,  6 Sep 2014 20:47:44 +0400
+Message-ID: <1410022064-15308-1-git-send-email-boger@contactless.ru>
+References: <53F8CC58.2030406@roeck-us.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53F8CC58.2030406@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-watchdog@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Evgeny Boger <boger@contactless.ru>
 List-Id: devicetree@vger.kernel.org
 
+From: Evgeny Boger <boger@contactless.ru>
 
-Hello Geert,
+Add option to use with watchdog timers which are always enabled
+in hardware, i.e. there is no way to enable/disable it via GPIO pin.
+The driver will start pinging WDT immediately upon loading
+and will continue to do so even after stopping the watchdog.
 
+Signed-off-by: Evgeny Boger <boger@contactless.ru>
+---
 
-On Thu, Aug 28, 2014 at 10:12:32AM +0200, Geert Uytterhoeven wrote:
->   - r8a7792 (R-Car V2H)
->   - r8a7793 (R-Car M2-N)
->   - r8a7794 (R-Car E2)
-> 
-> r8a7791 is now called "R-Car M2-W".
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Changes since v1:
+* fixed typos and indentation
+* gpio_wdt_start_timer renamed to gpio_wdt_start_hwping. 
+  This function actually starts the timer to ping hardware.
+  I personally find both proposed gpio_wdt_enable and __gpio_wdt_start 
+  names discouraging in this context.
+* fixed broken error handling for register_reboot_notifier
 
-I don't have any concerns on this patch and will be adding to my next
-branch. But before that, I have one simple question. Although the
-binding description mention about soc types, the rcar thermal driver do
-not differentiate soc types, only supports the "renesas,rcar-thermal"
-compatible. 
+ .../devicetree/bindings/watchdog/gpio-wdt.txt      | 14 ++++++-
+ drivers/watchdog/gpio_wdt.c                        | 46 +++++++++++++++++-----
+ 2 files changed, 50 insertions(+), 10 deletions(-)
 
-Do you care explaining why we need the soc specific compatibles?
-
-> ---
-> v2: Drop RFC
-> ---
->  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> index 0ef00be44b01..43404b197933 100644
-> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> @@ -7,7 +7,10 @@ Required properties:
->  			    - "renesas,thermal-r8a73a4" (R-Mobile AP6)
->  			    - "renesas,thermal-r8a7779" (R-Car H1)
->  			    - "renesas,thermal-r8a7790" (R-Car H2)
-> -			    - "renesas,thermal-r8a7791" (R-Car M2)
-> +			    - "renesas,thermal-r8a7791" (R-Car M2-W)
-> +			    - "renesas,thermal-r8a7792" (R-Car V2H)
-> +			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-> +			    - "renesas,thermal-r8a7794" (R-Car E2)
->  - reg			: Address range of the thermal registers.
->  			  The 1st reg will be recognized as common register
->  			  if it has "interrupts".
-> -- 
-> 1.9.1
-> 
+diff --git a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
+index 37afec1..047fe3f 100644
+--- a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
+@@ -12,8 +12,11 @@ Required Properties:
+     the opposite level disables the WDT. Active level is determined
+     by the GPIO flags.
+ - hw_margin_ms: Maximum time to reset watchdog circuit (milliseconds).
++- always-enabled: Use with watchdog timer which is always enabled
++  in hardware, i.e. there is no way to enable/disable it via GPIO pin.
++  Driver will start pinging WDT immediately upon loading.
+ 
+-Example:
++Examples:
+ 	watchdog: watchdog {
+ 		/* ADM706 */
+ 		compatible = "linux,wdt-gpio";
+@@ -21,3 +24,12 @@ Example:
+ 		hw_algo = "toggle";
+ 		hw_margin_ms = <1600>;
+ 	};
++
++	watchdog: watchdog {
++		/* TPS3813 */
++		compatible = "linux,wdt-gpio";
++		gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
++		hw_algo = "toggle";
++		hw_margin_ms = <10000>;
++		always-enabled;
++	};
+diff --git a/drivers/watchdog/gpio_wdt.c b/drivers/watchdog/gpio_wdt.c
+index 220a9e0..b6ab6e7 100644
+--- a/drivers/watchdog/gpio_wdt.c
++++ b/drivers/watchdog/gpio_wdt.c
+@@ -37,6 +37,8 @@ struct gpio_wdt_priv {
+ 	struct notifier_block	notifier;
+ 	struct timer_list	timer;
+ 	struct watchdog_device	wdd;
++	bool		always_enabled;
++	bool		started;
+ };
+ 
+ static void gpio_wdt_disable(struct gpio_wdt_priv *priv)
+@@ -48,10 +50,8 @@ static void gpio_wdt_disable(struct gpio_wdt_priv *priv)
+ 		gpio_direction_input(priv->gpio);
+ }
+ 
+-static int gpio_wdt_start(struct watchdog_device *wdd)
++static int gpio_wdt_start_hwping(struct gpio_wdt_priv *priv)
+ {
+-	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
+-
+ 	priv->state = priv->active_low;
+ 	gpio_direction_output(priv->gpio, priv->state);
+ 	priv->last_jiffies = jiffies;
+@@ -60,12 +60,30 @@ static int gpio_wdt_start(struct watchdog_device *wdd)
+ 	return 0;
+ }
+ 
++static int gpio_wdt_start(struct watchdog_device *wdd)
++{
++	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
++
++	priv->started = true;
++	if (priv->always_enabled) {
++		/* hardware ping timer is already enabled */
++		priv->last_jiffies = jiffies;
++	} else {
++		gpio_wdt_start_hwping(priv);
++	}
++
++	return 0;
++}
++
+ static int gpio_wdt_stop(struct watchdog_device *wdd)
+ {
+ 	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
+ 
+-	mod_timer(&priv->timer, 0);
+-	gpio_wdt_disable(priv);
++	priv->started = false;
++	if (!priv->always_enabled) {
++		mod_timer(&priv->timer, 0);
++		gpio_wdt_disable(priv);
++	}
+ 
+ 	return 0;
+ }
+@@ -91,8 +109,9 @@ static void gpio_wdt_hwping(unsigned long data)
+ 	struct watchdog_device *wdd = (struct watchdog_device *)data;
+ 	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
+ 
+-	if (time_after(jiffies, priv->last_jiffies +
+-		       msecs_to_jiffies(wdd->timeout * 1000))) {
++	if (priv->started &&
++		time_after(jiffies, priv->last_jiffies +
++			       msecs_to_jiffies(wdd->timeout * 1000))) {
+ 		dev_crit(wdd->dev, "Timer expired. System will reboot soon!\n");
+ 		return;
+ 	}
+@@ -197,6 +216,9 @@ static int gpio_wdt_probe(struct platform_device *pdev)
+ 	/* Use safe value (1/2 of real timeout) */
+ 	priv->hw_margin = msecs_to_jiffies(hw_margin / 2);
+ 
++	priv->always_enabled = of_property_read_bool(pdev->dev.of_node,
++						"always-enabled");
++
+ 	watchdog_set_drvdata(&priv->wdd, priv);
+ 
+ 	priv->wdd.info		= &gpio_wdt_ident;
+@@ -207,6 +229,7 @@ static int gpio_wdt_probe(struct platform_device *pdev)
+ 	if (watchdog_init_timeout(&priv->wdd, 0, &pdev->dev) < 0)
+ 		priv->wdd.timeout = SOFT_TIMEOUT_DEF;
+ 
++	priv->started = false;
+ 	setup_timer(&priv->timer, gpio_wdt_hwping, (unsigned long)&priv->wdd);
+ 
+ 	ret = watchdog_register_device(&priv->wdd);
+@@ -215,10 +238,15 @@ static int gpio_wdt_probe(struct platform_device *pdev)
+ 
+ 	priv->notifier.notifier_call = gpio_wdt_notify_sys;
+ 	ret = register_reboot_notifier(&priv->notifier);
+-	if (ret)
++	if (ret) {
+ 		watchdog_unregister_device(&priv->wdd);
++		return ret;
++	}
+ 
+-	return ret;
++	if (priv->always_enabled)
++		gpio_wdt_start_hwping(priv);
++
++	return 0;
+ }
+ 
+ static int gpio_wdt_remove(struct platform_device *pdev)
+-- 
+1.9.1
