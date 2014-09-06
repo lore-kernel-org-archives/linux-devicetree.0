@@ -1,91 +1,65 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: davinci: support adding delay between
- transmission
-Date: Sat, 6 Sep 2014 15:31:14 +0100
-Message-ID: <20140906143113.GI2601@sirena.org.uk>
-References: <1408634706-5762-1-git-send-email-grygorii.strashko@ti.com>
- <1408634706-5762-3-git-send-email-grygorii.strashko@ti.com>
- <20140821182035.GM24407@sirena.org.uk>
- <53F74695.3010902@ti.com>
- <20140822150644.GX24407@sirena.org.uk>
- <5409C704.5070303@ti.com>
+Subject: Re: [PATCH v2.2 2/2] dt-bindings: Adding compatible attribute for
+ SKY81452 regulator
+Date: Sat, 6 Sep 2014 15:38:28 +0100
+Message-ID: <20140906143828.GJ2601@sirena.org.uk>
+References: <20140813190423.GI17528@sirena.org.uk>
+ <1409539218-5571-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1409539218-5571-3-git-send-email-jack.yoo@skyworksinc.com>
+ <20140901103158.GO29327@sirena.org.uk>
+ <20140905015507.GA2636@jack-ThinkPad-T520>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nEsDIrWrg+hrB7l1"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="ibvzjYYg+QDzMCy1"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5409C704.5070303-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+In-Reply-To: <20140905015507.GA2636@jack-ThinkPad-T520>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---nEsDIrWrg+hrB7l1
+--ibvzjYYg+QDzMCy1
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 05, 2014 at 05:21:56PM +0300, Grygorii Strashko wrote:
+On Fri, Sep 05, 2014 at 10:55:07AM +0900, Gyungoh Yoo wrote:
+> On Mon, Sep 01, 2014 at 11:31:58AM +0100, Mark Brown wrote:
 
-> I think we have some misunderstanding here :(
-> 1) All new properties a optional and should be specified for SPI Slave de=
-vices
-> 2) Seems we are talking using different terms:
-> - you referring to the term "transfers" - sequence of packets.
->   Each packet is one transfer (array of words).
-> - while these new properties affect on "transmissions" - sequence of word=
-s.
->   Each word is one transmission.
+> > Why is this a good idea - can this driver be used for anything other
+> > than a sky81452?
 
-That's *very* unusual terminology which doesn't match my expectations at
-all.  Please describe words as words, that'll be much more obvious.
+> Yes. There is a possibility that this driver will be used by similar
+> device with SKY81452.
 
-> Also, below is additional information about properties which
-> are used in 5-pin mode (SPI_READY) to improve error detection
-> [OMAP-L138/da830 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf]:
+OK, so tha was slightly the wrong question.  What added information is
+forcing the user to create a subnode and specify a compatible string
+providing?  This driver is specifying a block of multiple regulators
+with absolute register addresses hard coded into it, there's no real
+ability to use the driver in a different configuration here.  As soon as
+we see the parent device we already know everything there is to know
+about the IP block, having a separate compatible string just forces the
+user to do more typing for no gain.
 
-This is a *whole* other thing, please split these out and work on this
-separately.  The client device is going to need to be doing the same
-thing here so implementing this as a local option in the controller
-driver isn't the best way forwards.
-
-> >> SPIFMTn[23].PARPOL - Parity polarity: even or odd. PARPOL can be modif=
-ied in privilege mode only.
-> >>   0 An even parity flag is added at the end of the transmit data strea=
-m.
-> >>   1 An odd parity flag is added at the end of the transmit data stream.
-
-> > Why would these be specified in DT and not with runtime flags enabled by
-> > the device?  It looks like they affect the data stream generated by the
-> > controller so the client device needs to know about them; I'd expect
-> > that it's device driver would be controlling when they are enabled if
-> > the controller supports them.
-
-> Could you clarify, pls - Do you mean that struct spi_device.mode and=20
-> common SPI DT bindings should be extended to support this?
-
-Yes, if they aren't something that's purely internal to the device they
-need to be generic so that both devices can be configured appropriately.
-
---nEsDIrWrg+hrB7l1
+--ibvzjYYg+QDzMCy1
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUCxqxAAoJECTWi3JdVIfQYjwH/An1KCsee66haxtTca1CTfh1
-iKEmcHmrctbujZkCjhdk1uIwX/z6j9Ik+0PUX6d0DpAaxhOpiDkdS5+MN2yIpGJ4
-2H2ls+Tx6juopNwEnXz1wP+NmCj5FGzIxKTgEFueeRMWN6gp2+1rwz9F7lDXocmu
-YpDKF2auif7JECfLneAYKCpxo+GVODhwFo73KM4EDxSvwSRmT3a7Z156l4o24864
-My7tqHk8DG72iW670Qge2JVfq/Nn4Yg42Lj1z1OBqw/OERsL1Ghzl5gZzMwMmjAR
-iIUPqcA8eZS86/Ih11BWIFo9IBle6rD52hj9z20KpjI881rm2XpiybO7FYHN5TA=
-=+YEl
+iQEcBAEBAgAGBQJUCxxgAAoJECTWi3JdVIfQcBYH/R2CS4T/GKxj2OQMNW2zJrC8
+FdTwq6lavlnYlxzmwXiOF7+grWbxXil5oLxw3N/qRPN2c5Tu2XaNz2BG2MK6gIgY
+jgBIvY7tOKxnVohjcf2GWn60EyCZDBws76Exs3MJlE1qAPZjIeTt+eh42IGHCdo7
+/JnBWobjro77Q8zJpHkEj31kjHrSb97POZoqn9gMOhpmWVdfJr/qbb6GKiu5rwJj
+Kg7eNszlJx/739Rs732ZgEzdiIWXQkLT8d22Q6hW4Dz9aUKnJxohhpcFaqsM/vn5
+Hfd+LKavPdodU8l0Rv4N7XEXVj0iMMWK0SB/WwV9aY2XM0bMai2W/8ULfdWiZCA=
+=ncGW
 -----END PGP SIGNATURE-----
 
---nEsDIrWrg+hrB7l1--
+--ibvzjYYg+QDzMCy1--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
