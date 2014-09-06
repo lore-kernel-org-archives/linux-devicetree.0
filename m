@@ -1,38 +1,59 @@
-From: Alexey Charkov <alchark@gmail.com>
-Subject: [PATCH 2/4] tty: vt8500_serial: add missing support for RTS setting
-Date: Sat,  6 Sep 2014 21:21:13 +0400
-Message-ID: <1410024075-1354-3-git-send-email-alchark@gmail.com>
-References: <1410024075-1354-1-git-send-email-alchark@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410024075-1354-1-git-send-email-alchark@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tony Prisk <linux@prisktech.co.nz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
-Cc: Alexey Charkov <alchark@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] thermal: rcar: Add binding docs for new R-Car Gen2 SoCs
+Date: Sat, 6 Sep 2014 20:10:13 +0200
+Message-ID: <CAMuHMdW_BYT8ughx=-j3Y+5Bd1Jkb3An8D=uTNcXa6rU3nfNQg@mail.gmail.com>
+References: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
+	<20140906161357.GA3573@developer>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140906161357.GA3573@developer>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Zhang Rui <rui.zhang@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
- drivers/tty/serial/vt8500_serial.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Hi Eduardo,
 
-diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
-index f225719..47e74f9 100644
---- a/drivers/tty/serial/vt8500_serial.c
-+++ b/drivers/tty/serial/vt8500_serial.c
-@@ -291,6 +291,14 @@ static unsigned int vt8500_get_mctrl(struct uart_port *port)
- 
- static void vt8500_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
-+	unsigned int lcr = vt8500_read(port, VT8500_URLCR);
-+
-+	if (mctrl & TIOCM_RTS)
-+		lcr |= VT8500_RTS;
-+	else
-+		lcr &= ~VT8500_RTS;
-+
-+	vt8500_write(port, lcr, VT8500_URLCR);
- }
- 
- static void vt8500_break_ctl(struct uart_port *port, int break_ctl)
--- 
-2.0.0
+On Sat, Sep 6, 2014 at 6:13 PM, Eduardo Valentin <edubezval@gmail.com> wrote:
+> On Thu, Aug 28, 2014 at 10:12:32AM +0200, Geert Uytterhoeven wrote:
+>>   - r8a7792 (R-Car V2H)
+>>   - r8a7793 (R-Car M2-N)
+>>   - r8a7794 (R-Car E2)
+>>
+>> r8a7791 is now called "R-Car M2-W".
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> I don't have any concerns on this patch and will be adding to my next
+> branch. But before that, I have one simple question. Although the
+
+Thanks!
+
+> binding description mention about soc types, the rcar thermal driver do
+> not differentiate soc types, only supports the "renesas,rcar-thermal"
+> compatible.
+>
+> Do you care explaining why we need the soc specific compatibles?
+
+The reason we also have the SoC-specific values is that we are not
+100% sure the thermal IP cores in the Renesas R-Car Gen1 and R-Car Gen2
+series are really identical.
+
+Currently the driver treats all of them the same, but if we ever discover
+a difference, and the driver needs to start distinguishing among different
+versions, we will need to have the SoC-specific values in the DTSes to
+do so.
+
+I hope this explains our rationale.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
