@@ -1,74 +1,84 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] RFC: add function for localbus address
-Date: Fri, 05 Sep 2014 16:29:36 -0700
-Message-ID: <540A4760.8060105@codeaurora.org>
-References: <20140729234522.E9FF1C40738@trevor.secretlab.ca> <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: [PATCH v6 3/4] dt-bindings: pci: xgene pcie device tree bindings
+Date: Fri,  5 Sep 2014 17:25:42 -0700
+Message-ID: <1409963143-11951-4-git-send-email-tinamdar@apm.com>
+References: <1409963143-11951-1-git-send-email-tinamdar@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1409963143-11951-1-git-send-email-tinamdar@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, Tanmay Inamdar <tinamdar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/14 08:45, Stanimir Varbanov wrote:
-> Hi Grant,
->
-> I came down to this. Could you review? Is that
-> implementation closer to the suggestion made by you.
+This patch adds the bindings for X-Gene PCIe driver. The driver resides
+under 'drivers/pci/host/pci-xgene.c' file.
 
-I like this patch (but I'm biased because I want it to exist). Feel free
-to add my Tested-by.
+Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
+---
+ .../devicetree/bindings/pci/xgene-pci.txt          | 55 ++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
 
-
-> ---
->  drivers/of/address.c       |   49 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/platform.c      |   20 ++++++++++++++---
->  include/linux/of_address.h |   19 +++++++++++++++++
->  3 files changed, 84 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index e371825..86c2166 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -601,6 +601,32 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
->  }
->  EXPORT_SYMBOL(of_get_address);
->  
-> +const __be32 *of_get_localbus_address(struct device_node *np, int index,
-> +				      u64 *size)
-> +{
-> +	struct device_node *root, *parent;
-> +	const __be32 *ranges, *prop = NULL;
-> +
-> +	parent = of_get_parent(np);
-> +	if (!parent)
-> +		return NULL;
-> +
-> +	root = of_find_node_by_path("/");
-> +
-> +	if (parent == root) {
-> +		of_node_put(parent);
-> +		return NULL;
-> +	}
-
-I don't get this part though. Perhaps it needs a comment to say why we
-don't allow the node to live in the root.
-
-> +
-> +	ranges = of_get_property(parent, "ranges", NULL);
-> +	of_node_put(parent);
-> +
-> +	if (!ranges)
-> +		prop = of_get_address(np, index, size, NULL);
-> +
-> +	return prop;
-> +}
-> +
->
-
+diff --git a/Documentation/devicetree/bindings/pci/xgene-pci.txt b/Documentation/devicetree/bindings/pci/xgene-pci.txt
+new file mode 100644
+index 0000000..683a253
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/xgene-pci.txt
+@@ -0,0 +1,55 @@
++* AppliedMicro X-Gene PCIe interface
++
++Required properties:
++- device_type: set to "pci"
++- compatible: should contain "apm,xgene-pcie" to identify the core.
++- reg: A list of physical base address and length for each set of controller
++       registers. Must contain an entry for each entry in the reg-names
++       property.
++- reg-names: Must include the following entries:
++  "csr": controller configuration registers.
++  "cfg": pcie configuration space registers.
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- ranges: ranges for the outbound memory, I/O regions.
++- dma-ranges: ranges for the inbound memory regions.
++- #interrupt-cells: set to <1>
++- interrupt-map-mask and interrupt-map: standard PCI properties
++	to define the mapping of the PCIe interface to interrupt
++	numbers.
++- clocks: from common clock binding: handle to pci clock.
++
++Optional properties:
++- status: Either "ok" or "disabled".
++
++Example:
++
++SoC specific DT Entry:
++
++	pcie0: pcie@1f2b0000 {
++		status = "disabled";
++		device_type = "pci";
++		compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
++		#interrupt-cells = <1>;
++		#size-cells = <2>;
++		#address-cells = <3>;
++		reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
++			0xe0 0xd0000000 0x0 0x00040000>; /* PCI config space */
++		reg-names = "csr", "cfg";
++		ranges = <0x01000000 0x00 0x00000000 0xe0 0x10000000 0x00 0x00010000   /* io */
++			  0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000>; /* mem */
++		dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
++			      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
++		interrupt-map-mask = <0x0 0x0 0x0 0x7>;
++		interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
++				 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
++				 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
++				 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
++		clocks = <&pcie0clk 0>;
++	};
++
++
++Board specific DT Entry:
++	&pcie0 {
++		status = "ok";
++	};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.1
