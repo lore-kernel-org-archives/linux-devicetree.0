@@ -1,52 +1,47 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Sat, 6 Sep 2014 10:47:01 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E982BFA@SHSMSX101.ccr.corp.intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
- <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
- <3465722.Gc9y01nQRe@wuerfel> <20140905193736.GA7981@breakpoint.cc>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 6/7] ARM: dts: sun6i: Add required ahb1 clock
+ parent and rates for dma controller
+Date: Sat,  6 Sep 2014 18:47:27 +0800
+Message-ID: <1410000448-9999-7-git-send-email-wens@csie.org>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140905193736.GA7981@breakpoint.cc>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBRWMVOQAKGQETUJAARI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1410000448-9999-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > >
-> > > -	irq_set_chained_handler(irq, dwapb_irq_handler);
-> > > -	irq_set_handler_data(irq, gpio);
-> > > +	if (!pp->irq_shared) {
-> > > +		irq_set_chained_handler(pp->irq, dwapb_irq_handler);
-> > > +		irq_set_handler_data(pp->irq, gpio);
-> > > +	} else {
-> > > +		/*
-> > > +		 * Request a shared IRQ since where MFD would have devices
-> > > +		 * using the same irq pin
-> > > +		 */
-> > > +		err = devm_request_irq(gpio->dev, pp->irq,
-> > > +				       dwapb_irq_handler_mfd,
-> > > +				       IRQF_SHARED, "gpio-dwapb-mfd", gpio);
-> > > +		if (err) {
-> > > +			dev_err(gpio->dev, "error requesting IRQ\n");
-> > > +			irq_domain_remove(gpio->domain);
-> > > +			gpio->domain = NULL;
-> > > +			return;
-> > > +		}
-> > > +	}
-> > >
-> >
-> > I think this need some better documentation. Why is it safe to use
-> > devm_request_irq rather than irq_set_chained_handler here?
-> 
-> Usually it is preferred to use irq_set_chained_handler() for the chained handler
-> so the handler does not show up in /proc/interrupts.
-> This requires an exclusive non-shared handler which is not the case on the intel
-> platform. So they have to use devm_request_irq() instead.
-> 
-Yes, for Intel Quark, it has a single PCI function exporting a GPIO and I2C controller, and
-the irq is shared by GPIO and I2C, so we need shared irq as the comments said.
+The DMA controller requires AHB1 bus clock to be clocked from PLL6.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 8eb2c6d..1117989 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -317,6 +317,11 @@
+ 			clocks = <&ahb1_gates 6>;
+ 			resets = <&ahb1_rst 6>;
+ 			#dma-cells = <1>;
++
++			/* DMA controller requires AHB1 clocked from PLL6 */
++			assigned-clocks = <&ahb1>;
++			assigned-clock-parents = <&pll6>;
++			assigned-clock-rates = <200000000>;
+ 		};
+ 
+ 		mmc0: mmc@01c0f000 {
+-- 
+2.1.0
