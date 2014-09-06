@@ -1,38 +1,42 @@
-From: Carlo Caione <carlo@caione.org>
-Subject: Re: [PATCH 2/7] ARM: meson: serial: add MesonX SoC on-chip uart
- driver
-Date: Sat, 6 Sep 2014 20:51:12 +0200
-Message-ID: <20140906185112.GB14240@nuc>
-References: <1408272594-10814-1-git-send-email-carlo@caione.org>
- <1408272594-10814-3-git-send-email-carlo@caione.org>
- <20140906182804.GA14240@nuc>
- <20140906183834.GA28645@kroah.com>
+From: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 0/2] ARM: mvebu: Use Hardware BCH ECC for RN104 and RN2120
+Date: Sat, 06 Sep 2014 22:48:44 +0200
+Message-ID: <cover.1410035142.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140906183834.GA28645@kroah.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On sab, set 06, 2014 at 11:38:34 -0700, Greg KH wrote:
-> On Sat, Sep 06, 2014 at 08:28:04PM +0200, Carlo Caione wrote:
-> > On dom, ago 17, 2014 at 12:49:49 +0200, Carlo Caione wrote:
-> > > The SoC has four fully functional UARTs which use the same programming
-> > > model. They are named UART_A, UART_B, UART_C and UART_AO (Always-On)
-> > > which cannot be powered off.
-> > > 
-> > > Signed-off-by: Carlo Caione <carlo@caione.org>
-> > > ---
-> > 
-> > Ping
-> 
-> It's still in my queue, sorry, been busy with conferences and the like,
-> should get to everything next week...
+Hi,
 
-No prob. I'll wait, thanks.
+Following Ben's report and fix for RN102, I did some tests
+on RN104 and RN2120 (they have the same Hynix H27U1G8F2BTR
+flash and setup) and came up w/ the exact same fixes for
+their respective .dts files. With those patches, it is now
+possible to update kernel from userland and u-boot will
+happily load and boot it on those devices.
+
+Both patches should be candidates for stable, I guess.
+
+Cheers,
+
+a+
+
+Arnaud Ebalard (2):
+  ARM: mvebu: Netgear RN104: Use Hardware BCH ECC
+  ARM: mvebu: Netgear RN2120: Use Hardware BCH ECC
+
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts | 4 ++++
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 4 ++++
+ 2 files changed, 8 insertions(+)
 
 -- 
-Carlo Caione
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
