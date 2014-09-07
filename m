@@ -1,187 +1,168 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2] Add support for always enabled watchdog timers to
- gpio_wdt driver
-Date: Sun, 07 Sep 2014 10:23:49 -0700
-Message-ID: <540C94A5.3030603@roeck-us.net>
-References: <53F8CC58.2030406@roeck-us.net> <1410022064-15308-1-git-send-email-boger@contactless.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410022064-15308-1-git-send-email-boger@contactless.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Evgeny Boger <boger@contactless.ru>, linux-watchdog@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH] dmaengine: qcom_bam_dma: add one more optional clock
+Date: Sun,  7 Sep 2014 20:55:47 +0300
+Message-ID: <1410112547-363-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Andy Gross <agross@codeaurora.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2014 09:47 AM, Evgeny Boger wrote:
-> From: Evgeny Boger <boger@contactless.ru>
->
-> Add option to use with watchdog timers which are always enabled
-> in hardware, i.e. there is no way to enable/disable it via GPIO pin.
-> The driver will start pinging WDT immediately upon loading
-> and will continue to do so even after stopping the watchdog.
->
-> Signed-off-by: Evgeny Boger <boger@contactless.ru>
-> ---
->
+The BAM is tightly coupled with the peripheral to which it
+belongs. In that sprit to access the BAM configuration
+registers the driver needs to enable some peripheral
+clocks. Currently the DT node enables bamclk which seems
+is not enough for some peripherals (for example the crypto
+engine wants core and iface clocks). This change attempts
+to solve this issue by adding one more optional clock
+in bam_dma driver.
 
-Overall looks good to me, though we really need feedback from the DT folks
-on the binding. There is a parallel effort to add this functionality into
-the watchdog core, meaning the proposed binding "'always-enabled' will
-very likely find its way into other drivers. We'll also need a separate
-binding to express "watchdog can not be stopped after started once".
-That is a separate issue, but important to keep in mind when discussing
-the bindings.
+Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+---
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       | 12 ++++--
+ drivers/dma/qcom_bam_dma.c                         | 44 +++++++++++++++-------
+ 2 files changed, 38 insertions(+), 18 deletions(-)
 
-Thanks,
-Guenter
-
-> Changes since v1:
-> * fixed typos and indentation
-> * gpio_wdt_start_timer renamed to gpio_wdt_start_hwping.
->    This function actually starts the timer to ping hardware.
->    I personally find both proposed gpio_wdt_enable and __gpio_wdt_start
->    names discouraging in this context.
-> * fixed broken error handling for register_reboot_notifier
->
->   .../devicetree/bindings/watchdog/gpio-wdt.txt      | 14 ++++++-
->   drivers/watchdog/gpio_wdt.c                        | 46 +++++++++++++++++-----
->   2 files changed, 50 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-> index 37afec1..047fe3f 100644
-> --- a/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/gpio-wdt.txt
-> @@ -12,8 +12,11 @@ Required Properties:
->       the opposite level disables the WDT. Active level is determined
->       by the GPIO flags.
->   - hw_margin_ms: Maximum time to reset watchdog circuit (milliseconds).
-> +- always-enabled: Use with watchdog timer which is always enabled
-> +  in hardware, i.e. there is no way to enable/disable it via GPIO pin.
-> +  Driver will start pinging WDT immediately upon loading.
->
-> -Example:
-> +Examples:
->   	watchdog: watchdog {
->   		/* ADM706 */
->   		compatible = "linux,wdt-gpio";
-> @@ -21,3 +24,12 @@ Example:
->   		hw_algo = "toggle";
->   		hw_margin_ms = <1600>;
->   	};
-> +
-> +	watchdog: watchdog {
-> +		/* TPS3813 */
-> +		compatible = "linux,wdt-gpio";
-> +		gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
-> +		hw_algo = "toggle";
-> +		hw_margin_ms = <10000>;
-> +		always-enabled;
-> +	};
-> diff --git a/drivers/watchdog/gpio_wdt.c b/drivers/watchdog/gpio_wdt.c
-> index 220a9e0..b6ab6e7 100644
-> --- a/drivers/watchdog/gpio_wdt.c
-> +++ b/drivers/watchdog/gpio_wdt.c
-> @@ -37,6 +37,8 @@ struct gpio_wdt_priv {
->   	struct notifier_block	notifier;
->   	struct timer_list	timer;
->   	struct watchdog_device	wdd;
-> +	bool		always_enabled;
-> +	bool		started;
->   };
->
->   static void gpio_wdt_disable(struct gpio_wdt_priv *priv)
-> @@ -48,10 +50,8 @@ static void gpio_wdt_disable(struct gpio_wdt_priv *priv)
->   		gpio_direction_input(priv->gpio);
->   }
->
-> -static int gpio_wdt_start(struct watchdog_device *wdd)
-> +static int gpio_wdt_start_hwping(struct gpio_wdt_priv *priv)
->   {
-> -	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-> -
->   	priv->state = priv->active_low;
->   	gpio_direction_output(priv->gpio, priv->state);
->   	priv->last_jiffies = jiffies;
-> @@ -60,12 +60,30 @@ static int gpio_wdt_start(struct watchdog_device *wdd)
->   	return 0;
->   }
->
-> +static int gpio_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
-> +
-> +	priv->started = true;
-> +	if (priv->always_enabled) {
-> +		/* hardware ping timer is already enabled */
-> +		priv->last_jiffies = jiffies;
-> +	} else {
-> +		gpio_wdt_start_hwping(priv);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static int gpio_wdt_stop(struct watchdog_device *wdd)
->   {
->   	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
->
-> -	mod_timer(&priv->timer, 0);
-> -	gpio_wdt_disable(priv);
-> +	priv->started = false;
-> +	if (!priv->always_enabled) {
-> +		mod_timer(&priv->timer, 0);
-> +		gpio_wdt_disable(priv);
-> +	}
->
->   	return 0;
->   }
-> @@ -91,8 +109,9 @@ static void gpio_wdt_hwping(unsigned long data)
->   	struct watchdog_device *wdd = (struct watchdog_device *)data;
->   	struct gpio_wdt_priv *priv = watchdog_get_drvdata(wdd);
->
-> -	if (time_after(jiffies, priv->last_jiffies +
-> -		       msecs_to_jiffies(wdd->timeout * 1000))) {
-> +	if (priv->started &&
-> +		time_after(jiffies, priv->last_jiffies +
-> +			       msecs_to_jiffies(wdd->timeout * 1000))) {
->   		dev_crit(wdd->dev, "Timer expired. System will reboot soon!\n");
->   		return;
->   	}
-> @@ -197,6 +216,9 @@ static int gpio_wdt_probe(struct platform_device *pdev)
->   	/* Use safe value (1/2 of real timeout) */
->   	priv->hw_margin = msecs_to_jiffies(hw_margin / 2);
->
-> +	priv->always_enabled = of_property_read_bool(pdev->dev.of_node,
-> +						"always-enabled");
-> +
->   	watchdog_set_drvdata(&priv->wdd, priv);
->
->   	priv->wdd.info		= &gpio_wdt_ident;
-> @@ -207,6 +229,7 @@ static int gpio_wdt_probe(struct platform_device *pdev)
->   	if (watchdog_init_timeout(&priv->wdd, 0, &pdev->dev) < 0)
->   		priv->wdd.timeout = SOFT_TIMEOUT_DEF;
->
-> +	priv->started = false;
->   	setup_timer(&priv->timer, gpio_wdt_hwping, (unsigned long)&priv->wdd);
->
->   	ret = watchdog_register_device(&priv->wdd);
-> @@ -215,10 +238,15 @@ static int gpio_wdt_probe(struct platform_device *pdev)
->
->   	priv->notifier.notifier_call = gpio_wdt_notify_sys;
->   	ret = register_reboot_notifier(&priv->notifier);
-> -	if (ret)
-> +	if (ret) {
->   		watchdog_unregister_device(&priv->wdd);
-> +		return ret;
-> +	}
->
-> -	return ret;
-> +	if (priv->always_enabled)
-> +		gpio_wdt_start_hwping(priv);
-> +
-> +	return 0;
->   }
->
->   static int gpio_wdt_remove(struct platform_device *pdev)
->
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+index d75a9d7..2376897 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+@@ -6,8 +6,11 @@ Required properties:
+ - interrupts: Should contain the one interrupt shared by all channels
+ - #dma-cells: must be <1>, the cell in the dmas property of the client device
+   represents the channel number
+-- clocks: required clock
+-- clock-names: must contain "bam_clk" entry
++- clocks: list of required clock plus one optional clock. The optional clock
++          is needed for some peripherals and can be omitted.
++- clock-names: must contain "core" clock name representing the required clock
++               plus the optional "iface" clock name depending on
++               peripheral needs.
+ - qcom,ee : indicates the active Execution Environment identifier (0-7) used in
+   the secure world.
+ 
+@@ -17,8 +20,9 @@ Example:
+ 		compatible = "qcom,bam-v1.4.0";
+ 		reg = <0xf9984000 0x15000>;
+ 		interrupts = <0 94 0>;
+-		clocks = <&gcc GCC_BAM_DMA_AHB_CLK>;
+-		clock-names = "bam_clk";
++		clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
++			 <&gcc GCC_BLSP1_AHB_CLK>;
++		clock-names = "core", "iface";
+ 		#dma-cells = <1>;
+ 		qcom,ee = <0>;
+ 	};
+diff --git a/drivers/dma/qcom_bam_dma.c b/drivers/dma/qcom_bam_dma.c
+index 7a4bbb0..d898ec3 100644
+--- a/drivers/dma/qcom_bam_dma.c
++++ b/drivers/dma/qcom_bam_dma.c
+@@ -297,7 +297,7 @@ struct bam_device {
+ 	/* execution environment ID, from DT */
+ 	u32 ee;
+ 
+-	struct clk *bamclk;
++	struct clk *iface, *core;
+ 	int irq;
+ 
+ 	/* dma start transaction tasklet */
+@@ -996,19 +996,32 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
+-	if (IS_ERR(bdev->bamclk))
+-		return PTR_ERR(bdev->bamclk);
++	bdev->core = devm_clk_get(bdev->dev, "core");
++	if (IS_ERR(bdev->core))
++		return PTR_ERR(bdev->core);
+ 
+-	ret = clk_prepare_enable(bdev->bamclk);
++	ret = clk_prepare_enable(bdev->core);
+ 	if (ret) {
+-		dev_err(bdev->dev, "failed to prepare/enable clock\n");
++		dev_err(bdev->dev, "failed to prepare/enable core clock\n");
+ 		return ret;
+ 	}
+ 
++	bdev->iface = devm_clk_get(bdev->dev, "iface");
++	if (IS_ERR(bdev->iface) && PTR_ERR(bdev->iface) == -EPROBE_DEFER) {
++		ret = -EPROBE_DEFER;
++		goto err_disable_core_clk;
++	} else if (!IS_ERR(bdev->iface)) {
++		ret = clk_prepare_enable(bdev->iface);
++		if (ret) {
++			dev_err(bdev->dev,
++				"failed to prepare/enable iface clock\n");
++			goto err_disable_core_clk;
++		}
++	}
++
+ 	ret = bam_init(bdev);
+ 	if (ret)
+-		goto err_disable_clk;
++		goto err_disable_clks;
+ 
+ 	tasklet_init(&bdev->task, dma_tasklet, (unsigned long)bdev);
+ 
+@@ -1017,7 +1030,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 
+ 	if (!bdev->channels) {
+ 		ret = -ENOMEM;
+-		goto err_disable_clk;
++		goto err_disable_clks;
+ 	}
+ 
+ 	/* allocate and initialize channels */
+@@ -1029,7 +1042,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	ret = devm_request_irq(bdev->dev, bdev->irq, bam_dma_irq,
+ 			IRQF_TRIGGER_HIGH, "bam_dma", bdev);
+ 	if (ret)
+-		goto err_disable_clk;
++		goto err_disable_clks;
+ 
+ 	/* set max dma segment size */
+ 	bdev->common.dev = bdev->dev;
+@@ -1037,7 +1050,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	ret = dma_set_max_seg_size(bdev->common.dev, BAM_MAX_DATA_SIZE);
+ 	if (ret) {
+ 		dev_err(bdev->dev, "cannot set maximum segment size\n");
+-		goto err_disable_clk;
++		goto err_disable_clks;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, bdev);
+@@ -1058,7 +1071,7 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	ret = dma_async_device_register(&bdev->common);
+ 	if (ret) {
+ 		dev_err(bdev->dev, "failed to register dma async device\n");
+-		goto err_disable_clk;
++		goto err_disable_clks;
+ 	}
+ 
+ 	ret = of_dma_controller_register(pdev->dev.of_node, bam_dma_xlate,
+@@ -1070,8 +1083,10 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 
+ err_unregister_dma:
+ 	dma_async_device_unregister(&bdev->common);
+-err_disable_clk:
+-	clk_disable_unprepare(bdev->bamclk);
++err_disable_clks:
++	clk_disable_unprepare(bdev->iface);
++err_disable_core_clk:
++	clk_disable_unprepare(bdev->core);
+ 	return ret;
+ }
+ 
+@@ -1099,7 +1114,8 @@ static int bam_dma_remove(struct platform_device *pdev)
+ 
+ 	tasklet_kill(&bdev->task);
+ 
+-	clk_disable_unprepare(bdev->bamclk);
++	clk_disable_unprepare(bdev->iface);
++	clk_disable_unprepare(bdev->core);
+ 
+ 	return 0;
+ }
+-- 
+1.8.3.2
