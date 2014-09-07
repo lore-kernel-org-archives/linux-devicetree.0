@@ -1,60 +1,45 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH 0/3] Yet another stab at a fpga framework
-Date: Sun, 7 Sep 2014 20:57:00 +0200
-Message-ID: <20140907185700.GA26553@amd>
-References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH ] ARM: pxa: fix section mismatch warning for pxa_timer_nodt_init
+Date: Sun, 07 Sep 2014 23:06:05 +0200
+Message-ID: <3188925.pjYA4K7kjn@wuerfel>
+References: <1405356724-32207-1-git-send-email-robert.jarzmik@free.fr> <87oawivarv.fsf@free.fr> <12220413.BdRleC0Xf5@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1406932118-13885-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atull@opensource.altera.com
-Cc: gregkh@linuxfoundation.org, jgunthorpe@obsidianresearch.com, hpa@zytor.com, monstr@monstr.eu, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pantelis.antoniou@konsulko.com, robh+dt@kernel.org, grant.likely@linaro.org, broonie@kernel.org, philip@balister.org, rubini@gnudd.com, s.trumtrar@pengutronix.de, jason@lakedaemon.net, kyle.teske@ni.com, nico@linaro.org, balbi@ti.com, m.chehab@samsung.com, davidb@codeaurora.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, sameo@linux.intel.com, akpm@linux-foundation.org, linus.walleij@linaro.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <12220413.BdRleC0Xf5@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Saturday 26 July 2014 20:50:36 Arnd Bergmann wrote:
+> commit a38b1f60b5245a3 ("ARM: pxa: Add non device-tree timer link to
+> clocksource") introduced a harmless section mismatch warning for
+> all pxa platforms, by introducing a new pxa_timer_init() function
+> that is not marked __init but that calls pxa_timer_nodt_init(),
+> which is. The function is only called at init time, so it is safe
+> to also annotate it this way.
+> 
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> 
 
-> [resend with fixed email settings]
-> 
-> The idea of the framework is to provide consistent ways of
-> programming raw images into FPGA's.
-> 
-> Programming from device tree overlays is supported.
-> 
-> The core (fpga-mgr.c) does not include a userspace interface
-> and just exports kernel functions.
-> 
-> This approach separates the core from the interfaces.
-> 
-> Each interface can be enabled or disabled in the defconfig.
-> In some production contexts, interfaces that might be used
-> during development can be disabled.
-> 
-> The core exports kernel functions to:
->   * write the fpga from a buffer or using the firmware layer
->   * get fpga status
->   * find a particular fpga manager from a device tree phandle
->   * register/unregister lower level fpga drivers.
-> 
-> The bus allows us to:
->   * program fpga from a device tree overlay using firmware.
->   * automatically reload firmware and reprogram fpga during resume.
-> 
-> The sysfs interface:
->   * read only, get the name and status of fpga manager.
-> 
-> I have a configfs interface patch which I haven't included,
-> adds configfs as a separate file.
+Apparently this is not merged yet, should we take it through arm-soc?
 
-Thanks for the patches... is there new version? Is that corresponding
-socfpga code?
-
-I'd like to configure fpga with .rbf file on board similar to SocKit.
-
-Thanks,
-								Pavel
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+diff --git a/arch/arm/mach-pxa/generic.c b/arch/arm/mach-pxa/generic.c
+index 630fa916bbc6..04b013fbc98f 100644
+--- a/arch/arm/mach-pxa/generic.c
++++ b/arch/arm/mach-pxa/generic.c
+@@ -61,7 +61,7 @@ EXPORT_SYMBOL(get_clock_tick_rate);
+ /*
+  * For non device-tree builds, keep legacy timer init
+  */
+-void pxa_timer_init(void)
++void __init pxa_timer_init(void)
+ {
+        pxa_timer_nodt_init(IRQ_OST0, io_p2v(0x40a00000),
+                            get_clock_tick_rate());
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
