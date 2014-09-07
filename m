@@ -1,45 +1,95 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH ] ARM: pxa: fix section mismatch warning for pxa_timer_nodt_init
-Date: Sun, 07 Sep 2014 23:06:05 +0200
-Message-ID: <3188925.pjYA4K7kjn@wuerfel>
-References: <1405356724-32207-1-git-send-email-robert.jarzmik@free.fr> <87oawivarv.fsf@free.fr> <12220413.BdRleC0Xf5@wuerfel>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 1/9] ACPI / PM: Let acpi_dev_pm_detach() return an error code
+Date: Mon, 08 Sep 2014 00:12:04 +0200
+Message-ID: <1971236.2OpvqOp5Mv@vostro.rjw.lan>
+References: <1409838756-31963-1-git-send-email-ulf.hansson@linaro.org> <1409838756-31963-2-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <12220413.BdRleC0Xf5@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1409838756-31963-2-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 26 July 2014 20:50:36 Arnd Bergmann wrote:
-> commit a38b1f60b5245a3 ("ARM: pxa: Add non device-tree timer link to
-> clocksource") introduced a harmless section mismatch warning for
-> all pxa platforms, by introducing a new pxa_timer_init() function
-> that is not marked __init but that calls pxa_timer_nodt_init(),
-> which is. The function is only called at init time, so it is safe
-> to also annotate it this way.
+On Thursday, September 04, 2014 03:52:28 PM Ulf Hansson wrote:
+> To give callers the option of acting on a errors while removing the
+> pm_domain ops for the device in the ACPI PM domain, let
+> acpi_dev_pm_detach() return an int to provide the error code.
 > 
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+I can take this patch alone for 3.8 if that helps.
+
+> ---
+>  drivers/acpi/device_pm.c | 8 +++++++-
+>  include/linux/acpi.h     | 7 +++++--
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+> index 67075f8..0d52ce1 100644
+> --- a/drivers/acpi/device_pm.c
+> +++ b/drivers/acpi/device_pm.c
+> @@ -1055,6 +1055,8 @@ static struct dev_pm_domain acpi_general_pm_domain = {
+>   *
+>   * Callers must ensure proper synchronization of this function with power
+>   * management callbacks.
+> + *
+> + * Returns 0 on successfully attached PM domain or negative error code.
+>   */
+>  int acpi_dev_pm_attach(struct device *dev, bool power_on)
+>  {
+> @@ -1087,8 +1089,10 @@ EXPORT_SYMBOL_GPL(acpi_dev_pm_attach);
+>   *
+>   * Callers must ensure proper synchronization of this function with power
+>   * management callbacks.
+> + *
+> + * Returns 0 on successfully detached PM domain or negative error code.
+>   */
+> -void acpi_dev_pm_detach(struct device *dev, bool power_off)
+> +int acpi_dev_pm_detach(struct device *dev, bool power_off)
+>  {
+>  	struct acpi_device *adev = ACPI_COMPANION(dev);
+>  
+> @@ -1107,7 +1111,9 @@ void acpi_dev_pm_detach(struct device *dev, bool power_off)
+>  			acpi_device_wakeup(adev, ACPI_STATE_S0, false);
+>  			acpi_dev_pm_low_power(dev, adev, ACPI_STATE_S0);
+>  		}
+> +		return 0;
+>  	}
+> +	return -EINVAL;
+>  }
+>  EXPORT_SYMBOL_GPL(acpi_dev_pm_detach);
+>  #endif /* CONFIG_PM */
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 807cbc4..c83cca5 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -587,7 +587,7 @@ static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
+>  #if defined(CONFIG_ACPI) && defined(CONFIG_PM)
+>  struct acpi_device *acpi_dev_pm_get_node(struct device *dev);
+>  int acpi_dev_pm_attach(struct device *dev, bool power_on);
+> -void acpi_dev_pm_detach(struct device *dev, bool power_off);
+> +int acpi_dev_pm_detach(struct device *dev, bool power_off);
+>  #else
+>  static inline struct acpi_device *acpi_dev_pm_get_node(struct device *dev)
+>  {
+> @@ -597,7 +597,10 @@ static inline int acpi_dev_pm_attach(struct device *dev, bool power_on)
+>  {
+>  	return -ENODEV;
+>  }
+> -static inline void acpi_dev_pm_detach(struct device *dev, bool power_off) {}
+> +static inline int acpi_dev_pm_detach(struct device *dev, bool power_off)
+> +{
+> +	return -ENODEV;
+> +}
+>  #endif
+>  
+>  #ifdef CONFIG_ACPI
 > 
 
-Apparently this is not merged yet, should we take it through arm-soc?
-
-diff --git a/arch/arm/mach-pxa/generic.c b/arch/arm/mach-pxa/generic.c
-index 630fa916bbc6..04b013fbc98f 100644
---- a/arch/arm/mach-pxa/generic.c
-+++ b/arch/arm/mach-pxa/generic.c
-@@ -61,7 +61,7 @@ EXPORT_SYMBOL(get_clock_tick_rate);
- /*
-  * For non device-tree builds, keep legacy timer init
-  */
--void pxa_timer_init(void)
-+void __init pxa_timer_init(void)
- {
-        pxa_timer_nodt_init(IRQ_OST0, io_p2v(0x40a00000),
-                            get_clock_tick_rate());
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
