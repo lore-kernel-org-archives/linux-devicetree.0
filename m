@@ -1,48 +1,81 @@
-From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2] spi: orion: support armada extended baud rates
-Date: Sun, 07 Sep 2014 22:18:52 +1000
-Message-ID: <540C4D2C.3050703@uclinux.org>
-References: <1409835268-29555-1-git-send-email-gerg@uclinux.org>	<CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A@mail.gmail.com>	<5409057A.6090900@uclinux.org>	<CAMuHMdWf6_yBhpNgK=wJcQqzLNJvTnC95SrqrcZyRH+jGL93vA@mail.gmail.com>	<5409B68A.7010604@uclinux.org>	<20140906120600.GA11500@arch.cereza> <20140906151654.49584b70@free-electrons.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [RFC PATCH 0/6] Change vendor prefix for Intersil Corporation
+Date: Sun, 7 Sep 2014 09:32:18 -0400
+Message-ID: <20140907133218.GA30828@titan.lakedaemon.net>
+References: <1408524184-31928-1-git-send-email-p.zabel@pengutronix.de>
+ <20140820121643.GU12769@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140906151654.49584b70-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140820121643.GU12769@titan.lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Kumar Gala <galak@codeaurora.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On Wed, Aug 20, 2014 at 08:16:43AM -0400, Jason Cooper wrote:
+> Philipp,
+> 
+> On Wed, Aug 20, 2014 at 10:42:58AM +0200, Philipp Zabel wrote:
+> > Hi,
+> > 
+> > currently there is a wild mixture of isl, isil, and intersil
+> > compatibles in the kernel. I figure at this point it is still
+> > possible to change this to use "isil" everywhere without too
+> > much pain, but it might be preferred to keep the already
+> > documented "isl" prefix, even though it doesn't follow the
+> > convention to use the NASDAQ symbol where available.
+> > 
+> > The current users of the "isil" prefix are the following drivers
+> > and device trees, so we could just as well change those instead:
+> > 	arch/arm/boot/dts/tegra20-seaboard.dts
+> > 	arch/arm/boot/dts/tegra20-ventana.dts
+> > 	arch/arm/boot/dts/tegra30-cardhu.dtsi
+> > 	arch/powerpc/boot/dts/p1022rdk.dts
+> > 	drivers/staging/iio/light/isl29018.c
+> > 	drivers/staging/iio/light/isl29028.c
+> > 
+> > regards
+> > Philipp
+> > 
+> > Philipp Zabel (6):
+> >   of: Change vendor prefix for Intersil Corporation to isil
+> >   Documentation: Add isl1208 and isl12022 to trivial-devices list
+> >   ARM: mvebu: Change vendor prefix for Intersil Corporation to isil
+> >   powerpc/85xx: Change vendor prefix for Intersil Corporation to isil
+> >   rtc: rtc-isl12022: Change vendor prefix for Intersil Corporation to
+> >     isil
+> >   rtc: rtc-isl12057: Change vendor prefix for Intersil Corporation to
+> >     isil
+> > 
+> >  Documentation/devicetree/bindings/i2c/trivial-devices.txt | 4 +++-
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt     | 2 +-
+> >  arch/arm/boot/dts/armada-370-netgear-rn102.dts            | 2 +-
+> >  arch/arm/boot/dts/armada-370-netgear-rn104.dts            | 2 +-
+> >  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts            | 2 +-
+> >  arch/powerpc/boot/dts/ppa8548.dts                         | 2 +-
+> >  drivers/rtc/rtc-isl12022.c                                | 3 ++-
+> >  drivers/rtc/rtc-isl12057.c                                | 3 ++-
+> >  8 files changed, 12 insertions(+), 8 deletions(-)
+> 
+> This looks good overall.  My only nit is that I'd like to see the legacy
+> name(s) captured in the binding docs.
+> 
+> I'll take the Armada dts changes through mvebu/arm-soc after a few days.
 
-On 06/09/14 23:16, Thomas Petazzoni wrote:
-> Hello,
->
-> On Sat, 6 Sep 2014 09:06:00 -0300, Ezequiel Garcia wrote:
->
->> Confirmed. Judging from the specs, seems the same SPI IP is on all the
->> Armada SoCs; you can do the 'armada-spi' compatible addition on 375 and 38x.
-> However, I believe a compatible string like "armada-370-spi" should be
-> used instead of "armada-spi". The normal rule is to use the oldest SoC
-> that introduced a certain feature as the compatible string.
+Just to dot our i's and cross our t's, would you mind sending out a
+non-rfc version of this series?
 
-Ok, will make it that then.
+thx,
 
-
-> Remember for example that Armada 1500 (Berlin) is a completely different
-> line of SoC, which cannot use this SPI driver.
->
-> Thanks Greg for working on this! I noticed this as well recently when
-> doing an SPI development, but you were faster than me in proposing a
-> patch!
->
-
-No problem :-)
-
-Regards
-Greg
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
