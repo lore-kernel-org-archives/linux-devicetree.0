@@ -1,97 +1,78 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] dmaengine: qcom_bam_dma: add one more optional clock
-Date: Mon, 08 Sep 2014 18:43:58 +0300
-Message-ID: <540DCEBE.8060808@mm-sol.com>
-References: <1410112547-363-1-git-send-email-svarbanov@mm-sol.com> <20140908103559.GC12081@leverpostej>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH] PCI: keystone: update to support multiple pci ports
+Date: Mon, 8 Sep 2014 11:52:47 -0400
+Message-ID: <540DD0CF.4000501@ti.com>
+References: <1409938782-31460-1-git-send-email-m-karicheri2@ti.com> <3654923.JrIGV2dJ70@wuerfel> <540A1F05.80706@ti.com> <5769746.NkKjYOOUiv@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140908103559.GC12081@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5769746.NkKjYOOUiv@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-Thank you for the comments!
-
-On 09/08/2014 01:36 PM, Mark Rutland wrote:
-> On Sun, Sep 07, 2014 at 06:55:47PM +0100, Stanimir Varbanov wrote:
->> The BAM is tightly coupled with the peripheral to which it
->> belongs. In that sprit to access the BAM configuration
->> registers the driver needs to enable some peripheral
->> clocks. Currently the DT node enables bamclk which seems
->> is not enough for some peripherals (for example the crypto
->> engine wants core and iface clocks). This change attempts
->> to solve this issue by adding one more optional clock
->> in bam_dma driver.
+On 09/05/2014 05:11 PM, Arnd Bergmann wrote:
+> On Friday 05 September 2014 16:37:25 Murali Karicheri wrote:
+>> On 09/05/2014 03:00 PM, Arnd Bergmann wrote:
+>>> On Friday 05 September 2014 14:33:54 Murali Karicheri wrote:
+>>>>> This looks like it's a shared register of some sort that doesn't
+>>>>> really belong into the registers of a particular port. Could it
+>>>>> be that it's actually for the PHY?
+>>>>>
+>>>> This a shared device configuration register between the two ports the
+>>>> desciption states it is bootstrap configuration of the PCIe module as
+>>>> Endpoint or Root complex and Not Phy. Hope below text will help.
+>>>
+>>> Ok. Why do you want to have this user-selectable though? Can't it
+>>> just be set by the boot loader before starting Linux?
 >>
->> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/dma/qcom_bam_dma.txt       | 12 ++++--
->>  drivers/dma/qcom_bam_dma.c                         | 44 +++++++++++++++-------
->>  2 files changed, 38 insertions(+), 18 deletions(-)
+>> Arnd,
 >>
->> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
->> index d75a9d7..2376897 100644
->> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
->> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
->> @@ -6,8 +6,11 @@ Required properties:
->>  - interrupts: Should contain the one interrupt shared by all channels
->>  - #dma-cells: must be <1>, the cell in the dmas property of the client device
->>    represents the channel number
->> -- clocks: required clock
->> -- clock-names: must contain "bam_clk" entry
->> +- clocks: list of required clock plus one optional clock. The optional clock
->> +          is needed for some peripherals and can be omitted.
->> +- clock-names: must contain "core" clock name representing the required clock
->> +               plus the optional "iface" clock name depending on
->> +               peripheral needs.
-> 
-> Please don't change the names of input lines (at least without retaining
-> support for the old name). Does this change not break existing DTBs?
+>> As the driver is responsible for configuring the device to support the
+>> device functionality, it make sense to do this in the device driver. The
+>> driver enables clock to the IP and this is an addition thing to be
+>> configured so that when the device is powered up, it should function as
+>> RC. The IP can be configured to work as Root Complex or Endpoint. So not
+>> sure why you want to me to move this functionality to boot loader.
+>
+> But the driver can only do root complex mode, and we would probably
+> want a completely different driver if we were to start supporting
+> endpoint mode.
+>
+Arnd,
 
-It shouldn't break any DTBs. I changed the "bam_clk" because it sounds
-like the BAM needs only one "bam_clk". But the practice shows that in
-the crypto engine case I need to pass "core" and "iface" clocks to get
-bam dma driver initialised.
+Good point! I will drop index#2 handling in the driver code and will 
+handle the same in boot loader. But I have a question though. The 
+original driver which is queued up for merge to v3.18 has index #2 for 
+this reg offset and is documented in the DT documentation as
 
-I hope Andy can share his opinion on that, or even suggest something better.
+	index 2 is the base address and length of PCI mode configuration
+	register.
+	index 3 is the base address and length of PCI device ID register.
 
-> 
-> Which of these new names did "bam_clk" previously correspond to?
 
-The required one i.e. "core".
+Will this create any issue in terms of backward compatibility if I 
+remove it and move index3 to index2 and update the code for the same? I 
+assume since this patch also will likely be on the next branch soon, and 
+gets merged together with original driver to v3.18, this should be fine. 
+But for some reason, if this patch doesn't make to v3.18, then won't 
+this break the backward compatibility?
 
-> 
-> How many clock inputs does the BAM actually have? Are there more which
-> we don't yet describe?
-> 
-> You mention that the iface clock is actually fed into the peripheral the
-> BAM is attached to. Can you explain why this clock is necessary to use
-> the BAM?
+I think the other option is document index2 as obsolete and update the 
+document and remove the code for handling it. Any suggestion?
 
-No, I can't explain why, might be hardware reasons.
+Thanks
 
-> 
-> If you want do describe multiple clocks and names are required, define
-> clocks in terms of clock-names so you don't need to state everything
-> twice, Put each clock on a new line, e.g.
-> 
-> - clocks: A list of phandle + clock-specifier pairs, one for each entry
->   in clock-names
-> - clock-names: should contain:
->    * "foo_clk" for the FOO clock
->    * "bar_clk" for the BAR input on baz_xxxx systems
+Murali
 
-OK. Thanks.
-
--- 
-regards,
-Stan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This also implies that the firmware has to pass a different DT for
+> endpoint mode, so it should be responsible for setting up the hardware
+> to match the DT.
+>
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
