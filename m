@@ -1,74 +1,72 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI domain_nr
-Date: Mon, 8 Sep 2014 09:27:56 -0500
-Message-ID: <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com> <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
+From: Laurentiu Tudor <b10716-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] of: make sure of_alias is initialized before accessing
+ it
+Date: Mon, 8 Sep 2014 17:13:41 +0300
+Message-ID: <540DB995.7040406@freescale.com>
+References: <53FDE6A3.3080303@freescale.com> <20140908132956.646FEC40AE5@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140908132956.646FEC40AE5-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: Laurentiu Tudor <Laurentiu.Tudor-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 8, 2014 at 8:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> Add of_pci_get_domain_nr() to retrieve the PCI domain number
-> of a given device from DT. If the information is not present,
-> the function can be requested to allocate a new domain number.
->
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> ---
->  drivers/of/of_pci.c    | 34 ++++++++++++++++++++++++++++++++++
->  include/linux/of_pci.h |  7 +++++++
->  2 files changed, 41 insertions(+)
->
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 8481996..a107edb 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -89,6 +89,40 @@ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
->  }
->  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
->
-> +static atomic_t of_domain_nr = ATOMIC_INIT(-1);
-> +
-> +/**
-> + * This function will try to obtain the host bridge domain number by
-> + * using of_alias_get_id() call with "pci-domain" as a stem. If that
-> + * fails, a local allocator will be used. The local allocator can
-> + * be requested to return a new domain_nr if the information is missing
-> + * from the device tree.
-> + *
-> + * @node: device tree node with the domain information
-> + * @allocate_if_missing: if DT lacks information about the domain nr,
-> + * allocate a new number.
-> + *
-> + * Returns the associated domain number from DT, or a new domain number
-> + * if DT information is missing and @allocate_if_missing is true. If
-> + * @allocate_if_missing is false then the last allocated domain number
-> + * will be returned.
-> + */
-> +int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
-> +{
-> +       int domain;
-> +
-> +       domain = of_alias_get_id(node, "pci-domain");
-> +       if (domain == -ENODEV) {
-> +               if (allocate_if_missing)
-> +                       domain = atomic_inc_return(&of_domain_nr);
-> +               else
-> +                       domain = atomic_read(&of_domain_nr);
+On 09/08/2014 04:29 PM, Grant Likely wrote:
+> On Wed, 27 Aug 2014 17:09:39 +0300, Laurentiu Tudor <b10716-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>> Simply swap of_alias and of_chosen initialization so
+>> that of_alias ends up read first. This must be done
+>> because it is accessed couple of lines below when
+>> trying to initialize the of_stdout using the alias
+>> based legacy method.
+>>
+>> [Fixes a752ee5 - tty: Update hypervisor tty drivers to                          
+>> use core stdout parsing code]
+>>
+>> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  drivers/of/base.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index d8574ad..52f8506 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -1847,6 +1847,10 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>>  {
+>>  	struct property *pp;
+>>  
+>> +	of_aliases = of_find_node_by_path("/aliases");
+>> +	if (!of_aliases)
+>> +		return;
+>> +
+>>  	of_chosen = of_find_node_by_path("/chosen");
+>>  	if (of_chosen == NULL)
+>>  		of_chosen = of_find_node_by_path("/chosen@0");
+>> @@ -1862,10 +1866,6 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>>  			of_stdout = of_find_node_by_path(name);
+>>  	}
+>>  
+>> -	of_aliases = of_find_node_by_path("/aliases");
+>> -	if (!of_aliases)
+>> -		return;
+>> -
+> 
+> Close, but not quite. The 'if (!of_aliases)' test should not be moved.
+> Only the search for of_find_node_by_path().
 
-This function seems a bit broken to me. It is overloaded with too many
-different outcomes. Think about how this would work if you have
-multiple PCI buses and a mixture of having pci-domain aliases or not.
-Aren't domain numbers global? Allocation should then start outside of
-the range of alias ids.
+Eek, completely missed this. Sorry.
 
-Rob
+> I've fixed it up and applied.
+ 
+Thanks!
+
+---
+Best Regards, Laurentiu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
