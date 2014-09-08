@@ -1,69 +1,79 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: make sure of_alias is initialized before accessing
- it
-Date: Mon, 08 Sep 2014 14:29:56 +0100
-Message-ID: <20140908132956.646FEC40AE5@trevor.secretlab.ca>
-References: <53FDE6A3.3080303@freescale.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53FDE6A3.3080303-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurentiu Tudor <b10716-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Laurentiu Tudor <Laurentiu.Tudor-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: davinci: support adding delay between
+	transmission
+Date: Mon, 8 Sep 2014 16:30:57 +0300
+Message-ID: <540DAF91.6090002@ti.com>
+References: <1408634706-5762-1-git-send-email-grygorii.strashko@ti.com>
+	<1408634706-5762-3-git-send-email-grygorii.strashko@ti.com>
+	<20140821182035.GM24407@sirena.org.uk> <53F74695.3010902@ti.com>
+	<20140822150644.GX24407@sirena.org.uk>
+	<5409C704.5070303@ti.com> <20140906143113.GI2601@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20140906143113.GI2601-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Aug 2014 17:09:39 +0300, Laurentiu Tudor <b10716-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> Simply swap of_alias and of_chosen initialization so
-> that of_alias ends up read first. This must be done
-> because it is accessed couple of lines below when
-> trying to initialize the of_stdout using the alias
-> based legacy method.
+Hi Mark,
+
+On 09/06/2014 05:31 PM, Mark Brown wrote:
+> On Fri, Sep 05, 2014 at 05:21:56PM +0300, Grygorii Strashko wrote:
 > 
-> [Fixes a752ee5 - tty: Update hypervisor tty drivers to                          
-> use core stdout parsing code]
+>> I think we have some misunderstanding here :(
+>> 1) All new properties a optional and should be specified for SPI Slave devices
+>> 2) Seems we are talking using different terms:
+>> - you referring to the term "transfers" - sequence of packets.
+>>    Each packet is one transfer (array of words).
+>> - while these new properties affect on "transmissions" - sequence of words.
+>>    Each word is one transmission.
 > 
-> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/of/base.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> That's *very* unusual terminology which doesn't match my expectations at
+> all.  Please describe words as words, that'll be much more obvious.
+
+These terms are used in DM/TRM :(
+
+I'll split this patch and first introduce WDELAY, C2TDELAY, T2CDELAY
+(with updated documentation).
+The only question is - Should they be somehow common or specific for spi-davinci?
+
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d8574ad..52f8506 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1847,6 +1847,10 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
->  {
->  	struct property *pp;
->  
-> +	of_aliases = of_find_node_by_path("/aliases");
-> +	if (!of_aliases)
-> +		return;
-> +
->  	of_chosen = of_find_node_by_path("/chosen");
->  	if (of_chosen == NULL)
->  		of_chosen = of_find_node_by_path("/chosen@0");
-> @@ -1862,10 +1866,6 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
->  			of_stdout = of_find_node_by_path(name);
->  	}
->  
-> -	of_aliases = of_find_node_by_path("/aliases");
-> -	if (!of_aliases)
-> -		return;
-> -
+>> Also, below is additional information about properties which
+>> are used in 5-pin mode (SPI_READY) to improve error detection
+>> [OMAP-L138/da830 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf]:
+> 
+> This is a *whole* other thing, please split these out and work on this
+> separately.  The client device is going to need to be doing the same
+> thing here so implementing this as a local option in the controller
+> driver isn't the best way forwards.
+> 
+>>>> SPIFMTn[23].PARPOL - Parity polarity: even or odd. PARPOL can be modified in privilege mode only.
+>>>>    0 An even parity flag is added at the end of the transmit data stream.
+>>>>    1 An odd parity flag is added at the end of the transmit data stream.
+> 
+>>> Why would these be specified in DT and not with runtime flags enabled by
+>>> the device?  It looks like they affect the data stream generated by the
+>>> controller so the client device needs to know about them; I'd expect
+>>> that it's device driver would be controlling when they are enabled if
+>>> the controller supports them.
+> 
+>> Could you clarify, pls - Do you mean that struct spi_device.mode and
+>> common SPI DT bindings should be extended to support this?
+> 
+> Yes, if they aren't something that's purely internal to the device they
+> need to be generic so that both devices can be configured appropriately.
+> 
 
-Close, but not quite. The 'if (!of_aliases)' test should not be moved.
-Only the search for of_find_node_by_path(). I've fixed it up and
-applied.
-
-g.
-
->  	for_each_property_of_node(of_aliases, pp) {
->  		const char *start = pp->name;
->  		const char *end = start + strlen(start);
-> -- 
-> 1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+-grygorii
