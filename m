@@ -1,83 +1,42 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] RFC: add function for localbus address
-Date: Mon, 8 Sep 2014 22:21:43 +0100
-Message-ID: <20140908212143.GN2601@sirena.org.uk>
-References: <540E1014.8090102@codeaurora.org>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] Documentation: dt-bindings: add dt binding info
+ for dwc2 dr_mode
+Date: Mon, 8 Sep 2014 14:31:17 -0700
+Message-ID: <20140908213117.GA3227@kroah.com>
+References: <1407159942-7063-1-git-send-email-kever.yang@rock-chips.com>
+ <1407159942-7063-2-git-send-email-kever.yang@rock-chips.com>
+ <CAD=FV=WDv9Pxe+jSqsfARPvjxMWPfcVpPMk1wHCgOO8ePiCh3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1540210485977394504=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <540E1014.8090102@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Stanimir Varbanov <svarbanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WDv9Pxe+jSqsfARPvjxMWPfcVpPMk1wHCgOO8ePiCh3g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, wulf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, han jiang <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>linux-arm-kerne
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 08, 2014 at 11:50:25AM -0700, Doug Anderson wrote:
+> Greg,
+> 
+> On Mon, Aug 4, 2014 at 6:45 AM, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> > Indicate that the generic dr_mode binding should be used for dwc2.
+> >
+> > Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > ---
+> >
+> > Changes in v3: None
+> > Changes in v2:
+> > - Split out dr_mode and rk3288 bindings.
+> >
+> >  Documentation/devicetree/bindings/usb/dwc2.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> 
+> Are there any other changes you'd like for this patch (and the next
+> one that goes with it) before landing?
 
---===============1540210485977394504==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FhKpTYimqQF2+bfE"
-Content-Disposition: inline
-
-
---FhKpTYimqQF2+bfE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Sep 08, 2014 at 01:22:44PM -0700, Stephen Boyd wrote:
-
-> Where is this described? From the commit text that introduces
-> IORESOURCE_REG I see:
-
-> "Currently a bunch of I2C/SPI MFD drivers are using IORESOURCE_IO for
-> register address ranges. Since this causes some confusion due to the
-> primary use of this resource type for PCI/ISA I/O ports create a new
-> resource type IORESOURCE_REG."
-
-> And the comment next to the #define says "Register offsets". I don't see
-> anywhere where it mentions these are CPU addresses. Certainly the
-> current IORESOURCE_REG users aren't CPU addresses because they're
-> SPI/I2C device drivers.
-
-Right, the intention was specifically to handle things where
-IORESOURCE_MEM wasn't appropriate as it wasn't ever going to be memory
-mapped I/O and should be in a separate address space.
-
---FhKpTYimqQF2+bfE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUDh3mAAoJECTWi3JdVIfQh9cH/02T4h6Y6ZA1T3XlNeTSvIJ+
-tZ8O95PRWz4Kjiu9m6ZrbR12uZ+yNFZfWq4CXS+X8nUhR71u3qa+kyiun0VEQ2wc
-xEPWL/p5+DO8hWgG1Xr3qejbpAGj115fwZMHuWM3oXp0AmnFf/qdzgRvGm2EcLW1
-QeVWIyYEN6EGPu0KjCaBL0nIBIacxHTSZK05WO+pjrLgXOfknlmKOZt2pHOIs9i8
-WkQK0Wg9GO/B8g6R1sVgLeD3NHzOJY8dvgzhB/yc6s43zmGHV2ankKoI0jnYkUEs
-4EWGQnpvcLMhGMVor00qfq3vQEO7TziZGrWY+aehc4LOqHYGlWYAUNHAxVb3bN0=
-=h2Dc
------END PGP SIGNATURE-----
-
---FhKpTYimqQF2+bfE--
-
-
---===============1540210485977394504==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1540210485977394504==--
+No idea, please resend.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
