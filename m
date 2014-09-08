@@ -1,62 +1,80 @@
-From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
-Date: Mon, 8 Sep 2014 15:52:42 +0200
-Message-ID: <20140908135242.GA21412@amd>
-References: <20140828124237.GA29102@fi-ourus-dhcp00977.emea.nsn-net.net>
- <20140828125915.GJ14650@leverpostej>
- <20140828155157.GB23677@roeck-us.net>
- <20140828161025.GO14650@leverpostej>
- <20140828164825.GA12153@roeck-us.net>
- <20140828172842.GF12769@titan.lakedaemon.net>
- <20140828174034.GC15307@roeck-us.net>
- <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
- <20140829104001.GB19424@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: Fix memory block alignment in
+ early_init_dt_add_memory_arch()
+Date: Mon, 08 Sep 2014 14:55:04 +0100
+Message-ID: <20140908135505.07632C40C20@trevor.secretlab.ca>
+References: <1408547431-24001-1-git-send-email-geert+renesas@glider.be>
+	<20140827103048.80BBBC409CB@trevor.secretlab.ca>
+	<CAMuHMdWZ_GDS_W-Y26ig7cKf7wdr82XF1kyLd8dFzc7Jb4_r-w@mail.gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140829104001.GB19424@leverpostej>
+In-Reply-To: <CAMuHMdWZ_GDS_W-Y26ig7cKf7wdr82XF1kyLd8dFzc7Jb4_r-w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> I would suggest we have two properties that describe the resistor's
-> rating and whether or not there is a diode:
+On Wed, 27 Aug 2014 13:08:51 +0200, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Grant,
 > 
-> trickle-resistor-ohms = <250>
-> diode-connected;
+> On Wed, Aug 27, 2014 at 12:30 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, 20 Aug 2014 17:10:31 +0200, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+> >> If a memory block is not aligned to PAGE_SIZE, its base address must be
+> >> rounded up, not down, and its size must be reduced.
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> >
+> > Looks reasonable. What is the situation that exposed this problem?
 > 
-> That's easy for a human to write and/or validate, we can easily extend
-> it in future, requires no proliferation of macros, and describes the
-> hardware rather than telling software what to do.
+> When ARM switched from arm_add_memory() to early_init_dt_add_memory_arch()
+> for DT-based platforms, I just noticed this when comparing the two
+> implementations.
 > 
-> The driver becomes a little more complicated, but gains sanity checking,
-> which is a good thing.
+> I don't know if it triggers in the wild.
+> 
+> > Should size be checked for page alignment also?
+> 
+> Size is already rounded down if it's not page aligned, cfr. the context below.
 
-Certainly looks better than register bit defines.
+Indeed it is. Silly me. Applied, thanks.
 
-As rtc-bq32k has similar options, I'm interested, too. I believe we
-should add
+g.
 
-trickle-charge-enable;
+> 
+> >> ---
+> >>  drivers/of/fdt.c | 6 +++++-
+> >>  1 file changed, 5 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> >> index f46a24ffa3fe..95fa81b8ca19 100644
+> >> --- a/drivers/of/fdt.c
+> >> +++ b/drivers/of/fdt.c
+> >> @@ -928,7 +928,11 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+> >>  void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+> >>  {
+> >>       const u64 phys_offset = __pa(PAGE_OFFSET);
+> >> -     base &= PAGE_MASK;
+> >> +
+> >> +     if (!PAGE_ALIGNED(base)) {
+> >> +             size -= PAGE_SIZE - (base & ~PAGE_MASK);
+> >> +             base = PAGE_ALIGN(base);
+> >> +     }
+> >>       size &= PAGE_MASK;
+> >>
+> >>       if (base > MAX_PHYS_ADDR) {
+> >> --
+> >> 1.9.1
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-(we may not want to charge at all), and I believe the diode should be
-
-disconnect-diode;
-
-... With diode connected, charge is slower, and that probably should
-be the default value. We don't want to give too much current in
-default case.  (bq32k has hard-coded resistor value for
-diode/not-diode case).
-
-Thanks and best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
