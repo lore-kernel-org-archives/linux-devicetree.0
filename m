@@ -1,110 +1,56 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 4/5] rtc: at91sam9: retain slow clock and check its rate
-Date: Mon, 8 Sep 2014 21:22:18 +0200
-Message-ID: <20140908212218.6a81af86@bbrezillon>
-References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1409733934-14465-5-git-send-email-boris.brezillon@free-electrons.com>
-	<20140908173338.GD14623@piout.net>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [resend PATCH 1/3] pinctrl: dra7: dt-bindings: add pin off modes
+ for dra7 SoC
+Date: Mon, 8 Sep 2014 14:32:35 -0500
+Message-ID: <20140908193235.GA12150@kahuna>
+References: <1410203998-8700-1-git-send-email-mugunthanvnm@ti.com>
+ <1410203998-8700-2-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140908173338.GD14623@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410203998-8700-2-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Sep 2014 19:33:38 +0200
-Alexandre Belloni <alexandre.belloni@free-electrons.com> wrote:
-
-> On 03/09/2014 at 10:45:33 +0200, Boris Brezillon wrote :
-> > The RTT block is using the slow clock and expect it to run at 32KHz.
-> > Now that we moved to the CCF it's better to retain the clk reference so
-> > that the CCF can't disable the slow clock considering it is unused.
-> > 
-> > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> > ---
-> >  drivers/rtc/rtc-at91sam9.c | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> > 
-> > diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-> > index 57014b7..5c5093b 100644
-> > --- a/drivers/rtc/rtc-at91sam9.c
-> > +++ b/drivers/rtc/rtc-at91sam9.c
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/platform_data/atmel.h>
-> >  #include <linux/io.h>
-> > +#include <linux/clk.h>
-> >  
-> >  /*
-> >   * This driver uses two configurable hardware resources that live in the
-> > @@ -74,6 +75,7 @@ struct sam9_rtc {
-> >  	u32			imr;
-> >  	void __iomem		*gpbr;
-> >  	int 			irq;
-> > +	struct clk		*sclk;
-> >  };
-> >  
-> >  #define rtt_readl(rtc, field) \
-> > @@ -373,6 +375,25 @@ static int at91_rtc_probe(struct platform_device *pdev)
-> >  		return ret;
-> >  	}
-> >  
-> > +	/* Retain slow clk if it is specified in the DT.
-> > +	 * Do not complain if slow clk is missing, but check its rate
-> > +	 * if it is available.
-> > +	 */
-> > +	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
-> > +	if (!IS_ERR(rtc->sclk)) {
-> > +		if (clk_get_rate(rtc->sclk) != AT91_SLOW_CLOCK) {
+On 00:49-20140909, Mugunthan V N wrote:
+> Add pin off modes for dra7 SoC so that during module disable or suspend
+> state it can help saving power
 > 
-> I would not bother doing that check but use the value for MR instead of
-> AT91_SLOW_CLOCK (see my previous mail).
-
-Unfortunately, we can't get rid of this macro without modifying the
-clk_lookup table in several arch/arm/mach-at91/<soc-name>.c files in
-order to handle non DT/CCF cases (which will remain until all non DT
-boards are moved to DT).
-But I agree that this should be removed as soon as possible (AFAIR, all
-SoCs have already been moved to the CCF).
-How about adding a TODO comment ?
-
+> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+> ---
+>  include/dt-bindings/pinctrl/dra.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> > +			dev_err(&pdev->dev,
-> > +				"Invalid slow clock rate (expecting %lu got %lu)",
-> > +				(unsigned long)AT91_SLOW_CLOCK,
-> > +				clk_get_rate(rtc->sclk));
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		ret = clk_prepare_enable(rtc->sclk);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> >  	/* NOTE:  sam9260 rev A silicon has a ROM bug which resets the
-> >  	 * RTT on at least some reboots.  If you have that chip, you must
-> >  	 * initialize the time from some external source like a GPS, wall
-> > @@ -397,6 +418,9 @@ static int at91_rtc_remove(struct platform_device *pdev)
-> >  	/* disable all interrupts */
-> >  	rtt_writel(rtc, MR, mr & ~(AT91_RTT_ALMIEN | AT91_RTT_RTTINCIEN));
-> >  
-> > +	if (!IS_ERR(rtc->sclk))
-> > +		clk_disable_unprepare(rtc->sclk);
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > -- 
-> > 1.9.1
-> > 
-> 
+> diff --git a/include/dt-bindings/pinctrl/dra.h b/include/dt-bindings/pinctrl/dra.h
+> index 002a285..a0ff2d0 100644
+> --- a/include/dt-bindings/pinctrl/dra.h
+> +++ b/include/dt-bindings/pinctrl/dra.h
+> @@ -46,5 +46,13 @@
+>  #define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
+>  #define PIN_INPUT_PULLDOWN	(PULL_ENA | INPUT_EN)
+>  
+> +/* Off mode states */
+> +#define PIN_OFF_NONE		0
+> +#define PIN_OFF_OUTPUT_HIGH	(OFF_EN | OFFOUT_EN | OFFOUT_VAL)
+> +#define PIN_OFF_OUTPUT_LOW	(OFF_EN | OFFOUT_EN)
+> +#define PIN_OFF_INPUT_PULLUP	(OFF_EN | OFF_PULL_EN | OFF_PULL_UP)
+> +#define PIN_OFF_INPUT_PULLDOWN	(OFF_EN | OFF_PULL_EN)
+> +#define PIN_OFF_WAKEUPENABLE	WAKEUP_EN
+> +
+>  #endif
 
+NAK for OFF_NONE, OFF_xyz etc.
 
+A) There is no OFF mode on DRA7. in sleep state use mode 15 (gated).
+B) when using this for wakeup - use pinctrl wakeup handling to do the
+wakeup.
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
