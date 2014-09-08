@@ -1,169 +1,69 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v3] hwspinlock: qcom: Add support for Qualcomm HW Mutex
- block
-Date: Mon, 08 Sep 2014 11:57:39 -0600
-Message-ID: <540DEE13.4090203@codeaurora.org>
-References: <1409688246-16530-1-git-send-email-bjorn.andersson@sonymobile.com> <2B6A9AA9-E69F-47DF-A1E7-5C95B4E6FA94@codeaurora.org> <20140903145508.GA16352@sonymobile.com> <5B5C3B14-0FC8-4B4B-AE33-69030B7863D8@codeaurora.org> <20140903163448.GB16352@sonymobile.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v5 0/4] Patches to add support for Rockchip dwc2 controller
+Date: Mon, 08 Sep 2014 20:43:40 +0200
+Message-ID: <4508852.pY5QcWPyfZ@diego>
+References: <1407470159-14722-1-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140903163448.GB16352@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, Suman Anna <s-anna@ti.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Eric Holmberg <eholmber@codeaurora.org>, "Cavin, Courtney" <Courtney.Cavin@sonymobile.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407470159-14722-1-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/3/2014 10:34 AM, Bjorn Andersson wrote:
-> On Wed 03 Sep 08:22 PDT 2014, Kumar Gala wrote:
->
->>
->> On Sep 3, 2014, at 9:55 AM, Bjorn Andersson <Bjorn.Andersson@sonymob=
-ile.com> wrote:
->>
->>> On Wed 03 Sep 05:49 PDT 2014, Kumar Gala wrote:
->>>
->>>>
->>>> On Sep 2, 2014, at 3:04 PM, Bjorn Andersson <Bjorn.Andersson@sonym=
-obile.com> wrote:
->>>>
->>>>> Changes since v2:
->>>>> - MODULE_DEVICE_TABLE
->>>>> - Changed prefix to qcom
->>>>> - Cleaned up includes
->>>>> - Rely on reg and num-locks to figure out stride, instead of of_m=
-atch data
->>>>
->>>> I know Jeff prefers this method of computing stride, but I=92m not=
- a fan as
->>>> there isn=92t a reason one could adjust qcom,num-locks in the dt f=
-or some
->>>> reason and leave regs alone.
->>>>
->>>
->>> All the current platform it's 32 consecutive mutexes with either 4 =
-or 128 byte
->>> stride, so encoding it as data either way works fine. The hardware =
-you're
->>> trying to describe with your dt is the addresses that spans your mu=
-tex
->>> registers and how many there are. So from the HW/dts pov I don't se=
-e why you
->>> would like to do this.
->>>
->>> Then looking in the caf code, there is a limit of max 8 mutexes. So=
- apparently
->>> there is some sort of usecase, I just don't know what or if it's va=
-lid from a
->>> dt pov.
->>
->> I believe not all the mutexes are meant for the cores running linux.
->> However, I think we just expect linux to play nice and not touch any=
-thing it
->> isn=92t using explicitly.
->>
->
-> I would expect so too.
+Hi Greg,
 
-Currently, and I expect this to continue, the first 8 mutexes involve=20
-usecases which involve Linux.  The remaining implemented locks support=20
-usecases which do not involve the Linux cores.  Generally we expect=20
-Linux to play nice, however it is possible to have hardware memory=20
-protection units in the SoC configured to prevent the Linux cores from=20
-accessing those upper locks.  From the global SoC pov, Linux should onl=
-y=20
-"see" the first 8.
+Am Freitag, 8. August 2014, 11:55:55 schrieb Kever Yang:
+> These patches to add support for dwc2 controller found in
+> Rockchip processors rk3066, rk3188 and rk3288,
+> and enable dts for rk3288 evb.
 
->
-> One problem I see is that it's not very robust relying on the relatio=
-nship
-> between reg and num-locks. I consider this an implementation detail l=
-eaking
-> into the dt binding and it's not described enough currently...
->
->>> Going to that future awesome SoCs where it's still called tcsr-mute=
-x, but with
->>> a stride of 4096 bytes makes me wonder; is that really a consecutiv=
-e 128kb with
->>> nothing else in-between that we can ioremap?
->>
->> think 64-bit machines with more address space to burn and wanting to=
- separate
->> resources to use MMUs for protection.
->>
->
-> Makes sense, I just don't have any documentation verifying this.
->
->>> I.e. can we really reuse this driver straight off for that SoC?
->>
->> I dont see why not.
->>
->
-> As long as the space inbetween is just wasted, there is no issue.
-
-Have a look at the msm8916.dtsi in the downstream repository.  I think=20
-it'll help with your questions concerning the 0x1000 stride case.
-
->
->>>>> diff --git a/Documentation/devicetree/bindings/hwlock/qcom-hwspin=
-lock.txt b/Documentation/devicetree/bindings/hwlock/qcom-hwspinlock.txt
->>>>> +- compatible:
->>>>> +	Usage: required
->>>>> +	Value type: <string>
->>>>> +	Definition: must be one of:
->>>>> +		    "qcom,sfpb-mutex",
->>>>> +		    "qcom,tcsr-mutex=94
->>>>
->>>> I dont get the purpose of having different compatible strings if t=
-here is no
->>>> difference in the code between them.
->>>>
->>>
->>> The semantics are the same, but there are no mutex registers in the=
- tcsr block
->>> in e.g 8960, so the name is just missleading. I assume that's why y=
-ou didn't
->>> follow caf and used the compatible "sfpb" in the first place?
->>
->> What do you expect the 8960 dt node to look like?  I=92m not 100% ag=
-ainst =91sfpb=92
->>
->> I=92m feel like we we should use compat for stride, so we=92d end up=
- with something like:
->>
->> qcom,sfpb-mutex: stride 4 bytes, base: 0x01200604, reset: 0x01200600
->> qcom,tcsr-mutex: stride 128 bytes, base: 0xFD484000, reset: 0xFD4853=
-80
->> qcom,tcsr-4k-mutex: stride 4k bytes, base: 0x740000, reset: 0x767000
->>
->
-> Maybe these are the best names for the 3 hw blocks after all.
->
-> The alternative would be either to encode the platform name in the co=
-mpatible
-> or adding the stride as a separate property. The first is waste and t=
-he second
-> doesn't describe how hw is connected. So netiher are good alternative=
-s.
->
->
-> I think your suggestion is reasonable and will move the stride back i=
-nto
-> compat. It's the most robust solution.
->
-> Is the 4k block finalized (don't see it in 8994 docs)? Should I add i=
-t to the
-> driver now as well?
->
-> Thanks for your input!
->
-> Regards,
-> Bjorn
->
+will you take patches 1 and 2?
 
 
-Jeffrey Hugo
---=20
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,=20
-hosted by The Linux Foundation.
+Thanks
+Heiko
+
+
+> 
+> Changes in v5:
+> - max_transfer_size change to 65535 to met the requirement of
+>   header file
+> - change the sort order of dwc2 in rk3288.dtsi
+> - don't enable otg port for evb
+> 
+> Changes in v4:
+> - max_transfer_size change to 65536, this should be enough
+>   for most transfer, the hardware auto-detect will set this
+>   to 0x7ffff which may make dma_alloc_coherent fail when
+>   non-dword aligned buf from driver like usbnet happen.
+> - remove EHCI and HSIC dts patch for Doug had post it seprately.
+> 
+> Changes in v3:
+> - EHCI and HSIC move new for version 3.
+> - Rebase
+> 
+> Changes in v2:
+> - Split out dr_mode and rk3288 bindings.
+> - add compatible "snps,dwc2" bingding info
+> - set most parameters as driver auto-detect
+> - evb patch added in version 2
+> 
+> Kever Yang (4):
+>   Documentation: dt-bindings: add dt binding info for Rockchip dwc2
+>   usb: dwc2: add compatible data for rockchip soc
+>   ARM: dts: add rk3288 dwc2 controller support
+>   ARM: dts: Enable USB host1(dwc) on rk3288-evb
+> 
+>  Documentation/devicetree/bindings/usb/dwc2.txt |  3 +++
+>  arch/arm/boot/dts/rk3288-evb.dtsi              |  4 ++++
+>  arch/arm/boot/dts/rk3288.dtsi                  | 20 ++++++++++++++++++
+>  drivers/usb/dwc2/platform.c                    | 29
+> ++++++++++++++++++++++++++ 4 files changed, 56 insertions(+)
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
