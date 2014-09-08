@@ -1,152 +1,75 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 2/5] PM / Domains: Add DT bindings for the R-Mobile System
- Controller
-Date: Mon,  8 Sep 2014 15:35:41 +0200
-Message-ID: <1410183344-14756-3-git-send-email-geert+renesas@glider.be>
-References: <1410183344-14756-1-git-send-email-geert+renesas@glider.be>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: use improved armada spi device tree
+ compatible name
+Date: Mon, 8 Sep 2014 10:40:56 -0300
+Message-ID: <20140908134056.GA2274@arch.hh.imgtec.org>
+References: <1410147029-30067-1-git-send-email-gerg@uclinux.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410183344-14756-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org, Philipp Zabel <philipp.zabel@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410147029-30067-1-git-send-email-gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A.o., the Renesas R-Mobile System Controller provides power management
-support, following the generic PM domain bindings in
-Documentation/devicetree/bindings/power/power_domain.txt.
+Sending to Jason (just in case)
 
-For now this supports the R-Mobile A1 (r8a7740) only, but it should be
-sufficiently generic to handle other members of the SH-Mobile/R-Mobile
-family in the future.
+On 08 Sep 01:30 PM, gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org wrote:
+> From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+>=20
+> Switch the Armada SoC SPI port device tree binding to use the new imp=
+roved
+> armada-370-spi compatible name. This allows for a wider range of baud=
+ rates
+> to be used.
+>=20
+> Signed-off-by: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
+> Tested-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Reviewed-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-370-xp.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts=
+/armada-370-xp.dtsi
+> index 23227e0..83286ec 100644
+> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+> @@ -110,7 +110,7 @@
+>  			};
+> =20
+>  			spi0: spi@10600 {
+> -				compatible =3D "marvell,orion-spi";
+> +				compatible =3D "marvell,armada-370-spi", "marvell,orion-spi";
+>  				reg =3D <0x10600 0x28>;
+>  				#address-cells =3D <1>;
+>  				#size-cells =3D <0>;
+> @@ -121,7 +121,7 @@
+>  			};
+> =20
+>  			spi1: spi@10680 {
+> -				compatible =3D "marvell,orion-spi";
+> +				compatible =3D "marvell,armada-370-spi", "marvell,orion-spi";
+>  				reg =3D <0x10680 0x28>;
+>  				#address-cells =3D <1>;
+>  				#size-cells =3D <0>;
+> --=20
+> 1.9.1
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-spi" =
+in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- .../bindings/power/renesas,sysc-rmobile.txt        | 106 +++++++++++++++++++++
- 1 file changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-
-diff --git a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-new file mode 100644
-index 000000000000..8d9d64df0088
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-@@ -0,0 +1,106 @@
-+DT bindings for the Renesas R-Mobile System Controller
-+
-+== System Controller Node ==
-+
-+The R-Mobile System Controller provides the following functions:
-+  - Boot mode management,
-+  - Reset generation,
-+  - Power management.
-+
-+Required properties:
-+- compatible: Should be "renesas,sysc-<soctype>", "renesas,sysc-rmobile" as
-+	      fallback.
-+	      Examples with soctypes are:
-+		- "renesas,sysc-r8a7740" (R-Mobile A1)
-+- reg: Two address start and address range blocks for the device:
-+         - The first block refers to the normally accessible registers,
-+         - the second block refers to the registers protected by the HPB
-+	   semaphore.
-+
-+Optional nodes:
-+- pm-domains: This node contains a hierarchy of PM domain nodes, which should
-+  match the Power Area Hierarchy in the Power Domain Specifications section of
-+  the device's datasheet.
-+
-+
-+== PM Domain Nodes ==
-+
-+Each of the PM domain nodes represents a PM domain, as documented by the
-+generic PM domain bindings in
-+Documentation/devicetree/bindings/power/power_domain.txt.
-+
-+The nodes should be named by the real power area names, and thus their names
-+should be unique.
-+
-+Required properties:
-+  - #power-domain-cells: Must be 0.
-+
-+Optional properties:
-+- reg: If the PM domain is not always-on, this property must contain the bit
-+       index number for the corresponding power area in the various Power
-+       Control and Status Registers. The parent's node must contain the
-+       following two properties:
-+	 - #address-cells: Must be 1,
-+	 - #address-cells: Must be 0.
-+       If the PM domain is always-on, this property must be omitted.
-+- power-on-latency: Power-on latency of the PM domain, in ns,
-+- power-off-latency: Power-off latency of the PM domain, in ns.
-+
-+
-+Example:
-+
-+This shows a subset of the r8a7740 PM domain hierarchy, containing the
-+C5 "always-on" domain, 2 of its subdomains (A4S and A4SU), and the A3SP domain,
-+which is a subdomain of A4S.
-+
-+	sysc: system-controller@e6180000 {
-+		compatible = "renesas,sysc-r8a7740", "renesas,sysc-rmobile";
-+		reg = <0xe6180000 8000>, <0xe6188000 8000>;
-+
-+		pm-domains {
-+			pd_c5: c5 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				#power-domain-cells = <0>;
-+
-+				pd_a4s: a4s@10 {
-+					reg = <10>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					#power-domain-cells = <0>;
-+					power-on-latency = <250000>;
-+					power-off-latency = <250000>;
-+
-+					pd_a3sp: a3sp@11 {
-+						reg = <11>;
-+						#power-domain-cells = <0>;
-+						power-on-latency = <250000>;
-+						power-off-latency = <250000>;
-+					};
-+				};
-+
-+				pd_a4su: a4su@20 {
-+					reg = <20>;
-+					#power-domain-cells = <0>;
-+					power-on-latency = <250000>;
-+					power-off-latency = <250000>;
-+				};
-+			};
-+		};
-+	};
-+
-+
-+== PM Domain Consumers ==
-+
-+Hardware blocks belonging to a PM domain should contain a "power-domains"
-+property that is a phandle pointing to the corresponding PM domain node.
-+
-+Example:
-+
-+	tpu: pwm@e6600000 {
-+		compatible = "renesas,tpu-r8a7740", "renesas,tpu";
-+		reg = <0xe6600000 0x100>;
-+		clocks = <&mstp3_clks R8A7740_CLK_TPU0>;
-+		power-domains = <&pd_a3sp>;
-+		#pwm-cells = <3>;
-+	};
--- 
-1.9.1
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
