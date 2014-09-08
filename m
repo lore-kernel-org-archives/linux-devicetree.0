@@ -1,151 +1,164 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v9 06/12] ARM: integrator: Correct usage of
- of_pci_range_to_resource()
-Date: Mon, 8 Sep 2014 13:25:49 +0100
-Message-ID: <20140908122549.GI27864@e106497-lin.cambridge.arm.com>
-References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
- <1407860725-25202-7-git-send-email-Liviu.Dudau@arm.com>
- <20140905220820.GI8080@google.com>
+From: Dmitry Lifshitz <lifshitz@compulab.co.il>
+Subject: Re: [PATCH 2/2] ARM: dts: omap5: Add dr_mode for dwc3
+Date: Mon, 08 Sep 2014 15:32:37 +0300
+Message-ID: <540DA1E5.1060701@compulab.co.il>
+References: <1381402195-29257-1-git-send-email-kishon@ti.com> <1381402195-29257-2-git-send-email-kishon@ti.com> <52580F34.8030809@ti.com> <20140416161619.GH28035@saruman.home> <540D9449.3090008@compulab.co.il> <540D955C.6060602@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20140905220820.GI8080@google.com>
-Content-Disposition: inline
-Sender: linux-arch-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <540D955C.6060602@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Felipe Balbi <balbi@ti.com>, George Cherian <george.cherian@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 05, 2014 at 11:08:20PM +0100, Bjorn Helgaas wrote:
-> [+cc Linus]
->=20
-> On Tue, Aug 12, 2014 at 05:25:19PM +0100, Liviu Dudau wrote:
-> > Previously, of_pci_range_to_resource() would return a resource
-> > that contained physical addresses of the IO space even if the
-> > IORESOURCE_IO flags mandate a logical port set of values. Now
-> > that the function has been fixed we need to update the drivers
-> > that were taking advantage of the old behaviour.
-> >=20
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Russell King <linux@arm.linux.org.uk>
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
->=20
-> Something's wrong with the CC: list.  You list Linus here in the chan=
-gelog,
-> but I don't see him in the CC: headers.
+Hi Roger,
 
-Yes, turns out one of my .git/config directories had supresscc=3Dall.
+Thank you for a quick reply. See, my reply below.
 
-Best regards,
-Liviu
+On 09/08/2014 02:39 PM, Roger Quadros wrote:
+> On 09/08/2014 02:34 PM, Dmitry Lifshitz wrote:
+>> Hi Felipe, Roger
+>>
+>> On 04/16/2014 07:16 PM, Felipe Balbi wrote:
+>>> On Fri, Oct 11, 2013 at 05:46:12PM +0300, Roger Quadros wrote:
+>>>> Hi,
+>>>>
+>>>> On 10/10/2013 01:49 PM, Kishon Vijay Abraham I wrote:
+>>>>> From: George Cherian <george.cherian@ti.com>
+>>>>>
+>>>>> Added dr_mode property in dwc3 and set its default mode to device.
+>>>>
+>>>> If there is a specific reason why this is not set to "otg", we need
+>>>> to explain it here.
+>>>>
+>>>> AFAIK the port is meant to be used as OTG port.
+>>>
+>>> we still don't have the workaround for dual role ports, I've been
+>>> working on it but still need to retest and make sure it's working fine
+>>> before merging upstream.
+>>>
+>>
+>>
+>> Does the OTG port suppose to work with OMAP5? I mean role switching mechanism?
+>>
+>> I'm testing kernel v3.16 with OMAP5 based board (CM-T54).
+>>
+>> If I set CONFIG_USB_DWC3_DUAL_ROLE, than nothing is going on when I plug some device/host cable into micro USB3.0 port (VBUS/ID detection with extcon events works fine).
+>>
+>> CONFIG_USB_DWC3_HOST/CONFIG_USB_DWC3_GADGET bring port to appropriate mode and it works.
+>>
+>> What is the purpose of setting dr_mode = "peripheral" in omap5.dtsi, since it is overridden by config options in dwc3_probe()?
+>
+> If dual role works it should be "otg" then. I'm not sure why it was set to peripheral. Maybe the role switching mechanism
+> was not in place earlier.
 
->=20
-> > ---
-> >  arch/arm/mach-integrator/pci_v3.c | 24 +++++++++++++-----------
-> >  1 file changed, 13 insertions(+), 11 deletions(-)
-> >=20
-> > diff --git a/arch/arm/mach-integrator/pci_v3.c b/arch/arm/mach-inte=
-grator/pci_v3.c
-> > index 05e1f73..193b7f8 100644
-> > --- a/arch/arm/mach-integrator/pci_v3.c
-> > +++ b/arch/arm/mach-integrator/pci_v3.c
-> > @@ -660,6 +660,7 @@ static void __init pci_v3_preinit(void)
-> >  {
-> >  	unsigned long flags;
-> >  	unsigned int temp;
-> > +	phys_addr_t io_address =3D pci_pio_to_address(io_mem.start);
-> > =20
-> >  	pcibios_min_mem =3D 0x00100000;
-> > =20
-> > @@ -701,7 +702,7 @@ static void __init pci_v3_preinit(void)
-> >  	/*
-> >  	 * Setup window 2 - PCI IO
-> >  	 */
-> > -	v3_writel(V3_LB_BASE2, v3_addr_to_lb_base2(io_mem.start) |
-> > +	v3_writel(V3_LB_BASE2, v3_addr_to_lb_base2(io_address) |
-> >  			V3_LB_BASE_ENABLE);
-> >  	v3_writew(V3_LB_MAP2, v3_addr_to_lb_map2(0));
-> > =20
-> > @@ -742,6 +743,7 @@ static void __init pci_v3_preinit(void)
-> >  static void __init pci_v3_postinit(void)
-> >  {
-> >  	unsigned int pci_cmd;
-> > +	phys_addr_t io_address =3D pci_pio_to_address(io_mem.start);
-> > =20
-> >  	pci_cmd =3D PCI_COMMAND_MEMORY |
-> >  		  PCI_COMMAND_MASTER | PCI_COMMAND_INVALIDATE;
-> > @@ -758,7 +760,7 @@ static void __init pci_v3_postinit(void)
-> >  		       "interrupt: %d\n", ret);
-> >  #endif
-> > =20
-> > -	register_isa_ports(non_mem.start, io_mem.start, 0);
-> > +	register_isa_ports(non_mem.start, io_address, 0);
-> >  }
-> > =20
-> >  /*
-> > @@ -867,33 +869,33 @@ static int __init pci_v3_probe(struct platfor=
-m_device *pdev)
-> > =20
-> >  	for_each_of_pci_range(&parser, &range) {
-> >  		if (!range.flags) {
-> > -			of_pci_range_to_resource(&range, np, &conf_mem);
-> > +			ret =3D of_pci_range_to_resource(&range, np, &conf_mem);
-> >  			conf_mem.name =3D "PCIv3 config";
-> >  		}
-> >  		if (range.flags & IORESOURCE_IO) {
-> > -			of_pci_range_to_resource(&range, np, &io_mem);
-> > +			ret =3D of_pci_range_to_resource(&range, np, &io_mem);
-> > +			dev_info(&pdev->dev, "IO PCI range converted\n");
-> >  			io_mem.name =3D "PCIv3 I/O";
-> >  		}
-> >  		if ((range.flags & IORESOURCE_MEM) &&
-> >  			!(range.flags & IORESOURCE_PREFETCH)) {
-> >  			non_mem_pci =3D range.pci_addr;
-> >  			non_mem_pci_sz =3D range.size;
-> > -			of_pci_range_to_resource(&range, np, &non_mem);
-> > +			ret =3D of_pci_range_to_resource(&range, np, &non_mem);
-> >  			non_mem.name =3D "PCIv3 non-prefetched mem";
-> >  		}
-> >  		if ((range.flags & IORESOURCE_MEM) &&
-> >  			(range.flags & IORESOURCE_PREFETCH)) {
-> >  			pre_mem_pci =3D range.pci_addr;
-> >  			pre_mem_pci_sz =3D range.size;
-> > -			of_pci_range_to_resource(&range, np, &pre_mem);
-> > +			ret =3D of_pci_range_to_resource(&range, np, &pre_mem);
-> >  			pre_mem.name =3D "PCIv3 prefetched mem";
-> >  		}
-> > -	}
-> > =20
-> > -	if (!conf_mem.start || !io_mem.start ||
-> > -	    !non_mem.start || !pre_mem.start) {
-> > -		dev_err(&pdev->dev, "missing ranges in device node\n");
-> > -		return -EINVAL;
-> > +		if (ret < 0) {
-> > +			dev_err(&pdev->dev, "missing ranges in device node\n");
-> > +			return -EINVAL;
-> > +		}
-> >  	}
-> > =20
-> >  	pci_v3.map_irq =3D of_irq_parse_and_map_pci;
-> > --=20
-> > 2.0.4
-> >=20
+
+This is what I have when setting dr_mode = "otg" (and compiling with 
+CONFIG_USB_DWC3_DUAL_ROLE):
+
+when load gadget driver and plugging host PC cable:
+
+root@cm-debian:~# modprobe g_ether
+using random self ethernet address
+using random host ethernet address
+usb0: HOST MAC fa:db:52:7f:95:c5
+usb0: MAC be:75:8d:71:6d:02
+using random self ethernet address
+using random host ethernet address
+g_ether gadget: Ethernet Gadget, version: Memorial Day 2008
+g_ether gadget: g_ether ready
+root@cm-debian:~# ------------[ cut here ]------------
+WARNING: CPU: 0 PID: 65 at 
+/home/lifshitz/workroot/git-repo/OMAP5/omap5-kernel/drivers/bus/omap_l3_noc.c:147 
+l3_handle_target.isra.2+0x230/0x27c()
+44000000.ocp:L3 Standard Error: MASTER UN IDENTIFIED TARGET OCMRAM 
+(Read): At Address: 0x00000000 : Data Access in User mode during 
+Functional access
+Modules linked in: usb_f_eem g_ether usb_f_rndis libcomposite u_ether 
+configfs rfcomm ecb btmrvl_sdio btmrvl bluetooth mwifiex_sdio mwifiex 
+dwc3 ahci_platform libahci_platform libahci libata snd_soc_cm_t54 
+ads7846 dwc3_omap extcon_palmas rtc_palmas extcon_class at24 
+snd_soc_wm8731 snd_soc_omap_mcbsp
+CPU: 0 PID: 65 Comm: irq/39-palmas Tainted: G        W 
+3.16.0-cm-t54+ #99
+[<c00156d0>] (unwind_backtrace) from [<c00124ac>] (show_stack+0x10/0x14)
+[<c00124ac>] (show_stack) from [<c05e29dc>] (dump_stack+0x74/0x8c)
+[<c05e29dc>] (dump_stack) from [<c0037dbc>] (warn_slowpath_common+0x70/0x88)
+[<c0037dbc>] (warn_slowpath_common) from [<c0037e68>] 
+(warn_slowpath_fmt+0x30/0x40)
+[<c0037e68>] (warn_slowpath_fmt) from [<c02d88b8>] 
+(l3_handle_target.isra.2+0x230/0x27c)
+[<c02d88b8>] (l3_handle_target.isra.2) from [<c02d89b0>] 
+(l3_interrupt_handler+0xac/0x13c)
+[<c02d89b0>] (l3_interrupt_handler) from [<c007ea00>] 
+(handle_irq_event_percpu+0x7c/0x230)
+[<c007ea00>] (handle_irq_event_percpu) from [<c007ebf8>] 
+(handle_irq_event+0x44/0x64)
+[<c007ebf8>] (handle_irq_event) from [<c0081b78>] 
+(handle_fasteoi_irq+0xa8/0x134)
+[<c0081b78>] (handle_fasteoi_irq) from [<c007e398>] 
+(generic_handle_irq+0x20/0x30)
+[<c007e398>] (generic_handle_irq) from [<c000f4ac>] (handle_IRQ+0x40/0x90)
+[<c000f4ac>] (handle_IRQ) from [<c0008620>] (gic_handle_irq+0x2c/0x60)
+[<c0008620>] (gic_handle_irq) from [<c05eacc0>] (__irq_svc+0x40/0x50)
+Exception stack(0xec939d80 to 0xec939dc8)
+9d80: ecb729b0 20000013 00000000 00000001 ecb72800 eca1e000 00000000 
+ec939e44
+9da0: ec939ed0 20000013 ecb72818 ed005e14 ec939ec8 ec939dc8 bf015f54 
+c05ea548
+9dc0: 80000013 ffffffff
+[<c05eacc0>] (__irq_svc) from [<c05ea548>] 
+(_raw_spin_unlock_irqrestore+0x1c/0x20)
+[<c05ea548>] (_raw_spin_unlock_irqrestore) from [<bf015f54>] 
+(extcon_update_state+0x144/0x1c4 [extcon_class])
+[<bf015f54>] (extcon_update_state [extcon_class]) from [<bf023288>] 
+(palmas_vbus_irq_handler+0x64/0xa0 [extcon_palmas])
+[<bf023288>] (palmas_vbus_irq_handler [extcon_palmas]) from [<c00815a8>] 
+(handle_nested_irq+0xa0/0x10c)
+[<c00815a8>] (handle_nested_irq) from [<c03ab85c>] 
+(regmap_irq_thread+0x184/0x300)
+[<c03ab85c>] (regmap_irq_thread) from [<c007f8b8>] (irq_thread_fn+0x1c/0x40)
+[<c007f8b8>] (irq_thread_fn) from [<c007f6a4>] (irq_thread+0x120/0x15c)
+[<c007f6a4>] (irq_thread) from [<c0056434>] (kthread+0xdc/0xf0)
+[<c0056434>] (kthread) from [<c000eb98>] (ret_from_fork+0x14/0x3c)
+---[ end trace 3b365a734f7f3202 ]---
+palmas-usb 48070000.i2c:palmas@48:palmas_usb: USB cable is attached
+
+
+
+when plugging storage device:
+
+root@cm-debian:~# dmesg | tail -n20
+...
+omap-dwc3 4a020000.omap_dwc3: ID GND
+palmas-usb 48070000.i2c:palmas@48:palmas_usb: USB-HOST cable is attached
+palmas-usb 48070000.i2c:palmas@48:palmas_usb: USB cable is attached
+
+and nothing is going on.
+
+Once again, when compiling with predefined role 
+(CONFIG_USB_DWC3_HOST/CONFIG_USB_DWC3_GADGET) the port is functional in 
+both modes.
+
+I'm wondering, if dwc3_probe() calls
+dwc3_core_init_mode() -> dwc3_set_mode() than why it is not required in 
+dwc3_omap_set_mailbox()?
+
+
+>
+> George any objections for "otg"?
+>
+> cheers,
+> -roger
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+>
+>
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Thanks,
+
+Dmitry
