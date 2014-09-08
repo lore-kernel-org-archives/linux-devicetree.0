@@ -1,62 +1,63 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] gpio: Add driver for AXM55xx SSP chip selects
-Date: Mon, 8 Sep 2014 12:35:47 +0100
-Message-ID: <20140908113547.GJ4015@sirena.org.uk>
-References: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com>
- <1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
- <CACRpkdby4H-fivNn_kG2uL0EjsCGAc+t6OyFi0+VcNGf2Z9NQA@mail.gmail.com>
- <20140904170630.GL29327@sirena.org.uk>
- <CACRpkdZEoBan=Lqr1T-iY41U9NfMA_MCLX3LA=juw7X4pmRvSQ@mail.gmail.com>
- <CAE0=X_3QO5p26M=FS7joKS3zD6LAM_moFutHNcyE1-CjauL3Rw@mail.gmail.com>
- <20140906135308.GC2601@sirena.org.uk>
- <CAE0=X_2q1Z+pGuh6OY9Si5jbrF9HkczNFUqUgK_8xBekNvMeyQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mhjHhnbe5PrRcwjY"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAE0=X_2q1Z+pGuh6OY9Si5jbrF9HkczNFUqUgK_8xBekNvMeyQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Anders Berg <anders.berg@avagotech.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 0/7]  ARM RealView DeviceTree support v6
+Date: Mon,  8 Sep 2014 13:37:59 +0200
+Message-ID: <1410176286-32533-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+I've updated the RealView DeviceTree patch again.
 
---mhjHhnbe5PrRcwjY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Main changes:
+- Calculate cache associativity from ePAPR definitions
+- Rely on the l2c_aux_[mask|val] from the DT_MACHINE
+- Add cache line size to device tree
 
-On Mon, Sep 08, 2014 at 01:02:32PM +0200, Anders Berg wrote:
-> On Sat, Sep 6, 2014 at 3:53 PM, Mark Brown <broonie@kernel.org> wrote:
+Florian Fainelli (1):
+  ARM: l2c: parse 'cache-size' and 'cache-sets' properties
 
-> > Would it not be more straightforward to just register it as a platform
-> > device in this case, or use a separate OF ID in the DT?  We appear to
-> > specify a compatible string when registering AMBA devices even if we are
-> > capable of identifying using the ID registers.
+Linus Walleij (6):
+  leds: add a driver for syscon-based LEDs
+  leds: add device tree bindings for register bit LEDs
+  power: reset: driver for the Versatile syscon reboot
+  soc: add driver for the ARM RealView
+  ARM: l2x0: calculate associativity from ePAPR cache props
+  ARM: realview: basic device tree implementation
 
-> I'll drop this gpio patch for now and submit a patch on the pl022
-> driver instead. I read the arm,primecell binding and learned that
-> there is a property (arm,primecell-periphid) that can be used to
-> override the HW PrimeCell ID. Seems like something to use here, right?
+ Documentation/devicetree/bindings/arm/arm-boards   |  65 ++++++
+ Documentation/devicetree/bindings/arm/gic.txt      |   1 +
+ Documentation/devicetree/bindings/arm/l2cc.txt     |   2 +
+ .../devicetree/bindings/leds/register-bit-led.txt  |  99 +++++++++
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/arm-realview-pb1176.dts          | 246 +++++++++++++++++++++
+ arch/arm/mach-realview/Kconfig                     |  13 ++
+ arch/arm/mach-realview/Makefile                    |   1 +
+ arch/arm/mach-realview/realview-dt.c               |  32 +++
+ arch/arm/mm/cache-l2x0.c                           | 111 ++++++++++
+ drivers/irqchip/irq-gic.c                          |   2 +
+ drivers/leds/Kconfig                               |  10 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-syscon.c                         | 165 ++++++++++++++
+ drivers/power/reset/Kconfig                        |   9 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/arm-versatile-reboot.c         | 111 ++++++++++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/versatile/Kconfig                      |  10 +
+ drivers/soc/versatile/Makefile                     |   1 +
+ drivers/soc/versatile/soc-realview.c               | 144 ++++++++++++
+ 22 files changed, 1027 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/register-bit-led.txt
+ create mode 100644 arch/arm/boot/dts/arm-realview-pb1176.dts
+ create mode 100644 arch/arm/mach-realview/realview-dt.c
+ create mode 100644 drivers/leds/leds-syscon.c
+ create mode 100644 drivers/power/reset/arm-versatile-reboot.c
+ create mode 100644 drivers/soc/versatile/Kconfig
+ create mode 100644 drivers/soc/versatile/Makefile
+ create mode 100644 drivers/soc/versatile/soc-realview.c
 
-Possibly, though if there's no hardware ID to override to that might not
-be the best option.  You could always define a property that's specific
-to the pl022 driver flagging that it's got these extra chip selects though.
+-- 
+1.9.3
 
---mhjHhnbe5PrRcwjY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUDZSTAAoJECTWi3JdVIfQ/AsH/iHCP5Aalikko8/T0dqeY94z
-fNwr+78Oo/IlKhNOnt9/gySYurhzeVi04FMpGQ4eoVmbaC+K5yAwBw+aBbOyC7HF
-pYqvO7uVR9pMab685pJTpiIsN0l7u8Kgkubc9Q+4oc8P/zYtWI83ou7ZsdN+oeM9
-kk5myErUMVKCuDCSuJikhtmQjIEPZa6aSFnsWnGGnU8xB0PEGeRx/v2uLv/d0WcL
-yFe4Mvwvyl2sAgpn2YiI+5xlPMW9J99hVte0WM99j1W5nt3nnl6uF/vX+UYt8Lp0
-wphT5YptZ/vJYwMz+pNTX6cLjbv/zwGLxHTnC2OUPIdjVegwRQJiiGKRuPg5bcw=
-=Nc6W
------END PGP SIGNATURE-----
-
---mhjHhnbe5PrRcwjY--
