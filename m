@@ -1,70 +1,285 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Mon, 08 Sep 2014 11:13:50 +0300
-Message-ID: <540D653E.7070509@mm-sol.com>
-References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com> <1409919274-13419-2-git-send-email-svarbanov@mm-sol.com> <3495079.hWGRuSPgx7@wuerfel>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v5 01/11] mfd: add atmel-hlcdc driver
+Date: Mon,  8 Sep 2014 10:43:32 +0200
+Message-ID: <1410165822-16868-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3495079.hWGRuSPgx7@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collins>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9x5
+family or sama5d3 family) exposes 2 subdevices:
+- a display controller (controlled by a DRM driver)
+- a PWM chip
 
-Thank you for the comments!
+The MFD device provides a regmap and several clocks (those connected
+to this hardware block) to its subdevices.
 
-On 09/05/2014 03:26 PM, Arnd Bergmann wrote:
-> On Friday 05 September 2014 15:14:33 Stanimir Varbanov wrote:
->> +       VADC_CHAN(LR_MUX1_BAT_THERM, 0)                 /* 0x30 */
->> +       VADC_CHAN(LR_MUX2_BAT_ID, 0)
->> +       VADC_CHAN(LR_MUX3_XO_THERM, 0)
->> +       VADC_CHAN(LR_MUX4_AMUX_THM1, 0)
->> +       VADC_CHAN(LR_MUX5_AMUX_THM2,by you  0)
->> +       VADC_CHAN(LR_MUX6_AMUX_THM3, 0)
->> +       VADC_CHAN(LR_MUX7_HW_ID, 0)
->> +       VADC_CHAN(LR_MUX8_AMUX_THM4, 0)
->> +       VADC_CHAN(LR_MUX9_AMUX_THM5, 0)
->> +       VADC_CHAN(AMUX_PU1, 0)
->> +       VADC_CHAN(AMUX_PU2, 0)
->> +       VADC_CHAN(LR_MUX3_BUF_XO_THERM_BUF, 0)          /* 0x3c */
->> +
->> +       VADC_CHAN(LR_MUX1_PU1_BAT_THERM, 0)             /* 0x70 */
->> +       VADC_CHAN(LR_MUX2_PU1_BAT_ID, 0)
->> +       VADC_CHAN(LR_MUX3_PU1_XO_THERM, 0)
->> +       VADC_CHAN(LR_MUX4_PU1_AMUX_THM1, 0)
->> +       VADC_CHAN(LR_MUX5_PU1_AMUX_THM2, 0)
->> +       VADC_CHAN(LR_MUX6_PU1_AMUX_THM3, 0)
->> +       VADC_CHAN(LR_MUX7_PU1_AMUX_HW_ID, 0)
->> +       VADC_CHAN(LR_MUX8_PU1_AMUX_THM4, 0)
->> +       VADC_CHAN(LR_MUX9_PU1_AMUX_THM5, 0)
->> +       VADC_CHAN(LR_MUX10_PU1_AMUX_USB_ID, 0)          /* 0x79 */
->> +       VADC_CHAN(LR_MUX3_BUF_PU1_XO_THERM_BUF, 0)      /* 0x7c */
->>
-> 
-> These numbers all look hardware specific, so why put macros into the
-> device tree rather than using them directly?
+This way concurrent accesses to the iomem range are handled by the regmap
+framework, and each subdevice can safely access HLCDC registers.
 
-The idea was to use #defines in DT nodes when we need to overwrite the
-adc channel parameters, see example in 2/2 how it will be used.
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Tested-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+---
+ drivers/mfd/Kconfig             |   6 ++
+ drivers/mfd/Makefile            |   1 +
+ drivers/mfd/atmel-hlcdc.c       | 118 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/atmel-hlcdc.h |  78 ++++++++++++++++++++++++++
+ 4 files changed, 203 insertions(+)
+ create mode 100644 drivers/mfd/atmel-hlcdc.c
+ create mode 100644 include/linux/mfd/atmel-hlcdc.h
 
-> 
-> If you want to make up your own macro namespace, I would suggest
-> using consecutive numbers and turning the above into
-> 
-> 	...
-> 	[LR_MUX3_BUF_XO_THERM_BUF] = VADC_CHAN(0x3c, 0),
-> 	[LR_MUX1_PU1_BAT_THERM]    = VADC_CHAN(0x70, 0),
-> 	[LR_MUX1_PU1_BAT_ID]       = VADC_CHAN(0x71, 0),
-> 	...
-> 
-> but I don't see that really improving the DT, since you then
-> need to look up the values in the header rather than the data sheet.
-
-I will see how can I make this elegantly by using IIO infrastructure better.
-
-regards,
-Stan
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 6cc4b6a..dbd1a16 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -59,6 +59,12 @@ config MFD_AAT2870_CORE
+ 	  additional drivers must be enabled in order to use the
+ 	  functionality of the device.
+ 
++config MFD_ATMEL_HLCDC
++	tristate
++	select MFD_CORE
++	select REGMAP_MMIO
++	depends on OF
++
+ config MFD_BCM590XX
+ 	tristate "Broadcom BCM590xx PMUs"
+ 	select MFD_CORE
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 8afedba..5f25b0d 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -156,6 +156,7 @@ obj-$(CONFIG_MFD_PM8921_CORE) 	+= pm8921-core.o ssbi.o
+ obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
+ obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
+ obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
++obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
+ obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
+ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+ obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+diff --git a/drivers/mfd/atmel-hlcdc.c b/drivers/mfd/atmel-hlcdc.c
+new file mode 100644
+index 0000000..aadb371
+--- /dev/null
++++ b/drivers/mfd/atmel-hlcdc.c
+@@ -0,0 +1,118 @@
++/*
++ * Copyright (C) 2014 Free Electrons
++ * Copyright (C) 2014 Atmel
++ *
++ * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/clk.h>
++#include <linux/mfd/atmel-hlcdc.h>
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++#define ATMEL_HLCDC_REG_MAX		(0x4000 - 0x4)
++
++static const struct mfd_cell atmel_hlcdc_cells[] = {
++	{
++		.name = "atmel-hlcdc-pwm",
++		.of_compatible = "atmel,hlcdc-pwm",
++	},
++	{
++		.name = "atmel-hlcdc-dc",
++		.of_compatible = "atmel,hlcdc-display-controller",
++	},
++};
++
++static const struct regmap_config atmel_hlcdc_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.max_register = ATMEL_HLCDC_REG_MAX,
++};
++
++static int atmel_hlcdc_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct atmel_hlcdc *hlcdc;
++	struct resource *res;
++	void __iomem *regs;
++
++	hlcdc = devm_kzalloc(dev, sizeof(*hlcdc), GFP_KERNEL);
++	if (!hlcdc)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(regs))
++		return PTR_ERR(regs);
++
++	hlcdc->periph_clk = devm_clk_get(dev, "periph_clk");
++	if (IS_ERR(hlcdc->periph_clk)) {
++		dev_err(dev, "failed to get peripheral clock\n");
++		return PTR_ERR(hlcdc->periph_clk);
++	}
++
++	hlcdc->sys_clk = devm_clk_get(dev, "sys_clk");
++	if (IS_ERR(hlcdc->sys_clk)) {
++		dev_err(dev, "failed to get system clock\n");
++		return PTR_ERR(hlcdc->sys_clk);
++	}
++
++	hlcdc->slow_clk = devm_clk_get(dev, "slow_clk");
++	if (IS_ERR(hlcdc->slow_clk)) {
++		dev_err(dev, "failed to get slow clock\n");
++		return PTR_ERR(hlcdc->slow_clk);
++	}
++
++	hlcdc->regmap = devm_regmap_init_mmio(dev, regs,
++					      &atmel_hlcdc_regmap_config);
++	if (IS_ERR(hlcdc->regmap))
++		return PTR_ERR(hlcdc->regmap);
++
++	dev_set_drvdata(dev, hlcdc);
++
++	return mfd_add_devices(dev, -1, atmel_hlcdc_cells,
++			       ARRAY_SIZE(atmel_hlcdc_cells),
++			       NULL, 0, NULL);
++}
++
++static int atmel_hlcdc_remove(struct platform_device *pdev)
++{
++	mfd_remove_devices(&pdev->dev);
++
++	return 0;
++}
++
++static const struct of_device_id atmel_hlcdc_match[] = {
++	{ .compatible = "atmel,sama5d3-hlcdc" },
++	{ /* sentinel */ },
++};
++
++static struct platform_driver atmel_hlcdc_driver = {
++	.probe = atmel_hlcdc_probe,
++	.remove = atmel_hlcdc_remove,
++	.driver = {
++		.name = "atmel-hlcdc",
++		.of_match_table = atmel_hlcdc_match,
++	},
++};
++module_platform_driver(atmel_hlcdc_driver);
++
++MODULE_ALIAS("platform:atmel-hlcdc");
++MODULE_AUTHOR("Boris Brezillon <boris.brezillon@free-electrons.com>");
++MODULE_DESCRIPTION("Atmel HLCDC driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/atmel-hlcdc.h b/include/linux/mfd/atmel-hlcdc.h
+new file mode 100644
+index 0000000..e9a503d
+--- /dev/null
++++ b/include/linux/mfd/atmel-hlcdc.h
+@@ -0,0 +1,78 @@
++/*
++ * Copyright (C) 2014 Free Electrons
++ * Copyright (C) 2014 Atmel
++ *
++ * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License version 2 as published by
++ * the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef __LINUX_MFD_HLCDC_H
++#define __LINUX_MFD_HLCDC_H
++
++#include <linux/clk.h>
++#include <linux/regmap.h>
++
++#define ATMEL_HLCDC_CFG(i)		((i) * 0x4)
++#define ATMEL_HLCDC_SIG_CFG		LCDCFG(5)
++#define ATMEL_HLCDC_HSPOL		BIT(0)
++#define ATMEL_HLCDC_VSPOL		BIT(1)
++#define ATMEL_HLCDC_VSPDLYS		BIT(2)
++#define ATMEL_HLCDC_VSPDLYE		BIT(3)
++#define ATMEL_HLCDC_DISPPOL		BIT(4)
++#define ATMEL_HLCDC_DITHER		BIT(6)
++#define ATMEL_HLCDC_DISPDLY		BIT(7)
++#define ATMEL_HLCDC_MODE_MASK		GENMASK(9, 8)
++#define ATMEL_HLCDC_PP			BIT(10)
++#define ATMEL_HLCDC_VSPSU		BIT(12)
++#define ATMEL_HLCDC_VSPHO		BIT(13)
++#define ATMEL_HLCDC_GUARDTIME_MASK	GENMASK(20, 16)
++
++#define ATMEL_HLCDC_EN			0x20
++#define ATMEL_HLCDC_DIS			0x24
++#define ATMEL_HLCDC_SR			0x28
++#define ATMEL_HLCDC_IER			0x2c
++#define ATMEL_HLCDC_IDR			0x30
++#define ATMEL_HLCDC_IMR			0x34
++#define ATMEL_HLCDC_ISR			0x38
++
++#define ATMEL_HLCDC_CLKPOL		BIT(0)
++#define ATMEL_HLCDC_CLKSEL		BIT(2)
++#define ATMEL_HLCDC_CLKPWMSEL		BIT(3)
++#define ATMEL_HLCDC_CGDIS(i)		BIT(8 + (i))
++#define ATMEL_HLCDC_CLKDIV_SHFT		16
++#define ATMEL_HLCDC_CLKDIV_MASK		GENMASK(23, 16)
++#define ATMEL_HLCDC_CLKDIV(div)		((div - 2) << ATMEL_HLCDC_CLKDIV_SHFT)
++
++#define ATMEL_HLCDC_PIXEL_CLK		BIT(0)
++#define ATMEL_HLCDC_SYNC		BIT(1)
++#define ATMEL_HLCDC_DISP		BIT(2)
++#define ATMEL_HLCDC_PWM			BIT(3)
++#define ATMEL_HLCDC_SIP			BIT(4)
++
++/**
++ * Structure shared by the MFD device and its subdevices.
++ *
++ * @regmap: register map used to access HLCDC IP registers
++ * @periph_clk: the hlcdc peripheral clock
++ * @sys_clk: the hlcdc system clock
++ * @slow_clk: the system slow clk
++ */
++struct atmel_hlcdc {
++	struct regmap *regmap;
++	struct clk *periph_clk;
++	struct clk *sys_clk;
++	struct clk *slow_clk;
++};
++
++#endif /* __LINUX_MFD_HLCDC_H */
+-- 
+1.9.1
