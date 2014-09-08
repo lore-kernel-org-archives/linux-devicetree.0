@@ -1,44 +1,80 @@
-From: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpio: Add driver for AXM55xx SSP chip selects
-Date: Mon, 8 Sep 2014 13:02:32 +0200
-Message-ID: <CAE0=X_2q1Z+pGuh6OY9Si5jbrF9HkczNFUqUgK_8xBekNvMeyQ@mail.gmail.com>
-References: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com>
-	<1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
-	<CACRpkdby4H-fivNn_kG2uL0EjsCGAc+t6OyFi0+VcNGf2Z9NQA@mail.gmail.com>
-	<20140904170630.GL29327@sirena.org.uk>
-	<CACRpkdZEoBan=Lqr1T-iY41U9NfMA_MCLX3LA=juw7X4pmRvSQ@mail.gmail.com>
-	<CAE0=X_3QO5p26M=FS7joKS3zD6LAM_moFutHNcyE1-CjauL3Rw@mail.gmail.com>
-	<20140906135308.GC2601@sirena.org.uk>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] thermal: rcar: Add binding docs for new R-Car Gen2 SoCs
+Date: Mon, 8 Sep 2014 13:02:50 +0200
+Message-ID: <CAMuHMdWceJ3H_LYHkAr+W_yKtRj9ghzad1A-stWAuHoNi555tw@mail.gmail.com>
+References: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
+	<20140906161357.GA3573@developer>
+	<CAMuHMdW_BYT8ughx=-j3Y+5Bd1Jkb3An8D=uTNcXa6rU3nfNQg@mail.gmail.com>
+	<20140908104835.GB3573@developer>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140906135308.GC2601-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140908104835.GB3573@developer>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Zhang Rui <rui.zhang@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 6, 2014 at 3:53 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Sep 05, 2014 at 11:05:37AM +0200, Anders Berg wrote:
->
->> Well, the problem with adding this to the spi-pl022 driver (as a
->> vendor specific extension) is that this IP block unfortunately isn't
->> distinguishable from the standard ARM PL022 implementation (same
->> values in the PrimeCell identification registers). That's why I went
->> down the GPIO path...
->
-> Would it not be more straightforward to just register it as a platform
-> device in this case, or use a separate OF ID in the DT?  We appear to
-> specify a compatible string when registering AMBA devices even if we are
-> capable of identifying using the ID registers.
+Hi Eduardo,
 
-I'll drop this gpio patch for now and submit a patch on the pl022
-driver instead. I read the arm,primecell binding and learned that
-there is a property (arm,primecell-periphid) that can be used to
-override the HW PrimeCell ID. Seems like something to use here, right?
+On Mon, Sep 8, 2014 at 12:48 PM, Eduardo Valentin <edubezval@gmail.com> wrote:
+> On Sat, Sep 06, 2014 at 08:10:13PM +0200, Geert Uytterhoeven wrote:
+>> On Sat, Sep 6, 2014 at 6:13 PM, Eduardo Valentin <edubezval@gmail.com> wrote:
+>> > On Thu, Aug 28, 2014 at 10:12:32AM +0200, Geert Uytterhoeven wrote:
+>> >>   - r8a7792 (R-Car V2H)
+>> >>   - r8a7793 (R-Car M2-N)
+>> >>   - r8a7794 (R-Car E2)
+>> >>
+>> >> r8a7791 is now called "R-Car M2-W".
+>> >>
+>> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> >
+>> > I don't have any concerns on this patch and will be adding to my next
+>> > branch. But before that, I have one simple question. Although the
+>>
+>> Thanks!
+>>
+>> > binding description mention about soc types, the rcar thermal driver do
+>> > not differentiate soc types, only supports the "renesas,rcar-thermal"
+>> > compatible.
+>> >
+>> > Do you care explaining why we need the soc specific compatibles?
+>>
+>> The reason we also have the SoC-specific values is that we are not
+>> 100% sure the thermal IP cores in the Renesas R-Car Gen1 and R-Car Gen2
+>> series are really identical.
+>>
+>> Currently the driver treats all of them the same, but if we ever discover
+>> a difference, and the driver needs to start distinguishing among different
+>> versions, we will need to have the SoC-specific values in the DTSes to
+>> do so.
+>
+> In this case, wouldn't make sense to find out first the differences
+> before changing DT documentation?
 
-/Anders
+That may be too late, if a DTS is in active use.
+
+We cannot have new SoC-specific values in a DTS if they're not documented,
+as checkpatch would complain.
+
+> Otherwise, you may also figure out that there is no difference and
+> then send a patch to remove the changes you are sending now
+> (or even removing the -<soc specific> parts).
+
+Removing SoC-specific parts cannot be done, as some of they are already
+in use in existing DTSes. These are supposed to be backwards-compatible.
+
+We are doing the same for (most) other Renesas hardware blocks.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
