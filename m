@@ -1,97 +1,76 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Mon, 08 Sep 2014 18:30:00 +0300
-Message-ID: <540DCB78.8060206@mm-sol.com>
-References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com> <3495079.hWGRuSPgx7@wuerfel> <540D653E.7070509@mm-sol.com> <3899885.YaIxR1zelv@wuerfel>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/3] phy: phy-stih407-usb: Add dt documentation for USB
+ picophy found on stih407 SoC family
+Date: Mon, 8 Sep 2014 21:00:25 +0530
+Message-ID: <540DCB91.7060702@ti.com>
+References: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org> <1409740079-16554-3-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3899885.YaIxR1zelv@wuerfel>
+In-Reply-To: <1409740079-16554-3-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collins>
+To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
+Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2014 01:19 PM, Arnd Bergmann wrote:
-> On Monday 08 September 2014 11:13:50 Stanimir Varbanov wrote:
->> On 09/05/2014 03:26 PM, Arnd Bergmann wrote:
->>> On Friday 05 September 2014 15:14:33 Stanimir Varbanov wrote:
->>>> +       VADC_CHAN(LR_MUX1_BAT_THERM, 0)                 /* 0x30 */
->>>> +       VADC_CHAN(LR_MUX2_BAT_ID, 0)
->>>> +       VADC_CHAN(LR_MUX3_XO_THERM, 0)
->>>> +       VADC_CHAN(LR_MUX4_AMUX_THM1, 0)
->>>> +       VADC_CHAN(LR_MUX5_AMUX_THM2,by you  0)
->>>> +       VADC_CHAN(LR_MUX6_AMUX_THM3, 0)
->>>> +       VADC_CHAN(LR_MUX7_HW_ID, 0)
->>>> +       VADC_CHAN(LR_MUX8_AMUX_THM4, 0)
->>>> +       VADC_CHAN(LR_MUX9_AMUX_THM5, 0)
->>>> +       VADC_CHAN(AMUX_PU1, 0)
->>>> +       VADC_CHAN(AMUX_PU2, 0)
->>>> +       VADC_CHAN(LR_MUX3_BUF_XO_THERM_BUF, 0)          /* 0x3c */
->>>> +
->>>> +       VADC_CHAN(LR_MUX1_PU1_BAT_THERM, 0)             /* 0x70 */
->>>> +       VADC_CHAN(LR_MUX2_PU1_BAT_ID, 0)
->>>> +       VADC_CHAN(LR_MUX3_PU1_XO_THERM, 0)
->>>> +       VADC_CHAN(LR_MUX4_PU1_AMUX_THM1, 0)
->>>> +       VADC_CHAN(LR_MUX5_PU1_AMUX_THM2, 0)
->>>> +       VADC_CHAN(LR_MUX6_PU1_AMUX_THM3, 0)
->>>> +       VADC_CHAN(LR_MUX7_PU1_AMUX_HW_ID, 0)
->>>> +       VADC_CHAN(LR_MUX8_PU1_AMUX_THM4, 0)
->>>> +       VADC_CHAN(LR_MUX9_PU1_AMUX_THM5, 0)
->>>> +       VADC_CHAN(LR_MUX10_PU1_AMUX_USB_ID, 0)          /* 0x79 */
->>>> +       VADC_CHAN(LR_MUX3_BUF_PU1_XO_THERM_BUF, 0)      /* 0x7c */
->>>>
->>>
->>> These numbers all look hardware specific, so why put macros into the
->>> device tree rather than using them directly?
->>
->> The idea was to use #defines in DT nodes when we need to overwrite the
->> adc channel parameters, see example in 2/2 how it will be used.
+Hi,
+
+On Wednesday 03 September 2014 03:57 PM, Peter Griffin wrote:
+> This patch adds the dt documentation for the usb picophy found on stih407 SoC family
+> available from STMicroelectronics.
 > 
-> I don't understand. The node in the example has
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  .../devicetree/bindings/phy/phy-stih407-usb.txt    | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
 > 
-> +               /* Channel node */
-> +               usb_id_nopull@39 {
-> +                       qcom,channel = <VADC_LR_MUX10_USB_ID>;
-> ...
-> +               };
-> 
-> 
-> And VADC_LR_MUX10_USB_ID is defined to 0x39.  How is this helping anything?
-> You just introduce an artificial dependency on the header file, which makes
-> it a mess to merge the patches or do updates, and anybody who needs to
-> make updates to this now has to go through the same pain, to update the
-> dts files, the driver and the binding document in lockstep.
-> 
-> Why not remove the qcom,channel property completely and use a 'reg'
-> property with #address-cells=<1>, #size-cells=<0> and put the number
-> directly in there, with no need for obfuscation macros?
+> diff --git a/Documentation/devicetree/bindings/phy/phy-stih407-usb.txt b/Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
+> new file mode 100644
+> index 0000000..650d346
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
+> @@ -0,0 +1,37 @@
+> +ST STiH407 USB-PHY controller
+> +
+> +This file documents the dt bindings for the picoPHY driver which is the PHY for both USB2 and USB3 host controllers
+> +controllers available on STiH407 SoC families.
+> +
+> +On STiH410, we have to use the DWC3 port#2 with a picoPHY to manage USB2
+> +devices. The USB2 Controller will use the ports #0 and #1.
+> +
+> +This is to document the DT parameters to be passed from the blob in that case.
+> +
+> +Required properties:
+> +- compatible		: should be "st,stih407-usb2-phy"
 
-OK thanks for the remarks. I will fix this mess.
+If STiH410 also uses the same driver then you should add a new compatibility
+value for it.
+> +- reg			: contain the offset and length of the system configuration registers
+> +			  used as glue logic to control & parameter phy
+> +- reg-names		: the names of the system configuration registers in "reg", should be "param" and "reg"
+> +- st,syscfg		: sysconfig register to manage phy parameter at driver level
+> +- resets		: list of phandle and reset specifier pairs. There should be two entries, one
+> +			  for the whole phy and one for the port
+> +- reset-names		: list of reset signal names. Should be "global" and "port"
+> +See: Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
+> +See: Documentation/devicetree/bindings/reset/reset.txt
+> +
+> +Example:
+> +
+> +usb2_picophy0: usbpicophy@0 {
+usbpicophy@f8 since you have a reg property ;-)
 
-I hope you are expecting to see this:
+> +	compatible	= "st,stih407-usb2-phy";
+> +	reg		= <0xf8 0x04>,	/* syscfg 5062 */
+> +			  <0xf4 0x04>;	/* syscfg 5061 */
+> +	reg-names	= "param",
+> +			  "ctrl";
+> +			  #phy-cells = <0>;
 
-pmic_vadc: vadc@3100 {
-	#address-cells = <1>;
-	#size-cells = <0>;
-	#io-channel-cells = <1>;
-	io-channel-ranges;
+alignment seems to have gone wrong here.
 
-	usb_id_nopull@39 {
-		reg = <0x39>;
-	};
-};
-
-and use the vadc channel from usb device node
-
-usb {
-	...
-	io-channels = <&pmic_vadc 0x39>;
-	io-channel-names = "usbidnopull";
-};
-
-
--- 
-regards,
-Stan
+Thanks
+Kishon
