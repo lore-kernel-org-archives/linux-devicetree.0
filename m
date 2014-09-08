@@ -1,74 +1,108 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v2] thermal: rcar: Add binding docs for new R-Car Gen2
- SoCs
-Date: Mon, 8 Sep 2014 06:48:37 -0400
-Message-ID: <20140908104835.GB3573@developer>
-References: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
- <20140906161357.GA3573@developer>
- <CAMuHMdW_BYT8ughx=-j3Y+5Bd1Jkb3An8D=uTNcXa6rU3nfNQg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdW_BYT8ughx=-j3Y+5Bd1Jkb3An8D=uTNcXa6rU3nfNQg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Zhang Rui <rui.zhang@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] Disabling OF functions that use sysfs if
+ CONFIG_SYSFS disabled
+Date: Mon, 08 Sep 2014 11:49:45 +0100
+Message-ID: <20140908104945.1C824C40AB2@trevor.secretlab.ca>
+References: <1409936173-6263-1-git-send-email-gaurav.minocha.os@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409936173-6263-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Fri,  5 Sep 2014 09:56:13 -0700, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch is to the fix the recent runtime bug in kernel
+> reported by <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> 
+> Mail Subject: [OF test] BUG: unable to handle kernel NULL
+>  pointer dereference at 00000038
+> 
+> Tested on x86 and arm architecture
+> 
+> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-On Sat, Sep 06, 2014 at 08:10:13PM +0200, Geert Uytterhoeven wrote:
-> Hi Eduardo,
-> 
-> On Sat, Sep 6, 2014 at 6:13 PM, Eduardo Valentin <edubezval@gmail.com> wrote:
-> > On Thu, Aug 28, 2014 at 10:12:32AM +0200, Geert Uytterhoeven wrote:
-> >>   - r8a7792 (R-Car V2H)
-> >>   - r8a7793 (R-Car M2-N)
-> >>   - r8a7794 (R-Car E2)
-> >>
-> >> r8a7791 is now called "R-Car M2-W".
-> >>
-> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > I don't have any concerns on this patch and will be adding to my next
-> > branch. But before that, I have one simple question. Although the
-> 
-> Thanks!
-> 
-> > binding description mention about soc types, the rcar thermal driver do
-> > not differentiate soc types, only supports the "renesas,rcar-thermal"
-> > compatible.
-> >
-> > Do you care explaining why we need the soc specific compatibles?
-> 
-> The reason we also have the SoC-specific values is that we are not
-> 100% sure the thermal IP cores in the Renesas R-Car Gen1 and R-Car Gen2
-> series are really identical.
-> 
-> Currently the driver treats all of them the same, but if we ever discover
-> a difference, and the driver needs to start distinguishing among different
-> versions, we will need to have the SoC-specific values in the DTSes to
-> do so.
+Applied, thanks.
 
-In this case, wouldn't make sense to find out first the differences
-before changing DT documentation?
+I've modified the commit message before applying. For future reference,
+when dealing with bug fixes, you should quote the commit that either
+introduced or exposed the bug by SHA1 id and patch title. This is what I
+wrote:
 
-Otherwise, you may also figure out that there is no difference and
-then send a patch to remove the changes you are sending now
-(or even removing the -<soc specific> parts).
+This patch is to the fix the recent runtime bug in kernel reported by 
+<fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>. The bug was exposed by commit b951f9dc,
+"Enabling OF selftest to run without machine's devicetree" and is
+exposed when CONFIG_OF_SELFTEST is enabled and CONFIG_SYSFS is
+disabled.
 
+> ---
+>  drivers/of/base.c    |   12 ++++++++++++
+>  drivers/of/dynamic.c |    3 +++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d8574ad..acadc72 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -138,6 +138,9 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+>  	/* Important: Don't leak passwords */
+>  	bool secure = strncmp(pp->name, "security-", 9) == 0;
+>  
+> +	if (!IS_ENABLED(CONFIG_SYSFS))
+> +		return 0;
+> +
+>  	if (!of_kset || !of_node_is_attached(np))
+>  		return 0;
+>  
+> @@ -158,6 +161,9 @@ int __of_attach_node_sysfs(struct device_node *np)
+>  	struct property *pp;
+>  	int rc;
+>  
+> +	if (!IS_ENABLED(CONFIG_SYSFS))
+> +		return 0;
+> +
+>  	if (!of_kset)
+>  		return 0;
+>  
+> @@ -1713,6 +1719,9 @@ int __of_remove_property(struct device_node *np, struct property *prop)
+>  
+>  void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
+>  {
+> +	if (!IS_ENABLED(CONFIG_SYSFS))
+> +		return;
+> +
+>  	/* at early boot, bail here and defer setup to of_init() */
+>  	if (of_kset && of_node_is_attached(np))
+>  		sysfs_remove_bin_file(&np->kobj, &prop->attr);
+> @@ -1777,6 +1786,9 @@ int __of_update_property(struct device_node *np, struct property *newprop,
+>  void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
+>  		struct property *oldprop)
+>  {
+> +	if (!IS_ENABLED(CONFIG_SYSFS))
+> +		return;
+> +
+>  	/* At early boot, bail out and defer setup to of_init() */
+>  	if (!of_kset)
+>  		return;
+> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+> index 54fecc4..f297891 100644
+> --- a/drivers/of/dynamic.c
+> +++ b/drivers/of/dynamic.c
+> @@ -45,6 +45,9 @@ void __of_detach_node_sysfs(struct device_node *np)
+>  {
+>  	struct property *pp;
+>  
+> +	if (!IS_ENABLED(CONFIG_SYSFS))
+> +		return;
+> +
+>  	BUG_ON(!of_node_is_initialized(np));
+>  	if (!of_kset)
+>  		return;
+> -- 
+> 1.7.9.5
+> 
 
-> 
-> I hope this explains our rationale.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
