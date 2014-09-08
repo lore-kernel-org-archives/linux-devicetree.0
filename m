@@ -1,67 +1,40 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: dra7-evm: Mark uart1 rxd as wakeup capable
-Date: Mon, 8 Sep 2014 13:47:27 -0500
-Message-ID: <20140908184727.GA2103@kahuna>
-References: <1408716235-26164-1-git-send-email-nm@ti.com>
- <1408716235-26164-7-git-send-email-nm@ti.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] Documentation: dt-bindings: add dt binding info
+ for dwc2 dr_mode
+Date: Mon, 8 Sep 2014 11:50:25 -0700
+Message-ID: <CAD=FV=WDv9Pxe+jSqsfARPvjxMWPfcVpPMk1wHCgOO8ePiCh3g@mail.gmail.com>
+References: <1407159942-7063-1-git-send-email-kever.yang@rock-chips.com>
+	<1407159942-7063-2-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1408716235-26164-7-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1407159942-7063-2-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Paul Zimmerman <paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, wulf <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, lyz <lyz-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, han jiang <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>linux-arm-kerne
 List-Id: devicetree@vger.kernel.org
 
-On 09:03-20140822, Nishanth Menon wrote:
->  	status = "okay";
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&uart1_pins>;
-> +	interrupts-extended = <&gic GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH
-> +			       &dra7_pmx_core 0x3e0>;
-^^
-Thanks to Lee Jones pointing this out to me in a different context[1]
-I made the wrong usage. Fixing the syntax to stay in sync with
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+Greg,
 
-[1] http://marc.info/?l=linux-omap&m=140930980325273&w=2
+On Mon, Aug 4, 2014 at 6:45 AM, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Indicate that the generic dr_mode binding should be used for dwc2.
+>
+> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+> Changes in v3: None
+> Changes in v2:
+> - Split out dr_mode and rk3288 bindings.
+>
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
------8<----
->From c3c284ebd2b8d5535abf297ef7537b2caa7fe67b Mon Sep 17 00:00:00 2001
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Date: Fri, 6 Jun 2014 20:53:22 -0500
-Subject: [PATCH V2 6/6] ARM: dts: dra7-evm: Mark uart1 rxd as wakeup capable
+Are there any other changes you'd like for this patch (and the next
+one that goes with it) before landing?
 
-Mark rxd as wakeupcapable for 115200n8 no hardware-flow control
-configuration. If h/w flow control is being used, then rts/cts
-appropriately should be used.
+Thanks!
 
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7-evm.dts |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 50f8022..08434c7 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -303,6 +303,8 @@
- 	status = "okay";
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart1_pins>;
-+	interrupts-extended = <&gic GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&dra7_pmx_core 0x3e0>;
- };
- 
- &uart2 {
--- 
-1.7.9.5
-
-
--- 
-Regards,
-Nishanth Menon
+-Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
