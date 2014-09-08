@@ -1,76 +1,115 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/3] phy: phy-stih407-usb: Add dt documentation for USB
- picophy found on stih407 SoC family
-Date: Mon, 8 Sep 2014 21:00:25 +0530
-Message-ID: <540DCB91.7060702@ti.com>
-References: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org> <1409740079-16554-3-git-send-email-peter.griffin@linaro.org>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Subject: Re: [PATCH v3 0/9] Tegra xHCI support
+Date: Mon, 8 Sep 2014 17:34:37 +0200
+Message-ID: <CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>
+References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409740079-16554-3-git-send-email-peter.griffin@linaro.org>
+In-Reply-To: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 2 September 2014 23:34, Andrew Bresticker <abrestic@chromium.org> wrote:
+>
+> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
+> USB3.0 memory sticks and ethernet dongles using controller firmware
+> recently posted by Andrew Chew [2].
 
-On Wednesday 03 September 2014 03:57 PM, Peter Griffin wrote:
-> This patch adds the dt documentation for the usb picophy found on stih407 SoC family
-> available from STMicroelectronics.
-> 
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  .../devicetree/bindings/phy/phy-stih407-usb.txt    | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-stih407-usb.txt b/Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
-> new file mode 100644
-> index 0000000..650d346
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
-> @@ -0,0 +1,37 @@
-> +ST STiH407 USB-PHY controller
-> +
-> +This file documents the dt bindings for the picoPHY driver which is the PHY for both USB2 and USB3 host controllers
-> +controllers available on STiH407 SoC families.
-> +
-> +On STiH410, we have to use the DWC3 port#2 with a picoPHY to manage USB2
-> +devices. The USB2 Controller will use the ports #0 and #1.
-> +
-> +This is to document the DT parameters to be passed from the blob in that case.
-> +
-> +Required properties:
-> +- compatible		: should be "st,stih407-usb2-phy"
+I have had mixed results when testing this on a Jetson TK1 board. Of 8
+USB devices I tested with, about half where probed correctly, but the
+other half repeatedly fail in hub_port_init because in the GET_STATUS
+right after the reset, the C_PORT_CONNECTION bit is set.
 
-If STiH410 also uses the same driver then you should add a new compatibility
-value for it.
-> +- reg			: contain the offset and length of the system configuration registers
-> +			  used as glue logic to control & parameter phy
-> +- reg-names		: the names of the system configuration registers in "reg", should be "param" and "reg"
-> +- st,syscfg		: sysconfig register to manage phy parameter at driver level
-> +- resets		: list of phandle and reset specifier pairs. There should be two entries, one
-> +			  for the whole phy and one for the port
-> +- reset-names		: list of reset signal names. Should be "global" and "port"
-> +See: Documentation/devicetree/bindings/reset/st,sti-powerdown.txt
-> +See: Documentation/devicetree/bindings/reset/reset.txt
-> +
-> +Example:
-> +
-> +usb2_picophy0: usbpicophy@0 {
-usbpicophy@f8 since you have a reg property ;-)
+I don't see any correlation between the failure and the kind of usb
+device, but I don't have much experience with USB implementations
+either.
 
-> +	compatible	= "st,stih407-usb2-phy";
-> +	reg		= <0xf8 0x04>,	/* syscfg 5062 */
-> +			  <0xf4 0x04>;	/* syscfg 5061 */
-> +	reg-names	= "param",
-> +			  "ctrl";
-> +			  #phy-cells = <0>;
+Regards,
 
-alignment seems to have gone wrong here.
+Tomeu
 
-Thanks
-Kishon
+> Notes:
+>  - HSIC support is mostly untested and I think there are still some issues
+>    to work out there.  I do have a Tegra124 board with a HSIC hub so I'll
+>    try to sort those out later.
+>  - The XUSB padctl driver doesn't play nice with the existing Tegra USB2.0
+>    PHY driver, so all ports should be assigned to the XHCI controller.
+>
+> Based on work by:
+>   a lot of people, but from what I can tell from the L4T tree [3], the
+>   original authors of the Tegra xHCI driver are:
+>     Ajay Gupta <ajayg@nvidia.com>
+>     Bharath Yadav <byadav@nvidia.com>
+>
+> Chagnes from v2:
+>  - Dropped mailbox channel specifier.  The mailbox driver allocates virtual
+>    channels backed by the single physical channel.
+>  - Added support for HS_CURR_LEVEL adjustment pinconfig property, which
+>    will be required for the Blaze board.
+>  - Addressed Stephen's review comments.
+>
+> Changes from v1:
+>  - Converted mailbox driver to use the common mailbox framework.
+>  - Fixed up host driver so that it can now be built and used as a module.
+>  - Addressed Stephen's review comments.
+>  - Misc. cleanups.
+>
+> Changes from RFC:
+>  - Dropped Tegra114 support.
+>  - Split out mailbox into separate driver.
+>  - Stopped using child xhci-plat device in xHCI host-controller driver.
+>  - Added PHY support to Thierry's XUSB padctl driver instead of in a separate
+>    USB PHY driver.
+>  - Added Jetson TK1 support.
+>  - Misc. cleanups.
+>
+> [0] https://lkml.org/lkml/2014/8/1/200
+> [1] https://lkml.org/lkml/2014/8/18/504
+> [2] https://patchwork.ozlabs.org/patch/384013/
+> [3] git://nv-tegra.nvidia.com/linux-3.10.git
+>
+> Andrew Bresticker (9):
+>   of: Add NVIDIA Tegra XUSB mailbox binding
+>   mailbox: Add NVIDIA Tegra XUSB mailbox driver
+>   of: Update Tegra XUSB pad controller binding for USB
+>   pinctrl: tegra-xusb: Add USB PHY support
+>   of: Add NVIDIA Tegra xHCI controller binding
+>   usb: xhci: Add NVIDIA Tegra xHCI host-controller driver
+>   ARM: tegra: Add Tegra124 XUSB mailbox and xHCI controller
+>   ARM: tegra: jetson-tk1: Add xHCI support
+>   ARM: tegra: venice2: Add xHCI support
+>
+>  .../bindings/mailbox/nvidia,tegra124-xusb-mbox.txt |   32 +
+>  .../pinctrl/nvidia,tegra124-xusb-padctl.txt        |   56 +-
+>  .../bindings/usb/nvidia,tegra124-xhci.txt          |  104 ++
+>  arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   48 +-
+>  arch/arm/boot/dts/tegra124-venice2.dts             |   79 +-
+>  arch/arm/boot/dts/tegra124.dtsi                    |   41 +
+>  drivers/mailbox/Kconfig                            |    3 +
+>  drivers/mailbox/Makefile                           |    2 +
+>  drivers/mailbox/tegra-xusb-mailbox.c               |  290 +++++
+>  drivers/pinctrl/Kconfig                            |    1 +
+>  drivers/pinctrl/pinctrl-tegra-xusb.c               | 1233 +++++++++++++++++++-
+>  drivers/usb/host/Kconfig                           |    9 +
+>  drivers/usb/host/Makefile                          |    1 +
+>  drivers/usb/host/xhci-tegra.c                      |  905 ++++++++++++++
+>  include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h   |   20 +
+>  include/soc/tegra/xusb.h                           |   53 +
+>  16 files changed, 2796 insertions(+), 81 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
+>  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
+>  create mode 100644 drivers/mailbox/tegra-xusb-mailbox.c
+>  create mode 100644 drivers/usb/host/xhci-tegra.c
+>  create mode 100644 include/soc/tegra/xusb.h
+>
+> --
+> 2.1.0.rc2.206.gedb03e5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
