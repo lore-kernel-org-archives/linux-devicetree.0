@@ -1,45 +1,54 @@
 From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v4 4/4] ARM: multi_v7_defconfig: Enable stih41x usb phy driver.
-Date: Mon,  8 Sep 2014 11:33:03 +0100
-Message-ID: <1410172383-17306-5-git-send-email-peter.griffin@linaro.org>
+Subject: [PATCH v4 2/4] phy: phy-stih41x-usb: Add dt documentation for USB phy on STiH415/6
+Date: Mon,  8 Sep 2014 11:33:01 +0100
+Message-ID: <1410172383-17306-3-git-send-email-peter.griffin@linaro.org>
 References: <1410172383-17306-1-git-send-email-peter.griffin@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1410172383-17306-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kishon@ti.com, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, lee.jones@linaro.org
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This driver is used by the ehci / ohci usb controllers on stih41x SoCs.
+This patch adds dt documentation bindings for the usb phy found
+on STiH415/5 SoC's from STMicroelectronics, which support USB 1.1 and 2.0.
 
+Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/phy/phy-stih41x-usb.txt    | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 5fb95fb..74fd4a1 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -387,6 +387,7 @@ CONFIG_PWM_VT8500=y
- CONFIG_OMAP_USB2=y
- CONFIG_TI_PIPE3=y
- CONFIG_PHY_MIPHY365X=y
-+CONFIG_PHY_STIH41X_USB=y
- CONFIG_PHY_SUN4I_USB=y
- CONFIG_EXT4_FS=y
- CONFIG_VFAT_FS=y
+diff --git a/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt b/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
+new file mode 100644
+index 0000000..00944a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
+@@ -0,0 +1,24 @@
++STMicroelectronics STiH41x USB PHY binding
++------------------------------------------
++
++This file contains documentation for the usb phy found in STiH415/6 SoCs from
++STMicroelectronics.
++
++Required properties:
++- compatible	: should be "st,stih416-usb-phy" or "st,stih415-usb-phy"
++- st,syscfg	: should be a phandle of the syscfg node
++- clock-names	: must contain "osc_phy"
++- clocks	: must contain an entry for each name in clock-names.
++See: Documentation/devicetree/bindings/clock/clock-bindings.txt
++- #phy-cells	: must be 0 for this phy
++See: Documentation/devicetree/bindings/phy/phy-bindings.txt
++
++Example:
++
++usb2_phy: usb2phy@0 {
++	compatible	= "st,stih416-usb-phy";
++	#phy-cell	= <0>;
++	st,syscfg	= <&syscfg_rear>;
++	clocks		= <&clk_sysin>;
++	clock-names	= "osc_phy";
++};
 -- 
 1.9.1
