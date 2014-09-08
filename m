@@ -1,51 +1,78 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v7 1/5] Documentation: Add device tree bindings for
- Freescale i.MX GPC
-Date: Mon, 08 Sep 2014 13:54:36 +0200
-Message-ID: <1410177276.3981.35.camel@paszta.hi.pengutronix.de>
-References: <1409060791-23167-1-git-send-email-p.zabel@pengutronix.de>
-	 <1409060791-23167-2-git-send-email-p.zabel@pengutronix.de>
-	 <CAMuHMdUqbk+OZiBMUsebQ_==7jCan+dHsfJLhi+CPUE=xc6yRA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v6 0/5]  Add EHCI and OHCI drivers for STi SoC's
+Date: Mon,  8 Sep 2014 13:04:43 +0100
+Message-ID: <1410177888-26710-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUqbk+OZiBMUsebQ_==7jCan+dHsfJLhi+CPUE=xc6yRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi,
 
-Am Freitag, den 05.09.2014, 13:47 +0200 schrieb Geert Uytterhoeven:
-> Hi Philipp,
-> 
-> On Tue, Aug 26, 2014 at 3:46 PM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> > @@ -0,0 +1,54 @@
-> 
-> > +IP cores belonging to a power domain should contain a 'power-domain' property
-> 
-> power-domains
-> 
-> > +that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
-> > +the power domain the device belongs to.
-> > +
-> > +Example of a device that is part of the PU power domain:
-> > +
-> > +       vpu: vpu@02040000 {
-> > +               reg = <0x02040000 0x3c000>;
-> > +               /* ... */
-> > +               power-domain = <&gpc 1>;
-> 
-> power-domains
+I believe all feedback has been incorporated, and this series has also been rebased on
+3.17-rc3.
 
-Thanks, I'll change those.
+It was re-worked from v2 onwards to split out the ehci and ohci parts
+into their own drivers / devices like most other ARM platforms based on
+feedback from Arnd Bergmann (see here http://www.spinics.net/lists/linux-usb/msg111124.html. 
 
-regards
-Philipp
+The ehci-platform & ohci-platform have been used as a basis for this in case we
+wish to merge the drivers again in the future.
 
+Changes since v5:
+ - Remove shared header file and duplicate private structure to help readability
+   and keep driver self contained, based on Arnd feedback.
+ - Rebased on 3.17-rc3
+
+Changes since v4:
+ - Ensure suspend / resume callbacks are wrapped in #ifdef CONFIG_PM_SLEEP as otherwise we
+   will get linker 'unused function' warnings when this option is disabled.
+ - Only declare and reference pm_ops struct if CONFIG_PM_SLEEP is enabled, this saves a few bytes
+
+Changes since v3:
+ - Make reset / power, clocks etc non optional dt options to simplify code
+ - Get rid of non DT boot code left over from *hci-platform drivers
+ - Remove DMA mask code
+ - Remove pre_setup func ptr and configure ahb2st bus convertor in ehci_platform_reset
+ - Unabstract and remove usb-st-common.c
+ - Have one kconfig which enables both ehci-st & ohci-st drivers
+
+Changes since v2:
+ - Based on Arnd Berghman feedback, split out into 2 devices / drivers
+ - Base drivers oh ehci-platform.c & ohci-platform.c with required extensions
+   to allow possible re-merge in the furture.
+
+Changes since v1:
+ - Correct s/OCHI/OHCI/ spelling
+ - Improve kconfig help message
+ - Various formating / spelling nits identified by Lee Jones
+ - Make driver depend on OF & remove node checks in code
+ - Use devm_ioremap_resource
+ - Remove unnecessary header files
+
+Peter Griffin (5):
+  usb: host: ehci-st: Add EHCI support for ST STB devices
+  usb: host: ohci-st: Add OHCI driver support for ST STB devices
+  usb: host: ehci-st: Add ehci-st devicetree bindings documentation
+  usb: host: ohci-st: Add ohci-st devicetree bindings documentation
+  MAINTAINERS: Add ehci-st.c and ohci-st.c to ARCH/STI architecture
+
+ Documentation/devicetree/bindings/usb/ehci-st.txt |  39 +++
+ Documentation/devicetree/bindings/usb/ohci-st.txt |  37 +++
+ MAINTAINERS                                       |   2 +
+ drivers/usb/host/Kconfig                          |   8 +
+ drivers/usb/host/Makefile                         |   1 +
+ drivers/usb/host/ehci-st.c                        | 375 ++++++++++++++++++++++
+ drivers/usb/host/ohci-st.c                        | 349 ++++++++++++++++++++
+ 7 files changed, 811 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ehci-st.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ohci-st.txt
+ create mode 100644 drivers/usb/host/ehci-st.c
+ create mode 100644 drivers/usb/host/ohci-st.c
+
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
