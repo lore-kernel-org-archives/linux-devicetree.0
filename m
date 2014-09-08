@@ -1,81 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/8 v2] leds: add device tree bindings for register bit LEDs
-Date: Mon, 8 Sep 2014 13:25:51 +0200
-Message-ID: <CACRpkdarXzrprA=1=oT-1K8X3y-QPH+gkteHCpZDcCA3pBZMOQ@mail.gmail.com>
-References: <1409659354-23553-1-git-send-email-linus.walleij@linaro.org>
-	<1409659354-23553-3-git-send-email-linus.walleij@linaro.org>
-	<5686741.QjIvGO0Jfo@wuerfel>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [RESEND PATCH v3]     rtc: ds1307: add trickle charger device
+ tree binding
+Date: Mon, 8 Sep 2014 07:26:57 -0400
+Message-ID: <20140908112657.GD30828@titan.lakedaemon.net>
+References: <20140908073216.GA20850@fi-ourus-dhcp00977.emea.nsn-net.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <5686741.QjIvGO0Jfo@wuerfel>
-Sender: linux-leds-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140908073216.GA20850-3P0KQDf13zYjNwtGTSXw41mm0B4v8B71Fo5piaCiEZ7R7s880joybQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 2, 2014 at 2:24 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 02 September 2014 14:02:28 Linus Walleij wrote:
->> +LED sub-node properties:
->> +
->> +Required properties:
->> +- compatible : must be "register-bit-led"
->> +- offset : register offset to the register controlling this LED
->> +- mask : bit mask for the bit controlling this LED in the register
->> +  typically 0x01, 0x02, 0x04 ...
->>
->
-> How does the driver know whether to do byte or word sized accesses?
+Matti,
 
-Like with all other bindings based on
-Documentation/devicetree/bindings/mfd/syscon.txt
-it is implicit that the access size is 32 bit words. Just grep
-for syscon in the bindings and you will see none define the access
-width.
+On Mon, Sep 08, 2014 at 10:32:24AM +0300, Matti Vaittinen wrote:
 
-If this should be fixed, the parent syscon binding should be
-altered to cover access width for all children as this is a property
-of the entire register range.
+>From here:
 
-So for example:
+> Hi dt bindings maintainers (and others interested in device-tree bindings),
+> 
+>    I would like to get this included in your tree. Do you think there is
+>    still something I could improve/change in order to get this accepted?
+>    Or do you think I should address this to someone else?
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
 
-gpr: iomuxc-gpr@020e0000 {
-        compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
-        reg = <0x020e0000 0x38>;
-        register-width = <32>;
-        register-valid = <32>;
-        register-stride = <4>;
-};
+To here should go below the '---'
 
-So as to indicate that this register range is made up of 32 bit
-words, all 32 bits are valid in each word, and the stride between
-words i 4 bytes (i.e. tightly packed).
+> Some DS13XX devices have "trickle chargers". Introduce a device tree binding
+> for specifying the trickle charger configuration for ds1339.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
+> ---
 
-As mentioned by Rob, the "syscon" driver should be renamed
-"register-range" and "syscon" deprecated as binding, as it is
-Linux terminology.
+Here.  Otherwise, it'll get included in the commit message, which I
+don't think was your intention.
 
-I guess this adds up to the conclusion that the "syscon" binding
-was badly reviewed and merged, and now we're suffering from it.
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |  1 -
+>  .../devicetree/bindings/rtc/dallas,ds1339.txt      | 18 ++++++
+>  drivers/rtc/rtc-ds1307.c                           | 66 ++++++++++++++++++++--
+>  3 files changed, 80 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
 
-----
+I would split this into two patches, one for the binding documentation,
+and one for the C file changes.  You can then use
+./scripts/get_maintainer.pl to see who the rtc maintainer is (nothing
+jumps out from my memory).
 
-Not that anyone should care when reviewing device tree bindings,
-but as it happens, the Linux driver
-drivers/mfd/syscon.c
-explicitly assumes all sycons are 32bit:
+Most likely, the rtc maintainer will take the series with the DT
+maintainers Acks.  You made all the binding changes as discussed by Mark
+and I, so fwiw,
 
-static struct regmap_config syscon_regmap_config = {
-        .reg_bits = 32,
-        .val_bits = 32,
-        .reg_stride = 4,
-};
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-If one happens to work on Linux (we would never assume such a
-thing, but if one by infinitesimal chance would still happen to do that)
-we can leave a note in this posting that the syscon driver would need to
-be altered to marshall it's regmap differently on stumbling onto this
-new property.
+Just keep in mind that I'm not a DT maintainer, I've just moved a lot of
+patches into that area :-P  When you respin the series to split it, just
+throw my Ack on the binding docs.
 
-Yours,
-Linus Walleij
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
