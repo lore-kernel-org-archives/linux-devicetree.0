@@ -1,102 +1,119 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [resend PATCH 2/3] arm/dts: dra7xx: Add CPSW and MDIO module nodes for dra7xx
-Date: Tue, 9 Sep 2014 00:49:57 +0530
-Message-ID: <1410203998-8700-3-git-send-email-mugunthanvnm@ti.com>
-References: <1410203998-8700-1-git-send-email-mugunthanvnm@ti.com>
+From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dma: Add Xilinx AXI Direct Memory Access Engine
+ driver support
+Date: Tue, 9 Sep 2014 00:52:16 +0530
+Message-ID: <CA+mB=1KarJGUYTZu=2k46gqt3oMAuYawfq+H=Lxa7YVqcThjCw@mail.gmail.com>
+References: <1406549869-24422-1-git-send-email-sthokal@xilinx.com>
+	<1406549869-24422-2-git-send-email-sthokal@xilinx.com>
+	<20140819170346.GS13288@intel.com>
+	<CA+mB=1L14Os=ZdJzj8_+XXa+oq4ZOS_kadQHpKQ2yws2tqGVSQ@mail.gmail.com>
+	<20140904063613.GD1610@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410203998-8700-1-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140904063613.GD1610-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Levente Kurusa <levex-vYTEC60ixJUAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add CPSW and MDIO related device tree data for DRA7XX and made as status
-disabled. Phy-id, pinmux for active and sleep state needs to be added in
-board dts files and enable the CPSW device.
+Hi Vinod,
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi | 59 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+On Thu, Sep 4, 2014 at 12:06 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Sep 03, 2014 at 12:17:43PM +0530, Srikanth Thokala wrote:
+>> Hi Vinod,
+>>
+>> Apologies for the delay.
+>>
+>> On Tue, Aug 19, 2014 at 10:33 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>> > On Mon, Jul 28, 2014 at 05:47:49PM +0530, Srikanth Thokala wrote:
+>> >> +struct xilinx_dma_chan {
+>> >> +     struct xilinx_dma_device *xdev;
+>> >> +     u32 ctrl_offset;
+>> >> +     spinlock_t lock;
+>> >> +     struct list_head pending_list;
+>> >> +     struct xilinx_dma_tx_descriptor *active_desc;
+>> >> +     struct xilinx_dma_tx_descriptor *allocated_desc;
+>> >> +     struct list_head done_list;
+>> >> +     struct list_head free_seg_list;
+>> >> +     struct dma_chan common;
+>> >> +     struct xilinx_dma_tx_segment *seg_v;
+>> >> +     dma_addr_t seg_p;
+>> >> +     struct device *dev;
+>> >> +     int irq;
+>> >> +     int id;
+>> >> +     enum dma_transfer_direction direction;
+>> > This looks suspect. Why should channel have direction, for a descriptor it
+>> > makes sense though.
+>>
+>> The channel only supports transfers in one direction. Either from memory to
+>> peripheral or from peripheral to memory, that's fixed and can't be changed
+>> at runtime.  So, the driver needs to know which direction the channel supports
+>> and hence it can reject transfers with the wrong direction.
+> But you already have this information in descriptor so why duplicate?
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index b6060d3..d588c1e 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -34,6 +34,8 @@
- 		serial3 = &uart4;
- 		serial4 = &uart5;
- 		serial5 = &uart6;
-+		ethernet0 = &cpsw_emac0;
-+		ethernet1 = &cpsw_emac1;
- 	};
- 
- 	timer {
-@@ -1134,6 +1136,63 @@
- 			ti,irqs-skip = <10 133 139 140>;
- 			ti,irqs-safe-map = <0>;
- 		};
-+
-+		mac: ethernet@4a100000 {
-+			compatible = "ti,cpsw";
-+			ti,hwmods = "gmac";
-+			cpdma_channels = <8>;
-+			ale_entries = <1024>;
-+			bd_ram_size = <0x2000>;
-+			no_bd_ram = <0>;
-+			rx_descs = <64>;
-+			mac_control = <0x20>;
-+			slaves = <2>;
-+			active_slave = <0>;
-+			cpts_clock_mult = <0x80000000>;
-+			cpts_clock_shift = <29>;
-+			reg = <0x48484000 0x1000
-+			       0x48485200 0x2E00>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			/*
-+			 * rx_thresh_pend
-+			 * rx_pend
-+			 * tx_pend
-+			 * misc_pend
-+			 */
-+			interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
-+			ranges;
-+			status = "disabled";
-+
-+			davinci_mdio: mdio@48485000 {
-+				compatible = "ti,davinci_mdio";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				ti,hwmods = "davinci_mdio";
-+				bus_freq = <1000000>;
-+				reg = <0x48485000 0x100>;
-+			};
-+
-+			cpsw_emac0: slave@48480200 {
-+				/* Filled in by U-Boot */
-+				mac-address = [ 00 00 00 00 00 00 ];
-+			};
-+
-+			cpsw_emac1: slave@48480300 {
-+				/* Filled in by U-Boot */
-+				mac-address = [ 00 00 00 00 00 00 ];
-+			};
-+
-+			phy_sel: cpsw-phy-sel@4a002554 {
-+				compatible = "ti,dra7xx-cpsw-phy-sel";
-+				reg= <0x4a002554 0x4>;
-+				reg-names = "gmii-sel";
-+			};
-+		};
-+
- 	};
- };
- 
--- 
-2.1.0
+Our descriptor doesn't have the information of channel direction, we have this
+information only in the chan structure (struct xilinx_dma_chan) which
+is populated
+while parsing the DT.  So, we use this information to ensure if we are servicing
+proper channel (in prep_slave_sg call).
+
+FYI: We also need the direction of the channel so that we can select SRC/DST
+register address in the issue_pending() call.
+
+Could you please elaborate, if I am missing something?
+
+>
+>> >> +/**
+>> >> + * xilinx_dma_channel_set_config - Configure DMA channel
+>> >> + * @dchan: DMA channel
+>> >> + * @cfg: DMA device configuration pointer
+>> >> + *
+>> >> + * Return: '0' on success and failure value on error
+>> >> + */
+>> >> +int xilinx_dma_channel_set_config(struct dma_chan *dchan,
+>> >> +                               struct xilinx_dma_config *cfg)
+>> >> +{
+>> >> +     struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
+>> >> +     u32 reg = dma_ctrl_read(chan, XILINX_DMA_REG_CONTROL);
+>> >> +
+>> >> +     if (cfg->reset)
+>> >> +             return xilinx_dma_reset(chan);
+>> >> +
+>> >> +     if (cfg->coalesc <= XILINX_DMA_CR_COALESCE_MAX)
+>> >> +             reg |= cfg->coalesc << XILINX_DMA_CR_COALESCE_SHIFT;
+>> >> +
+>> >> +     if (cfg->delay <= XILINX_DMA_CR_DELAY_MAX)
+>> >> +             reg |= cfg->delay << XILINX_DMA_CR_DELAY_SHIFT;
+>> >> +
+>> >> +     dma_ctrl_write(chan, XILINX_DMA_REG_CONTROL, reg);
+>> > You aren't checking if a transaction is already running on this channel.
+>> > Also don't you need other slave parameters, I see you have removed the
+>> > dma_slave_config entirely
+>>
+>> All the parameters that are required for this DMA engine are provided by
+>> SG list, so I don't see the need of dma_slave_config.  There are some
+>> specific IP parameters that are not part of dma_slave_config and these
+>> are being set by 'dma_channel_set_config' which is exported to slave
+>> drivers.
+> And that means you dont have any common parameters between dma_slave_config
+> right?
+
+Yes, true.
+
+Thanks,
+Srikanth
+
+>
+> --
+> ~Vinod
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
