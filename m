@@ -1,82 +1,61 @@
-From: Greg Ungerer <gerg-JBU5SbJe1FlAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2] spi: orion: support armada extended baud rates
-Date: Mon, 08 Sep 2014 11:52:20 +1000
-Message-ID: <540D0BD4.8060109@uclinux.org>
-References: <1409835268-29555-1-git-send-email-gerg@uclinux.org> <CAMuHMdWDOaPnmCzThqCo2848eDj6jmi-eaXM1YAXQLi41da34A@mail.gmail.com> <5409057A.6090900@uclinux.org> <CAMuHMdWf6_yBhpNgK=wJcQqzLNJvTnC95SrqrcZyRH+jGL93vA@mail.gmail.com> <5409B68A.7010604@uclinux.org> <20140906120600.GA11500@arch.cereza> <540C4C18.5030903@uclinux.org> <20140907151250.GA692@arch.cereza>
+From: robert.jarzmik@free.fr
+Subject: =?utf-8?Q?Re=C2=A0:_Re:_[PATCH_]_ARM:_pxa:_fix_section_?=
+ =?utf-8?Q?mismatch_warning_for_pxa=5Ftimer=5Fnodt=5Finit?=
+Date: Mon, 8 Sep 2014 04:21:59 +0200 (CEST)
+Message-ID: <2043099673.69233100.1410142919959.JavaMail.root@zimbra1-e1.priv.proxad.net>
+References: <3188925.pjYA4K7kjn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140907151250.GA692-nAQHv47ARr+vIlHkl8J1cg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3188925.pjYA4K7kjn@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
+Yes please Arnd, I'm still out for 1.5 week, so it would be great if yo=
+u take that through your tree with my ack. Thanks.
 
-On 08/09/14 01:12, Ezequiel Garcia wrote:
-> Hi Greg,
-> 
-> On 07 Sep 10:14 PM, Greg Ungerer wrote:
->> Hi Ezequiel,
->>
->> On 06/09/14 22:06, Ezequiel Garcia wrote:
->>> Hi Greg,
->>>
->>> (Ccing mvebu guys, full discussion here: http://www.spinics.net/lists/devicetree/msg47806.html)
->>>
->>> On 05 Sep 11:11 PM, Greg Ungerer wrote:
->>>> On 05/09/14 17:36, Geert Uytterhoeven wrote:
->>>>> No, the other way around (from most-specific to least-specific):
->>>>>
->>>>>     compatible = "marvell,armada-spi", "marvell,orion-spi"
->>>>>
->>>>> So the Armada version is used if available, and the Orion version
->>>>> is used as a fallback.
->>> Since you are doing another spin, please split this in two patches.
->>> The driver and devicetree binding documentation should be in one patch,
->>> and the devicetree .dtsi change in another patch.
->>>
->>> By following Geert's request about the compatible, you make sure both
->>> patches can be merged through different maintainers, and that an old devicetree
->>> blob can be used safely.
->>
->> Sure, yes, I would prefer that too. I didn't do it for this because
->> checkpatch
->> complained for the spi-orion.c change in its own:
->>
->> WARNING: DT compatible string "marvell,armada-spi" appears un-documented --
->> check ./Documentation/devicetree/bindings/
->> #170: FILE: drivers/spi/spi-orion.c:412:
->> +    { .compatible = "marvell,armada-spi", .data = &armada_spi_dev_data, },
->>
->> But I am happy to ignore that :-)
->>
-> 
-> If you split in two patches like this:
-> 
-> Patch #1: "spi: orion: Add a new foo feature"
-> 
->  .../devicetree/bindings/spi/spi-orion.txt          |   2 +-
->  drivers/spi/spi-orion.c                            | 116 +++++++++++++++++----
-> 
-> Patch #2: "ARM: mvebu: Add new compatible string for SPI"
-> 
->  arch/arm/boot/dts/armada-370-xp.dtsi               |   4 +-
-> 
-> Then checkpatch shouldn't complain. As you can see, it makes more sense like
-> this. The change to the devicetree binding in the driver and properly
-> documented, but the devicetree files per-se, get modified in another patch.
+Robert
 
-Ok, I see. Thanks.
+PS: I know, top-posting is madness, but I'm really limited by technolog=
+y right now.
 
-Regards
-Greg
+----- Mail d'origine -----
+De: Arnd Bergmann <arnd@arndb.de>
+=C3=80: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Lezcano <daniel.l=
+ezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@=
+vger.kernel.org, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linu=
+tronix.de>, arm@kernel.org
+Envoy=C3=A9: Sun, 07 Sep 2014 23:06:05 +0200 (CEST)
+Objet: Re: [PATCH ] ARM: pxa: fix section mismatch warning for pxa_time=
+r_nodt_init
 
+On Saturday 26 July 2014 20:50:36 Arnd Bergmann wrote:
+> commit a38b1f60b5245a3 ("ARM: pxa: Add non device-tree timer link to
+> clocksource") introduced a harmless section mismatch warning for
+> all pxa platforms, by introducing a new pxa_timer_init() function
+> that is not marked __init but that calls pxa_timer_nodt_init(),
+> which is. The function is only called at init time, so it is safe
+> to also annotate it this way.
+>=20
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>=20
 
+Apparently this is not merged yet, should we take it through arm-soc?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/mach-pxa/generic.c b/arch/arm/mach-pxa/generic.c
+index 630fa916bbc6..04b013fbc98f 100644
+--- a/arch/arm/mach-pxa/generic.c
++++ b/arch/arm/mach-pxa/generic.c
+@@ -61,7 +61,7 @@ EXPORT_SYMBOL(get_clock_tick_rate);
+ /*
+ * For non device-tree builds, keep legacy timer init
+ */
+-void pxa_timer_init(void)
++void __init pxa_timer_init(void)
+ {
+ pxa_timer_nodt_init(IRQ_OST0, io_p2v(0x40a00000),
+ get_clock_tick_rate());
