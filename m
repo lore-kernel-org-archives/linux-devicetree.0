@@ -1,144 +1,144 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] RFC: add function for localbus address
-Date: Mon, 08 Sep 2014 15:52:04 +0100
-Message-ID: <20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
-References: <20140729234522.E9FF1C40738@trevor.secretlab.ca>
-	<1409672700-21697-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
+ domain_nr
+Date: Mon, 8 Sep 2014 15:54:59 +0100
+Message-ID: <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
+ <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-arch-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  2 Sep 2014 18:45:00 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
-> Hi Grant,
-> 
-> I came down to this. Could you review? Is that
-> implementation closer to the suggestion made by you.
-> 
-> ---
->  drivers/of/address.c       |   49 ++++++++++++++++++++++++++++++++++++++++++++
->  drivers/of/platform.c      |   20 ++++++++++++++---
->  include/linux/of_address.h |   19 +++++++++++++++++
->  3 files changed, 84 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index e371825..86c2166 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -601,6 +601,32 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
->  }
->  EXPORT_SYMBOL(of_get_address);
->  
-> +const __be32 *of_get_localbus_address(struct device_node *np, int index,
-> +				      u64 *size)
-> +{
-> +	struct device_node *root, *parent;
-> +	const __be32 *ranges, *prop = NULL;
-> +
-> +	parent = of_get_parent(np);
-> +	if (!parent)
-> +		return NULL;
-> +
-> +	root = of_find_node_by_path("/");
-> +
-> +	if (parent == root) {
-> +		of_node_put(parent);
-> +		return NULL;
-> +	}
-> +
-> +	ranges = of_get_property(parent, "ranges", NULL);
-> +	of_node_put(parent);
-> +
-> +	if (!ranges)
-> +		prop = of_get_address(np, index, size, NULL);
-> +
-> +	return prop;
-> +}
+On Mon, Sep 08, 2014 at 03:27:56PM +0100, Rob Herring wrote:
+> On Mon, Sep 8, 2014 at 8:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
+te:
+> > Add of_pci_get_domain_nr() to retrieve the PCI domain number
+> > of a given device from DT. If the information is not present,
+> > the function can be requested to allocate a new domain number.
+> >
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Grant Likely <grant.likely@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> > ---
+> >  drivers/of/of_pci.c    | 34 ++++++++++++++++++++++++++++++++++
+> >  include/linux/of_pci.h |  7 +++++++
+> >  2 files changed, 41 insertions(+)
+> >
+> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> > index 8481996..a107edb 100644
+> > --- a/drivers/of/of_pci.c
+> > +++ b/drivers/of/of_pci.c
+> > @@ -89,6 +89,40 @@ int of_pci_parse_bus_range(struct device_node *n=
+ode, struct resource *res)
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
+> >
+> > +static atomic_t of_domain_nr =3D ATOMIC_INIT(-1);
+> > +
+> > +/**
+> > + * This function will try to obtain the host bridge domain number =
+by
+> > + * using of_alias_get_id() call with "pci-domain" as a stem. If th=
+at
+> > + * fails, a local allocator will be used. The local allocator can
+> > + * be requested to return a new domain_nr if the information is mi=
+ssing
+> > + * from the device tree.
+> > + *
+> > + * @node: device tree node with the domain information
+> > + * @allocate_if_missing: if DT lacks information about the domain =
+nr,
+> > + * allocate a new number.
+> > + *
+> > + * Returns the associated domain number from DT, or a new domain n=
+umber
+> > + * if DT information is missing and @allocate_if_missing is true. =
+If
+> > + * @allocate_if_missing is false then the last allocated domain nu=
+mber
+> > + * will be returned.
+> > + */
+> > +int of_pci_get_domain_nr(struct device_node *node, bool allocate_i=
+f_missing)
+> > +{
+> > +       int domain;
+> > +
+> > +       domain =3D of_alias_get_id(node, "pci-domain");
+> > +       if (domain =3D=3D -ENODEV) {
+> > +               if (allocate_if_missing)
+> > +                       domain =3D atomic_inc_return(&of_domain_nr)=
+;
+> > +               else
+> > +                       domain =3D atomic_read(&of_domain_nr);
+>=20
+> This function seems a bit broken to me. It is overloaded with too man=
+y
+> different outcomes. Think about how this would work if you have
+> multiple PCI buses and a mixture of having pci-domain aliases or not.
+> Aren't domain numbers global? Allocation should then start outside of
+> the range of alias ids.
+>=20
+> Rob
+>=20
 
-So, the above doesn't make much sense to me. It looks like the function
-merely decodes the local address, and the below function will stuff it
-into a resource structure, but the tests for if the parent is root or
-the parent has a ranges property are nonsensical. That shouldn't matter
-for the functionality (except for automatically decoding them.. more
-below)
+Rob,
 
-> +
->  unsigned long __weak pci_address_to_pio(phys_addr_t address)
->  {
->  	if (address > IO_SPACE_LIMIT)
-> @@ -665,6 +691,29 @@ int of_address_to_resource(struct device_node *dev, int index,
->  }
->  EXPORT_SYMBOL_GPL(of_address_to_resource);
->  
-> +int of_localbus_address_to_resource(struct device_node *dev, int index,
-> +				    struct resource *r)
-> +{
-> +	const char *name = NULL;
-> +	const __be32 *addrp;
-> +	u64 size;
-> +
-> +	addrp = of_get_localbus_address(dev, index, &size);
-> +	if (!addrp)
-> +		return -EINVAL;
-> +
-> +	of_property_read_string_index(dev, "reg-names", index, &name);
-> +
-> +	memset(r, 0, sizeof(*r));
-> +	r->start = be32_to_cpup(addrp);
-> +	r->end = r->start + size - 1;
-> +	r->flags = IORESOURCE_REG;
+Would this version make more sense?
 
-This is problematic. A resource is created, but there is absolutely no
-indication that the resource represents a localbus address instead of a
-CPU address. platform_device reg resources represent CPU addresses.
-Trying to overload it will cause confusion in drivers.
+int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_mis=
+sing)
+{
+       int domain;
 
-> +	r->name = name ? name : dev->full_name;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_localbus_address_to_resource);
-> +
->  struct device_node *of_find_matching_node_by_address(struct device_node *from,
->  					const struct of_device_id *matches,
->  					u64 base_address)
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 0197725..36dcbd7 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -106,8 +106,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  				  struct device *parent)
->  {
->  	struct platform_device *dev;
-> -	int rc, i, num_reg = 0, num_irq;
-> +	int rc, i, num_reg = 0, num_localbus_reg = 0, num_irq;
->  	struct resource *res, temp_res;
-> +	int num_resources;
->  
->  	dev = platform_device_alloc("", -1);
->  	if (!dev)
-> @@ -116,22 +117,33 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  	/* count the io and irq resources */
->  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
->  		num_reg++;
-> +
-> +	while (of_localbus_address_to_resource(np,
-> +					num_localbus_reg, &temp_res) == 0)
-> +		num_localbus_reg++;
-> +
+       domain =3D of_alias_get_id(node, "pci-domain");
+       if (domain =3D=3D -ENODEV) {
+               if (allocate_if_missing)
+                       domain =3D atomic_inc_return(&of_domain_nr);
+               else
+                       domain =3D atomic_read(&of_domain_nr);
+       } else {
+               /* remember the largest value seen */
+               int d =3D atomic_read(&of_domain_nr);
+               atomic_set(&of_domain_nr, max(domain, d));
+       }
 
-No, I don't support doing this. The moment a platform_driver depends on
-a local bus address it is doing something special. It needs to decode
-its own address in that case, which it can easily do.
+       return domain;
+}
+EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
 
-Any platform_driver that interprets a IORESOURCE_REG as a localbus
-address instead of a CPU address is *BROKEN*. It should be changed to
-either decode the address itself, of a new bus type should be created
-that can make its own decisions about what address resources mean.
+It would still create gaps and possible duplicates, but this is just a =
+number
+and trying to create a new root bus in an existing domain should fail. =
+I have
+no clue on how to generate unique values without parsing the DT and fil=
+ling
+a sparse array with values found there and then checking for allocated =
+values
+on new requests. This function gets called quite a lot and I'm trying n=
+ot to
+make it too heavy weight.
 
-I realize that you want to reuse the platform populate functionality in
-this case. We can refactor some of that code to make it usable for
-customized platform_bus_type instances.
 
-g.
+Best regards,
+Liviu
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
