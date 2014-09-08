@@ -1,98 +1,131 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/5] rtc: at91sam9: retain slow clock and check its rate
-Date: Mon, 8 Sep 2014 19:33:38 +0200
-Message-ID: <20140908173338.GD14623@piout.net>
-References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
- <1409733934-14465-5-git-send-email-boris.brezillon@free-electrons.com>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [PATCH v6 0/4] APM X-Gene PCIe host controller
+Date: Mon, 8 Sep 2014 10:56:07 -0700
+Message-ID: <CACoXjckxprMPbEPrzg2yU_KAnc+rRsRLFJfFbc8QA41y4E78LA@mail.gmail.com>
+References: <1409963143-11951-1-git-send-email-tinamdar@apm.com>
+	<CAErSpo643rAAqR0AAy5CwSkMv28Cw8Y55EYrYo0AHvQZxgvgXg@mail.gmail.com>
+	<20140908135918.GA1296@bart.dudau.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409733934-14465-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140908135918.GA1296@bart.dudau.co.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <liviu@dudau.co.uk>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2014 at 10:45:33 +0200, Boris Brezillon wrote :
-> The RTT block is using the slow clock and expect it to run at 32KHz.
-> Now that we moved to the CCF it's better to retain the clk reference so
-> that the CCF can't disable the slow clock considering it is unused.
-> 
-> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/rtc/rtc-at91sam9.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-> index 57014b7..5c5093b 100644
-> --- a/drivers/rtc/rtc-at91sam9.c
-> +++ b/drivers/rtc/rtc-at91sam9.c
-> @@ -21,6 +21,7 @@
->  #include <linux/slab.h>
->  #include <linux/platform_data/atmel.h>
->  #include <linux/io.h>
-> +#include <linux/clk.h>
->  
->  /*
->   * This driver uses two configurable hardware resources that live in the
-> @@ -74,6 +75,7 @@ struct sam9_rtc {
->  	u32			imr;
->  	void __iomem		*gpbr;
->  	int 			irq;
-> +	struct clk		*sclk;
->  };
->  
->  #define rtt_readl(rtc, field) \
-> @@ -373,6 +375,25 @@ static int at91_rtc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	/* Retain slow clk if it is specified in the DT.
-> +	 * Do not complain if slow clk is missing, but check its rate
-> +	 * if it is available.
-> +	 */
-> +	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
-> +	if (!IS_ERR(rtc->sclk)) {
-> +		if (clk_get_rate(rtc->sclk) != AT91_SLOW_CLOCK) {
+On Mon, Sep 8, 2014 at 6:59 AM, Liviu Dudau <liviu@dudau.co.uk> wrote:
+> On Sat, Sep 06, 2014 at 08:17:43AM -0600, Bjorn Helgaas wrote:
+>> On Fri, Sep 5, 2014 at 6:25 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
+>> > This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+>> > driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+>> > cards.
+>> >
+>> > X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
+>> > Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
+>> > support for creating generic pcie bridge from device tree. Liviu's patches
+>> > are available here
+>> > 1. https://lkml.org/lkml/2014/8/12/361
+>>
+>> I'm hoping to merge Liviu's patches and this X-Gene support for v3.18.
+>> I'm currently waiting for Liviu's v10 series (hopefully based on
+>> v3.17-rc2), and since your series depends on that, I'm going to wait
+>> for a v7 of your series that is rebased on top of Liviu's v10.  Does
+>> that make sense?
+>
+> Hi Bjorn,
+>
+> I've sent v10 based on v3.17-rc4, hope this is OK.
+>
+> Tanmay, unfortunately the API has changed again. I've put in the cover letter
+> of the series how the probe function needs changing. Basically, you need to
+> stop relying on the host bridge being created and use just the resource list
+> coming out of the of_pci_get_host_bridge_resources().
+>
 
-I would not bother doing that check but use the value for MR instead of
-AT91_SLOW_CLOCK (see my previous mail).
+Thanks Bjorn and Liviu. I will start porting X-Gene PCIe driver to Liviu's v10.
 
-> +			dev_err(&pdev->dev,
-> +				"Invalid slow clock rate (expecting %lu got %lu)",
-> +				(unsigned long)AT91_SLOW_CLOCK,
-> +				clk_get_rate(rtc->sclk));
-> +			return -EINVAL;
-> +		}
-> +
-> +		ret = clk_prepare_enable(rtc->sclk);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	/* NOTE:  sam9260 rev A silicon has a ROM bug which resets the
->  	 * RTT on at least some reboots.  If you have that chip, you must
->  	 * initialize the time from some external source like a GPS, wall
-> @@ -397,6 +418,9 @@ static int at91_rtc_remove(struct platform_device *pdev)
->  	/* disable all interrupts */
->  	rtt_writel(rtc, MR, mr & ~(AT91_RTT_ALMIEN | AT91_RTT_RTTINCIEN));
->  
-> +	if (!IS_ERR(rtc->sclk))
-> +		clk_disable_unprepare(rtc->sclk);
-> +
->  	return 0;
->  }
->  
-> -- 
-> 1.9.1
-> 
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Best regards,
+> Liviu
+>
+>>
+>> > If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
+>> > patches from Liviu must be applied before the patches in this patch set. Also
+>> > please use latest xgene u-boot firmware.
+>> >
+>> > changes since V5:
+>> > 1. Port driver to changed interface of 'of_create_pci_host_bridge'
+>> > 2. Fix the prefetch bit setting
+>> > 3. Removed bunch of register programming which is already done by firmware
+>> >
+>> > changes since V4:
+>> > 1. fix section mismatch warnings
+>> > 2. fix the patch description
+>> > 3. fix indentation
+>> > 4. update read/write cfg functions by passing both addr and offset.
+>> > 5. use 'time_before' for timeout.
+>> > 6. remove unnecessary 'IS_ERR_OR_NULL'. Keep 'IS_ERR' for 'clk_get'
+>> > 7. remove BUG_ON for pci_ioremap_io.
+>> >
+>> > changes since V3:
+>> > 1. remove 'struct hw_pci' and supporting ops in hw_pci
+>> > 2. add code to create the host bridge from dts
+>> > 3. add code to scan the the host bridge
+>> > 4. modify outbound windows setup function to get resource information from
+>> >    'bridge->windows'
+>> > 5. add compatible string in pcie dts node with current X-Gene SOC name.
+>> >
+>> > changes since V2:
+>> > 1. redefined each PCI port in different PCI domain correctly.
+>> > 2. removed setup_lane and setup_link functions from driver.
+>> > 3. removed scan_bus wrapper and set_primary_bus hack.
+>> > 4. added pci_ioremap_io for io resources.
+>> >
+>> > changes since V1:
+>> > 1. added PCI domain support
+>> > 2. reading cpu and pci addresses from device tree to configure regions.
+>> > 3. got rid of unnecessary wrappers for readl and writel.
+>> > 4. got rid of endpoint configuration code.
+>> > 5. added 'dma-ranges' property support to read inbound region configuration.
+>> > 6. renamed host driver file to 'pci-xgene.c' from 'pcie-xgene.c'
+>> > 7. dropped 'clock-names' property from bindings
+>> > 8. added comments whereever requested.
+>> >
+>> > Tanmay Inamdar (4):
+>> >   pci:host: APM X-Gene PCIe controller driver
+>> >   arm64: dts: APM X-Gene PCIe device tree nodes
+>> >   dt-bindings: pci: xgene pcie device tree bindings
+>> >   MAINTAINERS: entry for APM X-Gene PCIe host driver
+>> >
+>> >  .../devicetree/bindings/pci/xgene-pci.txt          |  55 ++
+>> >  MAINTAINERS                                        |   8 +
+>> >  arch/arm64/boot/dts/apm-mustang.dts                |   8 +
+>> >  arch/arm64/boot/dts/apm-storm.dtsi                 | 160 ++++++
+>> >  drivers/pci/host/Kconfig                           |  10 +
+>> >  drivers/pci/host/Makefile                          |   1 +
+>> >  drivers/pci/host/pci-xgene.c                       | 638 +++++++++++++++++++++
+>> >  7 files changed, 880 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
+>> >  create mode 100644 drivers/pci/host/pci-xgene.c
+>> >
+>> > --
+>> > 1.9.1
+>> >
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>
+> --
+> -------------------
+>    .oooO
+>    (   )
+>     \ (  Oooo.
+>      \_) (   )
+>           ) /
+>          (_/
+>
+>  One small step
+>    for me ...
+>
