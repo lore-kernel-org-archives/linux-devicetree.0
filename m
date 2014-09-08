@@ -1,71 +1,70 @@
-From: Laurentiu Tudor <b10716-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] of: make sure of_alias is initialized before accessing
- it
-Date: Mon, 8 Sep 2014 17:13:41 +0300
-Message-ID: <540DB995.7040406@freescale.com>
-References: <53FDE6A3.3080303@freescale.com> <20140908132956.646FEC40AE5@trevor.secretlab.ca>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] phy: miphy28lp: Add Device Tree bindings for the
+ MiPHY28lp
+Date: Mon, 8 Sep 2014 20:03:39 +0530
+Message-ID: <540DBE43.50403@ti.com>
+References: <1409758637-28654-1-git-send-email-gabriel.fernandez@linaro.org> <1409758637-28654-2-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140908132956.646FEC40AE5-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1409758637-28654-2-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Laurentiu Tudor <Laurentiu.Tudor-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, alexandre torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2014 04:29 PM, Grant Likely wrote:
-> On Wed, 27 Aug 2014 17:09:39 +0300, Laurentiu Tudor <b10716-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> Simply swap of_alias and of_chosen initialization so
->> that of_alias ends up read first. This must be done
->> because it is accessed couple of lines below when
->> trying to initialize the of_stdout using the alias
->> based legacy method.
->>
->> [Fixes a752ee5 - tty: Update hypervisor tty drivers to                          
->> use core stdout parsing code]
->>
->> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  drivers/of/base.c | 8 ++++----
->>  1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index d8574ad..52f8506 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -1847,6 +1847,10 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
->>  {
->>  	struct property *pp;
->>  
->> +	of_aliases = of_find_node_by_path("/aliases");
->> +	if (!of_aliases)
->> +		return;
->> +
->>  	of_chosen = of_find_node_by_path("/chosen");
->>  	if (of_chosen == NULL)
->>  		of_chosen = of_find_node_by_path("/chosen@0");
->> @@ -1862,10 +1866,6 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
->>  			of_stdout = of_find_node_by_path(name);
->>  	}
->>  
->> -	of_aliases = of_find_node_by_path("/aliases");
->> -	if (!of_aliases)
->> -		return;
->> -
+Hi,
+
+On Wednesday 03 September 2014 09:07 PM, Gabriel FERNANDEZ wrote:
+> The MiPHY28lp is a Generic PHY which can serve various SATA or PCIe
+> or USB3 devices.
 > 
-> Close, but not quite. The 'if (!of_aliases)' test should not be moved.
-> Only the search for of_find_node_by_path().
+> Signed-off-by: alexandre torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/phy-miphy28lp.txt      | 126 +++++++++++++++++++++
+>  1 file changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+> new file mode 100644
+> index 0000000..5e307af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+> @@ -0,0 +1,126 @@
+> +STMicroelectronics STi MIPHY28LP PHY binding
+> +============================================
+> +
+> +This binding describes a miphy device that is used to control PHY hardware
+> +for SATA, PCIe or USB3.
+> +
+> +Required properties (controller (parent) node):
+> +- compatible	: Should be "st,miphy28lp-phy"
+> +- st,syscfg	: Should be a phandle of the system configuration register group
+> +		  which contain the SATA, PCIe or USB3 mode setting bits
+> +
+> +Required nodes	:  A sub-node is required for each channel the controller
+> +		   provides. Address range information including the usual
+> +		   'reg' and 'reg-names' properties are used inside these
+> +		   nodes to describe the controller's topology. These nodes
+> +		   are translated by the driver's .xlate() function.
+> +
+> +Required properties (port (child) node):
+> +- #phy-cells	: Should be 1 (See second example)
+> +		  Cell after port phandle is device type from:
+> +			- MIPHY_TYPE_SATA
+> +			- MIPHY_TYPE_PCI
+> +			- MIPHY_TYPE_USB3
+> +- reg		: Address and length of the register set for the device
+> +- reg-names	: The names of the register addresses corresponding to the registers
+> +		  filled in "reg". Is can also contain the offset of the system configuration
 
-Eek, completely missed this. Sorry.
+%s/Is/It
 
-> I've fixed it up and applied.
- 
-Thanks!
-
----
-Best Regards, Laurentiu
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
