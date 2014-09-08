@@ -1,44 +1,30 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 4/5] rtc: rtc-isl12022: Change vendor prefix for Intersil Corporation to isil
-Date: Mon,  8 Sep 2014 11:19:19 +0200
-Message-ID: <1410167960-554-5-git-send-email-p.zabel@pengutronix.de>
-References: <1410167960-554-1-git-send-email-p.zabel@pengutronix.de>
+Subject: Re: [RFC PATCH 0/6] Change vendor prefix for Intersil Corporation
+Date: Mon, 08 Sep 2014 11:20:34 +0200
+Message-ID: <1410168034.3981.22.camel@paszta.hi.pengutronix.de>
+References: <1408524184-31928-1-git-send-email-p.zabel@pengutronix.de>
+	 <20140820121643.GU12769@titan.lakedaemon.net>
+	 <20140907133218.GA30828@titan.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410167960-554-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20140907133218.GA30828-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently there is a wild mixture of isl, isil, and intersil compatibles
-in the kernel. At this point, changing the vendor symbol to the most often
-used variant, which is equal to the NASDAQ symbol, isil, should not hurt.
+Hi Jason,
 
-Patch db04d6284e2a (drivers/rtc/rtc-isl12022.c: device tree support)
-added device tree support using the then documented isl vendor prefix,
-so we keep that around for backwards compatibility.
+Am Sonntag, den 07.09.2014, 09:32 -0400 schrieb Jason Cooper:
+> Just to dot our i's and cross our t's, would you mind sending out a
+> non-rfc version of this series?
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/rtc/rtc-isl12022.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thank you for the reminder, I have sent an updated version.
 
-diff --git a/drivers/rtc/rtc-isl12022.c b/drivers/rtc/rtc-isl12022.c
-index aa55f08..df20f18 100644
---- a/drivers/rtc/rtc-isl12022.c
-+++ b/drivers/rtc/rtc-isl12022.c
-@@ -275,7 +275,8 @@ static int isl12022_probe(struct i2c_client *client,
- 
- #ifdef CONFIG_OF
- static struct of_device_id isl12022_dt_match[] = {
--	{ .compatible = "isl,isl12022" },
-+	{ .compatible = "isil,isl12022" },
-+	{ .compatible = "isl,isl12022" }, /* for backwards compatibility */
- 	{ },
- };
- #endif
--- 
-2.1.0.rc1
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
