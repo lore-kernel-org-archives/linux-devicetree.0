@@ -1,108 +1,44 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] Disabling OF functions that use sysfs if
- CONFIG_SYSFS disabled
-Date: Mon, 08 Sep 2014 11:49:45 +0100
-Message-ID: <20140908104945.1C824C40AB2@trevor.secretlab.ca>
-References: <1409936173-6263-1-git-send-email-gaurav.minocha.os@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409936173-6263-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpio: Add driver for AXM55xx SSP chip selects
+Date: Mon, 8 Sep 2014 13:02:32 +0200
+Message-ID: <CAE0=X_2q1Z+pGuh6OY9Si5jbrF9HkczNFUqUgK_8xBekNvMeyQ@mail.gmail.com>
+References: <1409576021-24828-1-git-send-email-anders.berg@avagotech.com>
+	<1409576021-24828-2-git-send-email-anders.berg@avagotech.com>
+	<CACRpkdby4H-fivNn_kG2uL0EjsCGAc+t6OyFi0+VcNGf2Z9NQA@mail.gmail.com>
+	<20140904170630.GL29327@sirena.org.uk>
+	<CACRpkdZEoBan=Lqr1T-iY41U9NfMA_MCLX3LA=juw7X4pmRvSQ@mail.gmail.com>
+	<CAE0=X_3QO5p26M=FS7joKS3zD6LAM_moFutHNcyE1-CjauL3Rw@mail.gmail.com>
+	<20140906135308.GC2601@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140906135308.GC2601-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  5 Sep 2014 09:56:13 -0700, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch is to the fix the recent runtime bug in kernel
-> reported by <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> 
-> Mail Subject: [OF test] BUG: unable to handle kernel NULL
->  pointer dereference at 00000038
-> 
-> Tested on x86 and arm architecture
-> 
-> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Sat, Sep 6, 2014 at 3:53 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Sep 05, 2014 at 11:05:37AM +0200, Anders Berg wrote:
+>
+>> Well, the problem with adding this to the spi-pl022 driver (as a
+>> vendor specific extension) is that this IP block unfortunately isn't
+>> distinguishable from the standard ARM PL022 implementation (same
+>> values in the PrimeCell identification registers). That's why I went
+>> down the GPIO path...
+>
+> Would it not be more straightforward to just register it as a platform
+> device in this case, or use a separate OF ID in the DT?  We appear to
+> specify a compatible string when registering AMBA devices even if we are
+> capable of identifying using the ID registers.
 
-Applied, thanks.
+I'll drop this gpio patch for now and submit a patch on the pl022
+driver instead. I read the arm,primecell binding and learned that
+there is a property (arm,primecell-periphid) that can be used to
+override the HW PrimeCell ID. Seems like something to use here, right?
 
-I've modified the commit message before applying. For future reference,
-when dealing with bug fixes, you should quote the commit that either
-introduced or exposed the bug by SHA1 id and patch title. This is what I
-wrote:
-
-This patch is to the fix the recent runtime bug in kernel reported by 
-<fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>. The bug was exposed by commit b951f9dc,
-"Enabling OF selftest to run without machine's devicetree" and is
-exposed when CONFIG_OF_SELFTEST is enabled and CONFIG_SYSFS is
-disabled.
-
-> ---
->  drivers/of/base.c    |   12 ++++++++++++
->  drivers/of/dynamic.c |    3 +++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d8574ad..acadc72 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -138,6 +138,9 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
->  	/* Important: Don't leak passwords */
->  	bool secure = strncmp(pp->name, "security-", 9) == 0;
->  
-> +	if (!IS_ENABLED(CONFIG_SYSFS))
-> +		return 0;
-> +
->  	if (!of_kset || !of_node_is_attached(np))
->  		return 0;
->  
-> @@ -158,6 +161,9 @@ int __of_attach_node_sysfs(struct device_node *np)
->  	struct property *pp;
->  	int rc;
->  
-> +	if (!IS_ENABLED(CONFIG_SYSFS))
-> +		return 0;
-> +
->  	if (!of_kset)
->  		return 0;
->  
-> @@ -1713,6 +1719,9 @@ int __of_remove_property(struct device_node *np, struct property *prop)
->  
->  void __of_remove_property_sysfs(struct device_node *np, struct property *prop)
->  {
-> +	if (!IS_ENABLED(CONFIG_SYSFS))
-> +		return;
-> +
->  	/* at early boot, bail here and defer setup to of_init() */
->  	if (of_kset && of_node_is_attached(np))
->  		sysfs_remove_bin_file(&np->kobj, &prop->attr);
-> @@ -1777,6 +1786,9 @@ int __of_update_property(struct device_node *np, struct property *newprop,
->  void __of_update_property_sysfs(struct device_node *np, struct property *newprop,
->  		struct property *oldprop)
->  {
-> +	if (!IS_ENABLED(CONFIG_SYSFS))
-> +		return;
-> +
->  	/* At early boot, bail out and defer setup to of_init() */
->  	if (!of_kset)
->  		return;
-> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> index 54fecc4..f297891 100644
-> --- a/drivers/of/dynamic.c
-> +++ b/drivers/of/dynamic.c
-> @@ -45,6 +45,9 @@ void __of_detach_node_sysfs(struct device_node *np)
->  {
->  	struct property *pp;
->  
-> +	if (!IS_ENABLED(CONFIG_SYSFS))
-> +		return;
-> +
->  	BUG_ON(!of_node_is_initialized(np));
->  	if (!of_kset)
->  		return;
-> -- 
-> 1.7.9.5
-> 
-
+/Anders
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
