@@ -1,73 +1,70 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v5 09/11] ARM: at91/dt: define the HLCDC node available on
- sama5d3 SoCs
-Date: Mon,  8 Sep 2014 10:43:40 +0200
-Message-ID: <1410165822-16868-10-git-send-email-boris.brezillon@free-electrons.com>
-References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 3/5] ARM: mvebu: Change vendor prefix for Intersil Corporation to isil
+Date: Mon,  8 Sep 2014 11:19:18 +0200
+Message-ID: <1410167960-554-4-git-send-email-p.zabel@pengutronix.de>
+References: <1410167960-554-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410167960-554-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the HLCDC (HLCD Controller) IP available on some sama5d3 SoCs
-(i.e. sama5d31, sama5d33, sama5d34 and sama5d36) in sama5d3 dtsi file.
+Currently there is a wild mixture of isl, isil, and intersil
+compatibles in the kernel. At this point, changing the vendor
+symbol to the most often used variant, which is equal to the
+NASDAQ symbol, isil, should not hurt.
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sama5d3_lcd.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/armada-370-netgear-rn102.dts | 2 +-
+ arch/arm/boot/dts/armada-370-netgear-rn104.dts | 2 +-
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d3_lcd.dtsi b/arch/arm/boot/dts/sama5d3_lcd.dtsi
-index e7581f6..1874cf7 100644
---- a/arch/arm/boot/dts/sama5d3_lcd.dtsi
-+++ b/arch/arm/boot/dts/sama5d3_lcd.dtsi
-@@ -166,6 +166,34 @@
- 				};
- 			};
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn102.dts b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+index d6d572e..edc381c 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn102.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn102.dts
+@@ -122,7 +122,7 @@
+ 				status = "okay";
  
-+			hlcdc: hlcdc@f0030000 {
-+				compatible = "atmel,sama5d3-hlcdc";
-+				reg = <0xf0030000 0x2000>;
-+				clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
-+				clock-names = "periph_clk","sys_clk", "slow_clk";
-+				status = "disabled";
-+
-+				hlcdc-display-controller {
-+					compatible = "atmel,hlcdc-display-controller";
-+					interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+						reg = <0>;
-+					};
-+				};
-+
-+				hlcdc_pwm: hlcdc-pwm {
-+					compatible = "atmel,hlcdc-pwm";
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pinctrl_lcd_pwm>;
-+					#pwm-cells = <3>;
-+				};
-+			};
-+
- 			pmc: pmc@fffffc00 {
- 				periphck {
- 					lcdc_clk: lcdc_clk {
+ 				isl12057: isl12057@68 {
+-					compatible = "isl,isl12057";
++					compatible = "isil,isl12057";
+ 					reg = <0x68>;
+ 				};
+ 
+diff --git a/arch/arm/boot/dts/armada-370-netgear-rn104.dts b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+index c5fe8b5..7367b4c 100644
+--- a/arch/arm/boot/dts/armada-370-netgear-rn104.dts
++++ b/arch/arm/boot/dts/armada-370-netgear-rn104.dts
+@@ -117,7 +117,7 @@
+ 				status = "okay";
+ 
+ 				isl12057: isl12057@68 {
+-					compatible = "isl,isl12057";
++					compatible = "isil,isl12057";
+ 					reg = <0x68>;
+ 				};
+ 
+diff --git a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+index 0cf999a..252def8 100644
+--- a/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
++++ b/arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
+@@ -174,7 +174,7 @@
+ 				status = "okay";
+ 
+ 				isl12057: isl12057@68 {
+-					compatible = "isl,isl12057";
++					compatible = "isil,isl12057";
+ 					reg = <0x68>;
+ 				};
+ 
 -- 
-1.9.1
+2.1.0.rc1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
