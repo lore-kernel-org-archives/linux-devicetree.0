@@ -1,122 +1,127 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v10 00/10] Support for creating generic PCI host bridges from
- DT
-Date: Mon,  8 Sep 2014 14:54:22 +0100
-Message-ID: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+From: Liviu Dudau <liviu@dudau.co.uk>
+Subject: Re: [PATCH v6 0/4] APM X-Gene PCIe host controller
+Date: Mon, 8 Sep 2014 14:59:18 +0100
+Message-ID: <20140908135918.GA1296@bart.dudau.co.uk>
+References: <1409963143-11951-1-git-send-email-tinamdar@apm.com>
+ <CAErSpo643rAAqR0AAy5CwSkMv28Cw8Y55EYrYo0AHvQZxgvgXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arch <linux-arch@vger.kernel.org>, Sinan Kaya <okaya@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, Device Tree ML <devicetree@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAErSpo643rAAqR0AAy5CwSkMv28Cw8Y55EYrYo0AHvQZxgvgXg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Tanmay Inamdar <tinamdar@apm.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-This is my version 10 of the attempt at adding support for generic PCI host
-bridge controllers that make use of device tree information to
-configure themselves. This version reverses v9's attempt to create one function
-to drive the whole process of extracting the host bridge ranges, setup the
-host bridge driver and then scan the root bus behind the host bridge. While it
-would've been quite user friendly, I agree that it would've caused a lot of pain
-in the future.
+On Sat, Sep 06, 2014 at 08:17:43AM -0600, Bjorn Helgaas wrote:
+> On Fri, Sep 5, 2014 at 6:25 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
+> > This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+> > driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+> > cards.
+> >
+> > X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
+> > Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
+> > support for creating generic pcie bridge from device tree. Liviu's patches
+> > are available here
+> > 1. https://lkml.org/lkml/2014/8/12/361
+> 
+> I'm hoping to merge Liviu's patches and this X-Gene support for v3.18.
+> I'm currently waiting for Liviu's v10 series (hopefully based on
+> v3.17-rc2), and since your series depends on that, I'm going to wait
+> for a v7 of your series that is rebased on top of Liviu's v10.  Does
+> that make sense?
 
-I would like to get ACKs for the remaining patches as I would like to integrate
-this into -next in the following week.
+Hi Bjorn,
 
-This version marks an implementation break with the previous versions as
-of_create_pci_host_bridge() is now gone. It gets replaced by
-of_pci_get_host_bridge_resources() that only parses the DT and extracts the
-relevant ranges and converts them to resources. The updated host bridge drivers
-will have to follow the guidelines in this example code:
+I've sent v10 based on v3.17-rc4, hope this is OK.
 
-static int foohb_probe(struct platform_device *pdev)
-{
-	struct device_node *dn = pdev->dev.of_node;
-	struct foohb_drv *drv;
-	resource_size_t io_base = 0;  /* phys address for start of IO */
-	struct pci_bus *bus;
-	int err = 0;
-	LIST_HEAD(res);
-
-	.....
-	err = of_pci_get_host_bridge_resources(dn, 0, 255, &res, &io_base);
-	if (err)
-		goto err_handling;
-	err = foohb_setup(drv, ...., &res, &io_base);
-	if (err)
-		goto err_handling;
-	.....
-	pci_add_flags(....);
-	bus = pci_scan_root_bus(&pdev->dev, 0, &foohb_ops, drv, &res);
-	if (!bus)
-		goto err_handling;
-	....
-	return 0;
-
-err_handling:
-	......
-	return err;
-}
-
-Changes from v9:
- - Moved the DT parsing and assigning of IRQ patch from this series into arm64
-   specific patch. This keeps existing pcibios_add_device() unchanged and adds
-   an arch-specific version that can later be expanded to cater for dma_ops.
- - Incorporated the fix for users of of_pci_range_to_resources() into the patch
-   that changes the behaviour for easier bisection.
- - Added fixes for tegra and rcar host drivers in their usage of
-   of_pci_range_to_resources()
- - Broke up of_create_pci_host_bridge() to remove the callback function. The
-   function left has been renamed into of_pci_get_host_bridge_resources(). The
-   added benefit of that is that the architectural hook for fixing up host bridge
-   resources now dissappears.
- - Reshuffled the way pgprot_device gets introduced. It is now part of the patch
-   that adds pci_remap_iospace() function. The arm64 specific override is moved
-   into the arm64 patchset.
- - Added a patch to pci_scan_root_bus() to assign unassigned resources if PCI
-   flags are not PCI_PROBE_ONLY
-
-v9 thread here, with links to previous threads: https://lkml.org/lkml/2014/8/12/361
+Tanmay, unfortunately the API has changed again. I've put in the cover letter
+of the series how the probe function needs changing. Basically, you need to
+stop relying on the host bridge being created and use just the resource list
+coming out of the of_pci_get_host_bridge_resources().
 
 Best regards,
 Liviu
 
-Liviu Dudau (10):
-  Fix ioport_map() for !CONFIG_GENERIC_IOMAP cases.
-  PCI: Introduce helper functions to deal with PCI I/O ranges.
-  ARM: Define PCI_IOBASE as the base of virtual PCI IO space.
-  PCI: OF: Fix the conversion of IO ranges into IO resources.
-  PCI: Create pci_host_bridge before its associated bus in
-    pci_create_root_bus.
-  PCI: Introduce generic domain handling for PCI busses.
-  OF: Introduce helper function for getting PCI domain_nr
-  OF: PCI: Add support for parsing PCI host bridge resources from DT
-  PCI: Assign unassigned bus resources in pci_scan_root_bus()
-  PCI: Introduce pci_remap_iospace() for remapping PCI I/O bus resources
-    into CPU space
-
- arch/arm/include/asm/io.h         |   1 +
- arch/arm/mach-integrator/pci_v3.c |  23 +++---
- drivers/of/address.c              | 146 ++++++++++++++++++++++++++++++++++++++
- drivers/of/of_pci.c               | 136 +++++++++++++++++++++++++++++++++++
- drivers/pci/host/pci-tegra.c      |  10 ++-
- drivers/pci/host/pcie-rcar.c      |  21 ++++--
- drivers/pci/pci.c                 |  33 +++++++++
- drivers/pci/probe.c               |  46 +++++++-----
- include/asm-generic/io.h          |   2 +-
- include/asm-generic/pgtable.h     |   4 ++
- include/linux/of_address.h        |  15 ++--
- include/linux/of_pci.h            |  18 +++++
- include/linux/pci.h               |  24 +++++++
- 13 files changed, 429 insertions(+), 50 deletions(-)
+> 
+> > If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
+> > patches from Liviu must be applied before the patches in this patch set. Also
+> > please use latest xgene u-boot firmware.
+> >
+> > changes since V5:
+> > 1. Port driver to changed interface of 'of_create_pci_host_bridge'
+> > 2. Fix the prefetch bit setting
+> > 3. Removed bunch of register programming which is already done by firmware
+> >
+> > changes since V4:
+> > 1. fix section mismatch warnings
+> > 2. fix the patch description
+> > 3. fix indentation
+> > 4. update read/write cfg functions by passing both addr and offset.
+> > 5. use 'time_before' for timeout.
+> > 6. remove unnecessary 'IS_ERR_OR_NULL'. Keep 'IS_ERR' for 'clk_get'
+> > 7. remove BUG_ON for pci_ioremap_io.
+> >
+> > changes since V3:
+> > 1. remove 'struct hw_pci' and supporting ops in hw_pci
+> > 2. add code to create the host bridge from dts
+> > 3. add code to scan the the host bridge
+> > 4. modify outbound windows setup function to get resource information from
+> >    'bridge->windows'
+> > 5. add compatible string in pcie dts node with current X-Gene SOC name.
+> >
+> > changes since V2:
+> > 1. redefined each PCI port in different PCI domain correctly.
+> > 2. removed setup_lane and setup_link functions from driver.
+> > 3. removed scan_bus wrapper and set_primary_bus hack.
+> > 4. added pci_ioremap_io for io resources.
+> >
+> > changes since V1:
+> > 1. added PCI domain support
+> > 2. reading cpu and pci addresses from device tree to configure regions.
+> > 3. got rid of unnecessary wrappers for readl and writel.
+> > 4. got rid of endpoint configuration code.
+> > 5. added 'dma-ranges' property support to read inbound region configuration.
+> > 6. renamed host driver file to 'pci-xgene.c' from 'pcie-xgene.c'
+> > 7. dropped 'clock-names' property from bindings
+> > 8. added comments whereever requested.
+> >
+> > Tanmay Inamdar (4):
+> >   pci:host: APM X-Gene PCIe controller driver
+> >   arm64: dts: APM X-Gene PCIe device tree nodes
+> >   dt-bindings: pci: xgene pcie device tree bindings
+> >   MAINTAINERS: entry for APM X-Gene PCIe host driver
+> >
+> >  .../devicetree/bindings/pci/xgene-pci.txt          |  55 ++
+> >  MAINTAINERS                                        |   8 +
+> >  arch/arm64/boot/dts/apm-mustang.dts                |   8 +
+> >  arch/arm64/boot/dts/apm-storm.dtsi                 | 160 ++++++
+> >  drivers/pci/host/Kconfig                           |  10 +
+> >  drivers/pci/host/Makefile                          |   1 +
+> >  drivers/pci/host/pci-xgene.c                       | 638 +++++++++++++++++++++
+> >  7 files changed, 880 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
+> >  create mode 100644 drivers/pci/host/pci-xgene.c
+> >
+> > --
+> > 1.9.1
+> >
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 -- 
-2.0.4
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
+
+ One small step
+   for me ...
+
