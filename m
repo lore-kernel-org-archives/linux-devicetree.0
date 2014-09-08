@@ -1,115 +1,213 @@
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Subject: Re: [PATCH v3 0/9] Tegra xHCI support
-Date: Mon, 8 Sep 2014 17:34:37 +0200
-Message-ID: <CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>
-References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V2 3/3] mfd: palmas: Add support for optional wakeup
+Date: Mon, 8 Sep 2014 10:41:09 -0500
+Message-ID: <20140908154109.GA12336@kahuna>
+References: <1409950311-25236-1-git-send-email-nm@ti.com>
+ <1409950311-25236-4-git-send-email-nm@ti.com>
+ <alpine.DEB.2.10.1409052311210.5472@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.10.1409052311210.5472@nanos>
+Sender: linux-omap-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Mark Brown <broonie@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2 September 2014 23:34, Andrew Bresticker <abrestic@chromium.org> wrote:
->
-> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
-> USB3.0 memory sticks and ethernet dongles using controller firmware
-> recently posted by Andrew Chew [2].
+On 23:13-20140905, Thomas Gleixner wrote:
+> On Fri, 5 Sep 2014, Nishanth Menon wrote:
+> > +	if (!palmas->wakeirq)
+> > +		goto no_wake_irq;
+> > +
+> > +	ret = devm_request_irq(palmas->dev, palmas->wakeirq,
+> > +			       palmas_wake_irq,
+> > +			       IRQF_ONESHOT | pdata->irq_flags,
+> 
+> Why is this marked IRQF_ONESHOT?
 
-I have had mixed results when testing this on a Jetson TK1 board. Of 8
-USB devices I tested with, about half where probed correctly, but the
-other half repeatedly fail in hub_port_init because in the GET_STATUS
-right after the reset, the C_PORT_CONNECTION bit is set.
+Uggh.. should have dropped it. my bad.. removed in the revision below.
+Thanks for catching it.
+> 
+> > +			       dev_name(palmas->dev),
+> > +			       &palmas);
+> > +	if (ret < 0)
+> > +		goto err_i2c;
+> 
+> Why err and not doing the obvious clearing of palmas->wakeirq and
+> keep at least the i2c functional?
+Hmmm.. true.. we can stay alive even though without wakeup capability if
+someone messes up configuration..
 
-I don't see any correlation between the failure and the kind of usb
-device, but I don't have much experience with USB implementations
-either.
+Fixed version below. Let me know if you are ok with the following.
+----8<----
+>From 6da58ac66eedea46cf7282c6644c76c8f328f5ee Mon Sep 17 00:00:00 2001
+From: Nishanth Menon <nm@ti.com>
+Date: Tue, 12 Aug 2014 12:00:52 -0500
+Subject: [PATCH V3 3/3] mfd: palmas: Add support for optional wakeup
 
+With the recent pinctrl-single changes, omaps can treat wake-up events
+from deeper power  states as interrupts.
+
+This is to handle the case where the system needs two interrupt
+sources when SoC is in deep sleep(1 to exit from deep power mode such
+as sleep, and other from the module handling the actual event during
+system active state). This is not the same as threaded interrupts as the
+wakeup interrupt source is used only as part of deeper power saving
+mode.
+
+Let's add support for the optional second interrupt for wake-up
+events. And then SoC can wakeup and handle the event using it's
+regular handler.
+
+This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
+support for optional wake-up")
+
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ drivers/mfd/palmas.c       |   62 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/palmas.h |    2 ++
+ 2 files changed, 64 insertions(+)
+
+diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
+index 28cb048..de7d204 100644
+--- a/drivers/mfd/palmas.c
++++ b/drivers/mfd/palmas.c
+@@ -24,6 +24,7 @@
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/palmas.h>
+ #include <linux/of_device.h>
++#include <linux/of_irq.h>
+ 
+ static const struct regmap_config palmas_regmap_config[PALMAS_NUM_CLIENTS] = {
+ 	{
+@@ -326,6 +327,16 @@ static struct regmap_irq_chip tps65917_irq_chip = {
+ 			PALMAS_INT1_MASK),
+ };
+ 
++static irqreturn_t palmas_wake_irq(int irq, void *_palmas)
++{
++	/*
++	 * Return Not handled so that interrupt is disabled.
++	 * Level event ensures that the event is eventually handled
++	 * by the appropriate chip handler already registered
++	 */
++	return IRQ_NONE;
++}
++
+ int palmas_ext_control_req_config(struct palmas *palmas,
+ 	enum palmas_external_requestor_id id,  int ext_ctrl, bool enable)
+ {
+@@ -409,6 +420,7 @@ static void palmas_dt_to_pdata(struct i2c_client *i2c,
+ 		pdata->mux_from_pdata = 1;
+ 		pdata->pad2 = prop;
+ 	}
++	pdata->wakeirq = irq_of_parse_and_map(node, 1);
+ 
+ 	/* The default for this register is all masked */
+ 	ret = of_property_read_u32(node, "ti,power-ctrl", &prop);
+@@ -521,6 +533,7 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
+ 	i2c_set_clientdata(i2c, palmas);
+ 	palmas->dev = &i2c->dev;
+ 	palmas->irq = i2c->irq;
++	palmas->wakeirq = pdata->wakeirq;
+ 
+ 	match = of_match_device(of_palmas_match_tbl, &i2c->dev);
+ 
+@@ -587,6 +600,25 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
+ 	if (ret < 0)
+ 		goto err_i2c;
+ 
++	if (!palmas->wakeirq)
++		goto no_wake_irq;
++
++	ret = devm_request_irq(palmas->dev, palmas->wakeirq,
++			       palmas_wake_irq,
++			       pdata->irq_flags,
++			       dev_name(palmas->dev),
++			       &palmas);
++	if (ret < 0) {
++		dev_err(palmas->dev, "Invalid wakeirq(%d) (res: %d), skiping\n",
++			palmas->wakeirq, ret);
++		palmas->wakeirq = 0;
++	} else {
++		/* We use wakeirq only during suspend-resume path */
++		device_set_wakeup_capable(palmas->dev, true);
++		disable_irq_nosync(palmas->wakeirq);
++	}
++
++no_wake_irq:
+ no_irq:
+ 	slave = PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
+ 	addr = PALMAS_BASE_TO_REG(PALMAS_PU_PD_OD_BASE,
+@@ -706,6 +738,34 @@ static int palmas_i2c_remove(struct i2c_client *i2c)
+ 	return 0;
+ }
+ 
++static int palmas_i2c_suspend(struct i2c_client *i2c,  pm_message_t mesg)
++{
++	struct palmas *palmas = i2c_get_clientdata(i2c);
++	struct device *dev = &i2c->dev;
++
++	if (!palmas->wakeirq)
++		return 0;
++
++	if (device_may_wakeup(dev))
++		enable_irq(palmas->wakeirq);
++
++	return 0;
++}
++
++static int palmas_i2c_resume(struct i2c_client *i2c)
++{
++	struct palmas *palmas = i2c_get_clientdata(i2c);
++	struct device *dev = &i2c->dev;
++
++	if (!palmas->wakeirq)
++		return 0;
++
++	if (device_may_wakeup(dev))
++		disable_irq_nosync(palmas->wakeirq);
++
++	return 0;
++}
++
+ static const struct i2c_device_id palmas_i2c_id[] = {
+ 	{ "palmas", },
+ 	{ "twl6035", },
+@@ -721,6 +781,8 @@ static struct i2c_driver palmas_i2c_driver = {
+ 		   .of_match_table = of_palmas_match_tbl,
+ 		   .owner = THIS_MODULE,
+ 	},
++	.suspend = palmas_i2c_suspend,
++	.resume = palmas_i2c_resume,
+ 	.probe = palmas_i2c_probe,
+ 	.remove = palmas_i2c_remove,
+ 	.id_table = palmas_i2c_id,
+diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+index fb0390a..e8cf4c2 100644
+--- a/include/linux/mfd/palmas.h
++++ b/include/linux/mfd/palmas.h
+@@ -75,6 +75,7 @@ struct palmas {
+ 	/* IRQ Data */
+ 	int irq;
+ 	u32 irq_mask;
++	int wakeirq;
+ 	struct mutex irq_lock;
+ 	struct regmap_irq_chip_data *irq_data;
+ 
+@@ -377,6 +378,7 @@ struct palmas_clk_platform_data {
+ 
+ struct palmas_platform_data {
+ 	int irq_flags;
++	int wakeirq;
+ 	int gpio_base;
+ 
+ 	/* bit value to be loaded to the POWER_CTRL register */
+-- 
+1.7.9.5
+
+
+-- 
 Regards,
-
-Tomeu
-
-> Notes:
->  - HSIC support is mostly untested and I think there are still some issues
->    to work out there.  I do have a Tegra124 board with a HSIC hub so I'll
->    try to sort those out later.
->  - The XUSB padctl driver doesn't play nice with the existing Tegra USB2.0
->    PHY driver, so all ports should be assigned to the XHCI controller.
->
-> Based on work by:
->   a lot of people, but from what I can tell from the L4T tree [3], the
->   original authors of the Tegra xHCI driver are:
->     Ajay Gupta <ajayg@nvidia.com>
->     Bharath Yadav <byadav@nvidia.com>
->
-> Chagnes from v2:
->  - Dropped mailbox channel specifier.  The mailbox driver allocates virtual
->    channels backed by the single physical channel.
->  - Added support for HS_CURR_LEVEL adjustment pinconfig property, which
->    will be required for the Blaze board.
->  - Addressed Stephen's review comments.
->
-> Changes from v1:
->  - Converted mailbox driver to use the common mailbox framework.
->  - Fixed up host driver so that it can now be built and used as a module.
->  - Addressed Stephen's review comments.
->  - Misc. cleanups.
->
-> Changes from RFC:
->  - Dropped Tegra114 support.
->  - Split out mailbox into separate driver.
->  - Stopped using child xhci-plat device in xHCI host-controller driver.
->  - Added PHY support to Thierry's XUSB padctl driver instead of in a separate
->    USB PHY driver.
->  - Added Jetson TK1 support.
->  - Misc. cleanups.
->
-> [0] https://lkml.org/lkml/2014/8/1/200
-> [1] https://lkml.org/lkml/2014/8/18/504
-> [2] https://patchwork.ozlabs.org/patch/384013/
-> [3] git://nv-tegra.nvidia.com/linux-3.10.git
->
-> Andrew Bresticker (9):
->   of: Add NVIDIA Tegra XUSB mailbox binding
->   mailbox: Add NVIDIA Tegra XUSB mailbox driver
->   of: Update Tegra XUSB pad controller binding for USB
->   pinctrl: tegra-xusb: Add USB PHY support
->   of: Add NVIDIA Tegra xHCI controller binding
->   usb: xhci: Add NVIDIA Tegra xHCI host-controller driver
->   ARM: tegra: Add Tegra124 XUSB mailbox and xHCI controller
->   ARM: tegra: jetson-tk1: Add xHCI support
->   ARM: tegra: venice2: Add xHCI support
->
->  .../bindings/mailbox/nvidia,tegra124-xusb-mbox.txt |   32 +
->  .../pinctrl/nvidia,tegra124-xusb-padctl.txt        |   56 +-
->  .../bindings/usb/nvidia,tegra124-xhci.txt          |  104 ++
->  arch/arm/boot/dts/tegra124-jetson-tk1.dts          |   48 +-
->  arch/arm/boot/dts/tegra124-venice2.dts             |   79 +-
->  arch/arm/boot/dts/tegra124.dtsi                    |   41 +
->  drivers/mailbox/Kconfig                            |    3 +
->  drivers/mailbox/Makefile                           |    2 +
->  drivers/mailbox/tegra-xusb-mailbox.c               |  290 +++++
->  drivers/pinctrl/Kconfig                            |    1 +
->  drivers/pinctrl/pinctrl-tegra-xusb.c               | 1233 +++++++++++++++++++-
->  drivers/usb/host/Kconfig                           |    9 +
->  drivers/usb/host/Makefile                          |    1 +
->  drivers/usb/host/xhci-tegra.c                      |  905 ++++++++++++++
->  include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h   |   20 +
->  include/soc/tegra/xusb.h                           |   53 +
->  16 files changed, 2796 insertions(+), 81 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/nvidia,tegra124-xusb-mbox.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
->  create mode 100644 drivers/mailbox/tegra-xusb-mailbox.c
->  create mode 100644 drivers/usb/host/xhci-tegra.c
->  create mode 100644 include/soc/tegra/xusb.h
->
-> --
-> 2.1.0.rc2.206.gedb03e5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Nishanth Menon
