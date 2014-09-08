@@ -1,30 +1,52 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 0/6] Change vendor prefix for Intersil Corporation
-Date: Mon, 08 Sep 2014 11:20:34 +0200
-Message-ID: <1410168034.3981.22.camel@paszta.hi.pengutronix.de>
-References: <1408524184-31928-1-git-send-email-p.zabel@pengutronix.de>
-	 <20140820121643.GU12769@titan.lakedaemon.net>
-	 <20140907133218.GA30828@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v4 5/5] DT: Add binding for Altera SOCFPGA FPGA Manager
+Date: Mon,  8 Sep 2014 11:29:11 +0200
+Message-ID: <1410168551-6588-6-git-send-email-s.trumtrar@pengutronix.de>
+References: <1410168551-6588-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140907133218.GA30828-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+In-Reply-To: <1410168551-6588-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+To: barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+Altera SOCFPGA have a FPGA Manager, that manages and monitors the FPGA portion
+of the SoC.
 
-Am Sonntag, den 07.09.2014, 09:32 -0400 schrieb Jason Cooper:
-> Just to dot our i's and cross our t's, would you mind sending out a
-> non-rfc version of this series?
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ .../bindings/firmware/altr,socfpga-fpga-mgr.txt       | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/altr,socfpga-fpga-mgr.txt
 
-Thank you for the reminder, I have sent an updated version.
-
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/firmware/altr,socfpga-fpga-mgr.txt b/Documentation/devicetree/bindings/firmware/altr,socfpga-fpga-mgr.txt
+new file mode 100644
+index 000000000000..70ec4abf25b4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/altr,socfpga-fpga-mgr.txt
+@@ -0,0 +1,19 @@
++Altera SOCFPGA FPGA Manager
++---------------------------
++
++This binding defines the FPGA Manager on Altera SOCFPGAs. This is used to upload
++the firmware to the FPGA part of the SoC.
++
++Required properties:
++- compatible: shall be "altr,socfpga-fpga-mgr"
++- reg: Must contain 2 register ranges:
++	1. The control address space of the FPGA manager.
++	2. The configuration data address space where the firmware data is written to.
++
++Example:
++
++	fpgamgr@ff706000 {
++		compatible = "altr,socfpga-fpga-mgr";
++		reg = <0xff706000 0x1000>,
++		      <0xffb90000 0x1000>;
++	};
+-- 
+2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
