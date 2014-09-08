@@ -1,107 +1,137 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] RFC: add function for localbus address
-Date: Mon, 08 Sep 2014 13:22:44 -0700
-Message-ID: <540E1014.8090102@codeaurora.org>
-References: <20140729234522.E9FF1C40738@trevor.secretlab.ca>	<1409672700-21697-1-git-send-email-svarbanov@mm-sol.com> <20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: Re: [PATCH 5/7 v6] ARM: l2c: parse 'cache-size' and 'cache-sets'
+ properties
+Date: Mon, 08 Sep 2014 13:33:39 -0700
+Message-ID: <540E12A3.2080705@openwrt.org>
+References: <1410176286-32533-1-git-send-email-linus.walleij@linaro.org> <4685530.jbNLD4yaA8@wuerfel> <CACRpkdb_bS0P-fGxogiyCzG9CRPhJK1Gro=H3X1Ks_-UoXh52w@mail.gmail.com> <3479071.8nx1ubr8a9@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <3479071.8nx1ubr8a9@wuerfel>
+Sender: linux-leds-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh@kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding Mark Brown who finished off introducing IORESOURCE_REG.
+On 09/08/2014 06:16 AM, Arnd Bergmann wrote:
+> On Monday 08 September 2014 14:36:48 Linus Walleij wrote:
+>> On Mon, Sep 8, 2014 at 2:20 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> On Monday 08 September 2014 13:38:04 Linus Walleij wrote:
+>>>> +       of_property_read_u32(np, "cache-size", &size);
+>>>> +       of_property_read_u32(np, "cache-sets", &sets);
+>>>> +
+>>>> +       if (!size || !sets)
+>>>> +               return;
+>>>> +
+>>>> +       way_size =3D size / sets;
+>>>
+>>> Going back to this one: Isn't (size / sets) the set-size rather
+>>> than the way-size?
+>>>
+>>> After we discussed this on IRC, I had expected a calculation like
+>>>
+>>>         set_size =3D size / sets;
+>>>         ways =3D set_size / line_size;
+>>>         way_size =3D size / ways;
+>>
+>> First: in this PB1176 case:
+>>
+>> set_size =3D 128K/8 =3D 16K
+>> ways =3D 16K/32 =3D 512 bytes
+>> way_size =3D 128K/512 =3D 128 bytes
+>=20
+> I guess we should first try to find the right units so we know what
+> we are talking about. I was under the impression that the set size
+> is the number of bytes in a set, while 'ways' is counting the
+> associativity and has no unit.
 
-On 09/08/14 07:52, Grant Likely wrote:
-> On Tue,  2 Sep 2014 18:45:00 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
->> +
->>  unsigned long __weak pci_address_to_pio(phys_addr_t address)
->>  {
->>  	if (address > IO_SPACE_LIMIT)
->> @@ -665,6 +691,29 @@ int of_address_to_resource(struct device_node *dev, int index,
->>  }
->>  EXPORT_SYMBOL_GPL(of_address_to_resource);
->>  
->> +int of_localbus_address_to_resource(struct device_node *dev, int index,
->> +				    struct resource *r)
->> +{
->> +	const char *name = NULL;
->> +	const __be32 *addrp;
->> +	u64 size;
->> +
->> +	addrp = of_get_localbus_address(dev, index, &size);
->> +	if (!addrp)
->> +		return -EINVAL;
->> +
->> +	of_property_read_string_index(dev, "reg-names", index, &name);
->> +
->> +	memset(r, 0, sizeof(*r));
->> +	r->start = be32_to_cpup(addrp);
->> +	r->end = r->start + size - 1;
->> +	r->flags = IORESOURCE_REG;
-> This is problematic. A resource is created, but there is absolutely no
-> indication that the resource represents a localbus address instead of a
-> CPU address. platform_device reg resources represent CPU addresses.
-> Trying to overload it will cause confusion in drivers.
->
->> +	r->name = name ? name : dev->full_name;
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(of_localbus_address_to_resource);
->> +
->>  struct device_node *of_find_matching_node_by_address(struct device_node *from,
->>  					const struct of_device_id *matches,
->>  					u64 base_address)
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index 0197725..36dcbd7 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -106,8 +106,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
->>  				  struct device *parent)
->>  {
->>  	struct platform_device *dev;
->> -	int rc, i, num_reg = 0, num_irq;
->> +	int rc, i, num_reg = 0, num_localbus_reg = 0, num_irq;
->>  	struct resource *res, temp_res;
->> +	int num_resources;
->>  
->>  	dev = platform_device_alloc("", -1);
->>  	if (!dev)
->> @@ -116,22 +117,33 @@ struct platform_device *of_device_alloc(struct device_node *np,
->>  	/* count the io and irq resources */
->>  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
->>  		num_reg++;
->> +
->> +	while (of_localbus_address_to_resource(np,
->> +					num_localbus_reg, &temp_res) == 0)
->> +		num_localbus_reg++;
->> +
-> No, I don't support doing this. The moment a platform_driver depends on
-> a local bus address it is doing something special. It needs to decode
-> its own address in that case, which it can easily do.
->
-> Any platform_driver that interprets a IORESOURCE_REG as a localbus
-> address instead of a CPU address is *BROKEN*. It should be changed to
-> either decode the address itself, of a new bus type should be created
-> that can make its own decisions about what address resources mean.
+I agree with that.
 
-Where is this described? From the commit text that introduces
-IORESOURCE_REG I see:
+>=20
+> The last line also seems to incorrectly computed. Dividing 128KB
+> by 512 bytes should be 256 (no unit).
+>=20
+>> Well maybe it's the ARM reference manual internal lingo that
+>> is actually causing the confusion here. It will say something
+>> like:
+>>
+>> [19:17] Way-size 3=E2=80=99b000 =3D Reserved, internally mapped to 1=
+6KB
+>> 3=E2=80=99b001 =3D 16KB, this is the default value
+>> 3=E2=80=99b010 =3D 32KB
+>> 3=E2=80=99b011 =3D 64KB
+>> 3=E2=80=99b100 =3D 128KB
+>> 3=E2=80=99b101 =3D 256KB
+>> 3=E2=80=99b110 to 3=E2=80=99b111 =3D Reserved, internally mapped to =
+256 KB
+>>
+>> OK way-size ... is in the 16 thru 256KB range, which fits nicely
+>> with set size incidentally. And also corresponds to current
+>> comments in the code such as this from
+>> arch/arm/mach-realview/realview_pb1176.c:
+>>
+>> #ifdef CONFIG_CACHE_L2X0
+>>         /*
+>>          * The PL220 needs to be manually configured as the hardware
+>>          * doesn't report the correct sizes.
+>>          * 128kB (16kB/way), 8-way associativity, event monitor and
+>>          * parity enabled, ignore share bit, no force write allocate
+>>          * Bits:  .... ...0 0111 0011 0000 .... .... ....
+>>          */
+>>         l2x0_init(__io_address(REALVIEW_PB1176_L220_BASE), 0x0073000=
+0,
+>> 0xfe000fff);
+>> #endif
+>=20
+> 16KB way-size seems realistic, yes.
+>=20
+>> I can add a comment explaining that ARMs terminology does
+>> not match the academic terminology or something, and say that
+>> the thing we poke into "way-size" is actually "set size", if we agre=
+e
+>> that is what we're seeing here.
+>=20
+> Let's see again: 16KB way-size * 8 ways =3D 128KB, that seems correct=
+=2E
+> 16KB way-size / 32B line-size =3D 512 sets, that also seems realistic=
+=2E
+> 128KB cache-size / 512 sets =3D 256B set-size. 256B / 32B =3D 8 ways,
+> so everything fits together.
+>=20
+> Now in the code:
+>=20
+> +      of_property_read_u32(np, "cache-size", &size);
+>=20
+> 131072
+>=20
+> +       of_property_read_u32(np, "cache-sets", &sets);
+>=20
+> 512
+>=20
+> +
+> +       if (!size || !sets)
+> +               return;
+> +
+> +       way_size =3D size / sets;
+>=20
+> 256 -> impossible.
+>=20
+>=20
+>          set_size =3D size / sets;
+>=20
+> 256
+>=20
+>          ways =3D set_size / line_size;
+>=20
+> 8
+>=20
+>          way_size =3D size / ways;
+>=20
+> 16KB -> ok
 
-"Currently a bunch of I2C/SPI MFD drivers are using IORESOURCE_IO for
-register address ranges. Since this causes some confusion due to the
-primary use of this resource type for PCI/ISA I/O ports create a new
-resource type IORESOURCE_REG."
-
-And the comment next to the #define says "Register offsets". I don't see
-anywhere where it mentions these are CPU addresses. Certainly the
-current IORESOURCE_REG users aren't CPU addresses because they're
-SPI/I2C device drivers.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+So what we are missing right now is just a 'cache-line-size' property t=
+o
+get the maths right.
+--
+=46lorian
