@@ -1,127 +1,74 @@
-From: Liviu Dudau <liviu@dudau.co.uk>
-Subject: Re: [PATCH v6 0/4] APM X-Gene PCIe host controller
-Date: Mon, 8 Sep 2014 14:59:18 +0100
-Message-ID: <20140908135918.GA1296@bart.dudau.co.uk>
-References: <1409963143-11951-1-git-send-email-tinamdar@apm.com>
- <CAErSpo643rAAqR0AAy5CwSkMv28Cw8Y55EYrYo0AHvQZxgvgXg@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI domain_nr
+Date: Mon, 8 Sep 2014 09:27:56 -0500
+Message-ID: <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com> <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAErSpo643rAAqR0AAy5CwSkMv28Cw8Y55EYrYo0AHvQZxgvgXg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 06, 2014 at 08:17:43AM -0600, Bjorn Helgaas wrote:
-> On Fri, Sep 5, 2014 at 6:25 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
-> > This patch adds support for AppliedMicro X-Gene PCIe host controller. The
-> > driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
-> > cards.
-> >
-> > X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
-> > Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
-> > support for creating generic pcie bridge from device tree. Liviu's patches
-> > are available here
-> > 1. https://lkml.org/lkml/2014/8/12/361
-> 
-> I'm hoping to merge Liviu's patches and this X-Gene support for v3.18.
-> I'm currently waiting for Liviu's v10 series (hopefully based on
-> v3.17-rc2), and since your series depends on that, I'm going to wait
-> for a v7 of your series that is rebased on top of Liviu's v10.  Does
-> that make sense?
+On Mon, Sep 8, 2014 at 8:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> Add of_pci_get_domain_nr() to retrieve the PCI domain number
+> of a given device from DT. If the information is not present,
+> the function can be requested to allocate a new domain number.
+>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> ---
+>  drivers/of/of_pci.c    | 34 ++++++++++++++++++++++++++++++++++
+>  include/linux/of_pci.h |  7 +++++++
+>  2 files changed, 41 insertions(+)
+>
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index 8481996..a107edb 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -89,6 +89,40 @@ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
+>
+> +static atomic_t of_domain_nr = ATOMIC_INIT(-1);
+> +
+> +/**
+> + * This function will try to obtain the host bridge domain number by
+> + * using of_alias_get_id() call with "pci-domain" as a stem. If that
+> + * fails, a local allocator will be used. The local allocator can
+> + * be requested to return a new domain_nr if the information is missing
+> + * from the device tree.
+> + *
+> + * @node: device tree node with the domain information
+> + * @allocate_if_missing: if DT lacks information about the domain nr,
+> + * allocate a new number.
+> + *
+> + * Returns the associated domain number from DT, or a new domain number
+> + * if DT information is missing and @allocate_if_missing is true. If
+> + * @allocate_if_missing is false then the last allocated domain number
+> + * will be returned.
+> + */
+> +int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
+> +{
+> +       int domain;
+> +
+> +       domain = of_alias_get_id(node, "pci-domain");
+> +       if (domain == -ENODEV) {
+> +               if (allocate_if_missing)
+> +                       domain = atomic_inc_return(&of_domain_nr);
+> +               else
+> +                       domain = atomic_read(&of_domain_nr);
 
-Hi Bjorn,
+This function seems a bit broken to me. It is overloaded with too many
+different outcomes. Think about how this would work if you have
+multiple PCI buses and a mixture of having pci-domain aliases or not.
+Aren't domain numbers global? Allocation should then start outside of
+the range of alias ids.
 
-I've sent v10 based on v3.17-rc4, hope this is OK.
-
-Tanmay, unfortunately the API has changed again. I've put in the cover letter
-of the series how the probe function needs changing. Basically, you need to
-stop relying on the host bridge being created and use just the resource list
-coming out of the of_pci_get_host_bridge_resources().
-
-Best regards,
-Liviu
-
-> 
-> > If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
-> > patches from Liviu must be applied before the patches in this patch set. Also
-> > please use latest xgene u-boot firmware.
-> >
-> > changes since V5:
-> > 1. Port driver to changed interface of 'of_create_pci_host_bridge'
-> > 2. Fix the prefetch bit setting
-> > 3. Removed bunch of register programming which is already done by firmware
-> >
-> > changes since V4:
-> > 1. fix section mismatch warnings
-> > 2. fix the patch description
-> > 3. fix indentation
-> > 4. update read/write cfg functions by passing both addr and offset.
-> > 5. use 'time_before' for timeout.
-> > 6. remove unnecessary 'IS_ERR_OR_NULL'. Keep 'IS_ERR' for 'clk_get'
-> > 7. remove BUG_ON for pci_ioremap_io.
-> >
-> > changes since V3:
-> > 1. remove 'struct hw_pci' and supporting ops in hw_pci
-> > 2. add code to create the host bridge from dts
-> > 3. add code to scan the the host bridge
-> > 4. modify outbound windows setup function to get resource information from
-> >    'bridge->windows'
-> > 5. add compatible string in pcie dts node with current X-Gene SOC name.
-> >
-> > changes since V2:
-> > 1. redefined each PCI port in different PCI domain correctly.
-> > 2. removed setup_lane and setup_link functions from driver.
-> > 3. removed scan_bus wrapper and set_primary_bus hack.
-> > 4. added pci_ioremap_io for io resources.
-> >
-> > changes since V1:
-> > 1. added PCI domain support
-> > 2. reading cpu and pci addresses from device tree to configure regions.
-> > 3. got rid of unnecessary wrappers for readl and writel.
-> > 4. got rid of endpoint configuration code.
-> > 5. added 'dma-ranges' property support to read inbound region configuration.
-> > 6. renamed host driver file to 'pci-xgene.c' from 'pcie-xgene.c'
-> > 7. dropped 'clock-names' property from bindings
-> > 8. added comments whereever requested.
-> >
-> > Tanmay Inamdar (4):
-> >   pci:host: APM X-Gene PCIe controller driver
-> >   arm64: dts: APM X-Gene PCIe device tree nodes
-> >   dt-bindings: pci: xgene pcie device tree bindings
-> >   MAINTAINERS: entry for APM X-Gene PCIe host driver
-> >
-> >  .../devicetree/bindings/pci/xgene-pci.txt          |  55 ++
-> >  MAINTAINERS                                        |   8 +
-> >  arch/arm64/boot/dts/apm-mustang.dts                |   8 +
-> >  arch/arm64/boot/dts/apm-storm.dtsi                 | 160 ++++++
-> >  drivers/pci/host/Kconfig                           |  10 +
-> >  drivers/pci/host/Makefile                          |   1 +
-> >  drivers/pci/host/pci-xgene.c                       | 638 +++++++++++++++++++++
-> >  7 files changed, 880 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
-> >  create mode 100644 drivers/pci/host/pci-xgene.c
-> >
-> > --
-> > 1.9.1
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
--------------------
-   .oooO
-   (   )
-    \ (  Oooo.
-     \_) (   )
-          ) /
-         (_/
-
- One small step
-   for me ...
-
+Rob
