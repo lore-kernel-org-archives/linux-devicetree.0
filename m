@@ -1,42 +1,62 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v9 0/6] Add Maxim 77802 clocks support
-Date: Mon, 8 Sep 2014 08:49:28 +0200
-Message-ID: <CABxcv=mww1wcf+vo5uLxBrNZBVJhj9zvbwGu_oAKXm4XDUNvCQ@mail.gmail.com>
-References: <1408350784-15577-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH 2/6] dts, kbuild: Factor out dtbs install rules to
+ Makefile.dtbinst
+Date: Mon, 8 Sep 2014 09:14:09 +0200
+Message-ID: <20140908071409.GV4703@rric.localhost>
+References: <1409899692-1455-1-git-send-email-rric@kernel.org>
+ <1409899692-1455-3-git-send-email-rric@kernel.org>
+ <CAL_Jsq+NYU9c0Jw8DX_iH6G5_9tom9DGcP548q4tKQsdkb-s0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1408350784-15577-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Doug Anderson <dianders@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+NYU9c0Jw8DX_iH6G5_9tom9DGcP548q4tKQsdkb-s0A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Michal Marek <mmarek@suse.cz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mike,
+On 05.09.14 07:48:30, Rob Herring wrote:
+> On Fri, Sep 5, 2014 at 1:48 AM, Robert Richter <rric@kernel.org> wrote:
+> > From: Robert Richter <rrichter@cavium.com>
+> >
+> > Move dtbs install rules to Makefile.dtbinst. This change is needed to
+> > implement support for dts vendor subdirs. The change makes Makefiles
+> > easier and smaller as no longer the dtbs_install rule needs to be
+> > defined. Another advantage is that install goals are not encoded in
+> > targets anymore (%.dtb_dtbinst_).
+> >
+> > Signed-off-by: Robert Richter <rrichter@cavium.com>
+> > ---
+> >  arch/arm/Makefile            |  6 +++++-
+> >  arch/arm/boot/dts/Makefile   |  2 --
+> >  arch/arm64/Makefile          |  6 +++++-
+> >  arch/arm64/boot/dts/Makefile |  2 --
+> >  scripts/Kbuild.include       |  6 ++++++
+> >  scripts/Makefile.dtbinst     | 38 ++++++++++++++++++++++++++++++++++++++
+> >  scripts/Makefile.lib         | 12 ------------
+> >  7 files changed, 54 insertions(+), 18 deletions(-)
+> >  create mode 100644 scripts/Makefile.dtbinst
+> >
+> > diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> > index 0ce9d0f71f2a..1963d9a9a2c4 100644
+> > --- a/arch/arm/Makefile
+> > +++ b/arch/arm/Makefile
+> > @@ -313,9 +313,13 @@ $(BOOT_TARGETS): vmlinux
+> >         $(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
+> >
+> >  PHONY += dtbs dtbs_install
+> > -dtbs dtbs_install: prepare scripts
+> > +
+> > +dtbs: prepare scripts
+> >         $(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $@
+> >
+> > +dtbs_install:
+> > +       $(Q)$(MAKE) $(dtbinst)=$(boot)/dts MACHINE=$(MACHINE)
+> 
+> Can't you get rid of MACHINE here, too?
 
-On Mon, Aug 18, 2014 at 10:32 AM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
-> This series add support for the clocks present in the Maxim
-> 77802 Power Managment IC. Previously, the series was part
-> of a bigger one [0] that aimed to add support for all the
-> devices in the max77802 PMIC. But now the Maxim 77802 PMIC
-> dependencies were already merged for 3.17 so the series can
-> be split and each driver can go through the relevant tree.
->
+I moved this change to the end of this patch series to let maintainers
+the choise to drop the change if they are not fine with it.
 
-This series was first posted for 3.17 and you acked the whole set but
-it missed 3.17 because had as a dependency some changes in the
-max77802 mfd driver. Those dependencies made for 3.17 and that's why I
-re-posted it for 3.18 about a month ago.
-
-Since we are in 3.17-rc4 already, I'm afraid that this series may miss
-3.18 again, is there anything else you need from me to pick this
-series? It will obviously conflict with Tomeu's "Per-user clock
-constraints" series [0] so if you want I can rebase it on top of your
-clk-next-tomeu-kirkwood-v2 branch [1].
-
-Thanks a lot and best regards,
-Javier
-
-[0]: https://lkml.org/lkml/2014/9/1/466
-[1]: https://git.linaro.org/people/mike.turquette/linux.git/shortlog/refs/heads/clk-next-tomeu-kirkwood-v2
+-Robert
