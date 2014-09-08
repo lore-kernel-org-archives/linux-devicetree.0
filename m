@@ -1,129 +1,97 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI domain_nr
-Date: Mon, 8 Sep 2014 10:27:36 -0500
-Message-ID: <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
- <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com> <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
- <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Mon, 08 Sep 2014 18:30:00 +0300
+Message-ID: <540DCB78.8060206@mm-sol.com>
+References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com> <3495079.hWGRuSPgx7@wuerfel> <540D653E.7070509@mm-sol.com> <3899885.YaIxR1zelv@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3899885.YaIxR1zelv@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collins>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 8, 2014 at 9:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> On Mon, Sep 08, 2014 at 03:27:56PM +0100, Rob Herring wrote:
->> On Mon, Sep 8, 2014 at 8:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
->> > Add of_pci_get_domain_nr() to retrieve the PCI domain number
->> > of a given device from DT. If the information is not present,
->> > the function can be requested to allocate a new domain number.
->> >
->> > Cc: Bjorn Helgaas <bhelgaas@google.com>
->> > Cc: Arnd Bergmann <arnd@arndb.de>
->> > Cc: Grant Likely <grant.likely@linaro.org>
->> > Cc: Rob Herring <robh+dt@kernel.org>
->> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
->> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
->> > ---
->> >  drivers/of/of_pci.c    | 34 ++++++++++++++++++++++++++++++++++
->> >  include/linux/of_pci.h |  7 +++++++
->> >  2 files changed, 41 insertions(+)
->> >
->> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
->> > index 8481996..a107edb 100644
->> > --- a/drivers/of/of_pci.c
->> > +++ b/drivers/of/of_pci.c
->> > @@ -89,6 +89,40 @@ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
->> >  }
->> >  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
->> >
->> > +static atomic_t of_domain_nr = ATOMIC_INIT(-1);
->> > +
->> > +/**
->> > + * This function will try to obtain the host bridge domain number by
->> > + * using of_alias_get_id() call with "pci-domain" as a stem. If that
->> > + * fails, a local allocator will be used. The local allocator can
->> > + * be requested to return a new domain_nr if the information is missing
->> > + * from the device tree.
->> > + *
->> > + * @node: device tree node with the domain information
->> > + * @allocate_if_missing: if DT lacks information about the domain nr,
->> > + * allocate a new number.
->> > + *
->> > + * Returns the associated domain number from DT, or a new domain number
->> > + * if DT information is missing and @allocate_if_missing is true. If
->> > + * @allocate_if_missing is false then the last allocated domain number
->> > + * will be returned.
->> > + */
->> > +int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
->> > +{
->> > +       int domain;
->> > +
->> > +       domain = of_alias_get_id(node, "pci-domain");
->> > +       if (domain == -ENODEV) {
->> > +               if (allocate_if_missing)
->> > +                       domain = atomic_inc_return(&of_domain_nr);
->> > +               else
->> > +                       domain = atomic_read(&of_domain_nr);
+On 09/08/2014 01:19 PM, Arnd Bergmann wrote:
+> On Monday 08 September 2014 11:13:50 Stanimir Varbanov wrote:
+>> On 09/05/2014 03:26 PM, Arnd Bergmann wrote:
+>>> On Friday 05 September 2014 15:14:33 Stanimir Varbanov wrote:
+>>>> +       VADC_CHAN(LR_MUX1_BAT_THERM, 0)                 /* 0x30 */
+>>>> +       VADC_CHAN(LR_MUX2_BAT_ID, 0)
+>>>> +       VADC_CHAN(LR_MUX3_XO_THERM, 0)
+>>>> +       VADC_CHAN(LR_MUX4_AMUX_THM1, 0)
+>>>> +       VADC_CHAN(LR_MUX5_AMUX_THM2,by you  0)
+>>>> +       VADC_CHAN(LR_MUX6_AMUX_THM3, 0)
+>>>> +       VADC_CHAN(LR_MUX7_HW_ID, 0)
+>>>> +       VADC_CHAN(LR_MUX8_AMUX_THM4, 0)
+>>>> +       VADC_CHAN(LR_MUX9_AMUX_THM5, 0)
+>>>> +       VADC_CHAN(AMUX_PU1, 0)
+>>>> +       VADC_CHAN(AMUX_PU2, 0)
+>>>> +       VADC_CHAN(LR_MUX3_BUF_XO_THERM_BUF, 0)          /* 0x3c */
+>>>> +
+>>>> +       VADC_CHAN(LR_MUX1_PU1_BAT_THERM, 0)             /* 0x70 */
+>>>> +       VADC_CHAN(LR_MUX2_PU1_BAT_ID, 0)
+>>>> +       VADC_CHAN(LR_MUX3_PU1_XO_THERM, 0)
+>>>> +       VADC_CHAN(LR_MUX4_PU1_AMUX_THM1, 0)
+>>>> +       VADC_CHAN(LR_MUX5_PU1_AMUX_THM2, 0)
+>>>> +       VADC_CHAN(LR_MUX6_PU1_AMUX_THM3, 0)
+>>>> +       VADC_CHAN(LR_MUX7_PU1_AMUX_HW_ID, 0)
+>>>> +       VADC_CHAN(LR_MUX8_PU1_AMUX_THM4, 0)
+>>>> +       VADC_CHAN(LR_MUX9_PU1_AMUX_THM5, 0)
+>>>> +       VADC_CHAN(LR_MUX10_PU1_AMUX_USB_ID, 0)          /* 0x79 */
+>>>> +       VADC_CHAN(LR_MUX3_BUF_PU1_XO_THERM_BUF, 0)      /* 0x7c */
+>>>>
+>>>
+>>> These numbers all look hardware specific, so why put macros into the
+>>> device tree rather than using them directly?
 >>
->> This function seems a bit broken to me. It is overloaded with too many
->> different outcomes. Think about how this would work if you have
->> multiple PCI buses and a mixture of having pci-domain aliases or not.
->> Aren't domain numbers global? Allocation should then start outside of
->> the range of alias ids.
->>
->> Rob
->>
->
-> Rob,
->
-> Would this version make more sense?
+>> The idea was to use #defines in DT nodes when we need to overwrite the
+>> adc channel parameters, see example in 2/2 how it will be used.
+> 
+> I don't understand. The node in the example has
+> 
+> +               /* Channel node */
+> +               usb_id_nopull@39 {
+> +                       qcom,channel = <VADC_LR_MUX10_USB_ID>;
+> ...
+> +               };
+> 
+> 
+> And VADC_LR_MUX10_USB_ID is defined to 0x39.  How is this helping anything?
+> You just introduce an artificial dependency on the header file, which makes
+> it a mess to merge the patches or do updates, and anybody who needs to
+> make updates to this now has to go through the same pain, to update the
+> dts files, the driver and the binding document in lockstep.
+> 
+> Why not remove the qcom,channel property completely and use a 'reg'
+> property with #address-cells=<1>, #size-cells=<0> and put the number
+> directly in there, with no need for obfuscation macros?
 
-No.
+OK thanks for the remarks. I will fix this mess.
 
-> int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
-> {
->        int domain;
->
->        domain = of_alias_get_id(node, "pci-domain");
->        if (domain == -ENODEV) {
->                if (allocate_if_missing)
->                        domain = atomic_inc_return(&of_domain_nr);
->                else
->                        domain = atomic_read(&of_domain_nr);
->        } else {
->                /* remember the largest value seen */
->                int d = atomic_read(&of_domain_nr);
->                atomic_set(&of_domain_nr, max(domain, d));
->        }
->
->        return domain;
-> }
-> EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
->
-> It would still create gaps and possible duplicates, but this is just a number
-> and trying to create a new root bus in an existing domain should fail. I have
+I hope you are expecting to see this:
 
-Is failure okay in that case?
+pmic_vadc: vadc@3100 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	#io-channel-cells = <1>;
+	io-channel-ranges;
 
-> no clue on how to generate unique values without parsing the DT and filling
-> a sparse array with values found there and then checking for allocated values
+	usb_id_nopull@39 {
+		reg = <0x39>;
+	};
+};
 
-You really only need to know the maximum value and then start the
-non-DT allocations from there.
+and use the vadc channel from usb device node
 
-> on new requests. This function gets called quite a lot and I'm trying not to
-> make it too heavy weight.
+usb {
+	...
+	io-channels = <&pmic_vadc 0x39>;
+	io-channel-names = "usbidnopull";
+};
 
-Generally, nothing should be accessing the same DT value frequently.
-It should get cached somewhere.
 
-I don't really understand how domains are used so it's hard to provide
-a recommendation here. Do domains even belong in the DT? This function
-is just a weird mixture of data retrieval and allocation. I think you
-need to separate it into 2 functions.
-
-Rob
+-- 
+regards,
+Stan
