@@ -1,79 +1,391 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: davinci: support adding delay between
-	transmission
-Date: Mon, 8 Sep 2014 16:30:57 +0300
-Message-ID: <540DAF91.6090002@ti.com>
-References: <1408634706-5762-1-git-send-email-grygorii.strashko@ti.com>
-	<1408634706-5762-3-git-send-email-grygorii.strashko@ti.com>
-	<20140821182035.GM24407@sirena.org.uk> <53F74695.3010902@ti.com>
-	<20140822150644.GX24407@sirena.org.uk>
-	<5409C704.5070303@ti.com> <20140906143113.GI2601@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <20140906143113.GI2601-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC 5/5] ARM: shmobile: r8a7740 dtsi: Add PM domain support
+Date: Mon,  8 Sep 2014 15:35:44 +0200
+Message-ID: <1410183344-14756-6-git-send-email-geert+renesas@glider.be>
+References: <1410183344-14756-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1410183344-14756-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Add a device node for the System Controller, with subnodes that
+represent the hardware power area hierarchy.
+Hook up all devices to their respective PM domains.
 
-On 09/06/2014 05:31 PM, Mark Brown wrote:
-> On Fri, Sep 05, 2014 at 05:21:56PM +0300, Grygorii Strashko wrote:
-> 
->> I think we have some misunderstanding here :(
->> 1) All new properties a optional and should be specified for SPI Slave devices
->> 2) Seems we are talking using different terms:
->> - you referring to the term "transfers" - sequence of packets.
->>    Each packet is one transfer (array of words).
->> - while these new properties affect on "transmissions" - sequence of words.
->>    Each word is one transmission.
-> 
-> That's *very* unusual terminology which doesn't match my expectations at
-> all.  Please describe words as words, that'll be much more obvious.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm/boot/dts/r8a7740.dtsi | 121 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
 
-These terms are used in DM/TRM :(
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 1067a96c8425..35cf1fac01b5 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -25,6 +25,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0>;
+ 			clock-frequency = <800000000>;
++			power-domains = <&pd_a3sm>;
+ 		};
+ 	};
+ 
+@@ -46,6 +47,7 @@
+ 		reg = <0xe6138000 0x170>;
+ 		interrupts = <0 58 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7740_CLK_CMT1>;
++		power-domains = <&pd_c5>;
+ 		clock-names = "fck";
+ 
+ 		renesas,channels-mask = <0x3f>;
+@@ -71,6 +73,7 @@
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&pd_a4s>;
+ 	};
+ 
+ 	/* irqpin1: IRQ8 - IRQ15 */
+@@ -91,6 +94,7 @@
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&pd_a4s>;
+ 	};
+ 
+ 	/* irqpin2: IRQ16 - IRQ23 */
+@@ -111,6 +115,7 @@
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&pd_a4s>;
+ 	};
+ 
+ 	/* irqpin3: IRQ24 - IRQ31 */
+@@ -131,6 +136,7 @@
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
++		power-domains = <&pd_a4s>;
+ 	};
+ 
+ 	ether: ethernet@e9a00000 {
+@@ -139,6 +145,7 @@
+ 		      <0xe9a01800 0x800>;
+ 		interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7740_CLK_GETHER>;
++		power-domains = <&pd_a4s>;
+ 		phy-mode = "mii";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -155,6 +162,7 @@
+ 			      0 203 IRQ_TYPE_LEVEL_HIGH
+ 			      0 204 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp1_clks R8A7740_CLK_IIC0>;
++		power-domains = <&pd_a4r>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -168,6 +176,7 @@
+ 			      0 72 IRQ_TYPE_LEVEL_HIGH
+ 			      0 73 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7740_CLK_IIC1>;
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -177,6 +186,7 @@
+ 		interrupts = <0 100 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA0>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -186,6 +196,7 @@
+ 		interrupts = <0 101 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA1>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -195,6 +206,7 @@
+ 		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA0>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -204,6 +216,7 @@
+ 		interrupts = <0 103 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA3>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -213,6 +226,7 @@
+ 		interrupts = <0 104 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA4>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -222,6 +236,7 @@
+ 		interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA5>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -231,6 +246,7 @@
+ 		interrupts = <0 106 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA6>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -240,6 +256,7 @@
+ 		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFA7>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -249,6 +266,7 @@
+ 		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp2_clks R8A7740_CLK_SCIFB>;
+ 		clock-names = "sci_ick";
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -267,12 +285,14 @@
+ 			<&irqpin2 4 0>, <&irqpin2 5 0>, <&irqpin2 6 0>, <&irqpin2 7 0>,
+ 			<&irqpin3 0 0>, <&irqpin3 1 0>, <&irqpin3 2 0>, <&irqpin3 3 0>,
+ 			<&irqpin3 4 0>, <&irqpin3 5 0>, <&irqpin3 6 0>, <&irqpin3 7 0>;
++			power-domains = <&pd_c5>;
+ 	};
+ 
+ 	tpu: pwm@e6600000 {
+ 		compatible = "renesas,tpu-r8a7740", "renesas,tpu";
+ 		reg = <0xe6600000 0x100>;
+ 		clocks = <&mstp3_clks R8A7740_CLK_TPU0>;
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 		#pwm-cells = <3>;
+ 	};
+@@ -283,6 +303,7 @@
+ 		interrupts = <0 56 IRQ_TYPE_LEVEL_HIGH
+ 			      0 57 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7740_CLK_MMC>;
++		power-domains = <&pd_a3sp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -293,6 +314,7 @@
+ 			      0 118 IRQ_TYPE_LEVEL_HIGH
+ 			      0 119 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7740_CLK_SDHI0>;
++		power-domains = <&pd_a3sp>;
+ 		cap-sd-highspeed;
+ 		cap-sdio-irq;
+ 		status = "disabled";
+@@ -305,6 +327,7 @@
+ 			      0 122 IRQ_TYPE_LEVEL_HIGH
+ 			      0 123 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp3_clks R8A7740_CLK_SDHI1>;
++		power-domains = <&pd_a3sp>;
+ 		cap-sd-highspeed;
+ 		cap-sdio-irq;
+ 		status = "disabled";
+@@ -317,6 +340,7 @@
+ 			      0 126 IRQ_TYPE_LEVEL_HIGH
+ 			      0 127 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp4_clks R8A7740_CLK_SDHI2>;
++		power-domains = <&pd_a3sp>;
+ 		cap-sd-highspeed;
+ 		cap-sdio-irq;
+ 		status = "disabled";
+@@ -328,6 +352,7 @@
+ 		reg = <0xfe1f0000 0x400>;
+ 		interrupts = <0 9 0x4>;
+ 		clocks = <&mstp3_clks R8A7740_CLK_FSI>;
++		power-domains = <&pd_a4mp>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -379,6 +404,7 @@
+ 			compatible = "renesas,r8a7740-cpg-clocks";
+ 			reg = <0xe6150000 0x10000>;
+ 			clocks = <&extal1_clk>, <&extalr_clk>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <1>;
+ 			clock-output-names = "system", "pllc0", "pllc1",
+ 					     "pllc2", "r",
+@@ -393,6 +419,7 @@
+ 			compatible = "renesas,r8a7740-div6-clock", "renesas,cpg-div6-clock";
+ 			reg = <0xe6150080 4>;
+ 			clocks = <&pllc1_div2_clk>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <0>;
+ 			clock-output-names = "sub";
+ 		};
+@@ -401,6 +428,7 @@
+ 		pllc1_div2_clk: pllc1_div2_clk {
+ 			compatible = "fixed-factor-clock";
+ 			clocks = <&cpg_clocks R8A7740_CLK_PLLC1>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <0>;
+ 			clock-div = <2>;
+ 			clock-mult = <1>;
+@@ -409,6 +437,7 @@
+ 		extal1_div2_clk: extal1_div2_clk {
+ 			compatible = "fixed-factor-clock";
+ 			clocks = <&extal1_clk>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <0>;
+ 			clock-div = <2>;
+ 			clock-mult = <1>;
+@@ -420,6 +449,7 @@
+ 			compatible = "renesas,r8a7740-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0xe6150080 4>;
+ 			clocks = <&sub_clk>, <&sub_clk>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <1>;
+ 			renesas,clock-indices = <
+ 				R8A7740_CLK_SUBCK R8A7740_CLK_SUBCK2
+@@ -435,6 +465,7 @@
+ 				 <&cpg_clocks R8A7740_CLK_B>,
+ 				 <&sub_clk>, <&sub_clk>,
+ 				 <&cpg_clocks R8A7740_CLK_B>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <1>;
+ 			renesas,clock-indices = <
+ 				R8A7740_CLK_CEU21 R8A7740_CLK_CEU20 R8A7740_CLK_TMU0
+@@ -456,6 +487,7 @@
+ 				 <&sub_clk>, <&sub_clk>, <&sub_clk>,
+ 				 <&sub_clk>, <&sub_clk>, <&sub_clk>,
+ 				 <&sub_clk>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <1>;
+ 			renesas,clock-indices = <
+ 				R8A7740_CLK_SCIFA6 R8A7740_CLK_SCIFA7
+@@ -483,6 +515,7 @@
+ 				 <&cpg_clocks R8A7740_CLK_HP>,
+ 				 <&cpg_clocks R8A7740_CLK_HP>,
+ 				 <&cpg_clocks R8A7740_CLK_HP>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <1>;
+ 			renesas,clock-indices = <
+ 				R8A7740_CLK_CMT1 R8A7740_CLK_FSI R8A7740_CLK_IIC1
+@@ -500,6 +533,7 @@
+ 				 <&cpg_clocks R8A7740_CLK_HP>,
+ 				 <&cpg_clocks R8A7740_CLK_HP>,
+ 				 <&cpg_clocks R8A7740_CLK_HP>;
++			power-domains = <&pd_c5>;
+ 			#clock-cells = <1>;
+ 			renesas,clock-indices = <
+ 				R8A7740_CLK_USBH R8A7740_CLK_SDHI2
+@@ -509,4 +543,91 @@
+ 				"usbhost", "sdhi2", "usbfunc", "usphy";
+ 		};
+ 	};
++
++	sysc: system-controller@e6180000 {
++		compatible = "renesas,sysc-r8a7740", "renesas,sysc-rmobile";
++		reg = <0xe6180000 8000>, <0xe6188000 8000>;
++
++		pm-domains {
++			pd_c5: c5 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				#power-domain-cells = <0>;
++
++				pd_a4lc: a4lc@1 {
++					reg = <1>;
++					#power-domain-cells = <0>;
++					power-on-latency = <250000>;
++					power-off-latency = <250000>;
++				};
++
++				pd_a4mp: a4mp@2 {
++					reg = <2>;
++					#power-domain-cells = <0>;
++					power-on-latency = <250000>;
++					power-off-latency = <250000>;
++				};
++
++				pd_d4: d4@3 {
++					reg = <3>;
++					#power-domain-cells = <0>;
++					power-on-latency = <250000>;
++					power-off-latency = <250000>;
++				};
++
++				pd_a4r: a4r@5 {
++					reg = <5>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					#power-domain-cells = <0>;
++					power-on-latency = <250000>;
++					power-off-latency = <250000>;
++
++					pd_a3rv: a3rv@6 {
++						reg = <6>;
++						#power-domain-cells = <0>;
++						power-on-latency = <250000>;
++						power-off-latency = <250000>;
++					};
++				};
++
++				pd_a4s: a4s@10 {
++					reg = <10>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					#power-domain-cells = <0>;
++					power-on-latency = <250000>;
++					power-off-latency = <250000>;
++
++					pd_a3sp: a3sp@11 {
++						reg = <11>;
++						#power-domain-cells = <0>;
++						power-on-latency = <250000>;
++						power-off-latency = <250000>;
++					};
++
++					pd_a3sm: a3sm@12 {
++						reg = <12>;
++						#power-domain-cells = <0>;
++						power-on-latency = <250000>;
++						power-off-latency = <250000>;
++					};
++
++					pd_a3sg: a3sg@13 {
++						reg = <13>;
++						#power-domain-cells = <0>;
++						power-on-latency = <250000>;
++						power-off-latency = <250000>;
++					};
++				};
++
++				pd_a4su: a4su@20 {
++					reg = <20>;
++					#power-domain-cells = <0>;
++					power-on-latency = <250000>;
++					power-off-latency = <250000>;
++				};
++			};
++		};
++	};
+ };
+-- 
+1.9.1
 
-I'll split this patch and first introduce WDELAY, C2TDELAY, T2CDELAY
-(with updated documentation).
-The only question is - Should they be somehow common or specific for spi-davinci?
-
-> 
->> Also, below is additional information about properties which
->> are used in 5-pin mode (SPI_READY) to improve error detection
->> [OMAP-L138/da830 - http://www.ti.com/lit/ug/spruh77a/spruh77a.pdf]:
-> 
-> This is a *whole* other thing, please split these out and work on this
-> separately.  The client device is going to need to be doing the same
-> thing here so implementing this as a local option in the controller
-> driver isn't the best way forwards.
-> 
->>>> SPIFMTn[23].PARPOL - Parity polarity: even or odd. PARPOL can be modified in privilege mode only.
->>>>    0 An even parity flag is added at the end of the transmit data stream.
->>>>    1 An odd parity flag is added at the end of the transmit data stream.
-> 
->>> Why would these be specified in DT and not with runtime flags enabled by
->>> the device?  It looks like they affect the data stream generated by the
->>> controller so the client device needs to know about them; I'd expect
->>> that it's device driver would be controlling when they are enabled if
->>> the controller supports them.
-> 
->> Could you clarify, pls - Do you mean that struct spi_device.mode and
->> common SPI DT bindings should be extended to support this?
-> 
-> Yes, if they aren't something that's purely internal to the device they
-> need to be generic so that both devices can be configured appropriately.
-> 
-
-Regards,
--grygorii
