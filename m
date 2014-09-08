@@ -1,45 +1,54 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 0/4]  Add usb phy support for STiH41x SoCs.
-Date: Mon,  8 Sep 2014 10:30:34 +0100
-Message-ID: <1410168638-11072-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v3 2/4] phy: phy-stih41x-usb: Add dt documentation for USB phy on STiH415/6
+Date: Mon,  8 Sep 2014 10:30:36 +0100
+Message-ID: <1410168638-11072-3-git-send-email-peter.griffin@linaro.org>
+References: <1410168638-11072-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410168638-11072-1-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kishon@ti.com, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
+Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for the on-chip PHY used for USB 1.1 and 2.0 found
-on STiH415 and STiH416 consumer electronics SoC's from STMicroelectronics.
+This patch adds dt documentation bindings for the usb phy found
+on STiH415/5 SoC's from STMicroelectronics, which support USB 1.1 and 2.0.
 
-Changes since v2:
- - Rebased on top of 3.17-rc3
- - Enable driver in multi_v7_defconfig
-
-Changes since v1:
- - Change to select GENERIC_PHY rather than depends for uniformity
- - Ensure phy_provider_register is called  after PHY is created
- - Add extra commit message for MAINTAINERS patch
-
-Peter Griffin (4):
-  phy: phy-stih41x-usb: Add usb phy support for STiH41x SoCs.
-  phy: phy-stih41x-usb: Add dt documentation for USB phy on STiH415/6
-  MAINTAINERS: Add phy-stih41x-usb.c to ARCH/STI architecture
-  ARM: multi_v7_defconfig: Enable stih41x usb phy driver.
-
- .../devicetree/bindings/phy/phy-stih41x-usb.txt    |  24 +++
- MAINTAINERS                                        |   1 +
- arch/arm/configs/multi_v7_defconfig                |   1 +
- drivers/phy/Kconfig                                |   8 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-stih41x-usb.c                      | 192 +++++++++++++++++++++
- 6 files changed, 227 insertions(+)
+Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+---
+ .../devicetree/bindings/phy/phy-stih41x-usb.txt    | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
- create mode 100644 drivers/phy/phy-stih41x-usb.c
 
+diff --git a/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt b/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
+new file mode 100644
+index 0000000..00944a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
+@@ -0,0 +1,24 @@
++STMicroelectronics STiH41x USB PHY binding
++------------------------------------------
++
++This file contains documentation for the usb phy found in STiH415/6 SoCs from
++STMicroelectronics.
++
++Required properties:
++- compatible	: should be "st,stih416-usb-phy" or "st,stih415-usb-phy"
++- st,syscfg	: should be a phandle of the syscfg node
++- clock-names	: must contain "osc_phy"
++- clocks	: must contain an entry for each name in clock-names.
++See: Documentation/devicetree/bindings/clock/clock-bindings.txt
++- #phy-cells	: must be 0 for this phy
++See: Documentation/devicetree/bindings/phy/phy-bindings.txt
++
++Example:
++
++usb2_phy: usb2phy@0 {
++	compatible	= "st,stih416-usb-phy";
++	#phy-cell	= <0>;
++	st,syscfg	= <&syscfg_rear>;
++	clocks		= <&clk_sysin>;
++	clock-names	= "osc_phy";
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
