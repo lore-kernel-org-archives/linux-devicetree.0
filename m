@@ -1,153 +1,52 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v3 3/9] PM / Domains: Add APIs to attach/detach a PM domain for a device
-Date: Tue, 09 Sep 2014 00:11:53 +0200
-Message-ID: <2898464.MGK3rBhRTU@vostro.rjw.lan>
-References: <1409838756-31963-1-git-send-email-ulf.hansson@linaro.org> <1409838756-31963-4-git-send-email-ulf.hansson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1409838756-31963-4-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH 0/4] Initial support for XPowers AXP288 PMIC
+Date: Mon,  8 Sep 2014 15:24:02 -0700
+Message-ID: <1410215046-31751-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, September 04, 2014 03:52:30 PM Ulf Hansson wrote:
-> To maintain scalability let's add common methods to attach and detach
-> a PM domain for a device, dev_pm_domain_attach|detach().
-> 
-> Typically dev_pm_domain_attach() shall be invoked from subsystem level
-> code at the probe phase to try to attach a device to its PM domain.
-> The reversed actions may be done a the remove phase and then by invoking
-> dev_pm_domain_detach().
-> 
-> The supported PM domains at this point are the ACPI and the generic
-> PM domains.
-> 
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  drivers/base/power/common.c | 56 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/pm.h          | 14 ++++++++++++
->  2 files changed, 70 insertions(+)
-> 
-> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
-> index df2e5ee..9a86b16 100644
-> --- a/drivers/base/power/common.c
-> +++ b/drivers/base/power/common.c
-> @@ -11,6 +11,8 @@
->  #include <linux/export.h>
->  #include <linux/slab.h>
->  #include <linux/pm_clock.h>
-> +#include <linux/acpi.h>
-> +#include <linux/pm_domain.h>
->  
->  /**
->   * dev_pm_get_subsys_data - Create or refcount power.subsys_data for device.
-> @@ -82,3 +84,57 @@ int dev_pm_put_subsys_data(struct device *dev)
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(dev_pm_put_subsys_data);
-> +
-> +/**
-> + * dev_pm_domain_attach - Attach a device to its PM domain.
-> + * @dev: Device to attach.
-> + * @power_on: Used to indicate whether we should power on the device.
-> + *
-> + * The @dev may only be attached to a single PM domain. By iterating through
-> + * the available alternatives we try to find a valid PM domain for the device.
-> + *
-> + * This function should typically be invoked from subsystem level code during
-> + * the probe phase. Especially for those that holds devices which requires
-> + * power management through PM domains.
-> + *
-> + * Callers must ensure proper synchronization of this function with power
-> + * management callbacks.
-> + *
-> + * Returns 0 on successfully attached PM domain or negative error code.
-> + */
-> +int dev_pm_domain_attach(struct device *dev, bool power_on)
-> +{
-> +	int ret;
-> +
-> +	ret = acpi_dev_pm_attach(dev, power_on);
-> +	if (!ret || ret == -EPROBE_DEFER)
+XPowers AXP288 is a customized PMIC found on some Intel Baytrail-CR platforms.
+It comes with sub-functions such as USB charging, fuel gauge, ADC, and many LDO
+and BUCK channels.
 
-acpi_dev_pm_attach() doesn't return EPROBE_DEFER and there are no plans for it
-to do that.  IIRC, I pointed that out to you in the previous round (or even
-earlier).  Please remove this check, it is pointless.
+By extending the existing AXP20x driver, this patchset adds basic support
+for AXP288 PMIC with GPADC as one MFD cell device driver. It also adds hooks
+for ACPI opregion handler driver which can be used to handle ACPI requests.
 
-> +		return ret;
-> +
-> +	return genpd_dev_pm_attach(dev);
+Currently, the PMIC driver in this patchset does not support platform data
+enumeration. But when ACPI _DSD and unified device properties become available,
+cell devices with platform data will be added.
 
-And why don't you write this as
+This patch does not use intel_soc_pmic core for i2c and regmap handling in that
+axp288 shares similar programming interface with other Xpower PMICs supported in
+axp20x.c. Therefore, extending axp20x.c to include axp288 makes more sense.
 
-	ret = acpi_dev_pm_attach(dev, power_on);
-	if (ret)
-		ret = genpd_dev_pm_attach(dev);
 
-	return ret;
+Jacob Pan (4):
+  mfd/axp20x: rename files to support more devices
+  mfd/axp2xx: extend axp20x to support axp288 pmic
+  regulator/axp20x: use axp2xx consolidated header
+  iio/adc/axp288: add support for axp288 gpadc
 
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
-> +
-> +/**
-> + * dev_pm_domain_detach - Detach a device from its PM domain.
-> + * @dev: Device to attach.
-> + * @power_off: Used to indicate whether we should power off the device.
-> + *
-> + * The @dev may be attached to a PM domain. By iterating through the available
-> + * alternatives we detach it from its PM domain.
-> + *
-> + * This functions will reverse the actions from dev_pm_domain_attach() and thus
-> + * detach the @dev from its PM domain. Typically it should be invoked from
-> + * subsystem level code during the remove phase.
-> + *
-> + * Callers must ensure proper synchronization of this function with power
-> + * management callbacks.
-> + *
-> + * Returns 0 on successfully detached PM domain or negative error code.
-> + */
-> +int dev_pm_domain_detach(struct device *dev, bool power_off)
-> +{
-> +	if (acpi_dev_pm_detach(dev, power_off))
-> +		return genpd_dev_pm_detach(dev);
-
-And analogously here?  Or the other way around?  Just please make them both
-look analogously.
-
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_domain_detach);
-> diff --git a/include/linux/pm.h b/include/linux/pm.h
-> index 72c0fe0..8176b07 100644
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -621,6 +621,20 @@ struct dev_pm_domain {
->  	struct dev_pm_ops	ops;
->  };
->  
-> +#ifdef CONFIG_PM
-> +extern int dev_pm_domain_attach(struct device *dev, bool power_on);
-> +extern int dev_pm_domain_detach(struct device *dev, bool power_off);
-> +#else
-> +static inline int dev_pm_domain_attach(struct device *dev, bool power_on)
-> +{
-> +	return -ENODEV;
-> +}
-> +static inline int dev_pm_domain_detach(struct device *dev, bool power_off)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
-> +
->  /*
->   * The PM_EVENT_ messages are also used by drivers implementing the legacy
->   * suspend framework, based on the ->suspend() and ->resume() callbacks common
-> 
+ drivers/iio/adc/Kconfig              |   8 +
+ drivers/iio/adc/Makefile             |   1 +
+ drivers/iio/adc/axp288_gpadc.c       | 250 ++++++++++++++++++
+ drivers/mfd/Kconfig                  |   7 +-
+ drivers/mfd/Makefile                 |   2 +-
+ drivers/mfd/axp20x.c                 | 258 ------------------
+ drivers/mfd/axp2xx.c                 | 500 +++++++++++++++++++++++++++++++++++
+ drivers/regulator/axp20x-regulator.c |   6 +-
+ include/linux/mfd/axp20x.h           | 180 -------------
+ include/linux/mfd/axp2xx.h           | 235 ++++++++++++++++
+ 10 files changed, 1002 insertions(+), 445 deletions(-)
+ create mode 100644 drivers/iio/adc/axp288_gpadc.c
+ delete mode 100644 drivers/mfd/axp20x.c
+ create mode 100644 drivers/mfd/axp2xx.c
+ delete mode 100644 include/linux/mfd/axp20x.h
+ create mode 100644 include/linux/mfd/axp2xx.h
 
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+1.9.1
