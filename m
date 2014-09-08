@@ -1,60 +1,43 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4 3/5] DT: Add binding for Altera FPGAs in passive-serial mode
-Date: Mon,  8 Sep 2014 11:29:09 +0200
-Message-ID: <1410168551-6588-4-git-send-email-s.trumtrar@pengutronix.de>
-References: <1410168551-6588-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 0/4]  Add usb phy support for STiH41x SoCs.
+Date: Mon,  8 Sep 2014 10:30:34 +0100
+Message-ID: <1410168638-11072-1-git-send-email-peter.griffin@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410168551-6588-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+This series adds support for the on-chip PHY used for USB 1.1 and 2.0 found
+on STiH415 and STiH416 consumer electronics SoC's from STMicroelectronics.
 
-Altera FPGAs that are programmed via SPI use the passive serial protocol.
-Add a simple binding that describes the setup for this usecase.
+Changes since v2:
+ - Rebased on top of 3.17-rc3
+ - Enable driver in multi_v7_defconfig
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- .../bindings/firmware/altr,passive-serial.txt      | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/altr,passive-serial.txt
+Changes since v1:
+ - Change to select GENERIC_PHY rather than depends for uniformity
+ - Ensure phy_provider_register is called  after PHY is created
+ - Add extra commit message for MAINTAINERS patch
 
-diff --git a/Documentation/devicetree/bindings/firmware/altr,passive-serial.txt b/Documentation/devicetree/bindings/firmware/altr,passive-serial.txt
-new file mode 100644
-index 000000000000..d357dd39cf67
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/altr,passive-serial.txt
-@@ -0,0 +1,24 @@
-+Altera FPGAs in passive serial mode
-+-----------------------------------
-+
-+This binding defines the control interface to Altera FPGAs in
-+passive serial mode. This is used to upload the firmware and
-+to start the FPGA.
-+
-+Required properties:
-+- compatible: shall be "altr,fpga-passive-serial"
-+- reg: SPI chip select
-+- nstat-gpios: Specify GPIO for controlling the nstat pin
-+- confd-gpios: Specify GPIO for controlling the confd pin
-+- nconfig-gpios: Specify GPIO for controlling the nconfig pin
-+
-+Example:
-+
-+	fpga@0 {
-+		compatible = "altr,fpga-passive-serial";
-+		nstat-gpios = <&gpio4 18 0>;
-+		confd-gpios = <&gpio4 19 0>;
-+		nconfig-gpios = <&gpio4 20 0>;
-+		spi-max-frequency = <10000000>;
-+		reg = <0>;
-+	};
+Peter Griffin (4):
+  phy: phy-stih41x-usb: Add usb phy support for STiH41x SoCs.
+  phy: phy-stih41x-usb: Add dt documentation for USB phy on STiH415/6
+  MAINTAINERS: Add phy-stih41x-usb.c to ARCH/STI architecture
+  ARM: multi_v7_defconfig: Enable stih41x usb phy driver.
+
+ .../devicetree/bindings/phy/phy-stih41x-usb.txt    |  24 +++
+ MAINTAINERS                                        |   1 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ drivers/phy/Kconfig                                |   8 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-stih41x-usb.c                      | 192 +++++++++++++++++++++
+ 6 files changed, 227 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
+ create mode 100644 drivers/phy/phy-stih41x-usb.c
+
 -- 
-2.1.0
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
