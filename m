@@ -1,73 +1,153 @@
-From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 0/3] Yet another stab at a fpga framework
-Date: Mon, 8 Sep 2014 16:00:54 -0500
-Message-ID: <alpine.DEB.2.02.1409081559320.3201@atx-linux-37>
-References: <1406932118-13885-1-git-send-email-atull@opensource.altera.com> <20140907185700.GA26553@amd>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 3/9] PM / Domains: Add APIs to attach/detach a PM domain for a device
+Date: Tue, 09 Sep 2014 00:11:53 +0200
+Message-ID: <2898464.MGK3rBhRTU@vostro.rjw.lan>
+References: <1409838756-31963-1-git-send-email-ulf.hansson@linaro.org> <1409838756-31963-4-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140907185700.GA26553@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, philip-6RQC9ztksjxg9hUCZPvPmw@public.gmane.org, rubini-kaDoWcXyVrEAvxtiuMwx3w@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, kyle.teske-acOepvfBmUk@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1409838756-31963-4-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 7 Sep 2014, Pavel Machek wrote:
+On Thursday, September 04, 2014 03:52:30 PM Ulf Hansson wrote:
+> To maintain scalability let's add common methods to attach and detach
+> a PM domain for a device, dev_pm_domain_attach|detach().
+> 
+> Typically dev_pm_domain_attach() shall be invoked from subsystem level
+> code at the probe phase to try to attach a device to its PM domain.
+> The reversed actions may be done a the remove phase and then by invoking
+> dev_pm_domain_detach().
+> 
+> The supported PM domains at this point are the ACPI and the generic
+> PM domains.
+> 
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  drivers/base/power/common.c | 56 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/pm.h          | 14 ++++++++++++
+>  2 files changed, 70 insertions(+)
+> 
+> diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
+> index df2e5ee..9a86b16 100644
+> --- a/drivers/base/power/common.c
+> +++ b/drivers/base/power/common.c
+> @@ -11,6 +11,8 @@
+>  #include <linux/export.h>
+>  #include <linux/slab.h>
+>  #include <linux/pm_clock.h>
+> +#include <linux/acpi.h>
+> +#include <linux/pm_domain.h>
+>  
+>  /**
+>   * dev_pm_get_subsys_data - Create or refcount power.subsys_data for device.
+> @@ -82,3 +84,57 @@ int dev_pm_put_subsys_data(struct device *dev)
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_put_subsys_data);
+> +
+> +/**
+> + * dev_pm_domain_attach - Attach a device to its PM domain.
+> + * @dev: Device to attach.
+> + * @power_on: Used to indicate whether we should power on the device.
+> + *
+> + * The @dev may only be attached to a single PM domain. By iterating through
+> + * the available alternatives we try to find a valid PM domain for the device.
+> + *
+> + * This function should typically be invoked from subsystem level code during
+> + * the probe phase. Especially for those that holds devices which requires
+> + * power management through PM domains.
+> + *
+> + * Callers must ensure proper synchronization of this function with power
+> + * management callbacks.
+> + *
+> + * Returns 0 on successfully attached PM domain or negative error code.
+> + */
+> +int dev_pm_domain_attach(struct device *dev, bool power_on)
+> +{
+> +	int ret;
+> +
+> +	ret = acpi_dev_pm_attach(dev, power_on);
+> +	if (!ret || ret == -EPROBE_DEFER)
 
-> Hi!
-> 
-> > [resend with fixed email settings]
-> > 
-> > The idea of the framework is to provide consistent ways of
-> > programming raw images into FPGA's.
-> > 
-> > Programming from device tree overlays is supported.
-> > 
-> > The core (fpga-mgr.c) does not include a userspace interface
-> > and just exports kernel functions.
-> > 
-> > This approach separates the core from the interfaces.
-> > 
-> > Each interface can be enabled or disabled in the defconfig.
-> > In some production contexts, interfaces that might be used
-> > during development can be disabled.
-> > 
-> > The core exports kernel functions to:
-> >   * write the fpga from a buffer or using the firmware layer
-> >   * get fpga status
-> >   * find a particular fpga manager from a device tree phandle
-> >   * register/unregister lower level fpga drivers.
-> > 
-> > The bus allows us to:
-> >   * program fpga from a device tree overlay using firmware.
-> >   * automatically reload firmware and reprogram fpga during resume.
-> > 
-> > The sysfs interface:
-> >   * read only, get the name and status of fpga manager.
-> > 
-> > I have a configfs interface patch which I haven't included,
-> > adds configfs as a separate file.
-> 
-> Thanks for the patches... is there new version? Is that corresponding
-> socfpga code?
-> 
-> I'd like to configure fpga with .rbf file on board similar to SocKit.
-> 
-> Thanks,
-> 								Pavel
+acpi_dev_pm_attach() doesn't return EPROBE_DEFER and there are no plans for it
+to do that.  IIRC, I pointed that out to you in the previous round (or even
+earlier).  Please remove this check, it is pointless.
 
-Yes, hopefully next week.
+> +		return ret;
+> +
+> +	return genpd_dev_pm_attach(dev);
 
-Regards,
-Alan
+And why don't you write this as
 
+	ret = acpi_dev_pm_attach(dev, power_on);
+	if (ret)
+		ret = genpd_dev_pm_attach(dev);
 
+	return ret;
+
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
+> +
+> +/**
+> + * dev_pm_domain_detach - Detach a device from its PM domain.
+> + * @dev: Device to attach.
+> + * @power_off: Used to indicate whether we should power off the device.
+> + *
+> + * The @dev may be attached to a PM domain. By iterating through the available
+> + * alternatives we detach it from its PM domain.
+> + *
+> + * This functions will reverse the actions from dev_pm_domain_attach() and thus
+> + * detach the @dev from its PM domain. Typically it should be invoked from
+> + * subsystem level code during the remove phase.
+> + *
+> + * Callers must ensure proper synchronization of this function with power
+> + * management callbacks.
+> + *
+> + * Returns 0 on successfully detached PM domain or negative error code.
+> + */
+> +int dev_pm_domain_detach(struct device *dev, bool power_off)
+> +{
+> +	if (acpi_dev_pm_detach(dev, power_off))
+> +		return genpd_dev_pm_detach(dev);
+
+And analogously here?  Or the other way around?  Just please make them both
+look analogously.
+
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_domain_detach);
+> diff --git a/include/linux/pm.h b/include/linux/pm.h
+> index 72c0fe0..8176b07 100644
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -621,6 +621,20 @@ struct dev_pm_domain {
+>  	struct dev_pm_ops	ops;
+>  };
+>  
+> +#ifdef CONFIG_PM
+> +extern int dev_pm_domain_attach(struct device *dev, bool power_on);
+> +extern int dev_pm_domain_detach(struct device *dev, bool power_off);
+> +#else
+> +static inline int dev_pm_domain_attach(struct device *dev, bool power_on)
+> +{
+> +	return -ENODEV;
+> +}
+> +static inline int dev_pm_domain_detach(struct device *dev, bool power_off)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif
+> +
+>  /*
+>   * The PM_EVENT_ messages are also used by drivers implementing the legacy
+>   * suspend framework, based on the ->suspend() and ->resume() callbacks common
 > 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
