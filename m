@@ -1,92 +1,92 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/5] rtc: at91sam9: retain slow clock and check its rate
-Date: Mon, 8 Sep 2014 21:37:43 +0200
-Message-ID: <20140908213743.27d7a1bc@bbrezillon>
-References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1409733934-14465-5-git-send-email-boris.brezillon@free-electrons.com>
-	<20140908173338.GD14623@piout.net>
-	<20140908212218.6a81af86@bbrezillon>
+From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 5/7 v6] ARM: l2c: parse 'cache-size' and 'cache-sets'
+ properties
+Date: Mon, 08 Sep 2014 12:57:34 -0700
+Message-ID: <540E0A2E.9030106@openwrt.org>
+References: <1410176286-32533-1-git-send-email-linus.walleij@linaro.org>	<1410176286-32533-6-git-send-email-linus.walleij@linaro.org>	<4685530.jbNLD4yaA8@wuerfel> <CACRpkdb_bS0P-fGxogiyCzG9CRPhJK1Gro=H3X1Ks_-UoXh52w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140908212218.6a81af86@bbrezillon>
+In-Reply-To: <CACRpkdb_bS0P-fGxogiyCzG9CRPhJK1Gro=H3X1Ks_-UoXh52w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Sep 2014 21:22:18 +0200
-Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On 09/08/2014 05:36 AM, Linus Walleij wrote:
+> On Mon, Sep 8, 2014 at 2:20 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> On Monday 08 September 2014 13:38:04 Linus Walleij wrote:
+>>> +       of_property_read_u32(np, "cache-size", &size);
+>>> +       of_property_read_u32(np, "cache-sets", &sets);
+>>> +
+>>> +       if (!size || !sets)
+>>> +               return;
+>>> +
+>>> +       way_size =3D size / sets;
+>>
+>> Going back to this one: Isn't (size / sets) the set-size rather
+>> than the way-size?
+>>
+>> After we discussed this on IRC, I had expected a calculation like
+>>
+>>         set_size =3D size / sets;
+>>         ways =3D set_size / line_size;
+>>         way_size =3D size / ways;
+>=20
+> First: in this PB1176 case:
+>=20
+> set_size =3D 128K/8 =3D 16K
+> ways =3D 16K/32 =3D 512 bytes
+> way_size =3D 128K/512 =3D 128 bytes
+>=20
+> Well maybe it's the ARM reference manual internal lingo that
+> is actually causing the confusion here. It will say something
+> like:
+>=20
+> [19:17] Way-size 3=E2=80=99b000 =3D Reserved, internally mapped to 16=
+KB
+> 3=E2=80=99b001 =3D 16KB, this is the default value
+> 3=E2=80=99b010 =3D 32KB
+> 3=E2=80=99b011 =3D 64KB
+> 3=E2=80=99b100 =3D 128KB
+> 3=E2=80=99b101 =3D 256KB
+> 3=E2=80=99b110 to 3=E2=80=99b111 =3D Reserved, internally mapped to 2=
+56 KB
+>=20
+> OK way-size ... is in the 16 thru 256KB range, which fits nicely
+> with set size incidentally. And also corresponds to current
+> comments in the code such as this from
+> arch/arm/mach-realview/realview_pb1176.c:
+>=20
+> #ifdef CONFIG_CACHE_L2X0
+>         /*
+>          * The PL220 needs to be manually configured as the hardware
+>          * doesn't report the correct sizes.
+>          * 128kB (16kB/way), 8-way associativity, event monitor and
+>          * parity enabled, ignore share bit, no force write allocate
+>          * Bits:  .... ...0 0111 0011 0000 .... .... ....
+>          */
+>         l2x0_init(__io_address(REALVIEW_PB1176_L220_BASE), 0x00730000=
+,
+> 0xfe000fff);
+> #endif
+>=20
+> I can add a comment explaining that ARMs terminology does
+> not match the academic terminology or something, and say that
+> the thing we poke into "way-size" is actually "set size", if we agree
+> that is what we're seeing here.
+>=20
+> Florian: what was your interpretation?
 
-> On Mon, 8 Sep 2014 19:33:38 +0200
-> Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> 
-> > On 03/09/2014 at 10:45:33 +0200, Boris Brezillon wrote :
-> > > The RTT block is using the slow clock and expect it to run at 32KHz.
-> > > Now that we moved to the CCF it's better to retain the clk reference so
-> > > that the CCF can't disable the slow clock considering it is unused.
-> > > 
-> > > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > ---
-> > >  drivers/rtc/rtc-at91sam9.c | 24 ++++++++++++++++++++++++
-> > >  1 file changed, 24 insertions(+)
-> > > 
-> > > diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-> > > index 57014b7..5c5093b 100644
-> > > --- a/drivers/rtc/rtc-at91sam9.c
-> > > +++ b/drivers/rtc/rtc-at91sam9.c
-> > > @@ -21,6 +21,7 @@
-> > >  #include <linux/slab.h>
-> > >  #include <linux/platform_data/atmel.h>
-> > >  #include <linux/io.h>
-> > > +#include <linux/clk.h>
-> > >  
-> > >  /*
-> > >   * This driver uses two configurable hardware resources that live in the
-> > > @@ -74,6 +75,7 @@ struct sam9_rtc {
-> > >  	u32			imr;
-> > >  	void __iomem		*gpbr;
-> > >  	int 			irq;
-> > > +	struct clk		*sclk;
-> > >  };
-> > >  
-> > >  #define rtt_readl(rtc, field) \
-> > > @@ -373,6 +375,25 @@ static int at91_rtc_probe(struct platform_device *pdev)
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > +	/* Retain slow clk if it is specified in the DT.
-> > > +	 * Do not complain if slow clk is missing, but check its rate
-> > > +	 * if it is available.
-> > > +	 */
-> > > +	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
-> > > +	if (!IS_ERR(rtc->sclk)) {
-> > > +		if (clk_get_rate(rtc->sclk) != AT91_SLOW_CLOCK) {
-> > 
-> > I would not bother doing that check but use the value for MR instead of
-> > AT91_SLOW_CLOCK (see my previous mail).
-> 
-> Unfortunately, we can't get rid of this macro without modifying the
-> clk_lookup table in several arch/arm/mach-at91/<soc-name>.c files in
-> order to handle non DT/CCF cases (which will remain until all non DT
-> boards are moved to DT).
-
-After taking a closer look at what should be modified, I think it's
-worth it: there's only 5 impacted files (at91sam9260.c, at91sam9261.c,
-at91sam9263.c, at91sam9rl.c and at91sam9g45.c) and adding a clk_lookup
-entry is pretty easy.
-
-Moreover we'll end up with a clean driver and won't have to bother
-about cleaning it up when dropping non DT boards support.
-
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Yes that was my interpretation as well, that we could have 'way-size'
+and 'set-size' be the same things here, now that I re-think about it, I
+am not sure anymore. More to follow on Arnd's reply to this email.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+=46lorian
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
