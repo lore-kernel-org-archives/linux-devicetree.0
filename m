@@ -1,57 +1,83 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v3 2/9] PM / Domains: Add generic OF-based PM domain look-up
-Date: Mon, 08 Sep 2014 23:26:49 +0200
-Message-ID: <8273189.CFBBe805uk@vostro.rjw.lan>
-References: <1409838756-31963-1-git-send-email-ulf.hansson@linaro.org> <3105400.7vSnq2rA6s@vostro.rjw.lan> <CAMuHMdURbp8a0Ps2sZUZn7UHcWXZvRgS-4ubk1r=wGgXZ1PHmA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] RFC: add function for localbus address
+Date: Mon, 8 Sep 2014 22:21:43 +0100
+Message-ID: <20140908212143.GN2601@sirena.org.uk>
+References: <540E1014.8090102@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdURbp8a0Ps2sZUZn7UHcWXZvRgS-4ubk1r=wGgXZ1PHmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie@kernel>
+Content-Type: multipart/mixed; boundary="===============1540210485977394504=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <540E1014.8090102@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@linaro.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Stanimir Varbanov <svarbanov@mm-sol.com>, Grant Likely <grant.likely@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, September 08, 2014 10:53:09 PM Geert Uytterhoeven wrote:
-> Hi Rafael,
-> 
-> On Mon, Sep 8, 2014 at 11:08 PM, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
-> > BTW, I get bounces from t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, so I won't apply the patch with
-> > that as the "From" field.  And the s-o-b from a bouncing address is worthless
-> > too.
-> 
-> In the mean time, Tomasz has moved:
-> http://www.spinics.net/lists/arm-kernel/msg357102.html
-> 
-> Still, the From/SoB indicate attribution to Samsung, so I think it should be
-> kept.
 
-The "From:" field should point to a submitter's address that is actually active,
-so that (s)he can handle problem reports *sent* *to* *that* address.  I'm not
-going to apply anything with a bouncing "From:".
+--===============1540210485977394504==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FhKpTYimqQF2+bfE"
+Content-Disposition: inline
 
-The s-o-b is more of a gray area, but again it is supposed to be possible
-to verify which it won't be if it bounces.
 
-Also note that this is not Tomasz who is submitting this patch today, but Ulf
-who doesn't even work for Samsung as far as I know.
+--FhKpTYimqQF2+bfE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So I'd suggest using "Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>" as a "From:", remove
-his s-o-b entirely (and using the Ulf's one only) and add something like that
-to the changelog:
+On Mon, Sep 08, 2014 at 01:22:44PM -0700, Stephen Boyd wrote:
 
-"This patch was originally submitted by Tomasz Figa when he was employed
- by Samsung.
+> Where is this described? From the commit text that introduces
+> IORESOURCE_REG I see:
 
- Link: <URL-of-the-original-submission>"
+> "Currently a bunch of I2C/SPI MFD drivers are using IORESOURCE_IO for
+> register address ranges. Since this causes some confusion due to the
+> primary use of this resource type for PCI/ISA I/O ports create a new
+> resource type IORESOURCE_REG."
 
-This way Samsung will get the recognition and there won't be bouncing addresses
-in tags etc.
+> And the comment next to the #define says "Register offsets". I don't see
+> anywhere where it mentions these are CPU addresses. Certainly the
+> current IORESOURCE_REG users aren't CPU addresses because they're
+> SPI/I2C device drivers.
 
-Rafael
+Right, the intention was specifically to handle things where
+IORESOURCE_MEM wasn't appropriate as it wasn't ever going to be memory
+mapped I/O and should be in a separate address space.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--FhKpTYimqQF2+bfE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUDh3mAAoJECTWi3JdVIfQh9cH/02T4h6Y6ZA1T3XlNeTSvIJ+
+tZ8O95PRWz4Kjiu9m6ZrbR12uZ+yNFZfWq4CXS+X8nUhR71u3qa+kyiun0VEQ2wc
+xEPWL/p5+DO8hWgG1Xr3qejbpAGj115fwZMHuWM3oXp0AmnFf/qdzgRvGm2EcLW1
+QeVWIyYEN6EGPu0KjCaBL0nIBIacxHTSZK05WO+pjrLgXOfknlmKOZt2pHOIs9i8
+WkQK0Wg9GO/B8g6R1sVgLeD3NHzOJY8dvgzhB/yc6s43zmGHV2ankKoI0jnYkUEs
+4EWGQnpvcLMhGMVor00qfq3vQEO7TziZGrWY+aehc4LOqHYGlWYAUNHAxVb3bN0=
+=h2Dc
+-----END PGP SIGNATURE-----
+
+--FhKpTYimqQF2+bfE--
+
+
+--===============1540210485977394504==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1540210485977394504==--
