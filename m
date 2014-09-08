@@ -1,58 +1,74 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: correct of_console_check()'s return value
-Date: Mon, 08 Sep 2014 11:42:38 +0100
-Message-ID: <20140908104238.C7B3DC40AB2@trevor.secretlab.ca>
-References: <1409767603-3290-1-git-send-email-computersforpeace@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409767603-3290-1-git-send-email-computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v2] thermal: rcar: Add binding docs for new R-Car Gen2
+ SoCs
+Date: Mon, 8 Sep 2014 06:48:37 -0400
+Message-ID: <20140908104835.GB3573@developer>
+References: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
+ <20140906161357.GA3573@developer>
+ <CAMuHMdW_BYT8ughx=-j3Y+5Bd1Jkb3An8D=uTNcXa6rU3nfNQg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW_BYT8ughx=-j3Y+5Bd1Jkb3An8D=uTNcXa6rU3nfNQg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Zhang Rui <rui.zhang@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  3 Sep 2014 11:06:43 -0700, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The comments above of_console_check() say that it will return TRUE if it
-> registers a preferred console, but add_preferred_console() uses a
-> 0-equals-success convention, so ths leaves of_console_check() with an
-> inconsistent policy for its return values.
-> 
-> Fortunately, nobody was actually checking the return value of
-> of_console_check(), so this isn't significant at the moment.
-> 
-> But let's match the comments, so we're doing what we say.
-> 
-> Fixes: 3482f2c52b77 ('of: Create of_console_check() for selecting a console specified in /chosen')
-> Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Geert,
 
-Good catch. Applied, thanks.
-
-g.
-
-> ---
-> This is one way to fix it. Another possibility includes changing
-> of_console_check() to use 0-as-success
+On Sat, Sep 06, 2014 at 08:10:13PM +0200, Geert Uytterhoeven wrote:
+> Hi Eduardo,
 > 
->  drivers/of/base.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Sat, Sep 6, 2014 at 6:13 PM, Eduardo Valentin <edubezval@gmail.com> wrote:
+> > On Thu, Aug 28, 2014 at 10:12:32AM +0200, Geert Uytterhoeven wrote:
+> >>   - r8a7792 (R-Car V2H)
+> >>   - r8a7793 (R-Car M2-N)
+> >>   - r8a7794 (R-Car E2)
+> >>
+> >> r8a7791 is now called "R-Car M2-W".
+> >>
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > I don't have any concerns on this patch and will be adding to my next
+> > branch. But before that, I have one simple question. Although the
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d8574adf0d62..bcfd08c2795c 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1986,7 +1986,7 @@ bool of_console_check(struct device_node *dn, char *name, int index)
->  {
->  	if (!dn || dn != of_stdout || console_set_on_cmdline)
->  		return false;
-> -	return add_preferred_console(name, index, NULL);
-> +	return !add_preferred_console(name, index, NULL);
->  }
->  EXPORT_SYMBOL_GPL(of_console_check);
->  
-> -- 
-> 1.9.1
+> Thanks!
 > 
+> > binding description mention about soc types, the rcar thermal driver do
+> > not differentiate soc types, only supports the "renesas,rcar-thermal"
+> > compatible.
+> >
+> > Do you care explaining why we need the soc specific compatibles?
+> 
+> The reason we also have the SoC-specific values is that we are not
+> 100% sure the thermal IP cores in the Renesas R-Car Gen1 and R-Car Gen2
+> series are really identical.
+> 
+> Currently the driver treats all of them the same, but if we ever discover
+> a difference, and the driver needs to start distinguishing among different
+> versions, we will need to have the SoC-specific values in the DTSes to
+> do so.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In this case, wouldn't make sense to find out first the differences
+before changing DT documentation?
+
+Otherwise, you may also figure out that there is no difference and
+then send a patch to remove the changes you are sending now
+(or even removing the -<soc specific> parts).
+
+
+> 
+> I hope this explains our rationale.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
