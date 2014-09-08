@@ -1,46 +1,129 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/3]  Add picoPHY usb phy driver found on stih407 family
- SoC's
-Date: Mon, 8 Sep 2014 20:53:34 +0530
-Message-ID: <540DC9F6.8090306@ti.com>
-References: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI domain_nr
+Date: Mon, 8 Sep 2014 10:27:36 -0500
+Message-ID: <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com> <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+ <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: lee.jones@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Sep 8, 2014 at 9:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> On Mon, Sep 08, 2014 at 03:27:56PM +0100, Rob Herring wrote:
+>> On Mon, Sep 8, 2014 at 8:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+>> > Add of_pci_get_domain_nr() to retrieve the PCI domain number
+>> > of a given device from DT. If the information is not present,
+>> > the function can be requested to allocate a new domain number.
+>> >
+>> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> > Cc: Arnd Bergmann <arnd@arndb.de>
+>> > Cc: Grant Likely <grant.likely@linaro.org>
+>> > Cc: Rob Herring <robh+dt@kernel.org>
+>> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+>> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+>> > ---
+>> >  drivers/of/of_pci.c    | 34 ++++++++++++++++++++++++++++++++++
+>> >  include/linux/of_pci.h |  7 +++++++
+>> >  2 files changed, 41 insertions(+)
+>> >
+>> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+>> > index 8481996..a107edb 100644
+>> > --- a/drivers/of/of_pci.c
+>> > +++ b/drivers/of/of_pci.c
+>> > @@ -89,6 +89,40 @@ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+>> >  }
+>> >  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
+>> >
+>> > +static atomic_t of_domain_nr = ATOMIC_INIT(-1);
+>> > +
+>> > +/**
+>> > + * This function will try to obtain the host bridge domain number by
+>> > + * using of_alias_get_id() call with "pci-domain" as a stem. If that
+>> > + * fails, a local allocator will be used. The local allocator can
+>> > + * be requested to return a new domain_nr if the information is missing
+>> > + * from the device tree.
+>> > + *
+>> > + * @node: device tree node with the domain information
+>> > + * @allocate_if_missing: if DT lacks information about the domain nr,
+>> > + * allocate a new number.
+>> > + *
+>> > + * Returns the associated domain number from DT, or a new domain number
+>> > + * if DT information is missing and @allocate_if_missing is true. If
+>> > + * @allocate_if_missing is false then the last allocated domain number
+>> > + * will be returned.
+>> > + */
+>> > +int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
+>> > +{
+>> > +       int domain;
+>> > +
+>> > +       domain = of_alias_get_id(node, "pci-domain");
+>> > +       if (domain == -ENODEV) {
+>> > +               if (allocate_if_missing)
+>> > +                       domain = atomic_inc_return(&of_domain_nr);
+>> > +               else
+>> > +                       domain = atomic_read(&of_domain_nr);
+>>
+>> This function seems a bit broken to me. It is overloaded with too many
+>> different outcomes. Think about how this would work if you have
+>> multiple PCI buses and a mixture of having pci-domain aliases or not.
+>> Aren't domain numbers global? Allocation should then start outside of
+>> the range of alias ids.
+>>
+>> Rob
+>>
+>
+> Rob,
+>
+> Would this version make more sense?
 
-On Wednesday 03 September 2014 03:57 PM, Peter Griffin wrote:
-> This series adds support for the picoPHY usb phy which is used by the usb2
-> and usb3 host controllers when controlling usb2/1.1 devices. It is found on
-> stih407 family SoC's from the consumer electronics devision of STMicroelectronics.
+No.
 
-So miphy28lp is the PHY controller for USB3 device controller and picoPHY is
-the PHY controller for USB3 host controller?
+> int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
+> {
+>        int domain;
+>
+>        domain = of_alias_get_id(node, "pci-domain");
+>        if (domain == -ENODEV) {
+>                if (allocate_if_missing)
+>                        domain = atomic_inc_return(&of_domain_nr);
+>                else
+>                        domain = atomic_read(&of_domain_nr);
+>        } else {
+>                /* remember the largest value seen */
+>                int d = atomic_read(&of_domain_nr);
+>                atomic_set(&of_domain_nr, max(domain, d));
+>        }
+>
+>        return domain;
+> }
+> EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
+>
+> It would still create gaps and possible duplicates, but this is just a number
+> and trying to create a new root bus in an existing domain should fail. I have
 
-Thanks
-Kishon
+Is failure okay in that case?
 
-> 
-> Peter Griffin (3):
->   phy: phy-stih407-usb: Add usb picoPHY driver found on stih407 SoC
->     family
->   phy: phy-stih407-usb: Add dt documentation for USB picophy found on
->     stih407 SoC family
->   MAINTAINERS: Add phy-stih407-usb.c file to ARCH/STI architecture
-> 
->  .../devicetree/bindings/phy/phy-stih407-usb.txt    |  37 +++++
->  MAINTAINERS                                        |   1 +
->  drivers/phy/Kconfig                                |   8 +
->  drivers/phy/Makefile                               |   2 +
->  drivers/phy/phy-stih407-usb.c                      | 185 +++++++++++++++++++++
->  5 files changed, 233 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
->  create mode 100644 drivers/phy/phy-stih407-usb.c
-> 
+> no clue on how to generate unique values without parsing the DT and filling
+> a sparse array with values found there and then checking for allocated values
+
+You really only need to know the maximum value and then start the
+non-DT allocations from there.
+
+> on new requests. This function gets called quite a lot and I'm trying not to
+> make it too heavy weight.
+
+Generally, nothing should be accessing the same DT value frequently.
+It should get cached somewhere.
+
+I don't really understand how domains are used so it's hard to provide
+a recommendation here. Do domains even belong in the DT? This function
+is just a weird mixture of data retrieval and allocation. I think you
+need to separate it into 2 functions.
+
+Rob
