@@ -1,32 +1,55 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] Tegra xHCI support
-Date: Mon, 8 Sep 2014 09:22:11 -0700
-Message-ID: <CAL1qeaF7U9aoBp5gQPS=r+pe6krKmXdP1qak2gjhNqQMoHFB8A@mail.gmail.com>
-References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
-	<CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
+ domain_nr
+Date: Mon, 8 Sep 2014 10:39:05 -0600
+Message-ID: <20140908163905.GC29679@obsidianresearch.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
+ <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+ <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
+ <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com>
+ <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel@lists.>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 8, 2014 at 8:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
-> On 2 September 2014 23:34, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>
->> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
->> USB3.0 memory sticks and ethernet dongles using controller firmware
->> recently posted by Andrew Chew [2].
->
-> I have had mixed results when testing this on a Jetson TK1 board. Of 8
-> USB devices I tested with, about half where probed correctly, but the
-> other half repeatedly fail in hub_port_init because in the GET_STATUS
-> right after the reset, the C_PORT_CONNECTION bit is set.
->
-> I don't see any correlation between the failure and the kind of usb
-> device, but I don't have much experience with USB implementations
-> either.
+On Mon, Sep 08, 2014 at 04:59:31PM +0100, Liviu Dudau wrote:
 
-Hmm... I haven't seen that before.  Which particular devices were you using?
+> > I don't really understand how domains are used so it's hard to provide
+> > a recommendation here. Do domains even belong in the DT?
+> 
+> ACPI calls them segments and the way Bjorn explained it to me at some moment was
+> that it was an attempt to split up a bus in different groups (or alternatively,
+> merge a few busses together). To be honest I haven't seen systems where the domain
+> is anything other than zero, but JasonG (or maybe Benjamin) were floating an
+> idea of using the domain number to identify physical slots.
+
+A PCI domain qualifies the bus:device.function addressing so that we
+can have duplicate BDFs in the system.
+
+So, yes, they belong in DT - each 'top level' PCI node naturally
+represents a unique set of BDF addressing below it, and could alias
+other top level nodes. The first step to resolve a BDF to a DT node is
+to find the correct 'top level' by mapping the domain number.
+
+In an ideal world no small scale system should ever have domains. They
+were primarily introduced for large scale NUMA system that actually
+have more than 256 PCI busses.
+
+However, from a DT prespective, we've been saying that if the SOC
+presents a PCI-E root port that shares nothing with other root ports
+(ie aperture, driver instance, config space) then those ports must be
+represented by unique 'top level' DT nodes, and each DT node must be
+assigned to a Linux PCI domain.
+
+IMHO, designing such a SOC ignores the API guidelines provides by the
+PCI-E spec itself, and I hope such a thing won't be considered SBSA
+compatible..
+
+Jason
