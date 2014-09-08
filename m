@@ -1,143 +1,54 @@
-From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH 1/2 V4] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-Date: Mon, 8 Sep 2014 18:05:29 -0500
-Message-ID: <540E3639.5080807@amd.com>
-References: <1407942041-3291-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1407942041-3291-2-git-send-email-suravee.suthikulpanit@amd.com>
- <20140814175525.GI24018@leverpostej>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/2] ARM: dts: dra72-evm: Add i2c1 and tps65917 nodes
+Date: Mon, 8 Sep 2014 16:12:01 -0700
+Message-ID: <20140908231200.GR3238@atomide.com>
+References: <1406528334-4415-1-git-send-email-j-keerthy@ti.com>
+ <53D5EE21.1040000@ti.com>
+ <53D61643.4070005@ti.com>
+ <53EA0A26.1050301@ti.com>
+ <20140908200443.GA24258@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140814175525.GI24018@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140908200443.GA24258@kahuna>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Keerthy <a0393675@ti.com>, Keerthy <j-keerthy@ti.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, galak@codeaurora.org, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/14/2014 12:55 PM, Mark Rutland wrote:
-> On Wed, Aug 13, 2014 at 04:00:40PM +0100, suravee.suthikulpanit@amd.com wrote:
->> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->>
->> ARM GICv2m specification extends GICv2 to support MSI(-X) with
->> a new set of register frame. This patch introduces support for
->> the non-secure GICv2m register frame. Currently, GICV2m is available
->> in certain version of GIC-400.
->>
->> The patch introduces a new property in ARM gic binding, the v2m subnode.
->> It is optional.
->>
->> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->> Cc: Mark Rutland <Mark.Rutland@arm.com>
->> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
->> Cc: Jason Cooper <jason@lakedaemon.net>
->> Cc: Catalin Marinas <Catalin.Marinas@arm.com>
->> Cc: Will Deacon <Will.Deacon@arm.com>
->> ---
->>   Documentation/devicetree/bindings/arm/gic.txt |  32 ++++
->>   drivers/irqchip/Kconfig                       |   7 +
->>   drivers/irqchip/Makefile                      |   1 +
->>   drivers/irqchip/irq-gic-v2m.c                 | 215 ++++++++++++++++++++++++++
->>   drivers/irqchip/irq-gic.c                     |  75 +++++----
->>   drivers/irqchip/irq-gic.h                     |  48 ++++++
->>   6 files changed, 348 insertions(+), 30 deletions(-)
->>   create mode 100644 drivers/irqchip/irq-gic-v2m.c
->>   create mode 100644 drivers/irqchip/irq-gic.h
->>
->> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
->> index 5573c08..8a64179 100644
->> --- a/Documentation/devicetree/bindings/arm/gic.txt
->> +++ b/Documentation/devicetree/bindings/arm/gic.txt
->> @@ -95,3 +95,35 @@ Example:
->>                        <0x2c006000 0x2000>;
->>                  interrupts = <1 9 0xf04>;
->>          };
->> +
->> +
->> +* GICv2m extension for MSI/MSI-x support (Optional)
->> +
->> +Certain revision of GIC-400 supports MSI/MSI-x via V2M register frame.
->> +This is enabled by specifying v2m sub-node.
->> +
->> +Required properties:
->> +
->> +- msi-controller : Identifies the node as an MSI controller.
->> +
->> +- reg : GICv2m MSI interface register base and size
->> +
->> +Example:
->> +
->> +       interrupt-controller@e1101000 {
->> +               compatible = "arm,gic-400";
->> +               #interrupt-cells = <3>;
->> +               #address-cells = <2>;
->> +               #size-cells = <2>;
->> +               interrupt-controller;
->> +               interrupts = <1 8 0xf04>;
->> +               ranges = <0 0 0 0xe1100000 0 0x100000>;
->> +               reg = <0x0 0xe1110000 0 0x01000>,
->> +                     <0x0 0xe112f000 0 0x02000>,
->> +                     <0x0 0xe1140000 0 0x10000>,
->> +                     <0x0 0xe1160000 0 0x10000>;
->> +               v2m {
->> +                       msi-controller;
->> +                       reg = <0x0 0x80000 0 0x1000>;
->> +               };
->> +       };
->
-> [...]
->
->> @@ -1009,6 +1012,16 @@ gic_of_init(struct device_node *node, struct device_node *parent)
->>          if (of_property_read_u32(node, "cpu-offset", &percpu_offset))
->>                  percpu_offset = 0;
->>
->> +       gic_data[gic_cnt].irq_chip = &gic_chip;
->> +
->> +       /* Currently, we only support one v2m subnode. */
->> +       child = of_get_child_by_name(node, "v2m");
->> +       if (child) {
->> +               ret = gicv2m_of_init(child, &gic_data[gic_cnt]);
->> +               if (ret)
->> +                       return ret;
->> +       }
->
-> I can't see how you'd sanely expand this to multiple children, which was
-> the main point of having a separate node for the M block.
->
-> Give the M block a compatible string and look for children with that
-> string.
+* Nishanth Menon <nm@ti.com> [140908 13:05]:
+> On 18:05-20140812, Keerthy wrote:
+> > On Monday 28 July 2014 02:52 PM, Keerthy wrote:
+> > >On Monday 28 July 2014 12:00 PM, Lokesh Vutla wrote:
+> > >>On Monday 28 July 2014 11:48 AM, Keerthy wrote:
+> > >>>The patch series adds i2c1 and tps65917 and related nodes.
+> > >>>The patch series is boot tested on DRA72-EVM.
+> > >>>
+> > >>>Thanks to Lokesh <lokeshvutla@ti.com> for testing the series.
+> > >
+> > >Correcting the 'to' list.
+> > 
+> > Hi Tony,
+> > 
+> > If there are no comments could you please pull these two patches?
+> 
+> With 3.17-rc4, I tested this series:
+> dra72-evm-before: http://paste.ubuntu.org.cn/1496342
+> dra72-evm-after: http://paste.ubuntu.org.cn/1496341
+> 
+> Patches:
+> https://patchwork.kernel.org/patch/4632391/
+> https://patchwork.kernel.org/patch/4632421/
+> 
+> Could we pick these with 3.18?
+> 
+> Please free to add:
+> 
+> Tested-by: Nishanth Menon <nm@ti.com>
 
-Mark,
+OK applying into omap-for-v3.18/dt thanks.
 
-I am making change in the struct gic_chip_data to contain "v2m_list" (instead of just
-a single struct v2m_data). This way, it is clear on how we should handle multiple v2m nodes
-within a GIC.
+Regards,
 
-As for the device tree binding, in order to handle multiple v2m nodes within a GIC,
-it should not require adding another compatibility ID as it seems too complicate
-to have GIC node with multiple compat IDs).
-
-	v2m0 {
-		msi-controller;
-		reg = <0 0x80000 0 0x10000>;	
-	};
-
-	v2m1 {
-		msi-controller;
-		reg = <0 0x90000 0 0x10000>;
-	};
-
-This should work since the PCI controller uses "of_pci_find_msi_chip_by_node()" to locate the msi_chip,
-we can simply just use "v2m0" or "v2m1" to specify this.
-
-Thanks,
-
-Suravee.
+Tony
