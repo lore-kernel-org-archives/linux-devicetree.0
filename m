@@ -1,155 +1,143 @@
-From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-Subject: Re: [PATCH/RFC 2/5] PM / Domains: Add DT bindings for the R-Mobile
- System Controller
-Date: Tue, 09 Sep 2014 07:44:11 +0900
-Message-ID: <540E313B.8000305@renesas.com>
-References: <1410183344-14756-1-git-send-email-geert+renesas@glider.be> <1410183344-14756-3-git-send-email-geert+renesas@glider.be>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH 1/2 V4] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+Date: Mon, 8 Sep 2014 18:05:29 -0500
+Message-ID: <540E3639.5080807@amd.com>
+References: <1407942041-3291-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1407942041-3291-2-git-send-email-suravee.suthikulpanit@amd.com>
+ <20140814175525.GI24018@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1410183344-14756-3-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, khiem.nguyen.xt@renesas.com, Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140814175525.GI24018@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert, 
+On 8/14/2014 12:55 PM, Mark Rutland wrote:
+> On Wed, Aug 13, 2014 at 04:00:40PM +0100, suravee.suthikulpanit@amd.com wrote:
+>> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>>
+>> ARM GICv2m specification extends GICv2 to support MSI(-X) with
+>> a new set of register frame. This patch introduces support for
+>> the non-secure GICv2m register frame. Currently, GICV2m is available
+>> in certain version of GIC-400.
+>>
+>> The patch introduces a new property in ARM gic binding, the v2m subnode.
+>> It is optional.
+>>
+>> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>> Cc: Mark Rutland <Mark.Rutland@arm.com>
+>> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
+>> Cc: Jason Cooper <jason@lakedaemon.net>
+>> Cc: Catalin Marinas <Catalin.Marinas@arm.com>
+>> Cc: Will Deacon <Will.Deacon@arm.com>
+>> ---
+>>   Documentation/devicetree/bindings/arm/gic.txt |  32 ++++
+>>   drivers/irqchip/Kconfig                       |   7 +
+>>   drivers/irqchip/Makefile                      |   1 +
+>>   drivers/irqchip/irq-gic-v2m.c                 | 215 ++++++++++++++++++++++++++
+>>   drivers/irqchip/irq-gic.c                     |  75 +++++----
+>>   drivers/irqchip/irq-gic.h                     |  48 ++++++
+>>   6 files changed, 348 insertions(+), 30 deletions(-)
+>>   create mode 100644 drivers/irqchip/irq-gic-v2m.c
+>>   create mode 100644 drivers/irqchip/irq-gic.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+>> index 5573c08..8a64179 100644
+>> --- a/Documentation/devicetree/bindings/arm/gic.txt
+>> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+>> @@ -95,3 +95,35 @@ Example:
+>>                        <0x2c006000 0x2000>;
+>>                  interrupts = <1 9 0xf04>;
+>>          };
+>> +
+>> +
+>> +* GICv2m extension for MSI/MSI-x support (Optional)
+>> +
+>> +Certain revision of GIC-400 supports MSI/MSI-x via V2M register frame.
+>> +This is enabled by specifying v2m sub-node.
+>> +
+>> +Required properties:
+>> +
+>> +- msi-controller : Identifies the node as an MSI controller.
+>> +
+>> +- reg : GICv2m MSI interface register base and size
+>> +
+>> +Example:
+>> +
+>> +       interrupt-controller@e1101000 {
+>> +               compatible = "arm,gic-400";
+>> +               #interrupt-cells = <3>;
+>> +               #address-cells = <2>;
+>> +               #size-cells = <2>;
+>> +               interrupt-controller;
+>> +               interrupts = <1 8 0xf04>;
+>> +               ranges = <0 0 0 0xe1100000 0 0x100000>;
+>> +               reg = <0x0 0xe1110000 0 0x01000>,
+>> +                     <0x0 0xe112f000 0 0x02000>,
+>> +                     <0x0 0xe1140000 0 0x10000>,
+>> +                     <0x0 0xe1160000 0 0x10000>;
+>> +               v2m {
+>> +                       msi-controller;
+>> +                       reg = <0x0 0x80000 0 0x1000>;
+>> +               };
+>> +       };
+>
+> [...]
+>
+>> @@ -1009,6 +1012,16 @@ gic_of_init(struct device_node *node, struct device_node *parent)
+>>          if (of_property_read_u32(node, "cpu-offset", &percpu_offset))
+>>                  percpu_offset = 0;
+>>
+>> +       gic_data[gic_cnt].irq_chip = &gic_chip;
+>> +
+>> +       /* Currently, we only support one v2m subnode. */
+>> +       child = of_get_child_by_name(node, "v2m");
+>> +       if (child) {
+>> +               ret = gicv2m_of_init(child, &gic_data[gic_cnt]);
+>> +               if (ret)
+>> +                       return ret;
+>> +       }
+>
+> I can't see how you'd sanely expand this to multiple children, which was
+> the main point of having a separate node for the M block.
+>
+> Give the M block a compatible string and look for children with that
+> string.
 
-Thanks for your patch.
+Mark,
 
-On 9/8/2014 10:35 PM, Geert Uytterhoeven wrote:
-> A.o., the Renesas R-Mobile System Controller provides power management
-> support, following the generic PM domain bindings in
-> Documentation/devicetree/bindings/power/power_domain.txt.
-> 
-> For now this supports the R-Mobile A1 (r8a7740) only, but it should be
-> sufficiently generic to handle other members of the SH-Mobile/R-Mobile
-> family in the future.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  .../bindings/power/renesas,sysc-rmobile.txt        | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-> new file mode 100644
-> index 000000000000..8d9d64df0088
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-> @@ -0,0 +1,106 @@
-> +DT bindings for the Renesas R-Mobile System Controller
-> +
-> +== System Controller Node ==
-> +
-> +The R-Mobile System Controller provides the following functions:
-> +  - Boot mode management,
-> +  - Reset generation,
-> +  - Power management.
-> +
-> +Required properties:
-> +- compatible: Should be "renesas,sysc-<soctype>", "renesas,sysc-rmobile" as
-> +	      fallback.
-> +	      Examples with soctypes are:
-> +		- "renesas,sysc-r8a7740" (R-Mobile A1)
-> +- reg: Two address start and address range blocks for the device:
-> +         - The first block refers to the normally accessible registers,
-> +         - the second block refers to the registers protected by the HPB
-> +	   semaphore.
-> +
-> +Optional nodes:
-> +- pm-domains: This node contains a hierarchy of PM domain nodes, which should
-> +  match the Power Area Hierarchy in the Power Domain Specifications section of
-> +  the device's datasheet.
-> +
-> +
-> +== PM Domain Nodes ==
-> +
-> +Each of the PM domain nodes represents a PM domain, as documented by the
-> +generic PM domain bindings in
-> +Documentation/devicetree/bindings/power/power_domain.txt.
-> +
-> +The nodes should be named by the real power area names, and thus their names
-> +should be unique.
-> +
-> +Required properties:
-> +  - #power-domain-cells: Must be 0.
-> +
-> +Optional properties:
-> +- reg: If the PM domain is not always-on, this property must contain the bit
-> +       index number for the corresponding power area in the various Power
-> +       Control and Status Registers. The parent's node must contain the
-> +       following two properties:
-> +	 - #address-cells: Must be 1,
-> +	 - #address-cells: Must be 0.
+I am making change in the struct gic_chip_data to contain "v2m_list" (instead of just
+a single struct v2m_data). This way, it is clear on how we should handle multiple v2m nodes
+within a GIC.
 
-Should it be "#size-cells: Must be 0." ?
+As for the device tree binding, in order to handle multiple v2m nodes within a GIC,
+it should not require adding another compatibility ID as it seems too complicate
+to have GIC node with multiple compat IDs).
 
-> +       If the PM domain is always-on, this property must be omitted.
-> +- power-on-latency: Power-on latency of the PM domain, in ns,
-> +- power-off-latency: Power-off latency of the PM domain, in ns.
-> +
-> +
-> +Example:
-> +
-> +This shows a subset of the r8a7740 PM domain hierarchy, containing the
-> +C5 "always-on" domain, 2 of its subdomains (A4S and A4SU), and the A3SP domain,
-> +which is a subdomain of A4S.
-> +
-> +	sysc: system-controller@e6180000 {
-> +		compatible = "renesas,sysc-r8a7740", "renesas,sysc-rmobile";
-> +		reg = <0xe6180000 8000>, <0xe6188000 8000>;
-> +
-> +		pm-domains {
-> +			pd_c5: c5 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				#power-domain-cells = <0>;
-> +
-> +				pd_a4s: a4s@10 {
-> +					reg = <10>;
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					#power-domain-cells = <0>;
-> +					power-on-latency = <250000>;
-> +					power-off-latency = <250000>;
-> +
-> +					pd_a3sp: a3sp@11 {
-> +						reg = <11>;
-> +						#power-domain-cells = <0>;
-> +						power-on-latency = <250000>;
-> +						power-off-latency = <250000>;
-> +					};
-> +				};
-> +
-> +				pd_a4su: a4su@20 {
-> +					reg = <20>;
-> +					#power-domain-cells = <0>;
-> +					power-on-latency = <250000>;
-> +					power-off-latency = <250000>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +
-> +== PM Domain Consumers ==
-> +
-> +Hardware blocks belonging to a PM domain should contain a "power-domains"
-> +property that is a phandle pointing to the corresponding PM domain node.
-> +
-> +Example:
-> +
-> +	tpu: pwm@e6600000 {
-> +		compatible = "renesas,tpu-r8a7740", "renesas,tpu";
-> +		reg = <0xe6600000 0x100>;
-> +		clocks = <&mstp3_clks R8A7740_CLK_TPU0>;
-> +		power-domains = <&pd_a3sp>;
-> +		#pwm-cells = <3>;
-> +	};
-> 
+	v2m0 {
+		msi-controller;
+		reg = <0 0x80000 0 0x10000>;	
+	};
 
--- 
-Best regards,
-KHIEM Nguyen
+	v2m1 {
+		msi-controller;
+		reg = <0 0x90000 0 0x10000>;
+	};
+
+This should work since the PCI controller uses "of_pci_find_msi_chip_by_node()" to locate the msi_chip,
+we can simply just use "v2m0" or "v2m1" to specify this.
+
+Thanks,
+
+Suravee.
