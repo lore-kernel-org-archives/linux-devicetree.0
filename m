@@ -1,86 +1,70 @@
-From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] arm64, thunder: Document devicetree bindings for
- Cavium Thunder SoC
-Date: Mon, 8 Sep 2014 09:54:59 +0200
-Message-ID: <20140908075459.GW4703@rric.localhost>
-References: <1409903205-2762-1-git-send-email-rric@kernel.org>
- <1409903205-2762-4-git-send-email-rric@kernel.org>
- <20140905084200.GE13515@arm.com>
- <20140905093222.GS4703@rric.localhost>
- <20140905093932.GI2172@leverpostej>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Mon, 08 Sep 2014 11:13:50 +0300
+Message-ID: <540D653E.7070509@mm-sol.com>
+References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com> <1409919274-13419-2-git-send-email-svarbanov@mm-sol.com> <3495079.hWGRuSPgx7@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140905093932.GI2172@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3495079.hWGRuSPgx7@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collins>
 List-Id: devicetree@vger.kernel.org
 
-On 05.09.14 10:39:33, Mark Rutland wrote:
-> On Fri, Sep 05, 2014 at 10:32:22AM +0100, Robert Richter wrote:
-> > On 05.09.14 09:42:00, Will Deacon wrote:
-> > > On Fri, Sep 05, 2014 at 08:46:44AM +0100, Robert Richter wrote:
-> > > > From: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> > > > 
-> > > > This patch adds documentation for the devicetree bindings used by the
-> > > > DT files of Cavium Thunder SoC platforms.
-> > > > 
-> > > > Signed-off-by: Radha Mohan Chintakuntla <rchintakuntla-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> > > > Signed-off-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/arm/cavium-thunder.txt | 10 ++++++++++
-> > > >  Documentation/devicetree/bindings/arm/cpus.txt           |  1 +
-> > > >  2 files changed, 11 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder.txt b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> > > > new file mode 100644
-> > > > index 000000000000..6f63a5866902
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder.txt
-> > > > @@ -0,0 +1,10 @@
-> > > > +Cavium Thunder platform device tree bindings
-> > > > +--------------------------------------------
-> > > > +
-> > > > +Boards with Cavium's Thunder SoC shall have following properties.
-> > > > +
-> > > > +Root Node
-> > > > +---------
-> > > > +Required root node properties:
-> > > > +
-> > > > +  - compatible = "cavium,thunder-88xx";
-> > > 
-> > > Is this file necessary? We don't have one for xgene afaict.
-> > 
-> > Hmm, looking at Documentation/devicetree/bindings/arm/calxeda.txt
-> > there is something similar.
-> > 
-> > I am fine with both, keeping or removing it.
-> > 
-> > Would leave this to the DT maintainers.
+Hi Arnd,
+
+Thank you for the comments!
+
+On 09/05/2014 03:26 PM, Arnd Bergmann wrote:
+> On Friday 05 September 2014 15:14:33 Stanimir Varbanov wrote:
+>> +       VADC_CHAN(LR_MUX1_BAT_THERM, 0)                 /* 0x30 */
+>> +       VADC_CHAN(LR_MUX2_BAT_ID, 0)
+>> +       VADC_CHAN(LR_MUX3_XO_THERM, 0)
+>> +       VADC_CHAN(LR_MUX4_AMUX_THM1, 0)
+>> +       VADC_CHAN(LR_MUX5_AMUX_THM2,by you  0)
+>> +       VADC_CHAN(LR_MUX6_AMUX_THM3, 0)
+>> +       VADC_CHAN(LR_MUX7_HW_ID, 0)
+>> +       VADC_CHAN(LR_MUX8_AMUX_THM4, 0)
+>> +       VADC_CHAN(LR_MUX9_AMUX_THM5, 0)
+>> +       VADC_CHAN(AMUX_PU1, 0)
+>> +       VADC_CHAN(AMUX_PU2, 0)
+>> +       VADC_CHAN(LR_MUX3_BUF_XO_THERM_BUF, 0)          /* 0x3c */
+>> +
+>> +       VADC_CHAN(LR_MUX1_PU1_BAT_THERM, 0)             /* 0x70 */
+>> +       VADC_CHAN(LR_MUX2_PU1_BAT_ID, 0)
+>> +       VADC_CHAN(LR_MUX3_PU1_XO_THERM, 0)
+>> +       VADC_CHAN(LR_MUX4_PU1_AMUX_THM1, 0)
+>> +       VADC_CHAN(LR_MUX5_PU1_AMUX_THM2, 0)
+>> +       VADC_CHAN(LR_MUX6_PU1_AMUX_THM3, 0)
+>> +       VADC_CHAN(LR_MUX7_PU1_AMUX_HW_ID, 0)
+>> +       VADC_CHAN(LR_MUX8_PU1_AMUX_THM4, 0)
+>> +       VADC_CHAN(LR_MUX9_PU1_AMUX_THM5, 0)
+>> +       VADC_CHAN(LR_MUX10_PU1_AMUX_USB_ID, 0)          /* 0x79 */
+>> +       VADC_CHAN(LR_MUX3_BUF_PU1_XO_THERM_BUF, 0)      /* 0x7c */
+>>
 > 
-> Having a required root node compatible is fine, though I would only
-> expect it to be necessary for errata workarounds if we have no other way
-> of detecting things.
+> These numbers all look hardware specific, so why put macros into the
+> device tree rather than using them directly?
 
-Ok, will keep the change.
+The idea was to use #defines in DT nodes when we need to overwrite the
+adc channel parameters, see example in 2/2 how it will be used.
 
-> That said, compatible strings shouldn't have wildcards, so
-> "cavium,thunder-88xx" should be replaced with something more specific.
-> Later boards can claim compatibility with that (but should have their
-> own strings too).
+> 
+> If you want to make up your own macro namespace, I would suggest
+> using consecutive numbers and turning the above into
+> 
+> 	...
+> 	[LR_MUX3_BUF_XO_THERM_BUF] = VADC_CHAN(0x3c, 0),
+> 	[LR_MUX1_PU1_BAT_THERM]    = VADC_CHAN(0x70, 0),
+> 	[LR_MUX1_PU1_BAT_ID]       = VADC_CHAN(0x71, 0),
+> 	...
+> 
+> but I don't see that really improving the DT, since you then
+> need to look up the values in the header rather than the data sheet.
 
-88xx is not a wildcard for chips, there are no chips named 8800 or
-whatever, instead we have e.g. 87xx. That said, 88xx is the specific
-name of the soc and the first reference board. If there will be other
-boards with the same soc, it should have its own name but should be
-compatible with cavium,thunder-88xx. Later soc revisions will get a
-different name than thunder-88xx for differentiation.
+I will see how can I make this elegantly by using IIO infrastructure better.
 
--Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Stan
