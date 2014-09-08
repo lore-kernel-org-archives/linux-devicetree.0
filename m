@@ -1,144 +1,60 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
- domain_nr
-Date: Mon, 8 Sep 2014 15:54:59 +0100
-Message-ID: <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
- <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
- <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
+Date: Mon, 8 Sep 2014 15:58:25 +0100
+Message-ID: <20140908145825.GO12081@leverpostej>
+References: <20140828124237.GA29102@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140828125915.GJ14650@leverpostej>
+ <20140828155157.GB23677@roeck-us.net>
+ <20140828161025.GO14650@leverpostej>
+ <20140828164825.GA12153@roeck-us.net>
+ <20140828172842.GF12769@titan.lakedaemon.net>
+ <20140828174034.GC15307@roeck-us.net>
+ <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140829104001.GB19424@leverpostej>
+ <20140908135242.GA21412@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-arch-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+In-Reply-To: <20140908135242.GA21412@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@denx.de>
+Cc: Matti Vaittinen <matti.vaittinen@nsn.com>, ext Guenter Roeck <linux@roeck-us.net>, Jason Cooper <jason@lakedaemon.net>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "jic23@kernel.org" <jic23@kernel.org>, "arno@natisbad.org" <arno@natisbad.org>, "jgunthorpe@obsidianresearch.com" <jgunthorpe@obsidianresearch.com>, "san@rosetechnology.dk" <san@rosetechnology.dk>, "hs@denx.de" <hs@denx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Sverdlin Alexander <alexander.sverdlin@nsn.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 08, 2014 at 03:27:56PM +0100, Rob Herring wrote:
-> On Mon, Sep 8, 2014 at 8:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wro=
-te:
-> > Add of_pci_get_domain_nr() to retrieve the PCI domain number
-> > of a given device from DT. If the information is not present,
-> > the function can be requested to allocate a new domain number.
-> >
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Grant Likely <grant.likely@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > ---
-> >  drivers/of/of_pci.c    | 34 ++++++++++++++++++++++++++++++++++
-> >  include/linux/of_pci.h |  7 +++++++
-> >  2 files changed, 41 insertions(+)
-> >
-> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> > index 8481996..a107edb 100644
-> > --- a/drivers/of/of_pci.c
-> > +++ b/drivers/of/of_pci.c
-> > @@ -89,6 +89,40 @@ int of_pci_parse_bus_range(struct device_node *n=
-ode, struct resource *res)
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
-> >
-> > +static atomic_t of_domain_nr =3D ATOMIC_INIT(-1);
-> > +
-> > +/**
-> > + * This function will try to obtain the host bridge domain number =
-by
-> > + * using of_alias_get_id() call with "pci-domain" as a stem. If th=
-at
-> > + * fails, a local allocator will be used. The local allocator can
-> > + * be requested to return a new domain_nr if the information is mi=
-ssing
-> > + * from the device tree.
-> > + *
-> > + * @node: device tree node with the domain information
-> > + * @allocate_if_missing: if DT lacks information about the domain =
-nr,
-> > + * allocate a new number.
-> > + *
-> > + * Returns the associated domain number from DT, or a new domain n=
-umber
-> > + * if DT information is missing and @allocate_if_missing is true. =
-If
-> > + * @allocate_if_missing is false then the last allocated domain nu=
-mber
-> > + * will be returned.
-> > + */
-> > +int of_pci_get_domain_nr(struct device_node *node, bool allocate_i=
-f_missing)
-> > +{
-> > +       int domain;
-> > +
-> > +       domain =3D of_alias_get_id(node, "pci-domain");
-> > +       if (domain =3D=3D -ENODEV) {
-> > +               if (allocate_if_missing)
-> > +                       domain =3D atomic_inc_return(&of_domain_nr)=
-;
-> > +               else
-> > +                       domain =3D atomic_read(&of_domain_nr);
->=20
-> This function seems a bit broken to me. It is overloaded with too man=
-y
-> different outcomes. Think about how this would work if you have
-> multiple PCI buses and a mixture of having pci-domain aliases or not.
-> Aren't domain numbers global? Allocation should then start outside of
-> the range of alias ids.
->=20
-> Rob
->=20
+On Mon, Sep 08, 2014 at 02:52:42PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > I would suggest we have two properties that describe the resistor's
+> > rating and whether or not there is a diode:
+> > 
+> > trickle-resistor-ohms = <250>
+> > diode-connected;
+> > 
+> > That's easy for a human to write and/or validate, we can easily extend
+> > it in future, requires no proliferation of macros, and describes the
+> > hardware rather than telling software what to do.
+> > 
+> > The driver becomes a little more complicated, but gains sanity checking,
+> > which is a good thing.
+> 
+> Certainly looks better than register bit defines.
+> 
+> As rtc-bq32k has similar options, I'm interested, too. I believe we
+> should add
+> 
+> trickle-charge-enable;
+> 
+> (we may not want to charge at all), and I believe the diode should be
+> 
+> disconnect-diode;
+> 
+> ... With diode connected, charge is slower, and that probably should
+> be the default value. We don't want to give too much current in
+> default case.  (bq32k has hard-coded resistor value for
+> diode/not-diode case).
 
-Rob,
+I agree that if one case is less likely to be problematic / damaging
+that should be the default.
 
-Would this version make more sense?
-
-int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_mis=
-sing)
-{
-       int domain;
-
-       domain =3D of_alias_get_id(node, "pci-domain");
-       if (domain =3D=3D -ENODEV) {
-               if (allocate_if_missing)
-                       domain =3D atomic_inc_return(&of_domain_nr);
-               else
-                       domain =3D atomic_read(&of_domain_nr);
-       } else {
-               /* remember the largest value seen */
-               int d =3D atomic_read(&of_domain_nr);
-               atomic_set(&of_domain_nr, max(domain, d));
-       }
-
-       return domain;
-}
-EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
-
-It would still create gaps and possible duplicates, but this is just a =
-number
-and trying to create a new root bus in an existing domain should fail. =
-I have
-no clue on how to generate unique values without parsing the DT and fil=
-ling
-a sparse array with values found there and then checking for allocated =
-values
-on new requests. This function gets called quite a lot and I'm trying n=
-ot to
-make it too heavy weight.
-
-
-Best regards,
-Liviu
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Mark.
