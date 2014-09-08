@@ -1,49 +1,91 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [resend PATCH 0/3] Add DRA7xx CPSW Ethernet support in Device
- Tree
-Date: Mon, 8 Sep 2014 14:34:40 -0500
-Message-ID: <20140908193440.GC12150@kahuna>
-References: <1410203998-8700-1-git-send-email-mugunthanvnm@ti.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/5] rtc: at91sam9: retain slow clock and check its rate
+Date: Mon, 8 Sep 2014 21:37:43 +0200
+Message-ID: <20140908213743.27d7a1bc@bbrezillon>
+References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1409733934-14465-5-git-send-email-boris.brezillon@free-electrons.com>
+	<20140908173338.GD14623@piout.net>
+	<20140908212218.6a81af86@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410203998-8700-1-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20140908212218.6a81af86@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 00:49-20140909, Mugunthan V N wrote:
-> Adding device tree entry for CPSW to make it work in Dual EMAC mode.
-> 
-> These patches were tested with DRA7 hwmod patches on top of linux-next.
-> The patches were already reviewed [1] and has been waiting for cross bar
-> and hwmod to be pulled in. Now since all dependent patches has already
-> pulled in, so reposting the patches again.
-> 
-> Patches are tested on linux-next, the boot logs on DRA7xx EVM [2]
-> 
-> [1] https://lkml.org/lkml/2014/5/13/89
-> [2] http://slexy.org/view/s2YqO0Wj9b 
+On Mon, 8 Sep 2014 21:22:18 +0200
+Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Sorry this is now blocked inside TI. could you explain the testing done
-for sleep state? did you attempt sleep mode before testing this?
+> On Mon, 8 Sep 2014 19:33:38 +0200
+> Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+> > On 03/09/2014 at 10:45:33 +0200, Boris Brezillon wrote :
+> > > The RTT block is using the slow clock and expect it to run at 32KHz.
+> > > Now that we moved to the CCF it's better to retain the clk reference so
+> > > that the CCF can't disable the slow clock considering it is unused.
+> > > 
+> > > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---
+> > >  drivers/rtc/rtc-at91sam9.c | 24 ++++++++++++++++++++++++
+> > >  1 file changed, 24 insertions(+)
+> > > 
+> > > diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+> > > index 57014b7..5c5093b 100644
+> > > --- a/drivers/rtc/rtc-at91sam9.c
+> > > +++ b/drivers/rtc/rtc-at91sam9.c
+> > > @@ -21,6 +21,7 @@
+> > >  #include <linux/slab.h>
+> > >  #include <linux/platform_data/atmel.h>
+> > >  #include <linux/io.h>
+> > > +#include <linux/clk.h>
+> > >  
+> > >  /*
+> > >   * This driver uses two configurable hardware resources that live in the
+> > > @@ -74,6 +75,7 @@ struct sam9_rtc {
+> > >  	u32			imr;
+> > >  	void __iomem		*gpbr;
+> > >  	int 			irq;
+> > > +	struct clk		*sclk;
+> > >  };
+> > >  
+> > >  #define rtt_readl(rtc, field) \
+> > > @@ -373,6 +375,25 @@ static int at91_rtc_probe(struct platform_device *pdev)
+> > >  		return ret;
+> > >  	}
+> > >  
+> > > +	/* Retain slow clk if it is specified in the DT.
+> > > +	 * Do not complain if slow clk is missing, but check its rate
+> > > +	 * if it is available.
+> > > +	 */
+> > > +	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
+> > > +	if (!IS_ERR(rtc->sclk)) {
+> > > +		if (clk_get_rate(rtc->sclk) != AT91_SLOW_CLOCK) {
+> > 
+> > I would not bother doing that check but use the value for MR instead of
+> > AT91_SLOW_CLOCK (see my previous mail).
+> 
+> Unfortunately, we can't get rid of this macro without modifying the
+> clk_lookup table in several arch/arm/mach-at91/<soc-name>.c files in
+> order to handle non DT/CCF cases (which will remain until all non DT
+> boards are moved to DT).
 
-> 
-> Mugunthan V N (3):
->   pinctrl: dra7: dt-bindings: add pin off modes for dra7 SoC
->   arm/dts: dra7xx: Add CPSW and MDIO module nodes for dra7xx
->   arm/dts: dra7xx: Enable CPSW and MDIO for dra7xx EVM
-> 
->  arch/arm/boot/dts/dra7-evm.dts    | 107 ++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/dra7.dtsi       |  59 +++++++++++++++++++++
->  include/dt-bindings/pinctrl/dra.h |   8 +++
->  3 files changed, 174 insertions(+)
-> 
+After taking a closer look at what should be modified, I think it's
+worth it: there's only 5 impacted files (at91sam9260.c, at91sam9261.c,
+at91sam9263.c, at91sam9rl.c and at91sam9g45.c) and adding a clk_lookup
+entry is pretty easy.
+
+Moreover we'll end up with a clean driver and won't have to bother
+about cleaning it up when dropping non DT boards support.
+
+
+
 -- 
-Regards,
-Nishanth Menon
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
