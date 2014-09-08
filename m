@@ -1,49 +1,57 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4 5/5] DT: Add binding for Altera SOCFPGA FPGA Manager
-Date: Mon,  8 Sep 2014 11:29:11 +0200
-Message-ID: <1410168551-6588-6-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v4 3/5] DT: Add binding for Altera FPGAs in passive-serial mode
+Date: Mon,  8 Sep 2014 11:29:09 +0200
+Message-ID: <1410168551-6588-4-git-send-email-s.trumtrar@pengutronix.de>
 References: <1410168551-6588-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1410168551-6588-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Altera SOCFPGA have a FPGA Manager, that manages and monitors the FPGA portion
-of the SoC.
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+Altera FPGAs that are programmed via SPI use the passive serial protocol.
+Add a simple binding that describes the setup for this usecase.
 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- .../bindings/firmware/altr,socfpga-fpga-mgr.txt       | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/altr,socfpga-fpga-mgr.txt
+ .../bindings/firmware/altr,passive-serial.txt      | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/altr,passive-serial.txt
 
-diff --git a/Documentation/devicetree/bindings/firmware/altr,socfpga-fpga-mgr.txt b/Documentation/devicetree/bindings/firmware/altr,socfpga-fpga-mgr.txt
+diff --git a/Documentation/devicetree/bindings/firmware/altr,passive-serial.txt b/Documentation/devicetree/bindings/firmware/altr,passive-serial.txt
 new file mode 100644
-index 000000000000..70ec4abf25b4
+index 000000000000..d357dd39cf67
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/altr,socfpga-fpga-mgr.txt
-@@ -0,0 +1,19 @@
-+Altera SOCFPGA FPGA Manager
-+---------------------------
++++ b/Documentation/devicetree/bindings/firmware/altr,passive-serial.txt
+@@ -0,0 +1,24 @@
++Altera FPGAs in passive serial mode
++-----------------------------------
 +
-+This binding defines the FPGA Manager on Altera SOCFPGAs. This is used to upload
-+the firmware to the FPGA part of the SoC.
++This binding defines the control interface to Altera FPGAs in
++passive serial mode. This is used to upload the firmware and
++to start the FPGA.
 +
 +Required properties:
-+- compatible: shall be "altr,socfpga-fpga-mgr"
-+- reg: Must contain 2 register ranges:
-+	1. The control address space of the FPGA manager.
-+	2. The configuration data address space where the firmware data is written to.
++- compatible: shall be "altr,fpga-passive-serial"
++- reg: SPI chip select
++- nstat-gpios: Specify GPIO for controlling the nstat pin
++- confd-gpios: Specify GPIO for controlling the confd pin
++- nconfig-gpios: Specify GPIO for controlling the nconfig pin
 +
 +Example:
 +
-+	fpgamgr@ff706000 {
-+		compatible = "altr,socfpga-fpga-mgr";
-+		reg = <0xff706000 0x1000>,
-+		      <0xffb90000 0x1000>;
++	fpga@0 {
++		compatible = "altr,fpga-passive-serial";
++		nstat-gpios = <&gpio4 18 0>;
++		confd-gpios = <&gpio4 19 0>;
++		nconfig-gpios = <&gpio4 20 0>;
++		spi-max-frequency = <10000000>;
++		reg = <0>;
 +	};
 -- 
 2.1.0
