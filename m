@@ -1,29 +1,24 @@
-From: Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH/RFC 1/5] PM / Domains: Add DT bindings for power-on/off latencies
-Date: Tue, 09 Sep 2014 08:57:50 -0700
-Message-ID: <7h8ulskcqp.fsf@deeprootsystems.com>
-References: <1410183344-14756-1-git-send-email-geert+renesas@glider.be>
-	<1410183344-14756-2-git-send-email-geert+renesas@glider.be>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 3/8] Documentation: bindings: net: add the Marvell PXA168 Ethernet controller
+Date: Tue, 09 Sep 2014 17:58:12 +0200
+Message-ID: <3827594.chb831jyvc@wuerfel>
+References: <1410273848-24663-1-git-send-email-antoine.tenart@free-electrons.com> <1410273848-24663-4-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1410183344-14756-2-git-send-email-geert+renesas@glider.be>
-	(Geert Uytterhoeven's message of "Mon, 8 Sep 2014 15:35:40 +0200")
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1410273848-24663-4-git-send-email-antoine.tenart@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Geert Uytterhoeven <geert+renesas@glider.be> writes:
+On Tuesday 09 September 2014 16:44:03 Antoine Tenart wrote:
+> +- clocks: pointer to the clock for the device.
+> +- clock-names: should be "MFUCLK".
 
-> PM domain power on/off-latencies are properties of the hardware.
-> In legacy code, they're specified from platform code.
-> On DT platforms, their values should come from DT.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Clock names are normally not capitalized. Are you able to change
+that name when providing a binding or make it an anoymous clock?
+What does MFU stand for anyway?
 
-Nice.
-
-Acked-by: Kevin Hilman <khilman@linaro.org>
-
-Kevin
+	Arnd
