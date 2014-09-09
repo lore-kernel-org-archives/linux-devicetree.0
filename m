@@ -1,40 +1,53 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [resend PATCH 0/3] Add DRA7xx CPSW Ethernet support in Device
- Tree
-Date: Tue, 9 Sep 2014 18:26:36 +0530
-Message-ID: <540EF904.5070701@ti.com>
-References: <1410203998-8700-1-git-send-email-mugunthanvnm@ti.com>	<20140908193440.GC12150@kahuna>	<540EE4B0.70207@ti.com> <CAGo_u6riiMVTW2y1qZWdJ2QUVdxX7uZyaTO3tRTGivX8Pjni1w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAGo_u6riiMVTW2y1qZWdJ2QUVdxX7uZyaTO3tRTGivX8Pjni1w@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, dt list <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v2 0/4] Initial support for XPowers AXP288 PMIC
+Date: Tue,  9 Sep 2014 06:02:51 -0700
+Message-ID: <1410267775-4683-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jaco
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 September 2014 05:45 PM, Nishanth Menon wrote:
-> On Tue, Sep 9, 2014 at 6:29 AM, Mugunthan V N <mugunthanvnm@ti.com> wrote:
->>
->>> Sorry this is now blocked inside TI. could you explain the testing done
->>> for sleep state? did you attempt sleep mode before testing this?
->>>
->>
->> I have not tested sleep mode, just tested boot and ping test.
-> 
-> I must NAK then for the reason that this is a patch that is just build
-> tested and is not tested for the feature it claims to introduce.
-> 
-> 
+XPowers AXP288 is a customized PMIC found on some Intel Baytrail-CR platforms.
+It comes with sub-functions such as USB charging, fuel gauge, ADC, and many LDO
+and BUCK channels.
 
-Is suspend/resume supported in mainline, i was not able to test it.
+By extending the existing AXP20x driver, this patchset adds basic support
+for AXP288 PMIC with GPADC as one MFD cell device driver. It also adds hooks
+for ACPI opregion handler driver which can be used to handle ACPI requests.
 
-root@dra7xx-evm:~# echo mem > /sys/power/state
--sh: echo: write error: Invalid argument
+Currently, the PMIC driver in this patchset does not support platform data
+enumeration. But when ACPI _DSD and unified device properties become available,
+cell devices with platform data will be added.
 
-I was not able to use rtc wake also as the rtc device is not created.
+This patch does not use intel_soc_pmic core for i2c and regmap handling in that
+axp288 shares similar programming interface with other Xpower PMICs supported in
+axp20x.c. Therefore, extending axp20x.c to include axp288 makes more sense.
 
-Regards
-Mugunthan V N
+Changes v2:
+	- use format -M for 1/4
+	- minor tweak based on Maxime's review
 
+Jacob Pan (4):
+  mfd/axp20x: rename files to support more devices
+  mfd/axp2xx: extend axp20x to support axp288 pmic
+  regulator/axp20x: use axp2xx consolidated header
+  iio/adc/axp288: add support for axp288 gpadc
+
+ drivers/iio/adc/Kconfig                  |   8 +
+ drivers/iio/adc/Makefile                 |   1 +
+ drivers/iio/adc/axp288_gpadc.c           | 250 ++++++++++++++++
+ drivers/mfd/Kconfig                      |   7 +-
+ drivers/mfd/Makefile                     |   2 +-
+ drivers/mfd/axp20x.c                     | 258 ----------------
+ drivers/mfd/axp2xx.c                     | 496 +++++++++++++++++++++++++++++++
+ drivers/regulator/axp20x-regulator.c     |   6 +-
+ include/linux/mfd/{axp20x.h => axp2xx.h} |  57 +++-
+ 9 files changed, 819 insertions(+), 266 deletions(-)
+ create mode 100644 drivers/iio/adc/axp288_gpadc.c
+ delete mode 100644 drivers/mfd/axp20x.c
+ create mode 100644 drivers/mfd/axp2xx.c
+ rename include/linux/mfd/{axp20x.h => axp2xx.h} (79%)
+
+-- 
+1.9.1
