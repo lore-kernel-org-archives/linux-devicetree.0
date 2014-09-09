@@ -1,56 +1,52 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 5/8] ARM: dts: am33xx: Add external clock provider
-Date: Mon, 8 Sep 2014 16:30:38 -0700
-Message-ID: <20140908233037.GT3238@atomide.com>
-References: <cover.1408397864.git.jsarha@ti.com>
- <9d4974b949b9b3bc1b08d73b1ec2d9cdd7a8e5da.1408397864.git.jsarha@ti.com>
+Subject: Re: [PATCH 2/2] mfd: twl4030-power: use 'ti,system-power-controller'
+ as alternative way to support system power off
+Date: Mon, 8 Sep 2014 17:01:26 -0700
+Message-ID: <20140909000126.GU3238@atomide.com>
+References: <1409771208-21867-1-git-send-email-nm@ti.com>
+ <1409771208-21867-3-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9d4974b949b9b3bc1b08d73b1ec2d9cdd7a8e5da.1408397864.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, broonie@kernel.org, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, ezequiel.garcia@free-electrons.com, t-kristo@ti.com
+In-Reply-To: <1409771208-21867-3-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Jyri Sarha <jsarha@ti.com> [140818 14:49]:
-> Add external clock provider for am33xx devices.
-
-Please send all the .dts and defconfig changes separately
-so I can pick them up and we don't get pointless merge
-conflicts.
-
-Regards,
-
-TOny
- 
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> ---
->  arch/arm/boot/dts/am33xx.dtsi |   10 ++++++++++
->  1 file changed, 10 insertions(+)
+* Nishanth Menon <nm@ti.com> [140903 12:07]:
+> ti,system-power-controller is more or less the standard way of
+> indicating that the PMIC is the system wide power controller and hence
+> may be used to switch off the system. Almost ALL TI PMIC drivers and
+> many Maxim PMIC drivers follow the same style.
 > 
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 3a0a161..d2cc397 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -92,6 +92,16 @@
->  		pinctrl-single,function-mask = <0x7f>;
->  	};
+> So support 'ti,system-power-controller' in addition to the usual
+> 'ti,use_poweroff' to indicate that the PMIC instance has control for
+> switching off the system.
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+
+Acked-by: Tony Lindgren <tony@atomide.com>
+
+> ---
+>  drivers/mfd/twl4030-power.c |    3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
+> index 3bc969a..1c129ba 100644
+> --- a/drivers/mfd/twl4030-power.c
+> +++ b/drivers/mfd/twl4030-power.c
+> @@ -627,6 +627,9 @@ static bool twl4030_power_use_poweroff(const struct twl4030_power_data *pdata,
+>  	if (pdata && pdata->use_poweroff)
+>  		return true;
 >  
-> +	ext_clocks {
-> +		compatible = "ti,external-clocks";
+> +	if (of_property_read_bool(node, "ti,system-power-controller"))
+> +		return true;
 > +
-> +		ext_clocks: clocks {
-> +		};
-> +
-> +		ext_clockdomains: clockdomains {
-> +		};
-> +	};
-> +
->  	/*
->  	 * XXX: Use a flat representation of the AM33XX interconnect.
->  	 * The real AM33XX interconnect network is quite complex. Since
+>  	if (of_property_read_bool(node, "ti,use_poweroff"))
+>  		return true;
+>  
 > -- 
 > 1.7.9.5
 > 
