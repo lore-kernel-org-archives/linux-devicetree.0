@@ -1,54 +1,32 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v9 0/6] Add Maxim 77802 clocks support
-Date: Tue, 09 Sep 2014 13:57:39 -0700
-Message-ID: <20140909205739.19023.50828@quantum>
-References: <1408350784-15577-1-git-send-email-javier.martinez@collabora.co.uk>
- <CABxcv=mww1wcf+vo5uLxBrNZBVJhj9zvbwGu_oAKXm4XDUNvCQ@mail.gmail.com>
+From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: PFUZE100 regulator not going off when PWRON is 0
+Date: Tue, 9 Sep 2014 22:59:31 +0200
+Message-ID: <CAL8zT=hf8T7P=7PJKK9_de2R8bHmm=O4ws3JbBqKBaTMR5DinA@mail.gmail.com>
+References: <CAL8zT=hNnRU3gbprVXOMt6FC9veRvQKRmS9gSeCm5-DNfGv-xg@mail.gmail.com>
+ <20140903125248.GK29327@sirena.org.uk> <20140909024100.GA19119@Robin-OptiPlex-780>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=mww1wcf+vo5uLxBrNZBVJhj9zvbwGu_oAKXm4XDUNvCQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, Doug Anderson <dianders@chromium.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140909024100.GA19119@Robin-OptiPlex-780>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Javier Martinez Canillas (2014-09-07 23:49:28)
-> Hello Mike,
-> 
-> On Mon, Aug 18, 2014 at 10:32 AM, Javier Martinez Canillas
-> <javier.martinez@collabora.co.uk> wrote:
-> > This series add support for the clocks present in the Maxim
-> > 77802 Power Managment IC. Previously, the series was part
-> > of a bigger one [0] that aimed to add support for all the
-> > devices in the max77802 PMIC. But now the Maxim 77802 PMIC
-> > dependencies were already merged for 3.17 so the series can
-> > be split and each driver can go through the relevant tree.
-> >
-> 
-> This series was first posted for 3.17 and you acked the whole set but
-> it missed 3.17 because had as a dependency some changes in the
-> max77802 mfd driver. Those dependencies made for 3.17 and that's why I
-> re-posted it for 3.18 about a month ago.
-> 
-> Since we are in 3.17-rc4 already, I'm afraid that this series may miss
-> 3.18 again, is there anything else you need from me to pick this
-> series? It will obviously conflict with Tomeu's "Per-user clock
-> constraints" series [0] so if you want I can rebase it on top of your
-> clk-next-tomeu-kirkwood-v2 branch [1].
+2014-09-09 4:41 GMT+02:00 Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>:
+> Thanks for Mark's forward.
+>
+> Hi Jean-Michel,
+>   Yes, SWxOMODE can be set as 1 to active sleep mode if PWRON turn-off event
+> occurs. And the voltage of sleep mode can be set in other register SWxOFF. But
+> by default, SWxOMODE is 0 which means all SW will be turned off while PWRON go
+> form 1 to 0. For your issue, I hope you check the hardware design, and measure
+> PWRON pin to see whether it has been pulled low once your push reset key.
 
-Thanks for pinging me about it. I've pulled this series into clk-next
-for 3.18. Everything is going to conflict with Tomeu's series so we'll
-just handle that when it comes to merge his series (which I've since
-removed from clk-next due to pending issues).
-
+Thank you both, we found an electrical issue which made it not going down to 0V.
 Regards,
-Mike
-
-> 
-> Thanks a lot and best regards,
-> Javier
-> 
-> [0]: https://lkml.org/lkml/2014/9/1/466
-> [1]: https://git.linaro.org/people/mike.turquette/linux.git/shortlog/refs/heads/clk-next-tomeu-kirkwood-v2
+JM
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
