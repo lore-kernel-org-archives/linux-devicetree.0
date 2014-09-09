@@ -1,55 +1,44 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/8] Documentation: bindings: net: add the Marvell
- PXA168 Ethernet controller
-Date: Tue, 9 Sep 2014 18:52:26 +0100
-Message-ID: <20140909175226.GE3896@leverpostej>
-References: <1410273848-24663-1-git-send-email-antoine.tenart@free-electrons.com>
- <3827594.chb831jyvc@wuerfel>
- <20140909160136.GA26051@kwain>
- <2897714.QyEFFDa5hL@wuerfel>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/3] ASoC: tegra: add tegra sgtl5000
+	machine driver
+Date: Tue, 9 Sep 2014 15:00:11 -0300
+Message-ID: <CAOMZO5BYGwHGSeHeaQxEO=BUBGbno9P29et582SDzmwmfVioZA@mail.gmail.com>
+References: <cover.1410276224.git.marcel@ziswiler.com>
+ <f90791ebb1799a4aa62dd6b527885ddadae3c058.1410276224.git.marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2897714.QyEFFDa5hL@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <f90791ebb1799a4aa62dd6b527885ddadae3c058.1410276224.git.marcel@ziswiler.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel <linux-kernel@vger.kernel.org>, stefan@agner.ch, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 09, 2014 at 06:47:35PM +0100, Arnd Bergmann wrote:
-> On Tuesday 09 September 2014 18:01:36 Antoine Tenart wrote:
-> > 
-> > On Tue, Sep 09, 2014 at 05:58:12PM +0200, Arnd Bergmann wrote:
-> > > On Tuesday 09 September 2014 16:44:03 Antoine Tenart wrote:
-> > > > +- clocks: pointer to the clock for the device.
-> > > > +- clock-names: should be "MFUCLK".
-> > > 
-> > > Clock names are normally not capitalized. Are you able to change
-> > > that name when providing a binding or make it an anoymous clock?
-> > > What does MFU stand for anyway?
-> > 
-> > Sure. I could have make it an anonymous clock but the name "MFUCLK" was
-> > already used by the pxa168 Ethernet driver so I didn't wanted to change
-> > that.
-> 
-> I believe you can just ask for an anonymous clock anyway and get the
-> first one even if it has a name, but I didn't check.
-> 
-> In any case, we should not just take a clock name in a DT binding
-> because it happened to be used by platform code. It's easy fix the
-> platform code when someone makes a mistake there, but very hard to
-> fix DT strings once there are users relying on a particular convention.
+On Tue, Sep 9, 2014 at 12:28 PM, Marcel Ziswiler <marcel@ziswiler.com> wrote:
+> This binding and driver describe/support playback to headphones, and
+> capture from line-in and microphone.
+>
+> This driver is useful for the Toradex Apalis T30 and Colibri T30 modules.
+>
+> Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+> ---
+>  .../bindings/sound/nvidia,tegra-audio-sgtl5000.txt |  45 +++++
+>  sound/soc/tegra/Kconfig                            |  10 +
+>  sound/soc/tegra/Makefile                           |   2 +
+>  sound/soc/tegra/tegra_sgtl5000.c                   | 216 +++++++++++++++++++++
 
-At least with names it's easy to add/remove abitrary sets of clocks. We
-can be stuck with bad names but I don't think that's as big a concern.
+What about using the simple-audio-card binding instead of adding the
+tegra_sgtl5000 machine driver?
 
-So if there is an actual name for the clock input line (from the pov of
-the consumer), I'd recommend using it. Note that this does not have to
-be the current "MFUCLK" as used by platform data.
+An example of simple-audio-card used with sgtl5000 can be found here:
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+http://www.spinics.net/lists/devicetree/msg44466.html
