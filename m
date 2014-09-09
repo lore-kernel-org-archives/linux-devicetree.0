@@ -1,61 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] ARM: l2c: parse cache properties from ePAPR definitions
-Date: Tue, 09 Sep 2014 10:23:01 +0200
-Message-ID: <3872359.cDihUR1d12@wuerfel>
-References: <1410246633-23407-1-git-send-email-linus.walleij@linaro.org> <3750746.eYplbZAGky@wuerfel>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2] ARM: dts: Add mshc aliases for rk3288
+Date: Tue, 09 Sep 2014 10:28:36 +0200
+Message-ID: <18318098.Hm4yenW6Sf@diego>
+References: <1409785523-12209-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <3750746.eYplbZAGky@wuerfel>
-Sender: linux-leds-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1409785523-12209-1-git-send-email-dianders@chromium.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Sonny Rao <sonnyrao@chromium.org>, stefan@agner.ch, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Addy Ke <addy.ke@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 September 2014 09:42:18 Arnd Bergmann wrote:
-> > +     switch (set_size >> 10) {
-> > +     case 512:
-> > +             set_size_bits = 6;
-> > +             break;
-> > +     case 256:
-> > +             set_size_bits = 5;
-> > +             break;
-> > +     case 128:
-> > +             set_size_bits = 4;
-> > +             break;
-> > +     case 64:
-> > +             set_size_bits = 3;
-> > +             break;
-> > +     case 32:
-> > +             set_size_bits = 2;
-> > +             break;
-> > +     case 16:
-> > +             set_size_bits = 1;
-> > +             break;
-> > +     default:
-> > +             pr_err("L2C OF: cache way size: %d KB is not mapped\n",
-> > +                    way_size);
-> > +             break;
-> > +     }
-> > +
-> > +     /*
-> > +      * The l2x0 TRMs call this size "way size" but that is incorrect:
-> > +      * the thing being configured in these register bits is actually
-> > +      * the cache set size, so the variable here has the right name
-> > +      * but the register bit definitions following the TRM are not
-> > +      * in archaic naming.
-> > +      */
-> 
-> No, I think actually the comment and the variable name are wrong here,
-> and the TRM is right. I'm surprised you get the right results out of
-> this. The set_size should be a relatively small number, e.g. 256 bytes
-> in case of an 8-way associative cache with 32 byte lines. What is the
-> pr_debug output and the properties you pass in for your example system?
-> 
+Am Mittwoch, 3. September 2014, 16:05:23 schrieb Doug Anderson:
+> It's convenient (and less confusing to people reading logs) if the
+> eMMC port on rk3288 is consistenly marked with mmc0 and the sdmmc port
+> on rk3288 is consistently marked with mmc1.  Add the appropriate
+> aliases.
 
-I just saw you had 'cache-sets = <8>' in your original DT file. That
-is the wrong number, it needs to be 'cache-sets = <512>'. When you
-fix that, you should get the right way_size as well.
+Added to my v3.18-next/dts branch
 
-	Arnd
+> 
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Reviewed-by: Sonny Rao <sonnyrao@chromium.org>
+> ---
+> 
+> Changes in v2:
+> - Use mshc aliases now
+> - Adds sdio0/1 aliases since those are in the dts.
+> 
+>  arch/arm/boot/dts/rk3288.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 5f866e0..2c5d01f 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -29,6 +29,10 @@
+>  		i2c3 = &i2c3;
+>  		i2c4 = &i2c4;
+>  		i2c5 = &i2c5;
+> +		mshc0 = &emmc;
+> +		mshc1 = &sdmmc;
+> +		mshc2 = &sdio0;
+> +		mshc3 = &sdio1;
+>  		serial0 = &uart0;
+>  		serial1 = &uart1;
+>  		serial2 = &uart2;
+
