@@ -1,32 +1,41 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: PFUZE100 regulator not going off when PWRON is 0
-Date: Tue, 9 Sep 2014 22:59:31 +0200
-Message-ID: <CAL8zT=hf8T7P=7PJKK9_de2R8bHmm=O4ws3JbBqKBaTMR5DinA@mail.gmail.com>
-References: <CAL8zT=hNnRU3gbprVXOMt6FC9veRvQKRmS9gSeCm5-DNfGv-xg@mail.gmail.com>
- <20140903125248.GK29327@sirena.org.uk> <20140909024100.GA19119@Robin-OptiPlex-780>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/2] PCI: keystone: update to support multiple pci ports
+Date: Tue, 09 Sep 2014 23:09:36 +0200
+Message-ID: <9042477.aRbAhpkfQ5@wuerfel>
+References: <1410293835-13050-1-git-send-email-m-karicheri2@ti.com> <3294679.puV171E8qx@wuerfel> <540F6646.3010607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140909024100.GA19119@Robin-OptiPlex-780>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <540F6646.3010607@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-09-09 4:41 GMT+02:00 Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>:
-> Thanks for Mark's forward.
->
-> Hi Jean-Michel,
->   Yes, SWxOMODE can be set as 1 to active sleep mode if PWRON turn-off event
-> occurs. And the voltage of sleep mode can be set in other register SWxOFF. But
-> by default, SWxOMODE is 0 which means all SW will be turned off while PWRON go
-> form 1 to 0. For your issue, I hope you check the hardware design, and measure
-> PWRON pin to see whether it has been pulled low once your push reset key.
+On Tuesday 09 September 2014 16:42:46 Murali Karicheri wrote:
+> >>
+> >>      /* update the Vendor ID */
+> >> -    vendor_device_id = readl(ks_pcie->va_reg_pciid);
+> >> -    writew((vendor_device_id>>  16), pp->dbi_base + PCI_DEVICE_ID);
+> >> +    writew(ks_pcie->device_id, pp->dbi_base + PCI_DEVICE_ID);
+> >>
+> >>      /* update the DEV_STAT_CTRL to publish right mrrs */
+> >>      val = readl(pp->dbi_base + PCIE_CAP_BASE + PCI_EXP_DEVCTL);
+> >
+> > This change must have slipped in accidentally, at least it's not
+> > described in the changelog. Should this be another patch?
+> > The change seems useful.
+> Are you referring to mrrs or update to device id?  device id is in a SoC 
+> register at index2 and is read and updated by the driver here. MRRS 
+> update was originally in the code.
+> 
 
-Thank you both, we found an electrical issue which made it not going down to 0V.
-Regards,
-JM
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I meant the device id change. Maybe you accidentally did 'git commit
+--amend' during a rebase and that replaced the real changelog with
+the one of the patch in front of it and merged the two patches?
+
+That happened to me a few times and would explain the strange mix
+of two changes.
+
+	Arnd
