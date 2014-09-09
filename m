@@ -1,47 +1,106 @@
-From: Jamal Hadi Salim <jhs-jkUAjuhPggJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] net: Add Keystone NetCP ethernet driver support
-Date: Tue, 09 Sep 2014 07:44:09 -0400
-Message-ID: <540EE809.9020901@mojatatu.com>
-References: <1408115562-22487-1-git-send-email-santosh.shilimkar@ti.com> <20140821.163612.282672926741753926.davem@davemloft.net> <53F79DC5.8030003@ti.com> <540DC00F.1080103@ti.com>
+From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Subject: Re: Watchdog start during boot
+Date: Tue, 09 Sep 2014 13:48:00 +0200
+Message-ID: <540EE8F0.3020500@elproma.com.pl>
+References: <1410258569.15354.3.camel@lp-lvrv.comap.cz> <20140909110043.GG24081@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <540DC00F.1080103-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20140909110043.GG24081-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sandeep_n-l0cyMroinI0@public.gmane.org, Benjamin LaHaise <bcrl-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, shrijeet Mukherjee <shm-qUQiAmfTcIp+XZJcv9eMoEEOCMrvLtNR@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lisovy Rostislav <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Vokac <michal.vokac-veUE7cmDK2A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/14 10:41, Santosh Shilimkar wrote:
+Hi.
 
->> The NetCP plugin module infrastructure use all the standard kernel
->> infrastructure and its very tiny.
+http://www.spinics.net/lists/linux-watchdog/msg04055.html
+The patch is little similar to mine.
 
-So i found this manual here:
-http://www.silica.com/fileadmin/02_Products/Productdetails/Texas_Instruments/SILICA_TI_66AK2E05-ds.pdf
+I see the proposal http://www.spinics.net/lists/linux-watchdog/msg05004.html
+need our common forward evaluation. We all have similar needs.
 
-Glad there is an open document!
-There are a couple of ethernet switch chips I can spot there.
+I propose to add to my initial patch rootfs's warm-up time
+or similar name of parameter.
+If this time is not zero after the time timer stops pinging.
+The param is time when userland is ready to maintain
+a watchdog alone if it supports wachdog at all.
+Some userlands open /dev/watchdog only in critical moments
+and after they use magic close. Therefore my patch continue
+watchdog's pinging in kernel space.
 
-Can i control those with "bridge" or say "brctl" utilities?
+Information that watchdog is not stopable could be added to DT.
+However it seems to direct depends on the watchdog, ie. its driver
+or if bootloader enabled/disabled the watchdog.
 
-I can see the bridge ports are exposed and i should be able to
-control them via ifconfig or ip link. Thats what "standard
-kernel infrastructure" means. Magic hidden in a driver is
-not.
+As Guenter Roeck wrote
+watchdog_dev could be extended to support not only
+always active watchdogs but also longer timeout values
+to not implement it in each watchdog driver separately like now.
 
-Take a look at recent netconf discussion (as well as earlier
-referenced discussions):
-http://vger.kernel.org/netconf-nf-offload.pdf
+Also suspend could be unified in my opinion by some helper functions.
 
-Maybe we can help providing you some direction?
-The problem is it doesnt seem that the offload specs for
-those other pieces are open? e.g how do i add an entry
-to the L2 switch?
+best regards
+Janusz
 
-cheers,
-jamal
+W dniu 2014-09-09 13:00, Markus Pargmann pisze:
+> Hi,
+>
+> On Tue, Sep 09, 2014 at 12:29:29PM +0200, Lisovy Rostislav wrote:
+>> Hello;
+>> If my understanding is correct, the purpose of the "watchdog subsystem"
+>> is to provide an unified interface from user-space to watchdog devices
+>> (via /dev). The issue I am trying to solve is how to start the watchdog
+>> during boot (it would be sufficient just not to disable it since the
+>> bootloader enables it) to be controlled later on with the user-space
+>> tool -- i.e. when the user-space will not boot properly, I would like
+>> the device to be rebooted.
+>>
+>> My "quick and dirty" device-specific solution is:
+>>
+>> diff --git a/drivers/watchdog/omap_wdt.c b/drivers/watchdog/omap_wdt.c
+>> index 3691b15..1e44b03f 100644
+>> --- a/drivers/watchdog/omap_wdt.c
+>> +++ b/drivers/watchdog/omap_wdt.c
+>> @@ -53,6 +53,10 @@ static unsigned timer_margin;
+>>   module_param(timer_margin, uint, 0);
+>>   MODULE_PARM_DESC(timer_margin, "initial watchdog timeout (in seconds)");
+>>   
+>> +static bool start_on_boot = false;
+>> +module_param(start_on_boot, bool, 0);
+>> +MODULE_PARM_DESC(start_on_boot, "Start the watchdog during boot");
+>> +
+>>   struct omap_wdt_dev {
+>>          void __iomem    *base;          /* physical */
+>>          struct device   *dev;
+>> @@ -269,6 +273,9 @@ static int omap_wdt_probe(struct platform_device *pdev)
+>>   
+>>          pm_runtime_put_sync(wdev->dev);
+>>   
+>> +       if (start_on_boot)
+>> +               omap_wdt_start(omap_wdt);
+>> +
+>>          return 0;
+>>   }
+>>
+>> however I think it would be much beneficial to do this in a generic way.
+>> Maybe to create a device tree property, that would store some flag to
+>> start the watchdog during boot?
+> The devicetree should be a hardware description, so it may not be the
+> right way to pass such information.
+>
+> Some time ago I proposed something similar where the first watchdog
+> driver that is registered can be activated by a kernel commandline
+> parameter. Here is some discussion about the topic:
+> 	Mail-id 1393604183-8755-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+> 	http://www.spinics.net/lists/linux-watchdog/msg04055.html
+>
+> Best regards,
+>
+> Markus
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
