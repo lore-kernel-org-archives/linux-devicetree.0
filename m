@@ -1,98 +1,64 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC 1/3] DT: add binding for MXS regulator
-Date: Tue, 9 Sep 2014 18:59:40 +0100
-Message-ID: <20140909175940.GF3896@leverpostej>
-References: <1410089869-6611-1-git-send-email-info@lategoodbye.de>
- <1410089869-6611-2-git-send-email-info@lategoodbye.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] leds: Add DT support for leds-pca9532
+Date: Tue, 09 Sep 2014 20:08:53 +0200
+Message-ID: <17734612.3IvPuVrruO@wuerfel>
+References: <1410269280-8761-1-git-send-email-stigge@antcom.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410089869-6611-2-git-send-email-info@lategoodbye.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <info@lategoodbye.de>
-Cc: "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410269280-8761-1-git-send-email-stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 07, 2014 at 12:37:47PM +0100, Stefan Wahren wrote:
-> This patch adds the Device tree bindings for the Freescale MXS on-chip
-> regulators.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  .../bindings/regulator/mxs-regulator.txt           | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mxs-regulator.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/mxs-regulator.txt b/Documentation/devicetree/bindings/regulator/mxs-regulator.txt
-> new file mode 100644
-> index 0000000..c3226cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mxs-regulator.txt
-> @@ -0,0 +1,38 @@
-> +MXS regulators
+On Tuesday 09 September 2014 15:28:00 Roland Stigge wrote:
+> +#ifdef CONFIG_OF
+> +static struct pca9532_platform_data *pca9532_parse_dt(struct device *dev)
+> +{
+...
 > +
-> +Required node properties:
-> +- compatible: Should be "fsl,<soc>-power", where soc is "imx23" or "imx28"
-> +- reg: Offset and length of the register set for the device
-
-We require #address-cells and #size-cells if the child nodes have reg
-entries.
-
+>  static int pca9532_probe(struct i2c_client *client,
+>         const struct i2c_device_id *id)
+>  {
+> @@ -449,6 +489,11 @@ static int pca9532_probe(struct i2c_clie
+>         struct pca9532_platform_data *pca9532_pdata =
+>                         dev_get_platdata(&client->dev);
+>  
+> +#ifdef CONFIG_OF
+> +       if (!pca9532_pdata && client->dev.of_node)
+> +               pca9532_pdata = pca9532_parse_dt(&client->dev);
+> +#endif
 > +
-> +Required regulator properties:
-> +- compatible: Must be "fsl,mxs-regulator"
-> +- reg: Offset of the register set for the regulator
 
-Is this the offset or the absolute physical address?
+It would be better to remove the two #ifdef statements and instead
+do this in C language as
 
-The example seems to be absolute.
+	if (IS_ENABLED(CONFIG_OF) && !pca9532_pdata && client->dev.of_node)
+		pca9532_pdata = pca9532_parse_dt(&client->dev);
 
-> +- mxs-max-reg-val: Maximum value of this register
+This gives you extra compile-time coverage when CONFIG_OF is not
+enabled.
 
-What does this even mean? What's the format?
+I would probably also remove the !pca9532_pdata check there, since
+we rarely do auxdata for new devices these days, but that is a separate
+matter, and the check does not hurt.
 
-Is this not implied by standard properties like regulator-max-microvolt?
+> +       if (!of_property_read_u32_array(np, "nxp,pwm", &pwm[0], 2)) {
+> +               for (i = 0; i < 2; i++)
+> +                       pca9532_pdata->pwm[i] = pwm[i];
+> +       }
 
-> +Optional regulator properties:
-> +- mxs-default-microvolt: initial voltage of the regulator
+Is this a full PWM controller? If it is, it would be better to also
+provide a #pwm-cells property and register the device with the PWM
+subsystem to allow arbitrary users.
 
-Why is this necessary?
+If the PWM is only really usable for LED, it's probably enough to
+leave this used by the LED subsystem.
 
-Mark.
-
-> +
-> +Any regulator property defined as part of the core regulator
-> +binding, defined in regulator.txt, can also be used.
-> +
-> +Example:
-> +
-> +	power: power@80044000 {
-> +		compatible = "fsl,imx28-power";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x80044000 0x2000>;
-> +
-> +		reg_vddio: regulator-vddio@80044060 {
-> +			reg = <0x80044060>;
-> +			compatible = "fsl,mxs-regulator";
-> +			regulator-name = "vddio";
-> +			regulator-min-microvolt = <2800000>;
-> +			regulator-max-microvolt = <3600000>;
-> +			regulator-microvolt-offset = <80000>;
-> +			regulator-always-on;
-> +			mxs-max-reg-val = <0x10>;
-> +			mxs-default-microvolt = <3300000>;
-> +		};
-> +	};
-> +
-> -- 
-> 1.8.1.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
