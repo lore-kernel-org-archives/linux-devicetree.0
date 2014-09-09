@@ -1,52 +1,69 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v2] thermal: rcar: Add binding docs for new R-Car Gen2
- SoCs
-Date: Tue, 9 Sep 2014 10:51:29 -0400
-Message-ID: <20140909145127.GA5778@developer>
-References: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 2/2] DTS: serial: Add bindings documention for the
+ Mediatek UARTs
+Date: Tue, 9 Sep 2014 16:55:06 +0200
+Message-ID: <CABuKBe+nkR+HvQm-pacg5cJeYey-Nj+uqqLpzi1FAvzbxtJuew@mail.gmail.com>
+References: <1407852737-17265-1-git-send-email-matthias.bgg@gmail.com>
+	<1407852737-17265-3-git-send-email-matthias.bgg@gmail.com>
+	<20140908223314.GA26151@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409213552-5713-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Zhang Rui <rui.zhang@intel.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140908223314.GA26151@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, jslaby@suse.cz, Grant Likely <grant.likely@linaro.org>, Alan Cox <alan@linux.intel.com>, Varka Bhadram <varkabhadram@gmail.com>, Tobias Klauser <tklauser@distanz.ch>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Yingjoe Chen <yingjoe.chen@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 28, 2014 at 10:12:32AM +0200, Geert Uytterhoeven wrote:
->   - r8a7792 (R-Car V2H)
->   - r8a7793 (R-Car M2-N)
->   - r8a7794 (R-Car E2)
-> 
-> r8a7791 is now called "R-Car M2-W".
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+2014-09-09 0:33 GMT+02:00 Greg KH <gregkh@linuxfoundation.org>:
+> On Tue, Aug 12, 2014 at 04:12:17PM +0200, Matthias Brugger wrote:
+>> This patch adds the devicetree documentation for the Mediatek UART.
+>>
+>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> ---
+>>  .../devicetree/bindings/serial/mtk-uart.txt        |   20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/serial/mtk-uart.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+>> new file mode 100644
+>> index 0000000..6ca0e15
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+>> @@ -0,0 +1,20 @@
+>> +* Mediatek Universal Asynchronous Receiver/Transmitter (UART)
+>> +
+>> +Required properties:
+>> +- compatible: "mediatek,mt6577-uart"
+>> +  Compatibility with mt6577, mt6589, mt6582
+>> +
+>> +- reg: The base address of the UART register bank.
+>> +
+>> +- interrupts: A single interrupt specifier.
+>> +
+>> +- clocks: Clock driving the hardware.
+>> +
+>> +Example:
+>> +
+>> +     uart0: serial@11006000 {
+>> +             compatible = "mediatek,mt6577-uart";
+>> +             reg = <0x11006000 0x400>;
+>> +             interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
+>> +             clocks = <&uart_clk>;
+>> +     };
+>> --
+>> 1.7.9.5
+>
+> Resend this one as well with the 1/2 patch please.
 
-Pulled into my next branch. Thanks.
+Ok, I will send v5 with the comments from Mark added.
 
-> ---
-> v2: Drop RFC
-> ---
->  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> index 0ef00be44b01..43404b197933 100644
-> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-> @@ -7,7 +7,10 @@ Required properties:
->  			    - "renesas,thermal-r8a73a4" (R-Mobile AP6)
->  			    - "renesas,thermal-r8a7779" (R-Car H1)
->  			    - "renesas,thermal-r8a7790" (R-Car H2)
-> -			    - "renesas,thermal-r8a7791" (R-Car M2)
-> +			    - "renesas,thermal-r8a7791" (R-Car M2-W)
-> +			    - "renesas,thermal-r8a7792" (R-Car V2H)
-> +			    - "renesas,thermal-r8a7793" (R-Car M2-N)
-> +			    - "renesas,thermal-r8a7794" (R-Car E2)
->  - reg			: Address range of the thermal registers.
->  			  The 1st reg will be recognized as common register
->  			  if it has "interrupts".
-> -- 
-> 1.9.1
-> 
+>
+> thanks,
+>
+> greg k-h
+
+
+
+-- 
+motzblog.wordpress.com
