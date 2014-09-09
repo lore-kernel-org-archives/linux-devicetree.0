@@ -1,80 +1,68 @@
-From: Matti Vaittinen <matti.vaittinen@nsn.com>
-Subject: [PATCH v4 1/2] Documentation: dt-bindings: trickle charger dt
- binding document for ds1339
-Date: Tue, 9 Sep 2014 13:34:56 +0300
-Message-ID: <20140909103449.GA32724@fi-ourus-dhcp00977.emea.nsn-net.net>
+From: Jingchang Lu <jingchang.lu@freescale.com>
+Subject: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for LS1021A
+Date: Tue, 9 Sep 2014 16:39:12 +0800
+Message-ID: <1410251958-3961-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: a.zummo@towertech.it, "jic23@kernel.org" <jic23@kernel.org>, "arno@natisbad.org" <arno@natisbad.org>, jgunthorpe@obsidianresearch.com, san@rosetechnology.dk, hs@denx.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Sverdlin Alexander <alexander.sverdlin@nsn.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@freescale.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Documentation: dt-bindings: trickle charger dt binding document for ds1339
+This series contain the support for Freescale LS1021A CPU and LS1021A-QDS
+and LS1021A-TWR board.
 
-Some DS13XX devices have "trickle chargers". Introduce a device tree binding
-for the resistor and diode configuration for enabling trickle charger.
+The LS1021A SoC combines two ARM Cortex-A7 cores that have been optimized
+for high reliability and pack the highest level of integration available
+for sub-3W embedded communications processors and with a comprehensive
+enablement model focused on ease of programmability.
 
+The LS1021A SoC shares IPs with i.MX family, Vybrid family and Freescale
+PowerPC platform. 
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@nsn.com>
+For the detail information about LS1021A SoC, please refer to the RM doc.
+
 ---
+changes in v3:
+rewrite scfg and dcfg binding doc description.
+remove untested node and mtd partation info.
 
-    Delta to v3:
-        - Splitted documentation to own patch
-        - Changed diode property to trickle-diode-enable
+changes in v2:
+remove unused nodes.
+wakeup the secondary core by IPI call to u-boot standby procedure. 
+add dt-bindings for LS1021A SoC and platform gerenal configuration nodes.
 
- .../devicetree/bindings/i2c/trivial-devices.txt        |  1 -
- .../devicetree/bindings/rtc/dallas,ds1339.txt          | 18 ++++++++++++++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+----------------------------------------------------------------
+Jingchang Lu (6):
+	ARM: dts: Add SoC level device tree support for LS1021A
+	ARM: dts: Add initial LS1021A QDS board dts support
+	ARM: dts: Add initial LS1021A TWR board dts support
+	dt-bindings: arm: add Freescale LS1021A SoC device tree binding
+	ARM: imx: Add initial support for Freescale LS1021A
+	ARM: imx: Add Freescale LS1021A SMP support
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 6af570e..e9206a4 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -35,7 +35,6 @@ catalyst,24c32		i2c serial eeprom
- cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
- dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
- dallas,ds1338		I2C RTC with 56-Byte NV RAM
--dallas,ds1339		I2C Serial Real-Time Clock
- dallas,ds1340		I2C RTC with Trickle Charger
- dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
- dallas,ds1631		High-Precision Digital Thermometer
-diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-new file mode 100644
-index 0000000..fba65b2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-@@ -0,0 +1,18 @@
-+* Dallas DS1339		I2C Serial Real-Time Clock
-+
-+Required properties:
-+- compatible: Should contain "dallas,ds1339".
-+- reg: I2C address for chip
-+
-+Optional properties:
-+- trickle-resistor-ohms : Selected resistor for trickle charger
-+	Values usable for ds1339 are 250, 2000, 4000
-+	Should be given if trickle charger should be enabled
-+- trickle-diode-enable : Use internal trickle charger diode
-+	Should be given if internal trickle charger diode should be enabled
-+Example:
-+	ds1339: rtc@68 {
-+		compatible = "dallas,ds1339";
-+		trickle-resistor-ohms = <250>;
-+		reg = <0x68>;
-+	};
--- 
-1.8.3.1
-
-
--- 
-=============================================
-
-Matti Vaittinen
-Senile SW Specialist
-FINLAND 
-
-~~ When things go utterly wrong vim users can always type :help! ~~
+ Documentation/devicetree/bindings/arm/fsl.txt |  38 +++
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/ls1021a-qds.dts             | 285 +++++++++++++++++++++
+ arch/arm/boot/dts/ls1021a-twr.dts             | 117 +++++++++
+ arch/arm/boot/dts/ls1021a.dtsi                | 670 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-imx/Kconfig                     |  14 ++
+ arch/arm/mach-imx/Makefile                    |   4 +-
+ arch/arm/mach-imx/common.h                    |   1 +
+ arch/arm/mach-imx/mach-ls1021a.c              |  34 +++
+ arch/arm/mach-imx/platsmp.c                   |  32 +++
+ 10 files changed, 1216 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
+ create mode 100755 arch/arm/boot/dts/ls1021a-twr.dts
+ create mode 100644 arch/arm/boot/dts/ls1021a.dtsi
+ create mode 100644 arch/arm/mach-imx/mach-ls1021a.c
