@@ -1,47 +1,72 @@
-From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: PFUZE100 regulator not going off when PWRON is 0
-Date: Tue, 9 Sep 2014 10:41:02 +0800
-Message-ID: <20140909024100.GA19119@Robin-OptiPlex-780>
-References: <CAL8zT=hNnRU3gbprVXOMt6FC9veRvQKRmS9gSeCm5-DNfGv-xg@mail.gmail.com>
- <20140903125248.GK29327@sirena.org.uk>
+From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/5] extcon: gpio: Minor cleanups
+Date: Tue, 9 Sep 2014 09:44:34 +0530
+Message-ID: <1410236078-11713-2-git-send-email-george.cherian@ti.com>
+References: <1410236078-11713-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140903125248.GK29327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1410236078-11713-1-git-send-email-george.cherian-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rongjun.ying-kQvG35nSl+M@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for Mark's forward.
+Minor Cleanups
+ - Order the include files in alphabetical order.
+ - Fix description of state_off in extcon_gpio.h
+ - Add a descrition for check_on_resume in extcon_gpio.h
 
-Hi Jean-Michel,
-  Yes, SWxOMODE can be set as 1 to active sleep mode if PWRON turn-off event
-occurs. And the voltage of sleep mode can be set in other register SWxOFF. But
-by default, SWxOMODE is 0 which means all SW will be turned off while PWRON go
-form 1 to 0. For your issue, I hope you check the hardware design, and measure
-PWRON pin to see whether it has been pulled low once your push reset key.
+Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+---
+ drivers/extcon/extcon-gpio.c       | 10 +++++-----
+ include/linux/extcon/extcon-gpio.h |  4 +++-
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-On Wed, Sep 03, 2014 at 01:52:48PM +0100, Mark Brown wrote:
-> On Wed, Sep 03, 2014 at 11:44:22AM +0200, Jean-Michel Hautbois wrote:
-> 
-> > I have a custom i.MX6 based board, but PMIC part is exactly the same
-> > as the Freescale SabreSD board.
-> > I have a reset button, which makes the PWRON signal on PFUZE100 go from 1 to 0.
-> > I thought this would reset the chip, and thus all voltages would go to
-> > 0, but this is not the case. It seems that SWxOMODE registers are
-> > involved in this process, accorgind to the datasheet, but I don't
-> > think this is implemented right now.
-> > 
-> > I also removed regulator-always-on for my SW2 pin in order to get it
-> > off, but this has no effect.
-> 
-> You should really contact someone who worked on the driver or Freescale
-> about this - I don't think anyone on the CC list knows anything about
-> the part.  In general if you're asking about a specific driver this is a
-> good approach.  I've CCed Robin Gong who was the original author.
-
+diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+index 5b7ec27..72f19a3 100644
+--- a/drivers/extcon/extcon-gpio.c
++++ b/drivers/extcon/extcon-gpio.c
+@@ -20,16 +20,16 @@
+  *
+ */
+ 
+-#include <linux/module.h>
+-#include <linux/kernel.h>
++#include <linux/extcon.h>
++#include <linux/extcon/extcon-gpio.h>
++#include <linux/gpio.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+-#include <linux/gpio.h>
+-#include <linux/extcon.h>
+-#include <linux/extcon/extcon-gpio.h>
+ 
+ struct gpio_extcon_data {
+ 	struct extcon_dev *edev;
+diff --git a/include/linux/extcon/extcon-gpio.h b/include/linux/extcon/extcon-gpio.h
+index 8900fdf..0b17ad4 100644
+--- a/include/linux/extcon/extcon-gpio.h
++++ b/include/linux/extcon/extcon-gpio.h
+@@ -34,8 +34,10 @@
+  * @irq_flags:		IRQ Flags (e.g., IRQF_TRIGGER_LOW).
+  * @state_on:		print_state is overriden with state_on if attached.
+  *			If NULL, default method of extcon class is used.
+- * @state_off:		print_state is overriden with state_on if detached.
++ * @state_off:		print_state is overriden with state_off if detached.
+  *			If NUll, default method of extcon class is used.
++ * @check_on_resume:	Boolean describing whether to check the state of gpio
++ *			while resuming from sleep.
+  *
+  * Note that in order for state_on or state_off to be valid, both state_on
+  * and state_off should be not NULL. If at least one of them is NULL,
+-- 
+1.8.3.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
