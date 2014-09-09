@@ -1,112 +1,58 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: Watchdog start during boot
-Date: Tue, 9 Sep 2014 13:00:43 +0200
-Message-ID: <20140909110043.GG24081@pengutronix.de>
-References: <1410258569.15354.3.camel@lp-lvrv.comap.cz>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2 V4] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+Date: Tue, 9 Sep 2014 12:03:00 +0100
+Message-ID: <20140909110300.GD27786@leverpostej>
+References: <1407942041-3291-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1407942041-3291-2-git-send-email-suravee.suthikulpanit@amd.com>
+ <20140814175525.GI24018@leverpostej>
+ <540E3639.5080807@amd.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IvGM3kKqwtniy32b"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410258569.15354.3.camel-+pHGaL1WfiS95QTtyYMrYA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lisovy Rostislav <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Vokac <michal.vokac-veUE7cmDK2A@public.gmane.org>
+In-Reply-To: <540E3639.5080807@amd.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+[...]
 
---IvGM3kKqwtniy32b
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> @@ -1009,6 +1012,16 @@ gic_of_init(struct device_node *node, struct device_node *parent)
+> >>          if (of_property_read_u32(node, "cpu-offset", &percpu_offset))
+> >>                  percpu_offset = 0;
+> >>
+> >> +       gic_data[gic_cnt].irq_chip = &gic_chip;
+> >> +
+> >> +       /* Currently, we only support one v2m subnode. */
+> >> +       child = of_get_child_by_name(node, "v2m");
+> >> +       if (child) {
+> >> +               ret = gicv2m_of_init(child, &gic_data[gic_cnt]);
+> >> +               if (ret)
+> >> +                       return ret;
+> >> +       }
+> >
+> > I can't see how you'd sanely expand this to multiple children, which was
+> > the main point of having a separate node for the M block.
+> >
+> > Give the M block a compatible string and look for children with that
+> > string.
+> 
+> Mark,
+> 
+> I am making change in the struct gic_chip_data to contain "v2m_list" (instead of just
+> a single struct v2m_data). This way, it is clear on how we should handle multiple v2m nodes
+> within a GIC.
 
-Hi,
+Ok.
 
-On Tue, Sep 09, 2014 at 12:29:29PM +0200, Lisovy Rostislav wrote:
-> Hello;
-> If my understanding is correct, the purpose of the "watchdog subsystem"
-> is to provide an unified interface from user-space to watchdog devices
-> (via /dev). The issue I am trying to solve is how to start the watchdog
-> during boot (it would be sufficient just not to disable it since the
-> bootloader enables it) to be controlled later on with the user-space
-> tool -- i.e. when the user-space will not boot properly, I would like
-> the device to be rebooted.
->=20
-> My "quick and dirty" device-specific solution is:
->=20
-> diff --git a/drivers/watchdog/omap_wdt.c b/drivers/watchdog/omap_wdt.c
-> index 3691b15..1e44b03f 100644
-> --- a/drivers/watchdog/omap_wdt.c
-> +++ b/drivers/watchdog/omap_wdt.c
-> @@ -53,6 +53,10 @@ static unsigned timer_margin;
->  module_param(timer_margin, uint, 0);
->  MODULE_PARM_DESC(timer_margin, "initial watchdog timeout (in seconds)");
-> =20
-> +static bool start_on_boot =3D false;
-> +module_param(start_on_boot, bool, 0);
-> +MODULE_PARM_DESC(start_on_boot, "Start the watchdog during boot");
-> +
->  struct omap_wdt_dev {
->         void __iomem    *base;          /* physical */
->         struct device   *dev;
-> @@ -269,6 +273,9 @@ static int omap_wdt_probe(struct platform_device *pde=
-v)
-> =20
->         pm_runtime_put_sync(wdev->dev);
-> =20
-> +       if (start_on_boot)
-> +               omap_wdt_start(omap_wdt);
-> +
->         return 0;
->  }
->=20
-> however I think it would be much beneficial to do this in a generic way.
-> Maybe to create a device tree property, that would store some flag to
-> start the watchdog during boot?
+> As for the device tree binding, in order to handle multiple v2m nodes within a GIC,
+> it should not require adding another compatibility ID as it seems too complicate
+> to have GIC node with multiple compat IDs).
 
-The devicetree should be a hardware description, so it may not be the
-right way to pass such information.
+I don't follow.
 
-Some time ago I proposed something similar where the first watchdog
-driver that is registered can be activated by a kernel commandline
-parameter. Here is some discussion about the topic:
-	Mail-id 1393604183-8755-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-	http://www.spinics.net/lists/linux-watchdog/msg04055.html
+How does each sub-node having a compatible string complicate the GIC
+node?
 
-Best regards,
-
-Markus
-
---=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---IvGM3kKqwtniy32b
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJUDt3aAAoJEEpcgKtcEGQQfIIP+wZEx09jOfDiINxBqMCU+pf1
-stA94CkkpkaCtZKRa/Q6sAj0cj7P9v307AnwZy+ysQ/iFLXc+STbwdrqldPOTYmL
-I+SBcp+KbiEXe7wvsz+NDJlmjaYYiBeHJ3O35upxl56iONokM2KtpBZruhBW/zSS
-W1UdaqYdvHJdsrUB7k3/JaVBVhawk7C5bj+hZqFjLltrQvuZgKS0v4WGuApf6NM0
-ed1k7JJznD0Ozv7X7hksYAwrDMiUVAD8v4qOJUO2wyrbye9EdWLsxYWfvXkMKscB
-hYwYQXrm0x5CQ67tH8UdlRSqGJPUiqrp5nFriECeSWB75Wm5F3jPc1K47bIhgDTK
-orm4A2aG8NMuXzwE1Mo41Qjg6izzFKgO6wiJFWeJmpaWWPxwIlO9hY6bnv5/goav
-M4XAmbF4f9c72WwSHJM/NVOr5Yi/DhJkSsj7lWwe8a6TFDvopaUl/ZhiOXQoNnhJ
-6+GLOdGa02EnYqZkc3c3DXu/mIJ4o6orO8qtXkrbNWasjqYNP5RZkdoYBSLPozxP
-zXbjW244ymY6CONrz+GUtppzw9ekLAxwLbAY0C7XLgJDThkjpF8wAjpS3Q8wc69I
-/jtN0uR2irIudWYjpME5e9w6mokMB1zpSDoUQTMQfeNWAJWcaY+P8fwNEnK8urrt
-ddy6Kwal8WYrYH+cK7dV
-=3st2
------END PGP SIGNATURE-----
-
---IvGM3kKqwtniy32b--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
