@@ -1,97 +1,77 @@
-From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
-Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
-Date: Tue, 9 Sep 2014 09:22:06 +0300
-Message-ID: <20140909062158.GB21342@fi-ourus-dhcp00977.emea.nsn-net.net>
-References: <20140828125915.GJ14650@leverpostej>
- <20140828155157.GB23677@roeck-us.net>
- <20140828161025.GO14650@leverpostej>
- <20140828164825.GA12153@roeck-us.net>
- <20140828172842.GF12769@titan.lakedaemon.net>
- <20140828174034.GC15307@roeck-us.net>
- <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
- <20140829104001.GB19424@leverpostej>
- <20140908135242.GA21412@amd>
- <20140908145825.GO12081@leverpostej>
+From: Yijing Wang <wangyijing@huawei.com>
+Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
+ domain_nr
+Date: Tue, 9 Sep 2014 13:54:21 +0800
+Message-ID: <540E960D.7080408@huawei.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com> <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com> <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com> <20140908145459.GO27864@e106497-lin.cambridge.arm.com> <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com> <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140908145825.GO12081@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robherring2@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 08, 2014 at 03:58:25PM +0100, ext Mark Rutland wrote:
-> On Mon, Sep 08, 2014 at 02:52:42PM +0100, Pavel Machek wrote:
-> > > I would suggest we have two properties that describe the resistor's
-> > > rating and whether or not there is a diode:
-> > > 
-> > > trickle-resistor-ohms = <250>
-> > > diode-connected;
-> > > 
-> > > That's easy for a human to write and/or validate, we can easily extend
-> > > it in future, requires no proliferation of macros, and describes the
-> > > hardware rather than telling software what to do.
-> > > 
-> > > The driver becomes a little more complicated, but gains sanity checking,
-> > > which is a good thing.
-> > 
-> > Certainly looks better than register bit defines.
-> > 
-> > As rtc-bq32k has similar options, I'm interested, too. I believe we
-> > should add
-> > 
-> > trickle-charge-enable;
-
-I am unsure about this. It makes sense for devices where we cannot
-select resistor but just enable or disable charger. Is there any such
-devices? For devices like ds1339 this makes no sense. For them it is
-simpler to just enable the charger if resistor value is specified, and
-default the charger to be off. But I do not see a problem in supporting
-the trickle-charge-enable; for devices needing this (independently from
-the ds1307 driver).
-
-> > 
-> > (we may not want to charge at all), and I believe the diode should be
-> > 
-> > disconnect-diode;
-> > 
-> > ... With diode connected, charge is slower, and that probably should
-> > be the default value. We don't want to give too much current in
-> > default case.  (bq32k has hard-coded resistor value for
-> > diode/not-diode case).
+>>> on new requests. This function gets called quite a lot and I'm trying not to
+>>> make it too heavy weight.
+>>
+>> Generally, nothing should be accessing the same DT value frequently.
+>> It should get cached somewhere.
+>>
 > 
-> I agree that if one case is less likely to be problematic / damaging
-> that should be the default.
+> The problem appears for DTs that don't have the pci-domain info. Then the cached
+> value is left at the default non-valid value and attempts to rescan the DT will
+> be made every time the function is called.
+> 
+>> I don't really understand how domains are used so it's hard to provide
+>> a recommendation here. Do domains even belong in the DT?
+> 
+> ACPI calls them segments and the way Bjorn explained it to me at some moment was
+> that it was an attempt to split up a bus in different groups (or alternatively,
+> merge a few busses together). To be honest I haven't seen systems where the domain
+> is anything other than zero, but JasonG (or maybe Benjamin) were floating an
+> idea of using the domain number to identify physical slots.
 
-_Maybe_ 
-diode-connected = <1>; or 
-diode-connected = <0>; 
-or both
-diode-connected; and 
-diode-disconnected;
-could be used and let the driver to choose the defaults? But yes, I have
-no problem with inverting the default to be diode-connected.
+PCI domain(or named segment) is provided by firmware, in ACPI system, we evaluated it
+by method "_SEG". in IA64 with ACPI, PCI hostbridge driver retrieves the domain from ACPI,
+if it's absent, the default domain is zero. So I wonder why in DTS, if it's absent, we get
+a auto increment domain value.
 
-Then one question regarding the "process". Now if I cook up fourth patch
-with inverted diode-connected default for ds1339, should I collect new
-acks for this new patch? (V3 was acked by Alessandro and Jason.) I assume 
-yes.
+PCI get domain by ACPI "_SEG" in IA64(drivers/acpi/pci_root.c)
+......
+	status = acpi_evaluate_integer(handle, METHOD_NAME__SEG, NULL,
+				       &segment);
+	if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {
+		dev_err(&device->dev,  "can't evaluate _SEG\n");
+		result = -ENODEV;
+		goto end;
+	}
+.......
+
+Thanks!
+Yijing.
 
 > 
-> Mark.
+>> This function
+>> is just a weird mixture of data retrieval and allocation. I think you
+>> need to separate it into 2 functions.
+> 
+> It is meant to do allocation with the retrieval being a short-cut (or fine
+> control if you want).
+> 
+> I need to think a bit more for a better solution.
+> 
+> Best regards,
+> Liviu
+> 
+>>
+>> Rob
+>>
+> 
+
 
 -- 
-=============================================
-
-Matti Vaittinen
-Senile SW Specialist
-FINLAND 
-
-~~ When things go utterly wrong vim users can always type :help! ~~
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+Yijing
