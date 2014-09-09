@@ -1,35 +1,60 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 4/4] ARM: multi_v7_defconfig: Enable stih407 usb picophy
-Date: Tue,  9 Sep 2014 10:00:18 +0100
-Message-ID: <1410253218-18318-5-git-send-email-peter.griffin@linaro.org>
-References: <1410253218-18318-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410253218-18318-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kishon@ti.com, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, peppe.cavallaro@st.com, devicetree@vger.kernel.org
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding
+ to MFD driver
+Date: Tue, 9 Sep 2014 09:01:44 +0000
+Message-ID: <1410253304.25129.6.camel@intel.com>
+References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
+	 <4656BEB6164FC34F8171C6538F1A595B2E9829DA@SHSMSX101.ccr.corp.intel.com>
+	 <1409918522.30155.89.camel@intel.com> <31986364.cn091cmIXU@wuerfel>
+	 <4656BEB6164FC34F8171C6538F1A595B2E983296@SHSMSX101.ccr.corp.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E983296@SHSMSX101.ccr.corp.intel.com>
+Content-Language: en-US
+Content-ID: <8472BDCBB653DA4390AE67AADB58207B@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Chen, Alvin" <alvin.chen@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the picoPHY usb phy which is used by
-the usb2 and usb3 host controllers when controlling usb2/1.1
-devices. It is found in stih407 family SoC's from STMicroelectronics.
+T24gVHVlLCAyMDE0LTA5LTA5IGF0IDAxOjUwICswMDAwLCBDaGVuLCBBbHZpbiB3cm90ZToNCj4g
+PiBPbiBGcmlkYXkgMDUgU2VwdGVtYmVyIDIwMTQgMTI6MDI6MDEgU2hldmNoZW5rbywgQW5kcml5
+IHdyb3RlOg0KPiA+ID4gPiBpcnEgPSBpcnFfb2ZfcGFyc2VfYW5kX21hcChub2RlLCAwKTsgSWYg
+KCFpcnEpIHsNCj4gPiA+ID4gcHAtPmlycSA9IC0xOw0KPiA+ID4gPiByZXR1cm47DQo+ID4gPiA+
+IH0gZWxzZSB7DQo+ID4gPiA+IHBwLT5pcnEgPSBpcnE7DQo+ID4gPiA+IH0NCj4gPiA+ID4gVGhl
+biB0aGUgY29kZSBsb29rcyBzdHJhbmdlLg0KPiA+ID4gPg0KPiA+ID4gPiBIb3cgZG8geW91IHRo
+aW5rPw0KPiA+ID4NCj4gPiA+IElmIEkgdW5kZXJzdG9vZCBjb3JyZWN0bHkgeW91IG1lc3NlZCB1
+cCB3aXRoIGh3aXJxIHZzLiB2aXJxLg0KPiA+ID4gT3RoZXJ3aXNlIHlvdSBoYXZlIG1lbnRpb24g
+dGhhdCB5b3UgYXJlIHVzaW5nIHZpcnEgZXZlcnl3aGVyZSAoSSBndWVzcw0KPiA+ID4geW91IG1h
+eSByZW5hbWUgdGhlIGZpZWxkIGluIHRoZSBzdHJ1Y3R1cmUpLCBidXQgaW4gdGhpcyBjYXNlIHRo
+ZSBmaWVsZA0KPiA+ID4gaW4gdGhlIHBsYXRmb3JtX2RhdGEgbG9va3MgYSBiaXQgc3RyYW5nZS4N
+Cj4gPiANCj4gPiBUaGUgZmllbGQgaW4gcGxhdGZvcm1fZGF0YSBzaG91bGQgYmUgdGhlIG1hcHBl
+ZCB2aXJ0dWFsIGlycSBudW1iZXIsIGl0IG1ha2VzIG5vDQo+ID4gc2Vuc2UgdG8gdXNlIHRoZSBo
+d2lycSB1bmxlc3MgeW91IGFsc28gYWRkIGEgcG9pbnRlciB0byB0aGUgZG9tYWluIGluIHdoaWNo
+DQo+ID4gdGhhdCBod2lycSBleGlzdHMuDQo+ID4gDQo+ID4gQWxzbyB0aGUgb3V0cHV0IG9mIGly
+cV9vZl9wYXJzZV9hbmRfbWFwKCkgaXMgYSBtYXBwZWQgaXJxLCBhcyB0aGUgbmFtZQ0KPiA+IHN1
+Z2dlc3RzLg0KPiA+IA0KPiBJIGFncmVlIHdpdGggQXJuZC4gSGVyZSwgdGhlICdpcnEnIGlzICd2
+aXJxJy4NCj4gQW5kcml5LCB5b3UgbWF5IGJlIGNvbmZ1c2VkIGJ5IHRoZSBjb2RlIGxpa2UgJ2ly
+cV9jcmVhdGVfbWFwcGluZycuIEZvciBRdWFyayBjYXNlLCBpdCBoYXMgOCBHUElPIHBpbnMsIGFu
+ZCBlYWNoIHBpbiBjYW4gdHJpZ2dlcg0KPiBpbnRlcnJ1cHQsIGJ1dCBhbGwgdGhlc2UgaW50ZXJy
+dXB0cyBhcmUgdHJpZ2dlcmVkIGJ5IFBDSSBpcnEgd2hpY2ggaXMgc2hhcmVkLiBUaGUgJ2lycScg
+aW4gcGRhdGEgaXMgUENJIGlycS4gQXMgYWxsIEdQSU8gaW50ZXJydXB0cyBjb25uZWN0IHRvIHRo
+ZSBQQ0kNCj4gaXJxLCBvbmNlIHRoZSBHUElPIGludGVycnVwdCBpcyB0cmlnZ2VyZWQsIGFuZCB0
+aGUgUENJIGlycSBoYW5kbGVyIHdpbGwgYmUgY2FsbGVkICdkd2FwYl9pcnFfaGFuZGxlcl9tZmQn
+LiBBbmQgaW4gJ2R3YXBiX2RvX2lycScsIGl0IHdpbGwgcmVhZCB0aGUNCj4gaW50ZXJydXB0IHJl
+Z2lzdGVyIHRvIHNlZSB0aGUgaW50ZXJydXB0IGlzIHRyaWdnZXJlZCBieSB3aGljaCBHUElPIHBp
+biwgYW5kICdpcnFfY3JlYXRlX21hcHBpbmcnIGlzIGZvciB0aGlzIGNhc2UuDQoNClRoYW5rcyBm
+b3IgY2xhcmlmaWNhdGlvbi4gSSB0YWtlIGJhY2sgbXkgaW5pdGlhbCBjb21tZW50IHRoZW4uDQoN
+Ci0tIA0KQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BpbnRlbC5jb20+DQpJbnRl
+bCBGaW5sYW5kIE95DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KSW50ZWwgRmlubGFuZCBPeQpSZWdpc3RlcmVkIEFk
+ZHJlc3M6IFBMIDI4MSwgMDAxODEgSGVsc2lua2kgCkJ1c2luZXNzIElkZW50aXR5IENvZGU6IDAz
+NTc2MDYgLSA0IApEb21pY2lsZWQgaW4gSGVsc2lua2kgCgpUaGlzIGUtbWFpbCBhbmQgYW55IGF0
+dGFjaG1lbnRzIG1heSBjb250YWluIGNvbmZpZGVudGlhbCBtYXRlcmlhbCBmb3IKdGhlIHNvbGUg
+dXNlIG9mIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykuIEFueSByZXZpZXcgb3IgZGlzdHJpYnV0
+aW9uCmJ5IG90aGVycyBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5b3UgYXJlIG5vdCB0aGUg
+aW50ZW5kZWQKcmVjaXBpZW50LCBwbGVhc2UgY29udGFjdCB0aGUgc2VuZGVyIGFuZCBkZWxldGUg
+YWxsIGNvcGllcy4K
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 5fb95fb..65f4611 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -387,6 +387,7 @@ CONFIG_PWM_VT8500=y
- CONFIG_OMAP_USB2=y
- CONFIG_TI_PIPE3=y
- CONFIG_PHY_MIPHY365X=y
-+CONFIG_PHY_STIH407_USB=y
- CONFIG_PHY_SUN4I_USB=y
- CONFIG_EXT4_FS=y
- CONFIG_VFAT_FS=y
--- 
-1.9.1
