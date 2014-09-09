@@ -1,77 +1,104 @@
-From: Yijing Wang <wangyijing@huawei.com>
-Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
- domain_nr
-Date: Tue, 9 Sep 2014 13:54:21 +0800
-Message-ID: <540E960D.7080408@huawei.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com> <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com> <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com> <20140908145459.GO27864@e106497-lin.cambridge.arm.com> <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com> <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v6 5/7] net: cpsw: Add am33xx MACID readout
+Date: Tue, 9 Sep 2014 08:05:22 +0200
+Message-ID: <20140909060522.GD24081@pengutronix.de>
+References: <1410110375-3570-1-git-send-email-mpa@pengutronix.de>
+ <1410110375-3570-6-git-send-email-mpa@pengutronix.de>
+ <20140908165116.GH3238@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robherring2@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140908165116.GH3238@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "David S. Miller" <davem@davemloft.net>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Wolfram Sang <wsa@the-dreams.de>, Steven Rostedt <rostedt@goodmis.org>, Mugunthan V N <mugunthanvnm@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
->>> on new requests. This function gets called quite a lot and I'm trying not to
->>> make it too heavy weight.
->>
->> Generally, nothing should be accessing the same DT value frequently.
->> It should get cached somewhere.
->>
-> 
-> The problem appears for DTs that don't have the pci-domain info. Then the cached
-> value is left at the default non-valid value and attempts to rescan the DT will
-> be made every time the function is called.
-> 
->> I don't really understand how domains are used so it's hard to provide
->> a recommendation here. Do domains even belong in the DT?
-> 
-> ACPI calls them segments and the way Bjorn explained it to me at some moment was
-> that it was an attempt to split up a bus in different groups (or alternatively,
-> merge a few busses together). To be honest I haven't seen systems where the domain
-> is anything other than zero, but JasonG (or maybe Benjamin) were floating an
-> idea of using the domain number to identify physical slots.
 
-PCI domain(or named segment) is provided by firmware, in ACPI system, we evaluated it
-by method "_SEG". in IA64 with ACPI, PCI hostbridge driver retrieves the domain from ACPI,
-if it's absent, the default domain is zero. So I wonder why in DTS, if it's absent, we get
-a auto increment domain value.
+--VMt1DrMGOVs3KQwf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-PCI get domain by ACPI "_SEG" in IA64(drivers/acpi/pci_root.c)
-......
-	status = acpi_evaluate_integer(handle, METHOD_NAME__SEG, NULL,
-				       &segment);
-	if (ACPI_FAILURE(status) && status != AE_NOT_FOUND) {
-		dev_err(&device->dev,  "can't evaluate _SEG\n");
-		result = -ENODEV;
-		goto end;
-	}
-.......
+On Mon, Sep 08, 2014 at 09:51:17AM -0700, Tony Lindgren wrote:
+> * Markus Pargmann <mpa@pengutronix.de> [140907 10:20]:
+> > This patch adds a function to get the MACIDs from the am33xx SoC
+> > control module registers which hold unique vendor MACIDs. This is only
+> > used if of_get_mac_address() fails to get a valid mac address.
+> ...
+>=20
+> > @@ -1928,8 +1960,16 @@ static int cpsw_probe_dt(struct cpsw_platform_da=
+ta *data,
+> >  			 PHY_ID_FMT, mdio->name, phyid);
+> > =20
+> >  		mac_addr =3D of_get_mac_address(slave_node);
+> > -		if (mac_addr)
+> > +		if (mac_addr) {
+> >  			memcpy(slave_data->mac_addr, mac_addr, ETH_ALEN);
+> > +		} else {
+> > +			if (of_machine_is_compatible("ti,am33xx")) {
+> > +				ret =3D cpsw_am33xx_cm_get_macid(&pdev->dev, i,
+> > +							slave_data->mac_addr);
+> > +				if (ret)
+> > +					return ret;
+> > +			}
+> > +		}
+> > =20
+> >  		slave_data->phy_if =3D of_get_phy_mode(slave_node);
+> >  		if (slave_data->phy_if < 0) {
+>=20
+> Thanks for updating this, this looks more future proof for adding
+> the dra7 related patch.
+>=20
+> For the long run, it probably makes sense to add SoC specific
+> compatible values such as "ti,cpsw-am3350" and so on. Then the
+> mac address functions can be initialized based on the of_device_id
+> entry for .data. The wiring is cleary SoC specific here.
 
-Thanks!
-Yijing.
+The hardware doesn't differ across the SoCs, so I thought it may be
+better to keep one compatible and parse the machine compatible for the
+MACID location. But different compatible values are also ok.
 
-> 
->> This function
->> is just a weird mixture of data retrieval and allocation. I think you
->> need to separate it into 2 functions.
-> 
-> It is meant to do allocation with the retrieval being a short-cut (or fine
-> control if you want).
-> 
-> I need to think a bit more for a better solution.
-> 
-> Best regards,
-> Liviu
-> 
->>
->> Rob
->>
-> 
+>=20
+> So for the purpose of this series, I'm fine with this series,
+> please feel free to add for this patch:
+>=20
+> Acked-by: Tony Lindgren <tony@atomide.com>
 
+Thanks.
 
--- 
-Thanks!
-Yijing
+Best regards,
+
+Markus
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--VMt1DrMGOVs3KQwf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJUDpiiAAoJEEpcgKtcEGQQz9cQAJAjeqU57PVda0KLTo872VXN
+EParWewrWRw4BW6L4EaVG+NEo4Dmi5ZuWxcihp3CEcYc8ZfmTn9hwJnyGoqs8wv3
+nBxCFTSlzoG4co7FbwHV24CoxC09IGk0Gd4jGIX9CmT6MyMKqjEEZKqp4X1YAciD
+cMflZnWYKEBZ2GWexGiUO4OZE14asPFJOuiYNa5KoyMmQ2gI6N9G2kSC92APQWQQ
+fvNNfSh3d3823oaEQ9MUfRI12Onz14LNDcuv+wkg0lLrbhSAkBPhc14Y1ntBlstT
+MfW9rCJKYzjQaak1lgCjsqS94c6pRCaXZftHjCLjwLGDaDaiGFjrUQKytf86szH7
+E6fubNb2t8T3ls1EHum8TwV1Jwv2u+L9HGIj749otDsVAfjdUjjjBrFgwJahJulK
+VTZY5uSm/a0MQuLpA42LxMFpV18sqoWpejGeEvTA6CXp44Ew7Gr7uTn1VmR4F57f
+2H4tngeGV9G/pO3NBsZ5IQdbtG+Ypr0a+L7kefU8jlCJ7hsRCMehAVB9LGaTVYnX
+4YYUmmBuK3dooIh8k+U8eGB8tBw8Ns61RG7WneBUBWPy2KjOqcm2eDZqRTSEFH64
+oruWLU2EM1aLEzoiDL6zXGrhNKJzgXKZpPM0a+q1MVtH+9XtOQ86vP+nPPg+69SV
+RzTlc6gjoGG1txk5YJp/
+=/qoz
+-----END PGP SIGNATURE-----
+
+--VMt1DrMGOVs3KQwf--
