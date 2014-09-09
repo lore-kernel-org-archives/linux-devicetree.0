@@ -1,80 +1,123 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/2] PCI: keystone: update to support multiple pci ports
-Date: Tue, 09 Sep 2014 22:28:16 +0200
-Message-ID: <3294679.puV171E8qx@wuerfel>
-References: <1410293835-13050-1-git-send-email-m-karicheri2@ti.com> <1410293835-13050-2-git-send-email-m-karicheri2@ti.com>
+From: Frank Li <Frank.Li@freescale.com>
+Subject: [Patch v2 net-next 04/12] net: fec: parser max queue number from dt file
+Date: Wed, 10 Sep 2014 04:15:35 +0800
+Message-ID: <1410293743-27874-5-git-send-email-Frank.Li@freescale.com>
+References: <1410293743-27874-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1410293835-13050-2-git-send-email-m-karicheri2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Murali Karicheri <m-karicheri2@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1410293743-27874-1-git-send-email-Frank.Li@freescale.com>
+Sender: netdev-owner@vger.kernel.org
+To: b38611@freescale.com, davem@davemloft.net, netdev@vger.kernel.org, lznuaa@gmail.com
+Cc: shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Fugang Duan <B38611@freescale.com>, Frank Li <Frank.Li@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 September 2014 16:17:15 Murali Karicheri wrote:
-> K2E SoC has two PCI ports. The SATA controller is connected to second
-> PCI port (port 1). This patch enhances the driver to support multiple
-> ports.
-> 
-> Update the DT Documentation for the new attribute, ti,pcie-port and
-> remove the note for bootargs as this is no longer needed.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> ---
->  - updated based on comment against v1
->  .../devicetree/bindings/pci/pci-keystone.txt       |    8 +++++---
->  drivers/pci/host/pci-keystone.c                    |   15 ++++++++++-----
->  drivers/pci/host/pci-keystone.h                    |    4 ++--
->  3 files changed, 17 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
-> index bedacf0..c8f5773 100644
-> --- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
-> @@ -56,11 +56,13 @@ Optional properties:-
->  	phy-names: name of the Generic Keystine SerDes phy for PCI
->  	  - If boot loader already does PCI link establishment, then phys and
->  	    phy-names shouldn't be present.
-> +	ti,pcie-port: PCI port number. This is used to configure the PCI port
-> +	    number. For example K2E SoC supports 2 PCI ports and PCI bindings
-> +	    for the second port adds ti,pcie-port = <1> to identify second port
-> +	    and driver uses this to configure the PCI mode register for second
-> +	    port. If not present, port number 0 is assumed.
+From: Fugang Duan <B38611@freescale.com>
 
-Is this still needed? I thought with patch 1 removed, we no longer had
-a reason to know the port number.
+By default, the tx/rx queue number is 1, user can config the queue number
+at DTS file like this:
+	fsl,num-tx-queues=<3>;
+	fsl,num-rx-queues=<3>
 
-> -=========================
-> -Driver requires pci=pcie_bus_perf in the bootargs for proper functioning.
-> diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
-> index f1119eb..893820d 100644
-> --- a/drivers/pci/host/pci-keystone.c
-> +++ b/drivers/pci/host/pci-keystone.c
-> @@ -253,8 +253,8 @@ static int keystone_pcie_fault(unsigned long addr, unsigned int fsr,
->  
->  static void __init ks_pcie_host_init(struct pcie_port *pp)
->  {
-> -	u32 vendor_device_id, val;
->  	struct keystone_pcie *ks_pcie = to_keystone_pcie(pp);
-> +	u32 val;
->  
->  	ks_pcie_establish_link(ks_pcie);
->  	ks_dw_pcie_setup_rc_app_regs(ks_pcie);
-> @@ -263,8 +263,7 @@ static void __init ks_pcie_host_init(struct pcie_port *pp)
->  			pp->dbi_base + PCI_IO_BASE);
->  
->  	/* update the Vendor ID */
-> -	vendor_device_id = readl(ks_pcie->va_reg_pciid);
-> -	writew((vendor_device_id >> 16), pp->dbi_base + PCI_DEVICE_ID);
-> +	writew(ks_pcie->device_id, pp->dbi_base + PCI_DEVICE_ID);
->  
->  	/* update the DEV_STAT_CTRL to publish right mrrs */
->  	val = readl(pp->dbi_base + PCIE_CAP_BASE + PCI_EXP_DEVCTL);
+Since i.MX6SX enet-AVB IP support multi queues, so use multi queues
+interface to allocate and set up an Ethernet device.
 
-This change must have slipped in accidentally, at least it's not
-described in the changelog. Should this be another patch?
-The change seems useful.
+Signed-off-by: Fugang Duan <B38611@freescale.com>
+Signed-off-by: Frank Li <Frank.Li@freescale.com>
+---
+ drivers/net/ethernet/freescale/fec.h      |  2 ++
+ drivers/net/ethernet/freescale/fec_main.c | 46 ++++++++++++++++++++++++++++++-
+ 2 files changed, 47 insertions(+), 1 deletion(-)
 
-	Arnd
+diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
+index b2b91f8..72fb90f 100644
+--- a/drivers/net/ethernet/freescale/fec.h
++++ b/drivers/net/ethernet/freescale/fec.h
+@@ -356,6 +356,8 @@ struct fec_enet_private {
+ 
+ 	bool ptp_clk_on;
+ 	struct mutex ptp_clk_mutex;
++	unsigned int num_tx_queues;
++	unsigned int num_rx_queues;
+ 
+ 	/* The saved address of a sent-in-place packet/buffer, for skfree(). */
+ 	struct fec_enet_priv_tx_q *tx_queue[FEC_ENET_MAX_TX_QS];
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 4c0d2ee..2240df0 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -2709,6 +2709,42 @@ static void fec_reset_phy(struct platform_device *pdev)
+ }
+ #endif /* CONFIG_OF */
+ 
++static void
++fec_enet_get_queue_num(struct platform_device *pdev, int *num_tx, int *num_rx)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int err;
++
++	*num_tx = *num_rx = 1;
++
++	if (!np || !of_device_is_available(np))
++		return;
++
++	/* parse the num of tx and rx queues */
++	err = of_property_read_u32(np, "fsl,num-tx-queues", num_tx);
++	err |= of_property_read_u32(np, "fsl,num-rx-queues", num_rx);
++	if (err) {
++		*num_tx = 1;
++		*num_rx = 1;
++		return;
++	}
++
++	if (*num_tx < 1 || *num_tx > FEC_ENET_MAX_TX_QS) {
++		dev_err(&pdev->dev, "Invalidate num_tx(=%d), fail back to 1\n",
++			*num_tx);
++		*num_tx = 1;
++		return;
++	}
++
++	if (*num_rx < 1 || *num_rx > FEC_ENET_MAX_RX_QS) {
++		dev_err(&pdev->dev, "Invalidate num_rx(=%d), fail back to 1\n",
++			*num_rx);
++		*num_rx = 1;
++		return;
++	}
++
++}
++
+ static int
+ fec_probe(struct platform_device *pdev)
+ {
+@@ -2720,13 +2756,18 @@ fec_probe(struct platform_device *pdev)
+ 	const struct of_device_id *of_id;
+ 	static int dev_id;
+ 	struct device_node *np = pdev->dev.of_node, *phy_node;
++	int num_tx_qs = 1;
++	int num_rx_qs = 1;
+ 
+ 	of_id = of_match_device(fec_dt_ids, &pdev->dev);
+ 	if (of_id)
+ 		pdev->id_entry = of_id->data;
+ 
++	fec_enet_get_queue_num(pdev, &num_tx_qs, &num_rx_qs);
++
+ 	/* Init network device */
+-	ndev = alloc_etherdev(sizeof(struct fec_enet_private));
++	ndev = alloc_etherdev_mqs(sizeof(struct fec_enet_private),
++				  num_tx_qs, num_rx_qs);
+ 	if (!ndev)
+ 		return -ENOMEM;
+ 
+@@ -2735,6 +2776,9 @@ fec_probe(struct platform_device *pdev)
+ 	/* setup board info structure */
+ 	fep = netdev_priv(ndev);
+ 
++	fep->num_rx_queues = num_rx_qs;
++	fep->num_tx_queues = num_tx_qs;
++
+ #if !defined(CONFIG_M5272)
+ 	/* default enable pause frame auto negotiation */
+ 	if (pdev->id_entry &&
+-- 
+1.9.1
