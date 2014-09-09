@@ -1,49 +1,80 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v2 3/6] rtc: at91sam9: add DT support
-Date: Tue,  9 Sep 2014 11:30:32 +0200
-Message-ID: <1410255035-26775-4-git-send-email-boris.brezillon@free-electrons.com>
-References: <1410255035-26775-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Matti Vaittinen <matti.vaittinen@nsn.com>
+Subject: [PATCH v4 1/2] Documentation: dt-bindings: trickle charger dt
+ binding document for ds1339
+Date: Tue, 9 Sep 2014 13:34:56 +0300
+Message-ID: <20140909103449.GA32724@fi-ourus-dhcp00977.emea.nsn-net.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410255035-26775-1-git-send-email-boris.brezillon@free-electrons.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux@roeck-us.net" <linux@roeck-us.net>
+Cc: a.zummo@towertech.it, "jic23@kernel.org" <jic23@kernel.org>, "arno@natisbad.org" <arno@natisbad.org>, jgunthorpe@obsidianresearch.com, san@rosetechnology.dk, hs@denx.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Sverdlin Alexander <alexander.sverdlin@nsn.com>
 List-Id: devicetree@vger.kernel.org
 
-Add of_match_table to the existing driver so that rtc nodes defined in at91
-DTs can be attached to this driver.
+Documentation: dt-bindings: trickle charger dt binding document for ds1339
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Some DS13XX devices have "trickle chargers". Introduce a device tree binding
+for the resistor and diode configuration for enabling trickle charger.
+
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@nsn.com>
 ---
- drivers/rtc/rtc-at91sam9.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-index 74a9ca0..57014b7 100644
---- a/drivers/rtc/rtc-at91sam9.c
-+++ b/drivers/rtc/rtc-at91sam9.c
-@@ -454,6 +454,14 @@ static int at91_rtc_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(at91_rtc_pm_ops, at91_rtc_suspend, at91_rtc_resume);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id at91_rtc_dt_ids[] = {
-+	{ .compatible = "atmel,at91sam9260-rtt" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, at91_rtc_dt_ids);
-+#endif
+    Delta to v3:
+        - Splitted documentation to own patch
+        - Changed diode property to trickle-diode-enable
+
+ .../devicetree/bindings/i2c/trivial-devices.txt        |  1 -
+ .../devicetree/bindings/rtc/dallas,ds1339.txt          | 18 ++++++++++++++++++
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index 6af570e..e9206a4 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -35,7 +35,6 @@ catalyst,24c32		i2c serial eeprom
+ cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
+ dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
+ dallas,ds1338		I2C RTC with 56-Byte NV RAM
+-dallas,ds1339		I2C Serial Real-Time Clock
+ dallas,ds1340		I2C RTC with Trickle Charger
+ dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
+ dallas,ds1631		High-Precision Digital Thermometer
+diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+new file mode 100644
+index 0000000..fba65b2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+@@ -0,0 +1,18 @@
++* Dallas DS1339		I2C Serial Real-Time Clock
 +
- static struct platform_driver at91_rtc_driver = {
- 	.probe		= at91_rtc_probe,
- 	.remove		= at91_rtc_remove,
-@@ -462,6 +470,7 @@ static struct platform_driver at91_rtc_driver = {
- 		.name	= "rtc-at91sam9",
- 		.owner	= THIS_MODULE,
- 		.pm	= &at91_rtc_pm_ops,
-+		.of_match_table = of_match_ptr(at91_rtc_dt_ids),
- 	},
- };
- 
++Required properties:
++- compatible: Should contain "dallas,ds1339".
++- reg: I2C address for chip
++
++Optional properties:
++- trickle-resistor-ohms : Selected resistor for trickle charger
++	Values usable for ds1339 are 250, 2000, 4000
++	Should be given if trickle charger should be enabled
++- trickle-diode-enable : Use internal trickle charger diode
++	Should be given if internal trickle charger diode should be enabled
++Example:
++	ds1339: rtc@68 {
++		compatible = "dallas,ds1339";
++		trickle-resistor-ohms = <250>;
++		reg = <0x68>;
++	};
 -- 
-1.9.1
+1.8.3.1
+
+
+-- 
+=============================================
+
+Matti Vaittinen
+Senile SW Specialist
+FINLAND 
+
+~~ When things go utterly wrong vim users can always type :help! ~~
