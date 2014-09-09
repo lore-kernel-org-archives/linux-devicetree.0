@@ -1,49 +1,36 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv3 3/3] ASoC: simple-card: binding: update binding to
- support the new style.
-Date: Tue, 9 Sep 2014 13:09:48 +0100
-Message-ID: <20140909120948.GZ2601@sirena.org.uk>
-References: <1409711021-19277-1-git-send-email-Li.Xiubo@freescale.com>
- <1409711021-19277-4-git-send-email-Li.Xiubo@freescale.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [resend PATCH 0/3] Add DRA7xx CPSW Ethernet support in Device Tree
+Date: Tue, 9 Sep 2014 07:15:49 -0500
+Message-ID: <CAGo_u6riiMVTW2y1qZWdJ2QUVdxX7uZyaTO3tRTGivX8Pjni1w@mail.gmail.com>
+References: <1410203998-8700-1-git-send-email-mugunthanvnm@ti.com>
+	<20140908193440.GC12150@kahuna>
+	<540EE4B0.70207@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="aSM3KCOUSI0G0tph"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1409711021-19277-4-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>
-Cc: perex@perex.cz, lgirdwood@gmail.com, tiwai@suse.de, moinejf@free.fr, andrew@lunn.ch, kuninori.morimoto.gx@renesas.com, jsarha@ti.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <540EE4B0.70207-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 9, 2014 at 6:29 AM, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> wrote:
+>
+>> Sorry this is now blocked inside TI. could you explain the testing done
+>> for sleep state? did you attempt sleep mode before testing this?
+>>
+>
+> I have not tested sleep mode, just tested boot and ping test.
 
---aSM3KCOUSI0G0tph
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I must NAK then for the reason that this is a patch that is just build
+tested and is not tested for the feature it claims to introduce.
 
-On Wed, Sep 03, 2014 at 10:23:41AM +0800, Xiubo Li wrote:
-> This update patch will split the DT node into old style and new style:
-> The new style will will be easier to add muti DAI links from old single
-> DAI link DTs.
 
-> This patch will maintian compatibility with the old DTs.
-
-Is everyone happy with this new style binding?
-
---aSM3KCOUSI0G0tph
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUDu4LAAoJECTWi3JdVIfQ0u8H/iDNEPtFnuRUGXXCxZjgT0lY
-V92sNeDnbDc61qLYRQGTVPaOjMZoVFvr9NvUKQjeE+iRzHvZwtPipFgkBsp+EmC9
-YTVumOxWtDMn6sqQkuoJIdI9ZHZbBnQj1dI9Y4pDfgdPk8UqFZdS1ejGPRHr7dwC
-jbtS5PG6iBxAQHyw6xlRFLTP0RWBGOSb1gbVzs6/n7JIvr86NRCbM2kq8Wp9Dy2v
-2Eb6xxnCRIH8251FZJcLnZX252nFjoK9tTpcmeuorJw0zvnDRHmvLW7rXpTtPLyk
-1QqK6otYCfLn2LcBTYs40M9kxA3YsquACdRy5VX3jwIObHgAy8N3LkLhBC31tlg=
-=Ey16
------END PGP SIGNATURE-----
-
---aSM3KCOUSI0G0tph--
+-- 
+---
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
