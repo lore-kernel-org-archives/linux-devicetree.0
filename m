@@ -1,146 +1,552 @@
-From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 2/2] DT: iio: vadc: document dt binding
-Date: Wed, 10 Sep 2014 00:22:47 +0200
-Message-ID: <540F7DB7.9090007@gmx.de>
-References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com> <1409919274-13419-3-git-send-email-svarbanov@mm-sol.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v3] media: spi: Add support for LMH0395
+Date: Wed, 10 Sep 2014 01:43:54 +0300
+Message-ID: <2077517.tcAjureZcn@avalon>
+References: <1410277885-3996-1-git-send-email-jean-michel.hautbois@vodalys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409919274-13419-3-git-send-email-svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410277885-3996-1-git-send-email-jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stanimir Varbanov schrieb, Am 05.09.2014 14:14:
-> Document DT binding for Qualcomm SPMI PMIC voltage ADC
-> driver.
+Hi Jean-Michel,
+
+Thank you for the patch. Please see below for a couple of comments after a 
+very quick review.
+
+On Tuesday 09 September 2014 17:51:25 Jean-Michel Hautbois wrote:
+> This device is a SPI based device from TI.
+> It is a 3 Gbps HD/SD SDI Dual Output Low Power
+> Extended Reach Adaptive Cable Equalizer.
 > 
-> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> LMH0395 enables the use of up to two outputs.
+> These can be configured using DT.
+> 
+> Controls should be accessible from userspace too.
+> This will have to be done later.
+> 
+> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  110 ++++++++++++++++++++
->  1 files changed, 110 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+
+When posting a new version please add here a description of what changed 
+compared to the previous version.
+
+>  .../devicetree/bindings/media/spi/lmh0395.txt      |  44 +++
+>  MAINTAINERS                                        |   6 +
+>  drivers/media/spi/Kconfig                          |  14 +
+>  drivers/media/spi/Makefile                         |   1 +
+>  drivers/media/spi/lmh0395.c                        | 360 ++++++++++++++++++
+>  5 files changed, 425 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/spi/lmh0395.txt
+>  create mode 100644 drivers/media/spi/Kconfig
+>  create mode 100644 drivers/media/spi/Makefile
+>  create mode 100644 drivers/media/spi/lmh0395.c
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> new file mode 100644
-> index 0000000..f9c780f
+> diff --git a/Documentation/devicetree/bindings/media/spi/lmh0395.txt
+> b/Documentation/devicetree/bindings/media/spi/lmh0395.txt new file mode
+> 100644
+> index 0000000..0a640a4
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> @@ -0,0 +1,110 @@
-> +Qualcomm's SPMI PMIC voltage ADC
+> +++ b/Documentation/devicetree/bindings/media/spi/lmh0395.txt
+> @@ -0,0 +1,44 @@
+> +* Texas Instruments lmh0395 3G HD/SD SDI equalizer
 > +
-> +SPMI PMIC voltage ADC (VADC) provides interface to clients to read
-> +voltage. A 15 bit ADC is used for voltage measurements. There are multiple
-> +peripherals to the VADC and the scope of the driver is to provide interface
-> +for the USR peripheral of the VADC.
+> +The LMH0395 3 Gbps HD/SD SDI Dual Output Low Power Extended Reach Adaptive
+> +Cable Equalizer is designed to equalize data transmitted over cable (or any
+> +media with similar dispersive loss characteristics).
+> +The equalizer operates over a wide range of data rates from 125 Mbps to
+> 2.97 Gbps +and supports SMPTE 424M, SMPTE 292M, SMPTE344M, SMPTE 259M, and
+> DVB-ASI standards.
 > +
-> +VADC node:
+> +Required Properties :
+> +- compatible: Must be "ti,lmh0395"
 > +
-> +- compatible:
-> +    Usage: required
-> +    Value type: <string>
-> +    Definition: Should contain "qcom,spmi-vadc".
+> +The device node must contain one 'port' child node per device input and
+> output
+> +port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt. The port
+> nodes
+> +are numbered as follows.
 > +
-> +- reg:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: Base address in the SPMI PMIC register map.
-> +
-> +- interrupts:
-> +    Usage: required
-> +    Value type: <prop-encoded-array>
-> +    Definition: End of convertion interrupt number.
-Typo: conversion
-> +
-> +- qcom,poll-eoc:
-> +    Usage: optional
-> +    Value type: <empty>
-> +    Definition: Use polling instead of interrupt for end of conversion
-> +            completion.
-> +
-> +Channel node properities:
-Typo: properties
-> +
-> +- qcom,channel:
-> +    Usage: required
-> +    Value type: <u32>
-> +    Definition: AMUX channel number.
-> +
-> +- qcom,decimation:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Sampling rate to use for the individual channel measurement.
-> +            Quicker measurements can be made by reducing decimation ratio.
-> +            Valid values are 512, 1024, 2048, 4096.
-> +            If property is not found, default value of 512 will be used.
-> +
-> +- qcom,pre-scaling:
-> +    Usage: optional
-> +    Value type: <u32 array>
-> +    Definition: Used for scaling the channel input signal before the signal is
-> +            fed to VADC. The configuration for this node is to know the
-> +            pre-determined ratio and use it for post scaling. Select one from
-> +            the following options.
-> +            <1 1>, <1 3>, <1 4>, <1 6>, <1 20>, <1 8>, <10 81>, <1 10>
-> +            If property is not found default value depending of chip will be used.
-> +
-> +- qcom,ratiometric:
-> +    Usage: optional
-> +    Value type: <empty>
-> +    Definition: Channel calibration type. If this property is specified
-> +            VADC will use the VDD reference(1.8V) and GND for channel
-> +            calibration. If properity is not found, channel will be
-Typo: property
-> +            calibrated with 625mv and 1.25V reference channels.
-> +
-> +- qcom,hw-settle-time:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Time between AMUX getting configured and the ADC starting
-> +            conversion. Delay = 100us * (value) for value < 11, and
-> +            2ms * (value - 10) otherwise.
-> +            Valid values are: 0, 100, 200, 300, 400, 500, 600, 700, 800,
-> +            900 us and 1, 2, 4, 6, 8, 10 ms
-> +            If property is not found, channel will use 0us.
-> +
-> +- qcom,avg-samples:
-> +    Usage: optional
-> +    Value type: <u32>
-> +    Definition: Number of samples to be used for measurement.
-> +            Fast averaging provides the option to obtain a single measurement
-> +            from the ADC that is an average of multiple samples. The value
-> +            selected is 2^(value).
-> +            Valid values are: 1, 2, 4, 8, 16, 32, 64, 128, 256, 512
-> +            If property is not found, 1 sample will be used.
-> +
-> +- label:
-> +    Usage: optional
-> +    Value type: <string>
-> +    Definition: Channel name used for sysfs entry. If not provided
-> +            configuration device node name will be used.
-> +
-> +NOTE: At least one channel node is required.
+> +  Port			LMH0395
+> +------------------------------------------------------------
+> +  SDI input		0
+> +  SDI output		1,2
 > +
 > +Example:
-> +	/* VADC node */
-> +	vadc@3100 {
-> +		compatible = "qcom,spmi-vadc";
-> +		reg = <0x3100>;
-> +		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-> +		#io-channel-cells = <1>;
-> +		io-channel-ranges;
 > +
-> +		/* Channel node */
-> +		usb_id_nopull@39 {
-> +			qcom,channel = <VADC_LR_MUX10_USB_ID>;
-> +			qcom,decimation = <512>;
-> +			qcom,ratiometric;
-> +			qcom,hw-settle-time = <200>;
-> +			qcom,avg-samples = <1>;
-> +			qcom,pre-scaling = <1 3>
+> +ecspi@02010000 {
+> +	...
+> +	...
+> +
+> +	lmh0395@1 {
+> +		compatible = "ti,lmh0395";
+> +		reg = <1>;
+> +		spi-max-frequency = <20000000>;
+> +		ports {
+> +			port@0 {
+> +				reg = <0>;
+> +				sdi0_in: endpoint {};
+> +			};
+> +			port@1 {
+> +				reg=<1>;
+> +				sdi0_out0: endpoint {};
+> +			};
+
+This contradicts the above description, there should be 3 ports.
+
 > +		};
 > +	};
+> +	...
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cf24bb5..ca42b9e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9141,6 +9141,12 @@ S:	Maintained
+>  F:	sound/soc/codecs/lm49453*
+>  F:	sound/soc/codecs/isabelle*
 > 
+> +TI LMH0395 DRIVER
+> +M:	Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+> +L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +S:	Maintained
+> +F:	drivers/media/spi/lmh0395*
+> +
+>  TI LP855x BACKLIGHT DRIVER
+>  M:	Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+>  S:	Maintained
+> diff --git a/drivers/media/spi/Kconfig b/drivers/media/spi/Kconfig
+> new file mode 100644
+> index 0000000..291e7ea
+> --- /dev/null
+> +++ b/drivers/media/spi/Kconfig
+> @@ -0,0 +1,14 @@
+> +if VIDEO_V4L2
+> +
+> +config VIDEO_LMH0395
+> +	tristate "LMH0395 equalizer"
+> +	depends on VIDEO_V4L2 && SPI && MEDIA_CONTROLLER
+> +	---help---
+> +	  Support for TI LMH0395 3G HD/SD SDI Dual Output Low Power
+> +	  Extended Reach Adaptive Cable Equalizer.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called lmh0395.
+> +
+> +
+> +endif
+> diff --git a/drivers/media/spi/Makefile b/drivers/media/spi/Makefile
+> new file mode 100644
+> index 0000000..6c587e5
+> --- /dev/null
+> +++ b/drivers/media/spi/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_VIDEO_LMH0395)	+= lmh0395.o
+> diff --git a/drivers/media/spi/lmh0395.c b/drivers/media/spi/lmh0395.c
+> new file mode 100644
+> index 0000000..fe5c5f8
+> --- /dev/null
+> +++ b/drivers/media/spi/lmh0395.c
+> @@ -0,0 +1,360 @@
+> +/*
+> + * LMH0395 SPI driver.
+> + * Copyright (C) 2014  Jean-Michel Hautbois
+> + *
+> + * 3G HD/SD SDI Dual Output Low Power Extended Reach Adaptive Cable
+> Equalizer
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/ioctl.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/types.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/videodev2.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-of.h>
+> +
+> +static int debug;
+> +module_param(debug, int, 0644);
+> +MODULE_PARM_DESC(debug, "debug level (0-1)");
+> +
+> +#define	LMH0395_SPI_CMD_WRITE	0x00
+> +#define	LMH0395_SPI_CMD_READ	0x80
+> +
+> +/* Registers of LMH0395 */
+> +#define LMH0395_GENERAL_CTRL		0x00
+> +#define LMH0395_OUTPUT_DRIVER		0x01
+> +#define LMH0395_LAUNCH_AMP_CTRL		0x02
+> +#define LMH0395_MUTE_REF		0x03
+> +#define LMH0395_DEVICE_ID		0x04
+> +#define	LMH0395_RATE_INDICATOR		0x05
+> +#define	LMH0395_CABLE_LENGTH_INDICATOR	0x06
+> +#define	LMH0395_LAUNCH_AMP_INDICATION	0x07
+> +
+> +/* This is a one input, dual output device */
+> +#define LMH0395_SDI_INPUT	0
+> +#define LMH0395_SDI_OUT0	1
+> +#define LMH0395_SDI_OUT1	2
+> +
+> +#define LMH0395_PADS_NUM	3
+> +
+> +/* Register LMH0395_MUTE_REF bits [7:6] */
+> +enum lmh0395_output_type {
+> +	LMH0395_OUTPUT_TYPE_NONE,
+> +	LMH0395_OUTPUT_TYPE_SDO0,
+> +	LMH0395_OUTPUT_TYPE_SDO1,
+> +	LMH0395_OUTPUT_TYPE_BOTH
+> +};
+> +
+> +static const char * const output_strs[] = {
+> +	"No Output Driver",
+> +	"Output Driver 0",
+> +	"Output Driver 1",
+> +	"Output Driver 0+1",
+> +};
+> +
+> +
+> +/* spi implementation */
+> +
+> +static int lmh0395_spi_write(struct spi_device *spi, u8 reg, u8 data)
+> +{
+> +	int err;
+> +	u8 cmd[2];
+> +
+> +	cmd[0] = LMH0395_SPI_CMD_WRITE | reg;
+> +	cmd[1] = data;
+> +
+> +	err = spi_write(spi, cmd, 2);
+> +	if (err < 0) {
+> +		dev_err(&spi->dev, "SPI failed to select reg\n");
+> +		return err;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static int lmh0395_spi_read(struct spi_device *spi, u8 reg, u8 *data)
+> +{
+> +	int err;
+> +	u8 cmd[2];
+> +	u8 read_data[2];
+> +
+> +	cmd[0] = LMH0395_SPI_CMD_READ | reg;
+> +	cmd[1] = 0xFF;
+
+Please use lower case for hex constants, here and below.
+
+> +
+> +	err = spi_write(spi, cmd, 2);
+> +	if (err < 0) {
+> +		dev_err(&spi->dev, "SPI failed to select reg\n");
+> +		return err;
+> +	}
+> +
+> +	err = spi_read(spi, read_data, 2);
+> +	if (err < 0) {
+> +		dev_err(&spi->dev, "SPI failed to read reg\n");
+> +		return err;
+> +	}
+> +	/* The first 8 bits is the adress used, drop it */
+> +	*data = read_data[1];
+> +
+> +	return err;
+> +}
+> +
+> +struct lmh0395_state {
+> +	struct v4l2_subdev sd;
+> +	struct media_pad pads[LMH0395_PADS_NUM];
+> +	enum lmh0395_output_type output_type;
+> +};
+> +
+> +static inline struct lmh0395_state *to_state(struct v4l2_subdev *sd)
+> +{
+> +	return container_of(sd, struct lmh0395_state, sd);
+> +}
+> +
+> +static int lmh0395_set_output_type(struct v4l2_subdev *sd, u32 output)
+> +{
+> +	struct lmh0395_state *state = to_state(sd);
+> +	struct spi_device *spi = v4l2_get_subdevdata(sd);
+> +	u8 muteref_reg;
+> +
+> +	switch (output) {
+> +	case LMH0395_OUTPUT_TYPE_SDO0:
+> +		lmh0395_spi_read(spi, LMH0395_MUTE_REF, &muteref_reg);
+> +		muteref_reg &= ~(1 << 6);
+> +		break;
+> +	case LMH0395_OUTPUT_TYPE_SDO1:
+> +		lmh0395_spi_read(spi, LMH0395_MUTE_REF, &muteref_reg);
+> +		muteref_reg &= (1 << 7);
+> +		break;
+> +	case LMH0395_OUTPUT_TYPE_BOTH:
+> +		lmh0395_spi_read(spi, LMH0395_MUTE_REF, &muteref_reg);
+> +		muteref_reg |= 0x00 << 6;
+> +		break;
+> +	case LMH0395_OUTPUT_TYPE_NONE:
+> +		lmh0395_spi_read(spi, LMH0395_MUTE_REF, &muteref_reg);
+> +		muteref_reg |= 0x11 << 6;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	v4l2_dbg(1, debug, sd, "Selecting %s output type\n",
+> +					output_strs[output]);
+> +
+> +	/* The following settings will have to be dynamic */
+> +	muteref_reg &= ~(0x1F); /* Muteref enable */
+> +	muteref_reg |= 1 << 5; /* Digital Muteref */
+> +
+> +	lmh0395_spi_write(spi, LMH0395_MUTE_REF, muteref_reg);
+> +
+> +	state->output_type = output;
+> +	return 0;
+> +
+> +}
+> +
+> +static int lmh0395_get_rate(struct v4l2_subdev *sd, u8 *rate)
+> +{
+> +	struct spi_device *spi = v4l2_get_subdevdata(sd);
+> +	int err;
+> +	u8 ctrl;
+> +
+> +	err = lmh0395_spi_read(spi, LMH0395_RATE_INDICATOR, &ctrl);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	*rate = ctrl & 0x20;
+> +	v4l2_dbg(1, debug, sd, "Rate : %s\n", (ctrl & 0x20)?"3G/HD":"SD");
+> +	return 0;
+> +}
+> +
+> +static int lmh0395_get_cable_length(struct v4l2_subdev *sd, u8 rate)
+> +{
+> +	struct spi_device *spi = v4l2_get_subdevdata(sd);
+> +	u8 length;
+> +	u8 cli;
+> +	int err;
+> +
+> +	err = lmh0395_spi_read(spi, LMH0395_CABLE_LENGTH_INDICATOR, &cli);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	/* The cable length indicator (CLI) provides an indication of the
+> +	 * length of the cable attached to input. CLI is accessible via bits
+> +	 * [7:0] of SPI register 06h.
+> +	 * The 8-bit setting ranges in decimal value from 0 to 247
+> +	 * ("00000000" to "11110111" binary), corresponding to 0 to 400m of
+> +	 * Belden 1694A cable.
+> +	 * For 3G and HD input, CLI is 1.25m per step.
+> +	 * For SD input, CLI is 1.25m per step, less 20m, from 0 to 191 decimal
+> +	 * and 3.5m per step from 192 to 247 decimal.
+> +	 */
+> +
+> +	length = cli*5/4;
+> +	if (rate == 0) {
+> +		if (cli <= 191)
+> +			length -= 20;
+> +		else
+> +			length = ((191*5/4)-20) + ((cli-191)*7/2);
+> +
+> +	}
+> +	v4l2_dbg(1, debug, sd, "Length estimated (BELDEN 1694A cables) : %dm\n",
+> +			length);
+> +	return 0;
+> +}
+> +
+> +static int lmh0395_get_control(struct v4l2_subdev *sd)
+> +{
+> +	int err;
+> +	struct spi_device *spi = v4l2_get_subdevdata(sd);
+> +	u8 ctrl;
+> +	u8 rate;
+> +
+> +	err = lmh0395_spi_read(spi, LMH0395_GENERAL_CTRL, &ctrl);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	if (ctrl & 0x80) {
+> +		v4l2_dbg(1, debug, sd, "Carrier detected\n");
+> +		lmh0395_get_rate(sd, &rate);
+> +		lmh0395_get_cable_length(sd, rate);
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int lmh0395_s_routing(struct v4l2_subdev *sd, u32 input, u32 output,
+> +				u32 config)
+> +{
+> +	struct lmh0395_state *state = to_state(sd);
+> +	int err = 0;
+> +
+> +	if (state->output_type != output)
+> +		err = lmh0395_set_output_type(sd, output);
+> +
+> +	return err;
+> +}
+> +
+> +static const struct v4l2_subdev_video_ops lmh0395_video_ops = {
+> +	.s_routing = lmh0395_s_routing,
+> +};
+> +
+> +static const struct v4l2_subdev_ops lmh0395_ops = {
+> +	.video = &lmh0395_video_ops,
+> +};
+> +
+> +static const struct spi_device_id lmh0395_id[] = {
+> +	{ "lmh0395", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(spi, lmh0395_id);
+> +
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id lmh0395_of_match[] = {
+> +	{.compatible = "ti,lmh0395", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, lmh0395_of_match);
+> +#endif
+> +
+> +static int lmh0395_probe(struct spi_device *spi)
+> +{
+> +	u8 device_id;
+> +
+
+No need for a blank line here.
+
+> +	struct lmh0395_state *state;
+> +	struct v4l2_subdev *sd;
+> +	int err;
+> +
+> +	err = lmh0395_spi_read(spi, LMH0395_DEVICE_ID, &device_id);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	dev_dbg(&spi->dev, "device_id 0x%x\n", device_id);
+> +
+> +	/* Now that the device is here, let's init V4L2 */
+> +	state = devm_kzalloc(&spi->dev, sizeof(*state), GFP_KERNEL);
+> +	if (!state)
+> +		return -ENOMEM;
+> +
+> +	sd = &state->sd;
+> +	v4l2_spi_subdev_init(sd, spi, &lmh0395_ops);
+> +	state->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +
+> +	state->pads[LMH0395_SDI_INPUT].flags = MEDIA_PAD_FL_SINK;
+> +	state->pads[LMH0395_SDI_OUT0].flags = MEDIA_PAD_FL_SOURCE;
+> +	state->pads[LMH0395_SDI_OUT1].flags = MEDIA_PAD_FL_SOURCE;
+> +	err = media_entity_init(&sd->entity, LMH0395_PADS_NUM, state->pads, 0);
+> +	if (err)
+> +		return err;
+> +
+> +	err = v4l2_async_register_subdev(sd);
+
+The device could be used as soon as you call this, so you should move all the 
+below initialization code above this (I would move it right after the state 
+structure allocation).
+
+> +	if (err < 0) {
+> +		media_entity_cleanup(&sd->entity);
+> +		return err;
+> +	}
+> +
+> +	v4l2_dbg(1, debug, sd, "Configuring equalizer\n");
+> +	lmh0395_get_control(sd);
+> +	/* Default is no output */
+> +	lmh0395_set_output_type(sd, LMH0395_OUTPUT_TYPE_NONE);
+> +
+> +	if (IS_ENABLED(CONFIG_OF) && spi->dev.of_node) {
+> +		const struct of_device_id *oid;
+> +		struct device_node *n;
+> +		struct of_endpoint ep;
+> +
+> +		oid = of_match_node(lmh0395_of_match, spi->dev.of_node);
+
+You don't use oid.
+
+> +		n = NULL;
+
+You can initialize n to NULL when declaring it.
+
+> +		while ((n = of_graph_get_next_endpoint(spi->dev.of_node, n))
+> +								!= NULL) {
+> +			of_graph_parse_endpoint(n, &ep);
+> +			dev_dbg(&spi->dev, "endpoint %d on port %d\n",
+> +						ep.id, ep.port);
+> +			/* port 1 => SDO0 */
+> +			if (ep.port >= 1)
+> +				lmh0395_set_output_type(sd, ep.port);
+
+This will set the output type to SDO0 or SDO1, but never to both. I don't 
+think that's what you want.
+
+> +			of_node_put(n);
+> +		}
+> +	} else {
+> +		dev_dbg(&spi->dev, "No DT configuration\n");
+
+If CONFIG_OF is required, add a depends on OF in Kconfig, remove the 
+IS_ENABLED() check and don't use the of_match_ptr macro below.
+
+
+> +	}
+> +
+> +	dev_dbg(&spi->dev, "device probed\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int lmh0395_remove(struct spi_device *spi)
+> +{
+> +	struct v4l2_subdev *sd = spi_get_drvdata(spi);
+> +
+> +	v4l2_async_unregister_subdev(sd);
+> +	media_entity_cleanup(&sd->entity);
+> +	return 0;
+> +}
+> +
+> +
+> +static struct spi_driver lmh0395_driver = {
+> +	.driver = {
+> +		.of_match_table = of_match_ptr(lmh0395_of_match),
+> +		.name = "lmh0395",
+> +		.owner = THIS_MODULE,
+> +	},
+> +	.probe = lmh0395_probe,
+> +	.remove = lmh0395_remove,
+> +	.id_table = lmh0395_id,
+> +};
+> +
+> +module_spi_driver(lmh0395_driver);
+> +
+> +MODULE_DESCRIPTION("spi device driver for LMH0395 equalizer");
+> +MODULE_AUTHOR("Jean-Michel Hautbois");
+> +MODULE_LICENSE("GPL");
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
