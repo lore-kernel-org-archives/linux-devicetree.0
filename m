@@ -1,180 +1,62 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH 2/3] ARM: tegra: apalis/colibri t30: integrate audio support
-Date: Tue,  9 Sep 2014 17:28:46 +0200
-Message-ID: <6194523f927bd7b4b50e1b4a8f3a2d0282cea502.1410276224.git.marcel@ziswiler.com>
-References: <cover.1410276224.git.marcel@ziswiler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1410276224.git.marcel@ziswiler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org
-Cc: Stephen Warren <swarren@wwwdotorg.org>, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, stefan@agner.ch, Marcel Ziswiler <marcel@ziswiler.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/2] DTS: serial: Add bindings documention for the Mediatek UARTs
+Date: Tue,  9 Sep 2014 17:31:41 +0200
+Message-ID: <1410276703-5274-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yingjoe.chen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Integrate Freescale SGTL5000 analogue audio codec support.
+This patch set adds support for the UART found in Mediatek SoCs.
+The chip is a changed version of a 8250 controller.
+Especially it introduces a new register called highspeed. The value
+in this register has to be set depending on the baudrate. The value
+in the register influences the way the divisor has to be calculated.
 
-Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+The patch series is build against linux-next and tested on mt6589. Should
+work as well on mt6577 and mt6582.
+
+Thanks,
+Matthias
+
+Changes for v5:
+- specify all SoC compatible strings in Documentation
+- rename clock
+- rebase against linux-next
+
+Changes for v4:
+- delete owner in platform driver instance
+- pass plattform_device to mtk8250_probe_of
+- reorganise probe function to error out early
+- Fix DTS documentation
+
+Changes for v3:
+- use dev_warn instead of pr_warn
+- use 8250_core function to update termios
+
+Changes for v2:
+- drop 8250_core capability extension for the chip
+- encapsulate set_termios in the driver method
+
 ---
- arch/arm/boot/dts/tegra30-apalis.dtsi  | 49 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/tegra30-colibri.dtsi | 49 ++++++++++++++++++++++++++++++++++
- 2 files changed, 98 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index a5446cb..9fe3e4d 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -47,6 +47,24 @@
- 		pinctrl-0 = <&state_default>;
- 
- 		state_default: pinmux {
-+			/* Apalis Analogue Audio */
-+			clk1_out_pw4 {
-+				nvidia,pins = "clk1_out_pw4";
-+				nvidia,function = "extperiph1";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
-+			};
-+			dap3_fs_pp0 {
-+				nvidia,pins =	"dap3_fs_pp0",
-+						"dap3_sclk_pp3",
-+						"dap3_din_pp1",
-+						"dap3_dout_pp2";
-+				nvidia,function = "i2s2";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+
- 			/* Apalis BKL1_ON */
- 			pv2 {
- 				nvidia,pins = "pv2";
-@@ -404,6 +422,15 @@
- 		status = "okay";
- 		clock-frequency = <100000>;
- 
-+		/* SGTL5000 audio codec */
-+		sgtl5000: codec@0a {
-+			compatible = "fsl,sgtl5000";
-+			reg = <0x0a>;
-+			VDDA-supply = <&sys_3v3_reg>;
-+			VDDIO-supply = <&sys_3v3_reg>;
-+			clocks = <&tegra_car TEGRA30_CLK_EXTERN1>;
-+		};
-+
- 		pmic: tps65911@2d {
- 			compatible = "ti,tps65911";
- 			reg = <0x2d>;
-@@ -635,6 +662,12 @@
- 		nvidia,sys-clock-req-active-high;
- 	};
- 
-+	ahub@70080000 {
-+		i2s@70080500 {
-+			status = "okay";
-+		};
-+	};
-+
- 	sdhci@78000600 {
- 		status = "okay";
- 		bus-width = <8>;
-@@ -684,4 +717,20 @@
- 			regulator-always-on;
- 		};
- 	};
-+
-+	sound {
-+		compatible = "toradex,tegra-audio-sgtl5000-apalis_t30",
-+			     "nvidia,tegra-audio-sgtl5000";
-+		nvidia,model = "Toradex Apalis T30";
-+		nvidia,audio-routing =
-+			"Headphone Jack", "HP_OUT",
-+			"LINE_IN", "Line In Jack",
-+			"MIC_IN", "Mic Jack";
-+		nvidia,i2s-controller = <&tegra_i2s2>;
-+		nvidia,audio-codec = <&sgtl5000>;
-+		clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
-+			 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
-+			 <&tegra_car TEGRA30_CLK_EXTERN1>;
-+		clock-names = "pll_a", "pll_a_out0", "mclk";
-+	};
- };
-diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-index c4ed1be..e8ac72e 100644
---- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-+++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-@@ -29,6 +29,24 @@
- 		pinctrl-0 = <&state_default>;
- 
- 		state_default: pinmux {
-+			/* Colibri Analogue Audio */
-+			clk1_out_pw4 {
-+				nvidia,pins = "clk1_out_pw4";
-+				nvidia,function = "extperiph1";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+				nvidia,enable-input = <TEGRA_PIN_DISABLE>;
-+			};
-+			dap3_fs_pp0 {
-+				nvidia,pins =	"dap3_fs_pp0",
-+						"dap3_sclk_pp3",
-+						"dap3_din_pp1",
-+						"dap3_dout_pp2";
-+				nvidia,function = "i2s2";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+
- 			/* Colibri BL_ON */
- 			pv2 {
- 				nvidia,pins = "pv2";
-@@ -182,6 +200,15 @@
- 		status = "okay";
- 		clock-frequency = <100000>;
- 
-+		/* SGTL5000 audio codec */
-+		sgtl5000: codec@0a {
-+			compatible = "fsl,sgtl5000";
-+			reg = <0x0a>;
-+			VDDA-supply = <&sys_3v3_reg>;
-+			VDDIO-supply = <&sys_3v3_reg>;
-+			clocks = <&tegra_car TEGRA30_CLK_EXTERN1>;
-+		};
-+
- 		pmic: tps65911@2d {
- 			compatible = "ti,tps65911";
- 			reg = <0x2d>;
-@@ -331,6 +358,12 @@
- 		nvidia,sys-clock-req-active-high;
- 	};
- 
-+	ahub@70080000 {
-+		i2s@70080500 {
-+			status = "okay";
-+		};
-+	};
-+
- 	emmc: sdhci@78000600 {
- 		status = "okay";
- 		bus-width = <8>;
-@@ -383,4 +416,20 @@
- 			regulator-always-on;
- 		};
- 	};
-+
-+	sound {
-+		compatible = "toradex,tegra-audio-sgtl5000-colibri_t30",
-+			     "nvidia,tegra-audio-sgtl5000";
-+		nvidia,model = "Toradex Colibri T30";
-+		nvidia,audio-routing =
-+			"Headphone Jack", "HP_OUT",
-+			"LINE_IN", "Line In Jack",
-+			"MIC_IN", "Mic Jack";
-+		nvidia,i2s-controller = <&tegra_i2s2>;
-+		nvidia,audio-codec = <&sgtl5000>;
-+		clocks = <&tegra_car TEGRA30_CLK_PLL_A>,
-+			 <&tegra_car TEGRA30_CLK_PLL_A_OUT0>,
-+			 <&tegra_car TEGRA30_CLK_EXTERN1>;
-+		clock-names = "pll_a", "pll_a_out0", "mclk";
-+	};
- };
+Matthias Brugger (2):
+  tty: serial: 8250: Add Mediatek UART driver
+  DTS: serial: Add bindings documention for the Mediatek UARTs
+
+ .../devicetree/bindings/serial/mtk-uart.txt        |  22 ++
+ drivers/tty/serial/8250/8250_mtk.c                 | 294 +++++++++++++++++++++
+ drivers/tty/serial/8250/Kconfig                    |   6 +
+ drivers/tty/serial/8250/Makefile                   |   1 +
+ 4 files changed, 323 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/mtk-uart.txt
+ create mode 100644 drivers/tty/serial/8250/8250_mtk.c
+
 -- 
-1.9.3
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
