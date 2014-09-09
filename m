@@ -1,63 +1,66 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: [PATCH 1/4] ARM: dts: imx28-tx28: remove spidev labels and add third instance of spidev
-Date: Tue,  9 Sep 2014 13:26:00 +0200
-Message-ID: <1410261963-27956-2-git-send-email-LW@KARO-electronics.de>
-References: <1410261963-27956-1-git-send-email-LW@KARO-electronics.de>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [RESEND PATCH v3]     rtc: ds1307: add trickle charger device
+ tree binding
+Date: Tue, 9 Sep 2014 07:27:50 -0400
+Message-ID: <20140909112750.GK30828@titan.lakedaemon.net>
+References: <20140908073216.GA20850@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140908112657.GD30828@titan.lakedaemon.net>
+ <20140909082902.GD21342@fi-ourus-dhcp00977.emea.nsn-net.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410261963-27956-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140909082902.GD21342@fi-ourus-dhcp00977.emea.nsn-net.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@nsn.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, "linux@roeck-us.net" <linux@roeck-us.net>, a.zummo@towertech.it, "jic23@kernel.org" <jic23@kernel.org>, "arno@natisbad.org" <arno@natisbad.org>, jgunthorpe@obsidianresearch.com, san@rosetechnology.dk, hs@denx.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Sverdlin Alexander <alexander.sverdlin@nsn.com>
 List-Id: devicetree@vger.kernel.org
 
-The labels on the spidev nodes are not used and not required, so
-remove them. The TX28 supports 3 chipselects on the SPI
-interface. Make all those chipselects available to the user.
+On Tue, Sep 09, 2014 at 11:29:11AM +0300, Matti Vaittinen wrote:
+> On Mon, Sep 08, 2014 at 07:26:57AM -0400, ext Jason Cooper wrote:
+> > Matti,
+> > 
+> > On Mon, Sep 08, 2014 at 10:32:24AM +0300, Matti Vaittinen wrote:
+> > > ---
+> > 
+> > Here.  Otherwise, it'll get included in the commit message, which I
+> > don't think was your intention.
+> 
+> Ok, thanks.
+> 
+> > 
+> > >  .../devicetree/bindings/i2c/trivial-devices.txt    |  1 -
+> > >  .../devicetree/bindings/rtc/dallas,ds1339.txt      | 18 ++++++
+> > >  drivers/rtc/rtc-ds1307.c                           | 66 ++++++++++++++++++++--
+> > >  3 files changed, 80 insertions(+), 5 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+> > 
+> > I would split this into two patches, one for the binding documentation,
+> > and one for the C file changes.  You can then use
+> > ./scripts/get_maintainer.pl to see who the rtc maintainer is (nothing
+> > jumps out from my memory).
+> 
+> Splitting sounds reasonable. I will do this and also invert the default
+> diode setting to be connected as was suggested by Pavel in mail responce
+> to v1 of patch. And Alessandro is the maintainer for rtc according to
+> the MAINTAINERS file.
+> 
+> > 
+> > Most likely, the rtc maintainer will take the series with the DT
+> > maintainers Acks.  You made all the binding changes as discussed by Mark
+> > and I, so fwiw,
+> > 
+> > Acked-by: Jason Cooper <jason@lakedaemon.net>
+> > 
+> > Just keep in mind that I'm not a DT maintainer, I've just moved a lot of
+> > patches into that area :-P  When you respin the series to split it, just
+> > throw my Ack on the binding docs.
+> 
+> Thanks, although the doc will change when I invert the default diode
+> setting  =)
 
-Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
----
- arch/arm/boot/dts/imx28-tx28.dts |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Yep, I'm fine with the inversion.  Feel free to keep the Ack.
 
-diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28=
--tx28.dts
-index f947fbb..4e790c2 100644
---- a/arch/arm/boot/dts/imx28-tx28.dts
-+++ b/arch/arm/boot/dts/imx28-tx28.dts
-@@ -619,17 +619,23 @@
- 	clock-frequency =3D <57600000>;
- 	status =3D "okay";
-=20
--	spidev0: spi@0 {
-+	spi@0 {
- 		compatible =3D "spidev";
- 		reg =3D <0>;
- 		spi-max-frequency =3D <57600000>;
- 	};
-=20
--	spidev1: spi@1 {
-+	spi@1 {
- 		compatible =3D "spidev";
- 		reg =3D <1>;
- 		spi-max-frequency =3D <57600000>;
- 	};
-+
-+	spi@2 {
-+		compatible =3D "spidev";
-+		reg =3D <2>;
-+		spi-max-frequency =3D <57600000>;
-+	};
- };
-=20
- &usb0 {
---=20
-1.7.10.4
+thx,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
