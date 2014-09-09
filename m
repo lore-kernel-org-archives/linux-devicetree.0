@@ -1,54 +1,156 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/6] rtc: at91sam9: add DT support
-Date: Tue,  9 Sep 2014 11:30:29 +0200
-Message-ID: <1410255035-26775-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 4/6] ARM: at91: add clk_lookup entry for RTT devices
+Date: Tue,  9 Sep 2014 11:30:33 +0200
+Message-ID: <1410255035-26775-5-git-send-email-boris.brezillon@free-electrons.com>
+References: <1410255035-26775-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410255035-26775-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+First export the clk32k clk.
+Then add clk_lookup entries for RTT devices so that rtc-at91sam9 driver
+can retrieve and manipulate the slow clk.
 
-This patch series adds DT support to the atmel at91sam9 RTC driver.
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+---
+ arch/arm/mach-at91/at91sam9260.c | 2 ++
+ arch/arm/mach-at91/at91sam9261.c | 2 ++
+ arch/arm/mach-at91/at91sam9263.c | 4 ++++
+ arch/arm/mach-at91/at91sam9g45.c | 2 ++
+ arch/arm/mach-at91/at91sam9rl.c  | 2 ++
+ arch/arm/mach-at91/clock.c       | 2 +-
+ arch/arm/mach-at91/clock.h       | 1 +
+ 7 files changed, 14 insertions(+), 1 deletion(-)
 
-It also removes any machine specific inclusions to prepare the migration
-to multi platform kernel support, and retain the slow clock to prevent
-the CCF from disabling it at the end of boot.
-
-Best Regards,
-
-Boris
-
-Changes since v1:
- - remove non CCF specific case by adding the appropriate clk_lookup
-   entries in arch/arm/mach-at91/<soc-name>.c files
-
-Boris BREZILLON (6):
-  rtc: at91sam9: remove references to mach specific headers
-  rtc: at91sam9: use standard readl/writel functions instead of raw
-    versions
-  rtc: at91sam9: add DT support
-  ARM: at91: add clk_lookup entry for RTT devices
-  rtc: at91sam9: use clk API instead of relying on AT91_SLOW_CLOCK
-  rtc: at91sam9: add DT bindings documentation
-
- .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 20 +++++++
- arch/arm/mach-at91/at91sam9260.c                   |  2 +
- arch/arm/mach-at91/at91sam9261.c                   |  2 +
- arch/arm/mach-at91/at91sam9263.c                   |  4 ++
- arch/arm/mach-at91/at91sam9g45.c                   |  2 +
- arch/arm/mach-at91/at91sam9rl.c                    |  2 +
- arch/arm/mach-at91/clock.c                         |  2 +-
- arch/arm/mach-at91/clock.h                         |  1 +
- drivers/rtc/rtc-at91sam9.c                         | 63 ++++++++++++++++++----
- 9 files changed, 87 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-
+diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
+index 3477ba9..a853d4c 100644
+--- a/arch/arm/mach-at91/at91sam9260.c
++++ b/arch/arm/mach-at91/at91sam9260.c
+@@ -217,6 +217,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("pclk", "fffbc000.ssc", &ssc_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9260.0", &twi_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20.0", &twi_clk),
++	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
+ 	/* more usart lookup table for DT entries */
+ 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
+ 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
+@@ -237,6 +238,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("mci_clk", "fffa8000.mmc", &mmc_clk),
+ 	CLKDEV_CON_DEV_ID("spi_clk", "fffc8000.spi", &spi0_clk),
+ 	CLKDEV_CON_DEV_ID("spi_clk", "fffcc000.spi", &spi1_clk),
++	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
+ 	/* fake hclk clock */
+ 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
+ 	CLKDEV_CON_ID("pioA", &pioA_clk),
+diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
+index fb164a5..3f5a299 100644
+--- a/arch/arm/mach-at91/at91sam9261.c
++++ b/arch/arm/mach-at91/at91sam9261.c
+@@ -192,6 +192,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_ID("pioA", &pioA_clk),
+ 	CLKDEV_CON_ID("pioB", &pioB_clk),
+ 	CLKDEV_CON_ID("pioC", &pioC_clk),
++	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
+ 	/* more lookup table for DT entries */
+ 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
+ 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
+@@ -209,6 +210,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID(NULL, "fffff400.gpio", &pioA_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioB_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioC_clk),
++	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
+ };
+ 
+ static struct clk_lookup usart_clocks_lookups[] = {
+diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
+index 810fa5f..bef5b96 100644
+--- a/arch/arm/mach-at91/at91sam9263.c
++++ b/arch/arm/mach-at91/at91sam9263.c
+@@ -201,6 +201,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID("t0_clk", "atmel_tcb.0", &tcb_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9260.0", &twi_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "at91sam9rl-pwm", &pwm_clk),
++	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
++	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.1", &clk32k),
+ 	/* fake hclk clock */
+ 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
+ 	CLKDEV_CON_ID("pioA", &pioA_clk),
+@@ -227,6 +229,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioCDE_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioCDE_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "fffb8000.pwm", &pwm_clk),
++	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
++	CLKDEV_CON_DEV_ID(NULL, "fffffd50.rtc", &clk32k),
+ };
+ 
+ static struct clk_lookup usart_clocks_lookups[] = {
+diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
+index 9d45496..69fdfcc 100644
+--- a/arch/arm/mach-at91/at91sam9g45.c
++++ b/arch/arm/mach-at91/at91sam9g45.c
+@@ -253,6 +253,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID(NULL, "atmel_tdes", &aestdessha_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "atmel_aes", &aestdessha_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "at91sam9rl-pwm", &pwm_clk),
++	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
+ 	/* more usart lookup table for DT entries */
+ 	CLKDEV_CON_DEV_ID("usart", "ffffee00.serial", &mck),
+ 	CLKDEV_CON_DEV_ID("usart", "fff8c000.serial", &usart0_clk),
+@@ -279,6 +280,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioC_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioDE_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioDE_clk),
++	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
+ 
+ 	CLKDEV_CON_ID("pioA", &pioA_clk),
+ 	CLKDEV_CON_ID("pioB", &pioB_clk),
+diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
+index 878d501..a82dc61 100644
+--- a/arch/arm/mach-at91/at91sam9rl.c
++++ b/arch/arm/mach-at91/at91sam9rl.c
+@@ -205,6 +205,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_ID("pioB", &pioB_clk),
+ 	CLKDEV_CON_ID("pioC", &pioC_clk),
+ 	CLKDEV_CON_ID("pioD", &pioD_clk),
++	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
+ 	/* more lookup table for DT entries */
+ 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
+ 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
+@@ -223,6 +224,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
+ 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioB_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioC_clk),
+ 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioD_clk),
++	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
+ 	CLKDEV_CON_ID("adc_clk", &tsc_clk),
+ };
+ 
+diff --git a/arch/arm/mach-at91/clock.c b/arch/arm/mach-at91/clock.c
+index 034529d..f5cfed75 100644
+--- a/arch/arm/mach-at91/clock.c
++++ b/arch/arm/mach-at91/clock.c
+@@ -115,7 +115,7 @@ static u32 at91_pllb_usb_init;
+  * 48 MHz (unless no USB function clocks are needed).  The main clock and
+  * both PLLs are turned off to run in "slow clock mode" (system suspend).
+  */
+-static struct clk clk32k = {
++struct clk clk32k = {
+ 	.name		= "clk32k",
+ 	.rate_hz	= AT91_SLOW_CLOCK,
+ 	.users		= 1,		/* always on */
+diff --git a/arch/arm/mach-at91/clock.h b/arch/arm/mach-at91/clock.h
+index a98a39b..6eb825a 100644
+--- a/arch/arm/mach-at91/clock.h
++++ b/arch/arm/mach-at91/clock.h
+@@ -34,6 +34,7 @@ struct clk {
+ extern int __init clk_register(struct clk *clk);
+ extern struct clk mck;
+ extern struct clk utmi_clk;
++extern struct clk clk32k;
+ 
+ #define CLKDEV_CON_ID(_id, _clk)			\
+ 	{						\
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
