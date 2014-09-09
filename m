@@ -1,7 +1,7 @@
 From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: [PATCH 3/6] ARM: dts: imx: ventana: use gpio constants
-Date: Mon,  8 Sep 2014 23:07:28 -0700
-Message-ID: <1410242851-30765-4-git-send-email-tharvey@gateworks.com>
+Subject: [PATCH 1/6] ARM: dts: imx: ventana: remove unsupported dt nodes
+Date: Mon,  8 Sep 2014 23:07:26 -0700
+Message-ID: <1410242851-30765-2-git-send-email-tharvey@gateworks.com>
 References: <1410242851-30765-1-git-send-email-tharvey@gateworks.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1410242851-30765-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
@@ -10,463 +10,478 @@ To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use the gpio contants defined in bindings for active high/low
+The general device-tree rule is to not include nodes that do not have a driver
+or bindings in a dts/dtsi. Remove the place-holder nodes from the Gateworks
+Ventana boards until a time that a driver with proper bindings exists.
 
 Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6q-gw5400-a.dts  | 23 ++++++++++++-----------
- arch/arm/boot/dts/imx6qdl-gw51xx.dtsi | 14 ++++++++------
- arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 22 ++++++++++++----------
- arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 22 ++++++++++++----------
- arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 22 ++++++++++++----------
- 5 files changed, 56 insertions(+), 47 deletions(-)
+ arch/arm/boot/dts/imx6q-gw5400-a.dts  | 30 -----------
+ arch/arm/boot/dts/imx6qdl-gw51xx.dtsi | 57 ---------------------
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 74 ---------------------------
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 96 -----------------------------------
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 35 -------------
+ 5 files changed, 292 deletions(-)
 
 diff --git a/arch/arm/boot/dts/imx6q-gw5400-a.dts b/arch/arm/boot/dts/imx6q-gw5400-a.dts
-index 035f2b1..9687cd8 100644
+index 22e6f8e..d1ab780 100644
 --- a/arch/arm/boot/dts/imx6q-gw5400-a.dts
 +++ b/arch/arm/boot/dts/imx6q-gw5400-a.dts
-@@ -10,6 +10,7 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "imx6q.dtsi"
- 
- / {
-@@ -40,20 +41,20 @@
- 
- 		led0: user1 {
- 			label = "user1";
--			gpios = <&gpio4 6 0>; /* 102 -> MX6_PANLEDG */
-+			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* 102 -> MX6_PANLEDG */
- 			default-state = "on";
- 			linux,default-trigger = "heartbeat";
- 		};
- 
- 		led1: user2 {
- 			label = "user2";
--			gpios = <&gpio4 10 0>; /* 106 -> MX6_PANLEDR */
-+			gpios = <&gpio4 10 GPIO_ACTIVE_HIGH>; /* 106 -> MX6_PANLEDR */
- 			default-state = "off";
- 		};
- 
- 		led2: user3 {
- 			label = "user3";
--			gpios = <&gpio4 15 1>; /* 111 -> MX6_LOCLED# */
-+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* 111 -> MX6_LOCLED# */
- 			default-state = "off";
- 		};
- 	};
-@@ -64,7 +65,7 @@
- 
- 	pps {
- 		compatible = "pps-gpio";
--		gpios = <&gpio1 5 0>;
-+		gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
- 		status = "okay";
+@@ -199,11 +199,6 @@
+ 		#gpio-cells = <2>;
  	};
  
-@@ -106,7 +107,7 @@
- 			regulator-name = "usb_otg_vbus";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&gpio3 22 0>;
-+			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
+-	hwmon: gsc@29 {
+-		compatible = "gw,gsp";
+-		reg = <0x29>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -314,16 +309,6 @@
+ 			};
  		};
  	};
-@@ -134,7 +135,7 @@
- 
- &ecspi1 {
- 	fsl,spi-num-chipselects = <1>;
--	cs-gpios = <&gpio3 19 0>;
-+	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_ecspi1>;
- 	status = "okay";
-@@ -150,7 +151,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
--	phy-reset-gpios = <&gpio1 30 0>;
-+	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_HIGH>;
- 	status = "okay";
+-
+-	pciswitch: pex8609@3f {
+-		compatible = "plx,pex8609";
+-		reg = <0x3f>;
+-	};
+-
+-	pciclkgen: si52147@6b {
+-		compatible = "sil,si52147";
+-		reg = <0x6b>;
+-	};
  };
  
-@@ -331,8 +332,8 @@
+ &i2c3 {
+@@ -345,11 +330,6 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 	};
+ 
+-	hdmiin: adv7611@4c {
+-		compatible = "adi,adv7611";
+-		reg = <0x4c>;
+-	};
+-
+ 	touchscreen: egalax_ts@04 {
  		compatible = "eeti,egalax_ts";
  		reg = <0x04>;
- 		interrupt-parent = <&gpio7>;
--		interrupts = <12 2>; /* gpio7_12 active low */
--		wakeup-gpios = <&gpio7 12 0>;
-+		interrupts = <12 2>;
-+		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+@@ -357,16 +337,6 @@
+ 		interrupts = <12 2>; /* gpio7_12 active low */
+ 		wakeup-gpios = <&gpio7 12 0>;
  	};
+-
+-	videoout: adv7393@2a {
+-		compatible = "adi,adv7393";
+-		reg = <0x2a>;
+-	};
+-
+-	videoin: adv7180@20 {
+-		compatible = "adi,adv7180";
+-		reg = <0x20>;
+-	};
  };
  
-@@ -462,7 +463,7 @@
- };
- 
- &pcie {
--	reset-gpio = <&gpio1 29 0>;
-+	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- 
- 	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-@@ -508,7 +509,7 @@
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
--	cd-gpios = <&gpio7 0 0>;
-+	cd-gpios = <&gpio7 0 GPIO_ACTIVE_LOW>;
- 	vmmc-supply = <&reg_3p3v>;
- 	status = "okay";
- };
+ &iomuxc {
 diff --git a/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
-index 482ef28..fa2cae4 100644
+index 0db15af..f36492c 100644
 --- a/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
-@@ -9,6 +9,8 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	/* these are used by bootloader for disabling nodes */
- 	aliases {
-@@ -28,14 +30,14 @@
- 
- 		led0: user1 {
- 			label = "user1";
--			gpios = <&gpio4 6 0>; /* 102 -> MX6_PANLEDG */
-+			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
- 			default-state = "on";
- 			linux,default-trigger = "heartbeat";
- 		};
- 
- 		led1: user2 {
- 			label = "user2";
--			gpios = <&gpio4 7 0>; /* 103 -> MX6_PANLEDR */
-+			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
- 			default-state = "off";
- 		};
- 	};
-@@ -46,7 +48,7 @@
- 
- 	pps {
- 		compatible = "pps-gpio";
--		gpios = <&gpio1 26 0>;
-+		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
- 		status = "okay";
+@@ -143,11 +143,6 @@
+ 		#gpio-cells = <2>;
  	};
  
-@@ -79,7 +81,7 @@
- 			regulator-name = "usb_otg_vbus";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&gpio3 22 0>;
-+			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
- 	};
-@@ -89,7 +91,7 @@
+-	hwmon: gsc@29 {
+-		compatible = "gw,gsp";
+-		reg = <0x29>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -159,53 +154,6 @@
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
--	phy-reset-gpios = <&gpio1 30 0>;
-+	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
+ 	pinctrl-0 = <&pinctrl_i2c2>;
  	status = "okay";
+-
+-	pmic: ltc3676@3c {
+-		compatible = "lltc,ltc3676";
+-		reg = <0x3c>;
+-
+-		regulators {
+-			sw1_reg: ltc3676__sw1 {
+-				regulator-min-microvolt = <1175000>;
+-				regulator-max-microvolt = <1175000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw2_reg: ltc3676__sw2 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3_reg: ltc3676__sw3 {
+-				regulator-min-microvolt = <1175000>;
+-				regulator-max-microvolt = <1175000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw4_reg: ltc3676__sw4 {
+-				regulator-min-microvolt = <1500000>;
+-				regulator-max-microvolt = <1500000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			ldo2_reg: ltc3676__ldo2 {
+-				regulator-min-microvolt = <2500000>;
+-				regulator-max-microvolt = <2500000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			ldo4_reg: ltc3676__ldo4 {
+-				regulator-min-microvolt = <3000000>;
+-				regulator-max-microvolt = <3000000>;
+-			};
+-		};
+-	};
  };
  
-@@ -279,7 +281,7 @@
- };
- 
- &pcie {
--	reset-gpio = <&gpio1 0 0>;
-+	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
+ &i2c3 {
+@@ -213,11 +161,6 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
  	status = "okay";
+-
+-	videoin: adv7180@20 {
+-		compatible = "adi,adv7180";
+-		reg = <0x20>;
+-	};
  };
  
+ &iomuxc {
 diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-index f8c4ab4..53f4a0b 100644
+index 234e7b7..0b65c7d 100644
 --- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
-@@ -9,6 +9,8 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	/* these are used by bootloader for disabling nodes */
- 	aliases {
-@@ -37,20 +39,20 @@
- 
- 		led0: user1 {
- 			label = "user1";
--			gpios = <&gpio4 6 0>; /* 102 -> MX6_PANLEDG */
-+			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
- 			default-state = "on";
- 			linux,default-trigger = "heartbeat";
- 		};
- 
- 		led1: user2 {
- 			label = "user2";
--			gpios = <&gpio4 7 0>; /* 103 -> MX6_PANLEDR */
-+			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
- 			default-state = "off";
- 		};
- 
- 		led2: user3 {
- 			label = "user3";
--			gpios = <&gpio4 15 1>; /* 111 - MX6_LOCLED# */
-+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
- 			default-state = "off";
- 		};
- 	};
-@@ -61,7 +63,7 @@
- 
- 	pps {
- 		compatible = "pps-gpio";
--		gpios = <&gpio1 26 0>;
-+		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
- 		status = "okay";
+@@ -197,11 +197,6 @@
+ 		#gpio-cells = <2>;
  	};
  
-@@ -113,7 +115,7 @@
- 			regulator-name = "usb_otg_vbus";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&gpio3 22 0>;
-+			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
- 	};
-@@ -143,7 +145,7 @@
+-	hwmon: gsc@29 {
+-		compatible = "gw,gsp";
+-		reg = <0x29>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -213,65 +208,6 @@
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
--	phy-reset-gpios = <&gpio1 30 0>;
-+	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
+ 	pinctrl-0 = <&pinctrl_i2c2>;
  	status = "okay";
+-
+-	pciswitch: pex8609@3f {
+-		compatible = "plx,pex8609";
+-		reg = <0x3f>;
+-	};
+-
+-	pmic: ltc3676@3c {
+-		compatible = "lltc,ltc3676";
+-		reg = <0x3c>;
+-
+-		regulators {
+-			sw1_reg: ltc3676__sw1 {
+-				regulator-min-microvolt = <1175000>;
+-				regulator-max-microvolt = <1175000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw2_reg: ltc3676__sw2 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw3_reg: ltc3676__sw3 {
+-				regulator-min-microvolt = <1175000>;
+-				regulator-max-microvolt = <1175000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			sw4_reg: ltc3676__sw4 {
+-				regulator-min-microvolt = <1500000>;
+-				regulator-max-microvolt = <1500000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			ldo2_reg: ltc3676__ldo2 {
+-				regulator-min-microvolt = <2500000>;
+-				regulator-max-microvolt = <2500000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			ldo3_reg: ltc3676__ldo3 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			ldo4_reg: ltc3676__ldo4 {
+-				regulator-min-microvolt = <3000000>;
+-				regulator-max-microvolt = <3000000>;
+-			};
+-		};
+-	};
  };
  
-@@ -226,8 +228,8 @@
- 		compatible = "eeti,egalax_ts";
- 		reg = <0x04>;
- 		interrupt-parent = <&gpio7>;
--		interrupts = <12 2>; /* gpio7_12 active low */
--		wakeup-gpios = <&gpio7 12 0>;
-+		interrupts = <12 2>;
-+		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+ &i2c3 {
+@@ -280,11 +216,6 @@
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
+ 
+-	accelerometer: fxos8700@1e {
+-		compatible = "fsl,fxos8700";
+-		reg = <0x13>;
+-	};
+-
+ 	codec: sgtl5000@0a {
+ 		compatible = "fsl,sgtl5000";
+ 		reg = <0x0a>;
+@@ -300,11 +231,6 @@
+ 		interrupts = <12 2>; /* gpio7_12 active low */
+ 		wakeup-gpios = <&gpio7 12 0>;
  	};
+-
+-	videoin: adv7180@20 {
+-		compatible = "adi,adv7180";
+-		reg = <0x20>;
+-	};
  };
  
-@@ -402,7 +404,7 @@
- };
- 
- &pcie {
--	reset-gpio = <&gpio1 29 0>;
-+	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
-@@ -449,7 +451,7 @@
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
--	cd-gpios = <&gpio7 0 0>;
-+	cd-gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
- 	vmmc-supply = <&reg_3p3v>;
- 	status = "okay";
- };
+ &iomuxc {
 diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-index 01edfd99..2074df6 100644
+index 143f84f..0488cd1 100644
 --- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
-@@ -9,6 +9,8 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	/* these are used by bootloader for disabling nodes */
- 	aliases {
-@@ -38,20 +40,20 @@
- 
- 		led0: user1 {
- 			label = "user1";
--			gpios = <&gpio4 6 0>; /* 102 -> MX6_PANLEDG */
-+			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
- 			default-state = "on";
- 			linux,default-trigger = "heartbeat";
- 		};
- 
- 		led1: user2 {
- 			label = "user2";
--			gpios = <&gpio4 7 0>; /* 103 -> MX6_PANLEDR */
-+			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
- 			default-state = "off";
- 		};
- 
- 		led2: user3 {
- 			label = "user3";
--			gpios = <&gpio4 15 1>; /* 111 -> MX6_LOCLED# */
-+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
- 			default-state = "off";
- 		};
- 	};
-@@ -62,7 +64,7 @@
- 
- 	pps {
- 		compatible = "pps-gpio";
--		gpios = <&gpio1 26 0>;
-+		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
- 		status = "okay";
+@@ -206,11 +206,6 @@
+ 		#gpio-cells = <2>;
  	};
  
-@@ -114,7 +116,7 @@
- 			regulator-name = "usb_otg_vbus";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&gpio3 22 0>;
-+			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
- 	};
-@@ -150,7 +152,7 @@
+-	hwmon: gsc@29 {
+-		compatible = "gw,gsp";
+-		reg = <0x29>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -222,77 +217,6 @@
  	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
--	phy-reset-gpios = <&gpio1 30 0>;
-+	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
+ 	pinctrl-0 = <&pinctrl_i2c2>;
  	status = "okay";
+-
+-	pciclkgen: si53156@6b {
+-		compatible = "sil,si53156";
+-		reg = <0x6b>;
+-	};
+-
+-	pciswitch: pex8606@3f {
+-		compatible = "plx,pex8606";
+-		reg = <0x3f>;
+-	};
+-
+-	pmic: ltc3676@3c {
+-		compatible = "lltc,ltc3676";
+-		reg = <0x3c>;
+-
+-		regulators {
+-			/* VDD_SOC */
+-			sw1_reg: ltc3676__sw1 {
+-				regulator-min-microvolt = <1175000>;
+-				regulator-max-microvolt = <1175000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			/* VDD_1P8 */
+-			sw2_reg: ltc3676__sw2 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			/* VDD_ARM */
+-			sw3_reg: ltc3676__sw3 {
+-				regulator-min-microvolt = <1175000>;
+-				regulator-max-microvolt = <1175000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			/* VDD_DDR */
+-			sw4_reg: ltc3676__sw4 {
+-				regulator-min-microvolt = <1500000>;
+-				regulator-max-microvolt = <1500000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			/* VDD_2P5 */
+-			ldo2_reg: ltc3676__ldo2 {
+-				regulator-min-microvolt = <2500000>;
+-				regulator-max-microvolt = <2500000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			/* VDD_1P8 */
+-			ldo3_reg: ltc3676__ldo3 {
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <1800000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			/* VDD_HIGH */
+-			ldo4_reg: ltc3676__ldo4 {
+-				regulator-min-microvolt = <3000000>;
+-				regulator-max-microvolt = <3000000>;
+-			};
+-		};
+-	};
  };
  
-@@ -233,8 +235,8 @@
+ &i2c3 {
+@@ -301,11 +225,6 @@
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
+ 
+-	accelerometer: fxos8700@1e {
+-		compatible = "fsl,fxos8700";
+-		reg = <0x1e>;
+-	};
+-
+ 	codec: sgtl5000@0a {
+ 		compatible = "fsl,sgtl5000";
+ 		reg = <0x0a>;
+@@ -314,11 +233,6 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 	};
+ 
+-	hdmiin: adv7611@4c {
+-		compatible = "adi,adv7611";
+-		reg = <0x4c>;
+-	};
+-
+ 	touchscreen: egalax_ts@04 {
  		compatible = "eeti,egalax_ts";
  		reg = <0x04>;
- 		interrupt-parent = <&gpio1>;
--		interrupts = <11 2>; /* gpio1_11 active low */
--		wakeup-gpios = <&gpio1 11 0>;
-+		interrupts = <11 2>;
-+		wakeup-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+@@ -326,16 +240,6 @@
+ 		interrupts = <11 2>; /* gpio1_11 active low */
+ 		wakeup-gpios = <&gpio1 11 0>;
  	};
+-
+-	videoout: adv7393@2a {
+-		compatible = "adi,adv7393";
+-		reg = <0x2a>;
+-	};
+-
+-	videoin: adv7180@20 {
+-		compatible = "adi,adv7180";
+-		reg = <0x20>;
+-	};
  };
  
-@@ -418,7 +420,7 @@
- };
- 
- &pcie {
--	reset-gpio = <&gpio1 29 0>;
-+	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- 
- 	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-@@ -470,7 +472,7 @@
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
--	cd-gpios = <&gpio7 0 0>;
-+	cd-gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
- 	vmmc-supply = <&reg_3p3v>;
- 	status = "okay";
- };
+ &iomuxc {
 diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-index fab9c7a..ab7827a 100644
+index 16e7ad3..620e4cf 100644
 --- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-@@ -9,6 +9,8 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	/* these are used by bootloader for disabling nodes */
- 	aliases {
-@@ -38,20 +40,20 @@
- 
- 		led0: user1 {
- 			label = "user1";
--			gpios = <&gpio4 6 0>; /* 102 -> MX6_PANLEDG */
-+			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
- 			default-state = "on";
- 			linux,default-trigger = "heartbeat";
- 		};
- 
- 		led1: user2 {
- 			label = "user2";
--			gpios = <&gpio4 7 0>; /* 103 -> MX6_PANLEDR */
-+			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
- 			default-state = "off";
- 		};
- 
- 		led2: user3 {
- 			label = "user3";
--			gpios = <&gpio4 15 1>; /* 111 -> MX6_LOCLED# */
-+			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
- 			default-state = "off";
- 		};
- 	};
-@@ -62,7 +64,7 @@
- 
- 	pps {
- 		compatible = "pps-gpio";
--		gpios = <&gpio1 26 0>;
-+		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
- 		status = "okay";
+@@ -196,11 +196,6 @@
+ 		#gpio-cells = <2>;
  	};
  
-@@ -104,7 +106,7 @@
- 			regulator-name = "usb_otg_vbus";
- 			regulator-min-microvolt = <5000000>;
- 			regulator-max-microvolt = <5000000>;
--			gpio = <&gpio3 22 0>;
-+			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
+-	hwmon: gsc@29 {
+-		compatible = "gw,gsp";
+-		reg = <0x29>;
+-	};
+-
+ 	rtc: ds1672@68 {
+ 		compatible = "dallas,ds1672";
+ 		reg = <0x68>;
+@@ -311,16 +306,6 @@
+ 			};
  		};
  	};
-@@ -140,7 +142,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
--	phy-reset-gpios = <&gpio1 30 0>;
-+	phy-reset-gpios = <&gpio1 30 GPIO_ACTIVE_LOW>;
- 	status = "okay";
+-
+-	pciswitch: pex8609@3f {
+-		compatible = "plx,pex8609";
+-		reg = <0x3f>;
+-	};
+-
+-	pciclkgen: si52147@6b {
+-		compatible = "sil,si52147";
+-		reg = <0x6b>;
+-	};
  };
  
-@@ -322,8 +324,8 @@
+ &i2c3 {
+@@ -329,11 +314,6 @@
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
+ 
+-	accelerometer: fxos8700@1e {
+-		compatible = "fsl,fxos8700";
+-		reg = <0x1e>;
+-	};
+-
+ 	codec: sgtl5000@0a {
+ 		compatible = "fsl,sgtl5000";
+ 		reg = <0x0a>;
+@@ -342,11 +322,6 @@
+ 		VDDIO-supply = <&reg_3p3v>;
+ 	};
+ 
+-	hdmiin: adv7611@4c {
+-		compatible = "adi,adv7611";
+-		reg = <0x4c>;
+-	};
+-
+ 	touchscreen: egalax_ts@04 {
  		compatible = "eeti,egalax_ts";
  		reg = <0x04>;
- 		interrupt-parent = <&gpio7>;
--		interrupts = <12 2>; /* gpio7_12 active low */
--		wakeup-gpios = <&gpio7 12 0>;
-+		interrupts = <12 2>;
-+		wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+@@ -354,16 +329,6 @@
+ 		interrupts = <12 2>; /* gpio7_12 active low */
+ 		wakeup-gpios = <&gpio7 12 0>;
  	};
+-
+-	videoout: adv7393@2a {
+-		compatible = "adi,adv7393";
+-		reg = <0x2a>;
+-	};
+-
+-	videoin: adv7180@20 {
+-		compatible = "adi,adv7180";
+-		reg = <0x20>;
+-	};
  };
  
-@@ -501,7 +503,7 @@
- };
- 
- &pcie {
--	reset-gpio = <&gpio1 29 0>;
-+	reset-gpio = <&gpio1 29 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- 
- 	eth1: sky2@8 { /* MAC/PHY on bus 8 */
-@@ -557,7 +559,7 @@
- &usdhc3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
--	cd-gpios = <&gpio7 0 0>;
-+	cd-gpios = <&gpio7 0 GPIO_ACTIVE_HIGH>;
- 	vmmc-supply = <&reg_3p3v>;
- 	status = "okay";
- };
+ &iomuxc {
 -- 
 1.8.3.2
 
