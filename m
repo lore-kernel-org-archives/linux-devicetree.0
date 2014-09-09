@@ -1,74 +1,76 @@
 From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 7/8] phy: miphy28lp: Add SSC support for PCIE
-Date: Tue, 9 Sep 2014 11:23:45 +0200
-Message-ID: <CAG374jAGFXFJJkNjHBcApgzMw+VdfFQJOFmvOnvzozknk20XDw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/8] phy: miphy28lp: Add Device Tree bindings for the MiPHY28lp
+Date: Tue, 9 Sep 2014 11:24:50 +0200
+Message-ID: <CAG374jDLuwxYfxqY9UGt7+5gqo7eZxFn-=ehEpRJQfyCeWG3fQ@mail.gmail.com>
 References: <1409758637-28654-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1409758637-28654-8-git-send-email-gabriel.fernandez@linaro.org>
-	<540DC81F.6000901@ti.com>
+	<1409758637-28654-2-git-send-email-gabriel.fernandez@linaro.org>
+	<540DBE43.50403@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <540DC81F.6000901-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <540DBE43.50403-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, Harsh Gupta <harsh.gupta-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm7YdoiemnsNIQ@public.gmane.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, alexandre torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Kishon,
 
-On 8 September 2014 17:15, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->
->
-> On Wednesday 03 September 2014 09:07 PM, Gabriel FERNANDEZ wrote:
->> SSC is the technique of modulating the operating frequency of a signal
->> slightly to spread its radiated emissions over a range of frequencies.
->> This reduction in the maximum emission for a given frequency helps meet
->> radiated emission requirements.
->> These settings are applicable for PCIE with Internal clock.
->>
->> Signed-off-by: Harsh Gupta <harsh.gupta-qxv4g6HH51o@public.gmane.org>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm7YdoiemnsNIQ@public.gmane.org>
->> ---
->>  drivers/phy/phy-miphy28lp.c | 32 ++++++++++++++++++++++++++++++++
->>  1 file changed, 32 insertions(+)
->>
->> diff --git a/drivers/phy/phy-miphy28lp.c b/drivers/phy/phy-miphy28lp.c
->> index b36e737..976fdda 100644
->> --- a/drivers/phy/phy-miphy28lp.c
->> +++ b/drivers/phy/phy-miphy28lp.c
->> @@ -679,6 +679,36 @@ static int miphy28lp_init_sata(struct miphy28lp_phy *miphy_phy)
->>       return miphy_is_ready(miphy_phy);
->>  }
->>
->> +static void miphy_pcie_tune_ssc(struct miphy28lp_phy *miphy_phy)
->> +{
->> +     u8 val;
->> +
->> +     /* Compensate Tx impedance to avoid out of range values */
->> +     if (miphy_phy->ssc) {
->> +             /*
->> +              * Enable the SSC on PLL for all banks
->> +              * SSC Modulation @ 31 KHz and 4000 ppm modulation amp
->> +              */
->> +             val = readb_relaxed(miphy_phy->base + 0x0c);
->> +             val |= 0x04;
->> +             writeb_relaxed(val, miphy_phy->base + 0x0c);
->> +             val = readb_relaxed(miphy_phy->base + 0x0a);
->> +             val |= 0x10;
->> +             writeb_relaxed(val, miphy_phy->base + 0x0a);
->
-> macros for these registers and values is needed. Or else it's difficult to review.
 ok will be fix to v3
 
->> +
->> +             for (val = 0; val < 2; val++) {
->> +                     writeb_relaxed(val, miphy_phy->base + 0x0f);
->> +                     writeb_relaxed(0x69, miphy_phy->base + 0xe5);
+BR
+
+Gabriel
+
+On 8 September 2014 16:33, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
 >
-> Do these registers have to be written for every iteration?
-
-Yes because we select the bank value before (with val)
-
+> On Wednesday 03 September 2014 09:07 PM, Gabriel FERNANDEZ wrote:
+>> The MiPHY28lp is a Generic PHY which can serve various SATA or PCIe
+>> or USB3 devices.
+>>
+>> Signed-off-by: alexandre torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+>> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/phy/phy-miphy28lp.txt      | 126 +++++++++++++++++++++
+>>  1 file changed, 126 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+>> new file mode 100644
+>> index 0000000..5e307af
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
+>> @@ -0,0 +1,126 @@
+>> +STMicroelectronics STi MIPHY28LP PHY binding
+>> +============================================
+>> +
+>> +This binding describes a miphy device that is used to control PHY hardware
+>> +for SATA, PCIe or USB3.
+>> +
+>> +Required properties (controller (parent) node):
+>> +- compatible : Should be "st,miphy28lp-phy"
+>> +- st,syscfg  : Should be a phandle of the system configuration register group
+>> +               which contain the SATA, PCIe or USB3 mode setting bits
+>> +
+>> +Required nodes       :  A sub-node is required for each channel the controller
+>> +                provides. Address range information including the usual
+>> +                'reg' and 'reg-names' properties are used inside these
+>> +                nodes to describe the controller's topology. These nodes
+>> +                are translated by the driver's .xlate() function.
+>> +
+>> +Required properties (port (child) node):
+>> +- #phy-cells : Should be 1 (See second example)
+>> +               Cell after port phandle is device type from:
+>> +                     - MIPHY_TYPE_SATA
+>> +                     - MIPHY_TYPE_PCI
+>> +                     - MIPHY_TYPE_USB3
+>> +- reg                : Address and length of the register set for the device
+>> +- reg-names  : The names of the register addresses corresponding to the registers
+>> +               filled in "reg". Is can also contain the offset of the system configuration
+>
+> %s/Is/It
 >
 > Thanks
 > Kishon
