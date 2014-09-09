@@ -1,158 +1,158 @@
-From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
-Subject: [PATCH v5 2/2] rtc: ds1307: add trickle charger device tree binding.
-Date: Tue, 9 Sep 2014 17:33:49 +0300
-Message-ID: <20140909143342.GA2179@fi-ourus-dhcp00977.emea.nsn-net.net>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v10 08/10] OF: PCI: Add support for parsing PCI host
+ bridge resources from DT
+Date: Tue, 9 Sep 2014 14:35:46 +0100
+Message-ID: <20140909133546.GB2636@e102568-lin.cambridge.arm.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-9-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1410184472-17630-9-git-send-email-Liviu.Dudau@arm.com>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Some DS13XX devices have "trickle chargers". Introduce a device tree
-binding for specifying the trickle charger configuration for ds1339.
+On Mon, Sep 08, 2014 at 02:54:30PM +0100, Liviu Dudau wrote:
+> Provide a function to parse the PCI DT ranges that can be used to
+> create a pci_host_bridge structure together with its associated
+> bus.
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> ---
+>  drivers/of/of_pci.c    | 102 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_pci.h |  11 ++++++
+>  2 files changed, 113 insertions(+)
+> 
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index a107edb..36701da 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -1,7 +1,9 @@
+>  #include <linux/kernel.h>
+>  #include <linux/export.h>
+>  #include <linux/of.h>
+> +#include <linux/of_address.h>
+>  #include <linux/of_pci.h>
+> +#include <linux/slab.h>
+>  
+>  static inline int __of_pci_pci_compare(struct device_node *node,
+>  				       unsigned int data)
+> @@ -123,6 +125,106 @@ int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
+>  
+> +/**
+> + * of_pci_get_host_bridge_resources - Parse PCI host bridge resources from DT
+> + * @dev: device node of the host bridge having the range property
+> + * @busno: bus number associated with the bridge root bus
+> + * @bus_max: maximum number of busses for this bridge
+> + * @resources: list where the range of resources will be added after DT parsing
+> + * @io_base: pointer to a variable that will contain on return the physical
+> + * address for the start of the I/O range.
+> + *
+> + * It is the callers job to free the @resources list.
+> + *
+> + * This function will parse the "ranges" property of a PCI host bridge device
+> + * node and setup the resource mapping based on its content. It is expected
+> + * that the property conforms with the Power ePAPR document.
 
-Only ds1339 dt binding is supported because this is the only chip I have.
-I _assume_ the code would have worked on other allready supported chips.
-However I cannot check the resistor values for the other chips or test them.
-For other chips the driver code works as earlier Eg. it does not check the
-dt bindings at all
+You should also define what it returns and when.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
----
+> + *
+> + */
+> +int of_pci_get_host_bridge_resources(struct device_node *dev,
+> +			unsigned char busno, unsigned char bus_max,
+> +			struct list_head *resources, resource_size_t *io_base)
+> +{
+> +	struct resource *res;
+> +	struct resource *bus_range;
+> +	struct of_pci_range range;
+> +	struct of_pci_range_parser parser;
+> +	char range_type[4];
+> +	int err;
+> +
+> +	bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
+> +	if (!bus_range)
+> +		return -ENOMEM;
+> +
+> +	pr_info("PCI host bridge %s ranges:\n", dev->full_name);
+> +
+> +	err = of_pci_parse_bus_range(dev, bus_range);
+> +	if (err) {
+> +		bus_range->start = busno;
+> +		bus_range->end = bus_max;
+> +		bus_range->flags = IORESOURCE_BUS;
+> +		pr_info("  No bus range found for %s, using %pR\n",
+> +			dev->full_name, &bus_range);
+> +	} else {
+> +		if (bus_range->end > bus_range->start + bus_max)
+> +			bus_range->end = bus_range->start + bus_max;
+> +	}
+> +	pci_add_resource(resources, bus_range);
 
-Delta to v5
-    -Actually sent correct patch
+This means that eg in the PCI generic host controller I cannot "filter"
+the bus resource, unless I remove it, "filter" it, and add it again.
 
- drivers/rtc/rtc-ds1307.c | 67 +++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 63 insertions(+), 4 deletions(-)
+I certainly can't filter a resource that has been already added without
+removing it first.
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index f03d5ba..bb43cf7 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -126,9 +126,14 @@ struct chip_desc {
- 	u16			nvram_offset;
- 	u16			nvram_size;
- 	u16			trickle_charger_reg;
-+	u8			trickle_charger_setup;
-+	u8			(*do_trickle_setup)(struct i2c_client *, uint32_t, bool);
- };
- 
--static const struct chip_desc chips[last_ds_type] = {
-+static u8 do_trickle_setup_ds1339(struct i2c_client *,
-+				  uint32_t ohms, bool diode);
-+
-+static struct chip_desc chips[last_ds_type] = {
- 	[ds_1307] = {
- 		.nvram_offset	= 8,
- 		.nvram_size	= 56,
-@@ -143,6 +148,7 @@ static const struct chip_desc chips[last_ds_type] = {
- 	[ds_1339] = {
- 		.alarm		= 1,
- 		.trickle_charger_reg = 0x10,
-+		.do_trickle_setup = &do_trickle_setup_ds1339,
- 	},
- 	[ds_1340] = {
- 		.trickle_charger_reg = 0x08,
-@@ -833,15 +839,58 @@ ds1307_nvram_write(struct file *filp, struct kobject *kobj,
- 	return count;
- }
- 
-+
- /*----------------------------------------------------------------------*/
- 
-+static u8 do_trickle_setup_ds1339(struct i2c_client *client,
-+				  uint32_t ohms, bool diode)
-+{
-+	u8 setup = (diode) ? DS1307_TRICKLE_CHARGER_DIODE :
-+		DS1307_TRICKLE_CHARGER_NO_DIODE;
-+
-+	switch (ohms) {
-+	case 250:
-+		setup |= DS1307_TRICKLE_CHARGER_250_OHM;
-+		break;
-+	case 2000:
-+		setup |= DS1307_TRICKLE_CHARGER_2K_OHM;
-+		break;
-+	case 4000:
-+		setup |= DS1307_TRICKLE_CHARGER_4K_OHM;
-+		break;
-+	default:
-+		dev_warn(&client->dev,
-+			 "Unsupported ohm value %u in dt\n", ohms);
-+		return 0;
-+	}
-+	return setup;
-+}
-+
-+static void ds1307_trickle_of_init(struct i2c_client *client,
-+				   struct chip_desc *chip)
-+{
-+	uint32_t ohms = 0;
-+	bool diode = true;
-+
-+	if (!chip->do_trickle_setup)
-+		goto out;
-+	if (of_property_read_u32(client->dev.of_node, "trickle-resistor-ohms" , &ohms))
-+		goto out;
-+	if (of_property_read_bool(client->dev.of_node, "trickle-diode-disable"))
-+		diode = false;
-+	chip->trickle_charger_setup = chip->do_trickle_setup(client,
-+							     ohms, diode);
-+out:
-+	return;
-+}
-+
- static int ds1307_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
- 	struct ds1307		*ds1307;
- 	int			err = -ENODEV;
- 	int			tmp;
--	const struct chip_desc	*chip = &chips[id->driver_data];
-+	struct chip_desc	*chip = &chips[id->driver_data];
- 	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
- 	bool			want_irq = false;
- 	unsigned char		*buf;
-@@ -866,9 +915,19 @@ static int ds1307_probe(struct i2c_client *client,
- 	ds1307->client	= client;
- 	ds1307->type	= id->driver_data;
- 
--	if (pdata && pdata->trickle_charger_setup && chip->trickle_charger_reg)
-+	if (!pdata && client->dev.of_node)
-+		ds1307_trickle_of_init(client, chip);
-+	else if (pdata && pdata->trickle_charger_setup)
-+		chip->trickle_charger_setup = pdata->trickle_charger_setup;
-+
-+	if (chip->trickle_charger_setup && chip->trickle_charger_reg) {
-+		dev_dbg(&client->dev, "writing trickle charger info 0x%x to 0x%x\n",
-+		    DS13XX_TRICKLE_CHARGER_MAGIC | chip->trickle_charger_setup,
-+		    chip->trickle_charger_reg);
- 		i2c_smbus_write_byte_data(client, chip->trickle_charger_reg,
--			DS13XX_TRICKLE_CHARGER_MAGIC | pdata->trickle_charger_setup);
-+		    DS13XX_TRICKLE_CHARGER_MAGIC |
-+		    chip->trickle_charger_setup);
-+	}
- 
- 	buf = ds1307->regs;
- 	if (i2c_check_functionality(adapter, I2C_FUNC_SMBUS_I2C_BLOCK)) {
--- 
-1.8.3.1
+Thoughts ?
 
+> +
+> +	/* Check for ranges property */
+> +	err = of_pci_range_parser_init(&parser, dev);
+> +	if (err)
+> +		goto parse_failed;
+> +
+> +	pr_debug("Parsing ranges property...\n");
+> +	for_each_of_pci_range(&parser, &range) {
+> +		/* Read next ranges element */
+> +		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+> +			snprintf(range_type, 4, " IO");
+> +		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
+> +			snprintf(range_type, 4, "MEM");
+> +		else
+> +			snprintf(range_type, 4, "err");
+> +		pr_info("  %s %#010llx..%#010llx -> %#010llx\n", range_type,
+> +			range.cpu_addr, range.cpu_addr + range.size - 1,
+> +			range.pci_addr);
+> +
+> +		/*
+> +		 * If we failed translation or got a zero-sized region
+> +		 * then skip this range
+> +		 */
+> +		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+> +			continue;
+> +
+> +		res = kzalloc(sizeof(struct resource), GFP_KERNEL);
+> +		if (!res) {
+> +			err = -ENOMEM;
+> +			goto parse_failed;
+> +		}
+> +
+> +		err = of_pci_range_to_resource(&range, dev, res);
+> +		if (err) {
+> +			kfree(res);
 
--- 
-=============================================
+You might want to add a label to free res to make things more uniform.
 
-Matti Vaittinen
-Senile SW Specialist
-FINLAND 
+> +			goto parse_failed;
+> +		}
+> +
+> +		if (resource_type(res) == IORESOURCE_IO) {
+> +			if (*io_base)
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+You do not zero io_base in the first place so you should ask the API
+user to do that. Is 0 a valid value BTW ? If it is you've got to resort
+to something else to detect multiple IO resources.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lorenzo
