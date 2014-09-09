@@ -1,29 +1,57 @@
-From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] rtc: ds1307: add trickle charger device tree
- binding.
-Date: Tue, 9 Sep 2014 17:11:55 +0300
-Message-ID: <20140909141155.GG21342@fi-ourus-dhcp00977.emea.nsn-net.net>
-References: <20140909103832.GA338@fi-ourus-dhcp00977.emea.nsn-net.net>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCHv3 3/3] ASoC: simple-card: binding: update
+ binding to support the new style.
+Date: Tue, 9 Sep 2014 16:25:29 +0300
+Message-ID: <540EFFC9.4050207@ti.com>
+References: <1409711021-19277-1-git-send-email-Li.Xiubo@freescale.com>
+ <1409711021-19277-4-git-send-email-Li.Xiubo@freescale.com>
+ <20140909120948.GZ2601@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140909103832.GA338-3P0KQDf13zYjNwtGTSXw41mm0B4v8B71Fo5piaCiEZ7R7s880joybQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140909120948.GZ2601@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Xiubo Li <Li.Xiubo@freescale.com>
+Cc: mark.rutland@arm.com, moinejf@free.fr, alsa-devel@alsa-project.org, pawel.moll@arm.com, kuninori.morimoto.gx@renesas.com, andrew@lunn.ch, tiwai@suse.de, linux-kernel@vger.kernel.org, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 09, 2014 at 01:38:39PM +0300, Matti Vaittinen wrote:
-> +	diode = of_property_read_bool(client->dev.of_node, "diode-connected");
+On 09/09/2014 03:09 PM, Mark Brown wrote:
+> On Wed, Sep 03, 2014 at 10:23:41AM +0800, Xiubo Li wrote:
+>> This update patch will split the DT node into old style and new style:
+>> The new style will will be easier to add muti DAI links from old single
+>> DAI link DTs.
+>
+>> This patch will maintian compatibility with the old DTs.
+>
+> Is everyone happy with this new style binding?
+>
 
-Please ignore this patch. I've accidentally sent the wrong version!
-Sorry, I will send the correct one as soon as possible.
+If I read the diff correctly the only change in the syntax is moving the 
+bitclock-inversion and frame-inversion properties to DAI nodes also for 
+the new style bindings.
 
-Br.
-Matti
+I am Ok with that.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The document does not indicate that the same properties could be also 
+placed to DAI link level like they used to, from where they would apply 
+to both DAI nodes.
+
+I am Ok with this too, but this breaks the backwards compatibility, 
+which I guess is generally considered a problem. However, I doubt anyone 
+but me has yet used this part of the new syntax and I am happy to fix my 
+dts files.
+
+Best regards,
+Jyri
+
+ps. I could not find the corresponding code changes in the previous 
+patch, so I assume they are coming later.
