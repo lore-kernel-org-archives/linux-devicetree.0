@@ -1,45 +1,54 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v3 3/7] arm: dts: mt6589: Fix typo in GIC unit address
-Date: Tue,  9 Sep 2014 18:51:00 +0200
-Message-ID: <1410281464-9587-4-git-send-email-matthias.bgg@gmail.com>
-References: <1410281464-9587-1-git-send-email-matthias.bgg@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] spi: davinci: add support for adding delay between
+ word's transmission
+Date: Tue, 9 Sep 2014 17:55:55 +0100
+Message-ID: <20140909165555.GD2601@sirena.org.uk>
+References: <1410278851-10783-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410281464-9587-1-git-send-email-matthias.bgg@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, heiko@sntech.de, anders.berg@lsi.com, linus.walleij@linaro.org, stefan@agner.ch, lee.jones@linaro.org, linux@arm.linux.org.uk, pawel.moll@arm.com, srv_yingjoe.chen@mediatek.com, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, jason@lakedaemon.net, arnd@arndb.de, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, matthias.bgg@gmail.com, swarren@nvidia.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, galak@codeaurora.org, olof@lixom.net, maxime.ripard@free-electrons.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AHwfuuqjYixMHmQf"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410278851-10783-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This changes the unit address of the gic node to it's first register area.
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- arch/arm/boot/dts/mt6589.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--AHwfuuqjYixMHmQf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-index d0297a0..742c9bd 100644
---- a/arch/arm/boot/dts/mt6589.dtsi
-+++ b/arch/arm/boot/dts/mt6589.dtsi
-@@ -81,7 +81,7 @@
- 			clock-names = "system-clk", "rtc-clk";
- 		};
- 
--		gic: interrupt-controller@10212000 {
-+		gic: interrupt-controller@10211000 {
- 			compatible = "arm,cortex-a15-gic";
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
--- 
-1.9.1
+On Tue, Sep 09, 2014 at 07:07:31PM +0300, Grygorii Strashko wrote:
+
+> - ti,spi-c2t-delay: Chip-select-active-to-transmit-start delay
+> 	(SPIDELAY.C2TDELAY)
+
+> - ti,spi-t2c-delay: Transmit-end-to-chip-select-inactive delay
+> 	(SPIDELAY.T2CDELAY)
+
+Now I look at these they look very much like the standard delay feature
+that the SPI subsystem has already - are they?
+
+--AHwfuuqjYixMHmQf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUDzEaAAoJECTWi3JdVIfQcxsH/RWFMB9r3ZwsWsqISVqdMESh
+fPVCt6Fhu1OLMzY3rYe75Tz7u8Q4AIHNocobXbe8fBbx/Wy4esNf//Zh82W9SpT/
+Qz4smeQh2PIn3/QxYKlqoZhsRzL60377C306+nFd3dmDQEFlM/4YTRqLAiemQPeS
+7wzCkjQxBkTeBR3ueghpyq84HJaZ0p0wv+Mu5E0KpE5AKRO7iTqwnmeS96fON+at
+qryPh5biF1cMNXnY2nrRlGcfOotZCsN01buto3U0uN5wGd2cSPTrcBSgY779lmkI
+NMST+Kcj//c5LTDGnQxyUfFjI++6YiRy4Nakzb7BKECvxL4MlgR7plUFxOFk9aU=
+=961c
+-----END PGP SIGNATURE-----
+
+--AHwfuuqjYixMHmQf--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
