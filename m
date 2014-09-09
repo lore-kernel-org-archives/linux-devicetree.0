@@ -1,59 +1,173 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: [GIT PULL] ARM: dts: OMAP5 / DRA7: pinctrl updates
-Date: Tue, 9 Sep 2014 08:59:38 -0500
-Message-ID: <1410271178-28336-1-git-send-email-nm@ti.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
+ domain_nr
+Date: Tue, 9 Sep 2014 15:11:22 +0100
+Message-ID: <20140909141122.GY27864@e106497-lin.cambridge.arm.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
+ <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+ <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
+ <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com>
+ <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
+ <540E960D.7080408@huawei.com>
+ <20140909084621.GS27864@e106497-lin.cambridge.arm.com>
+ <540EC8CB.7010106@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <540EC8CB.7010106@huawei.com>
+Content-Disposition: inline
+Sender: linux-arch-owner@vger.kernel.org
+To: Yijing Wang <wangyijing@huawei.com>
+Cc: Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>"grant.likely@linaro.org" <gran>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 09, 2014 at 10:30:51AM +0100, Yijing Wang wrote:
+> On 2014/9/9 16:46, Liviu Dudau wrote:
+> > On Tue, Sep 09, 2014 at 06:54:21AM +0100, Yijing Wang wrote:
+> >>>>> on new requests. This function gets called quite a lot and I'm =
+trying not to
+> >>>>> make it too heavy weight.
+> >>>>
+> >>>> Generally, nothing should be accessing the same DT value frequen=
+tly.
+> >>>> It should get cached somewhere.
+> >>>>
+> >>>
+> >>> The problem appears for DTs that don't have the pci-domain info. =
+Then the cached
+> >>> value is left at the default non-valid value and attempts to resc=
+an the DT will
+> >>> be made every time the function is called.
+> >>>
+> >>>> I don't really understand how domains are used so it's hard to p=
+rovide
+> >>>> a recommendation here. Do domains even belong in the DT?
+> >>>
+> >>> ACPI calls them segments and the way Bjorn explained it to me at =
+some moment was
+> >>> that it was an attempt to split up a bus in different groups (or =
+alternatively,
+> >>> merge a few busses together). To be honest I haven't seen systems=
+ where the domain
+> >>> is anything other than zero, but JasonG (or maybe Benjamin) were =
+floating an
+> >>> idea of using the domain number to identify physical slots.
+> >>
+> >> PCI domain(or named segment) is provided by firmware, in ACPI syst=
+em, we evaluated it
+> >> by method "_SEG". in IA64 with ACPI, PCI hostbridge driver retriev=
+es the domain from ACPI,
+> >> if it's absent, the default domain is zero. So I wonder why in DTS=
+, if it's absent, we get
+> >> a auto increment domain value.
+> >=20
+> > Because you can have more than one hostbridge (rare, but not imposs=
+ible) and unless you
+> > want to join the two segments, you might want to give it a differen=
+t domain.
+>=20
+> OK. Sorry, I have one last question, because domain will be used to c=
+alculate the address used to
+> access PCI hardware config registers. So if DTS file doesn't report t=
+he domain, how do we know
+> we would access the right registers when we use the auto increment do=
+main vaule ?
 
-Hi Tony,
+That's a good question and sides with Arnd's suggestion to try to manda=
+te the presence of the PCI
+domain in the DTS. However, by grepping through the source code, it loo=
+ks like the architectures
+that use the domain number for reading config registers (x86-based) are=
+ non-DT architectures,
+while DT-aware arches seem to ignore the domain number except when prin=
+ting out messages. Is that
+another confirmation that most DT-aware architectures have only run wit=
+h domain_nr =3D 0?
 
-Please pull this series was posted[1] and based on the previous pulls
-[2] [3], updating the dts to enable the relevant feature.
 
-NOTE: I have dropped patch #1 of the series based on [4].
+> Has there a mechanism to make sure system can access the correct regi=
+sters by the domain ?
 
-These could go to your branch omap-for-v3.18/dt
+Not as such if you look with x86 glasses. With the exception of powerpc=
+ all other architecures
+seem to happily assume domain_nr =3D 0 and ignore it in the computation=
+ of configuration registers
+offsets.
 
-The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
+Best regards,
+Liviu
 
-  Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
+>=20
+> Thanks!
+> Yijing.
+>=20
+> >=20
+> > Best regards,
+> > Liviu
+> >=20
+> >>
+> >> PCI get domain by ACPI "_SEG" in IA64(drivers/acpi/pci_root.c)
+> >> ......
+> >> 	status =3D acpi_evaluate_integer(handle, METHOD_NAME__SEG, NULL,
+> >> 				       &segment);
+> >> 	if (ACPI_FAILURE(status) && status !=3D AE_NOT_FOUND) {
+> >> 		dev_err(&device->dev,  "can't evaluate _SEG\n");
+> >> 		result =3D -ENODEV;
+> >> 		goto end;
+> >> 	}
+> >> .......
+> >>
+> >> Thanks!
+> >> Yijing.
+> >>
+> >>>
+> >>>> This function
+> >>>> is just a weird mixture of data retrieval and allocation. I thin=
+k you
+> >>>> need to separate it into 2 functions.
+> >>>
+> >>> It is meant to do allocation with the retrieval being a short-cut=
+ (or fine
+> >>> control if you want).
+> >>>
+> >>> I need to think a bit more for a better solution.
+> >>>
+> >>> Best regards,
+> >>> Liviu
+> >>>
+> >>>>
+> >>>> Rob
+> >>>>
+> >>>
+> >>
+> >>
+> >> --=20
+> >> Thanks!
+> >> Yijing
+> >>
+> >>
+> >=20
+>=20
+>=20
+> --=20
+> Thanks!
+> Yijing
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
+in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
 
-are available in the git repository at:
-
-  https://github.com/nmenon/linux-2.6-playground.git pull/v3.18/for-dt-pinctrl-updates
-
-for you to fetch changes up to 66b0436977e2c62388d48836ff784f1fedb49c4f:
-
-  ARM: dts: dra7-evm: Mark uart1 rxd as wakeup capable (2014-09-09 08:33:29 -0500)
-
-----------------------------------------------------------------
-Nishanth Menon (5):
-      ARM: dts: OMAP5: switch to compatible pinctrl
-      ARM: dts: DRA7: switch to compatible pinctrl
-      ARM: dts: AM437x: switch to compatible pinctrl
-      ARM: dts: OMAP5 / DRA7: switch over to interrupts-extended property for UART
-      ARM: dts: dra7-evm: Mark uart1 rxd as wakeup capable
-
- arch/arm/boot/dts/am4372.dtsi  |    4 +++-
- arch/arm/boot/dts/dra7-evm.dts |    2 ++
- arch/arm/boot/dts/dra7.dtsi    |   24 +++++++++++++-----------
- arch/arm/boot/dts/omap5.dtsi   |   20 ++++++++++++--------
- 4 files changed, 30 insertions(+), 20 deletions(-)
-
-[1] http://marc.info/?l=linux-kernel&m=140871681606779&w=2
-[2] http://marc.info/?l=linux-kernel&m=141019565513129&w=2
-[3] http://marc.info/?l=linux-kernel&m=141019566913133&w=2
-[4] http://marc.info/?l=linux-omap&m=141022429924564&w=2
-
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
