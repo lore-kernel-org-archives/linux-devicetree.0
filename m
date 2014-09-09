@@ -1,81 +1,52 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v3 2/2] dma: Add Xilinx AXI Direct Memory Access Engine
- driver support
-Date: Tue, 9 Sep 2014 21:27:16 +0530
-Message-ID: <20140909155716.GN1610@intel.com>
-References: <1406549869-24422-1-git-send-email-sthokal@xilinx.com>
- <1406549869-24422-2-git-send-email-sthokal@xilinx.com>
- <20140819170346.GS13288@intel.com>
- <CA+mB=1L14Os=ZdJzj8_+XXa+oq4ZOS_kadQHpKQ2yws2tqGVSQ@mail.gmail.com>
- <20140904063613.GD1610@intel.com>
- <CA+mB=1KarJGUYTZu=2k46gqt3oMAuYawfq+H=Lxa7YVqcThjCw@mail.gmail.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv10 0/4] Common Mailbox Framework
+Date: Tue, 9 Sep 2014 11:23:54 -0500
+Message-ID: <540F299A.6030906@ti.com>
+References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>	<20140801182656.GJ30458@sirena.org.uk> <CAJe_ZhcmEUDD3+xC2mBFnBm7uiMhibtHhBOMxVBhy700BTvYsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CA+mB=1KarJGUYTZu=2k46gqt3oMAuYawfq+H=Lxa7YVqcThjCw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srikanth Thokala <sthokal@xilinx.com>
-Cc: devicetree@vger.kernel.org, Levente Kurusa <levex@linux.com>, Jassi Brar <jassisinghbrar@gmail.com>, svemula@xilinx.com, Michal Simek <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, anirudh@xilinx.com, Grant Likely <grant.likely@linaro.org>, "Williams,
- Dan J" <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJe_ZhcmEUDD3+xC2mBFnBm7uiMhibtHhBOMxVBhy700BTvYsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mollie Wu <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 09, 2014 at 12:52:16AM +0530, Srikanth Thokala wrote:
-> Hi Vinod,
-> 
-> On Thu, Sep 4, 2014 at 12:06 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> > On Wed, Sep 03, 2014 at 12:17:43PM +0530, Srikanth Thokala wrote:
-> >> Hi Vinod,
-> >>
-> >> Apologies for the delay.
-> >>
-> >> On Tue, Aug 19, 2014 at 10:33 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> >> > On Mon, Jul 28, 2014 at 05:47:49PM +0530, Srikanth Thokala wrote:
-> >> >> +struct xilinx_dma_chan {
-> >> >> +     struct xilinx_dma_device *xdev;
-> >> >> +     u32 ctrl_offset;
-> >> >> +     spinlock_t lock;
-> >> >> +     struct list_head pending_list;
-> >> >> +     struct xilinx_dma_tx_descriptor *active_desc;
-> >> >> +     struct xilinx_dma_tx_descriptor *allocated_desc;
-> >> >> +     struct list_head done_list;
-> >> >> +     struct list_head free_seg_list;
-> >> >> +     struct dma_chan common;
-> >> >> +     struct xilinx_dma_tx_segment *seg_v;
-> >> >> +     dma_addr_t seg_p;
-> >> >> +     struct device *dev;
-> >> >> +     int irq;
-> >> >> +     int id;
-> >> >> +     enum dma_transfer_direction direction;
-> >> > This looks suspect. Why should channel have direction, for a descriptor it
-> >> > makes sense though.
-> >>
-> >> The channel only supports transfers in one direction. Either from memory to
-> >> peripheral or from peripheral to memory, that's fixed and can't be changed
-> >> at runtime.  So, the driver needs to know which direction the channel supports
-> >> and hence it can reject transfers with the wrong direction.
-> > But you already have this information in descriptor so why duplicate?
-> 
-> Our descriptor doesn't have the information of channel direction, we have this
-> information only in the chan structure (struct xilinx_dma_chan) which
-> is populated
-> while parsing the DT.  So, we use this information to ensure if we are servicing
-> proper channel (in prep_slave_sg call).
-One of the argument of prep_slave_sg call is direction. You need to use that
-and store in in your descriptor for using it afterwards
+Jassi,
 
-> FYI: We also need the direction of the channel so that we can select SRC/DST
-> register address in the issue_pending() call.
-And you have the descriptor there as well so can use it
+On 08/02/2014 02:48 AM, Jassi Brar wrote:
+> On 1 August 2014 23:56, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Aug 01, 2014 at 05:59:54PM +0530, Jassi Brar wrote:
+>>> Hello,
+>>>  Here's v10. Not much different from v9. The code and the generic
+>>> bindings looked good enough to relevant gods, but the patchset still
+>>> needs some formal loving in the form of Acked-by's.
+>>>
+>>> Changes since v9:
+>>>  o Purely cosmetic changes - added headers and used BIT()
+>>
+>> Given that this code is now getting very stable can I suggest setting up
+>> a git tree and making sure it's included in -next?  Just send Stephen a
+>> mail with a pointer to the relevant tree and branch and ask him to add it.
+>>
+>> I'd say it's probably worth merging at this point though since it's not
+>> been in -next yet and the merge window is likely to open this weekend it
+>> might be a bit much to try to merge it this window.
+>>
+> Thanks, sounds good. Will do.
 
--- 
-~Vinod
+Is there anything pending on this series to make it into 3.18?
+
+This is one of the dependencies for our AM335/AM437 PM suspend support,
+so it would be great to see this in 3.18, so that we can target 3.19 for
+the PM series.
+
+regards
+Suman
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
