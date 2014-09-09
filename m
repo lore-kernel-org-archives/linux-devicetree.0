@@ -1,54 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: mc13xxx: add missing of_node_get()
-Date: Tue, 9 Sep 2014 12:22:21 +0100
-Message-ID: <20140909112221.GP2601@sirena.org.uk>
-References: <1410260825-21667-1-git-send-email-guodong.xu@linaro.org>
- <CAFRkauBhzHot9=z-Jv-rvdLaSWSfyYSULMKqcVX+tiHcXrxt_g@mail.gmail.com>
+From: Mark Brown <broonie-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] regulator/axp20x: use axp2xx consolidated header
+Date: Tue, 9 Sep 2014 12:25:16 +0100
+Message-ID: <20140909112516.GR2601@sirena.org.uk>
+References: <1410215046-31751-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1410215046-31751-4-git-send-email-jacob.jun.pan@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LfQcPIWFRhGivmDw"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="l2C7pJE7HE4aLL3l"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFRkauBhzHot9=z-Jv-rvdLaSWSfyYSULMKqcVX+tiHcXrxt_g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Axel Lin <axel.lin@ingics.com>
-Cc: Guodong Xu <guodong.xu@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <1410215046-31751-4-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Doug Anderson <d>
 List-Id: devicetree@vger.kernel.org
 
 
---LfQcPIWFRhGivmDw
+--l2C7pJE7HE4aLL3l
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 09, 2014 at 07:11:46PM +0800, Axel Lin wrote:
-> 2014-09-09 19:07 GMT+08:00 Guodong Xu <guodong.xu@linaro.org>:
-> > mc13xxx_parse_regulators_dt() goes through dt tree to search for regulator
-> > sub-nodes. For each matched node, later on it will be used and registered
-> > into a regulator_dev.
-> >
-> > of_node_get() should be called to increase its refcount.
+On Mon, Sep 08, 2014 at 03:24:05PM -0700, Jacob Pan wrote:
+> AXP20x driver has been extended to support axp288 variant. Header file
+> and common data structures has also been renamed to suit the new
+> scope of devices supported.
+>=20
+> This patch makes use of the renamed header and structure.
 
-> I think it's done by regulator core:
+> -#include <linux/mfd/axp20x.h>
+> +#include <linux/mfd/axp2xx.h>
 
-> commit 63c7c9e16c8e92cc069854f2babdf82d2d38e4c7
-> regulator: core: Get and put regulator of_node
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Yes, that's the idea anyway.  It's possible this is buggy though.
+but is it really worth the effort of renaming everything?  That's going
+to cause problems for things like the stable workflow.
 
---LfQcPIWFRhGivmDw
+--l2C7pJE7HE4aLL3l
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUDuLoAAoJECTWi3JdVIfQmYgH/00dYGF31lb02ivfhf8v/kUQ
-MPwoWmTa82mZRE5tWWGNkWGrJ2tnzM6oE8p/qsrypYSPXm5ltGh04W1KOMt1w1B2
-EGmU5BqGgpsaCjjhntHWNR42qGYxcSyz6B5/JoiHhdnWwSD71uSY1Et3Lu7uTJaR
-KOpS0hcx30Dpx1wsu+nu1NbuL8KPlJBYa3oHF3TXm0eG/3a7Qo/v5Ov1Q82s+zc5
-HUFV6cb6utFxZOeFg3lO2Dosm9oz0iCQckxSJFdoq/3Tbbh0xfXSRtnNbsjvbm7b
-d5xeoEAcOf+CPHcfThJIwvhoQZZKhU6inS8tPIBxtZm8+ZjpJv+tXXzNlgME+lY=
-=4Sp7
+iQEcBAEBAgAGBQJUDuObAAoJECTWi3JdVIfQ+p8H/iGfPM7c+ObHEgBC5s9ogh3t
+bkogCkWlDwMlDjGYF8k7272clZenUvvvMZdiYpkYO9PvqipyjPKMBzb9vWgfQ4+s
+lWao77aeZUzAleAAMJi0wiC6qmbqNkFozbpbugdzy7DPzPY7ip3L0lAStg/yvcQr
+itdCReJPCQMYv+iHqsFRkmW43QoWk6zsX8fdaZQYyLt2mHYNlx2hWDPZubtyU3r0
+pDZhc6zh3K1tcWX0ynLHXYWwUnpEBt71ecyGigTAy/lTyH8fZmMqyADMFCz8rLEB
+0Vw/vSd3UMPRrkOaGWEx1v7Lq+4PzY3qymr19QWGvGvA8SLBW+CG34le1Ohzmmo=
+=Q61h
 -----END PGP SIGNATURE-----
 
---LfQcPIWFRhGivmDw--
+--l2C7pJE7HE4aLL3l--
