@@ -1,89 +1,180 @@
-From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/5] extcon: gpio: Convert the driver to use gpio desc API's
-Date: Tue, 9 Sep 2014 09:44:35 +0530
-Message-ID: <1410236078-11713-3-git-send-email-george.cherian@ti.com>
+From: George Cherian <george.cherian@ti.com>
+Subject: [PATCH 3/5] extcon: gpio: Add dt support for the driver.
+Date: Tue, 9 Sep 2014 09:44:36 +0530
+Message-ID: <1410236078-11713-4-git-send-email-george.cherian@ti.com>
 References: <1410236078-11713-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410236078-11713-1-git-send-email-george.cherian-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rongjun.ying-kQvG35nSl+M@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410236078-11713-1-git-send-email-george.cherian@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cw00.choi@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, rongjun.ying@csr.com, linux@roeck-us.net
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, George Cherian <george.cherian@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert the driver to use gpiod_* API's.
+Add device tree support to extcon-gpio driver.
+Add devicetree binding documentation
 
-Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Signed-off-by: George Cherian <george.cherian@ti.com>
 ---
- drivers/extcon/extcon-gpio.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ .../devicetree/bindings/extcon/extcon-gpio.txt     | 21 +++++++
+ drivers/extcon/extcon-gpio.c                       | 70 +++++++++++++++-------
+ 2 files changed, 69 insertions(+), 22 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
 
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+new file mode 100644
+index 0000000..30aa2e1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+@@ -0,0 +1,21 @@
++GPIO based EXTCON
++
++EXTCON GPIO
++-----------
++
++Required Properties:
++ - compatible: should be:
++	* "linux,extcon-gpio"
++ - gpios: specifies the gpio pin used.
++
++Optional Properties:
++ - debounce: Debounce time for GPIO IRQ in ms
++
++
++Eg:
++
++	extcon1: am43_usbid_extcon1 {
++		compatible = "linux,extcon-gpio";
++		gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
++		debounce = <20>;
++		};
 diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 72f19a3..25269f6 100644
+index 25269f6..2bfbd2e 100644
 --- a/drivers/extcon/extcon-gpio.c
 +++ b/drivers/extcon/extcon-gpio.c
-@@ -33,8 +33,7 @@
+@@ -25,8 +25,10 @@
+ #include <linux/gpio.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+@@ -80,16 +82,12 @@ static ssize_t extcon_gpio_print_state(struct extcon_dev *edev, char *buf)
  
- struct gpio_extcon_data {
- 	struct extcon_dev *edev;
--	unsigned gpio;
--	bool gpio_active_low;
-+	struct gpio_desc *gpiod;
- 	const char *state_on;
- 	const char *state_off;
- 	int irq;
-@@ -50,9 +49,7 @@ static void gpio_extcon_work(struct work_struct *work)
- 		container_of(to_delayed_work(work), struct gpio_extcon_data,
- 			     work);
+ static int gpio_extcon_probe(struct platform_device *pdev)
+ {
++	struct device_node *np = pdev->dev.of_node;
+ 	struct gpio_extcon_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	struct gpio_extcon_data *extcon_data;
+ 	int ret;
+-
+-	if (!pdata)
+-		return -EBUSY;
+-	if (!pdata->irq_flags) {
+-		dev_err(&pdev->dev, "IRQ flag is not specified.\n");
+-		return -EINVAL;
+-	}
++	unsigned int irq_flags;
++	unsigned int debounce = 0;
  
--	state = gpio_get_value(data->gpio);
--	if (data->gpio_active_low)
--		state = !state;
-+	state = gpiod_get_value(data->gpiod);
- 	extcon_set_state(data->edev, state);
- }
- 
-@@ -106,22 +103,21 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 	extcon_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
+ 				   GFP_KERNEL);
+@@ -101,26 +99,48 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "failed to allocate extcon device\n");
+ 		return -ENOMEM;
  	}
- 	extcon_data->edev->name = pdata->name;
+-	extcon_data->edev->name = pdata->name;
  
--	extcon_data->gpio = pdata->gpio;
--	extcon_data->gpio_active_low = pdata->gpio_active_low;
-+	extcon_data->gpiod = gpio_to_desc(pdata->gpio);
- 	extcon_data->state_on = pdata->state_on;
- 	extcon_data->state_off = pdata->state_off;
- 	extcon_data->check_on_resume = pdata->check_on_resume;
- 	if (pdata->state_on && pdata->state_off)
- 		extcon_data->edev->print_state = extcon_gpio_print_state;
+-	extcon_data->gpiod = gpio_to_desc(pdata->gpio);
+-	extcon_data->state_on = pdata->state_on;
+-	extcon_data->state_off = pdata->state_off;
+-	extcon_data->check_on_resume = pdata->check_on_resume;
+-	if (pdata->state_on && pdata->state_off)
+-		extcon_data->edev->print_state = extcon_gpio_print_state;
++	if (np) {
++		int irq;
++
++		extcon_data->gpiod = gpiod_get(&pdev->dev, NULL);
++		if (IS_ERR(extcon_data->gpiod))
++			return PTR_ERR(extcon_data->gpiod);
++
++		extcon_data->edev->name = np->name;
++		of_property_read_u32(np, "debounce", &debounce);
++		irq = gpiod_to_irq(extcon_data->gpiod);
++		irq_flags = irq_get_trigger_type(irq);
++	} else {
++		if (!pdata)
++			return -EBUSY;
++		if (!pdata->irq_flags) {
++			dev_err(&pdev->dev, "IRQ flag is not specified.\n");
++			return -EINVAL;
++		}
++		extcon_data->edev->name = pdata->name;
++		extcon_data->state_on = pdata->state_on;
++		extcon_data->state_off = pdata->state_off;
++		extcon_data->check_on_resume = pdata->check_on_resume;
++		if (pdata->state_on && pdata->state_off)
++			extcon_data->edev->print_state = extcon_gpio_print_state;
++
++		extcon_data->gpiod = gpio_to_desc(pdata->gpio);
++		ret = devm_gpio_request_one(&pdev->dev, pdata->gpio,
++					    GPIOF_DIR_IN, pdev->name);
++		if (ret < 0)
++			return ret;
++		irq_flags = pdata->irq_flags;
++		debounce = pdata->debounce;
++	}
  
--	ret = devm_gpio_request_one(&pdev->dev, extcon_data->gpio, GPIOF_DIR_IN,
-+	ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
- 				    pdev->name);
- 	if (ret < 0)
- 		return ret;
+-	ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
+-				    pdev->name);
+-	if (ret < 0)
+-		return ret;
  
- 	if (pdata->debounce) {
--		ret = gpio_set_debounce(extcon_data->gpio,
--					pdata->debounce * 1000);
-+		ret = gpiod_set_debounce(extcon_data->gpiod,
-+					 pdata->debounce * 1000);
+-	if (pdata->debounce) {
++	if (debounce) {
+ 		ret = gpiod_set_debounce(extcon_data->gpiod,
+-					 pdata->debounce * 1000);
++					 debounce * 1000);
  		if (ret < 0)
  			extcon_data->debounce_jiffies =
- 				msecs_to_jiffies(pdata->debounce);
-@@ -133,7 +129,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+-				msecs_to_jiffies(pdata->debounce);
++				msecs_to_jiffies(debounce);
+ 	}
  
- 	INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
- 
--	extcon_data->irq = gpio_to_irq(extcon_data->gpio);
-+	extcon_data->irq = gpiod_to_irq(extcon_data->gpiod);
- 	if (extcon_data->irq < 0)
+ 	ret = devm_extcon_dev_register(&pdev->dev, extcon_data->edev);
+@@ -134,7 +154,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
  		return extcon_data->irq;
+ 
+ 	ret = request_any_context_irq(extcon_data->irq, gpio_irq_handler,
+-				      pdata->irq_flags, pdev->name,
++				      irq_flags, pdev->name,
+ 				      extcon_data);
+ 	if (ret < 0)
+ 		return ret;
+@@ -172,6 +192,11 @@ static int gpio_extcon_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
+ 
++static struct of_device_id of_extcon_gpio_match_tbl[] = {
++	{ .compatible = "linux,extcon-gpio", },
++	{ /* end */ }
++};
++
+ static struct platform_driver gpio_extcon_driver = {
+ 	.probe		= gpio_extcon_probe,
+ 	.remove		= gpio_extcon_remove,
+@@ -179,6 +204,7 @@ static struct platform_driver gpio_extcon_driver = {
+ 		.name	= "extcon-gpio",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &gpio_extcon_pm_ops,
++		.of_match_table = of_extcon_gpio_match_tbl,
+ 	},
+ };
  
 -- 
 1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
