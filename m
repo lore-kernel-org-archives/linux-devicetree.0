@@ -1,52 +1,29 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: mvebu: Use Hardware BCH ECC for RN104 and
- RN2120
-Date: Tue, 9 Sep 2014 11:53:34 -0400
-Message-ID: <20140909155334.GO30828@titan.lakedaemon.net>
-References: <cover.1410035142.git.arno@natisbad.org>
+From: Kevin Hilman <khilman@kernel.org>
+Subject: Re: [PATCH/RFC 1/5] PM / Domains: Add DT bindings for power-on/off latencies
+Date: Tue, 09 Sep 2014 08:57:50 -0700
+Message-ID: <7h8ulskcqp.fsf@deeprootsystems.com>
+References: <1410183344-14756-1-git-send-email-geert+renesas@glider.be>
+	<1410183344-14756-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1410035142.git.arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1410183344-14756-2-git-send-email-geert+renesas@glider.be>
+	(Geert Uytterhoeven's message of "Mon, 8 Sep 2014 15:35:40 +0200")
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 06, 2014 at 10:48:44PM +0200, Arnaud Ebalard wrote:
-> Hi,
-> 
-> Following Ben's report and fix for RN102, I did some tests
-> on RN104 and RN2120 (they have the same Hynix H27U1G8F2BTR
-> flash and setup) and came up w/ the exact same fixes for
-> their respective .dts files. With those patches, it is now
-> possible to update kernel from userland and u-boot will
-> happily load and boot it on those devices.
-> 
-> Both patches should be candidates for stable, I guess.
-> 
-> Cheers,
-> 
-> a+
-> 
-> Arnaud Ebalard (2):
->   ARM: mvebu: Netgear RN104: Use Hardware BCH ECC
->   ARM: mvebu: Netgear RN2120: Use Hardware BCH ECC
-> 
->  arch/arm/boot/dts/armada-370-netgear-rn104.dts | 4 ++++
->  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts | 4 ++++
->  2 files changed, 8 insertions(+)
+Geert Uytterhoeven <geert+renesas@glider.be> writes:
 
-I've applied both patches to mvebu/fixes and flagged them for stable,
-v3.14+.  I removed the 'Depends' line from each, as Thomas mentioned,
-there is no build dependency between these dts changes and the code
-supporting it (as it should be).
+> PM domain power on/off-latencies are properties of the hardware.
+> In legacy code, they're specified from platform code.
+> On DT platforms, their values should come from DT.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-thx,
+Nice.
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Kevin Hilman <khilman@linaro.org>
+
+Kevin
