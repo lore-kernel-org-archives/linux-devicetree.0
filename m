@@ -1,77 +1,135 @@
-From: Matti Vaittinen <matti.vaittinen@nsn.com>
-Subject: [PATCH v5 1/2] Documentation: dt-bindings: trickle charger dt
- binding document for ds1339
-Date: Tue, 9 Sep 2014 17:32:29 +0300
-Message-ID: <20140909143220.GA2164@fi-ourus-dhcp00977.emea.nsn-net.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Roland Stigge <stigge@antcom.de>
+Subject: [PATCH] leds: Add DT support for leds-pca9532
+Date: Tue,  9 Sep 2014 15:28:00 +0200
+Message-ID: <1410269280-8761-1-git-send-email-stigge@antcom.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, "jason@lakedaemon.net" <jason@lakedaemon.net>, "linux@roeck-us.net" <linux@roeck-us.net>
-Cc: a.zummo@towertech.it, "jic23@kernel.org" <jic23@kernel.org>, "arno@natisbad.org" <arno@natisbad.org>, jgunthorpe@obsidianresearch.com, san@rosetechnology.dk, hs@denx.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Sverdlin Alexander <alexander.sverdlin@nsn.com>
+To: robh+dt@kernel.org, riku.voipio@iki.fi, cooloney@gmail.com, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Cc: Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-Some DS13XX devices have "trickle chargers". Introduce a device tree binding
-for the resistor and diode configuration for enabling trickle charger.
+This patch adds DT support for leds-pca9532.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@nsn.com>
-Acked-by: Jason Cooper <jason@lakedaemon.net>
+Signed-off-by: Roland Stigge <stigge@antcom.de>
+
 ---
+Applies to v3.17-rc4
 
-Delta to v4
-    -This is the correct patch.
+ Documentation/devicetree/bindings/leds/leds-pca9532.txt |   43 ++++++++++++++
+ drivers/leds/leds-pca9532.c                             |   47 ++++++++++++++++
+ 2 files changed, 90 insertions(+)
 
- .../devicetree/bindings/i2c/trivial-devices.txt        |  1 -
- .../devicetree/bindings/rtc/dallas,ds1339.txt          | 18 ++++++++++++++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-index 6af570e..e9206a4 100644
---- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-@@ -35,7 +35,6 @@ catalyst,24c32		i2c serial eeprom
- cirrus,cs42l51		Cirrus Logic CS42L51 audio codec
- dallas,ds1307		64 x 8, Serial, I2C Real-Time Clock
- dallas,ds1338		I2C RTC with 56-Byte NV RAM
--dallas,ds1339		I2C Serial Real-Time Clock
- dallas,ds1340		I2C RTC with Trickle Charger
- dallas,ds1374		I2C, 32-Bit Binary Counter Watchdog RTC with Trickle Charger and Reset Input/Output
- dallas,ds1631		High-Precision Digital Thermometer
-diff --git a/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-new file mode 100644
-index 0000000..916f576
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
-@@ -0,0 +1,18 @@
-+* Dallas DS1339		I2C Serial Real-Time Clock
++++ linux-2.6/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+@@ -0,0 +1,43 @@
++NXP PCA9532 LED (incl. GPIO) controller
 +
 +Required properties:
-+- compatible: Should contain "dallas,ds1339".
-+- reg: I2C address for chip
++- compatible: must be "nxp,pca9532"
++- reg: I2C address
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Should be 2:
++   1) pin number
++   2) optional parameters:
++      - bit 0 specifies polarity (0 for normal, 1 for inverted)
++- nxp,typecodes: groups of 2 bits for each of the 16 pins:
++  0: None
++  1: LED
++  2: Beep
++  3: GPIO
++- nxp,statecodes: groups of 2 bits for each of the 16 pins:
++  0: off
++  1: on
++  2: pwm0
++  3: pwm1
 +
 +Optional properties:
-+- trickle-resistor-ohms : Selected resistor for trickle charger
-+	Values usable for ds1339 are 250, 2000, 4000
-+	Should be given if trickle charger should be enabled
-+- trickle-diode-disable : Do not use internal trickle charger diode
-+	Should be given if internal trickle charger diode should be disabled
++- nxp,psc: array of 2 numbers: PSC values for the two PWM channels (see datasheet)
++- nxp,pwm: array of 2 numbers: PWM values for the two PWM channels (see datasheet)
++
 +Example:
-+	ds1339: rtc@68 {
-+		compatible = "dallas,ds1339";
-+		trickle-resistor-ohms = <250>;
-+		reg = <0x68>;
++
++	pca9532: pca9532@60 {
++		compatible = "nxp,pca9532";
++		gpio-controller;
++		#gpio-cells = <2>;
++		nxp,typecodes = <0xffffffff>;
++		nxp,statecodes = <0x00000000>;
++		reg = <0x60>;
 +	};
--- 
-1.8.3.1
-
-
--- 
-=============================================
-
-Matti Vaittinen
-Senile SW Specialist
-FINLAND 
-
-~~ When things go utterly wrong vim users can always type :help! ~~
++
++	sd@20098000 {
++		wp-gpios = <&pca9532 5 0>;
++		cd-gpios = <&pca9532 4 0>;
++		cd-inverted;
++		bus-width = <4>;
++		status = "okay";
++	};
+--- linux-2.6.orig/drivers/leds/leds-pca9532.c
++++ linux-2.6/drivers/leds/leds-pca9532.c
+@@ -21,6 +21,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/leds-pca9532.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
+ 
+ /* m =  num_leds*/
+ #define PCA9532_REG_INPUT(i)	((i) >> 3)
+@@ -442,6 +443,45 @@ exit:
+ 	return err;
+ }
+ 
++#ifdef CONFIG_OF
++static struct pca9532_platform_data *pca9532_parse_dt(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct pca9532_platform_data *pca9532_pdata;
++	u32 typecodes, statecodes;
++	u32 pwm[2];
++	u32 psc[2];
++	int i;
++
++	pca9532_pdata = devm_kzalloc(dev, sizeof(*pca9532_pdata), GFP_KERNEL);
++	if (!pca9532_pdata)
++		return NULL;
++
++	if (!of_property_read_u32(np, "nxp,typecodes", &typecodes)) {
++		for (i = 0; i < 16; i++)
++			pca9532_pdata->leds[i].type =
++				(typecodes >> (2 * i)) & 0x3;
++	}
++	if (!of_property_read_u32(np, "nxp,statecodes", &statecodes)) {
++		for (i = 0; i < 16; i++)
++			pca9532_pdata->leds[i].state =
++				(statecodes >> (2 * i)) & 0x3;
++	}
++	if (!of_property_read_u32_array(np, "nxp,pwm", &pwm[0], 2)) {
++		for (i = 0; i < 2; i++)
++			pca9532_pdata->pwm[i] = pwm[i];
++	}
++	if (!of_property_read_u32_array(np, "nxp,psc", &psc[0], 2)) {
++		for (i = 0; i < 2; i++)
++			pca9532_pdata->psc[i] = psc[i];
++	}
++
++	pca9532_pdata->gpio_base = -1; /* dynamically assign gpio base */
++
++	return pca9532_pdata;
++}
++#endif
++
+ static int pca9532_probe(struct i2c_client *client,
+ 	const struct i2c_device_id *id)
+ {
+@@ -449,6 +489,11 @@ static int pca9532_probe(struct i2c_clie
+ 	struct pca9532_platform_data *pca9532_pdata =
+ 			dev_get_platdata(&client->dev);
+ 
++#ifdef CONFIG_OF
++	if (!pca9532_pdata && client->dev.of_node)
++		pca9532_pdata = pca9532_parse_dt(&client->dev);
++#endif
++
+ 	if (!pca9532_pdata)
+ 		return -EIO;
+ 
