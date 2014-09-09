@@ -1,73 +1,127 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] spi: davinci: add support for adding delay between
- word's transmission
-Date: Tue, 9 Sep 2014 20:58:19 +0100
-Message-ID: <20140909195819.GJ2601@sirena.org.uk>
-References: <1410278851-10783-1-git-send-email-grygorii.strashko@ti.com>
- <20140909165555.GD2601@sirena.org.uk>
- <540F3447.3020609@ti.com>
- <20140909172057.GH2601@sirena.org.uk>
- <540F44EB.8090700@ti.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v2 2/2] PCI: keystone: update to support multiple pci ports
+Date: Tue, 9 Sep 2014 16:17:15 -0400
+Message-ID: <1410293835-13050-2-git-send-email-m-karicheri2@ti.com>
+References: <1410293835-13050-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y06s9PvpQ1Ch5mdL"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <540F44EB.8090700-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1410293835-13050-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+K2E SoC has two PCI ports. The SATA controller is connected to second
+PCI port (port 1). This patch enhances the driver to support multiple
+ports.
 
---y06s9PvpQ1Ch5mdL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Update the DT Documentation for the new attribute, ti,pcie-port and
+remove the note for bootargs as this is no longer needed.
 
-On Tue, Sep 09, 2014 at 02:20:27PM -0400, Murali Karicheri wrote:
-> On 09/09/2014 01:20 PM, Mark Brown wrote:
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ - updated based on comment against v1
+ .../devicetree/bindings/pci/pci-keystone.txt       |    8 +++++---
+ drivers/pci/host/pci-keystone.c                    |   15 ++++++++++-----
+ drivers/pci/host/pci-keystone.h                    |    4 ++--
+ 3 files changed, 17 insertions(+), 10 deletions(-)
 
-> >If these delays are not related to chip select then the documentation
-> >needs to be fixed to not refer to chip select.
-
-> Ok. So what I understand is the issue is not having the right description to
-> indicate that these parameters are delays associated with tranmission of
-> successive words on the wire. Personally I like these description match with
-> what is described in the device spec/ user guide and what is described above
-> match with that. However we could add additional description as below to to
-> make it more explicit.
-
-> spi-c2t-delay - delay after CS is asserted before output bits on wire
-> spi-t2c-delay - delay after tramission of bits and before deasserting CS
-
-> Do you think this will help?
-
-No, that doesn't help at all.  You keep claiming that these parameters
-are related to the intervals between words but then providing
-descriptions of these parameters which relate to intervals around
-changes in /CS which is patently not something connected with the gaps
-between words.  Either your description of parameters which do not
-relate to /CS should not need to mention /CS or the parameters are in
-fact related to /CS, both can't simultaneously be true.
-
---y06s9PvpQ1Ch5mdL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUD1vWAAoJECTWi3JdVIfQrwQH/1EdE0KzL3TyDq37T3UhGGE4
-5ZoPIdyOslVaU2g7wdfdLcHvyhpCYQTmXrNa7NcnF8ombRlWv396T76aSGd+7SgG
-G1kVXtC5UaM4yitU5MU3bTeZ3w4eC8RmXH36FgDfey7FIKya2clJbswY4los+3Re
-oSyG3Q3JIDCuBG36fV4/hjJAL9Vi78+ePjXKaSHvyZF1PvmEjoIbC7f+qcLaZB9n
-5n4U8hsh0GkJpz/TcooWvbvy07NV6YydKfXgfQgd7Auph4FuAfJLovRDp7HSzFIh
-CRebFPlEOz7rdJBKN4PJ/tcteai/PmeqGWVQ/XiKx0Dii/woi+lYAZL8JkzIy0c=
-=v6Ak
------END PGP SIGNATURE-----
-
---y06s9PvpQ1Ch5mdL--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+index bedacf0..c8f5773 100644
+--- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
++++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+@@ -56,11 +56,13 @@ Optional properties:-
+ 	phy-names: name of the Generic Keystine SerDes phy for PCI
+ 	  - If boot loader already does PCI link establishment, then phys and
+ 	    phy-names shouldn't be present.
++	ti,pcie-port: PCI port number. This is used to configure the PCI port
++	    number. For example K2E SoC supports 2 PCI ports and PCI bindings
++	    for the second port adds ti,pcie-port = <1> to identify second port
++	    and driver uses this to configure the PCI mode register for second
++	    port. If not present, port number 0 is assumed.
+ 
+ Designware DT Properties not applicable for Keystone PCI
+ 
+ 1. pcie_bus clock-names not used.  Instead, a phandle to phys is used.
+ 
+-Note for PCI driver usage
+-=========================
+-Driver requires pci=pcie_bus_perf in the bootargs for proper functioning.
+diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
+index f1119eb..893820d 100644
+--- a/drivers/pci/host/pci-keystone.c
++++ b/drivers/pci/host/pci-keystone.c
+@@ -253,8 +253,8 @@ static int keystone_pcie_fault(unsigned long addr, unsigned int fsr,
+ 
+ static void __init ks_pcie_host_init(struct pcie_port *pp)
+ {
+-	u32 vendor_device_id, val;
+ 	struct keystone_pcie *ks_pcie = to_keystone_pcie(pp);
++	u32 val;
+ 
+ 	ks_pcie_establish_link(ks_pcie);
+ 	ks_dw_pcie_setup_rc_app_regs(ks_pcie);
+@@ -263,8 +263,7 @@ static void __init ks_pcie_host_init(struct pcie_port *pp)
+ 			pp->dbi_base + PCI_IO_BASE);
+ 
+ 	/* update the Vendor ID */
+-	vendor_device_id = readl(ks_pcie->va_reg_pciid);
+-	writew((vendor_device_id >> 16), pp->dbi_base + PCI_DEVICE_ID);
++	writew(ks_pcie->device_id, pp->dbi_base + PCI_DEVICE_ID);
+ 
+ 	/* update the DEV_STAT_CTRL to publish right mrrs */
+ 	val = readl(pp->dbi_base + PCIE_CAP_BASE + PCI_EXP_DEVCTL);
+@@ -345,12 +344,13 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
+ static int __init ks_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	struct keystone_pcie *ks_pcie;
++	int ret = 0, port_id = 0;
+ 	struct pcie_port *pp;
+ 	struct resource *res;
+ 	void __iomem *reg_p;
+ 	struct phy *phy;
+-	int ret = 0;
+ 
+ 	ks_pcie = devm_kzalloc(&pdev->dev, sizeof(*ks_pcie),
+ 				GFP_KERNEL);
+@@ -360,6 +360,9 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	}
+ 	pp = &ks_pcie->pp;
+ 
++	/* read the PCI port id */
++	of_property_read_u32(np, "ti,pcie-port", &port_id);
++
+ 	/* initialize SerDes Phy if present */
+ 	phy = devm_phy_get(dev, "pcie-phy");
+ 	if (!IS_ERR_OR_NULL(phy)) {
+@@ -373,7 +376,9 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	reg_p = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(reg_p))
+ 		return PTR_ERR(reg_p);
+-	ks_pcie->va_reg_pciid = reg_p;
++	ks_pcie->device_id = readl(reg_p) >> 16;
++	devm_iounmap(dev, reg_p);
++	devm_release_mem_region(dev, res->start, resource_size(res));
+ 
+ 	pp->dev = dev;
+ 	platform_set_drvdata(pdev, ks_pcie);
+diff --git a/drivers/pci/host/pci-keystone.h b/drivers/pci/host/pci-keystone.h
+index 729ea7d..80cfa8e 100644
+--- a/drivers/pci/host/pci-keystone.h
++++ b/drivers/pci/host/pci-keystone.h
+@@ -19,8 +19,8 @@
+ struct keystone_pcie {
+ 	struct	clk		*clk;
+ 	struct	pcie_port	pp;
+-	void __iomem		*va_reg_pciid;
+-
++	/* PCI Device ID */
++	u32			device_id;
+ 	int			num_legacy_host_irqs;
+ 	int			legacy_host_irqs[MAX_LEGACY_HOST_IRQS];
+ 	struct			device_node *legacy_intc_np;
+-- 
+1.7.9.5
