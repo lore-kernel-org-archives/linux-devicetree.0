@@ -1,41 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/2] PCI: keystone: update to support multiple pci ports
-Date: Tue, 09 Sep 2014 23:09:36 +0200
-Message-ID: <9042477.aRbAhpkfQ5@wuerfel>
-References: <1410293835-13050-1-git-send-email-m-karicheri2@ti.com> <3294679.puV171E8qx@wuerfel> <540F6646.3010607@ti.com>
+From: Philipp Zabel <pza@pengutronix.de>
+Subject: [GIT PULL v2] STiH407 reset controller support
+Date: Tue, 9 Sep 2014 23:36:52 +0200
+Message-ID: <20140909213651.GA591@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <540F6646.3010607@ti.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+To: Maxime Coquelin <maxime.coquelin@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, patrice.chotard@st.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 September 2014 16:42:46 Murali Karicheri wrote:
-> >>
-> >>      /* update the Vendor ID */
-> >> -    vendor_device_id = readl(ks_pcie->va_reg_pciid);
-> >> -    writew((vendor_device_id>>  16), pp->dbi_base + PCI_DEVICE_ID);
-> >> +    writew(ks_pcie->device_id, pp->dbi_base + PCI_DEVICE_ID);
-> >>
-> >>      /* update the DEV_STAT_CTRL to publish right mrrs */
-> >>      val = readl(pp->dbi_base + PCIE_CAP_BASE + PCI_EXP_DEVCTL);
-> >
-> > This change must have slipped in accidentally, at least it's not
-> > described in the changelog. Should this be another patch?
-> > The change seems useful.
-> Are you referring to mrrs or update to device id?  device id is in a SoC 
-> register at index2 and is read and updated by the driver here. MRRS 
-> update was originally in the code.
-> 
+Hi Maxime,
 
-I meant the device id change. Maybe you accidentally did 'git commit
---amend' during a rebase and that replaced the real changelog with
-the one of the patch in front of it and merged the two patches?
+I have rebased the STiH407 reset controller patches onto v3.17-rc1.
+The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
 
-That happened to me a few times and would explain the strange mix
-of two changes.
+  Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
 
-	Arnd
+are available in the git repository at:
+
+  git://git.pengutronix.de/git/pza/linux.git tags/reset-for-sti-3.18
+
+for you to fetch changes up to a83a81838a294adbb5356e6b4a3adcda1439d98e:
+
+  reset: sti: Document sti-picophyreset controllers bindings. (2014-09-04 13:05:01 +0200)
+
+----------------------------------------------------------------
+STiH407 reset controller support
+
+----------------------------------------------------------------
+Peter Griffin (2):
+      reset: stih407: Add softreset, powerdown and picophy controllers
+      reset: sti: Document sti-picophyreset controllers bindings.
+
+ .../bindings/reset/st,sti-picophyreset.txt         |  42 ++++++
+ drivers/reset/sti/Kconfig                          |   4 +
+ drivers/reset/sti/Makefile                         |   1 +
+ drivers/reset/sti/reset-stih407.c                  | 158 +++++++++++++++++++++
+ .../dt-bindings/reset-controller/stih407-resets.h  |  61 ++++++++
+ 5 files changed, 266 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/st,sti-picophyreset.txt
+ create mode 100644 drivers/reset/sti/reset-stih407.c
+ create mode 100644 include/dt-bindings/reset-controller/stih407-resets.h
