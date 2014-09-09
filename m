@@ -1,41 +1,27 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v8 5/5] ARM: dts: imx6qdl: Allow disabling the PU regulator, add a enable ramp delay
-Date: Tue,  9 Sep 2014 15:05:15 +0200
-Message-ID: <1410267915-18126-6-git-send-email-p.zabel@pengutronix.de>
-References: <1410267915-18126-1-git-send-email-p.zabel@pengutronix.de>
+From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] rtc: ds1307: add trickle charger device tree
+ binding.
+Date: Tue, 9 Sep 2014 17:11:55 +0300
+Message-ID: <20140909141155.GG21342@fi-ourus-dhcp00977.emea.nsn-net.net>
+References: <20140909103832.GA338@fi-ourus-dhcp00977.emea.nsn-net.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410267915-18126-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140909103832.GA338-3P0KQDf13zYjNwtGTSXw41mm0B4v8B71Fo5piaCiEZ7R7s880joybQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PU regulator is enabled during boot, but not necessarily always-on.
-It can be disabled by the generic pm domain framework when the PU power
-domain is shut down. The ramp delay of 150 us might be a bit conservative,
-the value is taken from the Freescale kernel.
+On Tue, Sep 09, 2014 at 01:38:39PM +0300, Matti Vaittinen wrote:
+> +	diode = of_property_read_bool(client->dev.of_node, "diode-connected");
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Please ignore this patch. I've accidentally sent the wrong version!
+Sorry, I will send the correct one as soon as possible.
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 0b1384c..d8d3d93 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -579,7 +579,8 @@
- 					regulator-name = "vddpu";
- 					regulator-min-microvolt = <725000>;
- 					regulator-max-microvolt = <1450000>;
--					regulator-always-on;
-+					regulator-enable-ramp-delay = <150>;
-+					regulator-boot-on;
- 					anatop-reg-offset = <0x140>;
- 					anatop-vol-bit-shift = <9>;
- 					anatop-vol-bit-width = <5>;
--- 
-2.1.0
+Br.
+Matti
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
