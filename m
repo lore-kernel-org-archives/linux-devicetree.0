@@ -1,66 +1,54 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v4 8/9] amba: Add support for attach/detach of PM domains
-Date: Tue,  9 Sep 2014 13:36:09 +0200
-Message-ID: <1410262570-22785-9-git-send-email-ulf.hansson@linaro.org>
-References: <1409838756-31963-1-git-send-email-ulf.hansson@linaro.org>
- <1410262570-22785-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1410262570-22785-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv3 5/6] ARM: imx: Add initial support for Freescale LS1021A
+Date: Tue, 09 Sep 2014 13:41:11 +0200
+Message-ID: <3532608.xLS91GQkq4@wuerfel>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com> <1410253952-15631-6-git-send-email-jingchang.lu@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410253952-15631-6-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-AMBA devices may on some SoCs resides in PM domains. To be able to
-manage these devices from there, let's try to attach devices to their
-corresponding PM domain during the probe phase.
+On Tuesday 09 September 2014 17:12:31 Jingchang Lu wrote:
+> +#include "common.h"
+> +
+> +static void __init ls1021a_init_machine(void)
+> +{
+> +       mxc_arch_reset_init_dt();
+> +       of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> +}
+> +
+> +static const char *ls1021a_dt_compat[] __initdata = {
+> +       "fsl,ls1021a",
+> +       NULL,
+> +};
 
-To reverse these actions at the remove phase, we try to detach the
-device from its PM domain.
+Please don't add any new users of mxc_arch_reset_init_dt(). We now
+have infrastructure to register a system-reset handler from the
+watchdog driver, so please do that instead, and clean up the
+existing users as well.
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Kevin Hilman <khilman@linaro.org>
----
- drivers/amba/bus.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+> +DT_MACHINE_START(LS1021A, "Freescale LS1021A")
+> +#ifdef CONFIG_ZONE_DMA
+> +       .dma_zone_size  = SZ_128M,
+> +#endif
+> +       .init_machine   = ls1021a_init_machine,
+> +       .dt_compat      = ls1021a_dt_compat,
+> +       .restart        = mxc_restart,
+> +MACHINE_END
 
-diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-index 3cf61a1..8f52393 100644
---- a/drivers/amba/bus.c
-+++ b/drivers/amba/bus.c
-@@ -182,9 +182,15 @@ static int amba_probe(struct device *dev)
- 	int ret;
- 
- 	do {
-+		ret = dev_pm_domain_attach(dev, true);
-+		if (ret == -EPROBE_DEFER)
-+			break;
-+
- 		ret = amba_get_enable_pclk(pcdev);
--		if (ret)
-+		if (ret) {
-+			dev_pm_domain_detach(dev, true);
- 			break;
-+		}
- 
- 		pm_runtime_get_noresume(dev);
- 		pm_runtime_set_active(dev);
-@@ -199,6 +205,7 @@ static int amba_probe(struct device *dev)
- 		pm_runtime_put_noidle(dev);
- 
- 		amba_put_disable_pclk(pcdev);
-+		dev_pm_domain_detach(dev, true);
- 	} while (0);
- 
- 	return ret;
-@@ -220,6 +227,7 @@ static int amba_remove(struct device *dev)
- 	pm_runtime_put_noidle(dev);
- 
- 	amba_put_disable_pclk(pcdev);
-+	dev_pm_domain_detach(dev, true);
- 
- 	return ret;
- }
--- 
-1.9.1
+I believe someone recently posted a patch to derive the dma_zone_size
+from device tree. Can yo try to find that and see if that will work
+for you?
 
+Can you explain what the reason is for needing a DMA zone?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
