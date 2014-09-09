@@ -1,40 +1,164 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Tue, 9 Sep 2014 01:20:29 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E983253@SHSMSX101.ccr.corp.intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
- <1409928798-31895-2-git-send-email-alvin.chen@intel.com>
- <3465722.Gc9y01nQRe@wuerfel>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv2] watchdog: imx2_wdt: Convert to use regmap framework's
+ endianness method.
+Date: Tue, 9 Sep 2014 01:37:22 +0000
+Message-ID: <7f0ca96002794780b7ff98269bb05c89@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1408953277-2069-1-git-send-email-Li.Xiubo@freescale.com>
+ <54446636ab294eed83c4a4e3d405dfe7@BY2PR0301MB0613.namprd03.prod.outlook.com>
+ <20140905160640.GB12374@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3465722.Gc9y01nQRe@wuerfel>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140905160640.GB12374@roeck-us.net>
 Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "wim@iguana.be" <wim@iguana.be>, "mpa@pengutronix.de" <mpa@pengutronix.de>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+
+Get it.
+
+Thanks very much.
+
+BRs
+Xiubo
+
+
+
+
+> -----Original Message-----
+> From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
+> Sent: Saturday, September 06, 2014 12:07 AM
+> To: Xiubo Li-B47053
+> Cc: wim@iguana.be; mpa@pengutronix.de; linux-watchdog@vger.kernel.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [PATCHv2] watchdog: imx2_wdt: Convert to use regmap framework's
+> endianness method.
+> 
+> On Fri, Sep 05, 2014 at 07:11:31AM +0000, Li.Xiubo@freescale.com wrote:
+> > Hi,
 > >
-> > +#ifdef CONFIG_OF_GPIO
-> > +
-> > +static struct dwapb_platform_data *
-> > +dwapb_gpio_get_pdata_of(struct device *dev) {
-> > +	struct device_node *node, *port_np;
-> > +	struct dwapb_platform_data *pdata;
-> > +	struct dwapb_port_property *pp;
-> > +	int nports;
-> > +	int i;
-> > +
-> > +	node = dev->of_node;
-> > +	if (!node)
-> > +		return ERR_PTR(-ENODEV);
+> > Ping :)
+> >
+> Wim usually picks up patches shortly before the next release window opens.
 > 
-> Please replace the #ifdef above with
+> It is in my watchdog-next branch, so it is not forgotten. I'll send a pull
+> request to Wim after -rc5.
 > 
-> 	if (!IS_ENABLED(CONFIG_OF_GPIO) || !node)
+> Wim, I am wondering - should I ask Stephen to add my watchdog-next branch to
+> linux-next ? I know it isn't really perfect, and there is no guarantee that
+> you will accept the patches in my branch, but it would expose the pending
+> patches to earlier visibility in -next.
 > 
-> here so get you proper compile-time coverage of the DT code path.
-OK, I will improve it.
+> Thanks,
+> Guenter
+> 
+> > Thanks,
+> >
+> > BRs
+> > Xiubo
+> >
+> >
+> > > -----Original Message-----
+> > > From: Xiubo Li [mailto:Li.Xiubo@freescale.com]
+> > > Sent: Monday, August 25, 2014 3:55 PM
+> > > To: wim@iguana.be; linux@roeck-us.net; mpa@pengutronix.de; linux-
+> > > watchdog@vger.kernel.org
+> > > Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; Xiubo Li-
+> B47053
+> > > Subject: [PATCHv2] watchdog: imx2_wdt: Convert to use regmap framework's
+> > > endianness method.
+> > >
+> > > Regmap framework will contain some patches to handle endianess, and there
+> > > does not need any parsing of endianness DT properties of individual driver,
+> > > so we can savely remove it here.
+> > >
+> > > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> > > Cc: Markus Pargmann <mpa@pengutronix.de>
+> > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> > > ---
+> > >
+> > > Changes in v2:
+> > > - Remove useless header file.
+> > >
+> > >
+> > >
+> > >
+> > >  Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt | 4 ++--
+> > >  drivers/watchdog/imx2_wdt.c                                | 9 +--------
+> > >  2 files changed, 3 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> > > b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> > > index e52ba2d..9e1ebe2 100644
+> > > --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> > > +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> > > @@ -6,8 +6,8 @@ Required properties:
+> > >  - interrupts : Should contain WDT interrupt
+> > >
+> > >  Optional property:
+> > > -- big-endian: If present the watchdog device's registers are implemented
+> > > -  in big endian mode, otherwise in little mode.
+> > > +- big-endian: Boolean property, required if all the i.MX WDT registers
+> > > +  are big-endian rather than little-endian.
+> > >
+> > >  Examples:
+> > >
+> > > diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+> > > index 68c3d37..afc8738 100644
+> > > --- a/drivers/watchdog/imx2_wdt.c
+> > > +++ b/drivers/watchdog/imx2_wdt.c
+> > > @@ -28,7 +28,6 @@
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/moduleparam.h>
+> > > -#include <linux/of_address.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/regmap.h>
+> > >  #include <linux/timer.h>
+> > > @@ -182,7 +181,7 @@ static struct watchdog_ops imx2_wdt_ops = {
+> > >  	.set_timeout = imx2_wdt_set_timeout,
+> > >  };
+> > >
+> > > -static struct regmap_config imx2_wdt_regmap_config = {
+> > > +static const struct regmap_config imx2_wdt_regmap_config = {
+> > >  	.reg_bits = 16,
+> > >  	.reg_stride = 2,
+> > >  	.val_bits = 16,
+> > > @@ -191,12 +190,10 @@ static struct regmap_config imx2_wdt_regmap_config =
+> {
+> > >
+> > >  static int __init imx2_wdt_probe(struct platform_device *pdev)
+> > >  {
+> > > -	struct device_node *np = pdev->dev.of_node;
+> > >  	struct imx2_wdt_device *wdev;
+> > >  	struct watchdog_device *wdog;
+> > >  	struct resource *res;
+> > >  	void __iomem *base;
+> > > -	bool big_endian;
+> > >  	int ret;
+> > >  	u32 val;
+> > >
+> > > @@ -204,10 +201,6 @@ static int __init imx2_wdt_probe(struct
+> platform_device
+> > > *pdev)
+> > >  	if (!wdev)
+> > >  		return -ENOMEM;
+> > >
+> > > -	big_endian = of_property_read_bool(np, "big-endian");
+> > > -	if (big_endian)
+> > > -		imx2_wdt_regmap_config.val_format_endian = REGMAP_ENDIAN_BIG;
+> > > -
+> > >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > >  	base = devm_ioremap_resource(&pdev->dev, res);
+> > >  	if (IS_ERR(base))
+> > > --
+> > > 1.8.5
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
