@@ -1,59 +1,73 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Tue, 09 Sep 2014 10:05:33 -0700
-Message-ID: <D034802C.A7BEE%dvhart@linux.intel.com>
-References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
- <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] spi: davinci: add support for adding delay between
+	word's transmission
+Date: Tue, 9 Sep 2014 13:09:27 -0400
+Message-ID: <540F3447.3020609@ti.com>
+References: <1410278851-10783-1-git-send-email-grygorii.strashko@ti.com>
+	<20140909165555.GD2601@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="US-ASCII"
+Content-Type: text/plain; charset="us-ascii"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20140909165555.GD2601-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/9/14, 11:07, "Weike Chen" <alvin.chen@intel.com> wrote:
-
->The Synopsys DesignWare APB GPIO driver only supports open firmware
->devices.
->But, like Intel Quark X1000 SOC, which has a single PCI function exporting
->a GPIO and an I2C controller, it is a Multifunction device. This patch is
->to enable the current Synopsys DesignWare APB GPIO driver to support the
->Multifunction device which exports the designware GPIO controller.
+On 09/09/2014 12:55 PM, Mark Brown wrote:
+> On Tue, Sep 09, 2014 at 07:07:31PM +0300, Grygorii Strashko wrote:
 >
->Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
->Signed-off-by: Weike Chen <alvin.chen@intel.com>
->---
-> drivers/gpio/Kconfig                     |    1 -
-> drivers/gpio/gpio-dwapb.c                |  226
->++++++++++++++++++++++--------
-> include/linux/platform_data/gpio-dwapb.h |   32 +++++
-> 3 files changed, 201 insertions(+), 58 deletions(-)
-> create mode 100644 include/linux/platform_data/gpio-dwapb.h
+>> - ti,spi-c2t-delay: Chip-select-active-to-transmit-start delay
+>> 	(SPIDELAY.C2TDELAY)
 >
->diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
->index 9de1515..8250a44 100644
->--- a/drivers/gpio/Kconfig
->+++ b/drivers/gpio/Kconfig
->@@ -136,7 +136,6 @@ config GPIO_DWAPB
-> 	tristate "Synopsys DesignWare APB GPIO driver"
-> 	select GPIO_GENERIC
-> 	select GENERIC_IRQ_CHIP
->-	depends on OF_GPIO
+>> - ti,spi-t2c-delay: Transmit-end-to-chip-select-inactive delay
+>> 	(SPIDELAY.T2CDELAY)
+>
+> Now I look at these they look very much like the standard delay feature
+> that the SPI subsystem has already - are they?
+Mark,
 
-You cover this specific dependencies with inline ifdefs, but you lose the
-CONFIG_OF depends by dropping it, and there are no such checks in the
-probe routine. Assumptions of OF are not limited to probe in this driver.
+As Grygorii explained in previous postings (reproduced below), these 
+delays are handled by the SPI hardware on Keystone and affect the delay 
+between successive word tranmssion and has nothing to do with the delay 
+you are talking about. Isn't the standard delay you mention here is 
+between successive packets send down to the lower level driver (in this 
+case spi-davinci.c) ?
 
-While I would like to see this assumption properly abstracted, the most
-expedient/immediate fix is probably to add a depends on OF above.
+Murali
 
---
-Darren
-Intel Open Source Technology Center
+Below is timing diagram which shows, in general, how these new 
+parameters affect on words transmission over Keystone/Davinci SPI bus:
 
+              +-+ +-+ +-+ +-+ +-+                           +-+ +-+ +-+
+SPI_CLK      | | | | | | | | | |                           | | | | | |
+   +----------+ +-+ +-+ +-+ +-+ +---------------------------+ +-+ +-+ +-
 
+SPI_SOMI/SIMO+-----------------+                           +-----------
+   +----------+ word1           +---------------------------+word2
+              +-----------------+                           +-----------
+                                           WDELAY
+                                          <--------->
+                                         +           +
+SPI_CS                                  |           |
+   +----+                                +-----------+
+        |                                |           |
+        +-----+-----------------+--------+           +-----+------------
+        |     |                 |        |           |     |
+        +     +                 +        |           +     +
+         <--->                   <------>             <--->
+        C2TDELAY                 T2CDELAY            C2TDELAY
+
+Where:
+         WDELAY - Delay in between transmissions
+	C2TDELAY - Chip-select-active-to-transmit-start-delay
+	T2CDELAY - Transmit-end-to-chip-select-inactive-delay
