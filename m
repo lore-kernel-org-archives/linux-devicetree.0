@@ -1,38 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 2/5] PM / Domains: Add DT bindings for the R-Mobile
- System Controller
-Date: Tue, 9 Sep 2014 09:16:34 +0200
-Message-ID: <CAMuHMdWRT=ZjXLVtPKJ1ppYLACQhBHJxZRxf6cnGkfC2dLxOOQ@mail.gmail.com>
-References: <1410183344-14756-1-git-send-email-geert+renesas@glider.be>
-	<1410183344-14756-3-git-send-email-geert+renesas@glider.be>
-	<540E313B.8000305@renesas.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH 2/3] phy: phy-stih407-usb: Add dt documentation for USB
+ picophy found on stih407 SoC family
+Date: Tue, 9 Sep 2014 08:34:46 +0100
+Message-ID: <20140909073446.GB7620@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org>
+ <1409740079-16554-3-git-send-email-peter.griffin@linaro.org>
+ <540DCB91.7060702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <540E313B.8000305@renesas.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <540DCB91.7060702@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, devicetree@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Khiem-san,
+Hi Kishon,
 
-On Tue, Sep 9, 2014 at 12:44 AM, Khiem Nguyen
-<khiem.nguyen.xt@renesas.com> wrote:
->> +      - #address-cells: Must be 1,
->> +      - #address-cells: Must be 0.
->
-> Should it be "#size-cells: Must be 0." ?
+Thanks for reviewing :-)
 
-Yes, obviously. Thanks, will fix.
+> > +On STiH410, we have to use the DWC3 port#2 with a picoPHY to manage USB2
+> > +devices. The USB2 Controller will use the ports #0 and #1.
+> > +
+> > +This is to document the DT parameters to be passed from the blob in that case.
+> > +
+> > +Required properties:
+> > +- compatible		: should be "st,stih407-usb2-phy"
+> 
+> If STiH410 also uses the same driver then you should add a new compatibility
+> value for it.
 
-Gr{oetje,eeting}s,
+I will remove the reference to stih410 in V2, as currently it is not supported
+upstream, and I'm not sure what ST's plans are regarding upstreaming it. If/
+when it is upstreamed, we can add this and a compabible property back in.
 
-                        Geert
+<snip>
+> > +
+> > +usb2_picophy0: usbpicophy@0 {
+> usbpicophy@f8 since you have a reg property ;-)
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+will fix in V2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> > +	compatible	= "st,stih407-usb2-phy";
+> > +	reg		= <0xf8 0x04>,	/* syscfg 5062 */
+> > +			  <0xf4 0x04>;	/* syscfg 5061 */
+> > +	reg-names	= "param",
+> > +			  "ctrl";
+> > +			  #phy-cells = <0>;
+> 
+> alignment seems to have gone wrong here.
+
+Will fix in v2
+
+regards,
+
+Peter.
