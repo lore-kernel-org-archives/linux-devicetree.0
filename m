@@ -1,69 +1,174 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 2/2] DTS: serial: Add bindings documention for the
- Mediatek UARTs
-Date: Tue, 9 Sep 2014 16:55:06 +0200
-Message-ID: <CABuKBe+nkR+HvQm-pacg5cJeYey-Nj+uqqLpzi1FAvzbxtJuew@mail.gmail.com>
-References: <1407852737-17265-1-git-send-email-matthias.bgg@gmail.com>
-	<1407852737-17265-3-git-send-email-matthias.bgg@gmail.com>
-	<20140908223314.GA26151@kroah.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH] RFC: add function for localbus address
+Date: Tue, 09 Sep 2014 18:07:02 +0300
+Message-ID: <540F1796.7090301@mm-sol.com>
+References: <20140729234522.E9FF1C40738@trevor.secretlab.ca> <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com> <20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140908223314.GA26151@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, jslaby@suse.cz, Grant Likely <grant.likely@linaro.org>, Alan Cox <alan@linux.intel.com>, Varka Bhadram <varkabhadram@gmail.com>, Tobias Klauser <tklauser@distanz.ch>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Yingjoe Chen <yingjoe.chen@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-serial@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-09-09 0:33 GMT+02:00 Greg KH <gregkh@linuxfoundation.org>:
-> On Tue, Aug 12, 2014 at 04:12:17PM +0200, Matthias Brugger wrote:
->> This patch adds the devicetree documentation for the Mediatek UART.
+Hi Grant,
+
+Thanks for the comments!
+
+On 09/08/2014 05:52 PM, Grant Likely wrote:
+> On Tue,  2 Sep 2014 18:45:00 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
+>> Hi Grant,
 >>
->> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> I came down to this. Could you review? Is that
+>> implementation closer to the suggestion made by you.
+>>
 >> ---
->>  .../devicetree/bindings/serial/mtk-uart.txt        |   20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/serial/mtk-uart.txt
+>>  drivers/of/address.c       |   49 ++++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/of/platform.c      |   20 ++++++++++++++---
+>>  include/linux/of_address.h |   19 +++++++++++++++++
+>>  3 files changed, 84 insertions(+), 4 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
->> new file mode 100644
->> index 0000000..6ca0e15
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
->> @@ -0,0 +1,20 @@
->> +* Mediatek Universal Asynchronous Receiver/Transmitter (UART)
+>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+>> index e371825..86c2166 100644
+>> --- a/drivers/of/address.c
+>> +++ b/drivers/of/address.c
+>> @@ -601,6 +601,32 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
+>>  }
+>>  EXPORT_SYMBOL(of_get_address);
+>>  
+>> +const __be32 *of_get_localbus_address(struct device_node *np, int index,
+>> +				      u64 *size)
+>> +{
+>> +	struct device_node *root, *parent;
+>> +	const __be32 *ranges, *prop = NULL;
 >> +
->> +Required properties:
->> +- compatible: "mediatek,mt6577-uart"
->> +  Compatibility with mt6577, mt6589, mt6582
+>> +	parent = of_get_parent(np);
+>> +	if (!parent)
+>> +		return NULL;
 >> +
->> +- reg: The base address of the UART register bank.
+>> +	root = of_find_node_by_path("/");
 >> +
->> +- interrupts: A single interrupt specifier.
+>> +	if (parent == root) {
+>> +		of_node_put(parent);
+>> +		return NULL;
+>> +	}
 >> +
->> +- clocks: Clock driving the hardware.
+>> +	ranges = of_get_property(parent, "ranges", NULL);
+>> +	of_node_put(parent);
 >> +
->> +Example:
+>> +	if (!ranges)
+>> +		prop = of_get_address(np, index, size, NULL);
 >> +
->> +     uart0: serial@11006000 {
->> +             compatible = "mediatek,mt6577-uart";
->> +             reg = <0x11006000 0x400>;
->> +             interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
->> +             clocks = <&uart_clk>;
->> +     };
->> --
->> 1.7.9.5
->
-> Resend this one as well with the 1/2 patch please.
+>> +	return prop;
+>> +}
+> 
+> So, the above doesn't make much sense to me. It looks like the function
+> merely decodes the local address, and the below function will stuff it
+> into a resource structure, but the tests for if the parent is root or
+> the parent has a ranges property are nonsensical. That shouldn't matter
+> for the functionality (except for automatically decoding them.. more
+> below)
+> 
+>> +
+>>  unsigned long __weak pci_address_to_pio(phys_addr_t address)
+>>  {
+>>  	if (address > IO_SPACE_LIMIT)
+>> @@ -665,6 +691,29 @@ int of_address_to_resource(struct device_node *dev, int index,
+>>  }
+>>  EXPORT_SYMBOL_GPL(of_address_to_resource);
+>>  
+>> +int of_localbus_address_to_resource(struct device_node *dev, int index,
+>> +				    struct resource *r)
+>> +{
+>> +	const char *name = NULL;
+>> +	const __be32 *addrp;
+>> +	u64 size;
+>> +
+>> +	addrp = of_get_localbus_address(dev, index, &size);
+>> +	if (!addrp)
+>> +		return -EINVAL;
+>> +
+>> +	of_property_read_string_index(dev, "reg-names", index, &name);
+>> +
+>> +	memset(r, 0, sizeof(*r));
+>> +	r->start = be32_to_cpup(addrp);
+>> +	r->end = r->start + size - 1;
+>> +	r->flags = IORESOURCE_REG;
+> 
+> This is problematic. A resource is created, but there is absolutely no
+> indication that the resource represents a localbus address instead of a
+> CPU address. platform_device reg resources represent CPU addresses.
+> Trying to overload it will cause confusion in drivers.
+> 
+>> +	r->name = name ? name : dev->full_name;
+>> +
+>> +	return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_localbus_address_to_resource);
+>> +
+>>  struct device_node *of_find_matching_node_by_address(struct device_node *from,
+>>  					const struct of_device_id *matches,
+>>  					u64 base_address)
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 0197725..36dcbd7 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -106,8 +106,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>>  				  struct device *parent)
+>>  {
+>>  	struct platform_device *dev;
+>> -	int rc, i, num_reg = 0, num_irq;
+>> +	int rc, i, num_reg = 0, num_localbus_reg = 0, num_irq;
+>>  	struct resource *res, temp_res;
+>> +	int num_resources;
+>>  
+>>  	dev = platform_device_alloc("", -1);
+>>  	if (!dev)
+>> @@ -116,22 +117,33 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>>  	/* count the io and irq resources */
+>>  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+>>  		num_reg++;
+>> +
+>> +	while (of_localbus_address_to_resource(np,
+>> +					num_localbus_reg, &temp_res) == 0)
+>> +		num_localbus_reg++;
+>> +
+> 
+> No, I don't support doing this. The moment a platform_driver depends on
+> a local bus address it is doing something special. It needs to decode
+> its own address in that case, which it can easily do.
+> 
+> Any platform_driver that interprets a IORESOURCE_REG as a localbus
+> address instead of a CPU address is *BROKEN*. It should be changed to
+> either decode the address itself, of a new bus type should be created
+> that can make its own decisions about what address resources mean.
 
-Ok, I will send v5 with the comments from Mark added.
+Do you mean new of_bus entry?
 
->
-> thanks,
->
-> greg k-h
+> 
+> I realize that you want to reuse the platform populate functionality in
+> this case. We can refactor some of that code to make it usable for
+> customized platform_bus_type instances.
 
+What kind of refactoring? And what you mean by "customized
+platform_bus_type"? Please elaborate more.
 
+In fact one of my first attempts to upstream Qualcomm PMIC driver here
+[1] I'm using of_get_address() over each child node to get the register
+addresses and constructing resources for them manually. After that those
+resources are passed to mfd_add_devices().
+
+This implementation does not get accepted from Lee Jones with teh
+argument that it re-implement of_platform_populate and he will need an
+Ack from OF maintainers.
+
+Do you mean with the statement above "It needs to decode its own address
+in that case, which it can easily do" something like what I've done in [1]?
+
+[1] http://www.kernelhub.org/?msg=520233&p=2
 
 -- 
-motzblog.wordpress.com
+regards,
+Stan
