@@ -1,63 +1,104 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v2 1/7] mfd: Add support for DA9150 combined charger &
- fuel-gauge device
-Date: Tue, 9 Sep 2014 10:32:40 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB5144B5@SW-EX-MBX01.diasemi.com>
-References: <cover.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
- <d6c7de200c9447dbafa74ee76739da943a0b73b2.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
- <53FF16BC.9050701@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Tue, 09 Sep 2014 12:32:26 +0200
+Message-ID: <7045486.CbS74HiY8I@wuerfel>
+References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com> <3899885.YaIxR1zelv@wuerfel> <540DCB78.8060206@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53FF16BC.9050701-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <540DCB78.8060206@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collins>
 List-Id: devicetree@vger.kernel.org
 
-T24gQXVndXN0IDI4LCAyMDE0IDEyOjQ3LCBWYXJrYSBCaGFkcmFtIHdyb3RlOg0KDQo+IE9uIDA4
-LzI4LzIwMTQgMDQ6MTggUE0sIEFkYW0gVGhvbXNvbiB3cm90ZToNCj4gDQo+ICguLi4pDQo+IA0K
-PiA+ICtzdGF0aWMgaW50IGRhOTE1MF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0K
-PiA+ICsJCQljb25zdCBzdHJ1Y3QgaTJjX2RldmljZV9pZCAqaWQpDQo+ID4gK3sNCj4gPiArCXN0
-cnVjdCBkYTkxNTAgKmRhOTE1MDsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJZGE5MTUw
-ID0gZGV2bV9remFsbG9jKCZjbGllbnQtPmRldiwgc2l6ZW9mKHN0cnVjdCBkYTkxNTApLCBHRlBf
-S0VSTkVMKTsNCj4gPiArCWlmIChkYTkxNTAgPT0gTlVMTCkNCj4gPiArCQlyZXR1cm4gLUVOT01F
-TTsNCj4gDQo+IGRhOTE1MCA9IGRldm1fa3phbGxvYygmY2xpZW50LT5kZXYsIHNpemVvZigqZGE5
-MTUwKSwgR0ZQX0tFUk5FTCk7DQo+IGlmICghZGE5MTUwKQ0KPiAJcmV0dXJuIC1FTk9NRU07DQoN
-Ck9rLCBubyByZWFsIGRpZmZlcmVuY2UsIGJ1dCBjYW4gY2hhbmdlIGl0Lg0KDQo+IA0KPiA+ICsJ
-ZGE5MTUwLT5kZXYgPSAmY2xpZW50LT5kZXY7DQo+ID4gKwlkYTkxNTAtPmlycSA9IGNsaWVudC0+
-aXJxOw0KPiA+ICsJaTJjX3NldF9jbGllbnRkYXRhKGNsaWVudCwgZGE5MTUwKTsNCj4gPiArCWRl
-dl9zZXRfZHJ2ZGF0YShkYTkxNTAtPmRldiwgZGE5MTUwKTsNCj4gPiArDQo+ID4gKwlkYTkxNTAt
-PnJlZ21hcCA9IGRldm1fcmVnbWFwX2luaXRfaTJjKGNsaWVudCwgJmRhOTE1MF9yZWdtYXBfY29u
-ZmlnKTsNCj4gPiArCWlmIChJU19FUlIoZGE5MTUwLT5yZWdtYXApKSB7DQo+ID4gKwkJcmV0ID0g
-UFRSX0VSUihkYTkxNTAtPnJlZ21hcCk7DQo+ID4gKwkJZGV2X2VycihkYTkxNTAtPmRldiwgIkZh
-aWxlZCB0byBhbGxvY2F0ZSByZWdpc3RlciBtYXA6ICVkXG4iLA0KPiA+ICsJCQlyZXQpOw0KPiA+
-ICsJCXJldHVybiByZXQ7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIGRhOTE1MF9kZXZp
-Y2VfaW5pdChkYTkxNTApOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGRhOTE1MF9y
-ZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGRh
-OTE1MCAqZGE5MTUwID0gaTJjX2dldF9jbGllbnRkYXRhKGNsaWVudCk7DQo+ID4gKw0KPiA+ICsJ
-ZGE5MTUwX2RldmljZV9leGl0KGRhOTE1MCk7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4g
-K30NCj4gPiArDQo+ID4gK3N0YXRpYyB2b2lkIGRhOTE1MF9zaHV0ZG93bihzdHJ1Y3QgaTJjX2Ns
-aWVudCAqY2xpZW50KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZGE5MTUwICpkYTkxNTAgPSBpMmNf
-Z2V0X2NsaWVudGRhdGEoY2xpZW50KTsNCj4gPiArDQo+ID4gKwlkYTkxNTBfZGV2aWNlX3NodXRk
-b3duKGRhOTE1MCk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaTJj
-X2RldmljZV9pZCBkYTkxNTBfaTJjX2lkW10gPSB7DQo+ID4gKwl7ICJkYTkxNTAiLCAwIH0sDQo+
-ID4gKwl7IH0NCj4gPiArfTsNCj4gPiArTU9EVUxFX0RFVklDRV9UQUJMRShpMmMsIGRhOTE1MF9p
-MmNfaWQpOw0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZGE5
-MTUwX29mX21hdGNoW10gPSB7DQo+ID4gKwl7IC5jb21wYXRpYmxlID0gImRsZyxkYTkxNTAiLCB9
-LA0KPiA+ICsJeyB9DQo+ID4gK307DQo+ID4gKw0KPiANCj4gbWlzc2VkIE1PRFVMRV9ERVZJQ0Vf
-VEFCTEUob2YsIC4uLikgICA/DQoNCk9rLCB3aWxsIGFkZCB0aGF0IGluLg0KDQo+IA0KPiA+ICtz
-dGF0aWMgc3RydWN0IGkyY19kcml2ZXIgZGE5MTUwX2RyaXZlciA9IHsNCj4gPiArCS5kcml2ZXIJ
-PSB7DQo+ID4gKwkJLm5hbWUJPSAiZGE5MTUwIiwNCj4gPiArCQkub3duZXIJPSBUSElTX01PRFVM
-RSwNCj4gDQo+IE5vIG5lZWQgdG8gdXBkYXRlIHRoaXMgZmllbGQuLi4NCg0KT2ssIHdpbGwgcmVt
-b3ZlIC5vd25lciBzZXR0aW5nLg0KDQo+IA0KPiA+ICsJCS5vZl9tYXRjaF90YWJsZSA9IG9mX21h
-dGNoX3B0cihkYTkxNTBfb2ZfbWF0Y2gpLA0KPiA+ICsJfSwNCj4gPiArCS5wcm9iZQkJPSBkYTkx
-NTBfcHJvYmUsDQo+ID4gKwkucmVtb3ZlCQk9IGRhOTE1MF9yZW1vdmUsDQo+ID4gKwkuc2h1dGRv
-d24JPSBkYTkxNTBfc2h1dGRvd24sDQo+ID4gKwkuaWRfdGFibGUJPSBkYTkxNTBfaTJjX2lkLA0K
-PiA+ICt9Ow0KPiA+ICsNCj4gPiArbW9kdWxlX2kyY19kcml2ZXIoZGE5MTUwX2RyaXZlcik7DQo+
-ID4gKw0KPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIkkyQyBEcml2ZXIgZm9yIERBOTE1MCIpOw0K
-PiA+ICtNT0RVTEVfQVVUSE9SKCJBZGFtIFRob21zb24NCj4gPEFkYW0uVGhvbXNvbi5PcGVuc291
-cmNlQGRpYXNlbWkuY29tIik7DQo+ID4gK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsNCj4gPg0KPiAt
-LQ0KPiBSZWdhcmRzLA0KPiBWYXJrYSBCaGFkcmFtLg0KDQo=
+On Monday 08 September 2014 18:30:00 Stanimir Varbanov wrote:
+> >>> These numbers all look hardware specific, so why put macros into the
+> >>> device tree rather than using them directly?
+> >>
+> >> The idea was to use #defines in DT nodes when we need to overwrite the
+> >> adc channel parameters, see example in 2/2 how it will be used.
+> > 
+> > I don't understand. The node in the example has
+> > 
+> > +               /* Channel node */
+> > +               usb_id_nopull@39 {
+> > +                       qcom,channel = <VADC_LR_MUX10_USB_ID>;
+> > ...
+> > +               };
+> > 
+> > 
+> > And VADC_LR_MUX10_USB_ID is defined to 0x39.  How is this helping anything?
+> > You just introduce an artificial dependency on the header file, which makes
+> > it a mess to merge the patches or do updates, and anybody who needs to
+> > make updates to this now has to go through the same pain, to update the
+> > dts files, the driver and the binding document in lockstep.
+> > 
+> > Why not remove the qcom,channel property completely and use a 'reg'
+> > property with #address-cells=<1>, #size-cells=<0> and put the number
+> > directly in there, with no need for obfuscation macros?
+> 
+> OK thanks for the remarks. I will fix this mess.
+> 
+> I hope you are expecting to see this:
+> 
+> pmic_vadc: vadc@3100 {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         #io-channel-cells = <1>;
+>         io-channel-ranges;
+> 
+>         usb_id_nopull@39 {
+>                 reg = <0x39>;
+>         };
+> };
+> 
+> and use the vadc channel from usb device node
+> 
+> usb {
+>         ...
+>         io-channels = <&pmic_vadc 0x39>;
+>         io-channel-names = "usbidnopull";
+> };
+
+The ID stuff looks good now, but I had not noticed the
+"io-channel-names" property before. I think you misunderstood
+the purpose of that, because it is very similar to the name of the
+adc provider (usb_id_nopull@39).
+
+Like anything else that we refer to by name (interrupt, reg,
+clock, regulator, ...), the name used in the client is supposed
+to be a string that identifies what the connection means to the
+client, not what it means to the provider. This string is
+supposed to be defined in the binding of the client device and
+independent of what other hardware block provides it.
+
+E.g. if you have two usb devices that need a separate adc channel,
+it could look like
+
+pmic_vadc: vadc@3100 {
+
+	usb_1_id_nopull@39 {
+		reg = 0x39;
+	};
+	usb_2_id_nopull@40 {
+		reg = 0x40;
+	};
+
+};
+
+usb@100000 {
+	io-channels = <&pmic_vadc 0x39>;
+	io-channel-names = "vadc";
+};
+
+usb@200000 {
+	io-channels = <&pmic_vadc 0x40>;
+	io-channel-names = "vadc";
+};
+
+Now the usb driver just asks for an io channel named "vadc"
+and the ADC core code will perform that lookup.
+
+	Arnd
