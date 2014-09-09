@@ -1,29 +1,93 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 2/3 v2] GPIO: gpio-dwapb: Support Debounce
-Date: Tue, 9 Sep 2014 00:47:11 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E983231@SHSMSX101.ccr.corp.intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
-	 <1409928798-31895-3-git-send-email-alvin.chen@intel.com>
-	 <1409908999.30155.85.camel@intel.com>
-	 <4656BEB6164FC34F8171C6538F1A595B2E98298B@SHSMSX101.ccr.corp.intel.com>
- <1409918621.30155.90.camel@intel.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/6] ARM: dts: OMAP3+: Add PRM interrupt
+Date: Mon, 8 Sep 2014 17:58:09 -0700
+Message-ID: <20140909005808.GG10785@atomide.com>
+References: <1408716235-26164-1-git-send-email-nm@ti.com>
+ <1408716235-26164-2-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1409918621.30155.90.camel@intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1408716235-26164-2-git-send-email-nm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Paul Walmsley <paul@pwsan.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Kevin Hilman <khilman@deeprootsystems.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PiA+IFNpbmNlIHRoZSAnZGVib3VuY2UnIGZlYXR1cmUgYWxzbyBuZWVkcyByZWFkL3dyaXRlLCBp
-ZiB3ZSBzcGxpdGUgdGhpcw0KPiA+IHBhdGNoLCB0aGVuIGZvciAnZGVib3VuY2UnLCBPbmUgcGF0
-Y2ggdXNlIHJlYWRsL3dyaXRlbCwgYW5kIGFub3RoZXINCj4gPiBwYXRjaCBjaGFuZ2UgdG8gZHdh
-cGJfcmVhZC93cml0ZS4gSXQgc2VlbXMgZHVwbGljYXRlIHNpbmNlIHRoZSBwcmV2aW91cw0KPiBw
-YXRjaCB1c2UgcmVhZGwvd3JpdGVsIGFuZCB0aGUgZmxsb3dpbmcgb25lIGNoYW5nZSBpdCBpbW1l
-ZGlhdGVseS4NCj4gPiBTaW5jZSB0aGlzIHBhdGNoIGlzIHNtYWxsLCBjb3VsZCB3ZSBqdXN0IG1h
-a2UgdGhlbSB0b2dldGhlcj8gSG93IGRvIHlvdQ0KPiB0aGluaz8NCj4gDQo+IE1ha2UgdGhlIGR3
-YXBiX3dyaXRlbC9yZWFkbCBwYXRjaCBnb2VzIGZpcnN0IGluIHRoZSBzZXJpZXMuDQo+IA0KT0su
-DQo=
+* Nishanth Menon <nm@ti.com> [140822 07:08]:
+> Provide OMAP3, 4 and OMAP5 with interrupt number for PRM
+> 
+> And for DRA7, provide crossbar number for prm interrupt.
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+
+I've picked this patch only into omap-for-v3.18/soc as
+this is needed for Felipe's intc related changes to work
+properly with the wake-up interrupts for DT based booting
+for off-idle.
+
+So please don't include this patch into your pull request
+for the other dts changes you have.
+
+Regards,
+
+Tony
+
+> ---
+>  arch/arm/boot/dts/dra7.dtsi  |    1 +
+>  arch/arm/boot/dts/omap3.dtsi |    1 +
+>  arch/arm/boot/dts/omap4.dtsi |    1 +
+>  arch/arm/boot/dts/omap5.dtsi |    1 +
+>  4 files changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 97f603c..7a3e011 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -89,6 +89,7 @@
+>  		prm: prm@4ae06000 {
+>  			compatible = "ti,dra7-prm";
+>  			reg = <0x4ae06000 0x3000>;
+> +			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+>  
+>  			prm_clocks: clocks {
+>  				#address-cells = <1>;
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index 575a49b..3136ed1 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -97,6 +97,7 @@
+>  		prm: prm@48306000 {
+>  			compatible = "ti,omap3-prm";
+>  			reg = <0x48306000 0x4000>;
+> +			interrupts = <11>;
+>  
+>  			prm_clocks: clocks {
+>  				#address-cells = <1>;
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index 69408b5..7375d44 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -129,6 +129,7 @@
+>  		prm: prm@4a306000 {
+>  			compatible = "ti,omap4-prm";
+>  			reg = <0x4a306000 0x3000>;
+> +			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>  
+>  			prm_clocks: clocks {
+>  				#address-cells = <1>;
+> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> index fc8df17..df0a09b 100644
+> --- a/arch/arm/boot/dts/omap5.dtsi
+> +++ b/arch/arm/boot/dts/omap5.dtsi
+> @@ -131,6 +131,7 @@
+>  		prm: prm@4ae06000 {
+>  			compatible = "ti,omap5-prm";
+>  			reg = <0x4ae06000 0x3000>;
+> +			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+>  
+>  			prm_clocks: clocks {
+>  				#address-cells = <1>;
+> -- 
+> 1.7.9.5
+> 
