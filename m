@@ -1,97 +1,49 @@
-From: kgene@kernel.org
-Subject: RE: [PATCH v2 5/7] arm64: dts: Add initial device tree support for
- EXYNOS7
-Date: Tue, 09 Sep 2014 12:28:37 +0900
-Message-ID: <02f801cfcbde$24a40160$6dec0420$@kernel.org>
-References: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
- <1409672143-8574-6-git-send-email-ch.naveen@samsung.com>
+From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: PFUZE100 regulator not going off when PWRON is 0
+Date: Tue, 9 Sep 2014 10:41:02 +0800
+Message-ID: <20140909024100.GA19119@Robin-OptiPlex-780>
+References: <CAL8zT=hNnRU3gbprVXOMt6FC9veRvQKRmS9gSeCm5-DNfGv-xg@mail.gmail.com>
+ <20140903125248.GK29327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1409672143-8574-6-git-send-email-ch.naveen@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Naveen Krishna Chatradhi' <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org
-Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, t.figa@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140903125248.GK29327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Naveen Krishna Chatradhi wrote:
+Thanks for Mark's forward.
+
+Hi Jean-Michel,
+  Yes, SWxOMODE can be set as 1 to active sleep mode if PWRON turn-off event
+occurs. And the voltage of sleep mode can be set in other register SWxOFF. But
+by default, SWxOMODE is 0 which means all SW will be turned off while PWRON go
+form 1 to 0. For your issue, I hope you check the hardware design, and measure
+PWRON pin to see whether it has been pulled low once your push reset key.
+
+On Wed, Sep 03, 2014 at 01:52:48PM +0100, Mark Brown wrote:
+> On Wed, Sep 03, 2014 at 11:44:22AM +0200, Jean-Michel Hautbois wrote:
 > 
-> Add initial device tree nodes for EXYNOS7 SoC and board dts file
-> to support Espresso board based on Exynos7 SoC.
+> > I have a custom i.MX6 based board, but PMIC part is exactly the same
+> > as the Freescale SabreSD board.
+> > I have a reset button, which makes the PWRON signal on PFUZE100 go from 1 to 0.
+> > I thought this would reset the chip, and thus all voltages would go to
+> > 0, but this is not the case. It seems that SWxOMODE registers are
+> > involved in this process, accorgind to the datasheet, but I don't
+> > think this is implemented right now.
+> > 
+> > I also removed regulator-always-on for my SW2 pin in order to get it
+> > off, but this has no effect.
 > 
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> ---
->  arch/arm64/boot/dts/Makefile                    |    1 +
->  arch/arm64/boot/dts/exynos/exynos7-espresso.dts |   31 +++++
->  arch/arm64/boot/dts/exynos/exynos7.dtsi         |  168 +++++++++++++++++++++++
->  3 files changed, 200 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-espresso.dts
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos7.dtsi
+> You should really contact someone who worked on the driver or Freescale
+> about this - I don't think anyone on the CC list knows anything about
+> the part.  In general if you're asking about a specific driver this is a
+> good approach.  I've CCed Robin Gong who was the original author.
 
-[...]
 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> new file mode 100644
-> index 0000000..e593af55
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> @@ -0,0 +1,168 @@
-> +/*
-> + * SAMSUNG EXYNOS7 SoC device tree source
-> + *
-> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <dt-bindings/clock/exynos7-clk.h>
-> +
-> +/ {
-> +	compatible = "samsung,exynos7";
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-
-+	#address-cells = <1>; ?
-
-Hmm...I can't see any 64-bit address here.
-
-> +	#size-cells = <2>;
-> +
-
-[...]
-
-> +
-> +	soc: soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0 0x18000000>;
-> +
-> +		chipid@10000000 {
-> +			compatible = "samsung,exynos4210-chipid";
-> +			reg = <0x10000000 0x100>;
-> +		};
-
-Maybe this is not required? There is no check chipid in arm/arm64.
-
-[...]
-
-> +		timer {
-> +			compatible = "arm,armv8-timer";
-> +			interrupts = <1 13 0xff01>,
-> +				     <1 14 0xff01>,
-> +				     <1 11 0xff01>,
-> +				     <1 10 0xff01>;
-
-clock-frequency ?
-
-[...]
-
-- Kukjin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
