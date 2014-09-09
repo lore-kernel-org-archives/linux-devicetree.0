@@ -1,61 +1,73 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v7 2/5] ARM: imx6: gpc: Add PU power domain for GPU/VPU
-Date: Tue, 9 Sep 2014 21:01:08 +0200
-Message-ID: <CAPDyKFozmLLEwK297K0mtvf-m_fUC79ZstbF6V-TAnNTh41VZw@mail.gmail.com>
-References: <1409060791-23167-1-git-send-email-p.zabel@pengutronix.de>
- <1409060791-23167-3-git-send-email-p.zabel@pengutronix.de>
- <CAPDyKFovJOVyKRNSA+sEjd4mXA9QYYYDQEAvTzkptj8FDzgWTQ@mail.gmail.com>
- <1410177246.3981.34.camel@paszta.hi.pengutronix.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] spi: davinci: add support for adding delay between
+ word's transmission
+Date: Tue, 9 Sep 2014 20:58:19 +0100
+Message-ID: <20140909195819.GJ2601@sirena.org.uk>
+References: <1410278851-10783-1-git-send-email-grygorii.strashko@ti.com>
+ <20140909165555.GD2601@sirena.org.uk>
+ <540F3447.3020609@ti.com>
+ <20140909172057.GH2601@sirena.org.uk>
+ <540F44EB.8090700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410177246.3981.34.camel@paszta.hi.pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="y06s9PvpQ1Ch5mdL"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <540F44EB.8090700-l0cyMroinI0@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
 
->> > +       is_off = IS_ENABLED(CONFIG_PM_RUNTIME);
->> > +       if (is_off)
->> > +               imx6q_pm_pu_power_off(&imx6q_pu_domain.base);
->>
->> Could you elaborate why is_off depends on CONFIG_PM_RUNTIME? That
->> seems strange to me. :-)
->>
->> Additionally, I think it would be better to leave the domain "on"
->> state. Wouldn't that even be required for some drivers to be able to
->> succeed probing of these devices?
->
-> The devices in the PU power domain are Vivante GPUs and the CODA Video
-> Processing Unit. These are platform devices that don't need to be active
-> to enumerate before being probed. The drivers support runtime PM, so if
-> CONFIG_PM_RUNTIME is enabled, it is safe to disable the PU power domain
-> on boot. The drivers will probe and request for the power domain to be
-> enabled via runtime PM before accessing the hardware.
->
-> If CONFIG_PM_RUNTIME is disabled, the power domain needs to stay enabled
-> at all times.
+--y06s9PvpQ1Ch5mdL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Philipp,
+On Tue, Sep 09, 2014 at 02:20:27PM -0400, Murali Karicheri wrote:
+> On 09/09/2014 01:20 PM, Mark Brown wrote:
 
-Thanks for your reply, that certainly made it clear on what you would
-like to accomplish.
+> >If these delays are not related to chip select then the documentation
+> >needs to be fixed to not refer to chip select.
 
-Before discussing further consequences in genpd of this approach
-(using IS_ENABLED(CONFIG_PM_RUNTIME)), I would be interested to see
-how the runtime PM support is implemented for any of the drivers you
-refer to. Do you mind pointing me to any of them?
+> Ok. So what I understand is the issue is not having the right description to
+> indicate that these parameters are delays associated with tranmission of
+> successive words on the wire. Personally I like these description match with
+> what is described in the device spec/ user guide and what is described above
+> match with that. However we could add additional description as below to to
+> make it more explicit.
 
-Kind regards
-Uffe
+> spi-c2t-delay - delay after CS is asserted before output bits on wire
+> spi-t2c-delay - delay after tramission of bits and before deasserting CS
+
+> Do you think this will help?
+
+No, that doesn't help at all.  You keep claiming that these parameters
+are related to the intervals between words but then providing
+descriptions of these parameters which relate to intervals around
+changes in /CS which is patently not something connected with the gaps
+between words.  Either your description of parameters which do not
+relate to /CS should not need to mention /CS or the parameters are in
+fact related to /CS, both can't simultaneously be true.
+
+--y06s9PvpQ1Ch5mdL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUD1vWAAoJECTWi3JdVIfQrwQH/1EdE0KzL3TyDq37T3UhGGE4
+5ZoPIdyOslVaU2g7wdfdLcHvyhpCYQTmXrNa7NcnF8ombRlWv396T76aSGd+7SgG
+G1kVXtC5UaM4yitU5MU3bTeZ3w4eC8RmXH36FgDfey7FIKya2clJbswY4los+3Re
+oSyG3Q3JIDCuBG36fV4/hjJAL9Vi78+ePjXKaSHvyZF1PvmEjoIbC7f+qcLaZB9n
+5n4U8hsh0GkJpz/TcooWvbvy07NV6YydKfXgfQgd7Auph4FuAfJLovRDp7HSzFIh
+CRebFPlEOz7rdJBKN4PJ/tcteai/PmeqGWVQ/XiKx0Dii/woi+lYAZL8JkzIy0c=
+=v6Ak
+-----END PGP SIGNATURE-----
+
+--y06s9PvpQ1Ch5mdL--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
