@@ -1,43 +1,74 @@
-From: "Vaittinen, Matti (NSN - FI/Oulu)" <matti.vaittinen-OYasijW0DpE@public.gmane.org>
-Subject: VS: [PATCH] rtc: ds1307: add trickle charger device tree binding
-Date: Tue, 9 Sep 2014 13:48:36 +0000
-Message-ID: <3AEAD721A6ADC64CB2CA46CCC17551A0B8492B@DEMUMBX013.nsn-intra.net>
-References: <20140828161025.GO14650@leverpostej>
- <20140828164825.GA12153@roeck-us.net>
- <20140828172842.GF12769@titan.lakedaemon.net>
- <20140828174034.GC15307@roeck-us.net>
- <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
- <20140829104001.GB19424@leverpostej> <20140908135242.GA21412@amd>
- <20140908145825.GO12081@leverpostej>
- <20140909062158.GB21342@fi-ourus-dhcp00977.emea.nsn-net.net>
- <20140909113425.GC15404@amd>,<20140909114203.GL30828@titan.lakedaemon.net>
+From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 04/12] iommu/arm-smmu: Convert to iommu_capable() API
+	function
+Date: Tue, 9 Sep 2014 15:57:10 +0200
+Message-ID: <20140909135710.GE2519@suse.de>
+References: <1409914384-21191-1-git-send-email-joro@8bytes.org>
+	<1409914384-21191-5-git-send-email-joro@8bytes.org>
+	<20140908165136.GW26030@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140909114203.GL30828-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Content-Language: fi-FI
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: ext Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "Sverdlin, Alexander (NSN - DE/Ulm)" <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140908165136.GW26030-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Will,
 
-L=E4hett=E4j=E4: ext Jason Cooper=20
+On Mon, Sep 08, 2014 at 05:51:36PM +0100, Will Deacon wrote:
+> On Fri, Sep 05, 2014 at 11:52:56AM +0100, Joerg Roedel wrote:
+> >  	switch (cap) {
+> >  	case IOMMU_CAP_CACHE_COHERENCY:
+> > -		return features & ARM_SMMU_FEAT_COHERENT_WALK;
+> > +		/*
+> > +		 * Use ARM_SMMU_FEAT_COHERENT_WALK as an indicator on whether
+> > +		 * the SMMU can force coherency on the DMA transaction. If it
+> > +		 * supports COHERENT_WALK it must be behind a coherent
+> > +		 * interconnect.
+> > +		 * A domain can be attached to any SMMU, so to reliably support
+> > +		 * IOMMU_CAP_CACHE_COHERENCY all SMMUs in the system need to be
+> > +		 * behind a coherent interconnect.
+> > +		 */
+> 
+> I don't think we should rely on the SMMU's advertisement of the coherent
+> table walk to mean anything other than `the SMMU can emit cacheable page
+> table walks'. The actual walker is a separate observer, and could have a
+> different route to memory than transactions flowing through the SMMU.
 
-> meh.  The presence or absence of the property should express the
-boolean.
->=20
-> The safe state should be the default (property absent), and the prope=
-rty
-name should describe the state when the property is present.
+Okay, so this should be advertised via DT then.
 
-This is What the v5 of patch does. It introduces boolean flag trickle-d=
-iode-disable. Diode enabled should be safer and it is also the default.
-Jason, I added your ack to that patch, thanks.
+> In reality, all we can report here is what the SMMU (as opposed to the rest
+> of the system) is capable of. The SMMU can always emit cacheable
+> transactions for a master if a stage-1 translation is in use so, without
+> extending the device-tree binding, we should report true here
+> unconditionally.
 
-Br. Matti Vaittinen --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sounds more like we should return false here unconditionally until we
+have a reliable way to tell whether this feature is available, no? When
+we return true the user of the IOMMU-API might rely on coherency that is
+not available.
+
+> An alternative is to extend the device-tree bindings to have something like
+> "dma-coherent" for the SMMU node, which would imply that the interconnect is
+> configured to honour snoops from the SMMU into the CPU caches. We might want
+> an additional property on top of that to indicate that the table walker is
+> also coherent (and we could check this against our ARM_SMMU_FEAT_COHERENT_WALK
+> flag)
+
+Sounds like a good idea, as long as there is no other way to detect
+this.
+
+
+	Joerg
