@@ -1,46 +1,43 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] PCI: keystone: update to support multiple pci ports
-Date: Tue, 09 Sep 2014 12:24:48 +0200
-Message-ID: <5974944.bS5MvrslRo@wuerfel>
-References: <1409938782-31460-1-git-send-email-m-karicheri2@ti.com> <5769746.NkKjYOOUiv@wuerfel> <540DD0CF.4000501@ti.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v2 1/4] phy: phy-stih407-usb: Add usb picoPHY driver
+ found on stih407 SoC family
+Date: Tue, 9 Sep 2014 11:26:55 +0100
+Message-ID: <20140909102655.GA8544@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1410253218-18318-1-git-send-email-peter.griffin@linaro.org>
+ <1410253218-18318-2-git-send-email-peter.griffin@linaro.org>
+ <2894228.eRmxgHsWbh@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <540DD0CF.4000501@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2894228.eRmxgHsWbh@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kishon@ti.com, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, peppe.cavallaro@st.com, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 September 2014 11:52:47 Murali Karicheri wrote:
-> On 09/05/2014 05:11 PM, Arnd Bergmann wrote:
-> > But the driver can only do root complex mode, and we would probably
-> > want a completely different driver if we were to start supporting
-> > endpoint mode.
-> 
-> Good point! I will drop index#2 handling in the driver code and will 
-> handle the same in boot loader. But I have a question though. The 
-> original driver which is queued up for merge to v3.18 has index #2 for 
-> this reg offset and is documented in the DT documentation as
-> 
-> 	index 2 is the base address and length of PCI mode configuration
-> 	register.
-> 	index 3 is the base address and length of PCI device ID register.
-> 
-> 
-> Will this create any issue in terms of backward compatibility if I 
-> remove it and move index3 to index2 and update the code for the same? I 
-> assume since this patch also will likely be on the next branch soon, and 
-> gets merged together with original driver to v3.18, this should be fine. 
-> But for some reason, if this patch doesn't make to v3.18, then won't 
-> this break the backward compatibility?
-> 
-> I think the other option is document index2 as obsolete and update the 
-> document and remove the code for handling it. Any suggestion?
+Hi Arnd,
 
-Since the driver is not merged into Linus' tree yet and (more importantly)
-has not been in a release yet, we can still fix it. Please just send a
-patch on top to remove it now, it's not too late yet.
+Thanks for reviewing :-)
 
-	Arnd
+> > +	phy = devm_phy_create(dev, NULL, match->data, NULL);
+> > +	if (IS_ERR(phy)) {
+> > +		dev_err(dev, "failed to create Display Port PHY\n");
+> > +		return PTR_ERR(phy);
+> > +	}
+> > +
+> 
+> There is only one entry in the match table, so it always points to
+> stih407_usb2_picophy_data. Do you have plans to add another set of
+> operations soon?
+
+Nope.
+
+> If not, just remove the .data pointer and hardcode the operations
+> in the devm_phy_create call.
+
+I've done as you suggest in v3 which I will send shortly.
+
+regards,
+
+Peter.
