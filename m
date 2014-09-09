@@ -1,40 +1,82 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 0/9] PM / Domains: Generic OF-based support
-Date: Tue, 9 Sep 2014 14:45:52 +0200
-Message-ID: <CAPDyKFr8OM3k0iJROvFOPN=UG=XfwJ7HBu1Yms8Yo=0C0fvW0A@mail.gmail.com>
-References: <1409838756-31963-1-git-send-email-ulf.hansson@linaro.org>
-	<1410262570-22785-1-git-send-email-ulf.hansson@linaro.org>
-	<20140909115446.GW2601@sirena.org.uk>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Tue, 09 Sep 2014 15:49:45 +0300
+Message-ID: <540EF769.9080002@mm-sol.com>
+References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com> <3899885.YaIxR1zelv@wuerfel> <540DCB78.8060206@mm-sol.com> <7045486.CbS74HiY8I@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20140909115446.GW2601@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7045486.CbS74HiY8I@wuerfel>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collins>
 List-Id: devicetree@vger.kernel.org
 
-On 9 September 2014 13:54, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Sep 09, 2014 at 01:36:01PM +0200, Ulf Hansson wrote:
->> Changes in v4:
->>       - Rebased patch "PM / Domains: Add generic OF-based PM domain look-up" -
->>         and updated the author and the commit message.
->>       - Adopted review comments for "PM / Domains: Add APIs to attach/detach
->>         a PM domain for a device".
->>       - Updated author and commit message for "ARM: exynos: Move to generic
->>         PM domain DT bindings".
->>       - Added some acks and reviewed by tags.
->>       - Started to use the "--in-reply-to" option to git-send-email. It should
->>         provide the option to show a better diffstat per patch.
->
-> Please don't send serieses in reply to earlier versions, it buries
-> things in the middle of old discussions which can mean they don't get
-> noticed, especially when you're sending multiple large patch serieses at
-> the same time.
+On 09/09/2014 01:32 PM, Arnd Bergmann wrote:
+> On Monday 08 September 2014 18:30:00 Stanimir Varbanov wrote:
+>>>>> These numbers all look hardware specific, so why put macros into the
+>>>>> device tree rather than using them directly?
+>>>>
+>>>> The idea was to use #defines in DT nodes when we need to overwrite the
+>>>> adc channel parameters, see example in 2/2 how it will be used.
+>>>
+>>> I don't understand. The node in the example has
+>>>
+>>> +               /* Channel node */
+>>> +               usb_id_nopull@39 {
+>>> +                       qcom,channel = <VADC_LR_MUX10_USB_ID>;
+>>> ...
+>>> +               };
+>>>
+>>>
+>>> And VADC_LR_MUX10_USB_ID is defined to 0x39.  How is this helping anything?
+>>> You just introduce an artificial dependency on the header file, which makes
+>>> it a mess to merge the patches or do updates, and anybody who needs to
+>>> make updates to this now has to go through the same pain, to update the
+>>> dts files, the driver and the binding document in lockstep.
+>>>
+>>> Why not remove the qcom,channel property completely and use a 'reg'
+>>> property with #address-cells=<1>, #size-cells=<0> and put the number
+>>> directly in there, with no need for obfuscation macros?
+>>
+>> OK thanks for the remarks. I will fix this mess.
+>>
+>> I hope you are expecting to see this:
+>>
+>> pmic_vadc: vadc@3100 {
+>>         #address-cells = <1>;
+>>         #size-cells = <0>;
+>>         #io-channel-cells = <1>;
+>>         io-channel-ranges;
+>>
+>>         usb_id_nopull@39 {
+>>                 reg = <0x39>;
+>>         };
+>> };
+>>
+>> and use the vadc channel from usb device node
+>>
+>> usb {
+>>         ...
+>>         io-channels = <&pmic_vadc 0x39>;
+>>         io-channel-names = "usbidnopull";
+>> };
+> 
+> The ID stuff looks good now, but I had not noticed the
+> "io-channel-names" property before. I think you misunderstood
+> the purpose of that, because it is very similar to the name of the
+> adc provider (usb_id_nopull@39).
+> 
+> Like anything else that we refer to by name (interrupt, reg,
+> clock, regulator, ...), the name used in the client is supposed
+> to be a string that identifies what the connection means to the
+> client, not what it means to the provider. This string is
+> supposed to be defined in the binding of the client device and
+> independent of what other hardware block provides it.
 
-Sorry, I just thought that it simplified life in this particular case. :-)
+yes of course, my fault. Thanks for clarification.
 
-If additional versions needs to be posted I will follow your advise. Thanks!
-
-Kind regards
-Uffe
+-- 
+regards,
+Stan
