@@ -1,98 +1,111 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 4/5] dt-bindings: Add binding info for Xgene QMTM UIO
- driver
-Date: Tue, 9 Sep 2014 11:53:10 +0100
-Message-ID: <20140909105310.GC27786@leverpostej>
-References: <1410256619-3213-1-git-send-email-ankit.jindal@linaro.org>
- <1410256619-3213-5-git-send-email-ankit.jindal@linaro.org>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: Watchdog start during boot
+Date: Tue, 9 Sep 2014 13:00:43 +0200
+Message-ID: <20140909110043.GG24081@pengutronix.de>
+References: <1410258569.15354.3.camel@lp-lvrv.comap.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IvGM3kKqwtniy32b"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1410256619-3213-5-git-send-email-ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1410258569.15354.3.camel-+pHGaL1WfiS95QTtyYMrYA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lisovy Rostislav <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Vokac <michal.vokac-veUE7cmDK2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 09, 2014 at 10:56:58AM +0100, Ankit Jindal wrote:
-> This patch adds device tree binding documentation for
-> Xgene QMTM UIO driver.
-> 
-> Signed-off-by: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   45 ++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
-> new file mode 100644
-> index 0000000..b71831b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
-> @@ -0,0 +1,45 @@
-> +APM X-Gene QMTM UIO nodes
+
+--IvGM3kKqwtniy32b
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Sep 09, 2014 at 12:29:29PM +0200, Lisovy Rostislav wrote:
+> Hello;
+> If my understanding is correct, the purpose of the "watchdog subsystem"
+> is to provide an unified interface from user-space to watchdog devices
+> (via /dev). The issue I am trying to solve is how to start the watchdog
+> during boot (it would be sufficient just not to disable it since the
+> bootloader enables it) to be controlled later on with the user-space
+> tool -- i.e. when the user-space will not boot properly, I would like
+> the device to be rebooted.
+>=20
+> My "quick and dirty" device-specific solution is:
+>=20
+> diff --git a/drivers/watchdog/omap_wdt.c b/drivers/watchdog/omap_wdt.c
+> index 3691b15..1e44b03f 100644
+> --- a/drivers/watchdog/omap_wdt.c
+> +++ b/drivers/watchdog/omap_wdt.c
+> @@ -53,6 +53,10 @@ static unsigned timer_margin;
+>  module_param(timer_margin, uint, 0);
+>  MODULE_PARM_DESC(timer_margin, "initial watchdog timeout (in seconds)");
+> =20
+> +static bool start_on_boot =3D false;
+> +module_param(start_on_boot, bool, 0);
+> +MODULE_PARM_DESC(start_on_boot, "Start the watchdog during boot");
 > +
-> +QMTM UIO nodes are defined for user space access to on-chip QMTM device
-> +on APM X-Gene SOC using UIO framework.
+>  struct omap_wdt_dev {
+>         void __iomem    *base;          /* physical */
+>         struct device   *dev;
+> @@ -269,6 +273,9 @@ static int omap_wdt_probe(struct platform_device *pde=
+v)
+> =20
+>         pm_runtime_put_sync(wdev->dev);
+> =20
+> +       if (start_on_boot)
+> +               omap_wdt_start(omap_wdt);
 > +
+>         return 0;
+>  }
+>=20
+> however I think it would be much beneficial to do this in a generic way.
+> Maybe to create a device tree property, that would store some flag to
+> start the watchdog during boot?
 
-Userspace vs kernel space has precisely _nothing_ to do with a HW
-description.
+The devicetree should be a hardware description, so it may not be the
+right way to pass such information.
 
-This doesn't describe at all what the device is (e.g. what does QMTM
-stand for, what is it used for?).
+Some time ago I proposed something similar where the first watchdog
+driver that is registered can be activated by a kernel commandline
+parameter. Here is some discussion about the topic:
+	Mail-id 1393604183-8755-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+	http://www.spinics.net/lists/linux-watchdog/msg04055.html
 
-NAK.
+Best regards,
 
-Please ensure you Cc the devicetree list (devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org) in
-future.
+Markus
 
-> +Required properties:
-> +- compatible: Should be "apm,xgene-qmtm-uio"
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-This should definitely not have "uio" in the name.
+--IvGM3kKqwtniy32b
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +- reg: Address and length of the register set for the device. It contains the
-> +  information of registers in the same order as described by reg-names.
-> +- reg-names: Should contain the register set names
-> +  - "csr": QMTM control and status register address space.
-> +  - "fabric": QMTM memory mapped access to queue states.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-These look ok, I guess.
+iQIcBAEBAgAGBQJUDt3aAAoJEEpcgKtcEGQQfIIP+wZEx09jOfDiINxBqMCU+pf1
+stA94CkkpkaCtZKRa/Q6sAj0cj7P9v307AnwZy+ysQ/iFLXc+STbwdrqldPOTYmL
+I+SBcp+KbiEXe7wvsz+NDJlmjaYYiBeHJ3O35upxl56iONokM2KtpBZruhBW/zSS
+W1UdaqYdvHJdsrUB7k3/JaVBVhawk7C5bj+hZqFjLltrQvuZgKS0v4WGuApf6NM0
+ed1k7JJznD0Ozv7X7hksYAwrDMiUVAD8v4qOJUO2wyrbye9EdWLsxYWfvXkMKscB
+hYwYQXrm0x5CQ67tH8UdlRSqGJPUiqrp5nFriECeSWB75Wm5F3jPc1K47bIhgDTK
+orm4A2aG8NMuXzwE1Mo41Qjg6izzFKgO6wiJFWeJmpaWWPxwIlO9hY6bnv5/goav
+M4XAmbF4f9c72WwSHJM/NVOr5Yi/DhJkSsj7lWwe8a6TFDvopaUl/ZhiOXQoNnhJ
+6+GLOdGa02EnYqZkc3c3DXu/mIJ4o6orO8qtXkrbNWasjqYNP5RZkdoYBSLPozxP
+zXbjW244ymY6CONrz+GUtppzw9ekLAxwLbAY0C7XLgJDThkjpF8wAjpS3Q8wc69I
+/jtN0uR2irIudWYjpME5e9w6mokMB1zpSDoUQTMQfeNWAJWcaY+P8fwNEnK8urrt
+ddy6Kwal8WYrYH+cK7dV
+=3st2
+-----END PGP SIGNATURE-----
 
-> +  - "qpool": Memory location for creating QMTM queues. This could be some
-> +    SRAM or reserved portion of RAM. It is expected that size and location
-> +    of qpool memory will be configurable via bootloader.
-
-I don't follow why this should be described in a reg entry. This is not
-a property of the device; this is a separate resource being assigned to
-the device.
-
-Why can the kernel not allocate this dynamically?
-
-If you need a specific fixed pool, use the reserved-memory bindings.
-
-> +- clocks: Reference to the clock entry.
-
-There is only one clock input to the IP block?
-
-> +- num_queues: Number of queues under this QMTM device.
-
-s/_/-/, property names should use '-' rather than '_'.
-
-> +- devid: QMTM identification number for the system having multiple QMTM devices
-
-What exactly is this used for? Why is the reg entry not sufficient?
-
-> +Optional properties:
-> +- status: Should be "ok" or "disabled" for enabled/disabled. Default is "ok".
-
-This is so standard I don't see the point in documenting it.
-
-Mark.
+--IvGM3kKqwtniy32b--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
