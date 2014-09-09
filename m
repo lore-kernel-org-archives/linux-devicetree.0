@@ -1,73 +1,87 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] spi: davinci: add support for adding delay between
- word's transmission
-Date: Tue, 9 Sep 2014 18:20:57 +0100
-Message-ID: <20140909172057.GH2601@sirena.org.uk>
-References: <1410278851-10783-1-git-send-email-grygorii.strashko@ti.com>
- <20140909165555.GD2601@sirena.org.uk>
- <540F3447.3020609@ti.com>
+From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: randconfig build error with next-20140909, in drivers/usb/dwc2/platform.c
+Date: Tue, 09 Sep 2014 10:32:11 -0700
+Message-ID: <540F399B.4070304@infradead.org>
+References: <CA+r1Zhj_jPHoYvGTdqYMpGNfzm9EkvqG-kBE2yTpfJVNK4xygQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sxKBPtypMsgSHGIi"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <540F3447.3020609-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+r1Zhj_jPHoYvGTdqYMpGNfzm9EkvqG-kBE2yTpfJVNK4xygQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jim Davis <jim.epost-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, linux-next <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 09/09/14 07:46, Jim Davis wrote:
+> Building with the attached random configuration file,
+> 
+> drivers/usb/dwc2/platform.o: In function `dwc2_platform_driver_init':
+> platform.c:(.init.text+0x0): multiple definition of `init_module'
+> drivers/usb/dwc2/gadget.o:gadget.c:(.init.text+0x0): first defined here
+> drivers/usb/dwc2/platform.o: In function `dwc2_platform_driver_exit':
+> platform.c:(.exit.text+0x0): multiple definition of `cleanup_module'
+> drivers/usb/dwc2/gadget.o:gadget.c:(.exit.text+0x0): first defined here
+> make[3]: *** [drivers/usb/dwc2/dwc2.o] Error 1
+> 
 
---sxKBPtypMsgSHGIi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+There are other issues as well.
 
-On Tue, Sep 09, 2014 at 01:09:27PM -0400, Murali Karicheri wrote:
-> On 09/09/2014 12:55 PM, Mark Brown wrote:
-> >On Tue, Sep 09, 2014 at 07:07:31PM +0300, Grygorii Strashko wrote:
+1.  On i386, with these configs:
 
-> >>- ti,spi-c2t-delay: Chip-select-active-to-transmit-start delay
-> >>	(SPIDELAY.C2TDELAY)
+CONFIG_USB_DWC2=m
+# CONFIG_USB_DWC2_HOST is not set
 
-> >>- ti,spi-t2c-delay: Transmit-end-to-chip-select-inactive delay
-> >>	(SPIDELAY.T2CDELAY)
+#
+# Gadget mode requires USB Gadget support to be enabled
+#
+CONFIG_USB_DWC2_PERIPHERAL=y
+# CONFIG_USB_DWC2_DUAL_ROLE is not set
+CONFIG_USB_DWC2_DEBUG=y
+CONFIG_USB_DWC2_VERBOSE=y
+# CONFIG_USB_DWC2_TRACK_MISSED_SOFS is not set
+# CONFIG_USB_DWC2_DEBUG_PERIODIC is not set
 
-> >Now I look at these they look very much like the standard delay feature
-> >that the SPI subsystem has already - are they?
+ERROR: "dwc2_hcd_get_frame_number" [drivers/usb/dwc2/dwc2.ko] undefined!
+ERROR: "dwc2_hcd_disconnect" [drivers/usb/dwc2/dwc2.ko] undefined!
+ERROR: "dwc2_hcd_start" [drivers/usb/dwc2/dwc2.ko] undefined!
 
-> As Grygorii explained in previous postings (reproduced below), these delays
-> are handled by the SPI hardware on Keystone and affect the delay between
-> successive word tranmssion and has nothing to do with the delay you are
-> talking about. Isn't the standard delay you mention here is between
-> successive packets send down to the lower level driver (in this case
-> spi-davinci.c) ?
+2.  on x86_64, with these configs:
 
-He talked about such delays between words (and there were some other
-delays listed which seemed to meet that description) but the above don't
-appear to refer to them, the above refer to delays around chip select
-which most definitely are covered with the standard delays.
+CONFIG_USB_DWC2=y
+# CONFIG_USB_DWC2_HOST is not set
 
-If these delays are not related to chip select then the documentation
-needs to be fixed to not refer to chip select.
+#
+# Gadget mode requires USB Gadget support to be enabled
+#
+CONFIG_USB_DWC2_PERIPHERAL=y
+# CONFIG_USB_DWC2_DUAL_ROLE is not set
+CONFIG_USB_DWC2_PLATFORM=y
+CONFIG_USB_DWC2_DEBUG=y
+CONFIG_USB_DWC2_VERBOSE=y
+CONFIG_USB_DWC2_TRACK_MISSED_SOFS=y
+# CONFIG_USB_DWC2_DEBUG_PERIODIC is not set
 
---sxKBPtypMsgSHGIi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+drivers/built-in.o: In function `dwc2_hc_set_even_odd_frame':
+core.c:(.text+0x1aff55): undefined reference to `dwc2_hcd_get_frame_number'
+drivers/built-in.o: In function `dwc2_handle_common_intr':
+(.text+0x1b3a48): undefined reference to `dwc2_hcd_start'
+drivers/built-in.o: In function `dwc2_handle_common_intr':
+(.text+0x1b3b05): undefined reference to `dwc2_hcd_disconnect'
+drivers/built-in.o: In function `dwc2_handle_common_intr':
+(.text+0x1b3b38): undefined reference to `dwc2_hcd_start'
+drivers/built-in.o: In function `dwc2_handle_common_intr':
+(.text+0x1b3e38): undefined reference to `dwc2_hcd_start'
+drivers/built-in.o: In function `dwc2_driver_remove':
+platform.c:(.text+0x1b7b35): undefined reference to `dwc2_hcd_remove'
+drivers/built-in.o: In function `dwc2_driver_probe':
+platform.c:(.text+0x1b7b72): undefined reference to `dwc2_set_all_params'
+platform.c:(.text+0x1b7c66): undefined reference to `dwc2_hcd_init'
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUDzbzAAoJECTWi3JdVIfQ9/kH/2gAH+/5KaTZvXZPdthTkNWq
-r8wtU1eDR6VsNK4gcmUTCmNNOMtqZ7ilAm4hFWu7TT42P2BeyOQKtRc2sK9PM0Zl
-CTdrQ/S/YOfwXoob0Fo+x3dDvbIltcwZjEfClfy7Vg/u+m3dRBPMP9DQlLZ+WM3A
-fGtMD6n9nTvBSXVi5gW+rZEqM5eAIo/neDRgor677cZq6u1N0IC152eD8C9/5IoV
-SfqE9gDaLQktgiBbRDG0Rgwk18zg5dRmr/XOyaHnGj1ewAqyL0p4UJWL3fUxm9yR
-zlJNtyAClaTEuCqcYyy0DnLeccoQfCcD4F2+grNdBHRBKXxvX5LnIETYAjM+ZMo=
-=AT0W
------END PGP SIGNATURE-----
 
---sxKBPtypMsgSHGIi--
+-- 
+~Randy
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
