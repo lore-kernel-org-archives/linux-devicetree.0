@@ -1,51 +1,89 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v2] ARM: dts: Add mshc aliases for rk3288
-Date: Tue, 09 Sep 2014 10:28:36 +0200
-Message-ID: <18318098.Hm4yenW6Sf@diego>
-References: <1409785523-12209-1-git-send-email-dianders@chromium.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/5] rtc: at91sam9: retain slow clock and check its rate
+Date: Tue, 9 Sep 2014 10:36:39 +0200
+Message-ID: <540EBC17.50407@atmel.com>
+References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>	<1409733934-14465-5-git-send-email-boris.brezillon@free-electrons.com>	<20140908173338.GD14623@piout.net>	<20140908212218.6a81af86@bbrezillon> <20140908213743.27d7a1bc@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1409785523-12209-1-git-send-email-dianders@chromium.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Sonny Rao <sonnyrao@chromium.org>, stefan@agner.ch, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Addy Ke <addy.ke@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140908213743.27d7a1bc@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 3. September 2014, 16:05:23 schrieb Doug Anderson:
-> It's convenient (and less confusing to people reading logs) if the
-> eMMC port on rk3288 is consistenly marked with mmc0 and the sdmmc port
-> on rk3288 is consistently marked with mmc1.  Add the appropriate
-> aliases.
+On 08/09/2014 21:37, Boris BREZILLON :
+> On Mon, 8 Sep 2014 21:22:18 +0200
+> Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> 
+>> On Mon, 8 Sep 2014 19:33:38 +0200
+>> Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>
+>>> On 03/09/2014 at 10:45:33 +0200, Boris Brezillon wrote :
+>>>> The RTT block is using the slow clock and expect it to run at 32KHz.
+>>>> Now that we moved to the CCF it's better to retain the clk reference so
+>>>> that the CCF can't disable the slow clock considering it is unused.
+>>>>
+>>>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>> ---
+>>>>  drivers/rtc/rtc-at91sam9.c | 24 ++++++++++++++++++++++++
+>>>>  1 file changed, 24 insertions(+)
+>>>>
+>>>> diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+>>>> index 57014b7..5c5093b 100644
+>>>> --- a/drivers/rtc/rtc-at91sam9.c
+>>>> +++ b/drivers/rtc/rtc-at91sam9.c
+>>>> @@ -21,6 +21,7 @@
+>>>>  #include <linux/slab.h>
+>>>>  #include <linux/platform_data/atmel.h>
+>>>>  #include <linux/io.h>
+>>>> +#include <linux/clk.h>
+>>>>  
+>>>>  /*
+>>>>   * This driver uses two configurable hardware resources that live in the
+>>>> @@ -74,6 +75,7 @@ struct sam9_rtc {
+>>>>  	u32			imr;
+>>>>  	void __iomem		*gpbr;
+>>>>  	int 			irq;
+>>>> +	struct clk		*sclk;
+>>>>  };
+>>>>  
+>>>>  #define rtt_readl(rtc, field) \
+>>>> @@ -373,6 +375,25 @@ static int at91_rtc_probe(struct platform_device *pdev)
+>>>>  		return ret;
+>>>>  	}
+>>>>  
+>>>> +	/* Retain slow clk if it is specified in the DT.
+>>>> +	 * Do not complain if slow clk is missing, but check its rate
+>>>> +	 * if it is available.
+>>>> +	 */
+>>>> +	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
+>>>> +	if (!IS_ERR(rtc->sclk)) {
+>>>> +		if (clk_get_rate(rtc->sclk) != AT91_SLOW_CLOCK) {
+>>>
+>>> I would not bother doing that check but use the value for MR instead of
+>>> AT91_SLOW_CLOCK (see my previous mail).
+>>
+>> Unfortunately, we can't get rid of this macro without modifying the
+>> clk_lookup table in several arch/arm/mach-at91/<soc-name>.c files in
+>> order to handle non DT/CCF cases (which will remain until all non DT
+>> boards are moved to DT).
+> 
+> After taking a closer look at what should be modified, I think it's
+> worth it: there's only 5 impacted files (at91sam9260.c, at91sam9261.c,
+> at91sam9263.c, at91sam9rl.c and at91sam9g45.c) and adding a clk_lookup
+> entry is pretty easy.
+> 
+> Moreover we'll end up with a clean driver and won't have to bother
+> about cleaning it up when dropping non DT boards support.
 
-Added to my v3.18-next/dts branch
+I vote for this => +1 ;-)
 
-> 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Reviewed-by: Sonny Rao <sonnyrao@chromium.org>
-> ---
-> 
-> Changes in v2:
-> - Use mshc aliases now
-> - Adds sdio0/1 aliases since those are in the dts.
-> 
->  arch/arm/boot/dts/rk3288.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 5f866e0..2c5d01f 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -29,6 +29,10 @@
->  		i2c3 = &i2c3;
->  		i2c4 = &i2c4;
->  		i2c5 = &i2c5;
-> +		mshc0 = &emmc;
-> +		mshc1 = &sdmmc;
-> +		mshc2 = &sdio0;
-> +		mshc3 = &sdio1;
->  		serial0 = &uart0;
->  		serial1 = &uart1;
->  		serial2 = &uart2;
-
+Bye,
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
