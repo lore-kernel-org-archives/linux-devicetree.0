@@ -1,44 +1,78 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv3 0/5] OMAP Mailbox framework adoption & DT support
-Date: Mon, 8 Sep 2014 19:52:26 -0700
-Message-ID: <20140909025225.GI10785@atomide.com>
-References: <1406680479-18446-1-git-send-email-s-anna@ti.com>
- <20140908232053.GS3238@atomide.com>
+From: kgene@kernel.org
+Subject: RE: [PATCH v2 5/7] arm64: dts: Add initial device tree support for
+ EXYNOS7
+Date: Tue, 09 Sep 2014 12:06:22 +0900
+Message-ID: <02e501cfcbdb$0a95cea0$1fc16be0$@kernel.org>
+References: <1409672143-8574-1-git-send-email-ch.naveen@samsung.com>
+ <3382034.5ADO0F7naY@wuerfel> <043401cfc794$7f228650$7d6792f0$@samsung.com>
+ <118816680.lTOkj0TsFJ@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140908232053.GS3238-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <118816680.lTOkj0TsFJ@wuerfel>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Arnd Bergmann' <arnd@arndb.de>
+Cc: 'Naveen Krishna Chatradhi' <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org, naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [140908 16:21]:
-> * Suman Anna <s-anna-l0cyMroinI0@public.gmane.org> [140729 17:37]:
-> > Hi,
-> > 
-> > This is an updated version of the OMAP Mailbox framework adoption &
-> > DT support series, refreshed to work with the v9 version of the mailbox
-> > framework [1] from Jassi Brar while also addressing some minor review
-> > comments. Detailed changes are summarized below. Patches are based on
-> > 3.16-rc2.
+Arnd Bergmann wrote:
 > 
-> Sorry for the delay, just noticed that I'm supposed to queue
-> these too. I'll queue these into omap-for-v3.18/mailbox against
-> v3.17-rc1 and will probably also merge it into omap-for-v3.18/dt
-> as well.
+> On Thursday 04 September 2014 01:31:21 Kukjin Kim wrote:
+> > > This is the board specific file, so it seems ok.
+> > >
+> > I mean there are many espresso boards are having different exynos7
+> > SoC. I mean exynos7-espresso cannot represent all of espresso boards.
+> >
+> 
+> Ah, I see, that makes sense.
+> 
+> We definitely need a top-level .dts file for each board that is different
+> in a nondiscoverable way then.
+> 
+Agreed.
 
-Actually this is not compiling and seems to probably miss
-the dependencies from Jassi, so dropping the branch.
+And one more, at this moment just using exynos7 would be nice to us then if
+required, we could add any specific properties later.
 
-Anyways, since it seems you need to repost this again, please
-repost the DT changes separately from the driver changes.
+> If the mmc settings and possibly some other nodes (to be added later)
+> are common across them, those can be in a board specific .dtsi file.
+> 
+Yes, right.
 
-Regards,
+> For the memory node, I would actually expect that to be filled by
+> the boot loader, so we could leave it out entirely. The same applies
+> to the command line: the parts that are in there at the moment (
+> "console=ttySAC2,115200n8 root=/dev/ram0 ramdisk=16384 initrd=0x42000000,16M")
+> clearly don't belong into a generic dts file and none of them should be
+> set that way.
+> 
+Hmm...yeah we need to use proper boot-loader but I think kernel needs having
+default memory property if boot loader doesn't have anything?
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> For the initial version, that would mean that the file comes down to having
+> as its only contents
+> 
+> /dts-v1/;
+> #include <dt-bindings/gpio/gpio.h>
+> #include "exynos7123.dtsi"
+> #include "exynos7-espresso.dtsi" // for the mmc nodes
+> 
+> / {
+>        model = "Samsung ESPRESSO board based on EXYNOS7123";
+>        compatible = "samsung,espresso", "samsung,exynos7123", "samsung,exynos7";
+> };
+> 
+> One more thing I just noticed is the GPL statement in the dts files.
+> Can we please change that to a permissive license in order to allow
+> including it in non-GPL boot loaders and operating systems?
+> 
+> Dual GPL+MIT or GPL+BSD would make most sense here.
+> 
+I need to check about that with license guy in my team ;)
+
+Naveen, I'll have a look at the patch again.
+
+Thanks,
+Kukjin
