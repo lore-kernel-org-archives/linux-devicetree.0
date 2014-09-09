@@ -1,174 +1,175 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH] RFC: add function for localbus address
-Date: Tue, 09 Sep 2014 18:07:02 +0300
-Message-ID: <540F1796.7090301@mm-sol.com>
-References: <20140729234522.E9FF1C40738@trevor.secretlab.ca> <1409672700-21697-1-git-send-email-svarbanov@mm-sol.com> <20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
+Date: Tue, 9 Sep 2014 11:09:18 -0400
+Message-ID: <20140909150916.GA6095@developer>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
+ <5407BA10.2030402@rock-chips.com>
+ <1410229637.8085.158.camel@rzhang1-toshiba>
+ <8397565.n78cHk4EtL@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8397565.n78cHk4EtL@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zhaoyifeng <zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hello
 
-Thanks for the comments!
+On Tue, Sep 09, 2014 at 01:35:31PM +0200, Heiko St=C3=BCbner wrote:
+> Am Dienstag, 9. September 2014, 10:27:17 schrieb Zhang Rui:
+> > On Thu, 2014-09-04 at 09:02 +0800, Caesar Wang wrote:
+> > > =E5=9C=A8 2014=E5=B9=B409=E6=9C=8803=E6=97=A5 16:07, Heiko St=C3=BC=
+bner =E5=86=99=E9=81=93:
+> > > > Am Mittwoch, 3. September 2014, 10:10:37 schrieb Caesar Wang:
+> > > >> This add the necessary binding documentation for the thermal
+> > > >> found on Rockchip SoCs
+> > > >>=20
+> > > >> Signed-off-by: zhaoyifeng <zyf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > > >> Signed-off-by: Caesar Wang <caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > > >> ---
+> > > >>=20
+> > > >>   .../devicetree/bindings/thermal/rockchip-thermal.txt | 20
+> > > >>=20
+> > > >> ++++++++++++++++++++ 1 file changed, 20 insertions(+)
+> > > >>=20
+> > > >>   create mode 100644
+> > > >>=20
+> > > >> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> > > >>=20
+> > > >> diff --git
+> > > >> a/Documentation/devicetree/bindings/thermal/rockchip-thermal.t=
+xt
+> > > >> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.t=
+xt new
+> > > >> file
+> > > >> mode 100644
+> > > >> index 0000000..1ed4d4c
+> > > >> --- /dev/null
+> > > >> +++ b/Documentation/devicetree/bindings/thermal/rockchip-therm=
+al.txt
+> > > >> @@ -0,0 +1,20 @@
+> > > >> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+> > > >> +
+> > > >> +Required properties:
+> > > >> +- compatible: "rockchip,rk3288-tsadc"
+> > > >> +- reg: physical base address of the controller and length of =
+memory
+> > > >> mapped
+> > > >> +       region.
+> > > >> +- interrupts: The interrupt number to the cpu. The interrupt =
+specifier
+> > > >> format +	      depends on the interrupt controller.
+> > > >> +- clocks: Must contain an entry for each entry in clock-names=
+=2E
+> > > >> +- clock-names: Shall be "tsadc" for the converter-clock, and
+> > > >> "apb_pclk" for +	       the peripheral clock.
+> > > >=20
+> > > > You're using the passive-temp, critical-temp and force-shut-tem=
+p
+> > > > properties in your driver without declaring them here.
+> > >=20
+> > > frankly,the about are need be declared. but  there are 4 types[0]=
+ for
+> > > trip in thermal framework,
+> > > there is no force-shut for me. So I want to change it three addit=
+ional
+> > > properties in [PATCH V4 4/4],
+> > >=20
+> > >=20
+> > > [0]
+> > > {
+> > >=20
+> > >      THERMAL_TRIP_CRITICAL,
+> > >      THERMAL_TRIP_HOT,
+> > >      THERMAL_TRIP_PASSIVE,
+> > >      THERMAL_TRIP_ACTIVE,
+> > >=20
+> > > }
+> >=20
+> > this sounds reasonable to me.
+> >=20
+> > > > But more importantly, please use the generic trip-points for th=
+is. I
+> > > > guess it shouldn't be a problem to introduce a "forced-shutdown=
+"
+> > > > trippoint [0] for the additional trip-point you have - thermal
+> > > > maintainers, please shout if I'm wrong :-)
+> >=20
+> > what is the difference between a critical trip point and a
+> > "forced-shutdown" trip point?
+> > Thermal core will do a shutdown in case the critical trip point is
+> > triggered.
+>=20
+> The forced-shutdown is where the thermal controller is supposed to al=
+so do a=20
 
-On 09/08/2014 05:52 PM, Grant Likely wrote:
-> On Tue,  2 Sep 2014 18:45:00 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
->> Hi Grant,
->>
->> I came down to this. Could you review? Is that
->> implementation closer to the suggestion made by you.
->>
->> ---
->>  drivers/of/address.c       |   49 ++++++++++++++++++++++++++++++++++++++++++++
->>  drivers/of/platform.c      |   20 ++++++++++++++---
->>  include/linux/of_address.h |   19 +++++++++++++++++
->>  3 files changed, 84 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/of/address.c b/drivers/of/address.c
->> index e371825..86c2166 100644
->> --- a/drivers/of/address.c
->> +++ b/drivers/of/address.c
->> @@ -601,6 +601,32 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
->>  }
->>  EXPORT_SYMBOL(of_get_address);
->>  
->> +const __be32 *of_get_localbus_address(struct device_node *np, int index,
->> +				      u64 *size)
->> +{
->> +	struct device_node *root, *parent;
->> +	const __be32 *ranges, *prop = NULL;
->> +
->> +	parent = of_get_parent(np);
->> +	if (!parent)
->> +		return NULL;
->> +
->> +	root = of_find_node_by_path("/");
->> +
->> +	if (parent == root) {
->> +		of_node_put(parent);
->> +		return NULL;
->> +	}
->> +
->> +	ranges = of_get_property(parent, "ranges", NULL);
->> +	of_node_put(parent);
->> +
->> +	if (!ranges)
->> +		prop = of_get_address(np, index, size, NULL);
->> +
->> +	return prop;
->> +}
-> 
-> So, the above doesn't make much sense to me. It looks like the function
-> merely decodes the local address, and the below function will stuff it
-> into a resource structure, but the tests for if the parent is root or
-> the parent has a ranges property are nonsensical. That shouldn't matter
-> for the functionality (except for automatically decoding them.. more
-> below)
-> 
->> +
->>  unsigned long __weak pci_address_to_pio(phys_addr_t address)
->>  {
->>  	if (address > IO_SPACE_LIMIT)
->> @@ -665,6 +691,29 @@ int of_address_to_resource(struct device_node *dev, int index,
->>  }
->>  EXPORT_SYMBOL_GPL(of_address_to_resource);
->>  
->> +int of_localbus_address_to_resource(struct device_node *dev, int index,
->> +				    struct resource *r)
->> +{
->> +	const char *name = NULL;
->> +	const __be32 *addrp;
->> +	u64 size;
->> +
->> +	addrp = of_get_localbus_address(dev, index, &size);
->> +	if (!addrp)
->> +		return -EINVAL;
->> +
->> +	of_property_read_string_index(dev, "reg-names", index, &name);
->> +
->> +	memset(r, 0, sizeof(*r));
->> +	r->start = be32_to_cpup(addrp);
->> +	r->end = r->start + size - 1;
->> +	r->flags = IORESOURCE_REG;
-> 
-> This is problematic. A resource is created, but there is absolutely no
-> indication that the resource represents a localbus address instead of a
-> CPU address. platform_device reg resources represent CPU addresses.
-> Trying to overload it will cause confusion in drivers.
-> 
->> +	r->name = name ? name : dev->full_name;
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(of_localbus_address_to_resource);
->> +
->>  struct device_node *of_find_matching_node_by_address(struct device_node *from,
->>  					const struct of_device_id *matches,
->>  					u64 base_address)
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index 0197725..36dcbd7 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -106,8 +106,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
->>  				  struct device *parent)
->>  {
->>  	struct platform_device *dev;
->> -	int rc, i, num_reg = 0, num_irq;
->> +	int rc, i, num_reg = 0, num_localbus_reg = 0, num_irq;
->>  	struct resource *res, temp_res;
->> +	int num_resources;
->>  
->>  	dev = platform_device_alloc("", -1);
->>  	if (!dev)
->> @@ -116,22 +117,33 @@ struct platform_device *of_device_alloc(struct device_node *np,
->>  	/* count the io and irq resources */
->>  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
->>  		num_reg++;
->> +
->> +	while (of_localbus_address_to_resource(np,
->> +					num_localbus_reg, &temp_res) == 0)
->> +		num_localbus_reg++;
->> +
-> 
-> No, I don't support doing this. The moment a platform_driver depends on
-> a local bus address it is doing something special. It needs to decode
-> its own address in that case, which it can easily do.
-> 
-> Any platform_driver that interprets a IORESOURCE_REG as a localbus
-> address instead of a CPU address is *BROKEN*. It should be changed to
-> either decode the address itself, of a new bus type should be created
-> that can make its own decisions about what address resources mean.
+Currently, there is no discrimination between hardware configured /
+triggered thermal shutdown and software detected / triggered thermal sh=
+utdown.
+One way to implement it though is to reuse the critical trip type. Even
+if you use more than one trip type it is doable, it will depend on the
+priorities you give to software triggered and hardware triggered.
 
-Do you mean new of_bus entry?
+> shutdown in hardware. As you said the thermal core will also shutdown=
+ at the=20
+> critical trip point, I guess we could map Caesar's value like
+>=20
+> trip-point		tsadc
+> critical		forced-shutdown (the 120 degrees in patch 4)
 
-> 
-> I realize that you want to reuse the platform populate functionality in
-> this case. We can refactor some of that code to make it usable for
-> customized platform_bus_type instances.
+> hot			critical (the 100 degrees)
+> ...
+>=20
+>=20
 
-What kind of refactoring? And what you mean by "customized
-platform_bus_type"? Please elaborate more.
+In the case we are planing to expand the trip type range, adding one
+specific to hardware configurable shutdown makes sense to me too.
+Alhtough, as I mention, I believe with the current generic trip types,
+this situation can be covered already. Besides, I believe
+'forced-shutdown' does not sound a descriptive enough though. I would
+suggest something more specific, say 'hardware-shutdown'.=20
 
-In fact one of my first attempts to upstream Qualcomm PMIC driver here
-[1] I'm using of_get_address() over each child node to get the register
-addresses and constructing resources for them manually. After that those
-resources are passed to mfd_add_devices().
+> >=20
+> > thanks,
+> > rui
+> >=20
+> > > It's a good option.
+> > > I can send a patch,but I don't know whether the thermal maintaine=
+rs will
+> > > accept it.
+> > >=20
+> > > Maybe,they have a better way to suggest it.:-)
+> > >=20
+> > >=20
+> > > PS:I will sent a new patch If I still have no received their sugg=
+estions
+> > > in two days.
+> > >=20
+> > > > Heiko
+> > > >=20
+> > > >=20
+> > > > [0] in a separate patch, changing
+> > > > - thermal_trip_type enum in include/linux/thermal.h
+> > > > - trip_types mapping in drivers/thermal/of-thermal.c
+> > > > - Documentation/devicetree/bindings/thermal/thermal.txt
+> > > >=20
+> > > >> +
+> > > >> +Example:
+> > > >> +tsadc: tsadc@ff280000 {
+> > > >> +	compatible =3D "rockchip,rk3288-tsadc";
+> > > >> +	reg =3D <0xff280000 0x100>;
+> > > >> +	interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> > > >> +	clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+> > > >> +	clock-names =3D "tsadc", "apb_pclk";
+> > > >> +};
+>=20
 
-This implementation does not get accepted from Lee Jones with teh
-argument that it re-implement of_platform_populate and he will need an
-Ack from OF maintainers.
-
-Do you mean with the statement above "It needs to decode its own address
-in that case, which it can easily do" something like what I've done in [1]?
-
-[1] http://www.kernelhub.org/?msg=520233&p=2
-
--- 
-regards,
-Stan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
