@@ -1,59 +1,53 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v2 5/8] net: pxa168_eth: get and set the mac address on
- the Ethernet controller
-Date: Tue, 9 Sep 2014 18:36:22 +0200
-Message-ID: <20140909163622.GA28752@kwain>
-References: <1410273848-24663-1-git-send-email-antoine.tenart@free-electrons.com>
- <1410273848-24663-6-git-send-email-antoine.tenart@free-electrons.com>
- <20140909162958.GS30828@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140909162958.GS30828@titan.lakedaemon.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/7] arm: mediatek: Add more basic features
+Date: Tue,  9 Sep 2014 18:50:57 +0200
+Message-ID: <1410281464-9587-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, anders.berg-M7mHMAq9Yzo@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, srv_yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jason,
+This patch set adds some minor changes to the Mediatek mt6589 support.
 
-On Tue, Sep 09, 2014 at 12:29:58PM -0400, Jason Cooper wrote:
-> On Tue, Sep 09, 2014 at 04:44:05PM +0200, Antoine Tenart wrote:
-> > When changing the MAC address, in addition to updating the dev_addr in
-> > the net_device structure, this patch also update the MAC address
-> > registers (high and low) of the Ethernet controller with the new MAC.
-> > The address stored in these registers is used for IEEE 802.3x Ethernet
-> > flow control, which is already enabled.
-> > =
+Features are low-level debugging on the mt6589, the addition to the
+"make dtbs" and multi_v7_defconfig, earlyprintk suppport, as well as a small
+changes in the DTS files.
 
-> > This patch also tries reading the MAC address stored in these registers
-> > when probing the driver, to use the MAC address set by the bootloader
-> > and avoid using a random one.
-> =
+The patch set is based on v3.17-rc1
 
-> Hmm, the wording here seems odd.  I think the preference should be:
-> =
+Changes for v3:
+- drop quirk to enable ARM arch timer
 
->  1) bootloader-supplied addr via DT
->  2) addr read from device
->  3) randomly generated one.
+Changes for v2:
+- rebased on v3.17-rc1
+- add patch for the compatible property of aquaris5
+- add patch setting GIC compatible string to new "arm,cortex-a7-gic"
+- set ARM arch timer frequency in DTS
 
-I agree. I'll update that.
+---
 
-Antoine
+Matthias Brugger (7):
+  arm: dts: Build dtb for Mediatek board
+  arm: multi_v7_defconfig: Enable Mediatek platform
+  arm: dts: mt6589: Fix typo in GIC unit address
+  arm: mediatek: Add earlyprintk support for mt6589
+  arm: dts: mt6589-aquaris5: Add boot argument earlyprintk
+  arm: dts: mediatek: Add compatible property for aquaris5
+  arm: dts: mt6589: Change compatible string for GIC
 
--- =
+ Documentation/devicetree/bindings/arm/mediatek.txt |  6 ++++++
+ arch/arm/Kconfig.debug                             | 10 ++++++++++
+ arch/arm/boot/dts/Makefile                         |  1 +
+ arch/arm/boot/dts/mt6589-aquaris5.dts              |  5 +++++
+ arch/arm/boot/dts/mt6589.dtsi                      |  4 ++--
+ arch/arm/configs/multi_v7_defconfig                |  1 +
+ 6 files changed, 25 insertions(+), 2 deletions(-)
 
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
