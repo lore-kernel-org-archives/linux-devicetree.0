@@ -1,75 +1,150 @@
-From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
-Subject: Re: [RESEND PATCH v3]     rtc: ds1307: add trickle charger device
- tree binding
-Date: Tue, 9 Sep 2014 11:29:11 +0300
-Message-ID: <20140909082902.GD21342@fi-ourus-dhcp00977.emea.nsn-net.net>
-References: <20140908073216.GA20850@fi-ourus-dhcp00977.emea.nsn-net.net>
- <20140908112657.GD30828@titan.lakedaemon.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2] ARM: l2c: parse cache properties from ePAPR definitions
+Date: Tue, 09 Sep 2014 09:42:18 +0200
+Message-ID: <3750746.eYplbZAGky@wuerfel>
+References: <1410246633-23407-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140908112657.GD30828-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ext Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org, san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1410246633-23407-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 08, 2014 at 07:26:57AM -0400, ext Jason Cooper wrote:
-> Matti,
+On Tuesday 09 September 2014 09:10:33 Linus Walleij wrote:
+> When both 'cache-size' and 'cache-sets' are specified for a L2 cache
+> controller node, parse those properties and set up the
+> set size based on which type of L2 cache controller we are using.
 > 
-> On Mon, Sep 08, 2014 at 10:32:24AM +0300, Matti Vaittinen wrote:
-> > ---
+> Update the L2 cache controller Device Tree binding with the optional
+> 'cache-size', 'cache-sets', 'cache-block-size' and 'cache-line-size'
+> properties. These come from the ePAPR specification.
 > 
-> Here.  Otherwise, it'll get included in the commit message, which I
-> don't think was your intention.
-
-Ok, thanks.
-
+> Using the cache size, number of sets and cache line size we can
+> calculate desired associativity of the L2 cache. This is done
+> by the calculation:
 > 
-> >  .../devicetree/bindings/i2c/trivial-devices.txt    |  1 -
-> >  .../devicetree/bindings/rtc/dallas,ds1339.txt      | 18 ++++++
-> >  drivers/rtc/rtc-ds1307.c                           | 66 ++++++++++++++++++++--
-> >  3 files changed, 80 insertions(+), 5 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/dallas,ds1339.txt
+>     set size = cache size / sets
+>     ways = set size / line size
+>     way size = cache size / ways
+>     associativity = way size / line size
 > 
-> I would split this into two patches, one for the binding documentation,
-> and one for the C file changes.  You can then use
-> ./scripts/get_maintainer.pl to see who the rtc maintainer is (nothing
-> jumps out from my memory).
-
-Splitting sounds reasonable. I will do this and also invert the default
-diode setting to be connected as was suggested by Pavel in mail responce
-to v1 of patch. And Alessandro is the maintainer for rtc according to
-the MAINTAINERS file.
-
+> This patch is an extended version based on the initial patch
+> by Florian Fainelli.
 > 
-> Most likely, the rtc maintainer will take the series with the DT
-> maintainers Acks.  You made all the binding changes as discussed by Mark
-> and I, so fwiw,
-> 
-> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> 
-> Just keep in mind that I'm not a DT maintainer, I've just moved a lot of
-> patches into that area :-P  When you respin the series to split it, just
-> throw my Ack on the binding docs.
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks, although the doc will change when I invert the default diode
-setting  =)
+Looks much better!
 
-Br.
-Matti
+> +static void __init l2x0_cache_size_of_parse(const struct device_node *np,
+> +					    u32 *aux_val, u32 *aux_mask,
+> +					    u32 max_set_size,
+> +					    u32 max_associativity)
+> +{
+> +	u32 mask = 0, val = 0;
+> +	u32 cache_size = 0, sets = 0;
+> +	u32 set_size = 0, set_size_bits = 1;
+> +	u32 ways = 0, way_size = 0;
+> +	u32 blocksize = 0;
+> +	u32 linesize = 0;
+> +	u32 assoc = 0;
+> +
+> +	of_property_read_u32(np, "cache-size", &cache_size);
+> +	of_property_read_u32(np, "cache-sets", &sets);
+> +	of_property_read_u32(np, "cache-block-size", &blocksize);
+> +	of_property_read_u32(np, "cache-line-size", &linesize);
+> +
+> +	if (!cache_size || !sets)
+> +		return;
 
--- 
-=============================================
+I wonder if we should add another property here that tells
+the OS to override the aux register setting for way-size
+and associativity. In theory the properties above are meant
+to be there for any cache, but I don't think we want to actually
+re-compute the auxctrl register values based on this all the
+time.
 
-Matti Vaittinen
-Senile SW Specialist
-FINLAND 
+> +	/* All these l2 caches have the same line = block size actually */
+> +	if (!linesize) {
+> +		if (blocksize) {
+> +			/* If linesize if not given, it is equal to blocksize */
+> +			linesize = blocksize;
+> +		} else {
+> +			/* Fall back to known size */
+> +			linesize = CACHE_LINE_SIZE;
+> +		}
+> +	}
 
-~~ When things go utterly wrong vim users can always type :help! ~~
+Maybe add a warning for the last fallback?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	/* This is the PL3x0 case */
+> +	if (max_associativity == 16 && (assoc != 8 && assoc != 16)) {
+> +		pr_err("L2C OF: cache setting yield illegal associativity\n");
+> +		pr_err("L2C OF: %d calculated, only 8 and 16 legal\n", assoc);
+> +		return;
+> +	}
+
+I'd rather see another function argument for the minimum associativity
+here. We have a few other cache controllers that are partially compatible
+with l2x0 (tauros3, aurora, bcm11351) and one of these or one we might
+add in the future could support a maximum of 16 but also some other sizes
+below 8.
+
+> +	/*
+> +	 * Special checks for the PL310 that only has two settings and
+> +	 * cannot be set to fully associative.
+> +	 */
+> +	if (max_associativity == 16) {
+> +		if (assoc == 16)
+> +			val |= L310_AUX_CTRL_ASSOCIATIVITY_16;
+> +		/* Else bit is left zero == 8 way associativity */
+> +	} else {
+> +		val |= (assoc << L2X0_AUX_CTRL_ASSOC_SHIFT);
+> +	}
+
+What happens if we set the bit for assoc=8 on pl310? Is that
+defined to be ignored or does it have to be zero?
+
+> +	switch (set_size >> 10) {
+> +	case 512:
+> +		set_size_bits = 6;
+> +		break;
+> +	case 256:
+> +		set_size_bits = 5;
+> +		break;
+> +	case 128:
+> +		set_size_bits = 4;
+> +		break;
+> +	case 64:
+> +		set_size_bits = 3;
+> +		break;
+> +	case 32:
+> +		set_size_bits = 2;
+> +		break;
+> +	case 16:
+> +		set_size_bits = 1;
+> +		break;
+> +	default:
+> +		pr_err("L2C OF: cache way size: %d KB is not mapped\n",
+> +		       way_size);
+> +		break;
+> +	}
+> +
+> +	/*
+> +	 * The l2x0 TRMs call this size "way size" but that is incorrect:
+> +	 * the thing being configured in these register bits is actually
+> +	 * the cache set size, so the variable here has the right name
+> +	 * but the register bit definitions following the TRM are not
+> +	 * in archaic naming.
+> +	 */
+
+No, I think actually the comment and the variable name are wrong here,
+and the TRM is right. I'm surprised you get the right results out of
+this. The set_size should be a relatively small number, e.g. 256 bytes
+in case of an 8-way associative cache with 32 byte lines. What is the
+pr_debug output and the properties you pass in for your example system?
+
+	Arnd
