@@ -1,500 +1,133 @@
-From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3] media: spi: Add support for LMH0395
-Date: Tue,  9 Sep 2014 17:51:25 +0200
-Message-ID: <1410277885-3996-1-git-send-email-jean-michel.hautbois@vodalys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v9 5/8] drivers: cpuidle: implement DT based idle states
+ infrastructure
+Date: Tue, 9 Sep 2014 16:51:50 +0100
+Message-ID: <20140909155150.GB4948@e102568-lin.cambridge.arm.com>
+References: <1409938498-17984-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1409938498-17984-6-git-send-email-lorenzo.pieralisi@arm.com>
+ <7hlhpxygzv.fsf@paris.lan>
+ <20140905212908.GA28626@e102568-lin.cambridge.arm.com>
+ <7hoauqw1c2.fsf@paris.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <7hoauqw1c2.fsf@paris.lan>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@ker>
 List-Id: devicetree@vger.kernel.org
 
-This device is a SPI based device from TI.
-It is a 3 Gbps HD/SD SDI Dual Output Low Power
-Extended Reach Adaptive Cable Equalizer.
+On Mon, Sep 08, 2014 at 04:58:53PM +0100, Kevin Hilman wrote:
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+> 
+> > On Fri, Sep 05, 2014 at 09:00:52PM +0100, Kevin Hilman wrote:
+> >> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+> >> 
+> >> > On most common ARM systems, the low-power states a CPU can be put into are
+> >> > not discoverable in HW and require device tree bindings to describe
+> >> > power down suspend operations and idle states parameters.
+> >> >
+> >> > In order to enable DT based idle states and configure idle drivers, this
+> >> > patch implements the bulk infrastructure required to parse the device tree
+> >> > idle states bindings and initialize the corresponding CPUidle driver states
+> >> > data.
+> >> >
+> >> > The parsing API accepts a start index that defines the first idle state
+> >> > that should be initialized by the parsing code in order to give new and
+> >> > legacy driver flexibility over which states should be parsed using the
+> >> > new DT mechanism.
+> >> >
+> >> > The idle states node(s) is obtained from the phandle list of the first cpu
+> >> > in the driver cpumask;  the kernel checks that the idle state node phandle
+> >> > is the same for all CPUs in the driver cpumask before declaring the idle state
+> >> > as valid and start parsing its content.
+> >> >
+> >> > The idle state enter function pointer is initialized through DT match
+> >> > structures passed in by the CPUidle driver, so that ARM legacy code can
+> >> > cope with platform specific idle entry method based on compatible
+> >> > string matching and the code used to initialize the enter function pointer
+> >> > can be moved to the DT generic layer.
+> >> >
+> >> > Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> >> > Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> >> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> >> 
+> >> [...]
+> >> 
+> >> > +	idle_state->flags = CPUIDLE_FLAG_TIME_VALID;
+> >> > +	if (of_property_read_bool(state_node, "local-timer-stop"))
+> >> > +		idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> >> > +	/*
+> >> > +	 * TODO:
+> >> > +	 *	replace with kstrdup and pointer assignment when name
+> >> > +	 *	and desc become string pointers
+> >> > +	 */
+> >> > +	strncpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN - 1);
+> >> > +	strncpy(idle_state->desc, state_node->name, CPUIDLE_DESC_LEN - 1);
+> >> 
+> >> This is a very minor concern, and shouldn't hold back this series,
+> >> but...
+> >> 
+> >> I was playing with this series in order to test out the qcom cpuidle
+> >> driver from Lina, and noticed that the state name and descriptions were
+> >> not terribly helpful:
+> >> 
+> >> /sys/devices/system/cpu/cpu0/cpuidle # cat state?/name
+> >> cpu-idle-state-
+> >> cpu-idle-state-
+> >> /sys/devices/system/cpu/cpu0/cpuidle # cat state?/desc
+> >> cpu-idle-state-0
+> >> cpu-idle-state-1
+> >> 
+> >> Turns out these strings come from the node name itself, and truncated in
+> >> the case of state->name, but this can be fixed in the DTS itself (c.f.
+> >> reply to Lina's driver.)
+> >> 
+> >> However, seeing that the node name is used to populate both the
+> >> state->name and ->, made me wonder if there should better way to set the
+> >> state->desc field to a more useful string.  Tools like powertop actually
+> >> use that field and it can be quite useful.
+> >
+> > Well, the truncation problem will be solved when those strings will be
+> > kdup'ed, so for the name I think there is not a problem, copying the
+> > state node is fine waiting for those strings to become pointers.
+> >
+> > For desc, there are four options:
+> >
+> > (1) enumerating idle states (but that's worse than copying the name into
+> >     desc since on ARM idle-state{1,2,3...} means nothing)
+> > (2) copying the idle state node compatible string into desc
+> > (3) Add an optional property to the DT bindings to describe the state
+> > (4) Leave code as it is
+> >
+> > (3) I am not extremely keen at this stage to re-patch the DT bindings,
+> > it has been an awful lot of work to make everyone agree so I would avoid
+> > any changes, I hope you understand (and I am not even sure DT maintainers
+> > would accept that, so even less keen on changing the DT bindings at this
+> > stage).
+> >
+> > (2) I am not sure it will clarify the description much.
+> >
+> > (1) I would rule it out. So either we accept that the name can be
+> > extended in length (that's going to be the case since we will
+> > dynamically allocate the string so there will be no truncation, to
+> > a reasonable extent) so (4) is fine, or we merge this code and I
+> > will take care of pushing for (3) in a separate patch and copy the resulting
+> > description into desc (if that change does not get NACK'ed).
+> >
+> > I would really want to see this code in the mailine asap since it is
+> > groundwork for all future CPUidle generalisation, I hope that what I am
+> > saying above is acceptable, please let me know what you think.
+> 
+> Agreed, as I stated when I rasied this issue, it's a very minor concern
+> and I don't think it should hold back this series.
+> 
+> After this series is merged, I think approach (3) is probably the best
+> and should be done as a follow-up patch/series.
 
-LMH0395 enables the use of up to two outputs.
-These can be configured using DT.
+I agree and that's what I will do, thank you Kevin (and Mark).
 
-Controls should be accessible from userspace too.
-This will have to be done later.
+Lorenzo
 
-Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/media/spi/lmh0395.txt      |  44 +++
- MAINTAINERS                                        |   6 +
- drivers/media/spi/Kconfig                          |  14 +
- drivers/media/spi/Makefile                         |   1 +
- drivers/media/spi/lmh0395.c                        | 360 +++++++++++++++++++++
- 5 files changed, 425 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/spi/lmh0395.txt
- create mode 100644 drivers/media/spi/Kconfig
- create mode 100644 drivers/media/spi/Makefile
- create mode 100644 drivers/media/spi/lmh0395.c
-
-diff --git a/Documentation/devicetree/bindings/media/spi/lmh0395.txt b/Documentation/devicetree/bindings/media/spi/lmh0395.txt
-new file mode 100644
-index 0000000..0a640a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/spi/lmh0395.txt
-@@ -0,0 +1,44 @@
-+* Texas Instruments lmh0395 3G HD/SD SDI equalizer
-+
-+The LMH0395 3 Gbps HD/SD SDI Dual Output Low Power Extended Reach Adaptive
-+Cable Equalizer is designed to equalize data transmitted over cable (or any
-+media with similar dispersive loss characteristics).
-+The equalizer operates over a wide range of data rates from 125 Mbps to 2.97 Gbps
-+and supports SMPTE 424M, SMPTE 292M, SMPTE344M, SMPTE 259M, and DVB-ASI standards.
-+
-+Required Properties :
-+- compatible: Must be "ti,lmh0395"
-+
-+The device node must contain one 'port' child node per device input and output
-+port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-+are numbered as follows.
-+
-+  Port			LMH0395
-+------------------------------------------------------------
-+  SDI input		0
-+  SDI output		1,2
-+
-+Example:
-+
-+ecspi@02010000 {
-+	...
-+	...
-+
-+	lmh0395@1 {
-+		compatible = "ti,lmh0395";
-+		reg = <1>;
-+		spi-max-frequency = <20000000>;
-+		ports {
-+			port@0 {
-+				reg = <0>;
-+				sdi0_in: endpoint {};
-+			};
-+			port@1 {
-+				reg=<1>;
-+				sdi0_out0: endpoint {};
-+			};
-+		};
-+	};
-+	...
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cf24bb5..ca42b9e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9141,6 +9141,12 @@ S:	Maintained
- F:	sound/soc/codecs/lm49453*
- F:	sound/soc/codecs/isabelle*
- 
-+TI LMH0395 DRIVER
-+M:	Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-+L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	drivers/media/spi/lmh0395*
-+
- TI LP855x BACKLIGHT DRIVER
- M:	Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
- S:	Maintained
-diff --git a/drivers/media/spi/Kconfig b/drivers/media/spi/Kconfig
-new file mode 100644
-index 0000000..291e7ea
---- /dev/null
-+++ b/drivers/media/spi/Kconfig
-@@ -0,0 +1,14 @@
-+if VIDEO_V4L2
-+
-+config VIDEO_LMH0395
-+	tristate "LMH0395 equalizer"
-+	depends on VIDEO_V4L2 && SPI && MEDIA_CONTROLLER
-+	---help---
-+	  Support for TI LMH0395 3G HD/SD SDI Dual Output Low Power
-+	  Extended Reach Adaptive Cable Equalizer.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called lmh0395.
-+
-+
-+endif
-diff --git a/drivers/media/spi/Makefile b/drivers/media/spi/Makefile
-new file mode 100644
-index 0000000..6c587e5
---- /dev/null
-+++ b/drivers/media/spi/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_VIDEO_LMH0395)	+= lmh0395.o
-diff --git a/drivers/media/spi/lmh0395.c b/drivers/media/spi/lmh0395.c
-new file mode 100644
-index 0000000..fe5c5f8
---- /dev/null
-+++ b/drivers/media/spi/lmh0395.c
-@@ -0,0 +1,360 @@
-+/*
-+ * LMH0395 SPI driver.
-+ * Copyright (C) 2014  Jean-Michel Hautbois
-+ *
-+ * 3G HD/SD SDI Dual Output Low Power Extended Reach Adaptive Cable Equalizer
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/ioctl.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/types.h>
-+#include <linux/slab.h>
-+#include <linux/uaccess.h>
-+#include <linux/spi/spi.h>
-+#include <linux/videodev2.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-of.h>
-+
-+static int debug;
-+module_param(debug, int, 0644);
-+MODULE_PARM_DESC(debug, "debug level (0-1)");
-+
-+#define	LMH0395_SPI_CMD_WRITE	0x00
-+#define	LMH0395_SPI_CMD_READ	0x80
-+
-+/* Registers of LMH0395 */
-+#define LMH0395_GENERAL_CTRL		0x00
-+#define LMH0395_OUTPUT_DRIVER		0x01
-+#define LMH0395_LAUNCH_AMP_CTRL		0x02
-+#define LMH0395_MUTE_REF		0x03
-+#define LMH0395_DEVICE_ID		0x04
-+#define	LMH0395_RATE_INDICATOR		0x05
-+#define	LMH0395_CABLE_LENGTH_INDICATOR	0x06
-+#define	LMH0395_LAUNCH_AMP_INDICATION	0x07
-+
-+/* This is a one input, dual output device */
-+#define LMH0395_SDI_INPUT	0
-+#define LMH0395_SDI_OUT0	1
-+#define LMH0395_SDI_OUT1	2
-+
-+#define LMH0395_PADS_NUM	3
-+
-+/* Register LMH0395_MUTE_REF bits [7:6] */
-+enum lmh0395_output_type {
-+	LMH0395_OUTPUT_TYPE_NONE,
-+	LMH0395_OUTPUT_TYPE_SDO0,
-+	LMH0395_OUTPUT_TYPE_SDO1,
-+	LMH0395_OUTPUT_TYPE_BOTH
-+};
-+
-+static const char * const output_strs[] = {
-+	"No Output Driver",
-+	"Output Driver 0",
-+	"Output Driver 1",
-+	"Output Driver 0+1",
-+};
-+
-+
-+/* spi implementation */
-+
-+static int lmh0395_spi_write(struct spi_device *spi, u8 reg, u8 data)
-+{
-+	int err;
-+	u8 cmd[2];
-+
-+	cmd[0] = LMH0395_SPI_CMD_WRITE | reg;
-+	cmd[1] = data;
-+
-+	err = spi_write(spi, cmd, 2);
-+	if (err < 0) {
-+		dev_err(&spi->dev, "SPI failed to select reg\n");
-+		return err;
-+	}
-+
-+	return err;
-+}
-+
-+static int lmh0395_spi_read(struct spi_device *spi, u8 reg, u8 *data)
-+{
-+	int err;
-+	u8 cmd[2];
-+	u8 read_data[2];
-+
-+	cmd[0] = LMH0395_SPI_CMD_READ | reg;
-+	cmd[1] = 0xFF;
-+
-+	err = spi_write(spi, cmd, 2);
-+	if (err < 0) {
-+		dev_err(&spi->dev, "SPI failed to select reg\n");
-+		return err;
-+	}
-+
-+	err = spi_read(spi, read_data, 2);
-+	if (err < 0) {
-+		dev_err(&spi->dev, "SPI failed to read reg\n");
-+		return err;
-+	}
-+	/* The first 8 bits is the adress used, drop it */
-+	*data = read_data[1];
-+
-+	return err;
-+}
-+
-+struct lmh0395_state {
-+	struct v4l2_subdev sd;
-+	struct media_pad pads[LMH0395_PADS_NUM];
-+	enum lmh0395_output_type output_type;
-+};
-+
-+static inline struct lmh0395_state *to_state(struct v4l2_subdev *sd)
-+{
-+	return container_of(sd, struct lmh0395_state, sd);
-+}
-+
-+static int lmh0395_set_output_type(struct v4l2_subdev *sd, u32 output)
-+{
-+	struct lmh0395_state *state = to_state(sd);
-+	struct spi_device *spi = v4l2_get_subdevdata(sd);
-+	u8 muteref_reg;
-+
-+	switch (output) {
-+	case LMH0395_OUTPUT_TYPE_SDO0:
-+		lmh0395_spi_read(spi, LMH0395_MUTE_REF, &muteref_reg);
-+		muteref_reg &= ~(1 << 6);
-+		break;
-+	case LMH0395_OUTPUT_TYPE_SDO1:
-+		lmh0395_spi_read(spi, LMH0395_MUTE_REF, &muteref_reg);
-+		muteref_reg &= (1 << 7);
-+		break;
-+	case LMH0395_OUTPUT_TYPE_BOTH:
-+		lmh0395_spi_read(spi, LMH0395_MUTE_REF, &muteref_reg);
-+		muteref_reg |= 0x00 << 6;
-+		break;
-+	case LMH0395_OUTPUT_TYPE_NONE:
-+		lmh0395_spi_read(spi, LMH0395_MUTE_REF, &muteref_reg);
-+		muteref_reg |= 0x11 << 6;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	v4l2_dbg(1, debug, sd, "Selecting %s output type\n",
-+					output_strs[output]);
-+
-+	/* The following settings will have to be dynamic */
-+	muteref_reg &= ~(0x1F); /* Muteref enable */
-+	muteref_reg |= 1 << 5; /* Digital Muteref */
-+
-+	lmh0395_spi_write(spi, LMH0395_MUTE_REF, muteref_reg);
-+
-+	state->output_type = output;
-+	return 0;
-+
-+}
-+
-+static int lmh0395_get_rate(struct v4l2_subdev *sd, u8 *rate)
-+{
-+	struct spi_device *spi = v4l2_get_subdevdata(sd);
-+	int err;
-+	u8 ctrl;
-+
-+	err = lmh0395_spi_read(spi, LMH0395_RATE_INDICATOR, &ctrl);
-+	if (err < 0)
-+		return err;
-+
-+	*rate = ctrl & 0x20;
-+	v4l2_dbg(1, debug, sd, "Rate : %s\n", (ctrl & 0x20)?"3G/HD":"SD");
-+	return 0;
-+}
-+
-+static int lmh0395_get_cable_length(struct v4l2_subdev *sd, u8 rate)
-+{
-+	struct spi_device *spi = v4l2_get_subdevdata(sd);
-+	u8 length;
-+	u8 cli;
-+	int err;
-+
-+	err = lmh0395_spi_read(spi, LMH0395_CABLE_LENGTH_INDICATOR, &cli);
-+	if (err < 0)
-+		return err;
-+
-+	/* The cable length indicator (CLI) provides an indication of the
-+	 * length of the cable attached to input. CLI is accessible via bits
-+	 * [7:0] of SPI register 06h.
-+	 * The 8-bit setting ranges in decimal value from 0 to 247
-+	 * ("00000000" to "11110111" binary), corresponding to 0 to 400m of
-+	 * Belden 1694A cable.
-+	 * For 3G and HD input, CLI is 1.25m per step.
-+	 * For SD input, CLI is 1.25m per step, less 20m, from 0 to 191 decimal
-+	 * and 3.5m per step from 192 to 247 decimal.
-+	 */
-+
-+	length = cli*5/4;
-+	if (rate == 0) {
-+		if (cli <= 191)
-+			length -= 20;
-+		else
-+			length = ((191*5/4)-20) + ((cli-191)*7/2);
-+
-+	}
-+	v4l2_dbg(1, debug, sd, "Length estimated (BELDEN 1694A cables) : %dm\n",
-+			length);
-+	return 0;
-+}
-+
-+static int lmh0395_get_control(struct v4l2_subdev *sd)
-+{
-+	int err;
-+	struct spi_device *spi = v4l2_get_subdevdata(sd);
-+	u8 ctrl;
-+	u8 rate;
-+
-+	err = lmh0395_spi_read(spi, LMH0395_GENERAL_CTRL, &ctrl);
-+	if (err < 0)
-+		return err;
-+
-+	if (ctrl & 0x80) {
-+		v4l2_dbg(1, debug, sd, "Carrier detected\n");
-+		lmh0395_get_rate(sd, &rate);
-+		lmh0395_get_cable_length(sd, rate);
-+	}
-+	return 0;
-+}
-+
-+static int lmh0395_s_routing(struct v4l2_subdev *sd, u32 input, u32 output,
-+				u32 config)
-+{
-+	struct lmh0395_state *state = to_state(sd);
-+	int err = 0;
-+
-+	if (state->output_type != output)
-+		err = lmh0395_set_output_type(sd, output);
-+
-+	return err;
-+}
-+
-+static const struct v4l2_subdev_video_ops lmh0395_video_ops = {
-+	.s_routing = lmh0395_s_routing,
-+};
-+
-+static const struct v4l2_subdev_ops lmh0395_ops = {
-+	.video = &lmh0395_video_ops,
-+};
-+
-+static const struct spi_device_id lmh0395_id[] = {
-+	{ "lmh0395", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(spi, lmh0395_id);
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id lmh0395_of_match[] = {
-+	{.compatible = "ti,lmh0395", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, lmh0395_of_match);
-+#endif
-+
-+static int lmh0395_probe(struct spi_device *spi)
-+{
-+	u8 device_id;
-+
-+	struct lmh0395_state *state;
-+	struct v4l2_subdev *sd;
-+	int err;
-+
-+	err = lmh0395_spi_read(spi, LMH0395_DEVICE_ID, &device_id);
-+	if (err < 0)
-+		return err;
-+
-+	dev_dbg(&spi->dev, "device_id 0x%x\n", device_id);
-+
-+	/* Now that the device is here, let's init V4L2 */
-+	state = devm_kzalloc(&spi->dev, sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return -ENOMEM;
-+
-+	sd = &state->sd;
-+	v4l2_spi_subdev_init(sd, spi, &lmh0395_ops);
-+	state->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+
-+	state->pads[LMH0395_SDI_INPUT].flags = MEDIA_PAD_FL_SINK;
-+	state->pads[LMH0395_SDI_OUT0].flags = MEDIA_PAD_FL_SOURCE;
-+	state->pads[LMH0395_SDI_OUT1].flags = MEDIA_PAD_FL_SOURCE;
-+	err = media_entity_init(&sd->entity, LMH0395_PADS_NUM, state->pads, 0);
-+	if (err)
-+		return err;
-+
-+	err = v4l2_async_register_subdev(sd);
-+	if (err < 0) {
-+		media_entity_cleanup(&sd->entity);
-+		return err;
-+	}
-+
-+	v4l2_dbg(1, debug, sd, "Configuring equalizer\n");
-+	lmh0395_get_control(sd);
-+	/* Default is no output */
-+	lmh0395_set_output_type(sd, LMH0395_OUTPUT_TYPE_NONE);
-+
-+	if (IS_ENABLED(CONFIG_OF) && spi->dev.of_node) {
-+		const struct of_device_id *oid;
-+		struct device_node *n;
-+		struct of_endpoint ep;
-+
-+		oid = of_match_node(lmh0395_of_match, spi->dev.of_node);
-+		n = NULL;
-+		while ((n = of_graph_get_next_endpoint(spi->dev.of_node, n))
-+								!= NULL) {
-+			of_graph_parse_endpoint(n, &ep);
-+			dev_dbg(&spi->dev, "endpoint %d on port %d\n",
-+						ep.id, ep.port);
-+			/* port 1 => SDO0 */
-+			if (ep.port >= 1)
-+				lmh0395_set_output_type(sd, ep.port);
-+			of_node_put(n);
-+		}
-+	} else {
-+		dev_dbg(&spi->dev, "No DT configuration\n");
-+	}
-+
-+	dev_dbg(&spi->dev, "device probed\n");
-+
-+	return 0;
-+}
-+
-+static int lmh0395_remove(struct spi_device *spi)
-+{
-+	struct v4l2_subdev *sd = spi_get_drvdata(spi);
-+
-+	v4l2_async_unregister_subdev(sd);
-+	media_entity_cleanup(&sd->entity);
-+	return 0;
-+}
-+
-+
-+static struct spi_driver lmh0395_driver = {
-+	.driver = {
-+		.of_match_table = of_match_ptr(lmh0395_of_match),
-+		.name = "lmh0395",
-+		.owner = THIS_MODULE,
-+	},
-+	.probe = lmh0395_probe,
-+	.remove = lmh0395_remove,
-+	.id_table = lmh0395_id,
-+};
-+
-+module_spi_driver(lmh0395_driver);
-+
-+MODULE_DESCRIPTION("spi device driver for LMH0395 equalizer");
-+MODULE_AUTHOR("Jean-Michel Hautbois");
-+MODULE_LICENSE("GPL");
--- 
-2.0.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
