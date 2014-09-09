@@ -1,80 +1,130 @@
-From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] phy: miphy28lp: Add Device Tree bindings for the MiPHY28lp
-Date: Tue, 9 Sep 2014 11:24:50 +0200
-Message-ID: <CAG374jDLuwxYfxqY9UGt7+5gqo7eZxFn-=ehEpRJQfyCeWG3fQ@mail.gmail.com>
-References: <1409758637-28654-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1409758637-28654-2-git-send-email-gabriel.fernandez@linaro.org>
-	<540DBE43.50403@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] ARM: l2c: parse cache properties from ePAPR definitions
+Date: Tue, 9 Sep 2014 11:27:55 +0200
+Message-ID: <CACRpkdY8314pTi2nw9gXmFJvmr6sdsyi+1iSUFrs2eVVEZ=3RA@mail.gmail.com>
+References: <1410246633-23407-1-git-send-email-linus.walleij@linaro.org>
+	<3750746.eYplbZAGky@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <540DBE43.50403-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, alexandre torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <3750746.eYplbZAGky@wuerfel>
+Sender: linux-leds-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+On Tue, Sep 9, 2014 at 9:42 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 09 September 2014 09:10:33 Linus Walleij wrote:
 
-ok will be fix to v3
+> I wonder if we should add another property here that tells
+> the OS to override the aux register setting for way-size
+> and associativity. In theory the properties above are meant
+> to be there for any cache, but I don't think we want to actually
+> re-compute the auxctrl register values based on this all the
+> time.
 
-BR
+OK added that.
 
-Gabriel
-
-On 8 September 2014 16:33, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> Hi,
+>> +     /* All these l2 caches have the same line = block size actually */
+>> +     if (!linesize) {
+>> +             if (blocksize) {
+>> +                     /* If linesize if not given, it is equal to blocksize */
+>> +                     linesize = blocksize;
+>> +             } else {
+>> +                     /* Fall back to known size */
+>> +                     linesize = CACHE_LINE_SIZE;
+>> +             }
+>> +     }
 >
-> On Wednesday 03 September 2014 09:07 PM, Gabriel FERNANDEZ wrote:
->> The MiPHY28lp is a Generic PHY which can serve various SATA or PCIe
->> or USB3 devices.
->>
->> Signed-off-by: alexandre torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
->> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/phy/phy-miphy28lp.txt      | 126 +++++++++++++++++++++
->>  1 file changed, 126 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
->> new file mode 100644
->> index 0000000..5e307af
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/phy-miphy28lp.txt
->> @@ -0,0 +1,126 @@
->> +STMicroelectronics STi MIPHY28LP PHY binding
->> +============================================
->> +
->> +This binding describes a miphy device that is used to control PHY hardware
->> +for SATA, PCIe or USB3.
->> +
->> +Required properties (controller (parent) node):
->> +- compatible : Should be "st,miphy28lp-phy"
->> +- st,syscfg  : Should be a phandle of the system configuration register group
->> +               which contain the SATA, PCIe or USB3 mode setting bits
->> +
->> +Required nodes       :  A sub-node is required for each channel the controller
->> +                provides. Address range information including the usual
->> +                'reg' and 'reg-names' properties are used inside these
->> +                nodes to describe the controller's topology. These nodes
->> +                are translated by the driver's .xlate() function.
->> +
->> +Required properties (port (child) node):
->> +- #phy-cells : Should be 1 (See second example)
->> +               Cell after port phandle is device type from:
->> +                     - MIPHY_TYPE_SATA
->> +                     - MIPHY_TYPE_PCI
->> +                     - MIPHY_TYPE_USB3
->> +- reg                : Address and length of the register set for the device
->> +- reg-names  : The names of the register addresses corresponding to the registers
->> +               filled in "reg". Is can also contain the offset of the system configuration
+> Maybe add a warning for the last fallback?
+
+OK.
+
+>> +     /* This is the PL3x0 case */
+>> +     if (max_associativity == 16 && (assoc != 8 && assoc != 16)) {
+>> +             pr_err("L2C OF: cache setting yield illegal associativity\n");
+>> +             pr_err("L2C OF: %d calculated, only 8 and 16 legal\n", assoc);
+>> +             return;
+>> +     }
 >
-> %s/Is/It
+> I'd rather see another function argument for the minimum associativity
+> here. We have a few other cache controllers that are partially compatible
+> with l2x0 (tauros3, aurora, bcm11351) and one of these or one we might
+> add in the future could support a maximum of 16 but also some other sizes
+> below 8.
+
+Well it's more like a list in that case. PL310 supports 8 or 16 way
+associativity, not 7, 9, 10...
+
+>> +     /*
+>> +      * Special checks for the PL310 that only has two settings and
+>> +      * cannot be set to fully associative.
+>> +      */
+>> +     if (max_associativity == 16) {
+>> +             if (assoc == 16)
+>> +                     val |= L310_AUX_CTRL_ASSOCIATIVITY_16;
+>> +             /* Else bit is left zero == 8 way associativity */
+>> +     } else {
+>> +             val |= (assoc << L2X0_AUX_CTRL_ASSOC_SHIFT);
+>> +     }
 >
-> Thanks
-> Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> What happens if we set the bit for assoc=8 on pl310? Is that
+> defined to be ignored or does it have to be zero?
+
+Only one single bit selects associativity on PL310.
+
+Bit 16 = 0 -> 8-way associativity
+Bit 16 = 1 -> 16-way associativity
+
+On L220 there are 1,2,3,4,5,6,7,8 ways of associativity.
+
+>> +     /*
+>> +      * The l2x0 TRMs call this size "way size" but that is incorrect:
+>> +      * the thing being configured in these register bits is actually
+>> +      * the cache set size, so the variable here has the right name
+>> +      * but the register bit definitions following the TRM are not
+>> +      * in archaic naming.
+>> +      */
+>
+> No, I think actually the comment and the variable name are wrong here,
+> and the TRM is right. I'm surprised you get the right results out of
+> this. The set_size should be a relatively small number, e.g. 256 bytes
+> in case of an 8-way associative cache with 32 byte lines. What is the
+> pr_debug output and the properties you pass in for your example system?
+
+It looks like that:
+
+L2C OF: override cache size: 131072 bytes (128KB)
+L2C OF: override set size: 16384 bytes (16 KB)
+L2C OF: override line size: 32 bytes
+L2C OF: override ways: 512 ways
+L2C OF: override way size: 256 bytes
+L2C OF: override associativity: 8
+L2C: DT/platform modifies aux control register: 0x02020fff -> 0x02030fff
+L2C-220 cache controller enabled, 8 ways, 128 kB
+L2C-220: CACHE_ID 0x41000486, AUX_CTRL 0x06030fff
+
+Based on that device tree:
+
+        L2: l2-cache {
+            compatible = "arm,l220-cache";
+            reg = <0x10110000 0x1000>;
+            interrupt-parent = <&intc_dc1176>;
+            interrupts = <0 13 IRQ_TYPE_LEVEL_HIGH>;
+            cache-unified;
+            cache-level = <2>;
+            /*
+             * Override default cache size, sets and
+             * associativity as these may be erroneously set
+             * up by boot loader(s).
+             */
+            arm,override-auxreg;
+            cache-size = <131072>; // 128kB
+            cache-sets = <8>;
+            cache-line-size = <32>;
+        };
+
+But I'll take a closer look to make sure we get this right.
+
+Yours,
+Linus Walleij
