@@ -1,50 +1,129 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 1/3 v2] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Tue, 9 Sep 2014 01:50:42 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E983296@SHSMSX101.ccr.corp.intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
- <4656BEB6164FC34F8171C6538F1A595B2E9829DA@SHSMSX101.ccr.corp.intel.com>
- <1409918522.30155.89.camel@intel.com> <31986364.cn091cmIXU@wuerfel>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
+Date: Tue, 09 Sep 2014 10:27:17 +0800
+Message-ID: <1410229637.8085.158.camel@rzhang1-toshiba>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
+	 <1409710239-19941-3-git-send-email-caesar.wang@rock-chips.com>
+	 <11280986.L6lv82O8Qv@diego> <5407BA10.2030402@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <31986364.cn091cmIXU@wuerfel>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "atull@opensource.altera.com" <atull@opensource.altera.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <5407BA10.2030402@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, edubezval@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-> On Friday 05 September 2014 12:02:01 Shevchenko, Andriy wrote:
-> > > irq = irq_of_parse_and_map(node, 0); If (!irq) {
-> > > pp->irq = -1;
-> > > return;
-> > > } else {
-> > > pp->irq = irq;
-> > > }
-> > > Then the code looks strange.
-> > >
-> > > How do you think?
+On Thu, 2014-09-04 at 09:02 +0800, Caesar Wang wrote:
+> =E5=9C=A8 2014=E5=B9=B409=E6=9C=8803=E6=97=A5 16:07, Heiko St=C3=BCbn=
+er =E5=86=99=E9=81=93:
+> > Am Mittwoch, 3. September 2014, 10:10:37 schrieb Caesar Wang:
+> >> This add the necessary binding documentation for the thermal
+> >> found on Rockchip SoCs
+> >>
+> >> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> >> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> >> ---
+> >>   .../devicetree/bindings/thermal/rockchip-thermal.txt | 20
+> >> ++++++++++++++++++++ 1 file changed, 20 insertions(+)
+> >>   create mode 100644
+> >> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-th=
+ermal.txt
+> >> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt n=
+ew file
+> >> mode 100644
+> >> index 0000000..1ed4d4c
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.t=
+xt
+> >> @@ -0,0 +1,20 @@
+> >> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+> >> +
+> >> +Required properties:
+> >> +- compatible: "rockchip,rk3288-tsadc"
+> >> +- reg: physical base address of the controller and length of memo=
+ry mapped
+> >> +       region.
+> >> +- interrupts: The interrupt number to the cpu. The interrupt spec=
+ifier
+> >> format +	      depends on the interrupt controller.
+> >> +- clocks: Must contain an entry for each entry in clock-names.
+> >> +- clock-names: Shall be "tsadc" for the converter-clock, and "apb=
+_pclk" for
+> >> +	       the peripheral clock.
+> > You're using the passive-temp, critical-temp and force-shut-temp pr=
+operties in
+> > your driver without declaring them here.
+>=20
+> frankly,the about are need be declared. but  there are 4 types[0] for=
+=20
+> trip in thermal framework,
+> there is no force-shut for me. So I want to change it three additiona=
+l=20
+> properties in [PATCH V4 4/4],
+>=20
+>=20
+> [0]
+> {
+>      THERMAL_TRIP_CRITICAL,
+>      THERMAL_TRIP_HOT,
+>      THERMAL_TRIP_PASSIVE,
+>      THERMAL_TRIP_ACTIVE,
+> }
+>=20
+this sounds reasonable to me.
+
+> > But more importantly, please use the generic trip-points for this. =
+I guess it
+> > shouldn't be a problem to introduce a "forced-shutdown" trippoint [=
+0] for the
+> > additional trip-point you have - thermal maintainers, please shout =
+if I'm
+> > wrong :-)
+>=20
+what is the difference between a critical trip point and a
+"forced-shutdown" trip point?
+Thermal core will do a shutdown in case the critical trip point is
+triggered.
+
+thanks,
+rui
+> It's a good option.
+> I can send a patch,but I don't know whether the thermal maintainers w=
+ill=20
+> accept it.
+>=20
+> Maybe,they have a better way to suggest it.:-)
+>=20
+>=20
+> PS:I will sent a new patch If I still have no received their suggesti=
+ons=20
+> in two days.
+>=20
 > >
-> > If I understood correctly you messed up with hwirq vs. virq.
-> > Otherwise you have mention that you are using virq everywhere (I guess
-> > you may rename the field in the structure), but in this case the field
-> > in the platform_data looks a bit strange.
-> 
-> The field in platform_data should be the mapped virtual irq number, it makes no
-> sense to use the hwirq unless you also add a pointer to the domain in which
-> that hwirq exists.
-> 
-> Also the output of irq_of_parse_and_map() is a mapped irq, as the name
-> suggests.
-> 
-I agree with Arnd. Here, the 'irq' is 'virq'.
-Andriy, you may be confused by the code like 'irq_create_mapping'. For Quark case, it has 8 GPIO pins, and each pin can trigger
-interrupt, but all these interrupts are triggered by PCI irq which is shared. The 'irq' in pdata is PCI irq. As all GPIO interrupts connect to the PCI
-irq, once the GPIO interrupt is triggered, and the PCI irq handler will be called 'dwapb_irq_handler_mfd'. And in 'dwapb_do_irq', it will read the
-interrupt register to see the interrupt is triggered by which GPIO pin, and 'irq_create_mapping' is for this case.
+> > Heiko
+> >
+> >
+> > [0] in a separate patch, changing
+> > - thermal_trip_type enum in include/linux/thermal.h
+> > - trip_types mapping in drivers/thermal/of-thermal.c
+> > - Documentation/devicetree/bindings/thermal/thermal.txt
+> >
+> >> +
+> >> +Example:
+> >> +tsadc: tsadc@ff280000 {
+> >> +	compatible =3D "rockchip,rk3288-tsadc";
+> >> +	reg =3D <0xff280000 0x100>;
+> >> +	interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> >> +	clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+> >> +	clock-names =3D "tsadc", "apb_pclk";
+> >> +};
+> >
+> >
+> >
+>=20
 
 
-.
