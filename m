@@ -1,323 +1,80 @@
-From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v7] ethernet: arc: Add support for Rockchip SoC layer device tree bindings
-Date: Tue,  9 Sep 2014 10:15:27 +0000
-Message-ID: <1410257727-22497-1-git-send-email-romain.perier@gmail.com>
+From: Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/4 v3] The Designware GPIO Supporting
+Date: Tue,  9 Sep 2014 11:07:57 -0700
+Message-ID: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boon Leong Ong <boon.leong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hock Leong Kweh <hock.leong.kweh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Mika Westerberg <mika.westerberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andriy Shevchenko <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alvin Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch defines a platform glue layer for Rockchip SoCs which
-support arc-emac driver. It ensures that regulator for the rmii is on
-before trying to connect to the ethernet controller. It applies right
-speed and mode changes to the grf when ethernet settings change.
+Hi,
+These patches are for Intel Quark X1000 designware GPIO supporting. The first
+patch enables the Synopsys DesignWare APB GPIO driver to support the MFD device.
+And the Quark designware GPIO controller is registered as MFD device,
+because Quark exports a single PCI device with both GPIO and I2C functions.
+It is about reviewing the GPIO changes in gpio-dwapb, and in near future,
+the Quark I2C driver and the MFD driver that binds these GPIO & I2C
+functions will be sent subsequently. The second patch replaces all
+'readl&writel' with 'dwapb_read'&'dwapb_write. The third patch enables the gpio
+'debounce' feature. And the fourth patch enables the power management.
 
-Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/net/ethernet/arc/Kconfig         |  10 ++
- drivers/net/ethernet/arc/Makefile        |   1 +
- drivers/net/ethernet/arc/emac.h          |   4 +-
- drivers/net/ethernet/arc/emac_main.c     |   2 +
- drivers/net/ethernet/arc/emac_rockchip.c | 229 +++++++++++++++++++++++++++++++
- 5 files changed, 245 insertions(+), 1 deletion(-)
- create mode 100644 drivers/net/ethernet/arc/emac_rockchip.c
+v3:
+ Split [PATCH 2/3] into two patches [PATCH 2/4] and [PATCH 3/4],
+ and now inlucde 4 patches.
 
-diff --git a/drivers/net/ethernet/arc/Kconfig b/drivers/net/ethernet/arc/Kconfig
-index 89e04fd..8e262e2 100644
---- a/drivers/net/ethernet/arc/Kconfig
-+++ b/drivers/net/ethernet/arc/Kconfig
-@@ -32,4 +32,14 @@ config ARC_EMAC
- 	  non-standard on-chip ethernet device ARC EMAC 10/100 is used.
- 	  Say Y here if you have such a board.  If unsure, say N.
- 
-+config EMAC_ROCKCHIP
-+	tristate "Rockchip EMAC support"
-+	select ARC_EMAC_CORE
-+	depends on OF_IRQ && OF_NET && REGULATOR
-+	---help---
-+	  Support for Rockchip RK3066/RK3188 EMAC ethernet controllers.
-+	  This selects Rockchip SoC glue layer support for the
-+	  emac device driver. This driver is used for RK3066/RK3188
-+	  EMAC ethernet controller.
-+
- endif # NET_VENDOR_ARC
-diff --git a/drivers/net/ethernet/arc/Makefile b/drivers/net/ethernet/arc/Makefile
-index 241bb80..79108af 100644
---- a/drivers/net/ethernet/arc/Makefile
-+++ b/drivers/net/ethernet/arc/Makefile
-@@ -5,3 +5,4 @@
- arc_emac-objs := emac_main.o emac_mdio.o
- obj-$(CONFIG_ARC_EMAC_CORE) += arc_emac.o
- obj-$(CONFIG_ARC_EMAC) += emac_arc.o
-+obj-$(CONFIG_EMAC_ROCKCHIP) += emac_rockchip.o
-diff --git a/drivers/net/ethernet/arc/emac.h b/drivers/net/ethernet/arc/emac.h
-index eb2ba67..dae1ac3 100644
---- a/drivers/net/ethernet/arc/emac.h
-+++ b/drivers/net/ethernet/arc/emac.h
-@@ -123,9 +123,11 @@ struct buffer_state {
-  * @speed:	PHY's last set speed.
-  */
- struct arc_emac_priv {
--	/* Devices */
- 	const char *drv_name;
- 	const char *drv_version;
-+	void (*set_mac_speed)(void *priv, unsigned int speed);
-+
-+	/* Devices */
- 	struct device *dev;
- 	struct phy_device *phy_dev;
- 	struct mii_bus *bus;
-diff --git a/drivers/net/ethernet/arc/emac_main.c b/drivers/net/ethernet/arc/emac_main.c
-index b35c69e..a08f343 100644
---- a/drivers/net/ethernet/arc/emac_main.c
-+++ b/drivers/net/ethernet/arc/emac_main.c
-@@ -48,6 +48,8 @@ static void arc_emac_adjust_link(struct net_device *ndev)
- 	if (priv->speed != phy_dev->speed) {
- 		priv->speed = phy_dev->speed;
- 		state_changed = 1;
-+		if (priv->set_mac_speed)
-+			priv->set_mac_speed(priv, priv->speed);
- 	}
- 
- 	if (priv->duplex != phy_dev->duplex) {
-diff --git a/drivers/net/ethernet/arc/emac_rockchip.c b/drivers/net/ethernet/arc/emac_rockchip.c
-new file mode 100644
-index 0000000..c31c740
---- /dev/null
-+++ b/drivers/net/ethernet/arc/emac_rockchip.c
-@@ -0,0 +1,229 @@
-+/**
-+ * emac-rockchip.c - Rockchip EMAC specific glue layer
-+ *
-+ * Copyright (C) 2014 Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/etherdevice.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_net.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include "emac.h"
-+
-+#define DRV_NAME        "rockchip_emac"
-+#define DRV_VERSION     "1.0"
-+
-+#define GRF_MODE_MII		(1UL << 0)
-+#define GRF_MODE_RMII		(0UL << 0)
-+#define GRF_SPEED_10M		(0UL << 1)
-+#define GRF_SPEED_100M		(1UL << 1)
-+#define GRF_SPEED_ENABLE_BIT	(1UL << 17)
-+#define GRF_MODE_ENABLE_BIT	(1UL << 16)
-+
-+struct emac_rockchip_soc_data {
-+	int grf_offset;
-+};
-+
-+struct rockchip_priv_data {
-+	struct arc_emac_priv emac;
-+	struct regmap *grf;
-+	const struct emac_rockchip_soc_data *soc_data;
-+	struct regulator *regulator;
-+	struct clk *refclk;
-+};
-+
-+static void emac_rockchip_set_mac_speed(void *priv, unsigned int speed)
-+{
-+	struct rockchip_priv_data *emac = priv;
-+	u32 data;
-+	int err = 0;
-+
-+	/* write-enable bits */
-+	data = GRF_SPEED_ENABLE_BIT;
-+
-+	switch(speed) {
-+	case 10:
-+		data |= GRF_SPEED_10M;
-+		break;
-+	case 100:
-+		data |= GRF_SPEED_100M;
-+		break;
-+	default:
-+		pr_err("speed %u not supported\n", speed);
-+		return;
-+	}
-+
-+	err = regmap_write(emac->grf, emac->soc_data->grf_offset, data);
-+	if (err)
-+		pr_err("unable to apply speed %u to grf (%d)\n", speed, err);
-+}
-+
-+static const struct emac_rockchip_soc_data emac_rockchip_dt_data[] = {
-+	{ .grf_offset = 0x154 }, /* rk3066 */
-+	{ .grf_offset = 0x0a4 }, /* rk3188 */
-+};
-+
-+static const struct of_device_id emac_rockchip_dt_ids[] = {
-+	{ .compatible = "rockchip,rk3066-emac", .data = &emac_rockchip_dt_data[0] },
-+	{ .compatible = "rockchip,rk3188-emac", .data = &emac_rockchip_dt_data[1] },
-+	{ /* Sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, emac_rockchip_dt_ids);
-+
-+static int emac_rockchip_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct net_device *ndev;
-+	struct rockchip_priv_data *priv;
-+	const struct of_device_id *match;
-+	u32 data;
-+	int err, interface;
-+
-+	if (!pdev->dev.of_node)
-+		return -ENODEV;
-+
-+	ndev = alloc_etherdev(sizeof(struct rockchip_priv_data));
-+	if (!ndev)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, ndev);
-+	SET_NETDEV_DEV(ndev, dev);
-+
-+	priv = netdev_priv(ndev);
-+	priv->emac.drv_name = DRV_NAME;
-+	priv->emac.drv_version = DRV_VERSION;
-+	priv->emac.set_mac_speed = emac_rockchip_set_mac_speed;
-+
-+	interface = of_get_phy_mode(dev->of_node);
-+
-+	/* RK3066 and RK3188 SoCs only support RMII */
-+	if (interface != PHY_INTERFACE_MODE_RMII) {
-+		dev_err(dev, "unsupported phy interface mode %d\n", interface);
-+		err = -ENOTSUPP;
-+		goto out_netdev;
-+	}
-+
-+	priv->grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
-+	if (IS_ERR(priv->grf)) {
-+		dev_err(dev, "failed to retrieve global register file (%ld)\n", PTR_ERR(priv->grf));
-+		err = PTR_ERR(priv->grf);
-+		goto out_netdev;
-+	}
-+
-+	match = of_match_node(emac_rockchip_dt_ids, dev->of_node);
-+	priv->soc_data = match->data;
-+
-+	priv->emac.clk = devm_clk_get(dev, "hclk");
-+	if (IS_ERR(priv->emac.clk)) {
-+		dev_err(dev, "failed to retrieve host clock (%ld)\n", PTR_ERR(priv->emac.clk));
-+		err = PTR_ERR(priv->emac.clk);
-+		goto out_netdev;
-+	}
-+
-+	priv->refclk = devm_clk_get(dev, "macref");
-+	if (IS_ERR(priv->refclk)) {
-+		dev_err(dev, "failed to retrieve reference clock (%ld)\n", PTR_ERR(priv->refclk));
-+		err = PTR_ERR(priv->refclk);
-+		goto out_netdev;
-+	}
-+
-+	err = clk_prepare_enable(priv->refclk);
-+	if (err) {
-+		dev_err(dev, "failed to enable reference clock (%d)\n", err);
-+		goto out_netdev;
-+	}
-+
-+	/* Optional regulator for PHY */
-+	priv->regulator = devm_regulator_get_optional(dev, "phy");
-+	if (IS_ERR(priv->regulator)) {
-+		if (PTR_ERR(priv->regulator) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_err(dev, "no regulator found\n");
-+		priv->regulator = NULL;
-+	}
-+
-+	if (priv->regulator) {
-+		err = regulator_enable(priv->regulator);
-+		if (err) {
-+			dev_err(dev, "failed to enable phy-supply (%d)\n", err);
-+			goto out_clk_disable;
-+		}
-+	}
-+
-+	err = arc_emac_probe(ndev, interface);
-+	if (err)
-+		goto out_regulator_disable;
-+
-+	/* write-enable bits */
-+	data = GRF_MODE_ENABLE_BIT | GRF_SPEED_ENABLE_BIT;
-+
-+	data |= GRF_SPEED_100M;
-+	data |= GRF_MODE_RMII;
-+
-+	err = regmap_write(priv->grf, priv->soc_data->grf_offset, data);
-+	if (err) {
-+		dev_err(dev, "unable to apply initial settings to grf (%d)\n", err);
-+		goto out_regulator_disable;
-+	}
-+
-+	/* RMII interface needs always a rate of 50MHz */
-+	err = clk_set_rate(priv->refclk, 50000000);
-+	if (err)
-+		dev_err(dev, "failed to change reference clock rate (%d)\n", err);
-+	return 0;
-+
-+out_regulator_disable:
-+	if (priv->regulator)
-+		regulator_disable(priv->regulator);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->refclk);
-+out_netdev:
-+	free_netdev(ndev);
-+	return err;
-+}
-+
-+static int emac_rockchip_remove(struct platform_device *pdev)
-+{
-+	struct net_device *ndev = platform_get_drvdata(pdev);
-+	struct rockchip_priv_data *priv = netdev_priv(ndev);
-+	int err;
-+
-+	err = arc_emac_remove(ndev);
-+
-+	clk_disable_unprepare(priv->refclk);
-+
-+	if (priv->regulator)
-+		regulator_disable(priv->regulator);
-+
-+	free_netdev(ndev);
-+	return err;
-+}
-+
-+static struct platform_driver emac_rockchip_driver = {
-+	.probe = emac_rockchip_probe,
-+	.remove = emac_rockchip_remove,
-+	.driver = {
-+		.name = DRV_NAME,
-+		.of_match_table  = emac_rockchip_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(emac_rockchip_driver);
-+
-+MODULE_AUTHOR("Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("Rockchip EMAC platform driver");
-+MODULE_LICENSE("GPL");
+ [PATCH 1/4]
+ * Use 'is_pdata_alloc' instead of 'is_of'.
+ * Allocate 'pdata' by 'kmalloc/kfree' instead of 'devm_*' for OF.
+ * Use 'IS_ENABLED(CONFIG_OF_GPIO)' instead of '#ifdef CONFIG_OF_GPIO'.
+ * A couple of other minor changes.
+ [PATCH 2/4]
+ * New patch splitted from the original [PATCH 2/3]
+ * Use 'dwapb_read/write' instead of readl&writel.
+ [PATCH 3/4]
+ * Move 'dwapb_read/write' defination to new patch [PATCH 2/4].
+ * Only port A support 'debounce' now.
+ [PATCH 4/4]
+ * The original patch [PATCH 3/3]
+ * Use 'struct dwapb_context' instead of 'struct gpio_saved_regs'.
+ * Allocate and save context dynamically by per port.
+
+v2:
+ [PATCH 1/3]
+ * Fixed a bug to set the base gpio number to '-1' for the OF flow.
+ * Set device node for each gpio chip for the OF flow.
+ * Change the name of 'struct dwapb_gpio_platform_data' to
+   'struct dwapb_platform_data'.
+ * Change the name of 'struct dwapb_gpio_port_property' to
+   'struct dwapb_port_property'.
+ * Access pdata directly in 'probe' instead of accesing it
+   by 'struct dwapb_gpio'.
+ * Free 'pdata' at the end of 'probe' if it is OF case to save memory.
+ * Improve the interrupt handler.
+ * Move 'irq_set_handler_data' together with 'irq_set_chained_hanlder'.
+ * Remove unncessary comments.
+ [PATCH 2/3]
+ * Change all 'readl'&'writel' to 'dwapb_read'&'dwapb_write'.
+ [PATCH 3/3]
+ * Change the name for 'struct gpio_saved_regs' to 'struct dwapb_context'.
+ * Save the registers for all ports according to the port index.
+ * Change '#if defined' to '#ifdef'.
+
+Weike Chen (4):
+  GPIO: gpio-dwapb: Enable platform driver binding to MFD driver
+  GPIO: gpio-dwapb: Change readl&writel to dwapb_read&dwapb_write
+  GPIO: gpio-dwapb: Support Debounce
+  GPIO: gpio-dwapb: Suspend & Resume PM enabling
+
+ drivers/gpio/Kconfig                     |    1 -
+ drivers/gpio/gpio-dwapb.c                |  400 +++++++++++++++++++++++++-----
+ include/linux/platform_data/gpio-dwapb.h |   32 +++
+ 3 files changed, 365 insertions(+), 68 deletions(-)
+ create mode 100644 include/linux/platform_data/gpio-dwapb.h
+
 -- 
-1.9.1
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
