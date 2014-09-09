@@ -1,180 +1,97 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH 3/5] extcon: gpio: Add dt support for the driver.
-Date: Tue, 9 Sep 2014 09:44:36 +0530
-Message-ID: <1410236078-11713-4-git-send-email-george.cherian@ti.com>
-References: <1410236078-11713-1-git-send-email-george.cherian@ti.com>
+From: Matti Vaittinen <matti.vaittinen-OYasijW0DpE@public.gmane.org>
+Subject: Re: [PATCH] rtc: ds1307: add trickle charger device tree binding
+Date: Tue, 9 Sep 2014 09:22:06 +0300
+Message-ID: <20140909062158.GB21342@fi-ourus-dhcp00977.emea.nsn-net.net>
+References: <20140828125915.GJ14650@leverpostej>
+ <20140828155157.GB23677@roeck-us.net>
+ <20140828161025.GO14650@leverpostej>
+ <20140828164825.GA12153@roeck-us.net>
+ <20140828172842.GF12769@titan.lakedaemon.net>
+ <20140828174034.GC15307@roeck-us.net>
+ <20140829073413.GN4587@fi-ourus-dhcp00977.emea.nsn-net.net>
+ <20140829104001.GB19424@leverpostej>
+ <20140908135242.GA21412@amd>
+ <20140908145825.GO12081@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410236078-11713-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, rongjun.ying@csr.com, linux@roeck-us.net
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140908145825.GO12081@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ext Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, ext Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org" <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org" <san-KGKi0rHxN0fKWSuBa/xFvVpr/1R2p/CL@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Sverdlin Alexander <alexander.sverdlin-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support to extcon-gpio driver.
-Add devicetree binding documentation
+On Mon, Sep 08, 2014 at 03:58:25PM +0100, ext Mark Rutland wrote:
+> On Mon, Sep 08, 2014 at 02:52:42PM +0100, Pavel Machek wrote:
+> > > I would suggest we have two properties that describe the resistor's
+> > > rating and whether or not there is a diode:
+> > > 
+> > > trickle-resistor-ohms = <250>
+> > > diode-connected;
+> > > 
+> > > That's easy for a human to write and/or validate, we can easily extend
+> > > it in future, requires no proliferation of macros, and describes the
+> > > hardware rather than telling software what to do.
+> > > 
+> > > The driver becomes a little more complicated, but gains sanity checking,
+> > > which is a good thing.
+> > 
+> > Certainly looks better than register bit defines.
+> > 
+> > As rtc-bq32k has similar options, I'm interested, too. I believe we
+> > should add
+> > 
+> > trickle-charge-enable;
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- .../devicetree/bindings/extcon/extcon-gpio.txt     | 21 +++++++
- drivers/extcon/extcon-gpio.c                       | 70 +++++++++++++++-------
- 2 files changed, 69 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+I am unsure about this. It makes sense for devices where we cannot
+select resistor but just enable or disable charger. Is there any such
+devices? For devices like ds1339 this makes no sense. For them it is
+simpler to just enable the charger if resistor value is specified, and
+default the charger to be off. But I do not see a problem in supporting
+the trickle-charge-enable; for devices needing this (independently from
+the ds1307 driver).
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-new file mode 100644
-index 0000000..30aa2e1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -0,0 +1,21 @@
-+GPIO based EXTCON
-+
-+EXTCON GPIO
-+-----------
-+
-+Required Properties:
-+ - compatible: should be:
-+	* "linux,extcon-gpio"
-+ - gpios: specifies the gpio pin used.
-+
-+Optional Properties:
-+ - debounce: Debounce time for GPIO IRQ in ms
-+
-+
-+Eg:
-+
-+	extcon1: am43_usbid_extcon1 {
-+		compatible = "linux,extcon-gpio";
-+		gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
-+		debounce = <20>;
-+		};
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 25269f6..2bfbd2e 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -25,8 +25,10 @@
- #include <linux/gpio.h>
- #include <linux/init.h>
- #include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-@@ -80,16 +82,12 @@ static ssize_t extcon_gpio_print_state(struct extcon_dev *edev, char *buf)
- 
- static int gpio_extcon_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct gpio_extcon_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct gpio_extcon_data *extcon_data;
- 	int ret;
--
--	if (!pdata)
--		return -EBUSY;
--	if (!pdata->irq_flags) {
--		dev_err(&pdev->dev, "IRQ flag is not specified.\n");
--		return -EINVAL;
--	}
-+	unsigned int irq_flags;
-+	unsigned int debounce = 0;
- 
- 	extcon_data = devm_kzalloc(&pdev->dev, sizeof(struct gpio_extcon_data),
- 				   GFP_KERNEL);
-@@ -101,26 +99,48 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "failed to allocate extcon device\n");
- 		return -ENOMEM;
- 	}
--	extcon_data->edev->name = pdata->name;
- 
--	extcon_data->gpiod = gpio_to_desc(pdata->gpio);
--	extcon_data->state_on = pdata->state_on;
--	extcon_data->state_off = pdata->state_off;
--	extcon_data->check_on_resume = pdata->check_on_resume;
--	if (pdata->state_on && pdata->state_off)
--		extcon_data->edev->print_state = extcon_gpio_print_state;
-+	if (np) {
-+		int irq;
-+
-+		extcon_data->gpiod = gpiod_get(&pdev->dev, NULL);
-+		if (IS_ERR(extcon_data->gpiod))
-+			return PTR_ERR(extcon_data->gpiod);
-+
-+		extcon_data->edev->name = np->name;
-+		of_property_read_u32(np, "debounce", &debounce);
-+		irq = gpiod_to_irq(extcon_data->gpiod);
-+		irq_flags = irq_get_trigger_type(irq);
-+	} else {
-+		if (!pdata)
-+			return -EBUSY;
-+		if (!pdata->irq_flags) {
-+			dev_err(&pdev->dev, "IRQ flag is not specified.\n");
-+			return -EINVAL;
-+		}
-+		extcon_data->edev->name = pdata->name;
-+		extcon_data->state_on = pdata->state_on;
-+		extcon_data->state_off = pdata->state_off;
-+		extcon_data->check_on_resume = pdata->check_on_resume;
-+		if (pdata->state_on && pdata->state_off)
-+			extcon_data->edev->print_state = extcon_gpio_print_state;
-+
-+		extcon_data->gpiod = gpio_to_desc(pdata->gpio);
-+		ret = devm_gpio_request_one(&pdev->dev, pdata->gpio,
-+					    GPIOF_DIR_IN, pdev->name);
-+		if (ret < 0)
-+			return ret;
-+		irq_flags = pdata->irq_flags;
-+		debounce = pdata->debounce;
-+	}
- 
--	ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
--				    pdev->name);
--	if (ret < 0)
--		return ret;
- 
--	if (pdata->debounce) {
-+	if (debounce) {
- 		ret = gpiod_set_debounce(extcon_data->gpiod,
--					 pdata->debounce * 1000);
-+					 debounce * 1000);
- 		if (ret < 0)
- 			extcon_data->debounce_jiffies =
--				msecs_to_jiffies(pdata->debounce);
-+				msecs_to_jiffies(debounce);
- 	}
- 
- 	ret = devm_extcon_dev_register(&pdev->dev, extcon_data->edev);
-@@ -134,7 +154,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
- 		return extcon_data->irq;
- 
- 	ret = request_any_context_irq(extcon_data->irq, gpio_irq_handler,
--				      pdata->irq_flags, pdev->name,
-+				      irq_flags, pdev->name,
- 				      extcon_data);
- 	if (ret < 0)
- 		return ret;
-@@ -172,6 +192,11 @@ static int gpio_extcon_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
- 
-+static struct of_device_id of_extcon_gpio_match_tbl[] = {
-+	{ .compatible = "linux,extcon-gpio", },
-+	{ /* end */ }
-+};
-+
- static struct platform_driver gpio_extcon_driver = {
- 	.probe		= gpio_extcon_probe,
- 	.remove		= gpio_extcon_remove,
-@@ -179,6 +204,7 @@ static struct platform_driver gpio_extcon_driver = {
- 		.name	= "extcon-gpio",
- 		.owner	= THIS_MODULE,
- 		.pm	= &gpio_extcon_pm_ops,
-+		.of_match_table = of_extcon_gpio_match_tbl,
- 	},
- };
- 
+> > 
+> > (we may not want to charge at all), and I believe the diode should be
+> > 
+> > disconnect-diode;
+> > 
+> > ... With diode connected, charge is slower, and that probably should
+> > be the default value. We don't want to give too much current in
+> > default case.  (bq32k has hard-coded resistor value for
+> > diode/not-diode case).
+> 
+> I agree that if one case is less likely to be problematic / damaging
+> that should be the default.
+
+_Maybe_ 
+diode-connected = <1>; or 
+diode-connected = <0>; 
+or both
+diode-connected; and 
+diode-disconnected;
+could be used and let the driver to choose the defaults? But yes, I have
+no problem with inverting the default to be diode-connected.
+
+Then one question regarding the "process". Now if I cook up fourth patch
+with inverted diode-connected default for ds1339, should I collect new
+acks for this new patch? (V3 was acked by Alessandro and Jason.) I assume 
+yes.
+
+> 
+> Mark.
+
 -- 
-1.8.3.1
+=============================================
+
+Matti Vaittinen
+Senile SW Specialist
+FINLAND 
+
+~~ When things go utterly wrong vim users can always type :help! ~~
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
