@@ -1,7 +1,7 @@
 From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 4/5] extcon: gpio: Always use gpio_get_value_cansleep
-Date: Tue, 9 Sep 2014 09:44:37 +0530
-Message-ID: <1410236078-11713-5-git-send-email-george.cherian@ti.com>
+Subject: [PATCH 5/5] extcon: gpio: Add support for using cable names
+Date: Tue, 9 Sep 2014 09:44:38 +0530
+Message-ID: <1410236078-11713-6-git-send-email-george.cherian@ti.com>
 References: <1410236078-11713-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,27 +12,55 @@ To: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yR
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some gpio's can sleep while reading, so always use gpio_get_value_cansleep
-to get data. This fixes warning from gpiolib due to wrong API usage.
+Add support for using cable names. Enables other drivers to register interest
+and get notified using extcon provided notifier call backs.
 
 Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
 ---
- drivers/extcon/extcon-gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/extcon/extcon-gpio.txt | 2 ++
+ drivers/extcon/extcon-gpio.c                             | 4 ++++
+ 2 files changed, 6 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+index 30aa2e1..2c9d29f 100644
+--- a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
++++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+@@ -7,6 +7,7 @@ Required Properties:
+  - compatible: should be:
+ 	* "linux,extcon-gpio"
+  - gpios: specifies the gpio pin used.
++ - cable-name: Name of the cable used.
+ 
+ Optional Properties:
+  - debounce: Debounce time for GPIO IRQ in ms
+@@ -18,4 +19,5 @@ Eg:
+ 		compatible = "linux,extcon-gpio";
+ 		gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
+ 		debounce = <20>;
++		cable-name = "USB-HOST";
+ 		};
 diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 2bfbd2e..3839749 100644
+index 3839749..c0ab8e7 100644
 --- a/drivers/extcon/extcon-gpio.c
 +++ b/drivers/extcon/extcon-gpio.c
-@@ -51,7 +51,7 @@ static void gpio_extcon_work(struct work_struct *work)
- 		container_of(to_delayed_work(work), struct gpio_extcon_data,
- 			     work);
+@@ -42,6 +42,7 @@ struct gpio_extcon_data {
+ 	struct delayed_work work;
+ 	unsigned long debounce_jiffies;
+ 	bool check_on_resume;
++	const char *cable_name[1];
+ };
  
--	state = gpiod_get_value(data->gpiod);
-+	state = gpiod_get_value_cansleep(data->gpiod);
- 	extcon_set_state(data->edev, state);
- }
- 
+ static void gpio_extcon_work(struct work_struct *work)
+@@ -111,6 +112,9 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+ 		of_property_read_u32(np, "debounce", &debounce);
+ 		irq = gpiod_to_irq(extcon_data->gpiod);
+ 		irq_flags = irq_get_trigger_type(irq);
++		of_property_read_string_index(np, "cable-name", 0,
++					      extcon_data->cable_name);
++		extcon_data->edev->supported_cable = extcon_data->cable_name;
+ 	} else {
+ 		if (!pdata)
+ 			return -EBUSY;
 -- 
 1.8.3.1
 
