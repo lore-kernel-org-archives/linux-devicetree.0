@@ -1,118 +1,43 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
- for dra7
-Date: Wed, 10 Sep 2014 08:50:51 -0500
-Message-ID: <5410573B.5010907@ti.com>
-References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com> <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
+From: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
+Subject: [PATCH 3/5] ARM: imx_v6_v7_defconfig: enable imx-tlv320aic3x by
+ default
+Date: Wed, 10 Sep 2014 16:46:47 +0300
+Message-ID: <1410356809-26179-4-git-send-email-d.lavnikevich@sam-solutions.com>
+References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>, bcousson@baylibre.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@freescale.com, kernel@pengutronix.de, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, timur@tabi.org, nicoleotsuka@gmail.com, Li.Xiubo@freescale.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2014 08:37 AM, Mugunthan V N wrote:
-> Add CPSW and MDIO related device tree data for DRA7XX and made as status
-> disabled. Phy-id, pinmux for active and sleep state needs to be added in
-> board dts files and enable the CPSW device.
-> 
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> ---
->  arch/arm/boot/dts/dra7.dtsi | 59 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d678152..8d79321 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -34,6 +34,8 @@
->  		serial3 = &uart4;
->  		serial4 = &uart5;
->  		serial5 = &uart6;
-> +		ethernet0 = &cpsw_emac0;
-> +		ethernet1 = &cpsw_emac1;
+Signed-off-by: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
+---
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-should this rather be in board dts?
-
->  	};
->  
->  	timer {
-> @@ -1262,6 +1264,63 @@
->  			ti,irqs-skip = <10 133 139 140>;
->  			ti,irqs-safe-map = <0>;
->  		};
-> +
-> +		mac: ethernet@4a100000 {
-> +			compatible = "ti,cpsw";
-> +			ti,hwmods = "gmac";
-> +			cpdma_channels = <8>;
-> +			ale_entries = <1024>;
-> +			bd_ram_size = <0x2000>;
-> +			no_bd_ram = <0>;
-> +			rx_descs = <64>;
-> +			mac_control = <0x20>;
-> +			slaves = <2>;
-> +			active_slave = <0>;
-> +			cpts_clock_mult = <0x80000000>;
-> +			cpts_clock_shift = <29>;
-> +			reg = <0x48484000 0x1000
-> +			       0x48485200 0x2E00>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			/*
-> +			 * rx_thresh_pend
-> +			 * rx_pend
-> +			 * tx_pend
-> +			 * misc_pend
-> +			 */
-> +			interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
-> +			ranges;
-> +			status = "disabled";
-> +
-> +			davinci_mdio: mdio@48485000 {
-> +				compatible = "ti,davinci_mdio";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				ti,hwmods = "davinci_mdio";
-> +				bus_freq = <1000000>;
-> +				reg = <0x48485000 0x100>;
-> +			};
-> +
-> +			cpsw_emac0: slave@48480200 {
-> +				/* Filled in by U-Boot */
-> +				mac-address = [ 00 00 00 00 00 00 ];
-
-should be disabled? what about platforms that do not have both emac ports?
-
-> +			};
-> +
-> +			cpsw_emac1: slave@48480300 {
-> +				/* Filled in by U-Boot */
-> +				mac-address = [ 00 00 00 00 00 00 ];
-
-should be disabled? what about platforms that do not have both emac ports?
-
-> +			};
-> +
-> +			phy_sel: cpsw-phy-sel@4a002554 {
-> +				compatible = "ti,dra7xx-cpsw-phy-sel";
-> +				reg= <0x4a002554 0x4>;
-> +				reg-names = "gmii-sel";
-> +			};
-> +		};
-> +
->  	};
->  };
->  
-> 
-
-
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 16cfec4385c8..66a6a5c6e75a 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -213,6 +213,7 @@ CONFIG_SND_SOC_IMX_WM8962=y
+ CONFIG_SND_SOC_IMX_SGTL5000=y
+ CONFIG_SND_SOC_IMX_SPDIF=y
+ CONFIG_SND_SOC_IMX_MC13783=y
++CONFIG_SND_SOC_IMX_TLV320AIC3X=y
+ CONFIG_USB=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_MXC=y
 -- 
-Regards,
-Nishanth Menon
+2.1.0
