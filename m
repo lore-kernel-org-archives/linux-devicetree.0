@@ -1,106 +1,70 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system
- timer
-Date: Wed, 10 Sep 2014 19:49:38 +0800
-Message-ID: <20140910114936.GE22579@dragon>
-References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
- <1409887606-22388-4-git-send-email-b20788@freescale.com>
- <CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ@mail.gmail.com>
- <5E619FDB-56BB-486E-B627-9D2A9D4F9F54@freescale.com>
- <20140910073333.GC22579@dragon>
- <7fd82b8c08c54f4dadb6b7402231a086@BN1PR0301MB0628.namprd03.prod.outlook.com>
+From: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: omap5: Add dr_mode for dwc3
+Date: Wed, 10 Sep 2014 15:03:33 +0300
+Message-ID: <54103E15.3090406@compulab.co.il>
+References: <1381402195-29257-1-git-send-email-kishon@ti.com> <1381402195-29257-2-git-send-email-kishon@ti.com> <52580F34.8030809@ti.com> <20140416161619.GH28035@saruman.home> <540D9449.3090008@compulab.co.il> <20140908132403.GA22409@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7fd82b8c08c54f4dadb6b7402231a086-RQSpjbwlmjRcEY/EnGXkZZwN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20140908132403.GA22409-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 07:43:41AM +0000, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c index 4ee6e77a0fdf..3f0401e27b38 100644
-> --- a/arch/arm/mach-imx/clk-imx6q.c
-> +++ b/arch/arm/mach-imx/clk-imx6q.c
-> @@ -245,6 +245,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
->         clk[IMX6QDL_CLK_PLL3_80M]  = imx_clk_fixed_factor("pll3_80m",  "pll3_usb_otg",   1, 6);
->         clk[IMX6QDL_CLK_PLL3_60M]  = imx_clk_fixed_factor("pll3_60m",  "pll3_usb_otg",   1, 8);
->         clk[IMX6QDL_CLK_TWD]       = imx_clk_fixed_factor("twd",       "arm",            1, 2);
-> +       clk[IMX6QDL_CLK_GPT_3M]    = imx_clk_fixed_factor("gpt_3m",    "osc",            1, 8);
->         if (cpu_is_imx6dl()) {
->                 clk[IMX6QDL_CLK_GPU2D_AXI] = imx_clk_fixed_factor("gpu2d_axi", "mmdc_ch0_axi_podf", 1, 1);
->                 clk[IMX6QDL_CLK_GPU3D_AXI] = imx_clk_fixed_factor("gpu3d_axi", "mmdc_ch0_axi_podf", 1, 1); @@ -469,6 +470,13 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
-> 
->         clk_register_clkdev(clk[IMX6QDL_CLK_ENET_REF], "enet_ref", NULL);
-> 
-> +       /*
-> +        * The gpt_3m clock is not available on i.MX6Q TO1.0.  Let's point it
-> +        * to clock gpt_ipg_per to ease the gpt driver code.
-> +        */
-> +       if (cpu_is_imx6q() && imx_get_soc_revision() == IMX_CHIP_REVISION_1_0)
-> +               clk[IMX6QDL_CLK_GPT_3M] = clk[IMX6QDL_CLK_GPT_IPG_PER];
-> +
->         if ((imx_get_soc_revision() != IMX_CHIP_REVISION_1_0) ||
->             cpu_is_imx6dl()) {
->                 clk_set_parent(clk[IMX6QDL_CLK_LDB_DI0_SEL], clk[IMX6QDL_CLK_PLL5_VIDEO_DIV]);
-> 
-> diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c index bf92e5a351c0..c0ad839516b0 100644
-> --- a/arch/arm/mach-imx/time.c
-> +++ b/arch/arm/mach-imx/time.c
-> @@ -312,10 +317,21 @@ static void __init _mxc_timer_init(int irq,
->         __raw_writel(0, timer_base + MXC_TCTL);
->         __raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
-> 
-> -       if (timer_is_v2())
-> -               tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
-> -       else
-> +       if (timer_is_v2()) {
-> +               tctl_val = V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
-> +               if (clk_get_rate(clk_per) == V2_TIMER_RATE_OSC_DIV8) {
-> 			/* Is the assumption corrrect ??? */
-> [Anson] I am afraid that i.MX6Q TO1.0 can NOT meet it, as there is no gpt_3m available for i.MX6Q TO1.0, but we have it in dtb and clk driver. 
-> 
-> +                       tctl_val |= V2_TCTL_CLK_OSC_DIV8;
-> +                       if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
-> +                               /* 24 / 8 = 3 MHz */
-> +                               __raw_writel(7 << V2_TPRER_PRE24M, timer_base + MXC_TPRER);
-> +                               tctl_val |= V2_TCTL_24MEN;
-> +                       }
-> +               } else {
-> +                       tctl_val |= V2_TCTL_CLK_PER;
-> +               }
-> +       } else {
->                 tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
-> +       }
-> 
->         __raw_writel(tctl_val, timer_base + MXC_TCTL);
-> 
-> @@ -349,9 +365,13 @@ static void __init mxc_timer_init_dt(struct device_node *np)
->         WARN_ON(!timer_base);
->         irq = irq_of_parse_and_map(np, 0);
-> 
-> -       clk_per = of_clk_get_by_name(np, "per");
->         clk_ipg = of_clk_get_by_name(np, "ipg");
-> 
-> +       /* Try osc_per clock first, and fall back to per clock otherwise */
-> +       clk_per = of_clk_get_by_name(np, "osc_per");
-> +       if (!IS_ERR(clk_per))
-> +               clk_per = of_clk_get_by_name(np, "per");
-> +
-> [Anson] For i.MX6Q TO1.0, there is no GPT_3M clock for GPT, but in dtb, there is osc_per, so clk_per will be initialized by osc_per, and the clk rate read in _mxc_timer_init function will be 3000000 and go to the GPT_3M clk source path, which will NOT work for i.MX6Q TO1.0.
-> 
+Hi,
 
-I had the following change for clk-imx6q.c as above.  Shouldn't it
-handle the i.MX6Q TO1.0 case well?
+On 09/08/2014 04:24 PM, Felipe Balbi wrote:
+> Hi,
+>
+> On Mon, Sep 08, 2014 at 02:34:33PM +0300, Dmitry Lifshitz wrote:
+>> Hi Felipe, Roger
+>>
+>> On 04/16/2014 07:16 PM, Felipe Balbi wrote:
+>>> On Fri, Oct 11, 2013 at 05:46:12PM +0300, Roger Quadros wrote:
+>>>> Hi,
+>>>>
+>>>> On 10/10/2013 01:49 PM, Kishon Vijay Abraham I wrote:
+>>>>> From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+>>>>>
+>>>>> Added dr_mode property in dwc3 and set its default mode to device.
+>>>>
+>>>> If there is a specific reason why this is not set to "otg", we need
+>>>> to explain it here.
+>>>>
+>>>> AFAIK the port is meant to be used as OTG port.
+>>>
+>>> we still don't have the workaround for dual role ports, I've been
+>>> working on it but still need to retest and make sure it's working fine
+>>> before merging upstream.
+>>>
+>>
+>>
+>> Does the OTG port suppose to work with OMAP5? I mean role switching
+>> mechanism?
+>>
+>> I'm testing kernel v3.16 with OMAP5 based board (CM-T54).
+>>
+>> If I set CONFIG_USB_DWC3_DUAL_ROLE, than nothing is going on when I plug
+>> some device/host cable into micro USB3.0 port (VBUS/ID detection with extcon
+>> events works fine).
+>
+> Dual role does not work. We allow the driver to the built with both Host
+> and Peripheral support because some platforms have more than one port
+> and building the driver with dual role allows us to make one port host
+> and one peripheral.
+>
 
-	if (cpu_is_imx6q() && imx_get_soc_revision() == IMX_CHIP_REVISION_1_0)
-		clk[IMX6QDL_CLK_GPT_3M] = clk[IMX6QDL_CLK_GPT_IPG_PER];
+Please, can you provide some detail about platforms with several ports.
+How do that ports are connected to DWC3?
 
-Shawn
 
->         _mxc_timer_init(irq, clk_per, clk_ipg);  }  CLOCKSOURCE_OF_DECLARE(mx1_timer, "fsl,imx1-gpt", mxc_timer_init_dt);
-> 
+Thanks,
+
+Dmitry
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
