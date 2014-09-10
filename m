@@ -1,105 +1,74 @@
-From: Caesar Wang <caesar.wang@rock-chips.com>
-Subject: Re: [PATCH v4 3/4] ARM: dts: add main Thermal info to rk3288
-Date: Wed, 10 Sep 2014 10:49:05 +0800
-Message-ID: <540FBC21.2090504@rock-chips.com>
-References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com> <1409710239-19941-4-git-send-email-caesar.wang@rock-chips.com> <3426113.Zcq8V2S7cg@diego>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3 3/3] ASoC: simple-card: binding: update binding to
+ support the new style.
+Date: Wed, 10 Sep 2014 02:51:16 +0000
+Message-ID: <755d5dc6d85243c0bd209aea49eef6c0@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1409711021-19277-1-git-send-email-Li.Xiubo@freescale.com>
+ <1409711021-19277-4-git-send-email-Li.Xiubo@freescale.com>
+ <20140909120948.GZ2601@sirena.org.uk> <540EFFC9.4050207@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <3426113.Zcq8V2S7cg@diego>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <540EFFC9.4050207-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "tiwai-l3A5Bk7waGM@public.gmane.org" <tiwai-l3A5Bk7waGM@public.gmane.org>, "moinejf-GANU6spQydw@public.gmane.org" <moinejf-GANU6spQydw@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org" <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Hi,
 
-=E5=9C=A8 2014=E5=B9=B409=E6=9C=8809=E6=97=A5 19:37, Heiko St=C3=BCbner=
- =E5=86=99=E9=81=93:
-> Am Mittwoch, 3. September 2014, 10:10:38 schrieb Caesar Wang:
->> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
->> ---
->>   arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk328=
-8.dtsi
->> index 36be7bb..3d672e3 100644
->> --- a/arch/arm/boot/dts/rk3288.dtsi
->> +++ b/arch/arm/boot/dts/rk3288.dtsi
->> @@ -224,6 +224,17 @@
->>   		status =3D "disabled";
->>   	};
->>
->> +	tsadc: tsadc@ff280000 {
-> please keep the list of nodes sorted by register address. So when loo=
-king at
-> my v3.18-next/dts branch, it should be after uart4: serial@ff1c0000 a=
-nd before
-> usb_host0_ehci: usb@ff500000 .
->
+> Subject: Re: [PATCHv3 3/3] ASoC: simple-card: binding: update binding to
+> support the new style.
+> 
+> On 09/09/2014 03:09 PM, Mark Brown wrote:
+> > On Wed, Sep 03, 2014 at 10:23:41AM +0800, Xiubo Li wrote:
+> >> This update patch will split the DT node into old style and new style:
+> >> The new style will will be easier to add muti DAI links from old single
+> >> DAI link DTs.
+> >
+> >> This patch will maintian compatibility with the old DTs.
+> >
+> > Is everyone happy with this new style binding?
+> >
+> 
+> If I read the diff correctly the only change in the syntax is moving the
+> bitclock-inversion and frame-inversion properties to DAI nodes also for
+> the new style bindings.
+> 
+> I am Ok with that.
+> 
+> The document does not indicate that the same properties could be also
+> placed to DAI link level like they used to, from where they would apply
+> to both DAI nodes.
+> 
 
-oh...,I will fix it.
->> +		compatible =3D "rockchip,rk3288-tsadc";
->> +		reg =3D <0xff280000 0x100>;
->> +		interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
->> +		clock-names =3D "tsadc", "apb_pclk";
->> +		pinctrl-names =3D "default";
->> +		pinctrl-1 =3D <&tsadc_int>;
->> +		status =3D "disabled";
->> +	};
->> +
->>   	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
->>
->>   	usb_hsic: usb@ff5c0000 {
->> @@ -611,5 +622,12 @@
->>   				rockchip,pins =3D <5 15 3 &pcfg_pull_none>;
->>   			};
->>   		};
->> +
->> +		tsadc {
->> +			tsadc_int: tsadc-int {
->> +				rockchip,pins =3D <0 10 RK_FUNC_1 &pcfg_pull_up>;
->> +			};
->> +		};
-> After looking this up in the schematics I see that this is the
-> overtemperature-protection output pin ... labeled OTP_OUT.
-> So I'd think the pinconfig should reflect this pin-name, especially a=
-s tsadc-int
-> suggests, that this would be an interrupt leading into the tsadc, whi=
-le in
-> fact it is an output to a separate circuit.
->
-Maybe,I guess  your mean as the follows .
-Please correct it and  Laugh out if I got it wrong.
+I will post one new version of this patch with some very small fix, and
+I will also add this.
 
-tsadc {
-             otp_out: otp-out {
-                 rockchip,pins =3D <0 10 RK_FUNC_GPIO &pcfg_pull_none>;
-             };
+> I am Ok with this too, but this breaks the backwards compatibility,
+> which I guess is generally considered a problem. However, I doubt anyone
+> but me has yet used this part of the new syntax and I am happy to fix my
+> dts files.
+> 
+> Best regards,
+> Jyri
+> 
+> ps. I could not find the corresponding code changes in the previous
+> patch, so I assume they are coming later.
 
-             tsadc_int: tsadc-int {
-                 rockchip,pins =3D <0 10 RK_FUNC_1 &pcfg_pull_none>;
-             };
-         };
-Then,I deal with the otp_out in thermal driver.
-I believe The "otp_out" will restart board if it's a high active.
+Yes, I have one patch about the new style in my local machine, for some
+reason I will post it later.
 
-tsadc_int: tsadc-int {
-+				rockchip,pins =3D <0 10 RK_FUNC_1 &pcfg_pull_up>;
-+			};
+Thanks,
 
-But,I think the about will be implemented in thermal driver.
-> Heiko
->
->
->
-
---=20
-Best regards,
-Caesar
+BRs
+Xiubo
 
 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
