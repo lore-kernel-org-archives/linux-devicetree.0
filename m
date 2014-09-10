@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 1/2] irqchip: add Broadcom BCM7120-style Level 2 interrupt controller
-Date: Tue,  9 Sep 2014 17:44:21 -0700
-Message-ID: <1410309862-27784-2-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH v2 2/2] Documentation: bcm7120-l2: Add Broadcom BCM7120-style L2 binding
+Date: Tue,  9 Sep 2014 17:44:22 -0700
+Message-ID: <1410309862-27784-3-git-send-email-f.fainelli@gmail.com>
 References: <1410309862-27784-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1410309862-27784-1-git-send-email-f.fainelli@gmail.com>
@@ -10,261 +10,118 @@ To: linux-kernel@vger.kernel.org
 Cc: jason@lakedaemon.net, tglx@linutronix.de, computersforpeace@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the Level-2 interrupt controller
-hardware found in Broadcom Set Top Box System-on-a-Chip devices. This
-interrupt controller is implemented using a single enable register.
+This patch adds the Device Tree binding document for the Broadcom
+BCM7120-style Set-top-box Level 2 interrupt controller hardware.
 
-This interrupt controller is always present on the platforms supported
-by the irq-brcmstb-l2 driver, hence the reason why both are compiled
-using the same Kconfig symbol.
+We provide some ascii art explaining the different roles and reasons why
+some properties are introduced to represent that interrupt controller.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
 Changes in v2:
-- get rid of the 'continue' in bcm7120_l2_intc_init_one
-- get rid of the irq_gc_{lock,unlock} in the chained interrupt handler
 
- drivers/irqchip/Makefile         |   3 +-
- drivers/irqchip/irq-bcm7120-l2.c | 220 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 222 insertions(+), 1 deletion(-)
- create mode 100644 drivers/irqchip/irq-bcm7120-l2.c
+- add an ascii diagram explaining how the HW works to clarify the binding
+- add some small bullet points explaining the HW roles and features
+- remove 'interrupt-names' since we are not using it and cannot document all
+  possible names as of today
+- clarify the values for the 'interrupts' property
+- clarify the terminology used to avoid using software concepts
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 73052ba9ca62..824f5eb780b6 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -33,4 +33,5 @@ obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
- obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
- obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
- obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
--obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
-+obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o \
-+					   irq-bcm7120-l2.o
-diff --git a/drivers/irqchip/irq-bcm7120-l2.c b/drivers/irqchip/irq-bcm7120-l2.c
+ .../interrupt-controller/brcm,bcm7120-l2-intc.txt  | 86 ++++++++++++++++++++++
+ 1 file changed, 86 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
 new file mode 100644
-index 000000000000..788ec31865be
+index 000000000000..67651886a317
 --- /dev/null
-+++ b/drivers/irqchip/irq-bcm7120-l2.c
-@@ -0,0 +1,220 @@
-+/*
-+ * Broadcom BCM7120 style Level 2 interrupt controller driver
-+ *
-+ * Copyright (C) 2014 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+@@ -0,0 +1,86 @@
++Broadcom BCM7120-style Level 2 interrupt controller
 +
-+#define pr_fmt(fmt)	KBUILD_MODNAME	": " fmt
++This interrupt controller hardware is a second level interrupt controller that
++is hooked to a parent interrupt controller: e.g: ARM GIC for ARM-based
++platforms. It can be found on BCM7xxx products starting with BCM7120.
 +
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/io.h>
-+#include <linux/irqdomain.h>
-+#include <linux/reboot.h>
-+#include <linux/irqchip/chained_irq.h>
++Such an interrupt controller has the following hardware design:
 +
-+#include "irqchip.h"
++- outputs multiple interrupts signals towards its interrupt controller parent
 +
-+#include <asm/mach/irq.h>
++- controls how some of the interrupts will be flowing, whether they will
++  directly output an interrupt signal towards the interrupt controller parent,
++  or if they will output an interrupt signal at this 2nd level interrupt
++  controller, in particular for UARTs
 +
-+/* Register offset in the L2 interrupt controller */
-+#define IRQEN		0x00
-+#define IRQSTAT		0x04
++- not all 32-bits within the interrupt controller actually map to an interrupt
 +
-+struct bcm7120_l2_intc_data {
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+	bool can_wake;
-+	u32 irq_fwd_mask;
-+	u32 irq_map_mask;
-+	u32 saved_mask;
++The typical hardware layout for this controller is represented below:
++
++2nd level interrupt line		Outputs for the parent controller (e.g: ARM GIC)
++
++0 -----[ MUX ] ------------|==========> GIC interrupt 75
++          \-----------\
++                       |
++1 -----[ MUX ] --------)---|==========> GIC interrupt 76
++          \------------|
++                       |
++2 -----[ MUX ] --------)---|==========> GIC interrupt 77
++          \------------|
++                       |
++3 ---------------------|
++4 ---------------------|
++5 ---------------------|
++7 ---------------------|---|===========> GIC interrupt 66
++9 ---------------------|
++10 --------------------|
++11 --------------------/
++
++6 ------------------------\
++                           |===========> GIC interrupt 64
++8 ------------------------/
++
++12 ........................ X
++13 ........................ X 		(not connected)
++..
++31 ........................ X
++
++Required properties:
++
++- compatible: should be "brcm,bcm7120-l2-intc"
++- reg: specifies the base physical address and size of the registers
++- interrupt-controller: identifies the node as an interrupt controller
++- #interrupt-cells: specifies the number of cells needed to encode an interrupt
++  source, should be 1.
++- interrupt-parent: specifies the phandle to the parent interrupt controller
++  this one is cascaded from
++- interrupts: specifies the interrupt line(s) in the interrupt-parent controller
++  node, valid values depend on the type of parent interrupt controller
++- brcm,int-map-mask: 32-bits bit mask describing how many and which interrupts
++  are wired to this 2nd level interrupt controller, and how they match their
++  respective interrupt parents. Should match exactly the number of interrupts
++  specified in the 'interrupts' property.
++
++Optional properties:
++
++- brcm,irq-can-wake: if present, this means the L2 controller can be used as a
++  wakeup source for system suspend/resume.
++
++- brcm,int-fwd-mask: if present, a 32-bits bit mask to configure for the
++  interrupts which have a mux gate, typically UARTs. Setting these bits will
++  make their respective interrupts outputs bypass this 2nd level interrupt
++  controller completely, it completely transparent for the interrupt controller
++  parent
++
++Example:
++
++irq0_intc: interrupt-controller@f0406800 {
++	compatible = "brcm,bcm7120-l2-intc";
++	interrupt-parent = <&intc>;
++	#interrupt-cells = <1>;
++	reg = <0xf0406800 0x8>;
++	interrupt-controller;
++	interrupts = <0x0 0x42 0x0>, <0x0 0x40 0x0>;
++	brcm,int-map-mask = <0xeb8>, <0x140>;
++	brcm,int-fwd-mask = <0x7>;
 +};
-+
-+static void bcm7120_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct bcm7120_l2_intc_data *b = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct irq_chip_generic *gc = irq_get_domain_generic_chip(b->domain, 0);
-+	u32 status;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	status = __raw_readl(b->base + IRQSTAT);
-+
-+	if (status == 0) {
-+		do_bad_IRQ(irq, desc);
-+		goto out;
-+	}
-+
-+	do {
-+		irq = ffs(status) - 1;
-+		status &= ~(1 << irq);
-+		generic_handle_irq(irq_find_mapping(b->domain, irq));
-+	} while (status);
-+
-+out:
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void bcm7120_l2_intc_suspend(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct bcm7120_l2_intc_data *b = gc->private;
-+	u32 reg;
-+
-+	irq_gc_lock(gc);
-+	/* Save the current mask and the interrupt forward mask */
-+	b->saved_mask = __raw_readl(b->base) | b->irq_fwd_mask;
-+	if (b->can_wake) {
-+		reg = b->saved_mask | gc->wake_active;
-+		__raw_writel(reg, b->base);
-+	}
-+	irq_gc_unlock(gc);
-+}
-+
-+static void bcm7120_l2_intc_resume(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct bcm7120_l2_intc_data *b = gc->private;
-+
-+	/* Restore the saved mask */
-+	irq_gc_lock(gc);
-+	__raw_writel(b->saved_mask, b->base);
-+	irq_gc_unlock(gc);
-+}
-+
-+static int bcm7120_l2_intc_init_one(struct device_node *dn,
-+					struct bcm7120_l2_intc_data *data,
-+					int irq, const __be32 *map_mask)
-+{
-+	int parent_irq;
-+
-+	parent_irq = irq_of_parse_and_map(dn, irq);
-+	if (parent_irq < 0) {
-+		pr_err("failed to map interrupt %d\n", irq);
-+		return parent_irq;
-+	}
-+
-+	data->irq_map_mask |= be32_to_cpup(map_mask + irq);
-+
-+	irq_set_handler_data(parent_irq, data);
-+	irq_set_chained_handler(parent_irq, bcm7120_l2_intc_irq_handle);
-+
-+	return 0;
-+}
-+
-+int __init bcm7120_l2_intc_of_init(struct device_node *dn,
-+					struct device_node *parent)
-+{
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct bcm7120_l2_intc_data *data;
-+	struct irq_chip_generic *gc;
-+	struct irq_chip_type *ct;
-+	const __be32 *map_mask;
-+	int num_parent_irqs;
-+	int ret = 0, len, irq;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->base = of_iomap(dn, 0);
-+	if (!data->base) {
-+		pr_err("failed to remap intc L2 registers\n");
-+		ret = -ENOMEM;
-+		goto out_free;
-+	}
-+
-+	if (of_property_read_u32(dn, "brcm,int-fwd-mask", &data->irq_fwd_mask))
-+		data->irq_fwd_mask = 0;
-+
-+	/* Enable all interrupt specified in the interrupt forward mask and have
-+	 * the other disabled
-+	 */
-+	__raw_writel(data->irq_fwd_mask, data->base + IRQEN);
-+
-+	num_parent_irqs = of_irq_count(dn);
-+	if (num_parent_irqs <= 0) {
-+		pr_err("invalid number of parent interrupts\n");
-+		ret = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	map_mask = of_get_property(dn, "brcm,int-map-mask", &len);
-+	if (!map_mask || (len != (sizeof(*map_mask) * num_parent_irqs))) {
-+		pr_err("invalid brcm,int-map-mask property\n");
-+		ret = -EINVAL;
-+		goto out_unmap;
-+	}
-+
-+	for (irq = 0; irq < num_parent_irqs; irq++) {
-+		ret = bcm7120_l2_intc_init_one(dn, data, irq, map_mask);
-+		if (ret)
-+			goto out_unmap;
-+	}
-+
-+	data->domain = irq_domain_add_linear(dn, 32,
-+					&irq_generic_chip_ops, NULL);
-+	if (!data->domain) {
-+		ret = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1,
-+				dn->full_name, handle_level_irq, clr, 0,
-+				IRQ_GC_INIT_MASK_CACHE);
-+	if (ret) {
-+		pr_err("failed to allocate generic irq chip\n");
-+		goto out_free_domain;
-+	}
-+
-+	gc = irq_get_domain_generic_chip(data->domain, 0);
-+	gc->unused = 0xfffffff & ~data->irq_map_mask;
-+	gc->reg_base = data->base;
-+	gc->private = data;
-+	ct = gc->chip_types;
-+
-+	ct->regs.mask = IRQEN;
-+	ct->chip.irq_mask = irq_gc_mask_clr_bit;
-+	ct->chip.irq_unmask = irq_gc_mask_set_bit;
-+	ct->chip.irq_ack = irq_gc_noop;
-+	ct->chip.irq_suspend = bcm7120_l2_intc_suspend;
-+	ct->chip.irq_resume = bcm7120_l2_intc_resume;
-+
-+	if (of_property_read_bool(dn, "brcm,irq-can-wake")) {
-+		data->can_wake = true;
-+		/* This IRQ chip can wake the system, set all relevant child
-+		 * interupts in wake_enabled mask
-+		 */
-+		gc->wake_enabled = 0xffffffff;
-+		gc->wake_enabled &= ~gc->unused;
-+		ct->chip.irq_set_wake = irq_gc_set_wake;
-+	}
-+
-+	pr_info("registered BCM7120 L2 intc (mem: 0x%p, parent IRQ(s): %d)\n",
-+			data->base, num_parent_irqs);
-+
-+	return 0;
-+
-+out_free_domain:
-+	irq_domain_remove(data->domain);
-+out_unmap:
-+	iounmap(data->base);
-+out_free:
-+	kfree(data);
-+	return ret;
-+}
-+IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,bcm7120-l2-intc",
-+		bcm7120_l2_intc_of_init);
 -- 
 1.9.1
