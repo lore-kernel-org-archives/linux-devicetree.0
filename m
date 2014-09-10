@@ -1,80 +1,108 @@
-Return-Path: <jic23@kernel.org>
-Message-Id: <541fc191.48d5440a.0986.67a4SMTPIN_ADDED_MISSING@mx.google.com>
-In-Reply-To: <A874F61F95741C4A9BA573A70FE3998FBC4743E2@DQHE06.ent.ti.com>
-References: <1410448403-19402-1-git-send-email-svarbanov@mm-sol.com> <1410448403-19402-2-git-send-email-svarbanov@mm-sol.com> <54138151.8010902@gmx.de> <54147E97.60808@kernel.org> <5416F3E2.3030009@mm-sol.com> <4dbc485f-599a-4b50-854c-c2e1c44d4810@email.android.com> <541AAC80.1090708@mm-sol.com> <541ED2C0.4040801@kernel.org> <A874F61F95741C4A9BA573A70FE3998FBC4743E2@DQHE06.ent.ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain;
- charset=UTF-8
-Subject: RE: [PATCH v2 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-From: Jonathan Cameron <jic23@kernel.org>
-Date: Mon, 22 Sep 2014 07:28:06 +0100
-To: "Kim, Milo" <Milo.Kim@ti.com>, Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David
+In-Reply-To: <20140910163250.GA22910@obsidianresearch.com>
+References: <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+	<20140908145459.GO27864@e106497-lin.cambridge.arm.com>
+	<CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com>
+	<20140908155931.GP27864@e106497-lin.cambridge.arm.com>
+	<540E960D.7080408@huawei.com>
+	<20140909084621.GS27864@e106497-lin.cambridge.arm.com>
+	<540EC8CB.7010106@huawei.com>
+	<CAErSpo4cAfom2=07NYDRfTCdHO22M0v+ueiaZuG6v2Xd18wEnQ@mail.gmail.com>
+	<20140909154123.GA12906@obsidianresearch.com>
+	<CAL_JsqJMRqbwNkB2K6Mg2DU9mSHwAObtD7LLG2_n=4jGDAFhyQ@mail.gmail.com>
+	<20140910163250.GA22910@obsidianresearch.com>
+Date: Wed, 10 Sep 2014 14:36:03 -0500
+Message-ID: <CAL_JsqJOybCgpPbZq5jPBrfsS0an2O5Ct=VwJvnSruNryz5dMQ@mail.gmail.com>
+Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI domain_nr
+From: Rob Herring <robherring2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Yijing Wang <wangyijing@huawei.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-<collinsd@codeaurora.org>,"Ivan T. Ivanov" <iivanov@mm-sol.com>
-Message-ID: <4f726fe9-707e-41bd-bcc7-188516b6f47a@email.android.com>
-
-
-
-On September 22, 2014 2:01:12 AM GMT+01:00, "Kim, Milo" <Milo.Kim@ti.com> wrote:
->Hello Jonathan and Stanimir,
->
->> >> See Documentation/ABI/sysfs-bus-iio
->> >> Millivolts I think... We copied hwmon where possible.
+On Wed, Sep 10, 2014 at 11:32 AM, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> On Tue, Sep 09, 2014 at 09:44:56PM -0500, Rob Herring wrote:
+>> On Tue, Sep 9, 2014 at 10:41 AM, Jason Gunthorpe
+>> <jgunthorpe@obsidianresearch.com> wrote:
+>> > On Tue, Sep 09, 2014 at 08:26:19AM -0600, Bjorn Helgaas wrote:
 >> >
->> > I'm a bit confused about these units. I searched references of
->> > iio_read_channel_processed() and found a few.
+>> >> So as long as the DT tells you the ECAM information for each host
+>> >> bridge, that should be sufficient.  The domain number is then just a
+>> >> Linux convenience and is not tied to the platform as it is on ia64.
 >> >
->> > The iio_hwmon expecting milivolts. On the other side
->lp8788-charger.c
->> > registers a get_property method in charger-manager.c, which expects
->> > microvolts in get_batt_uV().
->> It's definitely meant to be millivolts (lifted from hwmon a while
->back).
->> See Documentation/ABI/testing/sysfs-bus-iio
->> 
->> Looks like we have a bug in lp8788-charger - it might be matched with
->one in
->> lp8788-adc, but then there will be a bug there...
->> 
->> Cc'd Milo Kim.
+>> > I think this is right for DT systems - the domain is purely internal
+>> > to the kernel and userspace, it is used to locate the proper host
+>> > bridge driver instance, which contains the proper config accessor (and
+>> > register bases, etc).
+>> >
+>> > AFAIK the main reason to have a DT alias to learn the domain number is
+>> > to make it stable so things like udev/etc can reliably match on the
+>> > PCI location.
+>>
+>> For what purpose?
 >
->'lp8788-charger' registers not charger-manager but power-supply
->subsystem.
->'lp8788-adc' is the IIO driver.
->'lp8788-charger' is the IIO consumer of lp8788-adc.
+> udev places PCI D:B:D.F's all over the place, eg:
 >
->(How to communicate between lp8788-adc and lp8788-charger)
->1. Application requests vbatt(battery voltage) by accessing
->/sys/class/power/
->2. lp8788-charger asks lp8788-adc to get converted vbatt value
->3. lp8788-adc get the battery ADC from the device.
->   It returns calculated micro voltage to lp8788-charger.
-It should be in millivolts... See below. 
->4. lp8788-charger reports this uV value to the application
->5. Application uses uV or converts to mV or V unit. It's up to the app.
+> $ ls /dev/serial/by-path/
+> pci-0000:00:1a.0-usb-0:1.4.2.5:1.0@
+> pci-0000:00:1a.0-usb-0:1.4.2.6:1.0@
+> $ ls /dev/disk/by-path/
+> pci-0000:03:00.0-sas-0x5fcfffff00000001-lun-0@
+> pci-0000:03:00.0-sas-0x5fcfffff00000001-lun-0-part1@
+> pci-0000:03:00.0-sas-0x5fcfffff00000001-lun-0-part2@
+> pci-0000:03:00.0-sas-0x5fcfffff00000001-lun-0-part3@
+>     ^^^^
+> domain number
 >
->Please note that battery app accesses not /sys/bus/iio but
->/sys/class/power/.
-
-Indeed but the value actually returned is that from iio_read_channel_processed which
-
-calls iio_channel_read (or does application of scale locally though the effect is the same)
-
-with the processed value. This then calls read_raw and so gets a value that should be in millivolts.
-
-Hence the query.
-
-Looks to me like the ADC driver has wrong scale value? 
-
-
-
-
+> It is part of the stable naming scheme udev uses - and that scheme is
+> predicated on the PCI location being stable.
 >
->Best regards,
->Milo
+>> IMO they should not. We really want to move away from aliases, not
+>> expand their use. They are used for serial because there was no good
+>> way to not break things like "console=ttyS0". I2C I think was more
+>> internal, but may have been for i2c-dev. What are we going to break if
+>> we don't have consistent domain numbering?
+>
+> Well, DT needs some kind of solution to produce stable names for
+> things. It is no good if the names unpredictably randomize.
+>
+> Lets use I2C as an example. My embedded systems have multiple I2C
+> busses, with multiple drivers (so load order is not easily ensured).
+> I am relying on DT aliases to force the bus numbers to stable values,
+> but if I don't do that - then how do I find things in user space?
 
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+By searching for the class of device you want, not searching the bus.
+
+> $ ls -l /sys/bus/i2c/devices
+> lrwxrwxrwx    1 root     root            0 Sep 10 16:12 i2c-2 -> ../../../devices/pci0000:00/0000:00:01.0/i2c_qsfp.4/i2c-2
+>
+> Oh, I have to search based on the HW path, which includes the domain
+> number.
+>
+> So that *must* be really stable, or user space has no hope of mapping
+> real hardware back to an I2C bus number.
+>
+> The same is true for pretty much every small IDR scheme in the kernel
+> - they rely on the HW path for stable names.
+>
+> As an aside, I think for embedded being able to directly specify
+> things like the bus number for I2C, ethX for ethernet, etc is very
+> valuable, I would be sad to see that go away.
+>
+>> DT, I'd rather see it as part of the PCI root node. But I'm not
+>> convinced it is needed.
+>
+>> It doesn't really sound like we have any actual need to solve this for
+>> DT ATM. It's not clear to me if all buses should be domain 0 or a
+>> simple incrementing index for each bus in absence of any firmware set
+>> value.
+>
+> There are already ARM DTs in the kernel that require multiple domains,
+> so that ship has sailed.
+>
+> I don't think it really matters where the number comes from, so long
+> as it doesn't change after a kernel upgrade, or with a different
+> module load order, or if the DT is recompiled, or whatever. It needs
+> to be stable.
+>
+> Jason
