@@ -1,100 +1,90 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 0/2] IO voltage domain support for rk3188 and rk3288
-Date: Wed, 10 Sep 2014 16:12:55 -0700
-Message-ID: <7hlhprqdc8.fsf@linaro.org>
-References: <1409254565-10677-1-git-send-email-dianders@chromium.org>
-	<53FF9E93.3040601@ti.com>
-	<CAD=FV=Vcj+tAno92c38Prviyi-v2CmuGSzak1ppETL033KAF4w@mail.gmail.com>
-	<1450179.xJuMFg9Vvn@diego>
-	<CACRpkda-XS0XLSkAZ-16=JvD8FbRJNuN4UVL4dMyV71bfU5T2A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda-XS0XLSkAZ-16=JvD8FbRJNuN4UVL4dMyV71bfU5T2A@mail.gmail.com>
-	(Linus Walleij's message of "Thu, 4 Sep 2014 18:51:47 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Doug Anderson <dianders@chromium.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Addy Ke <addy.ke@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Peter De Schrijver <pdeschrijver@nvidia.com>, Andy Gross <agross@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-k>
+From: Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v7 0/4] APM X-Gene PCIe host controller
+Date: Wed, 10 Sep 2014 16:20:16 -0700
+Message-ID: <1410391220-4866-1-git-send-email-tinamdar@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus Walleij <linus.walleij@linaro.org> writes:
+This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+cards.
 
-> On Sat, Aug 30, 2014 at 1:27 PM, Heiko St=C3=BCbner <heiko@sntech.de>=
- wrote:
->> Am Freitag, 29. August 2014, 21:51:46 schrieb Doug Anderson:
->>> On Thu, Aug 28, 2014 at 2:26 PM, Santosh Shilimkar
->>>
->>> <santosh.shilimkar@ti.com> wrote:
->>> > On Thursday 28 August 2014 03:36 PM, Doug Anderson wrote:
->>> >> These two patches add support for automatically configuring the =
-IO
->>> >> voltage domains on rk3188 and rk3288 SoCs.  The first patch adds=
- some
->>> >> new notification types to the regulator code.  It's used by the =
-second
->>> >> patch which actually implements the IO voltage domain driver.
->>> >>
->>> >> These two patches were co-developed by Heiko St=C3=BCbner and Do=
-ug Anderson
->>> >> (proof of concept patches were written by Heiko).  They were tes=
-ted in
->>> >> a private branch on an rk3288 board using rk808 instead of mainl=
-ine
->>> >> since rk808 support isn't finalized in mainline yet.
->>> >>
->>> >> (sorry if you got this series twice; my mailer seems unhappy wit=
-h me)
->>> >>
->>> >> Heiko St=C3=BCbner (2):
->>> >>   regulator: core: Add REGULATOR_EVENT_PRE_VOLTAGE_CHANGE (and A=
-BORT)
->>> >>   soc/rockchip: io-domain: add driver handling io domains
->>> >
->>> > Sorry to shot down but your IO domains are nothing but voltage do=
-mains
->>> > and you should really build something in the drivers/power/*
->>>
->>> If everyone agrees that this belongs in drivers/power that's totall=
-y
->>> OK.  Neither Heiko nor I was confident that it should be in
->>> drivers/soc.  I had even though that the code wouldn't be totally o=
-ut
->>> of place in the Rockchip pinctrl driver (adding Linus W since I thi=
-nk
->>> some SoCs did add code to handle 3.3V vs. 1.8V in pinctrl).
->>
->> a bit of context for Linus ...
->>
->> This is essentially the continuation of  the thread "io-domain volta=
-ges as
->> regulators?" from the beginning of august. After more discussions we=
- found out
->> that the io voltage selection I asked about is not an independent su=
-pply, but
->> instead has to reflect the voltage of the real supplying regulator.
->>
->> And setting the io-voltage setting to 1.8V while the regulator is su=
-pplying
->> 3.3V for example may actually damage the chip.
->>
->>
->> So in our current approach here, we added a driver that tracks volta=
-ge changes
->> of the supplying regulator via a notifier and sets the register bits
->> accordingly.
->
-> I feel I'm not smart enough for this. You need the PM people to look
-> at this stuff, like Rafael Wysocki, Kevin Hilman and Ulf Hansson.
+X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
+Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
+support for creating generic pcie bridge from device tree. Liviu's patches
+are available here
+https://lkml.org/lkml/2014/9/8/333
 
-I think the best fit for this is along with the Adaptive Voltage Scalin=
-g
-(AVS) stuff we currently have in drivers/power/avs.  It's not exactly
-adaptive in the same sense as the TI/SmartReflex is because there's no
-hardware being configured to dynamically make micro-adjustments to the
-regulators.  But, it is adaptive in the sense that there's SoC-specific
-"stuff" to do right around the same time the voltage is scaled.
+If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
+patches from Liviu must be applied before the patches in this patch set. Also
+please use latest xgene u-boot firmware.
 
-So I would suggest drivers/power/avs.
+changes since V6:
+1. Port driver to changed interface as per Liviu's v10 series.
 
-Kevin
+changes since V5:
+1. Port driver to changed interface of 'of_create_pci_host_bridge'
+2. Fix the prefetch bit setting
+3. Removed bunch of register programming which is already done by firmware
+
+changes since V4:
+1. fix section mismatch warnings
+2. fix the patch description
+3. fix indentation
+4. update read/write cfg functions by passing both addr and offset.
+5. use 'time_before' for timeout.
+6. remove unnecessary 'IS_ERR_OR_NULL'. Keep 'IS_ERR' for 'clk_get'
+7. remove BUG_ON for pci_ioremap_io.
+
+changes since V3:
+1. remove 'struct hw_pci' and supporting ops in hw_pci
+2. add code to create the host bridge from dts
+3. add code to scan the the host bridge
+4. modify outbound windows setup function to get resource information from
+   'bridge->windows'
+5. add compatible string in pcie dts node with current X-Gene SOC name.
+
+changes since V2:
+1. redefined each PCI port in different PCI domain correctly.
+2. removed setup_lane and setup_link functions from driver.
+3. removed scan_bus wrapper and set_primary_bus hack.
+4. added pci_ioremap_io for io resources.
+
+changes since V1:
+1. added PCI domain support
+2. reading cpu and pci addresses from device tree to configure regions.
+3. got rid of unnecessary wrappers for readl and writel.
+4. got rid of endpoint configuration code.
+5. added 'dma-ranges' property support to read inbound region configuration.
+6. renamed host driver file to 'pci-xgene.c' from 'pcie-xgene.c'
+7. dropped 'clock-names' property from bindings
+8. added comments whereever requested.
+
+
+Tanmay Inamdar (4):
+  pci:host: APM X-Gene PCIe host controller driver
+  arm64: dts: APM X-Gene PCIe device tree nodes
+  dt-bindings: pci: xgene pcie device tree bindings
+  MAINTAINERS: entry for APM X-Gene PCIe host driver
+
+ .../devicetree/bindings/pci/xgene-pci.txt          |  55 ++
+ MAINTAINERS                                        |   8 +
+ arch/arm64/boot/dts/apm-mustang.dts                |   8 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 | 160 +++++
+ drivers/pci/host/Kconfig                           |  10 +
+ drivers/pci/host/Makefile                          |   1 +
+ drivers/pci/host/pci-xgene.c                       | 647 +++++++++++++++++++++
+ 7 files changed, 889 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
+ create mode 100644 drivers/pci/host/pci-xgene.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
