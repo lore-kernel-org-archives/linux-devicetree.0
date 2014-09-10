@@ -1,45 +1,34 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v10 06/10] PCI: Introduce generic domain handling for PCI
- busses.
-Date: Mon, 8 Sep 2014 15:03:21 +0100
-Message-ID: <20140908140321.GF22717@arm.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
- <1410184472-17630-7-git-send-email-Liviu.Dudau@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V4] pwm: lpc32xx - Add a driver for the motor PWM
+Date: Wed, 10 Sep 2014 18:28:39 +0200
+Message-ID: <3043402.gA1yIrlkCZ@wuerfel>
+References: <1410363822-22151-1-git-send-email-alban.bedel@avionic-design.de> <12709842.iga6ki5KTS@wuerfel> <20140910175941.5c44837f@avionic-0020>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410184472-17630-7-git-send-email-Liviu.Dudau@arm.com>
+In-Reply-To: <20140910175941.5c44837f@avionic-0020>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+To: Alban Bedel <alban.bedel@avionic-design.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 08, 2014 at 02:54:28PM +0100, Liviu Dudau wrote:
-> The handling of PCI domains (or PCI segments in ACPI speak) is
-> usually a straightforward affair but its implementation is
-> currently left to the architectural code, with pci_domain_nr(b)
-> querying the value of the domain associated with bus b.
+On Wednesday 10 September 2014 17:59:41 Alban Bedel wrote:
+> On Wed, 10 Sep 2014 17:51:36 +0200
+> Arnd Bergmann <arnd@arndb.de> wrote:
 > 
-> This patch introduces CONFIG_PCI_DOMAINS_GENERIC as an
-> option that can be selected if an architecture want a
-> simple implementation where the value of the domain
-> associated with a bus is stored in struct pci_bus.
+> > On Wednesday 10 September 2014 17:43:42 Alban Bedel wrote:
+> > > +- #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+> > > +  the cells format. The only third cell flag supported by this binding is
+> > > +  PWM_POLARITY_INVERTED.
+> > 
+> > If you don't have multiple pwm outputs or programmable period, I would say it
+> > should use #pwm-cells=<1> and only pass the polarity.
 > 
-> The architectures that select CONFIG_PCI_DOMAINS_GENERIC will
-> then have to implement pci_bus_assign_domain_nr() as a way
-> of setting the domain number associated with a root bus.
-> All child busses except the root bus will inherit the domain_nr
-> value from their parent.
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Catalin Marinas <Catalin.Marinas@arm.com>
-> [Renamed pci_set_domain_nr() to pci_bus_assign_domain_nr()]
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> There is 3 channel, so 3 PWM from the API POV, and the period is
+> independently programmable for each one.
 
-I'm probably the author here, but the patch log doesn't say so (I don't
-mind, just a remark).
+Then you should put the channel number into the first cell and the period
+length into the second cell, as the pwm.txt document says.
 
--- 
-Catalin
+	Arnd
