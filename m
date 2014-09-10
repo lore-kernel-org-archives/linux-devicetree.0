@@ -1,63 +1,27 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v2 2/2] PCI: keystone: update to support multiple pci
- ports
-Date: Tue, 9 Sep 2014 18:50:13 -0400
-Message-ID: <540F8425.70304@ti.com>
-References: <1410293835-13050-1-git-send-email-m-karicheri2@ti.com> <9042477.aRbAhpkfQ5@wuerfel> <540F75DF.5050904@ti.com> <3967092.l9bxcqMaSa@wuerfel>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v6 1/4] ethernet: arc: Add support for Rockchip SoC
+ layer device tree bindings
+Date: Tue, 09 Sep 2014 17:30:19 -0700 (PDT)
+Message-ID: <20140909.173019.1085874055765706579.davem@davemloft.net>
+References: <1410196490-5646-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <3967092.l9bxcqMaSa@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1410196490-5646-1-git-send-email-romain.perier@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: romain.perier@gmail.com
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2014 05:52 PM, Arnd Bergmann wrote:
-> On Tuesday 09 September 2014 17:49:19 Murali Karicheri wrote:
->> Actually this is an inteded. The vendor ID is in a register indicated by
->> reg offset and as per the device spec, it needs to be read and updated
->> by the software. Now since multiple instances of PCI device needs to be
->> read the same register, the reading happens in the probe() and same is
->> unmapped after that.
->>
->> +       ks_pcie->device_id = readl(reg_p)>>  16;
->> +       devm_iounmap(dev, reg_p);
->> +       devm_release_mem_region(dev, res->start, resource_size(res));
->>
->> Afetr that in ks_pcie_host_init(), it update the device_id in the RC's
->> config space.
->
-> I'm not sure I understand the purpose of this. Do you mean you read
-> the vendor/device ID of whichever device happens to get probed first
-> and then program the same ID into all other devices as well?
+From: Romain Perier <romain.perier@gmail.com>
+Date: Mon,  8 Sep 2014 17:14:47 +0000
 
-My mistake. It is the device ID, not vendor ID. The PCI driver supports 
-PCI h/w on K2HK, K2E and K2L SoCs for which PCI device IDs are assigned as
+> This patch defines a platform glue layer for Rockchip SoCs which
+> support arc-emac driver. It ensures that regulator for the rmii is on
+> before trying to connect to the ethernet controller. It applies right
+> speed and mode changes to the grf when ethernet settings change.
+> 
+> Signed-off-by: Romain Perier <romain.perier@gmail.com>
 
-+#define PCIE_RC_K2HK		0xb008
-+#define PCIE_RC_K2E		0xb009
-+#define PCIE_RC_K2L		0xb00a
-+
-
-and the same driver code runs on all these h/w. The device ID is not 
-filled in by default by the h/w, in the config space of the RC at offset 
-1000h "VENDOR_DEVICE_ID Vendor and Device Identification Register". 
-Same is available in a seperate SoC register whose offset is specified 
-by index 2. This is read by driver and updated in the config space. The 
-Vendor ID is however set by default.
-
-There is a mrrs PCI quirk required for Keystone PCI which depends on 
-this vendor ID to be filled correctly as it match vendor id/ device id 
-of the bridge device to apply the quirk.
-
-Hope this clarify your question.
-
-Murali
-
->
-> What if the order changes between two boots? Why does the vendor/device
-> ID of the host bridge even matter at all?
->
-> 	Arnd
+Applied.
