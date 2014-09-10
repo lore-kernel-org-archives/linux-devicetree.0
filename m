@@ -1,53 +1,32 @@
-From: "Chao Xie" <xiechao_mail@163.com>
-Subject: Re:Re: [PATCH 02/12] clk: mmp: add spin lock for clk-frac
-Date: Wed, 10 Sep 2014 09:30:47 +0800 (CST)
-Message-ID: <39edaf46.1299c.1485d2f33e4.Coremail.xiechao_mail@163.com>
-References: <1409027904-21859-1-git-send-email-chao.xie@marvell.com>
- <1409027904-21859-3-git-send-email-chao.xie@marvell.com>
- <20140903180424.11368.36053@quantum>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv3 2/3] ASoC: simple-card: Adjust the comments of simple
+ card.
+Date: Wed, 10 Sep 2014 01:43:40 +0000
+Message-ID: <c8f233709d2c4c89b435d3b09c6fae50@BY2PR0301MB0613.namprd03.prod.outlook.com>
+References: <1409711021-19277-1-git-send-email-Li.Xiubo@freescale.com>
+ <1409711021-19277-3-git-send-email-Li.Xiubo@freescale.com>
+ <20140909120235.GY2601@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140903180424.11368.36053@quantum>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, haojian.zhuang@gmail.com, Chao Xie <chao.xie@marvell.com>, haojian.zhuang@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140909120235.GY2601@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: "perex@perex.cz" <perex@perex.cz>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "tiwai@suse.de" <tiwai@suse.de>, "moinejf@free.fr" <moinejf@free.fr>, "andrew@lunn.ch" <andrew@lunn.ch>, "kuninori.morimoto.gx@renesas.com" <kuninori.morimoto.gx@renesas.com>, "jsarha@ti.com" <jsarha@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+> Subject: Re: [PATCHv3 2/3] ASoC: simple-card: Adjust the comments of simple
+> card.
+> 
+> On Wed, Sep 03, 2014 at 10:23:40AM +0800, Xiubo Li wrote:
+> > Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+> 
+> This doesn't apply against current code.
 
-At 2014-09-04 02:04:24, "Mike Turquette" <mturquette@linaro.org> wrote:
->Quoting Chao Xie (2014-08-25 21:38:14)
->> From: Chao Xie <chao.xie@marvell.com>
->> 
->> The register used by clk-frac may be shared with
->> other clocks.
->> So it needs to use spin lock to protect the register
->> access.
->> 
->> Signed-off-by: Chao Xie <chao.xie@marvell.com>
->
->This patch will break against the latest clk-next due to api changes.
->You can see more here[0] and use this script to update your code if you
->like[1].
->
->Basically the calls to clk_set_rate need to be changed to
->clk_provider_set_rate.
+I will send one new version about this.
 
->
-I see the patch set [0] is V10 now, and it is not merged to clk-next yet.
-So should i wait for the patch set to be merged, then send out the updated patches?
-
->[0] http://lkml.kernel.org/r/<1409758148-20104-1-git-send-email-tomeu.vizoso@collabora.com>
->[1] http://cgit.collabora.com/git/user/tomeu/linux.git/commit/?h=clk-refactoring-9&id=ea48c0d655346cce26329523cf24574f9ea8feee
->
->Regards,
->Mike
+Thanks,
+BRs
+Xiubo
