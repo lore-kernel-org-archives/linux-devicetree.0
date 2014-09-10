@@ -1,102 +1,42 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [GIT PULL 1/2] SOCFPGA updates for 3.18
-Date: Wed, 10 Sep 2014 12:42:23 +0200
-Message-ID: <CAPDyKFoXiNOHQ3W=U08jU2PG-fz4F_7wuW-KNEoDfcQzrLKmVA@mail.gmail.com>
-References: <1409847105-27241-1-git-send-email-dinguyen@opensource.altera.com>
-	<20140909141756.GA30100@amd>
-	<4134101.OOENTRabu1@wuerfel>
-	<20140909210232.GA539@amd>
-	<CAPDyKFr35646zQUDUnv9LYy9jtY7r343hev9FrhxOfjVMb6MJw@mail.gmail.com>
-	<20140910083337.GA5178@amd>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] ARM: l2c: parse cache properties from ePAPR definitions
+Date: Wed, 10 Sep 2014 12:44:16 +0200
+Message-ID: <CACRpkdaLJ6Y+5WXyV1f1UUjiSJ5s2YbG=trKvonbwWLv2aDf4g@mail.gmail.com>
+References: <1410339572-23694-1-git-send-email-linus.walleij@linaro.org>
+	<4196671.LQ3YKNLqVB@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140910083337.GA5178@amd>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Pavel Machek <pavel@denx.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, marex@denx.de, dinguyen@opensource.altera.com, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, "arm@kernel.org" <arm@kernel.org>, dinh.linux@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <4196671.LQ3YKNLqVB@wuerfel>
+Sender: linux-leds-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10 September 2014 10:33, Pavel Machek <pavel@denx.de> wrote:
-> On Wed 2014-09-10 09:13:27, Ulf Hansson wrote:
->> On 9 September 2014 23:02, Pavel Machek <pavel@denx.de> wrote:
->> > On Tue 2014-09-09 17:02:34, Arnd Bergmann wrote:
->> >> On Tuesday 09 September 2014 16:17:56 Pavel Machek wrote:
->> >> > > Jaehoon Chung (1):
->> >> > >       ARM: dts: socfpga: unuse the slot-node and deprecate the supports-highspeed for dw-mmc
->> >> > >
->> >> >
->> >> > This patch is a bad idea. It removes support for two mmc cards on a
->> >> > single controller -- configuration hardware supports and configuration
->> >> > that allows using u-SD card on mcvevk board.
->> >> >
->> >>
->> >> Your objection comes too late, and to the wrong patch, since the
->> >> driver and all other users have already been changed. We had a long
->> >> discussion about this when the issue first came up, and we could
->> >> not find any example of dw-mmc actually being used in a scenario
->> >> with one controller that has multiple devices attached.
->> >
->> > Well, this is not first time I raised this. 3.17 is not yet out, so we
->> > still have chance to fix regressions without major fuss.
->> >
->> >> Apparently every user out there instead uses multiple controller
->> >> instances instead. Are you sure that the socfpga implementation
->> >> is an exception from this?
->> >
->> > Marek Vasut has the hardware. His board apprently has uSD and eMMC,
->> > and I believe it has just one controller. I'll try to get details.
->> >
->>
->> Just wanted to highlight some of the reasons to why the earlier
->> discussion we have had, came to the conclusion to remove the slot
->> node.
->>
->> 1) The mmc core don't support multiple cards attached to the same
->> host, it never has. Also, I am not aware of any requests that
->> suggested us to add it. Due to obvious reasons from performance
->> perspective it's simply a really bad idea, that's likely also why
->> there haven't been any requests for it.
->
-> Well, that's Linux problem, right? (And why is it bad idea, btw? The
-> bandwidth will be shared between the controllers, ok, that does not
-> sound too bad.)
+On Wed, Sep 10, 2014 at 11:44 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 10 September 2014 10:59:32 Linus Walleij wrote:
 
-Bandwidth is just one issue. Latency is yet another, which is probably
-far worse to handle than bandwidth.
+>> +     pr_info("L2C OF: override cache size: %d bytes (%dKB)\n",
+>> +             cache_size, cache_size >> 10);
+>> +     pr_info("L2C OF: override line size: %d bytes\n", line_size);
+>> +     pr_info("L2C OF: override way size: %d bytes (%dKB)\n",
+>> +             way_size, way_size >> 10);
+>> +     pr_info("L2C OF: override associativity: %d\n", *associativity);
+>
+> I think it would be really nice to print both the original setting
+> and the setting from DT here.
 
->
->> 2) On the host level, the support for handle multiple slots in DT for
->> dw-mmc has been broken. While dw-mmc parsed the DT nodes for slots, it
->> screwed up configurations. Thus the support for slots have never
->> worked as expected from DT point of view.
->
-> Well, DT is supposed to describe the hardware. From your description,
-> it seems that linux does not support two slots on one controller and
-> DT parsing code basically ignores the slots. (Logical, if it can't
-> support two slots).
->
-> So now we are breaking DT description due to Linux limitations. Which
->
-> a) makes it hard for any other os not having same limitation
->
-> b) makes it hard for people to fix the limitation
->
-> c) does not really solve anything
+There is already some code printing the original setting, even
+if it's cryptic, this is in __l2c_init():
+L2C: DT/platform modifies aux control register: 0x02020fff -> 0x02030fff
 
-Yes it does, the problem in 2) gets fixed.
+boot value -> augmented value
 
->
-> d) breaks backward compatibility with old dts
+If you mean that you want me to modify that debug code to provide
+more verbose pretty-print I am happy to do so, but as a separate
+patch.
 
-According to 2), it has never worked - so we don't break anything.
+The rest of the stuff I have fixed...
 
->
-> If nothing, d) should be argument not to do this.
->                                                                         Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-Kind regards
-Uffe
+Yours,
+Linus Walleij
