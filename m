@@ -1,101 +1,43 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/4] mfd/axp20x: rename files to support more devices
-Date: Wed, 10 Sep 2014 09:12:01 +0100
-Message-ID: <20140910081201.GK30307@lee--X1>
-References: <1410267775-4683-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1410267775-4683-2-git-send-email-jacob.jun.pan@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/2] PCI: keystone: update to support multiple pci ports
+Date: Wed, 10 Sep 2014 10:22:36 +0200
+Message-ID: <3814561.AbrslYBNjb@wuerfel>
+References: <1410293835-13050-1-git-send-email-m-karicheri2@ti.com> <3967092.l9bxcqMaSa@wuerfel> <540F8425.70304@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410267775-4683-2-git-send-email-jacob.jun.pan@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE TREE <devicetree@vger.kernel.org>, Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>, Angelo Compagnucci <angelo.compagnu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <540F8425.70304@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bhelgaas@google.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 09 Sep 2014, Jacob Pan wrote:
+On Tuesday 09 September 2014 18:50:13 Murali Karicheri wrote:
+> My mistake. It is the device ID, not vendor ID. The PCI driver supports 
+> PCI h/w on K2HK, K2E and K2L SoCs for which PCI device IDs are assigned as
+> 
+> +#define PCIE_RC_K2HK           0xb008
+> +#define PCIE_RC_K2E            0xb009
+> +#define PCIE_RC_K2L            0xb00a
+> +
+> 
+> and the same driver code runs on all these h/w. The device ID is not 
+> filled in by default by the h/w, in the config space of the RC at offset 
+> 1000h "VENDOR_DEVICE_ID Vendor and Device Identification Register". 
+> Same is available in a seperate SoC register whose offset is specified 
+> by index 2. This is read by driver and updated in the config space. The 
+> Vendor ID is however set by default.
+> 
+> There is a mrrs PCI quirk required for Keystone PCI which depends on 
+> this vendor ID to be filled correctly as it match vendor id/ device id 
+> of the bridge device to apply the quirk.
+> 
+> Hope this clarify your question.
 
-> More XPowers PMIC devices can be supported by extending this driver, =
-so
-> rename it to axp2xx to cover axp288 variant.
->=20
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/mfd/Kconfig                      | 7 ++++---
->  drivers/mfd/Makefile                     | 2 +-
->  drivers/mfd/{axp20x.c =3D> axp2xx.c}       | 2 +-
->  include/linux/mfd/{axp20x.h =3D> axp2xx.h} | 0
->  4 files changed, 6 insertions(+), 5 deletions(-)
->  rename drivers/mfd/{axp20x.c =3D> axp2xx.c} (99%)
->  rename include/linux/mfd/{axp20x.h =3D> axp2xx.h} (100%)
+Ok, I understand now. Yes, this makes sense, though I wonder if it would
+have been easier to handle the quirk in a different way based on the
+driver rather than the PCI ID. It's probably not worth revisiting though,
+unless Bjorn wants to see it done differently now.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index de5abf2..42a70a3 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -67,14 +67,15 @@ config MFD_BCM590XX
->  	help
->  	  Support for the BCM590xx PMUs from Broadcom
-> =20
-> -config MFD_AXP20X
-> -	bool "X-Powers AXP20X"
-> +config MFD_AXP2XX
-> +	bool "X-Powers AXP2XX"
->  	select MFD_CORE
->  	select REGMAP_I2C
->  	select REGMAP_IRQ
->  	depends on I2C=3Dy
->  	help
-> -	  If you say Y here you get support for the X-Powers AXP202 and AXP=
-209.
-> +	  If you say Y here you get support for the X-Powers AXP202, AXP209=
- and
-> +	  AXP288 power management IC (PMIC).
->  	  This driver include only the core APIs. You have to select indivi=
-dual
->  	  components like regulators or the PEK (Power Enable Key) under th=
-e
->  	  corresponding menus.
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index f001487..55d76b3 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -103,7 +103,7 @@ obj-$(CONFIG_PMIC_DA9052)	+=3D da9052-irq.o
->  obj-$(CONFIG_PMIC_DA9052)	+=3D da9052-core.o
->  obj-$(CONFIG_MFD_DA9052_SPI)	+=3D da9052-spi.o
->  obj-$(CONFIG_MFD_DA9052_I2C)	+=3D da9052-i2c.o
-> -obj-$(CONFIG_MFD_AXP20X)	+=3D axp20x.o
-> +obj-$(CONFIG_MFD_AXP2XX)	+=3D axp2xx.o
-> =20
->  obj-$(CONFIG_MFD_LP3943)	+=3D lp3943.o
->  obj-$(CONFIG_MFD_LP8788)	+=3D lp8788.o lp8788-irq.o
-> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp2xx.c
-> similarity index 99%
-> rename from drivers/mfd/axp20x.c
-> rename to drivers/mfd/axp2xx.c
-> index dee6539..c534443 100644
-> --- a/drivers/mfd/axp20x.c
-> +++ b/drivers/mfd/axp2xx.c
-> @@ -21,7 +21,7 @@
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
->  #include <linux/regulator/consumer.h>
-> -#include <linux/mfd/axp20x.h>
-> +#include <linux/mfd/axp2xx.h>
->  #include <linux/mfd/core.h>
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
-> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp2xx.h
-> similarity index 100%
-> rename from include/linux/mfd/axp20x.h
-> rename to include/linux/mfd/axp2xx.h
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+	Arnd
