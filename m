@@ -1,56 +1,71 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI domain_nr
-Date: Tue, 9 Sep 2014 21:44:56 -0500
-Message-ID: <CAL_JsqJMRqbwNkB2K6Mg2DU9mSHwAObtD7LLG2_n=4jGDAFhyQ@mail.gmail.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
- <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com> <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
- <20140908145459.GO27864@e106497-lin.cambridge.arm.com> <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com>
- <20140908155931.GP27864@e106497-lin.cambridge.arm.com> <540E960D.7080408@huawei.com>
- <20140909084621.GS27864@e106497-lin.cambridge.arm.com> <540EC8CB.7010106@huawei.com>
- <CAErSpo4cAfom2=07NYDRfTCdHO22M0v+ueiaZuG6v2Xd18wEnQ@mail.gmail.com> <20140909154123.GA12906@obsidianresearch.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v10 3/3] regulator: RK808: Remove pdata from the regulator
+Date: Tue, 9 Sep 2014 19:49:11 -0700
+Message-ID: <CAD=FV=Xht=nBBffu==py5CDhTjGKgtzNJWuz=X7=Eb0j1W7jog@mail.gmail.com>
+References: <1410311886-4579-1-git-send-email-zyw@rock-chips.com>
+	<1410311886-4579-4-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20140909154123.GA12906@obsidianresearch.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Yijing Wang <wangyijing@huawei.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410311886-4579-4-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@ch>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 9, 2014 at 10:41 AM, Jason Gunthorpe
-<jgunthorpe@obsidianresearch.com> wrote:
-> On Tue, Sep 09, 2014 at 08:26:19AM -0600, Bjorn Helgaas wrote:
+Hi,
+
+On Tue, Sep 9, 2014 at 6:18 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 >
->> So as long as the DT tells you the ECAM information for each host
->> bridge, that should be sufficient.  The domain number is then just a
->> Linux convenience and is not tied to the platform as it is on ia64.
+> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
 >
-> I think this is right for DT systems - the domain is purely internal
-> to the kernel and userspace, it is used to locate the proper host
-> bridge driver instance, which contains the proper config accessor (and
-> register bases, etc).
->
-> AFAIK the main reason to have a DT alias to learn the domain number is
-> to make it stable so things like udev/etc can reliably match on the
-> PCI location.
+> Changes in v10: None
 
-For what purpose?
+Despite the "None" above, I see that there are indeed changes between
+v9 and v10:
 
-> This is similar to i2c, etc that use the alias scheme, so IMHO
-> whatever they do to assign ID's to drivers should be copied for domain
-> numbers.
+diff --git a/drivers/regulator/rk808-regulator.c
+b/drivers/regulator/rk808-regulator.c
+index 0d5afc4..d91f2b6 100644
+--- a/drivers/regulator/rk808-regulator.c
++++ b/drivers/regulator/rk808-regulator.c
+@@ -3,8 +3,8 @@
+  *
+  * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+  *
+- * Author: Chris Zhong<zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+- * Author: Zhang Qing<zhanqging-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
++ * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
++ * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+  *
+  * This program is free software; you can redistribute it and/or modify it
+  * under the terms and conditions of the GNU General Public License,
+@@ -348,6 +348,6 @@ module_platform_driver(rk808_regulator_driver);
 
-IMO they should not. We really want to move away from aliases, not
-expand their use. They are used for serial because there was no good
-way to not break things like "console=ttyS0". I2C I think was more
-internal, but may have been for i2c-dev. What are we going to break if
-we don't have consistent domain numbering? If the domain goes into the
-DT, I'd rather see it as part of the PCI root node. But I'm not
-convinced it is needed.
+ MODULE_DESCRIPTION("regulator driver for the rk808 series PMICs");
+ MODULE_AUTHOR("Chris Zhong<zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+-MODULE_AUTHOR("Zhang Qing<zhanqging-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
++MODULE_AUTHOR("Zhang Qing<zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
+ MODULE_LICENSE("GPL");
+ MODULE_ALIAS("platform:rk808-regulator");
 
-It doesn't really sound like we have any actual need to solve this for
-DT ATM. It's not clear to me if all buses should be domain 0 or a
-simple incrementing index for each bus in absence of any firmware set
-value.
+That looks like the change requested by Dmitry for v9 (don't remove
+the space) plus a typo fix (flipping g/q).  Interestingly enough the
+typo fix shows that "MODULE_AUTHOR" should probably also have had a
+space before the "<".
 
-Rob
+
+Mark: I think you could just take this (possibly fixing the
+MODULE_AUTHOR yourself) to fix the linux-next breakage.  You can also
+add:
+
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
