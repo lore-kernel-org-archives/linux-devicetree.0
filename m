@@ -1,65 +1,68 @@
-From: Yijing Wang <wangyijing@huawei.com>
-Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
- domain_nr
-Date: Wed, 10 Sep 2014 09:55:48 +0800
-Message-ID: <540FAFA4.1080008@huawei.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
- <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
- <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
- <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
- <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com>
- <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
- <540E960D.7080408@huawei.com>
- <20140909084621.GS27864@e106497-lin.cambridge.arm.com>
- <540EC8CB.7010106@huawei.com>
- <CAErSpo4cAfom2=07NYDRfTCdHO22M0v+ueiaZuG6v2Xd18wEnQ@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [GIT PULL] ARM: dts: OMAP5 / DRA7: pinctrl updates
+Date: Wed, 10 Sep 2014 02:29:49 +0000
+Message-ID: <20140910022949.GB1058@atomide.com>
+References: <1410271178-28336-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAErSpo4cAfom2=07NYDRfTCdHO22M0v+ueiaZuG6v2Xd18wEnQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, linux-arch <linux-arch@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Device Tree ML <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Sinan Kaya <okaya@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410271178-28336-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Beno??t Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->> OK. Sorry, I have one last question, because domain will be used to calculate the address used to
->> access PCI hardware config registers. So if DTS file doesn't report the domain, how do we know
->> we would access the right registers when we use the auto increment domain vaule ?
->> Has there a mechanism to make sure system can access the correct registers by the domain ?
+* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [140909 14:00]:
 > 
-> I think you're referring to config access via ECAM (PCIe r3.0, sec
-> 7.2.2).  In that case, I don't think the domain should be used to
-> compute the memory-mapped configuration address.  Each host bridge is
-> in exactly one domain, and each host bridge has an associated ECAM
-> area base.  The address calculation uses the bus number, device
-> number, function number, and register number to compute an offset into
-> the ECAM area.
+> Hi Tony,
 > 
-> So as long as the DT tells you the ECAM information for each host
-> bridge, that should be sufficient.  The domain number is then just a
-> Linux convenience and is not tied to the platform as it is on ia64.
-
-Hi Bjorn, you are right, thanks for your detailed explanation! :)
-
-Thanks!
-Yijing.
-
+> Please pull this series was posted[1] and based on the previous pulls
+> [2] [3], updating the dts to enable the relevant feature.
 > 
-> Bjorn
+> NOTE: I have dropped patch #1 of the series based on [4].
 > 
-> .
+> These could go to your branch omap-for-v3.18/dt
 > 
+> The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
+> 
+>   Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
+> 
+> are available in the git repository at:
+> 
+>   https://github.com/nmenon/linux-2.6-playground.git pull/v3.18/for-dt-pinctrl-updates
+> 
+> for you to fetch changes up to 66b0436977e2c62388d48836ff784f1fedb49c4f:
+> 
+>   ARM: dts: dra7-evm: Mark uart1 rxd as wakeup capable (2014-09-09 08:33:29 -0500)
 
+Thanks pulling into omap-for-v3.18/dt.
 
--- 
-Thanks!
-Yijing
+Tony
+ 
+> ----------------------------------------------------------------
+> Nishanth Menon (5):
+>       ARM: dts: OMAP5: switch to compatible pinctrl
+>       ARM: dts: DRA7: switch to compatible pinctrl
+>       ARM: dts: AM437x: switch to compatible pinctrl
+>       ARM: dts: OMAP5 / DRA7: switch over to interrupts-extended property for UART
+>       ARM: dts: dra7-evm: Mark uart1 rxd as wakeup capable
+> 
+>  arch/arm/boot/dts/am4372.dtsi  |    4 +++-
+>  arch/arm/boot/dts/dra7-evm.dts |    2 ++
+>  arch/arm/boot/dts/dra7.dtsi    |   24 +++++++++++++-----------
+>  arch/arm/boot/dts/omap5.dtsi   |   20 ++++++++++++--------
+>  4 files changed, 30 insertions(+), 20 deletions(-)
+> 
+> [1] http://marc.info/?l=linux-kernel&m=140871681606779&w=2
+> [2] http://marc.info/?l=linux-kernel&m=141019565513129&w=2
+> [3] http://marc.info/?l=linux-kernel&m=141019566913133&w=2
+> [4] http://marc.info/?l=linux-omap&m=141022429924564&w=2
+> 
+> Regards,
+> Nishanth Menon
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
