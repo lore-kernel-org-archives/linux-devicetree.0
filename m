@@ -1,73 +1,39 @@
-From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] iio: st-sensors: add support for lis3lv02d accelerometer
-Date: Wed, 10 Sep 2014 15:36:07 +0200
-Message-ID: <20140910133607.GA13361@xo-6d-61-c0.localdomain>
-References: <1408815064-5763-1-git-send-email-linus.walleij@linaro.org>
- <53FB6205.5020704@kernel.org>
- <CACRpkdb5NXJiTvaHz9_nJiZcFsyVnjPYjaYZ1YH9meBgJhoTJA@mail.gmail.com>
- <54104B26.5080707@st.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [PATCH v2 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
+Date: Wed, 10 Sep 2014 19:07:25 +0530
+Message-ID: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <54104B26.5080707-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Yan Burman <burman.yan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yan Burman <yanb-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Adding device tree entry for CPSW to make it work in Dual EMAC mode.
+These patches were tested with DRA7 hwmod patches on top of linux-next.
+Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
+my tree to [2].
 
-> I'm sorry but I was in business trip. I think that current lis3lv02d 
-> supports more things, I want to support everything in the current IIO 
-> drivers but always I have no time.
+Did a boot test with CPSW and ping test with suspend/resume, the boot logs
+on DRA7xx EVM are posted at [3]
 
-Ok then, can you add hwmon interfaces from the other driver to your one? That way,
-we can deprecate one of them...
+[1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
+[2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dra7-evm-cpsw
+[3] http://pastebin.ubuntu.com/8309289/
 
-									Pavel
+Changes from initial version:
+* Dropped patch for pinoff states
+* Changed pinoff state to mode15
 
-> 
-> BR,
-> Denis
-> 
-> 
-> On 08/27/14 15:38, Linus Walleij wrote:
-> > On Mon, Aug 25, 2014 at 6:19 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >> On 23/08/14 18:31, Linus Walleij wrote:
-> >>> This adds support for the LIS3LV02 accelerometer found in the
-> >>> ST Microelectronics Nomadik board series.
-> >>>
-> >>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >>> Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-> >>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> This is a little 'interesting', given the part is already supported by
-> >> drivers/misc/lis3lv02d*.c and already has bindings under there.
-> >> Documentation/devicetree/bindings/misc/lis302.txt
-> >> (some of these are interesting).
-> > Grrr how come I missed this... It was originally merged as a
-> > hwmon driver.
-> >
-> >
-> >>> +/* CUSTOM VALUES FOR SENSOR 4 */
-> >>>
-> >> I wish now we'd nipped this naming convention in the bud and insisted
-> >> on naming after a relevant part. Oh well.
-> > Well we can always make an invasive patch fixing that. I can
-> > probably do it using sed or something.
-> >
-> >> Do we think this is the right way to handle the alternative support
-> >> here?
-> > Well this patch is a driver using the IIO framework and was written
-> > by ST, but the other driver support a few other interesting features
-> > and seems to be for the laptop usecase.
-> >
-> > Adding the other authors to the TO: line...
-> >
-> > Yours,
-> > Linus Walleij
+Mugunthan V N (2):
+  ARM: dts: dra7: Add CPSW and MDIO module nodes for dra7
+  ARM: dts: dra7-evm: Enable CPSW and MDIO for dra7xx EVM
+
+ arch/arm/boot/dts/dra7-evm.dts | 107 +++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7.dtsi    |  59 +++++++++++++++++++++++
+ 2 files changed, 166 insertions(+)
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+2.1.0
+
