@@ -1,38 +1,47 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
 Subject: Re: [PATCH] checkpatch: struct of_device_id should usually be const
-Date: Wed, 10 Sep 2014 00:23:17 -0700
-Message-ID: <1410333797.24028.29.camel@joe-AO725>
+Date: Wed, 10 Sep 2014 09:29:35 +0200
+Message-ID: <20140910072935.GA3755@pengutronix.de>
 References: <1410333346-29062-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1410333797.24028.29.camel@joe-AO725>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410333346-29062-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1410333797.24028.29.camel@joe-AO725>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-09-10 at 09:15 +0200, Uwe Kleine-K=F6nig wrote:
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -4941,6 +4941,7 @@ sub process {
->  				mtrr_ops|
->  				neigh_ops|
->  				nlmsvc_binding|
-> +				of_device_id|
->  				pci_raw_ops|
->  				pipe_buf_operations|
->  				platform_hibernation_ops|
+On Wed, Sep 10, 2014 at 12:23:17AM -0700, Joe Perches wrote:
+> On Wed, 2014-09-10 at 09:15 +0200, Uwe Kleine-K=F6nig wrote:
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+> > @@ -4941,6 +4941,7 @@ sub process {
+> >  				mtrr_ops|
+> >  				neigh_ops|
+> >  				nlmsvc_binding|
+> > +				of_device_id|
+> >  				pci_raw_ops|
+> >  				pipe_buf_operations|
+> >  				platform_hibernation_ops|
+>=20
+> Fine by me, there are ~1200 or so const uses.
+>=20
+> There are also ~350 of these that are not const.
+>=20
+> Are most all of those supposed to be const?
+Yeah, I'm working on a patch series to fix most of these. I thought I
+sent out the checkpatch patch first to slow down the occurences to fix.
 
-=46ine by me, there are ~1200 or so const uses.
+Best regards
+Uwe
 
-There are also ~350 of these that are not const.
-
-Are most all of those supposed to be const?
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
