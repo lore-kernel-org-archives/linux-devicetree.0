@@ -1,67 +1,50 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v1] ARM: dts: imx6dl: disable dma support for spi on
- i.mx6dl
-Date: Wed, 10 Sep 2014 11:21:30 +0800
-Message-ID: <20140910032128.GD18566@dragon>
-References: <1410312816-32171-1-git-send-email-b38343@freescale.com>
+From: Darren Hart <dvhart@infradead.org>
+Subject: Re: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
+ to MFD driver
+Date: Tue, 9 Sep 2014 20:26:46 -0700
+Message-ID: <20140910032646.GA39541@vmdeb7>
+References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
+ <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
+ <D034802C.A7BEE%dvhart@linux.intel.com>
+ <4656BEB6164FC34F8171C6538F1A595B2E98854F@SHSMSX101.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410312816-32171-1-git-send-email-b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E98854F@SHSMSX101.ccr.corp.intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Chen, Alvin" <alvin.chen@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 09:33:36AM +0800, Robin Gong wrote:
-> There is one weird data in rxfifo after one full rx/tx transfer
-> done sometimes. It looks a design issue and hard to workaround
-> totally, so disable dma functhion here. And will re-enable it
-> once the root cause found.
+On Wed, Sep 10, 2014 at 12:34:50AM +0000, Chen, Alvin wrote:
+> > >@@ -136,7 +136,6 @@ config GPIO_DWAPB
+> > > 	tristate "Synopsys DesignWare APB GPIO driver"
+> > > 	select GPIO_GENERIC
+> > > 	select GENERIC_IRQ_CHIP
+> > >-	depends on OF_GPIO
+> > 
+> > You cover this specific dependencies with inline ifdefs, but you lose the
+> > CONFIG_OF depends by dropping it, and there are no such checks in the probe
+> > routine. Assumptions of OF are not limited to probe in this driver.
+> > 
+> > While I would like to see this assumption properly abstracted, the most
+> > expedient/immediate fix is probably to add a depends on OF above.
 > 
-> Signed-off-by: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6dl.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> Andriy, how do you think? 
 > 
-> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-> index b453e0e..e84a1ff 100644
-> --- a/arch/arm/boot/dts/imx6dl.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl.dtsi
-> @@ -102,6 +102,22 @@
->  	};
->  };
->  
-> +&ecspi1 {
-> +	dma-names = "", "";
-> +};
-> +
-> +&ecspi2 {
-> +	dma-names = "", "";
-> +};
-> +
-> +&ecspi3 {
-> +	dma-names = "", "";
-> +};
-> +
-> +&ecspi4 {
-> +	dma-names = "", "";
-> +};
-> +
-
-This looks odd.  Can we drop the dma properties from imx6qdl.dtsi,
-and only add them in imx6q.dtsi instead?
-
-Shawn
-
->  &hdmi {
->  	compatible = "fsl,imx6dl-hdmi";
->  };
-> -- 
-> 1.9.1
+> How about 
+> depends on OF_GPIO || MFD_GPIO_DWAPB, or
+> depends on OF_GPIO || MFD_INTEL_QUARK_I2C_GPIO?
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Upon closer inspection, I think my concern is invalid. the OF header already
+tests for CONFIG_OF and provides no-op / -ENOSYS (tsk tsk) alternatives. So long
+as you can compile with "#CONFIG_OF is not set" as it is, then I withdraw my
+comment.
+
+Sorry for the noise.
+
+-- 
+Darren Hart
+Intel Open Source Technology Center
