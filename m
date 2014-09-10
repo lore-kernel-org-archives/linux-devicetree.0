@@ -1,31 +1,111 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI domain_nr
-Date: Wed, 10 Sep 2014 20:19:52 +0200
-Message-ID: <2908259.jgJNuDxCCa@wuerfel>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com> <3780051.0eHpCN6UC9@wuerfel> <20140909112054.GD29639@arm.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/6] iommu/arm-smmu: add support for specifying clocks
+Date: Wed, 10 Sep 2014 19:27:39 +0100
+Message-ID: <20140910182739.GM1710@arm.com>
+References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
+	<1407891099-24641-2-git-send-email-mitchelh@codeaurora.org>
+	<20140819125833.GO23128@arm.com> <53F39F6D.1040205@codeaurora.org>
+	<20140826142757.GU23445@arm.com>
+	<vnkwa968b6ux.fsf@mitchelh-linux.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140909112054.GD29639@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>"grant.likely@linaro.org" <grant.>
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <vnkwa968b6ux.fsf-Yf+dfxj6toJBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 September 2014 12:20:54 Catalin Marinas wrote:
+On Wed, Sep 10, 2014 at 02:29:42AM +0100, Mitchel Humpherys wrote:
+> On Tue, Aug 26 2014 at 07:27:58 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Tue, Aug 19, 2014 at 08:03:09PM +0100, Olav Haugan wrote:
+> >> Clients of the SMMU driver are required to vote for clocks and power
+> >> when they know they need to use the SMMU. However, the clock and power
+> >> needed to be on for the SMMU to service bus masters aren't necessarily
+> >> the same as the ones needed to read/write registers...See below.
+> >
+> > The case I'm thinking of is where a device masters through the IOMMU, but
+> > doesn't make use of any translations. In this case, its transactions will
+> > bypass the SMMU and I want to ensure that continues to happen, regardless of
+> > the power state of the SMMU.
 > 
-> We can assume that if a domain is not specified and there is a single
-> top level PCIe node, the domain defaults to 0. Are there any arm32
-> platforms that require multiple domains (and do not specify a number in
-> the DT)?
+> Then I assume the driver for such a device wouldn't be attaching to (or
+> detaching from) the IOMMU, so we won't be touching it at all either
+> way. Or am I missing something?
 
-In theory, I think all of them could work with a single domain, but then
-you need to partition the bus number space between the host controllers,
-so you have the exact same situation that you either need to make up
-random bus numbers or put them in DT.
+As long as its only the register file that gets powered down, then there's
+no issue. However, that's making assumptions about what these clocks are
+controlling. Is there a way for the driver to know which aspects of the
+device are controlled by which clock?
 
-Using multiple domains is way cleaner for this, even if we have to
-make up the numbers.
+> >> > What stops theses from racing with each other when there are multiple
+> >> > clocks? I also assume that the clk API ignores calls to clk_enable_prepare
+> >> > for a clk that's already enabled? I couldn't find that code...
+> >> 
+> >> All the clock APIs are reference counted yes. Not sure what you mean by
+> >> racing with each other? When you call to enable a clock the call does
+> >> not return until the clock is already ON (or OFF).
+> >
+> > I was thinking of an interrupt handler racing with normal code, but actually
+> > you balance the clk enable/disable in the interrupt handlers. However, it's
+> > not safe to call these clk functions from irq context anyway, since
+> > clk_prepare may sleep.
+> 
+> Ah yes. You okay with moving to a threaded IRQ?
 
-	Arnd
+A threaded IRQ already makes sense for context interrupts (if anybody has a
+platform that can do stalls properly), but it seems a bit weird for the
+global fault handler. Is there no way to fix the race instead?
+
+> >> >> @@ -2061,12 +2164,16 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+> >> >>  	spin_unlock(&arm_smmu_devices_lock);
+> >> >>  
+> >> >>  	arm_smmu_device_reset(smmu);
+> >> >> +	arm_smmu_disable_clocks(smmu);
+> >> > 
+> >> > I wonder if this is really the right thing to do. Rather than the
+> >> > fine-grained clock enable/disable you have, why don't we just enable in
+> >> > domain_init and disable in domain_destroy, with refcounting for the clocks?
+> >> > 
+> >> 
+> >> So the whole point of all of this is that we try to save power. As Mitch
+> >> wrote in the commit text we want to only leave the clock and power on
+> >> for as short period of time as possible.
+> >
+> > Understood, but if the clocks are going up and down like yo-yos, then it's
+> > not obvious that you end up saving any power at all. Have you tried
+> > measuring the power consumption with different granularities for the
+> > clocks?
+> 
+> This has been profiled extensively and for some use cases it's a huge
+> win. Unfortunately we don't have any numbers for public sharing :( but
+> you can imagine a use case where some multimedia framework maps a bunch
+> of buffers into an SMMU at the beginning of some interactive user
+> session and doesn't unmap them until the (human) user decides they are
+> done. This could be a long time, all the while these clocks could be
+> off, saving power.
+
+Ok, I can see that. I wonder whether we could wrap all of the iommu_ops
+functions with the clock enable/disable code, instead of putting it directly
+into the drivers?
+
+> > The code you're proposing seems to take the approach of `we're going to
+> > access registers so enable the clocks, access the registers then disable the
+> > clocks', which is simple but may not be particularly effective.
+> 
+> Yes, that's a good summary of the approach here. It has been effective
+> in saving power for us in the past...
+
+Mike, do you have any experience with this sort of stuff?
+
+Will
