@@ -1,44 +1,37 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Wed, 10 Sep 2014 00:34:50 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E98854F@SHSMSX101.ccr.corp.intel.com>
-References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
- <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
- <D034802C.A7BEE%dvhart@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <D034802C.A7BEE%dvhart@linux.intel.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] irqchip: Broadcom BCM7120-style Level 2 interrupt controller
+Date: Tue,  9 Sep 2014 17:44:20 -0700
+Message-ID: <1410309862-27784-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >@@ -136,7 +136,6 @@ config GPIO_DWAPB
-> > 	tristate "Synopsys DesignWare APB GPIO driver"
-> > 	select GPIO_GENERIC
-> > 	select GENERIC_IRQ_CHIP
-> >-	depends on OF_GPIO
-> 
-> You cover this specific dependencies with inline ifdefs, but you lose the
-> CONFIG_OF depends by dropping it, and there are no such checks in the probe
-> routine. Assumptions of OF are not limited to probe in this driver.
-> 
-> While I would like to see this assumption properly abstracted, the most
-> expedient/immediate fix is probably to add a depends on OF above.
+Hi Jason, Thomas, Mark,
 
-Andriy, how do you think? 
+This patch set adds support for the second type of Level-2 interrupt controller
+found on Broadcom Set Top Box hardware.
 
-How about 
-depends on OF_GPIO || MFD_GPIO_DWAPB, or
-depends on OF_GPIO || MFD_INTEL_QUARK_I2C_GPIO?
+Version 2 should address your previous comments made on the initial submission.
 
+Thanks!
 
-> --
-> Darren
-> Intel Open Source Technology Center
-> 
+Florian Fainelli (2):
+  irqchip: add Broadcom BCM7120-style Level 2 interrupt controller
+  Documentation: bcm7120-l2: Add Broadcom BCM7120-style L2 binding
 
+ .../interrupt-controller/brcm,bcm7120-l2-intc.txt  |  86 ++++++++
+ drivers/irqchip/Makefile                           |   3 +-
+ drivers/irqchip/irq-bcm7120-l2.c                   | 220 +++++++++++++++++++++
+ 3 files changed, 308 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
+ create mode 100644 drivers/irqchip/irq-bcm7120-l2.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
