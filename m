@@ -1,23 +1,47 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [Patch v2 net-next 09/12] net: fec: change FEC alignment
- according to i.mx6 sx requirement
-Date: Wed, 10 Sep 2014 09:51:24 -0300
-Message-ID: <CAOMZO5AwOWr8uWCvt3XzM8CJideu+1LBY6QUQ772QjLjCYxL1w@mail.gmail.com>
-References: <1410293743-27874-1-git-send-email-Frank.Li@freescale.com>
-	<1410293743-27874-10-git-send-email-Frank.Li@freescale.com>
+From: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] iio: st-sensors: add support for lis3lv02d accelerometer
+Date: Wed, 10 Sep 2014 14:59:18 +0200
+Message-ID: <54104B26.5080707@st.com>
+References: <1408815064-5763-1-git-send-email-linus.walleij@linaro.org>
+	<53FB6205.5020704@kernel.org>
+ <CACRpkdb5NXJiTvaHz9_nJiZcFsyVnjPYjaYZ1YH9meBgJhoTJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1410293743-27874-10-git-send-email-Frank.Li@freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: Frank Li <Frank.Li@freescale.com>
-Cc: Duan Fugang-B38611 <b38611@freescale.com>, "David S. Miller" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, =?UTF-8?B?5p2O5pm6?= <lznuaa@gmail.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdb5NXJiTvaHz9_nJiZcFsyVnjPYjaYZ1YH9meBgJhoTJA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Yan Burman <burman.yan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yan Burman <yanb-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 9, 2014 at 5:15 PM, Frank Li <Frank.Li@freescale.com> wrote:
-
-> +       fep->rx_align = 0x3;
-> +       fep->tx_align = 0x3;
-
-Why do you unconditionally set it as 0x3? It was 0xf for ARM and 0x3
-for non-ARM.
+Q2lhbyBndXlzLA0KDQpJJ20gc29ycnkgYnV0IEkgd2FzIGluIGJ1c2luZXNzIHRyaXAuIEkgdGhp
+bmsgdGhhdCBjdXJyZW50IGxpczNsdjAyZCANCnN1cHBvcnRzIG1vcmUgdGhpbmdzLCBJIHdhbnQg
+dG8gc3VwcG9ydCBldmVyeXRoaW5nIGluIHRoZSBjdXJyZW50IElJTyANCmRyaXZlcnMgYnV0IGFs
+d2F5cyBJIGhhdmUgbm8gdGltZS4NCg0KQlIsDQpEZW5pcw0KDQoNCk9uIDA4LzI3LzE0IDE1OjM4
+LCBMaW51cyBXYWxsZWlqIHdyb3RlOg0KPiBPbiBNb24sIEF1ZyAyNSwgMjAxNCBhdCA2OjE5IFBN
+LCBKb25hdGhhbiBDYW1lcm9uIDxqaWMyM0BrZXJuZWwub3JnPiB3cm90ZToNCj4+IE9uIDIzLzA4
+LzE0IDE4OjMxLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0KPj4+IFRoaXMgYWRkcyBzdXBwb3J0IGZv
+ciB0aGUgTElTM0xWMDIgYWNjZWxlcm9tZXRlciBmb3VuZCBpbiB0aGUNCj4+PiBTVCBNaWNyb2Vs
+ZWN0cm9uaWNzIE5vbWFkaWsgYm9hcmQgc2VyaWVzLg0KPj4+DQo+Pj4gQ2M6IGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnDQo+Pj4gQ2M6IERlbmlzIENJT0NDQSA8ZGVuaXMuY2lvY2NhQHN0LmNv
+bT4NCj4+PiBDYzogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4NCj4+PiBTaWduZWQt
+b2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQo+PiBUaGlz
+IGlzIGEgbGl0dGxlICdpbnRlcmVzdGluZycsIGdpdmVuIHRoZSBwYXJ0IGlzIGFscmVhZHkgc3Vw
+cG9ydGVkIGJ5DQo+PiBkcml2ZXJzL21pc2MvbGlzM2x2MDJkKi5jIGFuZCBhbHJlYWR5IGhhcyBi
+aW5kaW5ncyB1bmRlciB0aGVyZS4NCj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9taXNjL2xpczMwMi50eHQNCj4+IChzb21lIG9mIHRoZXNlIGFyZSBpbnRlcmVzdGluZykuDQo+
+IEdycnIgaG93IGNvbWUgSSBtaXNzZWQgdGhpcy4uLiBJdCB3YXMgb3JpZ2luYWxseSBtZXJnZWQg
+YXMgYQ0KPiBod21vbiBkcml2ZXIuDQo+DQo+DQo+Pj4gKy8qIENVU1RPTSBWQUxVRVMgRk9SIFNF
+TlNPUiA0ICovDQo+Pj4NCj4+IEkgd2lzaCBub3cgd2UnZCBuaXBwZWQgdGhpcyBuYW1pbmcgY29u
+dmVudGlvbiBpbiB0aGUgYnVkIGFuZCBpbnNpc3RlZA0KPj4gb24gbmFtaW5nIGFmdGVyIGEgcmVs
+ZXZhbnQgcGFydC4gT2ggd2VsbC4NCj4gV2VsbCB3ZSBjYW4gYWx3YXlzIG1ha2UgYW4gaW52YXNp
+dmUgcGF0Y2ggZml4aW5nIHRoYXQuIEkgY2FuDQo+IHByb2JhYmx5IGRvIGl0IHVzaW5nIHNlZCBv
+ciBzb21ldGhpbmcuDQo+DQo+PiBEbyB3ZSB0aGluayB0aGlzIGlzIHRoZSByaWdodCB3YXkgdG8g
+aGFuZGxlIHRoZSBhbHRlcm5hdGl2ZSBzdXBwb3J0DQo+PiBoZXJlPw0KPiBXZWxsIHRoaXMgcGF0
+Y2ggaXMgYSBkcml2ZXIgdXNpbmcgdGhlIElJTyBmcmFtZXdvcmsgYW5kIHdhcyB3cml0dGVuDQo+
+IGJ5IFNULCBidXQgdGhlIG90aGVyIGRyaXZlciBzdXBwb3J0IGEgZmV3IG90aGVyIGludGVyZXN0
+aW5nIGZlYXR1cmVzDQo+IGFuZCBzZWVtcyB0byBiZSBmb3IgdGhlIGxhcHRvcCB1c2VjYXNlLg0K
+Pg0KPiBBZGRpbmcgdGhlIG90aGVyIGF1dGhvcnMgdG8gdGhlIFRPOiBsaW5lLi4uDQo+DQo+IFlv
+dXJzLA0KPiBMaW51cyBXYWxsZWlqDQo=
