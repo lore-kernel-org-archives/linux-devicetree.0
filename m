@@ -1,144 +1,114 @@
-From: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system
- timer
-Date: Wed, 10 Sep 2014 07:45:53 +0000
-Message-ID: <874b446fdd4a4e78849fc80e8ec8a448@BN1PR0301MB0628.namprd03.prod.outlook.com>
-References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
- <1409887606-22388-4-git-send-email-b20788@freescale.com>
- <20140910073631.GD22579@dragon>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: Autoloading of SPI/nor driver on kirkwood (qnap devices)
+Date: Wed, 10 Sep 2014 09:59:49 +0200
+Message-ID: <CAMuHMdXO8+9UWgYTv-fcostAipoqjZ=wQe56L4L-SR09L33Ydw@mail.gmail.com>
+References: <1409673299.14324.43.camel@dagon.hellion.org.uk>
+	<1409796689.27524.34.camel@decadent.org.uk>
+	<CAMuHMdWBr=B0_Xivti9K5ReryHHEunQj2P26FjhmzhO-L9t+9g@mail.gmail.com>
+	<20140910060004.GA5732@norris-Latitude-E6410>
+	<CAN8TOE_BRyg=Ww0oOxGeRr5Xkwh5hTq0UKQAR2dFjRVfwcBZoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140910073631.GD22579@dragon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAN8TOE_BRyg=Ww0oOxGeRr5Xkwh5hTq0UKQAR2dFjRVfwcBZoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, debian-kernel <debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
++ devicetree, as the names are used in DTS file.
 
+On Wed, Sep 10, 2014 at 8:11 AM, Brian Norris
+<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> + Huang (his Freescale address is bouncing), Rafal
+>
+> On Tue, Sep 9, 2014 at 11:00 PM, Brian Norris
+> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Thu, Sep 04, 2014 at 09:02:04AM +0200, Geert Uytterhoeven wrote:
+>>> On Thu, Sep 4, 2014 at 4:11 AM, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org> wrote:
+>>> >> I noticed that many platforms declare the flash chip as compatible =
+>>> >> "st,m25pXXX" whereas the ts219.dtsi just said m25p128 but I tried
+>>> >> changing that and it didn't help. In any case without spi-nor.ko being
+>>> >> autoloaded I don't support m25p80.ko ever would be.
+>>> >
+>>> > m25p80.c has:
+>>> >
+>>> > static struct spi_driver m25p80_driver = {
+>>> >         ...
+>>> >         .id_table       = spi_nor_ids,
+>>> >         ...
+>>> > };
+>>> >
+>>> > while spi_nor_ids is defined in spi-nor.c.  Since they end up as two
+>>> > separate modules, modpost can't read the ID table and add the device ID
+>>> > aliases to m25p80.ko.
+>>>
+>>> Woops. This indeed doesn't work.
+>>> Note that the MODULE_DEVICE_TABLE() is also gone from m25p80.c
+>>>
+>>> So m25p80.c needs to contain the IDs, while spi-nor.c also needs the IDs
+>>> because it's a framework/library.
+>>
+>> Actually, m25p80.c only needs the strings (i.e., the named aliases --
+>> character data), and for the most part, spi-nor.c only needs the IDs (i.e.,
+>> the identification bytes).
+>>
+>> What's more, I don't think that any modern SPI NOR user really needs to
+>> be specifying exactly which SPI device it is via a specific string. Our
+>> driver code pretty much always re-detects the device by reading its
+>> device ID. All the SPI NOR code needs to know is how to read its ID.
 
-Best regards!
-Anson Huang
+But the proper name should be in the compatible property.
 
+>>> A quick solution would be to move the ID table to a header file, and include
+>>> that by both, and re-add the lost MODULE_DEVICE_TABLE() to m25p80.c.
+>>> That duplicates the data, though.
+>>>
+>>> Hmm, for the built-in case, we can avoid the duplication by letting m25p80.c
+>>> refer to the table in spi-nor.c if !MODULE.
+>>> Does anyone see a better solution?
+>>
+>> A little bit of a shot in the dark, as I haven't fleshed this one out:
+>>
+>> Would it work to just copy the SPI ID strings into m25p80.c, keep the
+>> full table in spi-nor.c, stop adding SPI ID string (and DT) bindings to
+>> the m25p80 table (force platforms to use "m25p80"-compatible probing, or
+>> maybe something generic like "spi-nor-rdid", "spi-nor-sfdp", etc.) and
+>> eventually kill the strings from spi-nor.c entirely? I really don't want
+>> to propagate string-binding much further into the SPI NOR library, since
+>> everything should be auto-detectable--partly just by an ID table as we
+>> have now, but eventually we can use CFI or SFDP parameters provided by
+>> relatively new SPI NOR chips.
 
------Original Message-----
-From: Shawn Guo [mailto:shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org] 
-Sent: 2014-09-10 3:37 PM
-To: Huang Yongcai-B20788
-Cc: festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system timer
+How does the SPI core know to use m25p80? From the ids, and the compatible
+value. If you won't add new names, all devices should declare compatiblity
+with "m25p80" (that's "spansion,m25p80", right?) as a fallback.
+However, are all devices really compatible with m25p80?
+I.e. does m25p80.c work will all devices, in the absense of support for the
+real device? If not, the fallback must not be there, and new device names
+must be added.
 
-On Fri, Sep 05, 2014 at 11:26:46AM +0800, Anson Huang wrote:
-> diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c index 
-> bf92e5a..a3ecb4a 100644
-> --- a/arch/arm/mach-imx/time.c
-> +++ b/arch/arm/mach-imx/time.c
-> @@ -60,17 +60,23 @@
->  #define MX2_TSTAT_CAPT		(1 << 1)
->  #define MX2_TSTAT_COMP		(1 << 0)
->  
-> -/* MX31, MX35, MX25, MX5 */
-> +/* MX31, MX35, MX25, MX5, MX6 */
->  #define V2_TCTL_WAITEN		(1 << 3) /* Wait enable mode */
->  #define V2_TCTL_CLK_IPG		(1 << 6)
->  #define V2_TCTL_CLK_PER		(2 << 6)
-> +#define V2_TCTL_CLK_OSC_DIV8	(5 << 6)
-> +#define V2_TCTL_CLK_OSC		(7 << 6)
+>> I'm not sure if this is great for the short-term problem of fixing
+>> module-autoloading. Perhaps we should do a short-term hack to duplicate
+>> the SPI ID strings to m25p80.c by including them in a header (and
+>> backport for 3.16.y stable?), but I'd like to disentangle this.
+>>
+>> Brian
 
-This one is unused?
-[Anson] Yes, will remove it in V3.
+Autoloading is based on "spi:<name>". If new names aren't added, m25p80
+won't be loaded for new SPI FLASHes, unless I'm missing something?
 
->  #define V2_TCTL_FRR		(1 << 9)
-> +#define V2_TCTL_24MEN		(1 << 10)
-> +#define V2_TPRER_PRE24M		12
->  #define V2_IR			0x0c
->  #define V2_TSTAT		0x08
->  #define V2_TSTAT_OF1		(1 << 0)
->  #define V2_TCN			0x24
->  #define V2_TCMP			0x10
->  
-> +#define	V2_TIMER_RATE_OSC_DIV8	3000000
+Gr{oetje,eeting}s,
 
-A space instead of tab should be used right after '#define'.
-[Anson] Accepted.
+                        Geert
 
-> +
->  #define timer_is_v1()	(cpu_is_mx1() || cpu_is_mx21() || cpu_is_mx27())
->  #define timer_is_v2()	(!timer_is_v1())
->  
-> @@ -293,7 +299,7 @@ static int __init mxc_clockevent_init(struct clk 
-> *timer_clk)  static void __init _mxc_timer_init(int irq,
->  				   struct clk *clk_per, struct clk *clk_ipg)  {
-> -	uint32_t tctl_val;
-> +	uint32_t tctl_val, tprer_val;
-
-The variable tprer_val does not seem really needed.
-[Anson] Will remove it and write the value directly to the register.
-
-Shawn
-
->  
->  	if (IS_ERR(clk_per)) {
->  		pr_err("i.MX timer: unable to get clk\n");
-> @@ -312,10 +318,26 @@ static void __init _mxc_timer_init(int irq,
->  	__raw_writel(0, timer_base + MXC_TCTL);
->  	__raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
->  
-> -	if (timer_is_v2())
-> -		tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
-> -	else
-> +	if (timer_is_v2()) {
-> +		if (((cpu_is_imx6q() && imx_get_soc_revision() >
-> +			IMX_CHIP_REVISION_1_0) || cpu_is_imx6dl() ||
-> +			cpu_is_imx6sx()) && (clk_get_rate(clk_per) ==
-> +			V2_TIMER_RATE_OSC_DIV8)) {
-> +			tctl_val = V2_TCTL_CLK_OSC_DIV8 | V2_TCTL_FRR |
-> +				V2_TCTL_WAITEN | MXC_TCTL_TEN;
-> +			if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
-> +				/* 24 / 8 = 3 MHz */
-> +				tprer_val = 7 << V2_TPRER_PRE24M;
-> +				__raw_writel(tprer_val, timer_base + MXC_TPRER);
-> +				tctl_val |= V2_TCTL_24MEN;
-> +			}
-> +		} else {
-> +			tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR |
-> +				V2_TCTL_WAITEN | MXC_TCTL_TEN;
-> +		}
-> +	} else {
->  		tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
-> +	}
->  
->  	__raw_writel(tctl_val, timer_base + MXC_TCTL);
->  
-> @@ -339,7 +361,7 @@ void __init mxc_timer_init(void __iomem *base, int irq)
->  
->  static void __init mxc_timer_init_dt(struct device_node *np)
->  {
-> -	struct clk *clk_per, *clk_ipg;
-> +	struct clk *clk_per, *clk_ipg, *clk_osc_per;
->  	int irq;
->  
->  	if (timer_base)
-> @@ -352,6 +374,13 @@ static void __init mxc_timer_init_dt(struct device_node *np)
->  	clk_per = of_clk_get_by_name(np, "per");
->  	clk_ipg = of_clk_get_by_name(np, "ipg");
->  
-> +	if ((cpu_is_imx6q() && imx_get_soc_revision() >
-> +		IMX_CHIP_REVISION_1_0) || cpu_is_imx6dl()) {
-> +		clk_osc_per = of_clk_get_by_name(np, "osc_per");
-> +		if (!IS_ERR(clk_osc_per))
-> +			clk_per = clk_osc_per;
-> +	}
-> +
->  	_mxc_timer_init(irq, clk_per, clk_ipg);
->  }
->  CLOCKSOURCE_OF_DECLARE(mx1_timer, "fsl,imx1-gpt", mxc_timer_init_dt);
-> -- 
-> 1.7.9.5
-> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
