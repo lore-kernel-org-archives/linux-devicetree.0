@@ -1,73 +1,88 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] mfd/axp2xx: extend axp20x to support axp288 pmic
-Date: Wed, 10 Sep 2014 10:25:37 +0200
-Message-ID: <20140910082537.GC31276@lukather>
-References: <1410267775-4683-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1410267775-4683-3-git-send-email-jacob.jun.pan@linux.intel.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [GIT PULL 1/2] SOCFPGA updates for 3.18
+Date: Wed, 10 Sep 2014 10:33:37 +0200
+Message-ID: <20140910083337.GA5178@amd>
+References: <1409847105-27241-1-git-send-email-dinguyen@opensource.altera.com>
+ <20140909141756.GA30100@amd>
+ <4134101.OOENTRabu1@wuerfel>
+ <20140909210232.GA539@amd>
+ <CAPDyKFr35646zQUDUnv9LYy9jtY7r343hev9FrhxOfjVMb6MJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410267775-4683-3-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
+In-Reply-To: <CAPDyKFr35646zQUDUnv9LYy9jtY7r343hev9FrhxOfjVMb6MJw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, marex@denx.de, dinguyen@opensource.altera.com, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, "arm@kernel.org" <arm@kernel.org>, dinh.linux@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed 2014-09-10 09:13:27, Ulf Hansson wrote:
+> On 9 September 2014 23:02, Pavel Machek <pavel@denx.de> wrote:
+> > On Tue 2014-09-09 17:02:34, Arnd Bergmann wrote:
+> >> On Tuesday 09 September 2014 16:17:56 Pavel Machek wrote:
+> >> > > Jaehoon Chung (1):
+> >> > >       ARM: dts: socfpga: unuse the slot-node and deprecate the supports-highspeed for dw-mmc
+> >> > >
+> >> >
+> >> > This patch is a bad idea. It removes support for two mmc cards on a
+> >> > single controller -- configuration hardware supports and configuration
+> >> > that allows using u-SD card on mcvevk board.
+> >> >
+> >>
+> >> Your objection comes too late, and to the wrong patch, since the
+> >> driver and all other users have already been changed. We had a long
+> >> discussion about this when the issue first came up, and we could
+> >> not find any example of dw-mmc actually being used in a scenario
+> >> with one controller that has multiple devices attached.
+> >
+> > Well, this is not first time I raised this. 3.17 is not yet out, so we
+> > still have chance to fix regressions without major fuss.
+> >
+> >> Apparently every user out there instead uses multiple controller
+> >> instances instead. Are you sure that the socfpga implementation
+> >> is an exception from this?
+> >
+> > Marek Vasut has the hardware. His board apprently has uSD and eMMC,
+> > and I believe it has just one controller. I'll try to get details.
+> >
+> 
+> Just wanted to highlight some of the reasons to why the earlier
+> discussion we have had, came to the conclusion to remove the slot
+> node.
+> 
+> 1) The mmc core don't support multiple cards attached to the same
+> host, it never has. Also, I am not aware of any requests that
+> suggested us to add it. Due to obvious reasons from performance
+> perspective it's simply a really bad idea, that's likely also why
+> there haven't been any requests for it.
 
---xesSdrSSBC0PokLI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, that's Linux problem, right? (And why is it bad idea, btw? The
+bandwidth will be shared between the controllers, ok, that does not
+sound too bad.)
 
-On Tue, Sep 09, 2014 at 06:02:53AM -0700, Jacob Pan wrote:
-> XPower AXP288 is a customized PMIC for Intel Baytrail-CR platforms. Simil=
-ar
-> to AXP202/209, AXP288 comes with USB charger, more LDO and BUCK channels,=
- and
-> AD converter. It also provides extended status and interrupt reporting
-> capabilities than the devices supported in axp20x.c.
->=20
-> In addition to feature extension, this patch also adds ACPI binding for
-> enumeration and hooks for ACPI custom operational region handlers.
->=20
-> Files and common data structures have been renamed from axp20x to axp2xx
-> in order to suit the extended scope of devices.
+> 2) On the host level, the support for handle multiple slots in DT for
+> dw-mmc has been broken. While dw-mmc parsed the DT nodes for slots, it
+> screwed up configurations. Thus the support for slots have never
+> worked as expected from DT point of view.
 
-I still feel like this renaming should be in the first patch that is
-already advertised at doing it.
+Well, DT is supposed to describe the hardware. From your description,
+it seems that linux does not support two slots on one controller and
+DT parsing code basically ignores the slots. (Logical, if it can't
+support two slots).
 
-This is quite hard to tell what you are actually doing in this patch,
-besides the renaming that is.
+So now we are breaking DT description due to Linux limitations. Which
 
-Maxime
+a) makes it hard for any other os not having same limitation
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+b) makes it hard for people to fix the limitation
 
---xesSdrSSBC0PokLI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+c) does not really solve anything
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+d) breaks backward compatibility with old dts
 
-iQIcBAEBAgAGBQJUEAsBAAoJEBx+YmzsjxAgHg8QALLFLYzyhPCN5S8rUj6NA9ll
-9JjSqPmyjAyDZT5PUupjG4hOOiYVEekCxecOmJmmADTtK3BkziCnYNLI8CgjO0GP
-yuD2jmOnMEeyjr0Ig+9MVoaI1vC/ouWsY/GDpPXcwbHJLizYoq1xvb4NRT6/Yal8
-kr6ISFLqS3SAxIC4HoGRP3LxiZwOXgQavIrJ16fcvlMBbO/WLGZ7Gcl9EKmi4Hlk
-tmVIjUaEMEEGbhB0c0/Pp11f/SvLFOf8cSMLlmTGZX96RRCDfrho8wPf7jYPKj6a
-fHGxmUe/dlTm34yZ/VgfO7veE2W5E+w2RZIb9KkdmQtQjsCoAPJDaHioeAxOkyUJ
-T5X7KuZqaaMieT6hGMvSVaE9ZLdDmxmrhPwqXpYcZGX9WOjZ7vEDAmWK5IYTXtEE
-et8etzxA3KpS0ZwZbPtE8WciG9hSpBcXxfrbqRTjKcBD73tTJYl6vgq1N5k3B8dm
-NOGn8uY9H205+IpbfCE6ElwqS+TTmwWElAZPOoxh8hIAuP24pKii/S7fkOFPVPA0
-UaENXebSANCetlg4qMaYrNvx7PQaTC9BmcTF6IMIvSaMG6tADYgHc24BkTS+HK4W
-wDYB0TDFjsJXAw3WtR/4tmfS1Z6/IqfkHUc8LfOKUAZSmeylENuk8BedMr09cFkA
-4O6Mj+Zrrz1/hRkf1ORn
-=cFLd
------END PGP SIGNATURE-----
-
---xesSdrSSBC0PokLI--
+If nothing, d) should be argument not to do this.
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
