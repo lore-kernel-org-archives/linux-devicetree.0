@@ -1,65 +1,94 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
-Date: Wed, 10 Sep 2014 09:01:24 -0500
-Message-ID: <541059B4.50205@ti.com>
-References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH RFC 2/3] ARM: regulator: add Freescale MXS regulator
+ driver
+Date: Wed, 10 Sep 2014 15:18:53 +0100
+Message-ID: <20140910141853.GA4994@leverpostej>
+References: <1410089869-6611-1-git-send-email-info@lategoodbye.de>
+ <1410089869-6611-3-git-send-email-info@lategoodbye.de>
+ <20140909182211.GG3896@leverpostej>
+ <540F523D.4010904@lategoodbye.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410356247-25925-1-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <540F523D.4010904-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
+Cc: "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "stefan.wahren-eS4NqCHxEME@public.gmane.org" <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2014 08:37 AM, Mugunthan V N wrote:
-> Adding device tree entry for CPSW to make it work in Dual EMAC mode.
-> These patches were tested with DRA7 hwmod patches on top of linux-next.
-> Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
-> my tree to [2].
-> 
-> Did a boot test with CPSW and ping test with suspend/resume, the boot logs
-> on DRA7xx EVM are posted at [3]
-> 
-> [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
-> [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dra7-evm-cpsw
-> [3] http://pastebin.ubuntu.com/8309289/
-> 
-> Changes from initial version:
-> * Dropped patch for pinoff states
-> * Changed pinoff state to mode15
-> 
-> Mugunthan V N (2):
->   ARM: dts: dra7: Add CPSW and MDIO module nodes for dra7
->   ARM: dts: dra7-evm: Enable CPSW and MDIO for dra7xx EVM
-> 
->  arch/arm/boot/dts/dra7-evm.dts | 107 +++++++++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/dra7.dtsi    |  59 +++++++++++++++++++++++
->  2 files changed, 166 insertions(+)
-> 
-I did apply these on Tony's
-"omap-for-v3.18/dt 6e55426 Merge branch .."
-they do apply.
+On Tue, Sep 09, 2014 at 08:17:17PM +0100, Stefan Wahren wrote:
+> Hi,
 
-However: why are we not sending dra72-evm.dts changes in the same
-series since we claim it to be dra7xx support?
+[...]
 
-Also, in your tests (http://pastebin.ubuntu.com/8309289/)
-echo -n "20">/sys/kernel/debug/pm_debug/wakeup_timer_seconds
-ping 172.24.188.1  & (or even better do a transfer of large file in
-background)
-echo mem > /sys/power/state
+> >> +       sreg = devm_kzalloc(dev, sizeof(*sreg), GFP_KERNEL);
+> >> +       if (!sreg)
+> >> +               return -ENOMEM;
+> >> +       sreg->initdata = initdata;
+> >> +       sreg->name = of_get_property(np, "regulator-name", NULL);
+> >
+> > I'm not keen on using of_get_property here. We have no idea if
+> > regulator-name is even a string (it should be, but we have no
+> > guarantee).
+> 
+> Better using of_property_read_string?
 
-transfer/ping should resume seamlessly. (only thing you should be
-careful is that the server should not timeout for 20 second inactivity)..
+Yes. That will check the value is NUL-terminated, at least.
 
-It is a valid test to verify peripheral activity after resume, BUT,
-equally important is to verify suspend-resume in the middle of activity.
+> >> +       sreg->cur_uA = 0;
+> >> +       sreg->cur_uV = 0;
+> >> +       sreg->base_addr = base_addr;
+> >> +       sreg->power_addr = power_addr;
+> >> +       init_waitqueue_head(&sreg->wait_q);
+> >> +       spin_lock_init(&sreg->lock);
+> >> +       sreg->max_reg_val = val;
+> >> +
+> >> +       rdesc = &sreg->rdesc;
+> >> +       rdesc->name = sreg->name;
+> >> +       rdesc->owner = THIS_MODULE;
+> >> +       rdesc->ops = &mxs_rops;
+> >> +
+> >> +       if (strcmp(rdesc->name, "overall_current") == 0)
+> >> +               rdesc->type = REGULATOR_CURRENT;
+> >> +       else
+> >> +               rdesc->type = REGULATOR_VOLTAGE;
+> >
+> > Wouldn't it make more sense to explicitly match the names you expect?
+> >
+> 
+> Okay, i make "regulator-name" a required property and use a white list 
+> of all possible regulators.
 
--- 
-Regards,
-Nishanth Menon
+I'm not sure if regulator-name is the right way to go. I believe the
+thing to do is match on the node name of the subnodes (as you were doing
+here).
+
+The only thing I didn't like was assuming the nodes were voltage
+regulators if they weren't called "overall_current". I'd prefer explicit
+matching, or something more general.
+
+[...]
+
+> >> +       of_property_read_u32(np, "mxs-default-microvolt",
+> >> +                                  &val);
+> >> +
+> >> +       if (val)
+> >> +               mxs_set_voltage(rdev, val, val, NULL);
+> >
+> > As I mentioned in my comments on the binding, I'd like to know why this
+> > is necessary and if it is why it shouldn't be a standardised property.
+> 
+>  From my understanding the standardised properties only defines a range, 
+> but no default state of the regulators. If the initialization from the 
+> bootloader or a hardcoded initialization in the driver is okay then the 
+> property is not necessary.
+
+Sure. My questions was why it is necessary to preconfigure the
+regulators at all rather than why it is necessary to do so in this
+manner.
+
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
