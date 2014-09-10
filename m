@@ -1,88 +1,51 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] rtc: at91sam9: add DT bindings documentation
-Date: Wed, 10 Sep 2014 18:55:19 +0200
-Message-ID: <54108277.9000100@atmel.com>
-References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com> <1409733934-14465-6-git-send-email-boris.brezillon@free-electrons.com> <20140910121424.GG2974@localhost> <20140910152019.111c4c01@bbrezillon> <20140910150702.GK2974@localhost> <20140910173114.593dd132@bbrezillon> <20140910155236.GL2974@localhost>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/3] ASoC: tegra: add tegra sgtl5000 machine driver
+Date: Wed, 10 Sep 2014 11:01:32 -0600
+Message-ID: <541083EC.7080803@wwwdotorg.org>
+References: <cover.1410276224.git.marcel@ziswiler.com>	<f90791ebb1799a4aa62dd6b527885ddadae3c058.1410276224.git.marcel@ziswiler.com> <CAOMZO5BYGwHGSeHeaQxEO=BUBGbno9P29et582SDzmwmfVioZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140910155236.GL2974@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5BYGwHGSeHeaQxEO=BUBGbno9P29et582SDzmwmfVioZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/09/2014 17:52, Johan Hovold :
-> On Wed, Sep 10, 2014 at 05:31:14PM +0200, Boris BREZILLON wrote:
->> On Wed, 10 Sep 2014 17:07:02 +0200
->> Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> 
->>> Yes, this essentially what I suggested in the thread (and my last reply)
->>> and relying on syscon rather than a custom driver seems like a good
->>> idea. It would allow early access to the registers too with the recently
->>> proposed changes. It would not guarantee any kind of exclusivity,
->>> though, but I guess that's tolerable?
+On 09/09/2014 12:00 PM, Fabio Estevam wrote:
+> On Tue, Sep 9, 2014 at 12:28 PM, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org> wrote:
+>> This binding and driver describe/support playback to headphones, and
+>> capture from line-in and microphone.
 >>
->> Yep, that's one of the concern I had with the syscon/regmap
->> approach :-(, but I guess I'll give this solution a try and post a new
->> version of this series ;-).
-> 
-> Perhaps we should see what Nicolas and Jean-Christophe says before
-> rushing into anything (again). ;)
-
-I said and say it again: keep it simple: if gpbr 0 is used by bootloader
-to pass information about the boot media, use gpbr 1, without protection
-without anything fancy, please.
-
-atmel,at91-rtt-as-rtc-gpbr = <1>;
-is good for me.
-
-We can decide to keep the DT binding as "unstable" and see what happen
-in one year from now (I suspect nothing will happen). The result is that
-we will have a simple update of this driver without new API or new
-sub-system to learn and maintain.
-
-So, all in all, I would just take what Johan or Boris did, and go with
-this, now!
-
-
-> I remember J-C considered loosing track of what was using a particular
-> backup register to be a regression. But I guess you can't have it both
-> ways (e.g. if you also want the early access soon provided by syscon).
-> 
-> I'll refresh my rtt and gmbr-node patches meanwhile, as they should be
-> needed in some form at least.
-> 
->> Can we just leave the rtt as an rtc problem on the side for now and bind
->> it to the rtc-at91sam9 driver.
+>> This driver is useful for the Toradex Apalis T30 and Colibri T30 modules.
 >>
->> If we ever decide to add a new driver using the RTT for another purpose
->> we will still be able to reference the RTT block like this (and keep
->> the existing rtt node definition):
->>
->> rtt-based-rtc {
->> 	compatible = "atmel,rtt-rtc";
->> 	atmel,rtt = <&rtt>;
->> 	atmel,time-reg = <&gpbr 0x0>;
->> }
-> 
-> But why not do this from the start?
-> 
->> rtt-based-xdev {
->> 	compatible = "atmel,rtt-xdev";
->> 	atmel,rtt = <&rtt>;
->> 	/*...*/
->> }
-> 
-> Johan
-> 
-> 
+>> Signed-off-by: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+>> ---
+>>   .../bindings/sound/nvidia,tegra-audio-sgtl5000.txt |  45 +++++
+>>   sound/soc/tegra/Kconfig                            |  10 +
+>>   sound/soc/tegra/Makefile                           |   2 +
+>>   sound/soc/tegra/tegra_sgtl5000.c                   | 216 +++++++++++++++++++++
+>
+> What about using the simple-audio-card binding instead of adding the
+> tegra_sgtl5000 machine driver?
+>
+> An example of simple-audio-card used with sgtl5000 can be found here:
+>
+> http://www.spinics.net/lists/devicetree/msg44466.html
 
+I don't think that will work; the Tegra audio complex requires some 
+clock management that doesn't immediately seem to fit into the 
+simple-audio-card concept.
 
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I had intended to refactor and collapse all the Tegra DT audio bindings 
+(and driver code) into a single instance so we didn't need to keep 
+adding more and more. However, I unfortunately never got around to that 
+and probably won't in the future either. Basically, the binding and code 
+would end up essentially identical to any of the current Tegra drivers 
+(or the union of them), with a few tweaks such as only creating e.g. a 
+headphone jack if a property in DT said to, and moving the sampling 
+frequency -> CODEC MCLK table out of the driver into a table in DT. I 
+think with those things parameterized in DT, we could get away with a 
+single "nvidia,tegra-audio-simple" binding and driver. Such a new 
+binding could be based on simple-audio-card with extensions though.
