@@ -1,33 +1,60 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] ARM: regulator: add Freescale MXS regulator driver
-Date: Wed, 10 Sep 2014 14:06:11 -0300
-Message-ID: <CAOMZO5CK=c+=y2BgsYRKVujgn3yRWYjOXkz0EwzBEVXDVpq0Gg@mail.gmail.com>
-References: <1410089869-6611-1-git-send-email-info@lategoodbye.de>
-	<1410089869-6611-3-git-send-email-info@lategoodbye.de>
-	<20140909182211.GG3896@leverpostej>
-	<540F523D.4010904@lategoodbye.de>
-	<20140910141853.GA4994@leverpostej>
-	<54108939.5050208@gmx.net>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v10 08/10] OF: PCI: Add support for parsing PCI host
+ bridge resources from DT
+Date: Wed, 10 Sep 2014 18:06:41 +0100
+Message-ID: <20140910170641.GC19662@e102568-lin.cambridge.arm.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-9-git-send-email-Liviu.Dudau@arm.com>
+ <20140909133546.GB2636@e102568-lin.cambridge.arm.com>
+ <20140910142241.GD27864@e106497-lin.cambridge.arm.com>
+ <20140910151026.GB11640@e102568-lin.cambridge.arm.com>
+ <20140910153233.GG27864@e106497-lin.cambridge.arm.com>
+ <20140910163746.GB19662@e102568-lin.cambridge.arm.com>
+ <20140910165347.GJ27864@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54108939.5050208-hi6Y0CQ0nG0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <wahrenst-hi6Y0CQ0nG0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "stefan.wahren-eS4NqCHxEME@public.gmane.org" <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140910165347.GJ27864@e106497-lin.cambridge.arm.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 2:24 PM, Stefan Wahren <wahrenst-hi6Y0CQ0nG0@public.gmane.org> wrote:
+On Wed, Sep 10, 2014 at 05:53:47PM +0100, Liviu Dudau wrote:
 
-> sorry i don't have a clue. In the original code there isn't a comment about
-> the reason. Currently there is no init of the vddio regulator by the kernel
-> and everything works fine.
->
-> @Fabio: Do you have any doubts?
+[...]
 
-I would say, just use and report whatever value comes from the
-bootloader. No need to force a particular regulator  output.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > > > > > +		if (resource_type(res) == IORESOURCE_IO) {
+> > > > > > > +			if (*io_base)
+> > > > > > 
+> > > > > > You do not zero io_base in the first place so you should ask the API
+> > > > > > user to do that. Is 0 a valid value BTW ? If it is you've got to resort
+> > > > > > to something else to detect multiple IO resources.
+> > > 
+> > > No, zero is not a valid value. It is the cpu_addr value from the IO range, I'm
+> > > hopying that no one is crazy enough to map PCI address space at CPU address zero.
+> > > Thanks for spotting the lack of initialisation though, I need to fix it.
+> > 
+> > Mmm...wasn't a trick question sorry :D
+> > 
+> > PCI host bridge /pci ranges:
+> >    IO 0x00000000..0x0000ffff -> 0x00000000
+> >    More than one I/O resource converted. CPU offset for old range lost!
+> >      MEM 0x41000000..0x7fffffff -> 0x41000000
+> >      pci-host-generic 40000000.pci: PCI host bridge to bus 0000:00
+> >      pci_bus 0000:00: root bus resource [bu-01]
+> >      pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
+> >      pci_bus 0000:00: root bus resource [mem 0x41000000-0x7fffffff]
+> > 
+> 
+> Your DT puts the IO space at CPU address zero? Could you copy the relevant
+> host bridge node from DT here?
+
+It is kvmtools generated dts, may not be representative of real HW but
+that's what it is. For the whole story:
+
+http://comments.gmane.org/gmane.linux.kernel.pci/29199
+
+Lorenzo
