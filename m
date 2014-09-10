@@ -1,303 +1,40 @@
-From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCHv4] ASoC: simple-card: binding: update binding to support the new style.
-Date: Wed, 10 Sep 2014 12:07:42 +0800
-Message-ID: <1410322062-35077-1-git-send-email-Li.Xiubo@freescale.com>
+From: "Pallala, Ramakrishna" <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 4/4] iio/adc/axp288: add support for axp288 gpadc
+Date: Wed, 10 Sep 2014 04:19:49 +0000
+Message-ID: <D854C92F57B1B347B57E531E78D05EAD576EDB3F@BGSMSX104.gar.corp.intel.com>
+References: <1410215046-31751-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1410215046-31751-5-git-send-email-jacob.jun.pan@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410215046-31751-5-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Lu, Aaron" <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch will split the DT binding into old style and new style, the
-new style will be easier to add many DAI links from old single DAI link
-DTs.
+Hi Jacob,
 
-This patch will maintian compatibility with the old DTs.
+> +#if defined(CONFIG_PM_SLEEP) || defined(CONFIG_PM_RUNTIME) static int 
+> +axp288_gpadc_suspend(struct device *dev) {
+> +	int ret;
+> +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> +	struct gpadc_info *info = iio_priv(indio_dev);
+> +
+> +	mutex_lock(&indio_dev->mlock);
+> +	ret = axp288_gpadc_enable(info->regmap, false);
+> +	mutex_unlock(&indio_dev->mlock);
+> +
+> +	return ret;
+> +}
 
-Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
+AXP288 has integrated fuel gauge which relies on VBATT and IBATT ADC measurements. If we disable the ADC then Fuel Gauge will get stuck.
+So for the proper functioning of this integrated fuel gauging ADC measurements should always be ON.
 
-
-Changes in v4:
-- Follow Jyri's advice.
-- Fix some small words or sentences errors.
-- Fix discription of the commit commnet.
-- Apply against the current code.
-- Add Notes.
-
-
- .../devicetree/bindings/sound/simple-card.txt      | 215 ++++++++++++++-------
- 1 file changed, 148 insertions(+), 67 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
-index c2e9841..5fe0796 100644
---- a/Documentation/devicetree/bindings/sound/simple-card.txt
-+++ b/Documentation/devicetree/bindings/sound/simple-card.txt
-@@ -1,15 +1,19 @@
--Simple-Card:
-+Device-Tree bindings for Simple Card
- 
- Simple-Card specifies audio DAI connections of SoC <-> codec.
- 
--Required properties:
-+=== Top level's properties and subnodes ===
- 
-+*** Required properties ***
- - compatible				: "simple-audio-card"
- 
--Optional properties:
--
-+*** Optional properties ***
- - simple-audio-card,name		: User specified audio sound card name, one string
- 					  property.
-+- simple-audio-card,format		: CPU/CODEC common audio format.
-+					  "i2s", "right_j", "left_j" , "dsp_a"
-+					  "dsp_b", "ac97", "pdm", "msb", "lsb"
-+					  (This is used for single DAI link & old style.)
- - simple-audio-card,widgets		: Please refer to widgets.txt.
- - simple-audio-card,routing		: A list of the connections between audio components.
- 					  Each entry is a pair of strings, the first being the
-@@ -17,63 +21,99 @@ Optional properties:
- 					  source.
- - simple-audio-card,mclk-fs             : Multiplication factor between stream rate and codec
-   					  mclk.
--
--Optional subnodes:
--
--- simple-audio-card,dai-link		: Container for dai-link level
--					  properties and the CPU and CODEC
--					  sub-nodes. This container may be
--					  omitted when the card has only one
--					  DAI link. See the examples and the
--					  section bellow.
--
--Dai-link subnode properties and subnodes:
--
--If dai-link subnode is omitted and the subnode properties are directly
--under "sound"-node the subnode property and subnode names have to be
--prefixed with "simple-audio-card,"-prefix.
--
--Required dai-link subnodes:
--
--- cpu					: CPU   sub-node
--- codec					: CODEC sub-node
--
--Optional dai-link subnode properties:
--
-+- simple-audio-card,frame-master	: Indicates DAI link frame master. One phandle to a
-+					  CODEC DAI node.
-+					  (This is used for single DAI link & old style.)
-+- simple-audio-card,bitclock-master	: Indicates DAI link bit clock master. One phandle to
-+					  a CODEC DAI node.
-+					  (This is used for single DAI link & old style.)
-+
-+*** Optional subnodes ***
-+- simple-audio-card,dai-link		: Container for DAI link level properties and the CPU
-+					  and CODEC nodes. This container may be omitted
-+					  when the card has only one DAI link and using the old
-+					  style. See the examples and the section bellow.
-+- simple-audio-card,cpu			: CPU DAI node.
-+					  (This is used for single DAI link & old style.)
-+- simple-audio-card,codec		: CODEC DAI node.
-+					  (This is used for single DAI link & old style.)
-+
-+=== DAI link node's properties and its subnodes ===
-+
-+*** Required subnodes ***
-+- cpu					: CPU DAI node.
-+- codec					: CODEC DAI node.
-+
-+*** Optional properties ***
- - format				: CPU/CODEC common audio format.
- 					  "i2s", "right_j", "left_j" , "dsp_a"
- 					  "dsp_b", "ac97", "pdm", "msb", "lsb"
--- frame-master				: Indicates dai-link frame master.
--					  phandle to a cpu or codec subnode.
--- bitclock-master			: Indicates dai-link bit clock master.
--					  phandle to a cpu or codec subnode.
--- bitclock-inversion			: bool property. Add this if the
--					  dai-link uses bit clock inversion.
--- frame-inversion			: bool property. Add this if the
--					  dai-link uses frame clock inversion.
--
--For backward compatibility the frame-master and bitclock-master
--properties can be used as booleans in codec subnode to indicate if the
--codec is the dai-link frame or bit clock master. In this case there
--should be no dai-link node, the same properties should not be present
--at sound-node level, and the bitclock-inversion and frame-inversion
--properties should also be placed in the codec node if needed.
--
--Required CPU/CODEC subnodes properties:
--
--- sound-dai				: phandle and port of CPU/CODEC
--
--Optional CPU/CODEC subnodes properties:
--
-+- frame-master				: Indicates DAI link frame master. One phandle to a
-+					  CODEC DAI node.
-+					  (This is One boolean property for old style.)
-+- bitclock-master			: Indicates DAI link bit clock master. One phandle to
-+					  a CODEC DAI node.
-+					  (This is one boolean property for old style.)
-+
-+For backward compatibility, the frame-master and bitclock-master
-+can be used as boolean properties in CPU/CODEC DAI node indicating
-+that the CODEC DAI is the DAI link frame master and bit clock master.
-+In this case there should be no DAI link level nodes or boolean
-+properties of them.
-+
-+For all the properties in DAI link level will be applied to both
-+CPU and CODEC DAIs.
-+
-+=== CPU/CODEC DAI node's properties and its subnodes ===
-+
-+*** Required properties ***
-+- sound-dai				: One phandle and port of CPU/CODEC DAI device node.
-+
-+*** Optional properties ***
-+- bitclock-inversion			: Boolean property. Add this if the DAI device uses bit
-+					  clock inversion.
-+- frame-inversion			: Boolean property. Add this if the DAI device uses frame
-+					  clock inversion.
-+- frame-master				: Boolean property. Add this if the CODEC DAI device is
-+					  frame master.
-+					  (This is used for single DAI link & old style.)
-+- bitclock-master			: Boolean property. Add this if the CODEC DAI device is
-+					  bit clock master.
-+					  (This is used for single DAI link & old style.)
- - dai-tdm-slot-num			: Please refer to tdm-slot.txt.
- - dai-tdm-slot-width			: Please refer to tdm-slot.txt.
--- clocks / system-clock-frequency	: specify subnode's clock if needed.
--					  it can be specified via "clocks" if system has
--					  clock node (= common clock), or "system-clock-frequency"
--					  (if system doens't support common clock)
-+- clocks / system-clock-frequency	: Specify CPU/CODEC DAI's clock if needed. It can
-+					  be specified via "clocks" if system has clock node
-+					  (= common clock), or "system-clock-frequency"(if system
-+					  doens't support common clock)
-+
-+=== Notes ===
-+*** DAI hardware clock masters ***
-+For [prefix]frame-master and [prefix]bitclock-master, which prefix
-+is "simple-audio-card,", are both wrt the CODEC DAI. If the CODEC DAI
-+is bit clock and frame master then the CPU DAI will be bit clock and
-+frame slave, and vice versa.
-+
-+=== Examples ===
-+*** CPU & CODEC DAI DT nodes ***
-+&i2c0 {
-+	ak4648: ak4648@12 {
-+		#sound-dai-cells = <0>;
-+		compatible = "asahi-kasei,ak4648";
-+		reg = <0x12>;
-+	};
-+};
- 
--Example 1 - single DAI link:
-+sh_fsi2: sh_fsi2@ec230000 {
-+	#sound-dai-cells = <1>;
-+	compatible = "renesas,sh_fsi2";
-+	reg = <0xec230000 0x400>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <0 146 0x4>;
-+};
- 
-+Example 1 - single DAI link & old style:
-+bitclock-master and frame-master as phandles.
- sound {
- 	compatible = "simple-audio-card";
- 	simple-audio-card,name = "VF610-Tower-Sound-Card";
-@@ -91,6 +131,7 @@ sound {
- 
- 	simple-audio-card,cpu {
- 		sound-dai = <&sh_fsi2 0>;
-+		bitclock-inversion;
- 	};
- 
- 	dailink0_master: simple-audio-card,codec {
-@@ -99,24 +140,64 @@ sound {
- 	};
- };
- 
--&i2c0 {
--	ak4648: ak4648@12 {
--		#sound-dai-cells = <0>;
--		compatible = "asahi-kasei,ak4648";
--		reg = <0x12>;
-+Example 2 - single DAI link & old style:
-+bitclock-master and frame-master as boolean properties.
-+sound {
-+	compatible = "simple-audio-card";
-+	simple-audio-card,name = "VF610-Tower-Sound-Card";
-+	simple-audio-card,format = "left_j";
-+	simple-audio-card,widgets =
-+		"Microphone", "Microphone Jack",
-+		"Headphone", "Headphone Jack",
-+		"Speaker", "External Speaker";
-+	simple-audio-card,routing =
-+		"MIC_IN", "Microphone Jack",
-+		"Headphone Jack", "HP_OUT",
-+		"External Speaker", "LINE_OUT";
-+
-+	simple-audio-card,cpu {
-+		sound-dai = <&sh_fsi2 0>;
- 	};
--};
- 
--sh_fsi2: sh_fsi2@ec230000 {
--	#sound-dai-cells = <1>;
--	compatible = "renesas,sh_fsi2";
--	reg = <0xec230000 0x400>;
--	interrupt-parent = <&gic>;
--	interrupts = <0 146 0x4>;
-+	simple-audio-card,codec {
-+		sound-dai = <&ak4648>;
-+		clocks = <&osc>;
-+		bitclock-master;
-+		frame-master;
-+		bitclock-inversion;
-+	};
- };
- 
--Example 2 - many DAI links:
-+Example 3 - single DAI link & new style:
-+sound {
-+	compatible = "simple-audio-card";
-+	simple-audio-card,name = "VF610-Tower-Sound-Card";
-+	simple-audio-card,widgets =
-+		"Microphone", "Microphone Jack",
-+		"Headphone", "Headphone Jack",
-+		"Speaker", "External Speaker";
-+	simple-audio-card,routing =
-+		"MIC_IN", "Microphone Jack",
-+		"Headphone Jack", "HP_OUT",
-+		"External Speaker", "LINE_OUT";
-+
-+	simple-audio-card,dai-link {
-+		format = "i2s";
-+		bitclock-master = <&dailink0_master>;
-+		frame-master = <&dailink0_master>;
-+		cpu {
-+			sound-dai = <&sh_fsi2 0>;
-+			frame-inversion;
-+		};
-+		dailink0_master: codec {
-+			sound-dai = <&ak4648>;
-+			clocks = <&osc>;
-+			frame-inversion;
-+		};
-+	};
-+};
- 
-+Example 4 - many DAI links:
- sound {
- 	compatible = "simple-audio-card";
- 	simple-audio-card,name = "Cubox Audio";
--- 
-2.1.0.27.g96db324
-
+Thanks,
+Ram
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
