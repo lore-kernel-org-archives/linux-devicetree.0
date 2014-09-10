@@ -1,53 +1,59 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 3/3] regulator: RK808: Remove pdata from the regulator
-Date: Wed, 10 Sep 2014 11:51:31 +0100
-Message-ID: <20140910105131.GT2601@sirena.org.uk>
-References: <1410311886-4579-1-git-send-email-zyw@rock-chips.com>
- <1410311886-4579-4-git-send-email-zyw@rock-chips.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [GIT PULL 1/2] SOCFPGA updates for 3.18
+Date: Wed, 10 Sep 2014 13:00:57 +0200
+Message-ID: <20140910110057.GA9354@amd>
+References: <1409847105-27241-1-git-send-email-dinguyen@opensource.altera.com>
+ <20140909141756.GA30100@amd>
+ <4134101.OOENTRabu1@wuerfel>
+ <20140909210232.GA539@amd>
+ <CAPDyKFr35646zQUDUnv9LYy9jtY7r343hev9FrhxOfjVMb6MJw@mail.gmail.com>
+ <20140910083337.GA5178@amd>
+ <CAPDyKFoXiNOHQ3W=U08jU2PG-fz4F_7wuW-KNEoDfcQzrLKmVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+xp03240ql3JIIXA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410311886-4579-4-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+In-Reply-To: <CAPDyKFoXiNOHQ3W=U08jU2PG-fz4F_7wuW-KNEoDfcQzrLKmVA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, marex@denx.de, dinguyen@opensource.altera.com, Kevin Hilman <khilman@linaro.org>, Olof Johansson <olof@lixom.net>, "arm@kernel.org" <arm@kernel.org>, dinh.linux@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mmc <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi!
 
---+xp03240ql3JIIXA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >> 2) On the host level, the support for handle multiple slots in DT for
+> >> dw-mmc has been broken. While dw-mmc parsed the DT nodes for slots, it
+> >> screwed up configurations. Thus the support for slots have never
+> >> worked as expected from DT point of view.
+> >
+> > Well, DT is supposed to describe the hardware. From your description,
+> > it seems that linux does not support two slots on one controller and
+> > DT parsing code basically ignores the slots. (Logical, if it can't
+> > support two slots).
+> >
+> > So now we are breaking DT description due to Linux limitations. Which
+> >
+> > a) makes it hard for any other os not having same limitation
+> >
+> > b) makes it hard for people to fix the limitation
+> >
+> > c) does not really solve anything
+> 
+> Yes it does, the problem in 2) gets fixed.
+> 
+> >
+> > d) breaks backward compatibility with old dts
+> 
+> According to 2), it has never worked - so we don't break anything.
 
-On Wed, Sep 10, 2014 at 09:18:06AM +0800, Chris Zhong wrote:
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->=20
-> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Umm? u-SD worked for me in 3.14, 3.15 and 3.16 with the device tree,
+and with single-slot described in the device tree. Now I have to
+change dtb-s to keep working configuration, which is something device
+tree should never ever do.
 
-Applied, thanks.  You shouldn't have spaces like the above in your list
-of tags and as Doug says e-mail addresses should have a space between
-the name and the <.
+Is it so hard to just fix the multiple slot parsing?
 
---+xp03240ql3JIIXA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUEC0zAAoJECTWi3JdVIfQp24H/AmSKVhbb+ZxBcBCAvpGU0gg
-NbuXBoN4wVYBiRnUD+HHHJaCXmtYI9SWv9aGq57Fkbu2UCH/VBfmn5Q46+Atf51m
-ORX3Nv0q5D2fLt0O5D42gtCGnIB9hjGdDeTYGzsYqpJATv3FwD/cJX3jvpaeVobi
-ujK8bFjpmU/8mvrSaobnbXu7c2TGa4tPC+MvQ76HCERhGi6DgF7AP+PsKB72SzUm
-dXQUCsqfIuBM7mmlBr6A0+RjjYyMsOSlgCdaARpRycMMEnO/V8kwXjFYZN32j4XE
-nLzIvj0P++Wdtow1Mq3IE4WDO/ItrKWJVIGbYO1Qu6B7PIOjPvbppUzxy79pw58=
-=LEK2
------END PGP SIGNATURE-----
-
---+xp03240ql3JIIXA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
