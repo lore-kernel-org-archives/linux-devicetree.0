@@ -1,47 +1,38 @@
-From: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH] iio: st-sensors: add support for lis3lv02d accelerometer
-Date: Wed, 10 Sep 2014 14:59:18 +0200
-Message-ID: <54104B26.5080707@st.com>
-References: <1408815064-5763-1-git-send-email-linus.walleij@linaro.org>
-	<53FB6205.5020704@kernel.org>
- <CACRpkdb5NXJiTvaHz9_nJiZcFsyVnjPYjaYZ1YH9meBgJhoTJA@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system
+ timer
+Date: Wed, 10 Sep 2014 21:01:52 +0800
+Message-ID: <20140910130150.GF22579@dragon>
+References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
+ <1409887606-22388-4-git-send-email-b20788@freescale.com>
+ <CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ@mail.gmail.com>
+ <5E619FDB-56BB-486E-B627-9D2A9D4F9F54@freescale.com>
+ <20140910073333.GC22579@dragon>
+ <7fd82b8c08c54f4dadb6b7402231a086@BN1PR0301MB0628.namprd03.prod.outlook.com>
+ <20140910114936.GE22579@dragon>
+ <8DDD46F6-AA96-4E14-ADD6-45A1AD12423C@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb5NXJiTvaHz9_nJiZcFsyVnjPYjaYZ1YH9meBgJhoTJA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Yan Burman <burman.yan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yan Burman <yanb-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8DDD46F6-AA96-4E14-ADD6-45A1AD12423C-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Q2lhbyBndXlzLA0KDQpJJ20gc29ycnkgYnV0IEkgd2FzIGluIGJ1c2luZXNzIHRyaXAuIEkgdGhp
-bmsgdGhhdCBjdXJyZW50IGxpczNsdjAyZCANCnN1cHBvcnRzIG1vcmUgdGhpbmdzLCBJIHdhbnQg
-dG8gc3VwcG9ydCBldmVyeXRoaW5nIGluIHRoZSBjdXJyZW50IElJTyANCmRyaXZlcnMgYnV0IGFs
-d2F5cyBJIGhhdmUgbm8gdGltZS4NCg0KQlIsDQpEZW5pcw0KDQoNCk9uIDA4LzI3LzE0IDE1OjM4
-LCBMaW51cyBXYWxsZWlqIHdyb3RlOg0KPiBPbiBNb24sIEF1ZyAyNSwgMjAxNCBhdCA2OjE5IFBN
-LCBKb25hdGhhbiBDYW1lcm9uIDxqaWMyM0BrZXJuZWwub3JnPiB3cm90ZToNCj4+IE9uIDIzLzA4
-LzE0IDE4OjMxLCBMaW51cyBXYWxsZWlqIHdyb3RlOg0KPj4+IFRoaXMgYWRkcyBzdXBwb3J0IGZv
-ciB0aGUgTElTM0xWMDIgYWNjZWxlcm9tZXRlciBmb3VuZCBpbiB0aGUNCj4+PiBTVCBNaWNyb2Vs
-ZWN0cm9uaWNzIE5vbWFkaWsgYm9hcmQgc2VyaWVzLg0KPj4+DQo+Pj4gQ2M6IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnDQo+Pj4gQ2M6IERlbmlzIENJT0NDQSA8ZGVuaXMuY2lvY2NhQHN0LmNv
-bT4NCj4+PiBDYzogTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4NCj4+PiBTaWduZWQt
-b2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQo+PiBUaGlz
-IGlzIGEgbGl0dGxlICdpbnRlcmVzdGluZycsIGdpdmVuIHRoZSBwYXJ0IGlzIGFscmVhZHkgc3Vw
-cG9ydGVkIGJ5DQo+PiBkcml2ZXJzL21pc2MvbGlzM2x2MDJkKi5jIGFuZCBhbHJlYWR5IGhhcyBi
-aW5kaW5ncyB1bmRlciB0aGVyZS4NCj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9taXNjL2xpczMwMi50eHQNCj4+IChzb21lIG9mIHRoZXNlIGFyZSBpbnRlcmVzdGluZykuDQo+
-IEdycnIgaG93IGNvbWUgSSBtaXNzZWQgdGhpcy4uLiBJdCB3YXMgb3JpZ2luYWxseSBtZXJnZWQg
-YXMgYQ0KPiBod21vbiBkcml2ZXIuDQo+DQo+DQo+Pj4gKy8qIENVU1RPTSBWQUxVRVMgRk9SIFNF
-TlNPUiA0ICovDQo+Pj4NCj4+IEkgd2lzaCBub3cgd2UnZCBuaXBwZWQgdGhpcyBuYW1pbmcgY29u
-dmVudGlvbiBpbiB0aGUgYnVkIGFuZCBpbnNpc3RlZA0KPj4gb24gbmFtaW5nIGFmdGVyIGEgcmVs
-ZXZhbnQgcGFydC4gT2ggd2VsbC4NCj4gV2VsbCB3ZSBjYW4gYWx3YXlzIG1ha2UgYW4gaW52YXNp
-dmUgcGF0Y2ggZml4aW5nIHRoYXQuIEkgY2FuDQo+IHByb2JhYmx5IGRvIGl0IHVzaW5nIHNlZCBv
-ciBzb21ldGhpbmcuDQo+DQo+PiBEbyB3ZSB0aGluayB0aGlzIGlzIHRoZSByaWdodCB3YXkgdG8g
-aGFuZGxlIHRoZSBhbHRlcm5hdGl2ZSBzdXBwb3J0DQo+PiBoZXJlPw0KPiBXZWxsIHRoaXMgcGF0
-Y2ggaXMgYSBkcml2ZXIgdXNpbmcgdGhlIElJTyBmcmFtZXdvcmsgYW5kIHdhcyB3cml0dGVuDQo+
-IGJ5IFNULCBidXQgdGhlIG90aGVyIGRyaXZlciBzdXBwb3J0IGEgZmV3IG90aGVyIGludGVyZXN0
-aW5nIGZlYXR1cmVzDQo+IGFuZCBzZWVtcyB0byBiZSBmb3IgdGhlIGxhcHRvcCB1c2VjYXNlLg0K
-Pg0KPiBBZGRpbmcgdGhlIG90aGVyIGF1dGhvcnMgdG8gdGhlIFRPOiBsaW5lLi4uDQo+DQo+IFlv
-dXJzLA0KPiBMaW51cyBXYWxsZWlqDQo=
+On Wed, Sep 10, 2014 at 12:31:48PM +0000, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
+> I think it should be OK now, but for the "try osc_per clk first ..." the check
+> should be as below?
+> 
+> If (IS_ERR(clk_per))
+>       clk_per = of_clk_get_by_name(np, "per");
+> 
+
+Ah, yes.  That was a mistake in my example code.
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
