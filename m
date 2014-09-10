@@ -1,297 +1,303 @@
-From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v8 2/5] ARM: imx6: gpc: Add PU power domain for GPU/VPU
-Date: Wed, 10 Sep 2014 11:49:20 +0800
-Message-ID: <20140910034918.GA28759@Robin-OptiPlex-780>
-References: <1410267915-18126-1-git-send-email-p.zabel@pengutronix.de>
- <1410267915-18126-3-git-send-email-p.zabel@pengutronix.de>
+From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCHv4] ASoC: simple-card: binding: update binding to support the new style.
+Date: Wed, 10 Sep 2014 12:07:42 +0800
+Message-ID: <1410322062-35077-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410267915-18126-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, jsarha-l0cyMroinI0@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-  Thanks for your great job, power domain make things clear. But looks your
-patch depend on 'PU regulator', if there is no PU regulator passed down from
-dts, we'll never implement your way for PGC. On i.mx6sx, there is no internal
-PU regulator, so I suggest you consider this case. 
-On Tue, Sep 09, 2014 at 03:05:12PM +0200, Philipp Zabel wrote:
-> When generic pm domain support is enabled, the PGC can be used
-> to completely gate power to the PU power domain containing GPU3D,
-> GPU2D, and VPU cores.
-> This code triggers the PGC powerdown sequence to disable the GPU/VPU
-> isolation cells and gate power and then disables the PU regulator.
-> To reenable, the reverse powerup sequence is triggered after the PU
-> regulator is enabled again.
-> The GPU and VPU devices in the PU power domain temporarily need
-> to be clocked during powerup, so that the reset machinery can work.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> Changes since v7:
->  - Updated to v3 of the OF PM domain series
->  - Made power domain registration depend on CONFIG_PM_GENERIC_DOMAINS
->    instead of CONFIG_PM.
-> ---
->  arch/arm/mach-imx/Kconfig |   1 +
->  arch/arm/mach-imx/gpc.c   | 203 ++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 204 insertions(+)
-> 
-> diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-> index 9de84a2..78d69cf 100644
-> --- a/arch/arm/mach-imx/Kconfig
-> +++ b/arch/arm/mach-imx/Kconfig
-> @@ -50,6 +50,7 @@ config HAVE_IMX_ANATOP
->  
->  config HAVE_IMX_GPC
->  	bool
-> +	select PM_GENERIC_DOMAINS if PM
->  
->  config HAVE_IMX_MMDC
->  	bool
-> diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
-> index 82ea74e..ea370b2 100644
-> --- a/arch/arm/mach-imx/gpc.c
-> +++ b/arch/arm/mach-imx/gpc.c
-> @@ -10,19 +10,41 @@
->   * http://www.gnu.org/copyleft/gpl.html
->   */
->  
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
->  #include <linux/io.h>
->  #include <linux/irq.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/irqchip/arm-gic.h>
->  #include "common.h"
-> +#include "hardware.h"
->  
-> +#define GPC_CNTR		0x000
->  #define GPC_IMR1		0x008
-> +#define GPC_PGC_GPU_PDN		0x260
-> +#define GPC_PGC_GPU_PUPSCR	0x264
-> +#define GPC_PGC_GPU_PDNSCR	0x268
->  #define GPC_PGC_CPU_PDN		0x2a0
->  
->  #define IMR_NUM			4
->  
-> +#define GPU_VPU_PUP_REQ		BIT(1)
-> +#define GPU_VPU_PDN_REQ		BIT(0)
-> +
-> +#define GPC_CLK_MAX		6
-> +
-> +struct pu_domain {
-> +	struct generic_pm_domain base;
-> +	struct regulator *reg;
-> +	struct clk *clk[GPC_CLK_MAX];
-> +	int num_clks;
-> +};
-> +
->  static void __iomem *gpc_base;
->  static u32 gpc_wake_irqs[IMR_NUM];
->  static u32 gpc_saved_imrs[IMR_NUM];
-> @@ -139,3 +161,184 @@ void __init imx_gpc_init(void)
->  	gic_arch_extn.irq_unmask = imx_gpc_irq_unmask;
->  	gic_arch_extn.irq_set_wake = imx_gpc_irq_set_wake;
->  }
-> +
-> +#ifdef CONFIG_PM_GENERIC_DOMAINS
-> +
-> +static int imx6q_pm_pu_power_off(struct generic_pm_domain *genpd)
-> +{
-> +	struct pu_domain *pu = container_of(genpd, struct pu_domain, base);
-> +	int iso, iso2sw;
-> +	u32 val;
-> +
-> +	/* Read ISO and ISO2SW power down delays */
-> +	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PDNSCR);
-> +	iso = val & 0x3f;
-> +	iso2sw = (val >> 8) & 0x3f;
-> +
-> +	/* Gate off PU domain when GPU/VPU when powered down */
-> +	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
-> +
-> +	/* Request GPC to power down GPU/VPU */
-> +	val = readl_relaxed(gpc_base + GPC_CNTR);
-> +	val |= GPU_VPU_PDN_REQ;
-> +	writel_relaxed(val, gpc_base + GPC_CNTR);
-> +
-> +	/* Wait ISO + ISO2SW IPG clock cycles */
-> +	ndelay((iso + iso2sw) * 1000 / 66);
-> +
-> +	regulator_disable(pu->reg);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx6q_pm_pu_power_on(struct generic_pm_domain *genpd)
-> +{
-> +	struct pu_domain *pu = container_of(genpd, struct pu_domain, base);
-> +	int i, ret, sw, sw2iso;
-> +	u32 val;
-> +
-> +	ret = regulator_enable(pu->reg);
-> +	if (ret) {
-> +		pr_err("%s: failed to enable regulator: %d\n", __func__, ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Enable reset clocks for all devices in the PU domain */
-> +	for (i = 0; i < pu->num_clks; i++)
-> +		clk_prepare_enable(pu->clk[i]);
-> +
-> +	/* Gate off PU domain when GPU/VPU when powered down */
-> +	writel_relaxed(0x1, gpc_base + GPC_PGC_GPU_PDN);
-> +
-> +	/* Read ISO and ISO2SW power down delays */
-> +	val = readl_relaxed(gpc_base + GPC_PGC_GPU_PUPSCR);
-> +	sw = val & 0x3f;
-> +	sw2iso = (val >> 8) & 0x3f;
-> +
-> +	/* Request GPC to power up GPU/VPU */
-> +	val = readl_relaxed(gpc_base + GPC_CNTR);
-> +	val |= GPU_VPU_PUP_REQ;
-> +	writel_relaxed(val, gpc_base + GPC_CNTR);
-> +
-> +	/* Wait ISO + ISO2SW IPG clock cycles */
-> +	ndelay((sw + sw2iso) * 1000 / 66);
-> +
-> +	/* Disable reset clocks for all devices in the PU domain */
-> +	for (i = 0; i < pu->num_clks; i++)
-> +		clk_disable_unprepare(pu->clk[i]);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct generic_pm_domain imx6q_arm_domain = {
-> +	.name = "ARM",
-> +};
-> +
-> +static struct pu_domain imx6q_pu_domain = {
-> +	.base = {
-> +		.name = "PU",
-> +		.power_off = imx6q_pm_pu_power_off,
-> +		.power_on = imx6q_pm_pu_power_on,
-> +		.power_off_latency_ns = 25000,
-> +		.power_on_latency_ns = 2000000,
-> +	},
-> +};
-> +
-> +static struct generic_pm_domain imx6sl_display_domain = {
-> +	.name = "DISPLAY",
-> +};
-> +
-> +static struct generic_pm_domain *imx_gpc_domains[] = {
-> +	&imx6q_arm_domain,
-> +	&imx6q_pu_domain.base,
-> +	&imx6sl_display_domain,
-> +};
-> +
-> +static struct genpd_onecell_data imx_gpc_onecell_data = {
-> +	.domains = imx_gpc_domains,
-> +	.num_domains = ARRAY_SIZE(imx_gpc_domains),
-> +};
-> +
-> +static int imx_gpc_genpd_init(struct device *dev, struct regulator *pu_reg)
-> +{
-> +	struct clk *clk;
-> +	bool is_off;
-> +	int i;
-> +
-> +	imx6q_pu_domain.base.of_node = dev->of_node;
-> +	imx6q_pu_domain.reg = pu_reg;
-> +
-> +	for (i = 0; ; i++) {
-> +		clk = of_clk_get(dev->of_node, i);
-> +		if (IS_ERR(clk))
-> +			break;
-> +		if (i >= GPC_CLK_MAX) {
-> +			dev_err(dev, "more than %d clocks\n", GPC_CLK_MAX);
-> +			goto clk_err;
-> +		}
-> +		imx6q_pu_domain.clk[i] = clk;
-> +	}
-> +	imx6q_pu_domain.num_clks = i;
-> +
-> +	is_off = IS_ENABLED(CONFIG_PM_RUNTIME);
-> +	if (is_off)
-> +		imx6q_pm_pu_power_off(&imx6q_pu_domain.base);
-> +
-> +	pm_genpd_init(&imx6q_pu_domain.base, NULL, is_off);
-> +	return of_genpd_add_provider_onecell(dev->of_node,
-> +					     &imx_gpc_onecell_data);
-> +
-> +clk_err:
-> +	while (i--)
-> +		clk_put(imx6q_pu_domain.clk[i]);
-> +	return -EINVAL;
-> +}
-> +
-> +#else
-> +static inline int imx_gpc_genpd_init(struct device *dev, struct regulator *reg)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_PM_GENERIC_DOMAINS */
-> +
-> +static int imx_gpc_probe(struct platform_device *pdev)
-> +{
-> +	struct regulator *pu_reg;
-> +	int ret;
-> +
-> +	pu_reg = devm_regulator_get(&pdev->dev, "pu");
-> +	if (IS_ERR(pu_reg)) {
-> +		ret = PTR_ERR(pu_reg);
-> +		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* The regulator is initially enabled */
-> +	ret = regulator_enable(pu_reg);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
-> +		return ret;
-> +	}
-> +	return imx_gpc_genpd_init(&pdev->dev, pu_reg);
-> +}
-> +
-> +static struct of_device_id imx_gpc_dt_ids[] = {
-> +	{ .compatible = "fsl,imx6q-gpc" },
-> +	{ .compatible = "fsl,imx6sl-gpc" },
-> +	{ }
-> +};
-> +
-> +static struct platform_driver imx_gpc_driver = {
-> +	.driver = {
-> +		.name = "imx-gpc",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = imx_gpc_dt_ids,
-> +	},
-> +	.probe = imx_gpc_probe,
-> +};
-> +
-> +static int __init imx_pgc_init(void)
-> +{
-> +	return platform_driver_register(&imx_gpc_driver);
-> +}
-> +subsys_initcall(imx_pgc_init);
-> -- 
-> 2.1.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+This patch will split the DT binding into old style and new style, the
+new style will be easier to add many DAI links from old single DAI link
+DTs.
+
+This patch will maintian compatibility with the old DTs.
+
+Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+
+
+Changes in v4:
+- Follow Jyri's advice.
+- Fix some small words or sentences errors.
+- Fix discription of the commit commnet.
+- Apply against the current code.
+- Add Notes.
+
+
+ .../devicetree/bindings/sound/simple-card.txt      | 215 ++++++++++++++-------
+ 1 file changed, 148 insertions(+), 67 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+index c2e9841..5fe0796 100644
+--- a/Documentation/devicetree/bindings/sound/simple-card.txt
++++ b/Documentation/devicetree/bindings/sound/simple-card.txt
+@@ -1,15 +1,19 @@
+-Simple-Card:
++Device-Tree bindings for Simple Card
+ 
+ Simple-Card specifies audio DAI connections of SoC <-> codec.
+ 
+-Required properties:
++=== Top level's properties and subnodes ===
+ 
++*** Required properties ***
+ - compatible				: "simple-audio-card"
+ 
+-Optional properties:
+-
++*** Optional properties ***
+ - simple-audio-card,name		: User specified audio sound card name, one string
+ 					  property.
++- simple-audio-card,format		: CPU/CODEC common audio format.
++					  "i2s", "right_j", "left_j" , "dsp_a"
++					  "dsp_b", "ac97", "pdm", "msb", "lsb"
++					  (This is used for single DAI link & old style.)
+ - simple-audio-card,widgets		: Please refer to widgets.txt.
+ - simple-audio-card,routing		: A list of the connections between audio components.
+ 					  Each entry is a pair of strings, the first being the
+@@ -17,63 +21,99 @@ Optional properties:
+ 					  source.
+ - simple-audio-card,mclk-fs             : Multiplication factor between stream rate and codec
+   					  mclk.
+-
+-Optional subnodes:
+-
+-- simple-audio-card,dai-link		: Container for dai-link level
+-					  properties and the CPU and CODEC
+-					  sub-nodes. This container may be
+-					  omitted when the card has only one
+-					  DAI link. See the examples and the
+-					  section bellow.
+-
+-Dai-link subnode properties and subnodes:
+-
+-If dai-link subnode is omitted and the subnode properties are directly
+-under "sound"-node the subnode property and subnode names have to be
+-prefixed with "simple-audio-card,"-prefix.
+-
+-Required dai-link subnodes:
+-
+-- cpu					: CPU   sub-node
+-- codec					: CODEC sub-node
+-
+-Optional dai-link subnode properties:
+-
++- simple-audio-card,frame-master	: Indicates DAI link frame master. One phandle to a
++					  CODEC DAI node.
++					  (This is used for single DAI link & old style.)
++- simple-audio-card,bitclock-master	: Indicates DAI link bit clock master. One phandle to
++					  a CODEC DAI node.
++					  (This is used for single DAI link & old style.)
++
++*** Optional subnodes ***
++- simple-audio-card,dai-link		: Container for DAI link level properties and the CPU
++					  and CODEC nodes. This container may be omitted
++					  when the card has only one DAI link and using the old
++					  style. See the examples and the section bellow.
++- simple-audio-card,cpu			: CPU DAI node.
++					  (This is used for single DAI link & old style.)
++- simple-audio-card,codec		: CODEC DAI node.
++					  (This is used for single DAI link & old style.)
++
++=== DAI link node's properties and its subnodes ===
++
++*** Required subnodes ***
++- cpu					: CPU DAI node.
++- codec					: CODEC DAI node.
++
++*** Optional properties ***
+ - format				: CPU/CODEC common audio format.
+ 					  "i2s", "right_j", "left_j" , "dsp_a"
+ 					  "dsp_b", "ac97", "pdm", "msb", "lsb"
+-- frame-master				: Indicates dai-link frame master.
+-					  phandle to a cpu or codec subnode.
+-- bitclock-master			: Indicates dai-link bit clock master.
+-					  phandle to a cpu or codec subnode.
+-- bitclock-inversion			: bool property. Add this if the
+-					  dai-link uses bit clock inversion.
+-- frame-inversion			: bool property. Add this if the
+-					  dai-link uses frame clock inversion.
+-
+-For backward compatibility the frame-master and bitclock-master
+-properties can be used as booleans in codec subnode to indicate if the
+-codec is the dai-link frame or bit clock master. In this case there
+-should be no dai-link node, the same properties should not be present
+-at sound-node level, and the bitclock-inversion and frame-inversion
+-properties should also be placed in the codec node if needed.
+-
+-Required CPU/CODEC subnodes properties:
+-
+-- sound-dai				: phandle and port of CPU/CODEC
+-
+-Optional CPU/CODEC subnodes properties:
+-
++- frame-master				: Indicates DAI link frame master. One phandle to a
++					  CODEC DAI node.
++					  (This is One boolean property for old style.)
++- bitclock-master			: Indicates DAI link bit clock master. One phandle to
++					  a CODEC DAI node.
++					  (This is one boolean property for old style.)
++
++For backward compatibility, the frame-master and bitclock-master
++can be used as boolean properties in CPU/CODEC DAI node indicating
++that the CODEC DAI is the DAI link frame master and bit clock master.
++In this case there should be no DAI link level nodes or boolean
++properties of them.
++
++For all the properties in DAI link level will be applied to both
++CPU and CODEC DAIs.
++
++=== CPU/CODEC DAI node's properties and its subnodes ===
++
++*** Required properties ***
++- sound-dai				: One phandle and port of CPU/CODEC DAI device node.
++
++*** Optional properties ***
++- bitclock-inversion			: Boolean property. Add this if the DAI device uses bit
++					  clock inversion.
++- frame-inversion			: Boolean property. Add this if the DAI device uses frame
++					  clock inversion.
++- frame-master				: Boolean property. Add this if the CODEC DAI device is
++					  frame master.
++					  (This is used for single DAI link & old style.)
++- bitclock-master			: Boolean property. Add this if the CODEC DAI device is
++					  bit clock master.
++					  (This is used for single DAI link & old style.)
+ - dai-tdm-slot-num			: Please refer to tdm-slot.txt.
+ - dai-tdm-slot-width			: Please refer to tdm-slot.txt.
+-- clocks / system-clock-frequency	: specify subnode's clock if needed.
+-					  it can be specified via "clocks" if system has
+-					  clock node (= common clock), or "system-clock-frequency"
+-					  (if system doens't support common clock)
++- clocks / system-clock-frequency	: Specify CPU/CODEC DAI's clock if needed. It can
++					  be specified via "clocks" if system has clock node
++					  (= common clock), or "system-clock-frequency"(if system
++					  doens't support common clock)
++
++=== Notes ===
++*** DAI hardware clock masters ***
++For [prefix]frame-master and [prefix]bitclock-master, which prefix
++is "simple-audio-card,", are both wrt the CODEC DAI. If the CODEC DAI
++is bit clock and frame master then the CPU DAI will be bit clock and
++frame slave, and vice versa.
++
++=== Examples ===
++*** CPU & CODEC DAI DT nodes ***
++&i2c0 {
++	ak4648: ak4648@12 {
++		#sound-dai-cells = <0>;
++		compatible = "asahi-kasei,ak4648";
++		reg = <0x12>;
++	};
++};
+ 
+-Example 1 - single DAI link:
++sh_fsi2: sh_fsi2@ec230000 {
++	#sound-dai-cells = <1>;
++	compatible = "renesas,sh_fsi2";
++	reg = <0xec230000 0x400>;
++	interrupt-parent = <&gic>;
++	interrupts = <0 146 0x4>;
++};
+ 
++Example 1 - single DAI link & old style:
++bitclock-master and frame-master as phandles.
+ sound {
+ 	compatible = "simple-audio-card";
+ 	simple-audio-card,name = "VF610-Tower-Sound-Card";
+@@ -91,6 +131,7 @@ sound {
+ 
+ 	simple-audio-card,cpu {
+ 		sound-dai = <&sh_fsi2 0>;
++		bitclock-inversion;
+ 	};
+ 
+ 	dailink0_master: simple-audio-card,codec {
+@@ -99,24 +140,64 @@ sound {
+ 	};
+ };
+ 
+-&i2c0 {
+-	ak4648: ak4648@12 {
+-		#sound-dai-cells = <0>;
+-		compatible = "asahi-kasei,ak4648";
+-		reg = <0x12>;
++Example 2 - single DAI link & old style:
++bitclock-master and frame-master as boolean properties.
++sound {
++	compatible = "simple-audio-card";
++	simple-audio-card,name = "VF610-Tower-Sound-Card";
++	simple-audio-card,format = "left_j";
++	simple-audio-card,widgets =
++		"Microphone", "Microphone Jack",
++		"Headphone", "Headphone Jack",
++		"Speaker", "External Speaker";
++	simple-audio-card,routing =
++		"MIC_IN", "Microphone Jack",
++		"Headphone Jack", "HP_OUT",
++		"External Speaker", "LINE_OUT";
++
++	simple-audio-card,cpu {
++		sound-dai = <&sh_fsi2 0>;
+ 	};
+-};
+ 
+-sh_fsi2: sh_fsi2@ec230000 {
+-	#sound-dai-cells = <1>;
+-	compatible = "renesas,sh_fsi2";
+-	reg = <0xec230000 0x400>;
+-	interrupt-parent = <&gic>;
+-	interrupts = <0 146 0x4>;
++	simple-audio-card,codec {
++		sound-dai = <&ak4648>;
++		clocks = <&osc>;
++		bitclock-master;
++		frame-master;
++		bitclock-inversion;
++	};
+ };
+ 
+-Example 2 - many DAI links:
++Example 3 - single DAI link & new style:
++sound {
++	compatible = "simple-audio-card";
++	simple-audio-card,name = "VF610-Tower-Sound-Card";
++	simple-audio-card,widgets =
++		"Microphone", "Microphone Jack",
++		"Headphone", "Headphone Jack",
++		"Speaker", "External Speaker";
++	simple-audio-card,routing =
++		"MIC_IN", "Microphone Jack",
++		"Headphone Jack", "HP_OUT",
++		"External Speaker", "LINE_OUT";
++
++	simple-audio-card,dai-link {
++		format = "i2s";
++		bitclock-master = <&dailink0_master>;
++		frame-master = <&dailink0_master>;
++		cpu {
++			sound-dai = <&sh_fsi2 0>;
++			frame-inversion;
++		};
++		dailink0_master: codec {
++			sound-dai = <&ak4648>;
++			clocks = <&osc>;
++			frame-inversion;
++		};
++	};
++};
+ 
++Example 4 - many DAI links:
+ sound {
+ 	compatible = "simple-audio-card";
+ 	simple-audio-card,name = "Cubox Audio";
+-- 
+2.1.0.27.g96db324
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
