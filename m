@@ -1,26 +1,24 @@
 From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v6 1/4] ethernet: arc: Add support for Rockchip SoC
- layer device tree bindings
-Date: Tue, 09 Sep 2014 17:30:19 -0700 (PDT)
-Message-ID: <20140909.173019.1085874055765706579.davem@davemloft.net>
+Subject: Re: [PATCH v2 3/4] ARM: dts: Add emac nodes to the rk3188 device
+ tree
+Date: Tue, 09 Sep 2014 17:30:24 -0700 (PDT)
+Message-ID: <20140909.173024.861360365308182971.davem@davemloft.net>
 References: <1410196490-5646-1-git-send-email-romain.perier@gmail.com>
+	<1410196490-5646-3-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1410196490-5646-1-git-send-email-romain.perier@gmail.com>
+In-Reply-To: <1410196490-5646-3-git-send-email-romain.perier@gmail.com>
 Sender: netdev-owner@vger.kernel.org
 To: romain.perier@gmail.com
 Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
 From: Romain Perier <romain.perier@gmail.com>
-Date: Mon,  8 Sep 2014 17:14:47 +0000
+Date: Mon,  8 Sep 2014 17:14:49 +0000
 
-> This patch defines a platform glue layer for Rockchip SoCs which
-> support arc-emac driver. It ensures that regulator for the rmii is on
-> before trying to connect to the ethernet controller. It applies right
-> speed and mode changes to the grf when ethernet settings change.
+> This adds support for EMAC Rockchip driver on RK3188 SoCs.
 > 
 > Signed-off-by: Romain Perier <romain.perier@gmail.com>
 
