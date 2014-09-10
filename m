@@ -1,58 +1,35 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [PATCH 14/16] arm: dts: am33xx: add DMA properties for UART
-Date: Wed, 10 Sep 2014 21:30:09 +0200
-Message-ID: <1410377411-26656-15-git-send-email-bigeasy@linutronix.de>
-References: <1410377411-26656-1-git-send-email-bigeasy@linutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410377411-26656-1-git-send-email-bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki@elproma.com.pl>
+Subject: Re: [PATCH] clk: Add PWM clock driver
+Date: Wed, 10 Sep 2014 22:05:17 +0200
+Message-ID: <5410AEFD.5030302@elproma.com.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Reviewed-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Tested-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
----
- arch/arm/boot/dts/am33xx.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Hi,
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 3a0a161342ba..078a760a4a21 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -200,6 +200,8 @@
- 			reg = <0x44e09000 0x2000>;
- 			interrupts = <72>;
- 			status = "disabled";
-+			dmas = <&edma 26>, <&edma 27>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart1: serial@48022000 {
-@@ -209,6 +211,8 @@
- 			reg = <0x48022000 0x2000>;
- 			interrupts = <73>;
- 			status = "disabled";
-+			dmas = <&edma 28>, <&edma 29>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart2: serial@48024000 {
-@@ -218,6 +222,8 @@
- 			reg = <0x48024000 0x2000>;
- 			interrupts = <74>;
- 			status = "disabled";
-+			dmas = <&edma 30>, <&edma 31>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		uart3: serial@481a6000 {
--- 
-2.1.0
+http://patchwork.ozlabs.org/patch/359069/
+https://lkml.org/lkml/2014/6/12/186
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will the patch ever included to linux-next?
+
+pwm_config()  API could be extended to support
+not only period [ns] and duty [ns] time
+but also frequency [Hz] and duty cycle fraction [1/1000?]
+(instead of time in ns) as parameters.
+Then  ns (rounded by pwm) to freq. conversion problem
+inclk_pwm_recalc_rate() usingpwm_get_period()
+could be avoided.
+To extend the API pwm_config() can support
+new flags forduty_ns and period_ns,
+eg. PWM_DUTY_PERCENT and PWM_PERIOD_HZ.
+
+
+best regards
+Janusz
+
