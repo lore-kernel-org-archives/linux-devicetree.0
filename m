@@ -1,277 +1,32 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v10 2/3] clk: RK808: Add clkout driver for RK808
-Date: Wed, 10 Sep 2014 09:18:05 +0800
-Message-ID: <1410311886-4579-3-git-send-email-zyw@rock-chips.com>
-References: <1410311886-4579-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410311886-4579-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 0/4] ARM: dts: several updates for the imx28-tx28.dts file
+Date: Wed, 10 Sep 2014 11:16:01 +0800
+Message-ID: <20140910031559.GB18566@dragon>
+References: <1410261963-27956-1-git-send-email-LW@KARO-electronics.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1410261963-27956-1-git-send-email-LW@KARO-electronics.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Tue, Sep 09, 2014 at 01:25:59PM +0200, Lothar Wa=DFmann wrote:
+> - remove unused labels on spidev nodes
+> - add third spidev node to utilize all available CS
+> - use GPIO polarity flags
+> - add configuration for spi-gpio driver as alternative to spi-mxs
+> - add an alias for the can transceiver regulator which is used by U-Boot
 
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
-
-Changes in v10:
-Adviced by Mike
-- remove rk808_clkout1_is_prepared
-Adviced by Dmitry Torokhov
-- add rk808_clkout_remove
-
-Changes in v9: None
-Changes in v8:
-Adviced by Mike
-- rename "control" to "enable"
-- define RK808_NR_OUTPUT 2
-
-Changes in v7:
-Adviced by doug
--fix coding style problems
-
-Changes in v6:
-Adviced by doug
-- use correct argument call of_clk_add_provider in probe
-
-Changes in v5:
-Adviced by doug
-- add some error checking in probe
-- move "rockchip,rk808.h" into the patch about dt-bindings
-
-Changes in v4:
-Adviced by doug
-- add "clock-output-names" propertiey
-- add a header file "rockchip,rk808.h"
-
-Changes in v3:
-- fix compile err
-
-Changes in v2:
-Adviced by javier.martinez
-- separated from rtc-rk808.c
-
- drivers/clk/Kconfig     |    9 +++
- drivers/clk/Makefile    |    1 +
- drivers/clk/clk-rk808.c |  170 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 180 insertions(+)
- create mode 100644 drivers/clk/clk-rk808.c
-
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index cfd3af7..84e0590 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -38,6 +38,15 @@ config COMMON_CLK_MAX77686
- 	---help---
- 	  This driver supports Maxim 77686 crystal oscillator clock. 
- 
-+config COMMON_CLK_RK808
-+	tristate "Clock driver for RK808"
-+	depends on MFD_RK808
-+	---help---
-+	  This driver supports RK808 crystal oscillator clock. These
-+	  multi-function devices have two fixed-rate oscillators,
-+	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
-+	  by control register.
-+
- config COMMON_CLK_SI5351
- 	tristate "Clock driver for SiLabs 5351A/B/C"
- 	depends on I2C
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index f537a0b..99f53d5 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_ARCH_NOMADIK)		+= clk-nomadik.o
- obj-$(CONFIG_ARCH_NSPIRE)		+= clk-nspire.o
- obj-$(CONFIG_COMMON_CLK_PALMAS)		+= clk-palmas.o
- obj-$(CONFIG_CLK_PPC_CORENET)		+= clk-ppc-corenet.o
-+obj-$(CONFIG_COMMON_CLK_RK808)		+= clk-rk808.o
- obj-$(CONFIG_COMMON_CLK_S2MPS11)	+= clk-s2mps11.o
- obj-$(CONFIG_COMMON_CLK_SI5351)		+= clk-si5351.o
- obj-$(CONFIG_COMMON_CLK_SI570)		+= clk-si570.o
-diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-new file mode 100644
-index 0000000..83902b9
---- /dev/null
-+++ b/drivers/clk/clk-rk808.c
-@@ -0,0 +1,170 @@
-+/*
-+ * Clkout driver for Rockchip RK808
-+ *
-+ * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * Author:Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/rk808.h>
-+#include <linux/i2c.h>
-+
-+#define RK808_NR_OUTPUT 2
-+
-+struct rk808_clkout {
-+	struct rk808 *rk808;
-+	struct clk_onecell_data clk_data;
-+	struct clk_hw		clkout1_hw;
-+	struct clk_hw		clkout2_hw;
-+};
-+
-+static unsigned long rk808_clkout_recalc_rate(struct clk_hw *hw,
-+					      unsigned long parent_rate)
-+{
-+	return 32768;
-+}
-+
-+static int rk808_clkout2_enable(struct clk_hw *hw, bool enable)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+
-+	return regmap_update_bits(rk808->regmap, RK808_CLK32OUT_REG,
-+				  CLK32KOUT2_EN, enable ? CLK32KOUT2_EN : 0);
-+}
-+
-+static int rk808_clkout2_prepare(struct clk_hw *hw)
-+{
-+	return rk808_clkout2_enable(hw, true);
-+}
-+
-+static void rk808_clkout2_unprepare(struct clk_hw *hw)
-+{
-+	rk808_clkout2_enable(hw, false);
-+}
-+
-+static int rk808_clkout2_is_prepared(struct clk_hw *hw)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+	uint32_t val;
-+
-+	int ret = regmap_read(rk808->regmap, RK808_CLK32OUT_REG, &val);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return (val & CLK32KOUT2_EN) ? 1 : 0;
-+}
-+
-+static const struct clk_ops rk808_clkout1_ops = {
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static const struct clk_ops rk808_clkout2_ops = {
-+	.prepare = rk808_clkout2_prepare,
-+	.unprepare = rk808_clkout2_unprepare,
-+	.is_prepared = rk808_clkout2_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static int rk808_clkout_probe(struct platform_device *pdev)
-+{
-+	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-+	struct i2c_client *client = rk808->i2c;
-+	struct device_node *node = client->dev.of_node;
-+	struct clk_init_data init = {};
-+	struct clk **clk_table;
-+	struct rk808_clkout *rk808_clkout;
-+
-+	rk808_clkout = devm_kzalloc(&client->dev,
-+				    sizeof(*rk808_clkout), GFP_KERNEL);
-+	if (!rk808_clkout)
-+		return -ENOMEM;
-+
-+	rk808_clkout->rk808 = rk808;
-+
-+	clk_table = devm_kcalloc(&client->dev, RK808_NR_OUTPUT,
-+				 sizeof(struct clk *), GFP_KERNEL);
-+	if (!clk_table)
-+		return -ENOMEM;
-+
-+	init.flags = CLK_IS_ROOT;
-+	init.parent_names = NULL;
-+	init.num_parents = 0;
-+	init.name = "rk808-clkout1";
-+	init.ops = &rk808_clkout1_ops;
-+	rk808_clkout->clkout1_hw.init = &init;
-+
-+	/* optional override of the clockname */
-+	of_property_read_string_index(node, "clock-output-names",
-+				      0, &init.name);
-+
-+	clk_table[0] = devm_clk_register(&client->dev,
-+					 &rk808_clkout->clkout1_hw);
-+	if (IS_ERR(clk_table[0]))
-+		return PTR_ERR(clk_table[0]);
-+
-+	init.name = "rk808-clkout2";
-+	init.ops = &rk808_clkout2_ops;
-+	rk808_clkout->clkout2_hw.init = &init;
-+
-+	/* optional override of the clockname */
-+	of_property_read_string_index(node, "clock-output-names",
-+				      1, &init.name);
-+
-+	clk_table[1] = devm_clk_register(&client->dev,
-+					 &rk808_clkout->clkout2_hw);
-+	if (IS_ERR(clk_table[1]))
-+		return PTR_ERR(clk_table[1]);
-+
-+	rk808_clkout->clk_data.clks = clk_table;
-+	rk808_clkout->clk_data.clk_num = RK808_NR_OUTPUT;
-+
-+	return of_clk_add_provider(node, of_clk_src_onecell_get,
-+				   &rk808_clkout->clk_data);
-+}
-+
-+static int rk808_clkout_remove(struct platform_device *pdev)
-+{
-+	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-+	struct i2c_client *client = rk808->i2c;
-+	struct device_node *node = client->dev.of_node;
-+
-+	of_clk_del_provider(node);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver rk808_clkout_driver = {
-+	.probe = rk808_clkout_probe,
-+	.remove = rk808_clkout_remove,
-+	.driver		= {
-+		.name	= "rk808-clkout",
-+	},
-+};
-+
-+module_platform_driver(rk808_clkout_driver);
-+
-+MODULE_DESCRIPTION("Clkout driver for the rk808 series PMICs");
-+MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:rk808-clkout");
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied all 4, thanks.
