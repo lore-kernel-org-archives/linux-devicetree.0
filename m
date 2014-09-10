@@ -1,40 +1,135 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/3]  Add picoPHY usb phy driver found on stih407 family
- SoC's
-Date: Wed, 10 Sep 2014 14:08:36 +0530
-Message-ID: <54100E0C.7070309@ti.com>
-References: <1409740079-16554-1-git-send-email-peter.griffin@linaro.org> <540DC9F6.8090306@ti.com> <20140908155331.GA7620@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Subject: Re: [PATCH V3] pwm: lpc32xx - Add a driver for the motor PWM
+Date: Wed, 10 Sep 2014 10:42:20 +0200
+Message-ID: <20140910104220.44558cf7@avionic-0020>
+References: <1410277361-26848-1-git-send-email-alban.bedel@avionic-design.de>
+	<20140909160548.GB3896@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140908155331.GA7620@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/LrSXqGn3aX/=Y0tIALeDQOi"; protocol="application/pgp-signature"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20140909160548.GB3896@leverpostej>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Roland Stigge <stigge@antcom.de>
 List-Id: devicetree@vger.kernel.org
 
+--Sig_/LrSXqGn3aX/=Y0tIALeDQOi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, 9 Sep 2014 17:05:48 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-On Monday 08 September 2014 09:23 PM, Peter Griffin wrote:
-> Hi Kishon,
-> 
->> On Wednesday 03 September 2014 03:57 PM, Peter Griffin wrote:
->>> This series adds support for the picoPHY usb phy which is used by the usb2
->>> and usb3 host controllers when controlling usb2/1.1 devices. It is found on
->>> stih407 family SoC's from the consumer electronics devision of STMicroelectronics.
->>
->> So miphy28lp is the PHY controller for USB3 device controller and picoPHY is
->> the PHY controller for USB3 host controller?
-> 
-> No, miphy28lp is the usb3 phy and picoPHY is the usb2 phy.
-> 
-> With a usb2 host controller only picoPHY is used. With the usb3 host controller both usb2 and usb3 phys
-> are used depending on what type of device is plugged in.
-> 
-> Hope that clarifies things,
+> On Tue, Sep 09, 2014 at 04:42:41PM +0100, Alban Bedel wrote:
+> > The LPC32xx motor PWMs have two output pin, A and B, with B =3D !A.
+> > The driver can switch the polarity to allow use either output pin A
+> > or output pin B.
+> >=20
+> > Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+> > ---
+> > V3: * Updated to current mainline API
+> >     * Fixed LPC32xx vs. LPC32XX
+> >     * Various coding style fix
+> > V2: * Splitted the DTS to its own patch
+> > ---
+> >  .../devicetree/bindings/pwm/lpc32xx-motor-pwm.txt  |  24 +++
+> >  drivers/pwm/Kconfig                                |  10 +
+> >  drivers/pwm/Makefile                               |   1 +
+> >  drivers/pwm/pwm-lpc32xx-motor.c                    | 210 +++++++++++++=
+++++++++
+> >  4 files changed, 245 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-motor=
+-pwm.txt
+> >  create mode 100644 drivers/pwm/pwm-lpc32xx-motor.c
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-motor-pwm.tx=
+t b/Documentation/devicetree/bindings/pwm/lpc32xx-motor-pwm.txt
+> > new file mode 100644
+> > index 0000000..decc27c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-motor-pwm.txt
+> > @@ -0,0 +1,24 @@
+> > +LPC32xx Motor PWM controller
+> > +
+> > +The LPC32xx motor PWMs have two output pin, A and B, with B =3D !A.
+> > +By default, output A should be used, if output B is used the PWM
+> > +polarity should be inverted using the linux,polarity property.
+> > +
+> > +Required properties:
+> > +- compatible: should be "nxp,lpc3220-motor-pwm"
+> > +- reg: physical base address and length of the controller's registers
+> > +
+> > +Optional properties:
+> > +- linux,polarity: Bit mask of the polarity to use for each output,
+> > +      a bit set to 0 indicate the default polarity, a bit set to 1
+> > +      indicate an inverted polarity. In other word this set if output
+> > +      pin A or output pin B has the correct polarity.
+>=20
+> What exactly does linux have to do with the choice of pin? Why should
+> this be "linux,polarity"?
 
-indeed. thanks for the explanation :-)
+Right, I'll remove this in favor of the standard 3 cells pwm specifiers.
 
-Cheers
-Kishon
+> > +
+> > +Examples:
+> > +
+> > +mpwm@400e8000 {
+> > +	compatible =3D "nxp,lpc3220-motor-pwm";
+> > +	reg =3D <0x400E8000 0x78>;
+> > +	linux,polarity =3D <0x5>; /* Use outputs B0, A1 and B2 */
+>=20
+> This doesn't match the description of there being two output pins. I
+> take it the description above is somewhat misleading?
+>=20
+> > +	#pwm-cells =3D <2>;
+>=20
+> The format of these cells should be described.
+>=20
+> Wouldn't it make more sense to describe the polarity in the
+> pwm-specifier? It seems like a property of the connection rather than
+> the PWM controller itself.
+
+Yes, will be done.
+
+>=20
+> > +	lpc32xx->clk =3D devm_clk_get(&pdev->dev, NULL);
+>=20
+> No clock was described in the binding.
+>=20
+> Is there only the one clock feeding the pwm? (rather than separate
+> interface and pwm clocks).
+
+There is only one clock for this PWM block.
+
+> Please describe clocks in the binding. If the clock inputs are named,
+> please use clock-names.
+
+No clock is defined in the current LPC32xx DTS, what should I do in
+this case?
+
+Alban
+
+--Sig_/LrSXqGn3aX/=Y0tIALeDQOi
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUEA7sAAoJEHSUmkuduC28fTUQAL5BLUJ8AYl9/1zQiE/F5QPs
+uaHrSNFOs00YSjycAG+KhsWxvbe0oEW4HtaPpr1GqvQ8oUgFWpMW5st3/zbsB5Ow
+M8CzX+v4ehc1cQ0BIsfqwF9pafmh8qyBw0068PDgc1klFlEVYsU4y1yHYBj00ORT
+86hDXWdgOmAT8DID5icKZGtjf86DUsva/RrbT7qaQk0Zzqxz1KryriK12YK/Ns8/
+upeI2BXAoWQzPTv1Mfdo+z+m7IEiGh1WMutHaDx/P2O1gngxlSrwijsXZYBdoY2N
+j73EsJHzJ2oMoV7+QfqC6sdDuzs/EcqkREjGIomDBPsNDdxZ0fK9GTTl/6/I33HE
+TEjLzi2X/YbmSSMy6Fu6XvpMw6l44tUpvs/Ds3Y57ZjQhh8X4YEMzdaiJ9/Znret
+crsgTvWl+Qv0OsK1w1O+KHOIpIyf6agIxu383j77OGB4cGROE4tr6mxvT0J2ZSqR
+c5RF4ngtwUiBmcpDofEjdlVJMU1Tm8/tPF6rrxXIXSKF5rAWzhQZZPVfmsT6fTT5
+3gZBPQqZCC6LtTA3hisJ5Qi3Fi3RhV58HSI/URz+Co3g8tcQ21BFWUdCPvFbCdil
+nOqGjIb0dvVFCCWNg9zeLCRKWK46vCPna6yVTP8q/hggnXzztrYYKfbFy/Tb6FID
+U1Ihr0OlsUjO9VpunN47
+=3rgT
+-----END PGP SIGNATURE-----
+
+--Sig_/LrSXqGn3aX/=Y0tIALeDQOi--
