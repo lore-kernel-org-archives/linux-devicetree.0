@@ -1,68 +1,48 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] PCI: keystone: update to support multiple pci
- ports
-Date: Wed, 10 Sep 2014 10:28:32 -0400
-Message-ID: <54106010.8040206@ti.com>
-References: <1410293835-13050-1-git-send-email-m-karicheri2@ti.com> <3967092.l9bxcqMaSa@wuerfel> <540F8425.70304@ti.com> <3814561.AbrslYBNjb@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/2] usb: gadget: Add xilinx usb2 device support
+Date: Wed, 10 Sep 2014 16:30:50 +0200
+Message-ID: <8798156.X6RhQq9Iqm@wuerfel>
+References: <1406020130-20467-1-git-send-email-sbhatta@xilinx.com> <20140821140040.GE9608@saruman.home> <CALHRZuqt-XJ5mPczzGJtSN=iq7TPut0=54r90QHWR+w-Lwwtyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3814561.AbrslYBNjb@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CALHRZuqt-XJ5mPczzGJtSN=iq7TPut0=54r90QHWR+w-Lwwtyg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sundeep subbaraya <sundeep.lkml@gmail.com>
+Cc: "balbi@ti.com" <balbi@ti.com>, Daniel Mack <daniel@zonque.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michals@xilinx.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, svemula@xilinx.com, anirudh@xilinx.com, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/10/2014 04:22 AM, Arnd Bergmann wrote:
-> On Tuesday 09 September 2014 18:50:13 Murali Karicheri wrote:
->> My mistake. It is the device ID, not vendor ID. The PCI driver supports
->> PCI h/w on K2HK, K2E and K2L SoCs for which PCI device IDs are assigned as
->>
->> +#define PCIE_RC_K2HK           0xb008
->> +#define PCIE_RC_K2E            0xb009
->> +#define PCIE_RC_K2L            0xb00a
->> +
->>
->> and the same driver code runs on all these h/w. The device ID is not
->> filled in by default by the h/w, in the config space of the RC at offset
->> 1000h "VENDOR_DEVICE_ID Vendor and Device Identification Register".
->> Same is available in a seperate SoC register whose offset is specified
->> by index 2. This is read by driver and updated in the config space. The
->> Vendor ID is however set by default.
->>
->> There is a mrrs PCI quirk required for Keystone PCI which depends on
->> this vendor ID to be filled correctly as it match vendor id/ device id
->> of the bridge device to apply the quirk.
->>
->> Hope this clarify your question.
->
-> Ok, I understand now. Yes, this makes sense, though I wonder if it would
-> have been easier to handle the quirk in a different way based on the
-> driver rather than the PCI ID. It's probably not worth revisiting though,
-> unless Bjorn wants to see it done differently now.
+On Wednesday 10 September 2014 19:25:11 sundeep subbaraya wrote:
+> > that's not exactly what I asked  Usually you only add COMPILE_TEST
+> > when you have an ARCH dependency. So something like:
+> >
+> >         depends on ARCH_ARM || COMPILE_TEST
+> >
+> > would make it clear that this driver is only available on ARM, but when
+> > doing my build tests, I'd still be able to compile it on x86.
+> 
+> Ok got it 
 
-Bjorn has reviewed the quirk patch and wanted to check the device ID and 
-vendor ID to avoid applying the quirck when bridge is non TI and same 
-device ID.
+Most of the xilinx stuff also applies to MICROBLAZE however, so it
+may need to be
 
-So support for two PCI port requires only the PCI device id related 
-change. So I will modify the subject and commit log to reflect the same 
-and re-send the patch.
+	ARM || MICROBLAZE || COMPILE_TEST
 
-Thanks again Arnd for your comments.
+(not ARCH_ARM, btw).
 
-Regards,
+> >> > Also, your code uses device tree functions unconditionally, which is
+> >> > fine, but it must hence depend on 'OF'.
+> >>
+> >> Ok will add OF along with COMPILE_TEST
+> >
+> > so this would be:
+> >
+> >         depends on OF || COMPILE_TEST
 
-Murali
->
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If it requires OF to build, you can use 'OF && (ARM || COMPILE_TEST)',
+but if there is no compile-time dependency, you can just leave out
+the 'depends on OF' completely. You can't even build a Zynq machine
+without OF enabled.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
