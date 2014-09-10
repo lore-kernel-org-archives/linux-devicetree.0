@@ -1,46 +1,98 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 4/5] ARM: shmobile: R-Mobile: Add DT support for PM domains
-Date: Wed, 10 Sep 2014 14:40:57 +0200
-Message-ID: <CAMuHMdUcaGNQWmfS4U=XhksscuWh6hk8gA8fOpaUwxSmChDbiQ@mail.gmail.com>
-References: <1410183344-14756-1-git-send-email-geert+renesas@glider.be>
-	<1410183344-14756-5-git-send-email-geert+renesas@glider.be>
-	<7h1trkkc49.fsf@deeprootsystems.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/5] rtc: at91sam9: add DT bindings documentation
+Date: Wed, 10 Sep 2014 14:43:15 +0200
+Message-ID: <20140910144315.240621e6@bbrezillon>
+References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1409733934-14465-6-git-send-email-boris.brezillon@free-electrons.com>
+	<20140910121424.GG2974@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <7h1trkkc49.fsf@deeprootsystems.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Philipp Zabel <philipp.zabel@gmail.com>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140910121424.GG2974@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+Hi Johan,
 
-On Tue, Sep 9, 2014 at 6:11 PM, Kevin Hilman <khilman@kernel.org> wrote:
->> +static int r8a7740_pd_a4s_suspend(void)
->> +{
->> +     /*
->> +      * The A4S domain contains the CPU core and therefore it should
->> +      * only be turned off if the CPU is in use.
->> +      */
->> +     return -EBUSY;
->> +}
->
->
-> Do you have plans to use pm_genpd_attach_cpuidle() for this eventually,
-> maybe by checking if the enclosing node is a CPU?  If not, are there
-> other plans to handle idle for the power domains that contain CPUs?
+On Wed, 10 Sep 2014 14:14:24 +0200
+Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Yes, the plan is to add more power saving features, and use DT topology
-analysis to get rid of the hardcoded domain logic.
+> On Wed, Sep 03, 2014 at 10:45:34AM +0200, Boris BREZILLON wrote:
+> > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt   | 20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> > new file mode 100644
+> > index 0000000..9ca455f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> > @@ -0,0 +1,20 @@
+> > +Atmel AT91SAM9260 Real Time Timer
+> > +
+> > +Required properties:
+> > +- compatible: should be: "atmel,at91sam9260-rtt"
+> > +- reg: should contain 2 memory regions
+> > +  * the first one encodes the memory region of the RTT controller
+> > +  * the second one encodes the GPBR (General Purpose Backup Resgisters)
+> > +    memory region used to store the current time
+> > +- interrupts: rtc alarm/event interrupt
+> > +- clocks: should contain one clock pointing the the slow clk
+> > +
+> > +Example:
+> > +
+> > +rtc@fffffe00 {
+> > +	compatible = "atmel,at91sam9260-rtt";
+> > +	reg = <0xfffffd20 0x10
+> > +	       0xfffffd50 0x4>;
+> > +	interrupts = <1 4 7>;
+> > +	clocks = <&clk32k>;
+> > +};
+> 
+> This does not describe the hardware, but rather a specific software
+> configuration.
+> 
+> The RTT is first of all not an RTC (although it can be used as one in a
+> specific software configuration). And the second register resource above
+> is not an RTT register, but a general-purpose backup register could be
+> used for other purposes (which register to use is currently configurable
+> for legacy booting using CONFIG_RTC_DRV_AT91SAM9_GPBR).
+> 
+> This was discussed in the thread where I posted an RFC for this last
+> year (which you linked to in your original submission thread), but no
+> conclusion was reached:
+> 
+> 	http://www.spinics.net/lists/arm-kernel/msg236292.html
 
-Gr{oetje,eeting}s,
+Yes, I read this thread.
 
-                        Geert
+Please, lets just find a solution, even if it's not a perfect one,
+because the situation is unacceptable.
+We're missing this features since the move to DT because we were not
+able to agree on a DT binding...
 
+I know DT bindings are supposed to represent HW parts and not what
+they're used for or how they're configured, but do you see any other
+real usage of the RTT block ?
+
+BTW, I don't care which binding/implementation is chosen but we need to
+sort this out!
+
+Best Regards,
+
+Boris
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
