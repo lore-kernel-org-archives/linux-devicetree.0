@@ -1,121 +1,114 @@
-From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v10 08/10] OF: PCI: Add support for parsing PCI host
- bridge resources from DT
-Date: Wed, 10 Sep 2014 17:53:47 +0100
-Message-ID: <20140910165347.GJ27864@e106497-lin.cambridge.arm.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
- <1410184472-17630-9-git-send-email-Liviu.Dudau@arm.com>
- <20140909133546.GB2636@e102568-lin.cambridge.arm.com>
- <20140910142241.GD27864@e106497-lin.cambridge.arm.com>
- <20140910151026.GB11640@e102568-lin.cambridge.arm.com>
- <20140910153233.GG27864@e106497-lin.cambridge.arm.com>
- <20140910163746.GB19662@e102568-lin.cambridge.arm.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH resend 1/4] clk: hix5hd2: add complex clk
+Date: Wed, 10 Sep 2014 09:52:11 -0700
+Message-ID: <20140910165211.19023.39726@quantum>
+References: <1409031970-4821-1-git-send-email-zhangfei.gao@linaro.org>
+ <1409031970-4821-2-git-send-email-zhangfei.gao@linaro.org>
+ <20140903173753.11368.10916@quantum>
+ <CABHwWpQRj1YepkszoiiH0_vAp_-mS8qSwrEiLNkRoKvUUt7uxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140910163746.GB19662-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABHwWpQRj1YepkszoiiH0_vAp_-mS8qSwrEiLNkRoKvUUt7uxg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?b?6Jab5bu65oiQ?= <jchxue@gmail.com>
+Cc: devicetree@vger.kernel.org, haifeng.yan@linaro.org, xuwei5@hisilicon.com, Haojian Zhuang <haojian.zhuang@linaro.org>, Jiancheng Xue <xuejiancheng@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 05:37:47PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, Sep 10, 2014 at 04:32:33PM +0100, Liviu Dudau wrote:
->=20
-> [...]
->=20
-> > > > > > +		/*
-> > > > > > +		 * If we failed translation or got a zero-sized region
-> > > > > > +		 * then skip this range
-> > > > > > +		 */
-> > > > > > +		if (range.cpu_addr =3D=3D OF_BAD_ADDR || range.size =3D=3D=
- 0)
-> > > > > > +			continue;
-> > > > > > +
-> > > > > > +		res =3D kzalloc(sizeof(struct resource), GFP_KERNEL);
-> > > > > > +		if (!res) {
-> > > > > > +			err =3D -ENOMEM;
-> > > > > > +			goto parse_failed;
-> > > > > > +		}
-> > > > > > +
-> > > > > > +		err =3D of_pci_range_to_resource(&range, dev, res);
-> > > > > > +		if (err) {
-> > > > > > +			kfree(res);
-> > > > >=20
-> > > > > You might want to add a label to free res to make things more=
- uniform.
-> >=20
-> > Sorry, not following you. How would a label help here?
->=20
-> It was just a suggestion so ignore it if you do not think it is clean=
-er.
-> It is to make code more uniform and undo operations in one place inst=
-ead of
-> doing it piecemeal (you kfree the res here and jump to complete the c=
-lean-up,
-> whereas you might want to add a different label and a different goto
-> destination and carry out the kfree there).
-
-But that kfree is the only done once, while the pci_free_resource_list(=
-) is
-done twice.
-
->=20
-> I do not mind either, it is just what I noticed.
->=20
-> > > > > > +			goto parse_failed;
-> > > > > > +		}
-> > > > > > +
-> > > > > > +		if (resource_type(res) =3D=3D IORESOURCE_IO) {
-> > > > > > +			if (*io_base)
-> > > > >=20
-> > > > > You do not zero io_base in the first place so you should ask =
-the API
-> > > > > user to do that. Is 0 a valid value BTW ? If it is you've got=
- to resort
-> > > > > to something else to detect multiple IO resources.
-> >=20
-> > No, zero is not a valid value. It is the cpu_addr value from the IO=
- range, I'm
-> > hopying that no one is crazy enough to map PCI address space at CPU=
- address zero.
-> > Thanks for spotting the lack of initialisation though, I need to fi=
-x it.
->=20
-> Mmm...wasn't a trick question sorry :D
->=20
-> PCI host bridge /pci ranges:
->    IO 0x00000000..0x0000ffff -> 0x00000000
->    More than one I/O resource converted. CPU offset for old range los=
-t!
->      MEM 0x41000000..0x7fffffff -> 0x41000000
->      pci-host-generic 40000000.pci: PCI host bridge to bus 0000:00
->      pci_bus 0000:00: root bus resource [bu-01]
->      pci_bus 0000:00: root bus resource [io  0x0000-0xffff]
->      pci_bus 0000:00: root bus resource [mem 0x41000000-0x7fffffff]
->=20
-
-Your DT puts the IO space at CPU address zero? Could you copy the relev=
-ant
-host bridge node from DT here?
-
-Best regards,
-Liviu
-
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+UXVvdGluZyDolpvlu7rmiJAgKDIwMTQtMDktMDQgMjM6Mzc6MjUpCj4gCj4gCj4gMjAxNC0wOS0w
+NCAxOjM3IEdNVCswODowMCBNaWtlIFR1cnF1ZXR0ZSA8bXR1cnF1ZXR0ZUBsaW5hcm8ub3JnPjoK
+PiAKPiAgICAgUXVvdGluZyBaaGFuZ2ZlaSBHYW8gKDIwMTQtMDgtMjUgMjI6NDY6MDcpCj4gICAg
+ID4gK3N0YXRpYyBpbnQgY2xrX2V0aGVyX2VuYWJsZShzdHJ1Y3QgY2xrX2h3ICpodykKPiAgICAg
+PiArewo+ICAgICA+ICvCoCDCoCDCoCDCoHN0cnVjdCBoaXg1aGQyX2Nsa19jb21wbGV4ICpjbGsg
+PSB0b19jb21wbGV4X2Nsayhodyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdTMyIHZhbDsKPiAgICAg
+PiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVsYXhlZChjbGstPmN0cmxfcmVn
+KTsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgfD0gY2xrLT5jdHJsX2Nsa19tYXNrIHwgY2xrLT5j
+dHJsX3JzdF9tYXNrOwo+ICAgICA+ICvCoCDCoCDCoCDCoHdyaXRlbF9yZWxheGVkKHZhbCwgY2xr
+LT5jdHJsX3JlZyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdmFsICY9IH4oY2xrLT5jdHJsX3JzdF9t
+YXNrKTsKPiAgICAgPiArwqAgwqAgwqAgwqB3cml0ZWxfcmVsYXhlZCh2YWwsIGNsay0+Y3RybF9y
+ZWcpOwo+ICAgICA+ICsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgPSByZWFkbF9yZWxheGVkKGNs
+ay0+cGh5X3JlZyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdmFsIHw9IGNsay0+cGh5X2Nsa19tYXNr
+Owo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCAmPSB+KGNsay0+cGh5X3JzdF9tYXNrKTsKPiAgICAg
+PiArwqAgwqAgwqAgwqB3cml0ZWxfcmVsYXhlZCh2YWwsIGNsay0+cGh5X3JlZyk7Cj4gICAgID4g
+K8KgIMKgIMKgIMKgbWRlbGF5KDEwKTsKPiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFs
+ICY9IH4oY2xrLT5waHlfY2xrX21hc2spOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCB8PSBjbGst
+PnBoeV9yc3RfbWFzazsKPiAgICAgPiArwqAgwqAgwqAgwqB3cml0ZWxfcmVsYXhlZCh2YWwsIGNs
+ay0+cGh5X3JlZyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgbWRlbGF5KDEwKTsKPiAgICAgPiArCj4g
+ICAgID4gK8KgIMKgIMKgIMKgdmFsIHw9IGNsay0+cGh5X2Nsa19tYXNrOwo+ICAgICA+ICvCoCDC
+oCDCoCDCoHZhbCAmPSB+KGNsay0+cGh5X3JzdF9tYXNrKTsKPiAgICAgPiArwqAgwqAgwqAgwqB3
+cml0ZWxfcmVsYXhlZCh2YWwsIGNsay0+cGh5X3JlZyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgbWRl
+bGF5KDMwKTsKPiAKPiAgICAgV2l0aCBhbGwgb2YgdGhlc2UgbWRlbGF5cywgSSB3b25kZXIgaWYg
+eW91IHNob3VsZCB1c2UgLnByZXBhcmUgYW5kCj4gICAgIC51bnByZXBhcmUgaW5zdGVhZD8gRG9l
+cyB0aGUgRXRoZXJuZXQgZHJpdmVyIGNhbGwgY2xrX3tlbnxkaXN9YWJsZSBmcm9tCj4gICAgIGlu
+dGVycnVwdCBjb250ZXh0Pwo+IAo+IMKgCj4gVGhhbmsgeW91IGZvciB0aGUgYWR2aXNlLgo+IAo+
+IEluIGhpeDVoZDIgc29jLCB0aGVzZSBtZGVsYXlzIGFyZSBuZWNlc3NhcnkgZm9yIHJlc2V0dGlu
+ZyB0aGUgRXRoZXJuZXQgwqBwaHkKPiBkZXZpY2UuIFRoZSBoYXJkd2FyZSBuZWVkIHNvbWUgdGlt
+ZSB0byBiZSBzdGFibGUuSXQncyBkaWZmaWN1bHQgdG8gdXNlIC5wcmVwYXJlCj4gYW5kIC51bnBy
+ZXBhcmUgaW5zdGVhZCwgYmVjYXVzZSB0aGV5IGFyZSBlbWJlZGVkIGluIHNldmVyYWwgcGxhY2Vz
+IGFtb25nIHRoZQo+IHdob2xlIHNlcXVlbmNlLiBFdmVuIHRob3VnaCBzb21lIGNvZGUgc2VnbWVu
+dCBjb3VsZCBiZSBwdXQgaW50byDCoHRoZSAucHJlcGFyZQo+IGNhbGxiYWNrLCBtZGVsYXlzIHNo
+b3VsZCBzdGlsbCBiZSByZXNlcnZlZC4gU28gd2UgaG9wZSB0byBrZWVwIHRoaXMgbWFubmVyIGlm
+Cj4gaXQncyBvay4KCk9LLiBJIHdvbmRlciBpZiB5b3Ugc2hvdWxkIGJlIHVzaW5nIHRoZSByZXNl
+dCBjb250cm9sbGVyIGZyYW1ld29yayB0byBjb250cm9sIHRoZQpyZXNldCBvZiB5b3VyIHBoeT8g
+U29tZSBjbG9jayBkcml2ZXJzIGFyZSBhbHNvIHJlc2V0IGRyaXZlcnMgc2luY2UgYml0cwpmb3Ig
+Y29udHJvbGxpbmcgdGhhdCBzdHVmZiBhcmUgb2Z0ZW4gY29tYmluZWQgaW4gdGhlIHNhbWUgcmVn
+aXN0ZXIKc3BhY2UuIEFzIGFuIGV4YW1wbGUsIHRha2UgYSBsb29rIGF0OgoKZHJpdmVycy9jbGsv
+cWNvbS9nY2MtYXBxODA4NC5jCgo+IAo+IFRoZSBFdGhlcm5ldCBkcml2ZXIgd29uJ3QgY2FsbCBj
+bGtfZW5hYmxlIGFuZCBjbGtfZGlzYWJsZSBmcm9tIGludGVycnVwdAo+IGNvbnRleHQuCgpHb29k
+IHRvIGtub3cuIGNsa19lbmFibGUgYW5kIGNsa19kaXNhYmxlIGFyZSBkZXNpZ25lZCB0byBiZSBj
+YWxsZWQKc2FmZWx5IGZyb20gaW50ZXJydXB0IGNvbnRleHQuIGNsa19wcmVwYXJlIGFuZCBjbGtf
+dW5wcmVwYXJlIG9mdGVuCmVuYWJsZS9kaXNhYmxlIGEgY2xvY2ssIGJ1dCBhcmUgZGVzaWduZWQg
+Zm9yIHVzZSBpbiBhIHJlZ3VsYXIgcHJvY2Vzcwpjb250ZXh0IChlLmcuIHdlIG1pZ2h0IHNsZWVw
+IG9yIHNjaGVkdWxlKS4gU28gZGVwZW5kaW5nIG9uIGhvdyBsb25nIGl0CnRha2VzIHlvdSB0byBl
+bmFibGUvZGlzYWJsZSB5b3VyIEV0aGVybmV0IGNsb2NrIHlvdSBtaWdodCB3YW50IHRvCm1pZ3Jh
+dGUgdG8gdGhvc2UgY2FsbGJhY2tzIGluc3RlYWQuCgpSZWdhcmRzLApNaWtlCgo+IAo+ICAgICDC
+oAo+IAo+ICAgICA+ICvCoCDCoCDCoCDCoHJldHVybiAwOwo+ICAgICA+ICt9Cj4gICAgID4gKwo+
+ICAgICA+ICtzdGF0aWMgdm9pZCBjbGtfZXRoZXJfZGlzYWJsZShzdHJ1Y3QgY2xrX2h3ICpodykK
+PiAgICAgPiArewo+ICAgICA+ICvCoCDCoCDCoCDCoHN0cnVjdCBoaXg1aGQyX2Nsa19jb21wbGV4
+ICpjbGsgPSB0b19jb21wbGV4X2Nsayhodyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdTMyIHZhbDsK
+PiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVsYXhlZChjbGstPmN0
+cmxfcmVnKTsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgJj0gfihjbGstPmN0cmxfY2xrX21hc2sp
+Owo+ICAgICA+ICvCoCDCoCDCoCDCoHdyaXRlbF9yZWxheGVkKHZhbCwgY2xrLT5jdHJsX3JlZyk7
+Cj4gICAgID4gK30KPiAgICAgPiArCj4gICAgID4gK3N0YXRpYyBzdHJ1Y3QgY2xrX29wcyBjbGtf
+ZXRoZXJfb3BzID0gewo+ICAgICA+ICvCoCDCoCDCoCDCoC5lbmFibGUgPSBjbGtfZXRoZXJfZW5h
+YmxlLAo+ICAgICA+ICvCoCDCoCDCoCDCoC5kaXNhYmxlID0gY2xrX2V0aGVyX2Rpc2FibGUsCj4g
+ICAgID4gK307Cj4gICAgID4gKwo+ICAgICA+ICtzdGF0aWMgaW50IGNsa19jb21wbGV4X2VuYWJs
+ZShzdHJ1Y3QgY2xrX2h3ICpodykKPiAgICAgPiArewo+ICAgICA+ICvCoCDCoCDCoCDCoHN0cnVj
+dCBoaXg1aGQyX2Nsa19jb21wbGV4ICpjbGsgPSB0b19jb21wbGV4X2Nsayhodyk7Cj4gICAgID4g
+K8KgIMKgIMKgIMKgdTMyIHZhbDsKPiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0g
+cmVhZGxfcmVsYXhlZChjbGstPmN0cmxfcmVnKTsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgfD0g
+Y2xrLT5jdHJsX2Nsa19tYXNrOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCAmPSB+KGNsay0+Y3Ry
+bF9yc3RfbWFzayk7Cj4gICAgID4gK8KgIMKgIMKgIMKgd3JpdGVsX3JlbGF4ZWQodmFsLCBjbGst
+PmN0cmxfcmVnKTsKPiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVs
+YXhlZChjbGstPnBoeV9yZWcpOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCB8PSBjbGstPnBoeV9j
+bGtfbWFzazsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgJj0gfihjbGstPnBoeV9yc3RfbWFzayk7
+Cj4gICAgID4gK8KgIMKgIMKgIMKgd3JpdGVsX3JlbGF4ZWQodmFsLCBjbGstPnBoeV9yZWcpOwo+
+ICAgICA+ICsKPiAgICAgPiArwqAgwqAgwqAgwqByZXR1cm4gMDsKPiAgICAgPiArfQo+ICAgICA+
+ICsKPiAgICAgPiArc3RhdGljIHZvaWQgY2xrX2NvbXBsZXhfZGlzYWJsZShzdHJ1Y3QgY2xrX2h3
+ICpodykKPiAgICAgPiArewo+ICAgICA+ICvCoCDCoCDCoCDCoHN0cnVjdCBoaXg1aGQyX2Nsa19j
+b21wbGV4ICpjbGsgPSB0b19jb21wbGV4X2Nsayhodyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdTMy
+IHZhbDsKPiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVsYXhlZChj
+bGstPmN0cmxfcmVnKTsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgfD0gY2xrLT5jdHJsX3JzdF9t
+YXNrOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCAmPSB+KGNsay0+Y3RybF9jbGtfbWFzayk7Cj4g
+ICAgID4gK8KgIMKgIMKgIMKgd3JpdGVsX3JlbGF4ZWQodmFsLCBjbGstPmN0cmxfcmVnKTsKPiAg
+ICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVsYXhlZChjbGstPnBoeV9y
+ZWcpOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCB8PSBjbGstPnBoeV9yc3RfbWFzazsKPiAgICAg
+PiArwqAgwqAgwqAgwqB2YWwgJj0gfihjbGstPnBoeV9jbGtfbWFzayk7Cj4gICAgID4gK8KgIMKg
+IMKgIMKgd3JpdGVsX3JlbGF4ZWQodmFsLCBjbGstPnBoeV9yZWcpOwo+ICAgICA+ICt9Cj4gICAg
+ID4gKwo+ICAgICA+ICtzdGF0aWMgc3RydWN0IGNsa19vcHMgY2xrX2NvbXBsZXhfb3BzID0gewo+
+ICAgICA+ICvCoCDCoCDCoCDCoC5lbmFibGUgPSBjbGtfY29tcGxleF9lbmFibGUsCj4gICAgID4g
+K8KgIMKgIMKgIMKgLmRpc2FibGUgPSBjbGtfY29tcGxleF9kaXNhYmxlLAo+ICAgICA+ICt9Owo+
+IAo+ICAgICBUaGVzZSBlbmFibGUvZGlzYWJsZSBjYWxsYmFja3MgbG9vayBnb29kLCB3aXRoIG5v
+IGRlbGF5cy4KPiAKPiAgICAgUmVnYXJkcywKPiAgICAgTWlrZQo+IAo+IAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
