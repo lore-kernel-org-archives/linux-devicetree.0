@@ -1,42 +1,53 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] ARM: l2c: parse cache properties from ePAPR definitions
-Date: Wed, 10 Sep 2014 12:44:16 +0200
-Message-ID: <CACRpkdaLJ6Y+5WXyV1f1UUjiSJ5s2YbG=trKvonbwWLv2aDf4g@mail.gmail.com>
-References: <1410339572-23694-1-git-send-email-linus.walleij@linaro.org>
-	<4196671.LQ3YKNLqVB@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 3/3] regulator: RK808: Remove pdata from the regulator
+Date: Wed, 10 Sep 2014 11:51:31 +0100
+Message-ID: <20140910105131.GT2601@sirena.org.uk>
+References: <1410311886-4579-1-git-send-email-zyw@rock-chips.com>
+ <1410311886-4579-4-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <4196671.LQ3YKNLqVB@wuerfel>
-Sender: linux-leds-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+xp03240ql3JIIXA"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410311886-4579-4-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 11:44 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 10 September 2014 10:59:32 Linus Walleij wrote:
 
->> +     pr_info("L2C OF: override cache size: %d bytes (%dKB)\n",
->> +             cache_size, cache_size >> 10);
->> +     pr_info("L2C OF: override line size: %d bytes\n", line_size);
->> +     pr_info("L2C OF: override way size: %d bytes (%dKB)\n",
->> +             way_size, way_size >> 10);
->> +     pr_info("L2C OF: override associativity: %d\n", *associativity);
->
-> I think it would be really nice to print both the original setting
-> and the setting from DT here.
+--+xp03240ql3JIIXA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There is already some code printing the original setting, even
-if it's cryptic, this is in __l2c_init():
-L2C: DT/platform modifies aux control register: 0x02020fff -> 0x02030fff
+On Wed, Sep 10, 2014 at 09:18:06AM +0800, Chris Zhong wrote:
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>=20
+> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-boot value -> augmented value
+Applied, thanks.  You shouldn't have spaces like the above in your list
+of tags and as Doug says e-mail addresses should have a space between
+the name and the <.
 
-If you mean that you want me to modify that debug code to provide
-more verbose pretty-print I am happy to do so, but as a separate
-patch.
+--+xp03240ql3JIIXA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The rest of the stuff I have fixed...
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Yours,
-Linus Walleij
+iQEcBAEBAgAGBQJUEC0zAAoJECTWi3JdVIfQp24H/AmSKVhbb+ZxBcBCAvpGU0gg
+NbuXBoN4wVYBiRnUD+HHHJaCXmtYI9SWv9aGq57Fkbu2UCH/VBfmn5Q46+Atf51m
+ORX3Nv0q5D2fLt0O5D42gtCGnIB9hjGdDeTYGzsYqpJATv3FwD/cJX3jvpaeVobi
+ujK8bFjpmU/8mvrSaobnbXu7c2TGa4tPC+MvQ76HCERhGi6DgF7AP+PsKB72SzUm
+dXQUCsqfIuBM7mmlBr6A0+RjjYyMsOSlgCdaARpRycMMEnO/V8kwXjFYZN32j4XE
+nLzIvj0P++Wdtow1Mq3IE4WDO/ItrKWJVIGbYO1Qu6B7PIOjPvbppUzxy79pw58=
+=LEK2
+-----END PGP SIGNATURE-----
+
+--+xp03240ql3JIIXA--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
