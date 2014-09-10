@@ -1,72 +1,51 @@
-From: Frank Li <Frank.Li@freescale.com>
-Subject: [Patch v3 net-next 06/12] net:fec: Disable enet-avb MAC instead of reset MAC
-Date: Thu, 11 Sep 2014 02:30:39 +0800
-Message-ID: <1410373845-5801-7-git-send-email-Frank.Li@freescale.com>
-References: <1410373845-5801-1-git-send-email-Frank.Li@freescale.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH RFC 2/3] ARM: regulator: add Freescale MXS regulator driver
+Date: Wed, 10 Sep 2014 15:54:45 -0300
+Message-ID: <CAOMZO5BEN_DQOyhrx5ZB7y6DoDvqbLvDyJfAabOvtUvKOiGHOA@mail.gmail.com>
+References: <1410089869-6611-1-git-send-email-info@lategoodbye.de>
+	<1410089869-6611-3-git-send-email-info@lategoodbye.de>
+	<20140909182211.GG3896@leverpostej>
+	<540F523D.4010904@lategoodbye.de>
+	<20140910141853.GA4994@leverpostej>
+	<20140910151316.GG7960@sirena.org.uk>
+	<54108B34.6010701@lategoodbye.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1410373845-5801-1-git-send-email-Frank.Li@freescale.com>
-Sender: netdev-owner@vger.kernel.org
-To: b38611@freescale.com, davem@davemloft.net, netdev@vger.kernel.org, lznuaa@gmail.com
-Cc: shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, Fugang Duan <B38611@freescale.com>, Frank Li <Frank.Li@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54108B34.6010701@lategoodbye.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Wahren <info@lategoodbye.de>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Fugang Duan <B38611@freescale.com>
+Hi Stefan,
 
-For i.MX6SX enet use AXI bus, reset MAC will make system bus dead
-if ENET-AXI bus has pending access (AHB bus should not have such issue).
-So, disable enet with AVB MAC instead of reset MAC itself.
+On Wed, Sep 10, 2014 at 2:32 PM, Stefan Wahren <info@lategoodbye.de> wrote:
+> Hi Mark,
+>
+> Am 10.09.2014 17:13, schrieb Mark Brown:
+>>
+>> On Wed, Sep 10, 2014 at 03:18:53PM +0100, Mark Rutland wrote:
+>>>
+>>> On Tue, Sep 09, 2014 at 08:17:17PM +0100, Stefan Wahren wrote:
+>>
+>>
+>> Ugh, this looks like it might be a regulator driver but since the
+>> subject line was "ARM: " I deleted it unread - if your changelog looks
+>> different to all the other changelogs in the subsystem it probably needs
+>> changing.
+>
+>
+> sorry about the confusion, i will remove ARM in the next version.
+>
+> Changelog? I didn't send a changelog because it was my first version.
+>
+> Should i resend this version only to you?
 
-Signed-off-by: Fugang Duan <B38611@freescale.com>
-Signed-off-by: Frank Li <Frank.Li@freescale.com>
----
- drivers/net/ethernet/freescale/fec_main.c | 26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+In the cover letter of this RFC series you mentioned that this has not
+been tested on real hardware.
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 03972f7..5f8e997 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -945,9 +945,16 @@ fec_restart(struct net_device *ndev)
- 	u32 rcntl = OPT_FRAME_SIZE | 0x04;
- 	u32 ecntl = 0x2; /* ETHEREN */
- 
--	/* Whack a reset.  We should wait for this. */
--	writel(1, fep->hwp + FEC_ECNTRL);
--	udelay(10);
-+	/* Whack a reset.  We should wait for this.
-+	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
-+	 * instead of reset MAC itself.
-+	 */
-+	if (id_entry && id_entry->driver_data & FEC_QUIRK_HAS_AVB) {
-+		writel(0, fep->hwp + FEC_ECNTRL);
-+	} else {
-+		writel(1, fep->hwp + FEC_ECNTRL);
-+		udelay(10);
-+	}
- 
- 	/*
- 	 * enet-mac reset will reset mac address registers too,
-@@ -1118,9 +1125,16 @@ fec_stop(struct net_device *ndev)
- 			netdev_err(ndev, "Graceful transmit stop did not complete!\n");
- 	}
- 
--	/* Whack a reset.  We should wait for this. */
--	writel(1, fep->hwp + FEC_ECNTRL);
--	udelay(10);
-+	/* Whack a reset.  We should wait for this.
-+	 * For i.MX6SX SOC, enet use AXI bus, we use disable MAC
-+	 * instead of reset MAC itself.
-+	 */
-+	if (id_entry && id_entry->driver_data & FEC_QUIRK_HAS_AVB) {
-+		writel(0, fep->hwp + FEC_ECNTRL);
-+	} else {
-+		writel(1, fep->hwp + FEC_ECNTRL);
-+		udelay(10);
-+	}
- 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
- 	writel(FEC_DEFAULT_IMASK, fep->hwp + FEC_IMASK);
- 
--- 
-1.9.1
+What about sending a new version of this series (with the RFC prefix
+removed and with Mark Rutland's suggestion implemented) tested on a
+mx28 board and also with the Subject of the regulator patch changed to
+'regulator: add support for mxs regulator" with Mark Brown on Cc?
