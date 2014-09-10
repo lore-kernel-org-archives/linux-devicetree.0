@@ -1,47 +1,142 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH] checkpatch: struct of_device_id should usually be const
-Date: Wed, 10 Sep 2014 09:29:35 +0200
-Message-ID: <20140910072935.GA3755@pengutronix.de>
-References: <1410333346-29062-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1410333797.24028.29.camel@joe-AO725>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system
+ timer
+Date: Wed, 10 Sep 2014 15:33:35 +0800
+Message-ID: <20140910073333.GC22579@dragon>
+References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
+ <1409887606-22388-4-git-send-email-b20788@freescale.com>
+ <CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ@mail.gmail.com>
+ <5E619FDB-56BB-486E-B627-9D2A9D4F9F54@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1410333797.24028.29.camel@joe-AO725>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Andy Whitcroft <apw@canonical.com>, linux-kernel@vger.kernel.org, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <5E619FDB-56BB-486E-B627-9D2A9D4F9F54@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Anson.Huang@freescale.com" <Anson.Huang@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 12:23:17AM -0700, Joe Perches wrote:
-> On Wed, 2014-09-10 at 09:15 +0200, Uwe Kleine-K=F6nig wrote:
-> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> []
-> > @@ -4941,6 +4941,7 @@ sub process {
-> >  				mtrr_ops|
-> >  				neigh_ops|
-> >  				nlmsvc_binding|
-> > +				of_device_id|
-> >  				pci_raw_ops|
-> >  				pipe_buf_operations|
-> >  				platform_hibernation_ops|
->=20
-> Fine by me, there are ~1200 or so const uses.
->=20
-> There are also ~350 of these that are not const.
->=20
-> Are most all of those supposed to be const?
-Yeah, I'm working on a patch series to fix most of these. I thought I
-sent out the checkpatch patch first to slow down the occurences to fix.
+On Fri, Sep 05, 2014 at 12:58:28PM +0000, Anson.Huang@freescale.com wrote:
+> >> @@ -312,10 +318,26 @@ static void __init _mxc_timer_init(int irq,
+> >>        __raw_writel(0, timer_base + MXC_TCTL);
+> >>        __raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
+> >> 
+> >> -       if (timer_is_v2())
+> >> -               tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
+> >> -       else
+> >> +       if (timer_is_v2()) {
+> >> +               if (((cpu_is_imx6q() && imx_get_soc_revision() >
+> >> +                       IMX_CHIP_REVISION_1_0) || cpu_is_imx6dl() ||
+> >> +                       cpu_is_imx6sx()) && (clk_get_rate(clk_per) ==
+> >> +                       V2_TIMER_RATE_OSC_DIV8)) {
+> >> +                       tctl_val = V2_TCTL_CLK_OSC_DIV8 | V2_TCTL_FRR |
+> >> +                               V2_TCTL_WAITEN | MXC_TCTL_TEN;
+> >> +                       if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
+> >> +                               /* 24 / 8 = 3 MHz */
+> >> +                               tprer_val = 7 << V2_TPRER_PRE24M;
+> >> +                               __raw_writel(tprer_val, timer_base + MXC_TPRER);
+> >> +                               tctl_val |= V2_TCTL_24MEN;
+> >> +                       }
+> >> +               } else {
+> >> +                       tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR |
+> >> +                               V2_TCTL_WAITEN | MXC_TCTL_TEN;
+> >> +               }
+> >> +       } else {
+> >>                tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
+> >> +       }
+> > 
+> > Can this block be rearranged a bit so that it becomes easier to read?
+> 
+> I have to consider v1, v2, and on v2, MX6Q's implementation is different from MX6DL and MX6SX, MX6SL has its special implementation, and MX6Q has difference between TO1.0 and other TOs, also, we have to consider the old dtb case. So, there are more than 6 different cases we need to consider, I thought it was the best way I can figure out, could you advice if you have better idea?
 
-Best regards
-Uwe
+[The lines should be wrapped around 70 columns]
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+I'm also a bit concerned by the readability of the code.  Can we
+reasonably assume it must be V2_TCTL_CLK_OSC_DIV8 case if
+clk_get_rate(clk_per) returns 3000000?  In that case, the code can be
+simplified a bit, something like below.  Is it going to work?
+
+Shawn
+
+diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+index 4ee6e77a0fdf..3f0401e27b38 100644
+--- a/arch/arm/mach-imx/clk-imx6q.c
++++ b/arch/arm/mach-imx/clk-imx6q.c
+@@ -245,6 +245,7 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+        clk[IMX6QDL_CLK_PLL3_80M]  = imx_clk_fixed_factor("pll3_80m",  "pll3_usb_otg",   1, 6);
+        clk[IMX6QDL_CLK_PLL3_60M]  = imx_clk_fixed_factor("pll3_60m",  "pll3_usb_otg",   1, 8);
+        clk[IMX6QDL_CLK_TWD]       = imx_clk_fixed_factor("twd",       "arm",            1, 2);
++       clk[IMX6QDL_CLK_GPT_3M]    = imx_clk_fixed_factor("gpt_3m",    "osc",            1, 8);
+        if (cpu_is_imx6dl()) {
+                clk[IMX6QDL_CLK_GPU2D_AXI] = imx_clk_fixed_factor("gpu2d_axi", "mmdc_ch0_axi_podf", 1, 1);
+                clk[IMX6QDL_CLK_GPU3D_AXI] = imx_clk_fixed_factor("gpu3d_axi", "mmdc_ch0_axi_podf", 1, 1);
+@@ -469,6 +470,13 @@ static void __init imx6q_clocks_init(struct device_node *ccm_node)
+
+        clk_register_clkdev(clk[IMX6QDL_CLK_ENET_REF], "enet_ref", NULL);
+
++       /*
++        * The gpt_3m clock is not available on i.MX6Q TO1.0.  Let's point it
++        * to clock gpt_ipg_per to ease the gpt driver code.
++        */
++       if (cpu_is_imx6q() && imx_get_soc_revision() == IMX_CHIP_REVISION_1_0)
++               clk[IMX6QDL_CLK_GPT_3M] = clk[IMX6QDL_CLK_GPT_IPG_PER];
++
+        if ((imx_get_soc_revision() != IMX_CHIP_REVISION_1_0) ||
+            cpu_is_imx6dl()) {
+                clk_set_parent(clk[IMX6QDL_CLK_LDB_DI0_SEL], clk[IMX6QDL_CLK_PLL5_VIDEO_DIV]);
+
+diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c
+index bf92e5a351c0..c0ad839516b0 100644
+--- a/arch/arm/mach-imx/time.c
++++ b/arch/arm/mach-imx/time.c
+@@ -312,10 +317,21 @@ static void __init _mxc_timer_init(int irq,
+        __raw_writel(0, timer_base + MXC_TCTL);
+        __raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
+
+-       if (timer_is_v2())
+-               tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
+-       else
++       if (timer_is_v2()) {
++               tctl_val = V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
++               if (clk_get_rate(clk_per) == V2_TIMER_RATE_OSC_DIV8) {
+			/* Is the assumption corrrect ??? */
++                       tctl_val |= V2_TCTL_CLK_OSC_DIV8;
++                       if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
++                               /* 24 / 8 = 3 MHz */
++                               __raw_writel(7 << V2_TPRER_PRE24M, timer_base + MXC_TPRER);
++                               tctl_val |= V2_TCTL_24MEN;
++                       }
++               } else {
++                       tctl_val |= V2_TCTL_CLK_PER;
++               }
++       } else {
+                tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
++       }
+
+        __raw_writel(tctl_val, timer_base + MXC_TCTL);
+
+@@ -349,9 +365,13 @@ static void __init mxc_timer_init_dt(struct device_node *np)
+        WARN_ON(!timer_base);
+        irq = irq_of_parse_and_map(np, 0);
+
+-       clk_per = of_clk_get_by_name(np, "per");
+        clk_ipg = of_clk_get_by_name(np, "ipg");
+
++       /* Try osc_per clock first, and fall back to per clock otherwise */
++       clk_per = of_clk_get_by_name(np, "osc_per");
++       if (!IS_ERR(clk_per))
++               clk_per = of_clk_get_by_name(np, "per");
++
+        _mxc_timer_init(irq, clk_per, clk_ipg);
+ }
+ CLOCKSOURCE_OF_DECLARE(mx1_timer, "fsl,imx1-gpt", mxc_timer_init_dt);
