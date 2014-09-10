@@ -1,114 +1,88 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH resend 1/4] clk: hix5hd2: add complex clk
-Date: Wed, 10 Sep 2014 09:52:11 -0700
-Message-ID: <20140910165211.19023.39726@quantum>
-References: <1409031970-4821-1-git-send-email-zhangfei.gao@linaro.org>
- <1409031970-4821-2-git-send-email-zhangfei.gao@linaro.org>
- <20140903173753.11368.10916@quantum>
- <CABHwWpQRj1YepkszoiiH0_vAp_-mS8qSwrEiLNkRoKvUUt7uxg@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/5] rtc: at91sam9: add DT bindings documentation
+Date: Wed, 10 Sep 2014 18:55:19 +0200
+Message-ID: <54108277.9000100@atmel.com>
+References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com> <1409733934-14465-6-git-send-email-boris.brezillon@free-electrons.com> <20140910121424.GG2974@localhost> <20140910152019.111c4c01@bbrezillon> <20140910150702.GK2974@localhost> <20140910173114.593dd132@bbrezillon> <20140910155236.GL2974@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABHwWpQRj1YepkszoiiH0_vAp_-mS8qSwrEiLNkRoKvUUt7uxg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?b?6Jab5bu65oiQ?= <jchxue@gmail.com>
-Cc: devicetree@vger.kernel.org, haifeng.yan@linaro.org, xuwei5@hisilicon.com, Haojian Zhuang <haojian.zhuang@linaro.org>, Jiancheng Xue <xuejiancheng@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140910155236.GL2974@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyDolpvlu7rmiJAgKDIwMTQtMDktMDQgMjM6Mzc6MjUpCj4gCj4gCj4gMjAxNC0wOS0w
-NCAxOjM3IEdNVCswODowMCBNaWtlIFR1cnF1ZXR0ZSA8bXR1cnF1ZXR0ZUBsaW5hcm8ub3JnPjoK
-PiAKPiAgICAgUXVvdGluZyBaaGFuZ2ZlaSBHYW8gKDIwMTQtMDgtMjUgMjI6NDY6MDcpCj4gICAg
-ID4gK3N0YXRpYyBpbnQgY2xrX2V0aGVyX2VuYWJsZShzdHJ1Y3QgY2xrX2h3ICpodykKPiAgICAg
-PiArewo+ICAgICA+ICvCoCDCoCDCoCDCoHN0cnVjdCBoaXg1aGQyX2Nsa19jb21wbGV4ICpjbGsg
-PSB0b19jb21wbGV4X2Nsayhodyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdTMyIHZhbDsKPiAgICAg
-PiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVsYXhlZChjbGstPmN0cmxfcmVn
-KTsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgfD0gY2xrLT5jdHJsX2Nsa19tYXNrIHwgY2xrLT5j
-dHJsX3JzdF9tYXNrOwo+ICAgICA+ICvCoCDCoCDCoCDCoHdyaXRlbF9yZWxheGVkKHZhbCwgY2xr
-LT5jdHJsX3JlZyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdmFsICY9IH4oY2xrLT5jdHJsX3JzdF9t
-YXNrKTsKPiAgICAgPiArwqAgwqAgwqAgwqB3cml0ZWxfcmVsYXhlZCh2YWwsIGNsay0+Y3RybF9y
-ZWcpOwo+ICAgICA+ICsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgPSByZWFkbF9yZWxheGVkKGNs
-ay0+cGh5X3JlZyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdmFsIHw9IGNsay0+cGh5X2Nsa19tYXNr
-Owo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCAmPSB+KGNsay0+cGh5X3JzdF9tYXNrKTsKPiAgICAg
-PiArwqAgwqAgwqAgwqB3cml0ZWxfcmVsYXhlZCh2YWwsIGNsay0+cGh5X3JlZyk7Cj4gICAgID4g
-K8KgIMKgIMKgIMKgbWRlbGF5KDEwKTsKPiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFs
-ICY9IH4oY2xrLT5waHlfY2xrX21hc2spOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCB8PSBjbGst
-PnBoeV9yc3RfbWFzazsKPiAgICAgPiArwqAgwqAgwqAgwqB3cml0ZWxfcmVsYXhlZCh2YWwsIGNs
-ay0+cGh5X3JlZyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgbWRlbGF5KDEwKTsKPiAgICAgPiArCj4g
-ICAgID4gK8KgIMKgIMKgIMKgdmFsIHw9IGNsay0+cGh5X2Nsa19tYXNrOwo+ICAgICA+ICvCoCDC
-oCDCoCDCoHZhbCAmPSB+KGNsay0+cGh5X3JzdF9tYXNrKTsKPiAgICAgPiArwqAgwqAgwqAgwqB3
-cml0ZWxfcmVsYXhlZCh2YWwsIGNsay0+cGh5X3JlZyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgbWRl
-bGF5KDMwKTsKPiAKPiAgICAgV2l0aCBhbGwgb2YgdGhlc2UgbWRlbGF5cywgSSB3b25kZXIgaWYg
-eW91IHNob3VsZCB1c2UgLnByZXBhcmUgYW5kCj4gICAgIC51bnByZXBhcmUgaW5zdGVhZD8gRG9l
-cyB0aGUgRXRoZXJuZXQgZHJpdmVyIGNhbGwgY2xrX3tlbnxkaXN9YWJsZSBmcm9tCj4gICAgIGlu
-dGVycnVwdCBjb250ZXh0Pwo+IAo+IMKgCj4gVGhhbmsgeW91IGZvciB0aGUgYWR2aXNlLgo+IAo+
-IEluIGhpeDVoZDIgc29jLCB0aGVzZSBtZGVsYXlzIGFyZSBuZWNlc3NhcnkgZm9yIHJlc2V0dGlu
-ZyB0aGUgRXRoZXJuZXQgwqBwaHkKPiBkZXZpY2UuIFRoZSBoYXJkd2FyZSBuZWVkIHNvbWUgdGlt
-ZSB0byBiZSBzdGFibGUuSXQncyBkaWZmaWN1bHQgdG8gdXNlIC5wcmVwYXJlCj4gYW5kIC51bnBy
-ZXBhcmUgaW5zdGVhZCwgYmVjYXVzZSB0aGV5IGFyZSBlbWJlZGVkIGluIHNldmVyYWwgcGxhY2Vz
-IGFtb25nIHRoZQo+IHdob2xlIHNlcXVlbmNlLiBFdmVuIHRob3VnaCBzb21lIGNvZGUgc2VnbWVu
-dCBjb3VsZCBiZSBwdXQgaW50byDCoHRoZSAucHJlcGFyZQo+IGNhbGxiYWNrLCBtZGVsYXlzIHNo
-b3VsZCBzdGlsbCBiZSByZXNlcnZlZC4gU28gd2UgaG9wZSB0byBrZWVwIHRoaXMgbWFubmVyIGlm
-Cj4gaXQncyBvay4KCk9LLiBJIHdvbmRlciBpZiB5b3Ugc2hvdWxkIGJlIHVzaW5nIHRoZSByZXNl
-dCBjb250cm9sbGVyIGZyYW1ld29yayB0byBjb250cm9sIHRoZQpyZXNldCBvZiB5b3VyIHBoeT8g
-U29tZSBjbG9jayBkcml2ZXJzIGFyZSBhbHNvIHJlc2V0IGRyaXZlcnMgc2luY2UgYml0cwpmb3Ig
-Y29udHJvbGxpbmcgdGhhdCBzdHVmZiBhcmUgb2Z0ZW4gY29tYmluZWQgaW4gdGhlIHNhbWUgcmVn
-aXN0ZXIKc3BhY2UuIEFzIGFuIGV4YW1wbGUsIHRha2UgYSBsb29rIGF0OgoKZHJpdmVycy9jbGsv
-cWNvbS9nY2MtYXBxODA4NC5jCgo+IAo+IFRoZSBFdGhlcm5ldCBkcml2ZXIgd29uJ3QgY2FsbCBj
-bGtfZW5hYmxlIGFuZCBjbGtfZGlzYWJsZSBmcm9tIGludGVycnVwdAo+IGNvbnRleHQuCgpHb29k
-IHRvIGtub3cuIGNsa19lbmFibGUgYW5kIGNsa19kaXNhYmxlIGFyZSBkZXNpZ25lZCB0byBiZSBj
-YWxsZWQKc2FmZWx5IGZyb20gaW50ZXJydXB0IGNvbnRleHQuIGNsa19wcmVwYXJlIGFuZCBjbGtf
-dW5wcmVwYXJlIG9mdGVuCmVuYWJsZS9kaXNhYmxlIGEgY2xvY2ssIGJ1dCBhcmUgZGVzaWduZWQg
-Zm9yIHVzZSBpbiBhIHJlZ3VsYXIgcHJvY2Vzcwpjb250ZXh0IChlLmcuIHdlIG1pZ2h0IHNsZWVw
-IG9yIHNjaGVkdWxlKS4gU28gZGVwZW5kaW5nIG9uIGhvdyBsb25nIGl0CnRha2VzIHlvdSB0byBl
-bmFibGUvZGlzYWJsZSB5b3VyIEV0aGVybmV0IGNsb2NrIHlvdSBtaWdodCB3YW50IHRvCm1pZ3Jh
-dGUgdG8gdGhvc2UgY2FsbGJhY2tzIGluc3RlYWQuCgpSZWdhcmRzLApNaWtlCgo+IAo+ICAgICDC
-oAo+IAo+ICAgICA+ICvCoCDCoCDCoCDCoHJldHVybiAwOwo+ICAgICA+ICt9Cj4gICAgID4gKwo+
-ICAgICA+ICtzdGF0aWMgdm9pZCBjbGtfZXRoZXJfZGlzYWJsZShzdHJ1Y3QgY2xrX2h3ICpodykK
-PiAgICAgPiArewo+ICAgICA+ICvCoCDCoCDCoCDCoHN0cnVjdCBoaXg1aGQyX2Nsa19jb21wbGV4
-ICpjbGsgPSB0b19jb21wbGV4X2Nsayhodyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdTMyIHZhbDsK
-PiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVsYXhlZChjbGstPmN0
-cmxfcmVnKTsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgJj0gfihjbGstPmN0cmxfY2xrX21hc2sp
-Owo+ICAgICA+ICvCoCDCoCDCoCDCoHdyaXRlbF9yZWxheGVkKHZhbCwgY2xrLT5jdHJsX3JlZyk7
-Cj4gICAgID4gK30KPiAgICAgPiArCj4gICAgID4gK3N0YXRpYyBzdHJ1Y3QgY2xrX29wcyBjbGtf
-ZXRoZXJfb3BzID0gewo+ICAgICA+ICvCoCDCoCDCoCDCoC5lbmFibGUgPSBjbGtfZXRoZXJfZW5h
-YmxlLAo+ICAgICA+ICvCoCDCoCDCoCDCoC5kaXNhYmxlID0gY2xrX2V0aGVyX2Rpc2FibGUsCj4g
-ICAgID4gK307Cj4gICAgID4gKwo+ICAgICA+ICtzdGF0aWMgaW50IGNsa19jb21wbGV4X2VuYWJs
-ZShzdHJ1Y3QgY2xrX2h3ICpodykKPiAgICAgPiArewo+ICAgICA+ICvCoCDCoCDCoCDCoHN0cnVj
-dCBoaXg1aGQyX2Nsa19jb21wbGV4ICpjbGsgPSB0b19jb21wbGV4X2Nsayhodyk7Cj4gICAgID4g
-K8KgIMKgIMKgIMKgdTMyIHZhbDsKPiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0g
-cmVhZGxfcmVsYXhlZChjbGstPmN0cmxfcmVnKTsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgfD0g
-Y2xrLT5jdHJsX2Nsa19tYXNrOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCAmPSB+KGNsay0+Y3Ry
-bF9yc3RfbWFzayk7Cj4gICAgID4gK8KgIMKgIMKgIMKgd3JpdGVsX3JlbGF4ZWQodmFsLCBjbGst
-PmN0cmxfcmVnKTsKPiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVs
-YXhlZChjbGstPnBoeV9yZWcpOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCB8PSBjbGstPnBoeV9j
-bGtfbWFzazsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgJj0gfihjbGstPnBoeV9yc3RfbWFzayk7
-Cj4gICAgID4gK8KgIMKgIMKgIMKgd3JpdGVsX3JlbGF4ZWQodmFsLCBjbGstPnBoeV9yZWcpOwo+
-ICAgICA+ICsKPiAgICAgPiArwqAgwqAgwqAgwqByZXR1cm4gMDsKPiAgICAgPiArfQo+ICAgICA+
-ICsKPiAgICAgPiArc3RhdGljIHZvaWQgY2xrX2NvbXBsZXhfZGlzYWJsZShzdHJ1Y3QgY2xrX2h3
-ICpodykKPiAgICAgPiArewo+ICAgICA+ICvCoCDCoCDCoCDCoHN0cnVjdCBoaXg1aGQyX2Nsa19j
-b21wbGV4ICpjbGsgPSB0b19jb21wbGV4X2Nsayhodyk7Cj4gICAgID4gK8KgIMKgIMKgIMKgdTMy
-IHZhbDsKPiAgICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVsYXhlZChj
-bGstPmN0cmxfcmVnKTsKPiAgICAgPiArwqAgwqAgwqAgwqB2YWwgfD0gY2xrLT5jdHJsX3JzdF9t
-YXNrOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCAmPSB+KGNsay0+Y3RybF9jbGtfbWFzayk7Cj4g
-ICAgID4gK8KgIMKgIMKgIMKgd3JpdGVsX3JlbGF4ZWQodmFsLCBjbGstPmN0cmxfcmVnKTsKPiAg
-ICAgPiArCj4gICAgID4gK8KgIMKgIMKgIMKgdmFsID0gcmVhZGxfcmVsYXhlZChjbGstPnBoeV9y
-ZWcpOwo+ICAgICA+ICvCoCDCoCDCoCDCoHZhbCB8PSBjbGstPnBoeV9yc3RfbWFzazsKPiAgICAg
-PiArwqAgwqAgwqAgwqB2YWwgJj0gfihjbGstPnBoeV9jbGtfbWFzayk7Cj4gICAgID4gK8KgIMKg
-IMKgIMKgd3JpdGVsX3JlbGF4ZWQodmFsLCBjbGstPnBoeV9yZWcpOwo+ICAgICA+ICt9Cj4gICAg
-ID4gKwo+ICAgICA+ICtzdGF0aWMgc3RydWN0IGNsa19vcHMgY2xrX2NvbXBsZXhfb3BzID0gewo+
-ICAgICA+ICvCoCDCoCDCoCDCoC5lbmFibGUgPSBjbGtfY29tcGxleF9lbmFibGUsCj4gICAgID4g
-K8KgIMKgIMKgIMKgLmRpc2FibGUgPSBjbGtfY29tcGxleF9kaXNhYmxlLAo+ICAgICA+ICt9Owo+
-IAo+ICAgICBUaGVzZSBlbmFibGUvZGlzYWJsZSBjYWxsYmFja3MgbG9vayBnb29kLCB3aXRoIG5v
-IGRlbGF5cy4KPiAKPiAgICAgUmVnYXJkcywKPiAgICAgTWlrZQo+IAo+IAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 10/09/2014 17:52, Johan Hovold :
+> On Wed, Sep 10, 2014 at 05:31:14PM +0200, Boris BREZILLON wrote:
+>> On Wed, 10 Sep 2014 17:07:02 +0200
+>> Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+>>> Yes, this essentially what I suggested in the thread (and my last reply)
+>>> and relying on syscon rather than a custom driver seems like a good
+>>> idea. It would allow early access to the registers too with the recently
+>>> proposed changes. It would not guarantee any kind of exclusivity,
+>>> though, but I guess that's tolerable?
+>>
+>> Yep, that's one of the concern I had with the syscon/regmap
+>> approach :-(, but I guess I'll give this solution a try and post a new
+>> version of this series ;-).
+> 
+> Perhaps we should see what Nicolas and Jean-Christophe says before
+> rushing into anything (again). ;)
+
+I said and say it again: keep it simple: if gpbr 0 is used by bootloader
+to pass information about the boot media, use gpbr 1, without protection
+without anything fancy, please.
+
+atmel,at91-rtt-as-rtc-gpbr = <1>;
+is good for me.
+
+We can decide to keep the DT binding as "unstable" and see what happen
+in one year from now (I suspect nothing will happen). The result is that
+we will have a simple update of this driver without new API or new
+sub-system to learn and maintain.
+
+So, all in all, I would just take what Johan or Boris did, and go with
+this, now!
+
+
+> I remember J-C considered loosing track of what was using a particular
+> backup register to be a regression. But I guess you can't have it both
+> ways (e.g. if you also want the early access soon provided by syscon).
+> 
+> I'll refresh my rtt and gmbr-node patches meanwhile, as they should be
+> needed in some form at least.
+> 
+>> Can we just leave the rtt as an rtc problem on the side for now and bind
+>> it to the rtc-at91sam9 driver.
+>>
+>> If we ever decide to add a new driver using the RTT for another purpose
+>> we will still be able to reference the RTT block like this (and keep
+>> the existing rtt node definition):
+>>
+>> rtt-based-rtc {
+>> 	compatible = "atmel,rtt-rtc";
+>> 	atmel,rtt = <&rtt>;
+>> 	atmel,time-reg = <&gpbr 0x0>;
+>> }
+> 
+> But why not do this from the start?
+> 
+>> rtt-based-xdev {
+>> 	compatible = "atmel,rtt-xdev";
+>> 	atmel,rtt = <&rtt>;
+>> 	/*...*/
+>> }
+> 
+> Johan
+> 
+> 
+
+
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
