@@ -1,48 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/2] usb: gadget: Add xilinx usb2 device support
-Date: Wed, 10 Sep 2014 16:30:50 +0200
-Message-ID: <8798156.X6RhQq9Iqm@wuerfel>
-References: <1406020130-20467-1-git-send-email-sbhatta@xilinx.com> <20140821140040.GE9608@saruman.home> <CALHRZuqt-XJ5mPczzGJtSN=iq7TPut0=54r90QHWR+w-Lwwtyg@mail.gmail.com>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] rtc: at91sam9: add DT bindings documentation
+Date: Wed, 10 Sep 2014 17:07:02 +0200
+Message-ID: <20140910150702.GK2974@localhost>
+References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1409733934-14465-6-git-send-email-boris.brezillon@free-electrons.com>
+ <20140910121424.GG2974@localhost>
+ <20140910152019.111c4c01@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALHRZuqt-XJ5mPczzGJtSN=iq7TPut0=54r90QHWR+w-Lwwtyg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sundeep subbaraya <sundeep.lkml@gmail.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, Daniel Mack <daniel@zonque.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michals@xilinx.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, svemula@xilinx.com, anirudh@xilinx.com, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140910152019.111c4c01@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 September 2014 19:25:11 sundeep subbaraya wrote:
-> > that's not exactly what I asked  Usually you only add COMPILE_TEST
-> > when you have an ARCH dependency. So something like:
-> >
-> >         depends on ARCH_ARM || COMPILE_TEST
-> >
-> > would make it clear that this driver is only available on ARM, but when
-> > doing my build tests, I'd still be able to compile it on x86.
+On Wed, Sep 10, 2014 at 03:20:19PM +0200, Boris BREZILLON wrote:
+> On Wed, 10 Sep 2014 14:14:24 +0200
+> Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+> > This does not describe the hardware, but rather a specific software
+> > configuration.
+> > 
+> > The RTT is first of all not an RTC (although it can be used as one in a
+> > specific software configuration). And the second register resource above
+> > is not an RTT register, but a general-purpose backup register could be
+> > used for other purposes (which register to use is currently configurable
+> > for legacy booting using CONFIG_RTC_DRV_AT91SAM9_GPBR).
 > 
-> Ok got it 
+> We could use a syscon device (which exposes a regmap) for the GPBR
+> block.
+> 
+> rtc@ffffff20 {
 
-Most of the xilinx stuff also applies to MICROBLAZE however, so it
-may need to be
+rtt
 
-	ARM || MICROBLAZE || COMPILE_TEST
+> 	compatible = "atmel,at91sam9260-rtt";
+> 	reg = <0xfffffd20 0x10>;
+> 	interrupts = <1 4 7>;
+> 	clocks = <&clk32k>;
+> 	atmel,time-reg = <&gpbr 0x0>;
+> };
+> 
+> gpbr: syscon@fffffd50 {
+> 	compatible = "atmel,at91sam9260-gpbr", "syscon";
+> 	reg = <0xfffffd50 0x10>;
+> 	
+> };
 
-(not ARCH_ARM, btw).
+Yes, this essentially what I suggested in the thread (and my last reply)
+and relying on syscon rather than a custom driver seems like a good
+idea. It would allow early access to the registers too with the recently
+proposed changes. It would not guarantee any kind of exclusivity,
+though, but I guess that's tolerable?
 
-> >> > Also, your code uses device tree functions unconditionally, which is
-> >> > fine, but it must hence depend on 'OF'.
-> >>
-> >> Ok will add OF along with COMPILE_TEST
-> >
-> > so this would be:
-> >
-> >         depends on OF || COMPILE_TEST
-
-If it requires OF to build, you can use 'OF && (ARM || COMPILE_TEST)',
-but if there is no compile-time dependency, you can just leave out
-the 'depends on OF' completely. You can't even build a Zynq machine
-without OF enabled.
-
-	Arnd
+Johan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
