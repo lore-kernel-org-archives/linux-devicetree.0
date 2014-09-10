@@ -1,67 +1,55 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [GIT PULL] ARM: dts: OMAP5 / DRA7: pinctrl updates
-Date: Wed, 10 Sep 2014 02:29:49 +0000
-Message-ID: <20140910022949.GB1058@atomide.com>
-References: <1410271178-28336-1-git-send-email-nm@ti.com>
+From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v1] ARM: dts: imx6dl: disable dma support for spi on i.mx6dl
+Date: Wed, 10 Sep 2014 09:33:36 +0800
+Message-ID: <1410312816-32171-1-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410271178-28336-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Beno??t Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [140909 14:00]:
-> 
-> Hi Tony,
-> 
-> Please pull this series was posted[1] and based on the previous pulls
-> [2] [3], updating the dts to enable the relevant feature.
-> 
-> NOTE: I have dropped patch #1 of the series based on [4].
-> 
-> These could go to your branch omap-for-v3.18/dt
-> 
-> The following changes since commit 7d1311b93e58ed55f3a31cc8f94c4b8fe988a2b9:
-> 
->   Linux 3.17-rc1 (2014-08-16 10:40:26 -0600)
-> 
-> are available in the git repository at:
-> 
->   https://github.com/nmenon/linux-2.6-playground.git pull/v3.18/for-dt-pinctrl-updates
-> 
-> for you to fetch changes up to 66b0436977e2c62388d48836ff784f1fedb49c4f:
-> 
->   ARM: dts: dra7-evm: Mark uart1 rxd as wakeup capable (2014-09-09 08:33:29 -0500)
+There is one weird data in rxfifo after one full rx/tx transfer
+done sometimes. It looks a design issue and hard to workaround
+totally, so disable dma functhion here. And will re-enable it
+once the root cause found.
 
-Thanks pulling into omap-for-v3.18/dt.
+Signed-off-by: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6dl.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Tony
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index b453e0e..e84a1ff 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -102,6 +102,22 @@
+ 	};
+ };
  
-> ----------------------------------------------------------------
-> Nishanth Menon (5):
->       ARM: dts: OMAP5: switch to compatible pinctrl
->       ARM: dts: DRA7: switch to compatible pinctrl
->       ARM: dts: AM437x: switch to compatible pinctrl
->       ARM: dts: OMAP5 / DRA7: switch over to interrupts-extended property for UART
->       ARM: dts: dra7-evm: Mark uart1 rxd as wakeup capable
-> 
->  arch/arm/boot/dts/am4372.dtsi  |    4 +++-
->  arch/arm/boot/dts/dra7-evm.dts |    2 ++
->  arch/arm/boot/dts/dra7.dtsi    |   24 +++++++++++++-----------
->  arch/arm/boot/dts/omap5.dtsi   |   20 ++++++++++++--------
->  4 files changed, 30 insertions(+), 20 deletions(-)
-> 
-> [1] http://marc.info/?l=linux-kernel&m=140871681606779&w=2
-> [2] http://marc.info/?l=linux-kernel&m=141019565513129&w=2
-> [3] http://marc.info/?l=linux-kernel&m=141019566913133&w=2
-> [4] http://marc.info/?l=linux-omap&m=141022429924564&w=2
-> 
-> Regards,
-> Nishanth Menon
-> 
++&ecspi1 {
++	dma-names = "", "";
++};
++
++&ecspi2 {
++	dma-names = "", "";
++};
++
++&ecspi3 {
++	dma-names = "", "";
++};
++
++&ecspi4 {
++	dma-names = "", "";
++};
++
+ &hdmi {
+ 	compatible = "fsl,imx6dl-hdmi";
+ };
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
