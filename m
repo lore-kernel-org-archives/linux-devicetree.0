@@ -1,111 +1,60 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/6] iommu/arm-smmu: add support for specifying clocks
-Date: Wed, 10 Sep 2014 19:27:39 +0100
-Message-ID: <20140910182739.GM1710@arm.com>
-References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
-	<1407891099-24641-2-git-send-email-mitchelh@codeaurora.org>
-	<20140819125833.GO23128@arm.com> <53F39F6D.1040205@codeaurora.org>
-	<20140826142757.GU23445@arm.com>
-	<vnkwa968b6ux.fsf@mitchelh-linux.qualcomm.com>
+From: <yes@shlinux1.ap.freescale.net>
+Subject: [Patch v3 net-next 02/12] net:fec: add enet AVB feature macro define for imx6sx
+Date: Thu, 11 Sep 2014 02:30:03 +0800
+Message-ID: <4353.63334040648$1410375265@news.gmane.org>
+References: <1410373813-5731-1-git-send-email-yes>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <vnkwa968b6ux.fsf-Yf+dfxj6toJBVvN7MMdr1KRtKmQZhJ7pQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1410373813-5731-1-git-send-email-yes>
+Sender: netdev-owner@vger.kernel.org
+To: b38611@freescale.com, davem@davemloft.net, netdev@vger.kernel.org, lznuaa@gmail.com
+Cc: shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, Fugang Duan <B38611@freescale.com>, Frank Li <Frank.Li@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 02:29:42AM +0100, Mitchel Humpherys wrote:
-> On Tue, Aug 26 2014 at 07:27:58 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Tue, Aug 19, 2014 at 08:03:09PM +0100, Olav Haugan wrote:
-> >> Clients of the SMMU driver are required to vote for clocks and power
-> >> when they know they need to use the SMMU. However, the clock and power
-> >> needed to be on for the SMMU to service bus masters aren't necessarily
-> >> the same as the ones needed to read/write registers...See below.
-> >
-> > The case I'm thinking of is where a device masters through the IOMMU, but
-> > doesn't make use of any translations. In this case, its transactions will
-> > bypass the SMMU and I want to ensure that continues to happen, regardless of
-> > the power state of the SMMU.
-> 
-> Then I assume the driver for such a device wouldn't be attaching to (or
-> detaching from) the IOMMU, so we won't be touching it at all either
-> way. Or am I missing something?
+From: Fugang Duan <B38611@freescale.com>
 
-As long as its only the register file that gets powered down, then there's
-no issue. However, that's making assumptions about what these clocks are
-controlling. Is there a way for the driver to know which aspects of the
-device are controlled by which clock?
+Add enet AVB feature macro define for imx6sx.
 
-> >> > What stops theses from racing with each other when there are multiple
-> >> > clocks? I also assume that the clk API ignores calls to clk_enable_prepare
-> >> > for a clk that's already enabled? I couldn't find that code...
-> >> 
-> >> All the clock APIs are reference counted yes. Not sure what you mean by
-> >> racing with each other? When you call to enable a clock the call does
-> >> not return until the clock is already ON (or OFF).
-> >
-> > I was thinking of an interrupt handler racing with normal code, but actually
-> > you balance the clk enable/disable in the interrupt handlers. However, it's
-> > not safe to call these clk functions from irq context anyway, since
-> > clk_prepare may sleep.
-> 
-> Ah yes. You okay with moving to a threaded IRQ?
+Signed-off-by: Fugang Duan <B38611@freescale.com>
+Signed-off-by: Frank Li <Frank.Li@freescale.com>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-A threaded IRQ already makes sense for context interrupts (if anybody has a
-platform that can do stalls properly), but it seems a bit weird for the
-global fault handler. Is there no way to fix the race instead?
-
-> >> >> @@ -2061,12 +2164,16 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
-> >> >>  	spin_unlock(&arm_smmu_devices_lock);
-> >> >>  
-> >> >>  	arm_smmu_device_reset(smmu);
-> >> >> +	arm_smmu_disable_clocks(smmu);
-> >> > 
-> >> > I wonder if this is really the right thing to do. Rather than the
-> >> > fine-grained clock enable/disable you have, why don't we just enable in
-> >> > domain_init and disable in domain_destroy, with refcounting for the clocks?
-> >> > 
-> >> 
-> >> So the whole point of all of this is that we try to save power. As Mitch
-> >> wrote in the commit text we want to only leave the clock and power on
-> >> for as short period of time as possible.
-> >
-> > Understood, but if the clocks are going up and down like yo-yos, then it's
-> > not obvious that you end up saving any power at all. Have you tried
-> > measuring the power consumption with different granularities for the
-> > clocks?
-> 
-> This has been profiled extensively and for some use cases it's a huge
-> win. Unfortunately we don't have any numbers for public sharing :( but
-> you can imagine a use case where some multimedia framework maps a bunch
-> of buffers into an SMMU at the beginning of some interactive user
-> session and doesn't unmap them until the (human) user decides they are
-> done. This could be a long time, all the while these clocks could be
-> off, saving power.
-
-Ok, I can see that. I wonder whether we could wrap all of the iommu_ops
-functions with the clock enable/disable code, instead of putting it directly
-into the drivers?
-
-> > The code you're proposing seems to take the approach of `we're going to
-> > access registers so enable the clocks, access the registers then disable the
-> > clocks', which is simple but may not be particularly effective.
-> 
-> Yes, that's a good summary of the approach here. It has been effective
-> in saving power for us in the past...
-
-Mike, do you have any experience with this sort of stuff?
-
-Will
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index c21ecff1..ee9f04f 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -104,6 +104,16 @@ static void set_multicast_list(struct net_device *ndev);
+  * ENET_TDAR[TDAR].
+  */
+ #define FEC_QUIRK_ERR006358            (1 << 7)
++/* ENET IP hw AVB
++ *
++ * i.MX6SX ENET IP add Audio Video Bridging (AVB) feature support.
++ * - Two class indicators on receive with configurable priority
++ * - Two class indicators and line speed timer on transmit allowing
++ *   implementation class credit based shapers externally
++ * - Additional DMA registers provisioned to allow managing up to 3
++ *   independent rings
++ */
++#define FEC_QUIRK_HAS_AVB		(1 << 8)
+ 
+ static struct platform_device_id fec_devtype[] = {
+ 	{
+@@ -128,6 +138,12 @@ static struct platform_device_id fec_devtype[] = {
+ 		.name = "mvf600-fec",
+ 		.driver_data = FEC_QUIRK_ENET_MAC,
+ 	}, {
++		.name = "imx6sx-fec",
++		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
++				FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
++				FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358 |
++				FEC_QUIRK_HAS_AVB,
++	}, {
+ 		/* sentinel */
+ 	}
+ };
+-- 
+1.9.1
