@@ -1,99 +1,210 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH 2/5] ASoC: fsl: add imx-tlv320aic3x machine
-	driver
-Date: Wed, 10 Sep 2014 16:19:22 +0200
-Message-ID: <20140910161922.73951f38@ipc1.ka-ro>
-References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
- <1410356809-26179-3-git-send-email-d.lavnikevich@sam-solutions.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v10 08/10] OF: PCI: Add support for parsing PCI host
+ bridge resources from DT
+Date: Wed, 10 Sep 2014 15:22:41 +0100
+Message-ID: <20140910142241.GD27864@e106497-lin.cambridge.arm.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-9-git-send-email-Liviu.Dudau@arm.com>
+ <20140909133546.GB2636@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1410356809-26179-3-git-send-email-d.lavnikevich@sam-solutions.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, tiwai@suse.de, Li.Xiubo@freescale.com, linux-kernel@vger.kernel.org, timur@tabi.org, nicoleotsuka@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, galak@codeaurora.org, grant.likely@linaro.org, shawn.guo@freescale.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140909133546.GB2636@e102568-lin.cambridge.arm.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpEbWl0cnkgTGF2bmlrZXZpY2ggd3JvdGU6Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9mc2wsaW14LWF1ZGlvLXRsdjMyMGFpYzN4LnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9mc2wsaW14LWF1ZGlv
-LXRsdjMyMGFpYzN4LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAw
-MDAwLi45ZTZjNDQ0M2Y0MGYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2ZzbCxpbXgtYXVkaW8tdGx2MzIwYWljM3gudHh0Cj4g
-QEAgLTAsMCArMSwyNyBAQAo+ICtBdWRpbyBjb21wbGV4IGZvciBpLk1YNiBib2FyZHMgd2l0aCB0
-bHYzMjBhaWMzeCBhdWRpbyBjb2RlY3MuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICst
-IGNvbXBhdGlibGUgOiAiZnNsLGlteC1hdWRpby10bHYzMjBhaWMzeCIKPiArLSBtb2RlbCA6IFRo
-ZSB1c2VyLXZpc2libGUgbmFtZSBvZiB0aGlzIHNvdW5kIGNvbXBsZXguCj4gKy0gc3NpLWNvbnRy
-b2xsZXIgOiBUaGUgcGhhbmRsZSBvZiB0aGUgU1NJIGNvbnRyb2xsZXIuCj4gKy0gbXV4LWludC1w
-b3J0IDogVGhlIGludGVybmFsIHBvcnQgb2YgdGhlIGkuTVggYXVkaW8gbXV4ZXIgKEFVRE1VWCku
-Cj4gKy0gbXV4LWV4dC1wb3J0IDogVGhlIGV4dGVybmFsIHBvcnQgb2YgdGhlIGkuTVggYXVkaW8g
-bXV4ZXIuCj4KZnNsLG11eC17aW50LGV4dH0tcG9ydD8KCj4gZGlmZiAtLWdpdCBhL3NvdW5kL3Nv
-Yy9mc2wvaW14LXRsdjMyMGFpYzN4LmMgYi9zb3VuZC9zb2MvZnNsL2lteC10bHYzMjBhaWMzeC5j
-Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmYzOGM2ODkxMTk1
-Mwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9zb3VuZC9zb2MvZnNsL2lteC10bHYzMjBhaWMzeC5j
-Cj4gQEAgLTAsMCArMSwxNzcgQEAKPiArLyoKPiArICogQ29weXJpZ2h0IDIwMTQgRG1pdHJ5IExh
-dm5pa2V2aWNoLAo+ICsgKiBTYU0gU29sdXRpb25zIDxkLmxhdm5pa2V2aWNoQHNhbS1zb2x1dGlv
-bnMuY29tPgo+ICsgKgo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNh
-biByZWRpc3RyaWJ1dGUgaXQgYW5kL29yIG1vZGlmeQo+ICsgKiBpdCB1bmRlciB0aGUgdGVybXMg
-b2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcwo+ICsgKiBwdWJs
-aXNoZWQgYnkgdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPiArICovCj4gKwo+ICsjaW5j
-bHVkZSA8bGludXgvbW9kdWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9pMmMuaD4KPiArI2luY2x1
-ZGUgPGxpbnV4L29mLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPgo+ICsKPiAr
-I2luY2x1ZGUgIi4uL2NvZGVjcy90bHYzMjBhaWMzeC5oIgo+ICsjaW5jbHVkZSAiaW14LWF1ZG11
-eC5oIgo+ICsjaW5jbHVkZSAiaW14LXNzaS5oIgo+ICsKPiArI2RlZmluZSBDT0RFQ19DTE9DSyAx
-OTIwMDAwMAo+ICsKSSBndWVzcyB0aGlzIG1pZ2h0IGJlIGJvYXJkIHNwZWNpZmljIGFuZCB0aHVz
-IGJlc3QgcGFzc2VkIHZpYSBhIGNsb2NrCnByb3BlcnR5IGluIERULgoKPiArLyogbWFjaGluZSBk
-YXBtIHdpZGdldHMgKi8KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1fd2lkZ2V0
-IGFpYzN4X2RhcG1fd2lkZ2V0c1tdID0gewo+ICsJU05EX1NPQ19EQVBNX0xJTkUoIkxpbmUgT3V0
-IiwgTlVMTCksCj4gKwlTTkRfU09DX0RBUE1fTElORSgiU3BlYWtlciIsIE5VTEwpLAo+ICsJU05E
-X1NPQ19EQVBNX0hQKCJIZWFkcGhvbmUgSmFjayIsIE5VTEwpLAo+ICsJU05EX1NPQ19EQVBNX01J
-QygiTWljIEphY2siLCBOVUxMKSwKPiArCVNORF9TT0NfREFQTV9MSU5FKCJMaW5lIEluIiwgTlVM
-TCksCj4gK307Cj4gKwo+ICtzdGF0aWMgaW50IGlteF9hdWRtdXhfY29uZmlnKGludCBpbnRfcG9y
-dCwgaW50IGV4dF9wb3J0KQo+ICt7Cj4gKwl1bnNpZ25lZCBpbnQgcHRjciwgcGRjcjsKPiArCj4g
-KwlpbnRfcG9ydC0tOwo+ICsJZXh0X3BvcnQtLTsKPiArCXB0Y3IgPSBJTVhfQVVETVVYX1YyX1BU
-Q1JfVEZTRElSIHwKPiArCQlJTVhfQVVETVVYX1YyX1BUQ1JfVEZTRUwoZXh0X3BvcnQpIHwKPiAr
-CQlJTVhfQVVETVVYX1YyX1BUQ1JfVENMS0RJUiB8Cj4gKwkJSU1YX0FVRE1VWF9WMl9QVENSX1RD
-U0VMKGV4dF9wb3J0KTsKPiArCXBkY3IgPSBJTVhfQVVETVVYX1YyX1BEQ1JfUlhEU0VMKGV4dF9w
-b3J0KTsKPiArCWlteF9hdWRtdXhfdjJfY29uZmlndXJlX3BvcnQoaW50X3BvcnQsIHB0Y3IsIHBk
-Y3IpOwo+ICsKPiArCXB0Y3IgPSAwOwo+ICsJcGRjciA9IElNWF9BVURNVVhfVjJfUERDUl9SWERT
-RUwoaW50X3BvcnQpOwo+ICsJaW14X2F1ZG11eF92Ml9jb25maWd1cmVfcG9ydChleHRfcG9ydCwg
-cHRjciwgcGRjcik7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPgpUaGlzIGZ1bmN0aW9uIGNvdWxk
-IGJlIHN0YXRpYyB2b2lkIC4uLgoKPiArCj4gKy8qIExvZ2ljIGZvciBhIGFpYzN4IGFzIGNvbm5l
-Y3RlZCBvbiBhIGlteCAqLwpzLyBhIC8gYW4gL2cKCj4gK3N0YXRpYyBpbnQgaW14X2FpYzN4X2lu
-aXQoc3RydWN0IHNuZF9zb2NfcGNtX3J1bnRpbWUgKnJ0ZCkKPiArewo+ICsJaW50IHJldDsKPiAr
-Cj4gKwlyZXQgPSBzbmRfc29jX2RhaV9zZXRfc3lzY2xrKHJ0ZC0+Y29kZWNfZGFpLCAwLCBDT0RF
-Q19DTE9DSywKPiArCQlTTkRfU09DX0NMT0NLX0lOKTsKPiArCWlmIChyZXQgPCAwKQo+ICsJCXJl
-dHVybiByZXQ7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4KPiArfQo+ICsKPiArc3RhdGljIHN0cnVjdCBz
-bmRfc29jX2RhaV9saW5rIGlteF90bHYzMjBfZGFpID0gewo+ICsJLm5hbWUgPSAiSGlGaSIsCj4g
-Kwkuc3RyZWFtX25hbWUgPSAiSGlGaSIsCj4gKwkuY29kZWNfZGFpX25hbWUgPSAidGx2MzIwYWlj
-M3gtaGlmaSIsCj4gKwkuaW5pdCA9ICZpbXhfYWljM3hfaW5pdCwKPiArCS5kYWlfZm10ID0gU05E
-X1NPQ19EQUlGTVRfSTJTIHwKPiArCQlTTkRfU09DX0RBSUZNVF9OQl9ORiB8Cj4gKwkJU05EX1NP
-Q19EQUlGTVRfQ0JNX0NGTSwKPiArfTsKPiArCj4gK3N0YXRpYyBzdHJ1Y3Qgc25kX3NvY19jYXJk
-IGlteF90bHYzMjBfY2FyZCA9IHsKPiArCS5udW1fbGlua3MgPSAxLAo+ICsJLm93bmVyID0gVEhJ
-U19NT0RVTEUsCj4gKwkuZGFpX2xpbmsgPSAmaW14X3RsdjMyMF9kYWksCj4gKwkuZGFwbV93aWRn
-ZXRzID0gYWljM3hfZGFwbV93aWRnZXRzLAo+ICsJLm51bV9kYXBtX3dpZGdldHMgPSBBUlJBWV9T
-SVpFKGFpYzN4X2RhcG1fd2lkZ2V0cyksCj4gK307Cj4gKwo+ICtzdGF0aWMgaW50IGlteF90bHYz
-MjBfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiArewo+ICsJc3RydWN0IGRl
-dmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9ub2RlOwo+ICsJc3RydWN0IGRldmljZV9ub2Rl
-ICpzc2lfbnAsICpjb2RlY19ucDsKPiArCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnNzaV9wZGV2
-Owo+ICsJc3RydWN0IGkyY19jbGllbnQgKmNvZGVjX2RldjsKPiArCWludCBpbnRfcG9ydCwgZXh0
-X3BvcnQ7Cj4gKwlpbnQgcmV0ID0gMDsKPiArClVzZWxlc3MgdmFyaWFibGUgaW5pdGlhbGl6YXRp
-b24uCgoKTG90aGFyIFdhw59tYW5uCi0tIApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwoKS2EtUm8gZWxlY3Ryb25pY3MgR21iSCB8IFBh
-c2NhbHN0cmHDn2UgMjIgfCBEIC0gNTIwNzYgQWFjaGVuClBob25lOiArNDkgMjQwOCAxNDAyLTAg
-fCBGYXg6ICs0OSAyNDA4IDE0MDItMTAKR2VzY2jDpGZ0c2bDvGhyZXI6IE1hdHRoaWFzIEthdXNz
-ZW4KSGFuZGVsc3JlZ2lzdGVyZWludHJhZzogQW10c2dlcmljaHQgQWFjaGVuLCBIUkIgNDk5NgoK
-d3d3Lmthcm8tZWxlY3Ryb25pY3MuZGUgfCBpbmZvQGthcm8tZWxlY3Ryb25pY3MuZGUKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBt
-YWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFs
-c2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+On Tue, Sep 09, 2014 at 02:35:46PM +0100, Lorenzo Pieralisi wrote:
+> On Mon, Sep 08, 2014 at 02:54:30PM +0100, Liviu Dudau wrote:
+> > Provide a function to parse the PCI DT ranges that can be used to
+> > create a pci_host_bridge structure together with its associated
+> > bus.
+> >=20
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Grant Likely <grant.likely@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> > ---
+> >  drivers/of/of_pci.c    | 102 +++++++++++++++++++++++++++++++++++++=
+++++++++++++
+> >  include/linux/of_pci.h |  11 ++++++
+> >  2 files changed, 113 insertions(+)
+> >=20
+> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> > index a107edb..36701da 100644
+> > --- a/drivers/of/of_pci.c
+> > +++ b/drivers/of/of_pci.c
+> > @@ -1,7 +1,9 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/export.h>
+> >  #include <linux/of.h>
+> > +#include <linux/of_address.h>
+> >  #include <linux/of_pci.h>
+> > +#include <linux/slab.h>
+> > =20
+> >  static inline int __of_pci_pci_compare(struct device_node *node,
+> >  				       unsigned int data)
+> > @@ -123,6 +125,106 @@ int of_pci_get_domain_nr(struct device_node *=
+node, bool allocate_if_missing)
+> >  }
+> >  EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
+> > =20
+> > +/**
+> > + * of_pci_get_host_bridge_resources - Parse PCI host bridge resour=
+ces from DT
+> > + * @dev: device node of the host bridge having the range property
+> > + * @busno: bus number associated with the bridge root bus
+> > + * @bus_max: maximum number of busses for this bridge
+> > + * @resources: list where the range of resources will be added aft=
+er DT parsing
+> > + * @io_base: pointer to a variable that will contain on return the=
+ physical
+> > + * address for the start of the I/O range.
+> > + *
+> > + * It is the callers job to free the @resources list.
+> > + *
+> > + * This function will parse the "ranges" property of a PCI host br=
+idge device
+> > + * node and setup the resource mapping based on its content. It is=
+ expected
+> > + * that the property conforms with the Power ePAPR document.
+>=20
+> You should also define what it returns and when.
+
+Thanks, will do.
+
+>=20
+> > + *
+> > + */
+> > +int of_pci_get_host_bridge_resources(struct device_node *dev,
+> > +			unsigned char busno, unsigned char bus_max,
+> > +			struct list_head *resources, resource_size_t *io_base)
+> > +{
+> > +	struct resource *res;
+> > +	struct resource *bus_range;
+> > +	struct of_pci_range range;
+> > +	struct of_pci_range_parser parser;
+> > +	char range_type[4];
+> > +	int err;
+> > +
+> > +	bus_range =3D kzalloc(sizeof(*bus_range), GFP_KERNEL);
+> > +	if (!bus_range)
+> > +		return -ENOMEM;
+> > +
+> > +	pr_info("PCI host bridge %s ranges:\n", dev->full_name);
+> > +
+> > +	err =3D of_pci_parse_bus_range(dev, bus_range);
+> > +	if (err) {
+> > +		bus_range->start =3D busno;
+> > +		bus_range->end =3D bus_max;
+> > +		bus_range->flags =3D IORESOURCE_BUS;
+> > +		pr_info("  No bus range found for %s, using %pR\n",
+> > +			dev->full_name, &bus_range);
+> > +	} else {
+> > +		if (bus_range->end > bus_range->start + bus_max)
+> > +			bus_range->end =3D bus_range->start + bus_max;
+> > +	}
+> > +	pci_add_resource(resources, bus_range);
+>=20
+> This means that eg in the PCI generic host controller I cannot "filte=
+r"
+> the bus resource, unless I remove it, "filter" it, and add it again.
+
+I'm not sure what you mean. Why do you have to remove the bus resource =
+and
+add it again? What you get back from of_pci_get_host_bridge_resources()=
+ is
+a list of resources as they have been parsed from DT. You now have the =
+option
+of doing any filtering that you might have done pre-v10 in the
+pcibios_fixup_bridge_ranges() but that is only on the list that was ret=
+urned
+from of_pci_get_host_bridge_resources(). At this moment no root bus or
+host bridge structure has been created so no resource was added to thos=
+e.
+With the filtered list you can use it to call pci_scan_root_bus() and *=
+then*
+it gets added to the pci_host_bridge structure.
+
+>=20
+> I certainly can't filter a resource that has been already added witho=
+ut
+> removing it first.
+>=20
+> Thoughts ?
+
+Hope I have explained what happens. Please let me know if you have any =
+other
+comments.
+
+Best regards,
+Liviu
+
+>=20
+> > +
+> > +	/* Check for ranges property */
+> > +	err =3D of_pci_range_parser_init(&parser, dev);
+> > +	if (err)
+> > +		goto parse_failed;
+> > +
+> > +	pr_debug("Parsing ranges property...\n");
+> > +	for_each_of_pci_range(&parser, &range) {
+> > +		/* Read next ranges element */
+> > +		if ((range.flags & IORESOURCE_TYPE_BITS) =3D=3D IORESOURCE_IO)
+> > +			snprintf(range_type, 4, " IO");
+> > +		else if ((range.flags & IORESOURCE_TYPE_BITS) =3D=3D IORESOURCE_=
+MEM)
+> > +			snprintf(range_type, 4, "MEM");
+> > +		else
+> > +			snprintf(range_type, 4, "err");
+> > +		pr_info("  %s %#010llx..%#010llx -> %#010llx\n", range_type,
+> > +			range.cpu_addr, range.cpu_addr + range.size - 1,
+> > +			range.pci_addr);
+> > +
+> > +		/*
+> > +		 * If we failed translation or got a zero-sized region
+> > +		 * then skip this range
+> > +		 */
+> > +		if (range.cpu_addr =3D=3D OF_BAD_ADDR || range.size =3D=3D 0)
+> > +			continue;
+> > +
+> > +		res =3D kzalloc(sizeof(struct resource), GFP_KERNEL);
+> > +		if (!res) {
+> > +			err =3D -ENOMEM;
+> > +			goto parse_failed;
+> > +		}
+> > +
+> > +		err =3D of_pci_range_to_resource(&range, dev, res);
+> > +		if (err) {
+> > +			kfree(res);
+>=20
+> You might want to add a label to free res to make things more uniform=
+=2E
+>=20
+> > +			goto parse_failed;
+> > +		}
+> > +
+> > +		if (resource_type(res) =3D=3D IORESOURCE_IO) {
+> > +			if (*io_base)
+>=20
+> You do not zero io_base in the first place so you should ask the API
+> user to do that. Is 0 a valid value BTW ? If it is you've got to reso=
+rt
+> to something else to detect multiple IO resources.
+>=20
+> Lorenzo
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
