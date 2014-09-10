@@ -1,38 +1,278 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 3/3] ARM: imx: source gpt per clk from OSC for system
- timer
-Date: Wed, 10 Sep 2014 21:01:52 +0800
-Message-ID: <20140910130150.GF22579@dragon>
-References: <1409887606-22388-1-git-send-email-b20788@freescale.com>
- <1409887606-22388-4-git-send-email-b20788@freescale.com>
- <CAOMZO5CJLSXy3p-eAe9xOJw8p4gxoRuT91bXV8gswy5oMuU6XQ@mail.gmail.com>
- <5E619FDB-56BB-486E-B627-9D2A9D4F9F54@freescale.com>
- <20140910073333.GC22579@dragon>
- <7fd82b8c08c54f4dadb6b7402231a086@BN1PR0301MB0628.namprd03.prod.outlook.com>
- <20140910114936.GE22579@dragon>
- <8DDD46F6-AA96-4E14-ADD6-45A1AD12423C@freescale.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
+ domain_nr
+Date: Wed, 10 Sep 2014 14:04:32 +0100
+Message-ID: <20140910130432.GB27864@e106497-lin.cambridge.arm.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-8-git-send-email-Liviu.Dudau@arm.com>
+ <CAL_JsqJi8k1Goc3UmXhuxf9v7=4gJrYG_Di7v574PxS8TsJaXw@mail.gmail.com>
+ <20140908145459.GO27864@e106497-lin.cambridge.arm.com>
+ <CAL_JsqJdGKDVwJOpPp19OkVPGzR7Zqv3nh+ONHHaYnPLYTYoYg@mail.gmail.com>
+ <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="d6Gm4EdcadzBjdND"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140908155931.GP27864@e106497-lin.cambridge.arm.com>
 Content-Disposition: inline
-In-Reply-To: <8DDD46F6-AA96-4E14-ADD6-45A1AD12423C-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 12:31:48PM +0000, Anson.Huang-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
-> I think it should be OK now, but for the "try osc_per clk first ..." the check
-> should be as below?
-> 
-> If (IS_ERR(clk_per))
->       clk_per = of_clk_get_by_name(np, "per");
-> 
 
-Ah, yes.  That was a mistake in my example code.
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Sep 08, 2014 at 04:59:31PM +0100, Liviu Dudau wrote:
+> On Mon, Sep 08, 2014 at 04:27:36PM +0100, Rob Herring wrote:
+> > On Mon, Sep 8, 2014 at 9:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote=
+:
+> > > On Mon, Sep 08, 2014 at 03:27:56PM +0100, Rob Herring wrote:
+> > >> On Mon, Sep 8, 2014 at 8:54 AM, Liviu Dudau <Liviu.Dudau@arm.com> wr=
+ote:
+> > >> > Add of_pci_get_domain_nr() to retrieve the PCI domain number
+> > >> > of a given device from DT. If the information is not present,
+> > >> > the function can be requested to allocate a new domain number.
+> > >> >
+> > >> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > >> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > >> > Cc: Grant Likely <grant.likely@linaro.org>
+> > >> > Cc: Rob Herring <robh+dt@kernel.org>
+> > >> > Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> > >> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> > >> > ---
+> > >> >  drivers/of/of_pci.c    | 34 ++++++++++++++++++++++++++++++++++
+> > >> >  include/linux/of_pci.h |  7 +++++++
+> > >> >  2 files changed, 41 insertions(+)
+> > >> >
+> > >> > diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> > >> > index 8481996..a107edb 100644
+> > >> > --- a/drivers/of/of_pci.c
+> > >> > +++ b/drivers/of/of_pci.c
+> > >> > @@ -89,6 +89,40 @@ int of_pci_parse_bus_range(struct device_node *=
+node, struct resource *res)
+> > >> >  }
+> > >> >  EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
+> > >> >
+> > >> > +static atomic_t of_domain_nr =3D ATOMIC_INIT(-1);
+> > >> > +
+> > >> > +/**
+> > >> > + * This function will try to obtain the host bridge domain number=
+ by
+> > >> > + * using of_alias_get_id() call with "pci-domain" as a stem. If t=
+hat
+> > >> > + * fails, a local allocator will be used. The local allocator can
+> > >> > + * be requested to return a new domain_nr if the information is m=
+issing
+> > >> > + * from the device tree.
+> > >> > + *
+> > >> > + * @node: device tree node with the domain information
+> > >> > + * @allocate_if_missing: if DT lacks information about the domain=
+ nr,
+> > >> > + * allocate a new number.
+> > >> > + *
+> > >> > + * Returns the associated domain number from DT, or a new domain =
+number
+> > >> > + * if DT information is missing and @allocate_if_missing is true.=
+ If
+> > >> > + * @allocate_if_missing is false then the last allocated domain n=
+umber
+> > >> > + * will be returned.
+> > >> > + */
+> > >> > +int of_pci_get_domain_nr(struct device_node *node, bool allocate_=
+if_missing)
+> > >> > +{
+> > >> > +       int domain;
+> > >> > +
+> > >> > +       domain =3D of_alias_get_id(node, "pci-domain");
+> > >> > +       if (domain =3D=3D -ENODEV) {
+> > >> > +               if (allocate_if_missing)
+> > >> > +                       domain =3D atomic_inc_return(&of_domain_nr=
+);
+> > >> > +               else
+> > >> > +                       domain =3D atomic_read(&of_domain_nr);
+> > >>
+> > >> This function seems a bit broken to me. It is overloaded with too ma=
+ny
+> > >> different outcomes. Think about how this would work if you have
+> > >> multiple PCI buses and a mixture of having pci-domain aliases or not=
+.
+> > >> Aren't domain numbers global? Allocation should then start outside o=
+f
+> > >> the range of alias ids.
+> > >>
+> > >> Rob
+> > >>
+> > >
+> > > Rob,
+> > >
+> > > Would this version make more sense?
+> >=20
+> > No.
+> >=20
+
+Hi Rob,
+
+Here is an updated version of the patch. I have implemented a separate func=
+tion
+for getting the max domain number from the device tree and use the result a=
+s
+the start value + 1 for the allocator.
+
+Best regards,
+Liviu
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
+--d6Gm4EdcadzBjdND
+Content-Type: text/x-diff; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment; filename="0001-OF-Introduce-helper-function-for-getting-PCI-domain_.patch"
+
+>From 77257fceaa8fbd74d6132fcf57c3af14bd48c0ae Mon Sep 17 00:00:00 2001
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Date: Mon, 4 Aug 2014 17:03:04 +0100
+Subject: [PATCH v10 07/10] OF: Introduce helper function for getting PCI do=
+main_nr
+
+Add of_pci_get_domain_nr() to retrieve the PCI domain number
+of a given device from DT. If the information is not present,
+the function can be requested to allocate a new domain number.
+
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+---
+ drivers/of/of_pci.c    | 62 ++++++++++++++++++++++++++++++++++++++++++++++=
+++++
+ include/linux/of_pci.h |  7 ++++++
+ 2 files changed, 69 insertions(+)
+
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index 8481996..3560401 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -3,6 +3,8 @@
+ #include <linux/of.h>
+ #include <linux/of_pci.h>
+=20
++#include "of_private.h"
++
+ static inline int __of_pci_pci_compare(struct device_node *node,
+ =09=09=09=09       unsigned int data)
+ {
+@@ -89,6 +91,66 @@ int of_pci_parse_bus_range(struct device_node *node, str=
+uct resource *res)
+ }
+ EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
+=20
++static atomic_t of_domain_nr =3D ATOMIC_INIT(-1);
++
++/*
++ * Get the maximum value for a domain number from the device tree
++ */
++static int of_get_max_pci_domain_nr(void)
++{
++=09struct alias_prop *app;
++=09int max_domain =3D -1;
++
++=09mutex_lock(&of_mutex);
++=09list_for_each_entry(app, &aliases_lookup, link) {
++=09=09if (strncmp(app->stem, "pci-domain", 10) !=3D 0)
++=09=09=09continue;
++
++=09=09max_domain =3D max(max_domain, app->id);
++=09}
++=09mutex_unlock(&of_mutex);
++
++=09return max_domain;
++}
++
++/**
++ * This function will try to obtain the host bridge domain number by
++ * using of_alias_get_id() call with "pci-domain" as a stem. If that
++ * fails, a local allocator will be used. The local allocator can
++ * be requested to return a new domain_nr if the information is missing
++ * from the device tree.
++ *
++ * @node: device tree node with the domain information
++ * @allocate_if_missing: if DT lacks information about the domain nr,
++ * allocate a new number.
++ *
++ * Returns the associated domain number from DT, or a new domain number
++ * if DT information is missing and @allocate_if_missing is true. If
++ * @allocate_if_missing is false then the last allocated domain number
++ * will be returned.
++ */
++int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missin=
+g)
++{
++=09int domain;
++
++=09domain =3D atomic_read(&of_domain_nr);
++=09if (of_domain_nr =3D=3D -1) {
++=09=09/* first run, get max defined domain nr in device tree */
++=09=09domain =3D of_get_max_pci_domain_nr();
++=09=09/* then set the start value for allocator to be max + 1 */
++=09=09atomic_set(&of_domain_nr, domain + 1);
++=09}
++=09domain =3D of_alias_get_id(node, "pci-domain");
++=09if (domain =3D=3D -ENODEV) {
++=09=09domain =3D atomic_read(&of_domain_nr);
++=09=09if (allocate_if_missing)
++=09=09=09atomic_inc(&of_domain_nr);
++=09}
++
++=09return domain;
++}
++EXPORT_SYMBOL_GPL(of_pci_get_domain_nr);
++
+ #ifdef CONFIG_PCI_MSI
+=20
+ static LIST_HEAD(of_pci_msi_chip_list);
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index dde3a4a..3a3824c 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -15,6 +15,7 @@ struct device_node *of_pci_find_child_device(struct devic=
+e_node *parent,
+ int of_pci_get_devfn(struct device_node *np);
+ int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
+ int of_pci_parse_bus_range(struct device_node *node, struct resource *res)=
+;
++int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missin=
+g);
+ #else
+ static inline int of_irq_parse_pci(const struct pci_dev *pdev, struct of_p=
+handle_args *out_irq)
+ {
+@@ -43,6 +44,12 @@ of_pci_parse_bus_range(struct device_node *node, struct =
+resource *res)
+ {
+ =09return -EINVAL;
+ }
++
++static inline int
++of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
++{
++=09return -1;
++}
+ #endif
+=20
+ #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
+--=20
+2.0.4
+
+--d6Gm4EdcadzBjdND--
