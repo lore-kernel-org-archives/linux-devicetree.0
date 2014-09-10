@@ -1,294 +1,99 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v3] ARM: l2c: parse cache properties from ePAPR definitions
-Date: Wed, 10 Sep 2014 10:59:32 +0200
-Message-ID: <1410339572-23694-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 2/5] ARM: imx6: gpc: Add PU power domain for GPU/VPU
+Date: Wed, 10 Sep 2014 11:07:03 +0200
+Message-ID: <1410340023.4508.4.camel@paszta.hi.pengutronix.de>
+References: <1410267915-18126-1-git-send-email-p.zabel@pengutronix.de>
+	 <1410267915-18126-3-git-send-email-p.zabel@pengutronix.de>
+	 <20140910034918.GA28759@Robin-OptiPlex-780>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140910034918.GA28759@Robin-OptiPlex-780>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When both 'cache-size' and 'cache-sets' are specified for a L2 cache
-controller node, parse those properties and set up the
-set size based on which type of L2 cache controller we are using.
+Hi Robin,
 
-Update the L2 cache controller Device Tree binding with the optional
-'cache-size', 'cache-sets', 'cache-block-size' and 'cache-line-size'
-properties. These come from the ePAPR specification.
+Am Mittwoch, den 10.09.2014, 11:49 +0800 schrieb Robin Gong:
+> Hi Philipp,
+>   Thanks for your great job, power domain make things clear. But looks your
+> patch depend on 'PU regulator', if there is no PU regulator passed down from
+> dts, we'll never implement your way for PGC. On i.mx6sx, there is no internal
+> PU regulator, so I suggest you consider this case. 
 
-Using the cache size, number of sets and cache line size we can
-calculate desired associativity of the L2 cache. This is done
-by the calculation:
+thank you for the hint. Would making the PU regulator optional be enough
+to make this work on i.MX6SX?
 
-    set size = cache size / sets
-    ways = set size / line size
-    way size = cache size / ways = sets * line size
-    associativity = cache size / way size
+regards
+Philipp
 
-Example output from the PB1176 DT that look like this:
+---8<---
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] ARM: imx6: gpc: Make PU regulator optional
 
-L2: l2-cache {
-    compatible = "arm,l220-cache";
-    (...)
-    arm,override-auxreg;
-    cache-size = <131072>; // 128kB
-    cache-sets = <512>;
-    cache-line-size = <32>;
-};
+On i.MX6SX there is no internal PU regulator, make it optional.
 
-Ends up like this:
-
-L2C OF: override cache size: 131072 bytes (128KB)
-L2C OF: override line size: 32 bytes
-L2C OF: override way size: 16384 bytes (16KB)
-L2C OF: override associativity: 8
-L2C: DT/platform modifies aux control register: 0x02020fff -> 0x02030fff
-L2C-220 cache controller enabled, 8 ways, 128 kB
-L2C-220: CACHE_ID 0x41000486, AUX_CTRL 0x06030fff
-
-Which is consistent with the value earlier hardcoded for the
-PB1176 platform.
-
-This patch is an extended version based on the initial patch
-by Florian Fainelli.
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
-ChangeLog v2->v3:
-- Fix up way size and associativity calculations using the combined
-  wisdom of Arnd and Russell.
-- Push associativity writes down to each cache hardware
-  implementation, L2x0/PL3x0 respectively.
-- Introduce a boolean device tree property to tell whether the
-  auxilary register value containing these size and set-based
-  configurations should be modified by the OS or not
----
- Documentation/devicetree/bindings/arm/l2cc.txt |  10 ++
- arch/arm/mm/cache-l2x0.c                       | 147 +++++++++++++++++++++++++
- 2 files changed, 157 insertions(+)
+ arch/arm/mach-imx/gpc.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index af527ee111c2..918b4489ab73 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -43,7 +43,17 @@ Optional properties:
- - arm,io-coherent : indicates that the system is operating in an hardware
-   I/O coherent mode. Valid only when the arm,pl310-cache compatible
-   string is used.
-+- arm,override-auxreg : this boolean property tells the OS implementation of
-+  the l2cc driver code to override the default cache size, sets (and thus
-+  associativity) settings from the auxilary control register. This is to be
-+  used when the boot code does not set up these properties correctly.
- - interrupts : 1 combined interrupt.
-+- cache-size : specifies the size in bytes of the cache
-+- cache-sets : specifies the number of associativity sets of the cache
-+- cache-block-size : specifies the size in bytes of a cache block
-+- cache-line-size : specifies the size in bytes of a line in the cache,
-+  if this is not specified, the line size is assumed to be equal to the
-+  cache block size
- - cache-id-part: cache id part number to be used if it is not present
-   on hardware
- - wt-override: If present then L2 is forced to Write through mode
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 5f2c988a06ac..8b4e54e3e18c 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -945,6 +945,115 @@ static int l2_wt_override;
-  * pass it though the device tree */
- static u32 cache_id_part_number_from_dt;
+diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+index cdf8a06..b36703d 100644
+--- a/arch/arm/mach-imx/gpc.c
++++ b/arch/arm/mach-imx/gpc.c
+@@ -186,7 +186,8 @@ static int imx6q_pm_pu_power_off(struct generic_pm_domain *genpd)
+ 	/* Wait ISO + ISO2SW IPG clock cycles */
+ 	ndelay((iso + iso2sw) * 1000 / 66);
  
-+/**
-+ * l2x0_cache_size_of_parse() - read cache size parameters from DT
-+ * @np: the device tree node for the l2 cache
-+ * @aux_val: pointer to machine-supplied auxilary register value, to
-+ * be augmented by the call (bits to be set to 1)
-+ * @aux_mask: pointer to machine-supplied auxilary register mask, to
-+ * be augmented by the call (bits to be set to 0)
-+ * @associativity: variable to return the calculated associativity in
-+ * @max_way_size: the maximum size in bytes for the cache ways
-+ */
-+static void __init l2x0_cache_size_of_parse(const struct device_node *np,
-+					    u32 *aux_val, u32 *aux_mask,
-+					    u32 *associativity,
-+					    u32 max_way_size)
-+{
-+	u32 mask = 0, val = 0;
-+	u32 cache_size = 0, sets = 0;
-+	u32 way_size_bits = 1;
-+	u32 way_size = 0;
-+	u32 block_size = 0;
-+	u32 line_size = 0;
-+
-+	if (!of_property_read_bool(np, "arm,override-auxreg"))
-+		return;
-+
-+	of_property_read_u32(np, "cache-size", &cache_size);
-+	of_property_read_u32(np, "cache-sets", &sets);
-+	of_property_read_u32(np, "cache-block-size", &block_size);
-+	of_property_read_u32(np, "cache-line-size", &line_size);
-+
-+	if (!cache_size || !sets)
-+		return;
-+
-+	/* All these l2 caches have the same line = block size actually */
-+	if (!line_size) {
-+		if (block_size) {
-+			/* If linesize if not given, it is equal to blocksize */
-+			line_size = block_size;
-+		} else {
-+			/* Fall back to known size */
-+			pr_warn("L2C OF: no cache block/line size given: "
-+				"falling back to default size %d bytes\n",
-+				CACHE_LINE_SIZE);
-+			line_size = CACHE_LINE_SIZE;
-+		}
-+	}
-+
-+	if (line_size != CACHE_LINE_SIZE)
-+		pr_warn("L2C OF: DT supplied line size %d bytes does "
-+			"not match hardware line size of %d bytes\n",
-+			line_size,
-+			CACHE_LINE_SIZE);
-+
-+	/*
-+	 * Since:
-+	 * set size = cache size / sets
-+	 * ways = cache size / (sets * line size)
-+	 * way size = cache size / (cache size / (sets * line size))
-+	 * way size = sets * line size
-+	 * associativity = ways = cache size / way size
-+	 */
-+	way_size = sets * line_size;
-+	*associativity = cache_size / way_size;
-+
-+	if (way_size > max_way_size) {
-+		pr_err("L2C OF: set size %dKB is too large\n", way_size);
-+		return;
-+	}
-+
-+	pr_info("L2C OF: override cache size: %d bytes (%dKB)\n",
-+		cache_size, cache_size >> 10);
-+	pr_info("L2C OF: override line size: %d bytes\n", line_size);
-+	pr_info("L2C OF: override way size: %d bytes (%dKB)\n",
-+		way_size, way_size >> 10);
-+	pr_info("L2C OF: override associativity: %d\n", *associativity);
-+
-+	switch (way_size >> 10) {
-+	case 512:
-+		way_size_bits = 6;
-+		break;
-+	case 256:
-+		way_size_bits = 5;
-+		break;
-+	case 128:
-+		way_size_bits = 4;
-+		break;
-+	case 64:
-+		way_size_bits = 3;
-+		break;
-+	case 32:
-+		way_size_bits = 2;
-+		break;
-+	case 16:
-+		way_size_bits = 1;
-+		break;
-+	default:
-+		pr_err("L2C OF: cache way size illegal: %dKB is not mapped\n",
-+		       way_size);
-+		break;
-+	}
-+
-+	mask |= L2C_AUX_CTRL_WAY_SIZE_MASK;
-+	val |= (way_size_bits << L2C_AUX_CTRL_WAY_SIZE_SHIFT);
-+
-+	*aux_val &= ~mask;
-+	*aux_val |= val;
-+	*aux_mask &= ~mask;
-+}
-+
- static void __init l2x0_of_parse(const struct device_node *np,
- 				 u32 *aux_val, u32 *aux_mask)
- {
-@@ -952,6 +1061,7 @@ static void __init l2x0_of_parse(const struct device_node *np,
- 	u32 tag = 0;
- 	u32 dirty = 0;
- 	u32 val = 0, mask = 0;
-+	u32 assoc;
+-	regulator_disable(pu->reg);
++	if (pu->reg)
++		regulator_disable(pu->reg);
  
- 	of_property_read_u32(np, "arm,tag-latency", &tag);
- 	if (tag) {
-@@ -974,6 +1084,15 @@ static void __init l2x0_of_parse(const struct device_node *np,
- 		val |= (dirty - 1) << L2X0_AUX_CTRL_DIRTY_LATENCY_SHIFT;
- 	}
- 
-+	l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
-+	if (assoc > 8) {
-+		pr_err("l2x0 of: cache setting yield too high associativity\n");
-+		pr_err("l2x0 of: %d calculated, max 8\n", assoc);
-+	} else {
-+		mask |= L2X0_AUX_CTRL_ASSOC_MASK;
-+		val |= (assoc << L2X0_AUX_CTRL_ASSOC_SHIFT);
-+	}
-+
- 	*aux_val &= ~mask;
- 	*aux_val |= val;
- 	*aux_mask &= ~mask;
-@@ -1021,6 +1140,7 @@ static void __init l2c310_of_parse(const struct device_node *np,
- 	u32 data[3] = { 0, 0, 0 };
- 	u32 tag[3] = { 0, 0, 0 };
- 	u32 filter[2] = { 0, 0 };
-+	u32 assoc;
- 
- 	of_property_read_u32_array(np, "arm,tag-latency", tag, ARRAY_SIZE(tag));
- 	if (tag[0] && tag[1] && tag[2])
-@@ -1047,6 +1167,23 @@ static void __init l2c310_of_parse(const struct device_node *np,
- 		writel_relaxed((filter[0] & ~(SZ_1M - 1)) | L310_ADDR_FILTER_EN,
- 			       l2x0_base + L310_ADDR_FILTER_START);
- 	}
-+
-+	l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_512K);
-+	switch (assoc) {
-+	case 16:
-+		*aux_val &= ~L2X0_AUX_CTRL_ASSOC_MASK;
-+		*aux_val |= L310_AUX_CTRL_ASSOCIATIVITY_16;
-+		*aux_mask &= ~L2X0_AUX_CTRL_ASSOC_MASK;
-+		break;
-+	case 8:
-+		*aux_val &= ~L2X0_AUX_CTRL_ASSOC_MASK;
-+		*aux_mask &= ~L2X0_AUX_CTRL_ASSOC_MASK;
-+		break;
-+	default:
-+		pr_err("PL310 OF: cache setting yield illegal associativity\n");
-+		pr_err("PL310 OF: %d calculated, only 8 and 16 legal\n", assoc);
-+		break;
-+	}
+ 	return 0;
  }
+@@ -197,8 +198,9 @@ static int imx6q_pm_pu_power_on(struct generic_pm_domain *genpd)
+ 	int i, ret, sw, sw2iso;
+ 	u32 val;
  
- static const struct l2c_init_data of_l2c310_data __initconst = {
-@@ -1238,6 +1375,7 @@ static void __init aurora_of_parse(const struct device_node *np,
- {
- 	u32 val = AURORA_ACR_REPLACEMENT_TYPE_SEMIPLRU;
- 	u32 mask =  AURORA_ACR_REPLACEMENT_MASK;
-+	u32 assoc;
+-	ret = regulator_enable(pu->reg);
+-	if (ret) {
++	if (pu->reg)
++		ret = regulator_enable(pu->reg);
++	if (pu->reg && ret) {
+ 		pr_err("%s: failed to enable regulator: %d\n", __func__, ret);
+ 		return ret;
+ 	}
+@@ -309,7 +311,9 @@ static int imx_gpc_probe(struct platform_device *pdev)
+ 	struct regulator *pu_reg;
+ 	int ret;
  
- 	of_property_read_u32(np, "cache-id-part",
- 			&cache_id_part_number_from_dt);
-@@ -1250,6 +1388,15 @@ static void __init aurora_of_parse(const struct device_node *np,
- 		mask |= AURORA_ACR_FORCE_WRITE_POLICY_MASK;
+-	pu_reg = devm_regulator_get(&pdev->dev, "pu");
++	pu_reg = devm_regulator_get_optional(&pdev->dev, "pu");
++	if (PTR_ERR(pu_reg) == -ENODEV)
++		pu_reg = NULL;
+ 	if (IS_ERR(pu_reg)) {
+ 		ret = PTR_ERR(pu_reg);
+ 		dev_err(&pdev->dev, "failed to get pu regulator: %d\n", ret);
+@@ -317,8 +321,9 @@ static int imx_gpc_probe(struct platform_device *pdev)
  	}
  
-+	l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
-+	if (assoc > 8) {
-+		pr_err("l2x0 of: cache setting yield too high associativity\n");
-+		pr_err("l2x0 of: %d calculated, max 8\n", assoc);
-+	} else {
-+		mask |= L2X0_AUX_CTRL_ASSOC_MASK;
-+		val |= (assoc << L2X0_AUX_CTRL_ASSOC_SHIFT);
-+	}
-+
- 	*aux_val &= ~mask;
- 	*aux_val |= val;
- 	*aux_mask &= ~mask;
+ 	/* The regulator is initially enabled */
+-	ret = regulator_enable(pu_reg);
+-	if (ret < 0) {
++	if (pu_reg)
++		ret = regulator_enable(pu_reg);
++	if (pu_reg && ret < 0) {
+ 		dev_err(&pdev->dev, "failed to enable pu regulator: %d\n", ret);
+ 		return ret;
+ 	}
 -- 
-1.9.3
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
