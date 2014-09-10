@@ -1,71 +1,105 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v10 3/3] regulator: RK808: Remove pdata from the regulator
-Date: Tue, 9 Sep 2014 19:49:11 -0700
-Message-ID: <CAD=FV=Xht=nBBffu==py5CDhTjGKgtzNJWuz=X7=Eb0j1W7jog@mail.gmail.com>
-References: <1410311886-4579-1-git-send-email-zyw@rock-chips.com>
-	<1410311886-4579-4-git-send-email-zyw@rock-chips.com>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: Re: [PATCH v4 3/4] ARM: dts: add main Thermal info to rk3288
+Date: Wed, 10 Sep 2014 10:49:05 +0800
+Message-ID: <540FBC21.2090504@rock-chips.com>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com> <1409710239-19941-4-git-send-email-caesar.wang@rock-chips.com> <3426113.Zcq8V2S7cg@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410311886-4579-4-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao@ch>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <3426113.Zcq8V2S7cg@diego>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: rui.zhang@intel.com, edubezval@gmail.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, zyw@rock-chips.com, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Heiko,
 
-On Tue, Sep 9, 2014 at 6:18 PM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+=E5=9C=A8 2014=E5=B9=B409=E6=9C=8809=E6=97=A5 19:37, Heiko St=C3=BCbner=
+ =E5=86=99=E9=81=93:
+> Am Mittwoch, 3. September 2014, 10:10:38 schrieb Caesar Wang:
+>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>> ---
+>>   arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
+>>   1 file changed, 18 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk328=
+8.dtsi
+>> index 36be7bb..3d672e3 100644
+>> --- a/arch/arm/boot/dts/rk3288.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288.dtsi
+>> @@ -224,6 +224,17 @@
+>>   		status =3D "disabled";
+>>   	};
+>>
+>> +	tsadc: tsadc@ff280000 {
+> please keep the list of nodes sorted by register address. So when loo=
+king at
+> my v3.18-next/dts branch, it should be after uart4: serial@ff1c0000 a=
+nd before
+> usb_host0_ehci: usb@ff500000 .
 >
-> Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
+
+oh...,I will fix it.
+>> +		compatible =3D "rockchip,rk3288-tsadc";
+>> +		reg =3D <0xff280000 0x100>;
+>> +		interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>> +		clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+>> +		clock-names =3D "tsadc", "apb_pclk";
+>> +		pinctrl-names =3D "default";
+>> +		pinctrl-1 =3D <&tsadc_int>;
+>> +		status =3D "disabled";
+>> +	};
+>> +
+>>   	/* NOTE: ohci@ff520000 doesn't actually work on hardware */
+>>
+>>   	usb_hsic: usb@ff5c0000 {
+>> @@ -611,5 +622,12 @@
+>>   				rockchip,pins =3D <5 15 3 &pcfg_pull_none>;
+>>   			};
+>>   		};
+>> +
+>> +		tsadc {
+>> +			tsadc_int: tsadc-int {
+>> +				rockchip,pins =3D <0 10 RK_FUNC_1 &pcfg_pull_up>;
+>> +			};
+>> +		};
+> After looking this up in the schematics I see that this is the
+> overtemperature-protection output pin ... labeled OTP_OUT.
+> So I'd think the pinconfig should reflect this pin-name, especially a=
+s tsadc-int
+> suggests, that this would be an interrupt leading into the tsadc, whi=
+le in
+> fact it is an output to a separate circuit.
 >
-> Changes in v10: None
+Maybe,I guess  your mean as the follows .
+Please correct it and  Laugh out if I got it wrong.
 
-Despite the "None" above, I see that there are indeed changes between
-v9 and v10:
+tsadc {
+             otp_out: otp-out {
+                 rockchip,pins =3D <0 10 RK_FUNC_GPIO &pcfg_pull_none>;
+             };
 
-diff --git a/drivers/regulator/rk808-regulator.c
-b/drivers/regulator/rk808-regulator.c
-index 0d5afc4..d91f2b6 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -3,8 +3,8 @@
-  *
-  * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
-  *
-- * Author: Chris Zhong<zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-- * Author: Zhang Qing<zhanqging-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ * Author: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ * Author: Zhang Qing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-  *
-  * This program is free software; you can redistribute it and/or modify it
-  * under the terms and conditions of the GNU General Public License,
-@@ -348,6 +348,6 @@ module_platform_driver(rk808_regulator_driver);
+             tsadc_int: tsadc-int {
+                 rockchip,pins =3D <0 10 RK_FUNC_1 &pcfg_pull_none>;
+             };
+         };
+Then,I deal with the otp_out in thermal driver.
+I believe The "otp_out" will restart board if it's a high active.
 
- MODULE_DESCRIPTION("regulator driver for the rk808 series PMICs");
- MODULE_AUTHOR("Chris Zhong<zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
--MODULE_AUTHOR("Zhang Qing<zhanqging-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-+MODULE_AUTHOR("Zhang Qing<zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
- MODULE_LICENSE("GPL");
- MODULE_ALIAS("platform:rk808-regulator");
+tsadc_int: tsadc-int {
++				rockchip,pins =3D <0 10 RK_FUNC_1 &pcfg_pull_up>;
++			};
 
-That looks like the change requested by Dmitry for v9 (don't remove
-the space) plus a typo fix (flipping g/q).  Interestingly enough the
-typo fix shows that "MODULE_AUTHOR" should probably also have had a
-space before the "<".
+But,I think the about will be implemented in thermal driver.
+> Heiko
+>
+>
+>
+
+--=20
+Best regards,
+Caesar
 
 
-Mark: I think you could just take this (possibly fixing the
-MODULE_AUTHOR yourself) to fix the linux-next breakage.  You can also
-add:
-
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
