@@ -1,143 +1,506 @@
-From: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/6] iommu/arm-smmu: add support for specifying clocks
-Date: Wed, 10 Sep 2014 12:09:06 -0700
-Message-ID: <vnkwbnqn9tt9.fsf@mitchelh-linux.qualcomm.com>
-References: <1407891099-24641-1-git-send-email-mitchelh@codeaurora.org>
-	<1407891099-24641-2-git-send-email-mitchelh@codeaurora.org>
-	<20140819125833.GO23128@arm.com> <53F39F6D.1040205@codeaurora.org>
-	<20140826142757.GU23445@arm.com>
-	<vnkwa968b6ux.fsf@mitchelh-linux.qualcomm.com>
-	<20140910182739.GM1710@arm.com>
+From: Frank Li <Frank.Li@freescale.com>
+Subject: [Patch v3 net-next 05/12] net: fec: init multi queue date structure
+Date: Thu, 11 Sep 2014 02:30:38 +0800
+Message-ID: <1410373845-5801-6-git-send-email-Frank.Li@freescale.com>
+References: <1410373845-5801-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140910182739.GM1710-5wv7dgnIgG8@public.gmane.org> (Will Deacon's message of "Wed,
-	10 Sep 2014 19:27:39 +0100")
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1410373845-5801-1-git-send-email-Frank.Li@freescale.com>
+Sender: netdev-owner@vger.kernel.org
+To: b38611@freescale.com, davem@davemloft.net, netdev@vger.kernel.org, lznuaa@gmail.com
+Cc: shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, Frank Li <Frank.Li@freescale.com>, Duan Fugang <B38611@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10 2014 at 11:27:39 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Sep 10, 2014 at 02:29:42AM +0100, Mitchel Humpherys wrote:
->> On Tue, Aug 26 2014 at 07:27:58 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Tue, Aug 19, 2014 at 08:03:09PM +0100, Olav Haugan wrote:
->> >> Clients of the SMMU driver are required to vote for clocks and power
->> >> when they know they need to use the SMMU. However, the clock and power
->> >> needed to be on for the SMMU to service bus masters aren't necessarily
->> >> the same as the ones needed to read/write registers...See below.
->> >
->> > The case I'm thinking of is where a device masters through the IOMMU, but
->> > doesn't make use of any translations. In this case, its transactions will
->> > bypass the SMMU and I want to ensure that continues to happen, regardless of
->> > the power state of the SMMU.
->> 
->> Then I assume the driver for such a device wouldn't be attaching to (or
->> detaching from) the IOMMU, so we won't be touching it at all either
->> way. Or am I missing something?
->
-> As long as its only the register file that gets powered down, then there's
-> no issue. However, that's making assumptions about what these clocks are
-> controlling. Is there a way for the driver to know which aspects of the
-> device are controlled by which clock?
+initilized all queues according to queue number get from DT file.
 
-Yes, folks should only be putting "config" clocks here. In our system,
-at least, the clocks for configuring the SMMU are different than those
-for using it. Maybe I should make a note about what "kinds" of clocks
-can be specified here in the bindings (i.e. only those that can be
-safely disabled while still allowing translations to occur)?
+Signed-off-by: Frank Li <Frank.Li@freescale.com>
+Signed-off-by: Duan Fugang <B38611@freescale.com>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 365 +++++++++++++++++++++---------
+ 1 file changed, 252 insertions(+), 113 deletions(-)
 
->
->> >> > What stops theses from racing with each other when there are multiple
->> >> > clocks? I also assume that the clk API ignores calls to clk_enable_prepare
->> >> > for a clk that's already enabled? I couldn't find that code...
->> >> 
->> >> All the clock APIs are reference counted yes. Not sure what you mean by
->> >> racing with each other? When you call to enable a clock the call does
->> >> not return until the clock is already ON (or OFF).
->> >
->> > I was thinking of an interrupt handler racing with normal code, but actually
->> > you balance the clk enable/disable in the interrupt handlers. However, it's
->> > not safe to call these clk functions from irq context anyway, since
->> > clk_prepare may sleep.
->> 
->> Ah yes. You okay with moving to a threaded IRQ?
->
-> A threaded IRQ already makes sense for context interrupts (if anybody has a
-> platform that can do stalls properly), but it seems a bit weird for the
-> global fault handler. Is there no way to fix the race instead?
-
-Are you referring to the scenario where someone might be disabling
-clocks at the same time? This isn't a problem since the clocks are
-refcounted. I believe the main problem here is calling clk_enable from
-atomic context since it might sleep.
-
-For my own edification, why would it be weird to move to a threaded IRQ
-here? We're not really doing any important work here (just printing an
-informational message) so moving to a threaded IRQ actually seems like
-the courteous thing to do...
-
->
->> >> >> @@ -2061,12 +2164,16 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->> >> >>  	spin_unlock(&arm_smmu_devices_lock);
->> >> >>  
->> >> >>  	arm_smmu_device_reset(smmu);
->> >> >> +	arm_smmu_disable_clocks(smmu);
->> >> > 
->> >> > I wonder if this is really the right thing to do. Rather than the
->> >> > fine-grained clock enable/disable you have, why don't we just enable in
->> >> > domain_init and disable in domain_destroy, with refcounting for the clocks?
->> >> > 
->> >> 
->> >> So the whole point of all of this is that we try to save power. As Mitch
->> >> wrote in the commit text we want to only leave the clock and power on
->> >> for as short period of time as possible.
->> >
->> > Understood, but if the clocks are going up and down like yo-yos, then it's
->> > not obvious that you end up saving any power at all. Have you tried
->> > measuring the power consumption with different granularities for the
->> > clocks?
->> 
->> This has been profiled extensively and for some use cases it's a huge
->> win. Unfortunately we don't have any numbers for public sharing :( but
->> you can imagine a use case where some multimedia framework maps a bunch
->> of buffers into an SMMU at the beginning of some interactive user
->> session and doesn't unmap them until the (human) user decides they are
->> done. This could be a long time, all the while these clocks could be
->> off, saving power.
->
-> Ok, I can see that. I wonder whether we could wrap all of the iommu_ops
-> functions with the clock enable/disable code, instead of putting it directly
-> into the drivers?
-
-Interesting idea... I'm up for it if the IOMMU core and driver
-maintainers are okay with it.
-
->
->> > The code you're proposing seems to take the approach of `we're going to
->> > access registers so enable the clocks, access the registers then disable the
->> > clocks', which is simple but may not be particularly effective.
->> 
->> Yes, that's a good summary of the approach here. It has been effective
->> in saving power for us in the past...
->
-> Mike, do you have any experience with this sort of stuff?
->
-> Will
-
-
-
--Mitch
-
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 2240df0..03972f7 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -834,47 +834,98 @@ static void fec_enet_bd_init(struct net_device *dev)
+ 	struct fec_enet_priv_rx_q *rxq;
+ 	struct bufdesc *bdp;
+ 	unsigned int i;
++	unsigned int q;
+ 
+-	/* Initialize the receive buffer descriptors. */
+-	rxq = fep->rx_queue[0];
+-	bdp = rxq->rx_bd_base;
++	for (q = 0; q < fep->num_rx_queues; q++) {
++		/* Initialize the receive buffer descriptors. */
++		rxq = fep->rx_queue[q];
++		bdp = rxq->rx_bd_base;
+ 
+-	for (i = 0; i < rxq->rx_ring_size; i++) {
++		for (i = 0; i < rxq->rx_ring_size; i++) {
+ 
+-		/* Initialize the BD for every fragment in the page. */
+-		if (bdp->cbd_bufaddr)
+-			bdp->cbd_sc = BD_ENET_RX_EMPTY;
+-		else
++			/* Initialize the BD for every fragment in the page. */
++			if (bdp->cbd_bufaddr)
++				bdp->cbd_sc = BD_ENET_RX_EMPTY;
++			else
++				bdp->cbd_sc = 0;
++			bdp = fec_enet_get_nextdesc(bdp, fep, q);
++		}
++
++		/* Set the last buffer to wrap */
++		bdp = fec_enet_get_prevdesc(bdp, fep, q);
++		bdp->cbd_sc |= BD_SC_WRAP;
++
++		rxq->cur_rx = rxq->rx_bd_base;
++	}
++
++	for (q = 0; q < fep->num_tx_queues; q++) {
++		/* ...and the same for transmit */
++		txq = fep->tx_queue[q];
++		bdp = txq->tx_bd_base;
++		txq->cur_tx = bdp;
++
++		for (i = 0; i < txq->tx_ring_size; i++) {
++			/* Initialize the BD for every fragment in the page. */
+ 			bdp->cbd_sc = 0;
+-		bdp = fec_enet_get_nextdesc(bdp, fep, 0);
++			if (txq->tx_skbuff[i]) {
++				dev_kfree_skb_any(txq->tx_skbuff[i]);
++				txq->tx_skbuff[i] = NULL;
++			}
++			bdp->cbd_bufaddr = 0;
++			bdp = fec_enet_get_nextdesc(bdp, fep, q);
++		}
++
++		/* Set the last buffer to wrap */
++		bdp = fec_enet_get_prevdesc(bdp, fep, q);
++		bdp->cbd_sc |= BD_SC_WRAP;
++		txq->dirty_tx = bdp;
+ 	}
++}
+ 
+-	/* Set the last buffer to wrap */
+-	bdp = fec_enet_get_prevdesc(bdp, fep, 0);
+-	bdp->cbd_sc |= BD_SC_WRAP;
++static void fec_enet_enable_ring(struct net_device *ndev)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++	struct fec_enet_priv_tx_q *txq;
++	struct fec_enet_priv_rx_q *rxq;
++	int i;
+ 
+-	rxq->cur_rx = rxq->rx_bd_base;
++	for (i = 0; i < fep->num_rx_queues; i++) {
++		rxq = fep->rx_queue[i];
++		writel(rxq->bd_dma, fep->hwp + FEC_R_DES_START(i));
+ 
+-	/* ...and the same for transmit */
+-	txq = fep->tx_queue[0];
+-	bdp = txq->tx_bd_base;
+-	txq->cur_tx = bdp;
++		/* enable DMA1/2 */
++		if (i)
++			writel(RCMR_MATCHEN | RCMR_CMP(i),
++			       fep->hwp + FEC_RCMR(i));
++	}
+ 
+-	for (i = 0; i < txq->tx_ring_size; i++) {
+-		/* Initialize the BD for every fragment in the page. */
+-		bdp->cbd_sc = 0;
+-		if (txq->tx_skbuff[i]) {
+-			dev_kfree_skb_any(txq->tx_skbuff[i]);
+-			txq->tx_skbuff[i] = NULL;
+-		}
+-		bdp->cbd_bufaddr = 0;
+-		bdp = fec_enet_get_nextdesc(bdp, fep, 0);
++	for (i = 0; i < fep->num_tx_queues; i++) {
++		txq = fep->tx_queue[i];
++		writel(txq->bd_dma, fep->hwp + FEC_X_DES_START(i));
++
++		/* enable DMA1/2 */
++		if (i)
++			writel(DMA_CLASS_EN | IDLE_SLOPE(i),
++			       fep->hwp + FEC_DMA_CFG(i));
+ 	}
++}
+ 
+-	/* Set the last buffer to wrap */
+-	bdp = fec_enet_get_prevdesc(bdp, fep, 0);
+-	bdp->cbd_sc |= BD_SC_WRAP;
+-	txq->dirty_tx = bdp;
++static void fec_enet_reset_skb(struct net_device *ndev)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++	struct fec_enet_priv_tx_q *txq;
++	int i, j;
++
++	for (i = 0; i < fep->num_tx_queues; i++) {
++		txq = fep->tx_queue[i];
++
++		for (j = 0; j < txq->tx_ring_size; j++) {
++			if (txq->tx_skbuff[j]) {
++				dev_kfree_skb_any(txq->tx_skbuff[j]);
++				txq->tx_skbuff[j] = NULL;
++			}
++		}
++	}
+ }
+ 
+ /*
+@@ -893,8 +944,6 @@ fec_restart(struct net_device *ndev)
+ 	u32 temp_mac[2];
+ 	u32 rcntl = OPT_FRAME_SIZE | 0x04;
+ 	u32 ecntl = 0x2; /* ETHEREN */
+-	struct fec_enet_priv_tx_q *txq;
+-	struct fec_enet_priv_rx_q *rxq;
+ 
+ 	/* Whack a reset.  We should wait for this. */
+ 	writel(1, fep->hwp + FEC_ECNTRL);
+@@ -918,24 +967,10 @@ fec_restart(struct net_device *ndev)
+ 
+ 	fec_enet_bd_init(ndev);
+ 
+-	/* Set receive and transmit descriptor base. */
+-	rxq = fep->rx_queue[0];
+-	writel(rxq->bd_dma, fep->hwp + FEC_R_DES_START(0));
+-	if (fep->bufdesc_ex)
+-		writel((unsigned long)rxq->bd_dma + sizeof(struct bufdesc_ex)
+-			* rxq->rx_ring_size, fep->hwp + FEC_X_DES_START(0));
+-	else
+-		writel((unsigned long)rxq->bd_dma + sizeof(struct bufdesc)
+-			* rxq->rx_ring_size,    fep->hwp + FEC_X_DES_START(0));
++	fec_enet_enable_ring(ndev);
+ 
+-
+-	txq = fep->tx_queue[0];
+-	for (i = 0; i <= TX_RING_MOD_MASK; i++) {
+-		if (txq->tx_skbuff[i]) {
+-			dev_kfree_skb_any(txq->tx_skbuff[i]);
+-			txq->tx_skbuff[i] = NULL;
+-		}
+-	}
++	/* Reset tx SKB buffers. */
++	fec_enet_reset_skb(ndev);
+ 
+ 	/* Enable MII mode */
+ 	if (fep->full_duplex == DUPLEX_FULL) {
+@@ -1057,7 +1092,8 @@ fec_restart(struct net_device *ndev)
+ 
+ 	/* And last, enable the transmit and receive processing */
+ 	writel(ecntl, fep->hwp + FEC_ECNTRL);
+-	writel(0, fep->hwp + FEC_R_DES_ACTIVE(0));
++	for (i = 0; i < fep->num_rx_queues; i++)
++		writel(0, fep->hwp + FEC_R_DES_ACTIVE(i));
+ 
+ 	if (fep->bufdesc_ex)
+ 		fec_ptp_start_cyclecounter(ndev);
+@@ -2233,41 +2269,122 @@ static void fec_enet_free_buffers(struct net_device *ndev)
+ 	struct bufdesc	*bdp;
+ 	struct fec_enet_priv_tx_q *txq;
+ 	struct fec_enet_priv_rx_q *rxq;
++	unsigned int q;
++
++	for (q = 0; q < fep->num_rx_queues; q++) {
++		rxq = fep->rx_queue[q];
++		bdp = rxq->rx_bd_base;
++		for (i = 0; i < rxq->rx_ring_size; i++) {
++			skb = rxq->rx_skbuff[i];
++			rxq->rx_skbuff[i] = NULL;
++			if (skb) {
++				dma_unmap_single(&fep->pdev->dev,
++						 bdp->cbd_bufaddr,
++						 FEC_ENET_RX_FRSIZE,
++						 DMA_FROM_DEVICE);
++				dev_kfree_skb(skb);
++			}
++			bdp = fec_enet_get_nextdesc(bdp, fep, q);
++		}
++	}
+ 
+-	rxq = fep->rx_queue[0];
+-	bdp = rxq->rx_bd_base;
+-	for (i = 0; i < rxq->rx_ring_size; i++) {
+-		skb = rxq->rx_skbuff[i];
+-		rxq->rx_skbuff[i] = NULL;
+-		if (skb) {
+-			dma_unmap_single(&fep->pdev->dev, bdp->cbd_bufaddr,
+-					FEC_ENET_RX_FRSIZE, DMA_FROM_DEVICE);
++	for (q = 0; q < fep->num_tx_queues; q++) {
++		txq = fep->tx_queue[q];
++		bdp = txq->tx_bd_base;
++		for (i = 0; i < txq->tx_ring_size; i++) {
++			kfree(txq->tx_bounce[i]);
++			txq->tx_bounce[i] = NULL;
++			skb = txq->tx_skbuff[i];
++			txq->tx_skbuff[i] = NULL;
+ 			dev_kfree_skb(skb);
+ 		}
+-		bdp = fec_enet_get_nextdesc(bdp, fep, 0);
+ 	}
++}
+ 
+-	txq = fep->tx_queue[0];
+-	bdp = txq->tx_bd_base;
+-	for (i = 0; i < txq->tx_ring_size; i++) {
+-		kfree(txq->tx_bounce[i]);
+-		txq->tx_bounce[i] = NULL;
+-		skb = txq->tx_skbuff[i];
+-		txq->tx_skbuff[i] = NULL;
+-		dev_kfree_skb(skb);
++static void fec_enet_free_queue(struct net_device *ndev)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++	int i;
++	struct fec_enet_priv_tx_q *txq;
++
++	for (i = 0; i < fep->num_tx_queues; i++)
++		if (fep->tx_queue[i] && fep->tx_queue[i]->tso_hdrs) {
++			txq = fep->tx_queue[i];
++			dma_free_coherent(NULL,
++					  txq->tx_ring_size * TSO_HEADER_SIZE,
++					  txq->tso_hdrs,
++					  txq->tso_hdrs_dma);
++		}
++
++	for (i = 0; i < fep->num_rx_queues; i++)
++		if (fep->rx_queue[i])
++			kfree(fep->rx_queue[i]);
++
++	for (i = 0; i < fep->num_tx_queues; i++)
++		if (fep->tx_queue[i])
++			kfree(fep->tx_queue[i]);
++}
++
++static int fec_enet_alloc_queue(struct net_device *ndev)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++	int i;
++	int ret = 0;
++	struct fec_enet_priv_tx_q *txq;
++
++	for (i = 0; i < fep->num_tx_queues; i++) {
++		txq = kzalloc(sizeof(*txq), GFP_KERNEL);
++		if (!txq) {
++			ret = -ENOMEM;
++			goto alloc_failed;
++		}
++
++		fep->tx_queue[i] = txq;
++		txq->tx_ring_size = TX_RING_SIZE;
++		fep->total_tx_ring_size += fep->tx_queue[i]->tx_ring_size;
++
++		txq->tx_stop_threshold = FEC_MAX_SKB_DESCS;
++		txq->tx_wake_threshold =
++				(txq->tx_ring_size - txq->tx_stop_threshold) / 2;
++
++		txq->tso_hdrs = dma_alloc_coherent(NULL,
++					txq->tx_ring_size * TSO_HEADER_SIZE,
++					&txq->tso_hdrs_dma,
++					GFP_KERNEL);
++		if (!txq->tso_hdrs) {
++			ret = -ENOMEM;
++			goto alloc_failed;
++		}
+ 	}
++
++	for (i = 0; i < fep->num_rx_queues; i++) {
++		fep->rx_queue[i] = kzalloc(sizeof(*fep->rx_queue[i]),
++					   GFP_KERNEL);
++		if (!fep->rx_queue[i]) {
++			ret = -ENOMEM;
++			goto alloc_failed;
++		}
++
++		fep->rx_queue[i]->rx_ring_size = RX_RING_SIZE;
++		fep->total_rx_ring_size += fep->rx_queue[i]->rx_ring_size;
++	}
++	return ret;
++
++alloc_failed:
++	fec_enet_free_queue(ndev);
++	return ret;
+ }
+ 
+-static int fec_enet_alloc_buffers(struct net_device *ndev)
++static int
++fec_enet_alloc_rxq_buffers(struct net_device *ndev, unsigned int queue)
+ {
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
+ 	unsigned int i;
+ 	struct sk_buff *skb;
+ 	struct bufdesc	*bdp;
+-	struct fec_enet_priv_tx_q *txq;
+ 	struct fec_enet_priv_rx_q *rxq;
+ 
+-	rxq = fep->rx_queue[0];
++	rxq = fep->rx_queue[queue];
+ 	bdp = rxq->rx_bd_base;
+ 	for (i = 0; i < rxq->rx_ring_size; i++) {
+ 		dma_addr_t addr;
+@@ -2294,14 +2411,28 @@ static int fec_enet_alloc_buffers(struct net_device *ndev)
+ 			ebdp->cbd_esc = BD_ENET_RX_INT;
+ 		}
+ 
+-		bdp = fec_enet_get_nextdesc(bdp, fep, 0);
++		bdp = fec_enet_get_nextdesc(bdp, fep, queue);
+ 	}
+ 
+ 	/* Set the last buffer to wrap. */
+-	bdp = fec_enet_get_prevdesc(bdp, fep, 0);
++	bdp = fec_enet_get_prevdesc(bdp, fep, queue);
+ 	bdp->cbd_sc |= BD_SC_WRAP;
++	return 0;
+ 
+-	txq = fep->tx_queue[0];
++ err_alloc:
++	fec_enet_free_buffers(ndev);
++	return -ENOMEM;
++}
++
++static int
++fec_enet_alloc_txq_buffers(struct net_device *ndev, unsigned int queue)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++	unsigned int i;
++	struct bufdesc  *bdp;
++	struct fec_enet_priv_tx_q *txq;
++
++	txq = fep->tx_queue[queue];
+ 	bdp = txq->tx_bd_base;
+ 	for (i = 0; i < txq->tx_ring_size; i++) {
+ 		txq->tx_bounce[i] = kmalloc(FEC_ENET_TX_FRSIZE, GFP_KERNEL);
+@@ -2316,11 +2447,11 @@ static int fec_enet_alloc_buffers(struct net_device *ndev)
+ 			ebdp->cbd_esc = BD_ENET_TX_INT;
+ 		}
+ 
+-		bdp = fec_enet_get_nextdesc(bdp, fep, 0);
++		bdp = fec_enet_get_nextdesc(bdp, fep, queue);
+ 	}
+ 
+ 	/* Set the last buffer to wrap. */
+-	bdp = fec_enet_get_prevdesc(bdp, fep, 0);
++	bdp = fec_enet_get_prevdesc(bdp, fep, queue);
+ 	bdp->cbd_sc |= BD_SC_WRAP;
+ 
+ 	return 0;
+@@ -2330,6 +2461,21 @@ static int fec_enet_alloc_buffers(struct net_device *ndev)
+ 	return -ENOMEM;
+ }
+ 
++static int fec_enet_alloc_buffers(struct net_device *ndev)
++{
++	struct fec_enet_private *fep = netdev_priv(ndev);
++	unsigned int i;
++
++	for (i = 0; i < fep->num_rx_queues; i++)
++		if (fec_enet_alloc_rxq_buffers(ndev, i))
++			return -ENOMEM;
++
++	for (i = 0; i < fep->num_tx_queues; i++)
++		if (fec_enet_alloc_txq_buffers(ndev, i))
++			return -ENOMEM;
++	return 0;
++}
++
+ static int
+ fec_enet_open(struct net_device *ndev)
+ {
+@@ -2579,28 +2725,9 @@ static int fec_enet_init(struct net_device *ndev)
+ 	struct bufdesc *cbd_base;
+ 	dma_addr_t bd_dma;
+ 	int bd_size;
++	unsigned int i;
+ 
+-	txq = kzalloc(sizeof(*txq), GFP_KERNEL);
+-	if (!txq)
+-		return -ENOMEM;
+-	fep->tx_queue[0] = txq;
+-
+-	rxq = kzalloc(sizeof(*rxq), GFP_KERNEL);
+-	if (!rxq) {
+-		kfree(txq);
+-		return -ENOMEM;
+-	}
+-
+-	fep->rx_queue[0] = rxq;
+-
+-
+-	txq->tx_ring_size = TX_RING_SIZE;
+-	rxq->rx_ring_size = RX_RING_SIZE;
+-	fep->total_tx_ring_size = txq->tx_ring_size;
+-	fep->total_rx_ring_size = rxq->rx_ring_size;
+-
+-	txq->tx_stop_threshold = FEC_MAX_SKB_DESCS;
+-	txq->tx_wake_threshold = (txq->tx_ring_size - txq->tx_stop_threshold) / 2;
++	fec_enet_alloc_queue(ndev);
+ 
+ 	if (fep->bufdesc_ex)
+ 		fep->bufdesc_size = sizeof(struct bufdesc_ex);
+@@ -2613,17 +2740,6 @@ static int fec_enet_init(struct net_device *ndev)
+ 	cbd_base = dma_alloc_coherent(NULL, bd_size, &bd_dma,
+ 				      GFP_KERNEL);
+ 	if (!cbd_base) {
+-		kfree(rxq);
+-		kfree(txq);
+-		return -ENOMEM;
+-	}
+-
+-	txq->tso_hdrs = dma_alloc_coherent(NULL, txq->tx_ring_size * TSO_HEADER_SIZE,
+-						&txq->tso_hdrs_dma, GFP_KERNEL);
+-	if (!txq->tso_hdrs) {
+-		kfree(rxq);
+-		kfree(txq);
+-		dma_free_coherent(NULL, bd_size, cbd_base, bd_dma);
+ 		return -ENOMEM;
+ 	}
+ 
+@@ -2635,12 +2751,35 @@ static int fec_enet_init(struct net_device *ndev)
+ 	fec_set_mac_address(ndev, NULL);
+ 
+ 	/* Set receive and transmit descriptor base. */
+-	rxq->rx_bd_base = cbd_base;
+-	if (fep->bufdesc_ex)
+-		txq->tx_bd_base = (struct bufdesc *)
+-			(((struct bufdesc_ex *)cbd_base) + rxq->rx_ring_size);
+-	else
+-		txq->tx_bd_base = cbd_base + rxq->rx_ring_size;
++	for (i = 0; i < fep->num_rx_queues; i++) {
++		rxq = fep->rx_queue[i];
++		rxq->index = i;
++		rxq->rx_bd_base = (struct bufdesc *)cbd_base;
++		rxq->bd_dma = bd_dma;
++		if (fep->bufdesc_ex) {
++			bd_dma += sizeof(struct bufdesc_ex) * rxq->rx_ring_size;
++			cbd_base = (struct bufdesc *)
++				(((struct bufdesc_ex *)cbd_base) + rxq->rx_ring_size);
++		} else {
++			bd_dma += sizeof(struct bufdesc) * rxq->rx_ring_size;
++			cbd_base += rxq->rx_ring_size;
++		}
++	}
++
++	for (i = 0; i < fep->num_tx_queues; i++) {
++		txq = fep->tx_queue[i];
++		txq->index = i;
++		txq->tx_bd_base = (struct bufdesc *)cbd_base;
++		txq->bd_dma = bd_dma;
++		if (fep->bufdesc_ex) {
++			bd_dma += sizeof(struct bufdesc_ex) * txq->tx_ring_size;
++			cbd_base = (struct bufdesc *)
++			 (((struct bufdesc_ex *)cbd_base) + txq->tx_ring_size);
++		} else {
++			bd_dma += sizeof(struct bufdesc) * txq->tx_ring_size;
++			cbd_base += txq->tx_ring_size;
++		}
++	}
+ 
+ 
+ 	/* The FEC Ethernet specific entries in the device structure */
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.1
