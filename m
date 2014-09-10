@@ -1,20 +1,69 @@
-From: Alina Yukov <igranadillo-5kAGVXofESjG66mcB53EVw@public.gmane.org>
-Subject: Please Help Me
-Date: Wed, 10 Sep 2014 07:31:33 -0430 (VET)
-Message-ID: <1098022811.1548346.1410350493475.JavaMail.root@mefbp.gob.ve>
-Reply-To: Alina Yukov <alinayukob-WmCXPOaMvLBWk0Htik3J/w@public.gmane.org>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] rtc: at91sam9: add DT bindings documentation
+Date: Wed, 10 Sep 2014 14:14:24 +0200
+Message-ID: <20140910121424.GG2974@localhost>
+References: <1409733934-14465-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1409733934-14465-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409733934-14465-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Good day to you,My name is Alina a dying widow contacting you from the sick
-bed. Please I need your assistance in establishing my late husband
-investment fund before I depart.
-Mrs Alina Yukov.
+On Wed, Sep 03, 2014 at 10:45:34AM +0200, Boris BREZILLON wrote:
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt   | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> new file mode 100644
+> index 0000000..9ca455f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> @@ -0,0 +1,20 @@
+> +Atmel AT91SAM9260 Real Time Timer
+> +
+> +Required properties:
+> +- compatible: should be: "atmel,at91sam9260-rtt"
+> +- reg: should contain 2 memory regions
+> +  * the first one encodes the memory region of the RTT controller
+> +  * the second one encodes the GPBR (General Purpose Backup Resgisters)
+> +    memory region used to store the current time
+> +- interrupts: rtc alarm/event interrupt
+> +- clocks: should contain one clock pointing the the slow clk
+> +
+> +Example:
+> +
+> +rtc@fffffe00 {
+> +	compatible = "atmel,at91sam9260-rtt";
+> +	reg = <0xfffffd20 0x10
+> +	       0xfffffd50 0x4>;
+> +	interrupts = <1 4 7>;
+> +	clocks = <&clk32k>;
+> +};
 
+This does not describe the hardware, but rather a specific software
+configuration.
+
+The RTT is first of all not an RTC (although it can be used as one in a
+specific software configuration). And the second register resource above
+is not an RTT register, but a general-purpose backup register could be
+used for other purposes (which register to use is currently configurable
+for legacy booting using CONFIG_RTC_DRV_AT91SAM9_GPBR).
+
+This was discussed in the thread where I posted an RFC for this last
+year (which you linked to in your original submission thread), but no
+conclusion was reached:
+
+	http://www.spinics.net/lists/arm-kernel/msg236292.html
+
+Johan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
