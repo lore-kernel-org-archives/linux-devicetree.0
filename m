@@ -1,75 +1,69 @@
-From: Robin Gong <b38343@freescale.com>
-Subject: Re: [PATCH v1] ARM: dts: imx6dl: disable dma support for spi on
- i.mx6dl
-Date: Wed, 10 Sep 2014 13:16:16 +0800
-Message-ID: <20140910051615.GA29006@Robin-OptiPlex-780>
-References: <1410312816-32171-1-git-send-email-b38343@freescale.com>
- <20140910032128.GD18566@dragon>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] powerpc: dts: t208x: Change T208x USB controller version
+Date: Wed, 10 Sep 2014 00:16:01 -0500
+Message-ID: <1410326161.24184.340.camel@snotra.buserror.net>
+References: <1408617090-29692-1-git-send-email-nikhil.badola@freescale.com>
+ <1408660593.6510.0.camel@snotra.buserror.net>
+ <5b5401b39f83458bb5ada39d13abee29@BN1PR0301MB0593.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140910032128.GD18566@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, Frank.Li@freescale.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <5b5401b39f83458bb5ada39d13abee29@BN1PR0301MB0593.namprd03.prod.outlook.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Badola Nikhil-B46172 <nikhil.badola@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 11:21:30AM +0800, Shawn Guo wrote:
-> On Wed, Sep 10, 2014 at 09:33:36AM +0800, Robin Gong wrote:
-> > There is one weird data in rxfifo after one full rx/tx transfer
-> > done sometimes. It looks a design issue and hard to workaround
-> > totally, so disable dma functhion here. And will re-enable it
-> > once the root cause found.
-> > 
-> > Signed-off-by: Robin Gong <b38343@freescale.com>
-> > ---
-> >  arch/arm/boot/dts/imx6dl.dtsi | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-> > index b453e0e..e84a1ff 100644
-> > --- a/arch/arm/boot/dts/imx6dl.dtsi
-> > +++ b/arch/arm/boot/dts/imx6dl.dtsi
-> > @@ -102,6 +102,22 @@
-> >  	};
-> >  };
-> >  
-> > +&ecspi1 {
-> > +	dma-names = "", "";
-> > +};
-> > +
-> > +&ecspi2 {
-> > +	dma-names = "", "";
-> > +};
-> > +
-> > +&ecspi3 {
-> > +	dma-names = "", "";
-> > +};
-> > +
-> > +&ecspi4 {
-> > +	dma-names = "", "";
-> > +};
-> > +
-> 
-> This looks odd.  Can we drop the dma properties from imx6qdl.dtsi,
-> and only add them in imx6q.dtsi instead?
-> 
-> Shawn
->
-Ok, I'll send v2.
-> >  &hdmi {
-> >  	compatible = "fsl,imx6dl-hdmi";
-> >  };
-> > -- 
-> > 1.9.1
-> > 
+T24gVHVlLCAyMDE0LTA5LTA5IGF0IDIzOjQ1IC0wNTAwLCBCYWRvbGEgTmlraGlsLUI0NjE3MiB3
+cm90ZToKPiA+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+RnJvbTogV29vZCBTY290dC1C
+MDc0MjEKPiA+U2VudDogRnJpZGF5LCBBdWd1c3QgMjIsIDIwMTQgNDowNyBBTQo+ID5UbzogQmFk
+b2xhIE5pa2hpbC1CNDYxNzIKPiA+Q2M6IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+ID5TdWJqZWN0OiBSZTogW1BBVENIXSBwb3dlcnBj
+OiBkdHM6IHQyMDh4OiBDaGFuZ2UgVDIwOHggVVNCIGNvbnRyb2xsZXIgdmVyc2lvbgo+ID4KPiA+
+T24gVGh1LCAyMDE0LTA4LTIxIGF0IDE2OjAxICswNTMwLCBOaWtoaWwgQmFkb2xhIHdyb3RlOgo+
+ID4+IENoYW5nZSBVU0IgY29udHJvbGxlciB2ZXJzaW9uIHRvIDIuNSBpbiBjb21wYXRpYmxlIHN0
+cmluZyBmb3IKPiA+PiBUMjA4MC9UMjA4MQo+ID4+Cj4gPj4gU2lnbmVkLW9mZi1ieTogTmlraGls
+IEJhZG9sYSA8bmlraGlsLmJhZG9sYUBmcmVlc2NhbGUuY29tPgo+ID4+IC0tLQo+ID4+IAlDaGVj
+a3BhdGNoIHdhcm5pbmdzIGhhbmRsZWQgYnkgY29tbWl0Cj4gPj4gNjFhOGMyYzZmZTcxMDgyZGUz
+ZWE4NjI5NTg5ZGNkZDBjYzVjM2YwMgo+ID4KPiA+VGhhdCBjaGVja3BhdGNoIHdhcm5pbmcgaXMg
+a25vd24gdG8gaGF2ZSBmYWxzZSBwb3NpdGl2ZXMgaW4gY2FzZXMgd2hlcmUgdGhlCj4gPmJpbmRp
+bmcgc2F5cyAiPENISVBOQU1FPi1kZXZpY2UiIG9yICJkZXZpY2UtPFZFUlNJT04+Ii4gIElmIHlv
+dSB3YW50IHRvCj4gPnVwZGF0ZSB0aGUgYmluZGluZyB0byBnaXZlIGFuIGV4YW1wbGUgd2l0aCBh
+IHZlcnNpb24sIHRoYXQncyBmaW5lLCBidXQKPiA+Y2hlY2twYXRjaCBzaG91bGRuJ3QgYmUgd2h5
+LiAgV2UncmUgbm90IGdvaW5nIHRvIHVwZGF0ZSB0aGUgYmluZGluZyBleGFtcGxlCj4gPmFnYWlu
+IHRvIG1hdGNoIGEgZGlmZmVyZW50IHZlcnNpb24gdGhlIG5leHQgdGltZSBvbmUgaXMgYWRkZWQg
+dG8gYSBkZXZpY2UgdHJlZS4uLgo+ID4KPiA+PiAJRG9jdW1lbnRhdGlvbjogZHRzOiBmc2wtdXNi
+OiBEb2N1bWVudCBVU0Igbm9kZSBjb21wYXRpYmxlIHN0cmluZyBmb3IKPiA+SVAgdmVyc2lvbgo+
+ID4+Cj4gPj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwODFzaS1wb3N0LmR0c2kgfCA0
+ICsrLS0KPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
+LSkKPiA+Pgo+ID4+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgx
+c2ktcG9zdC5kdHNpCj4gPj4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9z
+dC5kdHNpCj4gPj4gaW5kZXggOTc0NzlmMC4uYWVjZWU5NiAxMDA2NDQKPiA+PiAtLS0gYS9hcmNo
+L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpCj4gPj4gKysrIGIvYXJjaC9w
+b3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4MXNpLXBvc3QuZHRzaQo+ID4+IEBAIC00MTAsNyArNDEw
+LDcgQEAKPiA+PiAgL2luY2x1ZGUvICJxb3JpcS1ncGlvLTMuZHRzaSIKPiA+PiAgL2luY2x1ZGUv
+ICJxb3JpcS11c2IyLW1waC0wLmR0c2kiCj4gPj4gIAl1c2IwOiB1c2JAMjEwMDAwIHsKPiA+PiAt
+CQljb21wYXRpYmxlID0gImZzbC11c2IyLW1waC12Mi40IiwgImZzbC11c2IyLW1waCI7Cj4gPj4g
+KwkJY29tcGF0aWJsZSA9ICJmc2wtdXNiMi1tcGgtdjIuNSIsICJmc2wtdXNiMi1tcGgiOwo+ID4K
+PiA+VGhpcyBpcyBhbiBleGFtcGxlIG9mIHdoeSBpdCdzIGJldHRlciB0byByZWx5IG9uIHZlcnNp
+b24gcmVnaXN0ZXJzIHdoZW4gcHJlc2VudC4KPiA+Cj4gPi1TY290dAo+ID4KPiBIaSBzY290dCwK
+PiAKPiBJIGNhbiBzZWUgdGhpcyBwYXRjaCBpbiAic3VwZXJzZWRlZCIgc3RhdGUgaW4gcGF0Y2h3
+b3JrLiBBcyBwZXIgb3VyIGRpc2N1c3Npb24gdGhlIElQIHZlcnNpb24gY2hlY2tpbmcgaXMgdG8g
+YmUgZG9uZSBieSBjb21wYXRpYmxlIHN0cmluZyBvbmx5LCBzbyBjYW4gSSBwcm9jZWVkIHRvIHNl
+bmQgdGhpcyBwYXRjaCBhZ2Fpbj8KClNvcnJ5LCBhcHBhcmVudGx5IEkgdGhvdWdodCB0aGF0Cmh0
+dHA6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8zODM2NzAvIHdhcyBhIG5ld2VyIHZlcnNp
+b24gb2YgdGhlCnBhdGNoLCBhbmQgZGlkbid0IG5vdGljZSB0aGV5IHdlcmUgZm9yIGRpZmZlcmVu
+dCBjaGlwcy4gIE5vIG5lZWQgdG8KcmVzZW5kLiAgVGhhbmtzIGZvciBwb2ludGluZyB0aGlzIG91
+dC4KCi1TY290dAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
+cmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
