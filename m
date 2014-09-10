@@ -1,73 +1,198 @@
-From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH v10 1/3] RTC: RK808: add RTC driver for RK808
-Date: Wed, 10 Sep 2014 15:08:43 -0700
-Message-ID: <20140910150843.78d9416ae0dada8fccf8063a@linux-foundation.org>
-References: <1410311886-4579-1-git-send-email-zyw@rock-chips.com>
-	<1410311886-4579-2-git-send-email-zyw@rock-chips.com>
-	<20140910134411.8128acce79f2423d4448e8f4@linux-foundation.org>
-	<CAD=FV=V4-dHpKwRqewCr7ujDdRYiMiUcRuJAS7C602EyCMnPFQ@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2] iio: adc: rockchip_saradc: add support for rk3066-tsadc variant
+Date: Thu, 11 Sep 2014 00:22:35 +0200
+Message-ID: <1629907.fyghANjlk9@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=V4-dHpKwRqewCr7ujDdRYiMiUcRuJAS7C602EyCMnPFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lin Huang <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, xxx <xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Olof Johansson <olo>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 10 Sep 2014 14:37:13 -0700 Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+Older Rockchip SoCs, at least the rk3066, used a slightly modified saradc
+for temperature measurements. This so called tsadc does not contain any
+active parts like temperature interrupts and only supports polling the
+current temperature. The returned voltage can then be converted by a
+suitable thermal driver to and actual temperature and used for thermal
+handling.
 
-> Andrew,
-> 
-> On Wed, Sep 10, 2014 at 1:44 PM, Andrew Morton
-> <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
-> > On Wed, 10 Sep 2014 09:18:04 +0800 Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> >
-> >> Adding RTC driver for supporting RTC device present inside RK808 PMIC.
-> >>
-> >> ...
-> >>
-> >> +     ret = rtc_valid_tm(&tm);
-> >> +     if (ret) {
-> >> +             dev_warn(&pdev->dev, "invalid date/time and init time\n");
-> >> +             rk808_rtc_set_time(&pdev->dev, &tm_def);
-> >> +     }
-> >
-> > This is somewhat unusual.  Most drivers will emit a warning and give up
-> > when they find the time is wrong.  Why is this driver different and is
-> > this desirable behaviour?
-> 
-> When you say "give up", what does that mean?  I assume the driver
-> should keep initting, right?  Then the user can go in and set a time
-> later...
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+changes since v1:
+- use GENMASK instead of creating the mask manually
+  as suggested by Hartmut Knaack
 
-I think I was misreading current drivers a bit.  rtc-cmos.c will go in
-and set a dummy time but regular low-level drivers don't sanity-check
-the time at all at setup time.
+I've also opted for simply keeping the indent mismatch in
+struct rockchip_saradc, as I don't think it's worth the churn
+it produces
 
-> 
-> I did test things with just removing this chunk of code.  You get some
-> yells at bootup if you put a bogus time in there:
-> 
-> [    2.987590] rk808-rtc rk808-rtc: invalid date/time and init time
-> [    3.013148] rk808-rtc rk808-rtc: rtc core: registered rk808-rtc as rtc0
-> [    4.586115] rk808-rtc rk808-rtc: hctosys: invalid date/time
-> 
-> ...but if you later set a valid time then everything is fine.  That
-> seems reasonable behavior to me, so I guess we could just remove this
-> whole chunk?  It appears that after a normal bootup the date/time is
-> something valid.
+ .../bindings/iio/adc/rockchip-saradc.txt           |  2 +-
+ drivers/iio/adc/rockchip_saradc.c                  | 62 +++++++++++++++++-----
+ 2 files changed, 50 insertions(+), 14 deletions(-)
 
-hm.  Having an invalid time is perhaps better than having a valid but
-incorrect time.
-
-When one sees one driver doing something differently from the others
-one has to wonder "why" and "which one is better".  If setting a dummy
-time is better then all drivers should do it, and I expect this could
-be done by rtc core at registration time.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+index 5d3ec1d..a9a5fe1 100644
+--- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
+@@ -1,7 +1,7 @@
+ Rockchip Successive Approximation Register (SAR) A/D Converter bindings
+ 
+ Required properties:
+-- compatible: Should be "rockchip,saradc"
++- compatible: Should be "rockchip,saradc" or "rockchip,rk3066-tsadc"
+ - reg: physical base address of the controller and length of memory mapped
+        region.
+ - interrupts: The interrupt number to the cpu. The interrupt specifier format
+diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
+index e074a0b..99200b7 100644
+--- a/drivers/iio/adc/rockchip_saradc.c
++++ b/drivers/iio/adc/rockchip_saradc.c
+@@ -18,13 +18,13 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/clk.h>
+ #include <linux/completion.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/iio/iio.h>
+ 
+ #define SARADC_DATA			0x00
+-#define SARADC_DATA_MASK		0x3ff
+ 
+ #define SARADC_STAS			0x04
+ #define SARADC_STAS_BUSY		BIT(0)
+@@ -38,15 +38,22 @@
+ #define SARADC_DLY_PU_SOC		0x0c
+ #define SARADC_DLY_PU_SOC_MASK		0x3f
+ 
+-#define SARADC_BITS			10
+ #define SARADC_TIMEOUT			msecs_to_jiffies(100)
+ 
++struct rockchip_saradc_data {
++	int				num_bits;
++	const struct iio_chan_spec	*channels;
++	int				num_channels;
++	unsigned long			clk_rate;
++};
++
+ struct rockchip_saradc {
+ 	void __iomem		*regs;
+ 	struct clk		*pclk;
+ 	struct clk		*clk;
+ 	struct completion	completion;
+ 	struct regulator	*vref;
++	const struct rockchip_saradc_data *data;
+ 	u16			last_val;
+ };
+ 
+@@ -90,7 +97,7 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
+ 		}
+ 
+ 		*val = ret / 1000;
+-		*val2 = SARADC_BITS;
++		*val2 = info->data->num_bits;
+ 		return IIO_VAL_FRACTIONAL_LOG2;
+ 	default:
+ 		return -EINVAL;
+@@ -103,7 +110,7 @@ static irqreturn_t rockchip_saradc_isr(int irq, void *dev_id)
+ 
+ 	/* Read value */
+ 	info->last_val = readl_relaxed(info->regs + SARADC_DATA);
+-	info->last_val &= SARADC_DATA_MASK;
++	info->last_val &= GENMASK(info->data->num_bits - 1, 0);
+ 
+ 	/* Clear irq & power down adc */
+ 	writel_relaxed(0, info->regs + SARADC_CTRL);
+@@ -133,12 +140,44 @@ static const struct iio_chan_spec rockchip_saradc_iio_channels[] = {
+ 	ADC_CHANNEL(2, "adc2"),
+ };
+ 
++static const struct rockchip_saradc_data saradc_data = {
++	.num_bits = 10,
++	.channels = rockchip_saradc_iio_channels,
++	.num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels),
++	.clk_rate = 1000000,
++};
++
++static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels[] = {
++	ADC_CHANNEL(0, "adc0"),
++	ADC_CHANNEL(1, "adc1"),
++};
++
++static const struct rockchip_saradc_data rk3066_tsadc_data = {
++	.num_bits = 12,
++	.channels = rockchip_rk3066_tsadc_iio_channels,
++	.num_channels = ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
++	.clk_rate = 50000,
++};
++
++static const struct of_device_id rockchip_saradc_match[] = {
++	{
++		.compatible = "rockchip,saradc",
++		.data = &saradc_data,
++	}, {
++		.compatible = "rockchip,rk3066-tsadc",
++		.data = &rk3066_tsadc_data,
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
++
+ static int rockchip_saradc_probe(struct platform_device *pdev)
+ {
+ 	struct rockchip_saradc *info = NULL;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct iio_dev *indio_dev = NULL;
+ 	struct resource	*mem;
++	const struct of_device_id *match;
+ 	int ret;
+ 	int irq;
+ 
+@@ -152,6 +191,9 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	}
+ 	info = iio_priv(indio_dev);
+ 
++	match = of_match_device(rockchip_saradc_match, &pdev->dev);
++	info->data = match->data;
++
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	info->regs = devm_ioremap_resource(&pdev->dev, mem);
+ 	if (IS_ERR(info->regs))
+@@ -195,7 +237,7 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	 * Use a default of 1MHz for the converter clock.
+ 	 * This may become user-configurable in the future.
+ 	 */
+-	ret = clk_set_rate(info->clk, 1000000);
++	ret = clk_set_rate(info->clk, info->data->clk_rate);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "failed to set adc clk rate, %d\n", ret);
+ 		return ret;
+@@ -227,8 +269,8 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
+ 	indio_dev->info = &rockchip_saradc_iio_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
+-	indio_dev->channels = rockchip_saradc_iio_channels;
+-	indio_dev->num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels);
++	indio_dev->channels = info->data->channels;
++	indio_dev->num_channels = info->data->num_channels;
+ 
+ 	ret = iio_device_register(indio_dev);
+ 	if (ret)
+@@ -296,12 +338,6 @@ static int rockchip_saradc_resume(struct device *dev)
+ static SIMPLE_DEV_PM_OPS(rockchip_saradc_pm_ops,
+ 			 rockchip_saradc_suspend, rockchip_saradc_resume);
+ 
+-static const struct of_device_id rockchip_saradc_match[] = {
+-	{ .compatible = "rockchip,saradc" },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
+-
+ static struct platform_driver rockchip_saradc_driver = {
+ 	.probe		= rockchip_saradc_probe,
+ 	.remove		= rockchip_saradc_remove,
+-- 
+2.0.1
