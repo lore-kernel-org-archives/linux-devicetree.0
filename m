@@ -1,198 +1,100 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2] iio: adc: rockchip_saradc: add support for rk3066-tsadc variant
-Date: Thu, 11 Sep 2014 00:22:35 +0200
-Message-ID: <1629907.fyghANjlk9@diego>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH 0/2] IO voltage domain support for rk3188 and rk3288
+Date: Wed, 10 Sep 2014 16:12:55 -0700
+Message-ID: <7hlhprqdc8.fsf@linaro.org>
+References: <1409254565-10677-1-git-send-email-dianders@chromium.org>
+	<53FF9E93.3040601@ti.com>
+	<CAD=FV=Vcj+tAno92c38Prviyi-v2CmuGSzak1ppETL033KAF4w@mail.gmail.com>
+	<1450179.xJuMFg9Vvn@diego>
+	<CACRpkda-XS0XLSkAZ-16=JvD8FbRJNuN4UVL4dMyV71bfU5T2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda-XS0XLSkAZ-16=JvD8FbRJNuN4UVL4dMyV71bfU5T2A@mail.gmail.com>
+	(Linus Walleij's message of "Thu, 4 Sep 2014 18:51:47 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, Doug Anderson <dianders@chromium.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Addy Ke <addy.ke@rock-chips.com>, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Peter De Schrijver <pdeschrijver@nvidia.com>, Andy Gross <agross@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-k>
 List-Id: devicetree@vger.kernel.org
 
-Older Rockchip SoCs, at least the rk3066, used a slightly modified saradc
-for temperature measurements. This so called tsadc does not contain any
-active parts like temperature interrupts and only supports polling the
-current temperature. The returned voltage can then be converted by a
-suitable thermal driver to and actual temperature and used for thermal
-handling.
+Linus Walleij <linus.walleij@linaro.org> writes:
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
-changes since v1:
-- use GENMASK instead of creating the mask manually
-  as suggested by Hartmut Knaack
+> On Sat, Aug 30, 2014 at 1:27 PM, Heiko St=C3=BCbner <heiko@sntech.de>=
+ wrote:
+>> Am Freitag, 29. August 2014, 21:51:46 schrieb Doug Anderson:
+>>> On Thu, Aug 28, 2014 at 2:26 PM, Santosh Shilimkar
+>>>
+>>> <santosh.shilimkar@ti.com> wrote:
+>>> > On Thursday 28 August 2014 03:36 PM, Doug Anderson wrote:
+>>> >> These two patches add support for automatically configuring the =
+IO
+>>> >> voltage domains on rk3188 and rk3288 SoCs.  The first patch adds=
+ some
+>>> >> new notification types to the regulator code.  It's used by the =
+second
+>>> >> patch which actually implements the IO voltage domain driver.
+>>> >>
+>>> >> These two patches were co-developed by Heiko St=C3=BCbner and Do=
+ug Anderson
+>>> >> (proof of concept patches were written by Heiko).  They were tes=
+ted in
+>>> >> a private branch on an rk3288 board using rk808 instead of mainl=
+ine
+>>> >> since rk808 support isn't finalized in mainline yet.
+>>> >>
+>>> >> (sorry if you got this series twice; my mailer seems unhappy wit=
+h me)
+>>> >>
+>>> >> Heiko St=C3=BCbner (2):
+>>> >>   regulator: core: Add REGULATOR_EVENT_PRE_VOLTAGE_CHANGE (and A=
+BORT)
+>>> >>   soc/rockchip: io-domain: add driver handling io domains
+>>> >
+>>> > Sorry to shot down but your IO domains are nothing but voltage do=
+mains
+>>> > and you should really build something in the drivers/power/*
+>>>
+>>> If everyone agrees that this belongs in drivers/power that's totall=
+y
+>>> OK.  Neither Heiko nor I was confident that it should be in
+>>> drivers/soc.  I had even though that the code wouldn't be totally o=
+ut
+>>> of place in the Rockchip pinctrl driver (adding Linus W since I thi=
+nk
+>>> some SoCs did add code to handle 3.3V vs. 1.8V in pinctrl).
+>>
+>> a bit of context for Linus ...
+>>
+>> This is essentially the continuation of  the thread "io-domain volta=
+ges as
+>> regulators?" from the beginning of august. After more discussions we=
+ found out
+>> that the io voltage selection I asked about is not an independent su=
+pply, but
+>> instead has to reflect the voltage of the real supplying regulator.
+>>
+>> And setting the io-voltage setting to 1.8V while the regulator is su=
+pplying
+>> 3.3V for example may actually damage the chip.
+>>
+>>
+>> So in our current approach here, we added a driver that tracks volta=
+ge changes
+>> of the supplying regulator via a notifier and sets the register bits
+>> accordingly.
+>
+> I feel I'm not smart enough for this. You need the PM people to look
+> at this stuff, like Rafael Wysocki, Kevin Hilman and Ulf Hansson.
 
-I've also opted for simply keeping the indent mismatch in
-struct rockchip_saradc, as I don't think it's worth the churn
-it produces
+I think the best fit for this is along with the Adaptive Voltage Scalin=
+g
+(AVS) stuff we currently have in drivers/power/avs.  It's not exactly
+adaptive in the same sense as the TI/SmartReflex is because there's no
+hardware being configured to dynamically make micro-adjustments to the
+regulators.  But, it is adaptive in the sense that there's SoC-specific
+"stuff" to do right around the same time the voltage is scaled.
 
- .../bindings/iio/adc/rockchip-saradc.txt           |  2 +-
- drivers/iio/adc/rockchip_saradc.c                  | 62 +++++++++++++++++-----
- 2 files changed, 50 insertions(+), 14 deletions(-)
+So I would suggest drivers/power/avs.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-index 5d3ec1d..a9a5fe1 100644
---- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-@@ -1,7 +1,7 @@
- Rockchip Successive Approximation Register (SAR) A/D Converter bindings
- 
- Required properties:
--- compatible: Should be "rockchip,saradc"
-+- compatible: Should be "rockchip,saradc" or "rockchip,rk3066-tsadc"
- - reg: physical base address of the controller and length of memory mapped
-        region.
- - interrupts: The interrupt number to the cpu. The interrupt specifier format
-diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-index e074a0b..99200b7 100644
---- a/drivers/iio/adc/rockchip_saradc.c
-+++ b/drivers/iio/adc/rockchip_saradc.c
-@@ -18,13 +18,13 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/regulator/consumer.h>
- #include <linux/iio/iio.h>
- 
- #define SARADC_DATA			0x00
--#define SARADC_DATA_MASK		0x3ff
- 
- #define SARADC_STAS			0x04
- #define SARADC_STAS_BUSY		BIT(0)
-@@ -38,15 +38,22 @@
- #define SARADC_DLY_PU_SOC		0x0c
- #define SARADC_DLY_PU_SOC_MASK		0x3f
- 
--#define SARADC_BITS			10
- #define SARADC_TIMEOUT			msecs_to_jiffies(100)
- 
-+struct rockchip_saradc_data {
-+	int				num_bits;
-+	const struct iio_chan_spec	*channels;
-+	int				num_channels;
-+	unsigned long			clk_rate;
-+};
-+
- struct rockchip_saradc {
- 	void __iomem		*regs;
- 	struct clk		*pclk;
- 	struct clk		*clk;
- 	struct completion	completion;
- 	struct regulator	*vref;
-+	const struct rockchip_saradc_data *data;
- 	u16			last_val;
- };
- 
-@@ -90,7 +97,7 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
- 		}
- 
- 		*val = ret / 1000;
--		*val2 = SARADC_BITS;
-+		*val2 = info->data->num_bits;
- 		return IIO_VAL_FRACTIONAL_LOG2;
- 	default:
- 		return -EINVAL;
-@@ -103,7 +110,7 @@ static irqreturn_t rockchip_saradc_isr(int irq, void *dev_id)
- 
- 	/* Read value */
- 	info->last_val = readl_relaxed(info->regs + SARADC_DATA);
--	info->last_val &= SARADC_DATA_MASK;
-+	info->last_val &= GENMASK(info->data->num_bits - 1, 0);
- 
- 	/* Clear irq & power down adc */
- 	writel_relaxed(0, info->regs + SARADC_CTRL);
-@@ -133,12 +140,44 @@ static const struct iio_chan_spec rockchip_saradc_iio_channels[] = {
- 	ADC_CHANNEL(2, "adc2"),
- };
- 
-+static const struct rockchip_saradc_data saradc_data = {
-+	.num_bits = 10,
-+	.channels = rockchip_saradc_iio_channels,
-+	.num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels),
-+	.clk_rate = 1000000,
-+};
-+
-+static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels[] = {
-+	ADC_CHANNEL(0, "adc0"),
-+	ADC_CHANNEL(1, "adc1"),
-+};
-+
-+static const struct rockchip_saradc_data rk3066_tsadc_data = {
-+	.num_bits = 12,
-+	.channels = rockchip_rk3066_tsadc_iio_channels,
-+	.num_channels = ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
-+	.clk_rate = 50000,
-+};
-+
-+static const struct of_device_id rockchip_saradc_match[] = {
-+	{
-+		.compatible = "rockchip,saradc",
-+		.data = &saradc_data,
-+	}, {
-+		.compatible = "rockchip,rk3066-tsadc",
-+		.data = &rk3066_tsadc_data,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
-+
- static int rockchip_saradc_probe(struct platform_device *pdev)
- {
- 	struct rockchip_saradc *info = NULL;
- 	struct device_node *np = pdev->dev.of_node;
- 	struct iio_dev *indio_dev = NULL;
- 	struct resource	*mem;
-+	const struct of_device_id *match;
- 	int ret;
- 	int irq;
- 
-@@ -152,6 +191,9 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	}
- 	info = iio_priv(indio_dev);
- 
-+	match = of_match_device(rockchip_saradc_match, &pdev->dev);
-+	info->data = match->data;
-+
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	info->regs = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(info->regs))
-@@ -195,7 +237,7 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	 * Use a default of 1MHz for the converter clock.
- 	 * This may become user-configurable in the future.
- 	 */
--	ret = clk_set_rate(info->clk, 1000000);
-+	ret = clk_set_rate(info->clk, info->data->clk_rate);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to set adc clk rate, %d\n", ret);
- 		return ret;
-@@ -227,8 +269,8 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	indio_dev->info = &rockchip_saradc_iio_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
--	indio_dev->channels = rockchip_saradc_iio_channels;
--	indio_dev->num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels);
-+	indio_dev->channels = info->data->channels;
-+	indio_dev->num_channels = info->data->num_channels;
- 
- 	ret = iio_device_register(indio_dev);
- 	if (ret)
-@@ -296,12 +338,6 @@ static int rockchip_saradc_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(rockchip_saradc_pm_ops,
- 			 rockchip_saradc_suspend, rockchip_saradc_resume);
- 
--static const struct of_device_id rockchip_saradc_match[] = {
--	{ .compatible = "rockchip,saradc" },
--	{},
--};
--MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
--
- static struct platform_driver rockchip_saradc_driver = {
- 	.probe		= rockchip_saradc_probe,
- 	.remove		= rockchip_saradc_remove,
--- 
-2.0.1
+Kevin
