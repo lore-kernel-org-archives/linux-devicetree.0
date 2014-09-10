@@ -1,22 +1,53 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/3] ARM: tegra: apalis/colibri t30: integrate audio support
-Date: Wed, 10 Sep 2014 11:07:58 -0600
-Message-ID: <5410856E.7010207@wwwdotorg.org>
-References: <cover.1410276224.git.marcel@ziswiler.com> <6194523f927bd7b4b50e1b4a8f3a2d0282cea502.1410276224.git.marcel@ziswiler.com>
+From: Stefan Wahren <info@lategoodbye.de>
+Subject: Re: [PATCH RFC 2/3] ARM: regulator: add Freescale MXS regulator driver
+Date: Wed, 10 Sep 2014 19:32:36 +0200
+Message-ID: <54108B34.6010701@lategoodbye.de>
+References: <1410089869-6611-1-git-send-email-info@lategoodbye.de> <1410089869-6611-3-git-send-email-info@lategoodbye.de> <20140909182211.GG3896@leverpostej> <540F523D.4010904@lategoodbye.de> <20140910141853.GA4994@leverpostej> <20140910151316.GG7960@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6194523f927bd7b4b50e1b4a8f3a2d0282cea502.1410276224.git.marcel@ziswiler.com>
+In-Reply-To: <20140910151316.GG7960@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: alsa-devel@alsa-project.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, stefan@agner.ch
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/09/2014 09:28 AM, Marcel Ziswiler wrote:
-> Integrate Freescale SGTL5000 analogue audio codec support.
+Hi Mark,
 
-Patches 2 and 3 look OK. I'll hold off applying them until patch 1 is 
-applied, just to make sure that the new DT binding there is accepted 
-before I apply patches using it. If you could ping me when the patch is 
-applied, that'd be very useful. Thanks.
+Am 10.09.2014 17:13, schrieb Mark Brown:
+> On Wed, Sep 10, 2014 at 03:18:53PM +0100, Mark Rutland wrote:
+>> On Tue, Sep 09, 2014 at 08:17:17PM +0100, Stefan Wahren wrote:
+>
+> Ugh, this looks like it might be a regulator driver but since the
+> subject line was "ARM: " I deleted it unread - if your changelog looks
+> different to all the other changelogs in the subsystem it probably needs
+> changing.
+
+sorry about the confusion, i will remove ARM in the next version.
+
+Changelog? I didn't send a changelog because it was my first version.
+
+Should i resend this version only to you?
+
+>
+>>>>> +       sreg = devm_kzalloc(dev, sizeof(*sreg), GFP_KERNEL);
+>>>>> +       if (!sreg)
+>>>>> +               return -ENOMEM;
+>>>>> +       sreg->initdata = initdata;
+>>>>> +       sreg->name = of_get_property(np, "regulator-name", NULL);
+>
+>>>> I'm not keen on using of_get_property here. We have no idea if
+>>>> regulator-name is even a string (it should be, but we have no
+>>>> guarantee).
+>
+>>> Better using of_property_read_string?
+>
+>> Yes. That will check the value is NUL-terminated, at least.
+>
+> Or just remove the property entirely...  without having seen the
+> bindings if we're specifying the name of the device via the device tree
+> something seems wrong.
+>
+
+BR Stefan
