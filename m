@@ -1,69 +1,45 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH RFC 2/3] ARM: regulator: add Freescale MXS regulator
- driver
-Date: Wed, 10 Sep 2014 16:13:16 +0100
-Message-ID: <20140910151316.GG7960@sirena.org.uk>
-References: <1410089869-6611-1-git-send-email-info@lategoodbye.de>
- <1410089869-6611-3-git-send-email-info@lategoodbye.de>
- <20140909182211.GG3896@leverpostej>
- <540F523D.4010904@lategoodbye.de>
- <20140910141853.GA4994@leverpostej>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: make of_device_ids const
+Date: Wed, 10 Sep 2014 11:17:43 -0400
+Message-ID: <20140910151743.GW30828@titan.lakedaemon.net>
+References: <1410337579-23466-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1410337579-23466-3-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="w2JjAQZceEVGylhD"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140910141853.GA4994@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Stefan Wahren <info@lategoodbye.de>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1410337579-23466-3-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Uwe,
 
---w2JjAQZceEVGylhD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Sep 10, 2014 at 10:26:18AM +0200, Uwe Kleine-K=F6nig wrote:
+> of_device_ids (i.e. compatible strings and the respective data) are n=
+ot
+> supposed to change at runtime. All functions working with of_device_i=
+ds
+> provided by <linux/of.h> work with const of_device_ids. So mark the
+> non-const structs in arch/arm as const, too.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+=2E..
+>  arch/arm/mach-mvebu/coherency.c          | 2 +-
+>  arch/arm/mach-mvebu/pmsu.c               | 2 +-
 
-On Wed, Sep 10, 2014 at 03:18:53PM +0100, Mark Rutland wrote:
-> On Tue, Sep 09, 2014 at 08:17:17PM +0100, Stefan Wahren wrote:
+=46or the mvebu stuff,
 
-Ugh, this looks like it might be a regulator driver but since the
-subject line was "ARM: " I deleted it unread - if your changelog looks
-different to all the other changelogs in the subsystem it probably needs
-changing.
+Acked-by: Jason Cooper <jason-E2nrXYax+wsBe96aLqz0jA@public.gmane.org>
 
-> > >> +       sreg = devm_kzalloc(dev, sizeof(*sreg), GFP_KERNEL);
-> > >> +       if (!sreg)
-> > >> +               return -ENOMEM;
-> > >> +       sreg->initdata = initdata;
-> > >> +       sreg->name = of_get_property(np, "regulator-name", NULL);
+thx,
 
-> > > I'm not keen on using of_get_property here. We have no idea if
-> > > regulator-name is even a string (it should be, but we have no
-> > > guarantee).
-
-> > Better using of_property_read_string?
-
-> Yes. That will check the value is NUL-terminated, at least.
-
-Or just remove the property entirely...  without having seen the
-bindings if we're specifying the name of the device via the device tree
-something seems wrong.
-
---w2JjAQZceEVGylhD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUEGqLAAoJECTWi3JdVIfQYhMH/3Irx/4TIbl+1jnoUIF0bmc/
-0MzRdjsd1D8cTFaJsY4euQSaZYi5mXZcA0stJO0GZSinjy5kJfBPJ9vGaccXcYyD
-x0pc2Os91wiMIFK7ZmO4AfBR2bF1ZVKwsoPv++bbFgA2ts4UBDbDn60g9Deboris
-Xi/ACOtru1pMj6vHv+BGt+jxKR2Th36/zeCjewJuDb8YM6tL5XOyiHYotRGk+MLd
-M4kLH1VkYtSEJEnO/FIWEiWXOAHbL1HniYOxe3SFq8dd+dpiyi6FRZ7bHBoA5kZS
-qU+YAMxZHawTFZvNbiGh6v5LbIJ8k7n4CJIi6EOi2/y36K8voRcldj9HZoKJH4o=
-=rbLU
------END PGP SIGNATURE-----
-
---w2JjAQZceEVGylhD--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
