@@ -1,123 +1,118 @@
-From: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
-Subject: [PATCH 1/5] ARM: dts: pbab01: move i2c pins and frequency
- configuration into pfla02
-Date: Wed, 10 Sep 2014 16:46:45 +0300
-Message-ID: <1410356809-26179-2-git-send-email-d.lavnikevich@sam-solutions.com>
-References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
+ for dra7
+Date: Wed, 10 Sep 2014 08:50:51 -0500
+Message-ID: <5410573B.5010907@ti.com>
+References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com> <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@freescale.com, kernel@pengutronix.de, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de, timur@tabi.org, nicoleotsuka@gmail.com, Li.Xiubo@freescale.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>, bcousson@baylibre.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since pins and frequency are specific to module (pfla02), not base board
-(pbab02), it is better to be initialized in corresponding dts file.
+On 09/10/2014 08:37 AM, Mugunthan V N wrote:
+> Add CPSW and MDIO related device tree data for DRA7XX and made as status
+> disabled. Phy-id, pinmux for active and sleep state needs to be added in
+> board dts files and enable the CPSW device.
+> 
+> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> ---
+>  arch/arm/boot/dts/dra7.dtsi | 59 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index d678152..8d79321 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -34,6 +34,8 @@
+>  		serial3 = &uart4;
+>  		serial4 = &uart5;
+>  		serial5 = &uart6;
+> +		ethernet0 = &cpsw_emac0;
+> +		ethernet1 = &cpsw_emac1;
 
-Signed-off-by: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
----
- arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi | 22 ----------------------
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 26 ++++++++++++++++++++++++++
- 2 files changed, 26 insertions(+), 22 deletions(-)
+should this rather be in board dts?
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-index 584721264121..f1bdcae5b97d 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-@@ -28,9 +28,6 @@
- };
- 
- &i2c2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_i2c2>;
--	clock-frequency = <100000>;
- 	status = "okay";
- 
- 	tlv320@18 {
-@@ -55,9 +52,6 @@
- };
- 
- &i2c3 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_i2c3>;
--	clock-frequency = <100000>;
- 	status = "okay";
- };
- 
-@@ -84,19 +78,3 @@
- &usdhc3 {
- 	status = "okay";
- };
--
--&iomuxc {
--	pinctrl_i2c2: i2c2grp {
--		fsl,pins = <
--			MX6QDL_PAD_EIM_EB2__I2C2_SCL		0x4001b8b1
--			MX6QDL_PAD_EIM_D16__I2C2_SDA		0x4001b8b1
--		>;
--	};
--
--	pinctrl_i2c3: i2c3grp {
--		fsl,pins = <
--			MX6QDL_PAD_EIM_D17__I2C3_SCL		0x4001b8b1
--			MX6QDL_PAD_EIM_D18__I2C3_SDA		0x4001b8b1
--		>;
--	};
--};
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index 2694aa84e187..a927e88ccc98 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -162,6 +162,18 @@
- 	};
- };
- 
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	clock-frequency = <100000>;
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	clock-frequency = <100000>;
-+};
-+
- &iomuxc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_hog>;
-@@ -235,6 +247,20 @@
- 			>;
- 		};
- 
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_EB2__I2C2_SCL		0x4001b8b1
-+				MX6QDL_PAD_EIM_D16__I2C2_SDA		0x4001b8b1
-+			>;
-+		};
-+
-+		pinctrl_i2c3: i2c3grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D17__I2C3_SCL		0x4001b8b1
-+				MX6QDL_PAD_EIM_D18__I2C3_SDA		0x4001b8b1
-+			>;
-+		};
-+
- 		pinctrl_uart3: uart3grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_EIM_D24__UART3_TX_DATA	0x1b0b1
+>  	};
+>  
+>  	timer {
+> @@ -1262,6 +1264,63 @@
+>  			ti,irqs-skip = <10 133 139 140>;
+>  			ti,irqs-safe-map = <0>;
+>  		};
+> +
+> +		mac: ethernet@4a100000 {
+> +			compatible = "ti,cpsw";
+> +			ti,hwmods = "gmac";
+> +			cpdma_channels = <8>;
+> +			ale_entries = <1024>;
+> +			bd_ram_size = <0x2000>;
+> +			no_bd_ram = <0>;
+> +			rx_descs = <64>;
+> +			mac_control = <0x20>;
+> +			slaves = <2>;
+> +			active_slave = <0>;
+> +			cpts_clock_mult = <0x80000000>;
+> +			cpts_clock_shift = <29>;
+> +			reg = <0x48484000 0x1000
+> +			       0x48485200 0x2E00>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			/*
+> +			 * rx_thresh_pend
+> +			 * rx_pend
+> +			 * tx_pend
+> +			 * misc_pend
+> +			 */
+> +			interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
+> +			ranges;
+> +			status = "disabled";
+> +
+> +			davinci_mdio: mdio@48485000 {
+> +				compatible = "ti,davinci_mdio";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				ti,hwmods = "davinci_mdio";
+> +				bus_freq = <1000000>;
+> +				reg = <0x48485000 0x100>;
+> +			};
+> +
+> +			cpsw_emac0: slave@48480200 {
+> +				/* Filled in by U-Boot */
+> +				mac-address = [ 00 00 00 00 00 00 ];
+
+should be disabled? what about platforms that do not have both emac ports?
+
+> +			};
+> +
+> +			cpsw_emac1: slave@48480300 {
+> +				/* Filled in by U-Boot */
+> +				mac-address = [ 00 00 00 00 00 00 ];
+
+should be disabled? what about platforms that do not have both emac ports?
+
+> +			};
+> +
+> +			phy_sel: cpsw-phy-sel@4a002554 {
+> +				compatible = "ti,dra7xx-cpsw-phy-sel";
+> +				reg= <0x4a002554 0x4>;
+> +				reg-names = "gmii-sel";
+> +			};
+> +		};
+> +
+>  	};
+>  };
+>  
+> 
+
+
 -- 
-2.1.0
+Regards,
+Nishanth Menon
