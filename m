@@ -1,50 +1,55 @@
-From: Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Tue, 9 Sep 2014 20:26:46 -0700
-Message-ID: <20140910032646.GA39541@vmdeb7>
-References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
- <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
- <D034802C.A7BEE%dvhart@linux.intel.com>
- <4656BEB6164FC34F8171C6538F1A595B2E98854F@SHSMSX101.ccr.corp.intel.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3 5/6] ARM: imx: Add initial support for Freescale LS1021A
+Date: Wed, 10 Sep 2014 03:31:19 +0000
+Message-ID: <daf5ec5b70164b3e9a810def41909c48@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
+ <1410253952-15631-6-git-send-email-jingchang.lu@freescale.com>
+ <3532608.xLS91GQkq4@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E98854F@SHSMSX101.ccr.corp.intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: "Chen, Alvin" <alvin.chen@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3532608.xLS91GQkq4@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 12:34:50AM +0000, Chen, Alvin wrote:
-> > >@@ -136,7 +136,6 @@ config GPIO_DWAPB
-> > > 	tristate "Synopsys DesignWare APB GPIO driver"
-> > > 	select GPIO_GENERIC
-> > > 	select GENERIC_IRQ_CHIP
-> > >-	depends on OF_GPIO
-> > 
-> > You cover this specific dependencies with inline ifdefs, but you lose the
-> > CONFIG_OF depends by dropping it, and there are no such checks in the probe
-> > routine. Assumptions of OF are not limited to probe in this driver.
-> > 
-> > While I would like to see this assumption properly abstracted, the most
-> > expedient/immediate fix is probably to add a depends on OF above.
-> 
-> Andriy, how do you think? 
-> 
-> How about 
-> depends on OF_GPIO || MFD_GPIO_DWAPB, or
-> depends on OF_GPIO || MFD_INTEL_QUARK_I2C_GPIO?
-> 
-
-Upon closer inspection, I think my concern is invalid. the OF header already
-tests for CONFIG_OF and provides no-op / -ENOSYS (tsk tsk) alternatives. So long
-as you can compile with "#CONFIG_OF is not set" as it is, then I withdraw my
-comment.
-
-Sorry for the noise.
-
--- 
-Darren Hart
-Intel Open Source Technology Center
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQXJuZCBCZXJnbWFubiBbbWFpbHRv
+OmFybmRAYXJuZGIuZGVdDQo+U2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDA5LCAyMDE0IDc6NDEg
+UE0NCj5UbzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+Q2M6IEx1IEpp
+bmdjaGFuZy1CMzUwODM7IEd1byBTaGF3bi1SNjUwNzM7IEx1IEppbmdjaGFuZy1CMzUwODM7DQo+
+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIdjMgNS82XSBB
+Uk06IGlteDogQWRkIGluaXRpYWwgc3VwcG9ydCBmb3IgRnJlZXNjYWxlDQo+TFMxMDIxQQ0KPg0K
+Pk9uIFR1ZXNkYXkgMDkgU2VwdGVtYmVyIDIwMTQgMTc6MTI6MzEgSmluZ2NoYW5nIEx1IHdyb3Rl
+Og0KPj4gKyNpbmNsdWRlICJjb21tb24uaCINCj4+ICsNCj4+ICtzdGF0aWMgdm9pZCBfX2luaXQg
+bHMxMDIxYV9pbml0X21hY2hpbmUodm9pZCkgew0KPj4gKyAgICAgICBteGNfYXJjaF9yZXNldF9p
+bml0X2R0KCk7DQo+PiArICAgICAgIG9mX3BsYXRmb3JtX3BvcHVsYXRlKE5VTEwsIG9mX2RlZmF1
+bHRfYnVzX21hdGNoX3RhYmxlLCBOVUxMLA0KPj4gK05VTEwpOyB9DQo+PiArDQo+PiArc3RhdGlj
+IGNvbnN0IGNoYXIgKmxzMTAyMWFfZHRfY29tcGF0W10gX19pbml0ZGF0YSA9IHsNCj4+ICsgICAg
+ICAgImZzbCxsczEwMjFhIiwNCj4+ICsgICAgICAgTlVMTCwNCj4+ICt9Ow0KPg0KPlBsZWFzZSBk
+b24ndCBhZGQgYW55IG5ldyB1c2VycyBvZiBteGNfYXJjaF9yZXNldF9pbml0X2R0KCkuIFdlIG5v
+dyBoYXZlDQo+aW5mcmFzdHJ1Y3R1cmUgdG8gcmVnaXN0ZXIgYSBzeXN0ZW0tcmVzZXQgaGFuZGxl
+ciBmcm9tIHRoZSB3YXRjaGRvZyBkcml2ZXIsDQo+c28gcGxlYXNlIGRvIHRoYXQgaW5zdGVhZCwg
+YW5kIGNsZWFuIHVwIHRoZSBleGlzdGluZyB1c2VycyBhcyB3ZWxsLg0KSSBqdXN0IG5vdGljZSB0
+aGUgcmVzdGFydF9oYW5kbGVyIHN1cHBvcnQsIEkgd2lsbCB1c2UgdGhhdCBpbnN0ZWFkLCB0aGFu
+a3MuDQoNCj4NCj4+ICtEVF9NQUNISU5FX1NUQVJUKExTMTAyMUEsICJGcmVlc2NhbGUgTFMxMDIx
+QSIpICNpZmRlZiBDT05GSUdfWk9ORV9ETUENCj4+ICsgICAgICAgLmRtYV96b25lX3NpemUgID0g
+U1pfMTI4TSwNCj4+ICsjZW5kaWYNCj4+ICsgICAgICAgLmluaXRfbWFjaGluZSAgID0gbHMxMDIx
+YV9pbml0X21hY2hpbmUsDQo+PiArICAgICAgIC5kdF9jb21wYXQgICAgICA9IGxzMTAyMWFfZHRf
+Y29tcGF0LA0KPj4gKyAgICAgICAucmVzdGFydCAgICAgICAgPSBteGNfcmVzdGFydCwNCj4+ICtN
+QUNISU5FX0VORA0KPg0KPkkgYmVsaWV2ZSBzb21lb25lIHJlY2VudGx5IHBvc3RlZCBhIHBhdGNo
+IHRvIGRlcml2ZSB0aGUgZG1hX3pvbmVfc2l6ZSBmcm9tDQo+ZGV2aWNlIHRyZWUuIENhbiB5byB0
+cnkgdG8gZmluZCB0aGF0IGFuZCBzZWUgaWYgdGhhdCB3aWxsIHdvcmsgZm9yIHlvdT8NCj4NCj5D
+YW4geW91IGV4cGxhaW4gd2hhdCB0aGUgcmVhc29uIGlzIGZvciBuZWVkaW5nIGEgRE1BIHpvbmU/
+DQo+DQo+CUFybmQNCldpdGggTFBBRSBlbmFibGVkIG9uIG91ciBTb0MsIHdlIG1lZXQgdGhlIHN5
+c3RlbSBjb21wbGFpbnQgb2YNCiJjb2hlcmVudCBETUEgbWFzayAweGZmZmZmZmZmIGlzIHNtYWxs
+ZXIgdGhhbiBzeXN0ZW0gR0ZQX0RNQSBtYXNrIDB4ZmZmZmZmZmZmZmZmZmZmZiIsDQphbmQgSSBu
+b3RpY2UgdGhhdCBDT05GSUdfWk9ORV9ETUEgYW5kIGRtYV96b25lX3NpemUgaXMgYSBjb21tb24g
+cmVzb2x2ZSBmb3IgdGhpcy4NClRoYW5rcy4NCg0KDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFu
+Zw0KDQoNCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
