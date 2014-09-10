@@ -1,64 +1,35 @@
-From: "nikhil.badola@freescale.com" <nikhil.badola@freescale.com>
-Subject: RE: [PATCH] powerpc: dts: t208x: Change T208x USB controller version
-Date: Wed, 10 Sep 2014 04:45:01 +0000
-Message-ID: <5b5401b39f83458bb5ada39d13abee29@BN1PR0301MB0593.namprd03.prod.outlook.com>
-References: <1408617090-29692-1-git-send-email-nikhil.badola@freescale.com>
- <1408660593.6510.0.camel@snotra.buserror.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: dts: imx: ventana: dt cleanups
+Date: Wed, 10 Sep 2014 14:26:04 +0800
+Message-ID: <20140910062602.GB22579@dragon>
+References: <1410242851-30765-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1408660593.6510.0.camel@snotra.buserror.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410242851-30765-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogV29vZCBTY290dC1CMDc0MjENCj5T
-ZW50OiBGcmlkYXksIEF1Z3VzdCAyMiwgMjAxNCA0OjA3IEFNDQo+VG86IEJhZG9sYSBOaWtoaWwt
-QjQ2MTcyDQo+Q2M6IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZw0KPlN1YmplY3Q6IFJlOiBbUEFUQ0hdIHBvd2VycGM6IGR0czogdDIwOHg6
-IENoYW5nZSBUMjA4eCBVU0IgY29udHJvbGxlciB2ZXJzaW9uDQo+DQo+T24gVGh1LCAyMDE0LTA4
-LTIxIGF0IDE2OjAxICswNTMwLCBOaWtoaWwgQmFkb2xhIHdyb3RlOg0KPj4gQ2hhbmdlIFVTQiBj
-b250cm9sbGVyIHZlcnNpb24gdG8gMi41IGluIGNvbXBhdGlibGUgc3RyaW5nIGZvcg0KPj4gVDIw
-ODAvVDIwODENCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBOaWtoaWwgQmFkb2xhIDxuaWtoaWwuYmFk
-b2xhQGZyZWVzY2FsZS5jb20+DQo+PiAtLS0NCj4+IAlDaGVja3BhdGNoIHdhcm5pbmdzIGhhbmRs
-ZWQgYnkgY29tbWl0DQo+PiA2MWE4YzJjNmZlNzEwODJkZTNlYTg2Mjk1ODlkY2RkMGNjNWMzZjAy
-DQo+DQo+VGhhdCBjaGVja3BhdGNoIHdhcm5pbmcgaXMga25vd24gdG8gaGF2ZSBmYWxzZSBwb3Np
-dGl2ZXMgaW4gY2FzZXMgd2hlcmUgdGhlDQo+YmluZGluZyBzYXlzICI8Q0hJUE5BTUU+LWRldmlj
-ZSIgb3IgImRldmljZS08VkVSU0lPTj4iLiAgSWYgeW91IHdhbnQgdG8NCj51cGRhdGUgdGhlIGJp
-bmRpbmcgdG8gZ2l2ZSBhbiBleGFtcGxlIHdpdGggYSB2ZXJzaW9uLCB0aGF0J3MgZmluZSwgYnV0
-DQo+Y2hlY2twYXRjaCBzaG91bGRuJ3QgYmUgd2h5LiAgV2UncmUgbm90IGdvaW5nIHRvIHVwZGF0
-ZSB0aGUgYmluZGluZyBleGFtcGxlDQo+YWdhaW4gdG8gbWF0Y2ggYSBkaWZmZXJlbnQgdmVyc2lv
-biB0aGUgbmV4dCB0aW1lIG9uZSBpcyBhZGRlZCB0byBhIGRldmljZSB0cmVlLi4uDQo+DQo+PiAJ
-RG9jdW1lbnRhdGlvbjogZHRzOiBmc2wtdXNiOiBEb2N1bWVudCBVU0Igbm9kZSBjb21wYXRpYmxl
-IHN0cmluZyBmb3INCj5JUCB2ZXJzaW9uDQo+Pg0KPj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9m
-c2wvdDIwODFzaS1wb3N0LmR0c2kgfCA0ICsrLS0NCj4+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNl
-cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2Vy
-cGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpDQo+PiBiL2FyY2gvcG93ZXJwYy9ib290
-L2R0cy9mc2wvdDIwODFzaS1wb3N0LmR0c2kNCj4+IGluZGV4IDk3NDc5ZjAuLmFlY2VlOTYgMTAw
-NjQ0DQo+PiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNp
-DQo+PiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDgxc2ktcG9zdC5kdHNpDQo+
-PiBAQCAtNDEwLDcgKzQxMCw3IEBADQo+PiAgL2luY2x1ZGUvICJxb3JpcS1ncGlvLTMuZHRzaSIN
-Cj4+ICAvaW5jbHVkZS8gInFvcmlxLXVzYjItbXBoLTAuZHRzaSINCj4+ICAJdXNiMDogdXNiQDIx
-MDAwMCB7DQo+PiAtCQljb21wYXRpYmxlID0gImZzbC11c2IyLW1waC12Mi40IiwgImZzbC11c2Iy
-LW1waCI7DQo+PiArCQljb21wYXRpYmxlID0gImZzbC11c2IyLW1waC12Mi41IiwgImZzbC11c2Iy
-LW1waCI7DQo+DQo+VGhpcyBpcyBhbiBleGFtcGxlIG9mIHdoeSBpdCdzIGJldHRlciB0byByZWx5
-IG9uIHZlcnNpb24gcmVnaXN0ZXJzIHdoZW4gcHJlc2VudC4NCj4NCj4tU2NvdHQNCj4NCkhpIHNj
-b3R0LA0KDQpJIGNhbiBzZWUgdGhpcyBwYXRjaCBpbiAic3VwZXJzZWRlZCIgc3RhdGUgaW4gcGF0
-Y2h3b3JrLiBBcyBwZXIgb3VyIGRpc2N1c3Npb24gdGhlIElQIHZlcnNpb24gY2hlY2tpbmcgaXMg
-dG8gYmUgZG9uZSBieSBjb21wYXRpYmxlIHN0cmluZyBvbmx5LCBzbyBjYW4gSSBwcm9jZWVkIHRv
-IHNlbmQgdGhpcyBwYXRjaCBhZ2Fpbj8NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxp
-c3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBj
-LWRldg==
+On Mon, Sep 08, 2014 at 11:07:25PM -0700, Tim Harvey wrote:
+> This series contains several clean-ups for the Gateworks Ventana boards
+> already in mainline largely based on conventions that have become standard
+> since the patches were originally committed. The final patch also adds
+> additional support for GW52xx CANbus that was not there previously but
+> depends on the prior patches.
+> 
+> Tim Harvey (6):
+>   ARM: dts: imx: ventana: remove unsupported dt nodes
+>   ARM: dts: imx: ventana: remove unused aliases
+>   ARM: dts: imx: ventana: use gpio constants
+>   ARM: dts: imx: ventana: configure padconf for all pins
+>   ARM: dts: imx: ventana: cleanup pinctrl groups
+>   ARM: dts: imx: ventana: add canbus support for GW52xx
+
+Applied all, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
