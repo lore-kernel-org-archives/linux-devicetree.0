@@ -1,76 +1,51 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Wed, 10 Sep 2014 12:49:55 +0300
-Message-ID: <1410342595.2359.14.camel@iivanov-dev>
-References: <1409919274-13419-1-git-send-email-svarbanov@mm-sol.com>
-	 <3899885.YaIxR1zelv@wuerfel> <540DCB78.8060206@mm-sol.com>
-	 <7045486.CbS74HiY8I@wuerfel> <540EF769.9080002@mm-sol.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/7] mfd: Add support for DA9150 combined charger &
+ fuel-gauge device
+Date: Wed, 10 Sep 2014 10:51:19 +0100
+Message-ID: <20140910095119.GO30307@lee--X1>
+References: <cover.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
+ <d6c7de200c9447dbafa74ee76739da943a0b73b2.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
+ <53FF16BC.9050701@gmail.com>
+ <2E89032DDAA8B9408CB92943514A0337AB5144B5@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <540EF769.9080002@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeauro>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB5144B5@SW-EX-MBX01.diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
+Cc: Varka Bhadram <varkabhadram@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 09 Sep 2014, Opensource [Adam Thomson] wrote:
+> On August 28, 2014 12:47, Varka Bhadram wrote:
+>=20
+> > On 08/28/2014 04:18 PM, Adam Thomson wrote:
+> >=20
+> > (...)
+> >=20
+> > > +static int da9150_probe(struct i2c_client *client,
+> > > +			const struct i2c_device_id *id)
+> > > +{
+> > > +	struct da9150 *da9150;
+> > > +	int ret;
+> > > +
+> > > +	da9150 =3D devm_kzalloc(&client->dev, sizeof(struct da9150), GF=
+P_KERNEL);
+> > > +	if (da9150 =3D=3D NULL)
+> > > +		return -ENOMEM;
+> >=20
+> > da9150 =3D devm_kzalloc(&client->dev, sizeof(*da9150), GFP_KERNEL);
+> > if (!da9150)
+> > 	return -ENOMEM;
+>=20
+> Ok, no real difference, but can change it.
 
-On Tue, 2014-09-09 at 15:49 +0300, Stanimir Varbanov wrote:
-> On 09/09/2014 01:32 PM, Arnd Bergmann wrote:
-> > On Monday 08 September 2014 18:30:00 Stanimir Varbanov wrote:
-> >>>>> These numbers all look hardware specific, so why put macros into the
-> >>>>> device tree rather than using them directly?
-> >>>>
-> >>>> The idea was to use #defines in DT nodes when we need to overwrite the
-> >>>> adc channel parameters, see example in 2/2 how it will be used.
-> >>>
-> >>> I don't understand. The node in the example has
-> >>>
-> >>> +               /* Channel node */
-> >>> +               usb_id_nopull@39 {
-> >>> +                       qcom,channel = <VADC_LR_MUX10_USB_ID>;
-> >>> ...
-> >>> +               };
-> >>>
-> >>>
-> >>> And VADC_LR_MUX10_USB_ID is defined to 0x39.  How is this helping anything?
-> >>> You just introduce an artificial dependency on the header file, which makes
-> >>> it a mess to merge the patches or do updates, and anybody who needs to
-> >>> make updates to this now has to go through the same pain, to update the
-> >>> dts files, the driver and the binding document in lockstep.
-> >>>
-> >>> Why not remove the qcom,channel property completely and use a 'reg'
-> >>> property with #address-cells=<1>, #size-cells=<0> and put the number
-> >>> directly in there, with no need for obfuscation macros?
-> >>
-> >> OK thanks for the remarks. I will fix this mess.
-> >>
-> >> I hope you are expecting to see this:
-> >>
-> >> pmic_vadc: vadc@3100 {
-> >>         #address-cells = <1>;
-> >>         #size-cells = <0>;
-> >>         #io-channel-cells = <1>;
-> >>         io-channel-ranges;
-> >>
-> >>         usb_id_nopull@39 {
-> >>                 reg = <0x39>;
-> >>         };
-> >> };
-> >>
-> >> and use the vadc channel from usb device node
-> >>
-> >> usb {
-> >>         ...
-> >>         io-channels = <&pmic_vadc 0x39>;
+Not functionally, but we like to do things as succinctly as possible.
 
-I believe this will be more readable and clear.
-
-	     io-channels = <&pmic_vadc VADC_LR_MUX10_USB_ID>;
-
-I would like to keep channels definitions macros in DT header.
-
-Regards,
-Ivan
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
