@@ -1,114 +1,101 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: Autoloading of SPI/nor driver on kirkwood (qnap devices)
-Date: Wed, 10 Sep 2014 09:59:49 +0200
-Message-ID: <CAMuHMdXO8+9UWgYTv-fcostAipoqjZ=wQe56L4L-SR09L33Ydw@mail.gmail.com>
-References: <1409673299.14324.43.camel@dagon.hellion.org.uk>
-	<1409796689.27524.34.camel@decadent.org.uk>
-	<CAMuHMdWBr=B0_Xivti9K5ReryHHEunQj2P26FjhmzhO-L9t+9g@mail.gmail.com>
-	<20140910060004.GA5732@norris-Latitude-E6410>
-	<CAN8TOE_BRyg=Ww0oOxGeRr5Xkwh5hTq0UKQAR2dFjRVfwcBZoQ@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/4] mfd/axp20x: rename files to support more devices
+Date: Wed, 10 Sep 2014 09:12:01 +0100
+Message-ID: <20140910081201.GK30307@lee--X1>
+References: <1410267775-4683-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1410267775-4683-2-git-send-email-jacob.jun.pan@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN8TOE_BRyg=Ww0oOxGeRr5Xkwh5hTq0UKQAR2dFjRVfwcBZoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, debian-kernel <debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1410267775-4683-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE TREE <devicetree@vger.kernel.org>, Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>, Angelo Compagnucci <angelo.compagnu>
 List-Id: devicetree@vger.kernel.org
 
-+ devicetree, as the names are used in DTS file.
+On Tue, 09 Sep 2014, Jacob Pan wrote:
 
-On Wed, Sep 10, 2014 at 8:11 AM, Brian Norris
-<computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> + Huang (his Freescale address is bouncing), Rafal
->
-> On Tue, Sep 9, 2014 at 11:00 PM, Brian Norris
-> <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Thu, Sep 04, 2014 at 09:02:04AM +0200, Geert Uytterhoeven wrote:
->>> On Thu, Sep 4, 2014 at 4:11 AM, Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org> wrote:
->>> >> I noticed that many platforms declare the flash chip as compatible =
->>> >> "st,m25pXXX" whereas the ts219.dtsi just said m25p128 but I tried
->>> >> changing that and it didn't help. In any case without spi-nor.ko being
->>> >> autoloaded I don't support m25p80.ko ever would be.
->>> >
->>> > m25p80.c has:
->>> >
->>> > static struct spi_driver m25p80_driver = {
->>> >         ...
->>> >         .id_table       = spi_nor_ids,
->>> >         ...
->>> > };
->>> >
->>> > while spi_nor_ids is defined in spi-nor.c.  Since they end up as two
->>> > separate modules, modpost can't read the ID table and add the device ID
->>> > aliases to m25p80.ko.
->>>
->>> Woops. This indeed doesn't work.
->>> Note that the MODULE_DEVICE_TABLE() is also gone from m25p80.c
->>>
->>> So m25p80.c needs to contain the IDs, while spi-nor.c also needs the IDs
->>> because it's a framework/library.
->>
->> Actually, m25p80.c only needs the strings (i.e., the named aliases --
->> character data), and for the most part, spi-nor.c only needs the IDs (i.e.,
->> the identification bytes).
->>
->> What's more, I don't think that any modern SPI NOR user really needs to
->> be specifying exactly which SPI device it is via a specific string. Our
->> driver code pretty much always re-detects the device by reading its
->> device ID. All the SPI NOR code needs to know is how to read its ID.
+> More XPowers PMIC devices can be supported by extending this driver, =
+so
+> rename it to axp2xx to cover axp288 variant.
+>=20
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/mfd/Kconfig                      | 7 ++++---
+>  drivers/mfd/Makefile                     | 2 +-
+>  drivers/mfd/{axp20x.c =3D> axp2xx.c}       | 2 +-
+>  include/linux/mfd/{axp20x.h =3D> axp2xx.h} | 0
+>  4 files changed, 6 insertions(+), 5 deletions(-)
+>  rename drivers/mfd/{axp20x.c =3D> axp2xx.c} (99%)
+>  rename include/linux/mfd/{axp20x.h =3D> axp2xx.h} (100%)
 
-But the proper name should be in the compatible property.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
->>> A quick solution would be to move the ID table to a header file, and include
->>> that by both, and re-add the lost MODULE_DEVICE_TABLE() to m25p80.c.
->>> That duplicates the data, though.
->>>
->>> Hmm, for the built-in case, we can avoid the duplication by letting m25p80.c
->>> refer to the table in spi-nor.c if !MODULE.
->>> Does anyone see a better solution?
->>
->> A little bit of a shot in the dark, as I haven't fleshed this one out:
->>
->> Would it work to just copy the SPI ID strings into m25p80.c, keep the
->> full table in spi-nor.c, stop adding SPI ID string (and DT) bindings to
->> the m25p80 table (force platforms to use "m25p80"-compatible probing, or
->> maybe something generic like "spi-nor-rdid", "spi-nor-sfdp", etc.) and
->> eventually kill the strings from spi-nor.c entirely? I really don't want
->> to propagate string-binding much further into the SPI NOR library, since
->> everything should be auto-detectable--partly just by an ID table as we
->> have now, but eventually we can use CFI or SFDP parameters provided by
->> relatively new SPI NOR chips.
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index de5abf2..42a70a3 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -67,14 +67,15 @@ config MFD_BCM590XX
+>  	help
+>  	  Support for the BCM590xx PMUs from Broadcom
+> =20
+> -config MFD_AXP20X
+> -	bool "X-Powers AXP20X"
+> +config MFD_AXP2XX
+> +	bool "X-Powers AXP2XX"
+>  	select MFD_CORE
+>  	select REGMAP_I2C
+>  	select REGMAP_IRQ
+>  	depends on I2C=3Dy
+>  	help
+> -	  If you say Y here you get support for the X-Powers AXP202 and AXP=
+209.
+> +	  If you say Y here you get support for the X-Powers AXP202, AXP209=
+ and
+> +	  AXP288 power management IC (PMIC).
+>  	  This driver include only the core APIs. You have to select indivi=
+dual
+>  	  components like regulators or the PEK (Power Enable Key) under th=
+e
+>  	  corresponding menus.
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index f001487..55d76b3 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -103,7 +103,7 @@ obj-$(CONFIG_PMIC_DA9052)	+=3D da9052-irq.o
+>  obj-$(CONFIG_PMIC_DA9052)	+=3D da9052-core.o
+>  obj-$(CONFIG_MFD_DA9052_SPI)	+=3D da9052-spi.o
+>  obj-$(CONFIG_MFD_DA9052_I2C)	+=3D da9052-i2c.o
+> -obj-$(CONFIG_MFD_AXP20X)	+=3D axp20x.o
+> +obj-$(CONFIG_MFD_AXP2XX)	+=3D axp2xx.o
+> =20
+>  obj-$(CONFIG_MFD_LP3943)	+=3D lp3943.o
+>  obj-$(CONFIG_MFD_LP8788)	+=3D lp8788.o lp8788-irq.o
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp2xx.c
+> similarity index 99%
+> rename from drivers/mfd/axp20x.c
+> rename to drivers/mfd/axp2xx.c
+> index dee6539..c534443 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp2xx.c
+> @@ -21,7 +21,7 @@
+>  #include <linux/regmap.h>
+>  #include <linux/slab.h>
+>  #include <linux/regulator/consumer.h>
+> -#include <linux/mfd/axp20x.h>
+> +#include <linux/mfd/axp2xx.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp2xx.h
+> similarity index 100%
+> rename from include/linux/mfd/axp20x.h
+> rename to include/linux/mfd/axp2xx.h
 
-How does the SPI core know to use m25p80? From the ids, and the compatible
-value. If you won't add new names, all devices should declare compatiblity
-with "m25p80" (that's "spansion,m25p80", right?) as a fallback.
-However, are all devices really compatible with m25p80?
-I.e. does m25p80.c work will all devices, in the absense of support for the
-real device? If not, the fallback must not be there, and new device names
-must be added.
-
->> I'm not sure if this is great for the short-term problem of fixing
->> module-autoloading. Perhaps we should do a short-term hack to duplicate
->> the SPI ID strings to m25p80.c by including them in a header (and
->> backport for 3.16.y stable?), but I'd like to disentangle this.
->>
->> Brian
-
-Autoloading is based on "spi:<name>". If new names aren't added, m25p80
-won't be loaded for new SPI FLASHes, unless I'm missing something?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
