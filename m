@@ -1,61 +1,52 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio: st-sensors: add support for lis3lv02d accelerometer
-Date: Thu, 11 Sep 2014 11:13:24 +0200
-Message-ID: <CACRpkdZuSsePVjPpmLV5bs5VOcbnH2_gK4-kOfbpBM1-7Q=zgQ@mail.gmail.com>
-References: <1408815064-5763-1-git-send-email-linus.walleij@linaro.org>
-	<53FB6205.5020704@kernel.org>
+From: Addy <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Switch i2c0 to 400kHz on rk3288-evb-rk808
+Date: Thu, 11 Sep 2014 17:17:58 +0800
+Message-ID: <541168C6.2090603@rock-chips.com>
+References: <1410409815-22200-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53FB6205.5020704-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=GB2312
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410409815-22200-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 25, 2014 at 6:19 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On 23/08/14 18:31, Linus Walleij wrote:
->> This adds support for the LIS3LV02 accelerometer found in the
->> ST Microelectronics Nomadik board series.
->>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
->> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+On 11 Sep 2014 12:30, Doug Anderson writes:
+> We should be able to talk to the PMIC at 400kHz.  No need to talk at
+> the slow 100kHz.
 >
-> If anyone wants to look at what the misc driver supports that we still
-> don't have in the IIO driver then that would be great!
+> As measured by ftrace (with a bunch of extra patches, since cpufreq
+> for rk808 hasn't landed yet):
+>   before this change: cpu0_set_target() => ~500us
+>   after this change:  cpu0_set_target() => ~300us
+>
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3288-evb-rk808.dts | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+> index 36db177..ff522f8 100644
+> --- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
+> +++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+> @@ -18,6 +18,7 @@
+>  };
+>  
+>  &i2c0 {
+> +	clock-frequency = <400000>;
+>  	status = "okay";
+>  
+>  	rk808: pmic@1b {
+I have tested on rk3288-pinky board, it work well. so
 
-I had a quick look at it:
+Reviewed-by Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Tested-by Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-- The misc driver has a bridge that optionally registers the
-  accelerometer as a joystick in the input subsystem, so it
-  can be used as a polled joystick. That looks like something
-  we would want to be able to do for any accelerometer in a
-  generic glue file in IIO I think?
 
-- Ability to generate a "free-fall event" on a misc device
-  if the device containing the sensor is dropped. A special
-  interrupt can be enabled on the device for this. I can't quite
-  see how userspace is supposed to react to it, because this
-  miscdevice userspace ABI is sort of complex.
-
-- Some driver-specific sysfs power management stuff
-
-- Context save/restore registers for power-off handling.
-
-- Trigger selftest from sysfs : I suspect this could be ported
-  over to all the ST Micro devices, as they are similar in that
-  way, same kind of test registers.
-
-- Possible to enable high-pass filter from the DT config.
-  (Should that not be dynamic?)
-
-Apart from that it has a custom sysfs interface to read the
-accelerometer, similar to the IIO interface. It seems to *only* support
-raw values AFAICT  though, not sensitivity adjustment, so my patch
-gives the ability to have better sensor handling in the kernel from an
-IIO point of view.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
