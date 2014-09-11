@@ -1,56 +1,36 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for LS1021A
-Date: Thu, 11 Sep 2014 12:36:50 +0200
-Message-ID: <2944183.HzFlEzpKtu@wuerfel>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com> <62651744.c71MLsL3Q5@wuerfel> <cd69af536cd248b8add94a468fa97095@BL2PR03MB467.namprd03.prod.outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 5/8] arm64: dts: Add initial device tree support for EXYNOS7
+Date: Thu, 11 Sep 2014 12:41:01 +0200
+Message-ID: <27455049.omNFrla0xU@wuerfel>
+References: <1410430852-3491-1-git-send-email-ch.naveen@samsung.com> <1410430852-3491-6-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cd69af536cd248b8add94a468fa97095-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1410430852-3491-6-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, robh@kernel.org, catalin.marinas@arm.com, tomasz.figa@gmail.com, kgene.kim@samsung.com, naveenkrishna.ch@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 September 2014 08:21:58 Jingchang Lu wrote:
-> >One more thing: these should all go into the board specific files.
-> >
-> >The installed memory is almost always a property of the board, not the SoC,
-> >and a lot of boards only connect a subset of the serial ports, or they may
-> >have them in a different order.
-> >
-> >In particular, you only provide aliases for the six out of the ten
-> >available uarts, which seems arbitrary.
-> >
-> 
-> The memory size info will be fixed up in u-boot before booting the kernel image,
-> so I add the memory node in the SoC level device tree and keep only one copy. 
+On Thursday 11 September 2014 15:50:49 Naveen Krishna Chatradhi wrote:
+> +       aliases {
+> +               serial0 = &serial_0;
+> +               serial1 = &serial_1;
+> +               serial2 = &serial_2;
+> +               serial3 = &serial_3;
+> +       };
+> +
 
-Right. I wonder if it would make sense to just leave a placeholder in there
-that does not look like a plausible memory size. I believe the common case today
-is that we actually want to have the correct memory size in the board-level
-dts file because the boot loader does not change that value. If your boot loader
-does it, we probably don't want any default that may confuse users at all,
-in particular in the per-soc file.
+Please move the aliases from the exynos7.dtsi file into the
+exynos7-espresso.dts file, and only list the ones that are
+present, starting with alias 0, like
 
-> The lpuart derives the line number from the node's alias id, 8250 serial driver
-> doesn't rely on it, so only aliases for the lpuart are added, not arbitrary.
+	aliases {
+		serial0 = &serial_2;
+	};
 
-This is really bad though, for two reasons:
-
-a) you are relying on current behavior of two kernel drivers that we may want to
-change in the future. Unfortunately the two drivers don't do this consistently
-today, but that's something we should fix in the kernel, not work around in
-the hardware description.
-
-b) for the lpuart case, you put a fixed device order in the soc-specific file,
-without any guarantee that the board uses just the first x devices rather than
-another random subset. The alias values are really meant to to correspond to
-how the machine calls things, not how the SoC sees it.
+If the machine has only one serial port, it should be the first
+alias.
 
 	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
