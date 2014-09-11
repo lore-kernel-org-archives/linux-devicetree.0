@@ -1,53 +1,58 @@
-From: Nick Dyer <nick.dyer@itdev.co.uk>
-Subject: [PATCH] Input: atmel_mxt_ts - fix merge in DT documentation
-Date: Thu, 11 Sep 2014 15:52:46 +0100
-Message-ID: <5411B73E.4040404@itdev.co.uk>
-References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk> <53E4E41D.4070703@collabora.co.uk> <53EDF6B4.7080804@collabora.co.uk> <53EE307E.8060507@itdev.co.uk> <53EE319A.1030304@wwwdotorg.org>
+From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
+Date: Thu, 11 Sep 2014 16:52:22 +0200
+Message-ID: <1591383.Xdy91rktuP@fb07-iapwap2>
+References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de> <20140911141257.GC5149@katana> <20140911144003.GD5149@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53EE319A.1030304@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="nextPart6151357.4VKUoaRBI6"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140911144003.GD5149@katana>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/08/14 17:13, Stephen Warren wrote:
->>> Any comments on this? I would really appreciate if you can expand on how
->>> this DT property is supposed to be used so I can re-spin the atmel support
->>> patch for Peach boards.
->>
->> The below patch improves the documentation for the gpio-property.
+
+--nextPart6151357.4VKUoaRBI6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"
+
+Am Donnerstag, 11. September 2014, 16:40:04 schrieb Wolfram Sang:
+> > b) could be seen as a configuration thing since the functionality
+> > backend could be changed at runtime even.
 > 
-> That patch makes sense, and is a nice description,
-> Acked-by: Stephen Warren <swarren@nvidia.com>
+> Come to think of it, not only the functionality, also the address can be
+> changed at runtime. This makes me think it should really not be in DT
+> after all.
 
-Hi Dmitry-
+even worse, there can be multiple masters and slaves changing their role on 
+the fly AFAIK. So the best dt can do is to provide an initial configuration, 
+so all drivers know where they are and where to start. Everything else can be 
+changed during runtime.
 
-Something went a bit wrong in merging f5940231a - there's a bit of repeated
-text that's been introduced.
+> People will probably find out that it is possible to put it in DT, but
+> it should not be encouraged and they should do it on their own risk.
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
----
- Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 4 ----
- 1 file changed, 4 deletions(-)
+--nextPart6151357.4VKUoaRBI6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-index 0ac23f2..1852906 100644
---- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-+++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
-@@ -11,10 +11,6 @@ Required properties:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
- Optional properties for main touchpad device:
+iQEcBAABAgAGBQJUEbcmAAoJEKyeR39HFBtoUJAH/2VkYCMJ+aDlPXoWbktY2AHP
+xHbstyCIzfj7kdVl8G4BRmuAbkSzoSGtm/apwz6zQOv0YjwaxUw32gaO6/E3srVT
+qEzCTqg7gyvvhenOQY2OWXJvM9inwBPQzuB8DRVtRTbO8kJtyk7YCBhaKURc6xyf
+pqyhLjuJrwRuAxxF1hd3fur3uvtop11LFNbv5hxybGWyRRosO38h0vaHfLpKSqSD
+RjqV7NfjxoQ8sk25IAghwRquO+YeaItJ1fWcmcaOLGj/ID27X54SHq2vYGVkqMN2
+n9+CZ6n795dxd1tj1WQnIVl3CCd/0xcS5QAfmMgVKQ7sgfJB6AX/ElX6BxJf3u0=
+=3/oV
+-----END PGP SIGNATURE-----
 
--- linux,gpio-keymap: An array of up to 4 entries indicating the Linux
--    keycode generated by each GPIO. Linux keycodes are defined in
--    <dt-bindings/input/input.h>.
--
- - linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
-     on GPIO bit changes. An array of up to 8 entries can be provided
-     indicating the Linux keycode mapped to each bit of the status byte,
--- 
-1.9.1
+--nextPart6151357.4VKUoaRBI6--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
