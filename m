@@ -1,167 +1,59 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v3 6/8] ARM: at91: add clk_lookup entry for RTT devices
-Date: Thu, 11 Sep 2014 10:56:05 +0200
-Message-ID: <1410425767-17874-7-git-send-email-boris.brezillon@free-electrons.com>
-References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
+ LS1021A
+Date: Thu, 11 Sep 2014 08:58:40 +0000
+Message-ID: <39a86eecae314626a8a2af76849171ea@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
+ <1410253952-15631-2-git-send-email-jingchang.lu@freescale.com>
+ <fa256d13e4304175b14369b9d3b55729@BL2PR03MB579.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Johan Hovold <jhovold@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Douglas Gilbert <dgilbert@interlog.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <fa256d13e4304175b14369b9d3b55729-AZ66ij2kwaYNjdDjpj1h++O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-First export the clk32k clk.
-Then add clk_lookup entries for RTT devices so that rtc-at91sam9 driver
-can retrieve and manipulate the slow clk.
-
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
----
- arch/arm/mach-at91/at91sam9260.c | 2 ++
- arch/arm/mach-at91/at91sam9261.c | 2 ++
- arch/arm/mach-at91/at91sam9263.c | 4 ++++
- arch/arm/mach-at91/at91sam9g45.c | 2 ++
- arch/arm/mach-at91/at91sam9rl.c  | 2 ++
- arch/arm/mach-at91/clock.c       | 2 +-
- arch/arm/mach-at91/clock.h       | 1 +
- 7 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
-index 3477ba9..a853d4c 100644
---- a/arch/arm/mach-at91/at91sam9260.c
-+++ b/arch/arm/mach-at91/at91sam9260.c
-@@ -217,6 +217,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("pclk", "fffbc000.ssc", &ssc_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9260.0", &twi_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20.0", &twi_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
- 	/* more usart lookup table for DT entries */
- 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
- 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
-@@ -237,6 +238,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("mci_clk", "fffa8000.mmc", &mmc_clk),
- 	CLKDEV_CON_DEV_ID("spi_clk", "fffc8000.spi", &spi0_clk),
- 	CLKDEV_CON_DEV_ID("spi_clk", "fffcc000.spi", &spi1_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
- 	/* fake hclk clock */
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
-diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-index fb164a5..3f5a299 100644
---- a/arch/arm/mach-at91/at91sam9261.c
-+++ b/arch/arm/mach-at91/at91sam9261.c
-@@ -192,6 +192,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
- 	CLKDEV_CON_ID("pioB", &pioB_clk),
- 	CLKDEV_CON_ID("pioC", &pioC_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
- 	/* more lookup table for DT entries */
- 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
- 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
-@@ -209,6 +210,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "fffff400.gpio", &pioA_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioB_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioC_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
- };
- 
- static struct clk_lookup usart_clocks_lookups[] = {
-diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
-index 810fa5f..bef5b96 100644
---- a/arch/arm/mach-at91/at91sam9263.c
-+++ b/arch/arm/mach-at91/at91sam9263.c
-@@ -201,6 +201,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "atmel_tcb.0", &tcb_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9260.0", &twi_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "at91sam9rl-pwm", &pwm_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.1", &clk32k),
- 	/* fake hclk clock */
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
-@@ -227,6 +229,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioCDE_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioCDE_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffb8000.pwm", &pwm_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd50.rtc", &clk32k),
- };
- 
- static struct clk_lookup usart_clocks_lookups[] = {
-diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-index 9d45496..69fdfcc 100644
---- a/arch/arm/mach-at91/at91sam9g45.c
-+++ b/arch/arm/mach-at91/at91sam9g45.c
-@@ -253,6 +253,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "atmel_tdes", &aestdessha_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "atmel_aes", &aestdessha_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "at91sam9rl-pwm", &pwm_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
- 	/* more usart lookup table for DT entries */
- 	CLKDEV_CON_DEV_ID("usart", "ffffee00.serial", &mck),
- 	CLKDEV_CON_DEV_ID("usart", "fff8c000.serial", &usart0_clk),
-@@ -279,6 +280,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioC_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioDE_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioDE_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
- 
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
- 	CLKDEV_CON_ID("pioB", &pioB_clk),
-diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
-index 878d501..a82dc61 100644
---- a/arch/arm/mach-at91/at91sam9rl.c
-+++ b/arch/arm/mach-at91/at91sam9rl.c
-@@ -205,6 +205,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_ID("pioB", &pioB_clk),
- 	CLKDEV_CON_ID("pioC", &pioC_clk),
- 	CLKDEV_CON_ID("pioD", &pioD_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
- 	/* more lookup table for DT entries */
- 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
- 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
-@@ -223,6 +224,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioB_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioC_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioD_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
- 	CLKDEV_CON_ID("adc_clk", &tsc_clk),
- };
- 
-diff --git a/arch/arm/mach-at91/clock.c b/arch/arm/mach-at91/clock.c
-index 034529d..f5cfed75 100644
---- a/arch/arm/mach-at91/clock.c
-+++ b/arch/arm/mach-at91/clock.c
-@@ -115,7 +115,7 @@ static u32 at91_pllb_usb_init;
-  * 48 MHz (unless no USB function clocks are needed).  The main clock and
-  * both PLLs are turned off to run in "slow clock mode" (system suspend).
-  */
--static struct clk clk32k = {
-+struct clk clk32k = {
- 	.name		= "clk32k",
- 	.rate_hz	= AT91_SLOW_CLOCK,
- 	.users		= 1,		/* always on */
-diff --git a/arch/arm/mach-at91/clock.h b/arch/arm/mach-at91/clock.h
-index a98a39b..6eb825a 100644
---- a/arch/arm/mach-at91/clock.h
-+++ b/arch/arm/mach-at91/clock.h
-@@ -34,6 +34,7 @@ struct clk {
- extern int __init clk_register(struct clk *clk);
- extern struct clk mck;
- extern struct clk utmi_clk;
-+extern struct clk clk32k;
- 
- #define CLKDEV_CON_ID(_id, _clk)			\
- 	{						\
--- 
-1.9.1
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEd1cHRhIFN1cmVzaC1CNDI4
+MTMNCj5TZW50OiBUaHVyc2RheSwgU2VwdGVtYmVyIDExLCAyMDE0IDQ6NDIgUE0NCj5UbzogTHUg
+SmluZ2NoYW5nLUIzNTA4MzsgR3VvIFNoYXduLVI2NTA3Mw0KPkNjOiBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMdQ0KPkpp
+bmdjaGFuZy1CMzUwODM7IEJhZG9sYSBOaWtoaWwtQjQ2MTcyOyBaaGFvIENoZW5odWktQjM1MzM2
+OyBMZWVraGENCj5TaGF2ZXRhLUIyMDA1MjsgR3VwdGEgUnVjaGlrYS1SNjY0MzE7IFNoYXJtYSBC
+aHVwZXNoLUI0NTM3MDsgRnUgQ2hhby0NCj5CNDQ1NDg7IFhpdWJvIExpLUI0NzA1MzsgTHUgSmlu
+Z2NoYW5nLUIzNTA4Mw0KPlN1YmplY3Q6IFJFOiBbUEFUQ0h2MyAxLzZdIEFSTTogZHRzOiBBZGQg
+U29DIGxldmVsIGRldmljZSB0cmVlIHN1cHBvcnQgZm9yDQo+TFMxMDIxQQ0KPg0KPg0KPg0KPj4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4+IEZyb206IEppbmdjaGFuZyBMdSBbbWFpbHRv
+OmppbmdjaGFuZy5sdUBmcmVlc2NhbGUuY29tXQ0KPj4gU2VudDogVHVlc2RheSwgU2VwdGVtYmVy
+IDA5LCAyMDE0IDI6NDIgUE0NCj4+IFRvOiBHdW8gU2hhd24tUjY1MDczDQo+PiBDYzogbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsNCj4+IEx1IEppbmdjaGFuZy1CMzUwODM7IEJhZG9sYSBOaWtoaWwtQjQ2MTcyOyBaaGFvIENo
+ZW5odWktQjM1MzM2OyBHdXB0YQ0KPj4gU3VyZXNoLSBCNDI4MTM7IExlZWtoYSBTaGF2ZXRhLUIy
+MDA1MjsgR3VwdGEgUnVjaGlrYS1SNjY0MzE7IFNoYXJtYQ0KPj4gQmh1cGVzaC0gQjQ1MzcwOyBG
+dSBDaGFvLUI0NDU0ODsgWGl1Ym8gTGktQjQ3MDUzOyBMdSBKaW5nY2hhbmctQjM1MDgzDQo+PiBT
+dWJqZWN0OiBbUEFUQ0h2MyAxLzZdIEFSTTogZHRzOiBBZGQgU29DIGxldmVsIGRldmljZSB0cmVl
+IHN1cHBvcnQgZm9yDQo+PiBMUzEwMjFBDQo+Pg0KPj4gRnJvbTogSmluZ2NoYW5nIEx1IDxiMzUw
+ODNAZnJlZXNjYWxlLmNvbT4NCj4+DQo+PiBBZGQgRnJlZXNjYWxlIExTMTAyMUEgU29DIGRldmlj
+ZSB0cmVlIHN1cHBvcnQNCj4+DQo+PiArDQo+PiArCQl1c2JAMzEwMDAwMCB7DQo+PiArCQkJY29t
+cGF0aWJsZSA9ICJmc2wsZnNsLWR3YzMiOw0KPj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDI+Ow0K
+Pj4gKwkJCSNzaXplLWNlbGxzID0gPDI+Ow0KPj4gKwkJCXJhbmdlczsNCj4+ICsNCj4+ICsJCQlk
+d2MzIHsNCj4+ICsJCQkJY29tcGF0aWJsZSA9ICJzbnBzLGR3YzMiOw0KPj4gKwkJCQlyZWcgPSA8
+MHgwIDB4MzEwMDAwMCAweDAgMHgxMDAwMD47DQo+PiArCQkJCWludGVycnVwdHMgPSA8R0lDX1NQ
+SSA5Mw0KPj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+PiArCQkJCWRyX21vZGUgPSAiaG9zdCI7
+DQo+PiArCQkJCW1heGltdW0tc3BlZWQgPSAiaGlnaC1zcGVlZCI7DQo+PiArCQkJfTsNCj4+ICsJ
+CX07DQo+PiArCX07DQo+PiArDQo+PiArDQo+W1N1cmVzSF0gIENhbiB5b3UgcGxlYXNlIHBpY2sg
+dGhpcyBub2RlIGZvcm0gbHMxLWxpbnV4IC0+IGxzMS1kZXYgYnJhbmNoDQo+VGhpcyBub2RlIHNo
+b3VsZCBsb29rIGxpa2UNCj4NCj4NCj4JdXNiM0AzMTAwMDAwIHsNCj4gICAgICAgICAgICAgICAg
+ICAgICAgICBjb21wYXRpYmxlID0gInNucHMsZHdjMyI7DQo+ICAgICAgICAgICAgICAgICAgICAg
+ICAgcmVnID0gPDB4MCAweDMxMDAwMDAgMHgwIDB4MTAwMDA+Ow0KPiAgICAgICAgICAgICAgICAg
+ICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA5MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4g
+ICAgICAgICAgICAgICAgICAgICAgICBkcl9tb2RlID0gImhvc3QiOw0KPiAgICAgICAgICAgICAg
+ICB9Ow0KDQpPaywgSSB3aWxsIHVwZGF0ZSBpdCBpbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQpCZXN0
+IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
