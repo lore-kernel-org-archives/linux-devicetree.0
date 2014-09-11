@@ -1,40 +1,89 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] rtc: at91sam9: add DT support
-Date: Thu, 11 Sep 2014 11:39:42 +0200
-Message-ID: <20140911093942.GA12295@localhost>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 5/8] rtc: at91sam9: make use of syscon/regmap to
+ access GPBR registers
+Date: Thu, 11 Sep 2014 11:41:00 +0200
+Message-ID: <20140911094100.GB12295@localhost>
 References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1410425767-17874-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410425767-17874-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1410425767-17874-6-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 10:55:59AM +0200, Boris BREZILLON wrote:
+On Thu, Sep 11, 2014 at 10:56:04AM +0200, Boris BREZILLON wrote:
+> The GPBR registers are not part of the RTT block and thus should not be
+> defined in the reg property of the rtt node.
+> 
+> Use syscon to provide a proper DT representation and reference the GPBR
+> syscon device in a new "atmel,time-reg" property which store both the
+> syscon device phandle and the register offset within the GPBR block.
+> 
+> When using non DT boards, we won't be able to retrieve the syscon regmap,
+> hence we need to create our own regmap using the memory region defined
+> in the 2nd memory resource assigned to the RTT platform device.
+> 
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> 
+> Conflicts:
+> 	drivers/rtc/rtc-at91sam9.c
 
-> Johan, let me know if this version addresses part of your concerns.
+You probably don't want this here.
 
-Looks good to me. I just have a few minor comments on two of the patches.
+> ---
+>  drivers/rtc/Kconfig        |  1 +
+>  drivers/rtc/rtc-at91sam9.c | 58 +++++++++++++++++++++++++++++++++++++++-------
+>  2 files changed, 50 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index a168e96..7d76da8 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1081,6 +1081,7 @@ config RTC_DRV_AT91RM9200
+>  config RTC_DRV_AT91SAM9
+>  	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
+>  	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
+> +	select MFD_SYSCON
+>  	help
+>  	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
+>  	  (Real Time Timer). These timers are powered by the backup power
+> diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+> index d72c34d..b953545 100644
+> --- a/drivers/rtc/rtc-at91sam9.c
+> +++ b/drivers/rtc/rtc-at91sam9.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/platform_data/atmel.h>
+>  #include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+>  
+>  /*
+>   * This driver uses two configurable hardware resources that live in the
+> @@ -72,7 +74,8 @@ struct sam9_rtc {
+>  	void __iomem		*rtt;
+>  	struct rtc_device	*rtcdev;
+>  	u32			imr;
+> -	void __iomem		*gpbr;
+> +	struct regmap		*gpbr;
+> +	unsigned int		gpbr_offset;
+>  	int 			irq;
+>  };
+>  
+> @@ -81,10 +84,18 @@ struct sam9_rtc {
+>  #define rtt_writel(rtc, field, val) \
+>  	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
+>  
+> -#define gpbr_readl(rtc) \
+> -	readl((rtc)->gpbr)
+> -#define gpbr_writel(rtc, val) \
+> -	writel((val), (rtc)->gpbr)
+> +static inline unsigned int gpbr_readl(struct sam9_rtc *rtc) {
 
-> I'm open to any suggestion/rework to address other previously discussed
-> issues, as long as it does not end up in a dead-end (like the discussion
-> you had last year):
->  - the fact that the RTT block could be used for something that is not
->    an RTC
->  - the fact that referencing the GPBR node and defining a GPBR register
->    number to store RTC time info could be considered as an HW config and
->    not an HW description and thus should not be described in the DT
+Brace placement. Did you run checkpatch on the rest of the series?
 
-No doubt.
-
->  - other things I don't remember :-)
-
-Thanks,
 Johan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
