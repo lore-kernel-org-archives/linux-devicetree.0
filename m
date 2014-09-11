@@ -1,47 +1,45 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Input: atmel_mxt_ts - fix merge in DT documentation
-Date: Thu, 11 Sep 2014 10:32:57 -0700
-Message-ID: <20140911173256.GA36295@core.coreip.homeip.net>
-References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk>
- <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk>
- <53E37329.4020002@itdev.co.uk>
- <53E4E41D.4070703@collabora.co.uk>
- <53EDF6B4.7080804@collabora.co.uk>
- <53EE307E.8060507@itdev.co.uk>
- <53EE319A.1030304@wwwdotorg.org>
- <5411B73E.4040404@itdev.co.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] ARM: OMAP2+: make of_device_ids const
+Date: Thu, 11 Sep 2014 10:39:43 -0700
+Message-ID: <20140911173943.GB18849@atomide.com>
+References: <1410337579-23466-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1410337579-23466-2-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5411B73E.4040404@itdev.co.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Nick Dyer <nick.dyer@itdev.co.uk>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1410337579-23466-2-git-send-email-u.kleine-koenig@pengutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, Kevin Hilman <khilman@deeprootsystems.com>, Rajendra Nayak <rnayak@ti.com>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 03:52:46PM +0100, Nick Dyer wrote:
-> On 15/08/14 17:13, Stephen Warren wrote:
-> >>> Any comments on this? I would really appreciate if you can expand on how
-> >>> this DT property is supposed to be used so I can re-spin the atmel support
-> >>> patch for Peach boards.
-> >>
-> >> The below patch improves the documentation for the gpio-property.
-> > 
-> > That patch makes sense, and is a nice description,
-> > Acked-by: Stephen Warren <swarren@nvidia.com>
-> 
-> Hi Dmitry-
-> 
-> Something went a bit wrong in merging f5940231a - there's a bit of repeated
-> text that's been introduced.
-> 
-> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+* Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> [140910 01:27]=
+:
+> of_device_ids (i.e. compatible strings and the respective data) are n=
+ot
+> supposed to change at runtime. All functions working with of_device_i=
+ds
+> provided by <linux/of.h> work with const of_device_ids. So mark the
+> non-const function parameters and structs for OMAP2+ as const, too.
 
-Hmm, not sure how I messed this up, but I will queue the patch for the
-next push.
+Hmm this does not seem to compile with omap2plus_defconfig because
+of section type conflicts. Looks like there's some issue now with the
+use of __initconst:
 
-Thanks.
+arch/arm/mach-omap2/board-generic.c:262:20: error: dra72x_boards_compat=
+ causes a section type conflict with omap_dt_match_table
+arch/arm/mach-omap2/board-generic.c:30:34: note: =E2=80=98omap_dt_match=
+_table=E2=80=99 was declared here
+scripts/Makefile.build:257: recipe for target 'arch/arm/mach-omap2/boar=
+d-generic.o' failed
 
--- 
-Dmitry
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
