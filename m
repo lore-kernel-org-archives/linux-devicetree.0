@@ -1,73 +1,71 @@
-From: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH] iio: st-sensors: add support for lis3lv02d accelerometer
-Date: Thu, 11 Sep 2014 10:38:59 +0200
-Message-ID: <54115FA3.1040403@st.com>
-References: <1408815064-5763-1-git-send-email-linus.walleij@linaro.org>
- <53FB6205.5020704@kernel.org>
- <CACRpkdb5NXJiTvaHz9_nJiZcFsyVnjPYjaYZ1YH9meBgJhoTJA@mail.gmail.com>
- <54104B26.5080707@st.com> <20140910133607.GA13361@xo-6d-61-c0.localdomain>
+From: "suresh.gupta@freescale.com" <suresh.gupta@freescale.com>
+Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
+ LS1021A
+Date: Thu, 11 Sep 2014 08:41:32 +0000
+Message-ID: <fa256d13e4304175b14369b9d3b55729@BL2PR03MB579.namprd03.prod.outlook.com>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
+ <1410253952-15631-2-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140910133607.GA13361-5NIqAleC692hcjWhqY66xCZi+YwRKgec@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1410253952-15631-2-git-send-email-jingchang.lu@freescale.com>
 Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Yan Burman <burman.yan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yan Burman <yanb-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <Shawn.Guo@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "chenhui.zhao@freescale.com" <chenhui.zhao@freescale.com>, Chao Fu <B44548@freescale.com>, "shaveta@freescale.com" <shaveta@freescale.com>, Ruchika Gupta <ruchika.gupta@freescale.com>, "bhupesh.sharma@freescale.com" <bhupesh.sharma@freescale.com>, "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, Jingchang Lu <jingchang.lu@freescale.com>, "nikhil.badola@freescale.com" <nikhil.badola@freescale.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-When I have time yes for sure...:D
 
-Denis
 
-On 09/10/14 15:36, Pavel Machek wrote:
-> Hi!
->
->> I'm sorry but I was in business trip. I think that current lis3lv02d
->> supports more things, I want to support everything in the current IIO
->> drivers but always I have no time.
-> Ok then, can you add hwmon interfaces from the other driver to your one? That way,
-> we can deprecate one of them...
->
-> 									Pavel
->
->> BR,
->> Denis
->>
->>
->> On 08/27/14 15:38, Linus Walleij wrote:
->>> On Mon, Aug 25, 2014 at 6:19 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> On 23/08/14 18:31, Linus Walleij wrote:
->>>>> This adds support for the LIS3LV02 accelerometer found in the
->>>>> ST Microelectronics Nomadik board series.
->>>>>
->>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>>> Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
->>>>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> This is a little 'interesting', given the part is already supported by
->>>> drivers/misc/lis3lv02d*.c and already has bindings under there.
->>>> Documentation/devicetree/bindings/misc/lis302.txt
->>>> (some of these are interesting).
->>> Grrr how come I missed this... It was originally merged as a
->>> hwmon driver.
->>>
->>>
->>>>> +/* CUSTOM VALUES FOR SENSOR 4 */
->>>>>
->>>> I wish now we'd nipped this naming convention in the bud and insisted
->>>> on naming after a relevant part. Oh well.
->>> Well we can always make an invasive patch fixing that. I can
->>> probably do it using sed or something.
->>>
->>>> Do we think this is the right way to handle the alternative support
->>>> here?
->>> Well this patch is a driver using the IIO framework and was written
->>> by ST, but the other driver support a few other interesting features
->>> and seems to be for the laptop usecase.
->>>
->>> Adding the other authors to the TO: line...
->>>
->>> Yours,
->>> Linus Walleij
+> -----Original Message-----
+> From: Jingchang Lu [mailto:jingchang.lu@freescale.com]
+> Sent: Tuesday, September 09, 2014 2:42 PM
+> To: Guo Shawn-R65073
+> Cc: linux-arm-kernel@lists.infradead.org; devicetree@vger.kernel.org; Lu
+> Jingchang-B35083; Badola Nikhil-B46172; Zhao Chenhui-B35336; Gupta Suresh-
+> B42813; Leekha Shaveta-B20052; Gupta Ruchika-R66431; Sharma Bhupesh-
+> B45370; Fu Chao-B44548; Xiubo Li-B47053; Lu Jingchang-B35083
+> Subject: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for LS1021A
+> 
+> From: Jingchang Lu <b35083@freescale.com>
+> 
+> Add Freescale LS1021A SoC device tree support
+> 
+> +
+> +		usb@3100000 {
+> +			compatible = "fsl,fsl-dwc3";
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +
+> +			dwc3 {
+> +				compatible = "snps,dwc3";
+> +				reg = <0x0 0x3100000 0x0 0x10000>;
+> +				interrupts = <GIC_SPI 93
+> IRQ_TYPE_LEVEL_HIGH>;
+> +				dr_mode = "host";
+> +				maximum-speed = "high-speed";
+> +			};
+> +		};
+> +	};
+> +
+> +
+[SuresH]  Can you please pick this node form ls1-linux -> ls1-dev branch
+This node should look like
+
+
+	usb3@3100000 {
+                        compatible = "snps,dwc3";
+                        reg = <0x0 0x3100000 0x0 0x10000>;
+                        interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+                        dr_mode = "host";
+                };
