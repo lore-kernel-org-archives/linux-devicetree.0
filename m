@@ -1,45 +1,38 @@
-From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Subject: Re: [PATCH v3 5/8] arm64: dts: Add initial device tree support for EXYNOS7
-Date: Thu, 11 Sep 2014 17:51:18 +0530
-Message-ID: <CAHfPSqBCepBTuz8TDUyYSNKcWu1Umii8A4=Ue=eiBn8X7aiunA@mail.gmail.com>
-References: <1410430852-3491-1-git-send-email-ch.naveen@samsung.com>
- <1410430852-3491-6-git-send-email-ch.naveen@samsung.com> <27455049.omNFrla0xU@wuerfel>
+From: "Lennart Sorensen" <lsorense-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
+ for dra7
+Date: Thu, 11 Sep 2014 08:22:19 -0400
+Message-ID: <20140911122219.GD17690@csclub.uwaterloo.ca>
+References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com>
+ <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
+ <20140911013811.GB17692@csclub.uwaterloo.ca>
+ <541141E3.8030101@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <27455049.omNFrla0xU@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, robh@kernel.org, catalin.marinas@arm.com, tomasz.figa@gmail.com, Kukjin Kim <kgene.kim@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <541141E3.8030101-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 September 2014 16:11, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 11 September 2014 15:50:49 Naveen Krishna Chatradhi wrote:
->> +       aliases {
->> +               serial0 = &serial_0;
->> +               serial1 = &serial_1;
->> +               serial2 = &serial_2;
->> +               serial3 = &serial_3;
->> +       };
->> +
->
-> Please move the aliases from the exynos7.dtsi file into the
-> exynos7-espresso.dts file, and only list the ones that are
-> present, starting with alias 0, like
->
->         aliases {
->                 serial0 = &serial_2;
->         };
->
-> If the machine has only one serial port, it should be the first
-> alias.
+On Thu, Sep 11, 2014 at 12:02:03PM +0530, Mugunthan V N wrote:
+> slaves = <1>;
 
-Okay, will fix this in the next version.
+OK, works for me.
 
->
->         Arnd
+> overall disable takes care of this
 
-Thanks,
+Although once I enable cpsw I would need to leave the second port disabled
+I suppose, although perhaps settings slaves to 1 would essentially
+disable it.
+
+> Will add disabled in next version.
+
 -- 
-Shine bright,
-(: Nav :)
+Len Sorensen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
