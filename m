@@ -1,71 +1,90 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 30/35] irqchip: add irq-omap-intc.h header
-Date: Thu, 11 Sep 2014 14:08:01 -0700
-Message-ID: <20140911210800.GI18849@atomide.com>
-References: <1406582183-696-1-git-send-email-balbi@ti.com>
- <1406582183-696-31-git-send-email-balbi@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: dts: sun6i: Add required ahb1
+ clock parent and rates for dma controller
+Date: Thu, 11 Sep 2014 23:15:31 +0200
+Message-ID: <20140911211531.GN31276@lukather>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+ <1410000448-9999-7-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1SVgZ+3xbDF9VW5n"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBBFEZCQAKGQE6B4HOVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1406582183-696-31-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410000448-9999-7-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140728 14:19]:
-> OMAP INTC irqchip driver will be moved under
-> drivers/irqchip/ soon but we still have a dependency
-> with mach-omap2 when it comes to idle functions.
-> 
-> In order to make it easy to share those function
-> prototypes with OMAP PM code, we introduce this new
-> header.
-> 
-> Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+
+--1SVgZ+3xbDF9VW5n
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Sep 06, 2014 at 06:47:27PM +0800, Chen-Yu Tsai wrote:
+> The DMA controller requires AHB1 bus clock to be clocked from PLL6.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->  arch/arm/mach-omap2/board-3430sdp.c        |  1 +
->  arch/arm/mach-omap2/board-am3517crane.c    |  1 +
->  arch/arm/mach-omap2/board-am3517evm.c      |  1 +
->  arch/arm/mach-omap2/board-cm-t35.c         |  1 +
->  arch/arm/mach-omap2/board-cm-t3517.c       |  1 +
->  arch/arm/mach-omap2/board-devkit8000.c     |  1 +
->  arch/arm/mach-omap2/board-ldp.c            |  1 +
->  arch/arm/mach-omap2/board-omap3beagle.c    |  1 +
->  arch/arm/mach-omap2/board-omap3logic.c     |  1 +
->  arch/arm/mach-omap2/board-omap3pandora.c   |  1 +
->  arch/arm/mach-omap2/board-omap3stalker.c   |  1 +
->  arch/arm/mach-omap2/board-omap3touchbook.c |  1 +
->  arch/arm/mach-omap2/board-overo.c          |  1 +
->  arch/arm/mach-omap2/board-rx51.c           |  1 +
->  arch/arm/mach-omap2/board-ti8168evm.c      |  1 +
->  arch/arm/mach-omap2/common.h               |  9 ---------
->  arch/arm/mach-omap2/cpuidle34xx.c          |  1 +
->  arch/arm/mach-omap2/irq.c                  |  1 +
->  arch/arm/mach-omap2/pm24xx.c               |  1 +
->  arch/arm/mach-omap2/pm34xx.c               |  1 +
->  include/linux/irqchip/irq-omap-intc.h      | 32 ++++++++++++++++++++++++++++++
->  21 files changed, 51 insertions(+), 9 deletions(-)
+>  arch/arm/boot/dts/sun6i-a31.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a=
+31.dtsi
+> index 8eb2c6d..1117989 100644
+> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> @@ -317,6 +317,11 @@
+>  			clocks =3D <&ahb1_gates 6>;
+>  			resets =3D <&ahb1_rst 6>;
+>  			#dma-cells =3D <1>;
+> +
+> +			/* DMA controller requires AHB1 clocked from PLL6 */
+> +			assigned-clocks =3D <&ahb1>;
+> +			assigned-clock-parents =3D <&pll6>;
+> +			assigned-clock-rates =3D <200000000>;
 
-I ended up setting up another branch without this patch
-at omap-for-v3.12/intc-v2. It now has dependency to the
-SoC changes from Nishant and the const cleanup fix from Uwe.
+Where did you get that from?
 
-This patch is not needed, let's leave this out, the functions
-needed by the platform code won't need to be in a separate
-header file as they are only needed by the platform code.
+The user manual says that it should be clocked at 600MHz, and I'm not
+sure it should be enforced there either.
 
-If you have a chance, can you please repost the remainging
-patches to do the actual move to drivers, but without this
-patch? And if we are lucky we'll get an ack from the
-drivers/irqchip maintainers and I can apply those changes too
-into omap-for-v3.12/intc-v2 ;)
+Thanks!
+Maxime
 
-Regards,
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--1SVgZ+3xbDF9VW5n
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUEhDzAAoJEBx+YmzsjxAgYXgQAKbqAz/VvsbKC9OgoBnufGIb
+CYQ9GHyD9v13JXvigZN59bDdE8hvqw7WYqPZdyJEHjKHSAOta+TBeqmBBLnyAJE+
+wc7oyeJW55vL6GwSVZywAXqVdH/6lyKaYnCFBqcwlzoV9CcrLVXQDED/uQqbrkfn
+tPkF3lxwX8OsAISqUlxFfEPmi2/VK8Gu2BgyZKZmy27QtcsRUSWmzot3Es9nFKXN
+DcRbbAqBjukg4P6BXYywu6EMesba7ere7nwadKcT2qiOcYuOziO81oEzu8i/l6da
+NouT2scdh3mbq89oBrYAHLzykpH3qH/FTp2MqHe+BIFrN6RDzQt/7OvSGFABKLrT
+BPp/gGRHW1Tqw725KMnFKBsY0zL8oviDvni6a8iRQYiF4286Je2+MniaAFDdHFkQ
+iqu/iMi38lvKzwk1r7ClA3BQIhetaMCez6fp9h0qaNGdhyWi8YsPWjrON7ZIjjBT
+RDeADT+ZuKQPlyXbyEKU9AgmYNsUrQh/fVQCReV2kDPgEu6ItvhUVTjnqs43nHLX
+056DdsWYXkdcWdrty244iizZXR+P7v3wxqIEClgTqVmL9nre6VFRcQVPG5AujE0u
+37KfZ4YKWJhZfvF3nb2akJDdAIEJDgvkWBZCOODThhS1o4Zcy+6K/BmapR1FCGys
+nW5OC3Nl4pIxIRF1Z0Vr
+=67Wd
+-----END PGP SIGNATURE-----
+
+--1SVgZ+3xbDF9VW5n--
