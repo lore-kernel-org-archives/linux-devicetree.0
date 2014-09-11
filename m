@@ -1,225 +1,80 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: [PATCH v7 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Wed, 10 Sep 2014 16:20:18 -0700
-Message-ID: <1410391220-4866-3-git-send-email-tinamdar@apm.com>
-References: <1410391220-4866-1-git-send-email-tinamdar@apm.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v10 1/3] RTC: RK808: add RTC driver for RK808
+Date: Wed, 10 Sep 2014 17:10:36 -0700
+Message-ID: <CAD=FV=VPgU9YwoAecGAVcEe8H2YaA=vPZJUwnjmzhFCZxBXuqw@mail.gmail.com>
+References: <1410311886-4579-1-git-send-email-zyw@rock-chips.com>
+	<1410311886-4579-2-git-send-email-zyw@rock-chips.com>
+	<20140910134411.8128acce79f2423d4448e8f4@linux-foundation.org>
+	<CAD=FV=V4-dHpKwRqewCr7ujDdRYiMiUcRuJAS7C602EyCMnPFQ@mail.gmail.com>
+	<20140910150843.78d9416ae0dada8fccf8063a@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410391220-4866-1-git-send-email-tinamdar@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, patches@apm.com, linux-kernel@vger.kernel.org, Tanmay Inamdar <tinamdar@apm.com>, jcm@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140910150843.78d9416ae0dada8fccf8063a@linux-foundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Chris Zhong <zyw@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, Olof Johansson <olof@>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree nodes for APM X-Gene PCIe host controller and
-PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts
-nodes are added.
+Andrew,
 
-Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
----
- arch/arm64/boot/dts/apm-mustang.dts |   8 ++
- arch/arm64/boot/dts/apm-storm.dtsi  | 160 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 168 insertions(+)
+On Wed, Sep 10, 2014 at 3:08 PM, Andrew Morton
+<akpm@linux-foundation.org> wrote:
+> On Wed, 10 Sep 2014 14:37:13 -0700 Doug Anderson <dianders@chromium.org> wrote:
+>
+>> Andrew,
+>>
+>> On Wed, Sep 10, 2014 at 1:44 PM, Andrew Morton
+>> <akpm@linux-foundation.org> wrote:
+>> > On Wed, 10 Sep 2014 09:18:04 +0800 Chris Zhong <zyw@rock-chips.com> wrote:
+>> >
+>> >> Adding RTC driver for supporting RTC device present inside RK808 PMIC.
+>> >>
+>> >> ...
+>> >>
+>> >> +     ret = rtc_valid_tm(&tm);
+>> >> +     if (ret) {
+>> >> +             dev_warn(&pdev->dev, "invalid date/time and init time\n");
+>> >> +             rk808_rtc_set_time(&pdev->dev, &tm_def);
+>> >> +     }
+>> >
+>> > This is somewhat unusual.  Most drivers will emit a warning and give up
+>> > when they find the time is wrong.  Why is this driver different and is
+>> > this desirable behaviour?
+>>
+>> When you say "give up", what does that mean?  I assume the driver
+>> should keep initting, right?  Then the user can go in and set a time
+>> later...
+>
+> I think I was misreading current drivers a bit.  rtc-cmos.c will go in
+> and set a dummy time but regular low-level drivers don't sanity-check
+> the time at all at setup time.
+>
+>>
+>> I did test things with just removing this chunk of code.  You get some
+>> yells at bootup if you put a bogus time in there:
+>>
+>> [    2.987590] rk808-rtc rk808-rtc: invalid date/time and init time
+>> [    3.013148] rk808-rtc rk808-rtc: rtc core: registered rk808-rtc as rtc0
+>> [    4.586115] rk808-rtc rk808-rtc: hctosys: invalid date/time
+>>
+>> ...but if you later set a valid time then everything is fine.  That
+>> seems reasonable behavior to me, so I guess we could just remove this
+>> whole chunk?  It appears that after a normal bootup the date/time is
+>> something valid.
+>
+> hm.  Having an invalid time is perhaps better than having a valid but
+> incorrect time.
 
-diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
-index b2f5622..f649000 100644
---- a/arch/arm64/boot/dts/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm-mustang.dts
-@@ -25,6 +25,14 @@
- 	};
- };
- 
-+&pcie0clk {
-+	status = "ok";
-+};
-+
-+&pcie0 {
-+	status = "ok";
-+};
-+
- &serial0 {
- 	status = "ok";
- };
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index c0aceef..e8a32a2 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -269,6 +269,166 @@
- 				enable-mask = <0x2>;
- 				clock-output-names = "rtcclk";
- 			};
-+
-+			pcie0clk: pcie0clk@1f2bc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2bc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie0clk";
-+			};
-+
-+			pcie1clk: pcie1clk@1f2cc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2cc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie1clk";
-+			};
-+
-+			pcie2clk: pcie2clk@1f2dc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2dc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie2clk";
-+			};
-+
-+			pcie3clk: pcie3clk@1f50c000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f50c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie3clk";
-+			};
-+
-+			pcie4clk: pcie4clk@1f51c000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f51c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie4clk";
-+			};
-+		};
-+
-+		pcie0: pcie@1f2b0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-+				0xe0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x00 0x00000000 0xe0 0x10000000 0x00 0x00010000   /* io */
-+				  0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
-+			clocks = <&pcie0clk 0>;
-+		};
-+
-+		pcie1: pcie@1f2c0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f2c0000 0x0 0x00010000   /* Controller registers */
-+				0xd0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xd0 0x10000000 0x00 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0xd1 0x80000000 0x00 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc8 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xc9 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xca 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xcb 0x1>;
-+			clocks = <&pcie1clk 0>;
-+		};
-+
-+		pcie2: pcie@1f2d0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg =  < 0x00 0x1f2d0000 0x0 0x00010000   /* Controller registers */
-+				 0x90 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0x90 0x10000000 0x0 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0x91 0x80000000 0x0 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xce 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xcf 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xd0 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xd1 0x1>;
-+			clocks = <&pcie2clk 0>;
-+		};
-+
-+		pcie3: pcie@1f500000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f500000 0x0 0x00010000   /* Controller registers */
-+				0xa0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xa0 0x10000000 0x0 0x00010000   /* io   */
-+				  0x02000000 0x0 0x80000000 0xa1 0x80000000 0x0 0x80000000>; /* mem  */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xd4 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xd5 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xd6 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xd7 0x1>;
-+			clocks = <&pcie3clk 0>;
-+		};
-+
-+		pcie4: pcie@1f510000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f510000 0x0 0x00010000   /* Controller registers */
-+				0xc0 0xd0000000 0x0 0x00200000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xc0 0x10000000 0x0 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0xc1 0x80000000 0x0 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xda 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xdb 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xdc 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xdd 0x1>;
-+			clocks = <&pcie4clk 0>;
- 		};
- 
- 		serial0: serial@1c020000 {
--- 
-1.9.1
+OK.  It's an easy patch to remove this.  Chris: do you want to test
+that too and post it, or do you want me to?  Basically just remove:
+
+  rk808_rtc_set_time(&pdev->dev, &tm_def);
+
+...and of course then remove the tm_def structure and take braces off
+the "if".  I think everything works if you do that.  We need to make
+sure to base on the patch Andrew talked about about making the
+structure static (the new patch would remove the structure completely,
+but nice not to get a merge conflict).
+
+-Doug
