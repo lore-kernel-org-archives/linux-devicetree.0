@@ -1,59 +1,61 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
- LS1021A
-Date: Thu, 11 Sep 2014 08:58:40 +0000
-Message-ID: <39a86eecae314626a8a2af76849171ea@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
- <1410253952-15631-2-git-send-email-jingchang.lu@freescale.com>
- <fa256d13e4304175b14369b9d3b55729@BL2PR03MB579.namprd03.prod.outlook.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: st-sensors: add support for lis3lv02d accelerometer
+Date: Thu, 11 Sep 2014 11:13:24 +0200
+Message-ID: <CACRpkdZuSsePVjPpmLV5bs5VOcbnH2_gK4-kOfbpBM1-7Q=zgQ@mail.gmail.com>
+References: <1408815064-5763-1-git-send-email-linus.walleij@linaro.org>
+	<53FB6205.5020704@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fa256d13e4304175b14369b9d3b55729-AZ66ij2kwaYNjdDjpj1h++O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53FB6205.5020704-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEd1cHRhIFN1cmVzaC1CNDI4
-MTMNCj5TZW50OiBUaHVyc2RheSwgU2VwdGVtYmVyIDExLCAyMDE0IDQ6NDIgUE0NCj5UbzogTHUg
-SmluZ2NoYW5nLUIzNTA4MzsgR3VvIFNoYXduLVI2NTA3Mw0KPkNjOiBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBMdQ0KPkpp
-bmdjaGFuZy1CMzUwODM7IEJhZG9sYSBOaWtoaWwtQjQ2MTcyOyBaaGFvIENoZW5odWktQjM1MzM2
-OyBMZWVraGENCj5TaGF2ZXRhLUIyMDA1MjsgR3VwdGEgUnVjaGlrYS1SNjY0MzE7IFNoYXJtYSBC
-aHVwZXNoLUI0NTM3MDsgRnUgQ2hhby0NCj5CNDQ1NDg7IFhpdWJvIExpLUI0NzA1MzsgTHUgSmlu
-Z2NoYW5nLUIzNTA4Mw0KPlN1YmplY3Q6IFJFOiBbUEFUQ0h2MyAxLzZdIEFSTTogZHRzOiBBZGQg
-U29DIGxldmVsIGRldmljZSB0cmVlIHN1cHBvcnQgZm9yDQo+TFMxMDIxQQ0KPg0KPg0KPg0KPj4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4+IEZyb206IEppbmdjaGFuZyBMdSBbbWFpbHRv
-OmppbmdjaGFuZy5sdUBmcmVlc2NhbGUuY29tXQ0KPj4gU2VudDogVHVlc2RheSwgU2VwdGVtYmVy
-IDA5LCAyMDE0IDI6NDIgUE0NCj4+IFRvOiBHdW8gU2hhd24tUjY1MDczDQo+PiBDYzogbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsNCj4+IEx1IEppbmdjaGFuZy1CMzUwODM7IEJhZG9sYSBOaWtoaWwtQjQ2MTcyOyBaaGFvIENo
-ZW5odWktQjM1MzM2OyBHdXB0YQ0KPj4gU3VyZXNoLSBCNDI4MTM7IExlZWtoYSBTaGF2ZXRhLUIy
-MDA1MjsgR3VwdGEgUnVjaGlrYS1SNjY0MzE7IFNoYXJtYQ0KPj4gQmh1cGVzaC0gQjQ1MzcwOyBG
-dSBDaGFvLUI0NDU0ODsgWGl1Ym8gTGktQjQ3MDUzOyBMdSBKaW5nY2hhbmctQjM1MDgzDQo+PiBT
-dWJqZWN0OiBbUEFUQ0h2MyAxLzZdIEFSTTogZHRzOiBBZGQgU29DIGxldmVsIGRldmljZSB0cmVl
-IHN1cHBvcnQgZm9yDQo+PiBMUzEwMjFBDQo+Pg0KPj4gRnJvbTogSmluZ2NoYW5nIEx1IDxiMzUw
-ODNAZnJlZXNjYWxlLmNvbT4NCj4+DQo+PiBBZGQgRnJlZXNjYWxlIExTMTAyMUEgU29DIGRldmlj
-ZSB0cmVlIHN1cHBvcnQNCj4+DQo+PiArDQo+PiArCQl1c2JAMzEwMDAwMCB7DQo+PiArCQkJY29t
-cGF0aWJsZSA9ICJmc2wsZnNsLWR3YzMiOw0KPj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDI+Ow0K
-Pj4gKwkJCSNzaXplLWNlbGxzID0gPDI+Ow0KPj4gKwkJCXJhbmdlczsNCj4+ICsNCj4+ICsJCQlk
-d2MzIHsNCj4+ICsJCQkJY29tcGF0aWJsZSA9ICJzbnBzLGR3YzMiOw0KPj4gKwkJCQlyZWcgPSA8
-MHgwIDB4MzEwMDAwMCAweDAgMHgxMDAwMD47DQo+PiArCQkJCWludGVycnVwdHMgPSA8R0lDX1NQ
-SSA5Mw0KPj4gSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+PiArCQkJCWRyX21vZGUgPSAiaG9zdCI7
-DQo+PiArCQkJCW1heGltdW0tc3BlZWQgPSAiaGlnaC1zcGVlZCI7DQo+PiArCQkJfTsNCj4+ICsJ
-CX07DQo+PiArCX07DQo+PiArDQo+PiArDQo+W1N1cmVzSF0gIENhbiB5b3UgcGxlYXNlIHBpY2sg
-dGhpcyBub2RlIGZvcm0gbHMxLWxpbnV4IC0+IGxzMS1kZXYgYnJhbmNoDQo+VGhpcyBub2RlIHNo
-b3VsZCBsb29rIGxpa2UNCj4NCj4NCj4JdXNiM0AzMTAwMDAwIHsNCj4gICAgICAgICAgICAgICAg
-ICAgICAgICBjb21wYXRpYmxlID0gInNucHMsZHdjMyI7DQo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgcmVnID0gPDB4MCAweDMxMDAwMDAgMHgwIDB4MTAwMDA+Ow0KPiAgICAgICAgICAgICAgICAg
-ICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSA5MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4g
-ICAgICAgICAgICAgICAgICAgICAgICBkcl9tb2RlID0gImhvc3QiOw0KPiAgICAgICAgICAgICAg
-ICB9Ow0KDQpPaywgSSB3aWxsIHVwZGF0ZSBpdCBpbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQpCZXN0
-IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Aug 25, 2014 at 6:19 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 23/08/14 18:31, Linus Walleij wrote:
+>> This adds support for the LIS3LV02 accelerometer found in the
+>> ST Microelectronics Nomadik board series.
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> If anyone wants to look at what the misc driver supports that we still
+> don't have in the IIO driver then that would be great!
+
+I had a quick look at it:
+
+- The misc driver has a bridge that optionally registers the
+  accelerometer as a joystick in the input subsystem, so it
+  can be used as a polled joystick. That looks like something
+  we would want to be able to do for any accelerometer in a
+  generic glue file in IIO I think?
+
+- Ability to generate a "free-fall event" on a misc device
+  if the device containing the sensor is dropped. A special
+  interrupt can be enabled on the device for this. I can't quite
+  see how userspace is supposed to react to it, because this
+  miscdevice userspace ABI is sort of complex.
+
+- Some driver-specific sysfs power management stuff
+
+- Context save/restore registers for power-off handling.
+
+- Trigger selftest from sysfs : I suspect this could be ported
+  over to all the ST Micro devices, as they are similar in that
+  way, same kind of test registers.
+
+- Possible to enable high-pass filter from the DT config.
+  (Should that not be dynamic?)
+
+Apart from that it has a custom sysfs interface to read the
+accelerometer, similar to the IIO interface. It seems to *only* support
+raw values AFAICT  though, not sensitivity adjustment, so my patch
+gives the ability to have better sensor handling in the kernel from an
+IIO point of view.
+
+Yours,
+Linus Walleij
