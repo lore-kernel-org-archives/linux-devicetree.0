@@ -1,104 +1,99 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: omap5: Add dr_mode for dwc3
-Date: Thu, 11 Sep 2014 12:14:39 -0500
-Message-ID: <20140911171439.GG1840@saruman.home>
-References: <1381402195-29257-1-git-send-email-kishon@ti.com>
- <1381402195-29257-2-git-send-email-kishon@ti.com>
- <52580F34.8030809@ti.com>
- <20140416161619.GH28035@saruman.home>
- <540D9449.3090008@compulab.co.il>
- <20140908132403.GA22409@saruman.home>
- <54103E15.3090406@compulab.co.il>
-Reply-To: <balbi@ti.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
+ specify the physical timer
+Date: Thu, 11 Sep 2014 18:22:47 +0100
+Message-ID: <5411DA67.2040402@arm.com>
+References: <1410452204-7277-1-git-send-email-dianders@chromium.org> <20140911164710.GW6158@arm.com>	<5411D528.4050605@arm.com> <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3ecMC0kzqsE2ddMN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54103E15.3090406@compulab.co.il>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Lifshitz <lifshitz@compulab.co.il>
-Cc: balbi@ti.com, Roger Quadros <rogerq@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, George Cherian <george.cherian@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---3ecMC0kzqsE2ddMN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Sep 10, 2014 at 03:03:33PM +0300, Dmitry Lifshitz wrote:
+On 11/09/14 18:11, Doug Anderson wrote:
 > Hi,
->=20
-> On 09/08/2014 04:24 PM, Felipe Balbi wrote:
-> >Hi,
-> >
-> >On Mon, Sep 08, 2014 at 02:34:33PM +0300, Dmitry Lifshitz wrote:
-> >>Hi Felipe, Roger
-> >>
-> >>On 04/16/2014 07:16 PM, Felipe Balbi wrote:
-> >>>On Fri, Oct 11, 2013 at 05:46:12PM +0300, Roger Quadros wrote:
-> >>>>Hi,
-> >>>>
-> >>>>On 10/10/2013 01:49 PM, Kishon Vijay Abraham I wrote:
-> >>>>>From: George Cherian <george.cherian@ti.com>
-> >>>>>
-> >>>>>Added dr_mode property in dwc3 and set its default mode to device.
-> >>>>
-> >>>>If there is a specific reason why this is not set to "otg", we need
-> >>>>to explain it here.
-> >>>>
-> >>>>AFAIK the port is meant to be used as OTG port.
-> >>>
-> >>>we still don't have the workaround for dual role ports, I've been
-> >>>working on it but still need to retest and make sure it's working fine
-> >>>before merging upstream.
-> >>>
-> >>
-> >>
-> >>Does the OTG port suppose to work with OMAP5? I mean role switching
-> >>mechanism?
-> >>
-> >>I'm testing kernel v3.16 with OMAP5 based board (CM-T54).
-> >>
-> >>If I set CONFIG_USB_DWC3_DUAL_ROLE, than nothing is going on when I plug
-> >>some device/host cable into micro USB3.0 port (VBUS/ID detection with e=
-xtcon
-> >>events works fine).
-> >
-> >Dual role does not work. We allow the driver to the built with both Host
-> >and Peripheral support because some platforms have more than one port
-> >and building the driver with dual role allows us to make one port host
-> >and one peripheral.
-> >
->=20
-> Please, can you provide some detail about platforms with several ports.
-> How do that ports are connected to DWC3?
+> 
+> On Thu, Sep 11, 2014 at 10:00 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
+>> On 11/09/14 17:47, Will Deacon wrote:
+>>> On Thu, Sep 11, 2014 at 05:16:44PM +0100, Doug Anderson wrote:
+>>>> Some 32-bit (ARMv7) systems are architected like this:
+>>>>
+>>>> * The firmware doesn't know and doesn't care about hypervisor mode and
+>>>>   we don't want to add the complexity of hypervisor there.
+>>>>
+>>>> * The firmware isn't involved in SMP bringup or resume.
+>>>>
+>>>> * The ARCH timer come up with an uninitialized offset between the
+>>>>   virtual and physical counters.  Each core gets a different random
+>>>>   offset.
+>>>>
+>>>> On systems like the above, it doesn't make sense to use the virtual
+>>>> counter.  There's nobody managing the offset and each time a core goes
+>>>> down and comes back up it will get reinitialized to some other random
+>>>> value.
+>>>
+>>> You probably need to rephrase this slightly, as there *is* still a
+>>> requirement on the hypervisor/firmware (actually, two!). See below.
+>>>
+>>>> Let's add a property to the device tree to say that we shouldn't use
+>>>> the virtual timer.  Firmware could potentially remove this property
+>>>> before passing the device tree to the kernel if it really wants the
+>>>> kernel to use a virtual timer.
+>>>>
+>>>> Note that it's been said that ARM64 (ARMv8) systems the firmware and
+>>>> kernel really can't be architected as described above.  That means
+>>>> using the physical timer like this really only makes sense for ARMv7
+>>>> systems.
+>>>
+>>> I'd go further: this only makes sense if you're booting in secure SVC
+>>> mode.
+>>
+>> If that's the case, what's the problem? Enter monitor mode, set SCR.NS
+>> to one, nuke CNTVOFF, revert, job done.
+>>
+>> What am I missing?
+> 
+> Stuff like this was talked about in the thread about Sonny's patch at
+> <https://patchwork.kernel.org/patch/4790921/>
+> 
+> ...in that case we were always talking about HYP mode, though.  I
 
-you have several dwc3 instances.
+That's because I always assumed that you'd be running non-secure,
+dropped there by some idiotic firmware without any way to go back up.
 
---=20
-balbi
+> don't think anyone has explicitly talked about just switching to
+> monitor mode and then leaving ourselves in Secure SVC after we're
+> done.  It would be nice (especially for the VDSO guys) if we could
+> just init the virtual offset...
+> 
+> We would need to run this code potentially at processor bringup and
+> after suspend/resume, but that seems possible too.
 
---3ecMC0kzqsE2ddMN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Note that this would be an ARMv7 only thing (you can't do that on ARMv8,
+at all).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> Is the transition to monitor mode and back simple?  Where would you
+> suggest putting this code?  It would definitely need to be pretty
+> early.  We'd also need to be able to detect that we're in Secure SVC
+> and not mess up anyone else who happened to boot in Non Secure SVC.
 
-iQIcBAEBAgAGBQJUEdh/AAoJEIaOsuA1yqREQu8P/RQfq8OkOmKPlgsQZWQmintm
-kKmh52dCZgzzDjCKyoj3ADsth+W3lTpYOTFadgBFy3dSKx4vQqHYjwpfosUDO3+O
-Z9E4SZpgOUHuik8B9H3Y6K8j4Aj/KQw0TqP9fNqGOO/RR4DRyqnRJWLryDp3LJau
-HkJWuMnjLQ5sIwLeQnMvPAvtBTH/45o2CI48d1X7evN4cyNpi+BO6kK38/ceu0kv
-CCxpKQaZw+MsEaqOgIIjNFkeCebkOhN+aKVkRtn4Asq2uw7uJDlLjMMerB7sd949
-ViiNopJ9ntJC+OsSRW31Q0Zuj9P4D7md+JmmUMc8y/bY5equ19hZfegplToiX+10
-O6gsehDD/Ghtg53BP8fApn65G/yHlXB8SkVILuw/ef/ISNZqZ4traNUkucZ8EjL5
-MpB3rTIwZkDlwmcXgzMf15zZenSh6c5vIsl7CEhVAxCJnxSO8invothcmFbAyD4s
-YoQeUDfPqIAg8steS88klM4qhmOvQwcxry+0lTY8Nj6VOpRV3cn0CRYzXWdgK0x8
-dhrtsqBFgj0yL9CRkcSFPmhP6MOhhheEdL4LNkl++156KeeMkREiYaGm8yYLgPWc
-yWeLbj8peHgedb6smvFJGdu80Gsml3o00eCh2hnX3k5Hu2NmyPf66VeBEjklpuVr
-E9JKLdHD0o+Pz2CmRJVR
-=Ch2r
------END PGP SIGNATURE-----
+This would have to live in some very early platform-specific code. The
+ugly part is that you cannot find out what world you're in (accessing
+SCR is going to send you to UNDEF-land if accessed from NS).
 
---3ecMC0kzqsE2ddMN--
+If I was suicidal, I'd suggest you could pass a parameter to the command
+line, interpreted by the timer code... But I since I'm not, let's
+pretend I haven't said anything... ;-)
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
