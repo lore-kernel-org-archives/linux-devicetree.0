@@ -1,62 +1,73 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 8/8] rtc: at91sam9: add DT bindings documentation
-Date: Thu, 11 Sep 2014 11:42:13 +0200
-Message-ID: <20140911094213.GC12295@localhost>
-References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
- <1410425767-17874-9-git-send-email-boris.brezillon@free-electrons.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3 5/6] ARM: imx: Add initial support for Freescale LS1021A
+Date: Thu, 11 Sep 2014 09:53:56 +0000
+Message-ID: <517628172fb3416ea7b12b4ae24e098a@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
+ <3532608.xLS91GQkq4@wuerfel>
+ <daf5ec5b70164b3e9a810def41909c48@BL2PR03MB467.namprd03.prod.outlook.com>
+ <20140402.o60F9Z4YVe@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410425767-17874-9-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140402.o60F9Z4YVe@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 10:56:07AM +0200, Boris BREZILLON wrote:
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> ---
->  .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> new file mode 100644
-> index 0000000..258a036
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> @@ -0,0 +1,24 @@
-> +Atmel AT91SAM9260 Real Time Timer
-> +
-> +Required properties:
-> +- compatible: should be: "atmel,at91sam9260-rtt"
-> +- reg: should encode the memory region of the RTT controller
-> +- interrupts: rtc alarm/event interrupt
-> +- clocks: should contain one clock pointing the the slow clk
-> +- atmel,time-reg: should encode the GPBR register used to store the RTC
-> +		  time. The first cell should point to the GPBR node and
-> +		  the second one encode the offset within the GPBR block
-> +		  (or in other terms, the GPBR register used to store the
-> +		  current time value).
-> +
-> +
-> +
-> +Example:
-> +
-> +rtc@fffffe00 {
-
-This should be rtt@
-
-> +	compatible = "atmel,at91sam9260-rtt";
-> +	reg = <0xfffffd20 0x10>;
-> +	interrupts = <1 4 7>;
-> +	clocks = <&clk32k>;
-> +	atmel,time-reg = <&gpbr 0x0>;
-
-I think the property name could be more descriptive as it is specific to
-when the RTT is used as an RTC. Perhaps, atmel,rtt-rtc-time-reg?
-
-> +};
-
-Johan
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEFybmQgQmVyZ21hbm4gW21h
+aWx0bzphcm5kQGFybmRiLmRlXQ0KPlNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDEwLCAyMDE0
+IDM6NDIgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IEd1byBTaGF3bi1SNjUwNzM7DQo+ZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIdjMgNS82XSBBUk06IGlteDogQWRkIGlu
+aXRpYWwgc3VwcG9ydCBmb3IgRnJlZXNjYWxlDQo+TFMxMDIxQQ0KPg0KPk9uIFdlZG5lc2RheSAx
+MCBTZXB0ZW1iZXIgMjAxNCAwMzozMToxOSBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+DQo+PiA+PiAr
+RFRfTUFDSElORV9TVEFSVChMUzEwMjFBLCAiRnJlZXNjYWxlIExTMTAyMUEiKSAgI2lmZGVmDQo+
+PiA+PiArQ09ORklHX1pPTkVfRE1BDQo+PiA+PiArICAgICAgIC5kbWFfem9uZV9zaXplICA9IFNa
+XzEyOE0sDQo+PiA+PiArI2VuZGlmDQo+PiA+PiArICAgICAgIC5pbml0X21hY2hpbmUgICA9IGxz
+MTAyMWFfaW5pdF9tYWNoaW5lLA0KPj4gPj4gKyAgICAgICAuZHRfY29tcGF0ICAgICAgPSBsczEw
+MjFhX2R0X2NvbXBhdCwNCj4+ID4+ICsgICAgICAgLnJlc3RhcnQgICAgICAgID0gbXhjX3Jlc3Rh
+cnQsDQo+PiA+PiArTUFDSElORV9FTkQNCj4+ID4NCj4+ID5JIGJlbGlldmUgc29tZW9uZSByZWNl
+bnRseSBwb3N0ZWQgYSBwYXRjaCB0byBkZXJpdmUgdGhlIGRtYV96b25lX3NpemUNCj4+ID5mcm9t
+IGRldmljZSB0cmVlLiBDYW4geW8gdHJ5IHRvIGZpbmQgdGhhdCBhbmQgc2VlIGlmIHRoYXQgd2ls
+bCB3b3JrIGZvcg0KPnlvdT8NCj4+ID4NCj4+ID5DYW4geW91IGV4cGxhaW4gd2hhdCB0aGUgcmVh
+c29uIGlzIGZvciBuZWVkaW5nIGEgRE1BIHpvbmU/DQo+Pg0KPj4gV2l0aCBMUEFFIGVuYWJsZWQg
+b24gb3VyIFNvQywgd2UgbWVldCB0aGUgc3lzdGVtIGNvbXBsYWludCBvZg0KPj4gImNvaGVyZW50
+IERNQSBtYXNrIDB4ZmZmZmZmZmYgaXMgc21hbGxlciB0aGFuIHN5c3RlbSBHRlBfRE1BIG1hc2sN
+Cj4+IDB4ZmZmZmZmZmZmZmZmZmZmZiIsIGFuZCBJIG5vdGljZSB0aGF0IENPTkZJR19aT05FX0RN
+QSBhbmQgZG1hX3pvbmVfc2l6ZQ0KPmlzIGEgY29tbW9uIHJlc29sdmUgZm9yIHRoaXMuDQo+DQo+
+T2ssIEkgc2VlLiBUaGUgYWN0dWFsIHBvaW50IG9mIGRtYV96b25lX3NpemUgaG93ZXZlciBpcyBz
+bGlnaHRseSBkaWZmZXJlbnQsDQo+YW5kIEkgdGhpbmsgeW91IHNob3VsZCBub3QgdXNlIGl0IGxp
+a2UgdGhpcy4gV2Ugbm9ybWFsbHkgb25seSB1c2UgWk9ORV9ETUENCj5pZiB0aGVyZSBhcmUgZGV2
+aWNlcyB0aGF0IGhhdmUgYSBsaW1pdGF0aW9uIHNtYWxsZXIgdGhhbiA0R0IsIGFuZCB0aGF0DQo+
+YXBwZWFyIHRvIGJlIHRoZSBjYXNlIGZvciB5b3VyIHN5c3RlbS4NCj4NCj5UaGUgbWVzc2FnZSB5
+b3UgcXVvdGUgaXMgb25seSBwcmVzZW50IGluIGFyY2gvcG93ZXJwYywgc28gSSdtIG5vdCBzdXJl
+DQo+d2hhdCBzeW1wdG9tcyB5b3UgYXJlIGFjdHVhbGx5IHNlZWluZy4gUGxlYXNlIHRyeSByZW1v
+dmluZyB0aGUNCj5kbWFfem9uZV9zaXplIHNldHRpbmcgZm9yIHlvdXIgcGxhdGZvcm0gYW5kIHJl
+cG9ydCBpZiBpdCB3b3JrcyBvciB3aGF0IHRoZQ0KPnN5bXB0b20gaXMgaWYgaXQgZG9lcyBub3Qg
+d29yayB3aXRoIHRoZSBsYXRlc3Qga2VybmVsLg0KPg0KPldlIGRlZmluaXRlbHkgbmVlZCB0byBn
+ZXQgdGhpcyB0byB3b3JrIG91dCBvZiB0aGUgYm94IHdpdGhvdXQgYQ0KPmRtYV96b25lX3NpemUg
+aGFjay4NCj4NCj5DYW4geW91IGRlc2NyaWJlIHdoYXQgdGhlIG1lbW9yeSBsYXlvdXQgaXMgb2Yg
+eW91ciBwbGF0Zm9ybT8gQ2FuIHlvdSBoYXZlDQo+UkFNIGluc3RhbGxlZCBhYm92ZSB0aGUgNEdC
+IHBoeXNpY2FsIGFkZHJlc3MgYm91bmRhcnk/IElmIHlvdSBjYW4sIGFyZQ0KPnRoZXJlIGFueSBk
+ZXZpY2VzIHRoYXQgYXJlIHVuYWJsZSB0byBwZXJmb3JtIERNQSBpbnRvIHRoYXQgbWVtb3J5IHdp
+dGhvdXQNCj50aGUgdXNlIG9mIGFuIElPTU1VPw0KPg0KPglBcm5kDQpPdXIgZmlyc3QgTFMxMDIx
+QSBzdXBwb3J0IGlzIGJhc2VkIG9uIGtlcm5lbC0zLjEyLCB3aGVyZSB3aGVuIExQQUUgZW5hYmxl
+ZA0KaXQgd2lsbCBjb21wYXJlIHRoZSBkZXZpY2UncyBjb2hlcmVudF9kbWFfbWFzayB3aXRoIGFy
+bV9kbWFfbGltaXQsIHdoaWNoIGlzDQo2NC1iaXQgMHhmZmZmZmZmZmZmZmZmZmZmIHdpdGhvdXQg
+Q09ORklHX1pPTkVfRE1BLCB3aXRoIENPTkZJR19aT05FX0RNQSBjYW4NCmxpbWl0IHRoZSBjb21w
+YXJpc29uIGFuZCBhdm9pZCB0aGUgd2FybmluZy4NCkFsbCBkZXZpY2UgY2FuIGFkZHJlc3MgMzIt
+Yml0IGFkZHJlc3Mgc3BhY2Ugb24gTFMxMDIxQSwgV2l0aCB5b3UgY29tbWVudCBhYm92ZSwNCkkg
+cmVtb3ZlIHRoZSBkbWFfem9uZV9zaXplIGFuZCBvbmx5IHJlc2VydmUgdGhlIENPTkZJR19aT05F
+X0RNQSBPbiBrZXJuZWwtMy4xMiwNCmZpbmRpbmcgYWxsIHdvcmtzIHdlbGwsIHNvIEkgd2lsbCBy
+ZW1vdmUgdGhlIGRtYV96b25lX3NpemUgc2V0dGluZyBvbiAzLjEyLiBUaGFua3MuDQoNCkkgaGF2
+ZSBhIGxvb2sgb24gbGF0ZXN0IGtlcm5lbCwgZmluZGluZyBnZXRfY29oZXJlbnRfZG1hX21hc2so
+KSBoYXMgbGltaXRlZCB0aGUgbWFzaw0KdG8gKHU2NClETUFfQklUX01BU0soMzIpLCBkb2VzIHRo
+aXMgbWVhbiB0aGUgQ09ORklHX1pPTkVfRE1BIGlzIG5vdCBuZWVkZWQgZm9yIG1lDQpoZXJlPyBU
+aGFua3MuDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
