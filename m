@@ -1,120 +1,71 @@
-From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V3 3/3] ARM: imx: source gpt per clk from OSC for system timer
-Date: Thu, 11 Sep 2014 11:29:42 +0800
-Message-ID: <1410406182-21113-4-git-send-email-b20788@freescale.com>
+From: Anson Huang <b20788@freescale.com>
+Subject: [PATCH V3 2/3] ARM: dts: imx6: make gpt per clock can be from OSC
+Date: Thu, 11 Sep 2014 11:29:41 +0800
+Message-ID: <1410406182-21113-3-git-send-email-b20788@freescale.com>
 References: <1410406182-21113-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410406182-21113-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1410406182-21113-1-git-send-email-b20788@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org, kernel@pengutronix.de, festevam@gmail.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6Q TO > 1.0, i.MX6DL and i.MX6SX, gpt per clock
-can be from OSC instead of ipg_per, as ipg_per's rate
-may be scaled when system enter low bus mode, to keep
-system timer NOT drift, better to make gpt per clock
-at fixed rate, here add support for gpt per clock to
-be from OSC which is at fixed rate always.
+Original gpt per clk parent is from ipg_per clk which
+may be scaled when system enter low bus mode, as ipg
+clk will be lower in low bus mode, to keep system clk
+NOT drift, select gpt per clk parent from OSC which
+is at fixed freq always.
 
-There are some difference on this implementation of
-gpt per clock source, see below for details:
+On i.mx6qdl, add a osc_per clk source for i.mx6q
+TO > 1.0 and all i.MX6dl SoC.
 
-i.MX6Q TO > 1.0: GPT_CR_CLKSRC, b'101 selects fix clock
-    of OSC / 8 for gpt per clk;
-i.MX6DL and i.MX6SX: GPT_CR_CLKSRC, b'101 selects OSC
-    for gpt per clk, and we must enable GPT_CR_24MEM to
-    enable OSC clk source for gpt per, GPT_PR_PRESCALER24M
-    is for pre-scaling of this OSC clk, here set it to 8
-    to make gpt per clk is 3MHz;
-i.MX6SL: ipg_per can be from OSC directly, so no need to
-    implement this new clk source for gpt per.
+On i.mx6sx, just make gpt per clk from OSC.
 
-Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Anson Huang <b20788@freescale.com>
 ---
-change log from v2->v3:
-	1.remove unnecessary definition V2_TCTL_CLK_OSC and
-	  variable tprer_val;
-	2.optimize the logic of different gpt clk select.
+ arch/arm/boot/dts/imx6qdl.dtsi |    5 +++--
+ arch/arm/boot/dts/imx6sx.dtsi  |    2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
- arch/arm/mach-imx/time.c |   31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/mach-imx/time.c b/arch/arm/mach-imx/time.c
-index bf92e5a..15d18e1 100644
---- a/arch/arm/mach-imx/time.c
-+++ b/arch/arm/mach-imx/time.c
-@@ -60,17 +60,22 @@
- #define MX2_TSTAT_CAPT		(1 << 1)
- #define MX2_TSTAT_COMP		(1 << 0)
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 70d7207..8de2801 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -401,8 +401,9 @@
+ 				reg = <0x02098000 0x4000>;
+ 				interrupts = <0 55 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6QDL_CLK_GPT_IPG>,
+-					 <&clks IMX6QDL_CLK_GPT_IPG_PER>;
+-				clock-names = "ipg", "per";
++					 <&clks IMX6QDL_CLK_GPT_IPG_PER>,
++					 <&clks IMX6QDL_CLK_GPT_3M>;
++				clock-names = "ipg", "per", "osc_per";
+ 			};
  
--/* MX31, MX35, MX25, MX5 */
-+/* MX31, MX35, MX25, MX5, MX6 */
- #define V2_TCTL_WAITEN		(1 << 3) /* Wait enable mode */
- #define V2_TCTL_CLK_IPG		(1 << 6)
- #define V2_TCTL_CLK_PER		(2 << 6)
-+#define V2_TCTL_CLK_OSC_DIV8	(5 << 6)
- #define V2_TCTL_FRR		(1 << 9)
-+#define V2_TCTL_24MEN		(1 << 10)
-+#define V2_TPRER_PRE24M		12
- #define V2_IR			0x0c
- #define V2_TSTAT		0x08
- #define V2_TSTAT_OF1		(1 << 0)
- #define V2_TCN			0x24
- #define V2_TCMP			0x10
+ 			gpio1: gpio@0209c000 {
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 63d9d82..b5d8252 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -421,7 +421,7 @@
+ 				reg = <0x02098000 0x4000>;
+ 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
+-					 <&clks IMX6SX_CLK_GPT_SERIAL>;
++					 <&clks IMX6SX_CLK_GPT_3M>;
+ 				clock-names = "ipg", "per";
+ 			};
  
-+#define V2_TIMER_RATE_OSC_DIV8	3000000
-+
- #define timer_is_v1()	(cpu_is_mx1() || cpu_is_mx21() || cpu_is_mx27())
- #define timer_is_v2()	(!timer_is_v1())
- 
-@@ -312,10 +317,22 @@ static void __init _mxc_timer_init(int irq,
- 	__raw_writel(0, timer_base + MXC_TCTL);
- 	__raw_writel(0, timer_base + MXC_TPRER); /* see datasheet note */
- 
--	if (timer_is_v2())
--		tctl_val = V2_TCTL_CLK_PER | V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
--	else
-+	if (timer_is_v2()) {
-+		tctl_val = V2_TCTL_FRR | V2_TCTL_WAITEN | MXC_TCTL_TEN;
-+		if (clk_get_rate(clk_per) == V2_TIMER_RATE_OSC_DIV8) {
-+			tctl_val |= V2_TCTL_CLK_OSC_DIV8;
-+			if (cpu_is_imx6dl() || cpu_is_imx6sx()) {
-+				/* 24 / 8 = 3 MHz */
-+				__raw_writel(7 << V2_TPRER_PRE24M,
-+					timer_base + MXC_TPRER);
-+				tctl_val |= V2_TCTL_24MEN;
-+			}
-+		} else {
-+			tctl_val |= V2_TCTL_CLK_PER;
-+		}
-+	} else {
- 		tctl_val = MX1_2_TCTL_FRR | MX1_2_TCTL_CLK_PCLK1 | MXC_TCTL_TEN;
-+	}
- 
- 	__raw_writel(tctl_val, timer_base + MXC_TCTL);
- 
-@@ -349,9 +366,13 @@ static void __init mxc_timer_init_dt(struct device_node *np)
- 	WARN_ON(!timer_base);
- 	irq = irq_of_parse_and_map(np, 0);
- 
--	clk_per = of_clk_get_by_name(np, "per");
- 	clk_ipg = of_clk_get_by_name(np, "ipg");
- 
-+	/* Try osc_per first, and fall back to per otherwise */
-+	clk_per = of_clk_get_by_name(np, "osc_per");
-+	if (IS_ERR(clk_per))
-+		clk_per = of_clk_get_by_name(np, "per");
-+
- 	_mxc_timer_init(irq, clk_per, clk_ipg);
- }
- CLOCKSOURCE_OF_DECLARE(mx1_timer, "fsl,imx1-gpt", mxc_timer_init_dt);
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
