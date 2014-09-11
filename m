@@ -1,42 +1,55 @@
-From: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 8/8] arm64: dts: add <dt-bindings/> symlink
-Date: Thu, 11 Sep 2014 15:50:52 +0530
-Message-ID: <1410430852-3491-9-git-send-email-ch.naveen@samsung.com>
-References: <1410430852-3491-1-git-send-email-ch.naveen@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for LS1021A
+Date: Thu, 11 Sep 2014 12:36:50 +0200
+Message-ID: <2944183.HzFlEzpKtu@wuerfel>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com> <62651744.c71MLsL3Q5@wuerfel> <cd69af536cd248b8add94a468fa97095@BL2PR03MB467.namprd03.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1410430852-3491-1-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <cd69af536cd248b8add94a468fa97095-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On Thursday 11 September 2014 08:21:58 Jingchang Lu wrote:
+> >One more thing: these should all go into the board specific files.
+> >
+> >The installed memory is almost always a property of the board, not the SoC,
+> >and a lot of boards only connect a subset of the serial ports, or they may
+> >have them in a different order.
+> >
+> >In particular, you only provide aliases for the six out of the ten
+> >available uarts, which seems arbitrary.
+> >
+> 
+> The memory size info will be fixed up in u-boot before booting the kernel image,
+> so I add the memory node in the SoC level device tree and keep only one copy. 
 
-Add symlink to include/dt-bindings from arch/arm64/boot/dts/include/ to
-match the ones in ARM architectures so that preprocessed device
-tree files can include various useful constant definitions.
+Right. I wonder if it would make sense to just leave a placeholder in there
+that does not look like a plausible memory size. I believe the common case today
+is that we actually want to have the correct memory size in the board-level
+dts file because the boot loader does not change that value. If your boot loader
+does it, we probably don't want any default that may confuse users at all,
+in particular in the per-soc file.
 
-See commit c58299aa8754 ("kbuild: create an "include chroot" for DT bindings")
-merged in v3.10-rc1 for details.
+> The lpuart derives the line number from the node's alias id, 8250 serial driver
+> doesn't rely on it, so only aliases for the lpuart are added, not arbitrary.
 
-CC: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/include/dt-bindings |    1 +
- 1 file changed, 1 insertion(+)
- create mode 120000 arch/arm64/boot/dts/include/dt-bindings
+This is really bad though, for two reasons:
 
-diff --git a/arch/arm64/boot/dts/include/dt-bindings b/arch/arm64/boot/dts/include/dt-bindings
-new file mode 120000
-index 0000000..08c00e4
---- /dev/null
-+++ b/arch/arm64/boot/dts/include/dt-bindings
-@@ -0,0 +1 @@
-+../../../../../include/dt-bindings
-\ No newline at end of file
--- 
-1.7.9.5
+a) you are relying on current behavior of two kernel drivers that we may want to
+change in the future. Unfortunately the two drivers don't do this consistently
+today, but that's something we should fix in the kernel, not work around in
+the hardware description.
 
+b) for the lpuart case, you put a fixed device order in the soc-specific file,
+without any guarantee that the board uses just the first x devices rather than
+another random subset. The alias values are really meant to to correspond to
+how the machine calls things, not how the SoC sees it.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
