@@ -1,37 +1,58 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH] ARM: dts: Switch i2c0 to 400kHz on rk3288-evb-rk808
-Date: Wed, 10 Sep 2014 21:30:15 -0700
-Message-ID: <1410409815-22200-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Chris Zhong <zyw@rock-chips.com>, Addy Ke <addy.ke@rock-chips.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Gyungoh Yoo <gyungoh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2.2 2/2] dt-bindings: Adding compatible attribute for
+ SKY81452 regulator
+Date: Thu, 11 Sep 2014 14:22:30 +0900
+Message-ID: <20140911052230.GA3764@jack-ThinkPad-T520>
+References: <20140813190423.GI17528@sirena.org.uk>
+ <1409539218-5571-1-git-send-email-jack.yoo@skyworksinc.com>
+ <1409539218-5571-3-git-send-email-jack.yoo@skyworksinc.com>
+ <20140901103158.GO29327@sirena.org.uk>
+ <20140905015507.GA2636@jack-ThinkPad-T520>
+ <20140906143828.GJ2601@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140906143828.GJ2601-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gyungoh Yoo <jack.yoo-tjhQNA90jdKqndwCJWfcng@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We should be able to talk to the PMIC at 400kHz.  No need to talk at
-the slow 100kHz.
+On Sat, Sep 06, 2014 at 03:38:28PM +0100, Mark Brown wrote:
+> On Fri, Sep 05, 2014 at 10:55:07AM +0900, Gyungoh Yoo wrote:
+> > On Mon, Sep 01, 2014 at 11:31:58AM +0100, Mark Brown wrote:
+> 
+> > > Why is this a good idea - can this driver be used for anything other
+> > > than a sky81452?
+> 
+> > Yes. There is a possibility that this driver will be used by similar
+> > device with SKY81452.
+> 
+> OK, so tha was slightly the wrong question.  What added information is
+> forcing the user to create a subnode and specify a compatible string
+> providing?  This driver is specifying a block of multiple regulators
+> with absolute register addresses hard coded into it, there's no real
+> ability to use the driver in a different configuration here.  As soon as
+> we see the parent device we already know everything there is to know
+> about the IP block, having a separate compatible string just forces the
+> user to do more typing for no gain.
 
-As measured by ftrace (with a bunch of extra patches, since cpufreq
-for rk808 hasn't landed yet):
-  before this change: cpu0_set_target() => ~500us
-  after this change:  cpu0_set_target() => ~300us
+Thank you for your comments.
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
- arch/arm/boot/dts/rk3288-evb-rk808.dts | 1 +
- 1 file changed, 1 insertion(+)
+By the way,
+I knew that compatible string is used for binding a driver.
+http://devicetree.org/Device_Tree_Usage#Understanding_the_compatible_Property
 
-diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-index 36db177..ff522f8 100644
---- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
-+++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-@@ -18,6 +18,7 @@
- };
- 
- &i2c0 {
-+	clock-frequency = <400000>;
- 	status = "okay";
- 
- 	rk808: pmic@1b {
--- 
-2.1.0.rc2.206.gedb03e5
+And, from kernel 3.6, MFD core has a mechanism for binding of_node
+to the driver with of_compatible.
+
+Can I have a question about if it is possible to assign compatible string
+for binding driver independently with reusability?
+
+Thanks,
+Gyungoh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
