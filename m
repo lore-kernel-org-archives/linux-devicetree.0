@@ -1,72 +1,110 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3 5/6] ARM: imx: Add initial support for Freescale LS1021A
-Date: Thu, 11 Sep 2014 09:53:56 +0000
-Message-ID: <517628172fb3416ea7b12b4ae24e098a@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
- <3532608.xLS91GQkq4@wuerfel>
- <daf5ec5b70164b3e9a810def41909c48@BL2PR03MB467.namprd03.prod.outlook.com>
- <20140402.o60F9Z4YVe@wuerfel>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 5/8] rtc: at91sam9: make use of syscon/regmap to
+ access GPBR registers
+Date: Thu, 11 Sep 2014 11:55:19 +0200
+Message-ID: <20140911115519.52334db8@bbrezillon>
+References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1410425767-17874-6-git-send-email-boris.brezillon@free-electrons.com>
+	<20140911094100.GB12295@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140402.o60F9Z4YVe@wuerfel>
-Content-Language: en-US
+In-Reply-To: <20140911094100.GB12295@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEFybmQgQmVyZ21hbm4gW21h
-aWx0bzphcm5kQGFybmRiLmRlXQ0KPlNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDEwLCAyMDE0
-IDM6NDIgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IEd1byBTaGF3bi1SNjUwNzM7DQo+ZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIdjMgNS82XSBBUk06IGlteDogQWRkIGlu
-aXRpYWwgc3VwcG9ydCBmb3IgRnJlZXNjYWxlDQo+TFMxMDIxQQ0KPg0KPk9uIFdlZG5lc2RheSAx
-MCBTZXB0ZW1iZXIgMjAxNCAwMzozMToxOSBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+DQo+PiA+PiAr
-RFRfTUFDSElORV9TVEFSVChMUzEwMjFBLCAiRnJlZXNjYWxlIExTMTAyMUEiKSAgI2lmZGVmDQo+
-PiA+PiArQ09ORklHX1pPTkVfRE1BDQo+PiA+PiArICAgICAgIC5kbWFfem9uZV9zaXplICA9IFNa
-XzEyOE0sDQo+PiA+PiArI2VuZGlmDQo+PiA+PiArICAgICAgIC5pbml0X21hY2hpbmUgICA9IGxz
-MTAyMWFfaW5pdF9tYWNoaW5lLA0KPj4gPj4gKyAgICAgICAuZHRfY29tcGF0ICAgICAgPSBsczEw
-MjFhX2R0X2NvbXBhdCwNCj4+ID4+ICsgICAgICAgLnJlc3RhcnQgICAgICAgID0gbXhjX3Jlc3Rh
-cnQsDQo+PiA+PiArTUFDSElORV9FTkQNCj4+ID4NCj4+ID5JIGJlbGlldmUgc29tZW9uZSByZWNl
-bnRseSBwb3N0ZWQgYSBwYXRjaCB0byBkZXJpdmUgdGhlIGRtYV96b25lX3NpemUNCj4+ID5mcm9t
-IGRldmljZSB0cmVlLiBDYW4geW8gdHJ5IHRvIGZpbmQgdGhhdCBhbmQgc2VlIGlmIHRoYXQgd2ls
-bCB3b3JrIGZvcg0KPnlvdT8NCj4+ID4NCj4+ID5DYW4geW91IGV4cGxhaW4gd2hhdCB0aGUgcmVh
-c29uIGlzIGZvciBuZWVkaW5nIGEgRE1BIHpvbmU/DQo+Pg0KPj4gV2l0aCBMUEFFIGVuYWJsZWQg
-b24gb3VyIFNvQywgd2UgbWVldCB0aGUgc3lzdGVtIGNvbXBsYWludCBvZg0KPj4gImNvaGVyZW50
-IERNQSBtYXNrIDB4ZmZmZmZmZmYgaXMgc21hbGxlciB0aGFuIHN5c3RlbSBHRlBfRE1BIG1hc2sN
-Cj4+IDB4ZmZmZmZmZmZmZmZmZmZmZiIsIGFuZCBJIG5vdGljZSB0aGF0IENPTkZJR19aT05FX0RN
-QSBhbmQgZG1hX3pvbmVfc2l6ZQ0KPmlzIGEgY29tbW9uIHJlc29sdmUgZm9yIHRoaXMuDQo+DQo+
-T2ssIEkgc2VlLiBUaGUgYWN0dWFsIHBvaW50IG9mIGRtYV96b25lX3NpemUgaG93ZXZlciBpcyBz
-bGlnaHRseSBkaWZmZXJlbnQsDQo+YW5kIEkgdGhpbmsgeW91IHNob3VsZCBub3QgdXNlIGl0IGxp
-a2UgdGhpcy4gV2Ugbm9ybWFsbHkgb25seSB1c2UgWk9ORV9ETUENCj5pZiB0aGVyZSBhcmUgZGV2
-aWNlcyB0aGF0IGhhdmUgYSBsaW1pdGF0aW9uIHNtYWxsZXIgdGhhbiA0R0IsIGFuZCB0aGF0DQo+
-YXBwZWFyIHRvIGJlIHRoZSBjYXNlIGZvciB5b3VyIHN5c3RlbS4NCj4NCj5UaGUgbWVzc2FnZSB5
-b3UgcXVvdGUgaXMgb25seSBwcmVzZW50IGluIGFyY2gvcG93ZXJwYywgc28gSSdtIG5vdCBzdXJl
-DQo+d2hhdCBzeW1wdG9tcyB5b3UgYXJlIGFjdHVhbGx5IHNlZWluZy4gUGxlYXNlIHRyeSByZW1v
-dmluZyB0aGUNCj5kbWFfem9uZV9zaXplIHNldHRpbmcgZm9yIHlvdXIgcGxhdGZvcm0gYW5kIHJl
-cG9ydCBpZiBpdCB3b3JrcyBvciB3aGF0IHRoZQ0KPnN5bXB0b20gaXMgaWYgaXQgZG9lcyBub3Qg
-d29yayB3aXRoIHRoZSBsYXRlc3Qga2VybmVsLg0KPg0KPldlIGRlZmluaXRlbHkgbmVlZCB0byBn
-ZXQgdGhpcyB0byB3b3JrIG91dCBvZiB0aGUgYm94IHdpdGhvdXQgYQ0KPmRtYV96b25lX3NpemUg
-aGFjay4NCj4NCj5DYW4geW91IGRlc2NyaWJlIHdoYXQgdGhlIG1lbW9yeSBsYXlvdXQgaXMgb2Yg
-eW91ciBwbGF0Zm9ybT8gQ2FuIHlvdSBoYXZlDQo+UkFNIGluc3RhbGxlZCBhYm92ZSB0aGUgNEdC
-IHBoeXNpY2FsIGFkZHJlc3MgYm91bmRhcnk/IElmIHlvdSBjYW4sIGFyZQ0KPnRoZXJlIGFueSBk
-ZXZpY2VzIHRoYXQgYXJlIHVuYWJsZSB0byBwZXJmb3JtIERNQSBpbnRvIHRoYXQgbWVtb3J5IHdp
-dGhvdXQNCj50aGUgdXNlIG9mIGFuIElPTU1VPw0KPg0KPglBcm5kDQpPdXIgZmlyc3QgTFMxMDIx
-QSBzdXBwb3J0IGlzIGJhc2VkIG9uIGtlcm5lbC0zLjEyLCB3aGVyZSB3aGVuIExQQUUgZW5hYmxl
-ZA0KaXQgd2lsbCBjb21wYXJlIHRoZSBkZXZpY2UncyBjb2hlcmVudF9kbWFfbWFzayB3aXRoIGFy
-bV9kbWFfbGltaXQsIHdoaWNoIGlzDQo2NC1iaXQgMHhmZmZmZmZmZmZmZmZmZmZmIHdpdGhvdXQg
-Q09ORklHX1pPTkVfRE1BLCB3aXRoIENPTkZJR19aT05FX0RNQSBjYW4NCmxpbWl0IHRoZSBjb21w
-YXJpc29uIGFuZCBhdm9pZCB0aGUgd2FybmluZy4NCkFsbCBkZXZpY2UgY2FuIGFkZHJlc3MgMzIt
-Yml0IGFkZHJlc3Mgc3BhY2Ugb24gTFMxMDIxQSwgV2l0aCB5b3UgY29tbWVudCBhYm92ZSwNCkkg
-cmVtb3ZlIHRoZSBkbWFfem9uZV9zaXplIGFuZCBvbmx5IHJlc2VydmUgdGhlIENPTkZJR19aT05F
-X0RNQSBPbiBrZXJuZWwtMy4xMiwNCmZpbmRpbmcgYWxsIHdvcmtzIHdlbGwsIHNvIEkgd2lsbCBy
-ZW1vdmUgdGhlIGRtYV96b25lX3NpemUgc2V0dGluZyBvbiAzLjEyLiBUaGFua3MuDQoNCkkgaGF2
-ZSBhIGxvb2sgb24gbGF0ZXN0IGtlcm5lbCwgZmluZGluZyBnZXRfY29oZXJlbnRfZG1hX21hc2so
-KSBoYXMgbGltaXRlZCB0aGUgbWFzaw0KdG8gKHU2NClETUFfQklUX01BU0soMzIpLCBkb2VzIHRo
-aXMgbWVhbiB0aGUgQ09ORklHX1pPTkVfRE1BIGlzIG5vdCBuZWVkZWQgZm9yIG1lDQpoZXJlPyBU
-aGFua3MuDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0K
+On Thu, 11 Sep 2014 11:41:00 +0200
+Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+> On Thu, Sep 11, 2014 at 10:56:04AM +0200, Boris BREZILLON wrote:
+> > The GPBR registers are not part of the RTT block and thus should not be
+> > defined in the reg property of the rtt node.
+> > 
+> > Use syscon to provide a proper DT representation and reference the GPBR
+> > syscon device in a new "atmel,time-reg" property which store both the
+> > syscon device phandle and the register offset within the GPBR block.
+> > 
+> > When using non DT boards, we won't be able to retrieve the syscon regmap,
+> > hence we need to create our own regmap using the memory region defined
+> > in the 2nd memory resource assigned to the RTT platform device.
+> > 
+> > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > 
+> > Conflicts:
+> > 	drivers/rtc/rtc-at91sam9.c
+> 
+> You probably don't want this here.
+
+Absolutely, it's a rebase leftover :-).
+I'll remove this line from the commit message.
+
+> 
+> > ---
+> >  drivers/rtc/Kconfig        |  1 +
+> >  drivers/rtc/rtc-at91sam9.c | 58 +++++++++++++++++++++++++++++++++++++++-------
+> >  2 files changed, 50 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > index a168e96..7d76da8 100644
+> > --- a/drivers/rtc/Kconfig
+> > +++ b/drivers/rtc/Kconfig
+> > @@ -1081,6 +1081,7 @@ config RTC_DRV_AT91RM9200
+> >  config RTC_DRV_AT91SAM9
+> >  	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
+> >  	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
+> > +	select MFD_SYSCON
+> >  	help
+> >  	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
+> >  	  (Real Time Timer). These timers are powered by the backup power
+> > diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+> > index d72c34d..b953545 100644
+> > --- a/drivers/rtc/rtc-at91sam9.c
+> > +++ b/drivers/rtc/rtc-at91sam9.c
+> > @@ -21,6 +21,8 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/platform_data/atmel.h>
+> >  #include <linux/io.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/regmap.h>
+> >  
+> >  /*
+> >   * This driver uses two configurable hardware resources that live in the
+> > @@ -72,7 +74,8 @@ struct sam9_rtc {
+> >  	void __iomem		*rtt;
+> >  	struct rtc_device	*rtcdev;
+> >  	u32			imr;
+> > -	void __iomem		*gpbr;
+> > +	struct regmap		*gpbr;
+> > +	unsigned int		gpbr_offset;
+> >  	int 			irq;
+> >  };
+> >  
+> > @@ -81,10 +84,18 @@ struct sam9_rtc {
+> >  #define rtt_writel(rtc, field, val) \
+> >  	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
+> >  
+> > -#define gpbr_readl(rtc) \
+> > -	readl((rtc)->gpbr)
+> > -#define gpbr_writel(rtc, val) \
+> > -	writel((val), (rtc)->gpbr)
+> > +static inline unsigned int gpbr_readl(struct sam9_rtc *rtc) {
+> 
+> Brace placement. Did you run checkpatch on the rest of the series?
+
+Actually, I did last time I submitted, but forgot to run it this time.
+Sorry, for the inconvenience, I'll fix that.
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
