@@ -1,38 +1,38 @@
-From: "Lennart Sorensen" <lsorense-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
- for dra7
-Date: Thu, 11 Sep 2014 08:22:19 -0400
-Message-ID: <20140911122219.GD17690@csclub.uwaterloo.ca>
-References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com>
- <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
- <20140911013811.GB17692@csclub.uwaterloo.ca>
- <541141E3.8030101@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
+Date: Thu, 11 Sep 2014 14:32:08 +0200
+Message-ID: <40514790.Xc34lyFLGa@wuerfel>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com> <1410403012.25559.69.camel@rzhang1-toshiba> <20140911121842.GB26715@developer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <541141E3.8030101-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140911121842.GB26715@developer>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, dtor <dtor@chromium.org>, Chris Zhong <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 12:02:03PM +0530, Mugunthan V N wrote:
-> slaves = <1>;
+On Thursday 11 September 2014 08:18:43 Eduardo Valentin wrote:
+> > As what we want is to make thermal driver have a chance to configure the
+> > hardware shutdown registers, I'm thinking if we can do this without
+> > representing the hardware shutdown value as a trip point.
+> > Say,
+> > 1. parse DT, and get the hardware shutdown temperature value, and store
+> > it somewhere, e.g. struct __thermal_zone.
+> > 2. introduce a new parameter, int (*set_hardware_trip)(void *, long *),
+> > in thermal_zone_of_sensor_register().
+> > 3. invoke set_hard_trip(tz, hardware_shutdown_temperature_value) in
+> > thermal_zone_of_sensor_register().
+> 
+> The only issue I have with the above proposal is that not all platforms
+> use DT. Some still boot with boardfiles, for instance. Thus, the
+> parameter to configure hardware thermal shutdown needs to be common on
+> thermal core, not specific to of-thermal. Do you agree?
 
-OK, works for me.
+Do you know of a machine that can't yet be converted to DT and that
+needs this driver? In case of rockchips that is certainly not the
+case, and we don't care about anybody trying to use board files out
+of tree, they can just hack the thermal support as well.
 
-> overall disable takes care of this
-
-Although once I enable cpsw I would need to leave the second port disabled
-I suppose, although perhaps settings slaves to 1 would essentially
-disable it.
-
-> Will add disabled in next version.
-
--- 
-Len Sorensen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
