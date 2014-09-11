@@ -1,44 +1,68 @@
-From: Robert Richter <robert.richter@caviumnetworks.com>
-Subject: Re: [PATCH v2 2/4] arm64, thunder: Add initial dts for Cavium
- Thunder SoC
-Date: Thu, 11 Sep 2014 16:51:09 +0200
-Message-ID: <20140911145109.GJ10622@rric.localhost>
-References: <1409903205-2762-1-git-send-email-rric@kernel.org>
- <1409903205-2762-3-git-send-email-rric@kernel.org>
- <5017180.kZRPNE71Sv@wuerfel>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
+Date: Thu, 11 Sep 2014 16:54:22 +0200
+Message-ID: <20140911145421.GE5149@katana>
+References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de>
+ <20140911141257.GC5149@katana>
+ <20140911144003.GD5149@katana>
+ <1591383.Xdy91rktuP@fb07-iapwap2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5017180.kZRPNE71Sv@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Robert Richter <rric@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1591383.Xdy91rktuP@fb07-iapwap2>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Dietrich <marvin24@gmx.de>
+Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
 
-On 05.09.14 13:21:48, Arnd Bergmann wrote:
-> On Friday 05 September 2014 09:46:43 Robert Richter wrote:
-> > diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
-> > new file mode 100644
-> > index 000000000000..4cc1d059d2d9
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/thunder-88xx.dts
-> 
-> Most people end up having a soc.dtsi file and a board.dsi file including
-> the former and adding the machine-specific properties.
+--DqhR8hV3EnoxUkKN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks for your feedback on the dts file. I already included your
-suggestion into the patches and split the files.
+On Thu, Sep 11, 2014 at 04:52:22PM +0200, Marc Dietrich wrote:
+> Am Donnerstag, 11. September 2014, 16:40:04 schrieb Wolfram Sang:
+> > > b) could be seen as a configuration thing since the functionality
+> > > backend could be changed at runtime even.
+> >=20
+> > Come to think of it, not only the functionality, also the address can be
+> > changed at runtime. This makes me think it should really not be in DT
+> > after all.
+>=20
+> even worse, there can be multiple masters and slaves changing their role =
+on=20
+> the fly AFAIK. So the best dt can do is to provide an initial configurati=
+on,=20
+> so all drivers know where they are and where to start. Everything else ca=
+n be=20
+> changed during runtime.
 
--Robert
+Why do you want DT to be involved at all?
+
+
+--DqhR8hV3EnoxUkKN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUEbedAAoJEBQN5MwUoCm2SEIP/1y1KCLP9O8HoaQmsSO7FrIA
+03eEtT0dQWz1i5+UNR1AXOJrnFsegC2PlSf6Kws+XTmdX3wC1Nd8atxd+nGDRxfE
+kzz+h0PDh3JE2jAX/Txytrsje8PVsfTVM0FW8DPG/rpsUZ/gEN+pfqIVl30/OWR8
+2z5eC4bLRxvxYsG1PkggD2TvhZYfSGwa9AkaDpyHsUBJLomAoBg+Ec6pAbjFHwxO
+95wc1YP03MPydDRZpQ5dGHRt3wkzZJbhra9gG5oBH33na66k6AEWezZKDNcOBy/U
+6x0dOrqn457EFM8WMWkma+Yp9OuOt5wMiybBsA2yj1j8CFaCa4u5N56Zd+y3XNpA
+5evLhIqNzr/hoU/EMAGbNQ1y6mQuMhkYf5ryDdHSlxKEo8yCCsLWvEo71vFmutjP
+0huMZa4b/ZyDqy6rJbfwQ/Nqu1W83qF6Fnhi9czUQUna1mZwwwquHhS9soUt6QDB
+NSLEApGp1irvbbiiMyVk25tsBBh7amPqbGV2tREVrbX5SsdvOjSFZfD/1gDaB2Aq
+MmxHGI1Lv3m7IG/MdM68pv9gMutfv3bXe5W+xabqXODY6oHQgdMZ5lUjF+6ri5l5
+wxg2LIhX7pVzX7kJ5rd9iPNfu6BGRzoZ0zNcfW82QPbfnURtgDArWmkUnBkS8dYp
+9nxCgTFi2PTmtRLWJLSV
+=+FEn
+-----END PGP SIGNATURE-----
+
+--DqhR8hV3EnoxUkKN--
