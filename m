@@ -1,68 +1,43 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
-Date: Thu, 11 Sep 2014 16:54:22 +0200
-Message-ID: <20140911145421.GE5149@katana>
-References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de>
- <20140911141257.GC5149@katana>
- <20140911144003.GD5149@katana>
- <1591383.Xdy91rktuP@fb07-iapwap2>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH v2 0/2] Intial support for voltage ADC
+Date: Thu, 11 Sep 2014 18:13:21 +0300
+Message-ID: <1410448403-19402-1-git-send-email-svarbanov@mm-sol.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1591383.Xdy91rktuP@fb07-iapwap2>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Dietrich <marvin24@gmx.de>
-Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
+Here is version 2.
 
---DqhR8hV3EnoxUkKN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes since v1:
+ - the review comments from Peter Meerwald and Hartmut Knaack are taken into
+   account
+ - the driver private sysfs attributes are dropped out.
+ - dt binding document is changed in the section of adc channel nodes - now the
+   adc channel number is represented by "reg" property.
+ - various cleanups found during preparation of version 2.
 
-On Thu, Sep 11, 2014 at 04:52:22PM +0200, Marc Dietrich wrote:
-> Am Donnerstag, 11. September 2014, 16:40:04 schrieb Wolfram Sang:
-> > > b) could be seen as a configuration thing since the functionality
-> > > backend could be changed at runtime even.
-> >=20
-> > Come to think of it, not only the functionality, also the address can be
-> > changed at runtime. This makes me think it should really not be in DT
-> > after all.
->=20
-> even worse, there can be multiple masters and slaves changing their role =
-on=20
-> the fly AFAIK. So the best dt can do is to provide an initial configurati=
-on,=20
-> so all drivers know where they are and where to start. Everything else ca=
-n be=20
-> changed during runtime.
+regards,
+Stan
 
-Why do you want DT to be involved at all?
+-------------------------------------------------------------------------------
+Introduce inital support for VADC inside Qualcomm SPMI PMICs.
+The vadc driver is reworked version of the same downstream
+driver but now it is implemented through Industrial IO core.
 
+Comments are welcome!
 
---DqhR8hV3EnoxUkKN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Stanimir Varbanov (2):
+  iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+  DT: iio: vadc: document dt binding
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUEbedAAoJEBQN5MwUoCm2SEIP/1y1KCLP9O8HoaQmsSO7FrIA
-03eEtT0dQWz1i5+UNR1AXOJrnFsegC2PlSf6Kws+XTmdX3wC1Nd8atxd+nGDRxfE
-kzz+h0PDh3JE2jAX/Txytrsje8PVsfTVM0FW8DPG/rpsUZ/gEN+pfqIVl30/OWR8
-2z5eC4bLRxvxYsG1PkggD2TvhZYfSGwa9AkaDpyHsUBJLomAoBg+Ec6pAbjFHwxO
-95wc1YP03MPydDRZpQ5dGHRt3wkzZJbhra9gG5oBH33na66k6AEWezZKDNcOBy/U
-6x0dOrqn457EFM8WMWkma+Yp9OuOt5wMiybBsA2yj1j8CFaCa4u5N56Zd+y3XNpA
-5evLhIqNzr/hoU/EMAGbNQ1y6mQuMhkYf5ryDdHSlxKEo8yCCsLWvEo71vFmutjP
-0huMZa4b/ZyDqy6rJbfwQ/Nqu1W83qF6Fnhi9czUQUna1mZwwwquHhS9soUt6QDB
-NSLEApGp1irvbbiiMyVk25tsBBh7amPqbGV2tREVrbX5SsdvOjSFZfD/1gDaB2Aq
-MmxHGI1Lv3m7IG/MdM68pv9gMutfv3bXe5W+xabqXODY6oHQgdMZ5lUjF+6ri5l5
-wxg2LIhX7pVzX7kJ5rd9iPNfu6BGRzoZ0zNcfW82QPbfnURtgDArWmkUnBkS8dYp
-9nxCgTFi2PTmtRLWJLSV
-=+FEn
------END PGP SIGNATURE-----
-
---DqhR8hV3EnoxUkKN--
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  123 +++
+ drivers/iio/adc/Kconfig                            |   11 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/qcom-spmi-vadc.c                   |  999 ++++++++++++++++++++
+ include/dt-bindings/iio/qcom,spmi-pmic-vadc.h      |  119 +++
+ 5 files changed, 1253 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+ create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
