@@ -1,38 +1,59 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Thu, 11 Sep 2014 18:07:16 +0100
-Message-ID: <20140911170716.GA6158@arm.com>
-References: <1410452204-7277-1-git-send-email-dianders@chromium.org>
- <20140911164710.GW6158@arm.com>
- <CAD=FV=WECbZ4L=-C+F9K6kfiPUi7ar3a4a7Upq2TqDYYPGoOrA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv3 0/5] OMAP Mailbox framework adoption & DT support
+Date: Thu, 11 Sep 2014 10:09:55 -0700
+Message-ID: <20140911170955.GA18849@atomide.com>
+References: <1406680479-18446-1-git-send-email-s-anna@ti.com>
+ <20140908232053.GS3238@atomide.com>
+ <20140909025225.GI10785@atomide.com>
+ <540F279A.1080700@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=WECbZ4L=-C+F9K6kfiPUi7ar3a4a7Upq2TqDYYPGoOrA@mail.gmail.com>
+In-Reply-To: <540F279A.1080700@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: "olof@lixom.net" <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Christopher Covington <cov@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Suman Anna <s-anna@ti.com>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, Dave Gerlach <d-gerlach@ti.com>, Markus Mayer <markus.mayer@linaro.org>, Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 05:59:53PM +0100, Doug Anderson wrote:
-> On Thu, Sep 11, 2014 at 9:47 AM, Will Deacon <will.deacon@arm.com> wrote:
-> > I'd say `Only supported for ARM' to better match what we've done. Probably
-> > also worth mentioning that this relies on the hypervisor/firmware having set
-> > CNTHCTL.PL1PCEN and CNTHCTL.EL1PCTEN (but assumedly made a mess of CNTVOFF
-> > ;) if you want to boot on the non-secure side (e.g. as a guest).
+* Suman Anna <s-anna@ti.com> [140909 09:16]:
+> Hi Tony,
 > 
-> Note that the reset value of CNTHCTL.PL1PCEN and CNTHCTL.PL1PCTEN are
-> both 1 in my version of the ARM ARM.  On the other hand CNTVOFF is
-> documented to have an UNKNOWN reset value.  If only ARM had guaranteed
-> that CNTVOFF started out as 0 (which seems like it would have been
-> sensible) we wouldn't be in this mess.  :-/
+> On 09/08/2014 09:52 PM, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [140908 16:21]:
+> >> * Suman Anna <s-anna@ti.com> [140729 17:37]:
+> >>> Hi,
+> >>>
+> >>> This is an updated version of the OMAP Mailbox framework adoption &
+> >>> DT support series, refreshed to work with the v9 version of the mailbox
+> >>> framework [1] from Jassi Brar while also addressing some minor review
+> >>> comments. Detailed changes are summarized below. Patches are based on
+> >>> 3.16-rc2.
+> >>
+> >> Sorry for the delay, just noticed that I'm supposed to queue
+> >> these too. I'll queue these into omap-for-v3.18/mailbox against
+> >> v3.17-rc1 and will probably also merge it into omap-for-v3.18/dt
+> >> as well.
+> > 
+> > Actually this is not compiling and seems to probably miss
+> > the dependencies from Jassi, so dropping the branch.
+> 
+> The last 2 patches which is the framework adoption portion needs the
+> framework patches from Jassi (as stated in the cover letter). I will
+> ping on the framework thread to see if it is making it into 3.18. In any
+> case, we should be able to take the first three patches (2 in drivers
+> and 1 for DT) - they are independent of the framework and also are
+> dependencies for the framework adoption patches.
+> 
+> > Anyways, since it seems you need to repost this again, please
+> > repost the DT changes separately from the driver changes.
+> 
+> Yeah, the other two dependent series are merged for 3.17, so these are
+> the only patches remaining. I just need to repost them on a 3.17-rc, but
+> there are no changes required (even with v10 of the framework). So given
+> above, do you want me to split the first 3 (there is one DT patch) and
+> post them so that they can be merged for 3.18?
 
-I'm afraid we went the opposite way -- in ARMv8 there are a tiny handful
-of EL3 registers that are well-defined out of reset, then the rest of the
-system is UNKNOWN. The hardware guys prefer that and it can also be useful
-for very low-level debugging (system crashes, do a reset, read out the
-state).
+Yes please and looks like you already did thanks :)
 
-Will
+Tony
