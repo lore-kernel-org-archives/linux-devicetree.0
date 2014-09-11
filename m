@@ -1,80 +1,57 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v10 1/3] RTC: RK808: add RTC driver for RK808
-Date: Wed, 10 Sep 2014 17:10:36 -0700
-Message-ID: <CAD=FV=VPgU9YwoAecGAVcEe8H2YaA=vPZJUwnjmzhFCZxBXuqw@mail.gmail.com>
-References: <1410311886-4579-1-git-send-email-zyw@rock-chips.com>
-	<1410311886-4579-2-git-send-email-zyw@rock-chips.com>
-	<20140910134411.8128acce79f2423d4448e8f4@linux-foundation.org>
-	<CAD=FV=V4-dHpKwRqewCr7ujDdRYiMiUcRuJAS7C602EyCMnPFQ@mail.gmail.com>
-	<20140910150843.78d9416ae0dada8fccf8063a@linux-foundation.org>
+From: "Chen, Alvin" <alvin.chen@intel.com>
+Subject: RE: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
+ to MFD driver
+Date: Thu, 11 Sep 2014 00:32:06 +0000
+Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E98F95D@SHSMSX101.ccr.corp.intel.com>
+References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
+ <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
+ <alpine.DEB.2.02.1409101353500.2790@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140910150843.78d9416ae0dada8fccf8063a@linux-foundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Chris Zhong <zyw@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Mike Turquette <mturquette@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, rtc-linux@googlegroups.com, Grant Likely <grant.likely@linaro.org>, Lin Huang <hl@rock-chips.com>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, xxx <xxx@rock-chips.com>, Olof Johansson <olof@>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1409101353500.2790@atx-linux-37>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Andrew,
+> 
+> Hi Alvin,
+> 
+> I did a quick test and this looks like it works for me (with device tree).
+> I had a couple of small fixes below.
+It is very appreciated to help testing.
 
-On Wed, Sep 10, 2014 at 3:08 PM, Andrew Morton
-<akpm@linux-foundation.org> wrote:
-> On Wed, 10 Sep 2014 14:37:13 -0700 Doug Anderson <dianders@chromium.org> wrote:
->
->> Andrew,
->>
->> On Wed, Sep 10, 2014 at 1:44 PM, Andrew Morton
->> <akpm@linux-foundation.org> wrote:
->> > On Wed, 10 Sep 2014 09:18:04 +0800 Chris Zhong <zyw@rock-chips.com> wrote:
->> >
->> >> Adding RTC driver for supporting RTC device present inside RK808 PMIC.
->> >>
->> >> ...
->> >>
->> >> +     ret = rtc_valid_tm(&tm);
->> >> +     if (ret) {
->> >> +             dev_warn(&pdev->dev, "invalid date/time and init time\n");
->> >> +             rk808_rtc_set_time(&pdev->dev, &tm_def);
->> >> +     }
->> >
->> > This is somewhat unusual.  Most drivers will emit a warning and give up
->> > when they find the time is wrong.  Why is this driver different and is
->> > this desirable behaviour?
->>
->> When you say "give up", what does that mean?  I assume the driver
->> should keep initting, right?  Then the user can go in and set a time
->> later...
->
-> I think I was misreading current drivers a bit.  rtc-cmos.c will go in
-> and set a dummy time but regular low-level drivers don't sanity-check
-> the time at all at setup time.
->
->>
->> I did test things with just removing this chunk of code.  You get some
->> yells at bootup if you put a bogus time in there:
->>
->> [    2.987590] rk808-rtc rk808-rtc: invalid date/time and init time
->> [    3.013148] rk808-rtc rk808-rtc: rtc core: registered rk808-rtc as rtc0
->> [    4.586115] rk808-rtc rk808-rtc: hctosys: invalid date/time
->>
->> ...but if you later set a valid time then everything is fine.  That
->> seems reasonable behavior to me, so I guess we could just remove this
->> whole chunk?  It appears that after a normal bootup the date/time is
->> something valid.
->
-> hm.  Having an invalid time is perhaps better than having a valid but
-> incorrect time.
 
-OK.  It's an easy patch to remove this.  Chris: do you want to test
-that too and post it, or do you want me to?  Basically just remove:
+> Alan
+> 
+> >
+> > -	port->bgc.gc.ngpio = ngpio;
+> > -	port->bgc.gc.of_node = port_np;
+> > +#ifdef CONFIG_OF_GPIO
+> > +	port->bgc.gc.of_node = pp->node;
+> > +#endif
+> 
+> Please use 'if (IS_ENABLED(CONFIG_OF_GPIO)) as a conditional as you do
+> elsewhere.
+OK.
 
-  rk808_rtc_set_time(&pdev->dev, &tm_def);
+> 
+> >  static int dwapb_gpio_probe(struct platform_device *pdev)  {
+> > +	int i;
+> >  	struct resource *res;
+> >  	struct dwapb_gpio *gpio;
+> > -	struct device_node *np;
+> >  	int err;
+> > -	unsigned int offs = 0;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct dwapb_platform_data *pdata = dev_get_platdata(dev);
+> > +	bool is_pdata_alloc = !pdata;
+> 
+> Please combine the int's in one line (int err, i;) and put them as the last one on
+> this list.  It looks the same to the compiler of course, but more uniform for
+> human eyes :)
+OK.
 
-...and of course then remove the tm_def structure and take braces off
-the "if".  I think everything works if you do that.  We need to make
-sure to base on the patch Andrew talked about about making the
-structure static (the new patch would remove the structure completely,
-but nice not to get a merge conflict).
-
--Doug
