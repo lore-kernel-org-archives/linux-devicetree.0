@@ -1,43 +1,71 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/3] ARM: OMAP2+: make of_device_ids const
-Date: Thu, 11 Sep 2014 13:10:39 -0700
-Message-ID: <20140911201039.GH18849@atomide.com>
-References: <1410337579-23466-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1410337579-23466-2-git-send-email-u.kleine-koenig@pengutronix.de>
- <20140911173943.GB18849@atomide.com>
- <20140911190136.GM3755@pengutronix.de>
- <20140911191449.GF18849@atomide.com>
- <20140911194215.GO3755@pengutronix.de>
- <20140911194716.GG18849@atomide.com>
- <20140911195245.GP3755@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140911195245.GP3755@pengutronix.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Rajendra Nayak <rnayak@ti.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Carlo Caione <carlo@caione.org>
+Subject: [PATCH v2 6/9] ARM: meson: documentation: add bindings documentation
+Date: Thu, 11 Sep 2014 22:11:37 +0200
+Message-ID: <1410466300-19168-7-git-send-email-carlo@caione.org>
+References: <1410466300-19168-1-git-send-email-carlo@caione.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1410466300-19168-1-git-send-email-carlo@caione.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, b.galvani@gmail.com, maxime.ripard@free-electrons.com, afaerber@suse.de, matthias.bgg@gmail.com
+Cc: Carlo Caione <carlo@caione.org>
 List-Id: devicetree@vger.kernel.org
 
-* Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> [140911 12:53]=
-:
-> Hello Tony,
->=20
-> On Thu, Sep 11, 2014 at 12:47:17PM -0700, Tony Lindgren wrote:
-> > OK great thanks. I'll apply both into omap-for-v3.18/fixes-not-urge=
-nt.
-> I would have put "make of_device_ids const" into cleanups, but that's=
- up
-> to you.
+Add vendor prefixes and basic documentation for MesonX SoCs bindings
 
-Yes that would have worked too but already applied and building
-randconfigs :)
+Signed-off-by: Carlo Caione <carlo@caione.org>
+---
+ Documentation/devicetree/bindings/arm/amlogic.txt     | 8 ++++++++
+ Documentation/devicetree/bindings/arm/geniatech.txt   | 5 +++++
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 2 ++
+ 3 files changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/amlogic.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/geniatech.txt
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+new file mode 100644
+index 0000000..7eece72
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -0,0 +1,8 @@
++Amlogic MesonX device tree bindings
++-------------------------------------------
++
++Boards with the Amlogic Meson6 SoC shall have the following properties:
++
++Required root node property:
++
++compatible = "amlogic,meson6";
+diff --git a/Documentation/devicetree/bindings/arm/geniatech.txt b/Documentation/devicetree/bindings/arm/geniatech.txt
+new file mode 100644
+index 0000000..74ccba4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/geniatech.txt
+@@ -0,0 +1,5 @@
++Geniatech platforms device tree bindings
++-------------------------------------------
++
++Geniatech ATV1200
++    - compatible = "geniatech,atv1200"
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 46a311e..fb32fe0 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -13,6 +13,7 @@ allwinner	Allwinner Technology Co., Ltd.
+ altr	Altera Corp.
+ amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+ amd	Advanced Micro Devices (AMD), Inc.
++amlogic	Amlogic, Inc.
+ ams	AMS AG
+ amstaos	AMS-Taos Inc.
+ apm	Applied Micro Circuits Corporation (APM)
+@@ -50,6 +51,7 @@ excito	Excito
+ fsl	Freescale Semiconductor
+ GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
++geniatech	Geniatech, Inc.
+ globalscale	Globalscale Technologies, Inc.
+ gmt	Global Mixed-mode Technology, Inc.
+ google	Google, Inc.
+-- 
+1.9.1
+
