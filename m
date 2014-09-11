@@ -1,52 +1,47 @@
-From: Addy <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
 Subject: Re: [PATCH] ARM: dts: Switch i2c0 to 400kHz on rk3288-evb-rk808
-Date: Thu, 11 Sep 2014 17:17:58 +0800
-Message-ID: <541168C6.2090603@rock-chips.com>
+Date: Thu, 11 Sep 2014 11:23:47 +0200
+Message-ID: <14543621.jVTOtFDFto@diego>
 References: <1410409815-22200-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=GB2312
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410409815-22200-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410409815-22200-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Chris Zhong <zyw@rock-chips.com>, Addy Ke <addy.ke@rock-chips.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 11 Sep 2014 12:30, Doug Anderson writes:
+Am Mittwoch, 10. September 2014, 21:30:15 schrieb Doug Anderson:
 > We should be able to talk to the PMIC at 400kHz.  No need to talk at
 > the slow 100kHz.
->
+> 
 > As measured by ftrace (with a bunch of extra patches, since cpufreq
 > for rk808 hasn't landed yet):
 >   before this change: cpu0_set_target() => ~500us
 >   after this change:  cpu0_set_target() => ~300us
->
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> 
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+
+looks harmless :-)
+
+I've added it to my v3.18-next/dts branch with Addy's tags
+
+
 > ---
 >  arch/arm/boot/dts/rk3288-evb-rk808.dts | 1 +
 >  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
-> index 36db177..ff522f8 100644
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts
+> b/arch/arm/boot/dts/rk3288-evb-rk808.dts index 36db177..ff522f8 100644
 > --- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
 > +++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
 > @@ -18,6 +18,7 @@
 >  };
->  
+> 
 >  &i2c0 {
 > +	clock-frequency = <400000>;
 >  	status = "okay";
->  
+> 
 >  	rk808: pmic@1b {
-I have tested on rk3288-pinky board, it work well. so
-
-Reviewed-by Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Tested-by Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
