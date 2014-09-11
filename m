@@ -1,62 +1,51 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH 4/4 v3] GPIO: gpio-dwapb: Suspend & Resume PM enabling
-Date: Thu, 11 Sep 2014 11:40:13 -0500
-Message-ID: <alpine.DEB.2.02.1409111138080.4869@atx-linux-37>
-References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com> <1410286081-16653-5-git-send-email-alvin.chen@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410286081-16653-5-git-send-email-alvin.chen@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 0/4]   Add picoPHY usb phy driver found on stih407 family SoC's
+Date: Thu, 11 Sep 2014 18:02:43 +0100
+Message-ID: <1410454967-21500-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 9 Sep 2014, Weike Chen wrote:
+This series adds support for the picoPHY usb phy which is used by the usb2
+and usb3 host controllers when controlling usb2/1.1 devices. It is found on
+stih407 family SoC's from the consumer electronics devision of STMicroelectronics.
 
->  
->  struct dwapb_gpio;
-> +struct dwapb_context;
->  
->  struct dwapb_gpio_port {
->  	struct bgpio_chip	bgc;
->  	bool			is_registered;
->  	struct dwapb_gpio	*gpio;
-> +	struct dwapb_context	*ctx;
+Changes since v2:
+ - Remove .data and hardcode phy ops in devm_phy_create call (arndb)
+ - Add COMPILE_TEST in kconfig (arndb)
+ - Add depends on RESET_CONTROLLER in kconfig so COMPILE_TEST works
+ - select GENERIC_PHY instead of depends on (Bartlomiej)
 
-Alvin,
+Changes since v1:
+ - Remove reference to stih410 in dt documentation (kishon)
+ - Fix alignment issue in dt example (kishon)
+ - usbpicophy@f8 since you have a reg property (kishon)
+ - Enable driver in multi_v7_defconfig
 
-Will this build if CONFIG_PM_SLEEP is not defined?
+Peter Griffin (4):
+  phy: phy-stih407-usb: Add usb picoPHY driver found on stih407 SoC
+    family
+  phy: phy-stih407-usb: Add dt documentation for USB picophy found on
+    stih407 SoC family
+  MAINTAINERS: Add phy-stih407-usb.c file to ARCH/STI architecture
+  ARM: multi_v7_defconfig: Enable stih407 usb picophy
 
-Alan
+ .../devicetree/bindings/phy/phy-stih407-usb.txt    |  30 ++++
+ MAINTAINERS                                        |   1 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ drivers/phy/Kconfig                                |   9 ++
+ drivers/phy/Makefile                               |   2 +
+ drivers/phy/phy-stih407-usb.c                      | 177 +++++++++++++++++++++
+ 6 files changed, 220 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-stih407-usb.txt
+ create mode 100644 drivers/phy/phy-stih407-usb.c
 
-> +	unsigned int		idx;
->  };
->  
+-- 
+1.9.1
 
->  struct dwapb_gpio {
-> @@ -377,6 +380,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
->  
->  	port = &gpio->ports[offs];
->  	port->gpio = gpio;
-> +	port->idx = pp->idx;
->  
->  	dat = gpio->regs + GPIO_EXT_PORTA + (pp->idx * GPIO_EXT_PORT_SIZE);
->  	set = gpio->regs + GPIO_SWPORTA_DR + (pp->idx * GPIO_SWPORT_DR_SIZE);
-> @@ -584,10 +588,115 @@ static const struct of_device_id dwapb_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, dwapb_of_match);
->  
-> +#ifdef CONFIG_PM_SLEEP
-> +/* Store GPIO context across system-wide suspend/resume transitions */
-> +struct dwapb_context {
-> +	u32 data;
-> +	u32 dir;
-> +	u32 ext;
-> +	u32 int_en;
-> +	u32 int_mask;
-> +	u32 int_type;
-> +	u32 int_pol;
-> +	u32 int_deb;
-> +};
-> +
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
