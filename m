@@ -1,63 +1,117 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v4 08/12] Documentation: bindings: add doc for the USB2
- ChipIdea USB driver
-Date: Thu, 11 Sep 2014 09:09:25 +0800
-Message-ID: <20140911010924.GF3609@peterchendt>
-References: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
- <1409730511-16101-9-git-send-email-antoine.tenart@free-electrons.com>
+From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
+Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
+ for dra7
+Date: Wed, 10 Sep 2014 21:38:11 -0400
+Message-ID: <20140911013811.GB17692@csclub.uwaterloo.ca>
+References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com>
+ <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1409730511-16101-9-git-send-email-antoine.tenart@free-electrons.com>
+In-Reply-To: <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, balbi@ti.com, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 03, 2014 at 09:48:27AM +0200, Antoine Tenart wrote:
-> Document the USB2 ChipIdea driver (ci13xxx) bindings.
+On Wed, Sep 10, 2014 at 07:07:26PM +0530, Mugunthan V N wrote:
+> Add CPSW and MDIO related device tree data for DRA7XX and made as status
+> disabled. Phy-id, pinmux for active and sleep state needs to be added in
+> board dts files and enable the CPSW device.
 > 
-> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
 > ---
->  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+>  arch/arm/boot/dts/dra7.dtsi | 59 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> new file mode 100644
-> index 000000000000..8dd6d8285dab
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> @@ -0,0 +1,22 @@
-> +* USB2 ChipIdea USB controller for ci13xxx
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index d678152..8d79321 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -34,6 +34,8 @@
+>  		serial3 = &uart4;
+>  		serial4 = &uart5;
+>  		serial5 = &uart6;
+> +		ethernet0 = &cpsw_emac0;
+> +		ethernet1 = &cpsw_emac1;
+>  	};
+>  
+>  	timer {
+> @@ -1262,6 +1264,63 @@
+>  			ti,irqs-skip = <10 133 139 140>;
+>  			ti,irqs-safe-map = <0>;
+>  		};
 > +
-> +Required properties:
-> +- compatible: should be "chipidea,usb2"
-> +- reg: base address and length of the registers
-> +- interrupts: interrupt for the USB controller
-> +
-> +Optional properties:
-> +- clocks: reference to the USB clock
-> +- phys: reference to the USB PHY
-> +- vbus-supply: reference to the VBUS regulator
-> +
-> +Example:
-> +
-> +	usb@f7ed0000 {
-> +		compatible = "chipidea,usb2";
-> +		reg = <0xf7ed0000 0x10000>;
-> +		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&chip CLKID_USB0>;
-> +		phys = <&usb_phy0>;
-> +		vbus-supply = <&reg_usb0_vbus>;
-> +	};
-> -- 
-> 1.9.1
-> 
+> +		mac: ethernet@4a100000 {
+> +			compatible = "ti,cpsw";
+> +			ti,hwmods = "gmac";
+> +			cpdma_channels = <8>;
+> +			ale_entries = <1024>;
+> +			bd_ram_size = <0x2000>;
+> +			no_bd_ram = <0>;
+> +			rx_descs = <64>;
+> +			mac_control = <0x20>;
+> +			slaves = <2>;
 
-This one is ok for me.
+How am I supposed to override this in the board dtb when my board only
+uses 1 slave?
+
+> +			active_slave = <0>;
+> +			cpts_clock_mult = <0x80000000>;
+> +			cpts_clock_shift = <29>;
+> +			reg = <0x48484000 0x1000
+> +			       0x48485200 0x2E00>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			/*
+> +			 * rx_thresh_pend
+> +			 * rx_pend
+> +			 * tx_pend
+> +			 * misc_pend
+> +			 */
+> +			interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
+> +			ranges;
+> +			status = "disabled";
+> +
+> +			davinci_mdio: mdio@48485000 {
+> +				compatible = "ti,davinci_mdio";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				ti,hwmods = "davinci_mdio";
+> +				bus_freq = <1000000>;
+> +				reg = <0x48485000 0x100>;
+> +			};
+> +
+> +			cpsw_emac0: slave@48480200 {
+> +				/* Filled in by U-Boot */
+> +				mac-address = [ 00 00 00 00 00 00 ];
+> +			};
+> +
+> +			cpsw_emac1: slave@48480300 {
+> +				/* Filled in by U-Boot */
+> +				mac-address = [ 00 00 00 00 00 00 ];
+> +			};
+
+Should I then be setting this to disabled from my board file?  Or does
+the disabled for the ethernet overall take care of that?
+
+> +			phy_sel: cpsw-phy-sel@4a002554 {
+> +				compatible = "ti,dra7xx-cpsw-phy-sel";
+> +				reg= <0x4a002554 0x4>;
+> +				reg-names = "gmii-sel";
+> +			};
+
+I guess the board file would have to disable that too (we won't have a
+phy given we are connecting to a switch chip).
+
+> +		};
+> +
+>  	};
+>  };
 
 -- 
-Best Regards,
-Peter Chen
+Len Sorensen
