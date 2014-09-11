@@ -1,174 +1,178 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: dra7-evm: Enable CPSW and MDIO for dra7xx
- EVM
-Date: Thu, 11 Sep 2014 11:56:00 +0530
-Message-ID: <54114078.8090007@ti.com>
-References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com> <1410356247-25925-3-git-send-email-mugunthanvnm@ti.com> <54105893.70804@ti.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dma: at_xdmac: creation of the atmel eXtended DMA
+ Controller driver
+Date: Thu, 11 Sep 2014 08:29:18 +0200
+Message-ID: <20140911062918.GQ4434@ldesroches-Latitude-E6320>
+References: <1404825096-15724-1-git-send-email-ludovic.desroches@atmel.com>
+ <1404825096-15724-2-git-send-email-ludovic.desroches@atmel.com>
+ <20140725071631.GH8181@intel.com>
+ <20140728155431.GV2349@ldesroches-Latitude-E6320>
+ <20140728164750.GH8181@intel.com>
+ <20140910132353.GP4434@ldesroches-Latitude-E6320>
+ <20140911051452.GC3131@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <54105893.70804@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, bcousson@baylibre.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140911051452.GC3131-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 September 2014 07:26 PM, Nishanth Menon wrote:
-> On 09/10/2014 08:37 AM, Mugunthan V N wrote:
->> Adding CPSW phy-id, CPSW and MDIO pinmux configuration for active and
->> sleep states and enable them in board evm dts file.
->>
->> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->> ---
->>  arch/arm/boot/dts/dra7-evm.dts | 107 +++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 107 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
->> index 50f8022..e5c4e33 100644
->> --- a/arch/arm/boot/dts/dra7-evm.dts
->> +++ b/arch/arm/boot/dts/dra7-evm.dts
->> @@ -151,6 +151,87 @@
->>  			0xd0	(PIN_OUTPUT | MUX_MODE0)	/* gpmc_be0n_cle */
->>  		>;
->>  	};
->> +
->> +	cpsw_default: cpsw_default {
->> +		pinctrl-single,pins = <
->> +			/* Slave 1 */
->> +			0x250 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_tclk */
->> +			0x254 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_tctl */
->> +			0x258 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_td3 */
->> +			0x25c (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_td2 */
->> +			0x260 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_td1 */
->> +			0x264 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_td0 */
->> +			0x268 (PIN_INPUT | MUX_MODE0)	/* rgmii1_rclk */
->> +			0x26c (PIN_INPUT | MUX_MODE0)	/* rgmii1_rctl */
->> +			0x270 (PIN_INPUT | MUX_MODE0)	/* rgmii1_rd3 */
->> +			0x274 (PIN_INPUT | MUX_MODE0)	/* rgmii1_rd2 */
->> +			0x278 (PIN_INPUT | MUX_MODE0)	/* rgmii1_rd1 */
->> +			0x27c (PIN_INPUT | MUX_MODE0)	/* rgmii1_rd0 */
-> 
-> Cant we do this based on emac0 and emac1?
+On Thu, Sep 11, 2014 at 10:44:52AM +0530, Vinod Koul wrote:
+> On Wed, Sep 10, 2014 at 03:23:53PM +0200, Ludovic Desroches wrote:
+> > Hi,
+> > 
+> > Sorry for the delay. I am about to send a new version but I have still
+> > have some questions.
+> > 
+> > On Mon, Jul 28, 2014 at 10:17:50PM +0530, Vinod Koul wrote:
+> > > On Mon, Jul 28, 2014 at 05:54:31PM +0200, Ludovic Desroches wrote:
+> > > > > > +{
+> > > > > > +	struct at_xdmac_desc	*desc = txd_to_at_desc(tx);
+> > > > > > +	struct at_xdmac_chan	*atchan = to_at_xdmac_chan(tx->chan);
+> > > > > > +	dma_cookie_t		cookie;
+> > > > > > +	unsigned long		flags;
+> > > > > > +
+> > > > > > +	spin_lock_irqsave(&atchan->lock, flags);
+> > > > > > +	cookie = dma_cookie_assign(tx);
+> > > > > > +
+> > > > > > +	dev_vdbg(chan2dev(tx->chan), "%s: atchan 0x%p, add desc 0x%p to xfers_list\n",
+> > > > > > +		 __func__, atchan, desc);
+> > > > > > +	list_add_tail(&desc->xfer_node, &atchan->xfers_list);
+> > > > > > +	if (list_is_singular(&atchan->xfers_list))
+> > > > > > +		at_xdmac_start_xfer(atchan, desc);
+> > > > > so you dont start if list has more than 1 descriptors, why?
+> > > > Because I will let at_xdmac_advance_work managing the queue if not
+> > > > empty. So the only moment when I have to start the transfer in tx_submit
+> > > > is when I have only one transfer in the queue.
+> > > So xfers_list is current active descriptors right and if it is always going
+> > > to be singular why bother with a list?
+> > 
+> > xfers_list won't be always singular. I put all transfers into this list.
+> > If it is not singular, I don't have to start this transfer now.
+> Okay i think i got it now, you want to start only when its sigular and if
+> list is larger then at_xdmac_advance_work() would do so
 
-Cant because CPSW is a single ethernet device and dual EMAC is just a
-feature done by register two network device.
+Yes that's it.
 
 > 
->> +
->> +			/* Slave 2 */
->> +			0x198 (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_tclk */
-> 
-> NAK. reason comment style -> we use the style:
->  /* mode0_name.mode3_name */
-
-Will fix this in next version
-
-> 
->> +			0x19c (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_tctl */
->> +			0x1a0 (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_td3 */
->> +			0x1a4 (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_td2 */
->> +			0x1a8 (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_td1 */
->> +			0x1ac (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_td0 */
->> +			0x1b0 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rclk */
->> +			0x1b4 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rctl */
->> +			0x1b8 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rd3 */
->> +			0x1bc (PIN_INPUT | MUX_MODE3)	/* rgmii2_rd2 */
->> +			0x1c0 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rd1 */
->> +			0x1c4 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rd0 */
->> +		>;
->> +
->> +	};
->> +
->> +	cpsw_sleep: cpsw_sleep {
->> +		pinctrl-single,pins = <
->> +			/* Slave 1 */
->> +			0x250 (MUX_MODE15)
->> +			0x254 (MUX_MODE15)
->> +			0x258 (MUX_MODE15)
->> +			0x25c (MUX_MODE15)
->> +			0x260 (MUX_MODE15)
->> +			0x264 (MUX_MODE15)
->> +			0x268 (MUX_MODE15)
->> +			0x26c (MUX_MODE15)
->> +			0x270 (MUX_MODE15)
->> +			0x274 (MUX_MODE15)
->> +			0x278 (MUX_MODE15)
->> +			0x27c (MUX_MODE15)
->> +
->> +			/* Slave 1 */
-> ^^ Slave 1?
-
-Will fix this in next version
-
->> +			0x198 (MUX_MODE15)
->> +			0x19c (MUX_MODE15)
->> +			0x1a0 (MUX_MODE15)
->> +			0x1a4 (MUX_MODE15)
->> +			0x1a8 (MUX_MODE15)
->> +			0x1ac (MUX_MODE15)
->> +			0x1b0 (MUX_MODE15)
->> +			0x1b4 (MUX_MODE15)
->> +			0x1b8 (MUX_MODE15)
->> +			0x1bc (MUX_MODE15)
->> +			0x1c0 (MUX_MODE15)
->> +			0x1c4 (MUX_MODE15)
->> +		>;
->> +	};
->> +
->> +	davinci_mdio_default: davinci_mdio_default {
->> +		pinctrl-single,pins = <
->> +			/* MDIO */
-> ^^ you can drop the comment. it is redundant.
-
-Will remove this in next version
-
->> +			0x23c (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* mdio_data */
->> +			0x240 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mdio_clk */
->> +		>;
->> +	};
->> +
->> +	davinci_mdio_sleep: davinci_mdio_sleep {
->> +		pinctrl-single,pins = <
->> +			0x23c (MUX_MODE15)
->> +			0x240 (MUX_MODE15)
->> +		>;
->> +	};
->> +
->>  };
->>  
->>  &i2c1 {
->> @@ -504,3 +585,29 @@
->>  &usb2_phy2 {
->>  	phy-supply = <&ldousb_reg>;
->>  };
->> +
->> +&mac {
->> +	status = "okay";
->> +	pinctrl-names = "default", "sleep";
->> +	pinctrl-0 = <&cpsw_default>;
->> +	pinctrl-1 = <&cpsw_sleep>;
->> +	dual_emac;
->> +};
->> +
->> +&cpsw_emac0 {
->> +	phy_id = <&davinci_mdio>, <2>;
->> +	phy-mode = "rgmii";
->> +	dual_emac_res_vlan = <1>;
->> +};
->> +
->> +&cpsw_emac1 {
->> +	phy_id = <&davinci_mdio>, <3>;
->> +	phy-mode = "rgmii";
->> +	dual_emac_res_vlan = <2>;
->> +};
->> +
->> +&davinci_mdio {
->> +	pinctrl-names = "default", "sleep";
->> +	pinctrl-0 = <&davinci_mdio_default>;
->> +	pinctrl-1 = <&davinci_mdio_sleep>;
->> +};
->>
-> 
+> > > > > > +static struct dma_async_tx_descriptor *
+> > > > > > +at_xdmac_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
+> > > > > > +			 size_t len, unsigned long flags)
+> > > > > > +{
+> > > > > > +	struct at_xdmac_chan 	*atchan = to_at_xdmac_chan(chan);
+> > > > > > +	struct at_xdmac_desc	*first = NULL, *prev = NULL;
+> > > > > > +	size_t			remaining_size = len, xfer_size = 0, ublen;
+> > > > > > +	dma_addr_t		src_addr = src, dst_addr = dest;
+> > > > > > +	u32			dwidth;
+> > > > > > +	/*
+> > > > > > +	 * WARNING: The channel configuration is set here since there is no
+> > > > > > +	 * dmaengine_slave_config call in this case. Moreover we don't know the
+> > > > > > +	 * direction, it involves we can't dynamically set the source and dest
+> > > > > > +	 * interface so we have to use the same one. Only interface 0 allows EBI
+> > > > > > +	 * access. Hopefully we can access DDR through both ports (at least on
+> > > > > > +	 * SAMA5D4x), so we can use the same interface for source and dest,
+> > > > > > +	 * that solves the fact we don't know the direction.
+> > > > > and why do you need slave config for memcpy?
+> > > > Maybe the comments is not clear. With slave config we have the direction
+> > > > per to mem or mem to per. Of course when doing memcpy we don't need this
+> > > > information. But I use this information not only to set the transfer
+> > > > direction but also to set the interfaces to use for the source and dest
+> > > > (these interfaces depend on the connection on the matrix).
+> > > > So slave config was useful due to direction field  to tell which interface
+> > > > to use as source and which one as dest.
+> > > > I am lucky because NAND and DDR are on the same interfaces so it's not a
+> > > > problem.
+> > > > 
+> > > > This comment is more a warning for myself to keep in mind this possible 
+> > > > issue in order to not have a device with NAND and DDR on different
+> > > > interfaces because it will be difficult to tell which interface is the
+> > > > source and which one is the dest.
+> > > Well in that case shouldnt NAND be treated like periphral and not memory?
+> > 
+> > Yes maybe it would be better but it is not needed at the moment.
+> > 
+> > [...]
+> > 
+> > > > > > +	 */
+> > > > > > +	list_del(&desc->xfer_node);
+> > > > > > +	list_splice_init(&desc->descs_list, &atchan->free_descs_list);
+> > > > > shouldnt you move all the desc in active list in one shot ?
+> > > > > 
+> > > > 
+> > > > Sorry I don't get it. What are you suggesting by one shot?
+> > > Rather than invoking this per descriptor moving descriptors to
+> > > free_desc_list one by one, we can move all descriptors togther.
+> > 
+> > Per descriptor? list_splice_init move all the desc in one shot. Are you
+> > talking about the terminate all case? 
+> In this case you invoke the function for a descriptor which you delete from
+> its list and then join it to free_descs_list.
 > 
 
+I remove the transfer from the transfers list then I put the descriptors of this
+transfer in the free descriptors list. I am playing with two different
+lists.
+
+> > > > > > +static void at_xdmac_tasklet(unsigned long data)
+> > > > > > +{
+> > > > > > +	struct at_xdmac_chan	*atchan = (struct at_xdmac_chan *)data;
+> > > > > > +	struct at_xdmac_desc	*desc;
+> > > > > > +	u32			error_mask;
+> > > > > > +
+> > > > > > +	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
+> > > > > > +		 __func__, atchan->status);
+> > > > > > +
+> > > > > > +	error_mask = AT_XDMAC_CIS_RBEIS
+> > > > > > +		     | AT_XDMAC_CIS_WBEIS
+> > > > > > +		     | AT_XDMAC_CIS_ROIS;
+> > > > > > +
+> > > > > > +	if (at_xdmac_chan_is_cyclic(atchan)) {
+> > > > > > +		at_xdmac_handle_cyclic(atchan);
+> > > > > > +	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
+> > > > > > +		   || (atchan->status & error_mask)) {
+> > > > > > +		struct dma_async_tx_descriptor  *txd;
+> > > > > > +
+> > > > > > +		if (atchan->status & AT_XDMAC_CIS_RBEIS)
+> > > > > > +			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
+> > > > > > +		else if (atchan->status & AT_XDMAC_CIS_WBEIS)
+> > > > > > +			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
+> > > > > > +		else if (atchan->status & AT_XDMAC_CIS_ROIS)
+> > > > > > +			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
+> > > > > > +
+> > > > > > +		desc = list_first_entry(&atchan->xfers_list,
+> > > > > > +					struct at_xdmac_desc,
+> > > > > > +					xfer_node);
+> > > > > > +		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
+> > > > > > +		BUG_ON(!desc->active_xfer);
+> > > > > > +
+> > > > > > +		txd = &desc->tx_dma_desc;
+> > > > > > +
+> > > > > > +		at_xdmac_terminate_xfer(atchan, desc);
+> > > > > why terminate here? This looks wrong
+> > > > 
+> > > > Why? What do you have in mind? It is not obvious for me that it is the
+> > > > wrong place.
+> > > The descriptor has completed. The terminate has special meaning. The user
+> > > can cancel all transactions by invoking terminate_all(). That implies to
+> > > clean up the channel and abort the transfers. The transfer is done so what
+> > > does it mean to terminate.
+> > 
+> > So maybe I have to rename this function because I need to remove the
+> > transfer from the transfer list and put the transfer descriptors in the
+> > free descriptor list once transfer is done.
+> ok
+> 
+> -- 
+> ~Vinod
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
