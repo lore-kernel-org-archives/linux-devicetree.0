@@ -1,73 +1,66 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] rtc: at91sam9: add DT bindings documentation
-Date: Thu, 11 Sep 2014 11:56:28 +0200
-Message-ID: <20140911115628.110a403b@bbrezillon>
-References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1410425767-17874-9-git-send-email-boris.brezillon@free-electrons.com>
-	<20140911094213.GC12295@localhost>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3 5/6] ARM: imx: Add initial support for Freescale LS1021A
+Date: Thu, 11 Sep 2014 10:05:14 +0000
+Message-ID: <40b51f52f15242cfbd99c7b5a1cad3d4@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
+ <3532608.xLS91GQkq4@wuerfel>
+ <daf5ec5b70164b3e9a810def41909c48@BL2PR03MB467.namprd03.prod.outlook.com>
+ <20140402.o60F9Z4YVe@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140911094213.GC12295@localhost>
+In-Reply-To: <20140402.o60F9Z4YVe@wuerfel>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Sep 2014 11:42:13 +0200
-Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-
-> On Thu, Sep 11, 2014 at 10:56:07AM +0200, Boris BREZILLON wrote:
-> > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 24 ++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> > new file mode 100644
-> > index 0000000..258a036
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> > @@ -0,0 +1,24 @@
-> > +Atmel AT91SAM9260 Real Time Timer
-> > +
-> > +Required properties:
-> > +- compatible: should be: "atmel,at91sam9260-rtt"
-> > +- reg: should encode the memory region of the RTT controller
-> > +- interrupts: rtc alarm/event interrupt
-> > +- clocks: should contain one clock pointing the the slow clk
-> > +- atmel,time-reg: should encode the GPBR register used to store the RTC
-> > +		  time. The first cell should point to the GPBR node and
-> > +		  the second one encode the offset within the GPBR block
-> > +		  (or in other terms, the GPBR register used to store the
-> > +		  current time value).
-> > +
-> > +
-> > +
-> > +Example:
-> > +
-> > +rtc@fffffe00 {
-> 
-> This should be rtt@
-> 
-> > +	compatible = "atmel,at91sam9260-rtt";
-> > +	reg = <0xfffffd20 0x10>;
-> > +	interrupts = <1 4 7>;
-> > +	clocks = <&clk32k>;
-> > +	atmel,time-reg = <&gpbr 0x0>;
-> 
-> I think the property name could be more descriptive as it is specific to
-> when the RTT is used as an RTC. Perhaps, atmel,rtt-rtc-time-reg?
-
-No problem, I'll change both names for the next version.
-
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEFybmQgQmVyZ21hbm4gW21h
+aWx0bzphcm5kQGFybmRiLmRlXQ0KPlNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDEwLCAyMDE0
+IDM6NDIgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IEd1byBTaGF3bi1SNjUwNzM7DQo+ZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIdjMgNS82XSBBUk06IGlteDogQWRkIGlu
+aXRpYWwgc3VwcG9ydCBmb3IgRnJlZXNjYWxlDQo+TFMxMDIxQQ0KPg0KPk9uIFdlZG5lc2RheSAx
+MCBTZXB0ZW1iZXIgMjAxNCAwMzozMToxOSBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+DQo+PiA+PiAr
+RFRfTUFDSElORV9TVEFSVChMUzEwMjFBLCAiRnJlZXNjYWxlIExTMTAyMUEiKSAgI2lmZGVmDQo+
+PiA+PiArQ09ORklHX1pPTkVfRE1BDQo+PiA+PiArICAgICAgIC5kbWFfem9uZV9zaXplICA9IFNa
+XzEyOE0sDQo+PiA+PiArI2VuZGlmDQo+PiA+PiArICAgICAgIC5pbml0X21hY2hpbmUgICA9IGxz
+MTAyMWFfaW5pdF9tYWNoaW5lLA0KPj4gPj4gKyAgICAgICAuZHRfY29tcGF0ICAgICAgPSBsczEw
+MjFhX2R0X2NvbXBhdCwNCj4+ID4+ICsgICAgICAgLnJlc3RhcnQgICAgICAgID0gbXhjX3Jlc3Rh
+cnQsDQo+PiA+PiArTUFDSElORV9FTkQNCj4+ID4NCj4+ID5JIGJlbGlldmUgc29tZW9uZSByZWNl
+bnRseSBwb3N0ZWQgYSBwYXRjaCB0byBkZXJpdmUgdGhlIGRtYV96b25lX3NpemUNCj4+ID5mcm9t
+IGRldmljZSB0cmVlLiBDYW4geW8gdHJ5IHRvIGZpbmQgdGhhdCBhbmQgc2VlIGlmIHRoYXQgd2ls
+bCB3b3JrIGZvcg0KPnlvdT8NCj4+ID4NCj4+ID5DYW4geW91IGV4cGxhaW4gd2hhdCB0aGUgcmVh
+c29uIGlzIGZvciBuZWVkaW5nIGEgRE1BIHpvbmU/DQo+Pg0KPj4gV2l0aCBMUEFFIGVuYWJsZWQg
+b24gb3VyIFNvQywgd2UgbWVldCB0aGUgc3lzdGVtIGNvbXBsYWludCBvZg0KPj4gImNvaGVyZW50
+IERNQSBtYXNrIDB4ZmZmZmZmZmYgaXMgc21hbGxlciB0aGFuIHN5c3RlbSBHRlBfRE1BIG1hc2sN
+Cj4+IDB4ZmZmZmZmZmZmZmZmZmZmZiIsIGFuZCBJIG5vdGljZSB0aGF0IENPTkZJR19aT05FX0RN
+QSBhbmQgZG1hX3pvbmVfc2l6ZQ0KPmlzIGEgY29tbW9uIHJlc29sdmUgZm9yIHRoaXMuDQo+DQo+
+T2ssIEkgc2VlLiBUaGUgYWN0dWFsIHBvaW50IG9mIGRtYV96b25lX3NpemUgaG93ZXZlciBpcyBz
+bGlnaHRseSBkaWZmZXJlbnQsDQo+YW5kIEkgdGhpbmsgeW91IHNob3VsZCBub3QgdXNlIGl0IGxp
+a2UgdGhpcy4gV2Ugbm9ybWFsbHkgb25seSB1c2UgWk9ORV9ETUENCj5pZiB0aGVyZSBhcmUgZGV2
+aWNlcyB0aGF0IGhhdmUgYSBsaW1pdGF0aW9uIHNtYWxsZXIgdGhhbiA0R0IsIGFuZCB0aGF0DQo+
+YXBwZWFyIHRvIGJlIHRoZSBjYXNlIGZvciB5b3VyIHN5c3RlbS4NCj4NCj5UaGUgbWVzc2FnZSB5
+b3UgcXVvdGUgaXMgb25seSBwcmVzZW50IGluIGFyY2gvcG93ZXJwYywgc28gSSdtIG5vdCBzdXJl
+DQo+d2hhdCBzeW1wdG9tcyB5b3UgYXJlIGFjdHVhbGx5IHNlZWluZy4gUGxlYXNlIHRyeSByZW1v
+dmluZyB0aGUNCj5kbWFfem9uZV9zaXplIHNldHRpbmcgZm9yIHlvdXIgcGxhdGZvcm0gYW5kIHJl
+cG9ydCBpZiBpdCB3b3JrcyBvciB3aGF0IHRoZQ0KPnN5bXB0b20gaXMgaWYgaXQgZG9lcyBub3Qg
+d29yayB3aXRoIHRoZSBsYXRlc3Qga2VybmVsLg0KPg0KPldlIGRlZmluaXRlbHkgbmVlZCB0byBn
+ZXQgdGhpcyB0byB3b3JrIG91dCBvZiB0aGUgYm94IHdpdGhvdXQgYQ0KPmRtYV96b25lX3NpemUg
+aGFjay4NCj4NCj5DYW4geW91IGRlc2NyaWJlIHdoYXQgdGhlIG1lbW9yeSBsYXlvdXQgaXMgb2Yg
+eW91ciBwbGF0Zm9ybT8gQ2FuIHlvdSBoYXZlDQo+UkFNIGluc3RhbGxlZCBhYm92ZSB0aGUgNEdC
+IHBoeXNpY2FsIGFkZHJlc3MgYm91bmRhcnk/IElmIHlvdSBjYW4sIGFyZQ0KPnRoZXJlIGFueSBk
+ZXZpY2VzIHRoYXQgYXJlIHVuYWJsZSB0byBwZXJmb3JtIERNQSBpbnRvIHRoYXQgbWVtb3J5IHdp
+dGhvdXQNCj50aGUgdXNlIG9mIGFuIElPTU1VPw0KPg0KPglBcm5kDQoNCk91ciBwbGF0Zm9ybSBo
+YXMgaW1wbGVtZW50ZWQgdGhlIExhcmdlIHBoeXNpY2FsIEFkZHJlc3MgRXh0ZW5zaW9uLCB3aXRo
+IDQwLWJpdA0KYWRkcmVzcyBzcGFjZSwgU0RSQU0gY2FuIGJlIGFib3ZlIDRHQiBhZGRyZXNzLCBi
+dXQgY3VycmVudGx5IHdlIG9ubHkgdXNlIHRoZSBERFINCmNvbnRyb2xsZXIxIGF0IDB4ODAwMDAw
+MDAgYmVsb3cgNEdCIG9uIG91ciBRRFMgYW5kIFRXUiBib2FyZC4gT3RoZXJzIGlzIGFib3ZlIDRH
+Qg0KYWRkcmVzcy4gUENJRSBhZGRyZXNzIGlzIGFsc28gYWJvdmUgNEdCIGFkZHJlc3MgYW5kIHdl
+IGFyZSBhZGRpbmcgc3VwcG9ydCB0byBpdC4NClRoYW5rcy4NCg0KQmVzdCBSZWdhcmRzLA0KSmlu
+Z2NoYW5nDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
