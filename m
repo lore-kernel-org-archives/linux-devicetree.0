@@ -1,41 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v10 07/10] OF: Introduce helper function for getting PCI domain_nr
-Date: Thu, 11 Sep 2014 16:49:56 +0200
-Message-ID: <15029597.7ylOekBBOx@wuerfel>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com> <2908259.jgJNuDxCCa@wuerfel> <ae98d68652f1495a857f081c3a6aecb2@HKXPR06MB168.apcprd06.prod.outlook.com>
+From: Nick Dyer <nick.dyer@itdev.co.uk>
+Subject: [PATCH] Input: atmel_mxt_ts - fix merge in DT documentation
+Date: Thu, 11 Sep 2014 15:52:46 +0100
+Message-ID: <5411B73E.4040404@itdev.co.uk>
+References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk> <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk> <53E37329.4020002@itdev.co.uk> <53E4E41D.4070703@collabora.co.uk> <53EDF6B4.7080804@collabora.co.uk> <53EE307E.8060507@itdev.co.uk> <53EE319A.1030304@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae98d68652f1495a857f081c3a6aecb2@HKXPR06MB168.apcprd06.prod.outlook.com>
+In-Reply-To: <53EE319A.1030304@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Yijing Wang <wangyijing@huawei.com>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infrad>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 September 2014 14:11:05 Phil Edworthy wrote:
-> On 10 September 2014 19:20, Arnd wrote:
-> > On Tuesday 09 September 2014 12:20:54 Catalin Marinas wrote:
-> > >
-> > > We can assume that if a domain is not specified and there is a single
-> > > top level PCIe node, the domain defaults to 0. Are there any arm32
-> > > platforms that require multiple domains (and do not specify a number in
-> > > the DT)?
-> > 
-> > In theory, I think all of them could work with a single domain, but then
-> > you need to partition the bus number space between the host controllers,
-> > so you have the exact same situation that you either need to make up
-> > random bus numbers or put them in DT.
-> > 
-> > Using multiple domains is way cleaner for this, even if we have to
-> > make up the numbers.
+On 15/08/14 17:13, Stephen Warren wrote:
+>>> Any comments on this? I would really appreciate if you can expand on how
+>>> this DT property is supposed to be used so I can re-spin the atmel support
+>>> patch for Peach boards.
+>>
+>> The below patch improves the documentation for the gpio-property.
 > 
-> Maybe this is a stupid question, but why would you want to specify the domain
-> in the DT at all? Doesn't every instance of a driver imply a separate domain?
+> That patch makes sense, and is a nice description,
+> Acked-by: Stephen Warren <swarren@nvidia.com>
 
-See Jason Gunthorpe's latest reply on the topic. In short, the domain is
-visible to user space and we want it to be stable across boots when
-user configuration refers to devices by domain:bus:device:function
-numbers.
+Hi Dmitry-
 
-	Arnd
+Something went a bit wrong in merging f5940231a - there's a bit of repeated
+text that's been introduced.
+
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+---
+ Documentation/devicetree/bindings/input/atmel,maxtouch.txt | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+index 0ac23f2..1852906 100644
+--- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
++++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+@@ -11,10 +11,6 @@ Required properties:
+
+ Optional properties for main touchpad device:
+
+-- linux,gpio-keymap: An array of up to 4 entries indicating the Linux
+-    keycode generated by each GPIO. Linux keycodes are defined in
+-    <dt-bindings/input/input.h>.
+-
+ - linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
+     on GPIO bit changes. An array of up to 8 entries can be provided
+     indicating the Linux keycode mapped to each bit of the status byte,
+-- 
+1.9.1
