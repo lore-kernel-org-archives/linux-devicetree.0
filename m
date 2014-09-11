@@ -1,61 +1,71 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
-Date: Thu, 11 Sep 2014 11:53:27 -0400
-Message-ID: <20140911155324.GA27076@developer>
-References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
- <1410403012.25559.69.camel@rzhang1-toshiba>
- <20140911121842.GB26715@developer>
- <40514790.Xc34lyFLGa@wuerfel>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v2 0/3] net: Add Keystone NetCP ethernet driver support
+Date: Thu, 11 Sep 2014 11:56:54 -0400
+Message-ID: <5411C646.6090701@ti.com>
+References: <1408115562-22487-1-git-send-email-santosh.shilimkar@ti.com> <20140821.163612.282672926741753926.davem@davemloft.net> <53F79DC5.8030003@ti.com> <540DC00F.1080103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <40514790.Xc34lyFLGa@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Zhang Rui <rui.zhang@intel.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, dtor <dtor@chromium.org>, Chris Zhong <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, zhaoyifeng <zyf@rock-chips.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <540DC00F.1080103@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, sandeep_n@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
+Dave,
 
-On Thu, Sep 11, 2014 at 02:32:08PM +0200, Arnd Bergmann wrote:
-> On Thursday 11 September 2014 08:18:43 Eduardo Valentin wrote:
-> > > As what we want is to make thermal driver have a chance to configure the
-> > > hardware shutdown registers, I'm thinking if we can do this without
-> > > representing the hardware shutdown value as a trip point.
-> > > Say,
-> > > 1. parse DT, and get the hardware shutdown temperature value, and store
-> > > it somewhere, e.g. struct __thermal_zone.
-> > > 2. introduce a new parameter, int (*set_hardware_trip)(void *, long *),
-> > > in thermal_zone_of_sensor_register().
-> > > 3. invoke set_hard_trip(tz, hardware_shutdown_temperature_value) in
-> > > thermal_zone_of_sensor_register().
-> > 
-> > The only issue I have with the above proposal is that not all platforms
-> > use DT. Some still boot with boardfiles, for instance. Thus, the
-> > parameter to configure hardware thermal shutdown needs to be common on
-> > thermal core, not specific to of-thermal. Do you agree?
+On Monday 08 September 2014 10:41 AM, Santosh Shilimkar wrote:
+> Hi Dave,
 > 
-> Do you know of a machine that can't yet be converted to DT and that
-> needs this driver? In case of rockchips that is certainly not the
-> case, and we don't care about anybody trying to use board files out
-> of tree, they can just hack the thermal support as well.
+> On 8/22/14 3:45 PM, Santosh Shilimkar wrote:
+>> Hi David,
+>>
+>> On Thursday 21 August 2014 07:36 PM, David Miller wrote:
+>>> From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> Date: Fri, 15 Aug 2014 11:12:39 -0400
+>>>
+>>>> Update version after incorporating David Miller's comment from earlier
+>>>> posting [1]. I would like to get these merged for upcoming 3.18 merge
+>>>> window if there are no concerns on this version.
+>>>>
+>>>> The network coprocessor (NetCP) is a hardware accelerator that processes
+>>>> Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+>>>> switch sub-module to send and receive packets. NetCP also includes a packet
+>>>> accelerator (PA) module to perform packet classification operations such as
+>>>> header matching, and packet modification operations such as checksum
+>>>> generation. NetCP can also optionally include a Security Accelerator(SA)
+>>>> capable of performing IPSec operations on ingress/egress packets.
+>>>>
+>>>> Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+>>>> includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+>>>> 1Gb/s rates per Ethernet port.
+>>>>
+>>>> NetCP driver has a plug-in module architecture where each of the NetCP
+>>>> sub-modules exist as a loadable kernel module which plug in to the netcp
+>>>> core. These sub-modules are represented as "netcp-devices" in the dts
+>>>> bindings. It is mandatory to have the ethernet switch sub-module for
+>>>> the ethernet interface to be operational. Any other sub-module like the
+>>>> PA is optional.
+>>>>
+>>>> Both GBE and XGBE network processors supported using common driver. It
+>>>> is also designed to handle future variants of NetCP.
+>>>
+>>> I don't want to see an offload driver that doesn't plug into the existing
+>>> generic frameworks for configuration et al.
+>>>
+>>> If no existing facility exists to support what you need, you must work
+>>> with the upstream maintainers to design and create one.
+>>>
+>>> It is absolutely no reasonable for every "switch on a chip" driver to
+>>> export it's own configuration knob, we need a standard interface all
+>>> such drivers will plug into and provide.
+>>>
+As discussed on other thread, we are dropping the custom exports. I
+will be spinning updated version with the exports removed.
 
-I see. Again, the only concern I have is to produce thermal framework APIs
-that would be only in the of-thermal. My point is not specific to this
-patch, or this platform, but with a detail in the above proposal. 
+And for the future offload support additions, we will plug into
+generic frameworks as when they are available.
 
-While I agree to have a trip specific to configurable hardware triggered
-thermal shutdown, I just don't see why it needs to be a feature
-implemented only via of-thermal. It has to be properly defined in
-thermal core.
-
-The proposal of of-thermal is not to become a separate/competing thermal
-framework.
-
-> 
-> 	Arnd
-
-Cheers,
-
-Eduardo
+Regards,
+Santosh
