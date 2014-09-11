@@ -1,206 +1,116 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 1/3] ARM: OMAP2+: make of_device_ids const
-Date: Thu, 11 Sep 2014 21:01:36 +0200
-Message-ID: <20140911190136.GM3755@pengutronix.de>
-References: <1410337579-23466-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <1410337579-23466-2-git-send-email-u.kleine-koenig@pengutronix.de>
- <20140911173943.GB18849@atomide.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] PCI: keystone: remove handle of PCI mode configuration
+Date: Thu, 11 Sep 2014 15:09:10 -0400
+Message-ID: <5411F356.2090405@ti.com>
+References: <1410369159-11564-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140911173943.GB18849@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Rajendra Nayak <rnayak@ti.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Grant Likely <grant.likely@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410369159-11564-1-git-send-email-m-karicheri2-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 10:39:43AM -0700, Tony Lindgren wrote:
-> * Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de> [140910 01:2=
-7]:
-> > of_device_ids (i.e. compatible strings and the respective data) are=
- not
-> > supposed to change at runtime. All functions working with of_device=
-_ids
-> > provided by <linux/of.h> work with const of_device_ids. So mark the
-> > non-const function parameters and structs for OMAP2+ as const, too.
->=20
-> Hmm this does not seem to compile with omap2plus_defconfig because
-> of section type conflicts. Looks like there's some issue now with the
-> use of __initconst:
->=20
-> arch/arm/mach-omap2/board-generic.c:262:20: error: dra72x_boards_comp=
-at causes a section type conflict with omap_dt_match_table
-> arch/arm/mach-omap2/board-generic.c:30:34: note: =E2=80=98omap_dt_mat=
-ch_table=E2=80=99 was declared here
-> scripts/Makefile.build:257: recipe for target 'arch/arm/mach-omap2/bo=
-ard-generic.o' failed
-The problem is dra74x_boards_compat though:
+On 09/10/2014 01:12 PM, Murali Karicheri wrote:
+> Keystone PCI hardware supports both RC and EP modes and devcfg
+> register has bits to boot strap the device to either of these modes.
+> It seems proper to add this functionality to the boot loader rather
+> than in the driver as device will be operating in either mode, not
+> both any time. Currently the driver supports only RC mode and hence
+> register configuration in the driver is not needed and driver can
+> assume this is a RC hardware.
+>
+> Also update the DT documentation accordingly.
+>
+> Signed-off-by: Murali Karicheri<m-karicheri2-l0cyMroinI0@public.gmane.org>
+> Acked-by: Arnd Bergmann<arnd-r2nGTMty4D4@public.gmane.org>
+> ---
+> 	v3 - No change
+> 	v2 - Added this separate patch to remove pci mode handling
+>   .../devicetree/bindings/pci/pci-keystone.txt       |    4 +---
+>   drivers/pci/host/pci-keystone.c                    |   21 ++------------------
+>   2 files changed, 3 insertions(+), 22 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+> index ceb3e24..bedacf0 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+> @@ -13,9 +13,7 @@ Required Properties:-
+>
+>   compatibility: "ti,keystone-pcie"
+>   reg:	index 1 is the base address and length of DW application registers.
+> -	index 2 is the base address and length of PCI mode configuration
+> -	register.
+> -	index 3 is the base address and length of PCI device ID register.
+> +	index 2 is the base address and length of PCI device ID register.
+>
+>   pcie_msi_intc : Interrupt controller device node for MSI IRQ chip
+>   	interrupt-cells: should be set to 1
+> diff --git a/drivers/pci/host/pci-keystone.c b/drivers/pci/host/pci-keystone.c
+> index ff8ed25..f1119eb 100644
+> --- a/drivers/pci/host/pci-keystone.c
+> +++ b/drivers/pci/host/pci-keystone.c
+> @@ -35,10 +35,6 @@
+>   #define MAX_MSI_HOST_IRQS		8
+>   #define MAX_LEGACY_HOST_IRQS		4
+>
+> -/* RC mode settings masks */
+> -#define PCIE_RC_MODE		BIT(2)
+> -#define PCIE_MODE_MASK		(BIT(1) | BIT(2))
+> -
+>   /* DEV_STAT_CTRL */
+>   #define PCIE_CAP_BASE		0x70
+>
+> @@ -355,7 +351,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>   	void __iomem *reg_p;
+>   	struct phy *phy;
+>   	int ret = 0;
+> -	u32 val;
+>
+>   	ks_pcie = devm_kzalloc(&pdev->dev, sizeof(*ks_pcie),
+>   				GFP_KERNEL);
+> @@ -365,18 +360,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>   	}
+>   	pp =&ks_pcie->pp;
+>
+> -	/* index 2 is the devcfg register for RC mode settings */
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> -	reg_p = devm_ioremap_resource(dev, res);
+> -	if (IS_ERR(reg_p))
+> -		return PTR_ERR(reg_p);
+> -
+> -	/* enable RC mode in devcfg */
+> -	val = readl(reg_p);
+> -	val&= ~PCIE_MODE_MASK;
+> -	val |= PCIE_RC_MODE;
+> -	writel(val, reg_p);
+> -
+>   	/* initialize SerDes Phy if present */
+>   	phy = devm_phy_get(dev, "pcie-phy");
+>   	if (!IS_ERR_OR_NULL(phy)) {
+> @@ -385,8 +368,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+>   			return ret;
+>   	}
+>
+> -	/* index 3 is to read PCI DEVICE_ID */
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+> +	/* index 2 is to read PCI DEVICE_ID */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+>   	reg_p = devm_ioremap_resource(dev, res);
+>   	if (IS_ERR(reg_p))
+>   		return PTR_ERR(reg_p);
+Bjorn,
 
-	static const char *dra74x_boards_compat[] __initconst =3D {
-		...
+These patches need to go onto host-keystone as well for v3.18. If you 
+you have any comments, please let me know so that I can address them. I 
+have incorporated comments from Arnd already.
 
-*dra74x_boards_compat is const, but dra74x_boards_compat isn't, so
-either the variable must go into __initdata or it must be declared as:
+Thanks.
 
-	static const char * const dra74x_boards_compat[] __initconst =3D {
-		...
-
-(but then I guess you get another warning because struct machine_desc's
-dt_compat is declared as
-
-	const char **dt_compat;
-
-=2E)
-
-With the patch below, arch/arm/mach-omap2/board-generic.c compiles just
-fine. Don't know yet if the additional const in <asm/mach_desc.h> is
-problematic ...
-
-diff --git a/arch/arc/include/asm/mach_desc.h b/arch/arc/include/asm/ma=
-ch_desc.h
-index e8993a2be6c2..f4a7bc8d8967 100644
---- a/arch/arc/include/asm/mach_desc.h
-+++ b/arch/arc/include/asm/mach_desc.h
-@@ -35,7 +35,7 @@
-  */
- struct machine_desc {
- 	const char		*name;
--	const char		**dt_compat;
-+	const char *const	*dt_compat;
-=20
- 	void			(*init_early)(void);
- 	void			(*init_irq)(void);
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/=
-board-generic.c
-index 5827abb080e4..0b311d51425f 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -43,7 +43,7 @@ static void __init omap_generic_init(void)
- }
-=20
- #ifdef CONFIG_SOC_OMAP2420
--static const char *omap242x_boards_compat[] __initconst =3D {
-+static const char *const omap242x_boards_compat[] __initconst =3D {
- 	"ti,omap2420",
- 	NULL,
- };
-@@ -62,7 +62,7 @@ MACHINE_END
- #endif
-=20
- #ifdef CONFIG_SOC_OMAP2430
--static const char *omap243x_boards_compat[] __initconst =3D {
-+static const char *const omap243x_boards_compat[] __initconst =3D {
- 	"ti,omap2430",
- 	NULL,
- };
-@@ -81,7 +81,7 @@ MACHINE_END
- #endif
-=20
- #ifdef CONFIG_ARCH_OMAP3
--static const char *omap3_boards_compat[] __initconst =3D {
-+static const char *const omap3_boards_compat[] __initconst =3D {
- 	"ti,omap3430",
- 	"ti,omap3",
- 	NULL,
-@@ -100,7 +100,7 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattene=
-d Device Tree)")
- 	.restart	=3D omap3xxx_restart,
- MACHINE_END
-=20
--static const char *omap36xx_boards_compat[] __initconst =3D {
-+static const char *const omap36xx_boards_compat[] __initconst =3D {
- 	"ti,omap36xx",
- 	NULL,
- };
-@@ -118,7 +118,7 @@ DT_MACHINE_START(OMAP36XX_DT, "Generic OMAP36xx (Fl=
-attened Device Tree)")
- 	.restart	=3D omap3xxx_restart,
- MACHINE_END
-=20
--static const char *omap3_gp_boards_compat[] __initconst =3D {
-+static const char *const omap3_gp_boards_compat[] __initconst =3D {
- 	"ti,omap3-beagle",
- 	"timll,omap3-devkit8000",
- 	NULL,
-@@ -137,7 +137,7 @@ DT_MACHINE_START(OMAP3_GP_DT, "Generic OMAP3-GP (Fl=
-attened Device Tree)")
- 	.restart	=3D omap3xxx_restart,
- MACHINE_END
-=20
--static const char *am3517_boards_compat[] __initconst =3D {
-+static const char *const am3517_boards_compat[] __initconst =3D {
- 	"ti,am3517",
- 	NULL,
- };
-@@ -157,7 +157,7 @@ MACHINE_END
- #endif
-=20
- #ifdef CONFIG_SOC_AM33XX
--static const char *am33xx_boards_compat[] __initconst =3D {
-+static const char *const am33xx_boards_compat[] __initconst =3D {
- 	"ti,am33xx",
- 	NULL,
- };
-@@ -177,7 +177,7 @@ MACHINE_END
- #endif
-=20
- #ifdef CONFIG_ARCH_OMAP4
--static const char *omap4_boards_compat[] __initconst =3D {
-+static const char *const omap4_boards_compat[] __initconst =3D {
- 	"ti,omap4460",
- 	"ti,omap4430",
- 	"ti,omap4",
-@@ -199,7 +199,7 @@ MACHINE_END
- #endif
-=20
- #ifdef CONFIG_SOC_OMAP5
--static const char *omap5_boards_compat[] __initconst =3D {
-+static const char *const omap5_boards_compat[] __initconst =3D {
- 	"ti,omap5432",
- 	"ti,omap5430",
- 	"ti,omap5",
-@@ -221,7 +221,7 @@ MACHINE_END
- #endif
-=20
- #ifdef CONFIG_SOC_AM43XX
--static const char *am43_boards_compat[] __initconst =3D {
-+static const char *const am43_boards_compat[] __initconst =3D {
- 	"ti,am4372",
- 	"ti,am43",
- 	NULL,
-@@ -240,7 +240,7 @@ MACHINE_END
- #endif
-=20
- #ifdef CONFIG_SOC_DRA7XX
--static const char *dra74x_boards_compat[] __initconst =3D {
-+static const char *const dra74x_boards_compat[] __initconst =3D {
- 	"ti,dra742",
- 	"ti,dra7",
- 	NULL,
-@@ -259,7 +259,7 @@ DT_MACHINE_START(DRA74X_DT, "Generic DRA74X (Flatte=
-ned Device Tree)")
- 	.restart	=3D omap44xx_restart,
- MACHINE_END
-=20
--static const char *dra72x_boards_compat[] __initconst =3D {
-+static const char *const dra72x_boards_compat[] __initconst =3D {
- 	"ti,dra722",
- 	NULL,
- };
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig     =
-       |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Murali
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
