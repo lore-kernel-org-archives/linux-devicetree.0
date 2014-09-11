@@ -1,67 +1,71 @@
-From: Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] ARM: regulator: add Freescale MXS regulator driver
-Date: Thu, 11 Sep 2014 07:53:20 +0200
-Message-ID: <541138D0.6090808@lategoodbye.de>
-References: <1410089869-6611-1-git-send-email-info@lategoodbye.de>	<1410089869-6611-3-git-send-email-info@lategoodbye.de>	<20140909182211.GG3896@leverpostej>	<540F523D.4010904@lategoodbye.de>	<20140910141853.GA4994@leverpostej>	<20140910151316.GG7960@sirena.org.uk>	<54108B34.6010701@lategoodbye.de> <CAOMZO5BEN_DQOyhrx5ZB7y6DoDvqbLvDyJfAabOvtUvKOiGHOA@mail.gmail.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [PATCH v2 0/2] Add DRA7xx CPSW Ethernet support in Device Tree
+Date: Thu, 11 Sep 2014 12:01:55 +0530
+Message-ID: <541141DB.9010908@ti.com>
+References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com> <541059B4.50205@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5BEN_DQOyhrx5ZB7y6DoDvqbLvDyJfAabOvtUvKOiGHOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "stefan.wahren-eS4NqCHxEME@public.gmane.org" <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <541059B4.50205@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>, bcousson@baylibre.com, tony@atomide.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-
-Am 10.09.2014 20:54, schrieb Fabio Estevam:
-> Hi Stefan,
->
-> On Wed, Sep 10, 2014 at 2:32 PM, Stefan Wahren <info-saaNCTdWVBT7BZbvpMY5sg@public.gmane.org> wrote:
->> Hi Mark,
+On Wednesday 10 September 2014 07:31 PM, Nishanth Menon wrote:
+> On 09/10/2014 08:37 AM, Mugunthan V N wrote:
+>> Adding device tree entry for CPSW to make it work in Dual EMAC mode.
+>> These patches were tested with DRA7 hwmod patches on top of linux-next.
+>> Patches are tested on top of Nishanth's PM tree for v3.17 [1] and pushed
+>> my tree to [2].
 >>
->> Am 10.09.2014 17:13, schrieb Mark Brown:
->>>
->>> On Wed, Sep 10, 2014 at 03:18:53PM +0100, Mark Rutland wrote:
->>>>
->>>> On Tue, Sep 09, 2014 at 08:17:17PM +0100, Stefan Wahren wrote:
->>>
->>>
->>> Ugh, this looks like it might be a regulator driver but since the
->>> subject line was "ARM: " I deleted it unread - if your changelog looks
->>> different to all the other changelogs in the subsystem it probably needs
->>> changing.
+>> Did a boot test with CPSW and ping test with suspend/resume, the boot logs
+>> on DRA7xx EVM are posted at [3]
 >>
+>> [1] git://github.com/nmenon/linux-2.6-playground.git testing/v3.17/cpu-idle-suspend-dra7-omap5-framework
+>> [2] git://git.ti.com/~mugunthanvnm/ti-linux-kernel/linux.git v3.17/dra7-evm-cpsw
+>> [3] http://pastebin.ubuntu.com/8309289/
 >>
->> sorry about the confusion, i will remove ARM in the next version.
+>> Changes from initial version:
+>> * Dropped patch for pinoff states
+>> * Changed pinoff state to mode15
 >>
->> Changelog? I didn't send a changelog because it was my first version.
+>> Mugunthan V N (2):
+>>   ARM: dts: dra7: Add CPSW and MDIO module nodes for dra7
+>>   ARM: dts: dra7-evm: Enable CPSW and MDIO for dra7xx EVM
 >>
->> Should i resend this version only to you?
->
-> In the cover letter of this RFC series you mentioned that this has not
-> been tested on real hardware.
->
-> What about sending a new version of this series (with the RFC prefix
-> removed and with Mark Rutland's suggestion implemented) tested on a
-> mx28 board and also with the Subject of the regulator patch changed to
-> 'regulator: add support for mxs regulator" with Mark Brown on Cc?
->
+>>  arch/arm/boot/dts/dra7-evm.dts | 107 +++++++++++++++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/dra7.dtsi    |  59 +++++++++++++++++++++++
+>>  2 files changed, 166 insertions(+)
+>>
+> I did apply these on Tony's
+> "omap-for-v3.18/dt 6e55426 Merge branch .."
+> they do apply.
+> 
+> However: why are we not sending dra72-evm.dts changes in the same
+> series since we claim it to be dra7xx support?
 
-that's the same idea i had about the first real version of my patch. 
-Unfortunately i can do the porting only in my spare time. So i try to 
-avoid with the RFC series the situation, that i spend many days in 
-development and testing, but after it the regulator guys says it went in 
-the complete wrong direction. The advice about the anatop regulator was 
-helpful, but there is still some unsureness.
+Will add dra72x support and submit the next version.
 
-I will try to get a Duckbill, so i can do testing at home.
+> 
+> Also, in your tests (http://pastebin.ubuntu.com/8309289/)
+> echo -n "20">/sys/kernel/debug/pm_debug/wakeup_timer_seconds
+> ping 172.24.188.1  & (or even better do a transfer of large file in
+> background)
+> echo mem > /sys/power/state
+> 
+> transfer/ping should resume seamlessly. (only thing you should be
+> careful is that the server should not timeout for 20 second inactivity)..
 
-Thanks
+ping will resume seamlessly will try tftp and update on my next version
+submission. Will add ping test across suspend resume with both ports
+while posting my next version
 
-Stefan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Mugunthan V N
+
+> 
+> It is a valid test to verify peripheral activity after resume, BUT,
+> equally important is to verify suspend-resume in the middle of activity.
+> 
