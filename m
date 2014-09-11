@@ -1,74 +1,73 @@
-From: Alban Bedel <alban.bedel@avionic-design.de>
-Subject: Re: [PATCH V4] pwm: lpc32xx - Add a driver for the motor PWM
-Date: Thu, 11 Sep 2014 10:36:21 +0200
-Message-ID: <20140911103621.198f7ef6@avionic-0020>
-References: <1410363822-22151-1-git-send-email-alban.bedel@avionic-design.de>
-	<12709842.iga6ki5KTS@wuerfel>
-	<20140910175941.5c44837f@avionic-0020>
-	<3043402.gA1yIrlkCZ@wuerfel>
+From: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH] iio: st-sensors: add support for lis3lv02d accelerometer
+Date: Thu, 11 Sep 2014 10:38:59 +0200
+Message-ID: <54115FA3.1040403@st.com>
+References: <1408815064-5763-1-git-send-email-linus.walleij@linaro.org>
+ <53FB6205.5020704@kernel.org>
+ <CACRpkdb5NXJiTvaHz9_nJiZcFsyVnjPYjaYZ1YH9meBgJhoTJA@mail.gmail.com>
+ <54104B26.5080707@st.com> <20140910133607.GA13361@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- boundary="Sig_/BDRRaeeI_B__tI7NPrXWs0I"; protocol="application/pgp-signature"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <3043402.gA1yIrlkCZ@wuerfel>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Alban Bedel <alban.bedel@avionic-design.de>, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Roland Stigge <stigge@antcom.de>
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140910133607.GA13361-5NIqAleC692hcjWhqY66xCZi+YwRKgec@public.gmane.org>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Piel <eric.piel-VkQ1JFuSMpfAbQlEx87xDw@public.gmane.org>, Yan Burman <burman.yan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yan Burman <yanb-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/BDRRaeeI_B__tI7NPrXWs0I
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When I have time yes for sure...:D
 
-On Wed, 10 Sep 2014 18:28:39 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+Denis
 
-> On Wednesday 10 September 2014 17:59:41 Alban Bedel wrote:
-> > On Wed, 10 Sep 2014 17:51:36 +0200
-> > Arnd Bergmann <arnd@arndb.de> wrote:
-> >=20
-> > > On Wednesday 10 September 2014 17:43:42 Alban Bedel wrote:
-> > > > +- #pwm-cells: should be 3. See pwm.txt in this directory for a des=
-cription of
-> > > > +  the cells format. The only third cell flag supported by this bin=
-ding is
-> > > > +  PWM_POLARITY_INVERTED.
-> > >=20
-> > > If you don't have multiple pwm outputs or programmable period, I woul=
-d say it
-> > > should use #pwm-cells=3D<1> and only pass the polarity.
-> >=20
-> > There is 3 channel, so 3 PWM from the API POV, and the period is
-> > independently programmable for each one.
->=20
-> Then you should put the channel number into the first cell and the period
-> length into the second cell, as the pwm.txt document says.
-
-That's what is implemented in this patch, by using
-of_pwm_xlate_with_flags() for the .of_xlate callback.
-
-Alban
-
---Sig_/BDRRaeeI_B__tI7NPrXWs0I
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUEV8FAAoJEHSUmkuduC28Mz8P/i5s2Fj+YQcB9OFcGwsoRdrr
-aR2DNHXMcnJfROlS6eqRhm0DPtFlL5y6rzP7wRUenJ4Vgd+sWO5hI5UwPm5lLT4T
-bb98y6ULuq2oYhSgPU1MUf4Nhf6zDQnL3/fFNsR4trZj9rzVeWJt80fpwDL8suZ4
-EBF72DlRU1jwzKxf8SZOm7G5c+/FHRsad2gW/SaZIHg5vnN6l7E7mzHsOWWP9Sf6
-KHwoIlOR76wvLcItUDF9ZWhGGgu6RdmBcMBpOAhWOTMQqMWQnzLYzzz3jxIm6SSc
-ftTvVkL0nJ3j7piIDf4vuq01lsV0rm1+zY6BAvlTWg9dgGPen8wB63qL8u/kH78z
-Pc6lg1NpRi7gzdx7BbcMaFdPQoiMBO1UaCYf8C8YYHOBhj5YYCPUuKRQ8iCGOrz0
-kELk1HcE0x8ndpw+PmTp8+LkRlwqJlvwSgKPzaUQRgB4P5avG/N2gyDdNoyu63Hv
-yJOntQeYF5Zp/XPG5sOCFY8t1eI/LfQwTqy+DTfsOQvuvPhAcF6O3rjHlwmke951
-I9ydqCNB0OW8vCtg82uMB+QmrT28yGIfKqRN3ohyehHWQtaMsh83qRjF9CuOgdGL
-BIXjaCEGmhBE6CI+BtqEATmPwCaOmjyZVYxybxOAfoAb39hFBYUxEVErPVBaIZim
-o064bM2xtqhcG5A7S/DS
-=7SNq
------END PGP SIGNATURE-----
-
---Sig_/BDRRaeeI_B__tI7NPrXWs0I--
+On 09/10/14 15:36, Pavel Machek wrote:
+> Hi!
+>
+>> I'm sorry but I was in business trip. I think that current lis3lv02d
+>> supports more things, I want to support everything in the current IIO
+>> drivers but always I have no time.
+> Ok then, can you add hwmon interfaces from the other driver to your one? That way,
+> we can deprecate one of them...
+>
+> 									Pavel
+>
+>> BR,
+>> Denis
+>>
+>>
+>> On 08/27/14 15:38, Linus Walleij wrote:
+>>> On Mon, Aug 25, 2014 at 6:19 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> On 23/08/14 18:31, Linus Walleij wrote:
+>>>>> This adds support for the LIS3LV02 accelerometer found in the
+>>>>> ST Microelectronics Nomadik board series.
+>>>>>
+>>>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>>>> Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+>>>>> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> This is a little 'interesting', given the part is already supported by
+>>>> drivers/misc/lis3lv02d*.c and already has bindings under there.
+>>>> Documentation/devicetree/bindings/misc/lis302.txt
+>>>> (some of these are interesting).
+>>> Grrr how come I missed this... It was originally merged as a
+>>> hwmon driver.
+>>>
+>>>
+>>>>> +/* CUSTOM VALUES FOR SENSOR 4 */
+>>>>>
+>>>> I wish now we'd nipped this naming convention in the bud and insisted
+>>>> on naming after a relevant part. Oh well.
+>>> Well we can always make an invasive patch fixing that. I can
+>>> probably do it using sed or something.
+>>>
+>>>> Do we think this is the right way to handle the alternative support
+>>>> here?
+>>> Well this patch is a driver using the IIO framework and was written
+>>> by ST, but the other driver support a few other interesting features
+>>> and seems to be for the laptop usecase.
+>>>
+>>> Adding the other authors to the TO: line...
+>>>
+>>> Yours,
+>>> Linus Walleij
