@@ -1,51 +1,69 @@
-From: "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
- LS1021A
-Date: Thu, 11 Sep 2014 10:10:37 +0000
-Message-ID: <1444adbcf7cd4b578a131db11e662490@BN1PR0301MB0593.namprd03.prod.outlook.com>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
- <1410253952-15631-2-git-send-email-jingchang.lu@freescale.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 0/8] rtc: at91sam9: add DT support
+Date: Thu, 11 Sep 2014 12:22:06 +0200
+Message-ID: <20140911102206.GA20727@localhost>
+References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20140911093942.GA12295@localhost>
+ <20140911120659.14daa624@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410253952-15631-2-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140911120659.14daa624@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Johan Hovold <johan@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>
 List-Id: devicetree@vger.kernel.org
 
->-----Original Message-----
->From: Jingchang Lu [mailto:jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
->Sent: Tuesday, September 09, 2014 2:42 PM
->To: Guo Shawn-R65073
->Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Lu
->Jingchang-B35083; Badola Nikhil-B46172; Zhao Chenhui-B35336; Gupta Suresh-
->B42813; Leekha Shaveta-B20052; Gupta Ruchika-R66431; Sharma Bhupesh-
->B45370; Fu Chao-B44548; Xiubo Li-B47053; Lu Jingchang-B35083
->Subject: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for LS1021A
+On Thu, Sep 11, 2014 at 12:06:59PM +0200, Boris BREZILLON wrote:
+> On Thu, 11 Sep 2014 11:39:42 +0200
+> Johan Hovold <johan@kernel.org> wrote:
+> 
+> > On Thu, Sep 11, 2014 at 10:55:59AM +0200, Boris BREZILLON wrote:
+> > 
+> > > Johan, let me know if this version addresses part of your concerns.
+> > 
+> > Looks good to me. I just have a few minor comments on two of the patches.
+> > 
+> > > I'm open to any suggestion/rework to address other previously discussed
+> > > issues, as long as it does not end up in a dead-end (like the discussion
+> > > you had last year):
+> > >  - the fact that the RTT block could be used for something that is not
+> > >    an RTC
+> > >  - the fact that referencing the GPBR node and defining a GPBR register
+> > >    number to store RTC time info could be considered as an HW config and
+> > >    not an HW description and thus should not be described in the DT
+> > 
+> > No doubt.
 >
->From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
->Add Freescale LS1021A SoC device tree support
->+
->+		usb@8600000 {
->+			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
->+			reg = <0x0 0x8600000 0x0 0x1000>;
->+			#address-cells = <1>;
->+			#size-cells = <0>;
->+			interrupts = <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
->+			dr_mode = "host";
->+			phy_type = "ulpi";
->+		};
->+
+> Okay then. Any suggestion to do otherwise ?
 
-Please remove following from the above node :  
-			#address-cells = <1>;
-			#size-cells = <0>;
+I didn't mean it that way. We've already agreed that modifying the
+configuration (use) of the RTT in DT was acceptable for now.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And arguably, for a specific machine, describing that one of the gpbr is
+used by the rtt could be considered a hw description of that machine
+(comparable to saying that this gpio is used by this i2c controller, or
+whatever)?
+
+> Alexandre suggested to pass the GPBR register number through a module
+> parameter, and retrieve the GPBR syscon by searching for a gpbr node
+> (or atmel,at91sam9260-gpbr compatible node) in the device tree.
+> 
+> I'm not a big fan of this solution, as it implies passing driver
+> specific config to the global cmdline (and we'll have to handle the
+> 9263 case where 2 RTT blocks are availables).
+
+I agree with you, and we should really not be adding any more module
+parameters.
+
+Also continuing the hw description discussion above, the register
+allocation really should be specified in DT if you consider that the
+bootloader could one day be able to use it for whatever purpose.
+
+Whether to search for a specific gpbr compatible node is perhaps a
+different issue? What would the arguments be to restrict which type of
+sysconf register to use (besides the obvious one, that not using a
+battery-backed one would be rather pointless)?
+
+Johan
