@@ -1,65 +1,57 @@
-From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v3 0/5] Initial support for XPowers AXP288 PMIC
-Date: Thu, 11 Sep 2014 16:15:52 -0700
-Message-ID: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>Pete
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v3 3/5] regulator/axp20x: use axp2xx consolidated header
+Date: Thu, 11 Sep 2014 16:15:55 -0700
+Message-ID: <1410477357-6407-4-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE TREE <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>Pete
 List-Id: devicetree@vger.kernel.org
 
-XPowers AXP288 is a customized PMIC found on some Intel Baytrail-CR platforms.
-It comes with sub-functions such as USB charging, fuel gauge, ADC, and many LDO
-and BUCK channels.
+AXP20x driver has been extended to support axp288 variant. Header file
+and common data structures has also been renamed to suit the new
+scope of devices supported.
 
-By extending the existing AXP20x driver, this patchset adds basic support
-for AXP288 PMIC with GPADC as one MFD cell device driver. It also adds hooks
-for ACPI opregion handler driver which can be used to handle ACPI requests.
+This patch makes use of the renamed header and structure.
 
-Currently, the PMIC driver in this patchset does not support platform data
-enumeration. But when ACPI _DSD and unified device properties become available,
-cell devices with platform data will be added.
+Acked-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+---
+ drivers/regulator/axp20x-regulator.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-This patch does not use intel_soc_pmic core for i2c and regmap handling in that
-axp288 shares similar programming interface with other Xpower PMICs supported in
-axp20x.c. Therefore, extending axp20x.c to include axp288 makes more sense.
-
-Changes
- v3:	- put all file rename changes in 1/5
- 	- add iio documentation for in_current_raw/scale
-	- removed global variables in axp2xx
-	- removed pm callbacks from GPADC
-	- removed ACPI opregion cell device
-	- added scales to ADC current and voltage
-	- removed ADC thermal sensor from sysfs, kernel internal use only
-
- v2:
-	- use format -M for 1/4
-	- minor tweak based on Maxime's review
-
-
-Jacob Pan (5):
-  mfd/axp20x: rename files to support more devices
-  mfd/axp2xx: extend axp20x to support axp288 pmic
-  regulator/axp20x: use axp2xx consolidated header
-  iio/adc/axp288: add support for axp288 gpadc
-  iio: add documentation for current attribute
-
- Documentation/ABI/testing/sysfs-bus-iio  |   8 +
- drivers/iio/adc/Kconfig                  |   8 +
- drivers/iio/adc/Makefile                 |   1 +
- drivers/iio/adc/axp288_gpadc.c           | 238 +++++++++++++++
- drivers/mfd/Kconfig                      |   7 +-
- drivers/mfd/Makefile                     |   2 +-
- drivers/mfd/axp20x.c                     | 258 ----------------
- drivers/mfd/axp2xx.c                     | 493 +++++++++++++++++++++++++++++++
- drivers/regulator/axp20x-regulator.c     |   6 +-
- include/linux/mfd/{axp20x.h => axp2xx.h} |  66 ++++-
- 10 files changed, 818 insertions(+), 269 deletions(-)
- create mode 100644 drivers/iio/adc/axp288_gpadc.c
- delete mode 100644 drivers/mfd/axp20x.c
- create mode 100644 drivers/mfd/axp2xx.c
- rename include/linux/mfd/{axp20x.h => axp2xx.h} (76%)
-
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 004aadb..c9b6803 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -20,7 +20,7 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+-#include <linux/mfd/axp20x.h>
++#include <linux/mfd/axp2xx.h>
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/of_regulator.h>
+ 
+@@ -161,7 +161,7 @@ static struct of_regulator_match axp20x_matches[] = {
+ 
+ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
+ {
+-	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
++	struct axp2xx_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+ 
+ 	if (dcdcfreq < 750) {
+ 		dcdcfreq = 750;
+@@ -232,7 +232,7 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
+ static int axp20x_regulator_probe(struct platform_device *pdev)
+ {
+ 	struct regulator_dev *rdev;
+-	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
++	struct axp2xx_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+ 	struct regulator_config config = { };
+ 	struct regulator_init_data *init_data;
+ 	int ret, i;
 -- 
 1.9.1
