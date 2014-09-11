@@ -1,74 +1,47 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Thu, 11 Sep 2014 10:29:25 -0700
-Message-ID: <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com>
-References: <1410452204-7277-1-git-send-email-dianders@chromium.org>
-	<20140911164710.GW6158@arm.com>
-	<5411D528.4050605@arm.com>
-	<CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com>
-	<5411DA67.2040402@arm.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] Input: atmel_mxt_ts - fix merge in DT documentation
+Date: Thu, 11 Sep 2014 10:32:57 -0700
+Message-ID: <20140911173256.GA36295@core.coreip.homeip.net>
+References: <1407372486-25881-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1407372486-25881-2-git-send-email-javier.martinez@collabora.co.uk>
+ <53E37329.4020002@itdev.co.uk>
+ <53E4E41D.4070703@collabora.co.uk>
+ <53EDF6B4.7080804@collabora.co.uk>
+ <53EE307E.8060507@itdev.co.uk>
+ <53EE319A.1030304@wwwdotorg.org>
+ <5411B73E.4040404@itdev.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5411DA67.2040402-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5411B73E.4040404@itdev.co.uk>
+Sender: linux-input-owner@vger.kernel.org
+To: Nick Dyer <nick.dyer@itdev.co.uk>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Stephen Warren <swarren@nvidia.com>, Yufeng Shen <miletus@chromium.org>, Benson Leung <bleung@chromium.org>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Marc,
+On Thu, Sep 11, 2014 at 03:52:46PM +0100, Nick Dyer wrote:
+> On 15/08/14 17:13, Stephen Warren wrote:
+> >>> Any comments on this? I would really appreciate if you can expand on how
+> >>> this DT property is supposed to be used so I can re-spin the atmel support
+> >>> patch for Peach boards.
+> >>
+> >> The below patch improves the documentation for the gpio-property.
+> > 
+> > That patch makes sense, and is a nice description,
+> > Acked-by: Stephen Warren <swarren@nvidia.com>
+> 
+> Hi Dmitry-
+> 
+> Something went a bit wrong in merging f5940231a - there's a bit of repeated
+> text that's been introduced.
+> 
+> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
 
-On Thu, Sep 11, 2014 at 10:22 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->> We would need to run this code potentially at processor bringup and
->> after suspend/resume, but that seems possible too.
->
-> Note that this would be an ARMv7 only thing (you can't do that on ARMv8,
-> at all).
+Hmm, not sure how I messed this up, but I will queue the patch for the
+next push.
 
-Yes, of course.
+Thanks.
 
-
->> Is the transition to monitor mode and back simple?  Where would you
->> suggest putting this code?  It would definitely need to be pretty
->> early.  We'd also need to be able to detect that we're in Secure SVC
->> and not mess up anyone else who happened to boot in Non Secure SVC.
->
-> This would have to live in some very early platform-specific code. The
-> ugly part is that you cannot find out what world you're in (accessing
-> SCR is going to send you to UNDEF-land if accessed from NS).
-
-Yup, so the question is: would such code be accepted upstream, or are
-we going to embark on a big job for someone to figure out how to do
-this only to get NAKed?
-
-If there was some indication that folks would take this, I think we
-might be able to get it coded up.  If someone else wanted to volunteer
-to code it that would make me even happier, but maybe that's pushing
-my luck.  ;)
-
-
-> If I was suicidal, I'd suggest you could pass a parameter to the command
-> line, interpreted by the timer code... But I since I'm not, let's
-> pretend I haven't said anything... ;-)
-
-I did this in the past (again, see Sonny's thread), but didn't
-consider myself knowledgeable to know if that was truly a good test:
-
-       asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
-       pr_info("DOUG: val is %#010x", val);
-       val |= (1 << 2);
-       asm volatile("mcr p15, 0, %0, c1, c1, 0" : : "r" (val));
-       val = 0xffffffff;
-       asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
-       pr_info("DOUG: val is %#010x", val);
-
-The idea being that if you can make modifications to the SCR register
-(and see your changes take effect) then you must be in secure mode.
-In my case the first printout was 0x0 and the second was 0x4.
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Dmitry
