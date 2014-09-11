@@ -1,66 +1,56 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3 5/6] ARM: imx: Add initial support for Freescale LS1021A
-Date: Thu, 11 Sep 2014 10:05:14 +0000
-Message-ID: <40b51f52f15242cfbd99c7b5a1cad3d4@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
- <3532608.xLS91GQkq4@wuerfel>
- <daf5ec5b70164b3e9a810def41909c48@BL2PR03MB467.namprd03.prod.outlook.com>
- <20140402.o60F9Z4YVe@wuerfel>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] rtc: at91sam9: add DT support
+Date: Thu, 11 Sep 2014 12:06:59 +0200
+Message-ID: <20140911120659.14daa624@bbrezillon>
+References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20140911093942.GA12295@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140402.o60F9Z4YVe@wuerfel>
-Content-Language: en-US
+In-Reply-To: <20140911093942.GA12295@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEFybmQgQmVyZ21hbm4gW21h
-aWx0bzphcm5kQGFybmRiLmRlXQ0KPlNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDEwLCAyMDE0
-IDM6NDIgUE0NCj5UbzogTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPkNjOiBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7IEd1byBTaGF3bi1SNjUwNzM7DQo+ZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmcNCj5TdWJqZWN0OiBSZTogW1BBVENIdjMgNS82XSBBUk06IGlteDogQWRkIGlu
-aXRpYWwgc3VwcG9ydCBmb3IgRnJlZXNjYWxlDQo+TFMxMDIxQQ0KPg0KPk9uIFdlZG5lc2RheSAx
-MCBTZXB0ZW1iZXIgMjAxNCAwMzozMToxOSBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+DQo+PiA+PiAr
-RFRfTUFDSElORV9TVEFSVChMUzEwMjFBLCAiRnJlZXNjYWxlIExTMTAyMUEiKSAgI2lmZGVmDQo+
-PiA+PiArQ09ORklHX1pPTkVfRE1BDQo+PiA+PiArICAgICAgIC5kbWFfem9uZV9zaXplICA9IFNa
-XzEyOE0sDQo+PiA+PiArI2VuZGlmDQo+PiA+PiArICAgICAgIC5pbml0X21hY2hpbmUgICA9IGxz
-MTAyMWFfaW5pdF9tYWNoaW5lLA0KPj4gPj4gKyAgICAgICAuZHRfY29tcGF0ICAgICAgPSBsczEw
-MjFhX2R0X2NvbXBhdCwNCj4+ID4+ICsgICAgICAgLnJlc3RhcnQgICAgICAgID0gbXhjX3Jlc3Rh
-cnQsDQo+PiA+PiArTUFDSElORV9FTkQNCj4+ID4NCj4+ID5JIGJlbGlldmUgc29tZW9uZSByZWNl
-bnRseSBwb3N0ZWQgYSBwYXRjaCB0byBkZXJpdmUgdGhlIGRtYV96b25lX3NpemUNCj4+ID5mcm9t
-IGRldmljZSB0cmVlLiBDYW4geW8gdHJ5IHRvIGZpbmQgdGhhdCBhbmQgc2VlIGlmIHRoYXQgd2ls
-bCB3b3JrIGZvcg0KPnlvdT8NCj4+ID4NCj4+ID5DYW4geW91IGV4cGxhaW4gd2hhdCB0aGUgcmVh
-c29uIGlzIGZvciBuZWVkaW5nIGEgRE1BIHpvbmU/DQo+Pg0KPj4gV2l0aCBMUEFFIGVuYWJsZWQg
-b24gb3VyIFNvQywgd2UgbWVldCB0aGUgc3lzdGVtIGNvbXBsYWludCBvZg0KPj4gImNvaGVyZW50
-IERNQSBtYXNrIDB4ZmZmZmZmZmYgaXMgc21hbGxlciB0aGFuIHN5c3RlbSBHRlBfRE1BIG1hc2sN
-Cj4+IDB4ZmZmZmZmZmZmZmZmZmZmZiIsIGFuZCBJIG5vdGljZSB0aGF0IENPTkZJR19aT05FX0RN
-QSBhbmQgZG1hX3pvbmVfc2l6ZQ0KPmlzIGEgY29tbW9uIHJlc29sdmUgZm9yIHRoaXMuDQo+DQo+
-T2ssIEkgc2VlLiBUaGUgYWN0dWFsIHBvaW50IG9mIGRtYV96b25lX3NpemUgaG93ZXZlciBpcyBz
-bGlnaHRseSBkaWZmZXJlbnQsDQo+YW5kIEkgdGhpbmsgeW91IHNob3VsZCBub3QgdXNlIGl0IGxp
-a2UgdGhpcy4gV2Ugbm9ybWFsbHkgb25seSB1c2UgWk9ORV9ETUENCj5pZiB0aGVyZSBhcmUgZGV2
-aWNlcyB0aGF0IGhhdmUgYSBsaW1pdGF0aW9uIHNtYWxsZXIgdGhhbiA0R0IsIGFuZCB0aGF0DQo+
-YXBwZWFyIHRvIGJlIHRoZSBjYXNlIGZvciB5b3VyIHN5c3RlbS4NCj4NCj5UaGUgbWVzc2FnZSB5
-b3UgcXVvdGUgaXMgb25seSBwcmVzZW50IGluIGFyY2gvcG93ZXJwYywgc28gSSdtIG5vdCBzdXJl
-DQo+d2hhdCBzeW1wdG9tcyB5b3UgYXJlIGFjdHVhbGx5IHNlZWluZy4gUGxlYXNlIHRyeSByZW1v
-dmluZyB0aGUNCj5kbWFfem9uZV9zaXplIHNldHRpbmcgZm9yIHlvdXIgcGxhdGZvcm0gYW5kIHJl
-cG9ydCBpZiBpdCB3b3JrcyBvciB3aGF0IHRoZQ0KPnN5bXB0b20gaXMgaWYgaXQgZG9lcyBub3Qg
-d29yayB3aXRoIHRoZSBsYXRlc3Qga2VybmVsLg0KPg0KPldlIGRlZmluaXRlbHkgbmVlZCB0byBn
-ZXQgdGhpcyB0byB3b3JrIG91dCBvZiB0aGUgYm94IHdpdGhvdXQgYQ0KPmRtYV96b25lX3NpemUg
-aGFjay4NCj4NCj5DYW4geW91IGRlc2NyaWJlIHdoYXQgdGhlIG1lbW9yeSBsYXlvdXQgaXMgb2Yg
-eW91ciBwbGF0Zm9ybT8gQ2FuIHlvdSBoYXZlDQo+UkFNIGluc3RhbGxlZCBhYm92ZSB0aGUgNEdC
-IHBoeXNpY2FsIGFkZHJlc3MgYm91bmRhcnk/IElmIHlvdSBjYW4sIGFyZQ0KPnRoZXJlIGFueSBk
-ZXZpY2VzIHRoYXQgYXJlIHVuYWJsZSB0byBwZXJmb3JtIERNQSBpbnRvIHRoYXQgbWVtb3J5IHdp
-dGhvdXQNCj50aGUgdXNlIG9mIGFuIElPTU1VPw0KPg0KPglBcm5kDQoNCk91ciBwbGF0Zm9ybSBo
-YXMgaW1wbGVtZW50ZWQgdGhlIExhcmdlIHBoeXNpY2FsIEFkZHJlc3MgRXh0ZW5zaW9uLCB3aXRo
-IDQwLWJpdA0KYWRkcmVzcyBzcGFjZSwgU0RSQU0gY2FuIGJlIGFib3ZlIDRHQiBhZGRyZXNzLCBi
-dXQgY3VycmVudGx5IHdlIG9ubHkgdXNlIHRoZSBERFINCmNvbnRyb2xsZXIxIGF0IDB4ODAwMDAw
-MDAgYmVsb3cgNEdCIG9uIG91ciBRRFMgYW5kIFRXUiBib2FyZC4gT3RoZXJzIGlzIGFib3ZlIDRH
-Qg0KYWRkcmVzcy4gUENJRSBhZGRyZXNzIGlzIGFsc28gYWJvdmUgNEdCIGFkZHJlc3MgYW5kIHdl
-IGFyZSBhZGRpbmcgc3VwcG9ydCB0byBpdC4NClRoYW5rcy4NCg0KQmVzdCBSZWdhcmRzLA0KSmlu
-Z2NoYW5nDQo=
+On Thu, 11 Sep 2014 11:39:42 +0200
+Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+> On Thu, Sep 11, 2014 at 10:55:59AM +0200, Boris BREZILLON wrote:
+> 
+> > Johan, let me know if this version addresses part of your concerns.
+> 
+> Looks good to me. I just have a few minor comments on two of the patches.
+> 
+> > I'm open to any suggestion/rework to address other previously discussed
+> > issues, as long as it does not end up in a dead-end (like the discussion
+> > you had last year):
+> >  - the fact that the RTT block could be used for something that is not
+> >    an RTC
+> >  - the fact that referencing the GPBR node and defining a GPBR register
+> >    number to store RTC time info could be considered as an HW config and
+> >    not an HW description and thus should not be described in the DT
+> 
+> No doubt.
+
+Okay then. Any suggestion to do otherwise ?
+Alexandre suggested to pass the GPBR register number through a module
+parameter, and retrieve the GPBR syscon by searching for a gpbr node
+(or atmel,at91sam9260-gpbr compatible node) in the device tree.
+
+I'm not a big fan of this solution, as it implies passing driver
+specific config to the global cmdline (and we'll have to handle the
+9263 case where 2 RTT blocks are availables).
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
