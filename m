@@ -1,240 +1,46 @@
-From: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH] coresight: bindings for coresight drivers
-Date: Thu, 11 Sep 2014 10:04:31 -0600
-Message-ID: <1410451471-16121-1-git-send-email-mathieu.poirier@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Nathan Lynch <Nathan_Lynch@mentor.com>
+Subject: Re: [PATCH] clocksource: arch_timer: Allow the device tree to specify
+ the physical timer
+Date: Thu, 11 Sep 2014 11:07:34 -0500
+Message-ID: <5411C8C6.4060509@mentor.com>
+References: <1410450727-8182-1-git-send-email-dianders@chromium.org> <5411C68B.6090308@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5411C68B.6090308@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christopher Covington <cov@codeaurora.org>
+Cc: Doug Anderson <dianders@chromium.org>, olof@lixom.net, mark.rutland@arm.com, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Marc Zyngier <marc.zyngier@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Catalin Marinas <Catalin.Marinas@arm.com>, galak@codeaurora.org, Thomas Gleixner <tglx@linutronix.de>, Sonny Rao <sonnyrao@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 09/11/2014 10:58 AM, Christopher Covington wrote:
+> 
+> On 09/11/2014 11:52 AM, Doug Anderson wrote:
+>> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+>> index 5163ec1..8ca07a9 100644
+>> --- a/drivers/clocksource/arm_arch_timer.c
+>> +++ b/drivers/clocksource/arm_arch_timer.c
+>> @@ -649,6 +649,9 @@ static void __init arch_timer_init(struct device_node *np)
+>>  		arch_timer_ppi[i] = irq_of_parse_and_map(np, i);
+>>  	arch_timer_detect_rate(NULL, np);
+>>  
+>> +	if (of_property_read_bool(np, "arm,use-physical-timer"))
+>> +		arch_timer_use_virtual = false;
+>> +
+>>  	/*
+>>  	 * If HYP mode is available, we know that the physical timer
+>>  	 * has been configured to be accessible from PL1. Use it, so
+>>
+> 
+> How's the VDSO supposed to deal with this? It currently does:
+> 
+> cycle_now = arch_counter_get_cntvct()
 
-Coresight IP blocks allow for the support of HW assisted tracing
-on ARM SoCs.  Bindings for the currently available blocks are
-presented herein.
+Note the VDSO for 32-bit ARM is still out of tree so there's no mainline
+regression in that respect.
 
-Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Panchaxari Prasannamurthy <panchaxari.prasannamurthy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/arm/coresight.txt          | 203 +++++++++++++++++++++
- 1 file changed, 203 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-new file mode 100644
-index 0000000..96dd947
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -0,0 +1,203 @@
-+* CoreSight Components:
-+
-+CoreSight components are compliant with the ARM CoreSight architecture
-+specification and can be connected in various topologies to suit a particular
-+SoCs tracing needs. These trace components can generally be classified as sinks,
-+links and sources. Trace data produced by one or more sources flows through the
-+intermediate links connecting the source to the currently selected sink. Each
-+CoreSight component device should use these properties to describe its hardware
-+characteristcs.
-+
-+* Required properties for all components *except* non-configurable replicators:
-+
-+	* compatible: These have to be supplemented with "arm,primecell" as
-+	  drivers are using the AMBA bus interface.  Possible values include:
-+		- "arm,coresight-etb10", "arm,primecell";
-+		- "arm,coresight-tpiu", "arm,primecell";
-+		- "arm,coresight-tmc", "arm,primecell";
-+		- "arm,coresight-funnel", "arm,primecell";
-+		- "arm,coresight-etm3x", "arm,primecell";
-+
-+	* reg: physical base address and length of the register
-+	  set(s) of the component.
-+
-+	* clocks: the clock associated to this component.
-+
-+	* clock-names: the name of the clock as referenced by the code.
-+	  Since we are using the AMBA framework, the name should be
-+	  "apb_pclk".
-+
-+	* port or ports: The representation of the component's port
-+	  layout using the generic DT graph presentation found in
-+	  "bindings/graph.txt".
-+
-+* Required properties for devices that don't show up on the AMBA bus, such as
-+  non-configurable replicators:
-+
-+	* compatible: Currently supported value is (note the absence of the
-+	  AMBA markee):
-+		- "arm,coresight-replicator"
-+
-+	* id: a unique number that will identify this replicator.
-+
-+	* port or ports: same as above.
-+
-+* Optional properties for ETM/PTMs:
-+
-+	* arm,cp14: must be present if the system accesses ETM/PTM management registers
-+	  via co-processor 14.
-+
-+	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the source is
-+	  considered to belong to CPU0.
-+
-+* Optional property for TMC:
-+
-+	* arm,buffer-size: size of contiguous buffer space for TMC ETR
-+	 (embedded trace router)
-+
-+
-+Example:
-+
-+1. Sinks
-+	etb@0,20010000 {
-+		compatible = "arm,coresight-etb10", "arm,primecell";
-+		reg = <0 0x20010000 0 0x1000>;
-+
-+		coresight-default-sink;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			etb_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port0>;
-+			};
-+		};
-+	};
-+
-+	tpiu@0,20030000 {
-+		compatible = "arm,coresight-tpiu", "arm,primecell";
-+		reg = <0 0x20030000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			tpiu_in_port: endpoint@0 {
-+				slave-mode;
-+				remote-endpoint = <&replicator_out_port1>;
-+			};
-+		};
-+	};
-+
-+2. Links
-+	replicator {
-+		/* non-configurable replicators don't show up on the
-+		 * AMBA bus.  As such no need to add "arm,primecell".
-+		 */
-+		compatible = "arm,coresight-replicator";
-+		/* this will show up in debugfs as "0.replicator" */
-+		id = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* replicator output ports */
-+			port@0 {
-+				reg = <0>;
-+				replicator_out_port0: endpoint {
-+					remote-endpoint = <&etb_in_port>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				replicator_out_port1: endpoint {
-+					remote-endpoint = <&tpiu_in_port>;
-+				};
-+			};
-+
-+			/* replicator input port */
-+			port@2 {
-+				reg = <0>;
-+				replicator_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&funnel_out_port0>;
-+				};
-+			};
-+		};
-+	};
-+
-+	funnel@0,20040000 {
-+		compatible = "arm,coresight-funnel", "arm,primecell";
-+		reg = <0 0x20040000 0 0x1000>;
-+
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			/* funnel output port */
-+			port@0 {
-+				reg = <0>;
-+				funnel_out_port0: endpoint {
-+					remote-endpoint = <&replicator_in_port0>;
-+				};
-+			};
-+
-+			/* funnel input ports */
-+			port@1 {
-+				reg = <0>;
-+				funnel_in_port0: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm0_out_port>;
-+				};
-+			};
-+
-+			port@2 {
-+				reg = <1>;
-+				funnel_in_port1: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&ptm1_out_port>;
-+				};
-+			};
-+
-+			port@3 {
-+				reg = <2>;
-+				funnel_in_port2: endpoint {
-+					slave-mode;
-+					remote-endpoint = <&etm0_out_port>;
-+				};
-+			};
-+
-+		};
-+	};
-+
-+3. Sources
-+	ptm@0,2201c000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201c000 0 0x1000>;
-+
-+		cpu = <&cpu0>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm0_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port0>;
-+			};
-+		};
-+	};
-+
-+	ptm@0,2201d000 {
-+		compatible = "arm,coresight-etm3x", "arm,primecell";
-+		reg = <0 0x2201d000 0 0x1000>;
-+
-+		cpu = <&cpu1>;
-+		clocks = <&oscclk6a>;
-+		clock-names = "apb_pclk";
-+		port {
-+			ptm1_out_port: endpoint {
-+				remote-endpoint = <&funnel_in_port1>;
-+			};
-+		};
-+	};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think as long as there's some way for the vdso initialization code to
+discover that it can't use the virtual counter, it should be tractable.
+ If that involves adding an API to the arch timer code, that can be
+added along with the vdso code.
