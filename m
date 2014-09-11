@@ -1,32 +1,78 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] ARM: dts: pbab01: move i2c pins and frequency
- configuration into pfla02
-Date: Thu, 11 Sep 2014 10:47:18 +0200
-Message-ID: <1410425238.4011.18.camel@paszta.hi.pengutronix.de>
-References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
-	 <1410356809-26179-2-git-send-email-d.lavnikevich@sam-solutions.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 3/8] rtc: at91sam9: replace devm_ioremap by devm_ioremap_resource
+Date: Thu, 11 Sep 2014 10:56:02 +0200
+Message-ID: <1410425767-17874-4-git-send-email-boris.brezillon@free-electrons.com>
+References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410356809-26179-2-git-send-email-d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <1410425767-17874-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Lavnikevich <d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, timur-N01EOCouUvQ@public.gmane.org, nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 10.09.2014, 16:46 +0300 schrieb Dmitry Lavnikevich:
-> Since pins and frequency are specific to module (pfla02), not base board
-> (pbab02), it is better to be initialized in corresponding dts file.
-> 
-> Signed-off-by: Dmitry Lavnikevich <d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+Replace devm_ioremap calls by devm_ioremap_resource which already check
+resource consistency (resource != NULL) and print an error in case of
+failure.
 
-I have seen boards use the GPIO_3/6 pads instead of EIM_D17/D18 for
-I2C3, but the EIM_D17/D18 are indeed documented as "I2C1" pins at the
-pfla02 connector level.
+Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/rtc/rtc-at91sam9.c | 29 ++++++++++-------------------
+ 1 file changed, 10 insertions(+), 19 deletions(-)
 
-regards
-Philipp
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index 74a9ca0..38a2693 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -306,18 +306,11 @@ static const struct rtc_class_ops at91_rtc_ops = {
+  */
+ static int at91_rtc_probe(struct platform_device *pdev)
+ {
+-	struct resource	*r, *r_gpbr;
++	struct resource	*r;
+ 	struct sam9_rtc	*rtc;
+ 	int		ret, irq;
+ 	u32		mr;
+ 
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	r_gpbr = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	if (!r || !r_gpbr) {
+-		dev_err(&pdev->dev, "need 2 ressources\n");
+-		return -ENODEV;
+-	}
+-
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "failed to get interrupt resource\n");
+@@ -335,18 +328,16 @@ static int at91_rtc_probe(struct platform_device *pdev)
+ 		device_init_wakeup(&pdev->dev, 1);
+ 
+ 	platform_set_drvdata(pdev, rtc);
+-	rtc->rtt = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+-	if (!rtc->rtt) {
+-		dev_err(&pdev->dev, "failed to map registers, aborting.\n");
+-		return -ENOMEM;
+-	}
+ 
+-	rtc->gpbr = devm_ioremap(&pdev->dev, r_gpbr->start,
+-				resource_size(r_gpbr));
+-	if (!rtc->gpbr) {
+-		dev_err(&pdev->dev, "failed to map gpbr registers, aborting.\n");
+-		return -ENOMEM;
+-	}
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	rtc->rtt = devm_ioremap_resource(&pdev->dev, r);
++	if (IS_ERR(rtc->rtt))
++		return PTR_ERR(rtc->rtt);
++
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
++	if (IS_ERR(rtc->gpbr))
++		return PTR_ERR(rtc->rtt);
+ 
+ 	mr = rtt_readl(rtc, MR);
+ 
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
