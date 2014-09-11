@@ -1,114 +1,65 @@
 From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v3 1/5] mfd/axp20x: rename files to support more devices
-Date: Thu, 11 Sep 2014 16:15:53 -0700
-Message-ID: <1410477357-6407-2-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v3 0/5] Initial support for XPowers AXP288 PMIC
+Date: Thu, 11 Sep 2014 16:15:52 -0700
+Message-ID: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410477357-6407-1-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>Pete
 List-Id: devicetree@vger.kernel.org
 
-More XPowers PMIC devices can be supported by extending this driver, so
-rename it to axp2xx to cover axp288 variant.
+XPowers AXP288 is a customized PMIC found on some Intel Baytrail-CR platforms.
+It comes with sub-functions such as USB charging, fuel gauge, ADC, and many LDO
+and BUCK channels.
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/mfd/Kconfig                      | 7 ++++---
- drivers/mfd/Makefile                     | 2 +-
- drivers/mfd/{axp20x.c => axp2xx.c}       | 6 +++---
- include/linux/mfd/{axp20x.h => axp2xx.h} | 6 +++---
- 4 files changed, 11 insertions(+), 10 deletions(-)
- rename drivers/mfd/{axp20x.c => axp2xx.c} (97%)
- rename include/linux/mfd/{axp20x.h => axp2xx.h} (98%)
+By extending the existing AXP20x driver, this patchset adds basic support
+for AXP288 PMIC with GPADC as one MFD cell device driver. It also adds hooks
+for ACPI opregion handler driver which can be used to handle ACPI requests.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index de5abf2..42a70a3 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -67,14 +67,15 @@ config MFD_BCM590XX
- 	help
- 	  Support for the BCM590xx PMUs from Broadcom
- 
--config MFD_AXP20X
--	bool "X-Powers AXP20X"
-+config MFD_AXP2XX
-+	bool "X-Powers AXP2XX"
- 	select MFD_CORE
- 	select REGMAP_I2C
- 	select REGMAP_IRQ
- 	depends on I2C=y
- 	help
--	  If you say Y here you get support for the X-Powers AXP202 and AXP209.
-+	  If you say Y here you get support for the X-Powers AXP202, AXP209 and
-+	  AXP288 power management IC (PMIC).
- 	  This driver include only the core APIs. You have to select individual
- 	  components like regulators or the PEK (Power Enable Key) under the
- 	  corresponding menus.
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 3fcfdfc..8d0beb2 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -103,7 +103,7 @@ obj-$(CONFIG_PMIC_DA9052)	+= da9052-irq.o
- obj-$(CONFIG_PMIC_DA9052)	+= da9052-core.o
- obj-$(CONFIG_MFD_DA9052_SPI)	+= da9052-spi.o
- obj-$(CONFIG_MFD_DA9052_I2C)	+= da9052-i2c.o
--obj-$(CONFIG_MFD_AXP20X)	+= axp20x.o
-+obj-$(CONFIG_MFD_AXP2XX)	+= axp2xx.o
- 
- obj-$(CONFIG_MFD_LP3943)	+= lp3943.o
- obj-$(CONFIG_MFD_LP8788)	+= lp8788.o lp8788-irq.o
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp2xx.c
-similarity index 97%
-rename from drivers/mfd/axp20x.c
-rename to drivers/mfd/axp2xx.c
-index dee6539..332a8a0 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp2xx.c
-@@ -1,7 +1,7 @@
- /*
-- * axp20x.c - MFD core driver for the X-Powers AXP202 and AXP209
-+ * axp2xx.c - MFD core driver for the X-Powers AXP202 and AXP209
-  *
-- * AXP20x comprises an adaptive USB-Compatible PWM charger, 2 BUCK DC-DC
-+ * AXP2xx comprises an adaptive USB-Compatible PWM charger, 2 BUCK DC-DC
-  * converters, 5 LDOs, multiple 12-bit ADCs of voltage, current and temperature
-  * as well as 4 configurable GPIOs.
-  *
-@@ -21,7 +21,7 @@
- #include <linux/regmap.h>
- #include <linux/slab.h>
- #include <linux/regulator/consumer.h>
--#include <linux/mfd/axp20x.h>
-+#include <linux/mfd/axp2xx.h>
- #include <linux/mfd/core.h>
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
-diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp2xx.h
-similarity index 98%
-rename from include/linux/mfd/axp20x.h
-rename to include/linux/mfd/axp2xx.h
-index d0e31a2..a36d91b 100644
---- a/include/linux/mfd/axp20x.h
-+++ b/include/linux/mfd/axp2xx.h
-@@ -8,8 +8,8 @@
-  * published by the Free Software Foundation.
-  */
- 
--#ifndef __LINUX_MFD_AXP20X_H
--#define __LINUX_MFD_AXP20X_H
-+#ifndef __LINUX_MFD_AXP2XX_H
-+#define __LINUX_MFD_AXP2XX_H
- 
- enum {
- 	AXP202_ID = 0,
-@@ -177,4 +177,4 @@ struct axp20x_dev {
- 	long				variant;
- };
- 
--#endif /* __LINUX_MFD_AXP20X_H */
-+#endif /* __LINUX_MFD_AXP2XX_H */
+Currently, the PMIC driver in this patchset does not support platform data
+enumeration. But when ACPI _DSD and unified device properties become available,
+cell devices with platform data will be added.
+
+This patch does not use intel_soc_pmic core for i2c and regmap handling in that
+axp288 shares similar programming interface with other Xpower PMICs supported in
+axp20x.c. Therefore, extending axp20x.c to include axp288 makes more sense.
+
+Changes
+ v3:	- put all file rename changes in 1/5
+ 	- add iio documentation for in_current_raw/scale
+	- removed global variables in axp2xx
+	- removed pm callbacks from GPADC
+	- removed ACPI opregion cell device
+	- added scales to ADC current and voltage
+	- removed ADC thermal sensor from sysfs, kernel internal use only
+
+ v2:
+	- use format -M for 1/4
+	- minor tweak based on Maxime's review
+
+
+Jacob Pan (5):
+  mfd/axp20x: rename files to support more devices
+  mfd/axp2xx: extend axp20x to support axp288 pmic
+  regulator/axp20x: use axp2xx consolidated header
+  iio/adc/axp288: add support for axp288 gpadc
+  iio: add documentation for current attribute
+
+ Documentation/ABI/testing/sysfs-bus-iio  |   8 +
+ drivers/iio/adc/Kconfig                  |   8 +
+ drivers/iio/adc/Makefile                 |   1 +
+ drivers/iio/adc/axp288_gpadc.c           | 238 +++++++++++++++
+ drivers/mfd/Kconfig                      |   7 +-
+ drivers/mfd/Makefile                     |   2 +-
+ drivers/mfd/axp20x.c                     | 258 ----------------
+ drivers/mfd/axp2xx.c                     | 493 +++++++++++++++++++++++++++++++
+ drivers/regulator/axp20x-regulator.c     |   6 +-
+ include/linux/mfd/{axp20x.h => axp2xx.h} |  66 ++++-
+ 10 files changed, 818 insertions(+), 269 deletions(-)
+ create mode 100644 drivers/iio/adc/axp288_gpadc.c
+ delete mode 100644 drivers/mfd/axp20x.c
+ create mode 100644 drivers/mfd/axp2xx.c
+ rename include/linux/mfd/{axp20x.h => axp2xx.h} (76%)
+
 -- 
 1.9.1
