@@ -1,50 +1,75 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 2/2] Input: misc: introduce palmas-pwrbutton
-Date: Thu, 11 Sep 2014 07:01:19 -0500
-Message-ID: <20140911120119.GA17602@kahuna>
-References: <1408392810-16011-1-git-send-email-nm@ti.com>
- <1408636935-29515-1-git-send-email-nm@ti.com>
- <1408636935-29515-3-git-send-email-nm@ti.com>
- <00FC9A978A94B7418C33AFAE8A35ED49DF0662@DFLE09.ent.ti.com>
- <53F62A2B.6010208@ti.com>
- <00FC9A978A94B7418C33AFAE8A35ED49DF07A2@DFLE09.ent.ti.com>
- <20140821173715.GA23419@kahuna>
- <20140821180300.GA5854@core.coreip.homeip.net>
- <53F64217.5020303@ti.com>
- <20140910211353.GE38736@core.coreip.homeip.net>
+From: Marc Dietrich <marvin24@gmx.de>
+Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
+Date: Thu, 11 Sep 2014 14:17:16 +0200
+Message-ID: <16809905.2REViph6WO@fb07-iapwap2>
+References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de> <1410274470-12712-5-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140910211353.GE38736@core.coreip.homeip.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "Murphy, Dan" <dmurphy@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1410274470-12712-5-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dimtry,
+cc'ing: devicetree
 
-On 14:13-20140910, Dmitry Torokhov wrote:
-> On Thu, Aug 21, 2014 at 02:01:43PM -0500, Nishanth Menon wrote:
-> > On 08/21/2014 01:03 PM, Dmitry Torokhov wrote:
-> > 
-> > I believe I have taken care of other concerns on v2, but..Arrgh.. I
-> > did not reply to this comment..
-> > > BTW, I do not think you need to use of_node_get/put here, it's not going anywhere.
-> > It has been mentioned as a good practice to ensure we use get_put in
-> > to ensure reference count is appropriately maintained. So, I have'nt
-> > changed that in v3.
+Am Dienstag, 9. September 2014, 16:54:30 schrieb Wolfram Sang:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > 
-> You only need to maintain reference count if you pass the handle on.
-> Otherwise you'd have to do get/put every time you dereference something.
+> Not for upstream!
 > 
-> Anyway, I did a few changes to the driver (no need to store current
-> state, do not fre einput device after unregister, etc.), could you
-> please tell me if the version below still works for you?
-[...]
-Thanks for taking the time to do all the changes - they are awesome and
-the resultant driver does work.
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  arch/arm/boot/dts/r8a7790-lager.dts | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7790-lager.dts
+> b/arch/arm/boot/dts/r8a7790-lager.dts index 856b4236b674..12aa2f21e6fa
+> 100644
+> --- a/arch/arm/boot/dts/r8a7790-lager.dts
+> +++ b/arch/arm/boot/dts/r8a7790-lager.dts
+> @@ -205,9 +205,9 @@
+>  		renesas,function = "msiof1";
+>  	};
+> 
+> -	iic1_pins: iic1 {
+> -		renesas,groups = "iic1";
+> -		renesas,function = "iic1";
+> +	i2c1_pins: i2c1 {
+> +		renesas,groups = "i2c1";
+> +		renesas,function = "i2c1";
+>  	};
+> 
+>  	iic2_pins: iic2 {
+> @@ -356,10 +356,15 @@
+>  	status = "ok";
+>  };
+> 
+> -&iic1	{
+> +&i2c1	{
+>  	status = "ok";
+> -	pinctrl-0 = <&iic1_pins>;
+> +	pinctrl-0 = <&i2c1_pins>;
+>  	pinctrl-names = "default";
+> +
+> +	eeprom@64 {
+> +		compatible = "slave-24c02";
 
--- 
-Regards,
-Nishanth Menon
+a "real" compatible value should have vendor,device syntax.
+
+> +		reg = <0x64>;
+
+we had some discussions in the past how to represent i2c master devices in 
+device tree. The outcome was to use to a special representation to distinguish 
+them from slave devices, e.g. something like reg = <0x1 0x64>, where the 0x1 
+would mean "master" device (0x0 -> slave). If nothing is added, then it's also 
+slave. The adapter address cell would also need to be changed if this 
+extension is used.
+
+An alternative would be to use a special property (e.g. slave address), but 
+that would encode the same value twice (or even three times).
+
+Marc
+
