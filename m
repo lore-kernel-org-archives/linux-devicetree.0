@@ -1,69 +1,116 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 0/8] rtc: at91sam9: add DT support
-Date: Thu, 11 Sep 2014 12:22:06 +0200
-Message-ID: <20140911102206.GA20727@localhost>
-References: <1410425767-17874-1-git-send-email-boris.brezillon@free-electrons.com>
- <20140911093942.GA12295@localhost>
- <20140911120659.14daa624@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140911120659.14daa624@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Johan Hovold <johan@kernel.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH v3 1/8] clk: samsung: add support for 145xx and 1460x PLLs
+Date: Thu, 11 Sep 2014 15:50:45 +0530
+Message-ID: <1410430852-3491-2-git-send-email-ch.naveen@samsung.com>
+References: <1410430852-3491-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1410430852-3491-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com, kgene.kim@samsung.com, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 12:06:59PM +0200, Boris BREZILLON wrote:
-> On Thu, 11 Sep 2014 11:39:42 +0200
-> Johan Hovold <johan@kernel.org> wrote:
-> 
-> > On Thu, Sep 11, 2014 at 10:55:59AM +0200, Boris BREZILLON wrote:
-> > 
-> > > Johan, let me know if this version addresses part of your concerns.
-> > 
-> > Looks good to me. I just have a few minor comments on two of the patches.
-> > 
-> > > I'm open to any suggestion/rework to address other previously discussed
-> > > issues, as long as it does not end up in a dead-end (like the discussion
-> > > you had last year):
-> > >  - the fact that the RTT block could be used for something that is not
-> > >    an RTC
-> > >  - the fact that referencing the GPBR node and defining a GPBR register
-> > >    number to store RTC time info could be considered as an HW config and
-> > >    not an HW description and thus should not be described in the DT
-> > 
-> > No doubt.
->
-> Okay then. Any suggestion to do otherwise ?
+PLL145xx is similar to PLL35xx and PLL1460x is almost similar
+to PLL46xx with minor differences in bit positions. Hence,
+reuse the functions defined for pll_35xx and pll_46xx to
+support 145xx and 1460x PLLs respectively.
 
-I didn't mean it that way. We've already agreed that modifying the
-configuration (use) of the RTT in DT was acceptable for now.
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Mike Turquette <mturquette@linaro.org>
+---
+ drivers/clk/samsung/clk-pll.c |   25 ++++++++++++++++++++-----
+ drivers/clk/samsung/clk-pll.h |    4 ++++
+ 2 files changed, 24 insertions(+), 5 deletions(-)
 
-And arguably, for a specific machine, describing that one of the gpbr is
-used by the rtt could be considered a hw description of that machine
-(comparable to saying that this gpio is used by this i2c controller, or
-whatever)?
-
-> Alexandre suggested to pass the GPBR register number through a module
-> parameter, and retrieve the GPBR syscon by searching for a gpbr node
-> (or atmel,at91sam9260-gpbr compatible node) in the device tree.
-> 
-> I'm not a big fan of this solution, as it implies passing driver
-> specific config to the global cmdline (and we'll have to handle the
-> 9263 case where 2 RTT blocks are availables).
-
-I agree with you, and we should really not be adding any more module
-parameters.
-
-Also continuing the hw description discussion above, the register
-allocation really should be specified in DT if you consider that the
-bootloader could one day be able to use it for whatever purpose.
-
-Whether to search for a specific gpbr compatible node is perhaps a
-different issue? What would the arguments be to restrict which type of
-sysconf register to use (besides the obvious one, that not using a
-battery-backed one would be rather pointless)?
-
-Johan
+diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+index b07fad2..9d70e5c 100644
+--- a/drivers/clk/samsung/clk-pll.c
++++ b/drivers/clk/samsung/clk-pll.c
+@@ -482,6 +482,8 @@ static const struct clk_ops samsung_pll45xx_clk_min_ops = {
+ 
+ #define PLL46XX_VSEL_MASK	(1)
+ #define PLL46XX_MDIV_MASK	(0x1FF)
++#define PLL1460X_MDIV_MASK	(0x3FF)
++
+ #define PLL46XX_PDIV_MASK	(0x3F)
+ #define PLL46XX_SDIV_MASK	(0x7)
+ #define PLL46XX_VSEL_SHIFT	(27)
+@@ -511,13 +513,15 @@ static unsigned long samsung_pll46xx_recalc_rate(struct clk_hw *hw,
+ 
+ 	pll_con0 = __raw_readl(pll->con_reg);
+ 	pll_con1 = __raw_readl(pll->con_reg + 4);
+-	mdiv = (pll_con0 >> PLL46XX_MDIV_SHIFT) & PLL46XX_MDIV_MASK;
++	mdiv = (pll_con0 >> PLL46XX_MDIV_SHIFT) & ((pll->type == pll_1460x) ?
++				PLL1460X_MDIV_MASK : PLL46XX_MDIV_MASK);
+ 	pdiv = (pll_con0 >> PLL46XX_PDIV_SHIFT) & PLL46XX_PDIV_MASK;
+ 	sdiv = (pll_con0 >> PLL46XX_SDIV_SHIFT) & PLL46XX_SDIV_MASK;
+ 	kdiv = pll->type == pll_4650c ? pll_con1 & PLL4650C_KDIV_MASK :
+ 					pll_con1 & PLL46XX_KDIV_MASK;
+ 
+-	shift = pll->type == pll_4600 ? 16 : 10;
++	shift = ((pll->type == pll_4600) || (pll->type == pll_1460x)) ? 16 : 10;
++
+ 	fvco *= (mdiv << shift) + kdiv;
+ 	do_div(fvco, (pdiv << sdiv));
+ 	fvco >>= shift;
+@@ -573,14 +577,21 @@ static int samsung_pll46xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 		lock = 0xffff;
+ 
+ 	/* Set PLL PMS and VSEL values. */
+-	con0 &= ~((PLL46XX_MDIV_MASK << PLL46XX_MDIV_SHIFT) |
++	if (pll->type == pll_1460x) {
++		con0 &= ~((PLL1460X_MDIV_MASK << PLL46XX_MDIV_SHIFT) |
++			(PLL46XX_PDIV_MASK << PLL46XX_PDIV_SHIFT) |
++			(PLL46XX_SDIV_MASK << PLL46XX_SDIV_SHIFT));
++	} else {
++		con0 &= ~((PLL46XX_MDIV_MASK << PLL46XX_MDIV_SHIFT) |
+ 			(PLL46XX_PDIV_MASK << PLL46XX_PDIV_SHIFT) |
+ 			(PLL46XX_SDIV_MASK << PLL46XX_SDIV_SHIFT) |
+ 			(PLL46XX_VSEL_MASK << PLL46XX_VSEL_SHIFT));
++		con0 |=	rate->vsel << PLL46XX_VSEL_SHIFT;
++	}
++
+ 	con0 |= (rate->mdiv << PLL46XX_MDIV_SHIFT) |
+ 			(rate->pdiv << PLL46XX_PDIV_SHIFT) |
+-			(rate->sdiv << PLL46XX_SDIV_SHIFT) |
+-			(rate->vsel << PLL46XX_VSEL_SHIFT);
++			(rate->sdiv << PLL46XX_SDIV_SHIFT);
+ 
+ 	/* Set PLL K, MFR and MRR values. */
+ 	con1 = __raw_readl(pll->con_reg + 0x4);
+@@ -1190,6 +1201,9 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	/* clk_ops for 35xx and 2550 are similar */
+ 	case pll_35xx:
+ 	case pll_2550:
++	case pll_1450x:
++	case pll_1451x:
++	case pll_1452x:
+ 		if (!pll->rate_table)
+ 			init.ops = &samsung_pll35xx_clk_min_ops;
+ 		else
+@@ -1223,6 +1237,7 @@ static void __init _samsung_clk_register_pll(struct samsung_clk_provider *ctx,
+ 	case pll_4600:
+ 	case pll_4650:
+ 	case pll_4650c:
++	case pll_1460x:
+ 		if (!pll->rate_table)
+ 			init.ops = &samsung_pll46xx_clk_min_ops;
+ 		else
+diff --git a/drivers/clk/samsung/clk-pll.h b/drivers/clk/samsung/clk-pll.h
+index c0ed4d4..213de9a 100644
+--- a/drivers/clk/samsung/clk-pll.h
++++ b/drivers/clk/samsung/clk-pll.h
+@@ -33,6 +33,10 @@ enum samsung_pll_type {
+ 	pll_s3c2440_mpll,
+ 	pll_2550xx,
+ 	pll_2650xx,
++	pll_1450x,
++	pll_1451x,
++	pll_1452x,
++	pll_1460x,
+ };
+ 
+ #define PLL_35XX_RATE(_rate, _m, _p, _s)			\
+-- 
+1.7.9.5
