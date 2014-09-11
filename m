@@ -1,42 +1,117 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
- domain_nr
-Date: Thu, 11 Sep 2014 14:11:05 +0000
-Message-ID: <ae98d68652f1495a857f081c3a6aecb2@HKXPR06MB168.apcprd06.prod.outlook.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
- <3780051.0eHpCN6UC9@wuerfel> <20140909112054.GD29639@arm.com>
- <2908259.jgJNuDxCCa@wuerfel>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
+Date: Thu, 11 Sep 2014 16:12:58 +0200
+Message-ID: <20140911141257.GC5149@katana>
+References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de>
+ <1410274470-12712-5-git-send-email-wsa@the-dreams.de>
+ <16809905.2REViph6WO@fb07-iapwap2>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2908259.jgJNuDxCCa@wuerfel>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Yijing Wang <wangyijing@huawei.com>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <16809905.2REViph6WO@fb07-iapwap2>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 10 September 2014 19:20, Arnd wrote:
-> On Tuesday 09 September 2014 12:20:54 Catalin Marinas wrote:
-> >
-> > We can assume that if a domain is not specified and there is a single
-> > top level PCIe node, the domain defaults to 0. Are there any arm32
-> > platforms that require multiple domains (and do not specify a number in
-> > the DT)?
-> 
-> In theory, I think all of them could work with a single domain, but then
-> you need to partition the bus number space between the host controllers,
-> so you have the exact same situation that you either need to make up
-> random bus numbers or put them in DT.
-> 
-> Using multiple domains is way cleaner for this, even if we have to
-> make up the numbers.
+--1ccMZA6j1vT5UqiK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Maybe this is a stupid question, but why would you want to specify the domain
-in the DT at all? Doesn't every instance of a driver imply a separate domain?
+On Thu, Sep 11, 2014 at 02:17:16PM +0200, Marc Dietrich wrote:
+> cc'ing: devicetree
 
-Thanks
-Phil 
+Thanks, I forgot that!
+
+> > -&iic1	{
+> > +&i2c1	{
+> >  	status =3D "ok";
+> > -	pinctrl-0 =3D <&iic1_pins>;
+> > +	pinctrl-0 =3D <&i2c1_pins>;
+> >  	pinctrl-names =3D "default";
+> > +
+> > +	eeprom@64 {
+> > +		compatible =3D "slave-24c02";
+>=20
+> a "real" compatible value should have vendor,device syntax.
+
+I know. This is maybe a grey line between "configuration" and "hardware
+description". If we want an I2C slave, we need to things:
+
+a) HW support in the I2C master driver
+b) SW support by giving the slave callback some functionality (like my
+   eeprom simulator)
+
+a) should be compiled in with the master driver and does not need any DT
+binding, so this is easy.
+
+b) could be seen as a configuration thing since the functionality
+backend could be changed at runtime even. Think of being a usb-gadget
+here. However, since I2C is multi-master and not hot-pluggable, some
+other master might be depending on what I2C slave is actually used.
+So, it could be seen as hardware description, too? Not entirely sure.
+The drawback you also noticed is that there is no vendor for these
+functionalities. Maybe "wsa" since I did the functionality driver :)
+
+To be honest, the above DT snipplet was done to get easily started. If
+DT maintainers think this is more configuration, not much is lost. The
+only difference is that the userspace instantiation method should be
+used then:
+
+# echo slave-24c02 0x64 > /sys/bus/i2c/devices/i2c-0/new_device
+
+>=20
+> > +		reg =3D <0x64>;
+>=20
+> we had some discussions in the past how to represent i2c master devices i=
+n=20
+> device tree. The outcome was to use to a special representation to distin=
+guish=20
+> them from slave devices, e.g. something like reg =3D <0x1 0x64>, where th=
+e 0x1=20
+> would mean "master" device (0x0 -> slave). If nothing is added, then it's=
+ also=20
+> slave. The adapter address cell would also need to be changed if this=20
+> extension is used.
+
+Please don't change the reg-layout which is around since forever.
+It will break all existing devicetrees. NAK.
+
+> An alternative would be to use a special property (e.g. slave address), b=
+ut=20
+> that would encode the same value twice (or even three times).
+
+As said, if all breaks we handle it at runtime.
+
+Thanks,
+
+   Wolfram
+
+
+--1ccMZA6j1vT5UqiK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUEa3pAAoJEBQN5MwUoCm2qwoQAJ+o11//qRzqLox+NtJLC6Mw
+sXvgtyEq8CUw9FRf2akdPvxXhiY8gxHPpbL07Ek/u/CHbf+5VeQ2cKGkHmXX4xaN
+eYUDIIaQRfiEBJmyyZZGKsfFVkYHU2dCjo8XMyIVLyP/fdRTDkZ/O34N9OmGwWO0
+32edSAVWFGUOMD3PsxOpeZRax8RqRiE4lIos1ipxHzeA3eZrhuXJKARZMFBjHRnh
+/pMfLFk91cIPSowHc5Os7hFYahpOb9vHS6bO0WjwAyi6sHZfMsDZGGfBdHvPV4pw
+OXa2pjXKaiV9nvt8HbO0gCa44jTsD/kHl/KBV6T26pi8snQc6wvxfGhn/HyiGVUX
+qpW9ZP6CKTJK29Cxc2dkTXyotniOdSIJaO5w7wSnqsFgMrg/q8fzyH3u5gYUMC5O
+Ab5ahgghTJxYOgKP6h9VZbh6q7Fr4bh80A4TQCytSpYcpZrxT5Q1kZFW8ILN3IHD
+DyNgwqBvvyXndpENUcNDdNh/a8YaZRcqFWKHORy3Jr+sX3ypUyVlwlB0D3kALJwm
+x142V2B/Kk4f5hYB4GsZ++FWKbdajkrTYsQR1ZcuuKyr12s+WRzBCgLxq0peW/oB
+NEwUV0dusPUzdGfsEELnj4KYGrapYCMNmH1GgiCb/+pc2K1p5sE+aFwjnHwpGYet
+srJ3BZ94mCByFk2ZTRWO
+=Fzhd
+-----END PGP SIGNATURE-----
+
+--1ccMZA6j1vT5UqiK--
