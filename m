@@ -1,38 +1,57 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
-Date: Thu, 11 Sep 2014 14:32:08 +0200
-Message-ID: <40514790.Xc34lyFLGa@wuerfel>
-References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com> <1410403012.25559.69.camel@rzhang1-toshiba> <20140911121842.GB26715@developer>
+From: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.net>
+Subject: Re: [alsa-devel] [PATCH 2/5] ASoC: fsl: add imx-tlv320aic3x machine
+ driver
+Date: Thu, 11 Sep 2014 15:41:56 +0300
+Message-ID: <54119894.8040805@sam-solutions.net>
+References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com> <1410356809-26179-3-git-send-email-d.lavnikevich@sam-solutions.com> <20140910142740.GC16489@pengutronix.de> <CAGoOwPSpkNy6uNVAjG2HgiHHscKZjL5wgVrkyGwWCmyU7x+gWg@mail.gmail.com> <20140911064016.GE16489@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140911121842.GB26715@developer>
+In-Reply-To: <20140911064016.GE16489@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, dtor <dtor@chromium.org>, Chris Zhong <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, zhaoyifeng <zyf@rock-chips.com>
+To: Markus Pargmann <mpa@pengutronix.de>, Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, shawn.guo@freescale.com, kernel@pengutronix.de, linux@arm.linux.org.uk, "perex@perex.cz" <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Timur Tabi <timur@tabi.org>, Xiubo Li <Li.Xiubo@freescale.com>, grant.likely@linaro.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 September 2014 08:18:43 Eduardo Valentin wrote:
-> > As what we want is to make thermal driver have a chance to configure the
-> > hardware shutdown registers, I'm thinking if we can do this without
-> > representing the hardware shutdown value as a trip point.
-> > Say,
-> > 1. parse DT, and get the hardware shutdown temperature value, and store
-> > it somewhere, e.g. struct __thermal_zone.
-> > 2. introduce a new parameter, int (*set_hardware_trip)(void *, long *),
-> > in thermal_zone_of_sensor_register().
-> > 3. invoke set_hard_trip(tz, hardware_shutdown_temperature_value) in
-> > thermal_zone_of_sensor_register().
-> 
-> The only issue I have with the above proposal is that not all platforms
-> use DT. Some still boot with boardfiles, for instance. Thus, the
-> parameter to configure hardware thermal shutdown needs to be common on
-> thermal core, not specific to of-thermal. Do you agree?
+Hi,
 
-Do you know of a machine that can't yet be converted to DT and that
-needs this driver? In case of rockchips that is certainly not the
-case, and we don't care about anybody trying to use board files out
-of tree, they can just hack the thermal support as well.
+On 11/09/14 09:40, Markus Pargmann wrote:
+> On Wed, Sep 10, 2014 at 11:14:15AM -0700, Nicolin Chen wrote:
+>> On Wed, Sep 10, 2014 at 7:27 AM, Markus Pargmann <mpa@pengutronix.de> wrote:
+>>> Hi,
+>>>
+>>> On Wed, Sep 10, 2014 at 04:46:46PM +0300, Dmitry Lavnikevich wrote:
+>>>> This is driver for i.MX6 boards with tlv320aic3x audio codecs.
+>>>>
+>>>> Signed-off-by: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
+>>>> ---
+>>>>   .../bindings/sound/fsl,imx-audio-tlv320aic3x.txt   |  27 ++++
+>>>>   sound/soc/fsl/Kconfig                              |  13 ++
+>>>>   sound/soc/fsl/Makefile                             |   2 +
+>>>>   sound/soc/fsl/imx-tlv320aic3x.c                    | 177 +++++++++++++++++++++
+>>>>   4 files changed, 219 insertions(+)
+>>>>   create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx-audio-tlv320aic3x.txt
+>>>>   create mode 100644 sound/soc/fsl/imx-tlv320aic3x.c
+>>> Is it possible to use the simple-card
+>>> (Documentation/devicetree/bindings/sound/simple-card.txt) instead of
+>>> adding a new audio card driver? There are also DT bindings for the imx
+>>> audiomultiplexer (imx-audmux.txt).
+>> I don't know why my mutt doesn't display this mail.
+>>
+>> Anyway, if Simple Card supports audmux, yes, it's also a good idea.
+> Simple Card doesn't support it. But there are DT bindings for the audmux
+> device node which allow the definition of a default multiplexer setup.
+> That configuration is applied in the probe() function of the audmux driver.
+>
+> Best regards,
+>
+> Markus
+>
 
-	Arnd
+Yes, I've checked - it can be implemented with simple card +
+audmux configuration. Thanks for great suggestion. It will be
+done in next patchset version.
+
+Best regards,
+Lavnikevich Dmitry
