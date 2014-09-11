@@ -1,463 +1,226 @@
-From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v6] spi: spi-imx: add DMA support
-Date: Thu, 11 Sep 2014 09:18:44 +0800
-Message-ID: <1410398324-15284-1-git-send-email-b38343@freescale.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
+Date: Thu, 11 Sep 2014 10:36:52 +0800
+Message-ID: <1410403012.25559.69.camel@rzhang1-toshiba>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
+	 <1410310946.25559.12.camel@rzhang1-toshiba>
+	 <CAC-25o9qcddZLy8fcwEqWp7g5fXk31xhaQCcALuH+sXDgn5n8w@mail.gmail.com>
+	 <1487694.oyLYSrbpA8@diego>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1487694.oyLYSrbpA8@diego>
+Sender: linux-doc-owner@vger.kernel.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: "edubezval@gmail.com" <edubezval@gmail.com>, Caesar Wang <caesar.wang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, dtor <dtor@chromium.org>, Chris Zhong <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable DMA support on i.mx6. The read speed can increase from 600KB/s
-to 1.2MB/s on i.mx6q. You can disable or enable dma function in dts.
-If not set "dma-names" in dts, spi will use PIO mode. This patch only
-validate on i.mx6, not i.mx5, but encourage ones to apply this patch
-on i.mx5 since they share the same IP.
+On Wed, 2014-09-10 at 09:24 +0200, Heiko St=C3=BCbner wrote:
+> Am Dienstag, 9. September 2014, 21:14:18 schrieb edubezval@gmail.com:
+> > Hello,
+> >=20
+> > On Tue, Sep 9, 2014 at 9:02 PM, Zhang Rui <rui.zhang@intel.com> wro=
+te:
+> > > On Tue, 2014-09-09 at 11:09 -0400, Eduardo Valentin wrote:
+> > >> Hello
+> > >>=20
+> > >> On Tue, Sep 09, 2014 at 01:35:31PM +0200, Heiko St=C3=BCbner wro=
+te:
+> > >> > Am Dienstag, 9. September 2014, 10:27:17 schrieb Zhang Rui:
+> > >> > > On Thu, 2014-09-04 at 09:02 +0800, Caesar Wang wrote:
+> > >> > > > =E5=9C=A8 2014=E5=B9=B409=E6=9C=8803=E6=97=A5 16:07, Heiko=
+ St=C3=BCbner =E5=86=99=E9=81=93:
+> > >> > > > > Am Mittwoch, 3. September 2014, 10:10:37 schrieb Caesar =
+Wang:
+> > >> > > > >> This add the necessary binding documentation for the th=
+ermal
+> > >> > > > >> found on Rockchip SoCs
+> > >> > > > >>=20
+> > >> > > > >> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> > >> > > > >> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> > >> > > > >> ---
+> > >> > > > >>=20
+> > >> > > > >>   .../devicetree/bindings/thermal/rockchip-thermal.txt =
+| 20
+> > >> > > > >>=20
+> > >> > > > >> ++++++++++++++++++++ 1 file changed, 20 insertions(+)
+> > >> > > > >>=20
+> > >> > > > >>   create mode 100644
+> > >> > > > >>=20
+> > >> > > > >> Documentation/devicetree/bindings/thermal/rockchip-ther=
+mal.txt
+> > >> > > > >>=20
+> > >> > > > >> diff --git
+> > >> > > > >> a/Documentation/devicetree/bindings/thermal/rockchip-th=
+ermal.txt
+> > >> > > > >> b/Documentation/devicetree/bindings/thermal/rockchip-th=
+ermal.txt
+> > >> > > > >> new
+> > >> > > > >> file
+> > >> > > > >> mode 100644
+> > >> > > > >> index 0000000..1ed4d4c
+> > >> > > > >> --- /dev/null
+> > >> > > > >> +++
+> > >> > > > >> b/Documentation/devicetree/bindings/thermal/rockchip-th=
+ermal.tx
+> > >> > > > >> t
+> > >> > > > >> @@ -0,0 +1,20 @@
+> > >> > > > >> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+> > >> > > > >> +
+> > >> > > > >> +Required properties:
+> > >> > > > >> +- compatible: "rockchip,rk3288-tsadc"
+> > >> > > > >> +- reg: physical base address of the controller and len=
+gth of
+> > >> > > > >> memory
+> > >> > > > >> mapped
+> > >> > > > >> +       region.
+> > >> > > > >> +- interrupts: The interrupt number to the cpu. The int=
+errupt
+> > >> > > > >> specifier
+> > >> > > > >> format +           depends on the interrupt controller.
+> > >> > > > >> +- clocks: Must contain an entry for each entry in cloc=
+k-names.
+> > >> > > > >> +- clock-names: Shall be "tsadc" for the converter-cloc=
+k, and
+> > >> > > > >> "apb_pclk" for +            the peripheral clock.
+> > >> > > > >=20
+> > >> > > > > You're using the passive-temp, critical-temp and force-s=
+hut-temp
+> > >> > > > > properties in your driver without declaring them here.
+> > >> > > >=20
+> > >> > > > frankly,the about are need be declared. but  there are 4 t=
+ypes[0]
+> > >> > > > for
+> > >> > > > trip in thermal framework,
+> > >> > > > there is no force-shut for me. So I want to change it thre=
+e
+> > >> > > > additional
+> > >> > > > properties in [PATCH V4 4/4],
+> > >> > > >=20
+> > >> > > >=20
+> > >> > > > [0]
+> > >> > > > {
+> > >> > > >=20
+> > >> > > >      THERMAL_TRIP_CRITICAL,
+> > >> > > >      THERMAL_TRIP_HOT,
+> > >> > > >      THERMAL_TRIP_PASSIVE,
+> > >> > > >      THERMAL_TRIP_ACTIVE,
+> > >> > > >=20
+> > >> > > > }
+> > >> > >=20
+> > >> > > this sounds reasonable to me.
+> > >> > >=20
+> > >> > > > > But more importantly, please use the generic trip-points=
+ for
+> > >> > > > > this. I
+> > >> > > > > guess it shouldn't be a problem to introduce a "forced-s=
+hutdown"
+> > >> > > > > trippoint [0] for the additional trip-point you have - t=
+hermal
+> > >> > > > > maintainers, please shout if I'm wrong :-)
+> > >> > >=20
+> > >> > > what is the difference between a critical trip point and a
+> > >> > > "forced-shutdown" trip point?
+> > >> > > Thermal core will do a shutdown in case the critical trip po=
+int is
+> > >> > > triggered.
+> > >> >=20
+> > >> > The forced-shutdown is where the thermal controller is suppose=
+d to also
+> > >> > do a>>=20
+> > >> Currently, there is no discrimination between hardware configure=
+d /
+> > >> triggered thermal shutdown and software detected / triggered the=
+rmal
+> > >> shutdown. One way to implement it though is to reuse the critica=
+l trip
+> > >> type. Even if you use more than one trip type it is doable, it w=
+ill
+> > >> depend on the priorities you give to software triggered and hard=
+ware
+> > >> triggered.
+> > >>=20
+> > >> > shutdown in hardware. As you said the thermal core will also s=
+hutdown
+> > >> > at the critical trip point, I guess we could map Caesar's valu=
+e like
+> > >> >=20
+> > >> > trip-point          tsadc
+> > >> > critical            forced-shutdown (the 120 degrees in patch =
+4)
+> > >> >=20
+> > >> > hot                 critical (the 100 degrees)
+> > >> > ...
+> > >>=20
+> > >> In the case we are planing to expand the trip type range, adding=
+ one
+> > >> specific to hardware configurable shutdown makes sense to me too=
+=2E
+> > >=20
+> > > hmmm, why? you don't want an orderly shutdown? I still do not und=
+erstand
+> > > why we need a hardware shutdown trip point.
+> > > Say, if we expect the system to be shutdown at 100C, I don't thin=
+k we
+> > > have a chance to trigger the hardware shutdown trip point.
+> > > Further more, if my understanding is right, thermal core won't do
+> > > anything for the hardware shutdown trip point because the system =
+will be
+> > > shutdown automatically, right? If this is true, why bother introd=
+ucing
+> > > this to thermal core?
+> >=20
+> > Some ICs allow configuring the temperature when the shutdown will
+> > happen. That is, you setup in registers the thermal shutdown
+> > threshold, and one of the output pin of the IC is wired to, say, th=
+e
+> > processor reset pin. Some other ICs have the threshold hardwired, a=
+nd
+> > cannot be configured.
+> >=20
+> > Those options are a last chance to avoid processors to burn, in cas=
+e
+> > software really gets stuck at high temperatures.
+> >=20
+> > The only thing that the thermal driver would need to worry is the
+> > configuration step, that is, writing the value to the registers. In
+> > the case the thermal core would have a specific trip type for such
+> > case, the core itself would not do anything, except allowing design=
+ing
+> > a thermal zone with hardware shutdown trips. And thus the thermal
+> > driver would do the configuration.
+> >=20
+> >=20
+> > Currently, the way I see to implement this is to interpret critical
+> > trips as the threshold to be configured at the IC registers. That i=
+s,
+> > reusing critical trips as orderly power down and as the hardware
+> > shutdown threshold.
+>=20
+> which was what I also meant to express above [but seemingly failed to=
+ do=20
+> properly :-) ].
+>=20
+> Critical is specified as "Hardware not reliable", so I'd think it wou=
+ldn't=20
+> matter how the hw is shut down (orderly/unorderly) as long as its don=
+e.
 
-Note:
-  Sometime, there is a weid data in rxfifo after one full tx/rx
-transfer finish by DMA on i.mx6dl, so we disable dma functhion on
-i.mx6dl.
+Hmmm,
 
-Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+As what we want is to make thermal driver have a chance to configure th=
+e
+hardware shutdown registers, I'm thinking if we can do this without
+representing the hardware shutdown value as a trip point.
+Say,
+1. parse DT, and get the hardware shutdown temperature value, and store
+it somewhere, e.g. struct __thermal_zone.
+2. introduce a new parameter, int (*set_hardware_trip)(void *, long *),
+in thermal_zone_of_sensor_register().
+3. invoke set_hard_trip(tz, hardware_shutdown_temperature_value) in
+thermal_zone_of_sensor_register().
 
----
-Change from v5:
-1. Update binding doc fsl-imx-cspi.txt.
-2. remove usedma flag set from can_dma interface.
+thanks,
+rui
 
-Change from v4:
-1. Enrich comments.
-2. Remove the rxfifo workaround. The issue only exist on i.mx6dl, so disable
-   dma function in dts.
-
-Change from v3:
-1. Use spi core framwork to handle dump tx/rx buf
-2. Add one workaround for weird data in rxfifo when one full transfer done.
-
-Change from v2:
-http://thread.gmane.org/gmane.linux.ports.arm.kernel/291722/focus=294363
-1. Dma setup only for imx51-ecspi
-2. Use one small dummy buffer(1 bd size) to templiy store data
-   for meanless rx/tx, instead of malloc the actual transfer size.
-3. Split spi_mx_sdma_transfer to smaller and easily to read.
-4. Fix some code indent.
----
- .../devicetree/bindings/spi/fsl-imx-cspi.txt       |   5 +
- drivers/spi/spi-imx.c                              | 286 ++++++++++++++++++++-
- 2 files changed, 285 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 4256a6d..aad527b 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -7,6 +7,9 @@ Required properties:
- - interrupts : Should contain CSPI/eCSPI interrupt
- - fsl,spi-num-chipselects : Contains the number of the chipselect
- - cs-gpios : Specifies the gpio pins to be used for chipselects.
-+- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
-+		Documentation/devicetree/bindings/dma/dma.txt
-+- dma-names: DMA request names should include "tx" and "rx" if present.
- 
- Example:
- 
-@@ -19,4 +22,6 @@ ecspi@70010000 {
- 	fsl,spi-num-chipselects = <2>;
- 	cs-gpios = <&gpio3 24 0>, /* GPIO3_24 */
- 		   <&gpio3 25 0>; /* GPIO3_25 */
-+	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
-+	dma-names = "rx", "tx";
- };
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index 5daff20..3637847 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -21,6 +21,8 @@
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/delay.h>
-+#include <linux/dmaengine.h>
-+#include <linux/dma-mapping.h>
- #include <linux/err.h>
- #include <linux/gpio.h>
- #include <linux/interrupt.h>
-@@ -37,6 +39,7 @@
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- 
-+#include <linux/platform_data/dma-imx.h>
- #include <linux/platform_data/spi-imx.h>
- 
- #define DRIVER_NAME "spi_imx"
-@@ -51,6 +54,9 @@
- #define MXC_INT_RR	(1 << 0) /* Receive data ready interrupt */
- #define MXC_INT_TE	(1 << 1) /* Transmit FIFO empty interrupt */
- 
-+/* The maximum  bytes that a sdma BD can transfer.*/
-+#define MAX_SDMA_BD_BYTES  (1 << 15)
-+#define IMX_DMA_TIMEOUT (msecs_to_jiffies(3000))
- struct spi_imx_config {
- 	unsigned int speed_hz;
- 	unsigned int bpw;
-@@ -95,6 +101,16 @@ struct spi_imx_data {
- 	const void *tx_buf;
- 	unsigned int txfifo; /* number of words pushed in tx FIFO */
- 
-+	/* DMA */
-+	unsigned int dma_is_inited;
-+	unsigned int dma_finished;
-+	bool usedma;
-+	u32 rx_wml;
-+	u32 tx_wml;
-+	u32 rxt_wml;
-+	struct completion dma_rx_completion;
-+	struct completion dma_tx_completion;
-+
- 	const struct spi_imx_devtype_data *devtype_data;
- 	int chipselect[0];
- };
-@@ -181,9 +197,21 @@ static unsigned int spi_imx_clkdiv_2(unsigned int fin,
- 	return 7;
- }
- 
-+static bool spi_imx_can_dma(struct spi_master *master, struct spi_device *spi,
-+			 struct spi_transfer *transfer)
-+{
-+	struct spi_imx_data *spi_imx = spi_master_get_devdata(master);
-+
-+	if (spi_imx->dma_is_inited && (transfer->len > spi_imx->rx_wml)
-+	    && (transfer->len > spi_imx->tx_wml))
-+		return true;
-+	return false;
-+}
-+
- #define MX51_ECSPI_CTRL		0x08
- #define MX51_ECSPI_CTRL_ENABLE		(1 <<  0)
- #define MX51_ECSPI_CTRL_XCH		(1 <<  2)
-+#define MX51_ECSPI_CTRL_SMC		(1 << 3)
- #define MX51_ECSPI_CTRL_MODE_MASK	(0xf << 4)
- #define MX51_ECSPI_CTRL_POSTDIV_OFFSET	8
- #define MX51_ECSPI_CTRL_PREDIV_OFFSET	12
-@@ -201,6 +229,18 @@ static unsigned int spi_imx_clkdiv_2(unsigned int fin,
- #define MX51_ECSPI_INT_TEEN		(1 <<  0)
- #define MX51_ECSPI_INT_RREN		(1 <<  3)
- 
-+#define MX51_ECSPI_DMA      0x14
-+#define MX51_ECSPI_DMA_TX_WML_OFFSET	0
-+#define MX51_ECSPI_DMA_TX_WML_MASK	0x3F
-+#define MX51_ECSPI_DMA_RX_WML_OFFSET	16
-+#define MX51_ECSPI_DMA_RX_WML_MASK	(0x3F << 16)
-+#define MX51_ECSPI_DMA_RXT_WML_OFFSET	24
-+#define MX51_ECSPI_DMA_RXT_WML_MASK	(0x3F << 24)
-+
-+#define MX51_ECSPI_DMA_TEDEN_OFFSET	7
-+#define MX51_ECSPI_DMA_RXDEN_OFFSET	23
-+#define MX51_ECSPI_DMA_RXTDEN_OFFSET	31
-+
- #define MX51_ECSPI_STAT		0x18
- #define MX51_ECSPI_STAT_RR		(1 <<  3)
- 
-@@ -257,17 +297,22 @@ static void __maybe_unused mx51_ecspi_intctrl(struct spi_imx_data *spi_imx, int
- 
- static void __maybe_unused mx51_ecspi_trigger(struct spi_imx_data *spi_imx)
- {
--	u32 reg;
--
--	reg = readl(spi_imx->base + MX51_ECSPI_CTRL);
--	reg |= MX51_ECSPI_CTRL_XCH;
-+	u32 reg = readl(spi_imx->base + MX51_ECSPI_CTRL);
-+
-+	if (!spi_imx->usedma)
-+		reg |= MX51_ECSPI_CTRL_XCH;
-+	else if (!spi_imx->dma_finished)
-+		reg |= MX51_ECSPI_CTRL_SMC;
-+	else
-+		reg &= ~MX51_ECSPI_CTRL_SMC;
- 	writel(reg, spi_imx->base + MX51_ECSPI_CTRL);
- }
- 
- static int __maybe_unused mx51_ecspi_config(struct spi_imx_data *spi_imx,
- 		struct spi_imx_config *config)
- {
--	u32 ctrl = MX51_ECSPI_CTRL_ENABLE, cfg = 0;
-+	u32 ctrl = MX51_ECSPI_CTRL_ENABLE, cfg = 0, dma = 0;
-+	u32 tx_wml_cfg, rx_wml_cfg, rxt_wml_cfg;
- 	u32 clk = config->speed_hz, delay;
- 
- 	/*
-@@ -319,6 +364,30 @@ static int __maybe_unused mx51_ecspi_config(struct spi_imx_data *spi_imx,
- 	else			/* SCLK is _very_ slow */
- 		usleep_range(delay, delay + 10);
- 
-+	/*
-+	 * Configure the DMA register: setup the watermark
-+	 * and enable DMA request.
-+	 */
-+	if (spi_imx->dma_is_inited) {
-+		dma = readl(spi_imx->base + MX51_ECSPI_DMA);
-+
-+		spi_imx->tx_wml = spi_imx_get_fifosize(spi_imx) / 2;
-+		spi_imx->rx_wml = spi_imx_get_fifosize(spi_imx) / 2;
-+		spi_imx->rxt_wml = spi_imx_get_fifosize(spi_imx) / 2;
-+		rx_wml_cfg = spi_imx->rx_wml << MX51_ECSPI_DMA_RX_WML_OFFSET;
-+		tx_wml_cfg = spi_imx->tx_wml << MX51_ECSPI_DMA_TX_WML_OFFSET;
-+		rxt_wml_cfg = spi_imx->rxt_wml << MX51_ECSPI_DMA_RXT_WML_OFFSET;
-+		dma = (dma & ~MX51_ECSPI_DMA_TX_WML_MASK
-+			   & ~MX51_ECSPI_DMA_RX_WML_MASK
-+			   & ~MX51_ECSPI_DMA_RXT_WML_MASK)
-+			   | rx_wml_cfg | tx_wml_cfg | rxt_wml_cfg
-+			   |(1 << MX51_ECSPI_DMA_TEDEN_OFFSET)
-+			   |(1 << MX51_ECSPI_DMA_RXDEN_OFFSET)
-+			   |(1 << MX51_ECSPI_DMA_RXTDEN_OFFSET);
-+
-+		writel(dma, spi_imx->base + MX51_ECSPI_DMA);
-+	}
-+
- 	return 0;
- }
- 
-@@ -730,7 +799,186 @@ static int spi_imx_setupxfer(struct spi_device *spi,
- 	return 0;
- }
- 
--static int spi_imx_transfer(struct spi_device *spi,
-+static void spi_imx_sdma_exit(struct spi_imx_data *spi_imx)
-+{
-+	struct spi_master *master = spi_imx->bitbang.master;
-+
-+	if (master->dma_rx) {
-+		dma_release_channel(master->dma_rx);
-+		master->dma_rx = NULL;
-+	}
-+
-+	if (master->dma_tx) {
-+		dma_release_channel(master->dma_tx);
-+		master->dma_tx = NULL;
-+	}
-+
-+	spi_imx->dma_is_inited = 0;
-+}
-+
-+static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
-+			     struct spi_master *master,
-+			     const struct resource *res)
-+{
-+	struct dma_slave_config slave_config = {};
-+	int ret;
-+
-+	/* Prepare for TX DMA: */
-+	master->dma_tx = dma_request_slave_channel(dev, "tx");
-+	if (!master->dma_tx) {
-+		dev_err(dev, "cannot get the TX DMA channel!\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	slave_config.direction = DMA_MEM_TO_DEV;
-+	slave_config.dst_addr = res->start + MXC_CSPITXDATA;
-+	slave_config.dst_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	slave_config.dst_maxburst = spi_imx_get_fifosize(spi_imx) / 2;
-+	ret = dmaengine_slave_config(master->dma_tx, &slave_config);
-+	if (ret) {
-+		dev_err(dev, "error in TX dma configuration.\n");
-+		goto err;
-+	}
-+
-+	/* Prepare for RX : */
-+	master->dma_rx = dma_request_slave_channel(dev, "rx");
-+	if (!master->dma_rx) {
-+		dev_dbg(dev, "cannot get the DMA channel.\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	slave_config.direction = DMA_DEV_TO_MEM;
-+	slave_config.src_addr = res->start + MXC_CSPIRXDATA;
-+	slave_config.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
-+	slave_config.src_maxburst = spi_imx_get_fifosize(spi_imx) / 2;
-+	ret = dmaengine_slave_config(master->dma_rx, &slave_config);
-+	if (ret) {
-+		dev_err(dev, "error in RX dma configuration.\n");
-+		goto err;
-+	}
-+
-+	init_completion(&spi_imx->dma_rx_completion);
-+	init_completion(&spi_imx->dma_tx_completion);
-+	master->can_dma = spi_imx_can_dma;
-+	master->max_dma_len = MAX_SDMA_BD_BYTES;
-+	spi_imx->bitbang.master->flags = SPI_MASTER_MUST_RX |
-+					 SPI_MASTER_MUST_TX;
-+	spi_imx->dma_is_inited = 1;
-+
-+	return 0;
-+err:
-+	spi_imx_sdma_exit(spi_imx);
-+	return ret;
-+}
-+
-+static void spi_imx_dma_rx_callback(void *cookie)
-+{
-+	struct spi_imx_data *spi_imx = (struct spi_imx_data *)cookie;
-+
-+	complete(&spi_imx->dma_rx_completion);
-+}
-+
-+static void spi_imx_dma_tx_callback(void *cookie)
-+{
-+	struct spi_imx_data *spi_imx = (struct spi_imx_data *)cookie;
-+
-+	complete(&spi_imx->dma_tx_completion);
-+}
-+
-+static int spi_imx_dma_transfer(struct spi_imx_data *spi_imx,
-+				struct spi_transfer *transfer)
-+{
-+	struct dma_async_tx_descriptor *desc_tx = NULL, *desc_rx = NULL;
-+	int ret;
-+	u32 dma;
-+	int left;
-+	struct spi_master *master = spi_imx->bitbang.master;
-+	struct sg_table *tx = &transfer->tx_sg, *rx = &transfer->rx_sg;
-+
-+	if (tx) {
-+		desc_tx = dmaengine_prep_slave_sg(master->dma_tx,
-+					tx->sgl, tx->nents, DMA_TO_DEVICE,
-+					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+		if (!desc_tx)
-+			goto no_dma;
-+
-+		desc_tx->callback = spi_imx_dma_tx_callback;
-+		desc_tx->callback_param = (void *)spi_imx;
-+		dmaengine_submit(desc_tx);
-+	}
-+
-+	if (rx) {
-+		desc_rx = dmaengine_prep_slave_sg(master->dma_rx,
-+					rx->sgl, rx->nents, DMA_FROM_DEVICE,
-+					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-+		if (!desc_rx)
-+			goto no_dma;
-+
-+		desc_rx->callback = spi_imx_dma_rx_callback;
-+		desc_rx->callback_param = (void *)spi_imx;
-+		dmaengine_submit(desc_rx);
-+	}
-+
-+	reinit_completion(&spi_imx->dma_rx_completion);
-+	reinit_completion(&spi_imx->dma_tx_completion);
-+
-+	/* Trigger the cspi module. */
-+	spi_imx->dma_finished = 0;
-+
-+	dma = readl(spi_imx->base + MX51_ECSPI_DMA);
-+	dma = dma & (~MX51_ECSPI_DMA_RXT_WML_MASK);
-+	/* Change RX_DMA_LENGTH trigger dma fetch tail data */
-+	left = transfer->len % spi_imx->rxt_wml;
-+	if (left)
-+		writel(dma | (left << MX51_ECSPI_DMA_RXT_WML_OFFSET),
-+				spi_imx->base + MX51_ECSPI_DMA);
-+	spi_imx->devtype_data->trigger(spi_imx);
-+
-+	dma_async_issue_pending(master->dma_tx);
-+	dma_async_issue_pending(master->dma_rx);
-+	/* Wait SDMA to finish the data transfer.*/
-+	ret = wait_for_completion_timeout(&spi_imx->dma_tx_completion,
-+						IMX_DMA_TIMEOUT);
-+	if (!ret) {
-+		pr_warn("%s %s: I/O Error in DMA TX\n",
-+			dev_driver_string(&master->dev),
-+			dev_name(&master->dev));
-+		dmaengine_terminate_all(master->dma_tx);
-+	} else {
-+		ret = wait_for_completion_timeout(&spi_imx->dma_rx_completion,
-+				IMX_DMA_TIMEOUT);
-+		if (!ret) {
-+			pr_warn("%s %s: I/O Error in DMA RX\n",
-+				dev_driver_string(&master->dev),
-+				dev_name(&master->dev));
-+			spi_imx->devtype_data->reset(spi_imx);
-+			dmaengine_terminate_all(master->dma_rx);
-+		}
-+		writel(dma |
-+		       spi_imx->rxt_wml << MX51_ECSPI_DMA_RXT_WML_OFFSET,
-+		       spi_imx->base + MX51_ECSPI_DMA);
-+	}
-+
-+	spi_imx->dma_finished = 1;
-+	spi_imx->devtype_data->trigger(spi_imx);
-+
-+	if (!ret)
-+		ret = -ETIMEDOUT;
-+	else if (ret > 0)
-+		ret = transfer->len;
-+
-+	return ret;
-+
-+no_dma:
-+	pr_warn_once("%s %s: DMA not available, falling back to PIO\n",
-+		     dev_driver_string(&master->dev),
-+		     dev_name(&master->dev));
-+	return -EAGAIN;
-+}
-+
-+static int spi_imx_pio_transfer(struct spi_device *spi,
- 				struct spi_transfer *transfer)
- {
- 	struct spi_imx_data *spi_imx = spi_master_get_devdata(spi->master);
-@@ -751,6 +999,24 @@ static int spi_imx_transfer(struct spi_device *spi,
- 	return transfer->len;
- }
- 
-+static int spi_imx_transfer(struct spi_device *spi,
-+				struct spi_transfer *transfer)
-+{
-+	int ret;
-+	struct spi_imx_data *spi_imx = spi_master_get_devdata(spi->master);
-+
-+	if (spi_imx->bitbang.master->can_dma &&
-+	    spi_imx_can_dma(spi_imx->bitbang.master, spi, transfer)) {
-+		spi_imx->usedma = true;
-+		ret = spi_imx_dma_transfer(spi_imx, transfer);
-+		if (ret != -EAGAIN)
-+			return ret;
-+	}
-+	spi_imx->usedma = false;
-+
-+	return spi_imx_pio_transfer(spi, transfer);
-+}
-+
- static int spi_imx_setup(struct spi_device *spi)
- {
- 	struct spi_imx_data *spi_imx = spi_master_get_devdata(spi->master);
-@@ -911,6 +1177,13 @@ static int spi_imx_probe(struct platform_device *pdev)
- 		goto out_put_per;
- 
- 	spi_imx->spi_clk = clk_get_rate(spi_imx->clk_per);
-+	/*
-+	 * Only validated on i.mx6 now, can remove the constrain if validated on
-+	 * other chips.
-+	 */
-+	if (spi_imx->devtype_data == &imx51_ecspi_devtype_data
-+	    && spi_imx_sdma_init(&pdev->dev, spi_imx, master, res))
-+		dev_err(&pdev->dev, "dma setup error,use pio instead\n");
- 
- 	spi_imx->devtype_data->reset(spi_imx);
- 
-@@ -949,6 +1222,7 @@ static int spi_imx_remove(struct platform_device *pdev)
- 	writel(0, spi_imx->base + MXC_CSPICTRL);
- 	clk_unprepare(spi_imx->clk_ipg);
- 	clk_unprepare(spi_imx->clk_per);
-+	spi_imx_sdma_exit(spi_imx);
- 	spi_master_put(master);
- 
- 	return 0;
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
