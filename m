@@ -1,49 +1,79 @@
-From: atull <atull@opensource.altera.com>
-Subject: RE: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Thu, 11 Sep 2014 10:40:58 -0500
-Message-ID: <alpine.DEB.2.02.1409111039210.19272@atx-linux-37>
-References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com> <1410286081-16653-2-git-send-email-alvin.chen@intel.com> <alpine.DEB.2.02.1409101353500.2790@atx-linux-37>  <4656BEB6164FC34F8171C6538F1A595B2E98F982@SHSMSX101.ccr.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH] clocksource: arch_timer: Allow the device tree to specify the physical timer
+Date: Thu, 11 Sep 2014 08:52:07 -0700
+Message-ID: <1410450727-8182-1-git-send-email-dianders@chromium.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E98F982@SHSMSX101.ccr.corp.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Chen, Alvin" <alvin.chen@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>
+To: olof@lixom.net
+Cc: Sonny Rao <sonnyrao@chromium.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Christopher Covington <cov@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel@lists.infradead.org, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Sep 2014, Chen, Alvin wrote:
+Some 32-bit (ARMv7) systems are architected like this:
 
-> > >
-> > > Hi Alvin,
-> > >
-> > > I did a quick test and this looks like it works for me (with device tree).
-> > > I had a couple of small fixes below.
-> > It is very appreciated to help testing.
+* The firmware doesn't know and doesn't care about hypervisor mode and
+  we don't want to add the complexity of hypervisor there.
 
-Sure.  Thanks for adding features to the driver!
+* The firmware isn't involved in SMP bringup or resume.
 
-> > 
-> > 
-> > > Alan
-> > >
-> > > >
-> > > > -	port->bgc.gc.ngpio = ngpio;
-> > > > -	port->bgc.gc.of_node = port_np;
-> > > > +#ifdef CONFIG_OF_GPIO
-> > > > +	port->bgc.gc.of_node = pp->node;
-> > > > +#endif
-> > >
-> > > Please use 'if (IS_ENABLED(CONFIG_OF_GPIO)) as a conditional as you do
-> > > elsewhere.
-> > OK.
-> > 
-> Alan, I just do a quick test, here we can't use 'IS_ENABLED', it can't be compiled without OF_GPIO set.
-> Because 'gc.of_node' is not defined without 'OF_GPIO'. You can refer the structure of 'gc'.
-> 
+* The ARCH timer come up with an uninitialized offset between the
+  virtual and physical counters.  Each core gets a different random
+  offset.
 
-That makes sense.
+On systems like the above, it doesn't make sense to use the virtual
+counter.  There's nobody managing the offset and each time a core goes
+down and comes back up it will get reinitialized to some other random
+value.
 
-Thanks,
-Alan
+Let's add a property to the device tree to say that we shouldn't use
+the virtual timer.  Firmware could potentially remove this property
+before passing the device tree to the kernel if it really wants the
+kernel to use a virtual timer.
+
+Note that it's been said that ARM64 (ARMv8) systems the firmware and
+kernel really can't be architected as described above.  That means
+using the physical timer like this really only makes sense for ARMv7
+systems.
+
+In order for this patch to do anything useful, we also need Sonny's
+patch at <https://patchwork.kernel.org/patch/4790921/>
+
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Sonny Rao <sonnyrao@chromium.org>
+---
+ Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
+ drivers/clocksource/arm_arch_timer.c                 | 3 +++
+ 2 files changed, 9 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+index 37b2caf..876d32b 100644
+--- a/Documentation/devicetree/bindings/arm/arch_timer.txt
++++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+@@ -22,6 +22,12 @@ to deliver its interrupts via SPIs.
+ - always-on : a boolean property. If present, the timer is powered through an
+   always-on power domain, therefore it never loses context.
+ 
++** Optional properties:
++
++- arm,use-physical-timer : Don't ever use the virtual timer, just use the
++  physical one.  Not supported for ARM64.
++
++
+ Example:
+ 
+ 	timer {
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index 5163ec1..8ca07a9 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -649,6 +649,9 @@ static void __init arch_timer_init(struct device_node *np)
+ 		arch_timer_ppi[i] = irq_of_parse_and_map(np, i);
+ 	arch_timer_detect_rate(NULL, np);
+ 
++	if (of_property_read_bool(np, "arm,use-physical-timer"))
++		arch_timer_use_virtual = false;
++
+ 	/*
+ 	 * If HYP mode is available, we know that the physical timer
+ 	 * has been configured to be accessible from PL1. Use it, so
+-- 
+2.1.0.rc2.206.gedb03e5
