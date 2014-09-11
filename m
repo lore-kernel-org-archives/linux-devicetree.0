@@ -1,28 +1,72 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
- i.mx6dl
-Date: Thu, 11 Sep 2014 16:02:23 +0800
-Message-ID: <20140911080222.GG18566@dragon>
-References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
+ LS1021A
+Date: Thu, 11 Sep 2014 08:21:37 +0000
+Message-ID: <e7cb3a48c52e4ef6a31119a9371c2bc4@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
+ <1410253952-15631-2-git-send-email-jingchang.lu@freescale.com>
+ <4286278.g3iXMFknkK@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410327012-31185-1-git-send-email-b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <4286278.g3iXMFknkK@wuerfel>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 01:30:12PM +0800, Robin Gong wrote:
-> There is one weird data in rxfifo after one full rx/tx transfer
-> done sometimes. It looks a design issue and hard to workaround
-> totally, so disable dma functhion here. And will re-enable it
-> once the root cause found.
-> 
-> Signed-off-by: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Applied, thanks.
+DQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBBcm5kIEJlcmdtYW5uIFttYWls
+dG86YXJuZEBhcm5kYi5kZV0NCj5TZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIgMDksIDIwMTQgNzo1
+MCBQTQ0KPlRvOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj5DYzogTHUg
+SmluZ2NoYW5nLUIzNTA4MzsgR3VvIFNoYXduLVI2NTA3MzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7DQo+WmhhbyBDaGVuaHVpLUIzNTMzNjsgRnUgQ2hhby1CNDQ1NDg7IExlZWtoYSBTaGF2
+ZXRhLUIyMDA1MjsgR3VwdGEgU3VyZXNoLQ0KPkI0MjgxMzsgU2hhcm1hIEJodXBlc2gtQjQ1Mzcw
+OyBYaXVibyBMaS1CNDcwNTM7IEd1cHRhIFJ1Y2hpa2EtUjY2NDMxOyBMdQ0KPkppbmdjaGFuZy1C
+MzUwODM7IEJhZG9sYSBOaWtoaWwtQjQ2MTcyDQo+U3ViamVjdDogUmU6IFtQQVRDSHYzIDEvNl0g
+QVJNOiBkdHM6IEFkZCBTb0MgbGV2ZWwgZGV2aWNlIHRyZWUgc3VwcG9ydCBmb3INCj5MUzEwMjFB
+DQo+DQo+T24gVHVlc2RheSAwOSBTZXB0ZW1iZXIgMjAxNCAxNzoxMjoyNyBKaW5nY2hhbmcgTHUg
+d3JvdGU6DQo+DQo+PiArCQlkY2ZnOiBkY2ZnQDFlZTAwMDAgew0KPj4gKwkJCWNvbXBhdGlibGUg
+PSAiZnNsLGxzMTAyMWEtZGNmZyI7DQo+PiArCQkJcmVnID0gPDB4MCAweDFlZTAwMDAgMHgwIDB4
+MTAwMDA+Ow0KPj4gKwkJfTsNCj4+ICsJCXNjZmc6IHNjZmdAMTU3MDAwMCB7DQo+PiArCQkJY29t
+cGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1zY2ZnIjsNCj4+ICsJCQlyZWcgPSA8MHgwIDB4MTU3MDAw
+MCAweDAgMHgxMDAwMD47DQo+PiArCQl9Ow0KPg0KPlNob3VsZCB0aGVzZSBiZSBtYXJrZWQgYXMg
+J2NvbXBhdGlibGUgPSAic3lzY29uIicgYXMgd2VsbD8NClllcywgc29tZSBkcml2ZXIgbWF5IHJl
+ZmVyZW5jZSB0aGVtIGJ5IHRoZSBzeXNjb24gZHJpdmVyLCANCkkgd2lsbCBhZGQgdGhlICJzeXNj
+b24iIGNvbXBhdGlibGUgZm9yIGRyaXZlciBoYXMgYW5vdGhlciByZWZlcmVuY2Ugd2F5LCB0aGFu
+a3MuDQoNCj4NCj4+ICsJZGNzciB7DQo+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4+ICsJ
+CSNzaXplLWNlbGxzID0gPDE+Ow0KPj4gKwkJY29tcGF0aWJsZSA9ICJmc2wsZGNzciIsICJzaW1w
+bGUtYnVzIjsNCj4+ICsNCj4+ICsJCXJhbmdlcyA9IDwweDAgMHgwIDB4MjAwMDAwMDAgMHgxMDAw
+MDAwPjsNCj4+ICsNCj4+ICsJCWRjc3ItZXB1QDAgew0KPj4gKwkJCWNvbXBhdGlibGUgPSAiZnNs
+LGxzMTAyMWEtZGNzci1lcHUiOw0KPj4gKwkJCXJlZyA9IDwweDAgMHgxMDAwMD47DQo+PiArCQl9
+Ow0KPg0KPlRoZSBiaW5kaW5nIGRvY3VtZW50IG9ubHkgc3BlY2lmaWVzIGEgZ2VuZXJpYyAiZnNs
+LGRjc3ItZXB1Iiwgbm90DQo+ImZzbCxsczEwMjFhLWRjc3ItZXB1Ii4gSXQgYWxzbyBtYW5kYXRl
+cyB0aGF0ICJpbnRlcnJ1cHRzIg0KPm11c3QgYmUgcHJlc2VudCBhbmQgY29udGFpbiB0aHJlZSBp
+bnRlcnJ1cHQgbGluZXMuDQo+DQo+UGxlYXNlIGZpeCBlaXRoZXIgdGhlIERUIG9yIHRoZSBiaW5k
+aW5nLCBzbyB0aGV5IG1hdGNoLg0KPg0KPj4gKwkJZGNzci1nZGlAMTAwMDAwIHsNCj4+ICsJCQlj
+b21wYXRpYmxlID0gImZzbCxsczEwMjFhLWRjc3ItZ2RpIjsNCj4+ICsJCQlyZWcgPSA8MHgxMDAw
+MDAgMHgxMDAwMD47DQo+PiArCQl9Ow0KPj4gKw0KPj4gKwkJZGNzci1kZGRpQDEyMDAwMCB7DQo+
+PiArCQkJY29tcGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1kY3NyLWRkZGkiOw0KPj4gKwkJCXJlZyA9
+IDwweDEyMDAwMCAweDEwMDAwPjsNCj4+ICsJCX07DQo+PiArDQo+PiArCQlkY3NyLWRjZmdAMjIw
+MDAwIHsNCj4+ICsJCQljb21wYXRpYmxlID0gImZzbCxsczEwMjFhLWRjc3ItZGNmZyI7DQo+PiAr
+CQkJcmVnID0gPDB4MjIwMDAwIDB4MTAwMD47DQo+PiArCQl9Ow0KPj4gKw0KPj4gKwkJZGNzci1j
+bG9ja0AyMjEwMDAgew0KPj4gKwkJCWNvbXBhdGlibGUgPSAiZnNsLGxzMTAyMWEtZGNzci1jbG9j
+ayI7DQo+PiArCQkJcmVnID0gPDB4MjIxMDAwIDB4MTAwMD47DQo+PiArCQl9Ow0KPg0KPk5vbmUg
+b2YgdGhlc2UgYXJlIHBhcnQgb2YgdGhlIGRjc3IudHh0IGJpbmRpbmcuDQo+DQo+PiArCQlkY3Ny
+LXJjcG1AMjIyMDAwIHsNCj4+ICsJCQljb21wYXRpYmxlID0gImZzbCxsczEwMjFhLWRjc3ItcmNw
+bSI7DQo+PiArCQkJcmVnID0gPDB4MjIyMDAwIDB4MTAwMCAweDIyMzAwMCAweDEwMDA+Ow0KPj4g
+KwkJfTsNCj4NCj5NaXNzaW5nIGdlbmVyaWMgZnNsLGRjc3ItcmNwbSBjb21wYXRpYmxlIHZhbHVl
+IGFnYWluLg0KPg0KPj4gKwkJZGNzci1jY3BAMjI1MDAwIHsNCj4+ICsJCQljb21wYXRpYmxlID0g
+ImZzbCxsczEwMjFhLWRjc3ItY2NwIjsNCj4+ICsJCQlyZWcgPSA8MHgyMjUwMDAgMHgxMDAwPjsN
+Cj4+ICsJCX07DQo+DQo+SSdtIG5vdCBjaGVja2luZyBhbnkgZGV2aWNlcyBiZWxvdyB0aGlzIG9u
+ZSwgSSBhc3N1bWUgdGhleSBhcmUgbW9zdGx5DQo+aW5jb21wbGV0ZSwgc28gcGxlYXNlIGdvIHRo
+cm91Z2ggdGhlIHdob2xlIGxpc3QgYW5kIG1ha2Ugc3VyZSB0aGV5IGFsbA0KPm1hdGNoIHRoZSBk
+b2N1bWVudGF0aW9uLg0KPkkgY2FuJ3QgcmVhbGx5IGZpbmQgYW55IGNvZGUgdXNpbmcgdGhlIGRj
+c3IgaW4gTGludXguIElzIHRoZXJlIGFuIG91dCBvZg0KPnRyZWUgZHJpdmVyIHRoYXQgeW91IHBs
+YW4gdG8gc3VibWl0Pw0KPg0KPglBcm5kDQoNCkkgd2lsbCByZW1vdmUgdGhlc2UgZGNzciByZWxh
+dGVkIG5vZGVzIGFuZCBsZWF2ZSB0aGVtIHRvIGJlIGFkZGVkIGxhdGVyIHdoZW4NCkFsbCBvay4g
+VGhhbmtzLg0KDQoNCkJlc3QgUmVnYXJkcywNCkppbmdjaGFuZw0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
