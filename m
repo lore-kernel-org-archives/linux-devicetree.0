@@ -1,83 +1,58 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Thu, 11 Sep 2014 18:43:57 +0100
-Message-ID: <5411DF5D.8060906@arm.com>
-References: <1410452204-7277-1-git-send-email-dianders@chromium.org> <20140911164710.GW6158@arm.com>	<5411D528.4050605@arm.com> <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com> <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: add intmem node for rk3288 smp support
+Date: Thu, 11 Sep 2014 10:58:12 -0700
+Message-ID: <CAD=FV=U3gqMeCp_z_uML3iPc6GC_nnYL9v6qwux2PQ5wzrbdwQ@mail.gmail.com>
+References: <1410343554-8383-1-git-send-email-kever.yang@rock-chips.com>
+	<1410343554-8383-3-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1410343554-8383-3-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Addy Ke <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, han jiang <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/14 18:29, Doug Anderson wrote:
-> Marc,
-> 
-> On Thu, Sep 11, 2014 at 10:22 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>> We would need to run this code potentially at processor bringup and
->>> after suspend/resume, but that seems possible too.
->>
->> Note that this would be an ARMv7 only thing (you can't do that on ARMv8,
->> at all).
-> 
-> Yes, of course.
-> 
-> 
->>> Is the transition to monitor mode and back simple?  Where would you
->>> suggest putting this code?  It would definitely need to be pretty
->>> early.  We'd also need to be able to detect that we're in Secure SVC
->>> and not mess up anyone else who happened to boot in Non Secure SVC.
->>
->> This would have to live in some very early platform-specific code. The
->> ugly part is that you cannot find out what world you're in (accessing
->> SCR is going to send you to UNDEF-land if accessed from NS).
-> 
-> Yup, so the question is: would such code be accepted upstream, or are
-> we going to embark on a big job for someone to figure out how to do
-> this only to get NAKed?
-> 
-> If there was some indication that folks would take this, I think we
-> might be able to get it coded up.  If someone else wanted to volunteer
-> to code it that would make me even happier, but maybe that's pushing
-> my luck.  ;)
+Kever,
 
-Writing the code is a 5 minute job. Getting it accepted is another
-story, and I'm not sure everyone would agree on that.
+On Wed, Sep 10, 2014 at 3:05 AM, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> This patch add intmem node des which is needed by platsmp.c
+> and enable the smp.
+>
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+>  arch/arm/boot/dts/rk3288.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index dca586e..562ec5f 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -40,6 +40,7 @@
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+> +               enable-method = "rockchip,rk3288-smp";
+>                 cpu@500 {
+>                         device_type = "cpu";
+>                         compatible = "arm,cortex-a12";
+> @@ -353,6 +354,23 @@
+>                 status = "disabled";
+>         };
+>
+> +       bus_intmem@ff700000 {
+> +               compatible = "mmio-sram";
+> +               reg = <0xff700000 0x18000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0 0xff700000 0x18000>;
+> +                       smp-sram@0 {
 
->> If I was suicidal, I'd suggest you could pass a parameter to the command
->> line, interpreted by the timer code... But I since I'm not, let's
->> pretend I haven't said anything... ;-)
-> 
-> I did this in the past (again, see Sonny's thread), but didn't
-> consider myself knowledgeable to know if that was truly a good test:
-> 
->        asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
->        pr_info("DOUG: val is %#010x", val);
->        val |= (1 << 2);
->        asm volatile("mcr p15, 0, %0, c1, c1, 0" : : "r" (val));
->        val = 0xffffffff;
->        asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
->        pr_info("DOUG: val is %#010x", val);
-> 
-> The idea being that if you can make modifications to the SCR register
-> (and see your changes take effect) then you must be in secure mode.
-> In my case the first printout was 0x0 and the second was 0x4.
+nit: I think the "smp-sram@0" line is indented one too many tabs.
 
-The main issue is when you're *not* in secure mode. It is likely that
-this will explode badly. This is why I suggested something that is set
-by the bootloader (after all. it knows which mode it is booted in), and
-that the timer driver can use when the CPU comes up.
-
-Still, very ugly...
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
-
+I haven't done a full review of this series yet, though...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
