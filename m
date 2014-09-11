@@ -1,39 +1,46 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: DT: imx53: fix lvds channel 1 port
-Date: Thu, 11 Sep 2014 15:44:31 +0800
-Message-ID: <20140911074428.GF18566@dragon>
-References: <1409848985-16140-1-git-send-email-list-09_linux_arm@tqsc.de>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
+ to MFD driver
+Date: Thu, 11 Sep 2014 07:59:51 +0000
+Message-ID: <1410422381.7023.15.camel@intel.com>
+References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
+	 <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
+	 <alpine.DEB.2.02.1409101353500.2790@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409848985-16140-1-git-send-email-list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Niebel <list-09_linux_arm-7U5DVgMjAv4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1409101353500.2790@atx-linux-37>
+Content-Language: en-US
+Content-ID: <02B140BC09EDAA45A1366FC6FDB253C7@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "atull@opensource.altera.com" <atull@opensource.altera.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Chen, Alvin" <alvin.chen@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 04, 2014 at 06:43:05PM +0200, Markus Niebel wrote:
-> From: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
-> 
-> using LVDS channel 1 on an i.MX53 leads to following error:
-> 
-> imx-ldb 53fa8008.ldb: unable to set di0 parent clock to ldb_di1
-> 
-> This comes from imx_ldb_set_clock with mux = 0. Mux parameter must be "1" for
-> reparenting di1 clock to ldb_di1. The value of the mux param comes from device
-> tree port settings.
-> 
-> On i.MX5, the internal two-input-multiplexer is used. Due to hardware limitations,
-> only one port (port@[0,1]) can be used for each channel (lvds-channel@[0,1],
-> respectively)
-> 
-> Documentation update suggested by Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Signed-off-by: Markus Niebel <Markus.Niebel-HVi9AzVXQk5Wk0Htik3J/w@public.gmane.org>
+T24gV2VkLCAyMDE0LTA5LTEwIGF0IDE0OjExIC0wNTAwLCBhdHVsbCB3cm90ZToNCg0KW10NCg0K
+PiA+ICBzdGF0aWMgaW50IGR3YXBiX2dwaW9fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
+cGRldikNCj4gPiAgew0KPiA+ICsJaW50IGk7DQo+ID4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsN
+Cj4gPiAgCXN0cnVjdCBkd2FwYl9ncGlvICpncGlvOw0KPiA+IC0Jc3RydWN0IGRldmljZV9ub2Rl
+ICpucDsNCj4gPiAgCWludCBlcnI7DQo+ID4gLQl1bnNpZ25lZCBpbnQgb2ZmcyA9IDA7DQo+ID4g
+KwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICsJc3RydWN0IGR3YXBiX3Bs
+YXRmb3JtX2RhdGEgKnBkYXRhID0gZGV2X2dldF9wbGF0ZGF0YShkZXYpOw0KPiA+ICsJYm9vbCBp
+c19wZGF0YV9hbGxvYyA9ICFwZGF0YTsNCj4gDQo+IFBsZWFzZSBjb21iaW5lIHRoZSBpbnQncyBp
+biBvbmUgbGluZSAoaW50IGVyciwgaTspIGFuZCBwdXQgdGhlbSBhcw0KPiB0aGUgbGFzdCBvbmUg
+b24gdGhpcyBsaXN0LiAgSXQgbG9va3MgdGhlIHNhbWUgdG8gdGhlIGNvbXBpbGVyIG9mDQo+IGNv
+dXJzZSwgYnV0IG1vcmUgdW5pZm9ybSBmb3IgaHVtYW4gZXllcyA6KQ0KDQpEbyB5b3UgdGhpbmsg
+aXQncyBhIGdvb2QgaWRlYT8gSW4gdGhpcyBjYXNlIEksIGZvciBleGFtcGxlLCB3b3VsZCBsaWtl
+DQp0byBzZWUgaW50IGVyciBhcyBhIHNlcGFyYXRlIGxpbmUgYXQgdGhlIGVuZCBvZiBkZWZpbml0
+aW9uIGJsb2NrLiBJdA0Kd291bGQgYmUgYmV0dGVyIHRvIGRpc3Rpbmd1aXNoIGNvdW50ZXJzIGFu
+ZCByZXR1cm4gY29kZSBzdG9yYWdlLg0KTW9yZW92ZXIsIG9mdGVuIGNvdW50ZXJzIHdvdWxkIGJl
+IHVuc2lnbmVkIGludC4NCg0KLS0gDQpBbmR5IFNoZXZjaGVua28gPGFuZHJpeS5zaGV2Y2hlbmtv
+QGludGVsLmNvbT4NCkludGVsIEZpbmxhbmQgT3kNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpJbnRlbCBGaW5sYW5k
+IE95ClJlZ2lzdGVyZWQgQWRkcmVzczogUEwgMjgxLCAwMDE4MSBIZWxzaW5raSAKQnVzaW5lc3Mg
+SWRlbnRpdHkgQ29kZTogMDM1NzYwNiAtIDQgCkRvbWljaWxlZCBpbiBIZWxzaW5raSAKClRoaXMg
+ZS1tYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgbWF5IGNvbnRhaW4gY29uZmlkZW50aWFsIG1hdGVy
+aWFsIGZvcgp0aGUgc29sZSB1c2Ugb2YgdGhlIGludGVuZGVkIHJlY2lwaWVudChzKS4gQW55IHJl
+dmlldyBvciBkaXN0cmlidXRpb24KYnkgb3RoZXJzIGlzIHN0cmljdGx5IHByb2hpYml0ZWQuIElm
+IHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZApyZWNpcGllbnQsIHBsZWFzZSBjb250YWN0IHRoZSBz
+ZW5kZXIgYW5kIGRlbGV0ZSBhbGwgY29waWVzLgo=
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
