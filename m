@@ -1,7 +1,7 @@
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v3 3/5] regulator/axp20x: use axp2xx consolidated header
-Date: Thu, 11 Sep 2014 16:15:55 -0700
-Message-ID: <1410477357-6407-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v3 5/5] iio: add documentation for current attribute
+Date: Thu, 11 Sep 2014 16:15:57 -0700
+Message-ID: <1410477357-6407-6-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -10,48 +10,28 @@ To: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE
 Cc: Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>Pete
 List-Id: devicetree@vger.kernel.org
 
-AXP20x driver has been extended to support axp288 variant. Header file
-and common data structures has also been renamed to suit the new
-scope of devices supported.
+Add documentation for input current raw reading and scale.
 
-This patch makes use of the renamed header and structure.
-
-Acked-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/regulator/axp20x-regulator.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 004aadb..c9b6803 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -20,7 +20,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
--#include <linux/mfd/axp20x.h>
-+#include <linux/mfd/axp2xx.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/of_regulator.h>
- 
-@@ -161,7 +161,7 @@ static struct of_regulator_match axp20x_matches[] = {
- 
- static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- {
--	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-+	struct axp2xx_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
- 
- 	if (dcdcfreq < 750) {
- 		dcdcfreq = 750;
-@@ -232,7 +232,7 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
- static int axp20x_regulator_probe(struct platform_device *pdev)
- {
- 	struct regulator_dev *rdev;
--	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-+	struct axp2xx_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
- 	struct regulator_config config = { };
- 	struct regulator_init_data *init_data;
- 	int ret, i;
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index d760b02..3c76bd8 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -1028,3 +1028,11 @@ Contact:	linux-iio@vger.kernel.org
+ Description:
+ 		Raw value of rotation from true/magnetic north measured with
+ 		or without compensation from tilt sensors.
++
++What:		/sys/bus/iio/devices/iio:deviceX/in_currentX_raw
++What:		/sys/bus/iio/devices/iio:deviceX/in_currentX_scale
++KernelVersion:	3.18
++Contact:	linux-iio@vger.kernel.org
++Description:
++		Raw current measurement from channel X. Units after application of
++		scale and offset are milliamps.
 -- 
 1.9.1
