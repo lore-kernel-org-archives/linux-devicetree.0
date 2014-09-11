@@ -1,58 +1,44 @@
-From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
-Date: Thu, 11 Sep 2014 16:52:22 +0200
-Message-ID: <1591383.Xdy91rktuP@fb07-iapwap2>
-References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de> <20140911141257.GC5149@katana> <20140911144003.GD5149@katana>
+From: Robert Richter <robert.richter@caviumnetworks.com>
+Subject: Re: [PATCH v2 2/4] arm64, thunder: Add initial dts for Cavium
+ Thunder SoC
+Date: Thu, 11 Sep 2014 16:51:09 +0200
+Message-ID: <20140911145109.GJ10622@rric.localhost>
+References: <1409903205-2762-1-git-send-email-rric@kernel.org>
+ <1409903205-2762-3-git-send-email-rric@kernel.org>
+ <5017180.kZRPNE71Sv@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6151357.4VKUoaRBI6"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140911144003.GD5149@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <5017180.kZRPNE71Sv@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Robert Richter <rric@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Radha Mohan Chintakuntla <rchintakuntla@cavium.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Arnd,
 
---nextPart6151357.4VKUoaRBI6
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="ISO-8859-1"
-
-Am Donnerstag, 11. September 2014, 16:40:04 schrieb Wolfram Sang:
-> > b) could be seen as a configuration thing since the functionality
-> > backend could be changed at runtime even.
+On 05.09.14 13:21:48, Arnd Bergmann wrote:
+> On Friday 05 September 2014 09:46:43 Robert Richter wrote:
+> > diff --git a/arch/arm64/boot/dts/thunder-88xx.dts b/arch/arm64/boot/dts/thunder-88xx.dts
+> > new file mode 100644
+> > index 000000000000..4cc1d059d2d9
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/thunder-88xx.dts
 > 
-> Come to think of it, not only the functionality, also the address can be
-> changed at runtime. This makes me think it should really not be in DT
-> after all.
+> Most people end up having a soc.dtsi file and a board.dsi file including
+> the former and adding the machine-specific properties.
 
-even worse, there can be multiple masters and slaves changing their role on 
-the fly AFAIK. So the best dt can do is to provide an initial configuration, 
-so all drivers know where they are and where to start. Everything else can be 
-changed during runtime.
+thanks for your feedback on the dts file. I already included your
+suggestion into the patches and split the files.
 
-> People will probably find out that it is possible to put it in DT, but
-> it should not be encouraged and they should do it on their own risk.
-
---nextPart6151357.4VKUoaRBI6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJUEbcmAAoJEKyeR39HFBtoUJAH/2VkYCMJ+aDlPXoWbktY2AHP
-xHbstyCIzfj7kdVl8G4BRmuAbkSzoSGtm/apwz6zQOv0YjwaxUw32gaO6/E3srVT
-qEzCTqg7gyvvhenOQY2OWXJvM9inwBPQzuB8DRVtRTbO8kJtyk7YCBhaKURc6xyf
-pqyhLjuJrwRuAxxF1hd3fur3uvtop11LFNbv5hxybGWyRRosO38h0vaHfLpKSqSD
-RjqV7NfjxoQ8sk25IAghwRquO+YeaItJ1fWcmcaOLGj/ID27X54SHq2vYGVkqMN2
-n9+CZ6n795dxd1tj1WQnIVl3CCd/0xcS5QAfmMgVKQ7sgfJB6AX/ElX6BxJf3u0=
-=3/oV
------END PGP SIGNATURE-----
-
---nextPart6151357.4VKUoaRBI6--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Robert
