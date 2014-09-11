@@ -1,57 +1,109 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
- LS1021A
-Date: Thu, 11 Sep 2014 08:21:58 +0000
-Message-ID: <cd69af536cd248b8add94a468fa97095@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
- <1410253952-15631-2-git-send-email-jingchang.lu@freescale.com>
- <62651744.c71MLsL3Q5@wuerfel>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
+Date: Thu, 11 Sep 2014 10:28:06 +0200
+Message-ID: <54115D16.30206@linaro.org>
+References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com> <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com> <20140903173740.GJ1824@e102568-lin.cambridge.arm.com> <20140904160320.GB22354@arm.com> <20140904172909.GA14822@e102568-lin.cambridge.arm.com> <20140905092120.GG13515@arm.com> <20140905153457.GA26306@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <62651744.c71MLsL3Q5@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140905153457.GA26306@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Ami
 List-Id: devicetree@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQXJuZCBCZXJnbWFubiBbbWFpbHRv
-OmFybmRAYXJuZGIuZGVdDQo+U2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDA5LCAyMDE0IDc6NTMg
-UE0NCj5UbzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+Q2M6IEx1IEpp
-bmdjaGFuZy1CMzUwODM7IEd1byBTaGF3bi1SNjUwNzM7IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnOw0KPlpoYW8gQ2hlbmh1aS1CMzUzMzY7IEZ1IENoYW8tQjQ0NTQ4OyBMZWVraGEgU2hhdmV0
-YS1CMjAwNTI7IEd1cHRhIFN1cmVzaC0NCj5CNDI4MTM7IFNoYXJtYSBCaHVwZXNoLUI0NTM3MDsg
-WGl1Ym8gTGktQjQ3MDUzOyBHdXB0YSBSdWNoaWthLVI2NjQzMTsgTHUNCj5KaW5nY2hhbmctQjM1
-MDgzOyBCYWRvbGEgTmlraGlsLUI0NjE3Mg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0h2MyAxLzZdIEFS
-TTogZHRzOiBBZGQgU29DIGxldmVsIGRldmljZSB0cmVlIHN1cHBvcnQgZm9yDQo+TFMxMDIxQQ0K
-Pg0KPk9uIFR1ZXNkYXkgMDkgU2VwdGVtYmVyIDIwMTQgMTc6MTI6MjcgSmluZ2NoYW5nIEx1IHdy
-b3RlOg0KPj4gKyAgICAgICBhbGlhc2VzIHsNCj4+ICsgICAgICAgICAgICAgICBzZXJpYWwwID0g
-JmxwdWFydDA7DQo+PiArICAgICAgICAgICAgICAgc2VyaWFsMSA9ICZscHVhcnQxOw0KPj4gKyAg
-ICAgICAgICAgICAgIHNlcmlhbDIgPSAmbHB1YXJ0MjsNCj4+ICsgICAgICAgICAgICAgICBzZXJp
-YWwzID0gJmxwdWFydDM7DQo+PiArICAgICAgICAgICAgICAgc2VyaWFsNCA9ICZscHVhcnQ0Ow0K
-Pj4gKyAgICAgICAgICAgICAgIHNlcmlhbDUgPSAmbHB1YXJ0NTsNCj4+ICsgICAgICAgICAgICAg
-ICBldGhlcm5ldDAgPSAmZW5ldDA7DQo+PiArICAgICAgICAgICAgICAgZXRoZXJuZXQxID0gJmVu
-ZXQxOw0KPj4gKyAgICAgICAgICAgICAgIGV0aGVybmV0MiA9ICZlbmV0MjsNCj4+ICsgICAgICAg
-ICAgICAgICBzeXNjbGsgPSAmc3lzY2xrOw0KPj4gKyAgICAgICB9Ow0KPj4gKw0KPj4gKyAgICAg
-ICBtZW1vcnlAODAwMDAwMDAgew0KPj4gKyAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gIm1l
-bW9yeSI7DQo+PiArICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDgwMDAwMDAwIDB4MCAweDIw
-MDAwMDAwPjsNCj4+ICsgICAgICAgfTsNCj4+ICsNCj4+DQo+DQo+DQo+T25lIG1vcmUgdGhpbmc6
-IHRoZXNlIHNob3VsZCBhbGwgZ28gaW50byB0aGUgYm9hcmQgc3BlY2lmaWMgZmlsZXMuDQo+DQo+
-VGhlIGluc3RhbGxlZCBtZW1vcnkgaXMgYWxtb3N0IGFsd2F5cyBhIHByb3BlcnR5IG9mIHRoZSBi
-b2FyZCwgbm90IHRoZSBTb0MsDQo+YW5kIGEgbG90IG9mIGJvYXJkcyBvbmx5IGNvbm5lY3QgYSBz
-dWJzZXQgb2YgdGhlIHNlcmlhbCBwb3J0cywgb3IgdGhleSBtYXkNCj5oYXZlIHRoZW0gaW4gYSBk
-aWZmZXJlbnQgb3JkZXIuDQo+DQo+SW4gcGFydGljdWxhciwgeW91IG9ubHkgcHJvdmlkZSBhbGlh
-c2VzIGZvciB0aGUgc2l4IG91dCBvZiB0aGUgdGVuDQo+YXZhaWxhYmxlIHVhcnRzLCB3aGljaCBz
-ZWVtcyBhcmJpdHJhcnkuDQo+DQo+CUFybmQNCg0KVGhlIG1lbW9yeSBzaXplIGluZm8gd2lsbCBi
-ZSBmaXhlZCB1cCBpbiB1LWJvb3QgYmVmb3JlIGJvb3RpbmcgdGhlIGtlcm5lbCBpbWFnZSwNCnNv
-IEkgYWRkIHRoZSBtZW1vcnkgbm9kZSBpbiB0aGUgU29DIGxldmVsIGRldmljZSB0cmVlIGFuZCBr
-ZWVwIG9ubHkgb25lIGNvcHkuIA0KVGhlIGxwdWFydCBkZXJpdmVzIHRoZSBsaW5lIG51bWJlciBm
-cm9tIHRoZSBub2RlJ3MgYWxpYXMgaWQsIDgyNTAgc2VyaWFsIGRyaXZlcg0KZG9lc24ndCByZWx5
-IG9uIGl0LCBzbyBvbmx5IGFsaWFzZXMgZm9yIHRoZSBscHVhcnQgYXJlIGFkZGVkLCBub3QgYXJi
-aXRyYXJ5Lg0KVGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 09/05/2014 05:34 PM, Lorenzo Pieralisi wrote:
+> On Fri, Sep 05, 2014 at 10:21:20AM +0100, Will Deacon wrote:
+>> On Thu, Sep 04, 2014 at 06:29:10PM +0100, Lorenzo Pieralisi wrote:
+>>> On Thu, Sep 04, 2014 at 05:03:20PM +0100, Catalin Marinas wrote:
+>>>> On Wed, Sep 03, 2014 at 06:37:40PM +0100, Lorenzo Pieralisi wrote:
+>>>>> This patch should be ready to go too, is it ok if I split the ser=
+ies
+>>>>> in arm64 arch specific patches (will ask Catalin to pull) and CPU=
+idle ones
+>>>>> (inclusive of DT bindings and !!this patch!!) and send two separa=
+te pull
+>>>>> requests ?
+>>>>
+>>>> If Daniel/Rafael don't have any objection, I can take the whole se=
+ries
+>>>> through the arm64 tree (it seems that patches have been already ac=
+ked by
+>>>> Daniel).
+>>>
+>>> Thanks a lot Catalin. Since this one is a brand new CPUidle driver =
+and it
+>>> follows a different pattern from arm legacy drivers I would like to=
+ get
+>>> Daniel's ack on this patch too before pushing it. For the records I=
+ have
+>>> just added two pr_err to signal driver probing error, ultraminor ch=
+anges
+>>> that do not justify a repost.
+>>>
+>>> If Samsung guys do not manifest themselves I would drop patch 8 fro=
+m
+>>> the series till it gets tested and its patch dependency queued too.
+>>
+>> The last patch also has a dependency, as you mentioned to Daniel. I =
+think
+>> we can certainly merge the arm64 parts, and if Daniel doesn't object=
+, then
+>> we can take the driver stuff too but leaving the exynos bits out (i.=
+e. drop
+>> the last patch).
+>>
+>> Anyway, if you could repost with the acks you've collected and rearr=
+ange it
+>> so the arm64 patches are first in the series, that would be great.
+>
+> I can repost it with the acks and rearrange the patches, but for the
+> pull request I have to know what code can be merged, since there are
+> some arm64 patches (PSCI and CPUidle arm64 back-end) that are strictl=
+y
+> tied to the arm64 CPUidle driver, so I *have* to know if the arm64
+> CPUidle driver (this patch) can get merged and that requires an ack.
+>
+> If I do not hear from Samsung guys I will drop patch 8.
+
+Well I would prefer to have this patch merged (Cc'ing Tomasz).
+
+> I will wait till Monday (ie -rc4) and repost, I hope that's acceptabl=
+e.
+
+There is a procedure to solve this branch dependency.
+
+1. Create a patchset with only the changes in drivers/cpuidle (+ misc d=
+t=20
+stuff)
+
+2. Send the patchset to me.
+
+3. I create a branch with these patches (which will be merged in my=20
+cpuidle next branch)
+
+4. Merge this branch to a new branch (based on 3.17-rcX) and put on top=
+=20
+of that your changes for ARM[64]
+
+5. Send the PR to Catalin and Arnd (one for each branch or one for both=
+=20
+arch)
+
+I will ensure the base branch is not removed until the next merge windo=
+w.
+
+Does it sound good ?
+
+   -- Daniel
+
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
