@@ -1,67 +1,42 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 3/4] ARM: dts: add main Thermal info to rk3288
-Date: Thu, 11 Sep 2014 15:58:04 +0200
-Message-ID: <6563337.jht9ZmlHCg@diego>
-References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
- <3426113.Zcq8V2S7cg@diego> <540FBC21.2090504@rock-chips.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v10 07/10] OF: Introduce helper function for getting PCI
+ domain_nr
+Date: Thu, 11 Sep 2014 14:11:05 +0000
+Message-ID: <ae98d68652f1495a857f081c3a6aecb2@HKXPR06MB168.apcprd06.prod.outlook.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <3780051.0eHpCN6UC9@wuerfel> <20140909112054.GD29639@arm.com>
+ <2908259.jgJNuDxCCa@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <540FBC21.2090504@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com, linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, edubezval@gmail.com, zyw@rock-chips.com, cf@rock-chips.com, rui.zhang@intel.com, dtor@chromium.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2908259.jgJNuDxCCa@wuerfel>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Yijing Wang <wangyijing@huawei.com>, Rob Herring <robherring2@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2Flc2FyLAoKQW0gTWl0dHdvY2gsIDEwLiBTZXB0ZW1iZXIgMjAxNCwgMTA6NDk6MDUgc2No
-cmllYiBDYWVzYXIgV2FuZzoKPiBIaSBIZWlrbywKPiAKPiDlnKggMjAxNOW5tDA55pyIMDnml6Ug
-MTk6MzcsIEhlaWtvIFN0w7xibmVyIOWGmemBkzoKPiA+IEFtIE1pdHR3b2NoLCAzLiBTZXB0ZW1i
-ZXIgMjAxNCwgMTA6MTA6Mzggc2NocmllYiBDYWVzYXIgV2FuZzoKPiA+PiBTaWduZWQtb2ZmLWJ5
-OiBDYWVzYXIgV2FuZyA8Y2Flc2FyLndhbmdAcm9jay1jaGlwcy5jb20+Cj4gPj4gLS0tCj4gPj4g
-Cj4gPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSB8IDE4ICsrKysrKysrKysrKysr
-KysrKwo+ID4+ICAgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykKPiA+PiAKPiA+PiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kKPiA+PiBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL3JrMzI4OC5kdHNpCj4gPj4gaW5kZXggMzZiZTdiYi4uM2Q2NzJlMyAxMDA2NDQK
-PiA+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaQo+ID4+ICsrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL3JrMzI4OC5kdHNpCgpbLi4uXQoKPiA+PiBAQCAtNjExLDUgKzYyMiwxMiBA
-QAo+ID4+IAo+ID4+ICAgCQkJCXJvY2tjaGlwLHBpbnMgPSA8NSAxNSAzICZwY2ZnX3B1bGxfbm9u
-ZT47Cj4gPj4gICAJCQkKPiA+PiAgIAkJCX07Cj4gPj4gICAJCQo+ID4+ICAgCQl9Owo+ID4+IAo+
-ID4+ICsKPiA+PiArCQl0c2FkYyB7Cj4gPj4gKwkJCXRzYWRjX2ludDogdHNhZGMtaW50IHsKPiA+
-PiArCQkJCXJvY2tjaGlwLHBpbnMgPSA8MCAxMCBSS19GVU5DXzEgJnBjZmdfcHVsbF91cD47Cj4g
-Pj4gKwkJCX07Cj4gPj4gKwkJfTsKPiA+IAo+ID4gQWZ0ZXIgbG9va2luZyB0aGlzIHVwIGluIHRo
-ZSBzY2hlbWF0aWNzIEkgc2VlIHRoYXQgdGhpcyBpcyB0aGUKPiA+IG92ZXJ0ZW1wZXJhdHVyZS1w
-cm90ZWN0aW9uIG91dHB1dCBwaW4gLi4uIGxhYmVsZWQgT1RQX09VVC4KPiA+IFNvIEknZCB0aGlu
-ayB0aGUgcGluY29uZmlnIHNob3VsZCByZWZsZWN0IHRoaXMgcGluLW5hbWUsIGVzcGVjaWFsbHkg
-YXMKPiA+IHRzYWRjLWludCBzdWdnZXN0cywgdGhhdCB0aGlzIHdvdWxkIGJlIGFuIGludGVycnVw
-dCBsZWFkaW5nIGludG8gdGhlCj4gPiB0c2FkYywgd2hpbGUgaW4gZmFjdCBpdCBpcyBhbiBvdXRw
-dXQgdG8gYSBzZXBhcmF0ZSBjaXJjdWl0Lgo+IAo+IE1heWJlLEkgZ3Vlc3MgIHlvdXIgbWVhbiBh
-cyB0aGUgZm9sbG93cyAuCj4gUGxlYXNlIGNvcnJlY3QgaXQgYW5kICBMYXVnaCBvdXQgaWYgSSBn
-b3QgaXQgd3JvbmcuCgpJJ2xsIG5ldmVyIGxhdWdoIC4uLiBqdXN0IHRyeSBnZXQgdGhlIGJlc3Qg
-c29sdXRpb24gLyB0cnlpbmcgdG8gdW5kZXJzdGFuZCAKYmFja2dyb3VuZHMuCgo+IAo+IHRzYWRj
-IHsKPiAgICAgICAgICAgICAgb3RwX291dDogb3RwLW91dCB7Cj4gICAgICAgICAgICAgICAgICBy
-b2NrY2hpcCxwaW5zID0gPDAgMTAgUktfRlVOQ19HUElPICZwY2ZnX3B1bGxfbm9uZT47Cj4gICAg
-ICAgICAgICAgIH07Cj4gCj4gICAgICAgICAgICAgIHRzYWRjX2ludDogdHNhZGMtaW50IHsKPiAg
-ICAgICAgICAgICAgICAgIHJvY2tjaGlwLHBpbnMgPSA8MCAxMCBSS19GVU5DXzEgJnBjZmdfcHVs
-bF9ub25lPjsKPiAgICAgICAgICAgICAgfTsKPiAgICAgICAgICB9Owo+IFRoZW4sSSBkZWFsIHdp
-dGggdGhlIG90cF9vdXQgaW4gdGhlcm1hbCBkcml2ZXIuCj4gSSBiZWxpZXZlIFRoZSAib3RwX291
-dCIgd2lsbCByZXN0YXJ0IGJvYXJkIGlmIGl0J3MgYSBoaWdoIGFjdGl2ZS4KPiAKPiB0c2FkY19p
-bnQ6IHRzYWRjLWludCB7Cj4gKwkJCQlyb2NrY2hpcCxwaW5zID0gPDAgMTAgUktfRlVOQ18xICZw
-Y2ZnX3B1bGxfdXA+Owo+ICsJCQl9Owo+IAo+IEJ1dCxJIHRoaW5rIHRoZSBhYm91dCB3aWxsIGJl
-IGltcGxlbWVudGVkIGluIHRoZXJtYWwgZHJpdmVyLgoKSSBvbmx5IG1lYW50IHRoZSBwaW4gbmFt
-ZSAodHNhZGMtaW50IC0+IG90cC1vdXQpLiBJbiB0aGUgc2NobWF0aWNzIHRoZSBwaW4gCihjb250
-cm9sbGVkIGJ5IHRoZSB0c2FkYykgaXMgbGFiZWxlZCBvdHBfb3V0IGFuZCBsZWFkcyB0byB0aGUg
-b3ZlcnRlbXBlcmF0dXJlIApwcm90ZWN0aW9uIGNpcmN1aXQgYXMgZXhwZWN0ZWQuIEFuZCBhcyBp
-dCdzIGNvbnRyb2xsZWQgYnkgdGhlIHRzYWRjLCBpdCBzaG91bGQgCm9mIGNvdXJzZSBzdGF5IGFz
-IHRoZSBkZXNpcmVkIGZ1bmNfMS4KCgpIZWlrbwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi,
+
+On 10 September 2014 19:20, Arnd wrote:
+> On Tuesday 09 September 2014 12:20:54 Catalin Marinas wrote:
+> >
+> > We can assume that if a domain is not specified and there is a single
+> > top level PCIe node, the domain defaults to 0. Are there any arm32
+> > platforms that require multiple domains (and do not specify a number in
+> > the DT)?
+> 
+> In theory, I think all of them could work with a single domain, but then
+> you need to partition the bus number space between the host controllers,
+> so you have the exact same situation that you either need to make up
+> random bus numbers or put them in DT.
+> 
+> Using multiple domains is way cleaner for this, even if we have to
+> make up the numbers.
+
+Maybe this is a stupid question, but why would you want to specify the domain
+in the DT at all? Doesn't every instance of a driver imply a separate domain?
+
+Thanks
+Phil 
