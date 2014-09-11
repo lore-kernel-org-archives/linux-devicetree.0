@@ -1,146 +1,67 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 5/9] rtc: at91sam9: make use of syscon/regmap to access GPBR registers
-Date: Thu, 11 Sep 2014 15:53:08 +0200
-Message-ID: <1410443588-9092-1-git-send-email-boris.brezillon@free-electrons.com>
-References: <1410441525-25258-6-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410441525-25258-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 3/4] ARM: dts: add main Thermal info to rk3288
+Date: Thu, 11 Sep 2014 15:58:04 +0200
+Message-ID: <6563337.jht9ZmlHCg@diego>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
+ <3426113.Zcq8V2S7cg@diego> <540FBC21.2090504@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <540FBC21.2090504@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, addy.ke@rock-chips.com, dmitry.torokhov@gmail.com, linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, edubezval@gmail.com, zyw@rock-chips.com, cf@rock-chips.com, rui.zhang@intel.com, dtor@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The GPBR registers are not part of the RTT block and thus should not be
-defined in the reg property of the rtt node.
-
-Use syscon to provide a proper DT representation and reference the GPBR
-syscon device in a new "atmel,time-reg" property which store both the
-syscon device phandle and the register offset within the GPBR block.
-
-When using non DT boards, we won't be able to retrieve the syscon regmap,
-hence we need to create our own regmap using the memory region defined
-in the 2nd memory resource assigned to the RTT platform device.
-
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/rtc/Kconfig        |  1 +
- drivers/rtc/rtc-at91sam9.c | 59 +++++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 51 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index a168e96..7d76da8 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1081,6 +1081,7 @@ config RTC_DRV_AT91RM9200
- config RTC_DRV_AT91SAM9
- 	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
- 	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
-+	select MFD_SYSCON
- 	help
- 	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
- 	  (Real Time Timer). These timers are powered by the backup power
-diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-index d72c34d..944e317 100644
---- a/drivers/rtc/rtc-at91sam9.c
-+++ b/drivers/rtc/rtc-at91sam9.c
-@@ -21,6 +21,8 @@
- #include <linux/slab.h>
- #include <linux/platform_data/atmel.h>
- #include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- 
- /*
-  * This driver uses two configurable hardware resources that live in the
-@@ -72,7 +74,8 @@ struct sam9_rtc {
- 	void __iomem		*rtt;
- 	struct rtc_device	*rtcdev;
- 	u32			imr;
--	void __iomem		*gpbr;
-+	struct regmap		*gpbr;
-+	unsigned int		gpbr_offset;
- 	int 			irq;
- };
- 
-@@ -81,10 +84,19 @@ struct sam9_rtc {
- #define rtt_writel(rtc, field, val) \
- 	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
- 
--#define gpbr_readl(rtc) \
--	readl((rtc)->gpbr)
--#define gpbr_writel(rtc, val) \
--	writel((val), (rtc)->gpbr)
-+static inline unsigned int gpbr_readl(struct sam9_rtc *rtc)
-+{
-+	unsigned int val;
-+
-+	regmap_read(rtc->gpbr, rtc->gpbr_offset, &val);
-+
-+	return val;
-+}
-+
-+static inline void gpbr_writel(struct sam9_rtc *rtc, unsigned int val)
-+{
-+	regmap_write(rtc->gpbr, rtc->gpbr_offset, val);
-+}
- 
- /*
-  * Read current time and date in RTC
-@@ -301,6 +313,12 @@ static const struct rtc_class_ops at91_rtc_ops = {
- 	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
- };
- 
-+static struct regmap_config gpbr_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
- /*
-  * Initialize and install RTC driver
-  */
-@@ -334,10 +352,33 @@ static int at91_rtc_probe(struct platform_device *pdev)
- 	if (IS_ERR(rtc->rtt))
- 		return PTR_ERR(rtc->rtt);
- 
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
--	if (IS_ERR(rtc->gpbr))
--		return PTR_ERR(rtc->rtt);
-+	if (!pdev->dev.of_node) {
-+		void __iomem *gpbr;
-+
-+		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		gpbr = devm_ioremap_resource(&pdev->dev, r);
-+		if (IS_ERR(gpbr))
-+			return PTR_ERR(gpbr);
-+
-+		rtc->gpbr = regmap_init_mmio(NULL, gpbr,
-+					     &gpbr_regmap_config);
-+	} else {
-+		struct of_phandle_args args;
-+
-+		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-+						"atmel,rtt-rtc-time-reg", 1, 0,
-+						&args);
-+		if (ret)
-+			return ret;
-+
-+		rtc->gpbr = syscon_node_to_regmap(args.np);
-+		rtc->gpbr_offset = args.args[0];
-+	}
-+
-+	if (IS_ERR(rtc->gpbr)) {
-+		dev_err(&pdev->dev, "failed to retrieve gpbr regmap, aborting.\n");
-+		return -ENOMEM;
-+	}
- 
- 	mr = rtt_readl(rtc, MR);
- 
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQ2Flc2FyLAoKQW0gTWl0dHdvY2gsIDEwLiBTZXB0ZW1iZXIgMjAxNCwgMTA6NDk6MDUgc2No
+cmllYiBDYWVzYXIgV2FuZzoKPiBIaSBIZWlrbywKPiAKPiDlnKggMjAxNOW5tDA55pyIMDnml6Ug
+MTk6MzcsIEhlaWtvIFN0w7xibmVyIOWGmemBkzoKPiA+IEFtIE1pdHR3b2NoLCAzLiBTZXB0ZW1i
+ZXIgMjAxNCwgMTA6MTA6Mzggc2NocmllYiBDYWVzYXIgV2FuZzoKPiA+PiBTaWduZWQtb2ZmLWJ5
+OiBDYWVzYXIgV2FuZyA8Y2Flc2FyLndhbmdAcm9jay1jaGlwcy5jb20+Cj4gPj4gLS0tCj4gPj4g
+Cj4gPj4gICBhcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaSB8IDE4ICsrKysrKysrKysrKysr
+KysrKwo+ID4+ICAgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykKPiA+PiAKPiA+PiBk
+aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcmszMjg4LmR0c2kKPiA+PiBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL3JrMzI4OC5kdHNpCj4gPj4gaW5kZXggMzZiZTdiYi4uM2Q2NzJlMyAxMDA2NDQK
+PiA+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMyODguZHRzaQo+ID4+ICsrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL3JrMzI4OC5kdHNpCgpbLi4uXQoKPiA+PiBAQCAtNjExLDUgKzYyMiwxMiBA
+QAo+ID4+IAo+ID4+ICAgCQkJCXJvY2tjaGlwLHBpbnMgPSA8NSAxNSAzICZwY2ZnX3B1bGxfbm9u
+ZT47Cj4gPj4gICAJCQkKPiA+PiAgIAkJCX07Cj4gPj4gICAJCQo+ID4+ICAgCQl9Owo+ID4+IAo+
+ID4+ICsKPiA+PiArCQl0c2FkYyB7Cj4gPj4gKwkJCXRzYWRjX2ludDogdHNhZGMtaW50IHsKPiA+
+PiArCQkJCXJvY2tjaGlwLHBpbnMgPSA8MCAxMCBSS19GVU5DXzEgJnBjZmdfcHVsbF91cD47Cj4g
+Pj4gKwkJCX07Cj4gPj4gKwkJfTsKPiA+IAo+ID4gQWZ0ZXIgbG9va2luZyB0aGlzIHVwIGluIHRo
+ZSBzY2hlbWF0aWNzIEkgc2VlIHRoYXQgdGhpcyBpcyB0aGUKPiA+IG92ZXJ0ZW1wZXJhdHVyZS1w
+cm90ZWN0aW9uIG91dHB1dCBwaW4gLi4uIGxhYmVsZWQgT1RQX09VVC4KPiA+IFNvIEknZCB0aGlu
+ayB0aGUgcGluY29uZmlnIHNob3VsZCByZWZsZWN0IHRoaXMgcGluLW5hbWUsIGVzcGVjaWFsbHkg
+YXMKPiA+IHRzYWRjLWludCBzdWdnZXN0cywgdGhhdCB0aGlzIHdvdWxkIGJlIGFuIGludGVycnVw
+dCBsZWFkaW5nIGludG8gdGhlCj4gPiB0c2FkYywgd2hpbGUgaW4gZmFjdCBpdCBpcyBhbiBvdXRw
+dXQgdG8gYSBzZXBhcmF0ZSBjaXJjdWl0Lgo+IAo+IE1heWJlLEkgZ3Vlc3MgIHlvdXIgbWVhbiBh
+cyB0aGUgZm9sbG93cyAuCj4gUGxlYXNlIGNvcnJlY3QgaXQgYW5kICBMYXVnaCBvdXQgaWYgSSBn
+b3QgaXQgd3JvbmcuCgpJJ2xsIG5ldmVyIGxhdWdoIC4uLiBqdXN0IHRyeSBnZXQgdGhlIGJlc3Qg
+c29sdXRpb24gLyB0cnlpbmcgdG8gdW5kZXJzdGFuZCAKYmFja2dyb3VuZHMuCgo+IAo+IHRzYWRj
+IHsKPiAgICAgICAgICAgICAgb3RwX291dDogb3RwLW91dCB7Cj4gICAgICAgICAgICAgICAgICBy
+b2NrY2hpcCxwaW5zID0gPDAgMTAgUktfRlVOQ19HUElPICZwY2ZnX3B1bGxfbm9uZT47Cj4gICAg
+ICAgICAgICAgIH07Cj4gCj4gICAgICAgICAgICAgIHRzYWRjX2ludDogdHNhZGMtaW50IHsKPiAg
+ICAgICAgICAgICAgICAgIHJvY2tjaGlwLHBpbnMgPSA8MCAxMCBSS19GVU5DXzEgJnBjZmdfcHVs
+bF9ub25lPjsKPiAgICAgICAgICAgICAgfTsKPiAgICAgICAgICB9Owo+IFRoZW4sSSBkZWFsIHdp
+dGggdGhlIG90cF9vdXQgaW4gdGhlcm1hbCBkcml2ZXIuCj4gSSBiZWxpZXZlIFRoZSAib3RwX291
+dCIgd2lsbCByZXN0YXJ0IGJvYXJkIGlmIGl0J3MgYSBoaWdoIGFjdGl2ZS4KPiAKPiB0c2FkY19p
+bnQ6IHRzYWRjLWludCB7Cj4gKwkJCQlyb2NrY2hpcCxwaW5zID0gPDAgMTAgUktfRlVOQ18xICZw
+Y2ZnX3B1bGxfdXA+Owo+ICsJCQl9Owo+IAo+IEJ1dCxJIHRoaW5rIHRoZSBhYm91dCB3aWxsIGJl
+IGltcGxlbWVudGVkIGluIHRoZXJtYWwgZHJpdmVyLgoKSSBvbmx5IG1lYW50IHRoZSBwaW4gbmFt
+ZSAodHNhZGMtaW50IC0+IG90cC1vdXQpLiBJbiB0aGUgc2NobWF0aWNzIHRoZSBwaW4gCihjb250
+cm9sbGVkIGJ5IHRoZSB0c2FkYykgaXMgbGFiZWxlZCBvdHBfb3V0IGFuZCBsZWFkcyB0byB0aGUg
+b3ZlcnRlbXBlcmF0dXJlIApwcm90ZWN0aW9uIGNpcmN1aXQgYXMgZXhwZWN0ZWQuIEFuZCBhcyBp
+dCdzIGNvbnRyb2xsZWQgYnkgdGhlIHRzYWRjLCBpdCBzaG91bGQgCm9mIGNvdXJzZSBzdGF5IGFz
+IHRoZSBkZXNpcmVkIGZ1bmNfMS4KCgpIZWlrbwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
