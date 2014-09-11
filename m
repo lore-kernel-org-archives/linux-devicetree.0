@@ -1,96 +1,174 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 2/5] ASoC: fsl: add imx-tlv320aic3x machine
- driver
-Date: Thu, 11 Sep 2014 08:40:16 +0200
-Message-ID: <20140911064016.GE16489@pengutronix.de>
-References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
- <1410356809-26179-3-git-send-email-d.lavnikevich@sam-solutions.com>
- <20140910142740.GC16489@pengutronix.de>
- <CAGoOwPSpkNy6uNVAjG2HgiHHscKZjL5wgVrkyGwWCmyU7x+gWg@mail.gmail.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: FlexCAN driver triggers kernel BUG in BUSOFF restart
+Date: Thu, 11 Sep 2014 09:36:29 +0200
+Message-ID: <541150FD.7060104@pengutronix.de>
+References: <5411205A.4080606@lsirobway.com.au>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qGV0fN9tzfkG3CxV"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGoOwPSpkNy6uNVAjG2HgiHHscKZjL5wgVrkyGwWCmyU7x+gWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dmitry Lavnikevich <d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+ protocol="application/pgp-signature";
+ boundary="PkgubkJPD4hOWJnSvq4fnAKuAk1mswlDw"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <5411205A.4080606@lsirobway.com.au>
+Sender: linux-can-owner@vger.kernel.org
+To: Keith Lugsden <keith@lsirobway.com.au>, Wolfgang Grandegger <wg@grandegger.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---qGV0fN9tzfkG3CxV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--PkgubkJPD4hOWJnSvq4fnAKuAk1mswlDw
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 10, 2014 at 11:14:15AM -0700, Nicolin Chen wrote:
-> On Wed, Sep 10, 2014 at 7:27 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wro=
-te:
-> > Hi,
-> >
-> > On Wed, Sep 10, 2014 at 04:46:46PM +0300, Dmitry Lavnikevich wrote:
-> >> This is driver for i.MX6 boards with tlv320aic3x audio codecs.
-> >>
-> >> Signed-off-by: Dmitry Lavnikevich <d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
-> >> ---
-> >>  .../bindings/sound/fsl,imx-audio-tlv320aic3x.txt   |  27 ++++
-> >>  sound/soc/fsl/Kconfig                              |  13 ++
-> >>  sound/soc/fsl/Makefile                             |   2 +
-> >>  sound/soc/fsl/imx-tlv320aic3x.c                    | 177 ++++++++++++=
-+++++++++
-> >>  4 files changed, 219 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx-au=
-dio-tlv320aic3x.txt
-> >>  create mode 100644 sound/soc/fsl/imx-tlv320aic3x.c
-> >
-> > Is it possible to use the simple-card
-> > (Documentation/devicetree/bindings/sound/simple-card.txt) instead of
-> > adding a new audio card driver? There are also DT bindings for the imx
-> > audiomultiplexer (imx-audmux.txt).
+On 09/11/2014 06:08 AM, Keith Lugsden wrote:
+> I was asked by Freescale to post this kernel BUG to you and your email
+> address appears in the kernel documentation, so please accept my
+> apologies if you did not wish to see this.
+
+Thanks for the bug report.
+
+> A kernel BUG is triggered during a CAN send operation (kernel version
+> 3.15.7, stack trace follows below). A simple program, such as the one
+> included in the kernel's CAN documentation, will cause this problem, as=
+
+> will the can-utils programs 'cangen' and 'cansend'.
+
+[...]
+
+> Typical stack trace:
 >=20
-> I don't know why my mutt doesn't display this mail.
->=20
-> Anyway, if Simple Card supports audmux, yes, it's also a good idea.
+> BUG: scheduling while atomic: swapper/0/0/0x00000100
+> 1 lock held by swapper/0/0:
+> #0: (((&priv->restart_timer))){+.-...}, at: [<8002fe60>]
+> call_timer_fn+0x0/0xe8
+> Modules linked in:
+> CPU: 0 PID: 0 Comm: swapper/0 Tainted: G W 3.15.7 #5
+> Backtrace:
+> [<80011ba4>] (dump_backtrace) from [<80011d40>] (show_stack+0x18/0x1c)
+> r6:00000000 r5:00000000 r4:00000000 r3:00000000
+> [<80011d28>] (show_stack) from [<805de120>] (dump_stack+0x88/0xa4)
+> [<805de098>] (dump_stack) from [<805db3ec>] (__schedule_bug+0x64/0x7c)
+> r5:80867268 r4:80867268
+> [<805db388>] (__schedule_bug) from [<805e09b0>] (__schedule+0x540/0x5f8=
+)
+> r4:bf7c7b00 r3:00000002
+> [<805e0470>] (__schedule) from [<805e0b5c>] (schedule+0x38/0x88)
+> r10:8085c000 r9:00000000 r8:00000001 r7:00000000 r6:00004e20 r5:0000000=
+0
+> r4:00002710
+> [<805e0b24>] (schedule) from [<805e03c4>]
+> (schedule_hrtimeout_range_clock+0xe0/0x158)
+> [<805e02e4>] (schedule_hrtimeout_range_clock) from [<805e0450>]
+> (schedule_hrtimeout_range+0x14/0x18)
+> r10:808644c4 r8:bf335e00 r7:00000000 r6:c09b8000 r5:c09b8000 r4:bf33580=
+0
+> [<805e043c>] (schedule_hrtimeout_range) from [<8002fb58>]
+> (usleep_range+0x50/0x58)
+> [<8002fb08>] (usleep_range) from [<803f2964>]
+> (flexcan_chip_start+0x7c/0x440)
+> [<803f28e8>] (flexcan_chip_start) from [<803f3994>]
+> (flexcan_set_mode+0x28/0x54)
 
-Simple Card doesn't support it. But there are DT bindings for the audmux
-device node which allow the definition of a default multiplexer setup.
-That configuration is applied in the probe() function of the audmux driver.
+[...]
 
-Best regards,
+David Jander already provided a fix for this problem:
 
-Markus
+8badd65 can: flexcan: avoid calling usleep_range from interrupt context
 
+It will hit mainline soon and then be backported to the stable trees.
+
+Marc
+
+---
+
+=46rom 8badd65e48c90d66587359d5329c2813088c0f50 Mon Sep 17 00:00:00 2001
+From: David Jander <david@protonic.nl>
+Date: Wed, 27 Aug 2014 12:02:16 +0200
+Subject: [PATCH] can: flexcan: avoid calling usleep_range from interrupt
+ context
+
+Apparently can_restart() runs from a (timer-) interrupt and can call
+flexcan_chip_[en|dis]able(), so avoid using usleep_range()
+
+Signed-off-by: David Jander <david@protonic.nl>
+Cc: linux-stable <stable@vger.kernel.org>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+---
+ drivers/net/can/flexcan.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index 944aa5d..630c7bf 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -298,7 +298,7 @@ static int flexcan_chip_enable(struct flexcan_priv *p=
+riv)
+ 	flexcan_write(reg, &regs->mcr);
+=20
+ 	while (timeout-- && (flexcan_read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
+-		usleep_range(10, 20);
++		udelay(10);
+=20
+ 	if (flexcan_read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK)
+ 		return -ETIMEDOUT;
+@@ -317,7 +317,7 @@ static int flexcan_chip_disable(struct flexcan_priv *=
+priv)
+ 	flexcan_write(reg, &regs->mcr);
+=20
+ 	while (timeout-- && !(flexcan_read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
+-		usleep_range(10, 20);
++		udelay(10);
+=20
+ 	if (!(flexcan_read(&regs->mcr) & FLEXCAN_MCR_LPM_ACK))
+ 		return -ETIMEDOUT;
+@@ -336,7 +336,7 @@ static int flexcan_chip_freeze(struct flexcan_priv *p=
+riv)
+ 	flexcan_write(reg, &regs->mcr);
+=20
+ 	while (timeout-- && !(flexcan_read(&regs->mcr) & FLEXCAN_MCR_FRZ_ACK))
+-		usleep_range(100, 200);
++		udelay(100);
+=20
+ 	if (!(flexcan_read(&regs->mcr) & FLEXCAN_MCR_FRZ_ACK))
+ 		return -ETIMEDOUT;
+@@ -355,7 +355,7 @@ static int flexcan_chip_unfreeze(struct flexcan_priv =
+*priv)
+ 	flexcan_write(reg, &regs->mcr);
+=20
+ 	while (timeout-- && (flexcan_read(&regs->mcr) & FLEXCAN_MCR_FRZ_ACK))
+-		usleep_range(10, 20);
++		udelay(10);
+=20
+ 	if (flexcan_read(&regs->mcr) & FLEXCAN_MCR_FRZ_ACK)
+ 		return -ETIMEDOUT;
+@@ -370,7 +370,7 @@ static int flexcan_chip_softreset(struct flexcan_priv=
+ *priv)
+=20
+ 	flexcan_write(FLEXCAN_MCR_SOFTRST, &regs->mcr);
+ 	while (timeout-- && (flexcan_read(&regs->mcr) & FLEXCAN_MCR_SOFTRST))
+-		usleep_range(10, 20);
++		udelay(10);
+=20
+ 	if (flexcan_read(&regs->mcr) & FLEXCAN_MCR_SOFTRST)
+ 		return -ETIMEDOUT;
 --=20
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.1.0
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
---qGV0fN9tzfkG3CxV
+
+--PkgubkJPD4hOWJnSvq4fnAKuAk1mswlDw
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUEUPPAAoJEEpcgKtcEGQQb2YQALHB2zU9+ynWsb5H3+LO/c0t
-Th397KH56+T0/i1Qgbm6OwIQ8e1xYQ09EvQdPxxZg1RDt+cLnrSwiTjlBXV95Xfs
-Ez7UHGn5P+r7QRj+HBnaYfeOk7Hw2dcL4HIPUTqyZJDRIwEJQ96ka7nOBMNRpc94
-xOc56AEkt0ftffKdsLzTosPl2MPcfuG5fAp8jSbAChwXny5xx28YusUbQr3zNzXQ
-XRvfWt8eYB8XVF+E8OYQhMhHN2KD7dkUs0pE94ZzXp4i0oUo8jGVgPZBPZVoIVJk
-EXoTjsy7pCSEYYwlulDN1ujL41sHXvhnFB1Vli2UnmNygXELdd0q3jaa5sbUBiv8
-/A26yauckAqhGVDew3ayRp1UH7q4HD5KfXdBWUIt6dDecNuO3k6t1yTIeRG1hBLW
-DtvY3xGOTnwlvvJeuhQ1sK2IVQfyyi2U3CnlAJWybonmurtF4s9bnrY25xqakRa8
-53igpZXpS2bnUdnHVTw4LjR2t8HTBtQICcjXy+aUREMvxq7p5hwPmvSA2mvCdftb
-zFujI2hluuN8r5cfIVWQ/wfKyvNXmqv2Cl+3lUeoLToWUr2lS3h9gMXu0su/Ty2Q
-as34YH+roCnARk2Ddl4C2EcLAkoyeZLSSDt8X45f20tcMqXg6pKui/lsPwOcYsOu
-v7P+2VCwfHsgzcK21PE7
-=/KzK
+iEYEARECAAYFAlQRUQAACgkQjTAFq1RaXHMaeACfdZm83F1AibBMuosI0LNqsJ8g
+KuQAn0apVxVfqnPlmB2eQoaEu8EgJ3cE
+=5NoW
 -----END PGP SIGNATURE-----
 
---qGV0fN9tzfkG3CxV--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--PkgubkJPD4hOWJnSvq4fnAKuAk1mswlDw--
