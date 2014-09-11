@@ -1,106 +1,95 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
- for dra7
-Date: Thu, 11 Sep 2014 12:07:45 +0530
-Message-ID: <54114339.5070404@ti.com>
-References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com> <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com> <5410573B.5010907@ti.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 2/5] ASoC: fsl: add imx-tlv320aic3x machine
+ driver
+Date: Thu, 11 Sep 2014 08:40:16 +0200
+Message-ID: <20140911064016.GE16489@pengutronix.de>
+References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
+ <1410356809-26179-3-git-send-email-d.lavnikevich@sam-solutions.com>
+ <20140910142740.GC16489@pengutronix.de>
+ <CAGoOwPSpkNy6uNVAjG2HgiHHscKZjL5wgVrkyGwWCmyU7x+gWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qGV0fN9tzfkG3CxV"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5410573B.5010907-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGoOwPSpkNy6uNVAjG2HgiHHscKZjL5wgVrkyGwWCmyU7x+gWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolin Chen <nicoleotsuka-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Lavnikevich <d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 September 2014 07:20 PM, Nishanth Menon wrote:
-> On 09/10/2014 08:37 AM, Mugunthan V N wrote:
->> Add CPSW and MDIO related device tree data for DRA7XX and made as status
->> disabled. Phy-id, pinmux for active and sleep state needs to be added in
->> board dts files and enable the CPSW device.
->>
->> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/dra7.dtsi | 59 +++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 59 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->> index d678152..8d79321 100644
->> --- a/arch/arm/boot/dts/dra7.dtsi
->> +++ b/arch/arm/boot/dts/dra7.dtsi
->> @@ -34,6 +34,8 @@
->>  		serial3 = &uart4;
->>  		serial4 = &uart5;
->>  		serial5 = &uart6;
->> +		ethernet0 = &cpsw_emac0;
->> +		ethernet1 = &cpsw_emac1;
-> 
-> should this rather be in board dts?
 
-This should be here as the MAC address is filled in uboot with ethernet0
-and ethernet1, moving this to dts, the ordering of the ethernet can go
-for toss when they have other ethernet devices other than cpsw.
+--qGV0fN9tzfkG3CxV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
->>  	};
->>  
->>  	timer {
->> @@ -1262,6 +1264,63 @@
->>  			ti,irqs-skip = <10 133 139 140>;
->>  			ti,irqs-safe-map = <0>;
->>  		};
->> +
->> +		mac: ethernet@4a100000 {
->> +			compatible = "ti,cpsw";
->> +			ti,hwmods = "gmac";
->> +			cpdma_channels = <8>;
->> +			ale_entries = <1024>;
->> +			bd_ram_size = <0x2000>;
->> +			no_bd_ram = <0>;
->> +			rx_descs = <64>;
->> +			mac_control = <0x20>;
->> +			slaves = <2>;
->> +			active_slave = <0>;
->> +			cpts_clock_mult = <0x80000000>;
->> +			cpts_clock_shift = <29>;
->> +			reg = <0x48484000 0x1000
->> +			       0x48485200 0x2E00>;
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			/*
->> +			 * rx_thresh_pend
->> +			 * rx_pend
->> +			 * tx_pend
->> +			 * misc_pend
->> +			 */
->> +			interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
->> +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
->> +			ranges;
->> +			status = "disabled";
->> +
->> +			davinci_mdio: mdio@48485000 {
->> +				compatible = "ti,davinci_mdio";
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				ti,hwmods = "davinci_mdio";
->> +				bus_freq = <1000000>;
->> +				reg = <0x48485000 0x100>;
->> +			};
->> +
->> +			cpsw_emac0: slave@48480200 {
->> +				/* Filled in by U-Boot */
->> +				mac-address = [ 00 00 00 00 00 00 ];
-> 
-> should be disabled? what about platforms that do not have both emac ports?
+On Wed, Sep 10, 2014 at 11:14:15AM -0700, Nicolin Chen wrote:
+> On Wed, Sep 10, 2014 at 7:27 AM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wro=
+te:
+> > Hi,
+> >
+> > On Wed, Sep 10, 2014 at 04:46:46PM +0300, Dmitry Lavnikevich wrote:
+> >> This is driver for i.MX6 boards with tlv320aic3x audio codecs.
+> >>
+> >> Signed-off-by: Dmitry Lavnikevich <d.lavnikevich-H6HfJ9slvY0Aspv4Qr0y0gC/G2K4zDHf@public.gmane.org>
+> >> ---
+> >>  .../bindings/sound/fsl,imx-audio-tlv320aic3x.txt   |  27 ++++
+> >>  sound/soc/fsl/Kconfig                              |  13 ++
+> >>  sound/soc/fsl/Makefile                             |   2 +
+> >>  sound/soc/fsl/imx-tlv320aic3x.c                    | 177 ++++++++++++=
++++++++++
+> >>  4 files changed, 219 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,imx-au=
+dio-tlv320aic3x.txt
+> >>  create mode 100644 sound/soc/fsl/imx-tlv320aic3x.c
+> >
+> > Is it possible to use the simple-card
+> > (Documentation/devicetree/bindings/sound/simple-card.txt) instead of
+> > adding a new audio card driver? There are also DT bindings for the imx
+> > audiomultiplexer (imx-audmux.txt).
+>=20
+> I don't know why my mutt doesn't display this mail.
+>=20
+> Anyway, if Simple Card supports audmux, yes, it's also a good idea.
 
-the mac node is already disabled, so platforms which doesn't have emac
-should not enable this which in-turn emac node will be disabled.
+Simple Card doesn't support it. But there are DT bindings for the audmux
+device node which allow the definition of a default multiplexer setup.
+That configuration is applied in the probe() function of the audmux driver.
 
-Regards
-Mugunthan V N
+Best regards,
+
+Markus
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--qGV0fN9tzfkG3CxV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJUEUPPAAoJEEpcgKtcEGQQb2YQALHB2zU9+ynWsb5H3+LO/c0t
+Th397KH56+T0/i1Qgbm6OwIQ8e1xYQ09EvQdPxxZg1RDt+cLnrSwiTjlBXV95Xfs
+Ez7UHGn5P+r7QRj+HBnaYfeOk7Hw2dcL4HIPUTqyZJDRIwEJQ96ka7nOBMNRpc94
+xOc56AEkt0ftffKdsLzTosPl2MPcfuG5fAp8jSbAChwXny5xx28YusUbQr3zNzXQ
+XRvfWt8eYB8XVF+E8OYQhMhHN2KD7dkUs0pE94ZzXp4i0oUo8jGVgPZBPZVoIVJk
+EXoTjsy7pCSEYYwlulDN1ujL41sHXvhnFB1Vli2UnmNygXELdd0q3jaa5sbUBiv8
+/A26yauckAqhGVDew3ayRp1UH7q4HD5KfXdBWUIt6dDecNuO3k6t1yTIeRG1hBLW
+DtvY3xGOTnwlvvJeuhQ1sK2IVQfyyi2U3CnlAJWybonmurtF4s9bnrY25xqakRa8
+53igpZXpS2bnUdnHVTw4LjR2t8HTBtQICcjXy+aUREMvxq7p5hwPmvSA2mvCdftb
+zFujI2hluuN8r5cfIVWQ/wfKyvNXmqv2Cl+3lUeoLToWUr2lS3h9gMXu0su/Ty2Q
+as34YH+roCnARk2Ddl4C2EcLAkoyeZLSSDt8X45f20tcMqXg6pKui/lsPwOcYsOu
+v7P+2VCwfHsgzcK21PE7
+=/KzK
+-----END PGP SIGNATURE-----
+
+--qGV0fN9tzfkG3CxV--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
