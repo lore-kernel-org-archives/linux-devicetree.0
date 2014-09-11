@@ -1,113 +1,66 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: SPI and module auto-loading
-Date: Thu, 11 Sep 2014 15:03:50 +0200
-Message-ID: <54119DB6.8020807@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 0/9] rtc: at91sam9: add DT support
+Date: Thu, 11 Sep 2014 15:18:02 +0200
+Message-ID: <1410441491-25207-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, wsa@the-dreams.de, sjoerd.simons@collabora.co.uk
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Johan Hovold <jhovold@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Hello,
 
-We found an issue with module auto-loading on an I2C driver [0] and it turned
-out to be a problem on how the I2C subsystem reports the module alias to
-user-space. It always report modalias as "i2c:<dev_id>" even when the driver
-is probed via DT. The problem with this particular driver is that the I2C
-device ID table didn't contain an entry that matched what the I2C core was
-reporting as the MODALIAS uevent env var.
+This patch series adds DT support to the atmel at91sam9 RTC driver.
 
-I looked at the SPI core and it does the same. It always reports to udev as
-modalias "spi:<dev_id>" so the aliases filled in a module from the OF table
-are never used.
+It also removes any machine specific inclusions to prepare the migration
+to multi platform kernel support, and retain the slow clock to prevent
+the CCF from disabling it at the end of boot.
+  
+Best Regards,
 
-This can be easily worked around (and probably why it never was an issue) if
-the OF and SPI tables are kept in sync but I don't know if that is a hard
-requirement for all use-cases (e.g: a SPI driver that is DT only?).
+Boris
 
-Now, changing this behavior will break module auto-loading for a lot of
-drivers relies on the current behavior and don't define a struct of_device_id
-or are not using the MODULE_DEVICE_TABLE(of,..) macro but I wonder if that
-means that the drivers are broken and should be fixed?
+Changes since v3:
+ - add GPBR DT bindings doc
+ - fix a coding style issues
+ - add Alexandre's Acked-by
+ - change RTT DT bindings
 
-I'm sending an RFC patch [1] to know what you think about it.
+Changes since v2:
+ - make use of syscon/regmap to avoid directly requesting/mapping a GPBR
+   memory region in the RTT driver
 
-Thanks a lot and best regards,
-Javier
+Changes since v1:
+ - remove non CCF specific case by adding the appropriate clk_lookup
+   entries in arch/arm/mach-at91/<soc-name>.c files
 
-[0]: https://lkml.org/lkml/2014/9/11/127
-[1]
->From a7cd35209a597a578df6c801e5ff7b63b584bf3e Mon Sep 17 00:00:00 2001
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Date: Thu, 11 Sep 2014 14:31:04 +0200
-Subject: [PATCH RFC] spi: core: report OF style modalias when probing using DT
 
-An SPI driver that supports both OF and legacy platforms, will have
-both an OF and SPI ID table. This means that when built as a module,
-the aliases will be filled from both tables, e.g:
+Boris BREZILLON (9):
+  rtc: at91sam9: remove references to mach specific headers
+  rtc: at91sam9: use standard readl/writel functions instead of raw
+    versions
+  rtc: at91sam9: replace devm_ioremap by devm_ioremap_resource
+  rtc: at91sam9: add DT support
+  rtc: at91sam9: make use of syscon/regmap to access GPBR registers
+  ARM: at91: add clk_lookup entry for RTT devices
+  rtc: at91sam9: use clk API instead of relying on AT91_SLOW_CLOCK
+  rtc: at91sam9: add DT bindings documentation
+  mfd: syscon: add Atmel GPBR DT bindings documention
 
-$ modinfo cros_ec_spi | grep alias
-alias:          spi:cros-ec-spi
-alias:          of:N*T*Cgoogle,cros-ec-spi*
+ .../devicetree/bindings/mfd/atmel,gpbr.txt         |  15 +++
+ .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt |  23 ++++
+ arch/arm/mach-at91/at91sam9260.c                   |   2 +
+ arch/arm/mach-at91/at91sam9261.c                   |   2 +
+ arch/arm/mach-at91/at91sam9263.c                   |   4 +
+ arch/arm/mach-at91/at91sam9g45.c                   |   2 +
+ arch/arm/mach-at91/at91sam9rl.c                    |   2 +
+ arch/arm/mach-at91/clock.c                         |   2 +-
+ arch/arm/mach-at91/clock.h                         |   1 +
+ drivers/rtc/Kconfig                                |   1 +
+ drivers/rtc/rtc-at91sam9.c                         | 133 ++++++++++++++++-----
+ 11 files changed, 157 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
 
-But currently always an alias of the form spi:<dev_id> is reported
-even when the it was probed by matching the OF compatible string.
-
-$ cat /sys/devices/12d40000.spi/spi_master/spi2/spi2.0/modalias
-spi:cros-ec-spi
-
-Drivers for IP blocks that are included in DT-only platforms, may not
-have an updated SPI ID table so if a device is probed by matching its
-compatible string, udev can get a MODALIAS uevent env var that doesn't
-match with one of the valid aliases so the module won't be auto-loaded
-by libkmod/modprobe.
-
-This patch reports OF related uevent env vars (e.g: OF_COMPATIBLE) and
-so the module can be auto-loaded and also report the correctly on sysfs:
-
-$ cat /sys/devices/12d40000.spi/spi_master/spi2/spi2.0/modalias
-of:Ncros-ecT<NULL>Cgoogle,cros-ec-spi
-
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
-
-NOTE: this will break module auto-loading for all drivers that rely on the
-current behavior so it should not be applied unless is part of a series that
-fix all the broken drivers.
-
- drivers/spi/spi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 95cfe3b..154e1d6 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -63,6 +63,10 @@ modalias_show(struct device *dev, struct device_attribute
-*a, char *buf)
- 	const struct spi_device	*spi = to_spi_device(dev);
- 	int len;
-
-+	len = of_device_get_modalias(dev, buf, PAGE_SIZE - 1);
-+	if (len != -ENODEV)
-+		return len;
-+
- 	len = acpi_device_modalias(dev, buf, PAGE_SIZE - 1);
- 	if (len != -ENODEV)
- 		return len;
-@@ -124,6 +128,10 @@ static int spi_uevent(struct device *dev, struct
-kobj_uevent_env *env)
- 	const struct spi_device		*spi = to_spi_device(dev);
- 	int rc;
-
-+	rc = of_device_uevent_modalias(dev, env);
-+	if (rc != -ENODEV)
-+		return rc;
-+
- 	rc = acpi_device_uevent_modalias(dev, env);
- 	if (rc != -ENODEV)
- 		return rc;
 -- 
-2.1.0
+1.9.1
