@@ -1,117 +1,43 @@
-From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
-Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
- for dra7
-Date: Wed, 10 Sep 2014 21:38:11 -0400
-Message-ID: <20140911013811.GB17692@csclub.uwaterloo.ca>
-References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com>
- <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: bcousson@baylibre.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [RESEND PATCH 0/2] Add Qualcomm ADM dmaengine driver
+Date: Wed, 10 Sep 2014 21:18:51 -0500
+Message-ID: <1410401933-20621-1-git-send-email-agross@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 07:07:26PM +0530, Mugunthan V N wrote:
-> Add CPSW and MDIO related device tree data for DRA7XX and made as status
-> disabled. Phy-id, pinmux for active and sleep state needs to be added in
-> board dts files and enable the CPSW device.
-> 
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> ---
->  arch/arm/boot/dts/dra7.dtsi | 59 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d678152..8d79321 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -34,6 +34,8 @@
->  		serial3 = &uart4;
->  		serial4 = &uart5;
->  		serial5 = &uart6;
-> +		ethernet0 = &cpsw_emac0;
-> +		ethernet1 = &cpsw_emac1;
->  	};
->  
->  	timer {
-> @@ -1262,6 +1264,63 @@
->  			ti,irqs-skip = <10 133 139 140>;
->  			ti,irqs-safe-map = <0>;
->  		};
-> +
-> +		mac: ethernet@4a100000 {
-> +			compatible = "ti,cpsw";
-> +			ti,hwmods = "gmac";
-> +			cpdma_channels = <8>;
-> +			ale_entries = <1024>;
-> +			bd_ram_size = <0x2000>;
-> +			no_bd_ram = <0>;
-> +			rx_descs = <64>;
-> +			mac_control = <0x20>;
-> +			slaves = <2>;
+I am resending this patch set at the request of the maintainer.  The original
+text is shown below.
 
-How am I supposed to override this in the board dtb when my board only
-uses 1 slave?
+This patch set introduces the dmaengine driver for the Qualcomm Application
+Data Mover (ADM) DMA controller present on MSM8960, APQ8064, and IPQ8064
+devices.
 
-> +			active_slave = <0>;
-> +			cpts_clock_mult = <0x80000000>;
-> +			cpts_clock_shift = <29>;
-> +			reg = <0x48484000 0x1000
-> +			       0x48485200 0x2E00>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			/*
-> +			 * rx_thresh_pend
-> +			 * rx_pend
-> +			 * tx_pend
-> +			 * misc_pend
-> +			 */
-> +			interrupts = <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>;
-> +			ranges;
-> +			status = "disabled";
-> +
-> +			davinci_mdio: mdio@48485000 {
-> +				compatible = "ti,davinci_mdio";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				ti,hwmods = "davinci_mdio";
-> +				bus_freq = <1000000>;
-> +				reg = <0x48485000 0x100>;
-> +			};
-> +
-> +			cpsw_emac0: slave@48480200 {
-> +				/* Filled in by U-Boot */
-> +				mac-address = [ 00 00 00 00 00 00 ];
-> +			};
-> +
-> +			cpsw_emac1: slave@48480300 {
-> +				/* Filled in by U-Boot */
-> +				mac-address = [ 00 00 00 00 00 00 ];
-> +			};
+The initial version of this driver will only support slave DMA operations
+between system memory and peripherals.  Flow control via the CRCI (client rate
+control interface) is supported and can be configured via device tree
+configuration.  Flow control usage is required for some peripheral devices.
 
-Should I then be setting this to disabled from my board file?  Or does
-the disabled for the ethernet overall take care of that?
 
-> +			phy_sel: cpsw-phy-sel@4a002554 {
-> +				compatible = "ti,dra7xx-cpsw-phy-sel";
-> +				reg= <0x4a002554 0x4>;
-> +				reg-names = "gmii-sel";
-> +			};
+Andy Gross (2):
+  dmaengine: Add QCOM ADM DMA driver
+  dmaengine: qcom_adm: Add device tree binding
 
-I guess the board file would have to disable that too (we won't have a
-phy given we are connecting to a switch chip).
-
-> +		};
-> +
->  	};
->  };
+ Documentation/devicetree/bindings/dma/qcom_adm.txt |   62 ++
+ drivers/dma/Kconfig                                |   10 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/qcom_adm.c                             |  872 ++++++++++++++++++++
+ 4 files changed, 945 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom_adm.txt
+ create mode 100644 drivers/dma/qcom_adm.c
 
 -- 
-Len Sorensen
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
