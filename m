@@ -1,71 +1,37 @@
-From: Anson Huang <b20788@freescale.com>
-Subject: [PATCH V3 2/3] ARM: dts: imx6: make gpt per clock can be from OSC
-Date: Thu, 11 Sep 2014 11:29:41 +0800
-Message-ID: <1410406182-21113-3-git-send-email-b20788@freescale.com>
-References: <1410406182-21113-1-git-send-email-b20788@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410406182-21113-1-git-send-email-b20788@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@linaro.org, kernel@pengutronix.de, festevam@gmail.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH] ARM: dts: Switch i2c0 to 400kHz on rk3288-evb-rk808
+Date: Wed, 10 Sep 2014 21:30:15 -0700
+Message-ID: <1410409815-22200-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Chris Zhong <zyw@rock-chips.com>, Addy Ke <addy.ke@rock-chips.com>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Original gpt per clk parent is from ipg_per clk which
-may be scaled when system enter low bus mode, as ipg
-clk will be lower in low bus mode, to keep system clk
-NOT drift, select gpt per clk parent from OSC which
-is at fixed freq always.
+We should be able to talk to the PMIC at 400kHz.  No need to talk at
+the slow 100kHz.
 
-On i.mx6qdl, add a osc_per clk source for i.mx6q
-TO > 1.0 and all i.MX6dl SoC.
+As measured by ftrace (with a bunch of extra patches, since cpufreq
+for rk808 hasn't landed yet):
+  before this change: cpu0_set_target() => ~500us
+  after this change:  cpu0_set_target() => ~300us
 
-On i.mx6sx, just make gpt per clk from OSC.
-
-Signed-off-by: Anson Huang <b20788@freescale.com>
+Signed-off-by: Doug Anderson <dianders@chromium.org>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi |    5 +++--
- arch/arm/boot/dts/imx6sx.dtsi  |    2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/rk3288-evb-rk808.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 70d7207..8de2801 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -401,8 +401,9 @@
- 				reg = <0x02098000 0x4000>;
- 				interrupts = <0 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6QDL_CLK_GPT_IPG>,
--					 <&clks IMX6QDL_CLK_GPT_IPG_PER>;
--				clock-names = "ipg", "per";
-+					 <&clks IMX6QDL_CLK_GPT_IPG_PER>,
-+					 <&clks IMX6QDL_CLK_GPT_3M>;
-+				clock-names = "ipg", "per", "osc_per";
- 			};
+diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+index 36db177..ff522f8 100644
+--- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
++++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+@@ -18,6 +18,7 @@
+ };
  
- 			gpio1: gpio@0209c000 {
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 63d9d82..b5d8252 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -421,7 +421,7 @@
- 				reg = <0x02098000 0x4000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
--					 <&clks IMX6SX_CLK_GPT_SERIAL>;
-+					 <&clks IMX6SX_CLK_GPT_3M>;
- 				clock-names = "ipg", "per";
- 			};
+ &i2c0 {
++	clock-frequency = <400000>;
+ 	status = "okay";
  
+ 	rk808: pmic@1b {
 -- 
-1.7.9.5
+2.1.0.rc2.206.gedb03e5
