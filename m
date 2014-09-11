@@ -1,220 +1,86 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v2] PM / AVS: rockchip-io: add driver handling Rockchip
- io domains
-Date: Thu, 11 Sep 2014 18:16:39 -0400
-Message-ID: <54121F47.7060702@ti.com>
-References: <1410469229-30167-1-git-send-email-dianders@chromium.org>	<541214A7.3040402@ti.com>
- <CAD=FV=VYkf1AuwwSHsdCX2sqzKmZBzWdMZhi-kx3ycKtTcA=pA@mail.gmail.com>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 2/4] mfd/axp2xx: extend axp20x to support axp288 pmic
+Date: Thu, 11 Sep 2014 15:23:40 -0700
+Message-ID: <20140911152340.44515c8f@ultegra>
+References: <1410215046-31751-1-git-send-email-jacob.jun.pan@linux.intel.com>
+	<1410215046-31751-3-git-send-email-jacob.jun.pan@linux.intel.com>
+	<20140909073747.GI3804@lukather>
+	<20140909054517.5bd4e8b6@ultegra>
+	<20140909133704.GO3804@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=VYkf1AuwwSHsdCX2sqzKmZBzWdMZhi-kx3ycKtTcA=pA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Addy Ke <addy.ke@rock-chips.com>, Kevin Hilman <khilman@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Sonny Rao <sonnyrao@chromium.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@k>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140909133704.GO3804@lukather>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagn>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 September 2014 06:07 PM, Doug Anderson wrote:
-> Santosh,
-> 
-> On Thu, Sep 11, 2014 at 2:31 PM, Santosh Shilimkar
-> <santosh.shilimkar@ti.com> wrote:
->>> +Required properties:
->>> +- compatible: should be one of:
->>> +  - "rockchip,rk3188-iodomain" for rk3188
->>> +  - "rockchip,rk3288-iodomain" for rk3288
->> The key word 'voltage' is missing from the compatible. iodomain itself
->> doesn't convey what it is actually.
-> 
-> Sure, so you want "rockchip,rk3288-io-voltage-domain" then?
->
-Sounds good for me.
- 
-[..]
+On Tue, 9 Sep 2014 15:37:04 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
->>> diff --git a/drivers/power/avs/rockchip-io-domain.c b/drivers/power/avs/rockchip-io-domain.c
->>> new file mode 100644
->>> index 0000000..f4e0ebc
->>> --- /dev/null
->>> +++ b/drivers/power/avs/rockchip-io-domain.c
->>> @@ -0,0 +1,333 @@
->>> +/*
->>> + * Rockchip IO Voltage Domain driver
->>> + *
->>> + * Copyright 2014 MundoReader S.L.
->>> + * Copyright 2014 Google, Inc.
->>> + *
->>> + * This software is licensed under the terms of the GNU General Public
->>> + * License version 2, as published by the Free Software Foundation, and
->>> + * may be copied, distributed, and modified under those terms.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + */
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/err.h>
->>> +#include <linux/mfd/syscon.h>
->> The bindings are not talking about syscon usage. You might
->> want to document it appropriately to make the usage clear.
+> On Tue, Sep 09, 2014 at 05:45:17AM -0700, Jacob Pan wrote:
+> > > > -static int axp20x_i2c_probe(struct i2c_client *i2c,
+> > > > -			 const struct i2c_device_id *id)
+> > > > +static int axp2xx_match_device(struct axp2xx_dev *axp2xx,
+> > > > struct device *dev) {
+> > > > -	struct axp20x_dev *axp20x;
+> > > > +	const struct acpi_device_id *acpi_id;
+> > > >  	const struct of_device_id *of_id;
+> > > > -	int ret;
+> > > >  
+> > > > -	axp20x = devm_kzalloc(&i2c->dev, sizeof(*axp20x),
+> > > > GFP_KERNEL);
+> > > > -	if (!axp20x)
+> > > > -		return -ENOMEM;
+> > > > +	of_id = of_match_device(axp2xx_of_match, dev);
+> > > > +	if (of_id) {
+> > > > +		axp2xx->variant = (long) of_id->data;
+> > > > +		goto found_match;
+> > > > +	}
+> > > >  
+> > > > -	of_id = of_match_device(axp20x_of_match, &i2c->dev);
+> > > > -	if (!of_id) {
+> > > > -		dev_err(&i2c->dev, "Unable to setup AXP20X
+> > > > data\n");
+> > > > +	acpi_id =
+> > > > acpi_match_device(dev->driver->acpi_match_table, dev);
+> > > > +	if (!acpi_id || !acpi_id->driver_data) {
+> > > > +		dev_err(dev, "Unable to setup AXP2XX ACPI
+> > > > data\n"); return -ENODEV;
+> > > >  	}
+> > > > -	axp20x->variant = (long) of_id->data;
+> > > > +	axp2xx->variant = (long) acpi_id->driver_data;
+> > > 
+> > > Shouldn't that be in the if statement above? I guess acpi_id will
+> > > be null on a DT-based system.
+> > > 
+> > I am not sure what you mean. if acpi_id == NULL, then it will return
+> > -ENODEV since of_match_device() already found no match. If
+> > acpi_id != NULL, then id must contain variant info.
 > 
-> Doesn't the bindings have this?
+> Hmm, never mind. I read it backward and thought you were still in this
+> code path. I guess I need more coffee.
 > 
->> +- rockchip,grf: phandle to the syscon managing the "general register files"
+> That goto isn't very intuitive though.
 > 
-> I actually forgot that in v1, but I added it to v2.
+> Maybe something like
 > 
-Sorry didn't spot that. Ignore the comment.
+> if (of_id) {
+>    /* DT case */
+> } else if (acpi_id) {
+>   /* ACPI case */
+> } else {
+>   return;
+> }
+> 
+> would be better?
+> 
+yes, will be in v3.
 
+thanks.
+> Maxime
 > 
->>> +#define MAX_VOLTAGE_1_8              1980000
->> This is close to 2V, Is that intentional.
->>
->>> +#define MAX_VOLTAGE_3_3              3600000
->>> +
->> Same here.
-> 
-> I got these numbers from the document "Rocchip RK3288 datasheet".
-> Under "Recommended Operating Conditions" for "Digital GPIO".  When the
-> typical is 3.3V the max is 3.6V.  When the typical is 1.8V the max is
-> 1.98V.
-> 
-> The way these numbers are used is:
-> 
-> If the voltage on a rail is above the "1.8" voltage (1.98V) we'll tell
-> the SoC we're at 3.3.  If the voltage on a rail is above the "3.3V"
-> we'll consider that to be an error.
-> 
-> There's one secret ulterior motive here though that I'll admit to.
-> When a client uses regulator_set_voltage() they actually specify a min
-> and max voltage.  They might say that they want 3.3V by saying that
-> they want a voltage between 2.7V and 3.6V.  They might say that they
-> want 1.8V by saying that they want a voltage between 1.7V and 1.95V.
-> In our pre-change notification we are only told the possible range.
-> It's nice if things work properly in that case.  If we find some case
-> that doesn't work later we can always get fancier and try to figure
-> out what voltage the regulator will end up at, but I haven't seen the
-> need yet.
-> 
-> Note that the 1.7 - 1.95V is more than hypothetical.  dw_mmc requests
-> those ranges.  I'll admit that I was involved in that code, but I'll
-> also admit to having stolen those numbers from sdhci.
-> 
-Thanks for explaination. I suggest you to document it above those macro's
-so that its not confusing for any reader.
 
-> 
->>> +struct rockchip_iodomain;
->>> +
->>> +/**
->>> + * @supplies: voltage settings matching the register bits.
->>> + */
->>> +struct rockchip_iodomain_soc_data {
->>> +     int grf_offset;
->>> +     const char *supply_names[MAX_SUPPLIES];
->>> +     void (*init)(struct rockchip_iodomain *iod);
->>> +};
->>> +
->>> +struct rockchip_iodomain_supply {
->>> +     struct rockchip_iodomain *iod;
->>> +     struct regulator *reg;
->>> +     struct notifier_block nb;
->>> +     int idx;
->>> +};
->>> +
->>> +struct rockchip_iodomain {
->>> +     struct device *dev;
->>> +     struct regmap *grf;
->>> +     struct rockchip_iodomain_soc_data *soc_data;
->>> +     struct rockchip_iodomain_supply supplies[MAX_SUPPLIES];
->>> +};
->>> +
->>> +static int rockchip_iodomain_write(struct rockchip_iodomain_supply *supply,
->>> +                                int uV)
->>> +{
->>> +     struct rockchip_iodomain *iod = supply->iod;
->>> +     u32 val;
->>> +     int ret;
->>> +
->>> +     /* set value bit */
->>> +     val = (uV > MAX_VOLTAGE_1_8) ? 0 : 1;
->>> +     val <<= supply->idx;
->>> +
->>> +     /* apply hiword-mask */
->>> +     val |= (BIT(supply->idx) << 16);
->>> +
->>> +     ret = regmap_write(iod->grf, iod->soc_data->grf_offset, val);
->>> +     if (ret)
->>> +             dev_err(iod->dev, "Couldn't write to GRF\n");
->>> +
->>> +     return ret;
->>> +}
->>> +
->>> +static int rockchip_iodomain_notify(struct notifier_block *nb,
->>> +                                 unsigned long event,
->>> +                                 void *data)
->>> +{
->>> +     struct rockchip_iodomain_supply *supply =
->>> +                     container_of(nb, struct rockchip_iodomain_supply, nb);
->>> +     int uV;
->>> +     int ret;
->>> +
->>> +     /*
->>> +      * According to Rockchip it's important to keep the SoC IO domain
->>> +      * higher than (or equal to) the external voltage.  That means we need
->>> +      * to change it before external voltage changes happen in the case
->>> +      * of an increase.
->>> +      */
->>> +     if (event & REGULATOR_EVENT_PRE_VOLTAGE_CHANGE) {
->>> +             struct pre_voltage_change_data *pvc_data = data;
->>> +
->>> +             uV = max_t(unsigned long, pvc_data->old_uV, pvc_data->max_uV);
->>> +     } else if (event & (REGULATOR_EVENT_VOLTAGE_CHANGE |
->>> +                         REGULATOR_EVENT_ABORT_VOLTAGE_CHANGE)) {
->>> +             uV = (unsigned long)data;
->>> +     } else {
->>> +             return NOTIFY_OK;
->>> +     }
->>> +
->>> +     dev_dbg(supply->iod->dev, "Setting to %d\n", uV);
->>> +
->>> +     if (uV > MAX_VOLTAGE_3_3) {
->>> +             dev_err(supply->iod->dev, "Voltage too high: %d\n", uV);
->>> +
->>> +             if (event == REGULATOR_EVENT_PRE_VOLTAGE_CHANGE)
->>> +                     return NOTIFY_BAD;
->>> +     }
->>> +
->>> +     ret = rockchip_iodomain_write(supply, uV);
->>> +     if (ret && event == REGULATOR_EVENT_PRE_VOLTAGE_CHANGE)
->>> +             return NOTIFY_BAD;
->>> +
->>> +     dev_info(supply->iod->dev, "Setting to %d done\n", uV);
->>> +     return NOTIFY_OK;
->>> +}
->>> +
->>> +#define RK3288_SOC_CON2                      0x24c
->>> +#define RK3288_SOC_CON2_FLASH0               BIT(7)
->>> +#define RK3288_SOC_FLASH_SUPPLY_NUM  2
->>> +
->> Not a strong opinion but you can club all the defines on top
->> of the file.
-> 
-> Sure, I'll move them.
-> 
-OK. Feel free to add my reviewed-by tag after the updates if you need one.
-
-regards,
-Santosh
+[Jacob Pan]
