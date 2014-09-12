@@ -1,49 +1,67 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/7] clk: sunxi: unify sun6i AHB1 clock with
- proper PLL6 pre-divider
-Date: Fri, 12 Sep 2014 11:16:26 +0800
-Message-ID: <CAGb2v66L36nsoucSgLY8pV8f=wjKTvtjJby43Z=Ct+NiRonptQ@mail.gmail.com>
-References: <1410000448-9999-1-git-send-email-wens@csie.org>
- <1410000448-9999-4-git-send-email-wens@csie.org> <20140911210211.GM31276@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3 5/6] ARM: imx: Add initial support for Freescale LS1021A
+Date: Fri, 12 Sep 2014 03:17:44 +0000
+Message-ID: <0133655fbf2d45ee9936ff4baba65b50@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
+ <20140402.o60F9Z4YVe@wuerfel>
+ <517628172fb3416ea7b12b4ae24e098a@BL2PR03MB467.namprd03.prod.outlook.com>
+ <3005087.EqTxEFbPyU@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBIOLZGQAKGQEPAKYXGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140911210211.GM31276@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3005087.EqTxEFbPyU@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Sep 12, 2014 at 5:02 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Sat, Sep 06, 2014 at 06:47:24PM +0800, Chen-Yu Tsai wrote:
->> This patch unifies the sun6i AHB1 clock, originally supported
->> with separate mux and divider clks. It also adds support for
->> the pre-divider on the PLL6 input, thus allowing the clock to
->> be muxed to PLL6 with proper clock rate calculation.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> It looks fine, but I'd rather see this in a separate file, especially
-> since we don't seem to have any order dependency.
-
-Sorry, just to be clear, separate file under clk/sunxi?
-
-This cannot be in a separate file, as it shares a spinlock with apb1
-divider. They share the same register.
-
-We could move apb1 out though. But i would prefer to do that when
-we split out all the clocks into individual OF_CLK_DECLAREs.
-
-ChenYu
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQXJuZCBCZXJnbWFubiBbbWFpbHRv
+OmFybmRAYXJuZGIuZGVdDQo+U2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMSwgMjAxNCA2OjQ1
+IFBNDQo+VG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj5DYzogbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBHdW8gU2hhd24tUjY1MDczOw0KPmRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnDQo+U3ViamVjdDogUmU6IFtQQVRDSHYzIDUvNl0gQVJNOiBpbXg6IEFkZCBpbml0aWFs
+IHN1cHBvcnQgZm9yIEZyZWVzY2FsZQ0KPkxTMTAyMUENCj4NCj5PbiBUaHVyc2RheSAxMSBTZXB0
+ZW1iZXIgMjAxNCAwOTo1Mzo1NiBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+PiA+RnJvbTogQXJuZCBC
+ZXJnbWFubiBbbWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+PiA+DQo+PiA+T2ssIEkgc2VlLiBUaGUg
+YWN0dWFsIHBvaW50IG9mIGRtYV96b25lX3NpemUgaG93ZXZlciBpcyBzbGlnaHRseQ0KPj4gPmRp
+ZmZlcmVudCwgYW5kIEkgdGhpbmsgeW91IHNob3VsZCBub3QgdXNlIGl0IGxpa2UgdGhpcy4gV2Ug
+bm9ybWFsbHkNCj4+ID5vbmx5IHVzZSBaT05FX0RNQSBpZiB0aGVyZSBhcmUgZGV2aWNlcyB0aGF0
+IGhhdmUgYSBsaW1pdGF0aW9uIHNtYWxsZXINCj4+ID50aGFuIDRHQiwgYW5kIHRoYXQgYXBwZWFy
+IHRvIGJlIHRoZSBjYXNlIGZvciB5b3VyIHN5c3RlbS4NCj4+ID4NCj4+ID5UaGUgbWVzc2FnZSB5
+b3UgcXVvdGUgaXMgb25seSBwcmVzZW50IGluIGFyY2gvcG93ZXJwYywgc28gSSdtIG5vdA0KPj4g
+PnN1cmUgd2hhdCBzeW1wdG9tcyB5b3UgYXJlIGFjdHVhbGx5IHNlZWluZy4gUGxlYXNlIHRyeSBy
+ZW1vdmluZyB0aGUNCj4+ID5kbWFfem9uZV9zaXplIHNldHRpbmcgZm9yIHlvdXIgcGxhdGZvcm0g
+YW5kIHJlcG9ydCBpZiBpdCB3b3JrcyBvcg0KPj4gPndoYXQgdGhlIHN5bXB0b20gaXMgaWYgaXQg
+ZG9lcyBub3Qgd29yayB3aXRoIHRoZSBsYXRlc3Qga2VybmVsLg0KPj4gPg0KPj4gPldlIGRlZmlu
+aXRlbHkgbmVlZCB0byBnZXQgdGhpcyB0byB3b3JrIG91dCBvZiB0aGUgYm94IHdpdGhvdXQgYQ0K
+Pj4gPmRtYV96b25lX3NpemUgaGFjay4NCj4+ID4NCj4+ID5DYW4geW91IGRlc2NyaWJlIHdoYXQg
+dGhlIG1lbW9yeSBsYXlvdXQgaXMgb2YgeW91ciBwbGF0Zm9ybT8gQ2FuIHlvdQ0KPj4gPmhhdmUg
+UkFNIGluc3RhbGxlZCBhYm92ZSB0aGUgNEdCIHBoeXNpY2FsIGFkZHJlc3MgYm91bmRhcnk/IElm
+IHlvdQ0KPj4gPmNhbiwgYXJlIHRoZXJlIGFueSBkZXZpY2VzIHRoYXQgYXJlIHVuYWJsZSB0byBw
+ZXJmb3JtIERNQSBpbnRvIHRoYXQNCj4+ID5tZW1vcnkgd2l0aG91dCB0aGUgdXNlIG9mIGFuIElP
+TU1VPw0KPj4gPg0KPj4gT3VyIGZpcnN0IExTMTAyMUEgc3VwcG9ydCBpcyBiYXNlZCBvbiBrZXJu
+ZWwtMy4xMiwgd2hlcmUgd2hlbiBMUEFFDQo+PiBlbmFibGVkIGl0IHdpbGwgY29tcGFyZSB0aGUg
+ZGV2aWNlJ3MgY29oZXJlbnRfZG1hX21hc2sgd2l0aA0KPj4gYXJtX2RtYV9saW1pdCwgd2hpY2gg
+aXMgNjQtYml0IDB4ZmZmZmZmZmZmZmZmZmZmZiB3aXRob3V0DQo+PiBDT05GSUdfWk9ORV9ETUEs
+IHdpdGggQ09ORklHX1pPTkVfRE1BIGNhbiBsaW1pdCB0aGUgY29tcGFyaXNvbiBhbmQgYXZvaWQN
+Cj50aGUgd2FybmluZy4NCj4+IEFsbCBkZXZpY2UgY2FuIGFkZHJlc3MgMzItYml0IGFkZHJlc3Mg
+c3BhY2Ugb24gTFMxMDIxQSwgV2l0aCB5b3UNCj4+IGNvbW1lbnQgYWJvdmUsIEkgcmVtb3ZlIHRo
+ZSBkbWFfem9uZV9zaXplIGFuZCBvbmx5IHJlc2VydmUgdGhlDQo+PiBDT05GSUdfWk9ORV9ETUEg
+T24ga2VybmVsLTMuMTIsIGZpbmRpbmcgYWxsIHdvcmtzIHdlbGwsIHNvIEkgd2lsbCByZW1vdmUN
+Cj50aGUgZG1hX3pvbmVfc2l6ZSBzZXR0aW5nIG9uIDMuMTIuIFRoYW5rcy4NCj4NCj5PaywgZ29v
+ZC4NCj4NCj4+IEkgaGF2ZSBhIGxvb2sgb24gbGF0ZXN0IGtlcm5lbCwgZmluZGluZyBnZXRfY29o
+ZXJlbnRfZG1hX21hc2soKSBoYXMNCj4+IGxpbWl0ZWQgdGhlIG1hc2sgdG8gKHU2NClETUFfQklU
+X01BU0soMzIpLCBkb2VzIHRoaXMgbWVhbiB0aGUNCj4+IENPTkZJR19aT05FX0RNQSBpcyBub3Qg
+bmVlZGVkIGZvciBtZSBoZXJlPyBUaGFua3MuDQo+DQo+WW91IG9ubHkgbmVlZCB0byBlbmFibGUg
+Q09ORklHX1pPTkVfRE1BIGluIHRoZSBjYXNlIG9mIFJBTSBhYm92ZSB0aGUgNEdCDQo+Ym91bmRh
+cnkuIEkgd291bGQgc3VnZ2VzdCB5b3UgZG8gdGhlIHNhbWUgYXMgc29tZSBvZiB0aGUgb3RoZXIg
+cGxhdGZvcm1zDQo+YnkgYWRkaW5nDQo+DQo+CXNlbGVjdCBaT05FX0RNQSBpZiBBUk1fTFBBRQ0K
+Pg0KPmludG8geW91ciBLY29uZmlnIGZpbGUuIElmIExQQUUgaXMgZGlzYWJsZWQsIHlvdSBrbm93
+IHRoYXQgeW91IHdvbid0IG5lZWQNCj5aT05FX0RNQS4NCj4NCj4JQXJuZA0KDQpJIHdpbGwgZG8g
+dGhhdC4gVGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
