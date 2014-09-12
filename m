@@ -1,92 +1,104 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Fri, 12 Sep 2014 13:14:51 +0100
-Message-ID: <5412E3BB.9030800@arm.com>
-References: <1410452204-7277-1-git-send-email-dianders@chromium.org> <20140911164710.GW6158@arm.com>	<5411D528.4050605@arm.com> <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com> <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com> <5411DF5D.8060906@arm.com> <5412DC48.7030708@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5412DC48.7030708@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christopher Covington <cov@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Will Deacon <Will.Deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4/4] ARM: shmobile: r8a7740 dtsi: Add missing INTCA clock for irqpin module
+Date: Fri, 12 Sep 2014 15:15:20 +0200
+Message-ID: <1410527720-18061-5-git-send-email-geert+renesas@glider.be>
+References: <1410527720-18061-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1410527720-18061-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christopher,
+This clock drives the INTCA irqpin controller modules.
+Before, it was assumed enabled by the bootloader or reset state.
 
-On 12/09/14 12:43, Christopher Covington wrote:
-> Hi Marc,
-> 
-> On 09/11/2014 01:43 PM, Marc Zyngier wrote:
->> On 11/09/14 18:29, Doug Anderson wrote:
->>> Marc,
->>>
->>> On Thu, Sep 11, 2014 at 10:22 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
->>>>> We would need to run this code potentially at processor bringup and
->>>>> after suspend/resume, but that seems possible too.
->>>>
->>>> Note that this would be an ARMv7 only thing (you can't do that on ARMv8,
->>>> at all).
->>>
->>> Yes, of course.
->>>
->>>
->>>>> Is the transition to monitor mode and back simple?  Where would you
->>>>> suggest putting this code?  It would definitely need to be pretty
->>>>> early.  We'd also need to be able to detect that we're in Secure SVC
->>>>> and not mess up anyone else who happened to boot in Non Secure SVC.
->>>>
->>>> This would have to live in some very early platform-specific code. The
->>>> ugly part is that you cannot find out what world you're in (accessing
->>>> SCR is going to send you to UNDEF-land if accessed from NS).
->>>
->>> Yup, so the question is: would such code be accepted upstream, or are
->>> we going to embark on a big job for someone to figure out how to do
->>> this only to get NAKed?
->>>
->>> If there was some indication that folks would take this, I think we
->>> might be able to get it coded up.  If someone else wanted to volunteer
->>> to code it that would make me even happier, but maybe that's pushing
->>> my luck.  ;)
->>
->> Writing the code is a 5 minute job. Getting it accepted is another
->> story, and I'm not sure everyone would agree on that.
->>
->>>> If I was suicidal, I'd suggest you could pass a parameter to the command
->>>> line, interpreted by the timer code... But I since I'm not, let's
->>>> pretend I haven't said anything... ;-)
->>>
->>> I did this in the past (again, see Sonny's thread), but didn't
->>> consider myself knowledgeable to know if that was truly a good test:
->>>
->>>        asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
->>>        pr_info("DOUG: val is %#010x", val);
->>>        val |= (1 << 2);
->>>        asm volatile("mcr p15, 0, %0, c1, c1, 0" : : "r" (val));
->>>        val = 0xffffffff;
->>>        asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
->>>        pr_info("DOUG: val is %#010x", val);
->>>
->>> The idea being that if you can make modifications to the SCR register
->>> (and see your changes take effect) then you must be in secure mode.
->>> In my case the first printout was 0x0 and the second was 0x4.
->>
->> The main issue is when you're *not* in secure mode. It is likely that
->> this will explode badly. This is why I suggested something that is set
->> by the bootloader (after all. it knows which mode it is booted in), and
->> that the timer driver can use when the CPU comes up.
-> 
-> What exactly does "exploding badly" look like? Causing and undefined
-> instruction exception? That's just a branch with a mode switch. Any reason the
-> code couldn't deal with that or even use that to its advantage?
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
+---
+ arch/arm/boot/dts/r8a7740.dtsi            | 14 ++++++++++----
+ include/dt-bindings/clock/r8a7740-clock.h |  1 +
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-We surely can handle the UNDEF and do something there. We just can't do
-it the way Doug described it above.
-
-Thanks,
-
-	M.
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index d46c213a17ad..502483f4dccb 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -71,6 +71,7 @@
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+ 	};
+ 
+ 	/* irqpin1: IRQ8 - IRQ15 */
+@@ -91,6 +92,7 @@
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+ 	};
+ 
+ 	/* irqpin2: IRQ16 - IRQ23 */
+@@ -111,6 +113,7 @@
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+ 	};
+ 
+ 	/* irqpin3: IRQ24 - IRQ31 */
+@@ -131,6 +134,7 @@
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH
+ 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+ 	};
+ 
+ 	ether: ethernet@e9a00000 {
+@@ -448,8 +452,8 @@
+ 		mstp2_clks: mstp2_clks@e6150138 {
+ 			compatible = "renesas,r8a7740-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0xe6150138 4>, <0xe6150040 4>;
+-			clocks = <&sub_clk>, <&sub_clk>,
+-				 <&cpg_clocks R8A7740_CLK_HP>,
++			clocks = <&sub_clk>, <&cpg_clocks R8A7740_CLK_HP>,
++				 <&sub_clk>, <&cpg_clocks R8A7740_CLK_HP>,
+ 				 <&cpg_clocks R8A7740_CLK_HP>,
+ 				 <&cpg_clocks R8A7740_CLK_HP>,
+ 				 <&cpg_clocks R8A7740_CLK_HP>,
+@@ -458,7 +462,8 @@
+ 				 <&sub_clk>;
+ 			#clock-cells = <1>;
+ 			renesas,clock-indices = <
+-				R8A7740_CLK_SCIFA6 R8A7740_CLK_SCIFA7
++				R8A7740_CLK_SCIFA6 R8A7740_CLK_INTCA
++				R8A7740_CLK_SCIFA7
+ 				R8A7740_CLK_DMAC1 R8A7740_CLK_DMAC2
+ 				R8A7740_CLK_DMAC3 R8A7740_CLK_USBDMAC
+ 				R8A7740_CLK_SCIFA5 R8A7740_CLK_SCIFB
+@@ -467,7 +472,8 @@
+ 				R8A7740_CLK_SCIFA4
+ 			>;
+ 			clock-output-names =
+-				"scifa6", "scifa7", "dmac1", "dmac2", "dmac3",
++				"scifa6", "intca",
++				"scifa7", "dmac1", "dmac2", "dmac3",
+ 				"usbdmac", "scifa5", "scifb", "scifa0", "scifa1",
+ 				"scifa2", "scifa3", "scifa4";
+ 		};
+diff --git a/include/dt-bindings/clock/r8a7740-clock.h b/include/dt-bindings/clock/r8a7740-clock.h
+index f6b4b0fe7a43..476135da0f23 100644
+--- a/include/dt-bindings/clock/r8a7740-clock.h
++++ b/include/dt-bindings/clock/r8a7740-clock.h
+@@ -40,6 +40,7 @@
+ 
+ /* MSTP2 */
+ #define R8A7740_CLK_SCIFA6	30
++#define R8A7740_CLK_INTCA	29
+ #define R8A7740_CLK_SCIFA7	22
+ #define R8A7740_CLK_DMAC1	18
+ #define R8A7740_CLK_DMAC2	17
 -- 
-Jazz is not dead. It just smells funny...
+1.9.1
+
