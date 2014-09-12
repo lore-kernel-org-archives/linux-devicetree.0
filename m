@@ -1,42 +1,95 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 5/6] ARM: shmobile: ape6evm: sort dts file by address
-Date: Fri, 12 Sep 2014 11:04:05 +0200
-Message-ID: <CAMuHMdWmBo8-_3-3=TcTfW1NZHTGrkwXBAFtugZQZFa=6y2qkA@mail.gmail.com>
-References: <1410511876-9235-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1410511876-9235-6-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Marc Dietrich <marvin24@gmx.de>
+Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
+Date: Fri, 12 Sep 2014 11:06:49 +0200
+Message-ID: <7627175.tG5quZH0VN@fb07-iapwap2>
+References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de> <9935938.eKOCvCAtLt@fb07-iapwap2> <20140912083348.GA1289@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; boundary="nextPart1587627.2fD0quCvaU"; micalg="pgp-sha1"; protocol="application/pgp-signature"
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1410511876-9235-6-git-send-email-ulrich.hecht+renesas@gmail.com>
+In-Reply-To: <20140912083348.GA1289@katana>
 Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, Olof Johansson <olof@lixom.net>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
 
-I know this is not your fault, but...
+--nextPart1587627.2fD0quCvaU
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="ISO-8859-1"
 
-On Fri, Sep 12, 2014 at 10:51 AM, Ulrich Hecht
-<ulrich.hecht+renesas@gmail.com> wrote:
-> +       ape6evm_fixed_3v3: fixedregulator@0 {
+Am Freitag, 12. September 2014, 10:33:48 schrieb Wolfram Sang:
+> > > Why do you want DT to be involved at all?
+> > 
+> > Imagine a device which supports both, slave or master mode. The driver
+> > needs to know in which mode it should operate. This cannot be hard coded,
+> > because on different boards, different modes can be used.
+> 
+> Okay, it sounds weird to me that a device is not able to switch between
+> master and slave, but if you say so. Also, solving this issue would also
+> handle potential weird IP blocks which can be slave only, right?
 
-As there is no "reg" property, the "@0" must not be present.
+I didn't said device. I meant the driver (software) needs to know if which 
+mode to operate the device. DT has to provide just enough information to 
+select the right mode depending on the board implementation.
 
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "3V3";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               regulator-always-on;
-> +       };
+> What if you use two different adapter drivers or compatibles? One for
+> master-mode, one for slave-mode (slave could leave algo->master_xfer
+> empty, so the slave mode driver cannot send packets). I'm brainstorming
+> here, so while it should work IMO I will probably need a second thought.
+> 
+> So, in the DT you would have a block registering the I2C slave core
+> which binds to a simple driver providing reg_slave/unreg_slave and
+> pass on the slave-event. Then you could instantiate slave clients as
+> said before.
+> 
+> Maybe we need a real world example?
 
-Gr{oetje,eeting}s,
+ok, take our embedded controller driver (in staging/nvec) as an example. It's 
+basicly an MFD connecting keyboard, mouse, power, gpio, and some other stuff 
+to the soc. The MFD operates in master mode while the SOC is the I2C slave. 
+Theoretically, these roles could also switch (but that's not defined in the 
+nvec protocol).
 
-                        Geert
+So the i2c client driver sits in between the adapter (in slave or master mode) 
+and the the MFD children (keyboard, mouse, ...) and provides read/write/cb 
+functions (nvec uses a side channel gpio to be able to initiate writes on its 
+own) to its children. The MFD children don't care about how the i2c 
+communication is done, but the client driver needs to decide in which mode it 
+should talk to the EC. If this is not autodetectable, the mode needs to be 
+provided by the device tree.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+In this case you cannot use separate drivers for master and slave mode (or you 
+would need another layer to hide the driver multiplexing).
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> > The point is, that if we define a dt binding for master device on slave
+> > adapters it will be there forever. So even if it makes no sense for the
+> > example eeprom simulator (or even our embedded controller), it may make
+> > sense for other or future devices.
+> 
+> I don't know what you mean here. Again, an example might help?
+
+I just wanted to say that the discussion here should find a *generic* way to 
+distinguish slave and master clients on the i2c bus by using a proper DT 
+binding.
+
+Marc
+
+--nextPart1587627.2fD0quCvaU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJUEreqAAoJEKyeR39HFBtohnkIAIYKTkRFpQtlFVC5NojsYh/E
+ylFtmRd1cOXF+SRvBNP++OPcMSyfx07tS/6dheEhmtK7ue3vKzWV2cVGMw7ue2mn
+KfC9damQZj1S2DPbFxXFcV11qqJOh72D7LYcFbI/Vhd0Of5YK9cE8oc6izx6arET
+LDbayFvhd/JyWTqTyxBzd4AQZKS1YL4g23gSanSLt8IqdAf9MM2k9L4SaMp0XvV9
+GbxEJ8H4OvsHwgvGLFxlX0tUYYe6wxu9laGyGskdap5zgb4wIas2v8qn5L4vwr8r
+9vK+xqJOivPKHsZY8Aej/LR3I1KXQ2IrgJ7YbJZw/Qu19Pjx7u8QzE/PwYAuz9Q=
+=AsXP
+-----END PGP SIGNATURE-----
+
+--nextPart1587627.2fD0quCvaU--
+
