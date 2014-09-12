@@ -1,7 +1,7 @@
 From: <Frank.Li@freescale.com>
-Subject: [Patch v4 net-next 04/12] net: fec: parser max queue number from dt file
-Date: Sat, 13 Sep 2014 05:00:49 +0800
-Message-ID: <1410555657-10744-5-git-send-email-Frank.Li@freescale.com>
+Subject: [Patch v4 net-next 10/12] net: fec: init complete variable in early to avoid kernel dump
+Date: Sat, 13 Sep 2014 05:00:55 +0800
+Message-ID: <1410555657-10744-11-git-send-email-Frank.Li@freescale.com>
 References: <1410555657-10744-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,110 +14,58 @@ List-Id: devicetree@vger.kernel.org
 
 From: Fugang Duan <B38611@freescale.com>
 
-By default, the tx/rx queue number is 1, user can config the queue number
-at DTS file like this:
-	fsl,num-tx-queues=<3>;
-	fsl,num-rx-queues=<3>
+Software clear the MDIO interrupt before MDIO bus access, but
+MAC still generate MDIO interrupt. The issue only happen on
+imx6slx chip.
 
-Since i.MX6SX enet-AVB IP support multi queues, so use multi queues
-interface to allocate and set up an Ethernet device.
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.17.0-rc1-00399-g0bcad17 #315
+Backtrace:
+[<800121fc>] (dump_backtrace) from [<800124e0>] (show_stack+0x18/0x1c)
+ r6:8096e534 r5:8096e534 r4:00000000 r3:00000000
+[<800124c8>] (show_stack) from [<806a4c60>] (dump_stack+0x8c/0xa4)
+[<806a4bd4>] (dump_stack) from [<80060ab8>] (__lock_acquire+0x1814/0x1c40)
+ r6:be078000 r5:be074000 r4:be03f6e4 r3:be078000
+[<8005f2a4>] (__lock_acquire) from [<800616e0>] (lock_acquire+0x70/0x84)
+ r10:809ada33 r9:be010600 r8:00000096 r7:00000001 r6:be074000 r5:00000000
+ r4:60000193
+[<80061670>] (lock_acquire) from [<806abb20>] (_raw_spin_lock_irqsave+0x40/0x54)
+ r7:00000000 r6:8005a3f8 r5:00000193 r4:be03f6d4
+[<806abae0>] (_raw_spin_lock_irqsave) from [<8005a3f8>] (complete+0x1c/0x4c)
+ r6:80950904 r5:be03f6d0 r4:be03f6d4
+[<8005a3dc>] (complete) from [<8041b4c0>] (fec_enet_interrupt+0x128/0x164)
+ r6:80950904 r5:00800000 r4:be03f000 r3:00000000
+[<8041b398>] (fec_enet_interrupt) from [<8006aeac>] (handle_irq_event_percpu+0x38/0x13c)
+ r6:00000000 r5:be01065c r4:be399e00 r3:8041b398
+[<8006ae74>] (handle_irq_event_percpu) from [<8006aff4>] (handle_irq_event+0x44/0x64)
+ r10:be03f000 r9:80989fe0 r8:00000000 r7:00000096 r6:be399e00 r5:be01065c
+ r4:be010600
+[<8006afb0>] (handle_irq_event) from [<8006e3e8>] (handle_fasteoi_irq+0xc8/0x1bc)
+ r6:8096e764 r5:be01065c r4:be010600 r3:00000000
+[<8006e320>] (handle_fasteoi_irq) from [<8006a63c>] (generic_handle_irq+0x30/0x44)
+ r6:be074010 r5:80945e4c r4:00000096 r3:8006e320
+[<8006a60c>] (generic_handle_irq) from [<8000f218>] (handle_IRQ+0x54/0xbc)
+ r4:80950d74 r3:00000180
+[<8000f1c4>] (handle_IRQ) from [<800086cc>] (gic_handle_irq+0x30/0x68)
+ r8:be3ab478 r7:c080e100 r6:be075bd8 r5:80950eec r4:c080e10c r3:000000a0
+[<8000869c>] (gic_handle_irq) from [<80013064>] (__irq_svc+0x44/0x5c)
 
 Signed-off-by: Fugang Duan <B38611@freescale.com>
 Signed-off-by: Frank Li <Frank.Li@freescale.com>
 ---
- drivers/net/ethernet/freescale/fec.h      |  2 ++
- drivers/net/ethernet/freescale/fec_main.c | 46 ++++++++++++++++++++++++++++++-
- 2 files changed, 47 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fec_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-index b2b91f8..72fb90f 100644
---- a/drivers/net/ethernet/freescale/fec.h
-+++ b/drivers/net/ethernet/freescale/fec.h
-@@ -356,6 +356,8 @@ struct fec_enet_private {
- 
- 	bool ptp_clk_on;
- 	struct mutex ptp_clk_mutex;
-+	unsigned int num_tx_queues;
-+	unsigned int num_rx_queues;
- 
- 	/* The saved address of a sent-in-place packet/buffer, for skfree(). */
- 	struct fec_enet_priv_tx_q *tx_queue[FEC_ENET_MAX_TX_QS];
 diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 4c0d2ee..2240df0 100644
+index 9840a10..8f8e55e 100644
 --- a/drivers/net/ethernet/freescale/fec_main.c
 +++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -2709,6 +2709,42 @@ static void fec_reset_phy(struct platform_device *pdev)
- }
- #endif /* CONFIG_OF */
+@@ -3066,6 +3066,7 @@ fec_probe(struct platform_device *pdev)
+ 			goto failed_irq;
+ 	}
  
-+static void
-+fec_enet_get_queue_num(struct platform_device *pdev, int *num_tx, int *num_rx)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	int err;
-+
-+	*num_tx = *num_rx = 1;
-+
-+	if (!np || !of_device_is_available(np))
-+		return;
-+
-+	/* parse the num of tx and rx queues */
-+	err = of_property_read_u32(np, "fsl,num-tx-queues", num_tx);
-+	err |= of_property_read_u32(np, "fsl,num-rx-queues", num_rx);
-+	if (err) {
-+		*num_tx = 1;
-+		*num_rx = 1;
-+		return;
-+	}
-+
-+	if (*num_tx < 1 || *num_tx > FEC_ENET_MAX_TX_QS) {
-+		dev_err(&pdev->dev, "Invalidate num_tx(=%d), fail back to 1\n",
-+			*num_tx);
-+		*num_tx = 1;
-+		return;
-+	}
-+
-+	if (*num_rx < 1 || *num_rx > FEC_ENET_MAX_RX_QS) {
-+		dev_err(&pdev->dev, "Invalidate num_rx(=%d), fail back to 1\n",
-+			*num_rx);
-+		*num_rx = 1;
-+		return;
-+	}
-+
-+}
-+
- static int
- fec_probe(struct platform_device *pdev)
- {
-@@ -2720,13 +2756,18 @@ fec_probe(struct platform_device *pdev)
- 	const struct of_device_id *of_id;
- 	static int dev_id;
- 	struct device_node *np = pdev->dev.of_node, *phy_node;
-+	int num_tx_qs = 1;
-+	int num_rx_qs = 1;
- 
- 	of_id = of_match_device(fec_dt_ids, &pdev->dev);
- 	if (of_id)
- 		pdev->id_entry = of_id->data;
- 
-+	fec_enet_get_queue_num(pdev, &num_tx_qs, &num_rx_qs);
-+
- 	/* Init network device */
--	ndev = alloc_etherdev(sizeof(struct fec_enet_private));
-+	ndev = alloc_etherdev_mqs(sizeof(struct fec_enet_private),
-+				  num_tx_qs, num_rx_qs);
- 	if (!ndev)
- 		return -ENOMEM;
- 
-@@ -2735,6 +2776,9 @@ fec_probe(struct platform_device *pdev)
- 	/* setup board info structure */
- 	fep = netdev_priv(ndev);
- 
-+	fep->num_rx_queues = num_rx_qs;
-+	fep->num_tx_queues = num_tx_qs;
-+
- #if !defined(CONFIG_M5272)
- 	/* default enable pause frame auto negotiation */
- 	if (pdev->id_entry &&
++	init_completion(&fep->mdio_done);
+ 	ret = fec_enet_mii_init(pdev);
+ 	if (ret)
+ 		goto failed_mii_init;
 -- 
 1.9.1
