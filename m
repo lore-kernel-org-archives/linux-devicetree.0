@@ -1,92 +1,254 @@
-From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v4 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Fri, 12 Sep 2014 00:05:55 +0000
-Message-ID: <600c4437f5d14520931aabc242fd69f4@BN1PR0301MB0772.namprd03.prod.outlook.com>
-References: <1409730511-16101-1-git-send-email-antoine.tenart@free-electrons.com>
- <1409730511-16101-8-git-send-email-antoine.tenart@free-electrons.com>
- <20140911010709.GE3609@peterchendt> <20140911153119.GA11275@kwain>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH/RFC v5 2/4] leds: implement sysfs interface locking mechanism
+Date: Thu, 11 Sep 2014 18:11:11 -0700
+Message-ID: <CAK5ve-+Trcg+ZL5gBZmpY_Zcqk5VOhP7jowS8Liqcz0pO_UbBQ@mail.gmail.com>
+References: <1408542118-32723-1-git-send-email-j.anaszewski@samsung.com> <1408542118-32723-3-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140911153119.GA11275@kwain>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1408542118-32723-3-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, b.zolnierkie@samsung.com, Richard Purdie <rpurdie@rpsys.net>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Aug 20, 2014 at 6:41 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> Add a mechanism for locking LED subsystem sysfs interface.
+> This patch prepares ground for addition of LED Flash Class
+> extension, whose API will be integrated with V4L2 Flash API.
+> Such a fusion enforces introducing a locking scheme, which
+> will secure consistent access to the LED Flash Class device.
+>
+> The mechanism being introduced allows for disabling LED
+> subsystem sysfs interface by calling led_sysfs_lock function
+> and enabling it by calling led_sysfs_unlock. The functions
+> alter the LED_SYSFS_LOCK flag state and must be called
+> under mutex lock. The state of the lock is checked with use
+> of led_sysfs_is_locked function. Such a design allows for
+> providing immediate feedback to the user space on whether
+> the LED Flash Class device is available or is under V4L2 Flash
+> sub-device control.
+>
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> ---
+>  drivers/leds/led-class.c    |   23 ++++++++++++++++++++---
+>  drivers/leds/led-core.c     |   18 ++++++++++++++++++
+>  drivers/leds/led-triggers.c |   15 ++++++++++++---
+>  include/linux/leds.h        |   32 ++++++++++++++++++++++++++++++++
+>  4 files changed, 82 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 6f82a76..0bc0ba9 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -39,17 +39,31 @@ static ssize_t brightness_store(struct device *dev,
+>  {
+>         struct led_classdev *led_cdev = dev_get_drvdata(dev);
+>         unsigned long state;
+> -       ssize_t ret = -EINVAL;
+> +       ssize_t ret;
+> +
+> +#ifdef CONFIG_V4L2_FLASH_LED_CLASS
 
- 
-> On Thu, Sep 11, 2014 at 09:07:10AM +0800, Peter Chen wrote:
-> > On Wed, Sep 03, 2014 at 09:48:26AM +0200, Antoine Tenart wrote:
-> > > +
-> > > +static int ci_hdrc_usb2_dt_probe(struct device *dev,
-> > > +				 struct ci_hdrc_platform_data *ci_pdata) {
-> > > +	ci_pdata->phy = of_phy_get(dev->of_node, 0);
-> > > +	if (IS_ERR(ci_pdata->phy)) {
-> > > +		if (PTR_ERR(ci_pdata->phy) == -EPROBE_DEFER)
-> > > +			return -EPROBE_DEFER;
-> > > +
-> > > +		/* PHY is optional */
-> > > +		ci_pdata->phy = NULL;
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> >
-> > You may also need to consider usb_phy case.
-> 
-> Don't we try using the generic PHY framework for new drivers?
-> 
-> Since there is no need for supporting an usb_phy case I don't think we have to
-> consider this case yet. And no doing so could encourage people to add PHY
-> drivers to the common PHY framework.
-> 
+Can we remove this #ifdef? Following code looks good to the common LED class.
 
-If the common PHY framework is the only right way in future, you don't
-need to change it.
+> +       mutex_lock(&led_cdev->led_lock);
 
-> > > +
-> > > +	if (dev->of_node) {
-> > > +		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	} else {
-> > > +		ret = dma_set_mask_and_coherent(&pdev->dev,
-> DMA_BIT_MASK(32));
-> > > +		if (ret)
-> > > +			return ret;
-> > > +	}
-> >
-> > You may need to do clk_disable_unprepare for above error cases.
-> 
-> Sure, I'll fix that.
-> 
-> > > +
-> > > +	ci_pdata->name = dev_name(&pdev->dev);
-> > > +
-> > > +	priv->ci_pdev = ci_hdrc_add_device(dev, pdev->resource,
-> > > +					   pdev->num_resources, ci_pdata);
-> > > +	if (IS_ERR(priv->ci_pdev)) {
-> > > +		ret = PTR_ERR(priv->ci_pdev);
-> > > +		if (ret != -EPROBE_DEFER)
-> > > +			dev_err(dev,
-> > > +				"failed to register ci_hdrc platform
-> device: %d\n",
-> > > +				ret);
-> >
-> > Why you don't want the error message for deferral probe?
-> 
-> A driver can return an EPROBE_DEFER error and still probe successfully later.
-> This would be confusing to have this kind of error message in this case. And
-> when a driver returns -EPROBE_DEFER, there is an error message already.
-> 
+Can we choose more meaningful name instead of led_lock here?
+Then use led_sysfs_enable() instead of led_sysfs_unlock()
+led_sysfs_disable instead of led_sysfs_lock()
+led_sysfs_is_disabled instead of led_sysfs_is_locked()
 
-OK, agree.
+And the flag LED_SYSFS_LOCK -> LED_SYSFS_DISABLE
 
-Peter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I was just confused by the name lock and unlock and mutex lock.
+
+The idea looks good to me.
+
+Thanks,
+-Bryan
+
+> +
+> +       if (led_sysfs_is_locked(led_cdev)) {
+> +               ret = -EBUSY;
+> +               goto unlock;
+> +       }
+> +#endif
+>
+>         ret = kstrtoul(buf, 10, &state);
+>         if (ret)
+> -               return ret;
+> +               goto unlock;
+>
+>         if (state == LED_OFF)
+>                 led_trigger_remove(led_cdev);
+>         __led_set_brightness(led_cdev, state);
+>
+> -       return size;
+> +       ret = size;
+> +unlock:
+> +#ifdef CONFIG_V4L2_FLASH_LED_CLASS
+> +       mutex_unlock(&led_cdev->led_lock);
+> +#endif
+> +       return ret;
+>  }
+>  static DEVICE_ATTR_RW(brightness);
+>
+> @@ -215,6 +229,7 @@ int led_classdev_register(struct device *parent, struct led_classdev *led_cdev)
+>  #ifdef CONFIG_LEDS_TRIGGERS
+>         init_rwsem(&led_cdev->trigger_lock);
+>  #endif
+> +       mutex_init(&led_cdev->led_lock);
+>         /* add to the list of leds */
+>         down_write(&leds_list_lock);
+>         list_add_tail(&led_cdev->node, &leds_list);
+> @@ -266,6 +281,8 @@ void led_classdev_unregister(struct led_classdev *led_cdev)
+>         down_write(&leds_list_lock);
+>         list_del(&led_cdev->node);
+>         up_write(&leds_list_lock);
+> +
+> +       mutex_destroy(&led_cdev->led_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(led_classdev_unregister);
+>
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> index 466ce5a..4649ea5 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -143,3 +143,21 @@ int led_update_brightness(struct led_classdev *led_cdev)
+>         return ret;
+>  }
+>  EXPORT_SYMBOL(led_update_brightness);
+> +
+> +/* Caller must ensure led_cdev->led_lock held */
+> +void led_sysfs_lock(struct led_classdev *led_cdev)
+> +{
+> +       lockdep_assert_held(&led_cdev->led_lock);
+> +
+> +       led_cdev->flags |= LED_SYSFS_LOCK;
+> +}
+> +EXPORT_SYMBOL_GPL(led_sysfs_lock);
+> +
+> +/* Caller must ensure led_cdev->led_lock held */
+> +void led_sysfs_unlock(struct led_classdev *led_cdev)
+> +{
+> +       lockdep_assert_held(&led_cdev->led_lock);
+> +
+> +       led_cdev->flags &= ~LED_SYSFS_LOCK;
+> +}
+> +EXPORT_SYMBOL_GPL(led_sysfs_unlock);
+> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+> index c3734f1..d391a5d 100644
+> --- a/drivers/leds/led-triggers.c
+> +++ b/drivers/leds/led-triggers.c
+> @@ -37,6 +37,11 @@ ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
+>         char trigger_name[TRIG_NAME_MAX];
+>         struct led_trigger *trig;
+>         size_t len;
+> +       int ret = count;
+> +
+> +#ifdef CONFIG_V4L2_FLASH_LED_CLASS
+> +       mutex_lock(&led_cdev->led_lock);
+> +#endif
+>
+>         trigger_name[sizeof(trigger_name) - 1] = '\0';
+>         strncpy(trigger_name, buf, sizeof(trigger_name) - 1);
+> @@ -47,7 +52,7 @@ ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
+>
+>         if (!strcmp(trigger_name, "none")) {
+>                 led_trigger_remove(led_cdev);
+> -               return count;
+> +               goto exit_unlock;
+>         }
+>
+>         down_read(&triggers_list_lock);
+> @@ -58,12 +63,16 @@ ssize_t led_trigger_store(struct device *dev, struct device_attribute *attr,
+>                         up_write(&led_cdev->trigger_lock);
+>
+>                         up_read(&triggers_list_lock);
+> -                       return count;
+> +                       goto exit_unlock;
+>                 }
+>         }
+>         up_read(&triggers_list_lock);
+>
+> -       return -EINVAL;
+> +exit_unlock:
+> +#ifdef CONFIG_V4L2_FLASH_LED_CLASS
+> +       mutex_unlock(&led_cdev->led_lock);
+> +#endif
+> +       return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(led_trigger_store);
+>
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index cc85b16..ef343f1 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -13,6 +13,7 @@
+>  #define __LINUX_LEDS_H_INCLUDED
+>
+>  #include <linux/list.h>
+> +#include <linux/mutex.h>
+>  #include <linux/rwsem.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/workqueue.h>
+> @@ -41,6 +42,7 @@ struct led_classdev {
+>  #define LED_BLINK_ONESHOT      (1 << 17)
+>  #define LED_BLINK_ONESHOT_STOP (1 << 18)
+>  #define LED_BLINK_INVERT       (1 << 19)
+> +#define LED_SYSFS_LOCK         (1 << 20)
+>
+>         /* Set LED brightness level */
+>         /* Must not sleep, use a workqueue if needed */
+> @@ -84,6 +86,9 @@ struct led_classdev {
+>         /* true if activated - deactivate routine uses it to do cleanup */
+>         bool                    activated;
+>  #endif
+> +
+> +       /* Ensures consistent access to the LED Flash Class device */
+> +       struct mutex            led_lock;
+>  };
+>
+>  extern int led_classdev_register(struct device *parent,
+> @@ -150,6 +155,33 @@ extern void led_set_brightness(struct led_classdev *led_cdev,
+>   */
+>  extern int led_update_brightness(struct led_classdev *led_cdev);
+>
+> +/**
+> + * led_sysfs_lock - lock LED sysfs interface
+> + * @led_cdev: the LED to set
+> + *
+> + * Lock the LED's sysfs interface
+> + */
+> +extern void led_sysfs_lock(struct led_classdev *led_cdev);
+> +
+> +/**
+> + * led_sysfs_unlock - unlock LED sysfs interface
+> + * @led_cdev: the LED to set
+> + *
+> + * Unlock the LED's sysfs interface
+> + */
+> +extern void led_sysfs_unlock(struct led_classdev *led_cdev);
+> +
+> +/**
+> + * led_sysfs_is_locked
+> + * @led_cdev: the LED to query
+> + *
+> + * Returns: true if the sysfs interface of the led is locked
+> + */
+> +static inline bool led_sysfs_is_locked(struct led_classdev *led_cdev)
+> +{
+> +       return led_cdev->flags & LED_SYSFS_LOCK;
+> +}
+> +
+>  /*
+>   * LED Triggers
+>   */
+> --
+> 1.7.9.5
+>
