@@ -1,91 +1,75 @@
-From: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Fri, 12 Sep 2014 07:43:04 -0400
-Message-ID: <5412DC48.7030708@codeaurora.org>
-References: <1410452204-7277-1-git-send-email-dianders@chromium.org> <20140911164710.GW6158@arm.com>	<5411D528.4050605@arm.com> <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com> <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com> <5411DF5D.8060906@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] clk: rockchip: rk3288: add reset indices for SOFTRST9-11
+Date: Fri, 12 Sep 2014 19:45:27 +0800
+Message-ID: <1410522327-23175-1-git-send-email-mark.yao@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5411DF5D.8060906-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dkl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+The patch add the rest of the indices of the additional reset
+registers from the updated TRM.
 
-On 09/11/2014 01:43 PM, Marc Zyngier wrote:
-> On 11/09/14 18:29, Doug Anderson wrote:
->> Marc,
->>
->> On Thu, Sep 11, 2014 at 10:22 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->>>> We would need to run this code potentially at processor bringup and
->>>> after suspend/resume, but that seems possible too.
->>>
->>> Note that this would be an ARMv7 only thing (you can't do that on ARMv8,
->>> at all).
->>
->> Yes, of course.
->>
->>
->>>> Is the transition to monitor mode and back simple?  Where would you
->>>> suggest putting this code?  It would definitely need to be pretty
->>>> early.  We'd also need to be able to detect that we're in Secure SVC
->>>> and not mess up anyone else who happened to boot in Non Secure SVC.
->>>
->>> This would have to live in some very early platform-specific code. The
->>> ugly part is that you cannot find out what world you're in (accessing
->>> SCR is going to send you to UNDEF-land if accessed from NS).
->>
->> Yup, so the question is: would such code be accepted upstream, or are
->> we going to embark on a big job for someone to figure out how to do
->> this only to get NAKed?
->>
->> If there was some indication that folks would take this, I think we
->> might be able to get it coded up.  If someone else wanted to volunteer
->> to code it that would make me even happier, but maybe that's pushing
->> my luck.  ;)
-> 
-> Writing the code is a 5 minute job. Getting it accepted is another
-> story, and I'm not sure everyone would agree on that.
-> 
->>> If I was suicidal, I'd suggest you could pass a parameter to the command
->>> line, interpreted by the timer code... But I since I'm not, let's
->>> pretend I haven't said anything... ;-)
->>
->> I did this in the past (again, see Sonny's thread), but didn't
->> consider myself knowledgeable to know if that was truly a good test:
->>
->>        asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
->>        pr_info("DOUG: val is %#010x", val);
->>        val |= (1 << 2);
->>        asm volatile("mcr p15, 0, %0, c1, c1, 0" : : "r" (val));
->>        val = 0xffffffff;
->>        asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
->>        pr_info("DOUG: val is %#010x", val);
->>
->> The idea being that if you can make modifications to the SCR register
->> (and see your changes take effect) then you must be in secure mode.
->> In my case the first printout was 0x0 and the second was 0x4.
-> 
-> The main issue is when you're *not* in secure mode. It is likely that
-> this will explode badly. This is why I suggested something that is set
-> by the bootloader (after all. it knows which mode it is booted in), and
-> that the timer driver can use when the CPU comes up.
+Signed-off-by: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ include/dt-bindings/clock/rk3288-cru.h | 43 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-What exactly does "exploding badly" look like? Causing and undefined
-instruction exception? That's just a branch with a mode switch. Any reason the
-code couldn't deal with that or even use that to its advantage?
-
-Thanks,
-Christopher
-
+diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
+index ebcb460..e65d522 100644
+--- a/include/dt-bindings/clock/rk3288-cru.h
++++ b/include/dt-bindings/clock/rk3288-cru.h
+@@ -276,3 +276,46 @@
+ #define SRST_USBHOST1_CON	140
+ #define SRST_USB_ADP		141
+ #define SRST_ACC_EFUSE		142
++
++#define SRST_CORESIGHT		144
++#define SRST_PD_CORE_AHB_NOC	145
++#define SRST_PD_CORE_APB_NOC	146
++#define SRST_PD_CORE_MP_AXI	147
++#define SRST_GIC		148
++#define SRST_LCDC_PWM0		149
++#define SRST_LCDC_PWM1		150
++#define SRST_VIO0_H2P_BRG	151
++#define SRST_VIO1_H2P_BRG	152
++#define SRST_RGA_H2P_BRG	153
++#define SRST_HEVC		154
++#define SRST_TSADC		159
++
++#define SRST_DDRPHY0		160
++#define SRST_DDRPHY0_APB	161
++#define SRST_DDRCTRL0		162
++#define SRST_DDRCTRL0_APB	163
++#define SRST_DDRPHY0_CTRL	164
++#define SRST_DDRPHY1		165
++#define SRST_DDRPHY1_APB	166
++#define SRST_DDRCTRL1		167
++#define SRST_DDRCTRL1_APB	168
++#define SRST_DDRPHY1_CTRL	169
++#define SRST_DDRMSCH0		170
++#define SRST_DDRMSCH1		171
++#define SRST_CRYPTO		174
++#define SRST_C2C_HOST		175
++
++#define SRST_LCDC1_AXI		176
++#define SRST_LCDC1_AHB		177
++#define SRST_LCDC1_DCLK		178
++#define SRST_UART0		179
++#define SRST_UART1		180
++#define SRST_UART2		181
++#define SRST_UART3		182
++#define SRST_UART4		183
++#define SRST_SIMC		186
++#define SRST_PS2C		187
++#define SRST_TSP		188
++#define SRST_TSP_CLKIN0		189
++#define SRST_TSP_CLKIN1		190
++#define SRST_TSP_27M		191
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
