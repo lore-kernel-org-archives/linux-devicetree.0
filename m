@@ -1,76 +1,84 @@
-From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] clk: rockchip: rk3288: add reset indices for SOFTRST9-11
-Date: Fri, 12 Sep 2014 19:45:27 +0800
-Message-ID: <1410522327-23175-1-git-send-email-mark.yao@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dkl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH] ARM: dts: Add Maxim 77693 PMIC to the Trats2 board
+Date: Fri, 12 Sep 2014 14:03:06 +0200
+Message-ID: <1410523386-10581-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch add the rest of the indices of the additional reset
-registers from the updated TRM.
+The MAX77693 is a companion power management IC for smart phones and tablets.
 
-Signed-off-by: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+The MAX77693 contains input over-voltage protection (OVP),
+a fully-integrated 2.5A switching charger for Lithium Ion battery with
+integrated battery disconnect, OTG/accessory 5V output power,
+a high-current white LED driver for camera flash, two safeout LDOs,
+a haptic motor driver, Model Gauge m3 battery fuel gauge and MicroUSB
+Interface Controller (MUIC). I2C serial interface is used for
+communicating.
+
+Add MAX77693 node to the Trats2 board. This allows using:
+ - charger regulator,
+ - 2 safeout LDO regulators (for USB OTG),
+ - extcon.
+
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 ---
- include/dt-bindings/clock/rk3288-cru.h | 43 ++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ arch/arm/boot/dts/exynos4412-trats2.dts | 34 +++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-index ebcb460..e65d522 100644
---- a/include/dt-bindings/clock/rk3288-cru.h
-+++ b/include/dt-bindings/clock/rk3288-cru.h
-@@ -276,3 +276,46 @@
- #define SRST_USBHOST1_CON	140
- #define SRST_USB_ADP		141
- #define SRST_ACC_EFUSE		142
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+index 11967f4561e0..0b641513a23d 100644
+--- a/arch/arm/boot/dts/exynos4412-trats2.dts
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -22,6 +22,7 @@
+ 	aliases {
+ 		i2c9 = &i2c_ak8975;
+ 		i2c10 = &i2c_cm36651;
++		i2c11 = &i2c_max77693;
+ 	};
+ 
+ 	memory {
+@@ -518,6 +519,39 @@
+ 		};
+ 	};
+ 
++	i2c_max77693: i2c-gpio-1 {
++		compatible = "i2c-gpio";
++		gpios = <&gpm2 0 0>, <&gpm2 1 0 >;
++		i2c-gpio,delay-us = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
 +
-+#define SRST_CORESIGHT		144
-+#define SRST_PD_CORE_AHB_NOC	145
-+#define SRST_PD_CORE_APB_NOC	146
-+#define SRST_PD_CORE_MP_AXI	147
-+#define SRST_GIC		148
-+#define SRST_LCDC_PWM0		149
-+#define SRST_LCDC_PWM1		150
-+#define SRST_VIO0_H2P_BRG	151
-+#define SRST_VIO1_H2P_BRG	152
-+#define SRST_RGA_H2P_BRG	153
-+#define SRST_HEVC		154
-+#define SRST_TSADC		159
++		max77693@66 {
++			compatible = "maxim,max77693";
++			interrupt-parent = <&gpx1>;
++			interrupts = <5 2>;
++			reg = <0x66>;
 +
-+#define SRST_DDRPHY0		160
-+#define SRST_DDRPHY0_APB	161
-+#define SRST_DDRCTRL0		162
-+#define SRST_DDRCTRL0_APB	163
-+#define SRST_DDRPHY0_CTRL	164
-+#define SRST_DDRPHY1		165
-+#define SRST_DDRPHY1_APB	166
-+#define SRST_DDRCTRL1		167
-+#define SRST_DDRCTRL1_APB	168
-+#define SRST_DDRPHY1_CTRL	169
-+#define SRST_DDRMSCH0		170
-+#define SRST_DDRMSCH1		171
-+#define SRST_CRYPTO		174
-+#define SRST_C2C_HOST		175
++			regulators {
++				esafeout1_reg: esafeout@1 {
++					regulator-compatible = "ESAFEOUT1";
++					regulator-name = "ESAFEOUT1";
++				};
++				esafeout2_reg: esafeout@2 {
++					regulator-compatible = "ESAFEOUT2";
++					regulator-name = "ESAFEOUT2";
++				};
++				charger_reg: charger@0 {
++					regulator-compatible = "CHARGER";
++					regulator-name = "CHARGER";
++					regulator-min-microamp = <60000>;
++					regulator-max-microamp = <2580000>;
++				};
++			};
++		};
++	};
 +
-+#define SRST_LCDC1_AXI		176
-+#define SRST_LCDC1_AHB		177
-+#define SRST_LCDC1_DCLK		178
-+#define SRST_UART0		179
-+#define SRST_UART1		180
-+#define SRST_UART2		181
-+#define SRST_UART3		182
-+#define SRST_UART4		183
-+#define SRST_SIMC		186
-+#define SRST_PS2C		187
-+#define SRST_TSP		188
-+#define SRST_TSP_CLKIN0		189
-+#define SRST_TSP_CLKIN1		190
-+#define SRST_TSP_27M		191
+ 	mmc@12550000 {
+ 		num-slots = <1>;
+ 		supports-highspeed;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
