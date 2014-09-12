@@ -1,67 +1,26 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3 5/6] ARM: imx: Add initial support for Freescale LS1021A
-Date: Fri, 12 Sep 2014 03:17:44 +0000
-Message-ID: <0133655fbf2d45ee9936ff4baba65b50@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
- <20140402.o60F9Z4YVe@wuerfel>
- <517628172fb3416ea7b12b4ae24e098a@BL2PR03MB467.namprd03.prod.outlook.com>
- <3005087.EqTxEFbPyU@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3005087.EqTxEFbPyU@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sean Cross <xobs@kosagi.com>
+Subject: [PATCH v2 0/2] Add irq_over_gpio DT support to STMPE
+Date: Fri, 12 Sep 2014 11:18:32 +0800
+Message-ID: <1410491914-23378-1-git-send-email-xobs@kosagi.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: bunnie@kosagi.com, Sean Cross <xobs@kosagi.com>
 List-Id: devicetree@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogQXJuZCBCZXJnbWFubiBbbWFpbHRv
-OmFybmRAYXJuZGIuZGVdDQo+U2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMSwgMjAxNCA2OjQ1
-IFBNDQo+VG86IEx1IEppbmdjaGFuZy1CMzUwODMNCj5DYzogbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBHdW8gU2hhd24tUjY1MDczOw0KPmRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnDQo+U3ViamVjdDogUmU6IFtQQVRDSHYzIDUvNl0gQVJNOiBpbXg6IEFkZCBpbml0aWFs
-IHN1cHBvcnQgZm9yIEZyZWVzY2FsZQ0KPkxTMTAyMUENCj4NCj5PbiBUaHVyc2RheSAxMSBTZXB0
-ZW1iZXIgMjAxNCAwOTo1Mzo1NiBKaW5nY2hhbmcgTHUgd3JvdGU6DQo+PiA+RnJvbTogQXJuZCBC
-ZXJnbWFubiBbbWFpbHRvOmFybmRAYXJuZGIuZGVdDQo+PiA+DQo+PiA+T2ssIEkgc2VlLiBUaGUg
-YWN0dWFsIHBvaW50IG9mIGRtYV96b25lX3NpemUgaG93ZXZlciBpcyBzbGlnaHRseQ0KPj4gPmRp
-ZmZlcmVudCwgYW5kIEkgdGhpbmsgeW91IHNob3VsZCBub3QgdXNlIGl0IGxpa2UgdGhpcy4gV2Ug
-bm9ybWFsbHkNCj4+ID5vbmx5IHVzZSBaT05FX0RNQSBpZiB0aGVyZSBhcmUgZGV2aWNlcyB0aGF0
-IGhhdmUgYSBsaW1pdGF0aW9uIHNtYWxsZXINCj4+ID50aGFuIDRHQiwgYW5kIHRoYXQgYXBwZWFy
-IHRvIGJlIHRoZSBjYXNlIGZvciB5b3VyIHN5c3RlbS4NCj4+ID4NCj4+ID5UaGUgbWVzc2FnZSB5
-b3UgcXVvdGUgaXMgb25seSBwcmVzZW50IGluIGFyY2gvcG93ZXJwYywgc28gSSdtIG5vdA0KPj4g
-PnN1cmUgd2hhdCBzeW1wdG9tcyB5b3UgYXJlIGFjdHVhbGx5IHNlZWluZy4gUGxlYXNlIHRyeSBy
-ZW1vdmluZyB0aGUNCj4+ID5kbWFfem9uZV9zaXplIHNldHRpbmcgZm9yIHlvdXIgcGxhdGZvcm0g
-YW5kIHJlcG9ydCBpZiBpdCB3b3JrcyBvcg0KPj4gPndoYXQgdGhlIHN5bXB0b20gaXMgaWYgaXQg
-ZG9lcyBub3Qgd29yayB3aXRoIHRoZSBsYXRlc3Qga2VybmVsLg0KPj4gPg0KPj4gPldlIGRlZmlu
-aXRlbHkgbmVlZCB0byBnZXQgdGhpcyB0byB3b3JrIG91dCBvZiB0aGUgYm94IHdpdGhvdXQgYQ0K
-Pj4gPmRtYV96b25lX3NpemUgaGFjay4NCj4+ID4NCj4+ID5DYW4geW91IGRlc2NyaWJlIHdoYXQg
-dGhlIG1lbW9yeSBsYXlvdXQgaXMgb2YgeW91ciBwbGF0Zm9ybT8gQ2FuIHlvdQ0KPj4gPmhhdmUg
-UkFNIGluc3RhbGxlZCBhYm92ZSB0aGUgNEdCIHBoeXNpY2FsIGFkZHJlc3MgYm91bmRhcnk/IElm
-IHlvdQ0KPj4gPmNhbiwgYXJlIHRoZXJlIGFueSBkZXZpY2VzIHRoYXQgYXJlIHVuYWJsZSB0byBw
-ZXJmb3JtIERNQSBpbnRvIHRoYXQNCj4+ID5tZW1vcnkgd2l0aG91dCB0aGUgdXNlIG9mIGFuIElP
-TU1VPw0KPj4gPg0KPj4gT3VyIGZpcnN0IExTMTAyMUEgc3VwcG9ydCBpcyBiYXNlZCBvbiBrZXJu
-ZWwtMy4xMiwgd2hlcmUgd2hlbiBMUEFFDQo+PiBlbmFibGVkIGl0IHdpbGwgY29tcGFyZSB0aGUg
-ZGV2aWNlJ3MgY29oZXJlbnRfZG1hX21hc2sgd2l0aA0KPj4gYXJtX2RtYV9saW1pdCwgd2hpY2gg
-aXMgNjQtYml0IDB4ZmZmZmZmZmZmZmZmZmZmZiB3aXRob3V0DQo+PiBDT05GSUdfWk9ORV9ETUEs
-IHdpdGggQ09ORklHX1pPTkVfRE1BIGNhbiBsaW1pdCB0aGUgY29tcGFyaXNvbiBhbmQgYXZvaWQN
-Cj50aGUgd2FybmluZy4NCj4+IEFsbCBkZXZpY2UgY2FuIGFkZHJlc3MgMzItYml0IGFkZHJlc3Mg
-c3BhY2Ugb24gTFMxMDIxQSwgV2l0aCB5b3UNCj4+IGNvbW1lbnQgYWJvdmUsIEkgcmVtb3ZlIHRo
-ZSBkbWFfem9uZV9zaXplIGFuZCBvbmx5IHJlc2VydmUgdGhlDQo+PiBDT05GSUdfWk9ORV9ETUEg
-T24ga2VybmVsLTMuMTIsIGZpbmRpbmcgYWxsIHdvcmtzIHdlbGwsIHNvIEkgd2lsbCByZW1vdmUN
-Cj50aGUgZG1hX3pvbmVfc2l6ZSBzZXR0aW5nIG9uIDMuMTIuIFRoYW5rcy4NCj4NCj5PaywgZ29v
-ZC4NCj4NCj4+IEkgaGF2ZSBhIGxvb2sgb24gbGF0ZXN0IGtlcm5lbCwgZmluZGluZyBnZXRfY29o
-ZXJlbnRfZG1hX21hc2soKSBoYXMNCj4+IGxpbWl0ZWQgdGhlIG1hc2sgdG8gKHU2NClETUFfQklU
-X01BU0soMzIpLCBkb2VzIHRoaXMgbWVhbiB0aGUNCj4+IENPTkZJR19aT05FX0RNQSBpcyBub3Qg
-bmVlZGVkIGZvciBtZSBoZXJlPyBUaGFua3MuDQo+DQo+WW91IG9ubHkgbmVlZCB0byBlbmFibGUg
-Q09ORklHX1pPTkVfRE1BIGluIHRoZSBjYXNlIG9mIFJBTSBhYm92ZSB0aGUgNEdCDQo+Ym91bmRh
-cnkuIEkgd291bGQgc3VnZ2VzdCB5b3UgZG8gdGhlIHNhbWUgYXMgc29tZSBvZiB0aGUgb3RoZXIg
-cGxhdGZvcm1zDQo+YnkgYWRkaW5nDQo+DQo+CXNlbGVjdCBaT05FX0RNQSBpZiBBUk1fTFBBRQ0K
-Pg0KPmludG8geW91ciBLY29uZmlnIGZpbGUuIElmIExQQUUgaXMgZGlzYWJsZWQsIHlvdSBrbm93
-IHRoYXQgeW91IHdvbid0IG5lZWQNCj5aT05FX0RNQS4NCj4NCj4JQXJuZA0KDQpJIHdpbGwgZG8g
-dGhhdC4gVGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMsDQpKaW5nY2hhbmcNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These patches add support for using a GPIO as an IRQ source for the
+STMPE module when configured using device tree.
+
+Changes since v1:
+    - Split actual patch and Documentation into two parts
+
+Sean Cross (2):
+  mfd: stmpe: support gpio over irq under device tree
+  mfd: stmpe: Document DT binding for irq_over_gpio
+
+ Documentation/devicetree/bindings/mfd/stmpe.txt | 1 +
+ drivers/mfd/stmpe.c                             | 7 ++++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+-- 
+2.1.0
