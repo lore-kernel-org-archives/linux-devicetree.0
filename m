@@ -1,53 +1,46 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH] powerpc: make of_device_ids const
-Date: Fri, 12 Sep 2014 18:34:24 +1000
-Message-ID: <1410510864.17540.11.camel@concordia>
-References: <1410378998-8823-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410378998-8823-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH 0/6] ARM: shmobile: various DT files sorted by address
+Date: Fri, 12 Sep 2014 10:51:10 +0200
+Message-ID: <1410511876-9235-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, Olof Johansson <olof@lixom.net>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-09-10 at 21:56 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> of_device_ids (i.e. compatible strings and the respective data) are n=
-ot
-> supposed to change at runtime. All functions working with of_device_i=
-ds
-> provided by <linux/of.h> work with const of_device_ids. This allows t=
-o
-> mark all struct of_device_id const, too.
->=20
-> While touching these line also put the __init annotation at the right
-> position where necessary.
->=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> Hello,
->=20
-> I don't know how arch/powerpc is maintained. So please tell me if I
-> should split this patch further.
->=20
-> I manually checked that all const annotations are OK, and the 0day bu=
-ild
-> bot didn't find a regression.
+Hi!
 
-Thanks.
+Here's a bunch of DT files sorted by address only.  I hope nobody sees a
+need to break those down any further.
 
-We'll take it as-is, it seems to merge cleanly.
+None of these patches depend on each other, or anything else for that
+matter, so feel free to pick and choose.
 
-We track patches via patchwork, this one is at:
-  http://patchwork.ozlabs.org/patch/387959/
+Olof, is there a consensus on other sort criteria?  I'm thinking of
+"'compatible' first", for instance.  (Should that take precedence over #... 
+properties, too?  I have implemented that as the default in
+https://github.com/uli/dtssort, but it looks slightly odd to me.)
 
-cheers
+CU
+Uli
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ulrich Hecht (6):
+  ARM: shmobile: r7s72100: sort dtsi file by address
+  ARM: shmobile: emev2: sort dtsi file by address
+  ARM: shmobile: kzm9d: sort dts file by address
+  ARM: shmobile: r8a73a4: sort dtsi file by address
+  ARM: shmobile: ape6evm: sort dts file by address
+  ARM: shmobile: ape6evm-reference: sort dts file by address
+
+ arch/arm/boot/dts/emev2-kzm9d.dts               |  62 +++----
+ arch/arm/boot/dts/emev2.dtsi                    | 120 ++++++------
+ arch/arm/boot/dts/r7s72100.dtsi                 | 202 ++++++++++-----------
+ arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts |  26 +--
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts           |  36 ++--
+ arch/arm/boot/dts/r8a73a4.dtsi                  | 232 ++++++++++++------------
+ 6 files changed, 339 insertions(+), 339 deletions(-)
+
+-- 
+1.8.4.5
+
