@@ -1,15 +1,15 @@
 Return-Path: <D.Lavnikevich@sam-solutions.com>
 From: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
-Subject: [PATCH v3 1/4] ARM: dts: pbab01: move i2c pins and frequency configuration into pfla02
-Date: Tue, 16 Sep 2014 11:08:20 +0300
-Message-ID: <1410854903-26419-2-git-send-email-d.lavnikevich@sam-solutions.com>
-In-Reply-To: <1410854903-26419-1-git-send-email-d.lavnikevich@sam-solutions.com>
-References: <1410537872-17274-1-git-send-email-d.lavnikevich@sam-solutions.com>
- <1410854903-26419-1-git-send-email-d.lavnikevich@sam-solutions.com>
+Subject: [PATCH v2 1/4] ARM: dts: pbab01: move i2c pins and frequency configuration into pfla02
+Date: Fri, 12 Sep 2014 19:04:29 +0300
+Message-ID: <1410537872-17274-2-git-send-email-d.lavnikevich@sam-solutions.com>
+In-Reply-To: <1410537872-17274-1-git-send-email-d.lavnikevich@sam-solutions.com>
+References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
+ <1410537872-17274-1-git-send-email-d.lavnikevich@sam-solutions.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 To: shawn.guo@freescale.com, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Dmitry
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
 List-ID: <devicetree@vger.kernel.org>
 
 Since pins and frequency are specific to module (pfla02), not base board
@@ -73,7 +73,7 @@ index 584721264121..f1bdcae5b97d 100644
 -	};
 -};
 diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index 0e50bb0a6b94..aa2275671d2c 100644
+index 2694aa84e187..a927e88ccc98 100644
 --- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
 +++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
 @@ -162,6 +162,18 @@
