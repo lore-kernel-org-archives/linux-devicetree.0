@@ -1,79 +1,72 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Fri, 12 Sep 2014 11:20:57 +0100
-Message-ID: <5412C909.50004@arm.com>
-References: <1410452204-7277-1-git-send-email-dianders@chromium.org> <20140911164710.GW6158@arm.com>	<5411D528.4050605@arm.com> <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com> <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com> <5411DF5D.8060906@arm.com>	<54123697.4070804@codeaurora.org> <CAD=FV=XZVs-Xr72Rah1YwnTqB6Zj=ZwkvsEytctO9sp5dL=eCA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XZVs-Xr72Rah1YwnTqB6Zj=ZwkvsEytctO9sp5dL=eCA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Will Deacon <Will.Deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Christopher Covington <cov@codeaurora.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] clk: rockchip: rk3288: Document eDP clock names
+Date: Fri, 12 Sep 2014 18:20:58 +0800
+Message-ID: <1410517258-18789-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dkl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/09/14 01:01, Doug Anderson wrote:
-> Stephen,
-> 
-> On Thu, Sep 11, 2014 at 4:56 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> On 09/11/14 10:43, Marc Zyngier wrote:
->>>>> If I was suicidal, I'd suggest you could pass a parameter to the command
->>>>> line, interpreted by the timer code... But I since I'm not, let's
->>>>> pretend I haven't said anything... ;-)
->>>> I did this in the past (again, see Sonny's thread), but didn't
->>>> consider myself knowledgeable to know if that was truly a good test:
->>>>
->>>>        asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
->>>>        pr_info("DOUG: val is %#010x", val);
->>>>        val |= (1 << 2);
->>>>        asm volatile("mcr p15, 0, %0, c1, c1, 0" : : "r" (val));
->>>>        val = 0xffffffff;
->>>>        asm volatile("mrc p15, 0, %0, c1, c1, 0" : "=r" (val));
->>>>        pr_info("DOUG: val is %#010x", val);
->>>>
->>>> The idea being that if you can make modifications to the SCR register
->>>> (and see your changes take effect) then you must be in secure mode.
->>>> In my case the first printout was 0x0 and the second was 0x4.
->>> The main issue is when you're *not* in secure mode. It is likely that
->>> this will explode badly. This is why I suggested something that is set
->>> by the bootloader (after all. it knows which mode it is booted in), and
->>> that the timer driver can use when the CPU comes up.
->>
->> Where does this platform jump to when a CPU comes up? Is it
->> rockchip_secondary_startup()? I wonder if that path could have this
->> little bit of assembly to poke the cntvoff in monitor mode and then jump
->> to secondary_startup()? Before we boot any secondary CPUs we could also
->> read the cntvoff for CPU0 in the platform specific layer (where we know
->> we're running in secure mode) and then use that value as the "reset"
->> value for the secondaries. Or does this platform boot up in secure mode
->> some times and non-secure mode other times?
-> 
-> I guess it would depend a whole lot on the bootloader, wouldn't it?
+This patch adds clock names for rk3288 eDP.
 
-Yes, hence my suggestion of hooking such a thing from the timer code,
-where we could have a clue what to do (and what not to).
+Signed-off-by: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ drivers/clk/rockchip/clk-rk3288.c      | 6 +++---
+ include/dt-bindings/clock/rk3288-cru.h | 3 +++
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-> With our current "get out of the way" bootloader, Linux always sees
-> "Secure SVC".  ...but if someone decided to put a new bootloader on
-> the system that wanted to do something different (implement security
-> and boot the kernel in nonsecure HYP or implement a hypervisor and
-> boot the kernel in nonsecure SVC) then everything would be different.
-> 
-> If someone were to write a bootloader like that (or perhaps if we're
-> running in a VM?) then I'd imagine that the whole world would be
-> different.  Somehow this secure bootloader and/or hypervisor would
-> _have_ to be involved in processor bringup and suspend/resume.  Since
-> I've never looked at code implementing either of these I'm just making
-> assumptions, though.
-
-Exactly. That's why we're so hell bent on PSCI, because it solves all
-these issues (and that's why I've added some rudimentary support for it
-in u-boot).
-
-Thanks,
-
-	M.
+diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
+index 2e1d790..bfe18b5 100644
+--- a/drivers/clk/rockchip/clk-rk3288.c
++++ b/drivers/clk/rockchip/clk-rk3288.c
+@@ -320,10 +320,10 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 			RK3288_CLKSEL_CON(29), 6, 2, MFLAGS, 8, 8, DFLAGS,
+ 			RK3288_CLKGATE_CON(3), 3, GFLAGS),
+ 
+-	COMPOSITE_NODIV(0, "sclk_edp_24m", mux_edp_24m_p, 0,
++	COMPOSITE_NODIV(SCLK_EDP_24M, "sclk_edp_24m", mux_edp_24m_p, 0,
+ 			RK3288_CLKSEL_CON(28), 15, 1, MFLAGS,
+ 			RK3288_CLKGATE_CON(3), 12, GFLAGS),
+-	COMPOSITE(0, "sclk_edp", mux_pll_src_cpll_gpll_npll_p, 0,
++	COMPOSITE(SCLK_EDP, "sclk_edp", mux_pll_src_cpll_gpll_npll_p, 0,
+ 			RK3288_CLKSEL_CON(28), 6, 2, MFLAGS, 0, 6, DFLAGS,
+ 			RK3288_CLKGATE_CON(3), 13, GFLAGS),
+ 
+@@ -653,7 +653,7 @@ static struct rockchip_clk_branch rk3288_clk_branches[] __initdata = {
+ 	GATE(0, "pclk_mipi_dsi1", "hclk_vio", 0, RK3288_CLKGATE_CON(16), 5, GFLAGS),
+ 	GATE(0, "pclk_mipi_csi", "hclk_vio", 0, RK3288_CLKGATE_CON(16), 6, GFLAGS),
+ 	GATE(0, "pclk_lvds_phy", "hclk_vio", 0, RK3288_CLKGATE_CON(16), 7, GFLAGS),
+-	GATE(0, "pclk_edp_ctrl", "hclk_vio", 0, RK3288_CLKGATE_CON(16), 8, GFLAGS),
++	GATE(PCLK_EDP_CTRL, "pclk_edp_ctrl", "hclk_vio", 0, RK3288_CLKGATE_CON(16), 8, GFLAGS),
+ 	GATE(0, "pclk_hdmi_ctrl", "hclk_vio", 0, RK3288_CLKGATE_CON(16), 9, GFLAGS),
+ 	GATE(0, "pclk_vio2_h2p", "hclk_vio", 0, RK3288_CLKGATE_CON(16), 11, GFLAGS),
+ 
+diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
+index 4d65959..0f7369d 100644
+--- a/include/dt-bindings/clock/rk3288-cru.h
++++ b/include/dt-bindings/clock/rk3288-cru.h
+@@ -61,6 +61,8 @@
+ #define SCLK_LCDC_PWM1		101
+ #define SCLK_MAC_RX		102
+ #define SCLK_MAC_TX		103
++#define SCLK_EDP_24M		104
++#define SCLK_EDP		105
+ 
+ #define DCLK_VOP0		190
+ #define DCLK_VOP1		191
+@@ -112,6 +114,7 @@
+ #define PCLK_PS2C		352
+ #define PCLK_TIMER		353
+ #define PCLK_TZPC		354
++#define PCLK_EDP_CTRL		355
+ 
+ /* hclk gates */
+ #define HCLK_GPS		448
 -- 
-Jazz is not dead. It just smells funny...
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
