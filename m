@@ -1,104 +1,118 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/4] ARM: shmobile: r8a7740 dtsi: Add missing INTCA clock for irqpin module
-Date: Fri, 12 Sep 2014 15:15:20 +0200
-Message-ID: <1410527720-18061-5-git-send-email-geert+renesas@glider.be>
-References: <1410527720-18061-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1410527720-18061-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH RESEND 0/8] i2c: Relax mandatory I2C ID table passing
+Date: Fri, 12 Sep 2014 15:46:32 +0200
+Message-ID: <20140912134632.GE1930@katana>
+References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Qz2CZ664xQdCRdPu"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1409236538-21274-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This clock drives the INTCA irqpin controller modules.
-Before, it was assumed enabled by the bootloader or reset state.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org
----
- arch/arm/boot/dts/r8a7740.dtsi            | 14 ++++++++++----
- include/dt-bindings/clock/r8a7740-clock.h |  1 +
- 2 files changed, 11 insertions(+), 4 deletions(-)
+--Qz2CZ664xQdCRdPu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index d46c213a17ad..502483f4dccb 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -71,6 +71,7 @@
- 			      0 149 IRQ_TYPE_LEVEL_HIGH
- 			      0 149 IRQ_TYPE_LEVEL_HIGH
- 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
- 	};
- 
- 	/* irqpin1: IRQ8 - IRQ15 */
-@@ -91,6 +92,7 @@
- 			      0 149 IRQ_TYPE_LEVEL_HIGH
- 			      0 149 IRQ_TYPE_LEVEL_HIGH
- 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
- 	};
- 
- 	/* irqpin2: IRQ16 - IRQ23 */
-@@ -111,6 +113,7 @@
- 			      0 149 IRQ_TYPE_LEVEL_HIGH
- 			      0 149 IRQ_TYPE_LEVEL_HIGH
- 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
- 	};
- 
- 	/* irqpin3: IRQ24 - IRQ31 */
-@@ -131,6 +134,7 @@
- 			      0 149 IRQ_TYPE_LEVEL_HIGH
- 			      0 149 IRQ_TYPE_LEVEL_HIGH
- 			      0 149 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
- 	};
- 
- 	ether: ethernet@e9a00000 {
-@@ -448,8 +452,8 @@
- 		mstp2_clks: mstp2_clks@e6150138 {
- 			compatible = "renesas,r8a7740-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0xe6150138 4>, <0xe6150040 4>;
--			clocks = <&sub_clk>, <&sub_clk>,
--				 <&cpg_clocks R8A7740_CLK_HP>,
-+			clocks = <&sub_clk>, <&cpg_clocks R8A7740_CLK_HP>,
-+				 <&sub_clk>, <&cpg_clocks R8A7740_CLK_HP>,
- 				 <&cpg_clocks R8A7740_CLK_HP>,
- 				 <&cpg_clocks R8A7740_CLK_HP>,
- 				 <&cpg_clocks R8A7740_CLK_HP>,
-@@ -458,7 +462,8 @@
- 				 <&sub_clk>;
- 			#clock-cells = <1>;
- 			renesas,clock-indices = <
--				R8A7740_CLK_SCIFA6 R8A7740_CLK_SCIFA7
-+				R8A7740_CLK_SCIFA6 R8A7740_CLK_INTCA
-+				R8A7740_CLK_SCIFA7
- 				R8A7740_CLK_DMAC1 R8A7740_CLK_DMAC2
- 				R8A7740_CLK_DMAC3 R8A7740_CLK_USBDMAC
- 				R8A7740_CLK_SCIFA5 R8A7740_CLK_SCIFB
-@@ -467,7 +472,8 @@
- 				R8A7740_CLK_SCIFA4
- 			>;
- 			clock-output-names =
--				"scifa6", "scifa7", "dmac1", "dmac2", "dmac3",
-+				"scifa6", "intca",
-+				"scifa7", "dmac1", "dmac2", "dmac3",
- 				"usbdmac", "scifa5", "scifb", "scifa0", "scifa1",
- 				"scifa2", "scifa3", "scifa4";
- 		};
-diff --git a/include/dt-bindings/clock/r8a7740-clock.h b/include/dt-bindings/clock/r8a7740-clock.h
-index f6b4b0fe7a43..476135da0f23 100644
---- a/include/dt-bindings/clock/r8a7740-clock.h
-+++ b/include/dt-bindings/clock/r8a7740-clock.h
-@@ -40,6 +40,7 @@
- 
- /* MSTP2 */
- #define R8A7740_CLK_SCIFA6	30
-+#define R8A7740_CLK_INTCA	29
- #define R8A7740_CLK_SCIFA7	22
- #define R8A7740_CLK_DMAC1	18
- #define R8A7740_CLK_DMAC2	17
--- 
-1.9.1
+On Thu, Aug 28, 2014 at 03:35:30PM +0100, Lee Jones wrote:
+> Hi Wolfram,
+>=20
+> Placing this firmly back on your plate.  I truly hope we don't miss
+> another merge-window.  This patch-set has the support of some pretty
+> senior kernel maintainers, so I hope acceptance shouldn't be too
+> difficult.
+>=20
+> As previously discussed I believe it should be okay for an I2C device
+> driver _not_ supply an I2C ID table to match to.  The I2C subsystem
+> should be able to match via other means, such as via OF tables.  The
+> blocking factor during our previous conversation was to keep
+> registering via sysfs up and running.  This set does that.
 
+As mentioned in another thread, modaliases are one other possible side
+effect. As Javier correctly mentions, the beaviour does not really
+change with your patchset. Yet, if we remove i2c_device_id from drivers
+too carelessly, they might not be bound anymore.
+
+>=20
+> After thinking more deeply about the problem, it occurred to me that
+> any I2C device driver which uses the sysfs method and issues an
+> of_match_device() would also fail their probe().  Bolted on to this
+> set is a new, more generic way for these devices to match against
+> either of the I2C/OF tables.
+>=20
+> I hope this ticks all of your boxes.
+>=20
+> v3:
+>   - Insist on passing 'struct i2c_client' instead of 'struct device'
+>   - Remove hook from of_match_device()
+>=20
+> v2:
+>   - Removal of ACPI support (this is really an OF issue).
+>   - Add a new .probe2( with will seamlessly replace
+>   - Supply a warning on devices matching via OF without a suitable compat=
+ible
+>   - Remove unified match_device() - bad idea as it subverts type-safe beh=
+aviour
+>   - Provide examples of the kind of clean-up possible after this set.
+>     - I already have the full support from the maintainer of these driver=
+s =3D;-)
+>=20
+> Kind regards,
+> Lee
+>=20
+> Lee Jones (8):
+>   i2c: Add pointer dereference protection to i2c_match_id()
+>   i2c: Add the ability to match device to compatible string without an
+>     of_node
+>   i2c: Match using traditional OF methods, then by vendor-less
+>     compatible strings
+>   i2c: Make I2C ID tables non-mandatory for DT'ed devices
+>   i2c: Export i2c_match_id() for direct use by device drivers
+>   i2c: Provide a temporary .probe2() call-back type
+>   mfd: 88pm860x: Move over to new I2C device .probe() call
+>   mfd: as3722: Rid driver of superfluous I2C device ID structure
+>=20
+>  drivers/i2c/i2c-core.c      | 72 +++++++++++++++++++++++++++++++++++++++=
+------
+>  drivers/mfd/88pm860x-core.c |  5 ++--
+>  drivers/mfd/as3722.c        | 12 ++------
+>  include/linux/i2c.h         | 22 +++++++++++++-
+>  4 files changed, 88 insertions(+), 23 deletions(-)
+>=20
+> --=20
+> 1.9.1
+>=20
+
+--Qz2CZ664xQdCRdPu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUEvk4AAoJEBQN5MwUoCm2kOgQAKCI/fFrXmJFbf1Q0/Tl/9VI
+ujN7X5nJBG/7Fgy3o8QhK/De7Z8DJU0nnsdd701NcAyE29SAQaStaHUv5s+K+0Bc
+Feu+zbV60NB03ogrIwe80JsSLVVaYl2VHJN7qqhQ64IuJYdbKg+08c9ilv6U1vbu
+Tcp0n2CAlJ2RQpgvelQRKsjo3yZmloeL6aeZKbcRTpCtzr2iboq67Dz3ZAhCNqY4
+YIYvA0w/1yor7li1e9NgnnSIHaCHhMPQfkTAHQZD4Onu8tHhSnCbx8ueQPomr4uV
+2inZ/4T1OrmVIyQz86Ge4hGHPBJ+6dChGierF1j8NyNXdF6tj4uQ411S6NilJzW+
+An7AWDgHl44xDiquhruk7ijPPIXDYDtCpAUzuUFqlNRsnSUgaNCr7UfTO//qEoC+
+pE3u3S3+UuysgCK+q9nHubjlph7v/nGsaN8k91vPY/EXZ1Xz/QoOBOHhJIkUITSQ
+UaoHEI/0L2QA1gwYNbLP4a31GjVHBYy5W7ptzDv4hLevRxBUSN3OaAxQxBEc61Up
+1BUnrnArXn25x08NF7/YUAkHnVywUBXoYISTNeOOnuZcsBa6nOF/wxrnr9LSNrBb
+Q+RJYIe+7wem0J+1TQpfhSYSiQGQt4XLOQzC7CGyyv5YY0YYmcDV//H5jTEmHjkA
+Bc5AxCylij+UL1Q5lRhj
+=YATJ
+-----END PGP SIGNATURE-----
+
+--Qz2CZ664xQdCRdPu--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
