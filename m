@@ -1,41 +1,30 @@
-From: Carlo Caione <carlo@caione.org>
-Subject: Re: [PATCH v2 3/9] ARM: meson: serial: add MesonX SoC on-chip uart driver
-Date: Fri, 12 Sep 2014 08:59:07 +0200
-Message-ID: <CAOQ7t2a6ngA3CUWTAgwn=imJTQwfJK4_b=ig89tafky8fj7T_w@mail.gmail.com>
-References: <1410466300-19168-1-git-send-email-carlo@caione.org>
-	<1410466300-19168-4-git-send-email-carlo@caione.org>
-	<20140911212534.GA17251@kroah.com>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
+ for dra7
+Date: Fri, 12 Sep 2014 12:48:10 +0530
+Message-ID: <54129E32.2080703@ti.com>
+References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com> <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com> <5410573B.5010907@ti.com> <54114339.5070404@ti.com> <20140911212956.GC17692@csclub.uwaterloo.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20140911212534.GA17251@kroah.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Carlo Caione <carlo@caione.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "jslaby@suse.cz" <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Beniamino Galvani <b.galvani@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, afaerber@suse.de, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140911212956.GC17692-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lennart Sorensen <lsorense-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 11:25 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Thu, Sep 11, 2014 at 10:11:34PM +0200, Carlo Caione wrote:
->> The SoC has four fully functional UARTs which use the same programming
->> model. They are named UART_A, UART_B, UART_C and UART_AO (Always-On)
->> which cannot be powered off.
->>
->> Signed-off-by: Carlo Caione <carlo@caione.org>
->> ---
->>  drivers/tty/serial/Kconfig       |  18 ++
->>  drivers/tty/serial/Makefile      |   1 +
->>  drivers/tty/serial/meson_uart.c  | 634 +++++++++++++++++++++++++++++++++++++++
->>  include/uapi/linux/serial_core.h |   3 +
->>  4 files changed, 656 insertions(+)
->>  create mode 100644 drivers/tty/serial/meson_uart.c
->
-> I've already taken this patch, why resend it?
+On Friday 12 September 2014 02:59 AM, Lennart Sorensen wrote:
+> I have the mac but I don't want to use both ports on the 2 port switch.
+> In fact in our case ethernet1 is a pru_eth interface.  Can a board dts
+> override the alias for ethernet1 or is that a syntax error?  I don't
+> think I tried that yet.
 
-Just for completeness' sake since there is also the documentation in
-the patchset.
-In the cover I specified that it was already taken.
+You can override it in board dts file
 
-I'll leave it out in v3 (if any).
-
--- 
-Carlo Caione
+Regards
+Mugunthan V N
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
