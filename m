@@ -1,203 +1,160 @@
-From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v8 2/3] usb: dwc3: Add Qualcomm DWC3 glue layer driver
-Date: Fri, 12 Sep 2014 12:29:45 -0500
-Message-ID: <1410542986-24419-3-git-send-email-agross@codeaurora.org>
+From: Andy Gross <agross@codeaurora.org>
+Subject: [PATCH v8 1/3] usb: dwc3: qcom: Add device tree binding
+Date: Fri, 12 Sep 2014 12:29:44 -0500
+Message-ID: <1410542986-24419-2-git-send-email-agross@codeaurora.org>
 References: <1410542986-24419-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410542986-24419-1-git-send-email-agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Jack Pham <jackp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1410542986-24419-1-git-send-email-agross@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: devicetree@vger.kernel.org, Jack Pham <jackp@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-DWC3 glue layer is hardware layer around Synopsys DesignWare
-USB3 core. Its purpose is to supply Synopsys IP with required
-clocks, voltages and interface it with the rest of the SoC.
+QCOM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
+(SNPS) and HS, SS PHY's control and configuration registers.
 
-Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+It could operate in device mode (SS, HS, FS) and host
+mode (SS, HS, FS, LS).
+
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Signed-off-by: Andy Gross <agross@codeaurora.org>
 ---
- drivers/usb/dwc3/Kconfig     |    9 +++
- drivers/usb/dwc3/Makefile    |    1 +
- drivers/usb/dwc3/dwc3-qcom.c |  133 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 143 insertions(+)
- create mode 100644 drivers/usb/dwc3/dwc3-qcom.c
+ .../devicetree/bindings/phy/qcom-dwc3-usb-phy.txt  |   39 ++++++++++++
+ .../devicetree/bindings/usb/qcom,dwc3.txt          |   66 ++++++++++++++++++++
+ 2 files changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
 
-diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index 785510a..e9f258e 100644
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -80,6 +80,15 @@ config USB_DWC3_KEYSTONE
- 	  Support of USB2/3 functionality in TI Keystone2 platforms.
- 	  Say 'Y' or 'M' here if you have one such device
- 
-+config USB_DWC3_QCOM
-+	tristate "Qualcomm Platforms"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	default USB_DWC3
-+	select PHY_QCOM_DWC3
-+	help
-+	  Recent Qualcomm SoCs ship with one DesignWare Core USB3 IP inside,
-+	  say 'Y' or 'M' if you have one such device.
-+
- comment "Debugging features"
- 
- config USB_DWC3_DEBUG
-diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
-index 10ac3e7..0da8e75 100644
---- a/drivers/usb/dwc3/Makefile
-+++ b/drivers/usb/dwc3/Makefile
-@@ -33,3 +33,4 @@ obj-$(CONFIG_USB_DWC3_OMAP)		+= dwc3-omap.o
- obj-$(CONFIG_USB_DWC3_EXYNOS)		+= dwc3-exynos.o
- obj-$(CONFIG_USB_DWC3_PCI)		+= dwc3-pci.o
- obj-$(CONFIG_USB_DWC3_KEYSTONE)		+= dwc3-keystone.o
-+obj-$(CONFIG_USB_DWC3_QCOM)		+= dwc3-qcom.o
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+diff --git a/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt b/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
 new file mode 100644
-index 0000000..2067c04
+index 0000000..86f2dbe
 --- /dev/null
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -0,0 +1,133 @@
-+/* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
+@@ -0,0 +1,39 @@
++Qualcomm DWC3 HS AND SS PHY CONTROLLER
++--------------------------------------
 +
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/usb/phy.h>
++DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
++controllers.  Each DWC3 PHY controller should have its own node.
 +
-+struct dwc3_qcom {
-+	struct device		*dev;
++Required properties:
++- compatible: should contain one of the following:
++	- "qcom,dwc3-hs-usb-phy" for High Speed Synopsis PHY controller
++	- "qcom,dwc3-ss-usb-phy" for Super Speed Synopsis PHY controller
++- reg: offset and length of the DWC3 PHY controller register set
++- #phy-cells: must be zero
++- clocks: a list of phandles and clock-specifier pairs, one for each entry in
++  clock-names.
++- clock-names: Should contain "ref" for the PHY reference clock
 +
-+	struct clk		*core_clk;
-+	struct clk		*iface_clk;
-+	struct clk		*sleep_clk;
-+};
++Optional clocks:
++  "xo"		External reference clock
 +
-+static int dwc3_qcom_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct dwc3_qcom *qdwc;
-+	int ret = 0;
++Example:
++		phy@100f8800 {
++			compatible = "qcom,dwc3-hs-usb-phy";
++			reg = <0x100f8800 0x30>;
++			clocks = <&gcc USB30_0_UTMI_CLK>;
++			clock-names = "ref";
++			#phy-cells = <0>;
 +
-+	qdwc = devm_kzalloc(&pdev->dev, sizeof(*qdwc), GFP_KERNEL);
-+	if (!qdwc)
-+		return -ENOMEM;
++			status = "ok";
++		};
 +
-+	platform_set_drvdata(pdev, qdwc);
++		phy@100f8830 {
++			compatible = "qcom,dwc3-ss-usb-phy";
++			reg = <0x100f8830 0x30>;
++			clocks = <&gcc USB30_0_MASTER_CLK>;
++			clock-names = "ref";
++			#phy-cells = <0>;
 +
-+	qdwc->dev = &pdev->dev;
++			status = "ok";
++		};
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+new file mode 100644
+index 0000000..ca164e7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+@@ -0,0 +1,66 @@
++Qualcomm SuperSpeed DWC3 USB SoC controller
 +
-+	qdwc->core_clk = devm_clk_get(qdwc->dev, "core");
-+	if (IS_ERR(qdwc->core_clk)) {
-+		dev_dbg(qdwc->dev, "failed to get core clock\n");
-+		return PTR_ERR(qdwc->core_clk);
-+	}
++Required properties:
++- compatible:	should contain "qcom,dwc3"
++- clocks:		A list of phandle + clock-specifier pairs for the
++				clocks listed in clock-names
++- clock-names:	Should contain the following:
++  "core"		Master/Core clock, have to be >= 125 MHz for SS
++				operation and >= 60MHz for HS operation
 +
-+	qdwc->iface_clk = devm_clk_get(qdwc->dev, "iface");
-+	if (IS_ERR(qdwc->iface_clk)) {
-+		dev_dbg(qdwc->dev, "failed to get optional iface clock\n");
-+		qdwc->iface_clk = NULL;
-+	}
++Optional clocks:
++  "iface"		System bus AXI clock.  Not present on all platforms
++  "sleep"		Sleep clock, used when USB3 core goes into low
++				power mode (U3).
 +
-+	qdwc->sleep_clk = devm_clk_get(qdwc->dev, "sleep");
-+	if (IS_ERR(qdwc->sleep_clk)) {
-+		dev_dbg(qdwc->dev, "failed to get optional sleep clock\n");
-+		qdwc->sleep_clk = NULL;
-+	}
++Required child node:
++A child node must exist to represent the core DWC3 IP block. The name of
++the node is not important. The content of the node is defined in dwc3.txt.
 +
-+	ret = clk_prepare_enable(qdwc->core_clk);
-+	if (ret) {
-+		dev_err(qdwc->dev, "failed to enable core clock\n");
-+		goto err_core;
-+	}
++Phy documentation is provided in the following places:
++Documentation/devicetree/bindings/phy/qcom,dwc3-usb-phy.txt
 +
-+	ret = clk_prepare_enable(qdwc->iface_clk);
-+	if (ret) {
-+		dev_err(qdwc->dev, "failed to enable optional iface clock\n");
-+		goto err_iface;
-+	}
++Example device nodes:
 +
-+	ret = clk_prepare_enable(qdwc->sleep_clk);
-+	if (ret) {
-+		dev_err(qdwc->dev, "failed to enable optional sleep clock\n");
-+		goto err_sleep;
-+	}
++		hs_phy: phy@100f8800 {
++			compatible = "qcom,dwc3-hs-usb-phy";
++			reg = <0x100f8800 0x30>;
++			clocks = <&gcc USB30_0_UTMI_CLK>;
++			clock-names = "ref";
++			#phy-cells = <0>;
 +
-+	ret = of_platform_populate(node, NULL, NULL, qdwc->dev);
-+	if (ret) {
-+		dev_err(qdwc->dev, "failed to register core - %d\n", ret);
-+		goto err_clks;
-+	}
++			status = "ok";
++		};
 +
-+	return 0;
++		ss_phy: phy@100f8830 {
++			compatible = "qcom,dwc3-ss-usb-phy";
++			reg = <0x100f8830 0x30>;
++			clocks = <&gcc USB30_0_MASTER_CLK>;
++			clock-names = "ref";
++			#phy-cells = <0>;
 +
-+err_clks:
-+	clk_disable_unprepare(qdwc->sleep_clk);
-+err_sleep:
-+	clk_disable_unprepare(qdwc->iface_clk);
-+err_iface:
-+	clk_disable_unprepare(qdwc->core_clk);
-+err_core:
-+	return ret;
-+}
++			status = "ok";
++		};
 +
-+static int dwc3_qcom_remove(struct platform_device *pdev)
-+{
-+	struct dwc3_qcom *qdwc = platform_get_drvdata(pdev);
++		usb3_0: usb30@0 {
++			compatible = "qcom,dwc3";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			clocks = <&gcc USB30_0_MASTER_CLK>;
++			clock-names = "core";
 +
-+	of_platform_depopulate(&pdev->dev);
++			ranges;
 +
-+	clk_disable_unprepare(qdwc->sleep_clk);
-+	clk_disable_unprepare(qdwc->iface_clk);
-+	clk_disable_unprepare(qdwc->core_clk);
++			status = "ok";
 +
-+	return 0;
-+}
++			dwc3@10000000 {
++				compatible = "snps,dwc3";
++				reg = <0x10000000 0xcd00>;
++				interrupts = <0 205 0x4>;
++				phys = <&hs_phy>, <&ss_phy>;
++				phy-names = "usb2-phy", "usb3-phy";
++				tx-fifo-resize;
++				dr_mode = "host";
++			};
++		};
 +
-+static const struct of_device_id of_dwc3_match[] = {
-+	{ .compatible = "qcom,dwc3" },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, of_dwc3_match);
-+
-+static struct platform_driver dwc3_qcom_driver = {
-+	.probe		= dwc3_qcom_probe,
-+	.remove		= dwc3_qcom_remove,
-+	.driver		= {
-+		.name	= "qcom-dwc3",
-+		.owner	= THIS_MODULE,
-+		.of_match_table	= of_dwc3_match,
-+	},
-+};
-+
-+module_platform_driver(dwc3_qcom_driver);
-+
-+MODULE_ALIAS("platform:qcom-dwc3");
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("DesignWare USB3 QCOM Glue Layer");
-+MODULE_AUTHOR("Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>");
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
