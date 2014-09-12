@@ -1,89 +1,62 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] fbdev: fsl-sii902x: HDMI support for Freescale SoCs
-Date: Fri, 12 Sep 2014 12:34:17 +0300
-Message-ID: <5412BE19.2010302@ti.com>
-References: <1409892517-29816-1-git-send-email-Li.Xiubo@freescale.com>
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: SPI and module auto-loading
+Date: Fri, 12 Sep 2014 11:50:23 +0200
+Message-ID: <5412C1DF.3040707@collabora.co.uk>
+References: <54119DB6.8020807@collabora.co.uk> <20140911193325.GT4015@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="0ff6aQeaPd3M3s1MAo9HX6mg2ScwMT9ut"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409892517-29816-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140911193325.GT4015-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---0ff6aQeaPd3M3s1MAo9HX6mg2ScwMT9ut
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On 09/11/2014 09:33 PM, Mark Brown wrote:
+> On Thu, Sep 11, 2014 at 03:03:50PM +0200, Javier Martinez Canillas wrote:
+> 
+>> This can be easily worked around (and probably why it never was an issue) if
+>> the OF and SPI tables are kept in sync but I don't know if that is a hard
+>> requirement for all use-cases (e.g: a SPI driver that is DT only?).
+> 
+> I'm not sure I see that as an interesting use case, it seems better to
+> have drivers usable without DT and it's trivial to do so.
+>
 
-Hi,
+Yes, it's trivial but seems like an unnecessary duplication for me. AFAICT the
+OF tables are only used to match the devices in spi_match_device() but if both
+the OF and SPI tables must be kept in sync to properly report the module
+aliases to user-space then I wonder if the OF tables shouldn't just be removed
+from the SPI drivers since spi_match_device() will succeed anyways when
+calling spi_match_id().
 
-On 05/09/14 07:48, Xiubo Li wrote:
-> Some Freescale SoCs, there has an DVI/HDMI controller and a PHY,
-> attached to one of their display controller unit's LCDC interfaces.
-> This patch adds a preliminary static support for such controllers.
->=20
-> This will support for many modes and a dynamic switching between
-> them.
->=20
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/fsl-sii902x.txt      |  17 +
->  drivers/video/fbdev/Kconfig                        |   7 +
->  drivers/video/fbdev/Makefile                       |   1 +
->  drivers/video/fbdev/fsl-sii902x.c                  | 526 +++++++++++++=
-++++++++
->  4 files changed, 551 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/fsl-sii902x=
-=2Etxt
->  create mode 100644 drivers/video/fbdev/fsl-sii902x.c
+>> I'm sending an RFC patch [1] to know what you think about it.
+>> [1]
+>> From a7cd35209a597a578df6c801e5ff7b63b584bf3e Mon Sep 17 00:00:00 2001
+>> From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+>> Date: Thu, 11 Sep 2014 14:31:04 +0200
+>> Subject: [PATCH RFC] spi: core: report OF style modalias when probing using DT
+> 
+> We already have a perfectly good way of sending patches.
+> 
 
-I don't know how you picked the names of the people you sent this patch
-to, but looks to me that most of them are probably not interested in
-this patch.
+Of course I know how to post patches properly but proposing a patch was not my
+intention here since as I said this could break module auto-loading for many
+drivers that rely on the current behavior. What I wanted was to explain with
+code how the SPI core could report uevents in order to be consistent with what
+other subsystems do (e.g: platform drivers):
 
-Anyway, a few quick comments on the patch:
+http://lxr.free-electrons.com/source/drivers/base/platform.c#L717
 
-- You should probably use regmap instead of direct i2c calls.
-Interestingly, you define regmap variable, but you never use it.
-- Use defines for register offsets, instead of magic numbers.
-- You should not use static variables. They prevent having multiple
-instances of the device.
+I should probably had used sharing instead of sending but as a non-native
+english speaker sometimes I don't always choose the best wording.
 
-So the SiI902x chip is on the SoC, not on the board? And it's a plain
-standard SiI902x in other aspects?
-
- Tomi
-
-
-
---0ff6aQeaPd3M3s1MAo9HX6mg2ScwMT9ut
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUEr4ZAAoJEPo9qoy8lh71CpAQAKoDh2t5GoUuDQpPouk0PjlM
-u03FFs+tJDnol6nKjrA2aWdhi9tAUhofT2dyrnmlrHMPmhCRUZxuyuLFFVvYDcz9
-OUpt7nk80zAAhHwwsr4gReSzhLP7sTfqVjvuD4fwvA2Iff8XJI1v8ZTpSznz30PV
-77Nog6FoZpukkookxs1U2YEvftgHuox3DwKweyaTensWsbS17NJw7bjVLYehtqlQ
-RTFIz5kwhzbL6NEKY/FVTyEFxrqB3lck/r8bhbkRmEUunA9blJC/GVTiVYFTAW5d
-sJFfAS2Jo1yuKHtfpHjQoaCO/QcLV9I9MG1q7m+atXqy2SYW0nuxk0z79Gal4buu
-IENJXu+uh+lsbWNBeoS+KjPpVtCmX7+yFYXdsHg2LhS7KVY4z/Qjkd+a2hc1tyl1
-iQktbfdRm/0MLsNlI/dPpH19prgPg9Q0rxJJJKLcx9VtCE/3iZZZOzVJSz4o3ESN
-G7wfKLD+U9UQbow0g/UBWCqL58POVxxZtt37oYcQZ81i41H76D7xTK5ZscKQ9XBi
-PguTkAs2LCa2p3NlQPvuGdsA4cZCiWHjo3yNlY4HGzrG9/nXzz1B/JdeuZf3rzxN
-OgJnKs2ak0MfajQudQOgC0UcvQ//CRwXQDcjf6VagzYUIH0f9Qj5cmO4mqMC238I
-9sZSar3jJYIOgo9ICHi6
-=phmy
------END PGP SIGNATURE-----
-
---0ff6aQeaPd3M3s1MAo9HX6mg2ScwMT9ut--
+Anyway, I was just raising the issue because if a driver only defines an OF
+table and not a SPI table, the driver will be probed correctly but module
+auto-loading will not work. So even when it looks like having a SPI id table
+is not a requirement for OF, it really is and I think that is not documented.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
