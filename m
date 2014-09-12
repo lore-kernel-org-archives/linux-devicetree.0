@@ -1,40 +1,30 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v3 00/12] clk: sunxi: Improve MMC clocks support
-Date: Fri, 12 Sep 2014 09:22:06 +0200
-Message-ID: <54129F1E.30207@redhat.com>
-References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, wens@csie.org
+From: Jianqun <jay.xu@rock-chips.com>
+Subject: [PATCH 0/2] rockchip-max98090: add driver for rockchip board with max98090
+Date: Fri, 12 Sep 2014 15:26:46 +0800
+Message-ID: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, heiko@sntech.de, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, jay.xu@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: huangtao@rock-chips.com, cf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch to add driver for rockchip board using a max98090.
 
-On 09/11/2014 10:18 PM, Maxime Ripard wrote:
-> Hi everyone,
-> 
-> Here is an attempt at improving the MMC clock support in the Allwinner
-> SoCs.
-> 
-> Until now, the MMC clocks were having a custom phase function that was
-> directly setting an obscure value in the right register, because we
-> were not really having any idea of what these values were.
-> 
-> Now that we have more informations, we can introduce a common function
-> call to get and set the phase of a particular clock, and use this in
-> both our provider and our client.
-> 
-> Thanks,
-> Maxime
+Tested on RK3288 using a max98090.
 
-I've not done a full review this time around (-ENOTIME), but I've taken
-a look at the changed bits, and those look good to me.
+Jianqun (2):
+  ASoC: rockchip-max98090: add documentation for rockchip-max98090
+    driver
+  ASoC: rockchip-max98090: add driver for rockchip board using a
+    max98090
 
-Regards,
+ .../sound/rockchip,rockchip-audio-max98090.txt     |  23 ++
+ sound/soc/rockchip/Kconfig                         |   9 +
+ sound/soc/rockchip/Makefile                        |   5 +-
+ sound/soc/rockchip/rockchip_max98090.c             | 308 +++++++++++++++++++++
+ 4 files changed, 344 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-max98090.txt
+ create mode 100644 sound/soc/rockchip/rockchip_max98090.c
 
-Hans
+-- 
+1.9.1
