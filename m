@@ -1,118 +1,55 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH/RFC v5 1/4] leds: Improve and export led_update_brightness
-Date: Fri, 12 Sep 2014 14:05:55 -0700
-Message-ID: <CAK5ve-LTXTzV3v_5o5jPVDE_C=RP5+B5OtCUachiy9E8siP6+w@mail.gmail.com>
-References: <1408542118-32723-1-git-send-email-j.anaszewski@samsung.com>
- <1408542118-32723-2-git-send-email-j.anaszewski@samsung.com> <CAK5ve-K1tu8dRwF2cqdVesZUT+VWp-NnD3ZQh6mXtnXSRJ3hPA@mail.gmail.com>
+From: <Frank.Li@freescale.com>
+Subject: [Patch v4 net-next 00/12] net: fec: imx6sx multiqueue support
+Date: Sat, 13 Sep 2014 05:00:45 +0800
+Message-ID: <1410555657-10744-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAK5ve-K1tu8dRwF2cqdVesZUT+VWp-NnD3ZQh6mXtnXSRJ3hPA@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, b.zolnierkie@samsung.com, Richard Purdie <rpurdie@rpsys.net>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: b38611@freescale.com, davem@davemloft.net, netdev@vger.kernel.org, lznuaa@gmail.com
+Cc: shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, Frank Li <Frank.Li@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 5, 2014 at 2:03 PM, Bryan Wu <cooloney@gmail.com> wrote:
-> On Wed, Aug 20, 2014 at 6:41 AM, Jacek Anaszewski
-> <j.anaszewski@samsung.com> wrote:
->> led_update_brightness helper function used to be exploited only loca=
-lly
->> in the led-class.c module, where its result was being passed to the
->> brightness_show sysfs callback. With the introduction of v4l2-flash
->> subdevice the same functionality becomes required for reading curren=
-t
->> brightness from a LED device. This patch adds checking of return val=
-ue
->> of the brightness_get callback and moves the led_update_brightness()
->> function to the LED subsystem public API.
->>
->
-> This one looks good to me.
-> Thanks,
-> -Bryan
->
+From: Frank Li <Frank.Li@freescale.com>
 
-Merged=EF=BC=8C no need to update this patch then.
+These patches enable i.MX6SX multi queue support.
+i.MX6SX support 3 queue and AVB feature.
 
--Bryan
+Change from v3 to v4
+ - use "unsigned int" instead of "unsigned"
 
->> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> Cc: Bryan Wu <cooloney@gmail.com>
->> Cc: Richard Purdie <rpurdie@rpsys.net>
->> ---
->>  drivers/leds/led-class.c |    6 ------
->>  drivers/leds/led-core.c  |   16 ++++++++++++++++
->>  include/linux/leds.h     |   10 ++++++++++
->>  3 files changed, 26 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->> index f4e5bb4..6f82a76 100644
->> --- a/drivers/leds/led-class.c
->> +++ b/drivers/leds/led-class.c
->> @@ -23,12 +23,6 @@
->>
->>  static struct class *leds_class;
->>
->> -static void led_update_brightness(struct led_classdev *led_cdev)
->> -{
->> -       if (led_cdev->brightness_get)
->> -               led_cdev->brightness =3D led_cdev->brightness_get(le=
-d_cdev);
->> -}
->> -
->>  static ssize_t brightness_show(struct device *dev,
->>                 struct device_attribute *attr, char *buf)
->>  {
->> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->> index 8380eb7..466ce5a 100644
->> --- a/drivers/leds/led-core.c
->> +++ b/drivers/leds/led-core.c
->> @@ -127,3 +127,19 @@ void led_set_brightness(struct led_classdev *le=
-d_cdev,
->>         __led_set_brightness(led_cdev, brightness);
->>  }
->>  EXPORT_SYMBOL(led_set_brightness);
->> +
->> +int led_update_brightness(struct led_classdev *led_cdev)
->> +{
->> +       int ret =3D 0;
->> +
->> +       if (led_cdev->brightness_get) {
->> +               ret =3D led_cdev->brightness_get(led_cdev);
->> +               if (ret >=3D 0) {
->> +                       led_cdev->brightness =3D ret;
->> +                       return 0;
->> +               }
->> +       }
->> +
->> +       return ret;
->> +}
->> +EXPORT_SYMBOL(led_update_brightness);
->> diff --git a/include/linux/leds.h b/include/linux/leds.h
->> index bc221d11..cc85b16 100644
->> --- a/include/linux/leds.h
->> +++ b/include/linux/leds.h
->> @@ -139,6 +139,16 @@ extern void led_blink_set_oneshot(struct led_cl=
-assdev *led_cdev,
->>   */
->>  extern void led_set_brightness(struct led_classdev *led_cdev,
->>                                enum led_brightness brightness);
->> +/**
->> + * led_update_brightness - update LED brightness
->> + * @led_cdev: the LED to query
->> + *
->> + * Get an LED's current brightness and update led_cdev->brightness
->> + * member with the obtained value.
->> + *
->> + * Returns: 0 on success or negative error value on failure
->> + */
->> +extern int led_update_brightness(struct led_classdev *led_cdev);
->>
->>  /*
->>   * LED Triggers
->> --
->> 1.7.9.5
->>
+Change from v2 to v3
+ - fixed alignment requirement for ARM and NO-ARM platform
+
+Change from v1 to v2.
+ - Change num_tx_queue to unsigned int
+ - Avoid block non-dt platform
+ - remove call netif_set_real_num_rx_queues
+ - seperate multi queue patch two part, one is tx and rx handle, with fixed queue 0
+   then other one is initilized multiqueue
+ - use two difference alignment for tx and rx path
+
+Frank Li (4):
+  net: fec: init multi queue date structure
+  net: fec: add enet-avb IP support
+  ARM: Documentation: Update fec dts binding doc
+  ARM: dts: imx6sx: add multi-queue support enet
+
+Fugang Duan (8):
+  net:fec: add enet refrence clock for i.MX 6SX chip
+  net:fec: add enet AVB feature macro define for imx6sx
+  net: fec: change data structure to support multiqueue
+  net: fec: parser max queue number from dt file
+  net:fec: Disable enet-avb MAC instead of reset MAC
+  net:fec: Add fsl,imx6sx-fec  compatible strings
+  net: fec: change FEC alignment according to i.mx6 sx requirement
+  net: fec: init complete variable in early to avoid kernel dump
+
+ Documentation/devicetree/bindings/net/fsl-fec.txt |   6 +
+ arch/arm/boot/dts/imx6sx.dtsi                     |   2 +
+ drivers/net/ethernet/freescale/fec.h              | 154 +++-
+ drivers/net/ethernet/freescale/fec_main.c         | 853 ++++++++++++++++------
+ 4 files changed, 756 insertions(+), 259 deletions(-)
+
+-- 
+1.9.1
