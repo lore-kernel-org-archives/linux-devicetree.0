@@ -1,61 +1,60 @@
-From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] bcma: register bcma as device tree driver
-Date: Sat, 13 Sep 2014 17:13:18 +0200
-Message-ID: <54145F0E.8000506@broadcom.com>
-References: <1410615446-7639-1-git-send-email-hauke@hauke-m.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: SPI and module auto-loading
+Date: Fri, 12 Sep 2014 11:14:42 +0100
+Message-ID: <20140912101442.GR7960@sirena.org.uk>
+References: <54119DB6.8020807@collabora.co.uk>
+ <20140911193325.GT4015@sirena.org.uk>
+ <5412C1DF.3040707@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410615446-7639-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6eUvXotnMb6+obQB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5412C1DF.3040707-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/14 15:37, Hauke Mehrtens wrote:
-> This driver is used by the bcm53xx ARM SoC code. Now it is possible to
-> give the address of the chipcommon core in device tree and bcma will
-> search for all the other cores.
->
-> Signed-off-by: Hauke Mehrtens<hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/bus/bcma.txt | 41 +++++++++++++
->   drivers/bcma/bcma_private.h                    | 16 +++++
->   drivers/bcma/host_soc.c                        | 82 ++++++++++++++++++++++++++
->   drivers/bcma/main.c                            | 10 ++++
->   include/linux/bcma/bcma.h                      |  2 +
->   5 files changed, 151 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/bus/bcma.txt
->
-> This is based on wireless-testing and should go into that tree.
->
-> changes since:
-> RFC:
->   - reworded the irq description
->   - improved the example
->   - hocked into bcma_modeinit() and bcma_modexit()
->
-> diff --git a/Documentation/devicetree/bindings/bus/bcma.txt b/Documentation/devicetree/bindings/bus/bcma.txt
-> new file mode 100644
-> index 0000000..17e095f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/bus/bcma.txt
-> @@ -0,0 +1,41 @@
-> +Broadcom AIX SoC bcma bus driver
 
-Hi Hauke,
+--6eUvXotnMb6+obQB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-First of all a typo used all over the place: AIX should be AXI.
+On Fri, Sep 12, 2014 at 11:50:23AM +0200, Javier Martinez Canillas wrote:
+> On 09/11/2014 09:33 PM, Mark Brown wrote:
 
-The backplane in Broadcom SoC is ARM AXI with additional plugin option 
-to make it discoverable. Indeed the IRQ info is not included, but I see 
-no reason for specifying the register space for the cores in device-tree 
-as that is discoverable by bcma.
+> > I'm not sure I see that as an interesting use case, it seems better to
+> > have drivers usable without DT and it's trivial to do so.
 
-Regards,
-Arend
+> Yes, it's trivial but seems like an unnecessary duplication for me. AFAICT the
+> OF tables are only used to match the devices in spi_match_device() but if both
+> the OF and SPI tables must be kept in sync to properly report the module
+> aliases to user-space then I wonder if the OF tables shouldn't just be removed
+> from the SPI drivers since spi_match_device() will succeed anyways when
+> calling spi_match_id().
+
+The vendor identifier is an important part of the OF device ID, vendors
+can and do end up with different devices of the same name.
+
+--6eUvXotnMb6+obQB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUEseRAAoJECTWi3JdVIfQLgIH/3mMnuTYaQ0by3BYj4TI7PED
+4Yttr0iYsNtUz/X070ERIAHgFULpgapFrOdTrdlCS4juYORZVVjYzQA0Xad6UMux
++4apRJ/k7/MkIt7HbR36gc+ADidmgFGGvLULMUezdjpvIVnO38w6AEMwdV33dofO
+sdhc/GgcZGnQpKTdORBRt0i07Ql0vjEDDwoLqoHqBznAxoE7Zga7U643cPlwb9md
+aZg+LAI8BmNaVVEp0vvpLDc+0nP1CcnMt3tDlhSATvqfBcHt/rl9+YFCzlBWK8gt
+zt+B9s+T2Rm966QyVqa5/ICkHu9mCbzoWrpftRX2gGfxFSwwnARVcWA5TPabGck=
+=sAgB
+-----END PGP SIGNATURE-----
+
+--6eUvXotnMb6+obQB--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
