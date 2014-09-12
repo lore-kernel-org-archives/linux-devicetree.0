@@ -1,87 +1,81 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
- LS1021A
-Date: Fri, 12 Sep 2014 09:59:10 +0000
-Message-ID: <de5dbb877d09447498c8c3cabce67f7e@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
- <62651744.c71MLsL3Q5@wuerfel>
- <cd69af536cd248b8add94a468fa97095@BL2PR03MB467.namprd03.prod.outlook.com>
- <2944183.HzFlEzpKtu@wuerfel> <20140911111202.GA4958@pengutronix.de>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH v10 00/10] Support for creating generic PCI host bridges
+ from DT
+Date: Fri, 12 Sep 2014 05:00:49 -0500
+Message-ID: <5412C451.609@amd.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <5412ADE9.2050708@amd.com>
+ <20140912093018.GX27864@e106497-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140911111202.GA4958-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140912093018.GX27864@e106497-lin.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFNhc2NoYSBIYXVlciBbbWFp
-bHRvOnMuaGF1ZXJAcGVuZ3V0cm9uaXguZGVdDQo+U2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAx
-MSwgMjAxNCA3OjEyIFBNDQo+VG86IEFybmQgQmVyZ21hbm4NCj5DYzogTHUgSmluZ2NoYW5nLUIz
-NTA4MzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBHdW8gU2hhd24tDQo+
-UjY1MDczOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgWmhhbyBDaGVuaHVpLUIzNTMzNjsg
-RnUgQ2hhby1CNDQ1NDg7DQo+TGVla2hhIFNoYXZldGEtQjIwMDUyOyBHdXB0YSBTdXJlc2gtQjQy
-ODEzOyBTaGFybWEgQmh1cGVzaC1CNDUzNzA7IFhpdWJvDQo+TGktQjQ3MDUzOyBHdXB0YSBSdWNo
-aWthLVI2NjQzMTsgQmFkb2xhIE5pa2hpbC1CNDYxNzINCj5TdWJqZWN0OiBSZTogW1BBVENIdjMg
-MS82XSBBUk06IGR0czogQWRkIFNvQyBsZXZlbCBkZXZpY2UgdHJlZSBzdXBwb3J0IGZvcg0KPkxT
-MTAyMUENCj4NCj5PbiBUaHUsIFNlcCAxMSwgMjAxNCBhdCAxMjozNjo1MFBNICswMjAwLCBBcm5k
-IEJlcmdtYW5uIHdyb3RlOg0KPj4gT24gVGh1cnNkYXkgMTEgU2VwdGVtYmVyIDIwMTQgMDg6MjE6
-NTggSmluZ2NoYW5nIEx1IHdyb3RlOg0KPj4gPiA+T25lIG1vcmUgdGhpbmc6IHRoZXNlIHNob3Vs
-ZCBhbGwgZ28gaW50byB0aGUgYm9hcmQgc3BlY2lmaWMgZmlsZXMuDQo+PiA+ID4NCj4+ID4gPlRo
-ZSBpbnN0YWxsZWQgbWVtb3J5IGlzIGFsbW9zdCBhbHdheXMgYSBwcm9wZXJ0eSBvZiB0aGUgYm9h
-cmQsIG5vdA0KPj4gPiA+dGhlIFNvQywgYW5kIGEgbG90IG9mIGJvYXJkcyBvbmx5IGNvbm5lY3Qg
-YSBzdWJzZXQgb2YgdGhlIHNlcmlhbA0KPj4gPiA+cG9ydHMsIG9yIHRoZXkgbWF5IGhhdmUgdGhl
-bSBpbiBhIGRpZmZlcmVudCBvcmRlci4NCj4+ID4gPg0KPj4gPiA+SW4gcGFydGljdWxhciwgeW91
-IG9ubHkgcHJvdmlkZSBhbGlhc2VzIGZvciB0aGUgc2l4IG91dCBvZiB0aGUgdGVuDQo+PiA+ID5h
-dmFpbGFibGUgdWFydHMsIHdoaWNoIHNlZW1zIGFyYml0cmFyeS4NCj4+ID4gPg0KPj4gPg0KPj4g
-PiBUaGUgbWVtb3J5IHNpemUgaW5mbyB3aWxsIGJlIGZpeGVkIHVwIGluIHUtYm9vdCBiZWZvcmUg
-Ym9vdGluZyB0aGUNCj4+ID4ga2VybmVsIGltYWdlLCBzbyBJIGFkZCB0aGUgbWVtb3J5IG5vZGUg
-aW4gdGhlIFNvQyBsZXZlbCBkZXZpY2UgdHJlZQ0KPmFuZCBrZWVwIG9ubHkgb25lIGNvcHkuDQo+
-Pg0KPj4gUmlnaHQuIEkgd29uZGVyIGlmIGl0IHdvdWxkIG1ha2Ugc2Vuc2UgdG8ganVzdCBsZWF2
-ZSBhIHBsYWNlaG9sZGVyIGluDQo+PiB0aGVyZSB0aGF0IGRvZXMgbm90IGxvb2sgbGlrZSBhIHBs
-YXVzaWJsZSBtZW1vcnkgc2l6ZS4NCj4NCj5UaGUgcGxhY2Vob2xkZXIgaXMgYWxyZWFkeSBpbiBz
-a2VsZXRvbi5kdHNpLCBubyBuZWVkIHRvIGFkZCBpdCBhdCBTb0MNCj5sZXZlbC4NClRoYW5rcywg
-SSB3aWxsIHJlbW92ZSB0aGUgbm9kZSBpbiB0aGUgU29DIGR0c2kgYW5kIHVzZSBqdXN0IHRoYXQg
-aW4NCnRoZSBza2VsZXRvbjY0LmR0c2kgaW5zdGVhZC4NCg0KPg0KPj4gSSBiZWxpZXZlIHRoZSBj
-b21tb24gY2FzZSB0b2RheQ0KPj4gaXMgdGhhdCB3ZSBhY3R1YWxseSB3YW50IHRvIGhhdmUgdGhl
-IGNvcnJlY3QgbWVtb3J5IHNpemUgaW4gdGhlDQo+PiBib2FyZC1sZXZlbCBkdHMgZmlsZSBiZWNh
-dXNlIHRoZSBib290IGxvYWRlciBkb2VzIG5vdCBjaGFuZ2UgdGhhdA0KPj4gdmFsdWUuIElmIHlv
-dXIgYm9vdCBsb2FkZXIgZG9lcyBpdCwgd2UgcHJvYmFibHkgZG9uJ3Qgd2FudCBhbnkgZGVmYXVs
-dA0KPj4gdGhhdCBtYXkgY29uZnVzZSB1c2VycyBhdCBhbGwsIGluIHBhcnRpY3VsYXIgaW4gdGhl
-IHBlci1zb2MgZmlsZS4NCj4+DQo+PiA+IFRoZSBscHVhcnQgZGVyaXZlcyB0aGUgbGluZSBudW1i
-ZXIgZnJvbSB0aGUgbm9kZSdzIGFsaWFzIGlkLCA4MjUwDQo+PiA+IHNlcmlhbCBkcml2ZXIgZG9l
-c24ndCByZWx5IG9uIGl0LCBzbyBvbmx5IGFsaWFzZXMgZm9yIHRoZSBscHVhcnQgYXJlDQo+YWRk
-ZWQsIG5vdCBhcmJpdHJhcnkuDQo+Pg0KPj4gVGhpcyBpcyByZWFsbHkgYmFkIHRob3VnaCwgZm9y
-IHR3byByZWFzb25zOg0KPj4NCj4+IGEpIHlvdSBhcmUgcmVseWluZyBvbiBjdXJyZW50IGJlaGF2
-aW9yIG9mIHR3byBrZXJuZWwgZHJpdmVycyB0aGF0IHdlDQo+PiBtYXkgd2FudCB0byBjaGFuZ2Ug
-aW4gdGhlIGZ1dHVyZS4gVW5mb3J0dW5hdGVseSB0aGUgdHdvIGRyaXZlcnMgZG9uJ3QNCj4+IGRv
-IHRoaXMgY29uc2lzdGVudGx5IHRvZGF5LCBidXQgdGhhdCdzIHNvbWV0aGluZyB3ZSBzaG91bGQg
-Zml4IGluIHRoZQ0KPj4ga2VybmVsLCBub3Qgd29yayBhcm91bmQgaW4gdGhlIGhhcmR3YXJlIGRl
-c2NyaXB0aW9uLg0KPj4NCj4+IGIpIGZvciB0aGUgbHB1YXJ0IGNhc2UsIHlvdSBwdXQgYSBmaXhl
-ZCBkZXZpY2Ugb3JkZXIgaW4gdGhlDQo+PiBzb2Mtc3BlY2lmaWMgZmlsZSwgd2l0aG91dCBhbnkg
-Z3VhcmFudGVlIHRoYXQgdGhlIGJvYXJkIHVzZXMganVzdCB0aGUNCj4+IGZpcnN0IHggZGV2aWNl
-cyByYXRoZXIgdGhhbiBhbm90aGVyIHJhbmRvbSBzdWJzZXQuIFRoZSBhbGlhcyB2YWx1ZXMNCj4+
-IGFyZSByZWFsbHkgbWVhbnQgdG8gdG8gY29ycmVzcG9uZCB0byBob3cgdGhlIG1hY2hpbmUgY2Fs
-bHMgdGhpbmdzLCBub3QNCj5ob3cgdGhlIFNvQyBzZWVzIGl0Lg0KPg0KPkFsbCBpLk1YIFNvQ3Mg
-aGF2ZSB0aGUgYWxpYXNlcyBkZWZpbmVkIGhvdyB0aGUgU29DIHNlZXMgdGhlIGRldmljZXMgYW5k
-DQo+aS5NWCBpcyBub3QgYWxvbmUgaGVyZS4NCj4NCj5JIGtub3cgdGhhdCBzb21lIHBlb3BsZSBy
-YXRoZXIgbGlrZSB0byBzZWUgdGhlIGFsaWFzZXMgY29ycmVzcG9uZCB0byB0aGUNCj5udW1iZXJz
-IHByaW50ZWQgb24gdGhlIGNhc2Ugb3IgUENCLCB0aHVzIGRyb3BwaW5nIHRoZSBhbGlhc2VzIGZy
-b20gdGhlIFNvQw0KPmR0c2kgYW5kIHB1dHRpbmcgdGhlbSBpbnRvIHRoZSBib2FyZCBkdHMgaW5z
-dGVhZC4NCj4NCj5JIHRoaW5rIGJvdGggdGhlIFVBUlQgbnVtYmVyIGZyb20gdGhlIGRhdGFzaGVl
-dCBhbmQgdGhlIG51bWJlciBwcmludGVkIG9uDQo+dGhlIGNhc2UgYXJlIHZhbHVhYmxlIGluZm9y
-bWF0aW9ucywgd2Ugc2hvdWxkIGNvbWUgdXAgd2l0aCBhIHdheSB0bw0KPmV4cHJlc3MgYm90aCBp
-bmZvcm1hdGlvbnMgaW5zdGVhZCBvZiBhcmd1ZWluZyBhYm91dCB0aGUgbWVhbmluZyBvZiB0aGUN
-Cj4nc2VyaWFseCcgYWxpYXMuIFRoaXMgc2hvdWxkbid0IGV2ZW4gYmUgdG9vIGhhcmQsIHdlIGNv
-dWxkIGNyZWF0ZSBtdWx0aXBsZQ0KPmFsaWFzZXMgZm9yIHRoZSBzYW1lIGRldmljZSBhbmQgbGV0
-IHVkZXYgY3JlYXRlIGxpbmtzIGZvciBhbGwgb2YgdGhlbS4NCj4NCj5TYXNjaGENCg0KVGhlbiBJ
-IHdpbGwga2VlcCB0aGUgb25seSBhbGlhcyBmb3IgdGhlIGxwdWFydCB0byBtYWtlIHRoZW0gd29y
-a2luZyB3ZWxsIGN1cnJlbnRseS4NClRoYW5rcy4NCg0KQmVzdCBSZWdhcmRzLA0KSmluZ2NoYW5n
-DQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 9/12/2014 4:30 AM, Liviu Dudau wrote:
+> On Fri, Sep 12, 2014 at 09:25:13AM +0100, Suravee Suthikulpanit wrote:
+>> On 9/8/2014 8:54 AM, Liviu Dudau wrote:
+>>> This is my version 10 of the attempt at adding support for generic PCI host
+>>> bridge controllers that make use of device tree information to
+>>> configure themselves. This version reverses v9's attempt to create one function
+>>> to drive the whole process of extracting the host bridge ranges, setup the
+>>> host bridge driver and then scan the root bus behind the host bridge. While it
+>>> would've been quite user friendly, I agree that it would've caused a lot of pain
+>>> in the future.
+>>>
+>>> I would like to get ACKs for the remaining patches as I would like to integrate
+>>> this into -next in the following week.
+>>>
+>>> This version marks an implementation break with the previous versions as
+>>> of_create_pci_host_bridge() is now gone. It gets replaced by
+>>> of_pci_get_host_bridge_resources() that only parses the DT and extracts the
+>>> relevant ranges and converts them to resources. The updated host bridge drivers
+>>> will have to follow the guidelines in this example code:
+>>>
+>>> static int foohb_probe(struct platform_device *pdev)
+>>> {
+>>> 	struct device_node *dn = pdev->dev.of_node;
+>>> 	struct foohb_drv *drv;
+>>> 	resource_size_t io_base = 0;  /* phys address for start of IO */
+>>> 	struct pci_bus *bus;
+>>> 	int err = 0;
+>>> 	LIST_HEAD(res);
+>>>
+>>> 	.....
+>>> 	err = of_pci_get_host_bridge_resources(dn, 0, 255, &res, &io_base);
+>>> 	if (err)
+>>> 		goto err_handling;
+>>> 	err = foohb_setup(drv, ...., &res, &io_base);
+>>> 	if (err)
+>>> 		goto err_handling;
+>
+> Hi Suravee,
+>
+>>
+>> My understanding is that the "foohb_setup" above is supposed to be equivalent
+>> to the "int (*setup)(struct pci_host_bridge *, resource_size_t)" in V9 that was
+>> passed in as an argument of "of_create_pci_hot_bridge()".
+>
+> Correct. Parameters are probably different, but it is internal to your driver so
+> you can do whatever you want there.
+>
+>>
+>> The problem I have is I need an intermediate step between "pci_create_root_bus()"
+>> and "pci_scan_child_bus()" in order to update the information such as the "pci_bus->msi"
+>> before this is propagate down to the child bus during the "pci_scan_child_bus"
+>> which is also called in the pci_scan_root_bus() function.
+>
+> How did that work with my v9 patchset? How does it work for other MSI-aware platforms?
+> Are they not using pci_scan_child_bus()?
+
+In the of_create_pci_host_bridge of V9, you call the setup function between "pci_create_root_bus()"
+and "pci_scan_child_bus()". At that point, I can update the "root_bus->msi" to point to my
+"struct msi_chip" which was created during GICv2m initialization
+(Please see http://marc.info/?l=linux-kernel&m=141034053331632&w=2).
+Then, when a child bus is created, it propagate this msi_chip pointer from the parent bus.
+
+Suravee
