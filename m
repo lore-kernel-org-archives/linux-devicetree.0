@@ -1,51 +1,67 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
- LS1021A
-Date: Fri, 12 Sep 2014 01:46:49 +0000
-Message-ID: <41c81e91c363494babb72ccc50b8961c@BL2PR03MB467.namprd03.prod.outlook.com>
-References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
- <1410253952-15631-2-git-send-email-jingchang.lu@freescale.com>
- <1444adbcf7cd4b578a131db11e662490@BN1PR0301MB0593.namprd03.prod.outlook.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: dts: sun6i: Add required ahb1
+ clock parent and rates for dma controller
+Date: Fri, 12 Sep 2014 10:10:25 +0800
+Message-ID: <CAGb2v64+RxJ52DzawhAtYCn=sw+28e4Q11jzG02KQE=8hxa0tQ@mail.gmail.com>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+ <1410000448-9999-7-git-send-email-wens@csie.org> <20140911211531.GN31276@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1444adbcf7cd4b578a131db11e662490-RQSpjbwlmjRJV8q+uXLxw5wN6zqB+hSMnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBJNMZGQAKGQEJFWSD6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140911211531.GN31276@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IEJhZG9sYSBOaWtoaWwtQjQ2
-MTcyDQo+U2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMSwgMjAxNCA2OjExIFBNDQo+VG86IEx1
-IEppbmdjaGFuZy1CMzUwODM7IEd1byBTaGF3bi1SNjUwNzMNCj5DYzogbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgTHUNCj5K
-aW5nY2hhbmctQjM1MDgzOyBaaGFvIENoZW5odWktQjM1MzM2OyBHdXB0YSBTdXJlc2gtQjQyODEz
-OyBMZWVraGENCj5TaGF2ZXRhLUIyMDA1MjsgR3VwdGEgUnVjaGlrYS1SNjY0MzE7IFNoYXJtYSBC
-aHVwZXNoLUI0NTM3MDsgRnUgQ2hhby0NCj5CNDQ1NDg7IFhpdWJvIExpLUI0NzA1MzsgTHUgSmlu
-Z2NoYW5nLUIzNTA4Mw0KPlN1YmplY3Q6IFJFOiBbUEFUQ0h2MyAxLzZdIEFSTTogZHRzOiBBZGQg
-U29DIGxldmVsIGRldmljZSB0cmVlIHN1cHBvcnQgZm9yDQo+TFMxMDIxQQ0KPg0KPj4tLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPj5Gcm9tOiBKaW5nY2hhbmcgTHUgW21haWx0bzpqaW5nY2hh
-bmcubHVAZnJlZXNjYWxlLmNvbV0NCj4+U2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDA5LCAyMDE0
-IDI6NDIgUE0NCj4+VG86IEd1byBTaGF3bi1SNjUwNzMNCj4+Q2M6IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+Pkx1IEpp
-bmdjaGFuZy1CMzUwODM7IEJhZG9sYSBOaWtoaWwtQjQ2MTcyOyBaaGFvIENoZW5odWktQjM1MzM2
-OyBHdXB0YQ0KPj5TdXJlc2gtIEI0MjgxMzsgTGVla2hhIFNoYXZldGEtQjIwMDUyOyBHdXB0YSBS
-dWNoaWthLVI2NjQzMTsgU2hhcm1hDQo+PkJodXBlc2gtIEI0NTM3MDsgRnUgQ2hhby1CNDQ1NDg7
-IFhpdWJvIExpLUI0NzA1MzsgTHUgSmluZ2NoYW5nLUIzNTA4Mw0KPj5TdWJqZWN0OiBbUEFUQ0h2
-MyAxLzZdIEFSTTogZHRzOiBBZGQgU29DIGxldmVsIGRldmljZSB0cmVlIHN1cHBvcnQgZm9yDQo+
-PkxTMTAyMUENCj4+DQo+PkZyb206IEppbmdjaGFuZyBMdSA8YjM1MDgzQGZyZWVzY2FsZS5jb20+
-DQo+Pg0KPj5BZGQgRnJlZXNjYWxlIExTMTAyMUEgU29DIGRldmljZSB0cmVlIHN1cHBvcnQNCj4+
-Kw0KPj4rCQl1c2JAODYwMDAwMCB7DQo+PisJCQljb21wYXRpYmxlID0gImZzbC11c2IyLWRyLXYy
-LjUiLCAiZnNsLXVzYjItZHIiOw0KPj4rCQkJcmVnID0gPDB4MCAweDg2MDAwMDAgMHgwIDB4MTAw
-MD47DQo+PisJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4+KwkJCSNzaXplLWNlbGxzID0gPDA+
-Ow0KPj4rCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE3MSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsN
-Cj4+KwkJCWRyX21vZGUgPSAiaG9zdCI7DQo+PisJCQlwaHlfdHlwZSA9ICJ1bHBpIjsNCj4+KwkJ
-fTsNCj4+Kw0KPg0KPlBsZWFzZSByZW1vdmUgZm9sbG93aW5nIGZyb20gdGhlIGFib3ZlIG5vZGUg
-Og0KPgkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPgkJCSNzaXplLWNlbGxzID0gPDA+Ow0KDQpP
-aywgdGhhbmtzLg0KDQoNCg0KQmVzdCBSZWdhcmRzLA0KSmluZ2NoYW5nDQoNCg0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Sep 12, 2014 at 5:15 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Sat, Sep 06, 2014 at 06:47:27PM +0800, Chen-Yu Tsai wrote:
+>> The DMA controller requires AHB1 bus clock to be clocked from PLL6.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun6i-a31.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> index 8eb2c6d..1117989 100644
+>> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+>> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> @@ -317,6 +317,11 @@
+>>                       clocks = <&ahb1_gates 6>;
+>>                       resets = <&ahb1_rst 6>;
+>>                       #dma-cells = <1>;
+>> +
+>> +                     /* DMA controller requires AHB1 clocked from PLL6 */
+>> +                     assigned-clocks = <&ahb1>;
+>> +                     assigned-clock-parents = <&pll6>;
+>> +                     assigned-clock-rates = <200000000>;
+>
+> Where did you get that from?
+>
+> The user manual says that it should be clocked at 600MHz, and I'm not
+> sure it should be enforced there either.
+
+The bindings mean that ahb1 should be clocked from pll6 and at 200 MHz,
+not "pll6 should be 200 MHz". I assume you were misled by them.
+
+Clocking ahb1 from pll6 and at 200 MHz with the /3 pre-divider is the
+vendor BSP default:
+
+On sun6i, the clock init code calls aw_ccu_switch_ahb_2_pll6(), which muxes
+ahb1 from pll6 with the highest dividers, then sets the rate for ahb1 to
+pll6, which sets pre-divider to /3 and divider to /1.
+
+Hope this clears it up. :)
+
+
+Cheers
+ChenYu
