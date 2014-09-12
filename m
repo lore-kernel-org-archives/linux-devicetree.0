@@ -1,227 +1,52 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/4] dmaengine: device tree bindings for PL08x
-Date: Fri, 12 Sep 2014 09:37:22 +0200
-Message-ID: <1410507442-32451-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Mark Brown <broonie-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] regulator/axp20x: use axp2xx consolidated header
+Date: Fri, 12 Sep 2014 08:39:00 +0100
+Message-ID: <20140912073900.GP7960@sirena.org.uk>
+References: <1410215046-31751-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1410215046-31751-4-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20140909112516.GR2601@sirena.org.uk>
+ <20140911152650.74767024@ultegra>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hHiQ9nAwW5IGN2dL"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140911152650.74767024@ultegra>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Doug Anderson <d>
 List-Id: devicetree@vger.kernel.org
 
-This introduces device tree bindings for the PL08x DMA controllers
-when used with fixed signal assignment per channel, i.e. if each
-channel on the PL08x is assigned precisely one burst/single signal
-set.
 
-In many incarnations that exist in the wild, a mux had been put
-in front of the signals so that the system has to select a subset
-of signals to handle from a larger set. This is not described in
-the current binding: instead this is assumed to be handled with
-a more elaborate binding especially for muxed signal cases.
+--hHiQ9nAwW5IGN2dL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I imagine things like adding the property dma-mux = <&phandle>;
-for the DMA controller in such cases, and not specifying any
-signals for the channels, and provide a separate binding for
-the mux to enlist its signals.
+On Thu, Sep 11, 2014 at 03:26:50PM -0700, Jacob Pan wrote:
+> Mark Brown <broonie-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/dma/arm-pl08x.txt          | 182 +++++++++++++++++++++
- 1 file changed, 182 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/arm-pl08x.txt
+> > but is it really worth the effort of renaming everything?  That's
+> > going to cause problems for things like the stable workflow.
 
-diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.txt b/Documentation/devicetree/bindings/dma/arm-pl08x.txt
-new file mode 100644
-index 000000000000..5e0aca09b56b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/arm-pl08x.txt
-@@ -0,0 +1,182 @@
-+* ARM PrimeCells PL080 and PL081 and derivatives DMA controller
-+
-+Required properties:
-+- compatible: "arm,pl080", "arm,pl081", "arm,primecell"
-+- reg: Address range of the PL08x registers
-+- interrupt: The PL08x interrupt number
-+- clocks: The clock running the IP core clock
-+- clock-names: A list with one element with the name of the core clock
-+- lli-bus-interface-ahb1: if AHB master 1 is eligible for fetching LLIs
-+- lli-bus-interface-ahb2: if AHB master 2 is eligible for fetching LLIs
-+- mem-bus-interface-ahb1: if AHB master 1 is eligible for fetching memory contents
-+- mem-bus-interface-ahb2: if AHB master 2 is eligible for fetching memory contents
-+- #dma-cells: must be <3>
-+
-+Optional properties:
-+- memcpy-burst-size: the size of the bursts for memcpy: 1, 4, 8, 16, 32
-+  64, 128 or 256 bytes are legal values
-+- memcpy-bus-width: the bus width used for memcpy: 8, 16 or 32 are legal
-+  values
-+
-+Optional sub-nodes:
-+The slave transfer channels are assigned in consecutive order and
-+identified by one child node per channel, assuming a fixed-signal
-+per channel assignment and each with the following properties:
-+
-+Required properties:
-+- signal: the name of the on-chip signal line handled by this channel
-+- bus-interface-ahb1 or bus-interface-ahb2: tells the driver which
-+  bus interface(s) that is eligible for this specific channel. At least
-+  one of the interfaces must be specified, it is perfectly legal to
-+  specify both if the hardware supports using either interface.
-+
-+Clients
-+Required properties:
-+- dmas: Comma separated list of dma channel requests
-+- dma-names: Names of the aforementioned requested channels
-+
-+Example:
-+
-+dmac0: dma-controller@10130000 {
-+	compatible = "arm,pl080", "arm,primecell";
-+	reg = <0x10130000 0x1000>;
-+	interrupt-parent = <&vica>;
-+	interrupts = <15>;
-+	clocks = <&hclkdma0>;
-+	clock-names = "apb_pclk";
-+	lli-bus-interface-ahb1;
-+	lli-bus-interface-ahb2;
-+	mem-bus-interface-ahb2;
-+	memcpy-burst-size = <256>;
-+	memcpy-bus-width = <32>;
-+	#dma-cells = <1>;
-+	/* Assignments for the 32 channels */
-+	saa0@dmac0 {
-+		signal = "saa0";
-+		bus-interface-ahb1;
-+	};
-+	saa1@dmac0 {
-+		signal = "saa1";
-+		bus-interface-ahb1;
-+	};
-+	saa2@dmac0 {
-+		signal = "saa2";
-+		bus-interface-ahb1;
-+	};
-+	saa3@dmac0 {
-+		signal = "saa3";
-+		bus-interface-ahb1;
-+	};
-+	saa4@dmac0 {
-+		signal = "saa4";
-+		bus-interface-ahb1;
-+	};
-+	saa5@dmac0 {
-+		signal = "saa5";
-+		bus-interface-ahb1;
-+	};
-+	saa6@dmac0 {
-+		signal = "saa6";
-+		bus-interface-ahb1;
-+	};
-+	saa7@dmac0 {
-+		signal = "saa7";
-+		bus-interface-ahb1;
-+	};
-+	unused@dmac0 {
-+		signal = "unused";
-+		bus-interface-ahb1;
-+	};
-+	fir@dmac0 {
-+		signal = "firdatxrx";
-+		bus-interface-ahb1;
-+	};
-+	msp0rx@dmac0 {
-+		signal = "msp0rx";
-+		bus-interface-ahb1;
-+	};
-+	msp0tx@dmac0 {
-+		signal = "msp0tx";
-+		bus-interface-ahb1;
-+	};
-+	ssprx@dmac0 {
-+		signal = "ssprx";
-+		bus-interface-ahb1;
-+	};
-+	ssptx@dmac0 {
-+		signal = "ssptx";
-+		bus-interface-ahb1;
-+	};
-+	uart0rx@dmac0 {
-+		signal = "uart0rx";
-+		bus-interface-ahb1;
-+	};
-+	uart0tx@dmac0 {
-+		signal = "uart0tx";
-+		bus-interface-ahb1;
-+	};
-+	hsirxch0@dmac0 {
-+		signal = "hsirxch0";
-+		bus-interface-ahb1;
-+	};
-+	hsirxch1@dmac0 {
-+		signal = "hsirxch1";
-+		bus-interface-ahb1;
-+	};
-+	hsirxch2@dmac0 {
-+		signal = "hsirxch2";
-+		bus-interface-ahb1;
-+	};
-+	hsirxch3@dmac0 {
-+		signal = "hsirxch3";
-+		bus-interface-ahb1;
-+	};
-+	hsirxch4@dmac0 {
-+		signal = "hsirxch4";
-+		bus-interface-ahb1;
-+	};
-+	hsirxch5@dmac0 {
-+		signal = "hsirxch5";
-+		bus-interface-ahb1;
-+	};
-+	hsirxch6@dmac0 {
-+		signal = "hsirxch6";
-+		bus-interface-ahb1;
-+	};
-+	hsirxch7@dmac0 {
-+		signal = "hsirxch7";
-+		bus-interface-ahb1;
-+	};
-+	hsitxch0@dmac0 {
-+		signal = "hsitxch0";
-+		bus-interface-ahb1;
-+	};
-+	hsitxch1@dmac0 {
-+		signal = "hsitxch1";
-+		bus-interface-ahb1;
-+	};
-+	hsitxch2@dmac0 {
-+		signal = "hsitxch2";
-+		bus-interface-ahb1;
-+	};
-+	hsitxch3@dmac0 {
-+		signal = "hsitxch3";
-+		bus-interface-ahb1;
-+	};
-+	hsitxch4@dmac0 {
-+		signal = "hsitxch4";
-+		bus-interface-ahb1;
-+	};
-+	hsitxch5@dmac0 {
-+		signal = "hsitxch5";
-+		bus-interface-ahb1;
-+	};
-+	hsitxch6@dmac0 {
-+		signal = "hsitxch6";
-+		bus-interface-ahb1;
-+	};
-+	hsitxch7@dmac0 {
-+		signal = "hsitxch7";
-+		bus-interface-ahb1;
-+	};
-+};
--- 
-1.9.3
+> sorry for the late reply. IMHO, consistent and correct naming has
+> longer term benefit. how can i help to make the stable workflow easier?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Not do the rename - it makes doing a git cherry-pick easier.
+
+--hHiQ9nAwW5IGN2dL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUEqMTAAoJECTWi3JdVIfQq2sH/30hPjsGPESzE2pIVY1cIi19
+pOKvb0WfjbYwyS1/nkGnNvHas1rvGWlFbm0TalnzMQ5yj/UPaYJBQCRbuFUFzEnJ
+h/jVGSKcawpVuMcmworDupOY050ueHbZ3B2quuyoIi2jUy+k+941eg8/tWcO0ZDf
+++e23Vwm+YQ5QL52Glr2dVCqfiAtP4jg/SSw/r4PJ1BfmwnQO0Zj0xJ4kMVy0ecd
+OxZHwqxHXQxppXxbwqt+XrecCPN9o29DKu9dEurkpqXkQLDcFdX6Qq682Rp+vPdH
+E9FrNuIY9MjD1aME0pPmfnEcPPZGxJw/yrCdxxGF13ZVbTdrG1xawhV1tqnOEoo=
+=wIrp
+-----END PGP SIGNATURE-----
+
+--hHiQ9nAwW5IGN2dL--
