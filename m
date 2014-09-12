@@ -1,67 +1,38 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 6/7] ARM: dts: sun6i: Add required ahb1
- clock parent and rates for dma controller
-Date: Fri, 12 Sep 2014 10:10:25 +0800
-Message-ID: <CAGb2v64+RxJ52DzawhAtYCn=sw+28e4Q11jzG02KQE=8hxa0tQ@mail.gmail.com>
-References: <1410000448-9999-1-git-send-email-wens@csie.org>
- <1410000448-9999-7-git-send-email-wens@csie.org> <20140911211531.GN31276@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: "Chen, Alvin" <alvin.chen@intel.com>
+Subject: RE: [PATCH 4/4 v3] GPIO: gpio-dwapb: Suspend & Resume PM enabling
+Date: Fri, 12 Sep 2014 02:27:33 +0000
+Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E990CFF@SHSMSX101.ccr.corp.intel.com>
+References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
+ <1410286081-16653-5-git-send-email-alvin.chen@intel.com>
+ <alpine.DEB.2.02.1409111138080.4869@atx-linux-37>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJNMZGQAKGQEJFWSD6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140911211531.GN31276@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1409111138080.4869@atx-linux-37>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 12, 2014 at 5:15 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Sat, Sep 06, 2014 at 06:47:27PM +0800, Chen-Yu Tsai wrote:
->> The DMA controller requires AHB1 bus clock to be clocked from PLL6.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun6i-a31.dtsi | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
->> index 8eb2c6d..1117989 100644
->> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
->> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
->> @@ -317,6 +317,11 @@
->>                       clocks = <&ahb1_gates 6>;
->>                       resets = <&ahb1_rst 6>;
->>                       #dma-cells = <1>;
->> +
->> +                     /* DMA controller requires AHB1 clocked from PLL6 */
->> +                     assigned-clocks = <&ahb1>;
->> +                     assigned-clock-parents = <&pll6>;
->> +                     assigned-clock-rates = <200000000>;
->
-> Where did you get that from?
->
-> The user manual says that it should be clocked at 600MHz, and I'm not
-> sure it should be enforced there either.
-
-The bindings mean that ahb1 should be clocked from pll6 and at 200 MHz,
-not "pll6 should be 200 MHz". I assume you were misled by them.
-
-Clocking ahb1 from pll6 and at 200 MHz with the /3 pre-divider is the
-vendor BSP default:
-
-On sun6i, the clock init code calls aw_ccu_switch_ahb_2_pll6(), which muxes
-ahb1 from pll6 with the highest dividers, then sets the rate for ahb1 to
-pll6, which sets pre-divider to /3 and divider to /1.
-
-Hope this clears it up. :)
+> On Tue, 9 Sep 2014, Weike Chen wrote:
+> 
+> >
+> >  struct dwapb_gpio;
+> > +struct dwapb_context;
+> >
+> >  struct dwapb_gpio_port {
+> >  	struct bgpio_chip	bgc;
+> >  	bool			is_registered;
+> >  	struct dwapb_gpio	*gpio;
+> > +	struct dwapb_context	*ctx;
+> 
+> Alvin,
+> 
+> Will this build if CONFIG_PM_SLEEP is not defined?
+Actually, PM_SLEEP is always set as 'y' in 'kerne/power/Kconfig'. But I manually change it to 'n', this module can be compiled correctly.
+You may be concern with 'ctx', and you can see 'ctx' accessing is always in CONFIG_PM_SLEEP.
 
 
-Cheers
-ChenYu
+> Alan
