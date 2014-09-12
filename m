@@ -1,60 +1,113 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: SPI and module auto-loading
-Date: Fri, 12 Sep 2014 11:14:42 +0100
-Message-ID: <20140912101442.GR7960@sirena.org.uk>
-References: <54119DB6.8020807@collabora.co.uk>
- <20140911193325.GT4015@sirena.org.uk>
- <5412C1DF.3040707@collabora.co.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: rockchip-max98090: add driver for rockchip board
+ using a max98090
+Date: Fri, 12 Sep 2014 14:52:47 +0100
+Message-ID: <20140912135247.GU7960@sirena.org.uk>
+References: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com>
+ <1410507588-15719-1-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6eUvXotnMb6+obQB"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="qgEfXXHyyarqcYJd"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5412C1DF.3040707-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+In-Reply-To: <1410507588-15719-1-git-send-email-jay.xu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jianqun <jay.xu@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, heiko@sntech.de, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, cf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
 
---6eUvXotnMb6+obQB
+--qgEfXXHyyarqcYJd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Sep 12, 2014 at 11:50:23AM +0200, Javier Martinez Canillas wrote:
-> On 09/11/2014 09:33 PM, Mark Brown wrote:
+On Fri, Sep 12, 2014 at 03:39:48PM +0800, Jianqun wrote:
 
-> > I'm not sure I see that as an interesting use case, it seems better to
-> > have drivers usable without DT and it's trivial to do so.
+> +#define RK_PLAT_CLK_12M      12000000
 
-> Yes, it's trivial but seems like an unnecessary duplication for me. AFAICT the
-> OF tables are only used to match the devices in spi_match_device() but if both
-> the OF and SPI tables must be kept in sync to properly report the module
-> aliases to user-space then I wonder if the OF tables shouldn't just be removed
-> from the SPI drivers since spi_match_device() will succeed anyways when
-> calling spi_match_id().
+I'm not sure a define is adding anything here...  it's just a define
+saying 12MHz that has the value 12MHz.
 
-The vendor identifier is an important part of the OF device ID, vendors
-can and do end up with different devices of the same name.
+> +	struct snd_soc_dai *codec_dai = rtd->codec_dai;
+> +
+> +/* Set max98090 as master, i2s clock output 12MHz for max98090 */
+> +	ret = snd_soc_dai_set_sysclk(cpu_dai, 0,
 
---6eUvXotnMb6+obQB
+Coding style, comments aren't aligned with the code.
+
+> +	ret = snd_soc_add_card_controls(card, rk_mc_controls,
+> +					ARRAY_SIZE(rk_mc_controls));
+> +	if (ret) {
+> +		pr_err("unable to add card controls\n");
+> +		return ret;
+> +	}
+
+Use card->controls.
+
+> +	snd_soc_dapm_enable_pin(dapm, "Headset Mic");
+> +	snd_soc_dapm_enable_pin(dapm, "Headphone");
+> +	snd_soc_dapm_enable_pin(dapm, "Ext Spk");
+> +	snd_soc_dapm_enable_pin(dapm, "Int Mic");
+> +
+> +	snd_soc_dapm_sync(dapm);
+
+All pins are enabled by default and sync doesn't do anything during
+init.
+
+> +#ifdef CONFIG_PM_SLEEP
+> +static int snd_rk_prepare(struct device *dev)
+> +{
+> +	struct snd_soc_card *card = dev_get_drvdata(dev);
+> +	struct rk_mc_private *drv = snd_soc_card_get_drvdata(card);
+> +
+> +	snd_soc_jack_free_gpios(&drv->hp_jack, 1, &hp_jack_gpio);
+> +	snd_soc_jack_free_gpios(&drv->mic_jack, 1, &mic_jack_gpio);
+> +
+> +	return snd_soc_suspend(dev);
+> +}
+
+Why are you freeing the GPIOs over suspend, that doesn't seem good?
+
+> +	hp_jack_gpio.gpio = of_get_named_gpio(np, "rockchip,hp-det-gpios", 0);
+> +	if (hp_jack_gpio.gpio == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +
+> +	mic_jack_gpio.gpio = of_get_named_gpio(np, "rockchip,mic-det-gpios", 0);
+> +	if (mic_jack_gpio.gpio == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+
+This ignores errors other than probe deferral but the init code assumed
+that these would've succeeded.  Either the init code should handle
+failure or all errors should be treated as fatal.
+
+> +	platform_set_drvdata(pdev, &card);
+> +
+> +	ret = snd_soc_of_parse_card_name(card, "rockchip,model");
+> +	if (ret)
+> +		return ret;
+
+These need to happen before we register the card since they could be
+used as soon as we probe.
+
+> +	snd_soc_card_set_drvdata(soc_card, NULL);
+
+No need to clear driver data, the core will do it anyway and anything
+relying on pre-set driver data is broken.
+
+--qgEfXXHyyarqcYJd
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUEseRAAoJECTWi3JdVIfQLgIH/3mMnuTYaQ0by3BYj4TI7PED
-4Yttr0iYsNtUz/X070ERIAHgFULpgapFrOdTrdlCS4juYORZVVjYzQA0Xad6UMux
-+4apRJ/k7/MkIt7HbR36gc+ADidmgFGGvLULMUezdjpvIVnO38w6AEMwdV33dofO
-sdhc/GgcZGnQpKTdORBRt0i07Ql0vjEDDwoLqoHqBznAxoE7Zga7U643cPlwb9md
-aZg+LAI8BmNaVVEp0vvpLDc+0nP1CcnMt3tDlhSATvqfBcHt/rl9+YFCzlBWK8gt
-zt+B9s+T2Rm966QyVqa5/ICkHu9mCbzoWrpftRX2gGfxFSwwnARVcWA5TPabGck=
-=sAgB
+iQEcBAEBAgAGBQJUEvquAAoJECTWi3JdVIfQ4rAH/Rw1cnCoG2a7KDyvfQq54G4p
+cTfnQLNGLqDzp5FW0HjTL7ekZpX64wZa93LUp0utiPBn8kG5Gvq1sUL3i3ok6qwV
+vrkF54cQjc4ZyTujuhzXnvxpAA+Ujr797wPyiJhtykxCraBSMTK9Q+zKjhEeExUl
+N2iqeUfG3vf/LUesHLazL7+91h29a+RPZ8UVpyzUwYvjcOTaTl9FSjI8nlV2AxVs
++HcOmmyloGJK7ULrWP1mut+lGmgYo5vgfzuR7O26tKmtNhh28rMPKfUI05ocnn+R
+alaNw1NrzR6kMdhwSkxvYlXYe1X0Z1ge8vugcaoppaCwVSCGIhaZlPzgNWDiGhY=
+=dOK4
 -----END PGP SIGNATURE-----
 
---6eUvXotnMb6+obQB--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--qgEfXXHyyarqcYJd--
