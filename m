@@ -1,160 +1,86 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [PATCH v8 1/3] usb: dwc3: qcom: Add device tree binding
-Date: Fri, 12 Sep 2014 12:29:44 -0500
-Message-ID: <1410542986-24419-2-git-send-email-agross@codeaurora.org>
-References: <1410542986-24419-1-git-send-email-agross@codeaurora.org>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH RESEND 0/8] i2c: Relax mandatory I2C ID table passing
+Date: Fri, 12 Sep 2014 19:32:22 +0200
+Message-ID: <CABxcv==OXd+uePcB8zDzB-DDmr9ci6zscHX5TCauWoTO6E4fpg@mail.gmail.com>
+References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
+	<20140912134632.GE1930@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410542986-24419-1-git-send-email-agross@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: devicetree@vger.kernel.org, Jack Pham <jackp@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Andy Gross <agross@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140912134632.GE1930@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+[adding Sjoerd as cc who was the one that raised the module auto-loading issue]
 
-QCOM USB3.0 core wrapper consist of USB3.0 IP from Synopsys
-(SNPS) and HS, SS PHY's control and configuration registers.
+Hello,
 
-It could operate in device mode (SS, HS, FS) and host
-mode (SS, HS, FS, LS).
+On Fri, Sep 12, 2014 at 3:46 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>>
+>> Placing this firmly back on your plate.  I truly hope we don't miss
+>> another merge-window.  This patch-set has the support of some pretty
+>> senior kernel maintainers, so I hope acceptance shouldn't be too
+>> difficult.
+>>
+>> As previously discussed I believe it should be okay for an I2C device
+>> driver _not_ supply an I2C ID table to match to.  The I2C subsystem
+>> should be able to match via other means, such as via OF tables.  The
+>> blocking factor during our previous conversation was to keep
+>> registering via sysfs up and running.  This set does that.
+>
+> As mentioned in another thread, modaliases are one other possible side
+> effect. As Javier correctly mentions, the beaviour does not really
+> change with your patchset. Yet, if we remove i2c_device_id from drivers
+> too carelessly, they might not be bound anymore.
+>
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-Signed-off-by: Andy Gross <agross@codeaurora.org>
----
- .../devicetree/bindings/phy/qcom-dwc3-usb-phy.txt  |   39 ++++++++++++
- .../devicetree/bindings/usb/qcom,dwc3.txt          |   66 ++++++++++++++++++++
- 2 files changed, 105 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
- create mode 100644 Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+Right, removing the I2C ID table even from drivers that don't really
+need it (e.g: IP blocks only present in DT platforms) will as you said
+break module auto-loading. Probing will work since the OF table is
+used to match the device in i2c_device_match() but is the I2C table
+what is used to fill the valid module aliases with the current
+behavior of i2c_device_uevent(), the aliases filled from the OF table
+are never used.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt b/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
-new file mode 100644
-index 0000000..86f2dbe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
-@@ -0,0 +1,39 @@
-+Qualcomm DWC3 HS AND SS PHY CONTROLLER
-+--------------------------------------
-+
-+DWC3 PHY nodes are defined to describe on-chip Synopsis Physical layer
-+controllers.  Each DWC3 PHY controller should have its own node.
-+
-+Required properties:
-+- compatible: should contain one of the following:
-+	- "qcom,dwc3-hs-usb-phy" for High Speed Synopsis PHY controller
-+	- "qcom,dwc3-ss-usb-phy" for Super Speed Synopsis PHY controller
-+- reg: offset and length of the DWC3 PHY controller register set
-+- #phy-cells: must be zero
-+- clocks: a list of phandles and clock-specifier pairs, one for each entry in
-+  clock-names.
-+- clock-names: Should contain "ref" for the PHY reference clock
-+
-+Optional clocks:
-+  "xo"		External reference clock
-+
-+Example:
-+		phy@100f8800 {
-+			compatible = "qcom,dwc3-hs-usb-phy";
-+			reg = <0x100f8800 0x30>;
-+			clocks = <&gcc USB30_0_UTMI_CLK>;
-+			clock-names = "ref";
-+			#phy-cells = <0>;
-+
-+			status = "ok";
-+		};
-+
-+		phy@100f8830 {
-+			compatible = "qcom,dwc3-ss-usb-phy";
-+			reg = <0x100f8830 0x30>;
-+			clocks = <&gcc USB30_0_MASTER_CLK>;
-+			clock-names = "ref";
-+			#phy-cells = <0>;
-+
-+			status = "ok";
-+		};
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-new file mode 100644
-index 0000000..ca164e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-@@ -0,0 +1,66 @@
-+Qualcomm SuperSpeed DWC3 USB SoC controller
-+
-+Required properties:
-+- compatible:	should contain "qcom,dwc3"
-+- clocks:		A list of phandle + clock-specifier pairs for the
-+				clocks listed in clock-names
-+- clock-names:	Should contain the following:
-+  "core"		Master/Core clock, have to be >= 125 MHz for SS
-+				operation and >= 60MHz for HS operation
-+
-+Optional clocks:
-+  "iface"		System bus AXI clock.  Not present on all platforms
-+  "sleep"		Sleep clock, used when USB3 core goes into low
-+				power mode (U3).
-+
-+Required child node:
-+A child node must exist to represent the core DWC3 IP block. The name of
-+the node is not important. The content of the node is defined in dwc3.txt.
-+
-+Phy documentation is provided in the following places:
-+Documentation/devicetree/bindings/phy/qcom,dwc3-usb-phy.txt
-+
-+Example device nodes:
-+
-+		hs_phy: phy@100f8800 {
-+			compatible = "qcom,dwc3-hs-usb-phy";
-+			reg = <0x100f8800 0x30>;
-+			clocks = <&gcc USB30_0_UTMI_CLK>;
-+			clock-names = "ref";
-+			#phy-cells = <0>;
-+
-+			status = "ok";
-+		};
-+
-+		ss_phy: phy@100f8830 {
-+			compatible = "qcom,dwc3-ss-usb-phy";
-+			reg = <0x100f8830 0x30>;
-+			clocks = <&gcc USB30_0_MASTER_CLK>;
-+			clock-names = "ref";
-+			#phy-cells = <0>;
-+
-+			status = "ok";
-+		};
-+
-+		usb3_0: usb30@0 {
-+			compatible = "qcom,dwc3";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&gcc USB30_0_MASTER_CLK>;
-+			clock-names = "core";
-+
-+			ranges;
-+
-+			status = "ok";
-+
-+			dwc3@10000000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x10000000 0xcd00>;
-+				interrupts = <0 205 0x4>;
-+				phys = <&hs_phy>, <&ss_phy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+				tx-fifo-resize;
-+				dr_mode = "host";
-+			};
-+		};
-+
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+So what I propose is to do it incrementally:
+
+1) Merge Lee's series since that is definitely a step in the right
+direction to not make an I2C table mandatory (still will be needed for
+module auto loading though).
+
+2) On a follow-up series, make sure that all I2C drivers have a proper
+OF table and that are using the MODULE_DEVICE_TABLE(of,...) macro to
+fill the of:<foo> module aliases. That way the modules will have the
+proper aliases of the form "of:<foo>" besides the "i2c:<foo>" one.
+(even when always i2c:<foo> is reported to user-space currently).
+
+3) Apply the patch I posted [0] that changes the behavior of
+i2c_device_uevent() to report the OF uevent env vars to user-space in
+case of DT probing which after 2) should not regress any driver module
+auto-loading since all drivers should fill the of:<foo> aliases.
+
+After this, DT-only drivers will only need an OF table and legacy
+drivers will only need an I2C table. Drivers that support both will
+still need the two tables though which is a drawback of this approach
+since unnecessary duplication will exist on these drivers and can
+cause issues when both tables are not in sync as we saw on the issue
+reported by Sjoerd on [1].
+
+So an alternate approach could be to do the opposite, just remove the
+OF tables entirely from the I2C drivers and only use the I2C table
+even for DT-only drivers. This is possible since i2c_device_match()
+will succeed even without an OF table because i2c_match_id() matches
+for compatible strings and what is reported as uevent is what is in
+the I2C table anyways. I believe that is what Sjoerd suggested but
+I'll let him comment on that in case I misunderstood.
+
+By the way, the SPI subsystem has the same behavior, I raised the issue on [2].
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2014/9/11/269
+[1]: https://lkml.org/lkml/2014/9/9/100
+[2]: https://lkml.org/lkml/2014/9/11/458
