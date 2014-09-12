@@ -1,369 +1,227 @@
-From: Jianqun <jay.xu@rock-chips.com>
-Subject: [PATCH 2/2] ASoC: rockchip-max98090: add driver for rockchip board using a max98090
-Date: Fri, 12 Sep 2014 15:32:53 +0800
-Message-ID: <1410507173-15492-1-git-send-email-jay.xu@rock-chips.com>
-References: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, heiko@sntech.de, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, jay.xu@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: huangtao@rock-chips.com, cf@rock-chips.com
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/4] dmaengine: device tree bindings for PL08x
+Date: Fri, 12 Sep 2014 09:37:22 +0200
+Message-ID: <1410507442-32451-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Roland Stigge <stigge-uj/7R2tJ6VmzQB+pC5nmwQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver is used for rockchip board using a max98090.
-Test on RK3288 with max98090.
+This introduces device tree bindings for the PL08x DMA controllers
+when used with fixed signal assignment per channel, i.e. if each
+channel on the PL08x is assigned precisely one burst/single signal
+set.
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+In many incarnations that exist in the wild, a mux had been put
+in front of the signals so that the system has to select a subset
+of signals to handle from a larger set. This is not described in
+the current binding: instead this is assumed to be handled with
+a more elaborate binding especially for muxed signal cases.
+
+I imagine things like adding the property dma-mux = <&phandle>;
+for the DMA controller in such cases, and not specifying any
+signals for the channels, and provide a separate binding for
+the mux to enlist its signals.
+
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- sound/soc/rockchip/Kconfig             |   9 +
- sound/soc/rockchip/Makefile            |   5 +-
- sound/soc/rockchip/rockchip_max98090.c | 308 +++++++++++++++++++++++++++++++++
- 3 files changed, 321 insertions(+), 1 deletion(-)
- create mode 100644 sound/soc/rockchip/rockchip_max98090.c
+ .../devicetree/bindings/dma/arm-pl08x.txt          | 182 +++++++++++++++++++++
+ 1 file changed, 182 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/arm-pl08x.txt
 
-diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
-index 78fc159..f82fbf5 100644
---- a/sound/soc/rockchip/Kconfig
-+++ b/sound/soc/rockchip/Kconfig
-@@ -9,3 +9,12 @@ config SND_SOC_ROCKCHIP
- 
- config SND_SOC_ROCKCHIP_I2S
- 	tristate
-+
-+config SND_SOC_ROCKCHIP_MAX98090
-+	tristate "ASoC support for Rockchip boards using a MAX98090 codec"
-+	depends on SND_SOC_ROCKCHIP && I2C && GPIOLIB
-+	select SND_SOC_ROCKCHIP_I2S
-+	select SND_SOC_MAX98090
-+	help
-+	  Say Y or M here if you want to add support for SoC audio on Rockchip
-+	  boards using the MAX98090 codec, such as Veyron.
-diff --git a/sound/soc/rockchip/Makefile b/sound/soc/rockchip/Makefile
-index b921909..c324411 100644
---- a/sound/soc/rockchip/Makefile
-+++ b/sound/soc/rockchip/Makefile
-@@ -1,4 +1,7 @@
- # ROCKCHIP Platform Support
- snd-soc-i2s-objs := rockchip_i2s.o
--
- obj-$(CONFIG_SND_SOC_ROCKCHIP_I2S) += snd-soc-i2s.o
-+
-+# ROCKCHIP Machine Support
-+snd-soc-rockchip-max98090-objs := rockchip_max98090.o
-+obj-$(CONFIG_SND_SOC_ROCKCHIP_MAX98090) += snd-soc-rockchip-max98090.o
-diff --git a/sound/soc/rockchip/rockchip_max98090.c b/sound/soc/rockchip/rockchip_max98090.c
+diff --git a/Documentation/devicetree/bindings/dma/arm-pl08x.txt b/Documentation/devicetree/bindings/dma/arm-pl08x.txt
 new file mode 100644
-index 0000000..8a7b7ba
+index 000000000000..5e0aca09b56b
 --- /dev/null
-+++ b/sound/soc/rockchip/rockchip_max98090.c
-@@ -0,0 +1,308 @@
-+/*
-+ * Rockchip machine ASoC driver for boards using a MAX90809 CODEC.
-+ *
-+ * Copyright (c) 2014, ROCKCHIP CORPORATION.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ */
++++ b/Documentation/devicetree/bindings/dma/arm-pl08x.txt
+@@ -0,0 +1,182 @@
++* ARM PrimeCells PL080 and PL081 and derivatives DMA controller
 +
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
++Required properties:
++- compatible: "arm,pl080", "arm,pl081", "arm,primecell"
++- reg: Address range of the PL08x registers
++- interrupt: The PL08x interrupt number
++- clocks: The clock running the IP core clock
++- clock-names: A list with one element with the name of the core clock
++- lli-bus-interface-ahb1: if AHB master 1 is eligible for fetching LLIs
++- lli-bus-interface-ahb2: if AHB master 2 is eligible for fetching LLIs
++- mem-bus-interface-ahb1: if AHB master 1 is eligible for fetching memory contents
++- mem-bus-interface-ahb2: if AHB master 2 is eligible for fetching memory contents
++- #dma-cells: must be <3>
 +
-+#include <sound/core.h>
-+#include <sound/jack.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
++Optional properties:
++- memcpy-burst-size: the size of the bursts for memcpy: 1, 4, 8, 16, 32
++  64, 128 or 256 bytes are legal values
++- memcpy-bus-width: the bus width used for memcpy: 8, 16 or 32 are legal
++  values
 +
-+#include "rockchip_i2s.h"
++Optional sub-nodes:
++The slave transfer channels are assigned in consecutive order and
++identified by one child node per channel, assuming a fixed-signal
++per channel assignment and each with the following properties:
 +
-+#define DRV_NAME "rockchip-snd-max98090"
++Required properties:
++- signal: the name of the on-chip signal line handled by this channel
++- bus-interface-ahb1 or bus-interface-ahb2: tells the driver which
++  bus interface(s) that is eligible for this specific channel. At least
++  one of the interfaces must be specified, it is perfectly legal to
++  specify both if the hardware supports using either interface.
 +
-+struct rockchip_max98090 {
-+	int gpio_hp_det;
-+	int gpio_mic_det;
++Clients
++Required properties:
++- dmas: Comma separated list of dma channel requests
++- dma-names: Names of the aforementioned requested channels
++
++Example:
++
++dmac0: dma-controller@10130000 {
++	compatible = "arm,pl080", "arm,primecell";
++	reg = <0x10130000 0x1000>;
++	interrupt-parent = <&vica>;
++	interrupts = <15>;
++	clocks = <&hclkdma0>;
++	clock-names = "apb_pclk";
++	lli-bus-interface-ahb1;
++	lli-bus-interface-ahb2;
++	mem-bus-interface-ahb2;
++	memcpy-burst-size = <256>;
++	memcpy-bus-width = <32>;
++	#dma-cells = <1>;
++	/* Assignments for the 32 channels */
++	saa0@dmac0 {
++		signal = "saa0";
++		bus-interface-ahb1;
++	};
++	saa1@dmac0 {
++		signal = "saa1";
++		bus-interface-ahb1;
++	};
++	saa2@dmac0 {
++		signal = "saa2";
++		bus-interface-ahb1;
++	};
++	saa3@dmac0 {
++		signal = "saa3";
++		bus-interface-ahb1;
++	};
++	saa4@dmac0 {
++		signal = "saa4";
++		bus-interface-ahb1;
++	};
++	saa5@dmac0 {
++		signal = "saa5";
++		bus-interface-ahb1;
++	};
++	saa6@dmac0 {
++		signal = "saa6";
++		bus-interface-ahb1;
++	};
++	saa7@dmac0 {
++		signal = "saa7";
++		bus-interface-ahb1;
++	};
++	unused@dmac0 {
++		signal = "unused";
++		bus-interface-ahb1;
++	};
++	fir@dmac0 {
++		signal = "firdatxrx";
++		bus-interface-ahb1;
++	};
++	msp0rx@dmac0 {
++		signal = "msp0rx";
++		bus-interface-ahb1;
++	};
++	msp0tx@dmac0 {
++		signal = "msp0tx";
++		bus-interface-ahb1;
++	};
++	ssprx@dmac0 {
++		signal = "ssprx";
++		bus-interface-ahb1;
++	};
++	ssptx@dmac0 {
++		signal = "ssptx";
++		bus-interface-ahb1;
++	};
++	uart0rx@dmac0 {
++		signal = "uart0rx";
++		bus-interface-ahb1;
++	};
++	uart0tx@dmac0 {
++		signal = "uart0tx";
++		bus-interface-ahb1;
++	};
++	hsirxch0@dmac0 {
++		signal = "hsirxch0";
++		bus-interface-ahb1;
++	};
++	hsirxch1@dmac0 {
++		signal = "hsirxch1";
++		bus-interface-ahb1;
++	};
++	hsirxch2@dmac0 {
++		signal = "hsirxch2";
++		bus-interface-ahb1;
++	};
++	hsirxch3@dmac0 {
++		signal = "hsirxch3";
++		bus-interface-ahb1;
++	};
++	hsirxch4@dmac0 {
++		signal = "hsirxch4";
++		bus-interface-ahb1;
++	};
++	hsirxch5@dmac0 {
++		signal = "hsirxch5";
++		bus-interface-ahb1;
++	};
++	hsirxch6@dmac0 {
++		signal = "hsirxch6";
++		bus-interface-ahb1;
++	};
++	hsirxch7@dmac0 {
++		signal = "hsirxch7";
++		bus-interface-ahb1;
++	};
++	hsitxch0@dmac0 {
++		signal = "hsitxch0";
++		bus-interface-ahb1;
++	};
++	hsitxch1@dmac0 {
++		signal = "hsitxch1";
++		bus-interface-ahb1;
++	};
++	hsitxch2@dmac0 {
++		signal = "hsitxch2";
++		bus-interface-ahb1;
++	};
++	hsitxch3@dmac0 {
++		signal = "hsitxch3";
++		bus-interface-ahb1;
++	};
++	hsitxch4@dmac0 {
++		signal = "hsitxch4";
++		bus-interface-ahb1;
++	};
++	hsitxch5@dmac0 {
++		signal = "hsitxch5";
++		bus-interface-ahb1;
++	};
++	hsitxch6@dmac0 {
++		signal = "hsitxch6";
++		bus-interface-ahb1;
++	};
++	hsitxch7@dmac0 {
++		signal = "hsitxch7";
++		bus-interface-ahb1;
++	};
 +};
-+
-+static int rockchip_max98090_asoc_hw_params(struct snd_pcm_substream *substream,
-+					    struct snd_pcm_hw_params *params)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *codec_dai = rtd->codec_dai;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct snd_soc_codec *codec = codec_dai->codec;
-+	struct snd_soc_card *card = codec->card;
-+	int mclk, ret;
-+	unsigned int dai_fmt = rtd->dai_link->dai_fmt;
-+
-+	/* set codec DAI configuration */
-+	ret = snd_soc_dai_set_fmt(codec_dai, dai_fmt);
-+	if (ret < 0) {
-+		dev_err(card->dev, "codec_dai format not set, %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* set cpu DAI configuration */
-+	ret = snd_soc_dai_set_fmt(cpu_dai, dai_fmt);
-+	if (ret < 0) {
-+		dev_err(card->dev, "cpu_dai format not set, %d\n", ret);
-+		return ret;
-+	}
-+
-+	switch (params_rate(params)) {
-+	case 8000:
-+	case 16000:
-+	case 24000:
-+	case 32000:
-+	case 48000:
-+	case 64000:
-+	case 96000:
-+		mclk = 12288000;
-+		break;
-+	case 11025:
-+	case 22050:
-+	case 44100:
-+	case 88200:
-+		mclk = 11289600;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	mclk = 12000000;
-+	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
-+				     SND_SOC_CLOCK_OUT);
-+	if (ret < 0) {
-+		dev_err(card->dev, "cpu_dai clock not set, %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
-+				     SND_SOC_CLOCK_IN);
-+	if (ret < 0) {
-+		dev_err(card->dev, "codec_dai clock not set, %d\n", ret);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static struct snd_soc_ops rockchip_max98090_ops = {
-+	.hw_params = rockchip_max98090_asoc_hw_params,
-+};
-+
-+static struct snd_soc_jack rockchip_max98090_hp_jack;
-+static struct snd_soc_jack_pin rockchip_max98090_hp_jack_pins[] = {
-+	{
-+		.pin = "Headphones",
-+		.mask = SND_JACK_HEADPHONE,
-+	},
-+};
-+
-+static struct snd_soc_jack_gpio rockchip_max98090_hp_jack_gpio = {
-+	.name = "Headphone detection",
-+	.report = SND_JACK_HEADPHONE,
-+	.debounce_time = 150,
-+	.invert = 1,
-+};
-+
-+static struct snd_soc_jack rockchip_max98090_mic_jack;
-+static struct snd_soc_jack_pin rockchip_max98090_mic_jack_pins[] = {
-+	{
-+		.pin = "Mic Jack",
-+		.mask = SND_JACK_MICROPHONE,
-+	},
-+};
-+
-+static struct snd_soc_jack_gpio rockchip_max98090_mic_jack_gpio = {
-+	.name = "mic detect",
-+	.report = SND_JACK_MICROPHONE,
-+	.debounce_time = 150,
-+	.invert = 0,
-+};
-+
-+static const struct snd_soc_dapm_widget rockchip_max98090_dapm_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphones", NULL),
-+	SND_SOC_DAPM_SPK("Speakers", NULL),
-+	SND_SOC_DAPM_MIC("Mic Jack", NULL),
-+};
-+
-+static const struct snd_kcontrol_new rockchip_max98090_controls[] = {
-+	SOC_DAPM_PIN_SWITCH("Speakers"),
-+};
-+
-+static int rockchip_max98090_asoc_init(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct snd_soc_codec *codec = rtd->codec;
-+	struct snd_soc_card *card = codec->card;
-+	struct device_node *dn = card->dev->of_node;
-+
-+	if (dn) {
-+		enum of_gpio_flags flags;
-+
-+		rockchip_max98090_mic_jack_gpio.gpio = of_get_named_gpio_flags(
-+				dn, "rockchip,mic-det-gpios", 0, &flags);
-+		rockchip_max98090_mic_jack_gpio.invert =
-+				!!(flags & OF_GPIO_ACTIVE_LOW);
-+
-+		rockchip_max98090_hp_jack_gpio.gpio = of_get_named_gpio_flags(
-+				dn, "rockchip,hp-det-gpios", 0, &flags);
-+		rockchip_max98090_hp_jack_gpio.invert =
-+				!!(flags & OF_GPIO_ACTIVE_LOW);
-+	}
-+
-+	if (gpio_is_valid(rockchip_max98090_mic_jack_gpio.gpio)) {
-+		snd_soc_jack_new(codec, "Mic Jack", SND_JACK_MICROPHONE,
-+				 &rockchip_max98090_mic_jack);
-+		snd_soc_jack_add_pins(&rockchip_max98090_mic_jack,
-+				      1, rockchip_max98090_mic_jack_pins);
-+		snd_soc_jack_add_gpios(&rockchip_max98090_mic_jack, 1,
-+				       &rockchip_max98090_mic_jack_gpio);
-+	}
-+
-+	if (gpio_is_valid(rockchip_max98090_hp_jack_gpio.gpio)) {
-+		snd_soc_jack_new(codec, "Headphone Jack",
-+				 SND_JACK_HEADPHONE,
-+				 &rockchip_max98090_hp_jack);
-+		snd_soc_jack_add_pins(&rockchip_max98090_hp_jack,
-+				      1, rockchip_max98090_hp_jack_pins);
-+		snd_soc_jack_add_gpios(&rockchip_max98090_hp_jack, 1,
-+				       &rockchip_max98090_hp_jack_gpio);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_dai_link rockchip_max98090_dai = {
-+	.name = "max98090",
-+	.stream_name = "max98090 PCM",
-+	.codec_dai_name = "HiFi",
-+	.init = rockchip_max98090_asoc_init,
-+	.ops = &rockchip_max98090_ops,
-+	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
-+		   SND_SOC_DAIFMT_CBM_CFM,
-+};
-+
-+static struct snd_soc_card snd_soc_rockchip_max98090 = {
-+	.name = "ROCKCHIP-I2S",
-+	.owner = THIS_MODULE,
-+	.dai_link = &rockchip_max98090_dai,
-+	.num_links = 1,
-+	.controls = rockchip_max98090_controls,
-+	.num_controls = ARRAY_SIZE(rockchip_max98090_controls),
-+	.dapm_widgets = rockchip_max98090_dapm_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(rockchip_max98090_dapm_widgets),
-+	.fully_routed = true,
-+};
-+
-+static int rockchip_max98090_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct snd_soc_card *card = &snd_soc_rockchip_max98090;
-+	struct rockchip_max98090 *machine;
-+	int ret;
-+
-+	machine = devm_kzalloc(&pdev->dev, sizeof(*machine), GFP_KERNEL);
-+	if (!machine) {
-+		dev_err(&pdev->dev, "Can't allocate rockchip_max98090\n");
-+		return -ENOMEM;
-+	}
-+
-+	card->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, card);
-+	snd_soc_card_set_drvdata(card, machine);
-+
-+	machine->gpio_hp_det = of_get_named_gpio(np,
-+						 "rockchip,hp-det-gpios", 0);
-+	if (machine->gpio_hp_det == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	ret = snd_soc_of_parse_card_name(card, "rockchip,model");
-+	if (ret)
-+		goto err;
-+
-+	ret = snd_soc_of_parse_audio_routing(card, "rockchip,audio-routing");
-+	if (ret)
-+		goto err;
-+
-+	rockchip_max98090_dai.codec_of_node = of_parse_phandle(np,
-+			"rockchip,audio-codec", 0);
-+	if (!rockchip_max98090_dai.codec_of_node) {
-+		dev_err(&pdev->dev,
-+			"Property 'rockchip,audio-codec' missing or invalid\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	rockchip_max98090_dai.cpu_of_node = of_parse_phandle(np,
-+			"rockchip,i2s-controller", 0);
-+	if (!rockchip_max98090_dai.cpu_of_node) {
-+		dev_err(&pdev->dev,
-+			"Property 'rockchip,i2s-controller' missing or invalid\n");
-+		ret = -EINVAL;
-+		goto err;
-+	}
-+
-+	rockchip_max98090_dai.platform_of_node =
-+				rockchip_max98090_dai.cpu_of_node;
-+
-+	ret = snd_soc_register_card(card);
-+	if (ret) {
-+		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
-+			ret);
-+		goto err;
-+	}
-+
-+	return 0;
-+
-+err:
-+	return ret;
-+}
-+
-+static int rockchip_max98090_remove(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = platform_get_drvdata(pdev);
-+
-+	snd_soc_jack_free_gpios(&rockchip_max98090_hp_jack, 1,
-+				&rockchip_max98090_hp_jack_gpio);
-+
-+	snd_soc_unregister_card(card);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rockchip_max98090_of_match[] = {
-+	{ .compatible = "rockchip,rockchip-audio-max98090", },
-+	{},
-+};
-+
-+static struct platform_driver rockchip_max98090_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.owner = THIS_MODULE,
-+		.pm = &snd_soc_pm_ops,
-+		.of_match_table = rockchip_max98090_of_match,
-+	},
-+	.probe = rockchip_max98090_probe,
-+	.remove = rockchip_max98090_remove,
-+};
-+module_platform_driver(rockchip_max98090_driver);
-+
-+MODULE_AUTHOR("jianqun <xjq@rock-chips.com>");
-+MODULE_DESCRIPTION("Rockchip max98090 machine ASoC driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_DEVICE_TABLE(of, rockchip_max98090_of_match);
 -- 
-1.9.1
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
