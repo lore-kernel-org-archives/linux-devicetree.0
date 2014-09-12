@@ -1,43 +1,41 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH v6 2/8] mfd: max14577: Map charger device to its own of_node
-Date: Fri, 12 Sep 2014 08:53:54 +0200
-Message-ID: <1410504840-23543-3-git-send-email-k.kozlowski@samsung.com>
-References: <1410504840-23543-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1410504840-23543-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Carlo Caione <carlo@caione.org>
+Subject: Re: [PATCH v2 3/9] ARM: meson: serial: add MesonX SoC on-chip uart driver
+Date: Fri, 12 Sep 2014 08:59:07 +0200
+Message-ID: <CAOQ7t2a6ngA3CUWTAgwn=imJTQwfJK4_b=ig89tafky8fj7T_w@mail.gmail.com>
+References: <1410466300-19168-1-git-send-email-carlo@caione.org>
+	<1410466300-19168-4-git-send-email-carlo@caione.org>
+	<20140911212534.GA17251@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20140911212534.GA17251@kroah.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Carlo Caione <carlo@caione.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "jslaby@suse.cz" <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Beniamino Galvani <b.galvani@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, afaerber@suse.de, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a "maxim,max14577-charger" of_compatible to the mfd_cell so the
-MFD child device (the charger) will have its own of_node set. This will
-be used by the max14577 charger driver in next patches to obtain battery
-configuration from DTS.
+On Thu, Sep 11, 2014 at 11:25 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+> On Thu, Sep 11, 2014 at 10:11:34PM +0200, Carlo Caione wrote:
+>> The SoC has four fully functional UARTs which use the same programming
+>> model. They are named UART_A, UART_B, UART_C and UART_AO (Always-On)
+>> which cannot be powered off.
+>>
+>> Signed-off-by: Carlo Caione <carlo@caione.org>
+>> ---
+>>  drivers/tty/serial/Kconfig       |  18 ++
+>>  drivers/tty/serial/Makefile      |   1 +
+>>  drivers/tty/serial/meson_uart.c  | 634 +++++++++++++++++++++++++++++++++++++++
+>>  include/uapi/linux/serial_core.h |   3 +
+>>  4 files changed, 656 insertions(+)
+>>  create mode 100644 drivers/tty/serial/meson_uart.c
+>
+> I've already taken this patch, why resend it?
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
----
- drivers/mfd/max14577.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Just for completeness' sake since there is also the documentation in
+the patchset.
+In the cover I specified that it was already taken.
 
-diff --git a/drivers/mfd/max14577.c b/drivers/mfd/max14577.c
-index 4a5e885383f8..6599407b5624 100644
---- a/drivers/mfd/max14577.c
-+++ b/drivers/mfd/max14577.c
-@@ -35,7 +35,10 @@ static const struct mfd_cell max14577_devs[] = {
- 		.name = "max14577-regulator",
- 		.of_compatible = "maxim,max14577-regulator",
- 	},
--	{ .name = "max14577-charger", },
-+	{
-+		.name = "max14577-charger",
-+		.of_compatible = "maxim,max14577-charger",
-+	},
- };
- 
- static const struct mfd_cell max77836_devs[] = {
+I'll leave it out in v3 (if any).
+
 -- 
-1.9.1
+Carlo Caione
