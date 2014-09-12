@@ -1,106 +1,68 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 6/8] i2c: Provide a temporary .probe2() call-back type
-Date: Fri, 12 Sep 2014 15:50:24 +0200
-Message-ID: <20140912135023.GG1930@katana>
-References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
- <1409236538-21274-7-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UTZ8bGhNySVQ9LYl"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1409236538-21274-7-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH v4 0/8] arch: arm64: enable support for Samsung Exynos7 SoC
+Date: Fri, 12 Sep 2014 20:56:23 +0530
+Message-ID: <1410535592-5782-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: naveenkrishna.ch@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com, kgene.kim@samsung.com, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
+Changes since v3:
+- Removed aliases for serial controllers from dtsi file and moved it
+  into board specific dts file as suggested by Arnd.
+- Based this series on Robert Richter's patches for adding vendor
+  device tree sub-directories for arm64.
+  http://comments.gmane.org/gmane.linux.kbuild.devel/12131
 
---UTZ8bGhNySVQ9LYl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset supports new Exynos7 Samsung SoC based on Cortex-A57.
+Exynos7 is a System-On-Chip (SoC) that is based on 64-bit
+ARMv8 RISC processor.
 
-> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-> index 79b674d..c8240e5 100644
-> --- a/include/linux/i2c.h
-> +++ b/include/linux/i2c.h
-> @@ -125,7 +125,8 @@ extern s32 i2c_smbus_write_i2c_block_data(const struc=
-t i2c_client *client,
->   * struct i2c_driver - represent an I2C device driver
->   * @class: What kind of i2c device we instantiate (for detect)
->   * @attach_adapter: Callback for bus addition (deprecated)
-> - * @probe: Callback for device binding
-> + * @probe: Callback for device binding - soon to be deprecated
-> + * @probe2: New callback for device binding
+The following patches are tested based on Kgene's for-next tree.
+https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/log/?h=for-next
 
-I don't like the naming. What about 'simplified_probe' instead of
-'probe2'? The old 'probe' would be deprecated immediately, I guess.
+The following patches are required for this series.
+1- "tty/serial: fix config dependencies for samsung serial"
+   https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg36208.html
+2- "dts, kbuild: Implement support for dtb vendor subdirs" patch set 
+   http://comments.gmane.org/gmane.linux.kbuild.devel/12131
 
-Also, this needs more information in the kernel docs. Come to think of
-it, I'd like to see some more documentation in general. A document in
-Documentation/i2c should explain the differences between the
-probe-functions, the reason why they are there, the intended path to
-migrate over and examples how to convert drivers and what to keep in
-mind doing so.
+Alim Akhtar (1):
+  arm64: exynos7: Enable ARMv8 based Exynos7 (SoC) support
 
->   * @remove: Callback for device unbinding
->   * @shutdown: Callback for device shutdown
->   * @suspend: Callback for device suspend
-> @@ -170,6 +171,11 @@ struct i2c_driver {
->  	int (*probe)(struct i2c_client *, const struct i2c_device_id *);
->  	int (*remove)(struct i2c_client *);
-> =20
-> +	/* New driver model interface to aid the seamless removal of the
-> +	 * current probe()'s, more commonly unused than used second parameter.
+Naveen Krishna Chatradhi (6):
+  clk: samsung: add support for 145xx and 1460x PLLs
+  clk: samsung: Factor out the common code to clk.c
+  clk: samsung: Add fixed_factor_clocks field to struct exynos_cmu_info
+  clk: samsung: add initial clock support for Exynos7 SoC
+  arm64: dts: Add initial device tree support for EXYNOS7
+  tty/serial: samsung: enable usage for 64-bit Exynos platforms
 
-"largely unused second parameter"? Maybe more readable? At least, I
-needed to read this sentence more than once to get it. BTW have you
-measured how often it was used/unused?
+Pankaj Dubey (1):
+  arm64: dts: add <dt-bindings/> symlink
 
-> +	 */
-> +	int (*probe2)(struct i2c_client *);
-> +
->  	/* driver model interfaces that don't relate to enumeration  */
->  	void (*shutdown)(struct i2c_client *);
->  	int (*suspend)(struct i2c_client *, pm_message_t mesg);
-
-What I like in general: After your series I2C does more like what other
-subsystems (especially SPI) do.
-
-What I dislike about this in general: Putting to the drivers that they
-should find out about the matching. I mean the core already did the
-matching, so why should a driver do that again? Especially since it can
-get very cumbersome to do so with platform_data, DT and ACPI around
-which need to be checked. This is why I stopped my implementation to
-fix this issue. I felt the need for a helper function to assist the
-drivers how they were matched. Ideally by just retrieving the
-information which the subsystem cores already gathered. Making such a
-thing generic was where I stopped working on that.
-
-Has this been discussed somewhere already?
-
-
---UTZ8bGhNySVQ9LYl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUEvofAAoJEBQN5MwUoCm2UpsQAIVSA5gQVQdOWgc0mtc+wmTC
-Cn1z7wKish11QU60TYYo5H8lcwsvw2SabPmljM6doP6BOdsSe9vuYXgXHEERf+ev
-MxdvPwAzf0kqFFKBX13KyI1Xe+MQ2mZlOE0pJ3H7Ar/qsBo4jOQIpMBTSj7VfHIw
-XnYuTKJ7MdU6RSZhmXBl35iYcItdBI6NIXLjtirdf1LB4mweHP+VuoirkfwGwDmq
-AXO/GcqxeeYYooAPi31sOBYP+51ROvN5o3SdxbpPKVYkN0rPJZbqwzKl27YGrrIk
-88++aalootvegASjApp7YJU5wGL1AoiAkoib/JG2ScTvwlh1bqsOzrlrQsFdUOXq
-95dUFZSRwWpMxRNEC9K1Nl4NUQ6AqPHyUZwHFzce7rMAmIzY1VhYAkgDiPmu3Nur
-ovG7ju8n/9zffp97Ww96b8kZh7T6LEVAQp+/sqqJxbiRlK8vpSjOM/5O/+4lB3hk
-A8L6K9dHArdQmiNMlSZu6lCNcjZbbqMuj5ypfIkVNjZ4H2k6T+QjBUemb+TkzBJ4
-rkBkqf60EedR5zdLhVnfzdosRQoS1vEq5BT41bD4z+GRMYBO5zUd19JKxeL5wEyE
-oG2YeS4O/A1VD63LPPAYC3M4SFkHl+IAflciGr5VShpLaZRZprvbrcxE8WIz/xox
-KQGMqueIgSpC9ARltD1A
-=+NVU
------END PGP SIGNATURE-----
-
---UTZ8bGhNySVQ9LYl--
+ .../devicetree/bindings/clock/exynos7-clock.txt    |   37 ++
+ arch/arm64/Kconfig                                 |   12 +
+ arch/arm64/boot/dts/Makefile                       |    1 +
+ arch/arm64/boot/dts/exynos/Makefile                |    5 +
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts    |   39 ++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |  160 ++++++++
+ arch/arm64/boot/dts/include/dt-bindings            |    1 +
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos5260.c               |  185 ++-------
+ drivers/clk/samsung/clk-exynos7.c                  |  417 ++++++++++++++++++++
+ drivers/clk/samsung/clk-pll.c                      |   25 +-
+ drivers/clk/samsung/clk-pll.h                      |    4 +
+ drivers/clk/samsung/clk.c                          |   98 +++++
+ drivers/clk/samsung/clk.h                          |   37 ++
+ drivers/tty/serial/Kconfig                         |    2 +-
+ include/dt-bindings/clock/exynos7-clk.h            |   39 ++
+ 16 files changed, 898 insertions(+), 165 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos7-clock.txt
+ create mode 100644 arch/arm64/boot/dts/exynos/Makefile
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7.dtsi
+ create mode 120000 arch/arm64/boot/dts/include/dt-bindings
+ create mode 100644 drivers/clk/samsung/clk-exynos7.c
+ create mode 100644 include/dt-bindings/clock/exynos7-clk.h
