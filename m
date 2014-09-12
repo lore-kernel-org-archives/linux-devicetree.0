@@ -1,30 +1,40 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: dts: dra7: Add CPSW and MDIO module nodes
- for dra7
-Date: Fri, 12 Sep 2014 12:48:10 +0530
-Message-ID: <54129E32.2080703@ti.com>
-References: <1410356247-25925-1-git-send-email-mugunthanvnm@ti.com> <1410356247-25925-2-git-send-email-mugunthanvnm@ti.com> <5410573B.5010907@ti.com> <54114339.5070404@ti.com> <20140911212956.GC17692@csclub.uwaterloo.ca>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 00/12] clk: sunxi: Improve MMC clocks support
+Date: Fri, 12 Sep 2014 09:22:06 +0200
+Message-ID: <54129F1E.30207@redhat.com>
+References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140911212956.GC17692-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lennart Sorensen <lsorense-1wCw9BSqJbv44Nm34jS7GywD8/FfD2ys@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, chris@printf.net, david.lanzendoerfer@o2s.ch, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, wens@csie.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 12 September 2014 02:59 AM, Lennart Sorensen wrote:
-> I have the mac but I don't want to use both ports on the 2 port switch.
-> In fact in our case ethernet1 is a pru_eth interface.  Can a board dts
-> override the alias for ethernet1 or is that a syntax error?  I don't
-> think I tried that yet.
+Hi,
 
-You can override it in board dts file
+On 09/11/2014 10:18 PM, Maxime Ripard wrote:
+> Hi everyone,
+> 
+> Here is an attempt at improving the MMC clock support in the Allwinner
+> SoCs.
+> 
+> Until now, the MMC clocks were having a custom phase function that was
+> directly setting an obscure value in the right register, because we
+> were not really having any idea of what these values were.
+> 
+> Now that we have more informations, we can introduce a common function
+> call to get and set the phase of a particular clock, and use this in
+> both our provider and our client.
+> 
+> Thanks,
+> Maxime
 
-Regards
-Mugunthan V N
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've not done a full review this time around (-ENOTIME), but I've taken
+a look at the changed bits, and those look good to me.
+
+Regards,
+
+Hans
