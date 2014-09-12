@@ -1,7 +1,7 @@
 From: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] ASoC: rockchip-max98090: add driver for rockchip board using a max98090
-Date: Fri, 12 Sep 2014 15:39:48 +0800
-Message-ID: <1410507588-15719-1-git-send-email-jay.xu@rock-chips.com>
+Subject: [PATCH 2/2] ASoC: rockchip-max98090: add driver for rockchip board using a max98090
+Date: Fri, 12 Sep 2014 15:43:27 +0800
+Message-ID: <1410507807-15795-1-git-send-email-jay.xu@rock-chips.com>
 References: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1410506806-15327-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
