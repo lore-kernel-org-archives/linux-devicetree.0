@@ -1,31 +1,118 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [v4,1/9] ACPI / PM: Let acpi_dev_pm_detach() return an error code
-Date: Fri, 12 Sep 2014 14:05:53 -0700
-Message-ID: <20140912210553.GA27924@core.coreip.homeip.net>
-References: <1410262570-22785-2-git-send-email-ulf.hansson@linaro.org>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH/RFC v5 1/4] leds: Improve and export led_update_brightness
+Date: Fri, 12 Sep 2014 14:05:55 -0700
+Message-ID: <CAK5ve-LTXTzV3v_5o5jPVDE_C=RP5+B5OtCUachiy9E8siP6+w@mail.gmail.com>
+References: <1408542118-32723-1-git-send-email-j.anaszewski@samsung.com>
+ <1408542118-32723-2-git-send-email-j.anaszewski@samsung.com> <CAK5ve-K1tu8dRwF2cqdVesZUT+VWp-NnD3ZQh6mXtnXSRJ3hPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410262570-22785-2-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Philipp Zabel <philipp.zabel@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, linux-acpi@vger.kernel.org, Simon Horman <horms@verge.net.au>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAK5ve-K1tu8dRwF2cqdVesZUT+VWp-NnD3ZQh6mXtnXSRJ3hPA@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, b.zolnierkie@samsung.com, Richard Purdie <rpurdie@rpsys.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+On Fri, Sep 5, 2014 at 2:03 PM, Bryan Wu <cooloney@gmail.com> wrote:
+> On Wed, Aug 20, 2014 at 6:41 AM, Jacek Anaszewski
+> <j.anaszewski@samsung.com> wrote:
+>> led_update_brightness helper function used to be exploited only loca=
+lly
+>> in the led-class.c module, where its result was being passed to the
+>> brightness_show sysfs callback. With the introduction of v4l2-flash
+>> subdevice the same functionality becomes required for reading curren=
+t
+>> brightness from a LED device. This patch adds checking of return val=
+ue
+>> of the brightness_get callback and moves the led_update_brightness()
+>> function to the LED subsystem public API.
+>>
+>
+> This one looks good to me.
+> Thanks,
+> -Bryan
+>
 
-On Tue, Sep 09, 2014 at 01:36:02PM +0200, Ulf Hansson wrote:
-> To give callers the option of acting on a errors while removing the
-> pm_domain ops for the device in the ACPI PM domain, let
-> acpi_dev_pm_detach() return an int to provide the error code.
+Merged=EF=BC=8C no need to update this patch then.
 
-So how would callers handle the errors? As far as I can see
-acpi_dev_pm_detach() is called from ->remove() and ->shutdown() methods, where
-there is no meaningful strategy to handle errors as you are past the point of
-no return and you keep on tearing down the device.
+-Bryan
 
-Thanks. 
-
--- 
-Dmitry
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> Cc: Bryan Wu <cooloney@gmail.com>
+>> Cc: Richard Purdie <rpurdie@rpsys.net>
+>> ---
+>>  drivers/leds/led-class.c |    6 ------
+>>  drivers/leds/led-core.c  |   16 ++++++++++++++++
+>>  include/linux/leds.h     |   10 ++++++++++
+>>  3 files changed, 26 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+>> index f4e5bb4..6f82a76 100644
+>> --- a/drivers/leds/led-class.c
+>> +++ b/drivers/leds/led-class.c
+>> @@ -23,12 +23,6 @@
+>>
+>>  static struct class *leds_class;
+>>
+>> -static void led_update_brightness(struct led_classdev *led_cdev)
+>> -{
+>> -       if (led_cdev->brightness_get)
+>> -               led_cdev->brightness =3D led_cdev->brightness_get(le=
+d_cdev);
+>> -}
+>> -
+>>  static ssize_t brightness_show(struct device *dev,
+>>                 struct device_attribute *attr, char *buf)
+>>  {
+>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+>> index 8380eb7..466ce5a 100644
+>> --- a/drivers/leds/led-core.c
+>> +++ b/drivers/leds/led-core.c
+>> @@ -127,3 +127,19 @@ void led_set_brightness(struct led_classdev *le=
+d_cdev,
+>>         __led_set_brightness(led_cdev, brightness);
+>>  }
+>>  EXPORT_SYMBOL(led_set_brightness);
+>> +
+>> +int led_update_brightness(struct led_classdev *led_cdev)
+>> +{
+>> +       int ret =3D 0;
+>> +
+>> +       if (led_cdev->brightness_get) {
+>> +               ret =3D led_cdev->brightness_get(led_cdev);
+>> +               if (ret >=3D 0) {
+>> +                       led_cdev->brightness =3D ret;
+>> +                       return 0;
+>> +               }
+>> +       }
+>> +
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL(led_update_brightness);
+>> diff --git a/include/linux/leds.h b/include/linux/leds.h
+>> index bc221d11..cc85b16 100644
+>> --- a/include/linux/leds.h
+>> +++ b/include/linux/leds.h
+>> @@ -139,6 +139,16 @@ extern void led_blink_set_oneshot(struct led_cl=
+assdev *led_cdev,
+>>   */
+>>  extern void led_set_brightness(struct led_classdev *led_cdev,
+>>                                enum led_brightness brightness);
+>> +/**
+>> + * led_update_brightness - update LED brightness
+>> + * @led_cdev: the LED to query
+>> + *
+>> + * Get an LED's current brightness and update led_cdev->brightness
+>> + * member with the obtained value.
+>> + *
+>> + * Returns: 0 on success or negative error value on failure
+>> + */
+>> +extern int led_update_brightness(struct led_classdev *led_cdev);
+>>
+>>  /*
+>>   * LED Triggers
+>> --
+>> 1.7.9.5
+>>
