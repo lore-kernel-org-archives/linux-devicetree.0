@@ -1,50 +1,94 @@
-From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] clk: rockchip: rk3288: add VOP1 softresets and rename VOP0 softresets
-Date: Fri, 12 Sep 2014 18:33:23 +0800
-Message-ID: <1410518004-19040-1-git-send-email-mark.yao@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dkl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v10 09/10] PCI: Assign unassigned bus resources in
+ pci_scan_root_bus()
+Date: Fri, 12 Sep 2014 11:34:29 +0100
+Message-ID: <20140912103429.GA1994@e106497-lin.cambridge.arm.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+ <1410184472-17630-10-git-send-email-Liviu.Dudau@arm.com>
+ <5412C75F.30207@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <5412C75F.30207@amd.com>
+Content-Disposition: inline
+Sender: linux-arch-owner@vger.kernel.org
+To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The rk3288 have two vop, and each vop has three softresets were axi_reset,
-ahb_reset and dclk_reset.
+On Fri, Sep 12, 2014 at 11:13:51AM +0100, Suravee Suthikulpanit wrote:
+> On 9/8/2014 8:54 AM, Liviu Dudau wrote:
+> > If the firmware has not assigned all the bus resources and
+> > we are not just probing the PCIe busses, it makes sense to
+> > assign the unassigned resources in pci_scan_root_bus().
+> >
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> > ---
+> >   drivers/pci/probe.c | 3 +++
+> >   1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> > index ef891d2..508cf61 100644
+> > --- a/drivers/pci/probe.c
+> > +++ b/drivers/pci/probe.c
+> > @@ -1953,6 +1953,9 @@ struct pci_bus *pci_scan_root_bus(struct devi=
+ce *parent, int bus,
+> >   	if (!found)
+> >   		pci_bus_update_busn_res_end(b, max);
+> >
+> > +	if (!pci_has_flag(PCI_PROBE_ONLY))
+> > +		pci_assign_unassigned_bus_resources(b);
+> > +
+> >   	pci_bus_add_devices(b);
+> >   	return b;
+> >   }
+> >
+>=20
+> Liviu,
+>=20
+> Besides the check for PCI_PROBE_ONLY here, I think we also need to av=
+oid calling
+> "pci_enable_resources()" in the "driver/pci/pci.c: pcibios_enable_dev=
+ice()" for
+> PCI_PROBE_ONLY mode since the resource is not assigned by Linux. Othe=
+rwise, the
+> "drivers/pci/setup-res.c: pci_enable_resource()" would fail w/ error:
+>=20
+>      can't enable device: BAR ..... not assigned
 
-Signed-off-by: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- include/dt-bindings/clock/rk3288-cru.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Hmm, are you sure that is not because the host bridge resources have no=
+t been
+requested? pci-host-generic.c uses PCI_PROBE_ONLY and yet it works with=
+ the series as
+is. But it does request_resource() for the host bridge resources inside=
+ the driver.
 
-diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-index ebcb460..4d65959 100644
---- a/include/dt-bindings/clock/rk3288-cru.h
-+++ b/include/dt-bindings/clock/rk3288-cru.h
-@@ -235,9 +235,9 @@
- #define SRST_RGA_NIU		97
- #define SRST_VIO0_NIU_AXI	98
- #define SRST_VIO_NIU_AHB	99
--#define SRST_LCDC0_AXI		100
--#define SRST_LCDC0_AHB		101
--#define SRST_LCDC0_DCLK		102
-+#define SRST_VOP0_AXI		100
-+#define SRST_VOP0_AHB		101
-+#define SRST_VOP0_DCLK		102
- #define SRST_VIO1_NIU_AXI	103
- #define SRST_VIP		104
- #define SRST_RGA_CORE		105
-@@ -276,3 +276,7 @@
- #define SRST_USBHOST1_CON	140
- #define SRST_USB_ADP		141
- #define SRST_ACC_EFUSE		142
-+
-+#define SRST_VOP1_AXI		176
-+#define SRST_VOP1_AHB		177
-+#define SRST_VOP1_DCLK		178
--- 
-1.9.1
+Best regards,
+Liviu
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> Actually, in "arch/arm/kernel/bios32.c:", the weak "pcibios_enable_de=
+vice()" function
+> also has the check for PCI_PROBE_ONLY mode before calling pci_enable_=
+resources().
+>=20
+> Thanks,
+>=20
+> Suravee
+>=20
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
