@@ -1,72 +1,80 @@
-From: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] ARM: dts: add rk3288 i2s controller
-Date: Fri, 12 Sep 2014 16:11:51 +0800
-Message-ID: <1410509511-16667-1-git-send-email-jay.xu@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH v10 00/10] Support for creating generic PCI host bridges
+ from DT
+Date: Fri, 12 Sep 2014 03:25:13 -0500
+Message-ID: <5412ADE9.2050708@amd.com>
+References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add dt for rk3288 i2s controller, since i2s clock pins and data pins
-default to be GPIO, this patch also add pinctrl to mux them.
+On 9/8/2014 8:54 AM, Liviu Dudau wrote:
+> This is my version 10 of the attempt at adding support for generic PCI host
+> bridge controllers that make use of device tree information to
+> configure themselves. This version reverses v9's attempt to create one function
+> to drive the whole process of extracting the host bridge ranges, setup the
+> host bridge driver and then scan the root bus behind the host bridge. While it
+> would've been quite user friendly, I agree that it would've caused a lot of pain
+> in the future.
+>
+> I would like to get ACKs for the remaining patches as I would like to integrate
+> this into -next in the following week.
+>
+> This version marks an implementation break with the previous versions as
+> of_create_pci_host_bridge() is now gone. It gets replaced by
+> of_pci_get_host_bridge_resources() that only parses the DT and extracts the
+> relevant ranges and converts them to resources. The updated host bridge drivers
+> will have to follow the guidelines in this example code:
+>
+> static int foohb_probe(struct platform_device *pdev)
+> {
+> 	struct device_node *dn = pdev->dev.of_node;
+> 	struct foohb_drv *drv;
+> 	resource_size_t io_base = 0;  /* phys address for start of IO */
+> 	struct pci_bus *bus;
+> 	int err = 0;
+> 	LIST_HEAD(res);
+>
+> 	.....
+> 	err = of_pci_get_host_bridge_resources(dn, 0, 255, &res, &io_base);
+> 	if (err)
+> 		goto err_handling;
+> 	err = foohb_setup(drv, ...., &res, &io_base);
+> 	if (err)
+> 		goto err_handling;
 
-Tested on RK3288 board.
+My understanding is that the "foohb_setup" above is supposed to be equivalent
+to the "int (*setup)(struct pci_host_bridge *, resource_size_t)" in V9 that was
+passed in as an argument of "of_create_pci_hot_bridge()".
 
-Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- arch/arm/boot/dts/rk3288.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+The problem I have is I need an intermediate step between "pci_create_root_bus()"
+and "pci_scan_child_bus()" in order to update the information such as the "pci_bus->msi"
+before this is propagate down to the child bus during the "pci_scan_child_bus"
+which is also called in the pci_scan_root_bus() function.
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 5950b0a..0e2a815 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -130,6 +130,21 @@
- 		status = "disabled";
- 	};
- 
-+	i2s: i2s@ff890000 {
-+		compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
-+		reg = <0xff890000 0x10000>;
-+		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		dmas = <&dmac_bus_s 0>, <&dmac_bus_s 1>;
-+		dma-names = "tx", "rx";
-+		clock-names = "i2s_hclk", "i2s_clk";
-+		clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2s0_clk>;
-+		status = "disabled";
-+	};
-+
- 	uart0: serial@ff180000 {
- 		compatible = "rockchip,rk3288-uart", "snps,dw-apb-uart";
- 		reg = <0xff180000 0x100>;
-@@ -463,6 +478,17 @@
- 			};
- 		};
- 
-+		i2s0 {
-+			i2s0_clk: i2s0_clk {
-+				rockchip,pins = <6 0 RK_FUNC_1 &pcfg_pull_none>,
-+						<6 1 RK_FUNC_1 &pcfg_pull_none>,
-+						<6 2 RK_FUNC_1 &pcfg_pull_none>,
-+						<6 3 RK_FUNC_1 &pcfg_pull_none>,
-+						<6 4 RK_FUNC_1 &pcfg_pull_none>,
-+						<6 8 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		sdmmc {
- 			sdmmc_clk: sdmmc-clk {
- 				rockchip,pins = <6 20 RK_FUNC_1 &pcfg_pull_none>;
--- 
-1.9.1
+Does this mean that I should not be calling the pci_scan_root_bus(), and tries to
+re-implement the same logic in my driver?
 
+Thanks,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Suravee
+
+> 	.....
+> 	pci_add_flags(....);
+> 	bus = pci_scan_root_bus(&pdev->dev, 0, &foohb_ops, drv, &res);
+> 	if (!bus)
+> 		goto err_handling;
+> 	....
+> 	return 0;
+>
+> err_handling:
+> 	......
+> 	return err;
+> }
+>
