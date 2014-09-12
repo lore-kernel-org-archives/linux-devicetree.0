@@ -1,84 +1,61 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] ARM: dts: Add Maxim 77693 PMIC to the Trats2 board
-Date: Fri, 12 Sep 2014 14:03:06 +0200
-Message-ID: <1410523386-10581-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
+Date: Fri, 12 Sep 2014 14:15:10 +0200
+Message-ID: <20140912121510.GD1930@katana>
+References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de>
+ <7627175.tG5quZH0VN@fb07-iapwap2>
+ <20140912095821.GB1930@katana>
+ <1921859.32moD2F04k@fb07-iapwap2>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1921859.32moD2F04k@fb07-iapwap2>
+Sender: linux-sh-owner@vger.kernel.org
+To: Marc Dietrich <marvin24@gmx.de>
+Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-The MAX77693 is a companion power management IC for smart phones and tablets.
 
-The MAX77693 contains input over-voltage protection (OVP),
-a fully-integrated 2.5A switching charger for Lithium Ion battery with
-integrated battery disconnect, OTG/accessory 5V output power,
-a high-current white LED driver for camera flash, two safeout LDOs,
-a haptic motor driver, Model Gauge m3 battery fuel gauge and MicroUSB
-Interface Controller (MUIC). I2C serial interface is used for
-communicating.
+--BI5RvnYi6R4T2M87
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Add MAX77693 node to the Trats2 board. This allows using:
- - charger regulator,
- - 2 safeout LDO regulators (for USB OTG),
- - extcon.
 
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos4412-trats2.dts | 34 +++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+> > Am I missing something? Board properties can be encoded within the
+> > compatible entries ("ax100-ec", "ax200-ec"...). I'd think this means
+> > mostly different protocols, though.
+>=20
+> well, ac100 is the name of the board and nvec is the name of the protocol=
+=2E=20
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 11967f4561e0..0b641513a23d 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -22,6 +22,7 @@
- 	aliases {
- 		i2c9 = &i2c_ak8975;
- 		i2c10 = &i2c_cm36651;
-+		i2c11 = &i2c_max77693;
- 	};
- 
- 	memory {
-@@ -518,6 +519,39 @@
- 		};
- 	};
- 
-+	i2c_max77693: i2c-gpio-1 {
-+		compatible = "i2c-gpio";
-+		gpios = <&gpm2 0 0>, <&gpm2 1 0 >;
-+		i2c-gpio,delay-us = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+
-+		max77693@66 {
-+			compatible = "maxim,max77693";
-+			interrupt-parent = <&gpx1>;
-+			interrupts = <5 2>;
-+			reg = <0x66>;
-+
-+			regulators {
-+				esafeout1_reg: esafeout@1 {
-+					regulator-compatible = "ESAFEOUT1";
-+					regulator-name = "ESAFEOUT1";
-+				};
-+				esafeout2_reg: esafeout@2 {
-+					regulator-compatible = "ESAFEOUT2";
-+					regulator-name = "ESAFEOUT2";
-+				};
-+				charger_reg: charger@0 {
-+					regulator-compatible = "CHARGER";
-+					regulator-name = "CHARGER";
-+					regulator-min-microamp = <60000>;
-+					regulator-max-microamp = <2580000>;
-+				};
-+			};
-+		};
-+	};
-+
- 	mmc@12550000 {
- 		num-slots = <1>;
- 		supports-highspeed;
--- 
-1.9.1
+Yes, the driver could be named nvec, yet the compatible-strings should
+be similar to above. From that, the driver can deduce the protocol
+variant and possible initial settings.
+
+
+--BI5RvnYi6R4T2M87
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUEuPOAAoJEBQN5MwUoCm2+CQP/2133fSsmcvel6AnjbBLnA1b
+WlICrWzG2ZpamkzbU2pGwQMgQ0mSfOTIHQaZmOqIJQAxz3zVGYYatLlXYEzn9qDw
+XjNcHR81TGM+IoM5y3/02Yt8DEbGmqo7fiUIL/unzgjSlggyWfN+00MDOdTlvXfa
+FkBbfc0drTK3xmxeK4fot5vBty/oNDe75nlB+GgLhj6QysPBWwMk5DCpwR54R50K
+N/uMIj8TiAQHlng7BuoA9C7NkPAEZ1NqYI9rQJHKIN7GybZZNbtfDistL+uYog0q
+KjxS4BcSL3rha2O2i4ATOUG8URBGJi5Dct7GwWGo4jkDV+Du5lYejBL+HQ2GDmdv
+BtqklKnWynlx0+d4NBN6y9/EqM9h4eL5njzfuiCaMIHX9XfLLgxcOClSYt73GpVo
+GH2IgpxAHY8u4g0ARXZRJKsfFQPWhfkWYMo/PnfHpTNbQ8HzcU9fptCo9q5fPw4V
+bOid0iOYxIWXUhqyAS+AVawBQpaw9u0XGxYuks3/GJyvt6FCd/pZDn/j6Daqv90Y
+TQrGrueOHgLjw38DiTm0cU+EeuSjqSQB10UDzu0ZW6LdLIm4hGtJc7XpaYUdzBY0
+CXUlyY1tch4a+N035jYQZ637U1SJ2D/HmFdkMfS4V46WzZKxmOsNcDzjpyt4sf10
+fI3Krrcbh9NsXRUEFkhI
+=BXAr
+-----END PGP SIGNATURE-----
+
+--BI5RvnYi6R4T2M87--
