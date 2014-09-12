@@ -1,53 +1,91 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH V2 2/2] Input: misc: introduce palmas-pwrbutton
-Date: Thu, 11 Sep 2014 23:44:41 -0700
-Message-ID: <20140912064441.GC31165@core.coreip.homeip.net>
-References: <1408636935-29515-1-git-send-email-nm@ti.com>
- <1408636935-29515-3-git-send-email-nm@ti.com>
- <00FC9A978A94B7418C33AFAE8A35ED49DF0662@DFLE09.ent.ti.com>
- <53F62A2B.6010208@ti.com>
- <00FC9A978A94B7418C33AFAE8A35ED49DF07A2@DFLE09.ent.ti.com>
- <20140821173715.GA23419@kahuna>
- <20140821180300.GA5854@core.coreip.homeip.net>
- <53F64217.5020303@ti.com>
- <20140910211353.GE38736@core.coreip.homeip.net>
- <20140911120119.GA17602@kahuna>
+From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC v5 2/4] leds: implement sysfs interface locking
+ mechanism
+Date: Fri, 12 Sep 2014 08:45:03 +0200
+Message-ID: <5412966F.9000309@samsung.com>
+References: <1408542118-32723-1-git-send-email-j.anaszewski@samsung.com>
+ <1408542118-32723-3-git-send-email-j.anaszewski@samsung.com>
+ <CAK5ve-+Trcg+ZL5gBZmpY_Zcqk5VOhP7jowS8Liqcz0pO_UbBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140911120119.GA17602@kahuna>
-Sender: linux-input-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: "Murphy, Dan" <dmurphy@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAK5ve-+Trcg+ZL5gBZmpY_Zcqk5VOhP7jowS8Liqcz0pO_UbBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 11, 2014 at 07:01:19AM -0500, Nishanth Menon wrote:
-> Hi Dimtry,
-> 
-> On 14:13-20140910, Dmitry Torokhov wrote:
-> > On Thu, Aug 21, 2014 at 02:01:43PM -0500, Nishanth Menon wrote:
-> > > On 08/21/2014 01:03 PM, Dmitry Torokhov wrote:
-> > > 
-> > > I believe I have taken care of other concerns on v2, but..Arrgh.. I
-> > > did not reply to this comment..
-> > > > BTW, I do not think you need to use of_node_get/put here, it's not going anywhere.
-> > > It has been mentioned as a good practice to ensure we use get_put in
-> > > to ensure reference count is appropriately maintained. So, I have'nt
-> > > changed that in v3.
-> > 
-> > You only need to maintain reference count if you pass the handle on.
-> > Otherwise you'd have to do get/put every time you dereference something.
-> > 
-> > Anyway, I did a few changes to the driver (no need to store current
-> > state, do not fre einput device after unregister, etc.), could you
-> > please tell me if the version below still works for you?
-> [...]
-> Thanks for taking the time to do all the changes - they are awesome and
-> the resultant driver does work.
+Hi Bryan,
 
-Thank you for [re]testing. I queued the driver for the next merge
-window.
+Thanks for a review.
 
--- 
-Dmitry
+On 09/12/2014 03:11 AM, Bryan Wu wrote:
+> On Wed, Aug 20, 2014 at 6:41 AM, Jacek Anaszewski
+> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Add a mechanism for locking LED subsystem sysfs interface.
+>> This patch prepares ground for addition of LED Flash Class
+>> extension, whose API will be integrated with V4L2 Flash API.
+>> Such a fusion enforces introducing a locking scheme, which
+>> will secure consistent access to the LED Flash Class device.
+>>
+>> The mechanism being introduced allows for disabling LED
+>> subsystem sysfs interface by calling led_sysfs_lock function
+>> and enabling it by calling led_sysfs_unlock. The functions
+>> alter the LED_SYSFS_LOCK flag state and must be called
+>> under mutex lock. The state of the lock is checked with use
+>> of led_sysfs_is_locked function. Such a design allows for
+>> providing immediate feedback to the user space on whether
+>> the LED Flash Class device is available or is under V4L2 Flash
+>> sub-device control.
+>>
+>> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+>> ---
+>>   drivers/leds/led-class.c    |   23 ++++++++++++++++++++---
+>>   drivers/leds/led-core.c     |   18 ++++++++++++++++++
+>>   drivers/leds/led-triggers.c |   15 ++++++++++++---
+>>   include/linux/leds.h        |   32 ++++++++++++++++++++++++++++++++
+>>   4 files changed, 82 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+>> index 6f82a76..0bc0ba9 100644
+>> --- a/drivers/leds/led-class.c
+>> +++ b/drivers/leds/led-class.c
+>> @@ -39,17 +39,31 @@ static ssize_t brightness_store(struct device *dev,
+>>   {
+>>          struct led_classdev *led_cdev = dev_get_drvdata(dev);
+>>          unsigned long state;
+>> -       ssize_t ret = -EINVAL;
+>> +       ssize_t ret;
+>> +
+>> +#ifdef CONFIG_V4L2_FLASH_LED_CLASS
+>
+> Can we remove this #ifdef? Following code looks good to the common LED class.
+
+Sure.
+
+>> +       mutex_lock(&led_cdev->led_lock);
+>
+> Can we choose more meaningful name instead of led_lock here?
+> Then use led_sysfs_enable() instead of led_sysfs_unlock()
+> led_sysfs_disable instead of led_sysfs_lock()
+> led_sysfs_is_disabled instead of led_sysfs_is_locked()
+>
+> And the flag LED_SYSFS_LOCK -> LED_SYSFS_DISABLE
+>
+> I was just confused by the name lock and unlock and mutex lock.
+>
+> The idea looks good to me.
+
+Indeed, this naming will be more intuitive.
+
+Regards,
+Jacek
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
