@@ -1,90 +1,50 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
-Date: Fri, 12 Sep 2014 11:32:57 +0100
-Message-ID: <20140912103257.GB24416@localhost>
-References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com>
- <20140903173740.GJ1824@e102568-lin.cambridge.arm.com>
- <20140904160320.GB22354@arm.com>
- <20140904172909.GA14822@e102568-lin.cambridge.arm.com>
- <20140905092120.GG13515@arm.com>
- <20140905153457.GA26306@e102568-lin.cambridge.arm.com>
- <54115D16.30206@linaro.org>
- <20140911085727.GA25773@e102568-lin.cambridge.arm.com>
- <54116C40.3080700@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <54116C40.3080700@linaro.org>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Will Deacon <Will.Deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>S
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH] clk: rockchip: rk3288: add VOP1 softresets and rename VOP0 softresets
+Date: Fri, 12 Sep 2014 18:33:23 +0800
+Message-ID: <1410518004-19040-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dkl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, caesar.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Daniel, Lorenzo,
+The rk3288 have two vop, and each vop has three softresets were axi_reset,
+ahb_reset and dclk_reset.
 
-On Thu, Sep 11, 2014 at 10:32:48AM +0100, Daniel Lezcano wrote:
-> On 09/11/2014 10:57 AM, Lorenzo Pieralisi wrote:
-> > There is no ARM code in my series. So to sum it up:
-> >
-> > a) I send a pull request to Catalin for arm64 patches on top of the branch
-> >     you are creating with my patches
->  >
-> > b) You take care of merging the CPUidle related patches through your
-> >     tree
-> >
-> > Is the above what you meant ?
-> 
-> Right, that allows to share a branch across the trees and resolve the 
-> dependencies when a patchset is touching different subsystems.
-> 
-> I realize the dependency is inverted regarding what I proposed 
-> initially, so it is up to Catalin to create the branch and I will share 
-> it with him.
+Signed-off-by: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ include/dt-bindings/clock/rk3288-cru.h | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-I created the branch below with the arm64 specific patches for cpuidle.
-I won't rebase it and it should appear in -next tomorrow.
-
-Lorenzo, please send a pull request to Daniel with the additional
-patches on top of the arm64 branch. Thanks.
-
-The following changes since commit 2ce7598c9a453e0acd0e07be7be3f5eb39608ebd:
-
-  Linux 3.17-rc4 (2014-09-07 16:09:43 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux for-next/cpuidle
-
-for you to fetch changes up to 18910ab0d916b1a87016d69efd027714a80521dd:
-
-  arm64: add PSCI CPU_SUSPEND based cpu_suspend support (2014-09-12 10:48:56 +0100)
-
-----------------------------------------------------------------
-Lorenzo Pieralisi (4):
-      Documentation: arm: define DT idle states bindings
-      arm64: kernel: refactor the CPU suspend API for retention states
-      arm64: kernel: introduce cpu_init_idle CPU operation
-      arm64: add PSCI CPU_SUSPEND based cpu_suspend support
-
- Documentation/devicetree/bindings/arm/cpus.txt     |   8 +
- .../devicetree/bindings/arm/idle-states.txt        | 679 +++++++++++++++++++++
- Documentation/devicetree/bindings/arm/psci.txt     |  14 +-
- arch/arm64/include/asm/cpu_ops.h                   |   3 +
- arch/arm64/include/asm/cpuidle.h                   |  13 +
- arch/arm64/include/asm/suspend.h                   |   1 +
- arch/arm64/kernel/Makefile                         |   1 +
- arch/arm64/kernel/cpuidle.c                        |  31 +
- arch/arm64/kernel/psci.c                           | 104 ++++
- arch/arm64/kernel/sleep.S                          |  47 +-
- arch/arm64/kernel/suspend.c                        |  48 +-
- 11 files changed, 916 insertions(+), 33 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/idle-states.txt
- create mode 100644 arch/arm64/include/asm/cpuidle.h
- create mode 100644 arch/arm64/kernel/cpuidle.c
-
+diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
+index ebcb460..4d65959 100644
+--- a/include/dt-bindings/clock/rk3288-cru.h
++++ b/include/dt-bindings/clock/rk3288-cru.h
+@@ -235,9 +235,9 @@
+ #define SRST_RGA_NIU		97
+ #define SRST_VIO0_NIU_AXI	98
+ #define SRST_VIO_NIU_AHB	99
+-#define SRST_LCDC0_AXI		100
+-#define SRST_LCDC0_AHB		101
+-#define SRST_LCDC0_DCLK		102
++#define SRST_VOP0_AXI		100
++#define SRST_VOP0_AHB		101
++#define SRST_VOP0_DCLK		102
+ #define SRST_VIO1_NIU_AXI	103
+ #define SRST_VIP		104
+ #define SRST_RGA_CORE		105
+@@ -276,3 +276,7 @@
+ #define SRST_USBHOST1_CON	140
+ #define SRST_USB_ADP		141
+ #define SRST_ACC_EFUSE		142
++
++#define SRST_VOP1_AXI		176
++#define SRST_VOP1_AHB		177
++#define SRST_VOP1_DCLK		178
 -- 
-Catalin
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
