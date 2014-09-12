@@ -1,39 +1,144 @@
-From: Dave Airlie <airlied@gmail.com>
-Subject: Re: [PATCH v5] ASoC: tda998x: Add a codec to the HDMI transmitter
-Date: Fri, 12 Sep 2014 14:14:12 +1000
-Message-ID: <CAPM=9tx-x1+qXOkqJi1OpvWinTHARWjMgHhgNZs91q2rMCETPw@mail.gmail.com>
-References: <20140910101654.DA9BE897EF@gabe.freedesktop.org>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 5/9] rtc: at91sam9: make use of syscon/regmap to
+ access GPBR registers
+Date: Fri, 12 Sep 2014 07:33:06 +0200
+Message-ID: <20140912073306.5ac2c295@bbrezillon>
+References: <1410441525-25258-6-git-send-email-boris.brezillon@free-electrons.com>
+	<1410443588-9092-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20140911174209.GE3131@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140910101654.DA9BE897EF@gabe.freedesktop.org>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, "Russell King - ARM Linux <linux@arm.linux.org.uk> Andrew Jackson" <Andrew.Jackson@arm.com>, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Mark Brown <broonie@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140911174209.GE3131-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10 September 2014 19:29, Jean-Francois Moine <moinejf@free.fr> wrote:
-> This patch adds a CODEC function to the NXP TDA998x HDMI transmitter.
->
-> The CODEC handles both I2S and S/PDIF inputs.
-> It maintains the audio format and rate constraints according
-> to the HDMI device parameters (EDID) and does dynamic input
-> switch in the TDA998x I2C driver on start/stop audio streaming.
->
+On Thu, 11 Sep 2014 19:42:09 +0200
+Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-You should indicate on subsystem spanning patches what tree you think
-should merge it etc.
+> On 11/09/2014 at 15:53:08 +0200, Boris Brezillon wrote :
+> > The GPBR registers are not part of the RTT block and thus should not be
+> > defined in the reg property of the rtt node.
+> > 
+> > Use syscon to provide a proper DT representation and reference the GPBR
+> > syscon device in a new "atmel,time-reg" property which store both the
+> > syscon device phandle and the register offset within the GPBR block.
+> > 
+> > When using non DT boards, we won't be able to retrieve the syscon regmap,
+> > hence we need to create our own regmap using the memory region defined
+> > in the 2nd memory resource assigned to the RTT platform device.
+> > 
+> > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/rtc/Kconfig        |  1 +
+> >  drivers/rtc/rtc-at91sam9.c | 59 +++++++++++++++++++++++++++++++++++++++-------
+> >  2 files changed, 51 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> > index a168e96..7d76da8 100644
+> > --- a/drivers/rtc/Kconfig
+> > +++ b/drivers/rtc/Kconfig
+> > @@ -1081,6 +1081,7 @@ config RTC_DRV_AT91RM9200
+> >  config RTC_DRV_AT91SAM9
+> >  	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
+> >  	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
+> > +	select MFD_SYSCON
+> >  	help
+> >  	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
+> >  	  (Real Time Timer). These timers are powered by the backup power
+> > diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+> > index d72c34d..944e317 100644
+> > --- a/drivers/rtc/rtc-at91sam9.c
+> > +++ b/drivers/rtc/rtc-at91sam9.c
+> > @@ -21,6 +21,8 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/platform_data/atmel.h>
+> >  #include <linux/io.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/regmap.h>
+> >  
+> >  /*
+> >   * This driver uses two configurable hardware resources that live in the
+> > @@ -72,7 +74,8 @@ struct sam9_rtc {
+> >  	void __iomem		*rtt;
+> >  	struct rtc_device	*rtcdev;
+> >  	u32			imr;
+> > -	void __iomem		*gpbr;
+> > +	struct regmap		*gpbr;
+> > +	unsigned int		gpbr_offset;
+> >  	int 			irq;
+> >  };
+> >  
+> > @@ -81,10 +84,19 @@ struct sam9_rtc {
+> >  #define rtt_writel(rtc, field, val) \
+> >  	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
+> >  
+> > -#define gpbr_readl(rtc) \
+> > -	readl((rtc)->gpbr)
+> > -#define gpbr_writel(rtc, val) \
+> > -	writel((val), (rtc)->gpbr)
+> > +static inline unsigned int gpbr_readl(struct sam9_rtc *rtc)
+> > +{
+> > +	unsigned int val;
+> > +
+> > +	regmap_read(rtc->gpbr, rtc->gpbr_offset, &val);
+> > +
+> > +	return val;
+> > +}
+> > +
+> > +static inline void gpbr_writel(struct sam9_rtc *rtc, unsigned int val)
+> > +{
+> > +	regmap_write(rtc->gpbr, rtc->gpbr_offset, val);
+> > +}
+> >  
+> >  /*
+> >   * Read current time and date in RTC
+> > @@ -301,6 +313,12 @@ static const struct rtc_class_ops at91_rtc_ops = {
+> >  	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
+> >  };
+> >  
+> > +static struct regmap_config gpbr_regmap_config = {
+> > +	.reg_bits = 32,
+> > +	.val_bits = 32,
+> > +	.reg_stride = 4,
+> > +};
+> > +
+> >  /*
+> >   * Initialize and install RTC driver
+> >   */
+> > @@ -334,10 +352,33 @@ static int at91_rtc_probe(struct platform_device *pdev)
+> >  	if (IS_ERR(rtc->rtt))
+> >  		return PTR_ERR(rtc->rtt);
+> >  
+> > -	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > -	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
+> > -	if (IS_ERR(rtc->gpbr))
+> > -		return PTR_ERR(rtc->rtt);
+> > +	if (!pdev->dev.of_node) {
+> > +		void __iomem *gpbr;
+> > +
+> > +		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > +		gpbr = devm_ioremap_resource(&pdev->dev, r);
+> > +		if (IS_ERR(gpbr))
+> > +			return PTR_ERR(gpbr);
+> > +
+> 
+> Maybe you could add a comment here as this is soon to be dead code.
 
-If other tda998x ppl are okay with it, you can have my ack for merging
-via someone else.
+Sure. I'll add a TODO comment.
 
-Dave.
+Thanks.
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
