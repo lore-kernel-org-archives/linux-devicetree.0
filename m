@@ -1,29 +1,139 @@
-From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki@elproma.com.pl>
-Subject: Re: [PATCH] serial: mxs-auart: use mctrl_gpio helpers for handling
- modem signals (v2)
-Date: Fri, 12 Sep 2014 20:16:15 +0200
-Message-ID: <5413386F.3050903@elproma.com.pl>
-References: <1410540563-24789-1-git-send-email-j.uzycki@elproma.com.pl> <CAOMZO5B7EXoJSCxdW4XN7e1iGbY-Jd-z6VCEB2i-CAJyXh-Lrw@mail.gmail.com>
+From: Andy Gross <agross@codeaurora.org>
+Subject: Re: [PATCH v8 2/3] usb: dwc3: Add Qualcomm DWC3 glue layer driver
+Date: Fri, 12 Sep 2014 13:53:43 -0500
+Message-ID: <20140912185343.GA8756@qualcomm.com>
+References: <1410542986-24419-1-git-send-email-agross@codeaurora.org>
+ <1410542986-24419-3-git-send-email-agross@codeaurora.org>
+ <20140912174704.GG8567@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5B7EXoJSCxdW4XN7e1iGbY-Jd-z6VCEB2i-CAJyXh-Lrw@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140912174704.GG8567@saruman.home>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, Jack Pham <jackp@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Sep 12, 2014 at 12:47:04PM -0500, Felipe Balbi wrote:
+> Hi,
+> 
+> On Fri, Sep 12, 2014 at 12:29:45PM -0500, Andy Gross wrote:
+> > From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > 
+> > DWC3 glue layer is hardware layer around Synopsys DesignWare
+> > USB3 core. Its purpose is to supply Synopsys IP with required
+> > clocks, voltages and interface it with the rest of the SoC.
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> > Signed-off-by: Andy Gross <agross@codeaurora.org>
+> > ---
+> >  drivers/usb/dwc3/Kconfig     |    9 +++
+> >  drivers/usb/dwc3/Makefile    |    1 +
+> >  drivers/usb/dwc3/dwc3-qcom.c |  133 ++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 143 insertions(+)
+> >  create mode 100644 drivers/usb/dwc3/dwc3-qcom.c
+> > 
+> > diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> > index 785510a..e9f258e 100644
+> > --- a/drivers/usb/dwc3/Kconfig
+> > +++ b/drivers/usb/dwc3/Kconfig
+> > @@ -80,6 +80,15 @@ config USB_DWC3_KEYSTONE
+> >  	  Support of USB2/3 functionality in TI Keystone2 platforms.
+> >  	  Say 'Y' or 'M' here if you have one such device
+> >  
+> > +config USB_DWC3_QCOM
+> > +	tristate "Qualcomm Platforms"
+> > +	depends on ARCH_QCOM || COMPILE_TEST
+> > +	default USB_DWC3
+> > +	select PHY_QCOM_DWC3
+> 
+> I would rather steer away from selecting the PHY as it prevents having
+> PHYs as modules. Also, this will add a Kconfig warning for selecting a
+> symbol that doesn't exist (yet).
 
-> On Fri, Sep 12, 2014 at 1:49 PM, Janusz Uzycki <j.uzycki@elproma.com.pl> wrote:
->> Dedicated CTS and RTS pins are unusable together with a lot of other
->> peripherals because they share the same line. Pinctrl is limited.
->>
->> Moreover, the USART controller doesn't handle DTR/DSR/DCD/RI signals,
-> You meant "AUART controller"
-Thanks Fabio. I wait for more comments, especially to comments-questions 
-in the code.
+True.  The one downside is people having to fish around to find the phy config
+option.
 
-best regards
-Janusz
+> 
+> If it's all the same with you, I can clean this up when applying.
+> 
 
+Thats fine.
+
+> > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > new file mode 100644
+> > index 0000000..2067c04
+> > --- /dev/null
+> > +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > @@ -0,0 +1,133 @@
+> > +/* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regulator/consumer.h>
+> > +#include <linux/usb/phy.h>
+> 
+> doesn't look like you need regulator/consumer.h and usb/phy.h. I can
+> clean it up when applying.
+
+Ack, interim changes that should have been removed.  you can do that or I can
+respin.... no big deal.
+
+> 
+> > +struct dwc3_qcom {
+> > +	struct device		*dev;
+> > +
+> > +	struct clk		*core_clk;
+> > +	struct clk		*iface_clk;
+> > +	struct clk		*sleep_clk;
+> > +};
+> > +
+> > +static int dwc3_qcom_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device_node *node = pdev->dev.of_node;
+> > +	struct dwc3_qcom *qdwc;
+> > +	int ret = 0;
+> > +
+> > +	qdwc = devm_kzalloc(&pdev->dev, sizeof(*qdwc), GFP_KERNEL);
+> > +	if (!qdwc)
+> > +		return -ENOMEM;
+> > +
+> > +	platform_set_drvdata(pdev, qdwc);
+> > +
+> > +	qdwc->dev = &pdev->dev;
+> > +
+> > +	qdwc->core_clk = devm_clk_get(qdwc->dev, "core");
+> > +	if (IS_ERR(qdwc->core_clk)) {
+> > +		dev_dbg(qdwc->dev, "failed to get core clock\n");
+> 
+> this one would be a dev_err() since core can't work without its clock. I
+> can fix when applying.
+
+Right.  That's fine.
+
+> 
+> -- 
+> balbi
+
+
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
