@@ -1,82 +1,55 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: rockchip-max98090: add documentation for rockchip-max98090 driver
-Date: Fri, 12 Sep 2014 12:04 +0200
-Message-ID: <3774516.jOvxH1lgyQ@diego>
-References: <1410507036-15442-1-git-send-email-jay.xu@rock-chips.com> <1410513055-17775-1-git-send-email-jay.xu@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
+Date: Fri, 12 Sep 2014 12:10:37 +0200
+Message-ID: <CAMuHMdVi+6TXH68ddQ-UWfUif0Mv=ETu6dnpiy1Apike6zfAbg@mail.gmail.com>
+References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de>
+	<9935938.eKOCvCAtLt@fb07-iapwap2>
+	<20140912083348.GA1289@katana>
+	<7627175.tG5quZH0VN@fb07-iapwap2>
+	<20140912095821.GB1930@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410513055-17775-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jianqun <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140912095821.GB1930@katana>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Marc Dietrich <marvin24@gmx.de>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jianqun,
+Hi Wolfram,
 
-Am Freitag, 12. September 2014, 17:10:55 schrieb Jianqun:
-> Add documentation for rockchip-max98090 driver, which is need by rockchip
-> board using a max98090.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> changes since v1:
+On Fri, Sep 12, 2014 at 11:58 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> 2) Slave mode is needed for board bringup
+>
+> Some other components need a specific I2C slave to be present before
+> userspace is available, otherwise the system is unusable. This is IMO
+> then a hardware description and justifies DT entries:
 
-please make sure to also include the version in the patch subject, so that
-people can always see which is which. This one should've been
+OK, I didn't think this case, which is similar to an external device requiring
+a GPIO to be at a specific level.
 
-[PATCH v2 1/2] ASoC: rockchip-max98090: add documentation for rockchip-max98090 driver
+> DT pseudocode:
+>
+>         i2c {
+>                 compatible = "nvidia, tegra-i2c";
+>
+>                 ec-slave@42 {
+>                         compatible = "nvidia, ax100-ec-slave";
+>                         reg = <0x42>;
+>                 };
+>         };
 
-Because without this identification, people can only try to guess which one is the
-newest version.
+So distinguishing between drivers providing slave services (using slave
+mode) and drivers driving actual slave hardware (using master mode) is
+done based on the compatible-property.
 
+Gr{oetje,eeting}s,
 
-Heiko
-
-> - modify error text from "Tegra" to "rockchip"
-> 
->  .../sound/rockchip,rockchip-audio-max98090.txt     | 23
-> ++++++++++++++++++++++ 1 file changed, 23 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-max98090.tx
-> t
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-max98090.
-> txt
-> b/Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-max98090.
-> txt new file mode 100644
-> index 0000000..e12d1a0
-> --- /dev/null
-> +++
-> b/Documentation/devicetree/bindings/sound/rockchip,rockchip-audio-max98090.
-> txt @@ -0,0 +1,23 @@
-> +ROCKCHIP audio complex, with MAX98090 CODEC
-> +
-> +Required properties:
-> +- compatible : must be "rockchip,rockchip-audio-max98090"
-> +- rockchip,model : the user-visible name of this sound complex
-> +- rockchip,i2s-controller : The phandle of the rockchip I2S controller
-> +  that's connected to the CODEC.
-> +- rockchip,audio-codec : The phandle of the MAX98090 audio codec.
-> +
-> +Optional properties:
-> +- rockchip,hp-det-gpios : The GPIO that detect headphones are plugged in
-> +- rockchip,mic-det-gpios : The GPIO that detect micphones are plugged in
-> +
-> +Example:
-> +
-> +sound {
-> +	compatible = "rockchip,rockchip-audio-max98090";
-> +	rockchip,model = "ROCKCHIP-I2S";
-> +	rockchip,i2s-controller = <&i2s>;
-> +	rockchip,audio-codec = <&max98090>;
-> +	rockchip,hp-det-gpios = <&gpio6 5 GPIO_ACTIVE_HIGH>;
-> +	rockchip,mic-det-gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
-> +};
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
