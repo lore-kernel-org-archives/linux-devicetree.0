@@ -1,114 +1,87 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
-Date: Fri, 12 Sep 2014 11:58:21 +0200
-Message-ID: <20140912095821.GB1930@katana>
-References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de>
- <9935938.eKOCvCAtLt@fb07-iapwap2>
- <20140912083348.GA1289@katana>
- <7627175.tG5quZH0VN@fb07-iapwap2>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCHv3 1/6] ARM: dts: Add SoC level device tree support for
+ LS1021A
+Date: Fri, 12 Sep 2014 09:59:10 +0000
+Message-ID: <de5dbb877d09447498c8c3cabce67f7e@BL2PR03MB467.namprd03.prod.outlook.com>
+References: <1410253952-15631-1-git-send-email-jingchang.lu@freescale.com>
+ <62651744.c71MLsL3Q5@wuerfel>
+ <cd69af536cd248b8add94a468fa97095@BL2PR03MB467.namprd03.prod.outlook.com>
+ <2944183.HzFlEzpKtu@wuerfel> <20140911111202.GA4958@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7627175.tG5quZH0VN@fb07-iapwap2>
-Sender: linux-sh-owner@vger.kernel.org
-To: Marc Dietrich <marvin24@gmx.de>
-Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140911111202.GA4958-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---qlTNgmc+xy1dBmNv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> ok, take our embedded controller driver (in staging/nvec) as an example. =
-It's=20
-> basicly an MFD connecting keyboard, mouse, power, gpio, and some other st=
-uff=20
-> to the soc. The MFD operates in master mode while the SOC is the I2C slav=
-e.=20
-> Theoretically, these roles could also switch (but that's not defined in t=
-he=20
-> nvec protocol).
-
-I see these cases currently:
-
-1) my current case
-
-The I2C slave is not needed for board bringup, mainly for development or
-playing around. It can have this or that functionality on this or that
-address. -> does not belong into DT, should be done in userspace
-
-2) Slave mode is needed for board bringup
-
-Some other components need a specific I2C slave to be present before
-userspace is available, otherwise the system is unusable. This is IMO
-then a hardware description and justifies DT entries:
-
-DT pseudocode:
-
-	i2c {
-		compatible =3D "nvidia, tegra-i2c";
-
-		ec-slave@42 {
-			compatible =3D "nvidia, ax100-ec-slave";
-			reg =3D <0x42>;
-		};
-	};
-
-Of course, an MFD driver providing "nvidia, ax100-ec-slave" is needed
-which uses the I2C slave mode of the tegra controller.
-
-3) Master + slave mode is needed for board bringup:
-
-Again, IMO a hardware description, so we could use:
-
-	i2c {
-		compatible =3D "nvidia, tegra-i2c";
-
-		ec@64 {
-			compatible =3D "nvidia, ax100-ec";
-			reg =3D <0x64>;
-		};
-	};
-
-This is a standard I2C device driver (using the MFD framework) where
-i2c-tegra would act as a master on the client for 0x64. However, its
-probe function can fill an i2c_board_device (the driver should know the
-slave device address because of the protocol), get a new client using
-i2c_new_device, and register that as a I2C slave client. It then has an
-address where it listens and an address where it can send to. When to do
-what is protocol implementation.
-
-
-Am I missing something? Board properties can be encoded within the
-compatible entries ("ax100-ec", "ax200-ec"...). I'd think this means
-mostly different protocols, though.
-
-
---qlTNgmc+xy1dBmNv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUEsO9AAoJEBQN5MwUoCm2CX8P/26YJnJi+R06TSHAzWpDOdH4
-A21ApjwG4hruJDHfiXsI9cGoUku4uwnIErkIaWh5rHNFfmNRWmKqAxyVh7Lccv9Z
-rPII8I17sSHEDPIdbg4nHdijrVpD9TPVIZiGiGSeMmFV+iYbaFCMJuajDxxfbMe7
-JpXztCFp6buPAjYUAEbnlYEZpegvI1n3etsyvSkY/SgM5aTE9Ut6WSfa1S0Y9ERj
-I5y7YGv9o30hYe5p+KfPqajFicasiybAfpzRgDpaXtGVORsicr+2NNA7PkLmTpS3
-mOCtDaFNP7+QROgm6M5iK3Ki8gzHGDpC3J6r1eZknmIDLDJNaarXQPJ6dhHX2EEy
-CiO7MsxgBHd0HMilgeApjbzCLt43QcztNurWNTicYtNx7X+t97jHBxXlWwEqXr1W
-vAY9cDDBKIQ/NIrsg0MLoeRXebxkcJYBqx0WAVPLXj691p1+ZzfePfxTBEE8PjTq
-60waT2owTSbE+yPuwjS4o/FmfIQM9DipBcfsn/uK5K4p4YARhcJ3LqHsuWWA66s8
-BYeJdoJVcQoev1mxe/cJXIwD0KcNTWDAV7ufzV2qLTnRu21V7qpHdir0bWakzeSF
-jnyNUijBMdzxwXoTEGnvjtfVQJxQkwWexZQgCrLn4Omd6iU/v3AWtI69V3lXPNdL
-YYKHDXmo/WkzHMC1jnQ2
-=O3vC
------END PGP SIGNATURE-----
-
---qlTNgmc+xy1dBmNv--
+DQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFNhc2NoYSBIYXVlciBbbWFp
+bHRvOnMuaGF1ZXJAcGVuZ3V0cm9uaXguZGVdDQo+U2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAx
+MSwgMjAxNCA3OjEyIFBNDQo+VG86IEFybmQgQmVyZ21hbm4NCj5DYzogTHUgSmluZ2NoYW5nLUIz
+NTA4MzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBHdW8gU2hhd24tDQo+
+UjY1MDczOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgWmhhbyBDaGVuaHVpLUIzNTMzNjsg
+RnUgQ2hhby1CNDQ1NDg7DQo+TGVla2hhIFNoYXZldGEtQjIwMDUyOyBHdXB0YSBTdXJlc2gtQjQy
+ODEzOyBTaGFybWEgQmh1cGVzaC1CNDUzNzA7IFhpdWJvDQo+TGktQjQ3MDUzOyBHdXB0YSBSdWNo
+aWthLVI2NjQzMTsgQmFkb2xhIE5pa2hpbC1CNDYxNzINCj5TdWJqZWN0OiBSZTogW1BBVENIdjMg
+MS82XSBBUk06IGR0czogQWRkIFNvQyBsZXZlbCBkZXZpY2UgdHJlZSBzdXBwb3J0IGZvcg0KPkxT
+MTAyMUENCj4NCj5PbiBUaHUsIFNlcCAxMSwgMjAxNCBhdCAxMjozNjo1MFBNICswMjAwLCBBcm5k
+IEJlcmdtYW5uIHdyb3RlOg0KPj4gT24gVGh1cnNkYXkgMTEgU2VwdGVtYmVyIDIwMTQgMDg6MjE6
+NTggSmluZ2NoYW5nIEx1IHdyb3RlOg0KPj4gPiA+T25lIG1vcmUgdGhpbmc6IHRoZXNlIHNob3Vs
+ZCBhbGwgZ28gaW50byB0aGUgYm9hcmQgc3BlY2lmaWMgZmlsZXMuDQo+PiA+ID4NCj4+ID4gPlRo
+ZSBpbnN0YWxsZWQgbWVtb3J5IGlzIGFsbW9zdCBhbHdheXMgYSBwcm9wZXJ0eSBvZiB0aGUgYm9h
+cmQsIG5vdA0KPj4gPiA+dGhlIFNvQywgYW5kIGEgbG90IG9mIGJvYXJkcyBvbmx5IGNvbm5lY3Qg
+YSBzdWJzZXQgb2YgdGhlIHNlcmlhbA0KPj4gPiA+cG9ydHMsIG9yIHRoZXkgbWF5IGhhdmUgdGhl
+bSBpbiBhIGRpZmZlcmVudCBvcmRlci4NCj4+ID4gPg0KPj4gPiA+SW4gcGFydGljdWxhciwgeW91
+IG9ubHkgcHJvdmlkZSBhbGlhc2VzIGZvciB0aGUgc2l4IG91dCBvZiB0aGUgdGVuDQo+PiA+ID5h
+dmFpbGFibGUgdWFydHMsIHdoaWNoIHNlZW1zIGFyYml0cmFyeS4NCj4+ID4gPg0KPj4gPg0KPj4g
+PiBUaGUgbWVtb3J5IHNpemUgaW5mbyB3aWxsIGJlIGZpeGVkIHVwIGluIHUtYm9vdCBiZWZvcmUg
+Ym9vdGluZyB0aGUNCj4+ID4ga2VybmVsIGltYWdlLCBzbyBJIGFkZCB0aGUgbWVtb3J5IG5vZGUg
+aW4gdGhlIFNvQyBsZXZlbCBkZXZpY2UgdHJlZQ0KPmFuZCBrZWVwIG9ubHkgb25lIGNvcHkuDQo+
+Pg0KPj4gUmlnaHQuIEkgd29uZGVyIGlmIGl0IHdvdWxkIG1ha2Ugc2Vuc2UgdG8ganVzdCBsZWF2
+ZSBhIHBsYWNlaG9sZGVyIGluDQo+PiB0aGVyZSB0aGF0IGRvZXMgbm90IGxvb2sgbGlrZSBhIHBs
+YXVzaWJsZSBtZW1vcnkgc2l6ZS4NCj4NCj5UaGUgcGxhY2Vob2xkZXIgaXMgYWxyZWFkeSBpbiBz
+a2VsZXRvbi5kdHNpLCBubyBuZWVkIHRvIGFkZCBpdCBhdCBTb0MNCj5sZXZlbC4NClRoYW5rcywg
+SSB3aWxsIHJlbW92ZSB0aGUgbm9kZSBpbiB0aGUgU29DIGR0c2kgYW5kIHVzZSBqdXN0IHRoYXQg
+aW4NCnRoZSBza2VsZXRvbjY0LmR0c2kgaW5zdGVhZC4NCg0KPg0KPj4gSSBiZWxpZXZlIHRoZSBj
+b21tb24gY2FzZSB0b2RheQ0KPj4gaXMgdGhhdCB3ZSBhY3R1YWxseSB3YW50IHRvIGhhdmUgdGhl
+IGNvcnJlY3QgbWVtb3J5IHNpemUgaW4gdGhlDQo+PiBib2FyZC1sZXZlbCBkdHMgZmlsZSBiZWNh
+dXNlIHRoZSBib290IGxvYWRlciBkb2VzIG5vdCBjaGFuZ2UgdGhhdA0KPj4gdmFsdWUuIElmIHlv
+dXIgYm9vdCBsb2FkZXIgZG9lcyBpdCwgd2UgcHJvYmFibHkgZG9uJ3Qgd2FudCBhbnkgZGVmYXVs
+dA0KPj4gdGhhdCBtYXkgY29uZnVzZSB1c2VycyBhdCBhbGwsIGluIHBhcnRpY3VsYXIgaW4gdGhl
+IHBlci1zb2MgZmlsZS4NCj4+DQo+PiA+IFRoZSBscHVhcnQgZGVyaXZlcyB0aGUgbGluZSBudW1i
+ZXIgZnJvbSB0aGUgbm9kZSdzIGFsaWFzIGlkLCA4MjUwDQo+PiA+IHNlcmlhbCBkcml2ZXIgZG9l
+c24ndCByZWx5IG9uIGl0LCBzbyBvbmx5IGFsaWFzZXMgZm9yIHRoZSBscHVhcnQgYXJlDQo+YWRk
+ZWQsIG5vdCBhcmJpdHJhcnkuDQo+Pg0KPj4gVGhpcyBpcyByZWFsbHkgYmFkIHRob3VnaCwgZm9y
+IHR3byByZWFzb25zOg0KPj4NCj4+IGEpIHlvdSBhcmUgcmVseWluZyBvbiBjdXJyZW50IGJlaGF2
+aW9yIG9mIHR3byBrZXJuZWwgZHJpdmVycyB0aGF0IHdlDQo+PiBtYXkgd2FudCB0byBjaGFuZ2Ug
+aW4gdGhlIGZ1dHVyZS4gVW5mb3J0dW5hdGVseSB0aGUgdHdvIGRyaXZlcnMgZG9uJ3QNCj4+IGRv
+IHRoaXMgY29uc2lzdGVudGx5IHRvZGF5LCBidXQgdGhhdCdzIHNvbWV0aGluZyB3ZSBzaG91bGQg
+Zml4IGluIHRoZQ0KPj4ga2VybmVsLCBub3Qgd29yayBhcm91bmQgaW4gdGhlIGhhcmR3YXJlIGRl
+c2NyaXB0aW9uLg0KPj4NCj4+IGIpIGZvciB0aGUgbHB1YXJ0IGNhc2UsIHlvdSBwdXQgYSBmaXhl
+ZCBkZXZpY2Ugb3JkZXIgaW4gdGhlDQo+PiBzb2Mtc3BlY2lmaWMgZmlsZSwgd2l0aG91dCBhbnkg
+Z3VhcmFudGVlIHRoYXQgdGhlIGJvYXJkIHVzZXMganVzdCB0aGUNCj4+IGZpcnN0IHggZGV2aWNl
+cyByYXRoZXIgdGhhbiBhbm90aGVyIHJhbmRvbSBzdWJzZXQuIFRoZSBhbGlhcyB2YWx1ZXMNCj4+
+IGFyZSByZWFsbHkgbWVhbnQgdG8gdG8gY29ycmVzcG9uZCB0byBob3cgdGhlIG1hY2hpbmUgY2Fs
+bHMgdGhpbmdzLCBub3QNCj5ob3cgdGhlIFNvQyBzZWVzIGl0Lg0KPg0KPkFsbCBpLk1YIFNvQ3Mg
+aGF2ZSB0aGUgYWxpYXNlcyBkZWZpbmVkIGhvdyB0aGUgU29DIHNlZXMgdGhlIGRldmljZXMgYW5k
+DQo+aS5NWCBpcyBub3QgYWxvbmUgaGVyZS4NCj4NCj5JIGtub3cgdGhhdCBzb21lIHBlb3BsZSBy
+YXRoZXIgbGlrZSB0byBzZWUgdGhlIGFsaWFzZXMgY29ycmVzcG9uZCB0byB0aGUNCj5udW1iZXJz
+IHByaW50ZWQgb24gdGhlIGNhc2Ugb3IgUENCLCB0aHVzIGRyb3BwaW5nIHRoZSBhbGlhc2VzIGZy
+b20gdGhlIFNvQw0KPmR0c2kgYW5kIHB1dHRpbmcgdGhlbSBpbnRvIHRoZSBib2FyZCBkdHMgaW5z
+dGVhZC4NCj4NCj5JIHRoaW5rIGJvdGggdGhlIFVBUlQgbnVtYmVyIGZyb20gdGhlIGRhdGFzaGVl
+dCBhbmQgdGhlIG51bWJlciBwcmludGVkIG9uDQo+dGhlIGNhc2UgYXJlIHZhbHVhYmxlIGluZm9y
+bWF0aW9ucywgd2Ugc2hvdWxkIGNvbWUgdXAgd2l0aCBhIHdheSB0bw0KPmV4cHJlc3MgYm90aCBp
+bmZvcm1hdGlvbnMgaW5zdGVhZCBvZiBhcmd1ZWluZyBhYm91dCB0aGUgbWVhbmluZyBvZiB0aGUN
+Cj4nc2VyaWFseCcgYWxpYXMuIFRoaXMgc2hvdWxkbid0IGV2ZW4gYmUgdG9vIGhhcmQsIHdlIGNv
+dWxkIGNyZWF0ZSBtdWx0aXBsZQ0KPmFsaWFzZXMgZm9yIHRoZSBzYW1lIGRldmljZSBhbmQgbGV0
+IHVkZXYgY3JlYXRlIGxpbmtzIGZvciBhbGwgb2YgdGhlbS4NCj4NCj5TYXNjaGENCg0KVGhlbiBJ
+IHdpbGwga2VlcCB0aGUgb25seSBhbGlhcyBmb3IgdGhlIGxwdWFydCB0byBtYWtlIHRoZW0gd29y
+a2luZyB3ZWxsIGN1cnJlbnRseS4NClRoYW5rcy4NCg0KQmVzdCBSZWdhcmRzLA0KSmluZ2NoYW5n
+DQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
