@@ -1,7 +1,7 @@
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH 2/6] ARM: shmobile: emev2: sort dtsi file by address
-Date: Fri, 12 Sep 2014 10:51:12 +0200
-Message-ID: <1410511876-9235-3-git-send-email-ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH 3/6] ARM: shmobile: kzm9d: sort dts file by address
+Date: Fri, 12 Sep 2014 10:51:13 +0200
+Message-ID: <1410511876-9235-4-git-send-email-ulrich.hecht+renesas@gmail.com>
 References: <1410511876-9235-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1410511876-9235-1-git-send-email-ulrich.hecht+renesas@gmail.com>
@@ -12,151 +12,86 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 ---
- arch/arm/boot/dts/emev2.dtsi | 120 +++++++++++++++++++++----------------------
- 1 file changed, 60 insertions(+), 60 deletions(-)
+ arch/arm/boot/dts/emev2-kzm9d.dts | 62 +++++++++++++++++++--------------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/arch/arm/boot/dts/emev2.dtsi b/arch/arm/boot/dts/emev2.dtsi
-index 00eeed3..41d2da7 100644
---- a/arch/arm/boot/dts/emev2.dtsi
-+++ b/arch/arm/boot/dts/emev2.dtsi
-@@ -41,6 +41,12 @@
+diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev2-kzm9d.dts
+index 50ccd15..a1794cb 100644
+--- a/arch/arm/boot/dts/emev2-kzm9d.dts
++++ b/arch/arm/boot/dts/emev2-kzm9d.dts
+@@ -27,37 +27,6 @@
+ 		bootargs = "console=ttyS1,115200n81 ignore_loglevel root=/dev/nfs ip=dhcp";
+ 	};
+ 
+-	reg_1p8v: regulator@0 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "fixed-1.8V";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+-	};
+-
+-	reg_3p3v: regulator@1 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "fixed-3.3V";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-always-on;
+-		regulator-boot-on;
+-	};
+-
+-	lan9220@20000000 {
+-		compatible = "smsc,lan9220", "smsc,lan9115";
+-		reg = <0x20000000 0x10000>;
+-		phy-mode = "mii";
+-		interrupt-parent = <&gpio0>;
+-		interrupts = <1 IRQ_TYPE_EDGE_RISING>;
+-		reg-io-width = <4>;
+-		smsc,irq-active-high;
+-		smsc,irq-push-pull;
+-		vddvario-supply = <&reg_1p8v>;
+-		vdd33a-supply = <&reg_3p3v>;
+-	};
+-
+ 	gpio_keys {
+ 		compatible = "gpio-keys";
+ 		#address-cells = <1>;
+@@ -92,4 +61,35 @@
+ 			gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
  		};
  	};
- 
-+	pmu {
-+		compatible = "arm,cortex-a9-pmu";
-+		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 121 IRQ_TYPE_LEVEL_HIGH>;
++
++	reg_1p8v: regulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-1.8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		regulator-boot-on;
 +	};
 +
- 	gic: interrupt-controller@e0020000 {
- 		compatible = "arm,cortex-a9-gic";
- 		interrupt-controller;
-@@ -49,10 +55,60 @@
- 		      <0xe0020000 0x0100>;
- 	};
- 
--	pmu {
--		compatible = "arm,cortex-a9-pmu";
--		interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 121 IRQ_TYPE_LEVEL_HIGH>;
-+	gpio0: gpio@e0050000 {
-+		compatible = "renesas,em-gio";
-+		reg = <0xe0050000 0x2c>, <0xe0050040 0x20>;
-+		interrupts = <0 67 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 68 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <32>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
++	reg_3p3v: regulator@1 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
 +	};
-+	gpio1: gpio@e0050080 {
-+		compatible = "renesas,em-gio";
-+		reg = <0xe0050080 0x2c>, <0xe00500c0 0x20>;
-+		interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 70 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <32>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
++
++	lan9220@20000000 {
++		compatible = "smsc,lan9220", "smsc,lan9115";
++		reg = <0x20000000 0x10000>;
++		phy-mode = "mii";
++		interrupt-parent = <&gpio0>;
++		interrupts = <1 IRQ_TYPE_EDGE_RISING>;
++		reg-io-width = <4>;
++		smsc,irq-active-high;
++		smsc,irq-push-pull;
++		vddvario-supply = <&reg_1p8v>;
++		vdd33a-supply = <&reg_3p3v>;
 +	};
-+	gpio2: gpio@e0050100 {
-+		compatible = "renesas,em-gio";
-+		reg = <0xe0050100 0x2c>, <0xe0050140 0x20>;
-+		interrupts = <0 71 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 72 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <32>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+	gpio3: gpio@e0050180 {
-+		compatible = "renesas,em-gio";
-+		reg = <0xe0050180 0x2c>, <0xe00501c0 0x20>;
-+		interrupts = <0 73 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 74 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <32>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+	gpio4: gpio@e0050200 {
-+		compatible = "renesas,em-gio";
-+		reg = <0xe0050200 0x2c>, <0xe0050240 0x20>;
-+		interrupts = <0 75 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 76 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		ngpios = <31>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
- 	};
- 
- 	smu@e0110000 {
-@@ -168,60 +224,4 @@
- 		clocks = <&usib_u3_sclk>;
- 		clock-names = "sclk";
- 	};
--
--	gpio0: gpio@e0050000 {
--		compatible = "renesas,em-gio";
--		reg = <0xe0050000 0x2c>, <0xe0050040 0x20>;
--		interrupts = <0 67 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 68 IRQ_TYPE_LEVEL_HIGH>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		ngpios = <32>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--	gpio1: gpio@e0050080 {
--		compatible = "renesas,em-gio";
--		reg = <0xe0050080 0x2c>, <0xe00500c0 0x20>;
--		interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 70 IRQ_TYPE_LEVEL_HIGH>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		ngpios = <32>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--	gpio2: gpio@e0050100 {
--		compatible = "renesas,em-gio";
--		reg = <0xe0050100 0x2c>, <0xe0050140 0x20>;
--		interrupts = <0 71 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 72 IRQ_TYPE_LEVEL_HIGH>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		ngpios = <32>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--	gpio3: gpio@e0050180 {
--		compatible = "renesas,em-gio";
--		reg = <0xe0050180 0x2c>, <0xe00501c0 0x20>;
--		interrupts = <0 73 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 74 IRQ_TYPE_LEVEL_HIGH>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		ngpios = <32>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--	gpio4: gpio@e0050200 {
--		compatible = "renesas,em-gio";
--		reg = <0xe0050200 0x2c>, <0xe0050240 0x20>;
--		interrupts = <0 75 IRQ_TYPE_LEVEL_HIGH>,
--			     <0 76 IRQ_TYPE_LEVEL_HIGH>;
--		gpio-controller;
--		#gpio-cells = <2>;
--		ngpios = <31>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
  };
 -- 
 1.8.4.5
