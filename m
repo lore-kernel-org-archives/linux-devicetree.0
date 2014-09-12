@@ -1,91 +1,105 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH/RFC v5 2/4] leds: implement sysfs interface locking
- mechanism
-Date: Fri, 12 Sep 2014 08:45:03 +0200
-Message-ID: <5412966F.9000309@samsung.com>
-References: <1408542118-32723-1-git-send-email-j.anaszewski@samsung.com>
- <1408542118-32723-3-git-send-email-j.anaszewski@samsung.com>
- <CAK5ve-+Trcg+ZL5gBZmpY_Zcqk5VOhP7jowS8Liqcz0pO_UbBQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAK5ve-+Trcg+ZL5gBZmpY_Zcqk5VOhP7jowS8Liqcz0pO_UbBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 0/8] charger/mfd: max14577: Add support for MAX77836
+Date: Fri, 12 Sep 2014 08:53:52 +0200
+Message-ID: <1410504840-23543-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bryan,
+Hi,
 
-Thanks for a review.
 
-On 09/12/2014 03:11 AM, Bryan Wu wrote:
-> On Wed, Aug 20, 2014 at 6:41 AM, Jacek Anaszewski
-> <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Add a mechanism for locking LED subsystem sysfs interface.
->> This patch prepares ground for addition of LED Flash Class
->> extension, whose API will be integrated with V4L2 Flash API.
->> Such a fusion enforces introducing a locking scheme, which
->> will secure consistent access to the LED Flash Class device.
->>
->> The mechanism being introduced allows for disabling LED
->> subsystem sysfs interface by calling led_sysfs_lock function
->> and enabling it by calling led_sysfs_unlock. The functions
->> alter the LED_SYSFS_LOCK flag state and must be called
->> under mutex lock. The state of the lock is checked with use
->> of led_sysfs_is_locked function. Such a design allows for
->> providing immediate feedback to the user space on whether
->> the LED Flash Class device is available or is under V4L2 Flash
->> sub-device control.
->>
->> Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
->> ---
->>   drivers/leds/led-class.c    |   23 ++++++++++++++++++++---
->>   drivers/leds/led-core.c     |   18 ++++++++++++++++++
->>   drivers/leds/led-triggers.c |   15 ++++++++++++---
->>   include/linux/leds.h        |   32 ++++++++++++++++++++++++++++++++
->>   4 files changed, 82 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->> index 6f82a76..0bc0ba9 100644
->> --- a/drivers/leds/led-class.c
->> +++ b/drivers/leds/led-class.c
->> @@ -39,17 +39,31 @@ static ssize_t brightness_store(struct device *dev,
->>   {
->>          struct led_classdev *led_cdev = dev_get_drvdata(dev);
->>          unsigned long state;
->> -       ssize_t ret = -EINVAL;
->> +       ssize_t ret;
->> +
->> +#ifdef CONFIG_V4L2_FLASH_LED_CLASS
->
-> Can we remove this #ifdef? Following code looks good to the common LED class.
+This is a sixth version of patches adding support for
+MAX77836 device to the max14577 drivers.
 
-Sure.
+This patchset has been on the lists for quite long time and was already
+reviewed by all necessary maintainers except power supply.
+I need acks from power supply subsystem (patches: 3, 5-8).
 
->> +       mutex_lock(&led_cdev->led_lock);
->
-> Can we choose more meaningful name instead of led_lock here?
-> Then use led_sysfs_enable() instead of led_sysfs_unlock()
-> led_sysfs_disable instead of led_sysfs_lock()
-> led_sysfs_is_disabled instead of led_sysfs_is_locked()
->
-> And the flag LED_SYSFS_LOCK -> LED_SYSFS_DISABLE
->
-> I was just confused by the name lock and unlock and mutex lock.
->
-> The idea looks good to me.
+Generally this should be pulled at once but some parts may be split
+and pulled separately in following batches:
+ - Patches 1 and 2: as MFD prerequisites,
+ - Patches 3-5: adding actual charger code, depends on 1 and 2,
+ - Patch 6: fuel-gauge, independent,
+ - Patches 7 and 8: only documentation.
 
-Indeed, this naming will be more intuitive.
+Lee Jones said he can take the set through his tree. Still I need acks
+from power subsystem.
 
-Regards,
-Jacek
+Everything rebased on Linus' tree (v3.17-rc2-9-g68e370289c29).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v5
+================
+1. 5/8: Remove 'inline' from functions (suggested by Andrew Morton).
+2. Add Andrew Morton's acks.
+
+Changes since v4
+================
+1. Add Lee Jones' acks to patch 1 and 2 (mfd).
+2. power max17040 6/8: Remove duplicated (and not used) value of id
+   in array of i2c_device_id. (suggested by Lee Jones)
+
+Changes since v3
+================
+1. Split MFD changes into separate new patches:
+   1/8: mfd: max14577: Add defines for MAX77836 charger
+   2/8: Map charger device to its own of_node
+   Suggested by Lee Jones.
+
+Changes since v2
+================
+1. charger: Use sysfs instead of DTS for setting the fast charge timer.
+   The charger driver now selects the CONFIG_SYSFS and exports
+   a DEVICE_ATTR. (suggested by Mark Rutland)
+2. Add patch 6 with documentation of exported sysfs entry for fast
+   charge timer.
+3. charger 3/6: Add missing 'break' in switch parsing valid values
+   for fast charge timer.
+
+Changes since v1
+================
+1. charger 3/5: Add an error message for each unsuccessful parse of DT
+   property (suggested by Mark Rutland).
+2. charger 3/5: Use 'u32' type for storing values from DT (suggested
+   by Mark Rutland).
+3. charger 3/5: Remove an error message for memory allocation failure.
+
+
+The patchset (first and second part of the MAX77836 drivers) has been
+on the lists since January. Changelog for the first part of the drivers
+(merged):
+https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg628696.html
+
+
+Best regards,
+Krzysztof Kozlowski
+
+
+Krzysztof Kozlowski (8):
+  mfd: max14577: Add defines for MAX77836 charger
+  mfd: max14577: Map charger device to its own of_node
+  charger: max14577: Add support for MAX77836 charger
+  regulator/mfd: max14577: Export symbols for calculating charger
+    current
+  charger: max14577: Configure battery-dependent settings from DTS and
+    sysfs
+  power: max17040: Add ID for MAX77836 Fuel Gauge block
+  devicetree: mfd: max14577: Add device tree bindings document
+  Documentation: charger: max14577: Document exported sysfs entry
+
+ Documentation/ABI/testing/sysfs-class-power        |  14 +
+ Documentation/devicetree/bindings/mfd/max14577.txt | 146 ++++++++
+ drivers/mfd/max14577.c                             | 100 +++++-
+ drivers/power/Kconfig                              |   5 +-
+ drivers/power/max14577_charger.c                   | 370 +++++++++++++++++++--
+ drivers/power/max17040_battery.c                   |   3 +-
+ drivers/regulator/max14577.c                       |  80 +----
+ include/linux/mfd/max14577-private.h               |  95 ++++--
+ include/linux/mfd/max14577.h                       |  30 ++
+ 9 files changed, 704 insertions(+), 139 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+
+-- 
+1.9.1
