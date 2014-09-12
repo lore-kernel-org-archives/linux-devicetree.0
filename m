@@ -1,130 +1,114 @@
-From: Robin Gong <b38343@freescale.com>
-Subject: [PATCH v2 2/3] power: reset: imx-snvs-poweroff: add power off driver for i.mx6
-Date: Fri, 12 Sep 2014 16:48:58 +0800
-Message-ID: <1410511739-31122-3-git-send-email-b38343@freescale.com>
-References: <1410511739-31122-1-git-send-email-b38343@freescale.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
+Date: Fri, 12 Sep 2014 11:58:21 +0200
+Message-ID: <20140912095821.GB1930@katana>
+References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de>
+ <9935938.eKOCvCAtLt@fb07-iapwap2>
+ <20140912083348.GA1289@katana>
+ <7627175.tG5quZH0VN@fb07-iapwap2>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410511739-31122-1-git-send-email-b38343@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@freescale.com, kernel@pengutronix.de, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qlTNgmc+xy1dBmNv"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7627175.tG5quZH0VN@fb07-iapwap2>
+Sender: linux-sh-owner@vger.kernel.org
+To: Marc Dietrich <marvin24@gmx.de>
+Cc: linux-i2c@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-Add simple power off driver for i.mx6.
 
-Signed-off-by: Robin Gong <b38343@freescale.com>
----
- drivers/power/reset/Kconfig             |  6 +++
- drivers/power/reset/Makefile            |  1 +
- drivers/power/reset/imx-snvs-poweroff.c | 69 +++++++++++++++++++++++++++++++++
- 3 files changed, 76 insertions(+)
- create mode 100644 drivers/power/reset/imx-snvs-poweroff.c
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index ca41523..c48d9ba 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -45,6 +45,12 @@ config POWER_RESET_HISI
- 	help
- 	  Reboot support for Hisilicon boards.
- 
-+config POWER_RESET_IMX
-+	bool "IMX6 power-off driver"
-+	depends on POWER_RESET && SOC_IMX6
-+	help
-+	  Power off support for i.mx6 boards.
-+
- config POWER_RESET_MSM
- 	bool "Qualcomm MSM power-off driver"
- 	depends on POWER_RESET && ARCH_QCOM
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index a42e70e..2524daf 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_POWER_RESET_AXXIA) += axxia-reset.o
- obj-$(CONFIG_POWER_RESET_BRCMSTB) += brcmstb-reboot.o
- obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
- obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
-+obj-$(CONFIG_POWER_RESET_IMX) += imx-snvs-poweroff.o
- obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
- obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
- obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
-diff --git a/drivers/power/reset/imx-snvs-poweroff.c b/drivers/power/reset/imx-snvs-poweroff.c
-new file mode 100644
-index 0000000..55603ba
---- /dev/null
-+++ b/drivers/power/reset/imx-snvs-poweroff.c
-@@ -0,0 +1,69 @@
-+/* Power off driver for i.mx6
-+ * Copyright (c) 2014, FREESCALE CORPORATION.  All rights reserved.
-+ *
-+ * based on msm-poweroff.c
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+
-+#include <asm/system_misc.h>
-+
-+static void __iomem *snvs_base;
-+
-+static void do_imx_poweroff(void)
-+{
-+	u32 value = readl(snvs_base);
-+
-+	/* set TOP and DP_EN bit */
-+	writel(value | 0x60, snvs_base);
-+}
-+
-+static int imx_poweroff_probe(struct platform_device *pdev)
-+{
-+	snvs_base = of_iomap(pdev->dev.of_node, 0);
-+	if (!snvs_base) {
-+		dev_err(&pdev->dev, "failed to get memory\n");
-+		return -EIO;
-+	}
-+
-+	pm_power_off = do_imx_poweroff;
-+	return 0;
-+}
-+
-+static const struct of_device_id of_imx_poweroff_match[] = {
-+	{ .compatible = "fsl,sec-v4.0-poweroff", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_imx_poweroff_match);
-+
-+static struct platform_driver imx_poweroff_driver = {
-+	.probe = imx_poweroff_probe,
-+	.driver = {
-+		.name = "imx-snvs-poweroff",
-+		.of_match_table = of_match_ptr(of_imx_poweroff_match),
-+	},
-+};
-+
-+static int __init imx_poweroff_init(void)
-+{
-+	return platform_driver_register(&imx_poweroff_driver);
-+}
-+device_initcall(imx_poweroff_init);
--- 
-1.9.1
+
+> ok, take our embedded controller driver (in staging/nvec) as an example. =
+It's=20
+> basicly an MFD connecting keyboard, mouse, power, gpio, and some other st=
+uff=20
+> to the soc. The MFD operates in master mode while the SOC is the I2C slav=
+e.=20
+> Theoretically, these roles could also switch (but that's not defined in t=
+he=20
+> nvec protocol).
+
+I see these cases currently:
+
+1) my current case
+
+The I2C slave is not needed for board bringup, mainly for development or
+playing around. It can have this or that functionality on this or that
+address. -> does not belong into DT, should be done in userspace
+
+2) Slave mode is needed for board bringup
+
+Some other components need a specific I2C slave to be present before
+userspace is available, otherwise the system is unusable. This is IMO
+then a hardware description and justifies DT entries:
+
+DT pseudocode:
+
+	i2c {
+		compatible =3D "nvidia, tegra-i2c";
+
+		ec-slave@42 {
+			compatible =3D "nvidia, ax100-ec-slave";
+			reg =3D <0x42>;
+		};
+	};
+
+Of course, an MFD driver providing "nvidia, ax100-ec-slave" is needed
+which uses the I2C slave mode of the tegra controller.
+
+3) Master + slave mode is needed for board bringup:
+
+Again, IMO a hardware description, so we could use:
+
+	i2c {
+		compatible =3D "nvidia, tegra-i2c";
+
+		ec@64 {
+			compatible =3D "nvidia, ax100-ec";
+			reg =3D <0x64>;
+		};
+	};
+
+This is a standard I2C device driver (using the MFD framework) where
+i2c-tegra would act as a master on the client for 0x64. However, its
+probe function can fill an i2c_board_device (the driver should know the
+slave device address because of the protocol), get a new client using
+i2c_new_device, and register that as a I2C slave client. It then has an
+address where it listens and an address where it can send to. When to do
+what is protocol implementation.
+
+
+Am I missing something? Board properties can be encoded within the
+compatible entries ("ax100-ec", "ax200-ec"...). I'd think this means
+mostly different protocols, though.
+
+
+--qlTNgmc+xy1dBmNv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUEsO9AAoJEBQN5MwUoCm2CX8P/26YJnJi+R06TSHAzWpDOdH4
+A21ApjwG4hruJDHfiXsI9cGoUku4uwnIErkIaWh5rHNFfmNRWmKqAxyVh7Lccv9Z
+rPII8I17sSHEDPIdbg4nHdijrVpD9TPVIZiGiGSeMmFV+iYbaFCMJuajDxxfbMe7
+JpXztCFp6buPAjYUAEbnlYEZpegvI1n3etsyvSkY/SgM5aTE9Ut6WSfa1S0Y9ERj
+I5y7YGv9o30hYe5p+KfPqajFicasiybAfpzRgDpaXtGVORsicr+2NNA7PkLmTpS3
+mOCtDaFNP7+QROgm6M5iK3Ki8gzHGDpC3J6r1eZknmIDLDJNaarXQPJ6dhHX2EEy
+CiO7MsxgBHd0HMilgeApjbzCLt43QcztNurWNTicYtNx7X+t97jHBxXlWwEqXr1W
+vAY9cDDBKIQ/NIrsg0MLoeRXebxkcJYBqx0WAVPLXj691p1+ZzfePfxTBEE8PjTq
+60waT2owTSbE+yPuwjS4o/FmfIQM9DipBcfsn/uK5K4p4YARhcJ3LqHsuWWA66s8
+BYeJdoJVcQoev1mxe/cJXIwD0KcNTWDAV7ufzV2qLTnRu21V7qpHdir0bWakzeSF
+jnyNUijBMdzxwXoTEGnvjtfVQJxQkwWexZQgCrLn4Omd6iU/v3AWtI69V3lXPNdL
+YYKHDXmo/WkzHMC1jnQ2
+=O3vC
+-----END PGP SIGNATURE-----
+
+--qlTNgmc+xy1dBmNv--
