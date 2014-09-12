@@ -1,75 +1,48 @@
-From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
-Date: Fri, 12 Sep 2014 09:51:31 +0200
-Message-ID: <9935938.eKOCvCAtLt@fb07-iapwap2>
-References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de> <1591383.Xdy91rktuP@fb07-iapwap2> <20140911145421.GE5149@katana>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1739861.7zaRQAvcMS"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140911145421.GE5149@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH] ahci_xgene: Fix the error print invalid resource for APM X-Gene SoC AHCI SATA Host Controller driver.
+Date: Fri, 12 Sep 2014 13:24:08 +0530
+Message-ID: <1410508448-25111-2-git-send-email-stripathi@apm.com>
+References: <1410508448-25111-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1410508448-25111-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch fixes the error print invalid resource for the APM X-Gene
+SoC AHCI SATA Host Controller driver. This print was due to the fact
+that the controller 3 don't have a mux resource. This didn't result
+in any errors but the print seems like meaningless.
 
---nextPart1739861.7zaRQAvcMS
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="ISO-8859-1"
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+ drivers/ata/ahci_xgene.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Am Donnerstag, 11. September 2014, 16:54:22 schrieb Wolfram Sang:
-> On Thu, Sep 11, 2014 at 04:52:22PM +0200, Marc Dietrich wrote:
-> > Am Donnerstag, 11. September 2014, 16:40:04 schrieb Wolfram Sang:
-> > > > b) could be seen as a configuration thing since the functionality
-> > > > backend could be changed at runtime even.
-> > > 
-> > > Come to think of it, not only the functionality, also the address can be
-> > > changed at runtime. This makes me think it should really not be in DT
-> > > after all.
-> > 
-> > even worse, there can be multiple masters and slaves changing their role
-> > on
-> > the fly AFAIK. So the best dt can do is to provide an initial
-> > configuration, so all drivers know where they are and where to start.
-> > Everything else can be changed during runtime.
-> 
-> Why do you want DT to be involved at all?
+diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+index 40d0a76..9404db0c 100644
+--- a/drivers/ata/ahci_xgene.c
++++ b/drivers/ata/ahci_xgene.c
+@@ -434,7 +434,7 @@ static int xgene_ahci_mux_select(struct xgene_ahci_context *ctx)
+ 	u32 val;
 
-Imagine a device which supports both, slave or master mode. The driver needs 
-to know in which mode it should operate. This cannot be hard coded, because on 
-different boards, different modes can be used.
+ 	/* Check for optional MUX resource */
+-	if (IS_ERR(ctx->csr_mux))
++	if (!ctx->csr_mux)
+ 		return 0;
 
-The point is, that if we define a dt binding for master device on slave 
-adapters it will be there forever. So even if it makes no sense for the 
-example eeprom simulator (or even our embedded controller), it may make sense 
-for other or future devices.
+ 	val = readl(ctx->csr_mux + SATA_ENET_CONFIG_REG);
+@@ -485,7 +485,7 @@ static int xgene_ahci_probe(struct platform_device *pdev)
 
-On the other hand, we had some painful discussion about that issue in the 
-past, so if no one else steps up to propose a good alternative binding, I will 
-be the last to criticize your approach.
+ 	/* Retrieve the optional IP mux resource */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
+-	ctx->csr_mux = devm_ioremap_resource(dev, res);
++	ctx->csr_mux = res ? devm_ioremap_resource(dev, res) : NULL;
 
-Marc
-
---nextPart1739861.7zaRQAvcMS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJUEqYDAAoJEKyeR39HFBtozwgH/2bHmcw/6W6u/J5YCNajnCsl
-HTeIRhgyVhYg3veMFwivVoQPhSM00YuH7q9GNaKXOspFxkSUuo8wyZQZnaF3/sTE
-gQWMF6KV8qUgGKZe7J5944q7FEhKkiGNaOyBLnSNioq4U7hCdfuUgjaLcNVP2HXZ
-95gPaRInj7dxyoai7LyfYyHKV1qQdR+rVhStxUUFllRtVw9oZFiKr4JEmPcadcNq
-dYdsVkXoWQTLWtAl1dAl2RIvEI3DwygumnqXhwQ9G42FEAgIUbZMlFPsHE6+wDB2
-C5pOAeSI1FWJgKqixF40jutMroUb3naendOMSG2Ee2N40BpXk2m5PLi5Pyqba8I=
-=fuO/
------END PGP SIGNATURE-----
-
---nextPart1739861.7zaRQAvcMS--
-
+ 	dev_dbg(dev, "VAddr 0x%p Mmio VAddr 0x%p\n", ctx->csr_core,
+ 		hpriv->mmio);
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.2.1
+
