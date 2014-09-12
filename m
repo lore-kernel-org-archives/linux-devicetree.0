@@ -1,141 +1,89 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v10 00/10] Support for creating generic PCI host bridges
- from DT
-Date: Fri, 12 Sep 2014 10:30:18 +0100
-Message-ID: <20140912093018.GX27864@e106497-lin.cambridge.arm.com>
-References: <1410184472-17630-1-git-send-email-Liviu.Dudau@arm.com>
- <5412ADE9.2050708@amd.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] fbdev: fsl-sii902x: HDMI support for Freescale SoCs
+Date: Fri, 12 Sep 2014 12:34:17 +0300
+Message-ID: <5412BE19.2010302@ti.com>
+References: <1409892517-29816-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5412ADE9.2050708@amd.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="0ff6aQeaPd3M3s1MAo9HX6mg2ScwMT9ut"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1409892517-29816-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 12, 2014 at 09:25:13AM +0100, Suravee Suthikulpanit wrote:
-> On 9/8/2014 8:54 AM, Liviu Dudau wrote:
-> > This is my version 10 of the attempt at adding support for generic =
-PCI host
-> > bridge controllers that make use of device tree information to
-> > configure themselves. This version reverses v9's attempt to create =
-one function
-> > to drive the whole process of extracting the host bridge ranges, se=
-tup the
-> > host bridge driver and then scan the root bus behind the host bridg=
-e. While it
-> > would've been quite user friendly, I agree that it would've caused =
-a lot of pain
-> > in the future.
-> >
-> > I would like to get ACKs for the remaining patches as I would like =
-to integrate
-> > this into -next in the following week.
-> >
-> > This version marks an implementation break with the previous versio=
-ns as
-> > of_create_pci_host_bridge() is now gone. It gets replaced by
-> > of_pci_get_host_bridge_resources() that only parses the DT and extr=
-acts the
-> > relevant ranges and converts them to resources. The updated host br=
-idge drivers
-> > will have to follow the guidelines in this example code:
-> >
-> > static int foohb_probe(struct platform_device *pdev)
-> > {
-> > 	struct device_node *dn =3D pdev->dev.of_node;
-> > 	struct foohb_drv *drv;
-> > 	resource_size_t io_base =3D 0;  /* phys address for start of IO */
-> > 	struct pci_bus *bus;
-> > 	int err =3D 0;
-> > 	LIST_HEAD(res);
-> >
-> > 	.....
-> > 	err =3D of_pci_get_host_bridge_resources(dn, 0, 255, &res, &io_bas=
-e);
-> > 	if (err)
-> > 		goto err_handling;
-> > 	err =3D foohb_setup(drv, ...., &res, &io_base);
-> > 	if (err)
-> > 		goto err_handling;
+--0ff6aQeaPd3M3s1MAo9HX6mg2ScwMT9ut
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Hi Suravee,
+Hi,
 
+On 05/09/14 07:48, Xiubo Li wrote:
+> Some Freescale SoCs, there has an DVI/HDMI controller and a PHY,
+> attached to one of their display controller unit's LCDC interfaces.
+> This patch adds a preliminary static support for such controllers.
 >=20
-> My understanding is that the "foohb_setup" above is supposed to be eq=
-uivalent
-> to the "int (*setup)(struct pci_host_bridge *, resource_size_t)" in V=
-9 that was
-> passed in as an argument of "of_create_pci_hot_bridge()".
-
-Correct. Parameters are probably different, but it is internal to your =
-driver so
-you can do whatever you want there.
-
+> This will support for many modes and a dynamic switching between
+> them.
 >=20
-> The problem I have is I need an intermediate step between "pci_create=
-_root_bus()"
-> and "pci_scan_child_bus()" in order to update the information such as=
- the "pci_bus->msi"
-> before this is propagate down to the child bus during the "pci_scan_c=
-hild_bus"
-> which is also called in the pci_scan_root_bus() function.
+> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/video/fsl-sii902x.txt      |  17 +
+>  drivers/video/fbdev/Kconfig                        |   7 +
+>  drivers/video/fbdev/Makefile                       |   1 +
+>  drivers/video/fbdev/fsl-sii902x.c                  | 526 +++++++++++++=
+++++++++
+>  4 files changed, 551 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/fsl-sii902x=
+=2Etxt
+>  create mode 100644 drivers/video/fbdev/fsl-sii902x.c
 
-How did that work with my v9 patchset? How does it work for other MSI-a=
-ware platforms?
-Are they not using pci_scan_child_bus()?
+I don't know how you picked the names of the people you sent this patch
+to, but looks to me that most of them are probably not interested in
+this patch.
 
->=20
-> Does this mean that I should not be calling the pci_scan_root_bus(), =
-and tries to
-> re-implement the same logic in my driver?
+Anyway, a few quick comments on the patch:
 
-Bjorn can comment here, but there seems to be a long standing desire to=
- make
-pci_scan_root_bus() more useful. If your change is generic enough, how =
-about proposing
-a patch for pci_scan_root_bus() and see what feedback you get.
+- You should probably use regmap instead of direct i2c calls.
+Interestingly, you define regmap variable, but you never use it.
+- Use defines for register offsets, instead of magic numbers.
+- You should not use static variables. They prevent having multiple
+instances of the device.
 
-Judging by the complete silence I'm getting on my change (patch 9/10) o=
-f the same function,
-we might be lucky enough and no one will notice ;) (Bjorn, I'm kidding =
-and I know you
-are busy).
+So the SiI902x chip is on the SoC, not on the board? And it's a plain
+standard SiI902x in other aspects?
 
-Best regards,
-Liviu
+ Tomi
 
->=20
-> Thanks,
->=20
-> Suravee
->=20
-> > 	.....
-> > 	pci_add_flags(....);
-> > 	bus =3D pci_scan_root_bus(&pdev->dev, 0, &foohb_ops, drv, &res);
-> > 	if (!bus)
-> > 		goto err_handling;
-> > 	....
-> > 	return 0;
-> >
-> > err_handling:
-> > 	......
-> > 	return err;
-> > }
-> >
->=20
->=20
->=20
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+
+--0ff6aQeaPd3M3s1MAo9HX6mg2ScwMT9ut
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUEr4ZAAoJEPo9qoy8lh71CpAQAKoDh2t5GoUuDQpPouk0PjlM
+u03FFs+tJDnol6nKjrA2aWdhi9tAUhofT2dyrnmlrHMPmhCRUZxuyuLFFVvYDcz9
+OUpt7nk80zAAhHwwsr4gReSzhLP7sTfqVjvuD4fwvA2Iff8XJI1v8ZTpSznz30PV
+77Nog6FoZpukkookxs1U2YEvftgHuox3DwKweyaTensWsbS17NJw7bjVLYehtqlQ
+RTFIz5kwhzbL6NEKY/FVTyEFxrqB3lck/r8bhbkRmEUunA9blJC/GVTiVYFTAW5d
+sJFfAS2Jo1yuKHtfpHjQoaCO/QcLV9I9MG1q7m+atXqy2SYW0nuxk0z79Gal4buu
+IENJXu+uh+lsbWNBeoS+KjPpVtCmX7+yFYXdsHg2LhS7KVY4z/Qjkd+a2hc1tyl1
+iQktbfdRm/0MLsNlI/dPpH19prgPg9Q0rxJJJKLcx9VtCE/3iZZZOzVJSz4o3ESN
+G7wfKLD+U9UQbow0g/UBWCqL58POVxxZtt37oYcQZ81i41H76D7xTK5ZscKQ9XBi
+PguTkAs2LCa2p3NlQPvuGdsA4cZCiWHjo3yNlY4HGzrG9/nXzz1B/JdeuZf3rzxN
+OgJnKs2ak0MfajQudQOgC0UcvQ//CRwXQDcjf6VagzYUIH0f9Qj5cmO4mqMC238I
+9sZSar3jJYIOgo9ICHi6
+=phmy
+-----END PGP SIGNATURE-----
+
+--0ff6aQeaPd3M3s1MAo9HX6mg2ScwMT9ut--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
