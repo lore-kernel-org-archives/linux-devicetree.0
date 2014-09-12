@@ -1,70 +1,90 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC 4/4] ARM: shmobile: r8a7790: adapt DTS for I2C slave support
-Date: Fri, 12 Sep 2014 12:26:08 +0200
-Message-ID: <20140912102607.GC1930@katana>
-References: <1410274470-12712-1-git-send-email-wsa@the-dreams.de>
- <9935938.eKOCvCAtLt@fb07-iapwap2>
- <20140912083348.GA1289@katana>
- <7627175.tG5quZH0VN@fb07-iapwap2>
- <20140912095821.GB1930@katana>
- <CAMuHMdVi+6TXH68ddQ-UWfUif0Mv=ETu6dnpiy1Apike6zfAbg@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
+Date: Fri, 12 Sep 2014 11:32:57 +0100
+Message-ID: <20140912103257.GB24416@localhost>
+References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140903173740.GJ1824@e102568-lin.cambridge.arm.com>
+ <20140904160320.GB22354@arm.com>
+ <20140904172909.GA14822@e102568-lin.cambridge.arm.com>
+ <20140905092120.GG13515@arm.com>
+ <20140905153457.GA26306@e102568-lin.cambridge.arm.com>
+ <54115D16.30206@linaro.org>
+ <20140911085727.GA25773@e102568-lin.cambridge.arm.com>
+ <54116C40.3080700@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <54116C40.3080700@linaro.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVi+6TXH68ddQ-UWfUif0Mv=ETu6dnpiy1Apike6zfAbg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marc Dietrich <marvin24@gmx.de>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jean Delvare <jdelvare@suse.de>, Magnus Damm <magnus.damm@gmail.com>, Andrey Danin <danindrey@mail.ru>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Will Deacon <Will.Deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>S
 List-Id: devicetree@vger.kernel.org
 
+Daniel, Lorenzo,
 
---Clx92ZfkiYIKRjnr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> > DT pseudocode:
+On Thu, Sep 11, 2014 at 10:32:48AM +0100, Daniel Lezcano wrote:
+> On 09/11/2014 10:57 AM, Lorenzo Pieralisi wrote:
+> > There is no ARM code in my series. So to sum it up:
 > >
-> >         i2c {
-> >                 compatible =3D "nvidia, tegra-i2c";
+> > a) I send a pull request to Catalin for arm64 patches on top of the branch
+> >     you are creating with my patches
+>  >
+> > b) You take care of merging the CPUidle related patches through your
+> >     tree
 > >
-> >                 ec-slave@42 {
-> >                         compatible =3D "nvidia, ax100-ec-slave";
-> >                         reg =3D <0x42>;
-> >                 };
-> >         };
->=20
-> So distinguishing between drivers providing slave services (using slave
-> mode) and drivers driving actual slave hardware (using master mode) is
-> done based on the compatible-property.
+> > Is the above what you meant ?
+> 
+> Right, that allows to share a branch across the trees and resolve the 
+> dependencies when a patchset is touching different subsystems.
+> 
+> I realize the dependency is inverted regarding what I proposed 
+> initially, so it is up to Catalin to create the branch and I will share 
+> it with him.
 
-We describe users of one specific I2C bus. And the drivers that go along
-with them. No?
+I created the branch below with the arm64 specific patches for cpuidle.
+I won't rebase it and it should appear in -next tomorrow.
 
+Lorenzo, please send a pull request to Daniel with the additional
+patches on top of the arm64 branch. Thanks.
 
---Clx92ZfkiYIKRjnr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The following changes since commit 2ce7598c9a453e0acd0e07be7be3f5eb39608ebd:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+  Linux 3.17-rc4 (2014-09-07 16:09:43 -0700)
 
-iQIcBAEBAgAGBQJUEso/AAoJEBQN5MwUoCm2dqUQAIJYjozB+npQ2xeKh/n7t2wT
-nThOrcgorY4NuCbm6ZdWpjdgCjcIdduRCh8c8iei+Sh73z7FXxC2RvM7smzLstif
-xKftDaLK0YVIn76pC0hfWQyu2rc57eQUm+JtrjK+IK9cMgJ33/NkwJw6J3yb9Z9j
-4GWQMO42NsxSltYHTUAsmX6l9ASLMaDy1IBJEyTFla2+0HAwK9e8Os/WO7coCEV9
-dknuH/18D/zVL/ZwaEGSJaxZQ6JhrYNUIIwcuty+QG4z1eLXko9seLXP67ARS0mB
-kDqpaY0auznfSDav5d4lL/8b8xpE6+cce4ZESfA3pqVOXR9F8CCud6zzEtV4ui1S
-oq1F34EYnxDOD/wJX03Iw3n+2KHTVvf5Js48F8WNQyv74bbUQK1otIyax2OpsoDL
-t6vpCOImgQuEt96+Q5Yu+HIPdpCivxzSsHNgnuIpeAZFjpFhtEs8zD0MzapB73fl
-z5OHqLZpQbyq38ZtVgT10cReQvq66Enyr081fJhJFK69sU8m1YqHyFG3L+SpJf73
-xW1etxa3RpygDITlJ6iZxrceB6KpnRnURH65HE60aKBxYAMCZ/WixmfT0tP4CVd4
-7bUgInDoHcle4SFDhn7Z0tPT3QW80Ztkd6FE604MOo0xjwNfb9zc72jgxOaPqoTX
-kcPjy04MLtEHtbZp/9xf
-=ci9g
------END PGP SIGNATURE-----
+are available in the git repository at:
 
---Clx92ZfkiYIKRjnr--
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux for-next/cpuidle
+
+for you to fetch changes up to 18910ab0d916b1a87016d69efd027714a80521dd:
+
+  arm64: add PSCI CPU_SUSPEND based cpu_suspend support (2014-09-12 10:48:56 +0100)
+
+----------------------------------------------------------------
+Lorenzo Pieralisi (4):
+      Documentation: arm: define DT idle states bindings
+      arm64: kernel: refactor the CPU suspend API for retention states
+      arm64: kernel: introduce cpu_init_idle CPU operation
+      arm64: add PSCI CPU_SUSPEND based cpu_suspend support
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |   8 +
+ .../devicetree/bindings/arm/idle-states.txt        | 679 +++++++++++++++++++++
+ Documentation/devicetree/bindings/arm/psci.txt     |  14 +-
+ arch/arm64/include/asm/cpu_ops.h                   |   3 +
+ arch/arm64/include/asm/cpuidle.h                   |  13 +
+ arch/arm64/include/asm/suspend.h                   |   1 +
+ arch/arm64/kernel/Makefile                         |   1 +
+ arch/arm64/kernel/cpuidle.c                        |  31 +
+ arch/arm64/kernel/psci.c                           | 104 ++++
+ arch/arm64/kernel/sleep.S                          |  47 +-
+ arch/arm64/kernel/suspend.c                        |  48 +-
+ 11 files changed, 916 insertions(+), 33 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/idle-states.txt
+ create mode 100644 arch/arm64/include/asm/cpuidle.h
+ create mode 100644 arch/arm64/kernel/cpuidle.c
+
+-- 
+Catalin
+
