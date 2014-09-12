@@ -1,53 +1,204 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] Tegra xHCI support
-Date: Fri, 12 Sep 2014 09:37:17 -0700
-Message-ID: <CAL1qeaEk_r5XAKvvJfwXN9+Wi9EjC_2MgBfoP92TK=F+Ou9QTA@mail.gmail.com>
-References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
-	<CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>
-	<CAL1qeaF7U9aoBp5gQPS=r+pe6krKmXdP1qak2gjhNqQMoHFB8A@mail.gmail.com>
-	<CAAObsKAXO-pBtqd1jNj8faXqpE+5Wb0RFzPp+jn9FH0B=dHq8g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAObsKAXO-pBtqd1jNj8faXqpE+5Wb0RFzPp+jn9FH0B=dHq8g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel@lists.>
+From: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Subject: [PATCH] serial: mxs-auart: use mctrl_gpio helpers for handling modem signals (v2)
+Date: Fri, 12 Sep 2014 18:49:23 +0200
+Message-ID: <1410540563-24789-1-git-send-email-j.uzycki@elproma.com.pl>
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Janusz Uzycki <j.uzycki@elproma.com.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 9, 2014 at 1:21 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
-> On 8 September 2014 18:22, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> On Mon, Sep 8, 2014 at 8:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
->>> On 2 September 2014 23:34, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>
->>>> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
->>>> USB3.0 memory sticks and ethernet dongles using controller firmware
->>>> recently posted by Andrew Chew [2].
->>>
->>> I have had mixed results when testing this on a Jetson TK1 board. Of 8
->>> USB devices I tested with, about half where probed correctly, but the
->>> other half repeatedly fail in hub_port_init because in the GET_STATUS
->>> right after the reset, the C_PORT_CONNECTION bit is set.
->>>
->>> I don't see any correlation between the failure and the kind of usb
->>> device, but I don't have much experience with USB implementations
->>> either.
->>
->> Hmm... I haven't seen that before.  Which particular devices were you using?
->
-> Here they are:
->
-> work:
->
-> Genius keyboard: 05d5:6782
-> Logitech mouse: 046d:c06a
-> Denver MP3 player: 10d6:1100
-> Atheros Bluetooth dongle: 0cf3:3005
->
-> don't work:
->
-> MCS7830 ethernet dongle: 9710:7830
-> Genesys Logic hub: 05e3:0608
+Dedicated CTS and RTS pins are unusable together with a lot of other
+peripherals because they share the same line. Pinctrl is limited.
 
-I tried the hub and it works just fine for me... Have you tried this
-on any other boards like Big or Blaze?
+Moreover, the USART controller doesn't handle DTR/DSR/DCD/RI signals,
+so we have to control them via GPIO.
+
+This patch permits to use GPIOs to control the CTS/RTS/DTR/DSR/DCD/RI
+signals.
+
+Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
+---
+ .../devicetree/bindings/serial/fsl-mxs-auart.txt   | 10 +++-
+ drivers/tty/serial/Kconfig           |  1 +
+ drivers/tty/serial/mxs-auart.c       | 66 +++++++++++++++++++++-
+ 3 files changed, 73 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+index 59a40f1..7c408c8 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+@@ -11,8 +11,13 @@ Required properties:
+ - dma-names: "rx" for RX channel, "tx" for TX channel.
+ 
+ Optional properties:
+-- fsl,uart-has-rtscts : Indicate the UART has RTS and CTS lines,
++- fsl,uart-has-rtscts : Indicate the UART has RTS and CTS lines
++  for hardware flow control,
+ 	it also means you enable the DMA support for this UART.
++- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
++  line respectively. It will use specified PIO instead of the peripheral
++  function pin for the USART feature.
++  If unsure, don't specify this property.
+ 
+ Example:
+ auart0: serial@8006a000 {
+@@ -21,6 +26,9 @@ auart0: serial@8006a000 {
+ 	interrupts = <112>;
+ 	dmas = <&dma_apbx 8>, <&dma_apbx 9>;
+ 	dma-names = "rx", "tx";
++	cts-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
++	dsr-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++	dcd-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
+ };
+ 
+ Note: Each auart port should have an alias correctly numbered in "aliases"
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 4fe8ca1..90e8516 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1357,6 +1357,7 @@ config SERIAL_MXS_AUART
+ 	depends on ARCH_MXS
+ 	tristate "MXS AUART support"
+ 	select SERIAL_CORE
++	select SERIAL_MCTRL_GPIO if GPIOLIB
+ 	help
+ 	  This driver supports the MXS Application UART (AUART) port.
+ 
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index 024e54f..e32ffb5 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -38,6 +38,18 @@
+ 
+ #include <asm/cacheflush.h>
+ 
++/* based on clps711x.c from linux-next:
++ *  serial: clps711x: Use mctrl_gpio helpers for handling modem signals
++ *  serial: clps711x: Fix COMPILE_TEST build for target without GPIOLIB support
++ * based on Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt from linux-next:
++ *  serial: clps711x: Use mctrl_gpio helpers for handling modem signals
++ * based on atmel_serial.c from linux-next:
++ *  tty/serial: at91: use mctrl_gpio helpers
++ *  TODO: tty/serial: at91: add interrupts for modem control lines
++ *  */
++#include <linux/err.h>
++#include "serial_mctrl_gpio.h"
++
+ #define MXS_AUART_MAJOR 242
+ #define MXS_AUART_PORTS 5
+ #define MXS_AUART_FIFO_SIZE		16
+@@ -156,6 +168,8 @@ struct mxs_auart_port {
+ 	struct scatterlist rx_sgl;
+ 	struct dma_chan	*rx_dma_chan;
+ 	void *rx_dma_buf;
++
++	struct mctrl_gpios *gpios;
+ };
+ 
+ static struct platform_device_id mxs_auart_devtype[] = {
+@@ -417,6 +431,34 @@ static void mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
+ 
+ 	s->ctrl = mctrl;
+ 	writel(ctrl, u->membase + AUART_CTRL2);
++
++	mctrl_gpio_set(s->gpios, mctrl);
++}
++
++/* mxs_auart_modem_status() based on 8250.c,
++ * similar function should be in a serial's helper! */
++#define MCTRL_ANY_DELTA        (TIOCM_RI | TIOCM_DSR | TIOCM_CD | TIOCM_CTS)
++static u32 mxs_auart_modem_status(struct mxs_auart_port *s, u32 mctrl)
++{
++	u32 mctrl_diff;
++
++	mctrl_diff = mctrl ^ s->ctrl;
++	s->ctrl = mctrl;
++	if (mctrl_diff & MCTRL_ANY_DELTA &&
++			/*interrupt_enabled &&*/
++			s->port.state != NULL) {
++		if (mctrl_diff & TIOCM_RI)
++			s->port.icount.rng++;
++		if (mctrl_diff & TIOCM_DSR)
++			s->port.icount.dsr++;
++		if (mctrl_diff & TIOCM_CD)
++			uart_handle_dcd_change(&s->port, mctrl & TIOCM_CD);
++		if (mctrl_diff & TIOCM_CTS)
++			uart_handle_cts_change(&s->port, mctrl & TIOCM_CTS);
++
++		wake_up_interruptible(&s->port.state->port.delta_msr_wait);
++	}
++	return mctrl;
+ }
+ 
+ static u32 mxs_auart_get_mctrl(struct uart_port *u)
+@@ -433,7 +475,9 @@ static u32 mxs_auart_get_mctrl(struct uart_port *u)
+ 	if (ctrl2 & AUART_CTRL2_RTS)
+ 		mctrl |= TIOCM_RTS;
+ 
+-	return mctrl;
++	/* should mxs_auart_modem_status() be in interrupt only? */
++	return mxs_auart_modem_status(s,
++			mctrl_gpio_get(s->gpios, &mctrl));
+ }
+ 
+ static int mxs_auart_dma_prep_rx(struct mxs_auart_port *s);
+@@ -637,7 +681,12 @@ static void mxs_auart_settermios(struct uart_port *u,
+ 		ctrl |= AUART_LINECTRL_STP2;
+ 
+ 	/* figure out the hardware flow control settings */
+-	if (cflag & CRTSCTS) {
++	/*FIXME: DMA for hardware flow control only? */
++	if (cflag & CRTSCTS &&
++			(IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
++					 UART_GPIO_RTS)) ||
++			 IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
++					 UART_GPIO_CTS)))) {
+ 		/*
+ 		 * The DMA has a bug(see errata:2836) in mx23.
+ 		 * So we can not implement the DMA for auart in mx23,
+@@ -696,8 +745,14 @@ static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
+ 		| AUART_INTR_CTSMIS),
+ 			s->port.membase + AUART_INTR_CLR);
+ 
++	mxs_auart_modem_status(s,
++			mctrl_gpio_get(s->gpios, &s->ctrl));
++
+ 	if (istat & AUART_INTR_CTSMIS) {
+-		uart_handle_cts_change(&s->port, stat & AUART_STAT_CTS);
++		if (IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
++						UART_GPIO_CTS)))
++			uart_handle_cts_change(&s->port,
++					stat & AUART_STAT_CTS);
+ 		writel(AUART_INTR_CTSMIS,
+ 				s->port.membase + AUART_INTR_CLR);
+ 		istat &= ~AUART_INTR_CTSMIS;
+@@ -1084,6 +1139,8 @@ static int mxs_auart_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, s);
+ 
++	s->gpios = mctrl_gpio_init(&pdev->dev, 0);
++
+ 	auart_port[s->port.line] = s;
+ 
+ 	mxs_auart_reset(&s->port);
+@@ -1100,6 +1157,7 @@ static int mxs_auart_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ out_free_irq:
++	mctrl_gpio_free(&pdev->dev, s->gpios);	/*useless?*/
+ 	auart_port[pdev->id] = NULL;
+ 	free_irq(s->irq, s);
+ out_free_clk:
+@@ -1118,6 +1176,8 @@ static int mxs_auart_remove(struct platform_device *pdev)
+ 
+ 	auart_port[pdev->id] = NULL;
+ 
++	mctrl_gpio_free(&pdev->dev, s->gpios);	/*useless?*/
++
+ 	clk_put(s->clk);
+ 	free_irq(s->irq, s);
+ 	kfree(s);
+-- 
+1.7.11.3
+
