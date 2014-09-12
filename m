@@ -1,86 +1,148 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH RESEND 0/8] i2c: Relax mandatory I2C ID table passing
-Date: Fri, 12 Sep 2014 19:32:22 +0200
-Message-ID: <CABxcv==OXd+uePcB8zDzB-DDmr9ci6zscHX5TCauWoTO6E4fpg@mail.gmail.com>
-References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
-	<20140912134632.GE1930@katana>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v8 2/3] usb: dwc3: Add Qualcomm DWC3 glue layer driver
+Date: Fri, 12 Sep 2014 12:47:04 -0500
+Message-ID: <20140912174704.GG8567@saruman.home>
+References: <1410542986-24419-1-git-send-email-agross@codeaurora.org>
+ <1410542986-24419-3-git-send-email-agross@codeaurora.org>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140912134632.GE1930@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Rn7IEEq3VEzCw+ji"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1410542986-24419-3-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: Felipe Balbi <balbi@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, Jack Pham <jackp@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-[adding Sjoerd as cc who was the one that raised the module auto-loading issue]
+--Rn7IEEq3VEzCw+ji
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hi,
 
-On Fri, Sep 12, 2014 at 3:46 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->>
->> Placing this firmly back on your plate.  I truly hope we don't miss
->> another merge-window.  This patch-set has the support of some pretty
->> senior kernel maintainers, so I hope acceptance shouldn't be too
->> difficult.
->>
->> As previously discussed I believe it should be okay for an I2C device
->> driver _not_ supply an I2C ID table to match to.  The I2C subsystem
->> should be able to match via other means, such as via OF tables.  The
->> blocking factor during our previous conversation was to keep
->> registering via sysfs up and running.  This set does that.
->
-> As mentioned in another thread, modaliases are one other possible side
-> effect. As Javier correctly mentions, the beaviour does not really
-> change with your patchset. Yet, if we remove i2c_device_id from drivers
-> too carelessly, they might not be bound anymore.
->
+On Fri, Sep 12, 2014 at 12:29:45PM -0500, Andy Gross wrote:
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+>=20
+> DWC3 glue layer is hardware layer around Synopsys DesignWare
+> USB3 core. Its purpose is to supply Synopsys IP with required
+> clocks, voltages and interface it with the rest of the SoC.
+>=20
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
+> ---
+>  drivers/usb/dwc3/Kconfig     |    9 +++
+>  drivers/usb/dwc3/Makefile    |    1 +
+>  drivers/usb/dwc3/dwc3-qcom.c |  133 ++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 143 insertions(+)
+>  create mode 100644 drivers/usb/dwc3/dwc3-qcom.c
+>=20
+> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> index 785510a..e9f258e 100644
+> --- a/drivers/usb/dwc3/Kconfig
+> +++ b/drivers/usb/dwc3/Kconfig
+> @@ -80,6 +80,15 @@ config USB_DWC3_KEYSTONE
+>  	  Support of USB2/3 functionality in TI Keystone2 platforms.
+>  	  Say 'Y' or 'M' here if you have one such device
+> =20
+> +config USB_DWC3_QCOM
+> +	tristate "Qualcomm Platforms"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	default USB_DWC3
+> +	select PHY_QCOM_DWC3
 
-Right, removing the I2C ID table even from drivers that don't really
-need it (e.g: IP blocks only present in DT platforms) will as you said
-break module auto-loading. Probing will work since the OF table is
-used to match the device in i2c_device_match() but is the I2C table
-what is used to fill the valid module aliases with the current
-behavior of i2c_device_uevent(), the aliases filled from the OF table
-are never used.
+I would rather steer away from selecting the PHY as it prevents having
+PHYs as modules. Also, this will add a Kconfig warning for selecting a
+symbol that doesn't exist (yet).
 
-So what I propose is to do it incrementally:
+If it's all the same with you, I can clean this up when applying.
 
-1) Merge Lee's series since that is definitely a step in the right
-direction to not make an I2C table mandatory (still will be needed for
-module auto loading though).
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> new file mode 100644
+> index 0000000..2067c04
+> --- /dev/null
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -0,0 +1,133 @@
+> +/* Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/usb/phy.h>
 
-2) On a follow-up series, make sure that all I2C drivers have a proper
-OF table and that are using the MODULE_DEVICE_TABLE(of,...) macro to
-fill the of:<foo> module aliases. That way the modules will have the
-proper aliases of the form "of:<foo>" besides the "i2c:<foo>" one.
-(even when always i2c:<foo> is reported to user-space currently).
+doesn't look like you need regulator/consumer.h and usb/phy.h. I can
+clean it up when applying.
 
-3) Apply the patch I posted [0] that changes the behavior of
-i2c_device_uevent() to report the OF uevent env vars to user-space in
-case of DT probing which after 2) should not regress any driver module
-auto-loading since all drivers should fill the of:<foo> aliases.
+> +struct dwc3_qcom {
+> +	struct device		*dev;
+> +
+> +	struct clk		*core_clk;
+> +	struct clk		*iface_clk;
+> +	struct clk		*sleep_clk;
+> +};
+> +
+> +static int dwc3_qcom_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *node =3D pdev->dev.of_node;
+> +	struct dwc3_qcom *qdwc;
+> +	int ret =3D 0;
+> +
+> +	qdwc =3D devm_kzalloc(&pdev->dev, sizeof(*qdwc), GFP_KERNEL);
+> +	if (!qdwc)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, qdwc);
+> +
+> +	qdwc->dev =3D &pdev->dev;
+> +
+> +	qdwc->core_clk =3D devm_clk_get(qdwc->dev, "core");
+> +	if (IS_ERR(qdwc->core_clk)) {
+> +		dev_dbg(qdwc->dev, "failed to get core clock\n");
 
-After this, DT-only drivers will only need an OF table and legacy
-drivers will only need an I2C table. Drivers that support both will
-still need the two tables though which is a drawback of this approach
-since unnecessary duplication will exist on these drivers and can
-cause issues when both tables are not in sync as we saw on the issue
-reported by Sjoerd on [1].
+this one would be a dev_err() since core can't work without its clock. I
+can fix when applying.
 
-So an alternate approach could be to do the opposite, just remove the
-OF tables entirely from the I2C drivers and only use the I2C table
-even for DT-only drivers. This is possible since i2c_device_match()
-will succeed even without an OF table because i2c_match_id() matches
-for compatible strings and what is reported as uevent is what is in
-the I2C table anyways. I believe that is what Sjoerd suggested but
-I'll let him comment on that in case I misunderstood.
+--=20
+balbi
 
-By the way, the SPI subsystem has the same behavior, I raised the issue on [2].
+--Rn7IEEq3VEzCw+ji
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Best regards,
-Javier
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-[0]: https://lkml.org/lkml/2014/9/11/269
-[1]: https://lkml.org/lkml/2014/9/9/100
-[2]: https://lkml.org/lkml/2014/9/11/458
+iQIcBAEBAgAGBQJUEzGYAAoJEIaOsuA1yqRE420QAKstJj0gzbXAGM+tChypADxD
+tJ4VvoKSK8YN/oGPoXC0uobfqG+cTM3Amq3bWCbj3f/V7w1HLTRecjMAG+Ixwwtv
+/rsJrOucdEYBXFt82LCBX1qxwAaSFF3baxzMnZ/yBMF/OP9yMn2eUR6khjy5c4q8
+4TdeQ/jCbx4bDH+vHHDai6YtjRbyg3u+PuDTNvVJp9sZpsbgu117i32Hv6xwR9d9
+F0mrWiuXYyzhY1WMUtUQ9ZtE9q+jiFbZWDPkZ+OcOlIHRu4T/yJfqDojgNcoGSrY
+IzgcHt+UAE0MAE/Ow5ndiUWwzGgX5ZGxmotNKIeDrlD7IPlFPO2ZvAs2/dsbtErm
+zLocmG95FOzFZoZME7QpGS2w1/yNnY6GbchnIvnoSKykqLjB0Te72yA75DKgqMPv
+8OiYcXX3a5r8rhE+c8dykAVMiyZsZOa7BCZjU0NRHMxJRljlnWZ6t82qGXWBCuyW
+Uwqb92kNTMOcS1TOqGlT6U1gJrKfv2VZVDTeGwBb0enzc94tbET3jwzwRRXpZOLO
+3wMuj8nUDwemSvGDns6UA7idR5amzGv+jz2sMFThfcmqstUED5FD7u1i8XtQl/Li
+ggFmZMzUNHYKr9808sgss5BeszHBoMkJiYA930CAJz+Lqfm1owwIHsiQdVwl99hI
+gleuQml1VtpL40NKA020
+=rq44
+-----END PGP SIGNATURE-----
+
+--Rn7IEEq3VEzCw+ji--
