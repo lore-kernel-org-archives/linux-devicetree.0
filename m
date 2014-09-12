@@ -1,7 +1,7 @@
 From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: [PATCH 6/6] ARM: shmobile: ape6evm-reference: sort dts file by address
-Date: Fri, 12 Sep 2014 10:51:16 +0200
-Message-ID: <1410511876-9235-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+Subject: [PATCH 5/6] ARM: shmobile: ape6evm: sort dts file by address
+Date: Fri, 12 Sep 2014 10:51:15 +0200
+Message-ID: <1410511876-9235-6-git-send-email-ulrich.hecht+renesas@gmail.com>
 References: <1410511876-9235-1-git-send-email-ulrich.hecht+renesas@gmail.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1410511876-9235-1-git-send-email-ulrich.hecht+renesas@gmail.com>
@@ -12,15 +12,15 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 ---
- arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts | 26 ++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/r8a73a4-ape6evm.dts | 36 +++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts b/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
-index a860f32..bb45a70 100644
---- a/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
-+++ b/arch/arm/boot/dts/r8a73a4-ape6evm-reference.dts
-@@ -24,14 +24,11 @@
- 		bootargs = "console=ttySC0,115200 ignore_loglevel rw";
+diff --git a/arch/arm/boot/dts/r8a73a4-ape6evm.dts b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+index ce085fa..23e9925 100644
+--- a/arch/arm/boot/dts/r8a73a4-ape6evm.dts
++++ b/arch/arm/boot/dts/r8a73a4-ape6evm.dts
+@@ -20,24 +20,6 @@
+ 		bootargs = "console=ttySC0,115200 ignore_loglevel root=/dev/nfs ip=dhcp rw";
  	};
  
 -	memory@40000000 {
@@ -31,23 +31,32 @@ index a860f32..bb45a70 100644
 -	memory@200000000 {
 -		device_type = "memory";
 -		reg = <2 0x00000000 0 0x40000000>;
-+	lbsc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0 0x80000000>;
+-	};
+-
+-	ape6evm_fixed_3v3: fixedregulator@0 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "3V3";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-always-on;
+-	};
+-
+ 	lbsc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -55,6 +37,24 @@
+ 			vddvario-supply = <&ape6evm_fixed_3v3>;
+ 		};
  	};
- 
- 	vcc_mmc0: regulator@0 {
-@@ -62,11 +59,14 @@
- 		regulator-always-on;
- 	};
- 
--	lbsc {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0 0 0 0x80000000>;
++
++	ape6evm_fixed_3v3: fixedregulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
 +	memory@40000000 {
 +		device_type = "memory";
 +		reg = <0 0x40000000 0 0x40000000>;
@@ -56,9 +65,10 @@ index a860f32..bb45a70 100644
 +	memory@200000000 {
 +		device_type = "memory";
 +		reg = <2 0x00000000 0 0x40000000>;
- 	};
++	};
  };
  
+ &i2c5 {
 -- 
 1.8.4.5
 
