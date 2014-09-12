@@ -1,61 +1,63 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 02/11] NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
-Date: Fri, 12 Sep 2014 21:49:32 +0200
-Message-ID: <1410551381-7565-3-git-send-email-christophe-h.ricard@st.com>
-References: <1410551381-7565-1-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH 00/11] Follow up patches and several new fixes
+Date: Fri, 12 Sep 2014 21:49:30 +0200
+Message-ID: <1410551381-7565-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410551381-7565-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-After a unsuccessful call to nfc_hci_send_event the skb was not
-freed and might lead to memory leak.
+Hi,
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/nfc/st21nfca/st21nfca_dep.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Please find in those patches a set of followup items according to
+previous submissions feedback:
+- NFC: st21nfca: Fix few coding style issue
+- NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
+- NFC: st21nfca: Fix potential double kfree_skb error
+are patches related to previous patch:
+[PATCH 2/8] NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
 
-diff --git a/drivers/nfc/st21nfca/st21nfca_dep.c b/drivers/nfc/st21nfca/st21nfca_dep.c
-index 03dacc6..bf3132b 100644
---- a/drivers/nfc/st21nfca/st21nfca_dep.c
-+++ b/drivers/nfc/st21nfca/st21nfca_dep.c
-@@ -185,8 +185,10 @@ static int st21nfca_tm_send_atr_res(struct nfc_hci_dev *hdev,
- 
- 	info->dep_info.curr_nfc_dep_pni = 0;
- 
--	return nfc_hci_send_event(hdev, ST21NFCA_RF_CARD_F_GATE,
-+	r = nfc_hci_send_event(hdev, ST21NFCA_RF_CARD_F_GATE,
- 				ST21NFCA_EVT_SEND_DATA, skb->data, skb->len);
-+	kfree_skb(skb);
-+	return r;
- }
- 
- static int st21nfca_tm_recv_atr_req(struct nfc_hci_dev *hdev,
-@@ -254,6 +256,8 @@ static int st21nfca_tm_send_psl_res(struct nfc_hci_dev *hdev,
- 
- 	r = nfc_hci_send_event(hdev, ST21NFCA_RF_CARD_F_GATE,
- 				ST21NFCA_EVT_SEND_DATA, skb->data, skb->len);
-+	if (r < 0)
-+		goto error;
- 
- 	/*
- 	 * ST21NFCA only support P2P passive.
-@@ -269,8 +273,11 @@ static int st21nfca_tm_send_psl_res(struct nfc_hci_dev *hdev,
- 	}
- 
- 	/* Send an event to change bitrate change event to card f */
--	return nfc_hci_send_event(hdev, ST21NFCA_RF_CARD_F_GATE,
-+	r = nfc_hci_send_event(hdev, ST21NFCA_RF_CARD_F_GATE,
- 			ST21NFCA_EVT_CARD_F_BITRATE, bitrate, 2);
-+error:
-+	kfree_skb(skb);
-+	return r;
- }
- 
- static int st21nfca_tm_recv_psl_req(struct nfc_hci_dev *hdev,
+NFC: st21nfca: Replace all remaining IS_ERR(skb) with !skb is related
+with [PATCH 4/5] NFC: st21nfca: Remove all remaining IS_ERR(skb) for 
+simple !skb condition.
+I have tried to review again and add some more explanation. Hope that
+will be acceptable.
+
+Other patches are new they:
+- fix recursive fault in p2p target mode with st21nfca
+- fix bad behavior on st21nfcb
+- add ISO15693 technology for st21nfcb with a specific prioprietary
+RF protocol value.
+- fix st21nfcb dts documentation
+
+Best Regards
+Christophe
+
+Christophe Ricard (11):
+  NFC: st21nfca: Fix few coding style issue
+  NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
+  NFC: st21nfca: Fix recursive fault when doing p2p in target mode.
+  NFC: dts: st21nfcb_i2c: Fix invalid interrupts polarity.
+  NFC: st21nfcb: Fix improper management of -EREMOTEIO error code.
+  NFC: st21nfcb: Fix improper ndlc T2 management
+  NFC: nci: Add support for proprietary RF Protocols
+  NFC: st21nfcb: Add ISO15693 Reader/Writer support
+  NFC: st21nfcb: remove error output
+  NFC: st21nfca: Replace all remaining IS_ERR(skb) with !skb
+  NFC: st21nfca: Fix potential double kfree_skb error
+
+ .../devicetree/bindings/net/nfc/st21nfcb.txt       |  2 +-
+ drivers/nfc/st21nfca/st21nfca.c                    |  5 ++---
+ drivers/nfc/st21nfca/st21nfca_dep.c                | 25 ++++++++++++----------
+ drivers/nfc/st21nfcb/i2c.c                         | 23 +++++---------------
+ drivers/nfc/st21nfcb/ndlc.c                        |  6 +++++-
+ drivers/nfc/st21nfcb/ndlc.h                        |  4 ++++
+ drivers/nfc/st21nfcb/st21nfcb.c                    | 11 ++++++++++
+ include/net/nfc/nci_core.h                         |  9 ++++----
+ net/nfc/nci/ntf.c                                  |  9 +++++++-
+ 9 files changed, 55 insertions(+), 39 deletions(-)
+
 -- 
 1.9.1
 
