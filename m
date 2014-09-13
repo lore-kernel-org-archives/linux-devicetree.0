@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 10/11] NFC: st21nfca: ERR_PTR vs NULL fix
-Date: Sat, 13 Sep 2014 10:28:52 +0200
-Message-ID: <1410596933-5530-11-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 09/11] NFC: st21nfcb: remove error output
+Date: Sat, 13 Sep 2014 10:28:51 +0200
+Message-ID: <1410596933-5530-10-git-send-email-christophe-h.ricard@st.com>
 References: <1410596933-5530-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1410596933-5530-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,40 +10,31 @@ To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-"skb" can be NULL here but it can't be an ERR_PTR:
-- IS_ERR(NULL) return false and skb migth be NULL.
-- skb cannot be a ERR_PTR as nfc_hci_send_cmd_async it never using such cast.
+In case we are not able to read out the NDLC/NCI header, we do not
+consider this as an issue and we will give a later chance.
+The NDLC layer will handle errors thanks to its internal timers.
 
-!skb is more appropriate at those places.
-
-Reported-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/st21nfca_dep.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nfc/st21nfcb/i2c.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/nfc/st21nfca/st21nfca_dep.c b/drivers/nfc/st21nfca/st21nfca_dep.c
-index bf3132b..9408122 100644
---- a/drivers/nfc/st21nfca/st21nfca_dep.c
-+++ b/drivers/nfc/st21nfca/st21nfca_dep.c
-@@ -443,7 +443,7 @@ static void st21nfca_im_recv_atr_res_cb(void *context, struct sk_buff *skb,
- 	if (err != 0)
- 		return;
+diff --git a/drivers/nfc/st21nfcb/i2c.c b/drivers/nfc/st21nfcb/i2c.c
+index 0b8f721..c5d2427 100644
+--- a/drivers/nfc/st21nfcb/i2c.c
++++ b/drivers/nfc/st21nfcb/i2c.c
+@@ -156,10 +156,8 @@ static int st21nfcb_nci_i2c_read(struct st21nfcb_i2c_phy *phy,
+ 		r = i2c_master_recv(client, buf, ST21NFCB_NCI_I2C_MIN_SIZE);
+ 	}
  
--	if (IS_ERR(skb))
-+	if (!skb)
- 		return;
+-	if (r != ST21NFCB_NCI_I2C_MIN_SIZE) {
+-		nfc_err(&client->dev, "cannot read ndlc & nci header\n");
++	if (r != ST21NFCB_NCI_I2C_MIN_SIZE)
+ 		return -EREMOTEIO;
+-	}
  
- 	switch (info->async_cb_type) {
-@@ -555,7 +555,7 @@ static void st21nfca_im_recv_dep_res_cb(void *context, struct sk_buff *skb,
- 	if (err != 0)
- 		return;
- 
--	if (IS_ERR(skb))
-+	if (!skb)
- 		return;
- 
- 	switch (info->async_cb_type) {
+ 	len = be16_to_cpu(*(__be16 *) (buf + 2));
+ 	if (len > ST21NFCB_NCI_I2C_MAX_SIZE) {
 -- 
 1.9.1
 
