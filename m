@@ -1,45 +1,38 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH reword] ARM: MVEBU: Netgear RN102: Use Hardware BCH ECC
-Date: Sat, 13 Sep 2014 17:08:29 -0400
-Message-ID: <20140913210829.GI30828@titan.lakedaemon.net>
-References: <1410339341-3372-1-git-send-email-klightspeed@killerwolves.net>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [Patch v4 net-next 00/12] net: fec: imx6sx multiqueue support
+Date: Sat, 13 Sep 2014 17:32:53 -0400 (EDT)
+Message-ID: <20140913.173253.463259197219785898.davem@davemloft.net>
+References: <1410555657-10744-1-git-send-email-Frank.Li@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410339341-3372-1-git-send-email-klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org
-Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1410555657-10744-1-git-send-email-Frank.Li@freescale.com>
+Sender: netdev-owner@vger.kernel.org
+To: Frank.Li@freescale.com
+Cc: b38611@freescale.com, netdev@vger.kernel.org, lznuaa@gmail.com, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 10, 2014 at 06:55:41PM +1000, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
-> The bootloader on the Netgear ReadyNAS RN102 uses Hardware BCH ECC
-> (strength = 4), while the pxa3xx NAND driver by default uses 
-> Hamming ECC (strength = 1).
+From: <Frank.Li@freescale.com>
+Date: Sat, 13 Sep 2014 05:00:45 +0800
+
+> From: Frank Li <Frank.Li@freescale.com>
 > 
-> This patch changes the ECC mode on these machines to match that
-> of the bootloader and of the stock firmware. That way, it is
-> now possible to update the kernel from userland (e.g. using
-> standard tools from mtd-utils package); u-boot will happily
-> load and boot it.
+> These patches enable i.MX6SX multi queue support.
+> i.MX6SX support 3 queue and AVB feature.
 > 
-> Fixes: 92beaccd8b49 ("ARM: mvebu: Enable NAND controller in ReadyNAS 102 .dts file")
-> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-> Acked-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Tested-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 4 ++++
->  1 file changed, 4 insertions(+)
+> Change from v3 to v4
+>  - use "unsigned int" instead of "unsigned"
+> 
+> Change from v2 to v3
+>  - fixed alignment requirement for ARM and NO-ARM platform
+> 
+> Change from v1 to v2.
+>  - Change num_tx_queue to unsigned int
+>  - Avoid block non-dt platform
+>  - remove call netif_set_real_num_rx_queues
+>  - seperate multi queue patch two part, one is tx and rx handle, with fixed queue 0
+>    then other one is initilized multiqueue
+>  - use two difference alignment for tx and rx path
 
-I've already applied this the mvebu/fixes:
-
-  500abb6ccb9e ARM: mvebu: Netgear RN2120: Use Hardware BCH ECC
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Series applied, thanks Frank.
