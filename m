@@ -1,41 +1,67 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 09/12] ARM: sunxi: dt: Add sample and output mmc clocks
-Date: Sat, 13 Sep 2014 16:24:14 +0800
-Message-ID: <CAGb2v66KeidqMvYCt53F3aqTUAxziSR6dU1cuUyNbsZyN0Av+A@mail.gmail.com>
-References: <1410466706-27386-1-git-send-email-maxime.ripard@free-electrons.com>
- <1410466706-27386-10-git-send-email-maxime.ripard@free-electrons.com>
- <CAGb2v676B=pbKDnAfb3yUdL1ORgbacNTo=5EsTauNo+H993Agw@mail.gmail.com> <20140913081804.GY31276@lukather>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140913081804.GY31276@lukather>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Emilio Lopez <emilio@elopez.com.ar>, Chris Ball <chris@printf.net>, =?UTF-8?Q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer@o2s.ch>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 00/11] Follow up patches and several new fixes
+Date: Sat, 13 Sep 2014 10:28:42 +0200
+Message-ID: <1410596933-5530-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 13, 2014 at 4:18 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Fri, Sep 12, 2014 at 06:23:02PM +0800, Chen-Yu Tsai wrote:
->> >                 mmc0: mmc@01c0f000 {
->> >                         compatible = "allwinner,sun4i-a10-mmc";
->> >                         reg = <0x01c0f000 0x1000>;
->> > -                       clocks = <&ahb_gates 8>, <&mmc0_clk>;
->> > -                       clock-names = "ahb", "mmc";
->> > +                       clocks = <&ahb_gates 8>,
->> > +                                <&mmc0_clk>,
->> > +                                <&mmc0_sample_clk>,
->> > +                                <&mmc0_output_clk>;
->> > +                       clock-names = "ahb",
->> > +                                     "mmc",
->> > +                                     "sample",
->> > +                                     "output";
->>
->> Just a stylish nitpick. All the other resources in these files
->> are listed inline if possible, not one phandle/value per line.
->
-> Look at the PIO interrupts, every USB PHY resources, etc. ;)
+Hi,
 
-I guess we need some styling cleanups. :)
+Please find in those patches a set of followup items according to
+previous submissions feedback:
+- NFC: st21nfca: Fix few coding style issue
+- NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
+- NFC: st21nfca: Fix potential double kfree_skb error
+are patches related to previous patch:
+[PATCH 2/8] NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
 
-ChenYu
+NFC: st21nfca: Replace all remaining IS_ERR(skb) with !skb is related
+with [PATCH 4/5] NFC: st21nfca: Remove all remaining IS_ERR(skb) for
+simple !skb condition.
+I have tried to review again and add some more explanation. Hope that
+will be acceptable.
+
+Other patches are new they:
+- fix recursive fault in p2p target mode with st21nfca
+- fix bad behavior on st21nfcb
+- add ISO15693 technology for st21nfcb with a specific prioprietary
+RF protocol value.
+- fix st21nfcb dts documentation
+
+Best Regards
+Christophe
+
+Christophe Ricard (11):
+  NFC: st21nfca: Fix few coding style issue
+  NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
+  NFC: st21nfca: Fix recursive fault when doing p2p in target mode.
+  NFC: dts: st21nfcb_i2c: Fix invalid interrupts polarity.
+  NFC: st21nfcb: Fix improper management of -EREMOTEIO error code.
+  NFC: st21nfcb: Fix improper ndlc T2 management
+  NFC: nci: Add support for proprietary RF Protocols
+  NFC: st21nfcb: Add ISO15693 Reader/Writer support
+  NFC: st21nfcb: remove error output
+  NFC: st21nfca: ERR_PTR vs NULL fix
+  NFC: st21nfca: Fix potential double kfree_skb error
+
+ .../devicetree/bindings/net/nfc/st21nfcb.txt       |  2 +-
+ drivers/nfc/st21nfca/st21nfca.c                    | 11 ++++------
+ drivers/nfc/st21nfca/st21nfca_dep.c                | 25 ++++++++++++----------
+ drivers/nfc/st21nfcb/i2c.c                         | 23 +++++---------------
+ drivers/nfc/st21nfcb/ndlc.c                        |  6 +++++-
+ drivers/nfc/st21nfcb/ndlc.h                        |  4 ++++
+ drivers/nfc/st21nfcb/st21nfcb.c                    | 11 ++++++++++
+ include/net/nfc/nci_core.h                         |  9 ++++----
+ net/nfc/nci/ntf.c                                  |  9 +++++++-
+ 9 files changed, 57 insertions(+), 43 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
