@@ -1,52 +1,48 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V3 1/2] ARM: dts: Add DT changes for display on snow
-Date: Sun, 14 Sep 2014 00:17:21 +0530
-Message-ID: <CAEC9eQNPipVNGjsjc+etCY-w4BErqLxeC5kFStM14rE+wtQvHA@mail.gmail.com>
-References: <1409567792-8281-1-git-send-email-ajaykumar.rs@samsung.com>
-	<54147D6E.2030103@samsung.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/5] iio: add documentation for current attribute
+Date: Sat, 13 Sep 2014 20:55:36 +0100
+Message-ID: <5414A138.9080602@kernel.org>
+References: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com> <1410477357-6407-6-git-send-email-jacob.jun.pan@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54147D6E.2030103@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@google.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410477357-6407-6-git-send-email-jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Max
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+On 12/09/14 00:15, Jacob Pan wrote:
+> Add documentation for input current raw reading and scale.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+The content is fine, but please look at how the other types are handled.
+The raw attribute is described along with the units etc in it's own
+section, but the _scale attribute just gets lumped in with the equivalent
+for all the other channel types.
 
+Thanks,
 
-On Sat, Sep 13, 2014 at 10:52 PM, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> On 09/01/14 19:36, Ajay Kumar wrote:
->>
->> Add DT nodes for ptn3460 bridge chip and panel.
->> Add backlight enable pin and backlight power supply for pwm-backlight.
->> Also add bridge phandle needed by dp to enable display on snow.
->>
->> Signed-off-by: Ajay Kumar<ajaykumar.rs@samsung.com>
->> ---
->> Changes since V1:
->>         -- Remove "simple-panel" compatible string.
->>         -- Use GPIO_ACTIVE_HIGH instead of 0.
->>         -- Change panel node naming from "panel-simple" to "panel".
->>
->> Changes since V2:
->>         -- Use proper compatible string: "auo,b116xw03"
->>
->>   arch/arm/boot/dts/exynos5250-snow.dts |   41
->> ++++++++++++++++++---------------
->>   1 file changed, 22 insertions(+), 19 deletions(-)
->>
-> Applied this and 2nd one.
->
-> BTW, I resolved conflict when I applied. Please check my tree and then if
-> any problems, please let me know.
-
-This patchset has dependency on driver patches.
-But, no harm merging it since DT bindings are almost agreed.
-
-The below patch should be merged ASAP. Because, driver changes are already in
-for this patch:
-https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg35182.html
-
-Ajay
+Jonathan
+> ---
+>  Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+> index d760b02..3c76bd8 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-iio
+> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+> @@ -1028,3 +1028,11 @@ Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  Description:
+>  		Raw value of rotation from true/magnetic north measured with
+>  		or without compensation from tilt sensors.
+> +
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentX_raw
+> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentX_scale
+> +KernelVersion:	3.18
+> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> +Description:
+> +		Raw current measurement from channel X. Units after application of
+> +		scale and offset are milliamps.
+> 
