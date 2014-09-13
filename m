@@ -1,109 +1,110 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH 2/2] bcma: get IRQ numbers from dt
-Date: Sat, 13 Sep 2014 15:37:26 +0200
-Message-ID: <1410615446-7639-2-git-send-email-hauke@hauke-m.de>
-References: <1410615446-7639-1-git-send-email-hauke@hauke-m.de>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410615446-7639-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 2/3] dmaengine: sun6i: Add support for Allwinner
+ A23 (sun8i) variant
+Date: Sat, 13 Sep 2014 21:53:00 +0800
+Message-ID: <1410616381-30226-3-git-send-email-wens@csie.org>
+References: <1410616381-30226-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBT4Y2GQAKGQETN2LRLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1410616381-30226-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It is not possible to auto detect the irq numbers used by the cores on
-an arm SoC. If bcma was registered with device tree it will search for
-some device tree nodes with the irq number and add it to the core
-configuration.
+The A23 SoC has the same dma engine as the A31 (sun6i), with a
+reduced amount of endpoints and physical channels. Add the proper
+config data and compatible string to support it.
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+A slight difference in sun8i is an undocumented register needs
+to be toggled for dma to function.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/bcma/main.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 48 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/dma/sun6i-dma.txt |  2 +-
+ drivers/dma/Kconfig                                 |  4 ++--
+ drivers/dma/sun6i-dma.c                             | 20 ++++++++++++++++++++
+ 3 files changed, 23 insertions(+), 3 deletions(-)
 
-This is based on wireless-testing and should go into that tree.
-
-changes since:
-RFC:
- - add #ifdef CONFIG_OF
-
-diff --git a/drivers/bcma/main.c b/drivers/bcma/main.c
-index e5d578c..b8731ee 100644
---- a/drivers/bcma/main.c
-+++ b/drivers/bcma/main.c
-@@ -10,6 +10,8 @@
- #include <linux/platform_device.h>
- #include <linux/bcma/bcma.h>
- #include <linux/slab.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
+diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+index 3e145c1..9cdcba24d 100644
+--- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
++++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+@@ -4,7 +4,7 @@ This driver follows the generic DMA bindings defined in dma.txt.
  
- MODULE_DESCRIPTION("Broadcom's specific AMBA driver");
- MODULE_LICENSE("GPL");
-@@ -131,6 +133,45 @@ static bool bcma_is_core_needed_early(u16 core_id)
- 	return false;
- }
+ Required properties:
  
-+#ifdef CONFIG_OF
-+static struct device_node *bcma_of_find_child_device(struct platform_device *parent,
-+						     struct bcma_device *core)
-+{
-+	struct device_node *node;
-+	u64 size;
-+	const __be32 *reg;
+-- compatible:	Must be "allwinner,sun6i-a31-dma"
++- compatible:	Must be "allwinner,sun6i-a31-dma" or "allwinner,sun8i-a23-dma"
+ - reg:		Should contain the registers base address and length
+ - interrupts:	Should contain a reference to the interrupt used by this device
+ - clocks:	Should contain a reference to the parent AHB clock
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 9b1ea0e..5361aa7 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -395,12 +395,12 @@ config XILINX_VDMA
+ 
+ config DMA_SUN6I
+ 	tristate "Allwinner A31 SoCs DMA support"
+-	depends on MACH_SUN6I || COMPILE_TEST
++	depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
+ 	depends on RESET_CONTROLLER
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+-	  Support for the DMA engine for Allwinner A31 SoCs.
++	  Support for the DMA engine first found in Allwinner A31 SoCs.
+ 
+ config NBPFAXI_DMA
+ 	tristate "Renesas Type-AXI NBPF DMA support"
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 89ca0c4..29667dd 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -878,8 +878,20 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
+ 	.nr_max_vchans   = 53,
+ };
+ 
++/*
++ * The A23 only has 8 physical channels, a maximum DRQ port id of 24,
++ * and a total of 37 usable source and destination endpoints.
++ */
 +
-+	if (!parent || !parent->dev.of_node)
-+		return NULL;
++static struct sun6i_dma_config sun8i_a23_dma_cfg = {
++	.nr_max_channels = 8,
++	.nr_max_requests = 24,
++	.nr_max_vchans   = 37,
++};
 +
-+	for_each_child_of_node(parent->dev.of_node, node) {
-+		reg = of_get_address(node, 0, &size, NULL);
-+		if (!reg)
-+			continue;
-+		if (be32_to_cpup(reg) == core->addr)
-+			return node;
-+	}
-+	return NULL;
-+}
+ static struct of_device_id sun6i_dma_match[] = {
+ 	{ .compatible = "allwinner,sun6i-a31-dma", .data = &sun6i_a31_dma_cfg },
++	{ .compatible = "allwinner,sun8i-a23-dma", .data = &sun8i_a23_dma_cfg },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -1008,6 +1020,14 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 		goto err_dma_unregister;
+ 	}
+ 
++	/*
++	 * sun8i variant requires us to toggle an undocumented register,
++	 * as seen in Allwinner's SDK.
++	 */
++	if (of_device_is_compatible(pdev->dev.of_node,
++				    "allwinner,sun8i-a23-dma"))
++		writel(0x4, sdc->base + 0x20);
 +
-+static void bcma_of_fill_device(struct platform_device *parent,
-+				struct bcma_device *core)
-+{
-+	struct device_node *node;
-+
-+	node = bcma_of_find_child_device(parent, core);
-+	if (!node)
-+		return;
-+	core->dev.of_node = node;
-+	core->irq = irq_of_parse_and_map(node, 0);
-+}
-+#else
-+static void bcma_of_fill_device(struct platform_device *parent,
-+				struct bcma_device *core)
-+{
-+}
-+#endif /* CONFIG_OF */
-+
- static void bcma_register_core(struct bcma_bus *bus, struct bcma_device *core)
- {
- 	int err;
-@@ -147,7 +188,13 @@ static void bcma_register_core(struct bcma_bus *bus, struct bcma_device *core)
- 		break;
- 	case BCMA_HOSTTYPE_SOC:
- 		core->dev.dma_mask = &core->dev.coherent_dma_mask;
--		core->dma_dev = &core->dev;
-+		if (bus->host_pdev) {
-+			core->dma_dev = &bus->host_pdev->dev;
-+			core->dev.parent = &bus->host_pdev->dev;
-+			bcma_of_fill_device(bus->host_pdev, core);
-+		} else {
-+			core->dma_dev = &core->dev;
-+		}
- 		break;
- 	case BCMA_HOSTTYPE_SDIO:
- 		break;
+ 	return 0;
+ 
+ err_dma_unregister:
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0
