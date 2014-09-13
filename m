@@ -1,44 +1,42 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 09/11] NFC: st21nfcb: remove error output
-Date: Sat, 13 Sep 2014 10:28:51 +0200
-Message-ID: <1410596933-5530-10-git-send-email-christophe-h.ricard@st.com>
-References: <1410596933-5530-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410596933-5530-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH 0/4] Add initial support for pinctrl on Exynos7
+Date: Sat, 13 Sep 2014 14:20:47 +0530
+Message-ID: <1410598252-30931-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: kesavan.abhilash@gmail.com, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, robh@kernel.org, devicetree@vger.kernel.org, tomasz.figa@gmail.com, linus.walleij@linaro.org, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-In case we are not able to read out the NDLC/NCI header, we do not
-consider this as an issue and we will give a later chance.
-The NDLC layer will handle errors thanks to its internal timers.
+The following patches are tested based on Kgene's for-next tree.
+https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/log/?h=for-next
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/nfc/st21nfcb/i2c.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Following patches are required for this series:
+1- "tty/serial: fix config dependencies for samsung serial"
+   https://www.mail-archive.com/linux-samsung-soc <at> vger.kernel.org/msg36208.html
+2- "dts, kbuild: Implement support for dtb vendor subdirs" patchset 
+   http://comments.gmane.org/gmane.linux.kbuild.devel/12131
+3- "arch: arm64: enable support for Samsung Exynos7 SoC" patchset
+   http://www.spinics.net/lists/linux-samsung-soc/msg36728.html
 
-diff --git a/drivers/nfc/st21nfcb/i2c.c b/drivers/nfc/st21nfcb/i2c.c
-index 0b8f721..c5d2427 100644
---- a/drivers/nfc/st21nfcb/i2c.c
-+++ b/drivers/nfc/st21nfcb/i2c.c
-@@ -156,10 +156,8 @@ static int st21nfcb_nci_i2c_read(struct st21nfcb_i2c_phy *phy,
- 		r = i2c_master_recv(client, buf, ST21NFCB_NCI_I2C_MIN_SIZE);
- 	}
- 
--	if (r != ST21NFCB_NCI_I2C_MIN_SIZE) {
--		nfc_err(&client->dev, "cannot read ndlc & nci header\n");
-+	if (r != ST21NFCB_NCI_I2C_MIN_SIZE)
- 		return -EREMOTEIO;
--	}
- 
- 	len = be16_to_cpu(*(__be16 *) (buf + 2));
- 	if (len > ST21NFCB_NCI_I2C_MAX_SIZE) {
+Abhilash Kesavan (2):
+  pinctrl: exynos: Generalize the eint16_31 demux code
+  pinctrl: exynos: Add irq_chip instance for Exynos7 wakeup interrupts
+
+Naveen Krishna Chatradhi (2):
+  pinctrl: exynos: Add initial driver data for Exynos7
+  arm64: dts: Add initial pinctrl support to EXYNOS7
+
+ .../bindings/pinctrl/samsung-pinctrl.txt           |    3 +
+ arch/arm64/Kconfig                                 |    2 +
+ arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi    |  560 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |   66 +++
+ drivers/pinctrl/samsung/pinctrl-exynos.c           |  161 +++++-
+ drivers/pinctrl/samsung/pinctrl-exynos.h           |    4 +
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    1 +
+ 8 files changed, 788 insertions(+), 11 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
