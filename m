@@ -1,8 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 2/3] dmaengine: sun6i: Add support for Allwinner
- A23 (sun8i) variant
-Date: Sat, 13 Sep 2014 21:53:00 +0800
-Message-ID: <1410616381-30226-3-git-send-email-wens@csie.org>
+Subject: [PATCH 3/3] ARM: dts: sun8i: Add DMA controller node
+Date: Sat, 13 Sep 2014 21:53:01 +0800
+Message-ID: <1410616381-30226-4-git-send-email-wens@csie.org>
 References: <1410616381-30226-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -20,91 +19,77 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The A23 SoC has the same dma engine as the A31 (sun6i), with a
-reduced amount of endpoints and physical channels. Add the proper
-config data and compatible string to support it.
-
-A slight difference in sun8i is an undocumented register needs
-to be toggled for dma to function.
+Add the DMA controller node and DMA bindings to the supported devices.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/dma/sun6i-dma.txt |  2 +-
- drivers/dma/Kconfig                                 |  4 ++--
- drivers/dma/sun6i-dma.c                             | 20 ++++++++++++++++++++
- 3 files changed, 23 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun8i-a23.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-index 3e145c1..9cdcba24d 100644
---- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-@@ -4,7 +4,7 @@ This driver follows the generic DMA bindings defined in dma.txt.
+diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
+index cc8c650..46a8cc9 100644
+--- a/arch/arm/boot/dts/sun8i-a23.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23.dtsi
+@@ -203,6 +203,15 @@
+ 		#size-cells = <1>;
+ 		ranges;
  
- Required properties:
- 
--- compatible:	Must be "allwinner,sun6i-a31-dma"
-+- compatible:	Must be "allwinner,sun6i-a31-dma" or "allwinner,sun8i-a23-dma"
- - reg:		Should contain the registers base address and length
- - interrupts:	Should contain a reference to the interrupt used by this device
- - clocks:	Should contain a reference to the parent AHB clock
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 9b1ea0e..5361aa7 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -395,12 +395,12 @@ config XILINX_VDMA
- 
- config DMA_SUN6I
- 	tristate "Allwinner A31 SoCs DMA support"
--	depends on MACH_SUN6I || COMPILE_TEST
-+	depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
- 	depends on RESET_CONTROLLER
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
--	  Support for the DMA engine for Allwinner A31 SoCs.
-+	  Support for the DMA engine first found in Allwinner A31 SoCs.
- 
- config NBPFAXI_DMA
- 	tristate "Renesas Type-AXI NBPF DMA support"
-diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-index 89ca0c4..29667dd 100644
---- a/drivers/dma/sun6i-dma.c
-+++ b/drivers/dma/sun6i-dma.c
-@@ -878,8 +878,20 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
- 	.nr_max_vchans   = 53,
- };
- 
-+/*
-+ * The A23 only has 8 physical channels, a maximum DRQ port id of 24,
-+ * and a total of 37 usable source and destination endpoints.
-+ */
++		dma: dma-controller@01c02000 {
++			compatible = "allwinner,sun8i-a23-dma";
++			reg = <0x01c02000 0x1000>;
++			interrupts = <0 50 4>;
++			clocks = <&ahb1_gates 6>;
++			resets = <&ahb1_rst 6>;
++			#dma-cells = <1>;
++		};
 +
-+static struct sun6i_dma_config sun8i_a23_dma_cfg = {
-+	.nr_max_channels = 8,
-+	.nr_max_requests = 24,
-+	.nr_max_vchans   = 37,
-+};
-+
- static struct of_device_id sun6i_dma_match[] = {
- 	{ .compatible = "allwinner,sun6i-a31-dma", .data = &sun6i_a31_dma_cfg },
-+	{ .compatible = "allwinner,sun8i-a23-dma", .data = &sun8i_a23_dma_cfg },
- 	{ /* sentinel */ }
- };
+ 		mmc0: mmc@01c0f000 {
+ 			compatible = "allwinner,sun5i-a13-mmc";
+ 			reg = <0x01c0f000 0x1000>;
+@@ -332,6 +341,8 @@
+ 			reg-io-width = <4>;
+ 			clocks = <&apb2_gates 16>;
+ 			resets = <&apb2_rst 16>;
++			dmas = <&dma 6>, <&dma 6>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
  
-@@ -1008,6 +1020,14 @@ static int sun6i_dma_probe(struct platform_device *pdev)
- 		goto err_dma_unregister;
- 	}
+@@ -343,6 +354,8 @@
+ 			reg-io-width = <4>;
+ 			clocks = <&apb2_gates 17>;
+ 			resets = <&apb2_rst 17>;
++			dmas = <&dma 7>, <&dma 7>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
  
-+	/*
-+	 * sun8i variant requires us to toggle an undocumented register,
-+	 * as seen in Allwinner's SDK.
-+	 */
-+	if (of_device_is_compatible(pdev->dev.of_node,
-+				    "allwinner,sun8i-a23-dma"))
-+		writel(0x4, sdc->base + 0x20);
-+
- 	return 0;
+@@ -354,6 +367,8 @@
+ 			reg-io-width = <4>;
+ 			clocks = <&apb2_gates 18>;
+ 			resets = <&apb2_rst 18>;
++			dmas = <&dma 8>, <&dma 8>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
  
- err_dma_unregister:
+@@ -365,6 +380,8 @@
+ 			reg-io-width = <4>;
+ 			clocks = <&apb2_gates 19>;
+ 			resets = <&apb2_rst 19>;
++			dmas = <&dma 9>, <&dma 9>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+ 
+@@ -376,6 +393,8 @@
+ 			reg-io-width = <4>;
+ 			clocks = <&apb2_gates 20>;
+ 			resets = <&apb2_rst 20>;
++			dmas = <&dma 10>, <&dma 10>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+ 
 -- 
 2.1.0
