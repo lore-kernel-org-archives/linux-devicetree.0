@@ -1,48 +1,81 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/2] rockchip-max98090: add driver for rockchip board
- with max98090
-Date: Fri, 12 Sep 2014 14:42:34 +0100
-Message-ID: <20140912134234.GS7960@sirena.org.uk>
-References: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 1/2] bcma: register bcma as device tree driver
+Date: Sat, 13 Sep 2014 18:02:21 +0200
+Message-ID: <54146A8D.1060704@hauke-m.de>
+References: <1410615446-7639-1-git-send-email-hauke@hauke-m.de> <54145F0E.8000506@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CRjAHycgiaTQGSqU"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianqun <jay.xu@rock-chips.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, heiko@sntech.de, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, cf@rock-chips.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54145F0E.8000506-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/13/2014 05:13 PM, Arend van Spriel wrote:
+> On 09/13/14 15:37, Hauke Mehrtens wrote:
+>> This driver is used by the bcm53xx ARM SoC code. Now it is possible to
+>> give the address of the chipcommon core in device tree and bcma will
+>> search for all the other cores.
+>>
+>> Signed-off-by: Hauke Mehrtens<hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/bus/bcma.txt | 41 +++++++++++++
+>>   drivers/bcma/bcma_private.h                    | 16 +++++
+>>   drivers/bcma/host_soc.c                        | 82
+>> ++++++++++++++++++++++++++
+>>   drivers/bcma/main.c                            | 10 ++++
+>>   include/linux/bcma/bcma.h                      |  2 +
+>>   5 files changed, 151 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/bus/bcma.txt
+>>
+>> This is based on wireless-testing and should go into that tree.
+>>
+>> changes since:
+>> RFC:
+>>   - reworded the irq description
+>>   - improved the example
+>>   - hocked into bcma_modeinit() and bcma_modexit()
+>>
+>> diff --git a/Documentation/devicetree/bindings/bus/bcma.txt
+>> b/Documentation/devicetree/bindings/bus/bcma.txt
+>> new file mode 100644
+>> index 0000000..17e095f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/bus/bcma.txt
+>> @@ -0,0 +1,41 @@
+>> +Broadcom AIX SoC bcma bus driver
+> 
+> Hi Hauke,
+> 
+> First of all a typo used all over the place: AIX should be AXI.
 
---CRjAHycgiaTQGSqU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I will fix that.
 
-On Fri, Sep 12, 2014 at 03:26:46PM +0800, Jianqun wrote:
-> This patch to add driver for rockchip board using a max98090.
->=20
-> Tested on RK3288 using a max98090.
+> The backplane in Broadcom SoC is ARM AXI with additional plugin option
+> to make it discoverable. Indeed the IRQ info is not included, but I see
+> no reason for specifying the register space for the cores in device-tree
+> as that is discoverable by bcma.
 
-This appears to have two slightly different copies of the patches
-threaded to it...  that's a bit confusing.
+I specified the register space to make it possible to connect the device
+tree entry with the core. After the cores are automatically discovered,
+bcma searches for entry core found, for an device tree entry with the
+same address space and uses the irq number from that entry. If there is
+a core defined in device tree which is not found by bcma it will just be
+ignored. If a core is not specified in device tree it will get
+registered, but it will not get an IRQ.
+This was the most stable way I came up with, I also thought about using
+the core number, like assign the this IRQ to core number 5, but the core
+numbers could change when we do changes to bcma.
 
---CRjAHycgiaTQGSqU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+In the Broadcom vendor code there is a list with the IRQ numbers which
+get assigned to a specific core type. For example there is a list with 4
+IRQ numbers which get assigned to the first 4 Ethernet cores. This would
+also work, but I do not know how to do this in device tree.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUEvhFAAoJECTWi3JdVIfQJOoH/2G9+GShmgP08ravDGbJl1QF
-tdhg96begUO07R12cQJVQThw5Rcisx7NzA0686gEzTPcgnsWhDURkzMMwRoeLO0K
-oonyK/8IhJ9dpEMrjEVSvykoepcSjnebjw4/4puP2RcRAVLLw77e2ZdbWUIM7I5/
-OzlPIkRta09tw9x+oEEcXDasH6+Dubg0Jcnb8NSEd756HfKAu4gDtHdS64xO9YlG
-ODazFLcEC+7ANetFOH0Rff/NY/FpN51DORXayX1FrRNpe5GRsgcqMxZs+yzHVtp7
-XfqmzPXtC3zGRQElIKfjbJQO0rV9Q2XIEyg38rqO9/LaqRULaqtdR+/9dUj41o0=
-=k5YQ
------END PGP SIGNATURE-----
-
---CRjAHycgiaTQGSqU--
+Hauke
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
