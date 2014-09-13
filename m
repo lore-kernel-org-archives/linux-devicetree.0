@@ -1,63 +1,55 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 00/11] Follow up patches and several new fixes
-Date: Sat, 13 Sep 2014 10:28:42 +0200
-Message-ID: <1410596933-5530-1-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH v2 01/11] NFC: st21nfca: Fix few coding style issue
+Date: Sat, 13 Sep 2014 10:28:43 +0200
+Message-ID: <1410596933-5530-2-git-send-email-christophe-h.ricard@st.com>
+References: <1410596933-5530-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410596933-5530-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Fix few conding style issue such as useless line return or tab.
 
-Please find in those patches a set of followup items according to
-previous submissions feedback:
-- NFC: st21nfca: Fix few coding style issue
-- NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
-- NFC: st21nfca: Fix potential double kfree_skb error
-are patches related to previous patch:
-[PATCH 2/8] NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/nfc/st21nfca/st21nfca_dep.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-NFC: st21nfca: Replace all remaining IS_ERR(skb) with !skb is related
-with [PATCH 4/5] NFC: st21nfca: Remove all remaining IS_ERR(skb) for
-simple !skb condition.
-I have tried to review again and add some more explanation. Hope that
-will be acceptable.
-
-Other patches are new they:
-- fix recursive fault in p2p target mode with st21nfca
-- fix bad behavior on st21nfcb
-- add ISO15693 technology for st21nfcb with a specific prioprietary
-RF protocol value.
-- fix st21nfcb dts documentation
-
-Best Regards
-Christophe
-
-Christophe Ricard (11):
-  NFC: st21nfca: Fix few coding style issue
-  NFC: st21nfca: Fix potential skb leaks in NFC-DEP code
-  NFC: st21nfca: Fix recursive fault when doing p2p in target mode.
-  NFC: dts: st21nfcb_i2c: Fix invalid interrupts polarity.
-  NFC: st21nfcb: Fix improper management of -EREMOTEIO error code.
-  NFC: st21nfcb: Fix improper ndlc T2 management
-  NFC: nci: Add support for proprietary RF Protocols
-  NFC: st21nfcb: Add ISO15693 Reader/Writer support
-  NFC: st21nfcb: remove error output
-  NFC: st21nfca: ERR_PTR vs NULL fix
-  NFC: st21nfca: Fix potential double kfree_skb error
-
- .../devicetree/bindings/net/nfc/st21nfcb.txt       |  2 +-
- drivers/nfc/st21nfca/st21nfca.c                    | 11 ++++------
- drivers/nfc/st21nfca/st21nfca_dep.c                | 25 ++++++++++++----------
- drivers/nfc/st21nfcb/i2c.c                         | 23 +++++---------------
- drivers/nfc/st21nfcb/ndlc.c                        |  6 +++++-
- drivers/nfc/st21nfcb/ndlc.h                        |  4 ++++
- drivers/nfc/st21nfcb/st21nfcb.c                    | 11 ++++++++++
- include/net/nfc/nci_core.h                         |  9 ++++----
- net/nfc/nci/ntf.c                                  |  9 +++++++-
- 9 files changed, 57 insertions(+), 43 deletions(-)
-
+diff --git a/drivers/nfc/st21nfca/st21nfca_dep.c b/drivers/nfc/st21nfca/st21nfca_dep.c
+index 6c09a66..03dacc6 100644
+--- a/drivers/nfc/st21nfca/st21nfca_dep.c
++++ b/drivers/nfc/st21nfca/st21nfca_dep.c
+@@ -129,9 +129,8 @@ static void st21nfca_tx_work(struct work_struct *work)
+ 		device_lock(&dev->dev);
+ 
+ 		nfc_hci_send_cmd_async(info->hdev, ST21NFCA_RF_READER_F_GATE,
+-							ST21NFCA_WR_XCHG_DATA,
+-							skb->data, skb->len,
+-							info->async_cb, info);
++				ST21NFCA_WR_XCHG_DATA, skb->data, skb->len,
++				info->async_cb, info);
+ 		device_unlock(&dev->dev);
+ 		kfree_skb(skb);
+ 	}
+@@ -239,7 +238,6 @@ static int st21nfca_tm_send_psl_res(struct nfc_hci_dev *hdev,
+ 	struct st21nfca_psl_res *psl_res;
+ 	struct sk_buff *skb;
+ 	u8 bitrate[2] = {0, 0};
+-
+ 	int r;
+ 
+ 	skb = alloc_skb(sizeof(struct st21nfca_psl_res), GFP_KERNEL);
+@@ -311,7 +309,7 @@ int st21nfca_tm_send_dep_res(struct nfc_hci_dev *hdev, struct sk_buff *skb)
+ 	*skb_push(skb, 1) = skb->len;
+ 
+ 	r = nfc_hci_send_event(hdev, ST21NFCA_RF_CARD_F_GATE,
+-				ST21NFCA_EVT_SEND_DATA, skb->data, skb->len);
++			ST21NFCA_EVT_SEND_DATA, skb->data, skb->len);
+ 	kfree_skb(skb);
+ 
+ 	return r;
 -- 
 1.9.1
 
