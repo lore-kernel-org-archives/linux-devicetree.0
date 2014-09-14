@@ -1,92 +1,81 @@
-From: Varun Sethi <Varun.Sethi@freescale.com>
-Subject: [RFC][PATCH] devicetree: Add master-id-bits property to the iommu
- device
-Date: Sun, 14 Sep 2014 23:47:26 +0530
-Message-ID: <1410718646-9710-1-git-send-email-Varun.Sethi@freescale.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 3/5] dt-bindings: add devicetree bindings for Fairchild FAN53555 regulators
+Date: Sun, 14 Sep 2014 21:23:03 +0200
+Message-ID: <1410722585-13393-4-git-send-email-heiko@sntech.de>
+References: <1410722585-13393-1-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, thierry.reding@gmail.com, Mark.Rutland@arm.com, will.deacon@arm.com, hdoyu@nvidia.com, swarren@nvidia.com, arnd@arndb.de, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, stuart.yoder@freescale.com
-Cc: Varun Sethi <Varun.Sethi@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410722585-13393-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-"master-id-bits" property added to the IOMMU device node. This property can
-be used by the IOMMU driver to match relevan bits in the master id expressed
-by a DMA master.
+Document the regulator and add a fairchild vendor-prefix.
 
-This can be used to mask out certain bits that get added to the device master id
-due to IOMMU topology. For example, in case of MMU-500 the TBUID gets appended to
-the master id. This prevents sharing of a stream ID, amongst devices which are
-connected to different TBUs. 
-
-Signed-off-by: Varun Sethi <Varun.Sethi@freescale.com>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/iommu/iommu.txt |   29 +++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ .../devicetree/bindings/regulator/fan53555.txt     | 25 ++++++++++++++=
+++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ 2 files changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/fan5355=
+5.txt
 
-diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
-index 5a8b462..f7c8623 100644
---- a/Documentation/devicetree/bindings/iommu/iommu.txt
-+++ b/Documentation/devicetree/bindings/iommu/iommu.txt
-@@ -63,6 +63,23 @@ Note that these are merely examples and real-world use-cases may use different
- definitions to represent their individual needs. Always refer to the specific
- IOMMU binding for the exact meaning of the cells that make up the specifier.
- 
+diff --git a/Documentation/devicetree/bindings/regulator/fan53555.txt b=
+/Documentation/devicetree/bindings/regulator/fan53555.txt
+new file mode 100644
+index 0000000..2484497
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/fan53555.txt
+@@ -0,0 +1,25 @@
++Binding for Fairchild FAN53555 regulators
++
++Required properties:
++  - compatible: "fairchild,fan53555"
++  - reg: I2C address
++
 +Optional properties:
-+--------------------
-+- master-id-bits: This specifies number of master id bits used by the iommu, to
-+  match master id expressed by the DMA master device. This would be typically used
-+  in cases where we need DMA memory isolation between multiple masters. Each master
-+  would specify a master id associated with a DMA trasaction.
++  - fairchild,suspend-regulator: regulator number to use for suspend v=
+oltages
++		possible values are either <0> or <1>
++  - fairchild,slew-rate-microvolt: slew rate to use for positive volta=
+ge
++		transistions in microvolts per us, possible values are:
++		64000, 32000, 16000, 8000, 4000, 2000, 1000, 500
++  - vin-supply: regulator supplying the vin pin
 +
-+  The IOMMU driver can use this property to generate a mask to match only relevant
-+  bits in the master id. This can be used for masking out certain bits that get
-+  added to the master id as a part of the IOMMU topology.
++Example:
 +
-+  For example, in case of MMU-500 the TBU identifier is also appended to the master id.
-+  This posese issues for software implementations requiring dynamic master id allocation
-+  for supporting hot pluggable devices. It's possible to have a device group, with
-+  devices connected to different TBUs. Without masking the additional TBU ID bits, we
-+  can't share the master id across all devices in the device group.
-+
- 
- IOMMU master node:
- ==================
-@@ -147,6 +164,12 @@ Multiple-master IOMMU:
- 	iommu {
- 		/* the specifier represents the ID of the master */
- 		#iommu-cells = <1>;
-+
-+		/*
-+		 * This specifies number of master id bits used by
-+		 * the iommu for matching the master id.
-+		 */
-+		master-id-bits = <7>
- 	};
- 
- 	master@1 {
-@@ -173,6 +196,12 @@ Multiple-master IOMMU with configurable DMA window:
- 			 * master (i.e. the I/O virtual address space).
- 			 */
- 			#iommu-cells = <4>;
-+
-+			/*
-+			 * This specifies number of master id bits used by
-+			 * the iommu for matching the master id.
-+			 */
-+			master-id-bits = <7>
- 		};
- 
- 		master {
--- 
-1.7.9.5
++	regulator@40 {
++		compatible =3D "fairchild,fan53555";
++		regulator-name =3D "fan53555";
++		regulator-min-microvolt =3D <1000000>;
++		regulator-max-microvolt =3D <1800000>;
++		vin-supply =3D <&parent_reg>;
++		fairchild,suspend-regulator =3D <1>;
++		fairchild,slew-rate-microvolt =3D <64000>;
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
+cumentation/devicetree/bindings/vendor-prefixes.txt
+index ac7269f..99da41b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -49,6 +49,7 @@ epson	Seiko Epson Corp.
+ est	ESTeem Wireless Modems
+ eukrea  Eukr=C3=A9a Electromatique
+ excito	Excito
++fairchild	Fairchild Semiconductor
+ fsl	Freescale Semiconductor
+ GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+--=20
+2.0.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
