@@ -1,85 +1,101 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
-Date: Sun, 14 Sep 2014 18:59:20 +0200
-Message-ID: <5415C968.90303@gmail.com>
-References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com> <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com> <20140903173740.GJ1824@e102568-lin.cambridge.arm.com> <20140904160320.GB22354@arm.com> <20140904172909.GA14822@e102568-lin.cambridge.arm.com> <20140905092120.GG13515@arm.com> <20140905153457.GA26306@e102568-lin.cambridge.arm.com> <54115D16.30206@linaro.org> <20140911085727.GA25773@e102568-lin.cambridge.arm.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 1/2] bcma: register bcma as device tree driver
+Date: Sun, 14 Sep 2014 19:16:51 +0200
+Message-ID: <5415CD83.7000009@hauke-m.de>
+References: <1410615446-7639-1-git-send-email-hauke@hauke-m.de> <54145F0E.8000506@broadcom.com> <54146A8D.1060704@hauke-m.de> <54147373.1050109@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140911085727.GA25773@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Steph
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54147373.1050109-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[dropping my old @samsung.com address]
-
-On 11.09.2014 10:57, Lorenzo Pieralisi wrote:
-> On Thu, Sep 11, 2014 at 09:28:06AM +0100, Daniel Lezcano wrote:
->> On 09/05/2014 05:34 PM, Lorenzo Pieralisi wrote:
->>> On Fri, Sep 05, 2014 at 10:21:20AM +0100, Will Deacon wrote:
->>>> On Thu, Sep 04, 2014 at 06:29:10PM +0100, Lorenzo Pieralisi wrote:
->>>>> On Thu, Sep 04, 2014 at 05:03:20PM +0100, Catalin Marinas wrote:
->>>>>> On Wed, Sep 03, 2014 at 06:37:40PM +0100, Lorenzo Pieralisi wrote:
->>>>>>> This patch should be ready to go too, is it ok if I split the series
->>>>>>> in arm64 arch specific patches (will ask Catalin to pull) and CPUidle ones
->>>>>>> (inclusive of DT bindings and !!this patch!!) and send two separate pull
->>>>>>> requests ?
->>>>>>
->>>>>> If Daniel/Rafael don't have any objection, I can take the whole series
->>>>>> through the arm64 tree (it seems that patches have been already acked by
->>>>>> Daniel).
->>>>>
->>>>> Thanks a lot Catalin. Since this one is a brand new CPUidle driver and it
->>>>> follows a different pattern from arm legacy drivers I would like to get
->>>>> Daniel's ack on this patch too before pushing it. For the records I have
->>>>> just added two pr_err to signal driver probing error, ultraminor changes
->>>>> that do not justify a repost.
->>>>>
->>>>> If Samsung guys do not manifest themselves I would drop patch 8 from
->>>>> the series till it gets tested and its patch dependency queued too.
+On 09/13/2014 06:40 PM, Arend van Spriel wrote:
+> On 09/13/14 18:02, Hauke Mehrtens wrote:
+>> On 09/13/2014 05:13 PM, Arend van Spriel wrote:
+>>> On 09/13/14 15:37, Hauke Mehrtens wrote:
+>>>> This driver is used by the bcm53xx ARM SoC code. Now it is possible to
+>>>> give the address of the chipcommon core in device tree and bcma will
+>>>> search for all the other cores.
 >>>>
->>>> The last patch also has a dependency, as you mentioned to Daniel. I think
->>>> we can certainly merge the arm64 parts, and if Daniel doesn't object, then
->>>> we can take the driver stuff too but leaving the exynos bits out (i.e. drop
->>>> the last patch).
+>>>> Signed-off-by: Hauke Mehrtens<hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/bus/bcma.txt | 41 +++++++++++++
+>>>>    drivers/bcma/bcma_private.h                    | 16 +++++
+>>>>    drivers/bcma/host_soc.c                        | 82
+>>>> ++++++++++++++++++++++++++
+>>>>    drivers/bcma/main.c                            | 10 ++++
+>>>>    include/linux/bcma/bcma.h                      |  2 +
+>>>>    5 files changed, 151 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/bus/bcma.txt
 >>>>
->>>> Anyway, if you could repost with the acks you've collected and rearrange it
->>>> so the arm64 patches are first in the series, that would be great.
+>>>> This is based on wireless-testing and should go into that tree.
+>>>>
+>>>> changes since:
+>>>> RFC:
+>>>>    - reworded the irq description
+>>>>    - improved the example
+>>>>    - hocked into bcma_modeinit() and bcma_modexit()
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/bus/bcma.txt
+>>>> b/Documentation/devicetree/bindings/bus/bcma.txt
+>>>> new file mode 100644
+>>>> index 0000000..17e095f
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/bus/bcma.txt
+>>>> @@ -0,0 +1,41 @@
+>>>> +Broadcom AIX SoC bcma bus driver
 >>>
->>> I can repost it with the acks and rearrange the patches, but for the
->>> pull request I have to know what code can be merged, since there are
->>> some arm64 patches (PSCI and CPUidle arm64 back-end) that are strictly
->>> tied to the arm64 CPUidle driver, so I *have* to know if the arm64
->>> CPUidle driver (this patch) can get merged and that requires an ack.
+>>> Hi Hauke,
 >>>
->>> If I do not hear from Samsung guys I will drop patch 8.
+>>> First of all a typo used all over the place: AIX should be AXI.
 >>
->> Well I would prefer to have this patch merged (Cc'ing Tomasz).
+>> I will fix that.
+>>
+>>> The backplane in Broadcom SoC is ARM AXI with additional plugin option
+>>> to make it discoverable. Indeed the IRQ info is not included, but I see
+>>> no reason for specifying the register space for the cores in device-tree
+>>> as that is discoverable by bcma.
+>>
+>> I specified the register space to make it possible to connect the device
+>> tree entry with the core. After the cores are automatically discovered,
+>> bcma searches for entry core found, for an device tree entry with the
+>> same address space and uses the irq number from that entry. If there is
+>> a core defined in device tree which is not found by bcma it will just be
+>> ignored. If a core is not specified in device tree it will get
+>> registered, but it will not get an IRQ.
+>> This was the most stable way I came up with, I also thought about using
+>> the core number, like assign the this IRQ to core number 5, but the core
+>> numbers could change when we do changes to bcma.
 > 
-> Ok, but:
+> I understand. In the example I noticed the core base address was also
+> used in the entry label, ie. pcie@18002000. However, I am not sure
+> whether that can be obtained by the driver. If it is possible it could
+> be used to match the dt entry to a core and the register info would be
+> redundant.
+
+I could parse that out of the full name. The full name looks like this:
+"/axi@18000000/ethernet@18024000", but I do not think that would be nice.
+
+@Arnd Bergmann: is there some better way to connect an automatically
+detected device with an device tree entry?
+
+>> In the Broadcom vendor code there is a list with the IRQ numbers which
+>> get assigned to a specific core type. For example there is a list with 4
+>> IRQ numbers which get assigned to the first 4 Ethernet cores. This would
+>> also work, but I do not know how to do this in device tree.
 > 
-> a) I only compile tested it
-> b) There is a dts patch dependency for patch 8 to apply cleanly and it
->    hasn't been acked (I can't really do it since I can't test it)
-> 
->    http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/274179.html
-> 
-> So, what should we do ? Tomasz ?
+> I am wondering about the IRQ numbers. The SoC would also have a OOB
+> routing core, which controls non-axi signals between the cores. I will
+> ask internally whether the irq signals are controlled by it and can be
+> retrieved from it.
 
-Sorry for late reply. I don't work for Samsung anymore so I don't focus
-that much on areas other than I still maintain.
+Thanks, It would be nice if that is possible.
 
-As for b) I believe all my patches have been already merged and now
-we're just waiting for Kukjin to apply Bart's patch (although it's been
-sitting on the ML since July, so probably needs rebasing).
-
-About the patch 8 alone, somebody would have to test it. Maybe Bart or
-Krzysztof could find some time to look at this? Other than that, I'm not
-quite sure about entry latency you specified. It would look like
-entering the state takes longer time than leaving, which I believe is
-not the case. However I can't find any place in the code which would use
-entry latency, so it might not be that important for now.
-
-Best regards,
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
