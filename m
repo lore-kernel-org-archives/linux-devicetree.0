@@ -1,46 +1,70 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] irqchip: Broadcom BCM7120-style Level 2
- interrupt controller
-Date: Sun, 14 Sep 2014 02:22:52 -0400
-Message-ID: <20140914062252.GL21986@titan.lakedaemon.net>
-References: <1410309862-27784-1-git-send-email-f.fainelli@gmail.com>
+From: <suravee.suthikulpanit@amd.com>
+Subject: [PATCH 0/2 V6] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Sun, 14 Sep 2014 01:30:14 -0500
+Message-ID: <1410676216-27953-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410309862-27784-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
+Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 09, 2014 at 05:44:20PM -0700, Florian Fainelli wrote:
-> Hi Jason, Thomas, Mark,
-> 
-> This patch set adds support for the second type of Level-2 interrupt controller
-> found on Broadcom Set Top Box hardware.
-> 
-> Version 2 should address your previous comments made on the initial submission.
-> 
-> Thanks!
-> 
-> Florian Fainelli (2):
->   irqchip: add Broadcom BCM7120-style Level 2 interrupt controller
->   Documentation: bcm7120-l2: Add Broadcom BCM7120-style L2 binding
-> 
->  .../interrupt-controller/brcm,bcm7120-l2-intc.txt  |  86 ++++++++
->  drivers/irqchip/Makefile                           |   3 +-
->  drivers/irqchip/irq-bcm7120-l2.c                   | 220 +++++++++++++++++++++
->  3 files changed, 308 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm7120-l2-intc.txt
->  create mode 100644 drivers/irqchip/irq-bcm7120-l2.c
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
-Fixed up one unused variable warning and applied to irqchip/broadcom
+This patch set introduces support for MSI(-X) in GICv2m specification,
+which is implemented in some variation of GIC400.
 
-thx,
+This depends on and has been tested with the following patch set which
+implements PCI supports for ARM64:
+ 
+    * https://lkml.org/lkml/2014/8/12/394
+    * https://lkml.org/lkml/2014/8/12/361
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in V6:
+    * Fix the logic in patch 1 in drivers/irqchip/irq-gic.c: gic_of_init()
+      to print warning message when gicv2m_of_init fails instead of
+      returning error since v2m is optional.
+
+    * Minor clean up
+
+Changes in V5:
+    * Rebase to git://git.infradead.org/users/jcooper/linux.git irqchip/core
+
+  Marc Zyngier suggestions:
+    * Only use GICv2m irq_chip for MSI interrupts.
+    * Simplify logic to support multi-MSI in arch/arm64/kernel/msi.c.
+    * Modify gicv2m_setup_msi_irq() to also handle multi-MSI.
+
+  Mark Rutlan suggestions: 
+    * V4 patch set did not support multiple MSI register frame within a GIC.
+      Although, the proposed GICv2m device tree binding should be able to
+      handle the case.  Mark was questioning on how we can properly handle
+      this in the code. Therefore, I try to implement this by iterating through
+      the subnodes and look for msi-controller property. Once found, the code
+      parses v2m register frame information and store it in the v2m_list of
+      each gic_chip_data.
+
+  Jingoo han suggestions:
+    * Misc clean up.
+
+Suravee Suthikulpanit (2):
+  irqchip: gic: Add supports for ARM GICv2m MSI(-X)
+  irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
+
+ Documentation/devicetree/bindings/arm/gic.txt |  39 +++
+ arch/arm64/kernel/Makefile                    |   1 +
+ arch/arm64/kernel/msi.c                       |  41 ++++
+ drivers/irqchip/Kconfig                       |   7 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-gic-v2m.c                 | 328 ++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic.c                     |  88 ++++---
+ drivers/irqchip/irq-gic.h                     |  51 ++++
+ 8 files changed, 528 insertions(+), 28 deletions(-)
+ create mode 100644 arch/arm64/kernel/msi.c
+ create mode 100644 drivers/irqchip/irq-gic-v2m.c
+ create mode 100644 drivers/irqchip/irq-gic.h
+
+-- 
+1.9.3
+
