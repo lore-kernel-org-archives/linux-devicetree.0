@@ -1,101 +1,44 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 1/2] bcma: register bcma as device tree driver
-Date: Sun, 14 Sep 2014 19:16:51 +0200
-Message-ID: <5415CD83.7000009@hauke-m.de>
-References: <1410615446-7639-1-git-send-email-hauke@hauke-m.de> <54145F0E.8000506@broadcom.com> <54146A8D.1060704@hauke-m.de> <54147373.1050109@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54147373.1050109-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Subject: [PATCH] net: ethernet: freescale: fec_main.c:  Cleaning up missing null-terminate in conjunction with strncpy
+Date: Sun, 14 Sep 2014 19:32:42 +0200
+Message-ID: <1410715962-15986-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Nimrod Andy <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2014 06:40 PM, Arend van Spriel wrote:
-> On 09/13/14 18:02, Hauke Mehrtens wrote:
->> On 09/13/2014 05:13 PM, Arend van Spriel wrote:
->>> On 09/13/14 15:37, Hauke Mehrtens wrote:
->>>> This driver is used by the bcm53xx ARM SoC code. Now it is possible to
->>>> give the address of the chipcommon core in device tree and bcma will
->>>> search for all the other cores.
->>>>
->>>> Signed-off-by: Hauke Mehrtens<hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->>>> ---
->>>>    Documentation/devicetree/bindings/bus/bcma.txt | 41 +++++++++++++
->>>>    drivers/bcma/bcma_private.h                    | 16 +++++
->>>>    drivers/bcma/host_soc.c                        | 82
->>>> ++++++++++++++++++++++++++
->>>>    drivers/bcma/main.c                            | 10 ++++
->>>>    include/linux/bcma/bcma.h                      |  2 +
->>>>    5 files changed, 151 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/bus/bcma.txt
->>>>
->>>> This is based on wireless-testing and should go into that tree.
->>>>
->>>> changes since:
->>>> RFC:
->>>>    - reworded the irq description
->>>>    - improved the example
->>>>    - hocked into bcma_modeinit() and bcma_modexit()
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/bus/bcma.txt
->>>> b/Documentation/devicetree/bindings/bus/bcma.txt
->>>> new file mode 100644
->>>> index 0000000..17e095f
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/bus/bcma.txt
->>>> @@ -0,0 +1,41 @@
->>>> +Broadcom AIX SoC bcma bus driver
->>>
->>> Hi Hauke,
->>>
->>> First of all a typo used all over the place: AIX should be AXI.
->>
->> I will fix that.
->>
->>> The backplane in Broadcom SoC is ARM AXI with additional plugin option
->>> to make it discoverable. Indeed the IRQ info is not included, but I see
->>> no reason for specifying the register space for the cores in device-tree
->>> as that is discoverable by bcma.
->>
->> I specified the register space to make it possible to connect the device
->> tree entry with the core. After the cores are automatically discovered,
->> bcma searches for entry core found, for an device tree entry with the
->> same address space and uses the irq number from that entry. If there is
->> a core defined in device tree which is not found by bcma it will just be
->> ignored. If a core is not specified in device tree it will get
->> registered, but it will not get an IRQ.
->> This was the most stable way I came up with, I also thought about using
->> the core number, like assign the this IRQ to core number 5, but the core
->> numbers could change when we do changes to bcma.
-> 
-> I understand. In the example I noticed the core base address was also
-> used in the entry label, ie. pcie@18002000. However, I am not sure
-> whether that can be obtained by the driver. If it is possible it could
-> be used to match the dt entry to a core and the register info would be
-> redundant.
+Replacing strncpy with strlcpy to avoid strings that lacks null terminate.
 
-I could parse that out of the full name. The full name looks like this:
-"/axi@18000000/ethernet@18024000", but I do not think that would be nice.
+Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+---
+ drivers/net/ethernet/freescale/fec_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-@Arnd Bergmann: is there some better way to connect an automatically
-detected device with an device tree entry?
-
->> In the Broadcom vendor code there is a list with the IRQ numbers which
->> get assigned to a specific core type. For example there is a list with 4
->> IRQ numbers which get assigned to the first 4 Ethernet cores. This would
->> also work, but I do not know how to do this in device tree.
-> 
-> I am wondering about the IRQ numbers. The SoC would also have a OOB
-> routing core, which controls non-axi signals between the cores. I will
-> ask internally whether the irq signals are controlled by it and can be
-> retrieved from it.
-
-Thanks, It would be nice if that is possible.
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index 89355a7..e84b132 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1674,13 +1674,13 @@ static int fec_enet_mii_probe(struct net_device *ndev)
+ 				continue;
+ 			if (dev_id--)
+ 				continue;
+-			strncpy(mdio_bus_id, fep->mii_bus->id, MII_BUS_ID_SIZE);
++			strlcpy(mdio_bus_id, fep->mii_bus->id, MII_BUS_ID_SIZE);
+ 			break;
+ 		}
+ 
+ 		if (phy_id >= PHY_MAX_ADDR) {
+ 			netdev_info(ndev, "no PHY, assuming direct connection to switch\n");
+-			strncpy(mdio_bus_id, "fixed-0", MII_BUS_ID_SIZE);
++			strlcpy(mdio_bus_id, "fixed-0", MII_BUS_ID_SIZE);
+ 			phy_id = 0;
+ 		}
+ 
+-- 
+1.7.10.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
