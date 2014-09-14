@@ -1,46 +1,30 @@
-From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
-Subject: Re: [PATCH reword] ARM: MVEBU: Netgear RN102: Use Hardware BCH ECC
-Date: Sun, 14 Sep 2014 12:54:01 +1000
-Message-ID: <54150349.7050503@killerwolves.net>
-References: <1410339341-3372-1-git-send-email-klightspeed@killerwolves.net> <20140913210829.GI30828@titan.lakedaemon.net>
+From: Jianqun <xjq@rock-chips.com>
+Subject: Re: [PATCH 0/2] rockchip-max98090: add driver for rockchip board
+ with max98090
+Date: Sun, 14 Sep 2014 11:00:50 +0800
+Message-ID: <541504E2.3050200@rock-chips.com>
+References: <1410506806-15327-1-git-send-email-jay.xu@rock-chips.com> <20140912134234.GS7960@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140913210829.GI30828-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140912134234.GS7960@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Jianqun <jay.xu@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, heiko@sntech.de, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, cf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/09/14 07:08, Jason Cooper wrote:
-> On Wed, Sep 10, 2014 at 06:55:41PM +1000, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
->> The bootloader on the Netgear ReadyNAS RN102 uses Hardware BCH ECC
->> (strength = 4), while the pxa3xx NAND driver by default uses 
->> Hamming ECC (strength = 1).
->>
->> This patch changes the ECC mode on these machines to match that
->> of the bootloader and of the stock firmware. That way, it is
->> now possible to update the kernel from userland (e.g. using
->> standard tools from mtd-utils package); u-boot will happily
->> load and boot it.
->>
->> Fixes: 92beaccd8b49 ("ARM: mvebu: Enable NAND controller in ReadyNAS 102 .dts file")
->> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
->> Acked-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Tested-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 4 ++++
->>  1 file changed, 4 insertions(+)
-> 
-> I've already applied this the mvebu/fixes:
-> 
->   500abb6ccb9e ARM: mvebu: Netgear RN2120: Use Hardware BCH ECC
 
-That patch only affects arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
 
-The patch I posted affects arch/arm/boot/dts/armada-370-netgear-rn102.dts
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+=E5=9C=A8 09/12/2014 09:42 PM, Mark Brown =E5=86=99=E9=81=93:
+> On Fri, Sep 12, 2014 at 03:26:46PM +0800, Jianqun wrote:
+>> This patch to add driver for rockchip board using a max98090.
+>>
+>> Tested on RK3288 using a max98090.
+>=20
+> This appears to have two slightly different copies of the patches
+> threaded to it...  that's a bit confusing.
+>=20
+So sorry for all in the mail thread, I have made a stupid thing ~ since=
+ I made many
+patches at a meantime ~
