@@ -1,114 +1,46 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [Patch v9 3/3] phy: Add Qualcomm DWC3 HS/SS PHY driver
-Date: Sat, 13 Sep 2014 21:24:52 -0500
-Message-ID: <20140914022452.GA16652@saruman.home>
-References: <1410550088-8754-1-git-send-email-agross@codeaurora.org>
- <1410550088-8754-4-git-send-email-agross@codeaurora.org>
- <5413E829.8020804@ti.com>
-Reply-To: balbi@ti.com
+From: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+Subject: Re: [PATCH reword] ARM: MVEBU: Netgear RN102: Use Hardware BCH ECC
+Date: Sun, 14 Sep 2014 12:54:01 +1000
+Message-ID: <54150349.7050503@killerwolves.net>
+References: <1410339341-3372-1-git-send-email-klightspeed@killerwolves.net> <20140913210829.GI30828@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0921756718265377133=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5413E829.8020804@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Jack Pham <jackp@codeaurora.org>, linux-usb@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Andy Gross <agross@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140913210829.GI30828-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============0921756718265377133==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
-Content-Disposition: inline
+On 14/09/14 07:08, Jason Cooper wrote:
+> On Wed, Sep 10, 2014 at 06:55:41PM +1000, klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org wrote:
+>> The bootloader on the Netgear ReadyNAS RN102 uses Hardware BCH ECC
+>> (strength = 4), while the pxa3xx NAND driver by default uses 
+>> Hamming ECC (strength = 1).
+>>
+>> This patch changes the ECC mode on these machines to match that
+>> of the bootloader and of the stock firmware. That way, it is
+>> now possible to update the kernel from userland (e.g. using
+>> standard tools from mtd-utils package); u-boot will happily
+>> load and boot it.
+>>
+>> Fixes: 92beaccd8b49 ("ARM: mvebu: Enable NAND controller in ReadyNAS 102 .dts file")
+>> Signed-off-by: Ben Peddell <klightspeed-aslSrjg9ejhWX4hkXwHRhw@public.gmane.org>
+>> Acked-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Tested-by: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/armada-370-netgear-rn102.dts | 4 ++++
+>>  1 file changed, 4 insertions(+)
+> 
+> I've already applied this the mvebu/fixes:
+> 
+>   500abb6ccb9e ARM: mvebu: Netgear RN2120: Use Hardware BCH ECC
 
---MGYHOYXEY6WxJCY8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That patch only affects arch/arm/boot/dts/armada-xp-netgear-rn2120.dts
 
-Hi,
-
-On Sat, Sep 13, 2014 at 12:16:01PM +0530, Kishon Vijay Abraham I wrote:
-> On Saturday 13 September 2014 12:58 AM, Andy Gross wrote:
-> > This patch adds a new driver for the Qualcomm USB 3.0 PHY that exists o=
-n some
-> > Qualcomm platforms.  This driver uses the generic PHY framework and will
-> > interact with the DWC3 controller.
->=20
-> Do you have dt documentation for this driver?
-
-see patch 1
-
-> > +static inline void qcom_dwc3_phy_write_readback(
-> > +	struct qcom_dwc3_usb_phy *phy_dwc3, u32 offset,
-> > +	const u32 mask, u32 val)
-> > +{
-> > +	u32 write_val, tmp =3D readl(phy_dwc3->base + offset);
-> > +
-> > +	tmp &=3D ~mask;		/* retain other bits */
-> > +	write_val =3D tmp | val;
-> > +
-> > +	writel(write_val, phy_dwc3->base + offset);
-> > +
-> > +	/* Read back to see if val was written */
->=20
-> Does it fail sometime? I'm not sure if this should be present in the
-> driver since this looks more of a debug code.
-
-this was mentioned before. Silicon bug.
-
-> > +	writel_relaxed(data | SSUSB_CTRL_SS_PHY_RESET,
-> > +		phy_dwc3->base + SSUSB_PHY_CTRL_REG);
-> > +	usleep_range(2000, 2200);
->=20
-> use msleep here..
-
-why ? usleep_range() gives the scheduler oportunity to group timers.
-
---=20
-balbi
-
---MGYHOYXEY6WxJCY8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUFPx0AAoJEIaOsuA1yqRE+9wP/jgUkSQfawiG2UAtz29uFiRk
-8ukQVJjYHMDnklLr0IXYHFUKiBxLxycDwBZBW1gciwiabJAyAFu1sovWGLJ0mJmG
-F1v/NnYThwC6cpEzMi0qtw8FXT6N3QJ7oGFFLqqV4Sw4WKbSocnKq0jXfwc1PqMH
-VTTCpV2hgcQzwiNvx0CQ/kpTHExtwDKxFsfcXBUR6xbtYRY8duv4TsoY7k8rdUnC
-cW9eaVXfhgj6cdKYaobH45t26BVx/l2TKeCO9HazaOn4PjvFSA0nr3nkOyqYE9Hz
-yNjBNofOd1LRJM+O/QXOGRF6KjRq+V0HxvkGbgAworlfOrgWKhcMUKZjKjwSSU5a
-cNo0Ac5KvX4pBXxNGJCds+9vPtoleqpQQa/QC5j3cemei+JGnWIiANkO5BDXlFk7
-q1dDxA5MWjG1Wpo4rqpqu6vxX1/0kCoieVqwWVWQ96jYVC/ezakyP10a/CRfF01K
-uT4CKT46gtx0IUN+x4pWLCeh84Cts1HAIVC6N0B4JEoTbpfBzIkvmTdBEksxdnFW
-kxEQxsnk7OXZw9E8dXqTUREBVditeP1flpGxqJTUmL5wAPXGNWPKDWT/UQ71oYTK
-NVIsb+NBLnRkthI72ur3Bwwf1AamTqNmJmrx61xcfUK1tc3bHLUvybjWSEDLJVjS
-dhD13DFs9biOKDKFWX8j
-=5gl2
------END PGP SIGNATURE-----
-
---MGYHOYXEY6WxJCY8--
-
-
---===============0921756718265377133==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0921756718265377133==--
+The patch I posted affects arch/arm/boot/dts/armada-370-netgear-rn102.dts
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
