@@ -1,55 +1,49 @@
-From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v3 5/5] iio: add documentation for current attribute
-Date: Sun, 14 Sep 2014 15:13:48 +0200
-Message-ID: <5415948C.6080509@gmx.de>
-References: <1410477357-6407-1-git-send-email-jacob.jun.pan@linux.intel.com> <1410477357-6407-6-git-send-email-jacob.jun.pan@linux.intel.com> <5414A138.9080602@kernel.org>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH 00/14] Support 64bit Cortex A57 based Exynos7 SoC
+Date: Sun, 14 Sep 2014 19:15:14 +0530
+Message-ID: <CAJuA9ahjdZw23CyEJBO8wwypR0QCf=4+QXB1LXUSzc5rRoDe_w@mail.gmail.com>
+References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com>
+	<53FDC25A.2010806@samsung.com>
+	<54142324.600@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5414A138.9080602-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Maxime Ripard <maxime.ripard@free-elec>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <54142324.600@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, catalin.marinas@arm.com, naveenkrishna.ch@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Jonathan Cameron schrieb, Am 13.09.2014 21:55:
-> On 12/09/14 00:15, Jacob Pan wrote:
->> Add documentation for input current raw reading and scale.
+Hi Tomasz,
+
+On Sat, Sep 13, 2014 at 4:27 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> On 27.08.2014 13:34, Tomasz Figa wrote:
+>> Hi Naveen,
 >>
->> Signed-off-by: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> The content is fine, but please look at how the other types are handled.
-> The raw attribute is described along with the units etc in it's own
-> section, but the _scale attribute just gets lumped in with the equivalent
-> for all the other channel types.
-> 
-> Thanks,
-> 
-> Jonathan
->> ---
->>  Documentation/ABI/testing/sysfs-bus-iio | 8 ++++++++
->>  1 file changed, 8 insertions(+)
+>> On 27.08.2014 11:44, Naveen Krishna Chatradhi wrote:
+>>> This patchset supports new Exynos7 Samsung SoC based on Cortex-A57.
+>>> Exynos7 is a System-On-Chip (SoC) that is based on 64-bit
+>>> ARMv8 RISC processor.
 >>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
->> index d760b02..3c76bd8 100644
->> --- a/Documentation/ABI/testing/sysfs-bus-iio
->> +++ b/Documentation/ABI/testing/sysfs-bus-iio
->> @@ -1028,3 +1028,11 @@ Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>  Description:
->>  		Raw value of rotation from true/magnetic north measured with
->>  		or without compensation from tilt sensors.
->> +
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentX_raw
->> +What:		/sys/bus/iio/devices/iio:deviceX/in_currentX_scale
->> +KernelVersion:	3.18
->> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> +Description:
->> +		Raw current measurement from channel X. Units after application of
->> +		scale and offset are milliamps.
-Where is the offset?
->>
+>> A general issue with this series is that it introduces a very generic
+>> name for a very specific single SoC. We remember exactly the same cases
+>> for Exynos4 (original name used for Exynos5250) and Exynos5 (Exynos5250)
+>> and we should have learned that it is better to use a specific name
+>> first and only then try to make things common if it turns out to be
+>> appropriate.
+>
+> Any comments on this?
+
+The name of the SoC is Exynos7 and so all these patches are using
+Exynos7 in dt compatible string and file names. If there are any
+variants of Exynos7 SoC in future, support those variants will be
+based on what is already merged for Exynos7 SoC. There is no specific
+generalization targeted in this series by using Exynos7 name.
+
+Thanks,
+Thomas.
+
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
