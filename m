@@ -1,43 +1,146 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: [PATCH] net: ethernet: freescale: fec_main.c:  Cleaning up missing null-terminate in conjunction with strncpy
-Date: Sun, 14 Sep 2014 19:32:42 +0200
-Message-ID: <1410715962-15986-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/5] dt-bindings: Add binding info for Xgene QMTM UIO driver
+Date: Sun, 14 Sep 2014 23:27:27 +0530
+Message-ID: <CAPTm99XzJe8RWCaMCauGA9fgzRDNzk4bhZoKFtH3jiDHYek2fA@mail.gmail.com>
+References: <1410256619-3213-1-git-send-email-ankit.jindal@linaro.org>
+ <1410256619-3213-5-git-send-email-ankit.jindal@linaro.org> <20140909105310.GC27786@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140909105310.GC27786@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Nimrod Andy <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Frank Li <frank.li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replacing strncpy with strlcpy to avoid strings that lacks null terminate.
+On 9 September 2014 16:23, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Sep 09, 2014 at 10:56:58AM +0100, Ankit Jindal wrote:
+>> This patch adds device tree binding documentation for
+>> Xgene QMTM UIO driver.
+>>
+>> Signed-off-by: Ankit Jindal <ankit.jindal-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Tushar Jagad <tushar.jagad-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/uio/uio_xgene_qmtm.txt     |   45 ++++++++++++++++++++
+>>  1 file changed, 45 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+>> new file mode 100644
+>> index 0000000..b71831b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/uio/uio_xgene_qmtm.txt
+>> @@ -0,0 +1,45 @@
+>> +APM X-Gene QMTM UIO nodes
+>> +
+>> +QMTM UIO nodes are defined for user space access to on-chip QMTM device
+>> +on APM X-Gene SOC using UIO framework.
+>> +
+>
+> Userspace vs kernel space has precisely _nothing_ to do with a HW
+> description.
+>
+> This doesn't describe at all what the device is (e.g. what does QMTM
+> stand for, what is it used for?).
+>
+> NAK.
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
----
- drivers/net/ethernet/freescale/fec_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+QMTM stands for queue manager and traffic manager. It is device managing
+the hardware queues. It also implements QoS among hardware queues hence
+term "traffic" manager is present in its name.
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 89355a7..e84b132 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1674,13 +1674,13 @@ static int fec_enet_mii_probe(struct net_device *ndev)
- 				continue;
- 			if (dev_id--)
- 				continue;
--			strncpy(mdio_bus_id, fep->mii_bus->id, MII_BUS_ID_SIZE);
-+			strlcpy(mdio_bus_id, fep->mii_bus->id, MII_BUS_ID_SIZE);
- 			break;
- 		}
- 
- 		if (phy_id >= PHY_MAX_ADDR) {
- 			netdev_info(ndev, "no PHY, assuming direct connection to switch\n");
--			strncpy(mdio_bus_id, "fixed-0", MII_BUS_ID_SIZE);
-+			strlcpy(mdio_bus_id, "fixed-0", MII_BUS_ID_SIZE);
- 			phy_id = 0;
- 		}
- 
--- 
-1.7.10.4
+Sure, I will add more info about the device in the next revision.
 
+The primary purpose of QMTM UIO driver is to expose QMTM HW to
+user space so that frameworks like ODP (OpenDataPlane) can use
+this from user space.
+
+>
+> Please ensure you Cc the devicetree list (devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org) in
+> future.
+
+Sure, will do.
+
+>
+>> +Required properties:
+>> +- compatible: Should be "apm,xgene-qmtm-uio"
+>
+> This should definitely not have "uio" in the name.
+
+I added "uio" in compatible string because in future APM might
+add separate driver for accessing QMTM from kernel space.
+
+Can you suggest better compatible strings for this UIO driver?
+
+>
+>> +- reg: Address and length of the register set for the device. It contains the
+>> +  information of registers in the same order as described by reg-names.
+>> +- reg-names: Should contain the register set names
+>> +  - "csr": QMTM control and status register address space.
+>> +  - "fabric": QMTM memory mapped access to queue states.
+>
+> These look ok, I guess.
+>
+>> +  - "qpool": Memory location for creating QMTM queues. This could be some
+>> +    SRAM or reserved portion of RAM. It is expected that size and location
+>> +    of qpool memory will be configurable via bootloader.
+>
+> I don't follow why this should be described in a reg entry. This is not
+> a property of the device; this is a separate resource being assigned to
+> the device.
+
+Ok, I will remove it from reg and add "qpool-addr" and "qpool-size"
+attributes to
+point the location of qpool.
+
+>
+> Why can the kernel not allocate this dynamically?
+
+For faster access, this can be on-chip memory as well.
+
+>
+> If you need a specific fixed pool, use the reserved-memory bindings.
+
+reserved-memory only apply to RAM, it does not apply to on-chip
+SRAMs. Right ?
+
+>
+>> +- clocks: Reference to the clock entry.
+>
+> There is only one clock input to the IP block?
+
+Yes.
+
+>
+>> +- num_queues: Number of queues under this QMTM device.
+>
+> s/_/-/, property names should use '-' rather than '_'.
+
+Sure, will rename it in next revision.
+
+>
+>> +- devid: QMTM identification number for the system having multiple QMTM devices
+>
+> What exactly is this used for? Why is the reg entry not sufficient?
+
+When there are multiple QMTM devices, the devid is used to form a
+unique id (a tuple of queue number and device id) for the queues
+belonging to this device. Unfortunately, we don't have any register
+providing the devid of the device.
+
+>
+>> +Optional properties:
+>> +- status: Should be "ok" or "disabled" for enabled/disabled. Default is "ok".
+>
+> This is so standard I don't see the point in documenting it.
+
+Ok, I will remove it in next revision.
+
+>
+> Mark.
+
+Thanks,
+Ankit
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
