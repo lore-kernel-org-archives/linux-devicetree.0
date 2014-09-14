@@ -1,209 +1,108 @@
-From: <suravee.suthikulpanit@amd.com>
-Subject: [PATCH 2/2 V6] irqchip: gicv2m: Add support for multiple MSI for ARM64 GICv2m
-Date: Sun, 14 Sep 2014 01:30:16 -0500
-Message-ID: <1410676216-27953-3-git-send-email-suravee.suthikulpanit@amd.com>
-References: <1410676216-27953-1-git-send-email-suravee.suthikulpanit@amd.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1410676216-27953-1-git-send-email-suravee.suthikulpanit@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
-Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Mark Rutland <Mark.Rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] RFC: add function for localbus address
+Date: Sat, 13 Sep 2014 21:46:10 -0700
+Message-ID: <20140914044610.913E9C4102A@trevor.secretlab.ca>
+References: <20140729234522.E9FF1C40738@trevor.secretlab.ca>
+	<1409672700-21697-1-git-send-email-svarbanov@mm-sol.com>
+	<20140908145204.8ADC2C40AE5@trevor.secretlab.ca>
+	<540E1014.8090102@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <540E1014.8090102@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robherring2@gmail.com>, Rob Herring <rob.herring@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+On Mon, 08 Sep 2014 13:22:44 -0700, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> Adding Mark Brown who finished off introducing IORESOURCE_REG.
+> 
+> On 09/08/14 07:52, Grant Likely wrote:
+> > On Tue,  2 Sep 2014 18:45:00 +0300, Stanimir Varbanov <svarbanov@mm-sol.com> wrote:
+> >> +
+> >>  unsigned long __weak pci_address_to_pio(phys_addr_t address)
+> >>  {
+> >>  	if (address > IO_SPACE_LIMIT)
+> >> @@ -665,6 +691,29 @@ int of_address_to_resource(struct device_node *dev, int index,
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(of_address_to_resource);
+> >>  
+> >> +int of_localbus_address_to_resource(struct device_node *dev, int index,
+> >> +				    struct resource *r)
+> >> +{
+> >> +	const char *name = NULL;
+> >> +	const __be32 *addrp;
+> >> +	u64 size;
+> >> +
+> >> +	addrp = of_get_localbus_address(dev, index, &size);
+> >> +	if (!addrp)
+> >> +		return -EINVAL;
+> >> +
+> >> +	of_property_read_string_index(dev, "reg-names", index, &name);
+> >> +
+> >> +	memset(r, 0, sizeof(*r));
+> >> +	r->start = be32_to_cpup(addrp);
+> >> +	r->end = r->start + size - 1;
+> >> +	r->flags = IORESOURCE_REG;
+> > This is problematic. A resource is created, but there is absolutely no
+> > indication that the resource represents a localbus address instead of a
+> > CPU address. platform_device reg resources represent CPU addresses.
+> > Trying to overload it will cause confusion in drivers.
+> >
+> >> +	r->name = name ? name : dev->full_name;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(of_localbus_address_to_resource);
+> >> +
+> >>  struct device_node *of_find_matching_node_by_address(struct device_node *from,
+> >>  					const struct of_device_id *matches,
+> >>  					u64 base_address)
+> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> >> index 0197725..36dcbd7 100644
+> >> --- a/drivers/of/platform.c
+> >> +++ b/drivers/of/platform.c
+> >> @@ -106,8 +106,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
+> >>  				  struct device *parent)
+> >>  {
+> >>  	struct platform_device *dev;
+> >> -	int rc, i, num_reg = 0, num_irq;
+> >> +	int rc, i, num_reg = 0, num_localbus_reg = 0, num_irq;
+> >>  	struct resource *res, temp_res;
+> >> +	int num_resources;
+> >>  
+> >>  	dev = platform_device_alloc("", -1);
+> >>  	if (!dev)
+> >> @@ -116,22 +117,33 @@ struct platform_device *of_device_alloc(struct device_node *np,
+> >>  	/* count the io and irq resources */
+> >>  	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+> >>  		num_reg++;
+> >> +
+> >> +	while (of_localbus_address_to_resource(np,
+> >> +					num_localbus_reg, &temp_res) == 0)
+> >> +		num_localbus_reg++;
+> >> +
+> > No, I don't support doing this. The moment a platform_driver depends on
+> > a local bus address it is doing something special. It needs to decode
+> > its own address in that case, which it can easily do.
+> >
+> > Any platform_driver that interprets a IORESOURCE_REG as a localbus
+> > address instead of a CPU address is *BROKEN*. It should be changed to
+> > either decode the address itself, of a new bus type should be created
+> > that can make its own decisions about what address resources mean.
+> 
+> Where is this described? From the commit text that introduces
+> IORESOURCE_REG I see:
+> 
+> "Currently a bunch of I2C/SPI MFD drivers are using IORESOURCE_IO for
+> register address ranges. Since this causes some confusion due to the
+> primary use of this resource type for PCI/ISA I/O ports create a new
+> resource type IORESOURCE_REG."
 
-This patch extend GICv2m MSI to support multiple MSI in ARM64.
+Sorry, I mistook IORESOURCE_REG or IORESOURCE_IO. You're right, this
+isn't an issue.
 
-This requires the common arch_setup_msi_irqs() to be overwriten
-with ARM64 version which does not return 1 for PCI_CAP_ID_MSI and
-nvec > 1.
+I'm still concerned about the implications of automatically populating
+platform_devices with this resource type. I'll talk to Mark about it
+face to fact at Connect this week.
 
-Cc: Mark Rutland <Mark.Rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>
-Cc: Will Deacon <Will.Deacon@arm.com>
-Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
----
- arch/arm64/kernel/Makefile    |  1 +
- arch/arm64/kernel/msi.c       | 41 ++++++++++++++++++++
- drivers/irqchip/irq-gic-v2m.c | 87 ++++++++++++++++++++++++++++++++++++++-----
- 3 files changed, 119 insertions(+), 10 deletions(-)
- create mode 100644 arch/arm64/kernel/msi.c
-
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index df7ef87..a921c42 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -29,6 +29,7 @@ arm64-obj-$(CONFIG_ARM64_CPU_SUSPEND)	+= sleep.o suspend.o
- arm64-obj-$(CONFIG_JUMP_LABEL)		+= jump_label.o
- arm64-obj-$(CONFIG_KGDB)		+= kgdb.o
- arm64-obj-$(CONFIG_EFI)			+= efi.o efi-stub.o efi-entry.o
-+arm64-obj-$(CONFIG_PCI_MSI)		+= msi.o
- 
- obj-y					+= $(arm64-obj-y) vdso/
- obj-m					+= $(arm64-obj-m)
-diff --git a/arch/arm64/kernel/msi.c b/arch/arm64/kernel/msi.c
-new file mode 100644
-index 0000000..a295862
---- /dev/null
-+++ b/arch/arm64/kernel/msi.c
-@@ -0,0 +1,41 @@
-+/*
-+ * ARM64 architectural MSI implemention
-+ *
-+ * Support for Message Signalelled Interrupts for systems that
-+ * implement ARM Generic Interrupt Controller: GICv2m.
-+ *
-+ * Copyright (C) 2014 Advanced Micro Devices, Inc.
-+ * Authors: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published
-+ * by the Free Software Foundation.
-+ */
-+
-+#include <linux/irq.h>
-+#include <linux/msi.h>
-+#include <linux/pci.h>
-+
-+/*
-+ * ARM64 function for seting up MSI irqs.
-+ * Based on driver/pci/msi.c: arch_setup_msi_irqs().
-+ *
-+ * Note:
-+ * Current implementation assumes that all interrupt controller used in
-+ * ARM64 architecture _MUST_ supports multi-MSI.
-+ */
-+int arm64_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
-+{
-+	struct msi_desc *entry;
-+	int ret;
-+
-+	list_for_each_entry(entry, &dev->msi_list, list) {
-+		ret = arch_setup_msi_irq(dev, entry);
-+		if (ret < 0)
-+			return ret;
-+		if (ret > 0)
-+			return -ENOSPC;
-+	}
-+
-+	return 0;
-+}
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index 499bfb9..4ddb47d 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -99,13 +99,26 @@ static void gicv2m_teardown_msi_irq(struct msi_chip *chip, unsigned int irq)
- 	spin_unlock(&data->msi_cnt_lock);
- }
- 
-+static int gicv2m_msi_get_vec_count(struct pci_dev *pdev, struct msi_desc *desc)
-+{
-+	int ret = -EINVAL;
-+#ifdef CONFIG_PCI_MSI
-+	if (desc->msi_attrib.is_msix)
-+		ret = pci_msix_vec_count(pdev);
-+	else
-+		ret = pci_msi_vec_count(pdev);
-+#endif
-+	return ret;
-+}
-+
- static int gicv2m_setup_msi_irq(struct msi_chip *chip,
- 				struct pci_dev *pdev,
- 				struct msi_desc *desc)
- {
--	int irq, avail;
-+	int i, irq, nvec, avail;
- 	struct msi_msg msg;
- 	phys_addr_t addr;
-+	struct msi_desc *entry;
- 	struct v2m_data *data = container_of(chip, struct v2m_data, msi_chip);
- 
- 	if (!desc) {
-@@ -114,16 +127,70 @@ static int gicv2m_setup_msi_irq(struct msi_chip *chip,
- 		return -EINVAL;
- 	}
- 
--	avail = alloc_msi_irq(data, 1, &irq);
--	if (avail != 0) {
--		dev_err(&pdev->dev,
--			"GICv2m: MSI setup failed. Cannnot allocate IRQ\n");
--		return -ENOSPC;
--	}
-+	if (desc->msi_attrib.is_msix) {
-+		/**
-+		 * For MSIx:
-+		 * We allocate one irq at a time
-+		 */
-+		avail = alloc_msi_irq(data, 1, &irq);
-+		if (avail != 0) {
-+			dev_err(&pdev->dev,
-+				"GICv2m: MSI setup failed. Cannnot allocate IRQ\n");
-+			return -ENOSPC;
-+		}
- 
--	irq_set_chip_data(irq, chip);
--	irq_set_msi_desc(irq, desc);
--	irq_set_irq_type(irq, IRQ_TYPE_EDGE_RISING);
-+		irq_set_chip_data(irq, chip);
-+		irq_set_msi_desc(irq, desc);
-+		irq_set_irq_type(irq, IRQ_TYPE_EDGE_RISING);
-+	} else {
-+		/**
-+		 * For MSI and Multi-MSI:
-+		 * All requested irqs are allocated and setup at
-+		 * once. Subsequent calls to this function would simply return
-+		 * success. This is to avoid having to implement a separate
-+		 * function for setting up multiple irqs.
-+		 */
-+		BUG_ON(list_empty(&pdev->msi_list));
-+		WARN_ON(!list_is_singular(&pdev->msi_list));
-+
-+		nvec = gicv2m_msi_get_vec_count(pdev, desc);
-+		if (WARN_ON(nvec <= 0))
-+			return nvec;
-+
-+		entry = list_first_entry(&pdev->msi_list,
-+					 struct msi_desc, list);
-+
-+		if ((nvec > 1) && (entry->msi_attrib.multiple))
-+			return 0;
-+
-+		avail = alloc_msi_irq(data, nvec, &irq);
-+		if (avail != 0) {
-+			dev_err(&pdev->dev,
-+				"GICv2m: Failed to allocate %d irqs.\n", nvec);
-+			return avail;
-+		}
-+
-+		if (nvec > 1) {
-+			/* Set lowest of the new interrupts assigned
-+			 * to the PCI device
-+			 */
-+			entry->nvec_used = nvec;
-+			entry->msi_attrib.multiple = ilog2(
-+						__roundup_pow_of_two(nvec));
-+		}
-+
-+		for (i = 0; i < nvec; i++) {
-+			irq_set_chip_data(irq+i, chip);
-+			if (irq_set_msi_desc_off(irq, i, entry)) {
-+				dev_err(&pdev->dev,
-+					"GICv2m: Failed to set up MSI irq %d\n",
-+					(irq+i));
-+				return -EINVAL;
-+			}
-+
-+			irq_set_irq_type((irq+i), IRQ_TYPE_EDGE_RISING);
-+		}
-+	}
- 
- 	addr = data->res.start + V2M_MSI_SETSPI_NS;
- 	msg.address_hi = (u32)(addr >> 32);
--- 
-1.9.3
-
+g.
