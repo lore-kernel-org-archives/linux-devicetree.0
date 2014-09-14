@@ -1,49 +1,34 @@
-From: Thomas Abraham <ta.omasab@gmail.com>
-Subject: Re: [PATCH 00/14] Support 64bit Cortex A57 based Exynos7 SoC
-Date: Sun, 14 Sep 2014 19:15:14 +0530
-Message-ID: <CAJuA9ahjdZw23CyEJBO8wwypR0QCf=4+QXB1LXUSzc5rRoDe_w@mail.gmail.com>
-References: <1409132660-1898-1-git-send-email-ch.naveen@samsung.com>
-	<53FDC25A.2010806@samsung.com>
-	<54142324.600@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [v4,1/9] ACPI / PM: Let acpi_dev_pm_detach() return an error code
+Date: Sun, 14 Sep 2014 18:38:58 +0200
+Message-ID: <6318611.DnX9cEgMjk@vostro.rjw.lan>
+References: <1410262570-22785-2-git-send-email-ulf.hansson@linaro.org> <20140912210553.GA27924@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <54142324.600@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, catalin.marinas@arm.com, naveenkrishna.ch@gmail.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, cpgs@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140912210553.GA27924@core.coreip.homeip.net>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Philipp Zabel <philipp.zabel@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, linux-acpi@vger.kernel.org, Simon Horman <horms@verge.net.au>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Friday, September 12, 2014 02:05:53 PM Dmitry Torokhov wrote:
+> Hi Ulf,
+> 
+> On Tue, Sep 09, 2014 at 01:36:02PM +0200, Ulf Hansson wrote:
+> > To give callers the option of acting on a errors while removing the
+> > pm_domain ops for the device in the ACPI PM domain, let
+> > acpi_dev_pm_detach() return an int to provide the error code.
+> 
+> So how would callers handle the errors? As far as I can see
+> acpi_dev_pm_detach() is called from ->remove() and ->shutdown() methods, where
+> there is no meaningful strategy to handle errors as you are past the point of
+> no return and you keep on tearing down the device.
 
-On Sat, Sep 13, 2014 at 4:27 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On 27.08.2014 13:34, Tomasz Figa wrote:
->> Hi Naveen,
->>
->> On 27.08.2014 11:44, Naveen Krishna Chatradhi wrote:
->>> This patchset supports new Exynos7 Samsung SoC based on Cortex-A57.
->>> Exynos7 is a System-On-Chip (SoC) that is based on 64-bit
->>> ARMv8 RISC processor.
->>
->> A general issue with this series is that it introduces a very generic
->> name for a very specific single SoC. We remember exactly the same cases
->> for Exynos4 (original name used for Exynos5250) and Exynos5 (Exynos5250)
->> and we should have learned that it is better to use a specific name
->> first and only then try to make things common if it turns out to be
->> appropriate.
->
-> Any comments on this?
+This is specifically for what patch [3/9] is doing AFAICS.  
 
-The name of the SoC is Exynos7 and so all these patches are using
-Exynos7 in dt compatible string and file names. If there are any
-variants of Exynos7 SoC in future, support those variants will be
-based on what is already merged for Exynos7 SoC. There is no specific
-generalization targeted in this series by using Exynos7 name.
+The existing callers don't need to worry about this.
 
-Thanks,
-Thomas.
+Rafael
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
