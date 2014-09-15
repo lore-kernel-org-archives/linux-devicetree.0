@@ -1,44 +1,37 @@
 From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v5 06/12] Documentation: bindings: add doc for the Berlin USB PHY
-Date: Mon, 15 Sep 2014 12:36:12 +0200
-Message-ID: <1410777378-12726-7-git-send-email-antoine.tenart@free-electrons.com>
+Subject: [PATCH v5 12/12] ARM: dts: berlin: enable USB on the Google Chromecast
+Date: Mon, 15 Sep 2014 12:36:18 +0200
+Message-ID: <1410777378-12726-13-git-send-email-antoine.tenart@free-electrons.com>
 References: <1410777378-12726-1-git-send-email-antoine.tenart@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1410777378-12726-1-git-send-email-antoine.tenart@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings of the Marvell Berlin USB PHY driver.
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
+Enable usb1 on Google Chromecast which is connected to micro-USB
+plug used for external power supply, too.
+
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
 ---
- Documentation/devicetree/bindings/phy/berlin-usb-phy.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt b/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
-new file mode 100644
-index 000000000000..be33780f668e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
-@@ -0,0 +1,16 @@
-+* Marvell Berlin USB PHY
+diff --git a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+index bcd81ffc495d..5c42c3bfb613 100644
+--- a/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
++++ b/arch/arm/boot/dts/berlin2cd-google-chromecast.dts
+@@ -27,3 +27,7 @@
+ };
+ 
+ &uart0 { status = "okay"; };
 +
-+Required properties:
-+- compatible: "marvell,berlin2-usb-phy" or "marvell,berlin2cd-usb-phy"
-+- reg: base address and length of the registers
-+- #phys-cells: should be 0
-+- resets: reference to the reset controller
++&usb_phy1 { status = "okay"; };
 +
-+Example:
-+
-+	usb-phy@f774000 {
-+		compatible = "marvell,berlin2-usb-phy";
-+		reg = <0xf774000 0x128>;
-+		#phy-cells = <0>;
-+		resets = <&chip 0x104 14>;
-+	};
++&usb1 { status = "okay"; };
 -- 
 1.9.1
