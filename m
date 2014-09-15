@@ -1,52 +1,53 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/2] mfd: stmpe: Document DT binding for irq_over_gpio
-Date: Mon, 15 Sep 2014 16:13:03 -0700
-Message-ID: <20140915231303.GM25162@lee--X1>
-References: <1410491914-23378-1-git-send-email-xobs@kosagi.com>
- <1410491914-23378-3-git-send-email-xobs@kosagi.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [v4,1/9] ACPI / PM: Let acpi_dev_pm_detach() return an error code
+Date: Tue, 16 Sep 2014 01:36:15 +0200
+Message-ID: <4451285.EDb1j6ttbA@vostro.rjw.lan>
+References: <1410262570-22785-2-git-send-email-ulf.hansson@linaro.org> <6318611.DnX9cEgMjk@vostro.rjw.lan> <20140915165359.GA13080@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410491914-23378-3-git-send-email-xobs@kosagi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, bunnie@kosagi.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140915165359.GA13080@core.coreip.homeip.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Philipp Zabel <philipp.zabel@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, linux-acpi@vger.kernel.org, Simon Horman <horms@verge.net.au>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Sep 2014, Sean Cross wrote:
+On Monday, September 15, 2014 09:53:59 AM Dmitry Torokhov wrote:
+> On Sun, Sep 14, 2014 at 06:38:58PM +0200, Rafael J. Wysocki wrote:
+> > On Friday, September 12, 2014 02:05:53 PM Dmitry Torokhov wrote:
+> > > Hi Ulf,
+> > > 
+> > > On Tue, Sep 09, 2014 at 01:36:02PM +0200, Ulf Hansson wrote:
+> > > > To give callers the option of acting on a errors while removing the
+> > > > pm_domain ops for the device in the ACPI PM domain, let
+> > > > acpi_dev_pm_detach() return an int to provide the error code.
+> > > 
+> > > So how would callers handle the errors? As far as I can see
+> > > acpi_dev_pm_detach() is called from ->remove() and ->shutdown() methods, where
+> > > there is no meaningful strategy to handle errors as you are past the point of
+> > > no return and you keep on tearing down the device.
+> > 
+> > This is specifically for what patch [3/9] is doing AFAICS.  
+> > 
+> > The existing callers don't need to worry about this.
+> 
+> OK, so I have the very same comment about patch 3 then: we have
+> dev_pm_domain_detach() returning error. How would the callers handle errors?
 
-> STMPE now supports using a GPIO as an IRQ source.  Document the devic=
-e
-> tree binding for this option.
->=20
-> Signed-off-by: Sean Cross <xobs@kosagi.com>
-> ---
->  Documentation/devicetree/bindings/mfd/stmpe.txt | 1 +
->  1 file changed, 1 insertion(+)
+Ulf?
 
-Applied, thanks.
+> WRT this patch: I'd rater we did not just return generic "error code" just
+> because we do not know who manages PD for the device. Can we add API to check
+> if we are using ACPI to manage power domains? Then patch #3 could check if it
+> needs to use ACPI or generic power domain API.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Docume=
-ntation/devicetree/bindings/mfd/stmpe.txt
-> index 56edb55..3fb68bf 100644
-> --- a/Documentation/devicetree/bindings/mfd/stmpe.txt
-> +++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
-> @@ -13,6 +13,7 @@ Optional properties:
->   - interrupt-parent             : Specifies which IRQ controller we'=
-re connected to
->   - wakeup-source                : Marks the input device as wakable
->   - st,autosleep-timeout         : Valid entries (ms); 4, 16, 32, 64,=
- 128, 256, 512 and 1024
-> + - irq-gpio                     : If present, which GPIO to use for =
-event IRQ
-> =20
->  Example:
-> =20
+The rule is that if there is an ACPI companion object for the given device, then
+ACPI is used.  So the API is ACPI_COMPANION(dev) and we have that check around
+until someone realized that acpi_dev_pm_attach/detach() made it too.  We can
+restore it, I suppose, but I'm not sure how much better it is going to be.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Either way, I have no strong preferences here.
+
+Rafael
+
