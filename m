@@ -1,97 +1,131 @@
-From: Christopher Covington <cov@codeaurora.org>
-Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Mon, 15 Sep 2014 18:51:14 -0400
-Message-ID: <54176D62.9010600@codeaurora.org>
-References: <1410452204-7277-1-git-send-email-dianders@chromium.org> <20140911164710.GW6158@arm.com> <5411D528.4050605@arm.com> <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com> <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com> <5411DF5D.8060906@arm.com> <5412DC48.7030708@codeaurora.org> <5412E3BB.9030800@arm.com> <54134291.3040700@codeaurora.org> <20140915111055.GD1577@arm.com> <54174CFF.7050504@codeaurora.org> <CAPz6YkU8hEL6yocPf7UL8-tz9Onuu-9bevAToK3CDWsShN92YQ@mail.gmail.com> <54175EFE.6010509@codeaurora.org> <CAPz6YkWbxiGHO8RK==HbQ3P22amZ9sDKpGew=a2U8gO7soQCDg@mail.gmail.com> <CAPz6YkWwzpd4oxarEH4Vu-Z_eH+ysw0TNubpPsv_eC6QJPcw7g@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 0/8] charger/mfd: max14577: Add support for MAX77836
+Date: Mon, 15 Sep 2014 23:52:20 +0100
+Message-ID: <20140915225220.GH25162@lee--X1>
+References: <1410504840-23543-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPz6YkWwzpd4oxarEH4Vu-Z_eH+ysw0TNubpPsv_eC6QJPcw7g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sonny Rao <sonnyrao@chromium.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Doug Anderson <dianders@chromium.org>, Will Deacon <Will.Deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?B?SGVpa28
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410504840-23543-1-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sonny,
+On Fri, 12 Sep 2014, Krzysztof Kozlowski wrote:
+> This is a sixth version of patches adding support for
+> MAX77836 device to the max14577 drivers.
+>=20
+> This patchset has been on the lists for quite long time and was alrea=
+dy
+> reviewed by all necessary maintainers except power supply.
+> I need acks from power supply subsystem (patches: 3, 5-8).
 
-On 09/15/2014 06:04 PM, Sonny Rao wrote:
-> On Mon, Sep 15, 2014 at 2:52 PM, Sonny Rao <sonnyrao@chromium.org> wrote:
->> On Mon, Sep 15, 2014 at 2:49 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->>> On 09/15/14 14:47, Sonny Rao wrote:
->>>> On Mon, Sep 15, 2014 at 1:33 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->>>>> On 09/15/14 04:10, Catalin Marinas wrote:
->>>>>> On Fri, Sep 12, 2014 at 07:59:29PM +0100, Stephen Boyd wrote:
->>>>>>> On 09/12/14 05:14, Marc Zyngier wrote:
->>>>>>>> We surely can handle the UNDEF and do something there. We just can't do
->>>>>>>> it the way Doug described it above.
->>>>>>> I suggested doing that for something else a while ago and Will and Dave
->>>>>>> we're not thrilled[1]. The suggestion back then was to use DT to
->>>>>>> indicate what mode the kernel is running in.
->>>>>>>
->>>>>>> [1]
->>>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/105321.html
->>>>>> I think the context was slightly different. As I re-read the thread, it
->>>>>> seems that the discussion was around whether to use some SMC interface
->>>>>> or not based on whether the kernel is running secure or non-secure. The
->>>>>> argument made by Will was to actually specify the type of the firmware
->>>>>> SMC interface in the DT and use it in the kernel (and probably assume
->>>>>> the kernel is running in secure mode if no smc interface is specified in
->>>>>> the DT; you could have both though, running in secure mode and also
->>>>>> having firmware).
->>>>>>
->>>>>> In this arch timer case, we need to work around a firmware bug (or
->>>>>> feature as 32-bit ARM kernels never required CNTVOFF initialisation by
->>>>>> firmware, no matter how small such firmware is). We don't expect a
->>>>>> specific SMC call to initialise CNTVOFF, so we can't describe it in the
->>>>>> DT.
->>>>> Agreed, we can't described SMC calls that don't exist. From my
->>>>> perspective it's just another part of the cpu boot sequence that needs
->>>>> to be handled in the kernel, so describing the requirement via the
->>>>> cpu-boot method seems appropriate. It seems like we're making it harder
->>>>> than it should be by handling the undef when we could have slightly
->>>>> different SMP boot code (and suspend/resume code) depending on the boot
->>>>> method property.
->>>>
->>>> +heiko
->>>>
->>>> So, for the case of rk3288, based on this discussion what I'm going to
->>>> propose is to add code to rockchip.c which looks for a particular SMP
->>>> enable method -- say something like "rockchip,rk3288-smp-secure-svc"
->>>> which will then assume we have been booted in secure SVC mode and do
->>>> the CNTVOFF fixup.  I believe, it will need to do this on the boot CPU
->>>> as well, so I think it will need to scan the DT fairly early on the
->>>> boot CPU and also perform the function there.
->>>>
->>>> I'll look into implementing this and post code.  Comments and
->>>> suggestions appreciated, thanks.
->>>
->>> What goes wrong if we read the cntvoff from the boot CPU during
->>> smp_prepare_cpus() phase and use that to set the cntvoff on the other
->>> CPUs? That avoids needing to do anything very early by making the value
->>> the same. It does mean that cntvoff is some random out of reset value
->>> for CPU0, but at least it's consistent.
->>
->> I think we cannot read the value if we're not in hyp mode.
-> 
-> Well, thinking about it a little more, I think you still have a good point.
-> 
-> We don't need to do this early on, as long as we haven't started using
-> the arch timers yet.  If we are still able to do this at the point
-> where we're executing the code in arch/arm/mach-rockchip/platsmp.c
-> that finds the enable method then we can just handle it there.
+Give this set a few more days for the Power guys to respond.  If they
+don't, ping me and I will just apply the set.
 
-I've been playing around with the probe-based approach and while I need to do
-a lot more testing, it seems to be working for the first tens of instructions.
-I hope to be able to share a draft of that soon. Basically, I just read the
-current NSACR value and write it back (although maybe in the long term we
-would want to make sure a few of those bits are set or cleared). If that
-succeeds, we know we're in secure SVC and can proceed to set up MON and HYP.
+> Generally this should be pulled at once but some parts may be split
+> and pulled separately in following batches:
+>  - Patches 1 and 2: as MFD prerequisites,
+>  - Patches 3-5: adding actual charger code, depends on 1 and 2,
+>  - Patch 6: fuel-gauge, independent,
+>  - Patches 7 and 8: only documentation.
+>=20
+> Lee Jones said he can take the set through his tree. Still I need ack=
+s
+> from power subsystem.
+>=20
+> Everything rebased on Linus' tree (v3.17-rc2-9-g68e370289c29).
+>=20
+> Changes since v5
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 1. 5/8: Remove 'inline' from functions (suggested by Andrew Morton).
+> 2. Add Andrew Morton's acks.
+>=20
+> Changes since v4
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 1. Add Lee Jones' acks to patch 1 and 2 (mfd).
+> 2. power max17040 6/8: Remove duplicated (and not used) value of id
+>    in array of i2c_device_id. (suggested by Lee Jones)
+>=20
+> Changes since v3
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 1. Split MFD changes into separate new patches:
+>    1/8: mfd: max14577: Add defines for MAX77836 charger
+>    2/8: Map charger device to its own of_node
+>    Suggested by Lee Jones.
+>=20
+> Changes since v2
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 1. charger: Use sysfs instead of DTS for setting the fast charge time=
+r.
+>    The charger driver now selects the CONFIG_SYSFS and exports
+>    a DEVICE_ATTR. (suggested by Mark Rutland)
+> 2. Add patch 6 with documentation of exported sysfs entry for fast
+>    charge timer.
+> 3. charger 3/6: Add missing 'break' in switch parsing valid values
+>    for fast charge timer.
+>=20
+> Changes since v1
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 1. charger 3/5: Add an error message for each unsuccessful parse of D=
+T
+>    property (suggested by Mark Rutland).
+> 2. charger 3/5: Use 'u32' type for storing values from DT (suggested
+>    by Mark Rutland).
+> 3. charger 3/5: Remove an error message for memory allocation failure=
+=2E
+>=20
+>=20
+> The patchset (first and second part of the MAX77836 drivers) has been
+> on the lists since January. Changelog for the first part of the drive=
+rs
+> (merged):
+> https://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg628696.h=
+tml
+>=20
+>=20
+> Best regards,
+> Krzysztof Kozlowski
+>=20
+>=20
+> Krzysztof Kozlowski (8):
+>   mfd: max14577: Add defines for MAX77836 charger
+>   mfd: max14577: Map charger device to its own of_node
+>   charger: max14577: Add support for MAX77836 charger
+>   regulator/mfd: max14577: Export symbols for calculating charger
+>     current
+>   charger: max14577: Configure battery-dependent settings from DTS an=
+d
+>     sysfs
+>   power: max17040: Add ID for MAX77836 Fuel Gauge block
+>   devicetree: mfd: max14577: Add device tree bindings document
+>   Documentation: charger: max14577: Document exported sysfs entry
+>=20
+>  Documentation/ABI/testing/sysfs-class-power        |  14 +
+>  Documentation/devicetree/bindings/mfd/max14577.txt | 146 ++++++++
+>  drivers/mfd/max14577.c                             | 100 +++++-
+>  drivers/power/Kconfig                              |   5 +-
+>  drivers/power/max14577_charger.c                   | 370 +++++++++++=
+++++++++--
+>  drivers/power/max17040_battery.c                   |   3 +-
+>  drivers/regulator/max14577.c                       |  80 +----
+>  include/linux/mfd/max14577-private.h               |  95 ++++--
+>  include/linux/mfd/max14577.h                       |  30 ++
+>  9 files changed, 704 insertions(+), 139 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.tx=
+t
+>=20
 
-Christopher
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
