@@ -1,71 +1,63 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH] ARM: dts: Add Maxim 77693 PMIC to the Trats2 board
-Date: Mon, 15 Sep 2014 16:36:27 +0200
-Message-ID: <CABxcv=mYWDVwOWbvV4xy+xS5tQUrCexCT_LD7hgUO2d3FPe56w@mail.gmail.com>
-References: <1410523386-10581-1-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1410523386-10581-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [PATCH v4 0/4] Qualcomm SPMI PMIC pin controller drivers
+Date: Mon, 15 Sep 2014 17:44:10 +0300
+Message-ID: <1410792254-24126-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, David Collins <collinsd@codeaurora.org>, Wu Fenglin <fenglinw@qti.qualcomm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+Hi, 
 
-On Fri, Sep 12, 2014 at 2:03 PM, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
-> +       i2c_max77693: i2c-gpio-1 {
-> +               compatible = "i2c-gpio";
-> +               gpios = <&gpm2 0 0>, <&gpm2 1 0 >;
+This is forth version of the patches posted earlier here[1].
 
-Can you please include <dt-bindings/gpio/gpio.h> and use
-GPIO_ACTIVE_HIGH instead of 0 here for the type/level flags?
+Changes:
+- Driver for SSBI PMIC dropped from this patchest - let Bjorn to handle it.
+- Separate MPP and GPIO drivers.
+- Second value in 'reg' propriety is used to specify address range length
+  and this number of GPIO/MPP's that drivers should handle.
+- Using generic compatible = "qcom,spmi-pmic-gpio" in GPIO driver to handle
+  any PMIC SPMI based GPIO block.
+- Using generic compatible = "qcom,spmi-pmic-mpp" in MPP driver to handle
+  any PMIC SPMI based MPP block.
+- Analog functionality for MPP's is activated with qcom,analog-mode.
+- Fixed review comments and driver issues.
 
-> +               i2c-gpio,delay-us = <2>;
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               status = "okay";
-> +
-> +               max77693@66 {
-> +                       compatible = "maxim,max77693";
-> +                       interrupt-parent = <&gpx1>;
-> +                       interrupts = <5 2>;
-> +                       reg = <0x66>;
-> +
-> +                       regulators {
-> +                               esafeout1_reg: esafeout@1 {
-> +                                       regulator-compatible = "ESAFEOUT1";
+Short description:
 
-According to Documentation/devicetree/bindings/regulator/regulator.txt,
-the "regulator-compatible" DT property has been deprecated in favor of
-just using the regulator node's name.
+Patches adds pin control drivers for Multi-Purpose Pin (MPP) and
+General-purpose pin (GPIO) controllers found in Qualcomm SPMI based
+PMIC chips.
 
-> +                                       regulator-name = "ESAFEOUT1";
-> +                               };
-> +                               esafeout2_reg: esafeout@2 {
-> +                                       regulator-compatible = "ESAFEOUT2";
-> +                                       regulator-name = "ESAFEOUT2";
-> +                               };
-> +                               charger_reg: charger@0 {
-> +                                       regulator-compatible = "CHARGER";
-> +                                       regulator-name = "CHARGER";
-> +                                       regulator-min-microamp = <60000>;
-> +                                       regulator-max-microamp = <2580000>;
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
->         mmc@12550000 {
->                 num-slots = <1>;
->                 supports-highspeed;
->
+MPP's are enhanced GPIO's with analog circuits, which support 
+analog and digital input/output.
 
-Once those two issues are addressed, feel free to add my
+[1] https://www.mail-archive.com/linux-arm-msm@vger.kernel.org/msg10095.html
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Bjorn Andersson (1):
+  pinctrl: Device tree bindings for Qualcomm PMIC GPIO block
 
-Best regards,
-Javier
+Ivan T. Ivanov (3):
+  pinctrl: Device tree bindings for Qualcomm PMIC MPP block
+  pinctrl: Qualcomm SPMI PMIC GPIO pin controller driver
+  pinctrl: Qualcomm SPMI PMIC MPP pin controller driver
+
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 214 +++++
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  | 159 ++++
+ drivers/pinctrl/qcom/Kconfig                       |  12 +
+ drivers/pinctrl/qcom/Makefile                      |   2 +
+ drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c      | 944 ++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-pmic-mpp.c       | 958 +++++++++++++++++++++
+ include/dt-bindings/pinctrl/qcom,pmic-gpio.h       | 142 +++
+ include/dt-bindings/pinctrl/qcom,pmic-mpp.h        |  44 +
+ 8 files changed, 2475 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-spmi-pmic-mpp.c
+ create mode 100644 include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+ create mode 100644 include/dt-bindings/pinctrl/qcom,pmic-mpp.h
+
+-- 
+1.9.1
