@@ -1,84 +1,144 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] Tegra xHCI support
-Date: Mon, 15 Sep 2014 12:09:03 -0600
-Message-ID: <54172B3F.9030901@wwwdotorg.org>
-References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>	<CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>	<CAL1qeaF7U9aoBp5gQPS=r+pe6krKmXdP1qak2gjhNqQMoHFB8A@mail.gmail.com>	<CAAObsKAXO-pBtqd1jNj8faXqpE+5Wb0RFzPp+jn9FH0B=dHq8g@mail.gmail.com>	<CAL1qeaEk_r5XAKvvJfwXN9+Wi9EjC_2MgBfoP92TK=F+Ou9QTA@mail.gmail.com>	<CAAObsKAwgfx1g2p7PQP+=HudvAHHpcPi47gEH6BrxEgLu6w2VQ@mail.gmail.com> <CAL1qeaEC9O8-jgjGC44cFctoZPpp4dRVfQ=mhSb_2on7GgiU0w@mail.gmail.com>
+From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] MIPS: Move device-tree files to a common location
+Date: Mon, 15 Sep 2014 20:11:07 +0200
+Message-ID: <54172BBB.4040506@openwrt.org>
+References: <1410803639-3159-1-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaEC9O8-jgjGC44cFctoZPpp4dRVfQ=mhSb_2on7GgiU0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410803639-3159-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Qais Yousef <qais.yousef-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2014 11:06 AM, Andrew Bresticker wrote:
-> On Mon, Sep 15, 2014 at 12:00 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
->> On 12 September 2014 18:37, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>> On Tue, Sep 9, 2014 at 1:21 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
->>>> On 8 September 2014 18:22, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>> On Mon, Sep 8, 2014 at 8:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
->>>>>> On 2 September 2014 23:34, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>>>>
->>>>>>> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
->>>>>>> USB3.0 memory sticks and ethernet dongles using controller firmware
->>>>>>> recently posted by Andrew Chew [2].
->>>>>>
->>>>>> I have had mixed results when testing this on a Jetson TK1 board. Of 8
->>>>>> USB devices I tested with, about half where probed correctly, but the
->>>>>> other half repeatedly fail in hub_port_init because in the GET_STATUS
->>>>>> right after the reset, the C_PORT_CONNECTION bit is set.
->>>>>>
->>>>>> I don't see any correlation between the failure and the kind of usb
->>>>>> device, but I don't have much experience with USB implementations
->>>>>> either.
->>>>>
->>>>> Hmm... I haven't seen that before.  Which particular devices were you using?
->>>>
->>>> Here they are:
->>>>
->>>> work:
->>>>
->>>> Genius keyboard: 05d5:6782
->>>> Logitech mouse: 046d:c06a
->>>> Denver MP3 player: 10d6:1100
->>>> Atheros Bluetooth dongle: 0cf3:3005
->>>>
->>>> don't work:
->>>>
->>>> MCS7830 ethernet dongle: 9710:7830
->>>> Genesys Logic hub: 05e3:0608
->>>
->>> I tried the hub and it works just fine for me... Have you tried this
->>> on any other boards like Big or Blaze?
->>
->> I have a Blaze here, but haven't been able to get the external ports
->> to power up. I don't have schematics nor a strong interest to get that
->> fixed myself, as I can test my code just fine with the Blaze's
->> internal camera and the devices that do work on the Jetson.
->
-> Ok, since Blaze has been announced, hopefully we can post a
-> device-tree for it soon.
->
->> I'm using the firmware file that was posted recently:
->>
->> xhci-tegra 70090000.usb: Firmware timestamp: 2014-05-02 02:22:50 UTC,
->> Falcon state 0x20
->
-> Yup, I'm using the same firmware.
->
->> If things work for you with the same sources, .config and firmware, I
->> can only think of the hw being different (other hw revision?).
->
-> That, or perhaps bootloader differences?  I'm using mainline U-Boot.
->
-> Stephen, Thierry, have either of you had a chance to test this series?
+Hi,
 
-I haven't had a chance to yet. I just went to try it out, and found that 
-it depends on a whole slew of other patches that I don't have. Is there 
-a git branch somewhere to save me having to track down all the dependencies?
+for the lantiq/ralink part ...
 
-Thierry is on vacation right now. I think he was expecting to return 
-sometime this week, but the start of his vacation was delayed, so 
-perhaps he'll be back a bit later too.
+Acked-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+
+now we just need to merge jonas's appended DTB patch and I can finally
+drop the ugly hack i am currently using inside openwrt.
+
+Thanks,
+    John
+
+
+On 15/09/2014 19:53, Andrew Bresticker wrote:
+> To be consistent with other architectures and to avoid unnecessary
+> makefile duplication, move all MIPS device-trees to arch/mips/boot/dts
+> and build them with a common makefile.  Per Olof's suggestion in v1,
+> device-trees are grouped into per-vendor subdirectories, based on the
+> kbuild changes introduced by Robert Richter's series for arm64 DTS
+> vendor subdirectories [0].  The makefiles for MIPS must be adjusted
+> slightly from what is used for arm{,64} since most MIPS platforms
+> require builtin device-tree binaries.  This introduces two bits of
+> ugliness: a) *.dtb.o files are still generated by 'make dtbs' since
+> there is no longer a 'dtbs' target for the .../boot/dts makefile, and
+> b) the dummy.o trick to force kbuild to make an empty built-in.o.
+> I'd be interested in any suggestions to avoid these, since I"m by
+> no means a makefile/kbuild expert.
+>
+> Patch 1 sets up the makefiles for building the DTs in arch/mips/boot/dts
+> and introduces the config option BUILTIN_DTB for platforms that require
+> it.
+>
+> Patch 2 introduces the 'dtbs' and 'dtbs_install' makefile targets.
+>
+> Patch 3 moves the DTs out of the platform directores.
+>
+> I've build tested this on all affected platforms (Octeon, Lantiq, SEAD3,
+> Netlogic, and Ralink) as well as Malta.  For platforms where builtin DTBs
+> are optional (Netlogic and Ralink), I built with and without the builtin
+> DTBs.
+>
+> Based on 3.17-rc5.
+>
+> Changes from v2:
+>  - added 'dtbs_install' target
+>  - squashed move of dts files into a single patch
+>  - rebased on 3.17-rc5 + Robert's dts vendor subdir support
+> Changes from v1:
+>  - moved to per-vendor subdirectories
+>  - rebased on 3.17-rc2
+>
+> [0] https://lkml.org/lkml/2014/9/5/64
+>
+> Andrew Bresticker (3):
+>   MIPS: Create common infrastructure for building built-in device-trees
+>   MIPS: Add support for building and installing device-tree binaries
+>   MIPS: Move device-trees to arch/mips/boot/dts
+>
+>  arch/mips/Kconfig                                        |  5 +++++
+>  arch/mips/Makefile                                       | 16 ++++++++++++++++
+>  arch/mips/boot/.gitignore                                |  1 +
+>  arch/mips/boot/dts/Makefile                              | 10 ++++++++++
+>  arch/mips/boot/dts/cavium-octeon/Makefile                |  9 +++++++++
+>  arch/mips/{ => boot/dts}/cavium-octeon/octeon_3xxx.dts   |  0
+>  arch/mips/{ => boot/dts}/cavium-octeon/octeon_68xx.dts   |  0
+>  arch/mips/boot/dts/lantiq/Makefile                       |  9 +++++++++
+>  arch/mips/{lantiq/dts => boot/dts/lantiq}/danube.dtsi    |  0
+>  arch/mips/{lantiq/dts => boot/dts/lantiq}/easy50712.dts  |  0
+>  arch/mips/boot/dts/mti/Makefile                          |  9 +++++++++
+>  arch/mips/{mti-sead3 => boot/dts/mti}/sead3.dts          |  0
+>  arch/mips/boot/dts/netlogic/Makefile                     | 12 ++++++++++++
+>  .../mips/{netlogic/dts => boot/dts/netlogic}/xlp_evp.dts |  0
+>  .../mips/{netlogic/dts => boot/dts/netlogic}/xlp_fvp.dts |  0
+>  .../mips/{netlogic/dts => boot/dts/netlogic}/xlp_gvp.dts |  0
+>  .../mips/{netlogic/dts => boot/dts/netlogic}/xlp_svp.dts |  0
+>  arch/mips/boot/dts/ralink/Makefile                       | 12 ++++++++++++
+>  arch/mips/{ralink/dts => boot/dts/ralink}/mt7620a.dtsi   |  0
+>  .../{ralink/dts => boot/dts/ralink}/mt7620a_eval.dts     |  0
+>  arch/mips/{ralink/dts => boot/dts/ralink}/rt2880.dtsi    |  0
+>  .../mips/{ralink/dts => boot/dts/ralink}/rt2880_eval.dts |  0
+>  arch/mips/{ralink/dts => boot/dts/ralink}/rt3050.dtsi    |  0
+>  .../mips/{ralink/dts => boot/dts/ralink}/rt3052_eval.dts |  0
+>  arch/mips/{ralink/dts => boot/dts/ralink}/rt3883.dtsi    |  0
+>  .../mips/{ralink/dts => boot/dts/ralink}/rt3883_eval.dts |  0
+>  arch/mips/cavium-octeon/.gitignore                       |  2 --
+>  arch/mips/cavium-octeon/Makefile                         | 10 ----------
+>  arch/mips/lantiq/Kconfig                                 |  1 +
+>  arch/mips/lantiq/Makefile                                |  2 --
+>  arch/mips/lantiq/dts/Makefile                            |  1 -
+>  arch/mips/mti-sead3/Makefile                             |  4 ----
+>  arch/mips/netlogic/Kconfig                               |  4 ++++
+>  arch/mips/netlogic/Makefile                              |  1 -
+>  arch/mips/netlogic/dts/Makefile                          |  4 ----
+>  arch/mips/ralink/Kconfig                                 |  4 ++++
+>  arch/mips/ralink/Makefile                                |  2 --
+>  arch/mips/ralink/dts/Makefile                            |  4 ----
+>  38 files changed, 92 insertions(+), 30 deletions(-)
+>  create mode 100644 arch/mips/boot/dts/Makefile
+>  create mode 100644 arch/mips/boot/dts/cavium-octeon/Makefile
+>  rename arch/mips/{ => boot/dts}/cavium-octeon/octeon_3xxx.dts (100%)
+>  rename arch/mips/{ => boot/dts}/cavium-octeon/octeon_68xx.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/lantiq/Makefile
+>  rename arch/mips/{lantiq/dts => boot/dts/lantiq}/danube.dtsi (100%)
+>  rename arch/mips/{lantiq/dts => boot/dts/lantiq}/easy50712.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/mti/Makefile
+>  rename arch/mips/{mti-sead3 => boot/dts/mti}/sead3.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/netlogic/Makefile
+>  rename arch/mips/{netlogic/dts => boot/dts/netlogic}/xlp_evp.dts (100%)
+>  rename arch/mips/{netlogic/dts => boot/dts/netlogic}/xlp_fvp.dts (100%)
+>  rename arch/mips/{netlogic/dts => boot/dts/netlogic}/xlp_gvp.dts (100%)
+>  rename arch/mips/{netlogic/dts => boot/dts/netlogic}/xlp_svp.dts (100%)
+>  create mode 100644 arch/mips/boot/dts/ralink/Makefile
+>  rename arch/mips/{ralink/dts => boot/dts/ralink}/mt7620a.dtsi (100%)
+>  rename arch/mips/{ralink/dts => boot/dts/ralink}/mt7620a_eval.dts (100%)
+>  rename arch/mips/{ralink/dts => boot/dts/ralink}/rt2880.dtsi (100%)
+>  rename arch/mips/{ralink/dts => boot/dts/ralink}/rt2880_eval.dts (100%)
+>  rename arch/mips/{ralink/dts => boot/dts/ralink}/rt3050.dtsi (100%)
+>  rename arch/mips/{ralink/dts => boot/dts/ralink}/rt3052_eval.dts (100%)
+>  rename arch/mips/{ralink/dts => boot/dts/ralink}/rt3883.dtsi (100%)
+>  rename arch/mips/{ralink/dts => boot/dts/ralink}/rt3883_eval.dts (100%)
+>  delete mode 100644 arch/mips/cavium-octeon/.gitignore
+>  delete mode 100644 arch/mips/lantiq/dts/Makefile
+>  delete mode 100644 arch/mips/netlogic/dts/Makefile
+>  delete mode 100644 arch/mips/ralink/dts/Makefile
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
