@@ -1,88 +1,86 @@
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
-Subject: [PATCH v4 2/2] ARM: dts: at_xdmac: add bindings documentation
-Date: Mon, 15 Sep 2014 16:50:22 +0200
-Message-ID: <1410792622-22621-3-git-send-email-ludovic.desroches@atmel.com>
-References: <1410792622-22621-1-git-send-email-ludovic.desroches@atmel.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: Add Maxim 77693 PMIC to the Trats2 board
+Date: Mon, 15 Sep 2014 16:56:06 +0200
+Message-ID: <1410792966.883.2.camel@AMDC1943>
+References: <1410523386-10581-1-git-send-email-k.kozlowski@samsung.com>
+ <CABxcv=mYWDVwOWbvV4xy+xS5tQUrCexCT_LD7hgUO2d3FPe56w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1410792622-22621-1-git-send-email-ludovic.desroches@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, sergei.shtylyov@cogentembedded.com, arnd@arndb.de, vinod.koul@intel.com, nicolas.ferre@atmel.com, josh.wu@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>, dan.j.williams@intel.com, plagnioj@jcrosoft.com, maxime.ripard@free-electrons.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CABxcv=mYWDVwOWbvV4xy+xS5tQUrCexCT_LD7hgUO2d3FPe56w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for the new Atmel DMA controller (XDMAC)
-introduced with SAMA5D4.
+On pon, 2014-09-15 at 16:36 +0200, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
+> 
+> On Fri, Sep 12, 2014 at 2:03 PM, Krzysztof Kozlowski
+> <k.kozlowski@samsung.com> wrote:
+> > +       i2c_max77693: i2c-gpio-1 {
+> > +               compatible = "i2c-gpio";
+> > +               gpios = <&gpm2 0 0>, <&gpm2 1 0 >;
+> 
+> Can you please include <dt-bindings/gpio/gpio.h> and use
+> GPIO_ACTIVE_HIGH instead of 0 here for the type/level flags?
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
----
- .../devicetree/bindings/dma/atmel-xdma.txt         | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+Sure!
 
-diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-new file mode 100644
-index 0000000..647f099
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-@@ -0,0 +1,48 @@
-+* Atmel Extensible Direct Memory Access Controller (XDMAC)
-+
-+* XDMA Controller
-+Required properties:
-+- compatible: Should be "atmel,<chip>-dma".
-+- reg: Should contain DMA registers location and length.
-+- interrupts: Should contain DMA interrupt.
-+- #dma-cells: Must be <2>, used to represent the number of integer cells in
-+the dmas property of client devices.
-+  - The 1st cell specifies the memory interface (16 most significant bits) and
-+  the peripheral interface (16 less significant bits) to use.
-+  - The 2nd cell specifies the channel configuration register:
-+    - bit 30-24: PERID, peripheral identifier.
-+
-+Example:
-+
-+dma1: dma-controller@f0004000 {
-+	compatible = "atmel,sama5d4-dma";
-+	reg = <0xf0004000 0x200>;
-+	interrupts = <50 4 0>;
-+	#dma-cells = <2>;
-+};
-+
-+
-+* DMA clients
-+DMA clients connected to the Atmel XDMA controller must use the format
-+described in the dma.txt file, using a two-cell specifier for each channel.
-+The three cells in order are:
-+1. A phandle pointing to the DMA controller.
-+2. The memory interface (16 most significant bits), the peripheral interface
-+(16 less significant bits).
-+3. Channel configuration register. Configurable fields are:
-+  - bit 30-24: PERID, peripheral identifier.
-+
-+Example:
-+
-+i2c2: i2c@f8024000 {
-+	compatible = "atmel,at91sam9x5-i2c";
-+	reg = <0xf8024000 0x4000>;
-+	interrupts = <34 4 6>;
-+	dmas = <&dma1
-+		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
-+		AT91_XDMAC_DT_PERID(6)>,
-+	       <&dma1
-+		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
-+		AT91_XDMAC_DT_PERID(7)>;
-+	dma-names = "tx", "rx";
-+};
--- 
-2.0.3
+> 
+> > +               i2c-gpio,delay-us = <2>;
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +               status = "okay";
+> > +
+> > +               max77693@66 {
+> > +                       compatible = "maxim,max77693";
+> > +                       interrupt-parent = <&gpx1>;
+> > +                       interrupts = <5 2>;
+> > +                       reg = <0x66>;
+> > +
+> > +                       regulators {
+> > +                               esafeout1_reg: esafeout@1 {
+> > +                                       regulator-compatible = "ESAFEOUT1";
+> 
+> According to Documentation/devicetree/bindings/regulator/regulator.txt,
+> the "regulator-compatible" DT property has been deprecated in favor of
+> just using the regulator node's name.
+
+OK
+
+> 
+> > +                                       regulator-name = "ESAFEOUT1";
+> > +                               };
+> > +                               esafeout2_reg: esafeout@2 {
+> > +                                       regulator-compatible = "ESAFEOUT2";
+> > +                                       regulator-name = "ESAFEOUT2";
+> > +                               };
+> > +                               charger_reg: charger@0 {
+> > +                                       regulator-compatible = "CHARGER";
+> > +                                       regulator-name = "CHARGER";
+> > +                                       regulator-min-microamp = <60000>;
+> > +                                       regulator-max-microamp = <2580000>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> >         mmc@12550000 {
+> >                 num-slots = <1>;
+> >                 supports-highspeed;
+> >
+> 
+> Once those two issues are addressed, feel free to add my
+> 
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+
+Thank you for feedback!
+
+Best regards,
+Krzysztof
+
+> 
+> Best regards,
+> Javier
