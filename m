@@ -1,165 +1,111 @@
-From: Zhi Li <lznuaa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Patch v4 net-next 04/12] net: fec: parser max queue number from
- dt file
-Date: Mon, 15 Sep 2014 08:24:42 -0500
-Message-ID: <CAHrpEqTCBMn-P2O7VZOOLUN=Zbc8h_Ow9MKrv5cV5gZPENRqUw@mail.gmail.com>
-References: <1410555657-10744-1-git-send-email-Frank.Li@freescale.com>
-	<1410555657-10744-5-git-send-email-Frank.Li@freescale.com>
-	<20140915093926.11bdbc32@ipc1.ka-ro>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v2 0/9] Zynq PM updates
+Date: Mon, 15 Sep 2014 15:34:03 +0200
+Message-ID: <c64f6993-2f83-455e-b542-4c78eb39906f@BL2FFO11FD031.protection.gbl>
+References: <1409692754-13437-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140915093926.11bdbc32-VjFSrY7JcPWvSplVBqRQBQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: "Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Duan Fugang-B38611 <b38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2911402610850777606=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1409692754-13437-1-git-send-email-soren.brinkmann@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, linux-pm@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 2:39 AM, Lothar Wa=C3=9Fmann <LW@karo-electroni=
-cs.de> wrote:
-> Hi,
->
-> Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org wrote:
->> From: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>
->> By default, the tx/rx queue number is 1, user can config the queue n=
-umber
->> at DTS file like this:
->>       fsl,num-tx-queues=3D<3>;
->>       fsl,num-rx-queues=3D<3>
->>
->> Since i.MX6SX enet-AVB IP support multi queues, so use multi queues
->> interface to allocate and set up an Ethernet device.
->>
->> Signed-off-by: Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Signed-off-by: Frank Li <Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> ---
->>  drivers/net/ethernet/freescale/fec.h      |  2 ++
->>  drivers/net/ethernet/freescale/fec_main.c | 46 ++++++++++++++++++++=
-++++++++++-
->>  2 files changed, 47 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethe=
-rnet/freescale/fec.h
->> index b2b91f8..72fb90f 100644
->> --- a/drivers/net/ethernet/freescale/fec.h
->> +++ b/drivers/net/ethernet/freescale/fec.h
->> @@ -356,6 +356,8 @@ struct fec_enet_private {
->>
->>       bool ptp_clk_on;
->>       struct mutex ptp_clk_mutex;
->> +     unsigned int num_tx_queues;
->> +     unsigned int num_rx_queues;
->>
->>       /* The saved address of a sent-in-place packet/buffer, for skf=
-ree(). */
->>       struct fec_enet_priv_tx_q *tx_queue[FEC_ENET_MAX_TX_QS];
->> diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net=
-/ethernet/freescale/fec_main.c
->> index 4c0d2ee..2240df0 100644
->> --- a/drivers/net/ethernet/freescale/fec_main.c
->> +++ b/drivers/net/ethernet/freescale/fec_main.c
->> @@ -2709,6 +2709,42 @@ static void fec_reset_phy(struct platform_dev=
-ice *pdev)
->>  }
->>  #endif /* CONFIG_OF */
->>
->> +static void
->> +fec_enet_get_queue_num(struct platform_device *pdev, int *num_tx, i=
-nt *num_rx)
->> +{
->> +     struct device_node *np =3D pdev->dev.of_node;
->> +     int err;
->> +
->> +     *num_tx =3D *num_rx =3D 1;
->> +
->> +     if (!np || !of_device_is_available(np))
->> +             return;
->> +
->> +     /* parse the num of tx and rx queues */
->> +     err =3D of_property_read_u32(np, "fsl,num-tx-queues", num_tx);
->> +     err |=3D of_property_read_u32(np, "fsl,num-rx-queues", num_rx)=
-;
->> +     if (err) {
->> +             *num_tx =3D 1;
->> +             *num_rx =3D 1;
-> Shouldn't these be handled seperately? So that if only one of those
-> properties is given in DT the specified value for that property shoul=
-d
-> be used?
+--===============2911402610850777606==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="NRtvChqGG5AqXXHMGgl3D1hSoloED7ESS"
 
-I worry about asymmetric design in future.
-And use two property is the easy debug two directory.
+--NRtvChqGG5AqXXHMGgl3D1hSoloED7ESS
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-best regards
-=46rank Li
+On 09/02/2014 11:19 PM, Soren Brinkmann wrote:
+> Hi all,
+>=20
+> here is v2 of this series. It's mostly the same and most changes are
+> related to reformatting comments. The only functional change is in 'ARM=
+:
+> zynq: PM: Enable DDR clock stop' which does no longer enable
+> self-refresh too. It seems self-refresh is inflicting a non-negligible
+> amount of latency that degrades memory performance if enabled throughou=
+t
+> the whole run time.
+>=20
+> 	Thanks,
+> 	S=C3=B6ren
+>=20
+> Daniel Lezcano (2):
+>   ARM: zynq: Remove invalidate cache for cpu die
+>   ARM: zynq: cpuidle: Remove pointless code
+>=20
+> Soren Brinkmann (7):
+>   ARM: zynq: PM: Enable A9 internal clock gating feature
+>   Documentation: devicetree: Add binding for Synopsys DDR controller
+>   ARM: zynq: DT: Add DDRC node
+>   ARM: zynq: PM: Enable DDR clock stop
+>   ARM: zynq: Synchronise zynq_cpu_die/kill
+>   ARM: zynq: Remove hotplug.c
+>   ARM: zynq: Rename 'zynq_platform_cpu_die'
+>=20
+>  .../bindings/memory-controllers/synopsys.txt       | 11 +++
+>  arch/arm/boot/dts/zynq-7000.dtsi                   |  5 ++
+>  arch/arm/mach-zynq/Makefile                        |  3 +-
+>  arch/arm/mach-zynq/common.c                        |  7 ++
+>  arch/arm/mach-zynq/common.h                        | 16 ++++-
+>  arch/arm/mach-zynq/hotplug.c                       | 47 +-----------
+>  arch/arm/mach-zynq/platsmp.c                       | 41 ++++++++++-
+>  arch/arm/mach-zynq/pm.c                            | 83 ++++++++++++++=
+++++++++
+>  arch/arm/mach-zynq/slcr.c                          | 43 ++++++++++-
+>  drivers/cpuidle/cpuidle-zynq.c                     | 10 +--
+>  10 files changed, 205 insertions(+), 61 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controller=
+s/synopsys.txt
+>  create mode 100644 arch/arm/mach-zynq/pm.c
+>=20
+
+Applied all.
+
+Thanks,
+Michal
 
 
->
->> +             return;
->> +     }
->> +
->> +     if (*num_tx < 1 || *num_tx > FEC_ENET_MAX_TX_QS) {
->> +             dev_err(&pdev->dev, "Invalidate num_tx(=3D%d), fail ba=
-ck to 1\n",
->>
-> s/Invalidate/Invalid/
-> s/fail/fall/
-> If the problem is fixed up by the driver rather than leading to an
-> error exit it should be dev_warn() rather than dev_err().
->
->> +                     *num_tx);
->> +             *num_tx =3D 1;
->> +             return;
->> +     }
->> +
->> +     if (*num_rx < 1 || *num_rx > FEC_ENET_MAX_RX_QS) {
->> +             dev_err(&pdev->dev, "Invalidate num_rx(=3D%d), fail ba=
-ck to 1\n",
-> dto.
->
->> +                     *num_rx);
->> +             *num_rx =3D 1;
->> +             return;
->> +     }
->> +
->> +}
->> +
->>  static int
->>  fec_probe(struct platform_device *pdev)
->>  {
->> @@ -2720,13 +2756,18 @@ fec_probe(struct platform_device *pdev)
->>       const struct of_device_id *of_id;
->>       static int dev_id;
->>       struct device_node *np =3D pdev->dev.of_node, *phy_node;
->> +     int num_tx_qs =3D 1;
->> +     int num_rx_qs =3D 1;
->>
-> useless initialization. These variables are initialized in
-> fec_enet_get_queue_num() anyway.
->
->>       of_id =3D of_match_device(fec_dt_ids, &pdev->dev);
->>       if (of_id)
->>               pdev->id_entry =3D of_id->data;
->>
->> +     fec_enet_get_queue_num(pdev, &num_tx_qs, &num_rx_qs);
->> +
->
->
-> Lothar Wa=C3=9Fmann
-> --
-> ___________________________________________________________
->
-> Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-> Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-> Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-> Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
->
-> www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
-> ___________________________________________________________
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--NRtvChqGG5AqXXHMGgl3D1hSoloED7ESS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlQW6ssACgkQykllyylKDCH8uwCfYTkclAGg0jSyTwxbldhDXviI
+R38An0/9Rvt6HERzQWZzwl5BBhtkwgiS
+=UcOf
+-----END PGP SIGNATURE-----
+
+--NRtvChqGG5AqXXHMGgl3D1hSoloED7ESS--
+
+
+--===============2911402610850777606==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2911402610850777606==--
