@@ -1,31 +1,53 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend 0/2] i2c: hix5hd2: add i2c controller driver
-Date: Tue, 16 Sep 2014 03:56:10 +0800
-Message-ID: <CABQgh9EH=cA-bPWNNZEARzQbvHi6E=UdXfaFU+1sPq8RpuSQsA@mail.gmail.com>
-References: <1409030722-30709-1-git-send-email-zhangfei.gao@linaro.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
+ specify the physical timer
+Date: Mon, 15 Sep 2014 13:33:03 -0700
+Message-ID: <54174CFF.7050504@codeaurora.org>
+References: <1410452204-7277-1-git-send-email-dianders@chromium.org> <20140911164710.GW6158@arm.com> <5411D528.4050605@arm.com> <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com> <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com> <5411DF5D.8060906@arm.com> <5412DC48.7030708@codeaurora.org> <5412E3BB.9030800@arm.com> <54134291.3040700@codeaurora.org> <20140915111055.GD1577@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1409030722-30709-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Haifeng Yan <haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Xue <jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140915111055.GD1577@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, Christopher Covington <cov@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Will Deacon <Will.Deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Sonny Rao <sonnyrao@chromium.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26 August 2014 13:25, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Resend: verified on 3.17-rc1
+On 09/15/14 04:10, Catalin Marinas wrote:
+> On Fri, Sep 12, 2014 at 07:59:29PM +0100, Stephen Boyd wrote:
+>> On 09/12/14 05:14, Marc Zyngier wrote:
+>>> We surely can handle the UNDEF and do something there. We just can't do
+>>> it the way Doug described it above.
+>> I suggested doing that for something else a while ago and Will and Dave
+>> we're not thrilled[1]. The suggestion back then was to use DT to
+>> indicate what mode the kernel is running in.
+>>
+>> [1]
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/105321.html
+> I think the context was slightly different. As I re-read the thread, it
+> seems that the discussion was around whether to use some SMC interface
+> or not based on whether the kernel is running secure or non-secure. The
+> argument made by Will was to actually specify the type of the firmware
+> SMC interface in the DT and use it in the kernel (and probably assume
+> the kernel is running in secure mode if no smc interface is specified in
+> the DT; you could have both though, running in secure mode and also
+> having firmware).
 >
-> Wei Yan (2):
->   i2c: hix5hd2: add devicetree documentation
->   i2c: hix5hd2: add i2c controller driver
->
->  .../devicetree/bindings/i2c/i2c-hix5hd2.txt        |   31 ++
->  drivers/i2c/busses/Kconfig                         |   16 +
->  drivers/i2c/busses/Makefile                        |    1 +
->  drivers/i2c/busses/i2c-hix5hd2.c                   |  576 ++++++++++++++++++++
->  4 files changed, 624 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-hix5hd2.txt
->  create mode 100644 drivers/i2c/busses/i2c-hix5hd2.c
->
+> In this arch timer case, we need to work around a firmware bug (or
+> feature as 32-bit ARM kernels never required CNTVOFF initialisation by
+> firmware, no matter how small such firmware is). We don't expect a
+> specific SMC call to initialise CNTVOFF, so we can't describe it in the
+> DT.
 
-Any comments, thanks a lot.
+Agreed, we can't described SMC calls that don't exist. From my
+perspective it's just another part of the cpu boot sequence that needs
+to be handled in the kernel, so describing the requirement via the
+cpu-boot method seems appropriate. It seems like we're making it harder
+than it should be by handling the undef when we could have slightly
+different SMP boot code (and suspend/resume code) depending on the boot
+method property.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
