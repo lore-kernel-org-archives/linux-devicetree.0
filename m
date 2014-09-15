@@ -1,87 +1,45 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH] fbdev: fsl-sii902x: HDMI support for Freescale SoCs
-Date: Mon, 15 Sep 2014 02:17:24 +0000
-Message-ID: <d94bf53d85884b4da0fb4da3041e5742@BY2PR0301MB0613.namprd03.prod.outlook.com>
-References: <1409892517-29816-1-git-send-email-Li.Xiubo@freescale.com>
- <5412BE19.2010302@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC][PATCH] devicetree: Add master-id-bits property to the iommu
+	device
+Date: Mon, 15 Sep 2014 04:38:29 +0200
+Message-ID: <201409150438.29649.arnd@arndb.de>
+References: <1410718646-9710-1-git-send-email-Varun.Sethi@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5412BE19.2010302-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org" <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "daniel.vetter-/w4YWyX8dFk@public.gmane.org" <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1410718646-9710-1-git-send-email-Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomi,
-
-Thanks very much for your comments.
-
-
-> Subject: Re: [PATCH] fbdev: fsl-sii902x: HDMI support for Freescale SoCs
+On Sunday 14 September 2014, Varun Sethi wrote:
+> "master-id-bits" property added to the IOMMU device node. This property can
+> be used by the IOMMU driver to match relevan bits in the master id expressed
+> by a DMA master.
 > 
-> Hi,
+> This can be used to mask out certain bits that get added to the device master id
+> due to IOMMU topology. For example, in case of MMU-500 the TBUID gets appended to
+> the master id. This prevents sharing of a stream ID, amongst devices which are
+> connected to different TBUs. 
 > 
-> On 05/09/14 07:48, Xiubo Li wrote:
-> > Some Freescale SoCs, there has an DVI/HDMI controller and a PHY,
-> > attached to one of their display controller unit's LCDC interfaces.
-> > This patch adds a preliminary static support for such controllers.
-> >
-> > This will support for many modes and a dynamic switching between
-> > them.
-> >
-> > Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/video/fsl-sii902x.txt      |  17 +
-> >  drivers/video/fbdev/Kconfig                        |   7 +
-> >  drivers/video/fbdev/Makefile                       |   1 +
-> >  drivers/video/fbdev/fsl-sii902x.c                  | 526
-> +++++++++++++++++++++
-> >  4 files changed, 551 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/video/fsl-sii902x.txt
-> >  create mode 100644 drivers/video/fbdev/fsl-sii902x.c
-> 
-> I don't know how you picked the names of the people you sent this patch
-> to, but looks to me that most of them are probably not interested in
-> this patch.
-> 
+> Signed-off-by: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-I just using the get_maintainer.pl script.
+This seems rather specific to MMU-500. I don't think that most IOMMUs would
+use the term 'master ID', 'stream ID' or even the general concept, and you don't
+expand the acronym 'TBU'. I've seen many IOMMUs and I don't even know what
+that means.
 
+Why do you think this is something that is needed to be known at the global
+level, rather than a property for some individual drivers?
 
-> Anyway, a few quick comments on the patch:
-> 
-> - You should probably use regmap instead of direct i2c calls.
-> Interestingly, you define regmap variable, but you never use it.
-
-Yes, this it's my another version in my local machine using regmap which
-need much more test.
-
-> - Use defines for register offsets, instead of magic numbers.
-
-This will be fixed together with regmap using.
-
-> - You should not use static variables. They prevent having multiple
-> instances of the device.
-> 
-
-Okay.
-
-> So the SiI902x chip is on the SoC, not on the board? And it's a plain
-> standard SiI902x in other aspects?
-> 
-
-No, it's on board.
-
-And it will be used for i.MX and LS1+ platforms.
-
-Thanks,
-
-BRs
-Xiubo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
