@@ -1,87 +1,242 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V6 6/8] drm/bridge: Modify drm_bridge core to support driver model
-Date: Mon, 15 Sep 2014 20:37:57 +0300
-Message-ID: <2567411.1uGei9I2NP@avalon>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com> <1406316130-4744-7-git-send-email-ajaykumar.rs@samsung.com>
+From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki@elproma.com.pl>
+Subject: Re: [PATCH 1/2] serial: mxs-auart: use mctrl_gpio helpers for handling
+ modem signals (v2.1)
+Date: Mon, 15 Sep 2014 19:40:13 +0200
+Message-ID: <5417247D.3020706@elproma.com.pl>
+References: <1410802657-14084-1-git-send-email-j.uzycki@elproma.com.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1406316130-4744-7-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, seanpaul@google.com, daniel.vetter@ffwll.ch, joshi@samsung.com, ajaynumb@gmail.com, prashanth.g@samsung.com, Sean Cross <xobs@kosagi.com>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1410802657-14084-1-git-send-email-j.uzycki@elproma.com.pl>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ajay,
+The second patch (gpio interrupts) is not tested yet. However please 
+about comments.
 
-Thank you for the patch.
+best regards
+Janusz
 
-I think we're moving in the right direction, but we're not there yet.
-
-On Saturday 26 July 2014 00:52:08 Ajay Kumar wrote:
-> This patch tries to seperate drm_bridge implementation
-> into 2 parts, a drm part and a non_drm part.
-> 
-> A set of helper functions are defined in this patch to make
-> bridge driver probe independent of the drm flow.
-> 
-> The bridge devices register themselves on a lookup table
-> when they get probed by calling "drm_bridge_add_for_lookup".
-> 
-> The parent encoder driver waits till the bridge is available in the
-> lookup table(by calling "of_drm_find_bridge") and then continues with
-> its initialization.
-
-Before the introduction of the component framework I would have said this is 
-the way to go. Now, I think bridges should register themselves as components, 
-and the DRM master driver should use the component framework to get a 
-reference to the bridges it needs.
-
-> The encoder driver should call "drm_bridge_attach_encoder" to pass on
-> the drm_device and the encoder pointers to the bridge object.
-> 
-> Now that the drm_device pointer is available, the encoder then calls
-> "bridge->funcs->post_encoder_init" to allow the bridge to continue
-> registering itself with the drm core.
-
-This is what really bothers me with DRM bridge.
-
-The framework assumes that a bridge will always bridge an encoder and a 
-connector. Beside lacking support for chained bridges, this creates an 
-artificial split between bridges and encoders by modeling the same components 
-using drm_encoder or drm_bridge depending on their position in the video 
-output pipeline.
-
-I would like to see drm_bridge becoming more self-centric, removing the 
-awareness of the upstream encoder and downstream connector. I'll give this a 
-try, but it will conflict with this patch, so I'd like to share opinions and 
-coordinate efforts sooner than later if possible.
-
-> Also, non driver model based ptn3460 driver is removed in this patch.
-> 
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+W dniu 2014-09-15 19:37, Janusz Uzycki pisze:
+> Dedicated CTS and RTS pins are unusable together with a lot of other
+> peripherals because they share the same line. Pinctrl is limited.
+>
+> Moreover, the AUART controller doesn't handle DTR/DSR/DCD/RI signals,
+> so we have to control them via GPIO.
+>
+> This patch permits to use GPIOs to control the CTS/RTS/DTR/DSR/DCD/RI
+> signals.
+>
+> Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
 > ---
->  .../devicetree/bindings/drm/bridge/ptn3460.txt     |   27 --
->  drivers/gpu/drm/Makefile                           |    1 +
->  drivers/gpu/drm/bridge/Kconfig                     |   12 +-
->  drivers/gpu/drm/bridge/Makefile                    |    2 -
->  drivers/gpu/drm/bridge/ptn3460.c                   |  343 -----------------
->  drivers/gpu/drm/drm_bridge.c                       |   89 +++++
->  drivers/gpu/drm/drm_crtc.c                         |    9 +-
->  drivers/gpu/drm/exynos/Kconfig                     |    3 +-
->  drivers/gpu/drm/exynos/exynos_dp_core.c            |   57 ++--
->  drivers/gpu/drm/exynos/exynos_dp_core.h            |    1 +
->  drivers/gpu/drm/msm/hdmi/hdmi_bridge.c             |    3 +-
->  include/drm/bridge/ptn3460.h                       |   37 ---
->  include/drm/drm_crtc.h                             |   16 +-
->  13 files changed, 147 insertions(+), 453 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
->  delete mode 100644 drivers/gpu/drm/bridge/ptn3460.c
->  create mode 100644 drivers/gpu/drm/drm_bridge.c
->  delete mode 100644 include/drm/bridge/ptn3460.h
+>   .../devicetree/bindings/serial/fsl-mxs-auart.txt   | 10 ++-
+>   drivers/tty/serial/Kconfig           |  1 +
+>   drivers/tty/serial/mxs-auart.c       | 79 +++++++++++++++++++++-
+>   3 files changed, 86 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+> index 59a40f1..7c408c8 100644
+> --- a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+> +++ b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
+> @@ -11,8 +11,13 @@ Required properties:
+>   - dma-names: "rx" for RX channel, "tx" for TX channel.
+>   
+>   Optional properties:
+> -- fsl,uart-has-rtscts : Indicate the UART has RTS and CTS lines,
+> +- fsl,uart-has-rtscts : Indicate the UART has RTS and CTS lines
+> +  for hardware flow control,
+>   	it also means you enable the DMA support for this UART.
+> +- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
+> +  line respectively. It will use specified PIO instead of the peripheral
+> +  function pin for the USART feature.
+> +  If unsure, don't specify this property.
+>   
+>   Example:
+>   auart0: serial@8006a000 {
+> @@ -21,6 +26,9 @@ auart0: serial@8006a000 {
+>   	interrupts = <112>;
+>   	dmas = <&dma_apbx 8>, <&dma_apbx 9>;
+>   	dma-names = "rx", "tx";
+> +	cts-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+> +	dsr-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +	dcd-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
+>   };
+>   
+>   Note: Each auart port should have an alias correctly numbered in "aliases"
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 4fe8ca1..90e8516 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1357,6 +1357,7 @@ config SERIAL_MXS_AUART
+>   	depends on ARCH_MXS
+>   	tristate "MXS AUART support"
+>   	select SERIAL_CORE
+> +	select SERIAL_MCTRL_GPIO if GPIOLIB
+>   	help
+>   	  This driver supports the MXS Application UART (AUART) port.
+>   
+> diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+> index 52d14e3..78cd7d1 100644
+> --- a/drivers/tty/serial/mxs-auart.c
+> +++ b/drivers/tty/serial/mxs-auart.c
+> @@ -38,6 +38,18 @@
+>   
+>   #include <asm/cacheflush.h>
+>   
+> +/* based on clps711x.c from linux-next:
+> + *  serial: clps711x: Use mctrl_gpio helpers for handling modem signals
+> + *  serial: clps711x: Fix COMPILE_TEST build for target without GPIOLIB support
+> + * based on Documentation/devicetree/bindings/serial/cirrus,clps711x-uart.txt from linux-next:
+> + *  serial: clps711x: Use mctrl_gpio helpers for handling modem signals
+> + * based on atmel_serial.c from linux-next:
+> + *  tty/serial: at91: use mctrl_gpio helpers
+> + *  TODO: tty/serial: at91: add interrupts for modem control lines
+> + */
+> +#include <linux/err.h>
+> +#include "serial_mctrl_gpio.h"
+> +
+>   #define MXS_AUART_MAJOR 242
+>   #define MXS_AUART_PORTS 5
+>   #define MXS_AUART_FIFO_SIZE		16
+> @@ -156,6 +168,8 @@ struct mxs_auart_port {
+>   	struct scatterlist rx_sgl;
+>   	struct dma_chan	*rx_dma_chan;
+>   	void *rx_dma_buf;
+> +
+> +	struct mctrl_gpios	*gpios;
+>   };
+>   
+>   static struct platform_device_id mxs_auart_devtype[] = {
+> @@ -417,6 +431,34 @@ static void mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
+>   
+>   	s->ctrl = mctrl;
+>   	writel(ctrl, u->membase + AUART_CTRL2);
+> +
+> +	mctrl_gpio_set(s->gpios, mctrl);
+> +}
+> +
+> +/* mxs_auart_modem_status() based on 8250.c,
+> + * similar function could be as serial's helper... */
+> +#define MCTRL_ANY_DELTA        (TIOCM_RI | TIOCM_DSR | TIOCM_CD | TIOCM_CTS)
+> +static u32 mxs_auart_modem_status(struct mxs_auart_port *s, u32 mctrl)
+> +{
+> +	u32 mctrl_diff;
+> +
+> +	mctrl_diff = mctrl ^ s->ctrl;
+> +	s->ctrl = mctrl;
+> +	if (mctrl_diff & MCTRL_ANY_DELTA &&
+> +			/*interrupt_enabled &&*/
+> +			s->port.state != NULL) {
+> +		if (mctrl_diff & TIOCM_RI)
+> +			s->port.icount.rng++;
+> +		if (mctrl_diff & TIOCM_DSR)
+> +			s->port.icount.dsr++;
+> +		if (mctrl_diff & TIOCM_CD)
+> +			uart_handle_dcd_change(&s->port, mctrl & TIOCM_CD);
+> +		if (mctrl_diff & TIOCM_CTS)
+> +			uart_handle_cts_change(&s->port, mctrl & TIOCM_CTS);
+> +
+> +		wake_up_interruptible(&s->port.state->port.delta_msr_wait);
+> +	}
+> +	return mctrl;
+>   }
+>   
+>   static u32 mxs_auart_get_mctrl(struct uart_port *u)
+> @@ -433,7 +475,9 @@ static u32 mxs_auart_get_mctrl(struct uart_port *u)
+>   	if (ctrl2 & AUART_CTRL2_RTS)
+>   		mctrl |= TIOCM_RTS;
+>   
+> -	return mctrl;
+> +	/* should mxs_auart_modem_status() be in interrupt only? */
+> +	return mxs_auart_modem_status(s,
+> +			mctrl_gpio_get(s->gpios, &mctrl));
+>   }
+>   
+>   static int mxs_auart_dma_prep_rx(struct mxs_auart_port *s);
+> @@ -637,7 +681,12 @@ static void mxs_auart_settermios(struct uart_port *u,
+>   		ctrl |= AUART_LINECTRL_STP2;
+>   
+>   	/* figure out the hardware flow control settings */
+> -	if (cflag & CRTSCTS) {
+> +	/*FIXME: DMA for hardware flow control only? */
+> +	if (cflag & CRTSCTS &&
+> +			(IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
+> +					 UART_GPIO_RTS)) ||
+> +			 IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
+> +					 UART_GPIO_CTS)))) {
+>   		/*
+>   		 * The DMA has a bug(see errata:2836) in mx23.
+>   		 * So we can not implement the DMA for auart in mx23,
+> @@ -696,8 +745,14 @@ static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
+>   		| AUART_INTR_CTSMIS),
+>   			s->port.membase + AUART_INTR_CLR);
+>   
+> +	mxs_auart_modem_status(s,
+> +			mctrl_gpio_get(s->gpios, &s->ctrl));
+> +
+>   	if (istat & AUART_INTR_CTSMIS) {
+> -		uart_handle_cts_change(&s->port, stat & AUART_STAT_CTS);
+> +		if (IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
+> +						UART_GPIO_CTS)))
+> +			uart_handle_cts_change(&s->port,
+> +					stat & AUART_STAT_CTS);
+>   		writel(AUART_INTR_CTSMIS,
+>   				s->port.membase + AUART_INTR_CLR);
+>   		istat &= ~AUART_INTR_CTSMIS;
+> @@ -758,6 +813,8 @@ static int mxs_auart_startup(struct uart_port *u)
+>   	 */
+>   	writel(AUART_LINECTRL_FEN, u->membase + AUART_LINECTRL_SET);
+>   
+> +	/* get initial status of modem lines */
+> +	mctrl_gpio_get(s->gpios, &s->ctrl);
+>   	return 0;
+>   }
+>   
+> @@ -1021,6 +1078,14 @@ static int serial_mxs_probe_dt(struct mxs_auart_port *s,
+>   	return 0;
+>   }
+>   
+> +static int mxs_auart_init_gpios(struct mxs_auart_port *s, struct device *dev)
+> +{
+> +	s->gpios = mctrl_gpio_init(dev, 0);
+> +	if (IS_ERR_OR_NULL(s->gpios))
+> +		return -1;
+> +	return 0;
+> +}
+> +
+>   static int mxs_auart_probe(struct platform_device *pdev)
+>   {
+>   	const struct of_device_id *of_id =
+> @@ -1078,6 +1143,11 @@ static int mxs_auart_probe(struct platform_device *pdev)
+>   
+>   	platform_set_drvdata(pdev, s);
+>   
+> +	ret = mxs_auart_init_gpios(s, &pdev->dev);
+> +	if (ret < 0)
+> +		dev_err(&pdev->dev, "%s",
+> +			"Failed to initialize GPIOs. The serial port may not work as expected");
+> +
+>   	auart_port[s->port.line] = s;
+>   
+>   	mxs_auart_reset(&s->port);
+> @@ -1094,6 +1164,7 @@ static int mxs_auart_probe(struct platform_device *pdev)
+>   	return 0;
+>   
+>   out_free_irq:
+> +	mctrl_gpio_free(&pdev->dev, s->gpios);	/*useless?*/
+>   	auart_port[pdev->id] = NULL;
+>   	free_irq(s->irq, s);
+>   out_free_clk:
+> @@ -1112,6 +1183,8 @@ static int mxs_auart_remove(struct platform_device *pdev)
+>   
+>   	auart_port[pdev->id] = NULL;
+>   
+> +	mctrl_gpio_free(&pdev->dev, s->gpios);	/*useless?*/
+> +
+>   	clk_put(s->clk);
+>   	free_irq(s->irq, s);
+>   	kfree(s);
 
--- 
-Regards,
-
-Laurent Pinchart
