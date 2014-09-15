@@ -1,47 +1,54 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [v4,1/9] ACPI / PM: Let acpi_dev_pm_detach() return an error code
-Date: Mon, 15 Sep 2014 09:53:59 -0700
-Message-ID: <20140915165359.GA13080@core.coreip.homeip.net>
-References: <1410262570-22785-2-git-send-email-ulf.hansson@linaro.org>
- <20140912210553.GA27924@core.coreip.homeip.net>
- <6318611.DnX9cEgMjk@vostro.rjw.lan>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] regulator: fan53555: set regulator name from
+ constraints name
+Date: Mon, 15 Sep 2014 09:59:23 -0700
+Message-ID: <20140915165923.GX7960@sirena.org.uk>
+References: <1410722585-13393-1-git-send-email-heiko@sntech.de>
+ <1410722585-13393-3-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wrIrAujhz1F5gxq3"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6318611.DnX9cEgMjk@vostro.rjw.lan>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Philipp Zabel <philipp.zabel@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, linux-acpi@vger.kernel.org, Simon Horman <horms@verge.net.au>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1410722585-13393-3-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 14, 2014 at 06:38:58PM +0200, Rafael J. Wysocki wrote:
-> On Friday, September 12, 2014 02:05:53 PM Dmitry Torokhov wrote:
-> > Hi Ulf,
-> > 
-> > On Tue, Sep 09, 2014 at 01:36:02PM +0200, Ulf Hansson wrote:
-> > > To give callers the option of acting on a errors while removing the
-> > > pm_domain ops for the device in the ACPI PM domain, let
-> > > acpi_dev_pm_detach() return an int to provide the error code.
-> > 
-> > So how would callers handle the errors? As far as I can see
-> > acpi_dev_pm_detach() is called from ->remove() and ->shutdown() methods, where
-> > there is no meaningful strategy to handle errors as you are past the point of
-> > no return and you keep on tearing down the device.
-> 
-> This is specifically for what patch [3/9] is doing AFAICS.  
-> 
-> The existing callers don't need to worry about this.
 
-OK, so I have the very same comment about patch 3 then: we have
-dev_pm_domain_detach() returning error. How would the callers handle errors?
+--wrIrAujhz1F5gxq3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-WRT this patch: I'd rater we did not just return generic "error code" just
-because we do not know who manages PD for the device. Can we add API to check
-if we are using ACPI to manage power domains? Then patch #3 could check if it
-needs to use ACPI or generic power domain API.
+On Sun, Sep 14, 2014 at 09:23:02PM +0200, Heiko Stuebner wrote:
+> There is a high potential of more than one of those regulators existing
+> on a board, so name the regulator according to the name provided in the
+> initdata instead of statically.
 
-Thanks.
+No, this is pointless and broken.  The core will already use the
+board-specific name to identify the regulator in diagnostics and so on,
+the name being supplied here is supposed to describe the regulator
+within the device.
 
--- 
-Dmitry
+--wrIrAujhz1F5gxq3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUFxrqAAoJECTWi3JdVIfQzfwH/2THG1fWlx5WPGsHDi4hXyae
+O/ZkOGHFyNPOdGnb+bvR1+bzu4uQAd15eeWbQXkVwdaEsLw/kA18J4NWKLqGwPvC
+24+mrd3VV5ezCEjRe2rDc8r9kXHnT1vZfSD6LndynT6v/HusqfyoLk4L26CyeNsA
+iPj5uw5PQRc5DRnhrs0EZ8OwGN9Nuk568V/VXE944CkT4v4A2rrlfNPcH5BszTAu
+PXVEqGEZInoB6fUv7NFnzYejhn01jCIu6kxKCV0mmNUEf/jIXju1nL6AcmHqMC8O
+ZgsiAtp/bBT13TrLcJFEOIzu6A9P5lY8THMBQjHsL3xA4wDClxXJBL+AM/IGSDo=
+=A0yt
+-----END PGP SIGNATURE-----
+
+--wrIrAujhz1F5gxq3--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
