@@ -1,122 +1,98 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
- i.mx6dl
-Date: Mon, 15 Sep 2014 11:41:13 +0200
-Message-ID: <1410774073.3314.1.camel@pengutronix.de>
-References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410327012-31185-1-git-send-email-b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v5 00/12] ARM: berlin: USB support
+Date: Mon, 15 Sep 2014 12:36:06 +0200
+Message-ID: <1410777378-12726-1-git-send-email-antoine.tenart@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 10.09.2014, 13:30 +0800 schrieb Robin Gong:
-> There is one weird data in rxfifo after one full rx/tx transfer
-> done sometimes. It looks a design issue and hard to workaround
-> totally, so disable dma functhion here. And will re-enable it
-> once the root cause found.
-> 
-Sorry, I'm late to this as Shawn seems to already have picked up this
-patch, but this isn't the right way to fix the problem.
+This series adds the support for ChipIdea USB2 (ci13xxx) controllers,
+the USB PHYs of the Marvell Berlin SoCs and also adds a reset
+controller for these SoCs.
 
-We made it clear at kernel summit last year that we try to not break
-existing DTs as booting a new kernel with an old DT is a valid use case.
-While you don't strictly violate this rule what you do here is only
-fixing systems booting with a new DT while leaving others broken.
+The reset controller is used by the PHY driver and shares the
+existing chip controller node with the clocks and one pin controller.
 
-If you are working around a hardware problem please disable DMA support
-in the driver. This will also allow you to enable it again, if you find
-another workaround without touching the DT again.
+The Marvell Berlin USB controllers are host only on the BG2Q and are
+compatible with USB ChipIdea. We here add a glue to use the available
+common functions for this kind of controllers, and add a generic USB2
+ChipIdea driver. A PHY driver is also added to control the USB PHY.
 
-So this patch gets a NAK from me.
+This series applies on top of the generic PHY support in the USB
+framework[1].
 
-> Signed-off-by: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q.dtsi   | 20 ++++++++++++++++++++
->  arch/arm/boot/dts/imx6qdl.dtsi |  8 --------
->  2 files changed, 20 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index e9f3646..8d5d33b 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -291,6 +291,26 @@
->  	};
->  };
->  
-> +&ecspi1 {
-> +	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
-> +	dma-names = "rx", "tx";
-> +};
-> +
-> +&ecspi2 {
-> +	dmas = <&sdma 5 7 1>, <&sdma 6 7 2>;
-> +	dma-names = "rx", "tx";
-> +};
-> +
-> +&ecspi3 {
-> +	dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
-> +	dma-names = "rx", "tx";
-> +};
-> +
-> +&ecspi4 {
-> +	dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
-> +	dma-names = "rx", "tx";
-> +};
-> +
->  &mipi_dsi {
->  	port@2 {
->  		reg = <2>;
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 70d7207..f696546 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -210,8 +210,6 @@
->  					clocks = <&clks IMX6QDL_CLK_ECSPI1>,
->  						 <&clks IMX6QDL_CLK_ECSPI1>;
->  					clock-names = "ipg", "per";
-> -					dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
-> -					dma-names = "rx", "tx";
->  					status = "disabled";
->  				};
->  
-> @@ -224,8 +222,6 @@
->  					clocks = <&clks IMX6QDL_CLK_ECSPI2>,
->  						 <&clks IMX6QDL_CLK_ECSPI2>;
->  					clock-names = "ipg", "per";
-> -					dmas = <&sdma 5 7 1>, <&sdma 6 7 2>;
-> -					dma-names = "rx", "tx";
->  					status = "disabled";
->  				};
->  
-> @@ -238,8 +234,6 @@
->  					clocks = <&clks IMX6QDL_CLK_ECSPI3>,
->  						 <&clks IMX6QDL_CLK_ECSPI3>;
->  					clock-names = "ipg", "per";
-> -					dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
-> -					dma-names = "rx", "tx";
->  					status = "disabled";
->  				};
->  
-> @@ -252,8 +246,6 @@
->  					clocks = <&clks IMX6QDL_CLK_ECSPI4>,
->  						 <&clks IMX6QDL_CLK_ECSPI4>;
->  					clock-names = "ipg", "per";
-> -					dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
-> -					dma-names = "rx", "tx";
->  					status = "disabled";
->  				};
->  
+Patches 1-4 have already been taken by Sebastian.
+
+Changes since v4:
+	- fixed the error handling of ci_hdrc_usb2_probe()
+
+Changes since v3:
+        - removed the DMA mask property
+        - moved the clock handling in the common probe function
+        - fixed the documentation for the USB2 ChipIdea USB PHY binding
+        - made sure the reset bit is 0-31 in the reset driver
+
+Changes since v2:
+        - moved the PHY driver to the generic PHY framework
+        - changed the compatible to 'chipidea,usb2'
+        - added a property to set the DMA mask in the USB2 CI driver
+        - separated dt specific calls in the CI probing function
+        - rebased on top of the generic PHY support for CI[1]
+
+Changes since v1:
+        - made the Berlin CI USB driver a generic one
+        - added support to custom offset for the reset register
+        - added fixed regulators to support supply the VBUS
+        - modified the PHY driver to support the one one the BG2CD as
+          well
+        - documented the reset properties
+        - added bindings for the BG2CD
+        - cosmetic fixes
+
+[1] git://git.free-electrons.com:users/antoine-tenart/linux.git usb-phy
+
+Antoine Tenart (10):
+  reset: add the Berlin reset controller driver
+  Documentation: bindings: add reset bindings docs for Marvell Berlin
+    SoCs
+  ARM: Berlin: select the reset controller
+  ARM: dts: berlin: add a required reset property in the chip controller
+    node
+  phy: add the Berlin USB PHY driver
+  Documentation: bindings: add doc for the Berlin USB PHY
+  usb: chipidea: add a usb2 driver for ci13xxx
+  Documentation: bindings: add doc for the USB2 ChipIdea USB driver
+  ARM: dts: berlin: add BG2Q nodes for USB support
+  ARM: dts: Berlin: enable USB on the BG2Q DMP
+
+Sebastian Hesselbarth (2):
+  ARM: dts: berlin: add BG2CD nodes for USB support
+  ARM: dts: berlin: enable USB on the Google Chromecast
+
+ .../devicetree/bindings/arm/marvell,berlin.txt     |  10 +
+ .../devicetree/bindings/phy/berlin-usb-phy.txt     |  16 ++
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  22 ++
+ arch/arm/boot/dts/berlin2.dtsi                     |   1 +
+ arch/arm/boot/dts/berlin2cd-google-chromecast.dts  |   4 +
+ arch/arm/boot/dts/berlin2cd.dtsi                   |  35 ++++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |  53 +++++
+ arch/arm/boot/dts/berlin2q.dtsi                    |  53 +++++
+ arch/arm/mach-berlin/Kconfig                       |   2 +
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-berlin-usb.c                       | 224 +++++++++++++++++++++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-berlin.c                       | 131 ++++++++++++
+ drivers/usb/chipidea/Makefile                      |   1 +
+ drivers/usb/chipidea/ci_hdrc_usb2.c                | 137 +++++++++++++
+ 16 files changed, 698 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-usb-phy.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+ create mode 100644 drivers/phy/phy-berlin-usb.c
+ create mode 100644 drivers/reset/reset-berlin.c
+ create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
 
 -- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
