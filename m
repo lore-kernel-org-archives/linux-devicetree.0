@@ -1,39 +1,32 @@
 Return-Path: <D.Lavnikevich@sam-solutions.com>
-Message-ID: <5416D666.2050302@sam-solutions.net>
-Date: Mon, 15 Sep 2014 15:07:02 +0300
+Message-ID: <5416D5E2.5050109@sam-solutions.net>
+Date: Mon, 15 Sep 2014 15:04:50 +0300
 From: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.net>
 MIME-Version: 1.0
-Subject: Re: [alsa-devel] [PATCH v2 2/4] ARM: dts: pbab01: enable I2S audio
- on phyFLEX-i.MX6 boards
-References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>	<1410537872-17274-1-git-send-email-d.lavnikevich@sam-solutions.com>	<1410537872-17274-3-git-send-email-d.lavnikevich@sam-solutions.com>	<1410539161.314611261@f174.i.mail.ru> <CAOMZO5C9_XwgcLvVWvxB1A306_Ehm17ZE111j6d+7MhudAhT0g@mail.gmail.com>
-In-Reply-To: <CAOMZO5C9_XwgcLvVWvxB1A306_Ehm17ZE111j6d+7MhudAhT0g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] ARM: dts: pbab01: enable I2S audio on phyFLEX-i.MX6
+ boards
+References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com> <1410537872-17274-1-git-send-email-d.lavnikevich@sam-solutions.com> <1410537872-17274-3-git-send-email-d.lavnikevich@sam-solutions.com> <1410538486.406482403@f174.i.mail.ru>
+In-Reply-To: <1410538486.406482403@f174.i.mail.ru>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
-To: Fabio Estevam <festevam@gmail.com>, Alexander Shiyan <shc_work@mail.ru>
-Cc: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>, Mark Rutland <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, linux-kernel <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, =devicetree@vger.kernel.org, Shawn Guo <shawn.guo@freescale.com>
+To: Alexander Shiyan <shc_work@mail.ru>, Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
+Cc: =devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, shawn.guo@freescale.com, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de
 List-ID: <devicetree@vger.kernel.org>
 
-On 12/09/14 19:40, Fabio Estevam wrote:
-> On Fri, Sep 12, 2014 at 1:26 PM, Alexander Shiyan <shc_work@mail.ru> wrot=
-e:
->> Fri, 12 Sep 2014 19:04:30 +0300 =D0=BE=D1=82 Dmitry Lavnikevich <d.lavni=
-kevich@sam-solutions.com>:
->>> Audio on phyFLEX boards is presented by tlv320aic3007 codec connected
->>> over SSI interface.
->>>
->>> Signed-off-by: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
->>> ---
->> ...
->>> +&ssi2 {
->>> +     fsl,mode =3D "i2s-slave";
->>> +     status =3D "okay";
->>> +     #sound-dai-cells =3D <0>;
->>> +};
->> I have already sent patch to add "#sound-dai-cells" into all i.MX DT-fil=
-es.
->> Shawn, can you point us to this tree/commit?
-> https://git.kernel.org/cgit/linux/kernel/git/shawnguo/linux.git/commit/?h=
-=3Dfor-next&id=3D36c7e8826cf32dd4dd34c71b526653b800414355
-So should I base my next patchset on for-next branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
-?
+On 12/09/14 19:14, Alexander Shiyan wrote:
+> Fri, 12 Sep 2014 19:04:30 +0300 =D0=BE=D1=82 Dmitry Lavnikevich <d.lavnik=
+evich@sam-solutions.com>:
+>> +&audmux {
+>> +	status =3D "okay";
+>> +
+>> +	ssi2 {
+>> +		fsl,audmux-port =3D <1>;
+>> +		fsl,port-config =3D <0xa5000000 0x00008000>;
+>> +	};
+>> +	pins5 {
+>> +		fsl,audmux-port =3D <4>;
+>> +		fsl,port-config =3D <0x00000000 0x00002000>;
+>> +	};
+>> +};
+> You should use defines from sound/fsl-imx-audmux.h for audmux.
+Ok, will change it in next patchset version.
