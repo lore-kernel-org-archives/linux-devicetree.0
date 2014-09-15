@@ -1,200 +1,78 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v3] iio: adc: rockchip_saradc: add support for rk3066-tsadc variant
-Date: Mon, 15 Sep 2014 23:47:30 +0200
-Message-ID: <2689686.WEM6GuFSAn@diego>
+From: Sonny Rao <sonnyrao@chromium.org>
+Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
+ specify the physical timer
+Date: Mon, 15 Sep 2014 14:47:09 -0700
+Message-ID: <CAPz6YkU8hEL6yocPf7UL8-tz9Onuu-9bevAToK3CDWsShN92YQ@mail.gmail.com>
+References: <1410452204-7277-1-git-send-email-dianders@chromium.org>
+ <20140911164710.GW6158@arm.com> <5411D528.4050605@arm.com>
+ <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com>
+ <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com>
+ <5411DF5D.8060906@arm.com> <5412DC48.7030708@codeaurora.org>
+ <5412E3BB.9030800@arm.com> <54134291.3040700@codeaurora.org>
+ <20140915111055.GD1577@arm.com> <54174CFF.7050504@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <54174CFF.7050504@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Christopher Covington <cov@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Will Deacon <Will.Deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?Q?
 List-Id: devicetree@vger.kernel.org
 
-Older Rockchip SoCs, at least the rk3066, used a slightly modified saradc
-for temperature measurements. This so called tsadc does not contain any
-active parts like temperature interrupts and only supports polling the
-current temperature. The returned voltage can then be converted by a
-suitable thermal driver to and actual temperature and used for thermal
-handling.
+On Mon, Sep 15, 2014 at 1:33 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>
+> On 09/15/14 04:10, Catalin Marinas wrote:
+> > On Fri, Sep 12, 2014 at 07:59:29PM +0100, Stephen Boyd wrote:
+> >> On 09/12/14 05:14, Marc Zyngier wrote:
+> >>> We surely can handle the UNDEF and do something there. We just can't do
+> >>> it the way Doug described it above.
+> >> I suggested doing that for something else a while ago and Will and Dave
+> >> we're not thrilled[1]. The suggestion back then was to use DT to
+> >> indicate what mode the kernel is running in.
+> >>
+> >> [1]
+> >> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/105321.html
+> > I think the context was slightly different. As I re-read the thread, it
+> > seems that the discussion was around whether to use some SMC interface
+> > or not based on whether the kernel is running secure or non-secure. The
+> > argument made by Will was to actually specify the type of the firmware
+> > SMC interface in the DT and use it in the kernel (and probably assume
+> > the kernel is running in secure mode if no smc interface is specified in
+> > the DT; you could have both though, running in secure mode and also
+> > having firmware).
+> >
+> > In this arch timer case, we need to work around a firmware bug (or
+> > feature as 32-bit ARM kernels never required CNTVOFF initialisation by
+> > firmware, no matter how small such firmware is). We don't expect a
+> > specific SMC call to initialise CNTVOFF, so we can't describe it in the
+> > DT.
+>
+> Agreed, we can't described SMC calls that don't exist. From my
+> perspective it's just another part of the cpu boot sequence that needs
+> to be handled in the kernel, so describing the requirement via the
+> cpu-boot method seems appropriate. It seems like we're making it harder
+> than it should be by handling the undef when we could have slightly
+> different SMP boot code (and suspend/resume code) depending on the boot
+> method property.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
-changes since v2:
-- adapt message about the clk rate
-changes since v1:
-- use GENMASK instead of creating the mask manually
-  as suggested by Hartmut Knaack
 
- .../bindings/iio/adc/rockchip-saradc.txt           |  2 +-
- drivers/iio/adc/rockchip_saradc.c                  | 64 +++++++++++++++++-----
- 2 files changed, 51 insertions(+), 15 deletions(-)
++heiko
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-index 5d3ec1d..a9a5fe1 100644
---- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-@@ -1,7 +1,7 @@
- Rockchip Successive Approximation Register (SAR) A/D Converter bindings
- 
- Required properties:
--- compatible: Should be "rockchip,saradc"
-+- compatible: Should be "rockchip,saradc" or "rockchip,rk3066-tsadc"
- - reg: physical base address of the controller and length of memory mapped
-        region.
- - interrupts: The interrupt number to the cpu. The interrupt specifier format
-diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockchip_saradc.c
-index e074a0b..b546bc1 100644
---- a/drivers/iio/adc/rockchip_saradc.c
-+++ b/drivers/iio/adc/rockchip_saradc.c
-@@ -18,13 +18,13 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/clk.h>
- #include <linux/completion.h>
- #include <linux/regulator/consumer.h>
- #include <linux/iio/iio.h>
- 
- #define SARADC_DATA			0x00
--#define SARADC_DATA_MASK		0x3ff
- 
- #define SARADC_STAS			0x04
- #define SARADC_STAS_BUSY		BIT(0)
-@@ -38,15 +38,22 @@
- #define SARADC_DLY_PU_SOC		0x0c
- #define SARADC_DLY_PU_SOC_MASK		0x3f
- 
--#define SARADC_BITS			10
- #define SARADC_TIMEOUT			msecs_to_jiffies(100)
- 
-+struct rockchip_saradc_data {
-+	int				num_bits;
-+	const struct iio_chan_spec	*channels;
-+	int				num_channels;
-+	unsigned long			clk_rate;
-+};
-+
- struct rockchip_saradc {
- 	void __iomem		*regs;
- 	struct clk		*pclk;
- 	struct clk		*clk;
- 	struct completion	completion;
- 	struct regulator	*vref;
-+	const struct rockchip_saradc_data *data;
- 	u16			last_val;
- };
- 
-@@ -90,7 +97,7 @@ static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
- 		}
- 
- 		*val = ret / 1000;
--		*val2 = SARADC_BITS;
-+		*val2 = info->data->num_bits;
- 		return IIO_VAL_FRACTIONAL_LOG2;
- 	default:
- 		return -EINVAL;
-@@ -103,7 +110,7 @@ static irqreturn_t rockchip_saradc_isr(int irq, void *dev_id)
- 
- 	/* Read value */
- 	info->last_val = readl_relaxed(info->regs + SARADC_DATA);
--	info->last_val &= SARADC_DATA_MASK;
-+	info->last_val &= GENMASK(info->data->num_bits - 1, 0);
- 
- 	/* Clear irq & power down adc */
- 	writel_relaxed(0, info->regs + SARADC_CTRL);
-@@ -133,12 +140,44 @@ static const struct iio_chan_spec rockchip_saradc_iio_channels[] = {
- 	ADC_CHANNEL(2, "adc2"),
- };
- 
-+static const struct rockchip_saradc_data saradc_data = {
-+	.num_bits = 10,
-+	.channels = rockchip_saradc_iio_channels,
-+	.num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels),
-+	.clk_rate = 1000000,
-+};
-+
-+static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels[] = {
-+	ADC_CHANNEL(0, "adc0"),
-+	ADC_CHANNEL(1, "adc1"),
-+};
-+
-+static const struct rockchip_saradc_data rk3066_tsadc_data = {
-+	.num_bits = 12,
-+	.channels = rockchip_rk3066_tsadc_iio_channels,
-+	.num_channels = ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
-+	.clk_rate = 50000,
-+};
-+
-+static const struct of_device_id rockchip_saradc_match[] = {
-+	{
-+		.compatible = "rockchip,saradc",
-+		.data = &saradc_data,
-+	}, {
-+		.compatible = "rockchip,rk3066-tsadc",
-+		.data = &rk3066_tsadc_data,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
-+
- static int rockchip_saradc_probe(struct platform_device *pdev)
- {
- 	struct rockchip_saradc *info = NULL;
- 	struct device_node *np = pdev->dev.of_node;
- 	struct iio_dev *indio_dev = NULL;
- 	struct resource	*mem;
-+	const struct of_device_id *match;
- 	int ret;
- 	int irq;
- 
-@@ -152,6 +191,9 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	}
- 	info = iio_priv(indio_dev);
- 
-+	match = of_match_device(rockchip_saradc_match, &pdev->dev);
-+	info->data = match->data;
-+
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	info->regs = devm_ioremap_resource(&pdev->dev, mem);
- 	if (IS_ERR(info->regs))
-@@ -192,10 +234,10 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	}
- 
- 	/*
--	 * Use a default of 1MHz for the converter clock.
-+	 * Use a default value for the converter clock.
- 	 * This may become user-configurable in the future.
- 	 */
--	ret = clk_set_rate(info->clk, 1000000);
-+	ret = clk_set_rate(info->clk, info->data->clk_rate);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to set adc clk rate, %d\n", ret);
- 		return ret;
-@@ -227,8 +269,8 @@ static int rockchip_saradc_probe(struct platform_device *pdev)
- 	indio_dev->info = &rockchip_saradc_iio_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
--	indio_dev->channels = rockchip_saradc_iio_channels;
--	indio_dev->num_channels = ARRAY_SIZE(rockchip_saradc_iio_channels);
-+	indio_dev->channels = info->data->channels;
-+	indio_dev->num_channels = info->data->num_channels;
- 
- 	ret = iio_device_register(indio_dev);
- 	if (ret)
-@@ -296,12 +338,6 @@ static int rockchip_saradc_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(rockchip_saradc_pm_ops,
- 			 rockchip_saradc_suspend, rockchip_saradc_resume);
- 
--static const struct of_device_id rockchip_saradc_match[] = {
--	{ .compatible = "rockchip,saradc" },
--	{},
--};
--MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
--
- static struct platform_driver rockchip_saradc_driver = {
- 	.probe		= rockchip_saradc_probe,
- 	.remove		= rockchip_saradc_remove,
--- 
-2.0.1
+So, for the case of rk3288, based on this discussion what I'm going to
+propose is to add code to rockchip.c which looks for a particular SMP
+enable method -- say something like "rockchip,rk3288-smp-secure-svc"
+which will then assume we have been booted in secure SVC mode and do
+the CNTVOFF fixup.  I believe, it will need to do this on the boot CPU
+as well, so I think it will need to scan the DT fairly early on the
+boot CPU and also perform the function there.
+
+I'll look into implementing this and post code.  Comments and
+suggestions appreciated, thanks.
+
+
+>
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> hosted by The Linux Foundation
+>
