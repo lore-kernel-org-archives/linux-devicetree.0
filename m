@@ -1,48 +1,53 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3] spi: davinci: add support for adding delay between
-	word's transmissions
-Date: Mon, 15 Sep 2014 16:06:49 +0300
-Message-ID: <5416E469.3020806@ti.com>
-References: <1410536892-22775-1-git-send-email-grygorii.strashko@ti.com>
-	<20140913160628.GF7960@sirena.org.uk>
+From: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM64: make of_device_ids const
+Date: Mon, 15 Sep 2014 14:11:49 +0100
+Message-ID: <20140915131149.GA5415@arm.com>
+References: <1410337579-23466-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <1410337579-23466-4-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <20140913160628.GF7960-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410337579-23466-4-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/13/2014 07:06 PM, Mark Brown wrote:
-> On Fri, Sep 12, 2014 at 06:48:12PM +0300, Grygorii Strashko wrote:
->> From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
->>
->> This patch adds ability to configure delay between transmission of
->> words over SPI bus if it's required by SPI slave devices.
-> 
-> This is fine but it doesn't appear to apply against current code.  Can
-> you please check and resend?
-> 
+On Wed, Sep 10, 2014 at 09:26:19AM +0100, Uwe Kleine-K=F6nig wrote:
+> of_device_ids (i.e. compatible strings and the respective data) are n=
+ot
+> supposed to change at runtime. All functions working with of_device_i=
+ds
+> provided by <linux/of.h> work with const of_device_ids. So mark the
+> only non-const struct in arch/arm64 as const, too.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm64/kernel/perf_event.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_=
+event.c
+> index baf5afb7e6a0..aa29ecb4f800 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -1276,7 +1276,7 @@ arch_initcall(cpu_pmu_reset);
+>  /*
+>   * PMU platform driver and devicetree bindings.
+>   */
+> -static struct of_device_id armpmu_of_device_ids[] =3D {
+> +static const struct of_device_id armpmu_of_device_ids[] =3D {
+>  	{.compatible =3D "arm,armv8-pmuv3"},
+>  	{},
+>  };
 
-This one should be applied without conflicts on top of
-git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
-branch: for-next
+Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 
-since you've applied the patch:
-"[PATCH] spi: davinci: request cs_gpio's from probe"
-http://www.spinics.net/lists/linux-spi/msg01811.html
-
-I have to mention about this dependency, sorry for that.
-
-Regards,
--grygorii
+(I guess you could upstream the patches via the arm-soc tree)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
