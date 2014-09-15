@@ -1,113 +1,119 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH 3/4] tty: omap-serial: use threaded interrupt handler
-Date: Mon, 15 Sep 2014 11:39:15 -0400
-Message-ID: <54170823.7040801@hurleysoftware.com>
-References: <1410789610-23059-1-git-send-email-frans.klaver@xsens.com> <1410789610-23059-4-git-send-email-frans.klaver@xsens.com>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH RESEND] thermal: Add QPNP PMIC temperature alarm driver
+Date: Mon, 15 Sep 2014 19:02:46 +0300
+Message-ID: <54170DA6.6050001@mm-sol.com>
+References: <1410793383-30097-1-git-send-email-iivanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1410789610-23059-4-git-send-email-frans.klaver@xsens.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Frans Klaver <frans.klaver@xsens.com>, Tony Lindgren <tony@atomide.com>
-Cc: Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Pelykh <alexey.pelykh@gmail.com>, Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1410793383-30097-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2014 10:00 AM, Frans Klaver wrote:
-> At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we see 1600 uart
-> rx buffer overflows within 30 seconds. Threading the interrupt handling reduces
-> this to about 170 overflows in 10 minutes.
+Hi,
 
-Why is the threadirqs kernel boot option not sufficient?
-Or conversely, shouldn't this be selectable?
-
-Regards,
-Peter Hurley
-
-PS - To overflow the 64 byte RX FIFO at those data rates means interrupt
-latency in excess of 250us?
-
-> In practice this therefore reduces the need for hardware flow control,
-> meaning the sending side doesn't have to buffer as much either.
+On 09/15/2014 06:03 PM, Ivan T. Ivanov wrote:
+> Add support for the temperature alarm peripheral found inside
+> Qualcomm plug-and-play (QPNP) PMIC chips.  The temperature alarm
+> peripheral outputs a pulse on an interrupt line whenever the
+> thermal over temperature stage value changes.  Implement an ISR
+> to manage this interrupt.
 > 
-> Signed-off-by: Frans Klaver <frans.klaver@xsens.com>
+> Register a thermal zone device in sysfs with mulitple trip points
+
+s/mulitple/multiple/
+
+> corresponding to the physical threshold temperatures between over
+> temperature stages.  The temperature reported by this thermal
+> zone device should reflect the actual PMIC die temperature if an
+> ADC is present on the given PMIC.  If no ADC is present, then the
+> reported temperature should be estimated from the over
+> temperature stage value.
+> 
+> Send a notification to userspace via sysfs_notify() whenever the
+> over temperature stage value changes.
+> 
+> Cc: David Collins <collinsd@codeaurora.org>
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 > ---
->  drivers/tty/serial/omap-serial.c | 30 +++++++++++++++++++++++-------
->  1 file changed, 23 insertions(+), 7 deletions(-)
+>  .../bindings/thermal/qpnp-temp-alarm.txt           |  27 ++
+>  drivers/thermal/Kconfig                            |  12 +
+>  drivers/thermal/Makefile                           |   1 +
+>  drivers/thermal/qpnp-temp-alarm.c                  | 519 +++++++++++++++++++++
+>  4 files changed, 559 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/qpnp-temp-alarm.txt
+>  create mode 100644 drivers/thermal/qpnp-temp-alarm.c
 > 
-> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-> index 7d3f557..398139a 100644
-> --- a/drivers/tty/serial/omap-serial.c
-> +++ b/drivers/tty/serial/omap-serial.c
-> @@ -575,6 +575,20 @@ static void serial_omap_rdi(struct uart_omap_port *up, unsigned int lsr)
->  }
->  
->  /**
-> + * serial_omap_fast_irq() - schedule interrupt handling
-> + */
-> +static irqreturn_t serial_omap_fast_irq(int irq, void *dev_id)
-> +{
-> +	struct uart_omap_port *up = dev_id;
-> +	unsigned int iir = serial_in(up, UART_IIR);
+> diff --git a/Documentation/devicetree/bindings/thermal/qpnp-temp-alarm.txt b/Documentation/devicetree/bindings/thermal/qpnp-temp-alarm.txt
+> new file mode 100644
+> index 0000000..7eecb74
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/qpnp-temp-alarm.txt
+> @@ -0,0 +1,27 @@
+> +Qualcomm QPNP PMIC Temperature Alarm
 > +
-> +	if (iir & UART_IIR_NO_INT)
-> +		return IRQ_NONE;
+> +QPNP temperature alarm peripherals are found inside of Qualcomm PMIC chips
+> +that utilize the Qualcomm SPMI implementation. These peripherals provide an
+> +interrupt signal and status register to identify high PMIC die temperature.
 > +
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +/**
->   * serial_omap_irq() - This handles the interrupt from one port
->   * @irq: uart port irq number
->   * @dev_id: uart port info
-> @@ -584,7 +598,6 @@ static irqreturn_t serial_omap_irq(int irq, void *dev_id)
->  	struct uart_omap_port *up = dev_id;
->  	unsigned int iir, lsr;
->  	unsigned int type;
-> -	irqreturn_t ret = IRQ_NONE;
->  	int max_count = 256;
->  
->  	spin_lock(&up->port.lock);
-> @@ -595,7 +608,6 @@ static irqreturn_t serial_omap_irq(int irq, void *dev_id)
->  		if (iir & UART_IIR_NO_INT)
->  			break;
->  
-> -		ret = IRQ_HANDLED;
->  		lsr = serial_in(up, UART_LSR);
->  
->  		/* extract IRQ type from IIR register */
-> @@ -634,7 +646,7 @@ static irqreturn_t serial_omap_irq(int irq, void *dev_id)
->  	pm_runtime_put_autosuspend(up->dev);
->  	up->port_activity = jiffies;
->  
-> -	return ret;
-> +	return IRQ_HANDLED;
->  }
->  
->  static unsigned int serial_omap_tx_empty(struct uart_port *port)
-> @@ -731,15 +743,19 @@ static int serial_omap_startup(struct uart_port *port)
->  	/*
->  	 * Allocate the IRQ
->  	 */
-> -	retval = request_irq(up->port.irq, serial_omap_irq, up->port.irqflags,
-> -				up->name, up);
-> +	retval = request_threaded_irq(up->port.irq, serial_omap_fast_irq,
-> +						serial_omap_irq,
-> +						IRQF_ONESHOT | up->port.irqflags,
-> +						up->name, up);
->  	if (retval)
->  		return retval;
->  
->  	/* Optional wake-up IRQ */
->  	if (up->wakeirq) {
-> -		retval = request_irq(up->wakeirq, serial_omap_irq,
-> -				     up->port.irqflags, up->name, up);
-> +		retval = request_threaded_irq(up->wakeirq, serial_omap_fast_irq,
-> +						serial_omap_irq,
-> +						IRQF_ONESHOT | up->port.irqflags,
-> +						up->name, up);
->  		if (retval) {
->  			free_irq(up->port.irq, up);
->  			return retval;
-> 
+> +Required properties:
+> +- compatible:      Should contain "qcom,qpnp-temp-alarm".
+> +- reg:             Specifies the SPMI address temperature alarm device.
 
+SPMI address _of_ the temperature alarm device?
+
+> +- interrupts:      PMIC temperature alarm interrupt
+> +
+> +Optional properties:
+> +- label:           A string used as a descriptive name for this thermal
+> +                   device. This name should be 19 characters or less.
+> +- io-channels:     Should contain IIO channel specifier
+> +- io-channel-names: "thermal". The ADC channel for temperature reading.
+
+Maybe can be rephrased better such as:
+- io-channel-names: should contain "thermal" for the temperature reading ADC channel
+
+> +
+> +Example:
+> +
+> +	thermal-alarm@2400 {
+> +		compatible = "qcom,qpnp-temp-alarm";
+> +		reg = <0x2400>;
+> +		interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
+> +		label = "pm8941_tz";
+> +		io-channels = <&pm8941_vadc VADC_DIE_TEMP>;
+> +		io-channel-names = "thermal";
+> +	};
+
+Maybe describe the trip points in the DT?
+
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 693208e..7371cf9 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -248,4 +248,16 @@ depends on ARCH_STI && OF
+>  source "drivers/thermal/st/Kconfig"
+>  endmenu
+>  
+> +config QPNP_TEMP_ALARM
+> +	tristate "Qualcomm QPNP Temperature Alarm"
+> +	depends on OF && REGMAP_SPMI
+
+Seems to depend on IIO too.
+
+> +	help
+> +	  This enables a thermal sysfs driver for Qualcomm plug-and-play (QPNP)
+> +	  PMIC devices. It shows up in sysfs as a thermal zone with multiple
+> +	  trip points. The temperature reported by the thermal zone reflects the
+> +	  real time die temperature if an ADC is present or an estimate of the
+> +	  temperature based upon the over temperature stage value. Enabling the
+> +	  thermal zone device via the mode file results in shifting PMIC over
+> +	  temperature shutdown control from hardware to software.
+> +
+[..]
+
+BR,
+Georgi
