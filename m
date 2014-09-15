@@ -1,54 +1,83 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] regulator: fan53555: set regulator name from
- constraints name
-Date: Mon, 15 Sep 2014 09:59:23 -0700
-Message-ID: <20140915165923.GX7960@sirena.org.uk>
-References: <1410722585-13393-1-git-send-email-heiko@sntech.de>
- <1410722585-13393-3-git-send-email-heiko@sntech.de>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Tegra xHCI support
+Date: Mon, 15 Sep 2014 10:06:34 -0700
+Message-ID: <CAL1qeaEC9O8-jgjGC44cFctoZPpp4dRVfQ=mhSb_2on7GgiU0w@mail.gmail.com>
+References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
+	<CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>
+	<CAL1qeaF7U9aoBp5gQPS=r+pe6krKmXdP1qak2gjhNqQMoHFB8A@mail.gmail.com>
+	<CAAObsKAXO-pBtqd1jNj8faXqpE+5Wb0RFzPp+jn9FH0B=dHq8g@mail.gmail.com>
+	<CAL1qeaEk_r5XAKvvJfwXN9+Wi9EjC_2MgBfoP92TK=F+Ou9QTA@mail.gmail.com>
+	<CAAObsKAwgfx1g2p7PQP+=HudvAHHpcPi47gEH6BrxEgLu6w2VQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wrIrAujhz1F5gxq3"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410722585-13393-3-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAObsKAwgfx1g2p7PQP+=HudvAHHpcPi47gEH6BrxEgLu6w2VQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 15, 2014 at 12:00 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
+> On 12 September 2014 18:37, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> On Tue, Sep 9, 2014 at 1:21 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
+>>> On 8 September 2014 18:22, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>>> On Mon, Sep 8, 2014 at 8:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
+>>>>> On 2 September 2014 23:34, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>>>>>
+>>>>>> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
+>>>>>> USB3.0 memory sticks and ethernet dongles using controller firmware
+>>>>>> recently posted by Andrew Chew [2].
+>>>>>
+>>>>> I have had mixed results when testing this on a Jetson TK1 board. Of 8
+>>>>> USB devices I tested with, about half where probed correctly, but the
+>>>>> other half repeatedly fail in hub_port_init because in the GET_STATUS
+>>>>> right after the reset, the C_PORT_CONNECTION bit is set.
+>>>>>
+>>>>> I don't see any correlation between the failure and the kind of usb
+>>>>> device, but I don't have much experience with USB implementations
+>>>>> either.
+>>>>
+>>>> Hmm... I haven't seen that before.  Which particular devices were you using?
+>>>
+>>> Here they are:
+>>>
+>>> work:
+>>>
+>>> Genius keyboard: 05d5:6782
+>>> Logitech mouse: 046d:c06a
+>>> Denver MP3 player: 10d6:1100
+>>> Atheros Bluetooth dongle: 0cf3:3005
+>>>
+>>> don't work:
+>>>
+>>> MCS7830 ethernet dongle: 9710:7830
+>>> Genesys Logic hub: 05e3:0608
+>>
+>> I tried the hub and it works just fine for me... Have you tried this
+>> on any other boards like Big or Blaze?
+>
+> I have a Blaze here, but haven't been able to get the external ports
+> to power up. I don't have schematics nor a strong interest to get that
+> fixed myself, as I can test my code just fine with the Blaze's
+> internal camera and the devices that do work on the Jetson.
 
---wrIrAujhz1F5gxq3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok, since Blaze has been announced, hopefully we can post a
+device-tree for it soon.
 
-On Sun, Sep 14, 2014 at 09:23:02PM +0200, Heiko Stuebner wrote:
-> There is a high potential of more than one of those regulators existing
-> on a board, so name the regulator according to the name provided in the
-> initdata instead of statically.
+> I'm using the firmware file that was posted recently:
+>
+> xhci-tegra 70090000.usb: Firmware timestamp: 2014-05-02 02:22:50 UTC,
+> Falcon state 0x20
 
-No, this is pointless and broken.  The core will already use the
-board-specific name to identify the regulator in diagnostics and so on,
-the name being supplied here is supposed to describe the regulator
-within the device.
+Yup, I'm using the same firmware.
 
---wrIrAujhz1F5gxq3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> If things work for you with the same sources, .config and firmware, I
+> can only think of the hw being different (other hw revision?).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+That, or perhaps bootloader differences?  I'm using mainline U-Boot.
 
-iQEcBAEBAgAGBQJUFxrqAAoJECTWi3JdVIfQzfwH/2THG1fWlx5WPGsHDi4hXyae
-O/ZkOGHFyNPOdGnb+bvR1+bzu4uQAd15eeWbQXkVwdaEsLw/kA18J4NWKLqGwPvC
-24+mrd3VV5ezCEjRe2rDc8r9kXHnT1vZfSD6LndynT6v/HusqfyoLk4L26CyeNsA
-iPj5uw5PQRc5DRnhrs0EZ8OwGN9Nuk568V/VXE944CkT4v4A2rrlfNPcH5BszTAu
-PXVEqGEZInoB6fUv7NFnzYejhn01jCIu6kxKCV0mmNUEf/jIXju1nL6AcmHqMC8O
-ZgsiAtp/bBT13TrLcJFEOIzu6A9P5lY8THMBQjHsL3xA4wDClxXJBL+AM/IGSDo=
-=A0yt
------END PGP SIGNATURE-----
-
---wrIrAujhz1F5gxq3--
+Stephen, Thierry, have either of you had a chance to test this series?
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
