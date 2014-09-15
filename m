@@ -1,115 +1,57 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/7] ARM: dts: sun6i: Add required ahb1
- clock parent and rates for dma controller
-Date: Tue, 16 Sep 2014 17:48:49 +0200
-Message-ID: <20140916154849.GE2166@lukather>
-References: <1410000448-9999-1-git-send-email-wens@csie.org>
- <1410000448-9999-7-git-send-email-wens@csie.org>
- <20140911211531.GN31276@lukather>
- <CAGb2v64+RxJ52DzawhAtYCn=sw+28e4Q11jzG02KQE=8hxa0tQ@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC][PATCH] devicetree: Add master-id-bits property to the iommu
+	device
+Date: Mon, 15 Sep 2014 18:57:05 +0200
+Message-ID: <201409151857.05463.arnd@arndb.de>
+References: <1410718646-9710-1-git-send-email-Varun.Sethi@freescale.com>
+	<201409150438.29649.arnd@arndb.de>
+	<bfdff6494d7f46ab9a9f00f94159e9e1@BL2PR03MB468.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JBi0ZxuS5uaEhkUZ"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNNY4GQAKGQECRI36SY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64+RxJ52DzawhAtYCn=sw+28e4Q11jzG02KQE=8hxa0tQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <bfdff6494d7f46ab9a9f00f94159e9e1-AZ66ij2kwaacCcN9WK45f+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "Mark.Rutland-5wv7dgnIgG8@public.gmane.org" <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 15 September 2014, Varun Sethi wrote:
+> > 
+> > This seems rather specific to MMU-500. I don't think that most IOMMUs would
+> > use the term 'master ID', 'stream ID' or even the general concept, and you
+> > don't expand the acronym 'TBU'. I've seen many IOMMUs and I don't even
+> > know what that means.
+> 
+> TBU refers to the translation buffer unit, which is responsible for caching page translations. In case of translation miss in the cache, translation request is forwarded to the TCU (Translation control unit). The master id forwarded to TCU would also contain the TBU ID.  Using the master-id-bits property we can mask out the additional TBU bits at the TCU. This is a cause of concern when we want to share master id for devices which are connected to different TBUs. We have a hot pluggable bus architecture, where a device group can have multiple devices connected to different TBUs. So, we need a mechanism to mask out additional TBIU bits.
 
---JBi0ZxuS5uaEhkUZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, I think I understand now
 
-On Fri, Sep 12, 2014 at 10:10:25AM +0800, Chen-Yu Tsai wrote:
-> On Fri, Sep 12, 2014 at 5:15 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Sat, Sep 06, 2014 at 06:47:27PM +0800, Chen-Yu Tsai wrote:
-> >> The DMA controller requires AHB1 bus clock to be clocked from PLL6.
-> >>
-> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> ---
-> >>  arch/arm/boot/dts/sun6i-a31.dtsi | 5 +++++
-> >>  1 file changed, 5 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6=
-i-a31.dtsi
-> >> index 8eb2c6d..1117989 100644
-> >> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> >> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> >> @@ -317,6 +317,11 @@
-> >>                       clocks =3D <&ahb1_gates 6>;
-> >>                       resets =3D <&ahb1_rst 6>;
-> >>                       #dma-cells =3D <1>;
-> >> +
-> >> +                     /* DMA controller requires AHB1 clocked from PLL=
-6 */
-> >> +                     assigned-clocks =3D <&ahb1>;
-> >> +                     assigned-clock-parents =3D <&pll6>;
-> >> +                     assigned-clock-rates =3D <200000000>;
-> >
-> > Where did you get that from?
-> >
-> > The user manual says that it should be clocked at 600MHz, and I'm not
-> > sure it should be enforced there either.
->=20
-> The bindings mean that ahb1 should be clocked from pll6 and at 200 MHz,
-> not "pll6 should be 200 MHz". I assume you were misled by them.
->=20
-> Clocking ahb1 from pll6 and at 200 MHz with the /3 pre-divider is the
-> vendor BSP default:
->=20
-> On sun6i, the clock init code calls aw_ccu_switch_ahb_2_pll6(), which mux=
-es
-> ahb1 from pll6 with the highest dividers, then sets the rate for ahb1 to
-> pll6, which sets pre-divider to /3 and divider to /1.
->=20
-> Hope this clears it up. :)
+> > Why do you think this is something that is needed to be known at the global
+> > level, rather than a property for some individual drivers?
+> > 
+> In case of Freescale Layerscape SOCs, number of bits used for defining a stream id are specific to a given platform. 
+> 
+> Are you suggesting that this property should be added to the master device node, rather than the iommu node?
 
-It does, thanks :)
+Most importantly, I think this needs to be part of the (iommu) device specific binding, not the
+generic binding that is used for all iommus that may or may not have this concept.
 
-But still, I find it the wrong place to enforce such a limit. This
-should go into the clock driver itself. The DMA controller requires
-such a parenting, but it doesn't require any specific rate, this is
-more something of the global system policy.
+I believe in case of the ARM SMMU, it should actually go into the master node as part of
+the 'iommus' property, because the mask can be different for each master. If your IOMMU
+has a fixed mask that is used for all devices, that's fine and you can put it into
+the iommu node itself but document it in the binding for your IOMMU.
 
-Maxime
+For hot-pluggable buses, you probably need to have the 'iommus' property in the node
+that corresponds to the bus controller, and that will have a mask that is used for
+all devices plugged into it.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---JBi0ZxuS5uaEhkUZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUGFvhAAoJEBx+YmzsjxAgZWYP/26aPoXAZ7xFk0fy9qBv1/kr
-ss3te0S+1hzwJWIjNz2T6Blr/YnvYkqsOo6Y5znGpUXpjLACEny35ptFLDrrOxVw
-z+0zShbWTZCuIdcrkjyz4MSSxn8NaNYVZsfRZn5CfwYWtWdE3i9YvLxO/dXScw8e
-1uRlHFOwrDf64oZa0axpIQMMdbq+HDmi/bPx8Qs8gZaruqXVYz12h2cZl+cC6lj2
-XR2r9ZKOztJHIERPc3npcnnY9a3ntlRSuQySWTmNxV97qfwdnuh6ICY/d08nkv/0
-+/5HFRthNSsvj4l08tQFHqDLe+2RP8XiawFBngMKFPXnlrTRzHPCeZQCm0dNwuua
-3fW7bM3lleYPqSE905pteLSKbQHuC7uI1WIMwD2DvGh1Tvd58b+ike+cQgTqRnGS
-OyJhq0qF8to4Anr46XvMsy4XN+1M5xhS3q7vLy/18HmY3b2W5VrMQ9/xR+FABhDK
-XsZH5JpCWpTKoUxP4iYFqu5lsThKDRW5zIsjiX97HBhd69PYRUSDf+zyqN8+msjJ
-DbbVDztdEMLsL+iX5US7MtSiCSLpxLHMWOvC7CqUxAIq5BG4ThNFMAasb9dHHf50
-zWwAKuS4qYFnP/sr3CroUo0acXLZ/n2nw6FNHV/6rGlJvOlT+ILGvhjIMn57Lc8p
-oZZxeHNhDKx/bo+mKWoy
-=GS3C
------END PGP SIGNATURE-----
-
---JBi0ZxuS5uaEhkUZ--
+	Arnd
