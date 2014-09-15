@@ -1,63 +1,123 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] spi: davinci: add support for adding delay between
- word's transmissions
-Date: Mon, 15 Sep 2014 09:37:04 -0700
-Message-ID: <20140915163704.GT7960@sirena.org.uk>
-References: <1410536892-22775-1-git-send-email-grygorii.strashko@ti.com>
- <20140913160628.GF7960@sirena.org.uk>
- <5416E469.3020806@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
+Date: Mon, 15 Sep 2014 18:47:22 +0200
+Message-ID: <201409151847.22686.arnd@arndb.de>
+References: <1410792622-22621-1-git-send-email-ludovic.desroches@atmel.com> <1410792622-22621-2-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RDZKVD6KUognMRfE"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5416E469.3020806-l0cyMroinI0@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410792622-22621-2-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Monday 15 September 2014, Ludovic Desroches wrote:
+>  
+> +config AT_XDMAC
+> +	tristate "Atmel XDMA support"
+> +	depends on ARCH_AT91
+> +	select DMA_ENGINE
+> +	help
+> +	  Support the Atmel XDMA controller.
 
---RDZKVD6KUognMRfE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This should depend on (ARCH_AT91 || COMPILE_TEST) and built on x86 to
+get into the usual automated build checkers.
 
-On Mon, Sep 15, 2014 at 04:06:49PM +0300, Grygorii Strashko wrote:
-> On 09/13/2014 07:06 PM, Mark Brown wrote:
+> +static struct dma_chan *at_xdmac_xlate(struct of_phandle_args *dma_spec,
+> +				       struct of_dma *of_dma)
+> +{
+> +	struct at_xdmac		*atxdmac = of_dma->of_dma_data;
+> +	struct at_xdmac_chan	*atchan;
+> +	struct dma_chan		*chan;
+> +	struct device		*dev = atxdmac->dma.dev;
+> +	dma_cap_mask_t 		mask;
+> +
+> +	if (dma_spec->args_count != 2) {
+> +		dev_err(dev, "dma phandler args: bad number of args\n");
+> +		return NULL;
+> +	}
+> +
+> +	dma_cap_zero(mask);
+> +	dma_cap_set(DMA_SLAVE, mask);
 
-> > This is fine but it doesn't appear to apply against current code.  Can
-> > you please check and resend?
+The mask is unused, just remove it.
 
-> This one should be applied without conflicts on top of
-> git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
-> branch: for-next
+> +	chan = dma_get_any_slave_channel(&atxdmac->dma);
+> +	if (!chan) {
+> +		dev_err(dev, "can't get a dma channel\n");
+> +		return NULL;
+> +	}
+> +
+> +	atchan = to_at_xdmac_chan(chan);
+> +	atchan->memif = AT91_XDMAC_DT_GET_MEM_IF(dma_spec->args[0]);
+> +	atchan->perif = AT91_XDMAC_DT_GET_PER_IF(dma_spec->args[0]);
+> +	atchan->perid = AT91_XDMAC_DT_GET_PERID(dma_spec->args[1]);
+> +	dev_info(dev, "chan dt cfg: memif=%u perif=%u perid=%u\n",
+> +		 atchan->memif, atchan->perif, atchan->perid);
 
-> since you've applied the patch:
-> "[PATCH] spi: davinci: request cs_gpio's from probe"
-> http://www.spinics.net/lists/linux-spi/msg01811.html
+Maybe dev_dbg instead of dev_info?
 
-> I have to mention about this dependency, sorry for that.
+I think having three cells would be nicer here, so you can get rid of the
+macros.
+> diff --git a/drivers/dma/at_xdmac.h b/drivers/dma/at_xdmac.h
+> new file mode 100644
+> index 0000000..5f4d898
+> --- /dev/null
+> +++ b/drivers/dma/at_xdmac.h
 
-Please resend then as I asked.
+The header is only used in one file, so just move the contents into that file.
 
---RDZKVD6KUognMRfE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +
+> +static inline void __iomem *at_xdmac_chan_reg_base(struct at_xdmac *atxdmac, unsigned int chan_nb)
+> +{
+> +	return (void __iomem *)(atxdmac->regs + (AT_XDMAC_CHAN_REG_BASE + chan_nb * 0x40));
+> +}
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+That type cast should not be needed. Is atxdmac->regs not already a void __iomem *
 
-iQEcBAEBAgAGBQJUFxWvAAoJECTWi3JdVIfQsd8H/2IIdobF1ajJ7STmgtMMOFg4
-84f0kBBB00t3A6bEaU/abEIANcp8TD+tgj67n6+yRj0za9WpDLNLREjS6iXjyrr6
-s9jpTVjOMd0yX70P4tn2ClR6Pbsj2qWXiWOAVPyIH3g/g9mzxtugm1eKFHGqqQCK
-cGrmGUwWo+y79Q3x5YXcay0ul/lglC9X565iqnOavEgKvi9NiUCH8CsVNmMtPlcp
-/u+71o6il+2xqUpMmlNPrmkVHI7wxSb1qf6DJw7/phJYUnXAPykSgqATlc7execM
-RqGhllkqGKFXwmjOmiQMhvlSLLxpKw2yDyC3osHUGikRiWHWFEYyzQ9ffsxrg9A=
-=elNf
------END PGP SIGNATURE-----
+> +#define at_xdmac_read(atxdmac, reg) readl_relaxed((atxdmac)->regs + (reg))
+> +#define at_xdmac_write(atxdmac, reg, value) \
+> +	writel_relaxed((value), (atxdmac)->regs + (reg))
+> +
+> +#define at_xdmac_chan_read(atchan, reg) readl_relaxed((atchan)->ch_regs + (reg))
+> +#define at_xdmac_chan_write(atchan, reg, value) writel_relaxed((value), (atchan)->ch_regs + (reg))
 
---RDZKVD6KUognMRfE--
+Is writel_relaxed the right accessor here? I haven't reviewed all uses of this,
+but you have to ensure that every use that needs synchronization against the
+actual DMA has explicit barriers here.
+(0x2 << AT91_DMA_CFG_FIFOCFG_OFFSET)	/* single AHB access */
+>  
+> +
+> +/* ---------- XDMAC ---------- */
+> +#define AT91_XDMAC_DT_MEM_IF_MASK	(0x1)
+> +#define AT91_XDMAC_DT_MEM_IF_OFFSET	(16)
+> +#define AT91_XDMAC_DT_MEM_IF(mem_if)	(((mem_if) & AT91_XDMAC_DT_MEM_IF_MASK) \
+> +					<< AT91_XDMAC_DT_MEM_IF_OFFSET)
+> +#define AT91_XDMAC_DT_GET_MEM_IF(cfg)	(((cfg) >> AT91_XDMAC_DT_MEM_IF_OFFSET) \
+> +					& AT91_XDMAC_DT_MEM_IF_MASK)
+> +
+> +#define AT91_XDMAC_DT_PER_IF_MASK	(0x1)
+> +#define AT91_XDMAC_DT_PER_IF_OFFSET	(0)
+> +#define AT91_XDMAC_DT_PER_IF(per_if)	(((per_if) & AT91_XDMAC_DT_PER_IF_MASK) \
+> +					<< AT91_XDMAC_DT_PER_IF_OFFSET)
+> +#define AT91_XDMAC_DT_GET_PER_IF(cfg)	(((cfg) >> AT91_XDMAC_DT_PER_IF_OFFSET) \
+> +					& AT91_XDMAC_DT_PER_IF_MASK)
+> +
+> +#define AT91_XDMAC_DT_PERID_MASK	(0x7f)
+> +#define AT91_XDMAC_DT_PERID_OFFSET	(24)
+> +#define AT91_XDMAC_DT_PERID(perid)	(((perid) & AT91_XDMAC_DT_PERID_MASK) \
+> +					<< AT91_XDMAC_DT_PERID_OFFSET)
+> +#define AT91_XDMAC_DT_GET_PERID(cfg)	(((cfg) >> AT91_XDMAC_DT_PERID_OFFSET) \
+> +					& AT91_XDMAC_DT_PERID_MASK)
+
+As mentioned, I think it would be much better to keep the macros inside of the
+driver and not visible to the binding, so you can use simple numbers in DT.
+
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
