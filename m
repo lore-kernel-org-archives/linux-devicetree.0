@@ -1,116 +1,97 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH RESEND 0/8] i2c: Relax mandatory I2C ID table passing
-Date: Mon, 15 Sep 2014 23:46:21 +0100
-Message-ID: <20140915224621.GG25162@lee--X1>
-References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
- <20140912134632.GE1930@katana>
- <CABxcv==OXd+uePcB8zDzB-DDmr9ci6zscHX5TCauWoTO6E4fpg@mail.gmail.com>
+From: Christopher Covington <cov@codeaurora.org>
+Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
+ specify the physical timer
+Date: Mon, 15 Sep 2014 18:51:14 -0400
+Message-ID: <54176D62.9010600@codeaurora.org>
+References: <1410452204-7277-1-git-send-email-dianders@chromium.org> <20140911164710.GW6158@arm.com> <5411D528.4050605@arm.com> <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com> <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com> <5411DF5D.8060906@arm.com> <5412DC48.7030708@codeaurora.org> <5412E3BB.9030800@arm.com> <54134291.3040700@codeaurora.org> <20140915111055.GD1577@arm.com> <54174CFF.7050504@codeaurora.org> <CAPz6YkU8hEL6yocPf7UL8-tz9Onuu-9bevAToK3CDWsShN92YQ@mail.gmail.com> <54175EFE.6010509@codeaurora.org> <CAPz6YkWbxiGHO8RK==HbQ3P22amZ9sDKpGew=a2U8gO7soQCDg@mail.gmail.com> <CAPz6YkWwzpd4oxarEH4Vu-Z_eH+ysw0TNubpPsv_eC6QJPcw7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CABxcv==OXd+uePcB8zDzB-DDmr9ci6zscHX5TCauWoTO6E4fpg@mail.gmail.com>
+In-Reply-To: <CAPz6YkWwzpd4oxarEH4Vu-Z_eH+ysw0TNubpPsv_eC6QJPcw7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+To: Sonny Rao <sonnyrao@chromium.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Doug Anderson <dianders@chromium.org>, Will Deacon <Will.Deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, =?UTF-8?B?SGVpa28
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 12 Sep 2014, Javier Martinez Canillas wrote:
+Hi Sonny,
 
-> [adding Sjoerd as cc who was the one that raised the module auto-load=
-ing issue]
->=20
-> Hello,
->=20
-> On Fri, Sep 12, 2014 at 3:46 PM, Wolfram Sang <wsa@the-dreams.de> wro=
-te:
-> >>
-> >> Placing this firmly back on your plate.  I truly hope we don't mis=
-s
-> >> another merge-window.  This patch-set has the support of some pret=
-ty
-> >> senior kernel maintainers, so I hope acceptance shouldn't be too
-> >> difficult.
-> >>
-> >> As previously discussed I believe it should be okay for an I2C dev=
-ice
-> >> driver _not_ supply an I2C ID table to match to.  The I2C subsyste=
-m
-> >> should be able to match via other means, such as via OF tables.  T=
-he
-> >> blocking factor during our previous conversation was to keep
-> >> registering via sysfs up and running.  This set does that.
-> >
-> > As mentioned in another thread, modaliases are one other possible s=
-ide
-> > effect. As Javier correctly mentions, the beaviour does not really
-> > change with your patchset. Yet, if we remove i2c_device_id from dri=
-vers
-> > too carelessly, they might not be bound anymore.
-> >
->=20
-> Right, removing the I2C ID table even from drivers that don't really
-> need it (e.g: IP blocks only present in DT platforms) will as you sai=
-d
-> break module auto-loading. Probing will work since the OF table is
-> used to match the device in i2c_device_match() but is the I2C table
-> what is used to fill the valid module aliases with the current
-> behavior of i2c_device_uevent(), the aliases filled from the OF table
-> are never used.
->=20
-> So what I propose is to do it incrementally:
->=20
-> 1) Merge Lee's series since that is definitely a step in the right
-> direction to not make an I2C table mandatory (still will be needed fo=
-r
-> module auto loading though).
->=20
-> 2) On a follow-up series, make sure that all I2C drivers have a prope=
-r
-> OF table and that are using the MODULE_DEVICE_TABLE(of,...) macro to
-> fill the of:<foo> module aliases. That way the modules will have the
-> proper aliases of the form "of:<foo>" besides the "i2c:<foo>" one.
-> (even when always i2c:<foo> is reported to user-space currently).
->=20
-> 3) Apply the patch I posted [0] that changes the behavior of
-> i2c_device_uevent() to report the OF uevent env vars to user-space in
-> case of DT probing which after 2) should not regress any driver modul=
-e
-> auto-loading since all drivers should fill the of:<foo> aliases.
+On 09/15/2014 06:04 PM, Sonny Rao wrote:
+> On Mon, Sep 15, 2014 at 2:52 PM, Sonny Rao <sonnyrao@chromium.org> wrote:
+>> On Mon, Sep 15, 2014 at 2:49 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>>> On 09/15/14 14:47, Sonny Rao wrote:
+>>>> On Mon, Sep 15, 2014 at 1:33 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>>>>> On 09/15/14 04:10, Catalin Marinas wrote:
+>>>>>> On Fri, Sep 12, 2014 at 07:59:29PM +0100, Stephen Boyd wrote:
+>>>>>>> On 09/12/14 05:14, Marc Zyngier wrote:
+>>>>>>>> We surely can handle the UNDEF and do something there. We just can't do
+>>>>>>>> it the way Doug described it above.
+>>>>>>> I suggested doing that for something else a while ago and Will and Dave
+>>>>>>> we're not thrilled[1]. The suggestion back then was to use DT to
+>>>>>>> indicate what mode the kernel is running in.
+>>>>>>>
+>>>>>>> [1]
+>>>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/105321.html
+>>>>>> I think the context was slightly different. As I re-read the thread, it
+>>>>>> seems that the discussion was around whether to use some SMC interface
+>>>>>> or not based on whether the kernel is running secure or non-secure. The
+>>>>>> argument made by Will was to actually specify the type of the firmware
+>>>>>> SMC interface in the DT and use it in the kernel (and probably assume
+>>>>>> the kernel is running in secure mode if no smc interface is specified in
+>>>>>> the DT; you could have both though, running in secure mode and also
+>>>>>> having firmware).
+>>>>>>
+>>>>>> In this arch timer case, we need to work around a firmware bug (or
+>>>>>> feature as 32-bit ARM kernels never required CNTVOFF initialisation by
+>>>>>> firmware, no matter how small such firmware is). We don't expect a
+>>>>>> specific SMC call to initialise CNTVOFF, so we can't describe it in the
+>>>>>> DT.
+>>>>> Agreed, we can't described SMC calls that don't exist. From my
+>>>>> perspective it's just another part of the cpu boot sequence that needs
+>>>>> to be handled in the kernel, so describing the requirement via the
+>>>>> cpu-boot method seems appropriate. It seems like we're making it harder
+>>>>> than it should be by handling the undef when we could have slightly
+>>>>> different SMP boot code (and suspend/resume code) depending on the boot
+>>>>> method property.
+>>>>
+>>>> +heiko
+>>>>
+>>>> So, for the case of rk3288, based on this discussion what I'm going to
+>>>> propose is to add code to rockchip.c which looks for a particular SMP
+>>>> enable method -- say something like "rockchip,rk3288-smp-secure-svc"
+>>>> which will then assume we have been booted in secure SVC mode and do
+>>>> the CNTVOFF fixup.  I believe, it will need to do this on the boot CPU
+>>>> as well, so I think it will need to scan the DT fairly early on the
+>>>> boot CPU and also perform the function there.
+>>>>
+>>>> I'll look into implementing this and post code.  Comments and
+>>>> suggestions appreciated, thanks.
+>>>
+>>> What goes wrong if we read the cntvoff from the boot CPU during
+>>> smp_prepare_cpus() phase and use that to set the cntvoff on the other
+>>> CPUs? That avoids needing to do anything very early by making the value
+>>> the same. It does mean that cntvoff is some random out of reset value
+>>> for CPU0, but at least it's consistent.
+>>
+>> I think we cannot read the value if we're not in hyp mode.
+> 
+> Well, thinking about it a little more, I think you still have a good point.
+> 
+> We don't need to do this early on, as long as we haven't started using
+> the arch timers yet.  If we are still able to do this at the point
+> where we're executing the code in arch/arm/mach-rockchip/platsmp.c
+> that finds the enable method then we can just handle it there.
 
-This sounds resonable.
+I've been playing around with the probe-based approach and while I need to do
+a lot more testing, it seems to be working for the first tens of instructions.
+I hope to be able to share a draft of that soon. Basically, I just read the
+current NSACR value and write it back (although maybe in the long term we
+would want to make sure a few of those bits are set or cleared). If that
+succeeds, we know we're in secure SVC and can proceed to set up MON and HYP.
 
-> After this, DT-only drivers will only need an OF table and legacy
-> drivers will only need an I2C table. Drivers that support both will
-> still need the two tables though which is a drawback of this approach
-> since unnecessary duplication will exist on these drivers and can
-> cause issues when both tables are not in sync as we saw on the issue
-> reported by Sjoerd on [1].
->=20
-> So an alternate approach could be to do the opposite, just remove the
-> OF tables entirely from the I2C drivers and only use the I2C table
-> even for DT-only drivers. This is possible since i2c_device_match()
-> will succeed even without an OF table because i2c_match_id() matches
-> for compatible strings and what is reported as uevent is what is in
-> the I2C table anyways. I believe that is what Sjoerd suggested but
-> I'll let him comment on that in case I misunderstood.
+Christopher
 
-This would be really bad.  It would go completely against what I have
-working to achieve and OF conventions.
-
-> By the way, the SPI subsystem has the same behavior, I raised the iss=
-ue on [2].
->=20
-> Best regards,
-> Javier
->=20
-> [0]: https://lkml.org/lkml/2014/9/11/269
-> [1]: https://lkml.org/lkml/2014/9/9/100
-> [2]: https://lkml.org/lkml/2014/9/11/458
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by the Linux Foundation.
