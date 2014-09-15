@@ -1,45 +1,65 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC][PATCH] devicetree: Add master-id-bits property to the iommu
-	device
-Date: Mon, 15 Sep 2014 04:38:29 +0200
-Message-ID: <201409150438.29649.arnd@arndb.de>
-References: <1410718646-9710-1-git-send-email-Varun.Sethi@freescale.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [Patch v9 3/3] phy: Add Qualcomm DWC3 HS/SS PHY driver
+Date: Mon, 15 Sep 2014 12:07:12 +0530
+Message-ID: <54168918.1080408@ti.com>
+References: <1410550088-8754-1-git-send-email-agross@codeaurora.org> <1410550088-8754-4-git-send-email-agross@codeaurora.org> <5413E829.8020804@ti.com> <20140914022452.GA16652@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1410718646-9710-1-git-send-email-Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140914022452.GA16652@saruman.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jack Pham <jackp@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 14 September 2014, Varun Sethi wrote:
-> "master-id-bits" property added to the IOMMU device node. This property can
-> be used by the IOMMU driver to match relevan bits in the master id expressed
-> by a DMA master.
+Hi,
+
+On Sunday 14 September 2014 07:54 AM, Felipe Balbi wrote:
+> Hi,
 > 
-> This can be used to mask out certain bits that get added to the device master id
-> due to IOMMU topology. For example, in case of MMU-500 the TBUID gets appended to
-> the master id. This prevents sharing of a stream ID, amongst devices which are
-> connected to different TBUs. 
+> On Sat, Sep 13, 2014 at 12:16:01PM +0530, Kishon Vijay Abraham I wrote:
+>> On Saturday 13 September 2014 12:58 AM, Andy Gross wrote:
+>>> This patch adds a new driver for the Qualcomm USB 3.0 PHY that exists on some
+>>> Qualcomm platforms.  This driver uses the generic PHY framework and will
+>>> interact with the DWC3 controller.
+>>
+>> Do you have dt documentation for this driver?
 > 
-> Signed-off-by: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> see patch 1
 
-This seems rather specific to MMU-500. I don't think that most IOMMUs would
-use the term 'master ID', 'stream ID' or even the general concept, and you don't
-expand the acronym 'TBU'. I've seen many IOMMUs and I don't even know what
-that means.
+hmm.. missed that.
+> 
+>>> +static inline void qcom_dwc3_phy_write_readback(
+>>> +	struct qcom_dwc3_usb_phy *phy_dwc3, u32 offset,
+>>> +	const u32 mask, u32 val)
+>>> +{
+>>> +	u32 write_val, tmp = readl(phy_dwc3->base + offset);
+>>> +
+>>> +	tmp &= ~mask;		/* retain other bits */
+>>> +	write_val = tmp | val;
+>>> +
+>>> +	writel(write_val, phy_dwc3->base + offset);
+>>> +
+>>> +	/* Read back to see if val was written */
+>>
+>> Does it fail sometime? I'm not sure if this should be present in the
+>> driver since this looks more of a debug code.
+> 
+> this was mentioned before. Silicon bug.
 
-Why do you think this is something that is needed to be known at the global
-level, rather than a property for some individual drivers?
+okay.
+> 
+>>> +	writel_relaxed(data | SSUSB_CTRL_SS_PHY_RESET,
+>>> +		phy_dwc3->base + SSUSB_PHY_CTRL_REG);
+>>> +	usleep_range(2000, 2200);
+>>
+>> use msleep here..
+> 
+> why ? usleep_range() gives the scheduler oportunity to group timers.
 
-	Arnd
+Was of the opinion that for larger delays msleep should be used. But looks like
+it is only for 10+ ms (Documentation/timers/timers-howto.txt).
+
+Thanks
+Kishon
