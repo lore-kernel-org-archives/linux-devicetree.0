@@ -1,54 +1,104 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ahci_xgene: Fix the error print invalid resource for
-	APM X-Gene SoC AHCI SATA Host Controller driver.
-Date: Mon, 15 Sep 2014 09:49:40 +0100
-Message-ID: <20140915084940.GY12361@n2100.arm.linux.org.uk>
-References: <1410508448-25111-1-git-send-email-stripathi@apm.com> <1410508448-25111-2-git-send-email-stripathi@apm.com> <20140912175014.GA6298@mtj.dyndns.org> <CAOHikRA8LiNkMuzqe-Kgrf4QWbJ_jpXRGHdf+rsrCmq6R0GjDg@mail.gmail.com> <20140914093911.GB9028@mtj.dyndns.org> <CAOHikRAFM-FETGGXroNV39Yi-jChMA-W37ufhiMx4O2WgWpxFg@mail.gmail.com> <CAOHikRDdfKTxCXHGsywP+c8=1eLmMCf3fuC2pmH2WH-6ymHMAA@mail.gmail.com> <20140915074452.GC11267@mtj.dyndns.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 03/16] video: Add DT binding documentation for VGA connector
+Date: Mon, 15 Sep 2014 11:52:58 +0300
+Message-ID: <5416A8EA.1070402@ti.com>
+References: <1409157673-4154-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1409157673-4154-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140915074452.GC11267-9pTldWuhBndy/B6EtB590w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Suman Tripathi <stripathi-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux SCSI List <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Don Dutile <ddutile-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="H4VhjwoeT4PGpv3718xbDV0DSVD73oOGA"
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1409157673-4154-4-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 04:44:52PM +0900, Tejun Heo wrote:
-> On Mon, Sep 15, 2014 at 01:10:01PM +0530, Suman Tripathi wrote:
-> > [suman] : So the posted version is acceptable ? Any others comments on this
-> > patch ?
-> 
-> I'm suggesting setting ctx->cs_mux to NULL on failure.  IOW,
-> 
-> 	if (res) {
-> 		ctx->csr_mux = devm_ioremap_resources();
-> 		if (IS_ERR(ctx->csr_mux)) {
-> 			print warning or something;
-> 			ctx->csr_mux = NULL;
-> 		}
-> 	}
+--H4VhjwoeT4PGpv3718xbDV0DSVD73oOGA
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-A much better approach is:
+Hi,
 
-	if (res) {
-		void __iomem *csr = devm_ioremap_resources();
-		if (IS_ERR(csr)) {
-			ret = ERR_PTR(csr);
-			dev_xxx();
-			goto err;
-		}
+On 27/08/14 19:41, Laurent Pinchart wrote:
+> The VGA connector is described by a single input port and an optional
+> DDC bus.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-fbdev@vger.kernel.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.=
+com>
+> ---
+>  .../devicetree/bindings/video/vga-connector.txt    | 28 ++++++++++++++=
+++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/vga-connect=
+or.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/video/vga-connector.txt =
+b/Documentation/devicetree/bindings/video/vga-connector.txt
+> new file mode 100644
+> index 0000000..9a45ec1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/vga-connector.txt
+> @@ -0,0 +1,28 @@
+> +VGA Connector
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Required properties:
+> +- compatible: "vga-connector"
+> +
+> +Optional properties:
+> +- label: a symbolic name for the connector
+> +- ddc-i2c-bus: phandle to the I2C bus that is connected to VGA DDC
+> +
+> +Required nodes:
+> +- Video port for VGA input
+> +
+> +Example
+> +-------
+> +
+> +vga0: connector@0 {
+> +	compatible =3D "vga-connector";
+> +	label =3D "vga";
+> +
+> +	ddc-i2c-bus =3D <&i2c3>;
+> +
+> +	port {
+> +		vga_connector_in: endpoint {
+> +			remote-endpoint =3D <&adv7123_out>;
+> +		};
+> +	};
+> +};
+>=20
 
-		ctx->csr_mux = csr;
-	}
+Looks good to me.
 
-Then you never end up in the situation where csr_mux contains an error
-pointer value - and is much more obvious that is the case.
+ Tomi
 
--- 
-FTTC broadband for 0.8mile line: currently at 9.5Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+--H4VhjwoeT4PGpv3718xbDV0DSVD73oOGA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUFqjwAAoJEPo9qoy8lh71/VcP/jo7YNg0B1MyfKaUNQCiftsm
+pFQUlLkiC6tticqYOlYnlcNcLSctyYfV4gmUD/9wOpXAXJynP0SZaqRyDg0ckCTj
+Syhrd+ILrCUmLwtCNY9lKisWtAatu6MgTI/sm5SBzQS2TIYAfEslXnePVVy/bsA+
+bYXpTbuaJhaBkERQ3tWtJjjUtr3IJVPSOcviZhU6rcHWVgxUCwuardJ8vlGmreq8
+5+tyKprnDu47Aq6D7zkmZpDcyybLCfpEei0s7sBdvEX1UcCUkIQ6D3RWks18zIjs
+YCzGdDQHES4zCYWgeuM91hX7WD4xEQrt53326WjbdOWjgeIPcDC6KyiD27QqTrtX
+mRE2yvb8iHtGA94igm7z1nFK5vVKvC8eWXSfHPs0XYguhEQsoauNDwLt2u2xsasP
+gLWqx54uYDV2oLu7iNJii4e6HA5gxyIcUBzUhG0GODqTUiwZJV5xO2zbHo640EM5
+y47+Nv0sIKIjH7Fs6Ht7YFSdxHLPq9fcixMJYGB0BDcPgFz66xHx2IFWRLgrtAxj
+f+kS5Ws0xzp9xp/3dBjPPQwvmXhgHSwqaWj3aUDDUQwFkytJXUJKfU4QIT97yoVv
+yDvJ1w/4h8wuidW3Sjr8q/XiwNunJ+dQwjJw6O7ksMhIfqCq9jxoecnsXUyMwlWX
+b6uVcjvRSAoIwZklP/B/
+=/fjI
+-----END PGP SIGNATURE-----
+
+--H4VhjwoeT4PGpv3718xbDV0DSVD73oOGA--
