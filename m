@@ -1,14 +1,14 @@
 From: Jack Pham <jackp@codeaurora.org>
-Subject: Re: [Patch v9 1/3] usb: dwc3: qcom: Add device tree binding
-Date: Tue, 16 Sep 2014 11:15:43 -0700
-Message-ID: <20140916181543.GA19101@usblab-sd-06.qualcomm.com>
+Subject: Re: [Patch v9 3/3] phy: Add Qualcomm DWC3 HS/SS PHY driver
+Date: Tue, 16 Sep 2014 11:27:52 -0700
+Message-ID: <20140916182752.GB19101@usblab-sd-06.qualcomm.com>
 References: <1410550088-8754-1-git-send-email-agross@codeaurora.org>
- <1410550088-8754-2-git-send-email-agross@codeaurora.org>
+ <1410550088-8754-4-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410550088-8754-2-git-send-email-agross@codeaurora.org>
+In-Reply-To: <1410550088-8754-4-git-send-email-agross@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <agross@codeaurora.org>
 Cc: Felipe Balbi <balbi@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
@@ -16,71 +16,34 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Andy,
 
-On Fri, Sep 12, 2014 at 02:28:06PM -0500, Andy Gross wrote:
-> +Example device nodes:
+On Fri, Sep 12, 2014 at 02:28:08PM -0500, Andy Gross wrote:
+> +static int qcom_dwc3_hs_phy_init(struct qcom_dwc3_usb_phy *phy_dwc3)
+> +{
+> +	u32 val;
 > +
-> +		hs_phy: phy@100f8800 {
-> +			compatible = "qcom,dwc3-hs-usb-phy";
-> +			reg = <0x100f8800 0x30>;
+> +	/*
+> +	 * HSPHY Initialization: Enable UTMI clock, select 19.2MHz fsel
+> +	 * enable clamping, and disable RETENTION (power-on default is ENABLED)
+> +	 */
+> +	val = HSUSB_CTRL_DPSEHV_CLAMP | HSUSB_CTRL_DMSEHV_CLAMP |
+> +		HSUSB_CTRL_RETENABLEN  | HSUSB_CTRL_COMMONONN |
+> +		HSUSB_CTRL_OTGSESSVLD_CLAMP | HSUSB_CTRL_ID_HV_CLAMP |
+> +		HSUSB_CTRL_DPSEHV_CLAMP | HSUSB_CTRL_UTMI_OTG_VBUS_VALID |
+> +		HSUSB_CTRL_UTMI_CLK_EN | HSUSB_CTRL_CLAMP_EN | 0x70;
+> +
+> +	/* use core clock if external reference is not present */
+> +	if (!phy_dwc3->xo_clk)
+> +		val |= HSUSB_CTRL_USE_CLKCORE;
+> +
+> +	writel(val, phy_dwc3->base + HSUSB_PHY_CTRL_REG);
+> +	usleep_range(2000, 2200);
+> +
+> +	/* Disable (bypass) VBUS and ID filters */
+> +	writel(HSUSB_GCFG_XHCI_REV, phy_dwc3->base + QSCRATCH_GENERAL_CFG);
 
-Just wanted to point out that in our downstream code, the glue
-device/driver, i.e. "qcom,dwc3", does claim an entire register region
-that encompasses the same registers used by these PHYs. I noticed you're
-not adding a reg resource to the glue node below in this patchset. In
-order to allow multiple devices to use the overlapping regions, we avoid
-calling devm_ioremap_resource() and instead call devm_ioremap_nocache()
-directly which bypasses the request_mem_region() call, which I don't
-think is an entirely correct thing to do.
+Is this comment accurate? I believe this bit forces the IP to behave in
+XHCI rev 1.0. In which case, shouldn't it be done in the glue driver?
 
-On the other hand I'm trying to think of use cases on our other SOCs
-(MSM8974, APQ8084) where the glue actually would need access to the same
-or adjacent IO registers that couldn't just be handled directly by these
-PHY drivers. Should we accommodate for the potential of overlapping
-regions or should we just hold the line here and maybe only expose with
-finer granularity the registers that will actually be needed by the PHYs
-& glue respectively?
-
-> +			clocks = <&gcc USB30_0_UTMI_CLK>;
-> +			clock-names = "ref";
-> +			#phy-cells = <0>;
-> +
-> +			status = "ok";
-> +		};
-> +
-> +		ss_phy: phy@100f8830 {
-> +			compatible = "qcom,dwc3-ss-usb-phy";
-> +			reg = <0x100f8830 0x30>;
-> +			clocks = <&gcc USB30_0_MASTER_CLK>;
-> +			clock-names = "ref";
-> +			#phy-cells = <0>;
-> +
-> +			status = "ok";
-> +		};
-> +
-> +		usb3_0: usb30@0 {
-> +			compatible = "qcom,dwc3";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			clocks = <&gcc USB30_0_MASTER_CLK>;
-> +			clock-names = "core";
-> +
-> +			ranges;
-> +
-> +			status = "ok";
-> +
-> +			dwc3@10000000 {
-> +				compatible = "snps,dwc3";
-> +				reg = <0x10000000 0xcd00>;
-> +				interrupts = <0 205 0x4>;
-> +				phys = <&hs_phy>, <&ss_phy>;
-> +				phy-names = "usb2-phy", "usb3-phy";
-> +				tx-fifo-resize;
-> +				dr_mode = "host";
-> +			};
-> +		};
-> +
-
-Thanks,
 Jack
 -- 
 The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
