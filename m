@@ -1,47 +1,46 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH 1/4 v4] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Tue, 16 Sep 2014 09:22:43 -0500
-Message-ID: <alpine.DEB.2.02.1409160921020.4740@atx-linux-37>
-References: <1410859335-11080-1-git-send-email-alvin.chen@intel.com> <1410859335-11080-2-git-send-email-alvin.chen@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1410859335-11080-2-git-send-email-alvin.chen@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: zynq: DT: Fix GEM register area size
+Date: Tue, 16 Sep 2014 08:08:38 -0700
+Message-ID: <1410880118-3494-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 16 Sep 2014, Weike Chen wrote:
+The size of the GEM's register area is only 0x1000 bytes.
 
-One more:
+Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/zynq-7000.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +
-> +		/*
-> +		 * Only port A can provide interrupts in all configurations of
-> +		 * the IP.
-> +		 */
-> +		if (pp->idx == 0 &&
-> +		    of_property_read_bool(port_np, "interrupt-controller")) {
-> +			pp->irq = irq_of_parse_and_map(port_np, 0);
-> +			if (!pp->irq) {
-> +				dev_warn(dev, "no irq for bank %s\n",
-> +					 port_np->full_name);
-> +			}
-> +		} else {
-> +			pp->irq	= 0;
-> +		}
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 6cc83d4c6c76..3eb12f25e669 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -190,7 +190,7 @@
+ 
+ 		gem0: ethernet@e000b000 {
+ 			compatible = "cdns,gem";
+-			reg = <0xe000b000 0x4000>;
++			reg = <0xe000b000 0x1000>;
+ 			status = "disabled";
+ 			interrupts = <0 22 4>;
+ 			clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
+@@ -199,7 +199,7 @@
+ 
+ 		gem1: ethernet@e000c000 {
+ 			compatible = "cdns,gem";
+-			reg = <0xe000c000 0x4000>;
++			reg = <0xe000c000 0x1000>;
+ 			status = "disabled";
+ 			interrupts = <0 45 4>;
+ 			clocks = <&clkc 31>, <&clkc 31>, <&clkc 14>;
+-- 
+2.1.0.1.g27b9230
 
-The else clause is not needed since pp->irq == 0 already, right?
-
-Alan
-
-> +
-> +		pp->irq_shared	= false;
-> +		pp->gpio_base	= -1;
-> +		pp->name	= port_np->full_name;
-> +	}
-> +
-> +	return pdata;
-> +}
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
