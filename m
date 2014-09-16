@@ -1,64 +1,149 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] charger/mfd: max14577: Add support for MAX77836
-Date: Tue, 16 Sep 2014 11:30:00 +0200
-Message-ID: <20140916093000.GA31655@earth.universe>
-References: <1410504840-23543-1-git-send-email-k.kozlowski@samsung.com>
- <20140915225220.GH25162@lee--X1>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dma: at_xdmac: creation of the atmel eXtended DMA
+ Controller driver
+Date: Tue, 16 Sep 2014 11:34:40 +0200
+Message-ID: <20140916093440.GA15121@ldesroches-Latitude-E6320>
+References: <1410792622-22621-1-git-send-email-ludovic.desroches@atmel.com>
+ <1410792622-22621-2-git-send-email-ludovic.desroches@atmel.com>
+ <201409151847.22686.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140915225220.GH25162@lee--X1>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+In-Reply-To: <201409151847.22686.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 15, 2014 at 06:47:22PM +0200, Arnd Bergmann wrote:
+> On Monday 15 September 2014, Ludovic Desroches wrote:
+> >  
+> > +config AT_XDMAC
+> > +	tristate "Atmel XDMA support"
+> > +	depends on ARCH_AT91
+> > +	select DMA_ENGINE
+> > +	help
+> > +	  Support the Atmel XDMA controller.
+> 
+> This should depend on (ARCH_AT91 || COMPILE_TEST) and built on x86 to
+> get into the usual automated build checkers.
+>
 
---W/nzBZO5zC0uMSeA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok
+ 
+> > +static struct dma_chan *at_xdmac_xlate(struct of_phandle_args *dma_spec,
+> > +				       struct of_dma *of_dma)
+> > +{
+> > +	struct at_xdmac		*atxdmac = of_dma->of_dma_data;
+> > +	struct at_xdmac_chan	*atchan;
+> > +	struct dma_chan		*chan;
+> > +	struct device		*dev = atxdmac->dma.dev;
+> > +	dma_cap_mask_t 		mask;
+> > +
+> > +	if (dma_spec->args_count != 2) {
+> > +		dev_err(dev, "dma phandler args: bad number of args\n");
+> > +		return NULL;
+> > +	}
+> > +
+> > +	dma_cap_zero(mask);
+> > +	dma_cap_set(DMA_SLAVE, mask);
+> 
+> The mask is unused, just remove it.
+> 
 
-Hi,
+Ok
 
-On Mon, Sep 15, 2014 at 11:52:20PM +0100, Lee Jones wrote:
-> On Fri, 12 Sep 2014, Krzysztof Kozlowski wrote:
-> > This is a sixth version of patches adding support for
-> > MAX77836 device to the max14577 drivers.
-> >=20
-> > This patchset has been on the lists for quite long time and was already
-> > reviewed by all necessary maintainers except power supply.
-> > I need acks from power supply subsystem (patches: 3, 5-8).
->=20
-> Give this set a few more days for the Power guys to respond.  If they
-> don't, ping me and I will just apply the set.
+> > +	chan = dma_get_any_slave_channel(&atxdmac->dma);
+> > +	if (!chan) {
+> > +		dev_err(dev, "can't get a dma channel\n");
+> > +		return NULL;
+> > +	}
+> > +
+> > +	atchan = to_at_xdmac_chan(chan);
+> > +	atchan->memif = AT91_XDMAC_DT_GET_MEM_IF(dma_spec->args[0]);
+> > +	atchan->perif = AT91_XDMAC_DT_GET_PER_IF(dma_spec->args[0]);
+> > +	atchan->perid = AT91_XDMAC_DT_GET_PERID(dma_spec->args[1]);
+> > +	dev_info(dev, "chan dt cfg: memif=%u perif=%u perid=%u\n",
+> > +		 atchan->memif, atchan->perif, atchan->perid);
+> 
+> Maybe dev_dbg instead of dev_info?
+> 
+> I think having three cells would be nicer here, so you can get rid of the
+> macros.
 
-Acked-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I can split the memory and peripheral interface in two cells. But I
+would like to keep the macro for the third cell which is in fact the
+channel configuration register. The idea is to not have to change the
+bindings if one day we need to setup an extra field from this register.
+We had this case with the hdma controller: we didn't planned to exhibit
+the fifo configuration but we had to do it to allow dma use with usart.
 
--- Sebastian
+> > diff --git a/drivers/dma/at_xdmac.h b/drivers/dma/at_xdmac.h
+> > new file mode 100644
+> > index 0000000..5f4d898
+> > --- /dev/null
+> > +++ b/drivers/dma/at_xdmac.h
+> 
+> The header is only used in one file, so just move the contents into that file.
+> 
 
---W/nzBZO5zC0uMSeA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I'll merge the two files.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> > +
+> > +static inline void __iomem *at_xdmac_chan_reg_base(struct at_xdmac *atxdmac, unsigned int chan_nb)
+> > +{
+> > +	return (void __iomem *)(atxdmac->regs + (AT_XDMAC_CHAN_REG_BASE + chan_nb * 0x40));
+> > +}
+> 
+> That type cast should not be needed. Is atxdmac->regs not already a void __iomem *
+> 
 
-iQIcBAEBCgAGBQJUGAMYAAoJENju1/PIO/qac50P/3csfMvdBoikhV+JQWXFVTN9
-6P5fFBSQb2OG4GhE44vjRt2vLWOkjyOb4ohHTTgPrYXexsm+l87k1OmTloIXNScr
-Mfeiv9RtUYRgpY2TgOXrYbKKtX4QmSYqRB3SNrlH6IeyStQaKeDPRl0MtkuBtMBu
-/D8Coq2F5GvmKe53Faiv0ulbcyvuFesajy6zBHhvvZet1RTPDz2ixBG1bm4B84Nj
-Xk5FJzhgfGYag6kFr8Zv7uIKTVMz2dAncdnRiS5jH2TanFaZt1p4WA4E8okqp0gN
-7xSkbj2T1WxQJt6r4RYPs6bjcQZ+cVj7VvrGFNJaB0IW2jOg+tOh+sm4FIAW106c
-U7NYR/mHXTahVlI3ZGpVWKKH0Kfv9ceEGHp54V4nPBfF5D5JPgpPZFpMBqZt/ARQ
-mInE6lxR5L99zu8d+NfYWjyRi3vip4ZrTJzuEu6WV4okPpJxI09PgjYT/PruQjX8
-llAPuBqpvUoPNOYedmsHYUzj2lRLRNMt8OBPNGhwfKnU+t/X/rb20A7chgatwC6m
-VGNJ2V7I4+injByz0ImLnHAyaroJ8+oHVw+ee59LZBcaTBbriom+QUDRf/XXCi4n
-33SPeR0FXmoC23GfAHgR2F0nR+GVPax5ZaPMz6dWlnq3joWufbofDpW0RqEeLDwS
-B43dc0Gw+jlplFJ8q0aM
-=Wz+R
------END PGP SIGNATURE-----
+Right.
 
---W/nzBZO5zC0uMSeA--
+> > +#define at_xdmac_read(atxdmac, reg) readl_relaxed((atxdmac)->regs + (reg))
+> > +#define at_xdmac_write(atxdmac, reg, value) \
+> > +	writel_relaxed((value), (atxdmac)->regs + (reg))
+> > +
+> > +#define at_xdmac_chan_read(atchan, reg) readl_relaxed((atchan)->ch_regs + (reg))
+> > +#define at_xdmac_chan_write(atchan, reg, value) writel_relaxed((value), (atchan)->ch_regs + (reg))
+> 
+> Is writel_relaxed the right accessor here? I haven't reviewed all uses of this,
+> but you have to ensure that every use that needs synchronization against the
+> actual DMA has explicit barriers here.
+
+I'll try to check if relaxed ordering can cause some issues. 
+
+> (0x2 << AT91_DMA_CFG_FIFOCFG_OFFSET)	/* single AHB access */
+> >  
+> > +
+> > +/* ---------- XDMAC ---------- */
+> > +#define AT91_XDMAC_DT_MEM_IF_MASK	(0x1)
+> > +#define AT91_XDMAC_DT_MEM_IF_OFFSET	(16)
+> > +#define AT91_XDMAC_DT_MEM_IF(mem_if)	(((mem_if) & AT91_XDMAC_DT_MEM_IF_MASK) \
+> > +					<< AT91_XDMAC_DT_MEM_IF_OFFSET)
+> > +#define AT91_XDMAC_DT_GET_MEM_IF(cfg)	(((cfg) >> AT91_XDMAC_DT_MEM_IF_OFFSET) \
+> > +					& AT91_XDMAC_DT_MEM_IF_MASK)
+> > +
+> > +#define AT91_XDMAC_DT_PER_IF_MASK	(0x1)
+> > +#define AT91_XDMAC_DT_PER_IF_OFFSET	(0)
+> > +#define AT91_XDMAC_DT_PER_IF(per_if)	(((per_if) & AT91_XDMAC_DT_PER_IF_MASK) \
+> > +					<< AT91_XDMAC_DT_PER_IF_OFFSET)
+> > +#define AT91_XDMAC_DT_GET_PER_IF(cfg)	(((cfg) >> AT91_XDMAC_DT_PER_IF_OFFSET) \
+> > +					& AT91_XDMAC_DT_PER_IF_MASK)
+> > +
+> > +#define AT91_XDMAC_DT_PERID_MASK	(0x7f)
+> > +#define AT91_XDMAC_DT_PERID_OFFSET	(24)
+> > +#define AT91_XDMAC_DT_PERID(perid)	(((perid) & AT91_XDMAC_DT_PERID_MASK) \
+> > +					<< AT91_XDMAC_DT_PERID_OFFSET)
+> > +#define AT91_XDMAC_DT_GET_PERID(cfg)	(((cfg) >> AT91_XDMAC_DT_PERID_OFFSET) \
+> > +					& AT91_XDMAC_DT_PERID_MASK)
+> 
+> As mentioned, I think it would be much better to keep the macros inside of the
+> driver and not visible to the binding, so you can use simple numbers in DT.
+> 
+> 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
