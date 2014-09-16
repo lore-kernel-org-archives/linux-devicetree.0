@@ -1,97 +1,115 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] Tegra xHCI support
-Date: Tue, 16 Sep 2014 09:26:16 -0600
-Message-ID: <54185698.7020600@wwwdotorg.org>
-References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>	<CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>	<CAL1qeaF7U9aoBp5gQPS=r+pe6krKmXdP1qak2gjhNqQMoHFB8A@mail.gmail.com>	<CAAObsKAXO-pBtqd1jNj8faXqpE+5Wb0RFzPp+jn9FH0B=dHq8g@mail.gmail.com>	<CAL1qeaEk_r5XAKvvJfwXN9+Wi9EjC_2MgBfoP92TK=F+Ou9QTA@mail.gmail.com>	<CAAObsKAwgfx1g2p7PQP+=HudvAHHpcPi47gEH6BrxEgLu6w2VQ@mail.gmail.com>	<CAL1qeaEC9O8-jgjGC44cFctoZPpp4dRVfQ=mhSb_2on7GgiU0w@mail.gmail.com>	<54172B3F.9030901@wwwdotorg.org> <CAL1qeaEK=C4j+G5CA_91xJNe25d=-y47EyZAYnaMh46fNYVDAw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM: dts: sun6i: Add required ahb1
+ clock parent and rates for dma controller
+Date: Tue, 16 Sep 2014 17:48:49 +0200
+Message-ID: <20140916154849.GE2166@lukather>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+ <1410000448-9999-7-git-send-email-wens@csie.org>
+ <20140911211531.GN31276@lukather>
+ <CAGb2v64+RxJ52DzawhAtYCn=sw+28e4Q11jzG02KQE=8hxa0tQ@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL1qeaEK=C4j+G5CA_91xJNe25d=-y47EyZAYnaMh46fNYVDAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JBi0ZxuS5uaEhkUZ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNNY4GQAKGQECRI36SY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64+RxJ52DzawhAtYCn=sw+28e4Q11jzG02KQE=8hxa0tQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/15/2014 01:30 PM, Andrew Bresticker wrote:
-> On Mon, Sep 15, 2014 at 11:09 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 09/15/2014 11:06 AM, Andrew Bresticker wrote:
->>> On Mon, Sep 15, 2014 at 12:00 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
->>>> On 12 September 2014 18:37, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>> On Tue, Sep 9, 2014 at 1:21 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
->>>>>> On 8 September 2014 18:22, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>>>> On Mon, Sep 8, 2014 at 8:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org> wrote:
->>>>>>>> On 2 September 2014 23:34, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>>>>>>> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0 and
->>>>>>>>> USB3.0 memory sticks and ethernet dongles using controller firmware
->>>>>>>>> recently posted by Andrew Chew [2].
-...
->>> Stephen, Thierry, have either of you had a chance to test this series?
->>
->> I haven't had a chance to yet. I just went to try it out, and found that it
->> depends on a whole slew of other patches that I don't have. Is there a git
->> branch somewhere to save me having to track down all the dependencies?
->
-> Yes, Tomeu has the branch he used for testing here:
-> http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=3.17rc4-xhci
 
-Hmm. That git server was quite reluctant to cough up its bits, but it 
-did eventually.
+--JBi0ZxuS5uaEhkUZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> You'll also need the firmware Andrew Chew posted:
-> https://patchwork.ozlabs.org/patch/384013/
+On Fri, Sep 12, 2014 at 10:10:25AM +0800, Chen-Yu Tsai wrote:
+> On Fri, Sep 12, 2014 at 5:15 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Sat, Sep 06, 2014 at 06:47:27PM +0800, Chen-Yu Tsai wrote:
+> >> The DMA controller requires AHB1 bus clock to be clocked from PLL6.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/sun6i-a31.dtsi | 5 +++++
+> >>  1 file changed, 5 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6=
+i-a31.dtsi
+> >> index 8eb2c6d..1117989 100644
+> >> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> >> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> >> @@ -317,6 +317,11 @@
+> >>                       clocks =3D <&ahb1_gates 6>;
+> >>                       resets =3D <&ahb1_rst 6>;
+> >>                       #dma-cells =3D <1>;
+> >> +
+> >> +                     /* DMA controller requires AHB1 clocked from PLL=
+6 */
+> >> +                     assigned-clocks =3D <&ahb1>;
+> >> +                     assigned-clock-parents =3D <&pll6>;
+> >> +                     assigned-clock-rates =3D <200000000>;
+> >
+> > Where did you get that from?
+> >
+> > The user manual says that it should be clocked at 600MHz, and I'm not
+> > sure it should be enforced there either.
+>=20
+> The bindings mean that ahb1 should be clocked from pll6 and at 200 MHz,
+> not "pll6 should be 200 MHz". I assume you were misled by them.
+>=20
+> Clocking ahb1 from pll6 and at 200 MHz with the /3 pre-divider is the
+> vendor BSP default:
+>=20
+> On sun6i, the clock init code calls aw_ccu_switch_ahb_2_pll6(), which mux=
+es
+> ahb1 from pll6 with the highest dividers, then sets the rate for ahb1 to
+> pll6, which sets pre-divider to /3 and divider to /1.
+>=20
+> Hope this clears it up. :)
 
-The XHCI driver can't load its firmware unless it's a module; if I make 
-it built-in, it fails immediately with error -2 during "Direct firmware 
-loading". The driver needs to work with either immediate or deferred 
-firmware loading.
+It does, thanks :)
 
-I tried three USB3 mass storage devices, and they all appeared to work 
-without issue.
+But still, I find it the wrong place to enforce such a limit. This
+should go into the clock driver itself. The DMA controller requires
+such a parenting, but it doesn't require any specific rate, this is
+more something of the global system policy.
 
-0781:5581 SanDisk Corp.
-154b:fa0a PNY
-0781:5580 SanDisk Corp.
+Maxime
 
-I tried the following USB2 devices without issue:
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-0781:5575 SanDisk Corp.
-0b95:7720 ASIX Electronics Corp. AX88772
-045e:0095 Microsoft Corp. IntelliMouse Explorer 4.0 (IntelliPoint)
-046d:c313 Logitech, Inc. Internet 350 Keyboard
+--JBi0ZxuS5uaEhkUZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The following USB2 devices had problems:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-0b95:7720 ASIX Electronics Corp. AX88772
+iQIcBAEBAgAGBQJUGFvhAAoJEBx+YmzsjxAgZWYP/26aPoXAZ7xFk0fy9qBv1/kr
+ss3te0S+1hzwJWIjNz2T6Blr/YnvYkqsOo6Y5znGpUXpjLACEny35ptFLDrrOxVw
+z+0zShbWTZCuIdcrkjyz4MSSxn8NaNYVZsfRZn5CfwYWtWdE3i9YvLxO/dXScw8e
+1uRlHFOwrDf64oZa0axpIQMMdbq+HDmi/bPx8Qs8gZaruqXVYz12h2cZl+cC6lj2
+XR2r9ZKOztJHIERPc3npcnnY9a3ntlRSuQySWTmNxV97qfwdnuh6ICY/d08nkv/0
++/5HFRthNSsvj4l08tQFHqDLe+2RP8XiawFBngMKFPXnlrTRzHPCeZQCm0dNwuua
+3fW7bM3lleYPqSE905pteLSKbQHuC7uI1WIMwD2DvGh1Tvd58b+ike+cQgTqRnGS
+OyJhq0qF8to4Anr46XvMsy4XN+1M5xhS3q7vLy/18HmY3b2W5VrMQ9/xR+FABhDK
+XsZH5JpCWpTKoUxP4iYFqu5lsThKDRW5zIsjiX97HBhd69PYRUSDf+zyqN8+msjJ
+DbbVDztdEMLsL+iX5US7MtSiCSLpxLHMWOvC7CqUxAIq5BG4ThNFMAasb9dHHf50
+zWwAKuS4qYFnP/sr3CroUo0acXLZ/n2nw6FNHV/6rGlJvOlT+ILGvhjIMn57Lc8p
+oZZxeHNhDKx/bo+mKWoy
+=GS3C
+-----END PGP SIGNATURE-----
 
-> [  489.140536] usb 1-3: new high-speed USB device number 81 using xhci-tegra
-> [  489.260860] usb 1-3: device descriptor read/64, error -71
-> [  489.370804] xhci-tegra 70090000.usb: Setup ERROR: setup context command for slot 1.
-> [  489.378463] usb 1-3: hub failed to enable device, error -22
-> [  489.500531] usb 1-3: new high-speed USB device number 82 using xhci-tegra
-> [  489.655708] usb 1-3: can't set config #1, error -71
-> [  489.661231] usb 1-3: USB disconnect, device number 82
-> [  489.940531] usb 1-3: new high-speed USB device number 83 using xhci-tegra
-> [  490.060860] usb 1-3: device descriptor read/64, error -71
-> [  490.170805] xhci-tegra 70090000.usb: Setup ERROR: setup context command for slot 1.
-> [  490.178462] usb 1-3: hub failed to enable device, error -22
-(repeats over and over)
-
-15a4:1336 Afatech Technologies, Inc. SDHC/MicroSD/MMC/MS/M2/CF/XD Flash 
-Card Reader
-
-The power light comes on, and the activity light just keeps flashing 
-fast. Usually the activity light flashes a couple times and then turns 
-off. There is nothing in dmesg at all for this device.
-
-05e3:0608 Genesys Logic, Inc. USB-2.0 4-Port HUB
-
-Not detected. There is nothing in dmesg at all for this device.
-
-1bcf:0c31 Sunplus Innovation Technology Inc. SPIF30x Serial-ATA bridge
-
-Not detected. There is nothing in dmesg at all for this device.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--JBi0ZxuS5uaEhkUZ--
