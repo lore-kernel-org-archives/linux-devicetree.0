@@ -1,189 +1,66 @@
-From: kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org
-Subject: Re: [PATCH v3] ARM: apq8064: Add pinmux and i2c pinctrl nodes
-Date: Tue, 16 Sep 2014 08:36:41 -0400 (EDT)
-Message-ID: <1410871001.891126377@apps.rackspace.com>
-References: <1409052645-14984-1-git-send-email-kiran.padwal@smartplayin.com>
- <20140916023922.GB2386@qualcomm.com>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 16 Sep 2014 15:38:41 +0200
+Message-ID: <20140916133841.GA4869@kwain>
+References: <1410777378-12726-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1410777378-12726-8-git-send-email-antoine.tenart@free-electrons.com>
+ <20140916005129.GC3379@peterchendt>
 Mime-Version: 1.0
-Content-Type: text/plain;charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140916023922.GB2386-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140916005129.GC3379@peterchendt>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 16, 2014 at 08:51:30AM +0800, Peter Chen wrote:
+> On Mon, Sep 15, 2014 at 12:36:13PM +0200, Antoine Tenart wrote:
+> > Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+> > and DMA mask, to support USB2 ChipIdea controllers that don't need
+> > specific functions.
+> >=20
+> > Tested on the Marvell Berlin SoCs USB controllers.
+> >=20
+> > Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/usb/chipidea/Makefile       |   1 +
+> >  drivers/usb/chipidea/ci_hdrc_usb2.c | 137 ++++++++++++++++++++++++=
+++++++++++++
+> >  2 files changed, 138 insertions(+)
+> >  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
+> >=20
+>=20
+> compile error:
+>=20
+> /home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c: In=
+ function 'ci_hdrc_usb2_dt_probe':
+> /home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c:30:=
+2: error: implicit declaration of function 'of_phy_get' [-Werror=3Dimpl=
+icit-function-declaration]
+> /home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c:30:=
+16: warning: assignment makes pointer from integer without a cast [enab=
+led by default]
+
+Did you apply the series introducing the support for the generic PHY
+framework in the USB subsystem first? One of the patches includes
+'linux/phy/phy.h' in 'linux/usb/otg.h'. That's why I did not encounter
+this error.
+
+Anyway, you're right and 'linux/phy/phy.h' should be explicitly include=
+d
+here.
 
 
-On Monday, September 15, 2014 10:39pm, "Andy Gross" <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> said:
+Antoine
 
-> On Tue, Aug 26, 2014 at 05:00:45PM +0530, Kiran Padwal wrote:
->> This patch adds pinmux and i2c pinctrl DT node for IFC6410 board.
->> It also adds necessary DT support for i2c eeprom which is present on
->> IFC6410.
->>
->> Tested on IFC6410 board.
-> 
-> Looks fine
-
-Thanks for review.
-
-> 
->>
->> Signed-off-by: Kiran Padwal <kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
->> ---
->> Changes since v2:
->>  - Renamed pinmux i2c subnode "i2c1_pinmux" to "i2c1".
->>  - Removed labes of node.
->>  - Used canonical value as "okay" instead of "ok".
->>  - Used macros.
->>
->> Changes since v1:
->>  - Renamed pinmux phandle "qcom_pinmux" to "tlmm_pinmux".
->>  - Updated pinmux interrupt.
->>
->>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |   27 ++++++++++++++
->>  arch/arm/boot/dts/qcom-apq8064.dtsi        |   53 ++++++++++++++++++++++++++++
->>  2 files changed, 80 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
->> b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
->> index 7c2441d..ef0857e 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
->> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
->> @@ -5,6 +5,24 @@
->>  	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
->>
->>  	soc {
->> +		gsbi@12440000 {
->> +			status = "okay";
->> +			qcom,mode = <GSBI_PROT_I2C>;
->> +
->> +			i2c@12460000 {
->> +				status = "okay";
->> +				clock-frequency = <200000>;
->> +				pinctrl-0 = <&i2c1_pins>;
->> +				pinctrl-names = "default";
->> +
->> +				eeprom: eeprom@52 {
->> +					compatible = "atmel,24c128";
->> +					reg = <0x52>;
->> +					pagesize = <32>;
->> +				};
-> 
-> don't need read only here.  the eeprom is not being used by anything....
-> thankfully.
-> 
->> +			};
->> +		};
->> +
->>  		gsbi@16600000 {
->>  			status = "ok";
->>  			qcom,mode = <GSBI_PROT_I2C_UART>;
->> @@ -12,5 +30,14 @@
->>  				status = "ok";
->>  			};
->>  		};
->> +
->> +		pinmux@800000 {
->> +			i2c1_pins: i2c1 {
->> +				mux {
->> +					pins = "gpio20", "gpio21";
->> +					function = "gsbi1";
->> +				};
->> +			};
->> +		};
->>  	};
->>  };
->> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi
->> b/arch/arm/boot/dts/qcom-apq8064.dtsi
->> index 92bf793..5dddbf3 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
->> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
->> @@ -89,6 +89,17 @@
->>  			cpu-offset = <0x80000>;
->>  		};
->>
->> +		tlmm_pinmux: pinmux@800000 {
->> +			compatible = "qcom,apq8064-pinctrl";
->> +			reg = <0x800000 0x4000>;
->> +
->> +			gpio-controller;
->> +			#gpio-cells = <2>;
->> +			interrupt-controller;
->> +			#interrupt-cells = <2>;
->> +			interrupts = <0 16 IRQ_TYPE_LEVEL_HIGH>;
->> +		};
->> +
->>  		acc0: clock-controller@2088000 {
->>  			compatible = "qcom,kpss-acc-v1";
->>  			reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
->> @@ -133,6 +144,48 @@
->>  			regulator;
->>  		};
->>
->> +		gsbi1: gsbi@12440000 {
->> +			status = "disabled";
->> +			compatible = "qcom,gsbi-v1.0.0";
->> +			reg = <0x12440000 0x100>;
->> +			clocks = <&gcc GSBI1_H_CLK>;
->> +			clock-names = "iface";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			ranges;
->> +
->> +			i2c1: i2c@12460000 {
->> +				compatible = "qcom,i2c-qup-v1.1.1";
->> +				reg = <0x12460000 0x1000>;
->> +				interrupts = <0 194 IRQ_TYPE_NONE>;
->> +				clocks = <&gcc GSBI1_QUP_CLK>, <&gcc GSBI1_H_CLK>;
->> +				clock-names = "core", "iface";
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +			};
->> +		};
->> +
->> +		gsbi2: gsbi@12480000 {
->> +			status = "disabled";
->> +			compatible = "qcom,gsbi-v1.0.0";
->> +			reg = <0x12480000 0x100>;
->> +			clocks = <&gcc GSBI2_H_CLK>;
->> +			clock-names = "iface";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			ranges;
->> +
->> +			i2c2: i2c@124a0000 {
->> +				compatible = "qcom,i2c-qup-v1.1.1";
->> +				reg = <0x124a0000 0x1000>;
->> +				interrupts = <0 196 IRQ_TYPE_NONE>;
->> +				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
->> +				clock-names = "core", "iface";
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +			};
->> +		};
->> +
->>  		gsbi7: gsbi@16600000 {
->>  			status = "disabled";
->>  			compatible = "qcom,gsbi-v1.0.0";
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> --
-> sent by an employee of the Qualcomm Innovation Center, Inc.
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
-
-
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
