@@ -1,42 +1,82 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/8] charger/mfd: max14577: Add support for MAX77836
-Date: Tue, 16 Sep 2014 11:47:02 +0200
-Message-ID: <1410860822.16106.3.camel@AMDC1943>
-References: <1410504840-23543-1-git-send-email-k.kozlowski@samsung.com>
- <20140915225220.GH25162@lee--X1> <20140916093000.GA31655@earth.universe>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
+ i.mx6dl
+Date: Tue, 16 Sep 2014 11:50:06 +0200
+Message-ID: <1410861006.2746.1.camel@pengutronix.de>
+References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
+	 <1410774073.3314.1.camel@pengutronix.de>
+	 <20140916034123.GA20800@Robin-OptiPlex-780>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140916093000.GA31655-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140916034123.GA20800@Robin-OptiPlex-780>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On wto, 2014-09-16 at 11:30 +0200, Sebastian Reichel wrote:
-> Hi,
+Hi Robin,
+
+Am Dienstag, den 16.09.2014, 11:41 +0800 schrieb Robin Gong:
+> Hi Lucas,
+>   I understood your concern,but looks we have to break old DT.
+
+Sorry, but this isn't going to happen. And honestly I don't even see the
+need to do so.
+
+> Our old DT
+> support SPI DMA on i.mx6q/dl(v2,b3810c3dc1bcbc6a), but the DMA support patch
+> for SPI driver is still in reviewing(v6).
+
+So this means now is the time to fix this driver patch to not enable DMA
+on imx6dl. Nobody will experience any breakage in this case.
+
+> So the violation you mentioned comes
+> if someone use the DT during the time(from v2 to spi driver patch upstreamed).
+>   The different behaviors on different chips(only i.mxdl can't pass strength
+> test) are just found from last month, this is why I sent the patch for disable
+> SPI DMA support on i.mx6dl during I sent v6 patch for spi driver. I think that's
+> make sense, because DTs are also in development, new difference between different
+> chips maybe found in the future although they share the same IP....
+>   Yes, I can check cpu type by looking at DT in spi driver, but it's not nice.
+
+Yeah it would have been nicer if we had an explicit DT compatible for
+the imx6dl ecspi version, but it's not there, so we have to cope with
+this.
+
+> So I'm afraid that we have to break the old DTs in the gap between the two
+> levels patch accepted cycle.
 > 
-> On Mon, Sep 15, 2014 at 11:52:20PM +0100, Lee Jones wrote:
-> > On Fri, 12 Sep 2014, Krzysztof Kozlowski wrote:
-> > > This is a sixth version of patches adding support for
-> > > MAX77836 device to the max14577 drivers.
+> On Mon, Sep 15, 2014 at 11:41:13AM +0200, Lucas Stach wrote:
+> > Am Mittwoch, den 10.09.2014, 13:30 +0800 schrieb Robin Gong:
+> > > There is one weird data in rxfifo after one full rx/tx transfer
+> > > done sometimes. It looks a design issue and hard to workaround
+> > > totally, so disable dma functhion here. And will re-enable it
+> > > once the root cause found.
 > > > 
-> > > This patchset has been on the lists for quite long time and was already
-> > > reviewed by all necessary maintainers except power supply.
-> > > I need acks from power supply subsystem (patches: 3, 5-8).
+> > Sorry, I'm late to this as Shawn seems to already have picked up this
+> > patch, but this isn't the right way to fix the problem.
 > > 
-> > Give this set a few more days for the Power guys to respond.  If they
-> > don't, ping me and I will just apply the set.
-> 
-> Acked-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> -- Sebastian
+> > We made it clear at kernel summit last year that we try to not break
+> > existing DTs as booting a new kernel with an old DT is a valid use case.
+> > While you don't strictly violate this rule what you do here is only
+> > fixing systems booting with a new DT while leaving others broken.
+> > 
+> > If you are working around a hardware problem please disable DMA support
+> > in the driver. This will also allow you to enable it again, if you find
+> > another workaround without touching the DT again.
+> > 
+> > So this patch gets a NAK from me.
+> > 
 
-Thank you.
+Regards,
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
 
-Lee,
-Could you pick up whole patchset with Sebastian's ack?
-
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
