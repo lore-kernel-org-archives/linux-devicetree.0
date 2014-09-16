@@ -1,38 +1,113 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 1/1] of: add vendor prefix for Chipidea
-Date: Tue, 16 Sep 2014 08:35:44 +0800
-Message-ID: <1410827745-4101-1-git-send-email-peter.chen@freescale.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 4/4] ARM: shmobile: r8a7740 dtsi: Add missing INTCA clock
+ for irqpin module
+Date: Tue, 16 Sep 2014 09:41:14 +0900
+Message-ID: <20140916004113.GD26557@verge.net.au>
+References: <1410527720-18061-1-git-send-email-geert+renesas@glider.be>
+ <1410527720-18061-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1410527720-18061-5-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adds chipidea to the list of DT vendor prefixes.
+On Fri, Sep 12, 2014 at 03:15:20PM +0200, Geert Uytterhoeven wrote:
+> This clock drives the INTCA irqpin controller modules.
+> Before, it was assumed enabled by the bootloader or reset state.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: devicetree@vger.kernel.org
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 1 file changed, 1 insertion(+)
+Thanks, I have queued this up.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ac7269f..28c574f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -29,6 +29,7 @@ calxeda	Calxeda
- capella	Capella Microsystems, Inc
- cavium	Cavium, Inc.
- cdns	Cadence Design Systems Inc.
-+chipidea	Chipidea, Inc
- chrp	Common Hardware Reference Platform
- chunghwa	Chunghwa Picture Tubes Ltd.
- cirrus	Cirrus Logic, Inc.
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  arch/arm/boot/dts/r8a7740.dtsi            | 14 ++++++++++----
+>  include/dt-bindings/clock/r8a7740-clock.h |  1 +
+>  2 files changed, 11 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> index d46c213a17ad..502483f4dccb 100644
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -71,6 +71,7 @@
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+>  	};
+>  
+>  	/* irqpin1: IRQ8 - IRQ15 */
+> @@ -91,6 +92,7 @@
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+>  	};
+>  
+>  	/* irqpin2: IRQ16 - IRQ23 */
+> @@ -111,6 +113,7 @@
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+>  	};
+>  
+>  	/* irqpin3: IRQ24 - IRQ31 */
+> @@ -131,6 +134,7 @@
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH
+>  			      0 149 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&mstp2_clks R8A7740_CLK_INTCA>;
+>  	};
+>  
+>  	ether: ethernet@e9a00000 {
+> @@ -448,8 +452,8 @@
+>  		mstp2_clks: mstp2_clks@e6150138 {
+>  			compatible = "renesas,r8a7740-mstp-clocks", "renesas,cpg-mstp-clocks";
+>  			reg = <0xe6150138 4>, <0xe6150040 4>;
+> -			clocks = <&sub_clk>, <&sub_clk>,
+> -				 <&cpg_clocks R8A7740_CLK_HP>,
+> +			clocks = <&sub_clk>, <&cpg_clocks R8A7740_CLK_HP>,
+> +				 <&sub_clk>, <&cpg_clocks R8A7740_CLK_HP>,
+>  				 <&cpg_clocks R8A7740_CLK_HP>,
+>  				 <&cpg_clocks R8A7740_CLK_HP>,
+>  				 <&cpg_clocks R8A7740_CLK_HP>,
+> @@ -458,7 +462,8 @@
+>  				 <&sub_clk>;
+>  			#clock-cells = <1>;
+>  			renesas,clock-indices = <
+> -				R8A7740_CLK_SCIFA6 R8A7740_CLK_SCIFA7
+> +				R8A7740_CLK_SCIFA6 R8A7740_CLK_INTCA
+> +				R8A7740_CLK_SCIFA7
+>  				R8A7740_CLK_DMAC1 R8A7740_CLK_DMAC2
+>  				R8A7740_CLK_DMAC3 R8A7740_CLK_USBDMAC
+>  				R8A7740_CLK_SCIFA5 R8A7740_CLK_SCIFB
+> @@ -467,7 +472,8 @@
+>  				R8A7740_CLK_SCIFA4
+>  			>;
+>  			clock-output-names =
+> -				"scifa6", "scifa7", "dmac1", "dmac2", "dmac3",
+> +				"scifa6", "intca",
+> +				"scifa7", "dmac1", "dmac2", "dmac3",
+>  				"usbdmac", "scifa5", "scifb", "scifa0", "scifa1",
+>  				"scifa2", "scifa3", "scifa4";
+>  		};
+> diff --git a/include/dt-bindings/clock/r8a7740-clock.h b/include/dt-bindings/clock/r8a7740-clock.h
+> index f6b4b0fe7a43..476135da0f23 100644
+> --- a/include/dt-bindings/clock/r8a7740-clock.h
+> +++ b/include/dt-bindings/clock/r8a7740-clock.h
+> @@ -40,6 +40,7 @@
+>  
+>  /* MSTP2 */
+>  #define R8A7740_CLK_SCIFA6	30
+> +#define R8A7740_CLK_INTCA	29
+>  #define R8A7740_CLK_SCIFA7	22
+>  #define R8A7740_CLK_DMAC1	18
+>  #define R8A7740_CLK_DMAC2	17
+> -- 
+> 1.9.1
+> 
