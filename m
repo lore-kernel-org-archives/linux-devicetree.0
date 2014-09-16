@@ -1,267 +1,198 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/6] ARM: shmobile: r7s72100: sort dtsi file by address
-Date: Tue, 16 Sep 2014 09:49:21 +0900
-Message-ID: <20140916004921.GI26557@verge.net.au>
-References: <1410511876-9235-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1410511876-9235-2-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v5 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 16 Sep 2014 08:51:30 +0800
+Message-ID: <20140916005129.GC3379@peterchendt>
+References: <1410777378-12726-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1410777378-12726-8-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410511876-9235-2-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: Olof Johansson <olof@lixom.net>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, magnus.damm@gmail.com
+In-Reply-To: <1410777378-12726-8-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, balbi@ti.com, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 12, 2014 at 10:51:11AM +0200, Ulrich Hecht wrote:
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+On Mon, Sep 15, 2014 at 12:36:13PM +0200, Antoine Tenart wrote:
+> Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+> and DMA mask, to support USB2 ChipIdea controllers that don't need
+> specific functions.
+> 
+> Tested on the Marvell Berlin SoCs USB controllers.
+> 
+> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
 > ---
->  arch/arm/boot/dts/r7s72100.dtsi | 202 ++++++++++++++++++++--------------------
-
-This seems to have some (probably trivial) conflicts with
-other changes queued up for v3.18. Accordingly I am deferring
-it to v3.19. Please repost once v3.17-rc6 has been released.
-
->  1 file changed, 101 insertions(+), 101 deletions(-)
+>  drivers/usb/chipidea/Makefile       |   1 +
+>  drivers/usb/chipidea/ci_hdrc_usb2.c | 137 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 138 insertions(+)
+>  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
 > 
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index 1d28d01..6a0e57e 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -52,16 +52,6 @@
->  			clock-output-names = "usb_x1";
->  		};
+> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
+> index 2f099c7df7b5..1fc86a2ca22d 100644
+> --- a/drivers/usb/chipidea/Makefile
+> +++ b/drivers/usb/chipidea/Makefile
+> @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
 >  
-> -		/* Special CPG clocks */
-> -		cpg_clocks: cpg_clocks@fcfe0000 {
-> -			#clock-cells = <1>;
-> -			compatible = "renesas,r7s72100-cpg-clocks",
-> -				     "renesas,rz-cpg-clocks";
-> -			reg = <0xfcfe0000 0x18>;
-> -			clocks = <&extal_clk>, <&usb_x1_clk>;
-> -			clock-output-names = "pll", "i", "g";
-> -		};
-> -
->  		/* Fixed factor clocks */
->  		b_clk: b_clk {
->  			#clock-cells = <0>;
-> @@ -88,6 +78,16 @@
->  			clock-output-names = "p0";
->  		};
+>  # Glue/Bridge layers go here
 >  
-> +		/* Special CPG clocks */
-> +		cpg_clocks: cpg_clocks@fcfe0000 {
-> +			#clock-cells = <1>;
-> +			compatible = "renesas,r7s72100-cpg-clocks",
-> +				     "renesas,rz-cpg-clocks";
-> +			reg = <0xfcfe0000 0x18>;
-> +			clocks = <&extal_clk>, <&usb_x1_clk>;
-> +			clock-output-names = "pll", "i", "g";
-> +		};
-> +
->  		/* MSTP clocks */
->  		mstp3_clks: mstp3_clks@fcfe0420 {
->  			#clock-cells = <1>;
-> @@ -148,97 +148,6 @@
->  		};
->  	};
+> +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
+>  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
+>  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
 >  
-> -	gic: interrupt-controller@e8201000 {
-> -		compatible = "arm,cortex-a9-gic";
-> -		#interrupt-cells = <3>;
-> -		#address-cells = <0>;
-> -		interrupt-controller;
-> -		reg = <0xe8201000 0x1000>,
-> -			<0xe8202000 0x1000>;
-> -	};
-> -
-> -	i2c0: i2c@fcfee000 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
-> -		reg = <0xfcfee000 0x44>;
-> -		interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 158 IRQ_TYPE_EDGE_RISING>,
-> -			     <0 159 IRQ_TYPE_EDGE_RISING>,
-> -			     <0 160 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 161 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 162 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 163 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 164 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&mstp9_clks R7S72100_CLK_I2C0>;
-> -		clock-frequency = <100000>;
-> -		status = "disabled";
-> -	};
-> -
-> -	i2c1: i2c@fcfee400 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
-> -		reg = <0xfcfee400 0x44>;
-> -		interrupts = <0 165 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 166 IRQ_TYPE_EDGE_RISING>,
-> -			     <0 167 IRQ_TYPE_EDGE_RISING>,
-> -			     <0 168 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 169 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 170 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 171 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 172 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&mstp9_clks R7S72100_CLK_I2C1>;
-> -		clock-frequency = <100000>;
-> -		status = "disabled";
-> -	};
-> -
-> -	i2c2: i2c@fcfee800 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
-> -		reg = <0xfcfee800 0x44>;
-> -		interrupts = <0 173 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 174 IRQ_TYPE_EDGE_RISING>,
-> -			     <0 175 IRQ_TYPE_EDGE_RISING>,
-> -			     <0 176 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 177 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 178 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 179 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 180 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&mstp9_clks R7S72100_CLK_I2C2>;
-> -		clock-frequency = <100000>;
-> -		status = "disabled";
-> -	};
-> -
-> -	i2c3: i2c@fcfeec00 {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -		compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
-> -		reg = <0xfcfeec00 0x44>;
-> -		interrupts = <0 181 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 182 IRQ_TYPE_EDGE_RISING>,
-> -			     <0 183 IRQ_TYPE_EDGE_RISING>,
-> -			     <0 184 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 185 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 186 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 187 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <0 188 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&mstp9_clks R7S72100_CLK_I2C3>;
-> -		clock-frequency = <100000>;
-> -		status = "disabled";
-> -	};
-> -
-> -	mtu2: timer@fcff0000 {
-> -		compatible = "renesas,mtu2";
-> -		reg = <0xfcff0000 0x400>;
-> -		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-> -		interrupt-names = "tgi0a";
-> -		clocks = <&mstp3_clks R7S72100_CLK_MTU2>;
-> -		clock-names = "fck";
-> -		status = "disabled";
-> -	};
-> -
->  	scif0: serial@e8007000 {
->  		compatible = "renesas,scif-r7s72100", "renesas,scif";
->  		reg = <0xe8007000 64>;
-> @@ -404,4 +313,95 @@
->  		#size-cells = <0>;
->  		status = "disabled";
->  	};
+> diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> new file mode 100644
+> index 000000000000..1ef0db79505a
+> --- /dev/null
+> +++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
+> @@ -0,0 +1,137 @@
+> +/*
+> + * Copyright (C) 2014 Marvell Technology Group Ltd.
+> + *
+> + * Antoine Tenart <antoine.tenart@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
 > +
-> +	gic: interrupt-controller@e8201000 {
-> +		compatible = "arm,cortex-a9-gic";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <0>;
-> +		interrupt-controller;
-> +		reg = <0xe8201000 0x1000>,
-> +			<0xe8202000 0x1000>;
-> +	};
+> +#include <linux/clk.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/chipidea.h>
+> +#include <linux/usb/hcd.h>
+> +#include <linux/usb/ulpi.h>
 > +
-> +	i2c0: i2c@fcfee000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
-> +		reg = <0xfcfee000 0x44>;
-> +		interrupts = <0 157 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 158 IRQ_TYPE_EDGE_RISING>,
-> +			     <0 159 IRQ_TYPE_EDGE_RISING>,
-> +			     <0 160 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 161 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 162 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 163 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 164 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp9_clks R7S72100_CLK_I2C0>;
-> +		clock-frequency = <100000>;
-> +		status = "disabled";
-> +	};
+> +#include "ci.h"
 > +
-> +	i2c1: i2c@fcfee400 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
-> +		reg = <0xfcfee400 0x44>;
-> +		interrupts = <0 165 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 166 IRQ_TYPE_EDGE_RISING>,
-> +			     <0 167 IRQ_TYPE_EDGE_RISING>,
-> +			     <0 168 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 169 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 170 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 171 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 172 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp9_clks R7S72100_CLK_I2C1>;
-> +		clock-frequency = <100000>;
-> +		status = "disabled";
-> +	};
+> +struct ci_hdrc_usb2_priv {
+> +	struct platform_device	*ci_pdev;
+> +	struct clk		*clk;
+> +};
 > +
-> +	i2c2: i2c@fcfee800 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
-> +		reg = <0xfcfee800 0x44>;
-> +		interrupts = <0 173 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 174 IRQ_TYPE_EDGE_RISING>,
-> +			     <0 175 IRQ_TYPE_EDGE_RISING>,
-> +			     <0 176 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 177 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 178 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 179 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 180 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp9_clks R7S72100_CLK_I2C2>;
-> +		clock-frequency = <100000>;
-> +		status = "disabled";
-> +	};
+> +static int ci_hdrc_usb2_dt_probe(struct device *dev,
+> +				 struct ci_hdrc_platform_data *ci_pdata)
+> +{
+> +	ci_pdata->phy = of_phy_get(dev->of_node, 0);
+> +	if (IS_ERR(ci_pdata->phy)) {
+> +		if (PTR_ERR(ci_pdata->phy) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
 > +
-> +	i2c3: i2c@fcfeec00 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
-> +		reg = <0xfcfeec00 0x44>;
-> +		interrupts = <0 181 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 182 IRQ_TYPE_EDGE_RISING>,
-> +			     <0 183 IRQ_TYPE_EDGE_RISING>,
-> +			     <0 184 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 185 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 186 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 187 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 188 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp9_clks R7S72100_CLK_I2C3>;
-> +		clock-frequency = <100000>;
-> +		status = "disabled";
-> +	};
+> +		/* PHY is optional */
+> +		ci_pdata->phy = NULL;
+> +	}
 > +
-> +	mtu2: timer@fcff0000 {
-> +		compatible = "renesas,mtu2";
-> +		reg = <0xfcff0000 0x400>;
-> +		interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "tgi0a";
-> +		clocks = <&mstp3_clks R7S72100_CLK_MTU2>;
-> +		clock-names = "fck";
-> +		status = "disabled";
-> +	};
->  };
+> +	return 0;
+> +}
+> +
+> +static struct ci_hdrc_platform_data ci_default_pdata = {
+> +	.capoffset	= DEF_CAPOFFSET,
+> +	.flags		= CI_HDRC_REQUIRE_TRANSCEIVER |
+> +			  CI_HDRC_DISABLE_STREAMING,
+> +};
+> +
+> +static int ci_hdrc_usb2_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct ci_hdrc_usb2_priv *priv;
+> +	struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(&pdev->dev);
+> +	int ret;
+> +
+> +	if (!ci_pdata)
+> +		ci_pdata = &ci_default_pdata;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->clk = devm_clk_get(dev, NULL);
+> +	if (!IS_ERR(priv->clk)) {
+> +		ret = clk_prepare_enable(priv->clk);
+> +		if (ret) {
+> +			dev_err(dev, "failed to enable the clock: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (dev->of_node) {
+> +		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+> +		if (ret)
+> +			goto clk_err;
+> +	} else {
+> +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> +		if (ret)
+> +			goto clk_err;
+> +	}
+> +
+> +	ci_pdata->name = dev_name(&pdev->dev);
+> +
+> +	priv->ci_pdev = ci_hdrc_add_device(dev, pdev->resource,
+> +					   pdev->num_resources, ci_pdata);
+> +	if (IS_ERR(priv->ci_pdev)) {
+> +		ret = PTR_ERR(priv->ci_pdev);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev,
+> +				"failed to register ci_hdrc platform device: %d\n",
+> +				ret);
+> +		goto clk_err;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	pm_runtime_no_callbacks(dev);
+> +	pm_runtime_enable(dev);
+> +
+> +	return 0;
+> +
+> +clk_err:
+> +	if (!IS_ERR(priv->clk))
+> +		clk_disable_unprepare(priv->clk);
+> +	return ret;
+> +}
+> +
+> +static int ci_hdrc_usb2_remove(struct platform_device *pdev)
+> +{
+> +	struct ci_hdrc_usb2_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	pm_runtime_disable(&pdev->dev);
+> +	ci_hdrc_remove_device(priv->ci_pdev);
+> +	clk_disable_unprepare(priv->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ci_hdrc_usb2_of_match[] = {
+> +	{ .compatible = "chipidea,usb2" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
+> +
+> +static struct platform_driver ci_hdrc_usb2_driver = {
+> +	.probe	= ci_hdrc_usb2_probe,
+> +	.remove	= ci_hdrc_usb2_remove,
+> +	.driver	= {
+> +		.name		= "chipidea-usb2",
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table	= of_match_ptr(ci_hdrc_usb2_of_match),
+> +	},
+> +};
+> +module_platform_driver(ci_hdrc_usb2_driver);
+> +
+> +MODULE_DESCRIPTION("ChipIdea HDRC USB2 binding for ci13xxx");
+> +MODULE_AUTHOR("Antoine Tenart <antoine.tenart@free-electrons.com>");
+> +MODULE_LICENSE("GPL");
 > -- 
-> 1.8.4.5
+> 1.9.1
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+
+compile error:
+
+/home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c: In function 'ci_hdrc_usb2_dt_probe':
+/home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c:30:2: error: implicit declaration of function 'of_phy_get' [-Werror=implicit-function-declaration]
+/home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c:30:16: warning: assignment makes pointer from integer without a cast [enabled by default]
+
+-- 
+Best Regards,
+Peter Chen
