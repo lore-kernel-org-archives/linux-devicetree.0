@@ -1,234 +1,65 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v3 3/3] regulator: fan53555: add support for Silergy SYR82x regulators
-Date: Tue, 16 Sep 2014 21:22:54 +0200
-Message-ID: <1410895374-18367-4-git-send-email-heiko@sntech.de>
-References: <1410895374-18367-1-git-send-email-heiko@sntech.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410895374-18367-1-git-send-email-heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Heiko Stuebner <heiko@sntech.de>
+From: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/6] Add initial support for Broadcom Cygnus SoC
+Date: Tue, 16 Sep 2014 12:58:11 -0700
+Message-ID: <1410897497-27527-1-git-send-email-jonathar@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Silergy SYR82x regulators share the exact same functionality and register layout
-as the Fairchild FAN53555 regulators. Therefore extend the driver to add
-support for them.
+Hi,
 
-Both types use the same vendor id in their ID1 register, so it's not possible
-to distinguish them automatically.
+This patchset contains initial support for Broadcom's Cygnus SoC based on our
+iProc architecture. Initial support is minimal and includes just the mach
+platform code, clock driver, and a basic device tree configuration. Peripheral
+drivers will be submitted soon, as will device tree configurations for other
+Cygnus board variants.
 
-Similarly, the types also do not match. Type 8 used by the SYR827 and SYR828
-start at 712.5mV and increment in 12.5mv steps, while the FAN53555 type 8
-starts at 600mV and increments in 10mV steps.
+Jonathan Richardson (5):
+  ARM: cygnus: Initial support for Broadcom Cygnus SoC
+  clk: Clock driver support for Broadcom Cygnus SoC
+  dt-bindings: Document Broadcom Cygnus SoC and clock driver
+  ARM: dts: Enable Broadcom Cygnus SoC
+  ARM: cygnus defconfig : Initial defconfig for Broadcom Cygnus SoC
+  MAINTAINERS: Entry for Cygnus/iproc arm architecture and clock
+    drivers
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../devicetree/bindings/regulator/fan53555.txt     |   2 +-
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- drivers/regulator/fan53555.c                       | 102 ++++++++++++++++++---
- 3 files changed, 89 insertions(+), 16 deletions(-)
+ Documentation/devicetree/bindings/arm/cygnus.txt   |   12 +
+ .../devicetree/bindings/clock/clk-cygnus.txt       |  121 ++
+ .../devicetree/bindings/clock/clk-iproc.txt        |   48 +
+ MAINTAINERS                                        |   21 +
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |  344 ++++++
+ arch/arm/boot/dts/bcm911360_entphn.dts             |   17 +
+ arch/arm/configs/bcm_cygnus_defconfig              |  223 ++++
+ arch/arm/mach-bcm/Kconfig                          |   34 +
+ arch/arm/mach-bcm/Makefile                         |    3 +
+ arch/arm/mach-bcm/board_bcm_cygnus.c               |  166 +++
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/bcm/Makefile                           |    2 +
+ drivers/clk/bcm/clk-cygnus.c                       | 1179 ++++++++++++++++++++
+ drivers/clk/bcm/clk-iproc.c                        |  446 ++++++++
+ 15 files changed, 2618 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cygnus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/clk-cygnus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/clk-iproc.txt
+ create mode 100644 arch/arm/boot/dts/bcm-cygnus.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm911360_entphn.dts
+ create mode 100644 arch/arm/configs/bcm_cygnus_defconfig
+ create mode 100644 arch/arm/mach-bcm/board_bcm_cygnus.c
+ create mode 100644 drivers/clk/bcm/clk-cygnus.c
+ create mode 100644 drivers/clk/bcm/clk-iproc.c
 
-diff --git a/Documentation/devicetree/bindings/regulator/fan53555.txt b/Documentation/devicetree/bindings/regulator/fan53555.txt
-index 8a51924..2cd1930 100644
---- a/Documentation/devicetree/bindings/regulator/fan53555.txt
-+++ b/Documentation/devicetree/bindings/regulator/fan53555.txt
-@@ -1,7 +1,7 @@
- Binding for Fairchild FAN53555 regulators
- 
- Required properties:
--  - compatible: "fcs,fan53555"
-+  - compatible: one of "fcs,fan53555", "silergy,syr827", "silergy,syr828"
-   - reg: I2C address
- 
- Optional properties:
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 24b92b3..6073e76 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -125,6 +125,7 @@ sil	Silicon Image
- silabs	Silicon Laboratories
- simtek
- sii	Seiko Instruments, Inc.
-+silergy	Silergy Corp.
- sirf	SiRF Technology, Inc.
- smsc	Standard Microsystems Corporation
- snps 	Synopsys, Inc.
-diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
-index fa29ba0..f2f5535 100644
---- a/drivers/regulator/fan53555.c
-+++ b/drivers/regulator/fan53555.c
-@@ -52,6 +52,11 @@
- 
- #define FAN53555_NVOLTAGES	64	/* Numbers of voltages */
- 
-+enum fan53555_vendor {
-+	FAN53555_VENDOR_FAIRCHILD = 0,
-+	FAN53555_VENDOR_SILERGY,
-+};
-+
- /* IC Type */
- enum {
- 	FAN53555_CHIP_ID_00 = 0,
-@@ -62,7 +67,12 @@ enum {
- 	FAN53555_CHIP_ID_05,
- };
- 
-+enum {
-+	SILERGY_SYR82X = 8,
-+};
-+
- struct fan53555_device_info {
-+	enum fan53555_vendor vendor;
- 	struct regmap *regmap;
- 	struct device *dev;
- 	struct regulator_desc desc;
-@@ -183,6 +193,47 @@ static struct regulator_ops fan53555_regulator_ops = {
- 	.set_ramp_delay = fan53555_set_ramp,
- };
- 
-+static int fan53555_voltages_setup_fairchild(struct fan53555_device_info *di)
-+{
-+	/* Init voltage range and step */
-+	switch (di->chip_id) {
-+	case FAN53555_CHIP_ID_00:
-+	case FAN53555_CHIP_ID_01:
-+	case FAN53555_CHIP_ID_03:
-+	case FAN53555_CHIP_ID_05:
-+		di->vsel_min = 600000;
-+		di->vsel_step = 10000;
-+		break;
-+	case FAN53555_CHIP_ID_04:
-+		di->vsel_min = 603000;
-+		di->vsel_step = 12826;
-+		break;
-+	default:
-+		dev_err(di->dev,
-+			"Chip ID %d not supported!\n", di->chip_id);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int fan53555_voltages_setup_silergy(struct fan53555_device_info *di)
-+{
-+	/* Init voltage range and step */
-+	switch (di->chip_id) {
-+	case SILERGY_SYR82X:
-+		di->vsel_min = 712500;
-+		di->vsel_step = 12500;
-+		break;
-+	default:
-+		dev_err(di->dev,
-+			"Chip ID %d not supported!\n", di->chip_id);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /* For 00,01,03,05 options:
-  * VOUT = 0.60V + NSELx * 10mV, from 0.60 to 1.23V.
-  * For 04 option:
-@@ -191,6 +242,8 @@ static struct regulator_ops fan53555_regulator_ops = {
- static int fan53555_device_setup(struct fan53555_device_info *di,
- 				struct fan53555_platform_data *pdata)
- {
-+	int ret = 0;
-+
- 	/* Setup voltage control register */
- 	switch (pdata->sleep_vsel_id) {
- 	case FAN53555_VSEL_ID_0:
-@@ -205,26 +258,21 @@ static int fan53555_device_setup(struct fan53555_device_info *di,
- 		dev_err(di->dev, "Invalid VSEL ID!\n");
- 		return -EINVAL;
- 	}
--	/* Init voltage range and step */
--	switch (di->chip_id) {
--	case FAN53555_CHIP_ID_00:
--	case FAN53555_CHIP_ID_01:
--	case FAN53555_CHIP_ID_03:
--	case FAN53555_CHIP_ID_05:
--		di->vsel_min = 600000;
--		di->vsel_step = 10000;
-+
-+	switch (di->vendor) {
-+	case FAN53555_VENDOR_FAIRCHILD:
-+		ret = fan53555_voltages_setup_fairchild(di);
- 		break;
--	case FAN53555_CHIP_ID_04:
--		di->vsel_min = 603000;
--		di->vsel_step = 12826;
-+	case FAN53555_VENDOR_SILERGY:
-+		ret = fan53555_voltages_setup_silergy(di);
- 		break;
- 	default:
- 		dev_err(di->dev,
--			"Chip ID[%d]\n not supported!\n", di->chip_id);
-+			"vendor %d not supported!\n", di->chip_id);
- 		return -EINVAL;
- 	}
- 
--	return 0;
-+	return ret;
- }
- 
- static int fan53555_regulator_register(struct fan53555_device_info *di,
-@@ -278,6 +326,13 @@ static struct fan53555_platform_data *fan53555_parse_dt(struct device *dev,
- static const struct of_device_id fan53555_dt_ids[] = {
- 	{
- 		.compatible = "fcs,fan53555",
-+		.data = (void *)FAN53555_VENDOR_FAIRCHILD
-+	}, {
-+		.compatible = "silergy,syr827",
-+		.data = (void *)FAN53555_VENDOR_SILERGY,
-+	}, {
-+		.compatible = "silergy,syr828",
-+		.data = (void *)FAN53555_VENDOR_SILERGY,
- 	},
- 	{ }
- };
-@@ -307,7 +362,16 @@ static int fan53555_regulator_probe(struct i2c_client *client,
- 	if (!di)
- 		return -ENOMEM;
- 
--	if (!client->dev.of_node) {
-+	if (client->dev.of_node) {
-+		const struct of_device_id *match;
-+
-+		match = of_match_device(of_match_ptr(fan53555_dt_ids),
-+					&client->dev);
-+		if (!match)
-+			return -ENODEV;
-+
-+		di->vendor = (int) match->data;
-+	} else {
- 		/* if no ramp constraint set, get the pdata ramp_delay */
- 		if (!di->regulator->constraints.ramp_delay) {
- 			int slew_idx = (pdata->slew_rate & 0x7)
-@@ -316,6 +380,8 @@ static int fan53555_regulator_probe(struct i2c_client *client,
- 			di->regulator->constraints.ramp_delay
- 						= slew_rates[slew_idx];
- 		}
-+
-+		di->vendor = id->driver_data;
- 	}
- 
- 	di->regmap = devm_regmap_init_i2c(client, &fan53555_regmap_config);
-@@ -363,7 +429,13 @@ static int fan53555_regulator_probe(struct i2c_client *client,
- }
- 
- static const struct i2c_device_id fan53555_id[] = {
--	{"fan53555", -1},
-+	{
-+		.name = "fan53555",
-+		.driver_data = FAN53555_VENDOR_FAIRCHILD
-+	}, {
-+		.name = "syr82x",
-+		.driver_data = FAN53555_VENDOR_SILERGY
-+	},
- 	{ },
- };
- 
 -- 
-2.0.1
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
