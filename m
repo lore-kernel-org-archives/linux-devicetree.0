@@ -1,61 +1,73 @@
-From: Sandeep Nair <sandeep_n@ti.com>
-Subject: Re: [PATCH v3 2/3] net: Add Keystone NetCP ethernet driver
-Date: Tue, 16 Sep 2014 09:44:59 -0400
-Message-ID: <54183EDB.20801@ti.com>
-References: <1410638839-14792-1-git-send-email-santosh.shilimkar@ti.com>	<1410638839-14792-3-git-send-email-santosh.shilimkar@ti.com> <20140915.123755.1868053059646672094.davem@davemloft.net>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 16 Sep 2014 16:05:51 +0200
+Message-ID: <20140916140551.GE4869@kwain>
+References: <1410777378-12726-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1410777378-12726-8-git-send-email-antoine.tenart@free-electrons.com>
+ <20140916005129.GC3379@peterchendt>
+ <20140916133841.GA4869@kwain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140915.123755.1868053059646672094.davem@davemloft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>, santosh.shilimkar@ti.com
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, grant.likely@linaro.org, devicetree@vger.kernel.org, jhs@mojatatu.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140916133841.GA4869@kwain>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/15/2014 12:37 PM, David Miller wrote:
-> From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Date: Sat, 13 Sep 2014 16:07:18 -0400
->
->> +	/* Find this module in the sub-tree for this device */
->> +	devices = of_get_child_by_name(node, "netcp-devices");
->> +	if (!devices) {
->> +		dev_err(dev, "could not find netcp-devices node\n");
->> +		return NETCP_MOD_PROBE_SKIPPED;
->> +	}
->> +
->> +	for_each_available_child_of_node(devices, child) {
->> +		const char *name = netcp_node_name(child);
->> +
->> +		if (!strcasecmp(module->name, name))
->> +			break;
->> +	}
->> +
->> +	/* If module not used for this device, skip it */
->> +	if (child == NULL) {
->> +		dev_warn(dev, "module(%s) not used for device\n", module->name);
->> +		return NETCP_MOD_PROBE_SKIPPED;
->> +	}
->
-> of_get_child_by_name() takes a reference to an OF node, you must release
-> it in the error path.
->
-Will fix this.
->> +	inst_modpriv = devm_kzalloc(dev, sizeof(*inst_modpriv), GFP_KERNEL);
->> +	if (!inst_modpriv) {
->> +		dev_err(dev, "Failed to allocate instance for %s\n",
->> +			module->name);
->> +		return -ENOMEM;
->> +	}
->
-> Likewise, but here you have to release both "devices" and "child".
->
-> You're going to have to fix this OF node refcount problem for this
-> entire probe routine.
->
-Will do.
+On Tue, Sep 16, 2014 at 03:38:41PM +0200, Antoine Tenart wrote:
+> On Tue, Sep 16, 2014 at 08:51:30AM +0800, Peter Chen wrote:
+> > On Mon, Sep 15, 2014 at 12:36:13PM +0200, Antoine Tenart wrote:
+> > > Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
+> > > and DMA mask, to support USB2 ChipIdea controllers that don't nee=
+d
+> > > specific functions.
+> > >=20
+> > > Tested on the Marvell Berlin SoCs USB controllers.
+> > >=20
+> > > Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---
+> > >  drivers/usb/chipidea/Makefile       |   1 +
+> > >  drivers/usb/chipidea/ci_hdrc_usb2.c | 137 ++++++++++++++++++++++=
+++++++++++++++
+> > >  2 files changed, 138 insertions(+)
+> > >  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
+> > >=20
+> >=20
+> > compile error:
+> >=20
+> > /home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c: =
+In function 'ci_hdrc_usb2_dt_probe':
+> > /home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c:3=
+0:2: error: implicit declaration of function 'of_phy_get' [-Werror=3Dim=
+plicit-function-declaration]
+> > /home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c:3=
+0:16: warning: assignment makes pointer from integer without a cast [en=
+abled by default]
+>=20
+> Did you apply the series introducing the support for the generic PHY
+> framework in the USB subsystem first? One of the patches includes
+> 'linux/phy/phy.h' in 'linux/usb/otg.h'. That's why I did not encounte=
+r
+> this error.
+>=20
+> Anyway, you're right and 'linux/phy/phy.h' should be explicitly inclu=
+ded
+> here.
 
-Thanks for the review David!
+Let me know if you want me to quickly cook up a new version fixing this=
+=2E
 
-Regards
-Sandeep
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
