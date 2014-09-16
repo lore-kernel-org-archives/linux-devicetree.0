@@ -1,42 +1,175 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
- i.mx6dl
-Date: Tue, 16 Sep 2014 09:43:06 +0800
-Message-ID: <20140916014304.GA23450@dragon>
-References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
- <1410774073.3314.1.camel@pengutronix.de>
+From: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: apq8064: Add pinmux and i2c pinctrl nodes
+Date: Mon, 15 Sep 2014 21:39:22 -0500
+Message-ID: <20140916023922.GB2386@qualcomm.com>
+References: <1409052645-14984-1-git-send-email-kiran.padwal@smartplayin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1410774073.3314.1.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1409052645-14984-1-git-send-email-kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kiran Padwal <kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 11:41:13AM +0200, Lucas Stach wrote:
-> Am Mittwoch, den 10.09.2014, 13:30 +0800 schrieb Robin Gong:
-> > There is one weird data in rxfifo after one full rx/tx transfer
-> > done sometimes. It looks a design issue and hard to workaround
-> > totally, so disable dma functhion here. And will re-enable it
-> > once the root cause found.
-> > 
-> Sorry, I'm late to this as Shawn seems to already have picked up this
-> patch, but this isn't the right way to fix the problem.
+On Tue, Aug 26, 2014 at 05:00:45PM +0530, Kiran Padwal wrote:
+> This patch adds pinmux and i2c pinctrl DT node for IFC6410 board.
+> It also adds necessary DT support for i2c eeprom which is present on
+> IFC6410.
 > 
-> We made it clear at kernel summit last year that we try to not break
-> existing DTs as booting a new kernel with an old DT is a valid use case.
-> While you don't strictly violate this rule what you do here is only
-> fixing systems booting with a new DT while leaving others broken.
+> Tested on IFC6410 board.
+
+Looks fine
+
 > 
-> If you are working around a hardware problem please disable DMA support
-> in the driver. This will also allow you to enable it again, if you find
-> another workaround without touching the DT again.
+> Signed-off-by: Kiran Padwal <kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
+> ---
+> Changes since v2:
+>  - Renamed pinmux i2c subnode "i2c1_pinmux" to "i2c1".
+>  - Removed labes of node.
+>  - Used canonical value as "okay" instead of "ok".
+>  - Used macros.
+> 
+> Changes since v1:
+>  - Renamed pinmux phandle "qcom_pinmux" to "tlmm_pinmux".
+>  - Updated pinmux interrupt.
+> 
+>  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |   27 ++++++++++++++
+>  arch/arm/boot/dts/qcom-apq8064.dtsi        |   53 ++++++++++++++++++++++++++++
+>  2 files changed, 80 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> index 7c2441d..ef0857e 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+> @@ -5,6 +5,24 @@
+>  	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
+>  
+>  	soc {
+> +		gsbi@12440000 {
+> +			status = "okay";
+> +			qcom,mode = <GSBI_PROT_I2C>;
+> +
+> +			i2c@12460000 {
+> +				status = "okay";
+> +				clock-frequency = <200000>;
+> +				pinctrl-0 = <&i2c1_pins>;
+> +				pinctrl-names = "default";
+> +
+> +				eeprom: eeprom@52 {
+> +					compatible = "atmel,24c128";
+> +					reg = <0x52>;
+> +					pagesize = <32>;
+> +				};
 
-Okay, it's a valid point.  Patch dropped.
+don't need read only here.  the eeprom is not being used by anything....
+thankfully.
 
-Shawn
+> +			};
+> +		};
+> +
+>  		gsbi@16600000 {
+>  			status = "ok";
+>  			qcom,mode = <GSBI_PROT_I2C_UART>;
+> @@ -12,5 +30,14 @@
+>  				status = "ok";
+>  			};
+>  		};
+> +
+> +		pinmux@800000 {
+> +			i2c1_pins: i2c1 {
+> +				mux {
+> +					pins = "gpio20", "gpio21";
+> +					function = "gsbi1";
+> +				};
+> +			};
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index 92bf793..5dddbf3 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -89,6 +89,17 @@
+>  			cpu-offset = <0x80000>;
+>  		};
+>  
+> +		tlmm_pinmux: pinmux@800000 {
+> +			compatible = "qcom,apq8064-pinctrl";
+> +			reg = <0x800000 0x4000>;
+> +
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +			interrupts = <0 16 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+>  		acc0: clock-controller@2088000 {
+>  			compatible = "qcom,kpss-acc-v1";
+>  			reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
+> @@ -133,6 +144,48 @@
+>  			regulator;
+>  		};
+>  
+> +		gsbi1: gsbi@12440000 {
+> +			status = "disabled";
+> +			compatible = "qcom,gsbi-v1.0.0";
+> +			reg = <0x12440000 0x100>;
+> +			clocks = <&gcc GSBI1_H_CLK>;
+> +			clock-names = "iface";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			i2c1: i2c@12460000 {
+> +				compatible = "qcom,i2c-qup-v1.1.1";
+> +				reg = <0x12460000 0x1000>;
+> +				interrupts = <0 194 IRQ_TYPE_NONE>;
+> +				clocks = <&gcc GSBI1_QUP_CLK>, <&gcc GSBI1_H_CLK>;
+> +				clock-names = "core", "iface";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +		};
+> +
+> +		gsbi2: gsbi@12480000 {
+> +			status = "disabled";
+> +			compatible = "qcom,gsbi-v1.0.0";
+> +			reg = <0x12480000 0x100>;
+> +			clocks = <&gcc GSBI2_H_CLK>;
+> +			clock-names = "iface";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			i2c2: i2c@124a0000 {
+> +				compatible = "qcom,i2c-qup-v1.1.1";
+> +				reg = <0x124a0000 0x1000>;
+> +				interrupts = <0 196 IRQ_TYPE_NONE>;
+> +				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
+> +				clock-names = "core", "iface";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +		};
+> +
+>  		gsbi7: gsbi@16600000 {
+>  			status = "disabled";
+>  			compatible = "qcom,gsbi-v1.0.0";
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
