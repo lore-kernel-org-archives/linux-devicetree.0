@@ -1,142 +1,42 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH v2 1/3] iio: exyno-adc: use syscon for PMU register access
-Date: Tue, 16 Sep 2014 14:28:49 +0530
-Message-ID: <1410857931-4980-2-git-send-email-ch.naveen@samsung.com>
-References: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, cw00.choi@samsung.com, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, lars@metafoo.de, cpgs@samsung.com, grundler@chromium.org, jic23@kernel.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 5/9] ARM: meson6: clocksource: add Meson6 timer support
+Date: Tue, 16 Sep 2014 11:06:37 +0200
+Message-ID: <CABuKBeKSkT6k-EaqN17Exf5Qhd6cWJg_qESskrADtRU+_t4-tQ@mail.gmail.com>
+References: <1410466300-19168-1-git-send-email-carlo@caione.org>
+	<1410466300-19168-6-git-send-email-carlo@caione.org>
+	<3053926.qBD36ymAOD@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <3053926.qBD36ymAOD@wuerfel>
+Sender: linux-serial-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Carlo Caione <carlo@caione.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.cz, Grant Likely <grant.likely@linaro.org>, Beniamino Galvani <b.galvani@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the IIO based ADC driver to use syscon and regmap
-APIs to access and use PMU registers instead of remapping the PMU
-registers in the driver.
+2014-09-11 22:57 GMT+02:00 Arnd Bergmann <arnd@arndb.de>:
+> On Thursday 11 September 2014 22:11:36 Carlo Caione wrote:
+>> Meson6 SoCs are equipped with 5 32-bit timers, called TIMER_A, TIMER_B,
+>> TIMER_C, TIMER_D and TIMER_E.
+>>
+>> The driver is providing clocksource support for the 32-bit counter using
+>> TIMER_E. Clockevents are also supported using TIMER_A.
+>>
+>> Signed-off-by: Carlo Caione <carlo@caione.org>
+>>
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-To: linux-iio@vger.kernel.org
----
-Changes since v1:
-Rebased on top of togreg branch of IIO git
+This version addresses all the comments I had:
 
- drivers/iio/adc/exynos_adc.c |   30 +++++++++++++++++++++---------
- 1 file changed, 21 insertions(+), 9 deletions(-)
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-index 43620fd..fe03177 100644
---- a/drivers/iio/adc/exynos_adc.c
-+++ b/drivers/iio/adc/exynos_adc.c
-@@ -39,6 +39,8 @@
- #include <linux/iio/iio.h>
- #include <linux/iio/machine.h>
- #include <linux/iio/driver.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- 
- /* S3C/EXYNOS4412/5250 ADC_V1 registers definitions */
- #define ADC_V1_CON(x)		((x) + 0x00)
-@@ -90,11 +92,14 @@
- 
- #define EXYNOS_ADC_TIMEOUT	(msecs_to_jiffies(100))
- 
-+#define EXYNOS_ADCV1_PHY_OFFSET	0x0718
-+#define EXYNOS_ADCV2_PHY_OFFSET	0x0720
-+
- struct exynos_adc {
- 	struct exynos_adc_data	*data;
- 	struct device		*dev;
- 	void __iomem		*regs;
--	void __iomem		*enable_reg;
-+	struct regmap		*pmu_map;
- 	struct clk		*clk;
- 	struct clk		*sclk;
- 	unsigned int		irq;
-@@ -110,6 +115,7 @@ struct exynos_adc_data {
- 	int num_channels;
- 	bool needs_sclk;
- 	bool needs_adc_phy;
-+	int phy_offset;
- 	u32 mask;
- 
- 	void (*init_hw)(struct exynos_adc *info);
-@@ -183,7 +189,7 @@ static void exynos_adc_v1_init_hw(struct exynos_adc *info)
- 	u32 con1;
- 
- 	if (info->data->needs_adc_phy)
--		writel(1, info->enable_reg);
-+		regmap_write(info->pmu_map, info->data->phy_offset, 1);
- 
- 	/* set default prescaler values and Enable prescaler */
- 	con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
-@@ -198,7 +204,7 @@ static void exynos_adc_v1_exit_hw(struct exynos_adc *info)
- 	u32 con;
- 
- 	if (info->data->needs_adc_phy)
--		writel(0, info->enable_reg);
-+		regmap_write(info->pmu_map, info->data->phy_offset, 0);
- 
- 	con = readl(ADC_V1_CON(info->regs));
- 	con |= ADC_V1_CON_STANDBY;
-@@ -225,6 +231,7 @@ static const struct exynos_adc_data exynos_adc_v1_data = {
- 	.num_channels	= MAX_ADC_V1_CHANNELS,
- 	.mask		= ADC_DATX_MASK,	/* 12 bit ADC resolution */
- 	.needs_adc_phy	= true,
-+	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
- 
- 	.init_hw	= exynos_adc_v1_init_hw,
- 	.exit_hw	= exynos_adc_v1_exit_hw,
-@@ -314,7 +321,7 @@ static void exynos_adc_v2_init_hw(struct exynos_adc *info)
- 	u32 con1, con2;
- 
- 	if (info->data->needs_adc_phy)
--		writel(1, info->enable_reg);
-+		regmap_write(info->pmu_map, info->data->phy_offset, 1);
- 
- 	con1 = ADC_V2_CON1_SOFT_RESET;
- 	writel(con1, ADC_V2_CON1(info->regs));
-@@ -332,7 +339,7 @@ static void exynos_adc_v2_exit_hw(struct exynos_adc *info)
- 	u32 con;
- 
- 	if (info->data->needs_adc_phy)
--		writel(0, info->enable_reg);
-+		regmap_write(info->pmu_map, info->data->phy_offset, 0);
- 
- 	con = readl(ADC_V2_CON1(info->regs));
- 	con &= ~ADC_CON_EN_START;
-@@ -362,6 +369,7 @@ static const struct exynos_adc_data exynos_adc_v2_data = {
- 	.num_channels	= MAX_ADC_V2_CHANNELS,
- 	.mask		= ADC_DATX_MASK, /* 12 bit ADC resolution */
- 	.needs_adc_phy	= true,
-+	.phy_offset	= EXYNOS_ADCV2_PHY_OFFSET,
- 
- 	.init_hw	= exynos_adc_v2_init_hw,
- 	.exit_hw	= exynos_adc_v2_exit_hw,
-@@ -374,6 +382,7 @@ static const struct exynos_adc_data exynos3250_adc_data = {
- 	.mask		= ADC_DATX_MASK, /* 12 bit ADC resolution */
- 	.needs_sclk	= true,
- 	.needs_adc_phy	= true,
-+	.phy_offset	= EXYNOS_ADCV1_PHY_OFFSET,
- 
- 	.init_hw	= exynos_adc_v2_init_hw,
- 	.exit_hw	= exynos_adc_v2_exit_hw,
-@@ -558,10 +567,13 @@ static int exynos_adc_probe(struct platform_device *pdev)
- 
- 
- 	if (info->data->needs_adc_phy) {
--		mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--		info->enable_reg = devm_ioremap_resource(&pdev->dev, mem);
--		if (IS_ERR(info->enable_reg))
--			return PTR_ERR(info->enable_reg);
-+		info->pmu_map = syscon_regmap_lookup_by_phandle(
-+					pdev->dev.of_node,
-+					"samsung,syscon-phandle");
-+		if (IS_ERR(info->pmu_map)) {
-+			dev_err(&pdev->dev, "syscon regmap lookup failed.\n");
-+			return PTR_ERR(info->pmu_map);
-+		}
- 	}
- 
- 	irq = platform_get_irq(pdev, 0);
+>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>
+> We should take all the platform code through the arm-soc tree, this one
+> along with the DT binding document should go through the clocksource
+> tree.
+
+
+
 -- 
-1.7.9.5
+motzblog.wordpress.com
