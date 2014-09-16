@@ -1,43 +1,70 @@
-From: =?euc-kr?B?x9S47cHW?= <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH 0/5] Add dt support for extcon gpio driver
-Date: Tue, 16 Sep 2014 06:59:43 +0000 (GMT)
-Message-ID: <15828005.405941410850778437.JavaMail.weblogic@epml02>
-Reply-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
+Date: Tue, 16 Sep 2014 15:23:53 +0800
+Message-ID: <1410852233.25559.173.camel@rzhang1-toshiba>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
+	 <1410403012.25559.69.camel@rzhang1-toshiba>
+	 <20140911121842.GB26715@developer> <40514790.Xc34lyFLGa@wuerfel>
+	 <20140911155324.GA27076@developer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=euc-kr
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-MIME-version: 1.0
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, =?euc-kr?Q?=C3=D6=C2=F9=BF=EC?= <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rongjun.ying-kQvG35nSl+M@public.gmane.org" <rongjun.ying-kQvG35nSl+M@public.gmane.org>, "linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org" <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140911155324.GA27076@developer>
+Sender: linux-doc-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, dtor <dtor@chromium.org>, Chris Zhong <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-PiBIaSBDaGFud29vLA0KPiANCj4gQ291bGQgeW91IHBsZWFzZSBsb29rIGludG8gdGhpcyBzZXJp
-ZXM/DQoNCkhpLA0KDQpDaGFud29vIGhhcyBiZWVuIG9uIGEgdmFjYXRpb24gc2luY2UgbGFzdCB3
-ZWVrLg0KSSB0aGluayBoZSB3aWxsIGJlIG91dCBvZiBvZmZpY2UgKGFuZCBvdXQgb2YgdGhlIHdv
-cmsgZW1haWwpDQp1bnRpbCB0aGlzIHdlZWsuDQoNCkkgd2lsbCBub3QgYmUgZ2VuZXJhbGx5IGF2
-YWlsYWJsZSB0aGlzIHdlZWsgYXMgd2VsbC4NCg0KQ2hlZXJzLA0KTXl1bmdKb28uDQoNCj4gDQo+
-IE9uIDA5LzA5LzIwMTQgMDk6NDQgQU0sIEdlb3JnZSBDaGVyaWFuIHdyb3RlOg0KPiA+IFRoaXMg
-c2VyaWVzDQo+ID4gICAgICAgICAgLSBDb252ZXJ0IGV4dGNvbi1ncGlvIGRyaXZlciB0byB1c2Ug
-Z3Bpb2RfKiBBUEkncw0KPiA+ICAgICAgICAgIC0gQWRkcyBkdCBzdXBwb3J0IHRvIGV4dGNvbi1n
-cGlvIGRyaXZlci4NCj4gPiAJLSBBZGQgY2FibGUgbmFtZSBzdXBwb3J0IGluIGNhc2Ugb2YgZHQu
-DQo+ID4NCj4gPiBHZW9yZ2UgQ2hlcmlhbiAoNSk6DQo+ID4gICAgZXh0Y29uOiBncGlvOiBNaW5v
-ciBjbGVhbnVwcw0KPiA+ICAgIGV4dGNvbjogZ3BpbzogQ29udmVydCB0aGUgZHJpdmVyIHRvIHVz
-ZSBncGlvIGRlc2MgQVBJJ3MNCj4gPiAgICBleHRjb246IGdwaW86IEFkZCBkdCBzdXBwb3J0IGZv
-ciB0aGUgZHJpdmVyLg0KPiA+ICAgIGV4dGNvbjogZ3BpbzogQWx3YXlzIHVzZSAgZ3Bpb19nZXRf
-dmFsdWVfY2Fuc2xlZXANCj4gPiAgICBleHRjb246IGdwaW86IEFkZCBzdXBwb3J0IGZvciB1c2lu
-ZyBjYWJsZSBuYW1lcw0KPiA+DQo+ID4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9leHRjb24v
-ZXh0Y29uLWdwaW8udHh0ICAgICB8ICAyMyArKysrKw0KPiA+ICAgZHJpdmVycy9leHRjb24vZXh0
-Y29uLWdwaW8uYyAgICAgICAgICAgICAgICAgICAgICAgfCAxMDAgKysrKysrKysrKysrKy0tLS0t
-LS0tDQo+ID4gICBpbmNsdWRlL2xpbnV4L2V4dGNvbi9leHRjb24tZ3Bpby5oICAgICAgICAgICAg
-ICAgICB8ICAgNCArLQ0KPiA+ICAgMyBmaWxlcyBjaGFuZ2VkLCA4OSBpbnNlcnRpb25zKCspLCAz
-OCBkZWxldGlvbnMoLSkNCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZXh0Y29uL2V4dGNvbi1ncGlvLnR4dA0KPiA+DQo+IFJlZ2FyZHMN
-Cj4gLUdlb3JnZQ0KPiANCj4gDQo+IA0K
+On Thu, 2014-09-11 at 11:53 -0400, Eduardo Valentin wrote:
+> Arnd,
+> 
+> On Thu, Sep 11, 2014 at 02:32:08PM +0200, Arnd Bergmann wrote:
+> > On Thursday 11 September 2014 08:18:43 Eduardo Valentin wrote:
+> > > > As what we want is to make thermal driver have a chance to configure the
+> > > > hardware shutdown registers, I'm thinking if we can do this without
+> > > > representing the hardware shutdown value as a trip point.
+> > > > Say,
+> > > > 1. parse DT, and get the hardware shutdown temperature value, and store
+> > > > it somewhere, e.g. struct __thermal_zone.
+> > > > 2. introduce a new parameter, int (*set_hardware_trip)(void *, long *),
+> > > > in thermal_zone_of_sensor_register().
+> > > > 3. invoke set_hard_trip(tz, hardware_shutdown_temperature_value) in
+> > > > thermal_zone_of_sensor_register().
+> > > 
+> > > The only issue I have with the above proposal is that not all platforms
+> > > use DT. Some still boot with boardfiles, for instance. Thus, the
+> > > parameter to configure hardware thermal shutdown needs to be common on
+> > > thermal core, not specific to of-thermal. Do you agree?
+> > 
+> > Do you know of a machine that can't yet be converted to DT and that
+> > needs this driver? In case of rockchips that is certainly not the
+> > case, and we don't care about anybody trying to use board files out
+> > of tree, they can just hack the thermal support as well.
+> 
+> I see. Again, the only concern I have is to produce thermal framework APIs
+> that would be only in the of-thermal. My point is not specific to this
+> patch, or this platform, but with a detail in the above proposal. 
+> 
+> While I agree to have a trip specific to configurable hardware triggered
+> thermal shutdown, I just don't see why it needs to be a feature
+> implemented only via of-thermal. It has to be properly defined in
+> thermal core.
+> 
+> The proposal of of-thermal is not to become a separate/competing thermal
+> framework.
+> 
+Agreed.
+And I think we can have such feature in thermal core.
+But again I don't think we should represent it as an trip point. 
+
+thanks,
+rui
+> > 
+> > 	Arnd
+> 
+> Cheers,
+> 
+> Eduardo
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
