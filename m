@@ -1,113 +1,43 @@
-From: Weike Chen <alvin.chen@intel.com>
-Subject: [PATCH 2/4 v4] GPIO: gpio-dwapb: Change readl&writel to dwapb_read&dwapb_write
-Date: Tue, 16 Sep 2014 02:22:13 -0700
-Message-ID: <1410859335-11080-3-git-send-email-alvin.chen@intel.com>
-References: <1410859335-11080-1-git-send-email-alvin.chen@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410859335-11080-1-git-send-email-alvin.chen@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Alvin Chen <alvin.chen@intel.com>, Arnd Bergmann <arnd@arndb.de>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
+ i.mx6dl
+Date: Tue, 16 Sep 2014 09:43:06 +0800
+Message-ID: <20140916014304.GA23450@dragon>
+References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
+ <1410774073.3314.1.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410774073.3314.1.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch replaces 'readl&writel' with 'dwapb_read&dwapb_write'.
+On Mon, Sep 15, 2014 at 11:41:13AM +0200, Lucas Stach wrote:
+> Am Mittwoch, den 10.09.2014, 13:30 +0800 schrieb Robin Gong:
+> > There is one weird data in rxfifo after one full rx/tx transfer
+> > done sometimes. It looks a design issue and hard to workaround
+> > totally, so disable dma functhion here. And will re-enable it
+> > once the root cause found.
+> > 
+> Sorry, I'm late to this as Shawn seems to already have picked up this
+> patch, but this isn't the right way to fix the problem.
+> 
+> We made it clear at kernel summit last year that we try to not break
+> existing DTs as booting a new kernel with an old DT is a valid use case.
+> While you don't strictly violate this rule what you do here is only
+> fixing systems booting with a new DT while leaving others broken.
+> 
+> If you are working around a hardware problem please disable DMA support
+> in the driver. This will also allow you to enable it again, if you find
+> another workaround without touching the DT again.
 
-Reviewed-by: Shevchenko, Andriy <andriy.shevchenko@intel.com>
-Signed-off-by: Weike Chen <alvin.chen@intel.com>
----
- drivers/gpio/gpio-dwapb.c |   37 +++++++++++++++++++++++++++----------
- 1 file changed, 27 insertions(+), 10 deletions(-)
+Okay, it's a valid point.  Patch dropped.
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index a62467a..534945c 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -64,6 +64,23 @@ struct dwapb_gpio {
- 	struct irq_domain	*domain;
- };
- 
-+static inline u32 dwapb_read(struct dwapb_gpio *gpio, unsigned int offset)
-+{
-+	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-+	void __iomem *reg_base	= gpio->regs;
-+
-+	return bgc->read_reg(reg_base + offset);
-+}
-+
-+static inline void dwapb_write(struct dwapb_gpio *gpio, unsigned int offset,
-+			       u32 val)
-+{
-+	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-+	void __iomem *reg_base	= gpio->regs;
-+
-+	bgc->write_reg(reg_base + offset, val);
-+}
-+
- static int dwapb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- {
- 	struct bgpio_chip *bgc = to_bgpio_chip(gc);
-@@ -76,14 +93,14 @@ static int dwapb_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 
- static void dwapb_toggle_trigger(struct dwapb_gpio *gpio, unsigned int offs)
- {
--	u32 v = readl(gpio->regs + GPIO_INT_POLARITY);
-+	u32 v = dwapb_read(gpio, GPIO_INT_POLARITY);
- 
- 	if (gpio_get_value(gpio->ports[0].bgc.gc.base + offs))
- 		v &= ~BIT(offs);
- 	else
- 		v |= BIT(offs);
- 
--	writel(v, gpio->regs + GPIO_INT_POLARITY);
-+	dwapb_write(gpio, GPIO_INT_POLARITY, v);
- }
- 
- static u32 dwapb_do_irq(struct dwapb_gpio *gpio)
-@@ -126,9 +143,9 @@ static void dwapb_irq_enable(struct irq_data *d)
- 	u32 val;
- 
- 	spin_lock_irqsave(&bgc->lock, flags);
--	val = readl(gpio->regs + GPIO_INTEN);
-+	val = dwapb_read(gpio, GPIO_INTEN);
- 	val |= BIT(d->hwirq);
--	writel(val, gpio->regs + GPIO_INTEN);
-+	dwapb_write(gpio, GPIO_INTEN, val);
- 	spin_unlock_irqrestore(&bgc->lock, flags);
- }
- 
-@@ -141,9 +158,9 @@ static void dwapb_irq_disable(struct irq_data *d)
- 	u32 val;
- 
- 	spin_lock_irqsave(&bgc->lock, flags);
--	val = readl(gpio->regs + GPIO_INTEN);
-+	val = dwapb_read(gpio, GPIO_INTEN);
- 	val &= ~BIT(d->hwirq);
--	writel(val, gpio->regs + GPIO_INTEN);
-+	dwapb_write(gpio, GPIO_INTEN, val);
- 	spin_unlock_irqrestore(&bgc->lock, flags);
- }
- 
-@@ -183,8 +200,8 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
- 		return -EINVAL;
- 
- 	spin_lock_irqsave(&bgc->lock, flags);
--	level = readl(gpio->regs + GPIO_INTTYPE_LEVEL);
--	polarity = readl(gpio->regs + GPIO_INT_POLARITY);
-+	level = dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
-+	polarity = dwapb_read(gpio, GPIO_INT_POLARITY);
- 
- 	switch (type) {
- 	case IRQ_TYPE_EDGE_BOTH:
-@@ -211,8 +228,8 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
- 
- 	irq_setup_alt_chip(d, type);
- 
--	writel(level, gpio->regs + GPIO_INTTYPE_LEVEL);
--	writel(polarity, gpio->regs + GPIO_INT_POLARITY);
-+	dwapb_write(gpio, GPIO_INTTYPE_LEVEL, level);
-+	dwapb_write(gpio, GPIO_INT_POLARITY, polarity);
- 	spin_unlock_irqrestore(&bgc->lock, flags);
- 
- 	return 0;
--- 
-1.7.9.5
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
