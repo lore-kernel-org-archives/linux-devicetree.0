@@ -1,52 +1,88 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Tue, 16 Sep 2014 01:07:31 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E9918D4@SHSMSX101.ccr.corp.intel.com>
-References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
-  <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
-  <alpine.DEB.2.02.1409101353500.2790@atx-linux-37>
- <1410422381.7023.15.camel@intel.com>
- <alpine.DEB.2.02.1409111020130.19272@atx-linux-37>
- <4656BEB6164FC34F8171C6538F1A595B2E9915E6@SHSMSX101.ccr.corp.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Weike Chen <alvin.chen@intel.com>
+Subject: [PATCH 0/4 v4] The Designware GPIO Supporting
+Date: Tue, 16 Sep 2014 02:22:11 -0700
+Message-ID: <1410859335-11080-1-git-send-email-alvin.chen@intel.com>
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E9915E6@SHSMSX101.ccr.corp.intel.com>
-Content-Language: en-US
 Sender: linux-gpio-owner@vger.kernel.org
-Cc: "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'robh+dt@kernel.org'" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "'gnurou@gmail.com'" <gnurou@gmail.com>, "'linus.walleij@linaro.org'" <linus.walleij@linaro.org>, "'linux-gpio@vger.kernel.org'" <linux-gpio@vger.kernel.org>, "'sebastian@breakpoint.cc'" <sebastian@breakpoint.cc>, "'grant.likely@linaro.org'" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "'dvhart@linux.intel.com'" <dvhart@linux.intel.com>, "'arnd@arndb.de'" <arnd@arndb.de>, 'atull' <atull@opensource.altera.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Alvin Chen <alvin.chen@intel.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
+These patches are for Intel Quark X1000 designware GPIO supporting. The first
+patch enables the Synopsys DesignWare APB GPIO driver to support the MFD device.
+And the Quark designware GPIO controller is registered as MFD device,
+because Quark exports a single PCI device with both GPIO and I2C functions.
+It is about reviewing the GPIO changes in gpio-dwapb, and in near future,
+the Quark I2C driver and the MFD driver that binds these GPIO & I2C
+functions will be sent subsequently. The second patch replaces all
+'readl&writel' with 'dwapb_read'&'dwapb_write. The third patch enables the gpio
+'debounce' feature. And the fourth patch enables the power management.
 
-> 
-> > >
-> > > > >  static int dwapb_gpio_probe(struct platform_device *pdev)  {
-> > > > > +	int i;
-> > > > >  	struct resource *res;
-> > > > >  	struct dwapb_gpio *gpio;
-> > > > > -	struct device_node *np;
-> > > > >  	int err;
-> > > > > -	unsigned int offs = 0;
-> > > > > +	struct device *dev = &pdev->dev;
-> > > > > +	struct dwapb_platform_data *pdata = dev_get_platdata(dev);
-> > > > > +	bool is_pdata_alloc = !pdata;
-> > > >
-> > > > Please combine the int's in one line (int err, i;) and put them as
-> > > > the last one on this list.  It looks the same to the compiler of
-> > > > course, but more uniform for human eyes :)
-> > >
-> > > Do you think it's a good idea? In this case I, for example, would
-> > > like to see int err as a separate line at the end of definition
-> > > block. It would be better to distinguish counters and return code storage.
-> > > Moreover, often counters would be unsigned int.
-> >
-> > If they are both 'int' they should be combined.  If 'i' is changed to
-> > be an unsigned int they would be separate.
-> 
-> Linus, do you have any idea about it? I think it is not a big issue.
-> >
+---
+v4:
+ [PATCH 1/4]
+ * Use 'unsigned int i' instead of 'int i' in 'probe'.
+ [PATCH 2/4]
+ * No changes.
+ [PATCH 3/4]
+ * No changes.
+ [PATCH 4/4]
+ * No changes.
 
-Since no further feedbacks, I decide to use 'unsigned int i' to align the two feedbacks, since 'i' is just a counter.
-And will send a new version with just this changes later.
+v3:
+ Split [PATCH 2/3] into two patches [PATCH 2/4] and [PATCH 3/4],
+ and now inlucde 4 patches.
+
+ [PATCH 1/4]
+ * Use 'is_pdata_alloc' instead of 'is_of'.
+ * Allocate 'pdata' by 'kmalloc/kfree' instead of 'devm_*' for OF.
+ * Use 'IS_ENABLED(CONFIG_OF_GPIO)' instead of '#ifdef CONFIG_OF_GPIO'.
+ * A couple of other minor changes.
+ [PATCH 2/4]
+ * New patch splitted from the original [PATCH 2/3]
+ * Use 'dwapb_read/write' instead of readl&writel.
+ [PATCH 3/4]
+ * Move 'dwapb_read/write' defination to new patch [PATCH 2/4].
+ * Only port A support 'debounce' now.
+ [PATCH 4/4]
+ * The original patch [PATCH 3/3]
+ * Use 'struct dwapb_context' instead of 'struct gpio_saved_regs'.
+ * Allocate and save context dynamically by per port.
+
+v2:
+ [PATCH 1/3]
+ * Fixed a bug to set the base gpio number to '-1' for the OF flow.
+ * Set device node for each gpio chip for the OF flow.
+ * Change the name of 'struct dwapb_gpio_platform_data' to
+   'struct dwapb_platform_data'.
+ * Change the name of 'struct dwapb_gpio_port_property' to
+   'struct dwapb_port_property'.
+ * Access pdata directly in 'probe' instead of accesing it
+   by 'struct dwapb_gpio'.
+ * Free 'pdata' at the end of 'probe' if it is OF case to save memory.
+ * Improve the interrupt handler.
+ * Move 'irq_set_handler_data' together with 'irq_set_chained_hanlder'.
+ * Remove unncessary comments.
+ [PATCH 2/3]
+ * Change all 'readl'&'writel' to 'dwapb_read'&'dwapb_write'.
+ [PATCH 3/3]
+ * Change the name for 'struct gpio_saved_regs' to 'struct dwapb_context'.
+ * Save the registers for all ports according to the port index.
+ * Change '#if defined' to '#ifdef'.
+
+Weike Chen (4):
+  GPIO: gpio-dwapb: Enable platform driver binding to MFD driver
+  GPIO: gpio-dwapb: Change readl&writel to dwapb_read&dwapb_write
+  GPIO: gpio-dwapb: Support Debounce
+  GPIO: gpio-dwapb: Suspend & Resume PM enabling
+
+ drivers/gpio/Kconfig                     |    1 -
+ drivers/gpio/gpio-dwapb.c                |  400 +++++++++++++++++++++++++-----
+ include/linux/platform_data/gpio-dwapb.h |   32 +++
+ 3 files changed, 365 insertions(+), 68 deletions(-)
+ create mode 100644 include/linux/platform_data/gpio-dwapb.h
+
+-- 
+1.7.9.5
+
