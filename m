@@ -1,110 +1,61 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 3/4 v4] GPIO: gpio-dwapb: Support Debounce
-Date: Tue, 16 Sep 2014 11:37:49 +0300
-Message-ID: <1410856669.7023.54.camel@linux.intel.com>
-References: <1410859335-11080-1-git-send-email-alvin.chen@intel.com>
-	 <1410859335-11080-4-git-send-email-alvin.chen@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1410859335-11080-4-git-send-email-alvin.chen@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Arnd Bergmann <arnd@arndb.de>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH RESEND] ARM: DTS: correct the capability string for mmc0
+Date: Tue, 16 Sep 2014 14:20:09 +0530
+Message-ID: <1410857409-24767-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kgene.kim@samsung.com, dianders@chromium.org, jh80.chung@samsung.com, tgih.jun@samsung.com, javier.martinez@collabora.co.uk, khilman@linaro.org, Naveen Krishna Chatradhi <ch.naveen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-09-16 at 02:22 -0700, Weike Chen wrote:
-> This patch enables 'debounce' for the designware GPIO, and
-> it is based on Josef Ahmad's previous work.
-> 
-> Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
-> Reviewed-by: Shevchenko, Andriy <andriy.shevchenko@intel.com>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
 
-This line is wrong. How come?
+MMC capability for HS200 is parsed in mmc/core/host.c as
+dts string "mmc-hs200-1_8v".
 
-Couple of minor comments below, and after addressing them, please, use 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This patch corrects the dts string for Exynos5420 based peach-pit
+and Exynos5800 based peach-pi boards.
 
-> Signed-off-by: Weike Chen <alvin.chen@intel.com>
-> ---
->  drivers/gpio/gpio-dwapb.c |   28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index 534945c..9a76e3c 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -37,6 +37,7 @@
->  #define GPIO_INTTYPE_LEVEL	0x38
->  #define GPIO_INT_POLARITY	0x3c
->  #define GPIO_INTSTATUS		0x40
-> +#define GPIO_PORTA_DEBOUNCE	0x48
->  #define GPIO_PORTA_EOI		0x4c
->  #define GPIO_EXT_PORTA		0x50
->  #define GPIO_EXT_PORTB		0x54
-> @@ -235,6 +236,29 @@ static int dwapb_irq_set_type(struct irq_data *d, u32 type)
->  	return 0;
->  }
->  
-> +static int dwapb_gpio_set_debounce(struct gpio_chip *gc,
-> +				   unsigned offset, unsigned debounce)
-> +{
-> +	struct bgpio_chip *bgc = to_bgpio_chip(gc);
-> +	struct dwapb_gpio_port *port =
-> +			container_of(bgc, struct dwapb_gpio_port, bgc);
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+---
 
-Does it make sense to introduce an inline helper like
+Hi Kukjin,
 
-static inline struct dwapb_gpio_port *to_dwapb_gpio_port(struct
-bgpio_chip *gc)
-{...}
+As commented by Doug earlier for this patch, the two patches required
+  -- mmc: dw_mmc: Make sure we don't get stuck when we get an error
+  -- mmc: dw_mmc: change to use recommended reset procedure
+are now merged in upstream.
+So you can go ahead and pick this change.
 
-?
+ arch/arm/boot/dts/exynos5420-peach-pit.dts |    2 +-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-There is also another place where it could be used.
-
-> +	struct dwapb_gpio *gpio = port->gpio;
-> +	unsigned long flags, val_deb;
-> +	unsigned long mask = bgc->pin2mask(bgc, offset);
-> +
-> +	spin_lock_irqsave(&bgc->lock, flags);
-> +
-> +	val_deb = dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
-> +	if (debounce)
-> +		dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, mask | val_deb);
-
-May you put value on the first place? Like 'val_deb | mask'.
-
-> +	else
-> +		dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, ~mask & val_deb);
-
-Ditto.
-
-> +
-
-> +	spin_unlock_irqrestore(&bgc->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
->  static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
->  {
->  	u32 worked;
-> @@ -373,6 +397,10 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
->  	port->bgc.gc.ngpio = pp->ngpio;
->  	port->bgc.gc.base = pp->gpio_base;
->  
-> +	/* Only port A support debounce */
-> +	if (pp->idx == 0)
-> +		port->bgc.gc.set_debounce = dwapb_gpio_set_debounce;
-> +
->  	if (pp->irq)
->  		dwapb_configure_irqs(gpio, port, pp);
->  
-
-
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index 9a23382..e52ed04 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -560,7 +560,7 @@
+ 	status = "okay";
+ 	num-slots = <1>;
+ 	broken-cd;
+-	caps2-mmc-hs200-1_8v;
++	mmc-hs200-1_8v;
+ 	cap-mmc-highspeed;
+ 	non-removable;
+ 	card-detect-delay = <200>;
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 1d31c81..8616fbd 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -548,7 +548,7 @@
+ 	status = "okay";
+ 	num-slots = <1>;
+ 	broken-cd;
+-	caps2-mmc-hs200-1_8v;
++	mmc-hs200-1_8v;
+ 	cap-mmc-highspeed;
+ 	non-removable;
+ 	card-detect-delay = <200>;
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
-
+1.7.10.4
