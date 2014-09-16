@@ -1,46 +1,42 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/3] Documentation: dt-bindings: add dt binding info
- for rk3288-smp
-Date: Tue, 16 Sep 2014 19:54:39 +0100
-Message-ID: <20140916185439.GF14191@leverpostej>
-References: <1410864271-9277-1-git-send-email-kever.yang@rock-chips.com>
- <1410864271-9277-2-git-send-email-kever.yang@rock-chips.com>
-Mime-Version: 1.0
+From: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: qcom: Add I2C dt node for MSM8974 and DB8074 board
+Date: Tue, 16 Sep 2014 11:59:39 -0700
+Message-ID: <306266B7-29AB-474E-855E-F0BE55C9BA11@codeaurora.org>
+References: <1410867938-6254-1-git-send-email-kiran.padwal@smartplayin.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410864271-9277-2-git-send-email-kever.yang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kever Yang <kever.yang@rock-chips.com>
-Cc: "heiko@sntech.de" <heiko@sntech.de>, "dianders@chromium.org" <dianders@chromium.org>, "sonnyrao@chromium.org" <sonnyrao@chromium.org>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "cf@rock-chips.com" <cf@rock-chips.com>, "xjq@rock-chips.com" <xjq@rock-chips.com>, "hj@rock-chips.com" <hj@rock-chips.com>, "huangtao@rock-chips.com" <huangtao@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Olof Johansson <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.k>
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410867938-6254-1-git-send-email-kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kiran Padwal <kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 11:44:28AM +0100, Kever Yang wrote:
-> This add documentation for rk3288 smp dt binding
+
+On Sep 16, 2014, at 4:45 AM, Kiran Padwal <kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org> wrote:
+
+> Add support for i2c controller on the DB8074 board.
+> It also adds necessary DT support for i2c eeprom which is present on
+> DB8074 board.
 > 
-> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> Signed-off-by: Kiran Padwal <kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
 > ---
-> 
-> Changes in v2:
-> - add documentation
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 298e2f6..4b46233 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -195,6 +195,7 @@ nodes to be present and contain the properties described below.
->  			    "qcom,kpss-acc-v1"
->  			    "qcom,kpss-acc-v2"
->  			    "rockchip,rk3066-smp"
-> +			    "rockchip,rk3288-smp"
+> arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |   21 +++++++++++++++++++++
+> arch/arm/boot/dts/qcom-msm8974.dtsi            |   15 +++++++++++++--
+> 2 files changed, 34 insertions(+), 2 deletions(-)
 
-How do these differ?
+Can you rebase this on:
 
-What does "rockchip,rk3288-smp" mean exactly?
+ git://git.kernel.org/pub/scm/linux/kernel/git/galak/linux-qcom.git tags/qcom-dt-for-3.18
 
-Presumably other nodes / properties are required?
+- k
 
-Mark.
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
