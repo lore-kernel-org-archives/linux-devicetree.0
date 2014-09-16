@@ -1,130 +1,46 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC v2 00/12] ARM: shmobile: R-Mobile: Prototype DT PM domain
- support
-Date: Tue, 16 Sep 2014 20:48:47 +0200
-Message-ID: <1410893339-6361-1-git-send-email-geert+renesas@glider.be>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/3] Documentation: dt-bindings: add dt binding info
+ for rk3288-smp
+Date: Tue, 16 Sep 2014 19:54:39 +0100
+Message-ID: <20140916185439.GF14191@leverpostej>
+References: <1410864271-9277-1-git-send-email-kever.yang@rock-chips.com>
+ <1410864271-9277-2-git-send-email-kever.yang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-pm@vger.kernel.org, linux-sh@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Philipp Zabel <philipp.zabel@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1410864271-9277-2-git-send-email-kever.yang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: "heiko@sntech.de" <heiko@sntech.de>, "dianders@chromium.org" <dianders@chromium.org>, "sonnyrao@chromium.org" <sonnyrao@chromium.org>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "cf@rock-chips.com" <cf@rock-chips.com>, "xjq@rock-chips.com" <xjq@rock-chips.com>, "hj@rock-chips.com" <hj@rock-chips.com>, "huangtao@rock-chips.com" <huangtao@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Olof Johansson <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.k>
 List-Id: devicetree@vger.kernel.org
 
-	Hi all,
+On Tue, Sep 16, 2014 at 11:44:28AM +0100, Kever Yang wrote:
+> This add documentation for rk3288 smp dt binding
+> 
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+> 
+> Changes in v2:
+> - add documentation
+> 
+>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 298e2f6..4b46233 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -195,6 +195,7 @@ nodes to be present and contain the properties described below.
+>  			    "qcom,kpss-acc-v1"
+>  			    "qcom,kpss-acc-v2"
+>  			    "rockchip,rk3066-smp"
+> +			    "rockchip,rk3288-smp"
 
-This patch series contains prototype code to enable DT support for PM domains
-on Renesas R-Mobile SoCs.
+How do these differ?
 
-Currently it's limited to R-Mobile A1 (r8a7740), but given the similarity of
-the SYSC System-Controller on the various SH-Mobile/R-Mobile SoCs, and the
-abstraction of PM domains in DT, it should be sufficiently generic to handle
-other SoCs in the future (e.g. SH-Mobile AP4 (sh7372), SH-Mobile AG5 (sh73a0),
-R-Mobile APE6 (r8a73a4)).
+What does "rockchip,rk3288-smp" mean exactly?
 
-Changes compared to v1 (more detailed changelogs in the individual patches):
-  - Several new patches: [02], [04], [05], [06], [07], [11], [12],
-  - Run-Time management of the module clocks, making the hack in
-    drivers/sh/pm_runtime.c obsolete for DT platforms using genpd.
-    More about this below[*].
-  - Addition of PM QoS device latencies, specified from DT.
-  - Addition of build glue, so this builds and runs without additional
-    changes, incl. s2ram.
+Presumably other nodes / properties are required?
 
-This means that functionality-wise, the DT version is now on par with the
-legacy version, so I can continue focussing on fixing the common limitations,
-and the quirks in rmobile_pm_quirks() in a DT-friendly way.
-
-Thanks for your comments!
-
-Dependencies:
-  - "[PATCH 00/11] ARM: shmobile: r8a7740/armadillo legacy prototype pm domain
-    support", sent by me (www.spinics.net/lists/arm-kernel/msg358037.html),
-  - "[PATCH v4 0/9] PM / Domains: Generic OF-based support", sent by Ulf
-    Hansson (http://www.spinics.net/lists/arm-kernel/msg360672.html),
-  - Simon Horman's renesas-devel-20140916v2-v3.17-rc5,
-  - Rafael J. Wysocki's linux-pm.git#linux-next,
-  - Jason Cooper's linux.git#irqchip/for-next.
-
-For your convenience, I've also pushed this to
-git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git#rmobile-genpd
-
-Geert Uytterhoeven (12):
-  [01] PM / Domains: Add DT bindings for power-on/off latencies
-  [02] PM / Domains: Add DT bindings for PM QoS device latencies
-  [03] PM / Domains: Add DT bindings for the R-Mobile System Controller
-  [04] PM / Domains: Add genpd attach/detach callbacks
-  [05] PM / Domains: Add helper variable np = dev->of_node
-  [06] PM / Domains: Retrieve PM QoS device latencies from DT
-  [07] ARM: shmobile: R-Mobile: Use generic_pm_domain.attach_dev() for pm_clk
-    setup
-  [08] ARM: shmobile: R-Mobile: Store SYSC base address in rmobile_pm_domain
-  [09] ARM: shmobile: R-Mobile: Add DT support for PM domains
-  [10] ARM: shmobile: r8a7740 dtsi: Add PM domain support
-  [11] ARM: shmobile: r8a7740 dtsi: Add PM QoS device latencies
-  [12] drivers: sh: Disable PM runtime for multi-platform r8a7740 with genpd
-
- .../devicetree/bindings/power/power_domain.txt     |  16 ++
- .../bindings/power/renesas,sysc-rmobile.txt        | 111 +++++++++
- arch/arm/boot/dts/r8a7740.dtsi                     | 257 +++++++++++++++++++++
- arch/arm/mach-shmobile/Kconfig                     |   3 +-
- arch/arm/mach-shmobile/pm-r8a7740.c                |  14 ++
- arch/arm/mach-shmobile/pm-rmobile.c                | 187 +++++++++++++--
- arch/arm/mach-shmobile/pm-rmobile.h                |   3 +-
- arch/arm/mach-shmobile/pm-sh7372.c                 |  11 +
- drivers/base/power/domain.c                        |  38 ++-
- drivers/sh/pm_runtime.c                            |   2 +
- include/linux/pm_domain.h                          |   2 +
- 11 files changed, 620 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/renesas,sysc-rmobile.txt
-
--- 
-1.9.1
-
-[*] Run-Time management of the module clocks is a continuing story...
-
-  - The hack in drivers/sh/pm_runtime.c used the pm_clk_notifier on the
-    platform bus. This (a) is not compatible with genpd (and thus with SoCs
-    where we want to use genpd to manage the power areas), as there can be only
-    one PM domain attached to a device, and (b) affects all platform devices,
-    not only the on-SoC devices we want to manage.
-
-  - This series uses genpd to handle the module clocks. This works fine for
-    R-Mobile, as it has fine-grained power areas. It does require representing
-    the (documented) C5 always-on power area in DT, as now all on-SoC devices
-    need a phandle to a PM domain to manage their clocks.
-    For R-Car SoCs, this will be more complicated, as there are only power
-    areas for CPU cores and co-processors (e.g. SH-4A and SGX), so I'll have
-    to "invent" an always-on area, and put it in DT?
-    While genpd is touted as the solution for complex Run-Time management of
-    clocks, I feel like it's forcing a Linux-solution in DT, which should
-    represent the hardware. On Renesas SoCs, the module clocks are not related
-    to the power areas, but they're a property of the Clock Pulse Generator's
-    Module Standby functionality, hence my earlier proposal [A] below.
-
-  - Related discussions:
-      [A] "[PATCH/RFC 0/4] of: Register clocks for Runtime PM with PM core", by
-          me (https://lkml.org/lkml/2014/4/24/1118),
-      [B] "[RFC PATCH 0/3] PM / clock_ops: allow to specify custom
-	  pm_clk_notifier callback", by Grygorii Strashko
-	  (https://lkml.org/lkml/2014/7/25/630).
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Mark.
