@@ -1,87 +1,96 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH RESEND 0/8] i2c: Relax mandatory I2C ID table passing
-Date: Tue, 16 Sep 2014 10:00:18 +0200
-Message-ID: <CABxcv=nZhBFRTTmafLxopTiX+wrOKtMD5tKf-00ysrWcZ5N5rg@mail.gmail.com>
-References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
-	<20140912134632.GE1930@katana>
-	<CABxcv==OXd+uePcB8zDzB-DDmr9ci6zscHX5TCauWoTO6E4fpg@mail.gmail.com>
-	<20140915224621.GG25162@lee--X1>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 1/7] clk: sunxi: Add post clk divider
+ for factor clocks
+Date: Tue, 16 Sep 2014 16:11:27 +0800
+Message-ID: <CAGb2v655SryUfMyhY2aeVSHzK8+ykNEZ9CiNJcA610Dkbv0pMg@mail.gmail.com>
+References: <1410000448-9999-1-git-send-email-wens@csie.org>
+ <1410000448-9999-2-git-send-email-wens@csie.org> <54145822.4020607@elopez.com.ar>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140915224621.GG25162@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBRHB36QAKGQEHG526SI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <54145822.4020607-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
+Hi,
 
-On Tue, Sep 16, 2014 at 12:46 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Fri, 12 Sep 2014, Javier Martinez Canillas wrote:
->> So what I propose is to do it incrementally:
->>
->> 1) Merge Lee's series since that is definitely a step in the right
->> direction to not make an I2C table mandatory (still will be needed for
->> module auto loading though).
->>
->> 2) On a follow-up series, make sure that all I2C drivers have a proper
->> OF table and that are using the MODULE_DEVICE_TABLE(of,...) macro to
->> fill the of:<foo> module aliases. That way the modules will have the
->> proper aliases of the form "of:<foo>" besides the "i2c:<foo>" one.
->> (even when always i2c:<foo> is reported to user-space currently).
->>
->> 3) Apply the patch I posted [0] that changes the behavior of
->> i2c_device_uevent() to report the OF uevent env vars to user-space in
->> case of DT probing which after 2) should not regress any driver module
->> auto-loading since all drivers should fill the of:<foo> aliases.
+On Sat, Sep 13, 2014 at 10:43 PM, Emilio L=C3=B3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org> =
+wrote:
+> Hi,
 >
-> This sounds resonable.
+> El 06/09/14 a las 07:47, Chen-Yu Tsai escibi=C3=B3:
 >
-
-Ok, sounds like a plan then.
-
->> After this, DT-only drivers will only need an OF table and legacy
->> drivers will only need an I2C table. Drivers that support both will
->> still need the two tables though which is a drawback of this approach
->> since unnecessary duplication will exist on these drivers and can
->> cause issues when both tables are not in sync as we saw on the issue
->> reported by Sjoerd on [1].
+>> Some factor clocks, mostly PLLs, have an extra fixed divider just before
+>> the clock output. Add an option to the factor clk driver config data to
+>> specify this divider.
 >>
->> So an alternate approach could be to do the opposite, just remove the
->> OF tables entirely from the I2C drivers and only use the I2C table
->> even for DT-only drivers. This is possible since i2c_device_match()
->> will succeed even without an OF table because i2c_match_id() matches
->> for compatible strings and what is reported as uevent is what is in
->> the I2C table anyways. I believe that is what Sjoerd suggested but
->> I'll let him comment on that in case I misunderstood.
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>   drivers/clk/sunxi/clk-factors.c | 3 +++
+>>   drivers/clk/sunxi/clk-factors.h | 1 +
+>>   2 files changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/clk/sunxi/clk-factors.c
+>> b/drivers/clk/sunxi/clk-factors.c
+>> index 2057c8a..435111d 100644
+>> --- a/drivers/clk/sunxi/clk-factors.c
+>> +++ b/drivers/clk/sunxi/clk-factors.c
+>> @@ -64,6 +64,9 @@ static unsigned long clk_factors_recalc_rate(struct
+>> clk_hw *hw,
+>>         /* Calculate the rate */
+>>         rate =3D (parent_rate * (n + config->n_start) * (k + 1) >> p) / =
+(m +
+>> 1);
+>>
+>> +       if (config->post_div)
+>> +               rate /=3D config->post_div;
+>> +
+>>         return rate;
+>>   }
+>>
+>> diff --git a/drivers/clk/sunxi/clk-factors.h
+>> b/drivers/clk/sunxi/clk-factors.h
+>> index d2d0efa..ce70c65 100644
+>> --- a/drivers/clk/sunxi/clk-factors.h
+>> +++ b/drivers/clk/sunxi/clk-factors.h
+>> @@ -16,6 +16,7 @@ struct clk_factors_config {
+>>         u8 pshift;
+>>         u8 pwidth;
+>>         u8 n_start;
+>> +       u8 post_div;
+>>   };
+>>
+>>   struct clk_factors {
+>>
 >
-> This would be really bad.  It would go completely against what I have
-> working to achieve and OF conventions.
+> For the record, I liked your solution on[1] more, as it's in line with wh=
+at
+> we're doing on the other sunxi platforms, instead of adding features in
+> factors to cover for some cases. But it's your and Maxime's call, as I
+> haven't written any of the sun6i code so far.
+
+I'm OK either way. It's really up to Maxime whether he likes the DT
+representation.
+
+> Cheers!
 >
+> Emilio
+>
+> [1] https://patchwork.kernel.org/patch/4228541/
 
-Yes, I was just mentioning the two possible approaches but Sjoerd did
-a much better work on the SPI thread [0].
-
-Another drawback of only using the I2C table is that the vendor prefix
-of the compatible strings are not reported to user-space. So if there
-are two devices with the same name (driven by two different drivers)
-but different vendor, these are going to be probed correctly if
-built-in but module auto-loading will fail since doesn't take into
-account the vendor prefix. This is the current status btw and I guess
-it was never noticed because there isn't two devices with the same
-name today.
-
-The drawback of using the OF based aliases is that many I2C drivers
-probably rely on the current behavior and don't have a proper OF table
-but IMHO that is a bug and has to be fixed anyways.
-
-Of course that doesn't mean that we shouldn't make sure that all
-drivers have a proper OF table (and using MODULE_DEVICE_TABLE) before
-changing i2c_device_uevent(). Hence my proposal to do it in 3 steps as
-explained before.
-
-Best regards,
-Javier
-
-[0]: https://lkml.org/lkml/2014/9/15/70
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
