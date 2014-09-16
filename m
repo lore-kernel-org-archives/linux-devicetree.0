@@ -1,116 +1,37 @@
-From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
- specify the physical timer
-Date: Mon, 15 Sep 2014 17:24:59 -0700
-Message-ID: <CAPz6YkVRcb7nUJ=P3kBCcLDhLUeq745nZG6JuBqMvcD+9GbC7g@mail.gmail.com>
-References: <1410452204-7277-1-git-send-email-dianders@chromium.org>
- <20140911164710.GW6158@arm.com> <5411D528.4050605@arm.com>
- <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com>
- <5411DA67.2040402@arm.com> <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com>
- <5411DF5D.8060906@arm.com> <5412DC48.7030708@codeaurora.org>
- <5412E3BB.9030800@arm.com> <54134291.3040700@codeaurora.org>
- <20140915111055.GD1577@arm.com> <54174CFF.7050504@codeaurora.org>
- <CAPz6YkU8hEL6yocPf7UL8-tz9Onuu-9bevAToK3CDWsShN92YQ@mail.gmail.com>
- <54175EFE.6010509@codeaurora.org> <CAPz6YkWbxiGHO8RK==HbQ3P22amZ9sDKpGew=a2U8gO7soQCDg@mail.gmail.com>
- <CAPz6YkWwzpd4oxarEH4Vu-Z_eH+ysw0TNubpPsv_eC6QJPcw7g@mail.gmail.com> <54176D62.9010600@codeaurora.org>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 1/1] of: add vendor prefix for Chipidea
+Date: Tue, 16 Sep 2014 08:35:44 +0800
+Message-ID: <1410827745-4101-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54176D62.9010600-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_S
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 3:51 PM, Christopher Covington
-<cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> Hi Sonny,
->
-> On 09/15/2014 06:04 PM, Sonny Rao wrote:
->> On Mon, Sep 15, 2014 at 2:52 PM, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>> On Mon, Sep 15, 2014 at 2:49 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>> On 09/15/14 14:47, Sonny Rao wrote:
->>>>> On Mon, Sep 15, 2014 at 1:33 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>>>> On 09/15/14 04:10, Catalin Marinas wrote:
->>>>>>> On Fri, Sep 12, 2014 at 07:59:29PM +0100, Stephen Boyd wrote:
->>>>>>>> On 09/12/14 05:14, Marc Zyngier wrote:
->>>>>>>>> We surely can handle the UNDEF and do something there. We just can't do
->>>>>>>>> it the way Doug described it above.
->>>>>>>> I suggested doing that for something else a while ago and Will and Dave
->>>>>>>> we're not thrilled[1]. The suggestion back then was to use DT to
->>>>>>>> indicate what mode the kernel is running in.
->>>>>>>>
->>>>>>>> [1]
->>>>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/105321.html
->>>>>>> I think the context was slightly different. As I re-read the thread, it
->>>>>>> seems that the discussion was around whether to use some SMC interface
->>>>>>> or not based on whether the kernel is running secure or non-secure. The
->>>>>>> argument made by Will was to actually specify the type of the firmware
->>>>>>> SMC interface in the DT and use it in the kernel (and probably assume
->>>>>>> the kernel is running in secure mode if no smc interface is specified in
->>>>>>> the DT; you could have both though, running in secure mode and also
->>>>>>> having firmware).
->>>>>>>
->>>>>>> In this arch timer case, we need to work around a firmware bug (or
->>>>>>> feature as 32-bit ARM kernels never required CNTVOFF initialisation by
->>>>>>> firmware, no matter how small such firmware is). We don't expect a
->>>>>>> specific SMC call to initialise CNTVOFF, so we can't describe it in the
->>>>>>> DT.
->>>>>> Agreed, we can't described SMC calls that don't exist. From my
->>>>>> perspective it's just another part of the cpu boot sequence that needs
->>>>>> to be handled in the kernel, so describing the requirement via the
->>>>>> cpu-boot method seems appropriate. It seems like we're making it harder
->>>>>> than it should be by handling the undef when we could have slightly
->>>>>> different SMP boot code (and suspend/resume code) depending on the boot
->>>>>> method property.
->>>>>
->>>>> +heiko
->>>>>
->>>>> So, for the case of rk3288, based on this discussion what I'm going to
->>>>> propose is to add code to rockchip.c which looks for a particular SMP
->>>>> enable method -- say something like "rockchip,rk3288-smp-secure-svc"
->>>>> which will then assume we have been booted in secure SVC mode and do
->>>>> the CNTVOFF fixup.  I believe, it will need to do this on the boot CPU
->>>>> as well, so I think it will need to scan the DT fairly early on the
->>>>> boot CPU and also perform the function there.
->>>>>
->>>>> I'll look into implementing this and post code.  Comments and
->>>>> suggestions appreciated, thanks.
->>>>
->>>> What goes wrong if we read the cntvoff from the boot CPU during
->>>> smp_prepare_cpus() phase and use that to set the cntvoff on the other
->>>> CPUs? That avoids needing to do anything very early by making the value
->>>> the same. It does mean that cntvoff is some random out of reset value
->>>> for CPU0, but at least it's consistent.
->>>
->>> I think we cannot read the value if we're not in hyp mode.
->>
->> Well, thinking about it a little more, I think you still have a good point.
->>
->> We don't need to do this early on, as long as we haven't started using
->> the arch timers yet.  If we are still able to do this at the point
->> where we're executing the code in arch/arm/mach-rockchip/platsmp.c
->> that finds the enable method then we can just handle it there.
->
-> I've been playing around with the probe-based approach and while I need to do
-> a lot more testing, it seems to be working for the first tens of instructions.
-> I hope to be able to share a draft of that soon. Basically, I just read the
-> current NSACR value and write it back (although maybe in the long term we
-> would want to make sure a few of those bits are set or cleared). If that
-> succeeds, we know we're in secure SVC and can proceed to set up MON and HYP.
+Adds chipidea to the list of DT vendor prefixes.
 
-Christopher, sounds promising, please do share, thanks!
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 1 file changed, 1 insertion(+)
 
-Marc or Will, what do you guys think about this approach?
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ac7269f..28c574f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -29,6 +29,7 @@ calxeda	Calxeda
+ capella	Capella Microsystems, Inc
+ cavium	Cavium, Inc.
+ cdns	Cadence Design Systems Inc.
++chipidea	Chipidea, Inc
+ chrp	Common Hardware Reference Platform
+ chunghwa	Chunghwa Picture Tubes Ltd.
+ cirrus	Cirrus Logic, Inc.
+-- 
+1.7.9.5
 
-
->
-> Christopher
->
-> --
-> Employee of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> hosted by the Linux Foundation.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
