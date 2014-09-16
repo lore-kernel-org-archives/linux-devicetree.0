@@ -1,220 +1,107 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: [PATCH v9 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Tue, 16 Sep 2014 15:33:42 -0700
-Message-ID: <1410906824-9321-3-git-send-email-tinamdar@apm.com>
-References: <1410906824-9321-1-git-send-email-tinamdar@apm.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1410906824-9321-1-git-send-email-tinamdar@apm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@apm.com, jcm@redhat.com, Tanmay Inamdar <tinamdar@apm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] Tegra xHCI support
+Date: Tue, 16 Sep 2014 16:40:28 -0600
+Message-ID: <5418BC5C.5020108@wwwdotorg.org>
+References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>	<CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>	<CAL1qeaF7U9aoBp5gQPS=r+pe6krKmXdP1qak2gjhNqQMoHFB8A@mail.gmail.com>	<CAAObsKAXO-pBtqd1jNj8faXqpE+5Wb0RFzPp+jn9FH0B=dHq8g@mail.gmail.com>	<CAL1qeaEk_r5XAKvvJfwXN9+Wi9EjC_2MgBfoP92TK=F+Ou9QTA@mail.gmail.com>	<CAAObsKAwgfx1g2p7PQP+=HudvAHHpcPi47gEH6BrxEgLu6w2VQ@mail.gmail.com>	<CAL1qeaEC9O8-jgjGC44cFctoZPpp4dRVfQ=mhSb_2on7GgiU0w@mail.gmail.com>	<54172B3F.9030901@wwwdotorg.org>	<CAL1qeaEK=C4j+G5CA_91xJNe25d=-y47EyZAYnaMh46fNYVDAw@mail.gmail.com>	<54185698.7020600@wwwdotorg.org> <CAL1qeaGf6JSuq=ekZY7Pp2zSAB0+0S9fZ70xWpct2MJ=pTSmug@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaGf6JSuq=ekZY7Pp2zSAB0+0S9fZ70xWpct2MJ=pTSmug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree nodes for APM X-Gene PCIe host controller and
-PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts
-nodes are added.
+On 09/16/2014 10:57 AM, Andrew Bresticker wrote:
+> On Tue, Sep 16, 2014 at 8:26 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 09/15/2014 01:30 PM, Andrew Bresticker wrote:
+>>>
+>>> On Mon, Sep 15, 2014 at 11:09 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>>> wrote:
+>>>>
+>>>> On 09/15/2014 11:06 AM, Andrew Bresticker wrote:
+>>>>>
+>>>>> On Mon, Sep 15, 2014 at 12:00 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
+>>>>> wrote:
+>>>>>>
+>>>>>> On 12 September 2014 18:37, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>>>> wrote:
+>>>>>>>
+>>>>>>> On Tue, Sep 9, 2014 at 1:21 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
+>>>>>>> wrote:
+>>>>>>>>
+>>>>>>>> On 8 September 2014 18:22, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>>>>>> wrote:
+>>>>>>>>>
+>>>>>>>>> On Mon, Sep 8, 2014 at 8:34 AM, Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
+>>>>>>>>> wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 2 September 2014 23:34, Andrew Bresticker
+>>>>>>>>>> <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0
+>>>>>>>>>>> and
+>>>>>>>>>>> USB3.0 memory sticks and ethernet dongles using controller
+>>>>>>>>>>> firmware
+>>>>>>>>>>> recently posted by Andrew Chew [2].
+>>
+>> ...
+>>>>>
+>>>>> Stephen, Thierry, have either of you had a chance to test this series?
+>>>>
+>>>>
+>>>> I haven't had a chance to yet. I just went to try it out, and found that it
+>>>> depends on a whole slew of other patches that I don't have. Is there a git
+>>>> branch somewhere to save me having to track down all the dependencies?
+>>>
+>>> Yes, Tomeu has the branch he used for testing here:
+>>> http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=3.17rc4-xhci
+>>
+>> Hmm. That git server was quite reluctant to cough up its bits, but it did
+>> eventually.
+>>
+>>> You'll also need the firmware Andrew Chew posted:
+>>> https://patchwork.ozlabs.org/patch/384013/
+>>
+>> The XHCI driver can't load its firmware unless it's a module; if I make it
+>> built-in, it fails immediately with error -2 during "Direct firmware
+>> loading". The driver needs to work with either immediate or deferred
+>> firmware loading.
+>
+> If you want the driver to be built-in, you'll either need to build the
+> firmware in as well (i.e. EXTRA_FIRMWARE) or enable
+> FW_LOADER_USER_HELPER_FALLBACK to load with userspace/uevent (though
+> apparently this is deprecated).
 
-Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
----
- arch/arm64/boot/dts/apm-mustang.dts |   8 ++
- arch/arm64/boot/dts/apm-storm.dtsi  | 165 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 173 insertions(+)
+Hmm. I didn't have to do that for the Atmel touchpad driver to work, but 
+perhaps it's just ignoring a firmware loading error, and continuing with 
+whatever is in the device's flash already.
 
-diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
-index b2f5622..f649000 100644
---- a/arch/arm64/boot/dts/apm-mustang.dts
-+++ b/arch/arm64/boot/dts/apm-mustang.dts
-@@ -25,6 +25,14 @@
- 	};
- };
- 
-+&pcie0clk {
-+	status = "ok";
-+};
-+
-+&pcie0 {
-+	status = "ok";
-+};
-+
- &serial0 {
- 	status = "ok";
- };
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index c0aceef..403197a 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -269,6 +269,171 @@
- 				enable-mask = <0x2>;
- 				clock-output-names = "rtcclk";
- 			};
-+
-+			pcie0clk: pcie0clk@1f2bc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2bc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie0clk";
-+			};
-+
-+			pcie1clk: pcie1clk@1f2cc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2cc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie1clk";
-+			};
-+
-+			pcie2clk: pcie2clk@1f2dc000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f2dc000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie2clk";
-+			};
-+
-+			pcie3clk: pcie3clk@1f50c000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f50c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie3clk";
-+			};
-+
-+			pcie4clk: pcie4clk@1f51c000 {
-+				status = "disabled";
-+				compatible = "apm,xgene-device-clock";
-+				#clock-cells = <1>;
-+				clocks = <&socplldiv2 0>;
-+				reg = <0x0 0x1f51c000 0x0 0x1000>;
-+				reg-names = "csr-reg";
-+				clock-output-names = "pcie4clk";
-+			};
-+		};
-+
-+		pcie0: pcie@1f2b0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
-+				0xe0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x00 0x00000000 0xe0 0x10000000 0x00 0x00010000   /* io */
-+				  0x02000000 0x00 0x80000000 0xe1 0x80000000 0x00 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc2 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xc3 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xc4 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xc5 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie0clk 0>;
-+		};
-+
-+		pcie1: pcie@1f2c0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f2c0000 0x0 0x00010000   /* Controller registers */
-+				0xd0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xd0 0x10000000 0x00 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0xd1 0x80000000 0x00 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xc8 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xc9 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xca 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xcb 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie1clk 0>;
-+		};
-+
-+		pcie2: pcie@1f2d0000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg =  < 0x00 0x1f2d0000 0x0 0x00010000   /* Controller registers */
-+				 0x90 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0x90 0x10000000 0x0 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0x91 0x80000000 0x0 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xce 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xcf 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xd0 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xd1 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie2clk 0>;
-+		};
-+
-+		pcie3: pcie@1f500000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f500000 0x0 0x00010000   /* Controller registers */
-+				0xa0 0xd0000000 0x0 0x00040000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xa0 0x10000000 0x0 0x00010000   /* io   */
-+				  0x02000000 0x0 0x80000000 0xa1 0x80000000 0x0 0x80000000>; /* mem  */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xd4 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xd5 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xd6 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xd7 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie3clk 0>;
-+		};
-+
-+		pcie4: pcie@1f510000 {
-+			status = "disabled";
-+			device_type = "pci";
-+			compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
-+			#interrupt-cells = <1>;
-+			#size-cells = <2>;
-+			#address-cells = <3>;
-+			reg = < 0x00 0x1f510000 0x0 0x00010000   /* Controller registers */
-+				0xc0 0xd0000000 0x0 0x00200000>; /* PCI config space */
-+			reg-names = "csr", "cfg";
-+			ranges = <0x01000000 0x0 0x00000000 0xc0 0x10000000 0x0 0x00010000   /* io  */
-+				  0x02000000 0x0 0x80000000 0xc1 0x80000000 0x0 0x80000000>; /* mem */
-+			dma-ranges = <0x42000000 0x80 0x00000000 0x80 0x00000000 0x00 0x80000000
-+				      0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>;
-+			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+			interrupt-map = <0x0 0x0 0x0 0x1 &gic 0x0 0xda 0x1
-+					 0x0 0x0 0x0 0x2 &gic 0x0 0xdb 0x1
-+					 0x0 0x0 0x0 0x3 &gic 0x0 0xdc 0x1
-+					 0x0 0x0 0x0 0x4 &gic 0x0 0xdd 0x1>;
-+			dma-coherent;
-+			clocks = <&pcie4clk 0>;
- 		};
- 
- 		serial0: serial@1c020000 {
--- 
-1.9.1
+It seems odd that such a fundamental feature would require a deprecated 
+Kconfig option. Is there some replacement that does the same thing that 
+isn't deprecated? The Kconfig help for the option doesn't say anything 
+useful...
 
+Oh, this option doesn't actually seem to work. I see the following in dmesg:
+
+> [root@swarren-dt ~]# dmesg|grep -i -e xhci -e firmware
+> [    1.461773] xhci-tegra 70090000.usb: Failed to get supply 'avddio-pex': -517
+> [    1.468930] platform 70090000.usb: Driver xhci-tegra requests probe deferral
+> [    2.567966] xhci-tegra 70090000.usb: Direct firmware load for nvidia/tegra124/xusb.bin failed with error -2
+> [    2.577786] xhci-tegra 70090000.usb: Falling back to user helper
+
+... but:
+
+[root@swarren-dt ~]# lsusb
+unable to initialize libusb: -99
+
+Perhaps systemd-udevd doesn't implement firmware loading; is it 
+user-space udev that's deprecated implementing user-space firmware 
+loading, rather than the kernel deprecating support for calling out to 
+user space?
+
+This sucks, because now I can't just TFTP boot kernels but somehow have 
+to get updated kernel modules onto my device every time before testing a 
+new kernel build. That's a huge time-sink, unless I work out NFS root, 
+which probably isn't properly or easily supported by any distro.
