@@ -1,82 +1,74 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
- i.mx6dl
-Date: Tue, 16 Sep 2014 11:50:06 +0200
-Message-ID: <1410861006.2746.1.camel@pengutronix.de>
-References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
-	 <1410774073.3314.1.camel@pengutronix.de>
-	 <20140916034123.GA20800@Robin-OptiPlex-780>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: a case for a common efuse API?
+Date: Tue, 16 Sep 2014 12:16:47 +0200
+Message-ID: <20140916101647.GC9948@lukather>
+References: <53BC4DD7.20906@codeaurora.org>
+ <20140709083509.GQ13423@lukather>
+ <53BDD0F3.7040906@codeaurora.org>
+ <20140710142616.GD27469@lukather>
+ <54121B2C.5090702@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140916034123.GA20800@Robin-OptiPlex-780>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OROCMA9jn6tkzFBc"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54121B2C.5090702@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
 
-Am Dienstag, den 16.09.2014, 11:41 +0800 schrieb Robin Gong:
-> Hi Lucas,
->   I understood your concern,but looks we have to break old DT.
+--OROCMA9jn6tkzFBc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, but this isn't going to happen. And honestly I don't even see the
-need to do so.
+Hi Stephen,
 
-> Our old DT
-> support SPI DMA on i.mx6q/dl(v2,b3810c3dc1bcbc6a), but the DMA support patch
-> for SPI driver is still in reviewing(v6).
+On Thu, Sep 11, 2014 at 02:59:08PM -0700, Stephen Boyd wrote:
+> On 07/10/14 07:26, Maxime Ripard wrote:
+> >
+> > I guess that the kind of things we could discuss after posting these
+> > patches, but yep, it looks reasonnable.
+> >
+> > I'll try to get things a bit cleaner, and post them in the next days.
+> >
+>=20
+> I never saw anything. Did you do any cleaning/posting? I'm going to try
+> it out today/tomorrow to see if it can make some things cleaner.
 
-So this means now is the time to fix this driver patch to not enable DMA
-on imx6dl. Nobody will experience any breakage in this case.
+Sorry, I never got any time to put things in shape besides rebasing.
 
-> So the violation you mentioned comes
-> if someone use the DT during the time(from v2 to spi driver patch upstreamed).
->   The different behaviors on different chips(only i.mxdl can't pass strength
-> test) are just found from last month, this is why I sent the patch for disable
-> SPI DMA support on i.mx6dl during I sent v6 patch for spi driver. I think that's
-> make sense, because DTs are also in development, new difference between different
-> chips maybe found in the future although they share the same IP....
->   Yes, I can check cpu type by looking at DT in spi driver, but it's not nice.
+Feel free to pick up the work.
 
-Yeah it would have been nicer if we had an explicit DT compatible for
-the imx6dl ecspi version, but it's not there, so we have to cope with
-this.
+Maxime
 
-> So I'm afraid that we have to break the old DTs in the gap between the two
-> levels patch accepted cycle.
-> 
-> On Mon, Sep 15, 2014 at 11:41:13AM +0200, Lucas Stach wrote:
-> > Am Mittwoch, den 10.09.2014, 13:30 +0800 schrieb Robin Gong:
-> > > There is one weird data in rxfifo after one full rx/tx transfer
-> > > done sometimes. It looks a design issue and hard to workaround
-> > > totally, so disable dma functhion here. And will re-enable it
-> > > once the root cause found.
-> > > 
-> > Sorry, I'm late to this as Shawn seems to already have picked up this
-> > patch, but this isn't the right way to fix the problem.
-> > 
-> > We made it clear at kernel summit last year that we try to not break
-> > existing DTs as booting a new kernel with an old DT is a valid use case.
-> > While you don't strictly violate this rule what you do here is only
-> > fixing systems booting with a new DT while leaving others broken.
-> > 
-> > If you are working around a hardware problem please disable DMA support
-> > in the driver. This will also allow you to enable it again, if you find
-> > another workaround without touching the DT again.
-> > 
-> > So this patch gets a NAK from me.
-> > 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Regards,
-Lucas
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
+--OROCMA9jn6tkzFBc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUGA4PAAoJEBx+YmzsjxAg378P/240u56bFmIO0lVNiom8uTSI
+pIYuHkQuoG/bSoSfkPgIQhADAsFO8XPuu5/R4oX2AgU1YTro51K/wqAAyrJZxBfk
+OEhrN0HTiSde2Z6HewnK4wVlq/7Tia4zvST1ea40iUxHpT2VdjyVAO5AyDQAIpCs
+t2Cv9A+atbrGzll4V4tIUNmi3spKdVQ2uAOYne3xMRs8zwEeS+N2KDbu6N/03wH8
+JKllkq0ECWOW0Op7GatAHzOOVJXDMvR2FBvjLcfE8Atx9XRXNXak+gso2TPptkFc
+wawXBGh2s0NzP1X6NUyxwTw8yyvIuewjsqUBvc8jzJO5zpn+Eim0aEz8wwMrVDQw
+FXIGZzOV/x5qhESVd8/bknT/dP4xQ+ulZOMe+jOK/G3NtLviplJy2nBp+z6hwD0i
+fdeOTs/mGp3GH2sNoWxxFq+SnOgknrsi8EyL2HP3ZQj2lAtSMJotaMXyHT/1dWyd
+ehB0uGVue5FRPyALPmPpQS4j1+6QZufYyYTSUosAsU7JidcWVb/7ihdiZxCfueI7
+JGKZJREO6m6fFG3aBkXZtNLW8ADciIOOpqSiaq+n1sC+lO/a9hOQ7pf7T5DZ7Pge
+VL6regEdSe1hyAf1DEEGXgGWs5KkBpLI8zYgrIgk81QKW5uYLgFA4VSFxUvCK1BK
+ULWzrifChHxoIn0syLPv
+=ZqAQ
+-----END PGP SIGNATURE-----
+
+--OROCMA9jn6tkzFBc--
