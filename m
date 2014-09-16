@@ -1,200 +1,73 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 4/4 v4] GPIO: gpio-dwapb: Suspend & Resume PM enabling
-Date: Tue, 16 Sep 2014 10:26:45 +0300
-Message-ID: <1410852405.7023.48.camel@linux.intel.com>
-References: <1410859335-11080-1-git-send-email-alvin.chen@intel.com>
-	 <1410859335-11080-5-git-send-email-alvin.chen@intel.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
+Date: Tue, 16 Sep 2014 15:45:22 +0800
+Message-ID: <1410853522.1280.0.camel@rzhang1-toshiba>
+References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
+	 <1410403012.25559.69.camel@rzhang1-toshiba>
+	 <20140911121842.GB26715@developer> <40514790.Xc34lyFLGa@wuerfel>
+	 <20140911155324.GA27076@developer>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410859335-11080-5-git-send-email-alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boon Leong Ong <boon.leong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hock Leong Kweh <hock.leong.kweh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Andrzej Siewior <sebastian-E0PNVn5OA6ohrxcnuTQ+TQ@public.gmane.org>, Mika Westerberg <mika.westerberg-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140911155324.GA27076@developer>
+Sender: linux-doc-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, dtor <dtor@chromium.org>, Chris Zhong <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, zhaoyifeng <zyf@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-09-16 at 02:22 -0700, Weike Chen wrote:
-> This patch enables suspend and resume mode for the power management, and
-> it is based on Josef Ahmad's previous work.
+
+On Thu, 2014-09-11 at 11:53 -0400, Eduardo Valentin wrote:
+> Arnd,
 > 
-
-Few comments below.
-
-> Reviewed-by: Hock Leong Kweh <hock.leong.kweh-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-
-You still keep that guy as reviewer in a whole series, however I didn't
-see a word from him here. How is it possible?
-
-> Signed-off-by: Weike Chen <alvin.chen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/gpio/gpio-dwapb.c |  109 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 109 insertions(+)
+> On Thu, Sep 11, 2014 at 02:32:08PM +0200, Arnd Bergmann wrote:
+> > On Thursday 11 September 2014 08:18:43 Eduardo Valentin wrote:
+> > > > As what we want is to make thermal driver have a chance to configure the
+> > > > hardware shutdown registers, I'm thinking if we can do this without
+> > > > representing the hardware shutdown value as a trip point.
+> > > > Say,
+> > > > 1. parse DT, and get the hardware shutdown temperature value, and store
+> > > > it somewhere, e.g. struct __thermal_zone.
+> > > > 2. introduce a new parameter, int (*set_hardware_trip)(void *, long *),
+> > > > in thermal_zone_of_sensor_register().
+> > > > 3. invoke set_hard_trip(tz, hardware_shutdown_temperature_value) in
+> > > > thermal_zone_of_sensor_register().
+> > > 
+> > > The only issue I have with the above proposal is that not all platforms
+> > > use DT. Some still boot with boardfiles, for instance. Thus, the
+> > > parameter to configure hardware thermal shutdown needs to be common on
+> > > thermal core, not specific to of-thermal. Do you agree?
+> > 
+> > Do you know of a machine that can't yet be converted to DT and that
+> > needs this driver? In case of rockchips that is certainly not the
+> > case, and we don't care about anybody trying to use board files out
+> > of tree, they can just hack the thermal support as well.
 > 
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index 9a76e3c..14d83af 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -50,11 +50,14 @@
->  #define GPIO_SWPORT_DDR_SIZE	(GPIO_SWPORTB_DDR - GPIO_SWPORTA_DDR)
->  
->  struct dwapb_gpio;
-> +struct dwapb_context;
->  
->  struct dwapb_gpio_port {
->  	struct bgpio_chip	bgc;
->  	bool			is_registered;
->  	struct dwapb_gpio	*gpio;
-> +	struct dwapb_context	*ctx;
-> +	unsigned int		idx;
->  };
->  
->  struct dwapb_gpio {
-> @@ -377,6 +380,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
->  
->  	port = &gpio->ports[offs];
->  	port->gpio = gpio;
-> +	port->idx = pp->idx;
->  
->  	dat = gpio->regs + GPIO_EXT_PORTA + (pp->idx * GPIO_EXT_PORT_SIZE);
->  	set = gpio->regs + GPIO_SWPORTA_DR + (pp->idx * GPIO_SWPORT_DR_SIZE);
-> @@ -584,10 +588,115 @@ static const struct of_device_id dwapb_of_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, dwapb_of_match);
->  
-> +#ifdef CONFIG_PM_SLEEP
-> +/* Store GPIO context across system-wide suspend/resume transitions */
-> +struct dwapb_context {
-> +	u32 data;
-> +	u32 dir;
-> +	u32 ext;
-> +	u32 int_en;
-> +	u32 int_mask;
-> +	u32 int_type;
-> +	u32 int_pol;
-> +	u32 int_deb;
-> +};
+> I see. Again, the only concern I have is to produce thermal framework APIs
+> that would be only in the of-thermal. My point is not specific to this
+> patch, or this platform, but with a detail in the above proposal. 
+> 
+> While I agree to have a trip specific to configurable hardware triggered
+> thermal shutdown, I just don't see why it needs to be a feature
+> implemented only via of-thermal. It has to be properly defined in
+> thermal core.
+> 
+> The proposal of of-thermal is not to become a separate/competing thermal
+> framework.
+> 
+Agreed.
+And I think we can have such feature in thermal core.
+But again I don't think we should represent it as an trip point.
+Instead, we can have a separate parameter for
 
-> +
-> +static int dwapb_gpio_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
-> +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-> +	unsigned long flags;
-> +	int i;
-> +
-> +	spin_lock_irqsave(&bgc->lock, flags);
-> +	for (i = 0; i < gpio->nr_ports; i++) {
-> +		unsigned int offset;
-> +		unsigned int idx = gpio->ports[i].idx;
-> +		struct dwapb_context *ctx = gpio->ports[i].ctx;
-> +
-> +		if (!ctx) {
-> +			ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-> +			gpio->ports[i].ctx = ctx;
-> +		}
-
-I don't think it's a right place to allocate this resource, especially
-with devm_ helper. Can you move this to probe() stage?
-
-Or you even can embed contex structure inside chip one with #ifdef
-CONFIG_PM_SLEEP.
-
-Maybe others could comment on this.
-
-> +
-> +		offset = GPIO_SWPORTA_DDR + (idx * GPIO_SWPORT_DDR_SIZE);
-
-No need to have parentheses here. Check the code below as well.
-
-> +		ctx->dir = dwapb_read(gpio, offset);
-> +
-> +		offset = GPIO_SWPORTA_DR + (idx * GPIO_SWPORT_DR_SIZE);
-> +		ctx->data = dwapb_read(gpio, offset);
-> +
-> +		offset = GPIO_EXT_PORTA + (idx * GPIO_EXT_PORT_SIZE);
-> +		ctx->ext = dwapb_read(gpio, offset);
-> +
-> +		/* Only port A can provide interrupts */
-> +		if (idx == 0) {
-> +			ctx->int_mask	= dwapb_read(gpio, GPIO_INTMASK);
-> +			ctx->int_en	= dwapb_read(gpio, GPIO_INTEN);
-> +			ctx->int_pol	= dwapb_read(gpio, GPIO_INT_POLARITY);
-> +			ctx->int_type	= dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
-> +			ctx->int_deb	= dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
-> +
-> +			/* Mask out interrupts */
-> +			dwapb_write(gpio, GPIO_INTMASK, 0xffffffff);
-> +		}
-> +	}
-> +	spin_unlock_irqrestore(&bgc->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dwapb_gpio_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
-> +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-> +	unsigned long flags;
-> +	int i;
-> +
-> +	spin_lock_irqsave(&bgc->lock, flags);
-> +	for (i = 0; i < gpio->nr_ports; i++) {
-> +		unsigned int offset;
-> +		unsigned int idx = gpio->ports[i].idx;
-> +		struct dwapb_context *ctx = gpio->ports[i].ctx;
-> +
-> +		BUG_ON(ctx == 0);
-> +
-> +		offset = GPIO_SWPORTA_DR + (idx * GPIO_SWPORT_DR_SIZE);
-> +		dwapb_write(gpio, offset, ctx->data);
-> +
-> +		offset = GPIO_SWPORTA_DDR + (idx * GPIO_SWPORT_DDR_SIZE);
-> +		dwapb_write(gpio, offset, ctx->dir);
-> +
-> +		offset = GPIO_EXT_PORTA + (idx * GPIO_EXT_PORT_SIZE);
-> +		dwapb_write(gpio, offset, ctx->ext);
-> +
-> +		/* Only port A can provide interrupts */
-> +		if (idx == 0) {
-> +			dwapb_write(gpio, GPIO_INTTYPE_LEVEL, ctx->int_type);
-> +			dwapb_write(gpio, GPIO_INT_POLARITY, ctx->int_pol);
-> +			dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, ctx->int_deb);
-> +			dwapb_write(gpio, GPIO_INTEN, ctx->int_en);
-> +			dwapb_write(gpio, GPIO_INTMASK, ctx->int_mask);
-> +
-> +			/* Clear out spurious interrupts */
-> +			dwapb_write(gpio, GPIO_PORTA_EOI, 0xffffffff);
-> +		}
-> +	}
-> +	spin_unlock_irqrestore(&bgc->lock, flags);
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
-> +			 dwapb_gpio_resume);
-> +
->  static struct platform_driver dwapb_gpio_driver = {
->  	.driver		= {
->  		.name	= "gpio-dwapb",
->  		.owner	= THIS_MODULE,
-> +		.pm	= &dwapb_gpio_pm_ops,
->  		.of_match_table = of_match_ptr(dwapb_of_match),
->  	},
->  	.probe		= dwapb_gpio_probe,
+thanks,
+rui
+> > 
+> > 	Arnd
+> 
+> Cheers,
+> 
+> Eduardo
 
 
 
--- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
