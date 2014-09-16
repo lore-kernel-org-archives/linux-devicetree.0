@@ -1,47 +1,43 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: a case for a common efuse API?
-Date: Tue, 16 Sep 2014 12:16:47 +0200
-Message-ID: <20140916101647.GC9948@lukather>
-References: <53BC4DD7.20906@codeaurora.org>
- <20140709083509.GQ13423@lukather>
- <53BDD0F3.7040906@codeaurora.org>
- <20140710142616.GD27469@lukather>
- <54121B2C.5090702@codeaurora.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dmaengine: sun6i: support parameterized
+ compatible strings
+Date: Tue, 16 Sep 2014 12:33:01 +0200
+Message-ID: <20140916103301.GE9948@lukather>
+References: <1410616381-30226-1-git-send-email-wens@csie.org>
+ <1410616381-30226-2-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OROCMA9jn6tkzFBc"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="B0nZA57HJSoPbsHY"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBYVE4CQAKGQEXJWCOSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54121B2C.5090702@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1410616381-30226-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---OROCMA9jn6tkzFBc
+--B0nZA57HJSoPbsHY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Stephen,
-
-On Thu, Sep 11, 2014 at 02:59:08PM -0700, Stephen Boyd wrote:
-> On 07/10/14 07:26, Maxime Ripard wrote:
-> >
-> > I guess that the kind of things we could discuss after posting these
-> > patches, but yep, it looks reasonnable.
-> >
-> > I'll try to get things a bit cleaner, and post them in the next days.
-> >
+On Sat, Sep 13, 2014 at 09:52:59PM +0800, Chen-Yu Tsai wrote:
+> This patch adds support for hardware parameters tied to compatible
+> strings, so similar hardware can reuse the driver.
 >=20
-> I never saw anything. Did you do any cleaning/posting? I'm going to try
-> it out today/tomorrow to see if it can make some things cleaner.
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Sorry, I never got any time to put things in shape besides rebasing.
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Feel free to pick up the work.
-
+Thanks!
 Maxime
 
 --=20
@@ -49,26 +45,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---OROCMA9jn6tkzFBc
+--B0nZA57HJSoPbsHY
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJUGA4PAAoJEBx+YmzsjxAg378P/240u56bFmIO0lVNiom8uTSI
-pIYuHkQuoG/bSoSfkPgIQhADAsFO8XPuu5/R4oX2AgU1YTro51K/wqAAyrJZxBfk
-OEhrN0HTiSde2Z6HewnK4wVlq/7Tia4zvST1ea40iUxHpT2VdjyVAO5AyDQAIpCs
-t2Cv9A+atbrGzll4V4tIUNmi3spKdVQ2uAOYne3xMRs8zwEeS+N2KDbu6N/03wH8
-JKllkq0ECWOW0Op7GatAHzOOVJXDMvR2FBvjLcfE8Atx9XRXNXak+gso2TPptkFc
-wawXBGh2s0NzP1X6NUyxwTw8yyvIuewjsqUBvc8jzJO5zpn+Eim0aEz8wwMrVDQw
-FXIGZzOV/x5qhESVd8/bknT/dP4xQ+ulZOMe+jOK/G3NtLviplJy2nBp+z6hwD0i
-fdeOTs/mGp3GH2sNoWxxFq+SnOgknrsi8EyL2HP3ZQj2lAtSMJotaMXyHT/1dWyd
-ehB0uGVue5FRPyALPmPpQS4j1+6QZufYyYTSUosAsU7JidcWVb/7ihdiZxCfueI7
-JGKZJREO6m6fFG3aBkXZtNLW8ADciIOOpqSiaq+n1sC+lO/a9hOQ7pf7T5DZ7Pge
-VL6regEdSe1hyAf1DEEGXgGWs5KkBpLI8zYgrIgk81QKW5uYLgFA4VSFxUvCK1BK
-ULWzrifChHxoIn0syLPv
-=ZqAQ
+iQIcBAEBAgAGBQJUGBHdAAoJEBx+YmzsjxAgWnYP/0HzFoGzOghsgqZOoaLY/qOu
+RAun1nTxFTYP8kYRSjGPzEr6Xhp/z9kWgnznEUfdL+G9Zx+YvlWxRrkivjGgZQi6
+I3gRn0m800078bgWgZ/ADYjz2P4jKd0ztPsNtik2IPCm35SLUMWUGTqRwLqcriPh
+TJXXlCXcL2Mc0luyPLG5zM7pgm1nU4J2RalQWTZOUK5EGH7eYthIZnftrwqi6H/b
+s+epMaZYjpfrI2zRN6PlAWhup4+Pg40mcj1YGEiiEQ2oTe/S3Kiq60ob4Wg7SOyz
+ohlZr8NYff/1A8d3F/Cjwcu2oh19Q2Szb5Mct68d0UzR/xf6J89h88wHV9r5VH90
+SQJQXXeGuu0dSpCz7DydUM6NJAZqGaHb09rlW0M+sUzHPctPZibg9YE2HbqUCa8E
+ZaD0DZco0KUI7JpBrFGIYcGPmfoyaTNFWjuqitKv4+ANBf67QTvJbacM3HNGqVK5
+Ayn5JpW09fun8VcT1Gali+ZsGwKGMV/HvR3K6EPeFIvAkIkBrLYok/9sY3+bKAY1
+3W5yLqSflcMq7z21oY+q8BbEfSRma8Mo3AuDVtIdF7rTcHOqiLAb4Qw1+JH7pqeB
+dn2/jntyfAwSo+DlvCG7WYFyHB1Y4W8+TiW58jhPnqOurnRbTvZwPjTVDyh3YGY1
+zxhZa7MFcDcAMeR8ss5i
+=1yAm
 -----END PGP SIGNATURE-----
 
---OROCMA9jn6tkzFBc--
+--B0nZA57HJSoPbsHY--
