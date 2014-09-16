@@ -1,61 +1,55 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH RESEND] ARM: DTS: correct the capability string for mmc0
-Date: Tue, 16 Sep 2014 14:20:09 +0530
-Message-ID: <1410857409-24767-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: kgene.kim@samsung.com, dianders@chromium.org, jh80.chung@samsung.com, tgih.jun@samsung.com, javier.martinez@collabora.co.uk, khilman@linaro.org, Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+From: Frans Klaver <frans.klaver@xsens.com>
+Subject: Re: [PATCH 3/4] tty: omap-serial: use threaded interrupt handler
+Date: Tue, 16 Sep 2014 10:50:37 +0200
+Message-ID: <20140916085037.GI28458@ci00147.xsens-tech.local>
+References: <1410789610-23059-1-git-send-email-frans.klaver@xsens.com>
+ <1410789610-23059-4-git-send-email-frans.klaver@xsens.com>
+ <54170823.7040801@hurleysoftware.com>
+ <5417228C.5070503@hurleysoftware.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5417228C.5070503@hurleysoftware.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Hurley <peter@hurleysoftware.com>
+Cc: Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Pelykh <alexey.pelykh@gmail.com>, Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+On Mon, Sep 15, 2014 at 01:31:56PM -0400, Peter Hurley wrote:
+> On 09/15/2014 11:39 AM, Peter Hurley wrote:
+> > On 09/15/2014 10:00 AM, Frans Klaver wrote:
+> >> At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we see 1600 uart
+> >> rx buffer overflows within 30 seconds. Threading the interrupt handling reduces
+> >> this to about 170 overflows in 10 minutes.
+> > 
+> > Why is the threadirqs kernel boot option not sufficient?
+> > Or conversely, shouldn't this be selectable?
+> 
 
-MMC capability for HS200 is parsed in mmc/core/host.c as
-dts string "mmc-hs200-1_8v".
+I wasn't aware of the threadirqs boot option. I also wouldn't know if
+this should be selectable. What would be a reason to favor the
+non-threaded irq over the threaded irq?
 
-This patch corrects the dts string for Exynos5420 based peach-pit
-and Exynos5800 based peach-pi boards.
+> Also, do you see the same performance differential when you implement this
+> in the 8250 driver (that is, on top of Sebastian's omap->8250 conversion)?
+> 
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
----
+I haven't gotten Sebastian's driver to work properly yet on the console.
+There was no reason for me yet to throw my omap changes on top of
+Sebastian's queue.
 
-Hi Kukjin,
+> > PS - To overflow the 64 byte RX FIFO at those data rates means interrupt
+> > latency in excess of 250us?
 
-As commented by Doug earlier for this patch, the two patches required
-  -- mmc: dw_mmc: Make sure we don't get stuck when we get an error
-  -- mmc: dw_mmc: change to use recommended reset procedure
-are now merged in upstream.
-So you can go ahead and pick this change.
+At 3686400 baud it should take about 174 us to fill a 64 byte buffer. I
+haven't done any measurements on the interrupt latency though. If you
+consider that we're sending about 1kB of data, 240 times a second, we're
+spending a lot of time reading data from the uart. I can imagine the
+system has other work to do as well.
 
- arch/arm/boot/dts/exynos5420-peach-pit.dts |    2 +-
- arch/arm/boot/dts/exynos5800-peach-pi.dts  |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+This doesn't mean that we're not interested in Sebastian's driver
+anymore though. We really want that dma support.
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 9a23382..e52ed04 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -560,7 +560,7 @@
- 	status = "okay";
- 	num-slots = <1>;
- 	broken-cd;
--	caps2-mmc-hs200-1_8v;
-+	mmc-hs200-1_8v;
- 	cap-mmc-highspeed;
- 	non-removable;
- 	card-detect-delay = <200>;
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 1d31c81..8616fbd 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -548,7 +548,7 @@
- 	status = "okay";
- 	num-slots = <1>;
- 	broken-cd;
--	caps2-mmc-hs200-1_8v;
-+	mmc-hs200-1_8v;
- 	cap-mmc-highspeed;
- 	non-removable;
- 	card-detect-delay = <200>;
--- 
-1.7.10.4
+Thanks,
+Frans
