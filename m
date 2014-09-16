@@ -1,55 +1,41 @@
-From: Frans Klaver <frans.klaver@xsens.com>
-Subject: Re: [PATCH 3/4] tty: omap-serial: use threaded interrupt handler
-Date: Tue, 16 Sep 2014 10:50:37 +0200
-Message-ID: <20140916085037.GI28458@ci00147.xsens-tech.local>
-References: <1410789610-23059-1-git-send-email-frans.klaver@xsens.com>
- <1410789610-23059-4-git-send-email-frans.klaver@xsens.com>
- <54170823.7040801@hurleysoftware.com>
- <5417228C.5070503@hurleysoftware.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5417228C.5070503@hurleysoftware.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Pelykh <alexey.pelykh@gmail.com>, Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/3] iio: exynos-adc: use syscon instead of ioremap
+Date: Tue, 16 Sep 2014 14:28:48 +0530
+Message-ID: <1410857931-4980-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 01:31:56PM -0400, Peter Hurley wrote:
-> On 09/15/2014 11:39 AM, Peter Hurley wrote:
-> > On 09/15/2014 10:00 AM, Frans Klaver wrote:
-> >> At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we see 1600 uart
-> >> rx buffer overflows within 30 seconds. Threading the interrupt handling reduces
-> >> this to about 170 overflows in 10 minutes.
-> > 
-> > Why is the threadirqs kernel boot option not sufficient?
-> > Or conversely, shouldn't this be selectable?
-> 
+Changes since v1:
+1. Rebased on top of togreg branch of IIO git.
 
-I wasn't aware of the threadirqs boot option. I also wouldn't know if
-this should be selectable. What would be a reason to favor the
-non-threaded irq over the threaded irq?
+This patch set does the following
+1. Use the syscon and Regmap API instead of ioremappaing the
+   ADC_PHY register from PMU.
+2. Updates the Documentation in exynos-adc.txt with syscon phandle
+   for the ADC nodes.
+3. Updates the Dts files for Exynos3250, Exynos4x12, Exynos5250,
+   Exynos5420 with the syscon phandle.
 
-> Also, do you see the same performance differential when you implement this
-> in the 8250 driver (that is, on top of Sebastian's omap->8250 conversion)?
-> 
+Tested on Exynos5420 based Peach PIT and Exynos5800 based Peach PI
+by verifying sysfs entries provided by HWMON based NTC thermistors.
 
-I haven't gotten Sebastian's driver to work properly yet on the console.
-There was no reason for me yet to throw my omap changes on top of
-Sebastian's queue.
+Tested-By for Exynos3250, Exynos4x12 would be appreciated.
 
-> > PS - To overflow the 64 byte RX FIFO at those data rates means interrupt
-> > latency in excess of 250us?
+Naveen Krishna Chatradhi (3):
+  iio: exyno-adc: use syscon for PMU register access
+  Documentation: dt-bindings: update exynos-adc.txt with syscon handle
+  ARM: dts: exynos: Add sysreg phandle to ADC node
 
-At 3686400 baud it should take about 174 us to fill a 64 byte buffer. I
-haven't done any measurements on the interrupt latency though. If you
-consider that we're sending about 1kB of data, 240 times a second, we're
-spending a lot of time reading data from the uart. I can imagine the
-system has other work to do as well.
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt |    9 ++++--
+ arch/arm/boot/dts/exynos3250.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos4x12.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    3 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  |    3 +-
+ drivers/iio/adc/exynos_adc.c                       |   30 ++++++++++++++------
+ 6 files changed, 36 insertions(+), 15 deletions(-)
 
-This doesn't mean that we're not interested in Sebastian's driver
-anymore though. We really want that dma support.
-
-Thanks,
-Frans
+-- 
+1.7.9.5
