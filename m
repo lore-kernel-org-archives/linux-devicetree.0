@@ -1,167 +1,106 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] dmaengine: sun6i: Add support for
- Allwinner A23 (sun8i) variant
-Date: Tue, 16 Sep 2014 12:35:40 +0200
-Message-ID: <20140916103540.GF9948@lukather>
-References: <1410616381-30226-1-git-send-email-wens@csie.org>
- <1410616381-30226-3-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
+ specify the physical timer
+Date: Tue, 16 Sep 2014 11:42:42 +0100
+Message-ID: <20140916104242.GC27273@arm.com>
+References: <5412DC48.7030708@codeaurora.org>
+ <5412E3BB.9030800@arm.com>
+ <54134291.3040700@codeaurora.org>
+ <20140915111055.GD1577@arm.com>
+ <54174CFF.7050504@codeaurora.org>
+ <CAPz6YkU8hEL6yocPf7UL8-tz9Onuu-9bevAToK3CDWsShN92YQ@mail.gmail.com>
+ <54175EFE.6010509@codeaurora.org>
+ <CAPz6YkWbxiGHO8RK==HbQ3P22amZ9sDKpGew=a2U8gO7soQCDg@mail.gmail.com>
+ <CAPz6YkWwzpd4oxarEH4Vu-Z_eH+ysw0TNubpPsv_eC6QJPcw7g@mail.gmail.com>
+ <54176D62.9010600@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hcut4fGOf7Kh6EdG"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJ5H4CQAKGQEIJM22MY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410616381-30226-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <54176D62.9010600@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christopher Covington <cov@codeaurora.org>
+Cc: Sonny Rao <sonnyrao@chromium.org>, Stephen Boyd <sboyd@codeaurora.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Doug Anderson <dianders@chromium.org>, Will Deacon <Will.Deacon@arm.com>, "olof@lixom.net" <olof@lixom.net>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Nathan Lynch <Nathan_Lynch@mentor.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Heiko
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 15, 2014 at 11:51:14PM +0100, Christopher Covington wrote:
+> Hi Sonny,
+> 
+> On 09/15/2014 06:04 PM, Sonny Rao wrote:
+> > On Mon, Sep 15, 2014 at 2:52 PM, Sonny Rao <sonnyrao@chromium.org> wrote:
+> >> On Mon, Sep 15, 2014 at 2:49 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> >>> On 09/15/14 14:47, Sonny Rao wrote:
+> >>>> On Mon, Sep 15, 2014 at 1:33 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> >>>>> On 09/15/14 04:10, Catalin Marinas wrote:
+> >>>>>> On Fri, Sep 12, 2014 at 07:59:29PM +0100, Stephen Boyd wrote:
+> >>>>>>> On 09/12/14 05:14, Marc Zyngier wrote:
+> >>>>>>>> We surely can handle the UNDEF and do something there. We just can't do
+> >>>>>>>> it the way Doug described it above.
+> >>>>>>> I suggested doing that for something else a while ago and Will and Dave
+> >>>>>>> we're not thrilled[1]. The suggestion back then was to use DT to
+> >>>>>>> indicate what mode the kernel is running in.
+> >>>>>>>
+> >>>>>>> [1]
+> >>>>>>> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/105321.html
+> >>>>>> I think the context was slightly different. As I re-read the thread, it
+> >>>>>> seems that the discussion was around whether to use some SMC interface
+> >>>>>> or not based on whether the kernel is running secure or non-secure. The
+> >>>>>> argument made by Will was to actually specify the type of the firmware
+> >>>>>> SMC interface in the DT and use it in the kernel (and probably assume
+> >>>>>> the kernel is running in secure mode if no smc interface is specified in
+> >>>>>> the DT; you could have both though, running in secure mode and also
+> >>>>>> having firmware).
+> >>>>>>
+> >>>>>> In this arch timer case, we need to work around a firmware bug (or
+> >>>>>> feature as 32-bit ARM kernels never required CNTVOFF initialisation by
+> >>>>>> firmware, no matter how small such firmware is). We don't expect a
+> >>>>>> specific SMC call to initialise CNTVOFF, so we can't describe it in the
+> >>>>>> DT.
+> >>>>> Agreed, we can't described SMC calls that don't exist. From my
+> >>>>> perspective it's just another part of the cpu boot sequence that needs
+> >>>>> to be handled in the kernel, so describing the requirement via the
+> >>>>> cpu-boot method seems appropriate. It seems like we're making it harder
+> >>>>> than it should be by handling the undef when we could have slightly
+> >>>>> different SMP boot code (and suspend/resume code) depending on the boot
+> >>>>> method property.
+> >>>>
+> >>>> +heiko
+> >>>>
+> >>>> So, for the case of rk3288, based on this discussion what I'm going to
+> >>>> propose is to add code to rockchip.c which looks for a particular SMP
+> >>>> enable method -- say something like "rockchip,rk3288-smp-secure-svc"
+> >>>> which will then assume we have been booted in secure SVC mode and do
+> >>>> the CNTVOFF fixup.  I believe, it will need to do this on the boot CPU
+> >>>> as well, so I think it will need to scan the DT fairly early on the
+> >>>> boot CPU and also perform the function there.
+> >>>>
+> >>>> I'll look into implementing this and post code.  Comments and
+> >>>> suggestions appreciated, thanks.
+> >>>
+> >>> What goes wrong if we read the cntvoff from the boot CPU during
+> >>> smp_prepare_cpus() phase and use that to set the cntvoff on the other
+> >>> CPUs? That avoids needing to do anything very early by making the value
+> >>> the same. It does mean that cntvoff is some random out of reset value
+> >>> for CPU0, but at least it's consistent.
+> >>
+> >> I think we cannot read the value if we're not in hyp mode.
+> > 
+> > Well, thinking about it a little more, I think you still have a good point.
+> > 
+> > We don't need to do this early on, as long as we haven't started using
+> > the arch timers yet.  If we are still able to do this at the point
+> > where we're executing the code in arch/arm/mach-rockchip/platsmp.c
+> > that finds the enable method then we can just handle it there.
+> 
+> I've been playing around with the probe-based approach and while I need to do
+> a lot more testing, it seems to be working for the first tens of instructions.
+> I hope to be able to share a draft of that soon. Basically, I just read the
+> current NSACR value and write it back (although maybe in the long term we
+> would want to make sure a few of those bits are set or cleared). If that
+> succeeds, we know we're in secure SVC and can proceed to set up MON and HYP.
 
---hcut4fGOf7Kh6EdG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+But when it doesn't succeed, you get an undefined instruction fault
+(since NSACR is only writable in secure mode).
 
-On Sat, Sep 13, 2014 at 09:53:00PM +0800, Chen-Yu Tsai wrote:
-> The A23 SoC has the same dma engine as the A31 (sun6i), with a
-> reduced amount of endpoints and physical channels. Add the proper
-> config data and compatible string to support it.
->=20
-> A slight difference in sun8i is an undocumented register needs
-> to be toggled for dma to function.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/dma/sun6i-dma.txt |  2 +-
->  drivers/dma/Kconfig                                 |  4 ++--
->  drivers/dma/sun6i-dma.c                             | 20 +++++++++++++++=
-+++++
->  3 files changed, 23 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Docume=
-ntation/devicetree/bindings/dma/sun6i-dma.txt
-> index 3e145c1..9cdcba24d 100644
-> --- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> @@ -4,7 +4,7 @@ This driver follows the generic DMA bindings defined in d=
-ma.txt.
-> =20
->  Required properties:
-> =20
-> -- compatible:	Must be "allwinner,sun6i-a31-dma"
-> +- compatible:	Must be "allwinner,sun6i-a31-dma" or "allwinner,sun8i-a23-=
-dma"
->  - reg:		Should contain the registers base address and length
->  - interrupts:	Should contain a reference to the interrupt used by this d=
-evice
->  - clocks:	Should contain a reference to the parent AHB clock
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 9b1ea0e..5361aa7 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -395,12 +395,12 @@ config XILINX_VDMA
-> =20
->  config DMA_SUN6I
->  	tristate "Allwinner A31 SoCs DMA support"
-> -	depends on MACH_SUN6I || COMPILE_TEST
-> +	depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
->  	depends on RESET_CONTROLLER
->  	select DMA_ENGINE
->  	select DMA_VIRTUAL_CHANNELS
->  	help
-> -	  Support for the DMA engine for Allwinner A31 SoCs.
-> +	  Support for the DMA engine first found in Allwinner A31 SoCs.
-> =20
->  config NBPFAXI_DMA
->  	tristate "Renesas Type-AXI NBPF DMA support"
-> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> index 89ca0c4..29667dd 100644
-> --- a/drivers/dma/sun6i-dma.c
-> +++ b/drivers/dma/sun6i-dma.c
-> @@ -878,8 +878,20 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg =3D=
- {
->  	.nr_max_vchans   =3D 53,
->  };
-> =20
-> +/*
-> + * The A23 only has 8 physical channels, a maximum DRQ port id of 24,
-> + * and a total of 37 usable source and destination endpoints.
-> + */
-> +
-> +static struct sun6i_dma_config sun8i_a23_dma_cfg =3D {
-> +	.nr_max_channels =3D 8,
-> +	.nr_max_requests =3D 24,
-> +	.nr_max_vchans   =3D 37,
-> +};
-> +
->  static struct of_device_id sun6i_dma_match[] =3D {
->  	{ .compatible =3D "allwinner,sun6i-a31-dma", .data =3D &sun6i_a31_dma_c=
-fg },
-> +	{ .compatible =3D "allwinner,sun8i-a23-dma", .data =3D &sun8i_a23_dma_c=
-fg },
->  	{ /* sentinel */ }
->  };
-> =20
-> @@ -1008,6 +1020,14 @@ static int sun6i_dma_probe(struct platform_device =
-*pdev)
->  		goto err_dma_unregister;
->  	}
-> =20
-> +	/*
-> +	 * sun8i variant requires us to toggle an undocumented register,
-> +	 * as seen in Allwinner's SDK.
-
-The BSP I have has this:
-
-static void sunxi_dma_hw_init(struct sunxi_dmadev *dev)
-{
-        struct sunxi_dmadev *sunxi_dev =3D dev;
-
-        clk_prepare_enable(sunxi_dev->ahb_clk);
-#ifdef CONFIG_ARCH_SUN8IW3
-        writel(0x04, sunxi_dev->base + DMA_GATE);
-#endif
-}
-
-/* All is ok, and open the clock */
-sunxi_dma_hw_init(sunxi_dev);
-
-So I guess we can say that it's not that undocumented :)
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---hcut4fGOf7Kh6EdG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUGBJ8AAoJEBx+YmzsjxAgT84P/3z409e7xk7xnTaM0cDFhmNz
-k48oB/ekb4ydmJoq8McnjdThKgeOicyHpZv8zBIvY30ERoMENDNu0AXiDk8zRhhn
-RA77hp+O2XSEfuekXWXdRhFNRj/KLspW+H/+9hNUN4/iN+CQ2SM2PXhuukN0Rvqn
-RLg9s7gut1FPvf8Zquy6JgYsWf/24x3ff/bdzJ2g9mDhLvrUO+tN8o3M+v8XQPAe
-wJbIbnifiIfWL4XgKBDai7qQx0gatH5miNwjUueaLeMUM6CNmlorhqCZ+I5O20Ub
-uASkgNtvt7hxhLAqgXgkLIi9svKQLqGgWjdDDKsaLTxWK3OasQ261zcICyxoi9yC
-tghsoNfdQMlTBFQmM9Bz/jwAWO1G8t4rGjdeTFZZXhA7hQzWzjPSagI+ZweQ+6sy
-EyizIQAR8PDX4pObqoqSqVkV2fs5T44qehhILLNBIonP2Jk0lcOYInKgQ/JFSAoi
-z0nI/zcaIYLeXkp6bBJ3T+/OYzXZjlkSgDnc4FCt2PsHaj77EJJ+nwS/A+8a7oYm
-jsPAoAYxfQ8PGiFVz0O0NZmGT1QXKBxOL9EKkEzISswpIeSGfqH9COm3Oi3EbMWz
-I299LRLDelXBbzcd+YQhwoKRwUN/u7xM5FQvcMn6M7sdxPmO5qG58pmUvoJqS/F2
-GGgjq2aaCykdrSryTA0a
-=4hHq
------END PGP SIGNATURE-----
-
---hcut4fGOf7Kh6EdG--
+-- 
+Catalin
