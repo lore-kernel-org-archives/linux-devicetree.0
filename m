@@ -1,92 +1,441 @@
-From: Kiran Padwal <kiran.padwal@smartplayin.com>
-Subject: [PATCH] ARM: dts: qcom: Add I2C dt node for MSM8974 and DB8074 board
-Date: Tue, 16 Sep 2014 17:15:38 +0530
-Message-ID: <1410867938-6254-1-git-send-email-kiran.padwal@smartplayin.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, davidb@codeaurora.org, afaerber@suse.de
-Cc: linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Kiran Padwal <kiran.padwal@smartplayin.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [RFC PATCH v2 04/16] ACPI: Document ACPI device specific properties
+Date: Tue, 16 Sep 2014 14:52:35 +0300
+Message-ID: <1410868367-11056-5-git-send-email-mika.westerberg@linux.intel.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for i2c controller on the DB8074 board.
-It also adds necessary DT support for i2c eeprom which is present on
-DB8074 board.
+This document describes the data format and interfaces of ACPI device
+specific properties.
 
-Signed-off-by: Kiran Padwal <kiran.padwal@smartplayin.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Darren Hart <dvhart@linux.intel.com>
 ---
- arch/arm/boot/dts/qcom-apq8074-dragonboard.dts |   21 +++++++++++++++++++++
- arch/arm/boot/dts/qcom-msm8974.dtsi            |   15 +++++++++++++--
- 2 files changed, 34 insertions(+), 2 deletions(-)
+ Documentation/acpi/properties.txt | 410 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 410 insertions(+)
+ create mode 100644 Documentation/acpi/properties.txt
 
-diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-index b4dfb01..4737049 100644
---- a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-+++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-@@ -22,6 +22,13 @@
- 
- 
- 		pinctrl@fd510000 {
-+			i2c11_pins: i2c11 {
-+				mux {
-+					pins = "gpio83", "gpio84";
-+					function = "blsp_i2c11";
-+				};
-+			};
+diff --git a/Documentation/acpi/properties.txt b/Documentation/acpi/properties.txt
+new file mode 100644
+index 000000000000..43404523e282
+--- /dev/null
++++ b/Documentation/acpi/properties.txt
+@@ -0,0 +1,410 @@
++ACPI device properties
++======================
++This document describes the format and interfaces of ACPI device
++properties as specified in "Device Properties UUID For _DSD" available
++here:
 +
- 			spi8_default: spi8_default {
- 				mosi {
- 					pins = "gpio45";
-@@ -41,5 +48,19 @@
- 				};
- 			};
- 		};
++http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
 +
-+		i2c@f9967000 {
-+			status = "okay";
-+			clock-frequency = <200000>;
-+			pinctrl-0 = <&i2c11_pins>;
-+			pinctrl-names = "default";
++1. Introduction
++---------------
++In systems that use ACPI and want to take advantage of device specific
++properties, there needs to be a standard way to return and extract
++name-value pairs for a given ACPI device.
 +
-+			eeprom: eeprom@52 {
-+				compatible = "atmel,24c128";
-+				reg = <0x52>;
-+				pagesize = <32>;
-+				read-only;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 69dca2a..e265ec1 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -1,8 +1,8 @@
- /dts-v1/;
- 
--#include "skeleton.dtsi"
--
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/clock/qcom,gcc-msm8974.h>
-+#include "skeleton.dtsi"
- 
- / {
- 	model = "Qualcomm MSM8974";
-@@ -236,5 +236,16 @@
- 			#interrupt-cells = <2>;
- 			interrupts = <0 208 0>;
- 		};
++An ACPI device that wants to export its properties must implement a
++static name called _DSD that takes no arguments and returns a package of
++packages:
 +
-+		blsp_i2c11: i2c@f9967000 {
-+			status = "disable";
-+			compatible = "qcom,i2c-qup-v2.1.1";
-+			reg = <0xf9967000 0x1000>;
-+			interrupts = <0 105 IRQ_TYPE_NONE>;
-+			clocks = <&gcc GCC_BLSP2_QUP5_I2C_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
- 	};
- };
++	Name (_DSD, Package () {
++		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++		Package () {
++			Package () {"name1", <VALUE1>},
++			Package () {"name2", <VALUE2>}
++		}
++	})
++
++The UUID identifies contents of the following package. In case of ACPI
++device properties it is daffd814-6eba-4d8c-8a91-bc9bbf4aa301.
++
++In each returned package, the first item is the name and must be a string.
++The corresponding value can be a string, integer, reference, or package. If
++a package it may only contain strings, integers, and references.
++
++An example device where we might need properties is a device that uses
++GPIOs. In addition to the GpioIo/GpioInt resources the driver needs to
++know which GPIO is used for which purpose.
++
++To solve this we add the following ACPI device properties to the device:
++
++	Device (DEV0)
++	{
++		Name (_CRS, ResourceTemplate () {
++			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
++				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {0}
++			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
++				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {1}
++			...
++		})
++
++		Name (_DSD, Package () {
++			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++			Package () {
++				Package () {"reset-gpio", {^DEV0, 0, 0, 0}},
++				Package () {"shutdown-gpio", {^DEV0, 1, 0, 0}},
++			}
++		})
++	}
++
++Now the device driver can reference the GPIOs using names instead of
++using indexes.
++
++If there is an existing Device Tree binding for a device, it is expected
++that the same bindings are used with ACPI properties, so that the driver
++dealing with the device needs only minor modifications if any.
++
++2. Formal definition of properties
++----------------------------------
++The following chapters define the currently supported properties. For
++these there exists a helper function that can be used to extract the
++property value.
++
++2.1 Integer types
++-----------------
++ACPI integers are always 64-bit. However, for drivers the full range is
++typically not needed so we provide a set of functions which convert the
++64-bit integer to a smaller Linux integer type.
++
++An integer property looks like this:
++
++	Package () {"i2c-sda-hold-time-ns", 300},
++	Package () {"clock-frequency", 400000},
++
++To read a property value, use a unified property accessor as shown
++below:
++
++	u32 val;
++	int ret;
++
++	ret = device_property_read_u32(dev, "clock-frequency", &val);
++	if (ret)
++		/* Handle error */
++
++The function returns 0 if the property is copied to 'val' or negative
++errno if something went wrong (or the property does not exist).
++
++2.2 Integer arrays
++------------------
++An integer array is a package holding only integers. Arrays can be used to
++represent different things like Linux input key codes to GPIO mappings, pin
++control settings, dma request lines, etc.
++
++An integer array looks like this:
++
++	Package () {
++		"max8952,dvs-mode-microvolt",
++		Package () {
++			1250000,
++			1200000,
++			1050000,
++			950000,
++		}
++	}
++
++The above array property can be accessed like:
++
++	u32 voltages[4];
++	int ret;
++
++	ret = device_property_read_u32_array(dev, "max8952,dvs-mode-microvolt",
++					     voltages, ARRAY_SIZE(voltages));
++	if (ret)
++		/* Handle error */
++
++
++All functions copy the resulting values cast to a requested type to the
++caller supplied array. If you pass NULL in the value pointer ('voltages' in
++this case), the function returns number of items in the array. This can be
++useful if caller does not know size of the array beforehand.
++
++2.3 Strings
++-----------
++String properties can be used to describe many things like labels for GPIO
++buttons, compability ids, etc.
++
++A string property looks like this:
++
++	Package () {"pwm-names", "backlight"},
++	Package () {"label", "Status-LED"},
++
++You can use device_property_read_string() to extract strings:
++
++	const char *val;
++	int ret;
++
++	ret = device_property_read_string(dev, "label", &val);
++	if (ret)
++		/* Handle error */
++
++Note that the function does not copy the returned string but instead the
++value is modified to point to the string property itself.
++
++The memory is owned by the associated ACPI device object and released
++when it is removed. The user need not free the associated memory.
++
++2.4 String arrays
++-----------------
++String arrays can be useful in describing a list of labels, names for
++DMA channels, etc.
++
++A string array property looks like this:
++
++	Package () {"dma-names", Package () {"tx", "rx", "rx-tx"}},
++	Package () {"clock-output-names", Package () {"pll", "pll-switched"}},
++
++And these can be read in similar way that the integer arrrays:
++
++	const char *dma_names[3];
++	int ret;
++
++	ret = device_property_read_string_array(dev, "dma-names", dma_names,
++						ARRAY_SIZE(dma_names));
++	if (ret)
++		/* Handle error */
++
++The memory management rules follow what is specified for single strings.
++Specifically the returned pointers should be treated as constant and not to
++be freed. That is done automatically when the correspondig ACPI device
++object is released.
++
++2.5 Object references
++---------------------
++An ACPI object reference is used to refer to some object in the
++namespace. For example, if a device has dependencies with some other
++object, an object reference can be used.
++
++An object reference looks like this:
++
++	Package () {"dev0", \_SB.DEV0},
++
++At the time of writing this, there is no unified device_property_* accessor
++for references so one needs to use the following ACPI helper function:
++
++	int acpi_dev_get_property_reference(struct acpi_device *adev,
++					    const char *name,
++					    const char *size_prop, int index,
++					    struct acpi_reference_args *args);
++
++The referenced ACPI device is returned in args->adev if found.
++
++In addition to simple object references it is also possible to have object
++references with arguments. These are represented in ASL as follows:
++
++	Device (\_SB.PCI0.PWM)
++	{
++		Name (_DSD, Package () {
++			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++			Package () {
++				Package () {"#pwm-cells", 2}
++			}
++		})
++	}
++
++	Device (\_SB.PCI0.BL)
++	{
++		Name (_DSD, Package () {
++			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++			Package () {
++				Package () {
++					"pwms",
++					Package () {
++						\_SB.PCI0.PWM, 0, 5000000,
++						\_SB.PCI0.PWM, 1, 4500000,
++					}
++				}
++			}
++		})
++	}
++
++In the above example, the referenced device declares a property that
++returns the number of expected arguments (here it is "#pwm-cells"). If
++no such property is given we assume that all the integers following the
++reference are arguments.
++
++In the above example PWM device expects 2 additional arguments. This
++will be validated by the ACPI property core.
++
++The additional arguments must be integers. Nothing else is supported.
++
++It is possible, as in the above example, to have multiple references
++with varying number of integer arguments. It is up to the referenced
++device to declare how many arguments it expects. The 'index' parameter
++selects which reference is returned.
++
++One can use acpi_dev_get_property_reference() as well to extract the
++information in additional parameters:
++
++	struct acpi_reference_args args;
++	struct acpi_device *adev = /* this will point to the BL device */
++	int ret;
++
++	/* extract the first reference */
++	acpi_dev_get_property_reference(adev, "pwms", "#pwm-cells", 0, &args);
++
++	BUG_ON(args.nargs != 2);
++	BUG_ON(args.args[0] != 0);
++	BUG_ON(args.args[1] != 5000000);
++
++	/* extract the second reference */
++	acpi_dev_get_property_reference(adev, "pwms", "#pwm-cells", 1, &args);
++
++	BUG_ON(args.nargs != 2);
++	BUG_ON(args.args[0] != 1);
++	BUG_ON(args.args[1] != 4500000);
++
++In addition to arguments, args.adev now points to the ACPI device that
++corresponds to \_SB.PCI0.PWM.
++
++It is intended that this function is not used directly but instead
++subsystems like pwm implement their ACPI support on top of this function
++in such way that it is hidden from the client drivers, such as via
++pwm_get().
++
++3. Device property hierarchies
++------------------------------
++Devices are organized in a tree within the Linux kernel. It follows that
++the configuration data would also be hierarchical. In order to reach
++equivalence with Device Tree, the ACPI mechanism must also provide some
++sort of tree-like representation. Fortunately, the ACPI namespace is
++already such a structure.
++
++For example, we could have the following device in ACPI namespace. The
++KEYS device is much like gpio_keys_polled.c in that it includes "pseudo"
++devices for each GPIO:
++
++	Device (KEYS)
++	{
++		Name (_CRS, ResourceTemplate () {
++			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
++				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {0}
++			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
++				"\\_SB.PCI0.LPC", 0, ResourceConsumer) {1}
++			...
++		})
++
++		// "pseudo" devices declared under the parent device
++		Device (BTN0) {
++			Name (_DSD, Package () {
++				ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++				Package () {
++					Package () {"label", "minnow_btn0"}
++					Package () {"gpios", Package () {^KEYS, 0, 0, 1}}
++				}
++			})
++		}
++
++		Device (BTN1) {
++			Name (_DSD, Package () {
++				ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++				Package () {
++					Package () {"label", "minnow_btn1"}
++					Package () {"gpios", Package () {^KEYS, 1, 0, 1}}
++				}
++			})
++		}
++	}
++
++We can extract the above in gpio_keys_polled.c like:
++
++	static int gpio_keys_polled_create_button(struct fw_dev_node *fdn,
++						  void *data)
++	{
++		struct button_data *bdata = data;
++		const char *label = NULL;
++
++		/*
++		 * We need to use dev_node_ variant here to access the
++		 * firmware properties.
++		 */
++		dev_node_property_read_string(fdn, "label", &label);
++		/* and so on */
++	}
++
++	static void gpio_keys_polled_probe(struct device *dev)
++	{
++		/* Properties for the KEYS device itself */
++		device_property_read(dev, ...);
++
++		/*
++		 * Iterate over button devices and extract their
++		 * firmware configuration.
++		 */
++		ret = device_for_each_child_node(dev, gpio_keys_polled_create_button,
++						 &bdata);
++		if (ret)
++			/* Handle error */
++	}
++
++Note that you still need proper error handling which is omitted in the
++above example.
++
++4. Existing Device Tree enabled drivers
++---------------------------------------
++At the time of writing this, there are ~250 existing DT enabled drivers.
++Allocating _HID/_CID for each would not be feasible. To make sure that
++those drivers can still be used on ACPI systems, we provide an
++alternative way to get these matched.
++
++There is a special _HID "PRP0001" which means that use the DT bindings
++for matching this device to a driver. The driver needs to have
++.of_match_table filled in even when !CONFIG_OF.
++
++An example device would be leds that can be controlled via GPIOs. This
++is represented as "leds-gpio" device and looks like this in the ACPI
++namespace:
++
++	Device (LEDS)
++	{
++		Name (_DSD, Package () {
++			ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
++			Package () {
++				Package () {"compatible", Package () {"gpio-leds"}},
++			}
++		})
++		...
++	}
++
++In order to get the existing drivers/leds/leds-gpio.c bound to this
++device, we take advantage of "PRP0001":
++
++	/* Following already exists in the driver */
++	static const struct of_device_id of_gpio_leds_match[] = {
++		{ .compatible = "gpio-leds", },
++		{},
++	};
++	MODULE_DEVICE_TABLE(of, of_gpio_leds_match);
++
++	/* This we add to the driver to get it probed */
++	static const struct acpi_device_id acpi_gpio_leds_match[] = {
++		{ "PRP0001" }, /* Device Tree shoehorned into ACPI */
++		{},
++	};
++	MODULE_DEVICE_TABLE(acpi, acpi_gpio_leds_match);
++
++	static struct platform_driver gpio_led_driver = {
++		.driver = {
++			/*
++			 * No of_match_ptr() here because we want this
++			 * table to be visible even when !CONFIG_OF to
++			 * match against "compatible" in _DSD.
++			 */
++			.of_match_table = of_gpio_leds_match,
++			.acpi_match_table = acpi_gpio_leds_match,
++		},
++	};
++
++Once ACPI core sees "PRP0001" and that the device has "compatible"
++property it will do the match using .of_match_table instead.
++
++It is preferred that new devices get a proper _HID allocated for them
++instead of inventing new DT "compatible" devices.
 -- 
-1.7.9.5
+2.1.0
+
