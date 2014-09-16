@@ -1,223 +1,35 @@
-From: Hartmut Knaack <knaack.h@gmx.de>
-Subject: Re: [PATCH v3] iio: adc: rockchip_saradc: add support for rk3066-tsadc
- variant
-Date: Wed, 17 Sep 2014 00:08:20 +0200
-Message-ID: <5418B4D4.2070806@gmx.de>
-References: <2689686.WEM6GuFSAn@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH 0/2] Amlogic Meson I2C driver
+Date: Wed, 17 Sep 2014 00:07:55 +0200
+Message-ID: <1410905277-22172-1-git-send-email-b.galvani@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2689686.WEM6GuFSAn@diego>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Jonathan Cameron <jic23@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Carlo Caione <carlo@caione.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Heiko St=FCbner schrieb, Am 15.09.2014 23:47:
-> Older Rockchip SoCs, at least the rk3066, used a slightly modified sa=
-radc
-> for temperature measurements. This so called tsadc does not contain a=
-ny
-> active parts like temperature interrupts and only supports polling th=
-e
-> current temperature. The returned voltage can then be converted by a
-> suitable thermal driver to and actual temperature and used for therma=
-l
-> handling.
->=20
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Acked-by: Hartmut Knaack <knaack.h@gmx.de>
-> ---
-> changes since v2:
-> - adapt message about the clk rate
-> changes since v1:
-> - use GENMASK instead of creating the mask manually
->   as suggested by Hartmut Knaack
->=20
->  .../bindings/iio/adc/rockchip-saradc.txt           |  2 +-
->  drivers/iio/adc/rockchip_saradc.c                  | 64 ++++++++++++=
-+++++-----
->  2 files changed, 51 insertions(+), 15 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/rockchip-sarad=
-c.txt b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> index 5d3ec1d..a9a5fe1 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/rockchip-saradc.txt
-> @@ -1,7 +1,7 @@
->  Rockchip Successive Approximation Register (SAR) A/D Converter bindi=
-ngs
-> =20
->  Required properties:
-> -- compatible: Should be "rockchip,saradc"
-> +- compatible: Should be "rockchip,saradc" or "rockchip,rk3066-tsadc"
->  - reg: physical base address of the controller and length of memory =
-mapped
->         region.
->  - interrupts: The interrupt number to the cpu. The interrupt specifi=
-er format
-> diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rock=
-chip_saradc.c
-> index e074a0b..b546bc1 100644
-> --- a/drivers/iio/adc/rockchip_saradc.c
-> +++ b/drivers/iio/adc/rockchip_saradc.c
-> @@ -18,13 +18,13 @@
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/clk.h>
->  #include <linux/completion.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/iio/iio.h>
-> =20
->  #define SARADC_DATA			0x00
-> -#define SARADC_DATA_MASK		0x3ff
-> =20
->  #define SARADC_STAS			0x04
->  #define SARADC_STAS_BUSY		BIT(0)
-> @@ -38,15 +38,22 @@
->  #define SARADC_DLY_PU_SOC		0x0c
->  #define SARADC_DLY_PU_SOC_MASK		0x3f
-> =20
-> -#define SARADC_BITS			10
->  #define SARADC_TIMEOUT			msecs_to_jiffies(100)
-> =20
-> +struct rockchip_saradc_data {
-> +	int				num_bits;
-> +	const struct iio_chan_spec	*channels;
-> +	int				num_channels;
-> +	unsigned long			clk_rate;
-> +};
-> +
->  struct rockchip_saradc {
->  	void __iomem		*regs;
->  	struct clk		*pclk;
->  	struct clk		*clk;
->  	struct completion	completion;
->  	struct regulator	*vref;
-> +	const struct rockchip_saradc_data *data;
->  	u16			last_val;
->  };
-> =20
-> @@ -90,7 +97,7 @@ static int rockchip_saradc_read_raw(struct iio_dev =
-*indio_dev,
->  		}
-> =20
->  		*val =3D ret / 1000;
-> -		*val2 =3D SARADC_BITS;
-> +		*val2 =3D info->data->num_bits;
->  		return IIO_VAL_FRACTIONAL_LOG2;
->  	default:
->  		return -EINVAL;
-> @@ -103,7 +110,7 @@ static irqreturn_t rockchip_saradc_isr(int irq, v=
-oid *dev_id)
-> =20
->  	/* Read value */
->  	info->last_val =3D readl_relaxed(info->regs + SARADC_DATA);
-> -	info->last_val &=3D SARADC_DATA_MASK;
-> +	info->last_val &=3D GENMASK(info->data->num_bits - 1, 0);
-> =20
->  	/* Clear irq & power down adc */
->  	writel_relaxed(0, info->regs + SARADC_CTRL);
-> @@ -133,12 +140,44 @@ static const struct iio_chan_spec rockchip_sara=
-dc_iio_channels[] =3D {
->  	ADC_CHANNEL(2, "adc2"),
->  };
-> =20
-> +static const struct rockchip_saradc_data saradc_data =3D {
-> +	.num_bits =3D 10,
-> +	.channels =3D rockchip_saradc_iio_channels,
-> +	.num_channels =3D ARRAY_SIZE(rockchip_saradc_iio_channels),
-> +	.clk_rate =3D 1000000,
-> +};
-> +
-> +static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels=
-[] =3D {
-> +	ADC_CHANNEL(0, "adc0"),
-> +	ADC_CHANNEL(1, "adc1"),
-> +};
-> +
-> +static const struct rockchip_saradc_data rk3066_tsadc_data =3D {
-> +	.num_bits =3D 12,
-> +	.channels =3D rockchip_rk3066_tsadc_iio_channels,
-> +	.num_channels =3D ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
-> +	.clk_rate =3D 50000,
-> +};
-> +
-> +static const struct of_device_id rockchip_saradc_match[] =3D {
-> +	{
-> +		.compatible =3D "rockchip,saradc",
-> +		.data =3D &saradc_data,
-> +	}, {
-> +		.compatible =3D "rockchip,rk3066-tsadc",
-> +		.data =3D &rk3066_tsadc_data,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
-> +
->  static int rockchip_saradc_probe(struct platform_device *pdev)
->  {
->  	struct rockchip_saradc *info =3D NULL;
->  	struct device_node *np =3D pdev->dev.of_node;
->  	struct iio_dev *indio_dev =3D NULL;
->  	struct resource	*mem;
-> +	const struct of_device_id *match;
->  	int ret;
->  	int irq;
-> =20
-> @@ -152,6 +191,9 @@ static int rockchip_saradc_probe(struct platform_=
-device *pdev)
->  	}
->  	info =3D iio_priv(indio_dev);
-> =20
-> +	match =3D of_match_device(rockchip_saradc_match, &pdev->dev);
-> +	info->data =3D match->data;
-> +
->  	mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	info->regs =3D devm_ioremap_resource(&pdev->dev, mem);
->  	if (IS_ERR(info->regs))
-> @@ -192,10 +234,10 @@ static int rockchip_saradc_probe(struct platfor=
-m_device *pdev)
->  	}
-> =20
->  	/*
-> -	 * Use a default of 1MHz for the converter clock.
-> +	 * Use a default value for the converter clock.
->  	 * This may become user-configurable in the future.
->  	 */
-> -	ret =3D clk_set_rate(info->clk, 1000000);
-> +	ret =3D clk_set_rate(info->clk, info->data->clk_rate);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "failed to set adc clk rate, %d\n", ret);
->  		return ret;
-> @@ -227,8 +269,8 @@ static int rockchip_saradc_probe(struct platform_=
-device *pdev)
->  	indio_dev->info =3D &rockchip_saradc_iio_info;
->  	indio_dev->modes =3D INDIO_DIRECT_MODE;
-> =20
-> -	indio_dev->channels =3D rockchip_saradc_iio_channels;
-> -	indio_dev->num_channels =3D ARRAY_SIZE(rockchip_saradc_iio_channels=
-);
-> +	indio_dev->channels =3D info->data->channels;
-> +	indio_dev->num_channels =3D info->data->num_channels;
-> =20
->  	ret =3D iio_device_register(indio_dev);
->  	if (ret)
-> @@ -296,12 +338,6 @@ static int rockchip_saradc_resume(struct device =
-*dev)
->  static SIMPLE_DEV_PM_OPS(rockchip_saradc_pm_ops,
->  			 rockchip_saradc_suspend, rockchip_saradc_resume);
-> =20
-> -static const struct of_device_id rockchip_saradc_match[] =3D {
-> -	{ .compatible =3D "rockchip,saradc" },
-> -	{},
-> -};
-> -MODULE_DEVICE_TABLE(of, rockchip_saradc_match);
-> -
->  static struct platform_driver rockchip_saradc_driver =3D {
->  	.probe		=3D rockchip_saradc_probe,
->  	.remove		=3D rockchip_saradc_remove,
->=20
+Hi,
+
+this series adds a driver for the I2C controller found on Amlogic
+Meson SoCs. It has been tested on a Tronsmart Vega S89 TV Box, which
+is based on a Meson8 core, but should work also on Meson6 devices. 
+
+A patchset adding support for these SoCs was submitted some days ago
+and can be found here:
+
+http://thread.gmane.org/gmane.linux.ports.arm.kernel/356685
+
+Beniamino Galvani (2):
+  i2c: add support for Amlogic Meson I2C controller
+  i2c: meson: add device tree bindings documentation
+
+ .../devicetree/bindings/i2c/i2c-meson.txt          |  24 +
+ drivers/i2c/busses/Kconfig                         |   7 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-meson.c                     | 500 +++++++++++++++++++++
+ 4 files changed, 532 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-meson.txt
+ create mode 100644 drivers/i2c/busses/i2c-meson.c
+
+-- 
+1.9.1
