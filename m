@@ -1,126 +1,47 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/3] dmaengine: sun6i: Add support for
- Allwinner A23 (sun8i) variant
-Date: Tue, 16 Sep 2014 22:13:27 +0800
-Message-ID: <CAGb2v67jokpXHxR26YoCEB2Y_v07oQZXZfPuGJC_wO=r-SRZhg@mail.gmail.com>
-References: <1410616381-30226-1-git-send-email-wens@csie.org>
- <1410616381-30226-3-git-send-email-wens@csie.org> <20140916103540.GF9948@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH 1/4 v4] GPIO: gpio-dwapb: Enable platform driver binding
+ to MFD driver
+Date: Tue, 16 Sep 2014 09:22:43 -0500
+Message-ID: <alpine.DEB.2.02.1409160921020.4740@atx-linux-37>
+References: <1410859335-11080-1-git-send-email-alvin.chen@intel.com> <1410859335-11080-2-git-send-email-alvin.chen@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHEL4GQAKGQE5ZXEUMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140916103540.GF9948@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1410859335-11080-2-git-send-email-alvin.chen@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Weike Chen <alvin.chen@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andriy Shevchenko <andriy.shevchenko@intel.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 6:35 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Sat, Sep 13, 2014 at 09:53:00PM +0800, Chen-Yu Tsai wrote:
->> The A23 SoC has the same dma engine as the A31 (sun6i), with a
->> reduced amount of endpoints and physical channels. Add the proper
->> config data and compatible string to support it.
->>
->> A slight difference in sun8i is an undocumented register needs
->> to be toggled for dma to function.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/dma/sun6i-dma.txt |  2 +-
->>  drivers/dma/Kconfig                                 |  4 ++--
->>  drivers/dma/sun6i-dma.c                             | 20 ++++++++++++++++++++
->>  3 files changed, 23 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
->> index 3e145c1..9cdcba24d 100644
->> --- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
->> +++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
->> @@ -4,7 +4,7 @@ This driver follows the generic DMA bindings defined in dma.txt.
->>
->>  Required properties:
->>
->> -- compatible:        Must be "allwinner,sun6i-a31-dma"
->> +- compatible:        Must be "allwinner,sun6i-a31-dma" or "allwinner,sun8i-a23-dma"
->>  - reg:               Should contain the registers base address and length
->>  - interrupts:        Should contain a reference to the interrupt used by this device
->>  - clocks:    Should contain a reference to the parent AHB clock
->> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->> index 9b1ea0e..5361aa7 100644
->> --- a/drivers/dma/Kconfig
->> +++ b/drivers/dma/Kconfig
->> @@ -395,12 +395,12 @@ config XILINX_VDMA
->>
->>  config DMA_SUN6I
->>       tristate "Allwinner A31 SoCs DMA support"
->> -     depends on MACH_SUN6I || COMPILE_TEST
->> +     depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
->>       depends on RESET_CONTROLLER
->>       select DMA_ENGINE
->>       select DMA_VIRTUAL_CHANNELS
->>       help
->> -       Support for the DMA engine for Allwinner A31 SoCs.
->> +       Support for the DMA engine first found in Allwinner A31 SoCs.
->>
->>  config NBPFAXI_DMA
->>       tristate "Renesas Type-AXI NBPF DMA support"
->> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
->> index 89ca0c4..29667dd 100644
->> --- a/drivers/dma/sun6i-dma.c
->> +++ b/drivers/dma/sun6i-dma.c
->> @@ -878,8 +878,20 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
->>       .nr_max_vchans   = 53,
->>  };
->>
->> +/*
->> + * The A23 only has 8 physical channels, a maximum DRQ port id of 24,
->> + * and a total of 37 usable source and destination endpoints.
->> + */
->> +
->> +static struct sun6i_dma_config sun8i_a23_dma_cfg = {
->> +     .nr_max_channels = 8,
->> +     .nr_max_requests = 24,
->> +     .nr_max_vchans   = 37,
->> +};
->> +
->>  static struct of_device_id sun6i_dma_match[] = {
->>       { .compatible = "allwinner,sun6i-a31-dma", .data = &sun6i_a31_dma_cfg },
->> +     { .compatible = "allwinner,sun8i-a23-dma", .data = &sun8i_a23_dma_cfg },
->>       { /* sentinel */ }
->>  };
->>
->> @@ -1008,6 +1020,14 @@ static int sun6i_dma_probe(struct platform_device *pdev)
->>               goto err_dma_unregister;
->>       }
->>
->> +     /*
->> +      * sun8i variant requires us to toggle an undocumented register,
->> +      * as seen in Allwinner's SDK.
->
-> The BSP I have has this:
->
-> static void sunxi_dma_hw_init(struct sunxi_dmadev *dev)
-> {
->         struct sunxi_dmadev *sunxi_dev = dev;
->
->         clk_prepare_enable(sunxi_dev->ahb_clk);
-> #ifdef CONFIG_ARCH_SUN8IW3
->         writel(0x04, sunxi_dev->base + DMA_GATE);
-> #endif
-> }
->
-> /* All is ok, and open the clock */
-> sunxi_dma_hw_init(sunxi_dev);
->
-> So I guess we can say that it's not that undocumented :)
+On Tue, 16 Sep 2014, Weike Chen wrote:
 
-That's right. I meant undocumented in the user manual.
-I did reference the SDK in the comment, didn't I? :)
+One more:
 
-ChenYu
+> +
+> +		/*
+> +		 * Only port A can provide interrupts in all configurations of
+> +		 * the IP.
+> +		 */
+> +		if (pp->idx == 0 &&
+> +		    of_property_read_bool(port_np, "interrupt-controller")) {
+> +			pp->irq = irq_of_parse_and_map(port_np, 0);
+> +			if (!pp->irq) {
+> +				dev_warn(dev, "no irq for bank %s\n",
+> +					 port_np->full_name);
+> +			}
+> +		} else {
+> +			pp->irq	= 0;
+> +		}
+
+The else clause is not needed since pp->irq == 0 already, right?
+
+Alan
+
+> +
+> +		pp->irq_shared	= false;
+> +		pp->gpio_base	= -1;
+> +		pp->name	= port_np->full_name;
+> +	}
+> +
+> +	return pdata;
+> +}
