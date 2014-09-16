@@ -1,47 +1,87 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH RESEND] thermal: Add QPNP PMIC temperature alarm driver
-Date: Tue, 16 Sep 2014 10:53:30 +0300
-Message-ID: <1410854010.30351.17.camel@iivanov-dev>
-References: <1410793383-30097-1-git-send-email-iivanov@mm-sol.com>
-	 <54170DA6.6050001@mm-sol.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH RESEND 0/8] i2c: Relax mandatory I2C ID table passing
+Date: Tue, 16 Sep 2014 10:00:18 +0200
+Message-ID: <CABxcv=nZhBFRTTmafLxopTiX+wrOKtMD5tKf-00ysrWcZ5N5rg@mail.gmail.com>
+References: <1409236538-21274-1-git-send-email-lee.jones@linaro.org>
+	<20140912134632.GE1930@katana>
+	<CABxcv==OXd+uePcB8zDzB-DDmr9ci6zscHX5TCauWoTO6E4fpg@mail.gmail.com>
+	<20140915224621.GG25162@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <54170DA6.6050001@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140915224621.GG25162@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-09-15 at 19:02 +0300, Georgi Djakov wrote:
+Hello Lee,
 
-<snip>
+On Tue, Sep 16, 2014 at 12:46 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Fri, 12 Sep 2014, Javier Martinez Canillas wrote:
+>> So what I propose is to do it incrementally:
+>>
+>> 1) Merge Lee's series since that is definitely a step in the right
+>> direction to not make an I2C table mandatory (still will be needed for
+>> module auto loading though).
+>>
+>> 2) On a follow-up series, make sure that all I2C drivers have a proper
+>> OF table and that are using the MODULE_DEVICE_TABLE(of,...) macro to
+>> fill the of:<foo> module aliases. That way the modules will have the
+>> proper aliases of the form "of:<foo>" besides the "i2c:<foo>" one.
+>> (even when always i2c:<foo> is reported to user-space currently).
+>>
+>> 3) Apply the patch I posted [0] that changes the behavior of
+>> i2c_device_uevent() to report the OF uevent env vars to user-space in
+>> case of DT probing which after 2) should not regress any driver module
+>> auto-loading since all drivers should fill the of:<foo> aliases.
+>
+> This sounds resonable.
+>
 
-> > +Example:
-> > +
-> > +	thermal-alarm@2400 {
-> > +		compatible = "qcom,qpnp-temp-alarm";
-> > +		reg = <0x2400>;
-> > +		interrupts = <0 0x24 0 IRQ_TYPE_EDGE_RISING>;
-> > +		label = "pm8941_tz";
-> > +		io-channels = <&pm8941_vadc VADC_DIE_TEMP>;
-> > +		io-channel-names = "thermal";
-> > +	};
-> 
-> Maybe describe the trip points in the DT?
+Ok, sounds like a plan then.
 
-I am not sure. Trip points are not arbitrary selectable. Hardware
-have 4 predefined operating modes, if I could say.
+>> After this, DT-only drivers will only need an OF table and legacy
+>> drivers will only need an I2C table. Drivers that support both will
+>> still need the two tables though which is a drawback of this approach
+>> since unnecessary duplication will exist on these drivers and can
+>> cause issues when both tables are not in sync as we saw on the issue
+>> reported by Sjoerd on [1].
+>>
+>> So an alternate approach could be to do the opposite, just remove the
+>> OF tables entirely from the I2C drivers and only use the I2C table
+>> even for DT-only drivers. This is possible since i2c_device_match()
+>> will succeed even without an OF table because i2c_match_id() matches
+>> for compatible strings and what is reported as uevent is what is in
+>> the I2C table anyways. I believe that is what Sjoerd suggested but
+>> I'll let him comment on that in case I misunderstood.
+>
+> This would be really bad.  It would go completely against what I have
+> working to achieve and OF conventions.
+>
 
-0 = {105 C, 125 C, 145 C}
-1 = {110 C, 130 C, 150 C}
-2 = {115 C, 135 C, 155 C}
-3 = {120 C, 140 C, 160 C}
+Yes, I was just mentioning the two possible approaches but Sjoerd did
+a much better work on the SPI thread [0].
 
-Everything which driver could select is one of 0...3.
+Another drawback of only using the I2C table is that the vendor prefix
+of the compatible strings are not reported to user-space. So if there
+are two devices with the same name (driven by two different drivers)
+but different vendor, these are going to be probed correctly if
+built-in but module auto-loading will fail since doesn't take into
+account the vendor prefix. This is the current status btw and I guess
+it was never noticed because there isn't two devices with the same
+name today.
 
-Rest of the comments will be fixed in next version.
+The drawback of using the OF based aliases is that many I2C drivers
+probably rely on the current behavior and don't have a proper OF table
+but IMHO that is a bug and has to be fixed anyways.
 
-Thanks,
-Ivan
+Of course that doesn't mean that we shouldn't make sure that all
+drivers have a proper OF table (and using MODULE_DEVICE_TABLE) before
+changing i2c_device_uevent(). Hence my proposal to do it in 3 steps as
+explained before.
+
+Best regards,
+Javier
+
+[0]: https://lkml.org/lkml/2014/9/15/70
