@@ -1,227 +1,61 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 1/4] ARM: dts: cm-t54: add HDMI/DVI display data
-Date: Tue, 16 Sep 2014 11:46:15 -0500
-Message-ID: <54186957.50803@ti.com>
-References: <1410885322-5928-1-git-send-email-lifshitz@compulab.co.il> <1410885322-5928-2-git-send-email-lifshitz@compulab.co.il>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: add devicetree bindings for
+ Fairchild FAN53555 regulators
+Date: Tue, 16 Sep 2014 09:55:54 -0700
+Message-ID: <20140916165554.GQ7960@sirena.org.uk>
+References: <1410882844-10349-1-git-send-email-heiko@sntech.de>
+ <1410882844-10349-3-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1410885322-5928-2-git-send-email-lifshitz@compulab.co.il>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dmitry Lifshitz <lifshitz@compulab.co.il>, =?windows-1252?Q?Beno=EEt_?= =?windows-1252?Q?Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uvVZtPvgEsTJmsHL"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410882844-10349-3-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2014 11:35 AM, Dmitry Lifshitz wrote:
-> Add DSS related pinmux and display data nodes required to support HDMI
-> and DVI video out on CM-T54.
-> 
-> Signed-off-by: Dmitry Lifshitz <lifshitz@compulab.co.il>
-> ---
->  arch/arm/boot/dts/omap5-cm-t54.dts |  158 ++++++++++++++++++++++++++++++++++++
->  1 files changed, 158 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap5-cm-t54.dts b/arch/arm/boot/dts/omap5-cm-t54.dts
-> index 429471a..9cb40d6 100644
-> --- a/arch/arm/boot/dts/omap5-cm-t54.dts
-> +++ b/arch/arm/boot/dts/omap5-cm-t54.dts
-> @@ -66,6 +66,69 @@
->  			default-state = "off";
->  		};
->  	};
-> +
-> +	aliases {
-> +		display0 = &hdmi0;
-> +		display1 = &dvi0;
-> +	};
 
-Should probably maintain all the aliases in one place at the top of
-the dts?
+--uvVZtPvgEsTJmsHL
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +	hdmi0: connector@0 {
-> +		compatible = "hdmi-connector";
-> +		label = "hdmi";
-> +
-> +		type = "a";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&hdmi_conn_pins>;
-> +
-> +		hpd-gpios = <&gpio7 1 GPIO_ACTIVE_HIGH>; /* GPIO 193, HPD */
-> +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	tfp410: encoder@0 {
-> +		compatible = "ti,tfp410";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +
-> +				tfp410_in: endpoint@0 {
-> +					remote-endpoint = <&dpi_dvi_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +
-> +				tfp410_out: endpoint@0 {
-> +					remote-endpoint = <&dvi_connector_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	dvi0: connector@1 {
-> +		compatible = "dvi-connector";
-> +		label = "dvi";
-> +
-> +		digital;
-> +
-> +		ddc-i2c-bus = <&i2c2>;
-> +
-> +		port {
-> +			dvi_connector_in: endpoint {
-> +				remote-endpoint = <&tfp410_out>;
-> +			};
-> +		};
-> +	};
->  };
->  
->  &omap5_pmx_core {
-> @@ -88,6 +151,13 @@
->  		>;
->  	};
->  
-> +	i2c2_pins: pinmux_i2c2_pins {
-> +		pinctrl-single,pins = <
-> +			OMAP5_IOPAD(0x01b8, PIN_INPUT | MUX_MODE0) /* i2c2_scl */
-> +			OMAP5_IOPAD(0x01ba, PIN_INPUT | MUX_MODE0) /* i2c2_sda */
-> +		>;
-> +	};
-> +
->  	mmc1_pins: pinmux_mmc1_pins {
->  		pinctrl-single,pins = <
->  			OMAP5_IOPAD(0x01e2, PIN_INPUT_PULLUP | MUX_MODE0) /* sdcard_clk */
-> @@ -144,6 +214,53 @@
->  			OMAP5_IOPAD(0x00b6, PIN_OUTPUT | MUX_MODE6) /* hsi2_acdata.gpio3_83 */
->  		>;
->  	};
-> +
-> +	dss_hdmi_pins: pinmux_dss_hdmi_pins {
-> +		pinctrl-single,pins = <
-> +			OMAP5_IOPAD(0x013c, PIN_INPUT_PULLUP | MUX_MODE0) /* hdmi_cec.hdmi_cec */
-> +			OMAP5_IOPAD(0x0140, PIN_INPUT | MUX_MODE0) /* hdmi_ddc_scl.hdmi_ddc_scl */
-> +			OMAP5_IOPAD(0x0142, PIN_INPUT | MUX_MODE0) /* hdmi_ddc_sda.hdmi_ddc_sda */
-> +		>;
-> +	};
-> +
-> +	hdmi_conn_pins: pinmux_hdmi_conn_pins {
-> +		pinctrl-single,pins = <
-> +			OMAP5_IOPAD(0x013e, PIN_INPUT | MUX_MODE6) /* hdmi_hpd.gpio7_193 */
-> +		>;
-> +	};
-> +
-> +	dss_dpi_pins: pinmux_dss_dpi_pins {
-> +		pinctrl-single,pins = <
-> +			OMAP5_IOPAD(0x0104, PIN_OUTPUT | MUX_MODE3) /* dispc_data15 */
-> +			OMAP5_IOPAD(0x0106, PIN_OUTPUT | MUX_MODE3) /* dispc_data14 */
-> +			OMAP5_IOPAD(0x0108, PIN_OUTPUT | MUX_MODE3) /* dispc_data13 */
-> +			OMAP5_IOPAD(0x010a, PIN_OUTPUT | MUX_MODE3) /* dispc_data12 */
-> +			OMAP5_IOPAD(0x010c, PIN_OUTPUT | MUX_MODE3) /* dispc_data11 */
-> +			OMAP5_IOPAD(0x010e, PIN_OUTPUT | MUX_MODE3) /* dispc_data10 */
-> +			OMAP5_IOPAD(0x0110, PIN_OUTPUT | MUX_MODE3) /* dispc_data9 */
-> +			OMAP5_IOPAD(0x0112, PIN_OUTPUT | MUX_MODE3) /* dispc_data8 */
-> +			OMAP5_IOPAD(0x0114, PIN_OUTPUT | MUX_MODE3) /* dispc_data7 */
-> +			OMAP5_IOPAD(0x0116, PIN_OUTPUT | MUX_MODE3) /* dispc_data6 */
-> +			OMAP5_IOPAD(0x0118, PIN_OUTPUT | MUX_MODE3) /* dispc_data5 */
-> +			OMAP5_IOPAD(0x011a, PIN_OUTPUT | MUX_MODE3) /* dispc_data4 */
-> +			OMAP5_IOPAD(0x011c, PIN_OUTPUT | MUX_MODE3) /* dispc_data3 */
-> +			OMAP5_IOPAD(0x011e, PIN_OUTPUT | MUX_MODE3) /* dispc_data2 */
-> +			OMAP5_IOPAD(0x0120, PIN_OUTPUT | MUX_MODE3) /* dispc_data1 */
-> +			OMAP5_IOPAD(0x0122, PIN_OUTPUT | MUX_MODE3) /* dispc_data0 */
-> +			OMAP5_IOPAD(0x0124, PIN_OUTPUT | MUX_MODE3) /* dispc_vsync */
-> +			OMAP5_IOPAD(0x0126, PIN_OUTPUT | MUX_MODE3) /* dispc_hsync */
-> +			OMAP5_IOPAD(0x0128, PIN_OUTPUT | MUX_MODE3) /* dispc_de */
-> +			OMAP5_IOPAD(0x012a, PIN_OUTPUT | MUX_MODE3) /* dispc_pclk */
-> +			OMAP5_IOPAD(0x012c, PIN_OUTPUT | MUX_MODE3) /* dispc_data17 */
-> +			OMAP5_IOPAD(0x012e, PIN_OUTPUT | MUX_MODE3) /* dispc_data16 */
-> +			OMAP5_IOPAD(0x0130, PIN_OUTPUT | MUX_MODE3) /* dispc_data18 */
-> +			OMAP5_IOPAD(0x0132, PIN_OUTPUT | MUX_MODE3) /* dispc_data19 */
-> +			OMAP5_IOPAD(0x0134, PIN_OUTPUT | MUX_MODE3) /* dispc_data20 */
-> +			OMAP5_IOPAD(0x0136, PIN_OUTPUT | MUX_MODE3) /* dispc_data21 */
-> +			OMAP5_IOPAD(0x0138, PIN_OUTPUT | MUX_MODE3) /* dispc_data22 */
-> +			OMAP5_IOPAD(0x013a, PIN_OUTPUT | MUX_MODE3) /* dispc_data23 */
-> +		>;
-> +	};
->  };
->  
->  &mmc1 {
-> @@ -398,6 +515,13 @@
->  	};
->  };
->  
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_pins>;
-> +
-> +	clock-frequency = <100000>;
-> +};
-> +
->  &usbhshost {
->  	port2-mode = "ehci-hsic";
->  	port3-mode = "ehci-hsic";
-> @@ -410,3 +534,37 @@
->  &cpu0 {
->  	cpu0-supply = <&smps123_reg>;
->  };
-> +
-> +&dss {
-> +	status = "ok";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&dss_dpi_pins>;
-> +
-> +	port {
-> +		dpi_dvi_out: endpoint@0 {
-> +			remote-endpoint = <&tfp410_in>;
-> +			data-lines = <24>;
-> +		};
-> +	};
-> +};
-> +
-> +&dsi2 {
-> + 	status = "ok";
-> + 	vdd-supply = <&ldo4_reg>;
-> +};
-> +
-> +&hdmi {
-> +	status = "ok";
-> +	vdda-supply = <&ldo4_reg>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&dss_hdmi_pins>;
-> +
-> +	port {
-> +		hdmi_out: endpoint {
-> +			remote-endpoint = <&hdmi_connector_in>;
-> +			lanes = <1 0 3 2 5 4 7 6>;
-> +		};
-> +	};
-> +};
-> 
+On Tue, Sep 16, 2014 at 05:54:02PM +0200, Heiko Stuebner wrote:
 
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -49,6 +49,7 @@ epson	Seiko Epson Corp.
+>  est	ESTeem Wireless Modems
+>  eukrea  Eukr=E9a Electromatique
+>  excito	Excito
+> +fairchild	Fairchild Semiconductor
+>  fsl	Freescale Semiconductor
+>  GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+>  gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
 
--- 
-Regards,
-Nishanth Menon
+Google tells me that the stock ticker symbol for Fairchild is FCS
+(sorry, should've spotted this on the previous version).
+
+--uvVZtPvgEsTJmsHL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUGGuZAAoJECTWi3JdVIfQSf8H/AuetSC7i2wwfoM+atzBDv3z
+iFqBtl1/Z/+Mp5KOBNjsXUR5PjYTeCseleGZj5cchDkSCle9BTuIetoB0u59DQSz
+xIzq6qQGBuP67DzpichY4W0hv3EQ1QPfsgHJPFFlEfYU8I1Z9CoyeBuxtoVAHEqt
++4f7iSmyYeH8eKDMHeZN43/RYxuTRhiziZ5Hr+fI4UawKQOWqEOJ7GIrOPpukHul
+D6LwMsarLLe2T0VP6UZ30Ph1pTwv5hcY8ogIW7D2+dvOvhll1kbWcjJUbjsKNEC4
+gQsQVyh5ncLXBqNBXn2/VF5g//hNtYT86nX/A7YeRP5G4qCLndV3FiJG43uTlww=
+=6dNL
+-----END PGP SIGNATURE-----
+
+--uvVZtPvgEsTJmsHL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
