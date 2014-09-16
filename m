@@ -1,135 +1,71 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH v2 1/7] mfd: Add support for DA9150 combined charger &
- fuel-gauge device
-Date: Tue, 16 Sep 2014 10:50:21 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB514E7C@SW-EX-MBX01.diasemi.com>
-References: <cover.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
- <d6c7de200c9447dbafa74ee76739da943a0b73b2.1409145187.git.Adam.Thomson.Opensource@diasemi.com>
- <20140828163608.GY24579@lee--X1>
- <2E89032DDAA8B9408CB92943514A0337AB5144CE@SW-EX-MBX01.diasemi.com>
- <20140910094951.GN30307@lee--X1>
- <2E89032DDAA8B9408CB92943514A0337AB514846@SW-EX-MBX01.diasemi.com>
- <20140915223924.GC25162@lee--X1>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] clocksource: arch_timer: Allow the device tree to
+ specify the physical timer
+Date: Tue, 16 Sep 2014 12:03:21 +0100
+Message-ID: <20140916110321.GD27273@arm.com>
+References: <5411D528.4050605@arm.com>
+ <CAD=FV=XMmizxJFPj0FEhJ7Gk4ZcQaUJDxf_Qq5kGKSvxDFVmzg@mail.gmail.com>
+ <5411DA67.2040402@arm.com>
+ <CAD=FV=UQfo4J3P4wGjOhQZQ5KXKgYAdjPsi1ykKZxQw-FwJz8w@mail.gmail.com>
+ <5411DF5D.8060906@arm.com>
+ <5412DC48.7030708@codeaurora.org>
+ <5412E3BB.9030800@arm.com>
+ <54134291.3040700@codeaurora.org>
+ <20140915111055.GD1577@arm.com>
+ <54174CFF.7050504@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140915223924.GC25162@lee--X1>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Joe Perches <joe@perches.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <54174CFF.7050504-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2VwdGVtYmVyIDE1LCAyMDE0IDIzOjM5LCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gT24gV2Vk
-LCAxMCBTZXAgMjAxNCwgT3BlbnNvdXJjZSBbQWRhbSBUaG9tc29uXSB3cm90ZToNCj4gPiBPbiBT
-ZXB0ZW1iZXIgMTAsIDIwMTQgMTA6NTAsIExlZSBKb25lcyB3cm90ZToNCj4gPiA+IE9uIFR1ZSwg
-MDkgU2VwIDIwMTQsIE9wZW5zb3VyY2UgW0FkYW0gVGhvbXNvbl0gd3JvdGU6DQo+ID4gPg0KPiA+
-ID4gPiBPbiBBdWd1c3QgMjgsIDIwMTQgMTc6MzYsIExlZSBKb25lcyB3cm90ZToNCj4gPiA+ID4N
-Cj4gPiA+ID4gVGhhbmtzIGZvciB0aGUgZmVlZGJhY2suIEFzIGEgZ2VuZXJhbCBjb21tZW50IGEg
-Y291cGxlIG9mIHRoZSBpdGVtcyB5b3UndmUNCj4gPiA+ID4gaWRlbnRpZmllZCByZWxhdGUgdG8g
-ZnV0dXJlIHVwZGF0ZXMgKGFkZGl0aW9uYWwgZnVuY3Rpb25hbGl0eSBiZWluZyBhZGRlZCkuDQo+
-ID4gPiA+IEkgYWxyZWFkeSBoYXZlIGNvZGUgaW4gcGxhY2UgZm9yIHRoaXMgYnV0IGhhdmUgc3Ry
-aXBwZWQgb3V0IGEgY291cGxlIG9mIHRoZQ0KPiA+ID4gPiBkcml2ZXJzIGp1c3QgdG8gcmVkdWNl
-IHRoZSBjaHVybiBhbmQgc2l6ZSBvZiBwYXRjaCBzdWJtaXNzaW9uLiBUaGVzZSB3aWxsIGJlDQo+
-ID4gPiA+IGFkZGVkIG9uY2UgdGhlc2UgcGF0Y2hlcyBoYXZlIGJlZW4gYWNjZXB0ZWQuDQo+ID4g
-PiA+DQo+ID4gPiA+IFdoZXJlIHRoaXMgaXMgdGhlIGNhc2UsIEkgaGF2ZSBhZGRlZCBub3RlcyBp
-bi1saW5lIGFnYWluc3QgdGhlIHJlbGV2YW50DQo+ID4gPiA+IGNvbW1lbnRzIHlvdSBtYWRlLg0K
-PiA+ID4gPg0KPiA+ID4gPiA+IE9uIFRodSwgMjggQXVnIDIwMTQsIEFkYW0gVGhvbXNvbiB3cm90
-ZToNCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gREE5MTUwIGlzIGEgY29tYmluZWQgQ2hhcmdlciBh
-bmQgRnVlbC1HYXVnZSBJQywgd2l0aCBhZGRpdGlvbmFsDQo+ID4gPiA+ID4gPiBHUElPIGFuZCBH
-UEFEQyBmdW5jdGlvbmFsaXR5Lg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IFNpZ25lZC1vZmYt
-Ynk6IEFkYW0gVGhvbXNvbg0KPiA8QWRhbS5UaG9tc29uLk9wZW5zb3VyY2VAZGlhc2VtaS5jb20+
-DQo+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ICBkcml2ZXJzL21mZC9LY29uZmlnICAgICAg
-ICAgICAgICAgICAgfCAgIDEyICsNCj4gPiA+ID4gPiA+ICBkcml2ZXJzL21mZC9NYWtlZmlsZSAg
-ICAgICAgICAgICAgICAgfCAgICAyICsNCj4gPiA+ID4gPiA+ICBkcml2ZXJzL21mZC9kYTkxNTAt
-Y29yZS5jICAgICAgICAgICAgfCAgMzMyICsrKysrKysrKysNCj4gPiA+ID4gPiA+ICBkcml2ZXJz
-L21mZC9kYTkxNTAtaTJjLmMgICAgICAgICAgICAgfCAgMTc2ICsrKysrKw0KPiANCj4gWy4uLl0N
-Cj4gDQo+ID4gPiA+ID4gPiArLyogSGVscGVyIGZ1bmN0aW9ucyBmb3Igc3ViLWRldmljZXMgdG8g
-cmVxdWVzdC9mcmVlIElSUXMgKi8NCj4gPiA+ID4gPiA+ICtpbnQgZGE5MTUwX3JlZ2lzdGVyX2ly
-cShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCB2b2lkICpkZXZfaWQsDQo+ID4gPiA+ID4g
-PiArCQkJaXJxX2hhbmRsZXJfdCBoYW5kbGVyLCBjb25zdCBjaGFyICpuYW1lKQ0KPiA+ID4gPiA+
-ID4gK3sNCj4gPiA+ID4gPiA+ICsJaW50IGlycSwgcmV0Ow0KPiA+ID4gPiA+ID4gKw0KPiA+ID4g
-PiA+ID4gKwlpcnEgPSBwbGF0Zm9ybV9nZXRfaXJxX2J5bmFtZShwZGV2LCBuYW1lKTsNCj4gPiA+
-ID4gPiA+ICsJaWYgKGlycSA8IDApDQo+ID4gPiA+ID4gPiArCQlyZXR1cm4gaXJxOw0KPiA+ID4g
-PiA+ID4gKw0KPiA+ID4gPiA+ID4gKwlyZXQgPSBkZXZtX3JlcXVlc3RfdGhyZWFkZWRfaXJxKCZw
-ZGV2LT5kZXYsIGlycSwgTlVMTCwgaGFuZGxlciwNCj4gPiA+ID4gPiA+ICsJCQkJCUlSUUZfT05F
-U0hPVCwgbmFtZSwgZGV2X2lkKTsNCj4gPiA+ID4gPiA+ICsJaWYgKHJldCkNCj4gPiA+ID4gPiA+
-ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgIkZhaWxlZCB0byByZXF1ZXN0IElSUSAlZDogJWRcbiIs
-IGlycSwNCj4gcmV0KTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJcmV0dXJuIHJldDsN
-Cj4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiArRVhQT1JUX1NZTUJPTF9HUEwoZGE5MTUwX3Jl
-Z2lzdGVyX2lycSk7DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBXaHkgZG8gdGhleSBuZWVkIGhlbHA/
-ICBXaGF0IHByb2JsZW0gZG9lcyBhZGRpbmcgdGhlc2UgbGF5ZXJzIHNvbHZlPw0KPiA+ID4gPg0K
-PiA+ID4gPiBNZWFucyBJIGRvbid0IGhhdmUgdG8ga2VlcCBhZGRpbmcgcHJpbnQgZXJyb3IgbGlu
-ZXMgZXZlcnl3aGVyZSBlbHNlIGlmIHRoaXMNCj4gPiA+ID4gZnVuY3Rpb24gdGFrZXMgY2FyZSBv
-ZiBpdC4gVGhvdWdodCB0aGF0IHdvdWxkIGJlIGNsZWFuZXIuDQo+ID4gPg0KPiA+ID4gWW91IG9u
-bHkgbmVlZCB0byByZXF1ZXN0IGVhY2ggSVJRIG9uY2UuICBJdCdzIGp1c3QgbW9yZSBhYnN0cmFj
-dGlvbg0KPiA+ID4gZm9yIHRoZSBzYWtlIG9mIGl0LiAgSSB3b3VsZCBwcmVmZXIgaWYgeW91IHJl
-bW92ZWQgdGhlbS4NCj4gPg0KPiA+IFllcywgYnV0IGluIHRoZSBjaGFyZ2VyIGRyaXZlciBmb3Ig
-ZXhhbXBsZSwgdGhlcmUgYXJlIDQgSVJRcyB0byByZXF1ZXN0LiBJZg0KPiA+IEkgZG9uJ3QgdXNl
-IHRoaXMgYXBwcm9hY2ggdGhlIElSUSByZXF1ZXN0aW5nIGJlY29tZXMgYmxvYXRlZCwgaGVuY2Ug
-d2h5IEkgd2VudA0KPiA+IGZvciBhIGNvbW1vbiBmdW5jdGlvbiBsaWtlIHRoaXMuIFRob3VnaHQg
-Z2VuZXJhbGx5IHRoZSBpbnRlbnRpb24gd2FzIHRvIGN1dA0KPiA+IGRvd24gb24gcmVwZWF0ZWQg
-Y29kZT8NCj4gDQo+IElmIHlvdSdyZSB3b3JyaWVkIGFib3V0IGJsb2F0IGluIC5wcm9iZSgpIGl0
-J3Mgb2theSB0byBkZWZpbmUgYSBuZXcNCj4gZnVuY3Rpb24gd2l0aGluIHRoZSBjaGFyZ2VyIGRy
-aXZlcjsgaG93ZXZlciwgY3JlYXRpbmcgYSBjYWxsLWJhY2sgaW50bw0KPiB0aGUgTUZEIGRyaXZl
-ciBsaWtlIHRoaXMgSSB0aGluayBpdCBvdmVyLWtpbGwgZm9yIDQgcmVxdWVzdHMuDQoNCkkgY291
-bGQgZG8gc29tZXRoaW5nIGp1c3QgaW4gdGhlIGNoYXJnZXIsIGJ1dCB3aHkgbm90IGhhdmUgc29t
-ZXRoaW5nIHdoaWNoIGNhbg0KYmUgdXNlZCBmb3IgYWxsIHN1Yi1kZXZpY2VzPyBUaGVyZSBpcyBh
-bHNvIGFuIElSUSB1c2VkIGluIHRoZSBJSU8gQURDIGRyaXZlciBhbmQNCnRoZXJlIHdpbGwgYmUg
-YW5vdGhlciBpbiB0aGUgbGF0ZXIgZnVlbC1nYXVnZSBkcml2ZXIgdG9vLiBEb2Vzbid0IG1ha2Ug
-c2Vuc2UgdG8NCm1lIG5vdCB0byBkbyBpbiB0aGUgTUZEIGNvZGUgd2hlbiB0aGF0IHdpbGwgcHJv
-dmlkZSBhIHNpbXBsZSBjb21tb24gY2FsbCBmb3IgYWxsDQpzdWItZGV2aWNlcy4gV2hhdCBpcyB5
-b3VyIGNvbmNlcm4gd2l0aCBhZGRpbmcgc29tZXRoaW5nIGxpa2UgdGhpcywganVzdCBzbyBJJ20N
-CmNsZWFyPw0KDQo+IA0KPiA+ID4gPiA+ID4gK3ZvaWQgZGE5MTUwX3JlbGVhc2VfaXJxKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIHZvaWQgKmRldl9pZCwNCj4gPiA+ID4gPiA+ICsJCSAg
-ICAgICBjb25zdCBjaGFyICpuYW1lKQ0KPiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ICsJaW50
-IGlycTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsJaXJxID0gcGxhdGZvcm1fZ2V0X2ly
-cV9ieW5hbWUocGRldiwgbmFtZSk7DQo+ID4gPiA+ID4gPiArCWlmIChpcnEgPCAwKQ0KPiA+ID4g
-PiA+ID4gKwkJcmV0dXJuOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKwlkZXZtX2ZyZWVf
-aXJxKCZwZGV2LT5kZXYsIGlycSwgZGV2X2lkKTsNCj4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4g
-PiArRVhQT1JUX1NZTUJPTF9HUEwoZGE5MTUwX3JlbGVhc2VfaXJxKTsNCj4gPiA+ID4gPg0KPiA+
-ID4gPiA+IERvIHlvdSBldmVyIHJlbGVhc2UgdGhlIElSUSBhbmQgbm90IHVuYmluZCB0aGUgZHJp
-dmVyPw0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gQXJlIHRoZXJlIG9yZGVyaW5nIGlzc3VlcyBhdCBw
-bGF5IGhlcmU/DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJZiBub3QsIHRoZXJlJ3Mgbm8gbmVlZCB0
-byBjb25kdWN0IGEgbWFudWFsIGZyZWUuDQo+ID4gPiA+DQo+ID4gPiA+IEluIHRoZSBjaGFyZ2Vy
-IGRyaXZlciwgaW4gdGhlIHJlbW92ZSBmdW5jdGlvbiB0aGVyZSBpcyBhIG5lZWQgSSBiZWxpZXZl
-IHRvDQo+ID4gPiA+IGZyZWUgdGhlIElSUXMgYmVmb3JlIG90aGVyIGl0ZW1zIGFyZSBjbGVhcmVk
-IHVwIChlLmcuIHBvd2VyX3N1cHBseSBjbGFzc2VzKSwNCj4gPiA+ID4gc28gdGhpcyBpcyB3aHkg
-SSBoYXZlIGFkZGVkIHRoaXMgaW4gaGVyZS4NCj4gPiA+DQo+ID4gPiBDYW4geW91IGhhbmRsZSB0
-aGlzIHNlcGFyYXRlbHkgaW4gdGhlIENoYXJnZXIgZHJpdmVyIHRoZW4gcGxlYXNlPw0KPiA+ID4N
-Cj4gPiA+IFsuLi5dDQo+ID4NCj4gPiBJZiBJIGhhdmUgdG8gcmVtb3ZlIHRoZSBJUlEgcmVnaXN0
-ZXIgZnVuY3Rpb24sIHRoZW4geWVzLCBvdGhlcndpc2UgaXQgbWFrZXMgbW9yZQ0KPiA+IHNlbnNl
-IHRvIGhhdmUgdGhlIHBhaXIgb2YgZnVuY3Rpb25zIGluIHRoZSBNRkQgY29yZSBJIHdvdWxkIHNh
-eS4NCj4gDQo+IEkgd291bGQgcHJlZmVyIHlvdSB0byByZW1vdmUgdGhlIGNhbGwtYmFjayBwbGVh
-c2UuDQoNClJpZ2h0Lg0KDQo+IA0KPiA+ID4gPiA+ID4gKwlpZiAocGRhdGEpDQo+ID4gPiA+ID4g
-PiArCQlkYTkxNTAtPmlycV9iYXNlID0gcGRhdGEtPmlycV9iYXNlOw0KPiA+ID4gPiA+ID4gKwll
-bHNlDQo+ID4gPiA+ID4gPiArCQlkYTkxNTAtPmlycV9iYXNlID0gLTE7DQo+ID4gPiA+ID4NCj4g
-PiA+ID4gPiBwZGF0YSA/IHBkYXRhLT5pcnFfYmFzZSA6IC0xOw0KPiA+ID4gPg0KPiA+ID4gPiBU
-aGlzIGlzIGxlZnQgdGhpcyB3YXkgYXMgbGF0ZXIgdXBkYXRlcyB0byBhZGQgYWRkaXRpb25hbCBm
-dW5jdGlvbmFsaXR5IHdpbGwNCj4gPiA+ID4gcmVxdWlyZSBhZGR0aW9uYWwgd29yayB0byBiZSBk
-b25lIHdpdGggdGhlIHBsYXRmb3JtIGRhdGEuIFNlZW1lZCBwb2ludGxlc3MNCj4gPiA+ID4gY2hh
-bmdpbmcgaXQgaGVyZSBqdXN0IHRvIGNoYW5nZSBpdCBiYWNrIGxhdGVyLg0KPiA+ID4NCj4gPiA+
-IFlvdSdyZSBub3QgY2hhbmdpbmcgYW55dGhpbmcsIGFzIHRoaXMgaXMgdGhlIGludHJvZHVjdGlv
-biBvZiB0aGUgY29kZS4NCj4gPiA+IEkgY2FuJ3QgdGVsbCB5b3UgaG93IG1hbnkgdGltZXMgSSd2
-ZSBoZWFyZCAiSSB3aWxsIGNoYW5nZSBpdCBsYXRlciIsDQo+ID4gPiBvciAiZG9pbmcgaXQgdGhp
-cyB3YXkgd2lsbCBzdXBwb3J0IHN1YnNlcXVlbnQgc3VibWlzc2lvbnMiLCB0aGVuDQo+ID4gPiBy
-ZWNlaXZlZCBubyBtb3JlIHBhdGNoZXMuICBJdCdzIG9rYXkgdG8gZG8gaXQgbmljZWx5IG5vdyBh
-bmQgZXhwYW5kDQo+ID4gPiBpdCBiYWNrIG91dCBpbiB0aGUgbmV3IHBhdGNoZXMuDQo+ID4gPg0K
-PiA+ID4gWy4uLl0NCj4gPg0KPiA+IEl0IGFwcGVhcnMgdGhhdCB3YXkgdG8geW91IGJ1dCBJIGhh
-dmUgdG8gbW9kaWZ5IG15IGNvZGUgZm9yIHN1bWJpc3Npb24gYXMgdGhlDQo+ID4gbG9jYWwgY29k
-ZSBJIGhhdmUgY292ZXJzIGFsbCBmdW5jdGlvbmFsaXR5LiBBbSBoYXZpbmcgdG8gcmVmYWN0b3Ig
-YWdhaW4gYW5kDQo+ID4gYWdhaW4ganVzdCB0byBzdWl0IHRoaXMgaW5pdGlhbCBzdWJtaXNzaW9u
-LCBhbmQgdGhlbiBJIGhhdmUgdG8gcmV2ZXJ0IGl0IGJhY2sNCj4gPiBhZ2FpbiB3aGVuIHN1Ym1p
-dHRpbmcgdGhlIGxhc3QgY291cGxlIG9mIGRyaXZlcnMuIFRpbWUgY29uc3VtaW5nLCBhbmQgcXVp
-dGUNCj4gPiBmcnVzdHJhdGluZyB3aGVuIHRoZSBpbnRlbnRpb24gd2FzIHRvIG1ha2UgdGhlIHdo
-b2xlIHByb2Nlc3MgZWFzaWVyLiBBbnl3YXksDQo+ID4gd2lsbCB1cGRhdGUgZm9yIG5vdyBhbmQg
-cmV2ZXJ0IGluIHN1YnNlcXVlbnQgcGF0Y2hlcy4NCj4gDQo+IEkgc2luY2VyZWx5IGhvcGUgdGhl
-IHJlZmFjdG9yaW5ncyB3b24ndCBhZGQgdG9vIG11Y2ggZWZmb3J0LCBidXQgaXQncw0KPiBkaWZm
-aWN1bHQgdG8gaGF2ZSBvbmUgcnVsZSBmb3IgdGhlIG1hc3NlcyBhbmQgZGlmZmVyZW50IG9uZXMg
-Zm9yDQo+IG90aGVycy4NCg0KSSBkbyB1bmRlcnN0YW5kIHRoYXQsIGFuZCB0aGF0J3MgZmFpciBl
-bm91Z2guIElzIGp1c3QgZnJ1c3RyYXRpbmcgd2hlbiB5b3UncmUNCnRyeWluZyB0byBkbyBhIHBy
-b3BlciBqb2IuIEFueXdheSwgYW0gc3VyZSBJJ2xsIGxpdmUuIDopDQoNCj4gDQo+IC0tDQo+IExl
-ZSBKb25lcw0KPiBMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkDQo+
-IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29Dcw0KPiBGb2xs
-b3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nDQo=
+On Mon, Sep 15, 2014 at 09:33:03PM +0100, Stephen Boyd wrote:
+> On 09/15/14 04:10, Catalin Marinas wrote:
+> > On Fri, Sep 12, 2014 at 07:59:29PM +0100, Stephen Boyd wrote:
+> >> On 09/12/14 05:14, Marc Zyngier wrote:
+> >>> We surely can handle the UNDEF and do something there. We just can't do
+> >>> it the way Doug described it above.
+> >> I suggested doing that for something else a while ago and Will and Dave
+> >> we're not thrilled[1]. The suggestion back then was to use DT to
+> >> indicate what mode the kernel is running in.
+> >>
+> >> [1]
+> >> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/105321.html
+> > I think the context was slightly different. As I re-read the thread, it
+> > seems that the discussion was around whether to use some SMC interface
+> > or not based on whether the kernel is running secure or non-secure. The
+> > argument made by Will was to actually specify the type of the firmware
+> > SMC interface in the DT and use it in the kernel (and probably assume
+> > the kernel is running in secure mode if no smc interface is specified in
+> > the DT; you could have both though, running in secure mode and also
+> > having firmware).
+> >
+> > In this arch timer case, we need to work around a firmware bug (or
+> > feature as 32-bit ARM kernels never required CNTVOFF initialisation by
+> > firmware, no matter how small such firmware is). We don't expect a
+> > specific SMC call to initialise CNTVOFF, so we can't describe it in the
+> > DT.
+> 
+> Agreed, we can't described SMC calls that don't exist. From my
+> perspective it's just another part of the cpu boot sequence that needs
+> to be handled in the kernel, so describing the requirement via the
+> cpu-boot method seems appropriate. It seems like we're making it harder
+> than it should be by handling the undef when we could have slightly
+> different SMP boot code (and suspend/resume code) depending on the boot
+> method property.
+
+For 32-bit ARM SoCs, I think you can describe this via some specific
+enable-method property. What I don't like though is the multitude of
+enable methods (trying to reduce them on arm64) and the fact that
+registers like CNTVOFF are rather architecture than SoC specific.
+
+-- 
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
