@@ -1,51 +1,49 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6] spi: spi-imx: add DMA support
-Date: Tue, 16 Sep 2014 10:41:12 -0700
-Message-ID: <20140916174112.GU7960@sirena.org.uk>
-References: <1410398324-15284-1-git-send-email-b38343@freescale.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="saqwZB8dd8xoGD4q"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410398324-15284-1-git-send-email-b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH net-next] of: mdio: honor flags passed to of_phy_connect
+Date: Tue, 16 Sep 2014 10:49:36 -0700
+Message-ID: <1410889776-11107-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Commit f9a8f83b04e0 ("net: phy: remove flags argument from phy_{attach,
+connect, connect_direct}") removed the flags argument to the PHY library
+calls to: phy_{attach,connect,connect_direct}.
 
---saqwZB8dd8xoGD4q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Most Device Tree aware drivers call of_phy_connect() with the flag
+argument set to 0, but some of them might want to set a different value
+there in order for the PHY driver to key a specific behavior based on
+the phy_device::dev_flags value.
 
-On Thu, Sep 11, 2014 at 09:18:44AM +0800, Robin Gong wrote:
-> Enable DMA support on i.mx6. The read speed can increase from 600KB/s
-> to 1.2MB/s on i.mx6q. You can disable or enable dma function in dts.
-> If not set "dma-names" in dts, spi will use PIO mode. This patch only
-> validate on i.mx6, not i.mx5, but encourage ones to apply this patch
-> on i.mx5 since they share the same IP.
+Allow such drivers to set custom dev_flags as part of the
+of_phy_connect() call since of_phy_connect() does start the PHY state
+machine, it will call into the PHY driver config_init() callback which
+is usually where a specific phy_flags value is important.
 
-Applied, thanks.
+Fixes: f9a8f83b04e0 ("net: phy: remove flags argument from phy_{attach, connect, connect_direct}")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+David,
 
---saqwZB8dd8xoGD4q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+This is applicable to 3.9 and newer, thanks!
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ drivers/of/of_mdio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-iQEcBAEBAgAGBQJUGHY3AAoJECTWi3JdVIfQjyAH/idzcyENZCv5XYBmBARGjcLd
-VBO8sU5OieN4U5/bq2TyDzVW4vRP0BfBoQ2PQZec5N1UcYnWAsfjupzGC1yvGAqK
-mq9OAe4J5qihlwNLg+YNn9AHTGEcBJ+UKmJE+Y3KhS58wIGiLYq3YVfb9hyflVla
-6gQ9Wjmqc3uNtRvvr3sey8/19B+7i0Lr8vlUyBM751I7nVUZPOy26YoHsNc1QS82
-WgX7QcmB4WpUeUtQ4nxFrrq8jxi+dexrU5HHcuqOa+wqA8SNeQbdREdUekn5N+Mf
-IdI7X1I8KtOTpbFF9fF/eHT/h8PwInhuCvgBc76KNRAZOLGYFileVkn8pg9HcbU=
-=5iX7
------END PGP SIGNATURE-----
-
---saqwZB8dd8xoGD4q--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 401b2453da45..a85d80012993 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -224,6 +224,8 @@ struct phy_device *of_phy_connect(struct net_device *dev,
+ 	if (!phy)
+ 		return NULL;
+ 
++	phy->dev_flags = flags;
++
+ 	return phy_connect_direct(dev, phy, hndlr, iface) ? NULL : phy;
+ }
+ EXPORT_SYMBOL(of_phy_connect);
+-- 
+1.9.1
