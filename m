@@ -1,70 +1,124 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: document Rockchip thermal
-Date: Tue, 16 Sep 2014 15:23:53 +0800
-Message-ID: <1410852233.25559.173.camel@rzhang1-toshiba>
-References: <1409710239-19941-1-git-send-email-caesar.wang@rock-chips.com>
-	 <1410403012.25559.69.camel@rzhang1-toshiba>
-	 <20140911121842.GB26715@developer> <40514790.Xc34lyFLGa@wuerfel>
-	 <20140911155324.GA27076@developer>
+From: "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 4/4 v4] GPIO: gpio-dwapb: Suspend & Resume PM enabling
+Date: Tue, 16 Sep 2014 07:24:57 +0000
+Message-ID: <1410852297.7023.46.camel@intel.com>
+References: <1410859335-11080-1-git-send-email-alvin.chen@intel.com>
+	 <1410859335-11080-5-git-send-email-alvin.chen@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140911155324.GA27076@developer>
-Sender: linux-doc-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Caesar Wang <caesar.wang@rock-chips.com>, LKML <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, dtor <dtor@chromium.org>, Chris Zhong <zyw@rock-chips.com>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, zhaoyifeng <zyf@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1410859335-11080-5-git-send-email-alvin.chen@intel.com>
+Content-Language: en-US
+Content-ID: <A53B6F9743788A468B1B9A594C0BB768@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: "Chen, Alvin" <alvin.chen@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "sebastian@breakpoint.cc" <sebastian@breakpoint.cc>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "dvhart@linux.intel.com" <dvhart@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "atull@opensource.altera.com" <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-09-11 at 11:53 -0400, Eduardo Valentin wrote:
-> Arnd,
-> 
-> On Thu, Sep 11, 2014 at 02:32:08PM +0200, Arnd Bergmann wrote:
-> > On Thursday 11 September 2014 08:18:43 Eduardo Valentin wrote:
-> > > > As what we want is to make thermal driver have a chance to configure the
-> > > > hardware shutdown registers, I'm thinking if we can do this without
-> > > > representing the hardware shutdown value as a trip point.
-> > > > Say,
-> > > > 1. parse DT, and get the hardware shutdown temperature value, and store
-> > > > it somewhere, e.g. struct __thermal_zone.
-> > > > 2. introduce a new parameter, int (*set_hardware_trip)(void *, long *),
-> > > > in thermal_zone_of_sensor_register().
-> > > > 3. invoke set_hard_trip(tz, hardware_shutdown_temperature_value) in
-> > > > thermal_zone_of_sensor_register().
-> > > 
-> > > The only issue I have with the above proposal is that not all platforms
-> > > use DT. Some still boot with boardfiles, for instance. Thus, the
-> > > parameter to configure hardware thermal shutdown needs to be common on
-> > > thermal core, not specific to of-thermal. Do you agree?
-> > 
-> > Do you know of a machine that can't yet be converted to DT and that
-> > needs this driver? In case of rockchips that is certainly not the
-> > case, and we don't care about anybody trying to use board files out
-> > of tree, they can just hack the thermal support as well.
-> 
-> I see. Again, the only concern I have is to produce thermal framework APIs
-> that would be only in the of-thermal. My point is not specific to this
-> patch, or this platform, but with a detail in the above proposal. 
-> 
-> While I agree to have a trip specific to configurable hardware triggered
-> thermal shutdown, I just don't see why it needs to be a feature
-> implemented only via of-thermal. It has to be properly defined in
-> thermal core.
-> 
-> The proposal of of-thermal is not to become a separate/competing thermal
-> framework.
-> 
-Agreed.
-And I think we can have such feature in thermal core.
-But again I don't think we should represent it as an trip point. 
-
-thanks,
-rui
-> > 
-> > 	Arnd
-> 
-> Cheers,
-> 
-> Eduardo
-
+T24gVHVlLCAyMDE0LTA5LTE2IGF0IDAyOjIyIC0wNzAwLCBXZWlrZSBDaGVuIHdyb3RlOg0KPiBU
+aGlzIHBhdGNoIGVuYWJsZXMgc3VzcGVuZCBhbmQgcmVzdW1lIG1vZGUgZm9yIHRoZSBwb3dlciBt
+YW5hZ2VtZW50LCBhbmQNCj4gaXQgaXMgYmFzZWQgb24gSm9zZWYgQWhtYWQncyBwcmV2aW91cyB3
+b3JrLg0KPiANCg0KRmV3IGNvbW1lbnRzIGJlbG93Lg0KDQo+IFJldmlld2VkLWJ5OiBIb2NrIExl
+b25nIEt3ZWggPGhvY2subGVvbmcua3dlaEBpbnRlbC5jb20+DQoNCllvdSBzdGlsbCBrZWVwIHRo
+YXQgZ3V5IGFzIHJldmlld2VyIGluIGEgd2hvbGUgc2VyaWVzLCBob3dldmVyIEkgZGlkbid0DQpz
+ZWUgYSB3b3JkIGZyb20gaGltIGhlcmUuIEhvdyBpcyBpdCBwb3NzaWJsZT8NCg0KPiBTaWduZWQt
+b2ZmLWJ5OiBXZWlrZSBDaGVuIDxhbHZpbi5jaGVuQGludGVsLmNvbT4NCj4gLS0tDQo+ICBkcml2
+ZXJzL2dwaW8vZ3Bpby1kd2FwYi5jIHwgIDEwOSArKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxMDkgaW5zZXJ0aW9ucygrKQ0K
+PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvLWR3YXBiLmMgYi9kcml2ZXJzL2dw
+aW8vZ3Bpby1kd2FwYi5jDQo+IGluZGV4IDlhNzZlM2MuLjE0ZDgzYWYgMTAwNjQ0DQo+IC0tLSBh
+L2RyaXZlcnMvZ3Bpby9ncGlvLWR3YXBiLmMNCj4gKysrIGIvZHJpdmVycy9ncGlvL2dwaW8tZHdh
+cGIuYw0KPiBAQCAtNTAsMTEgKzUwLDE0IEBADQo+ICAjZGVmaW5lIEdQSU9fU1dQT1JUX0REUl9T
+SVpFCShHUElPX1NXUE9SVEJfRERSIC0gR1BJT19TV1BPUlRBX0REUikNCj4gIA0KPiAgc3RydWN0
+IGR3YXBiX2dwaW87DQo+ICtzdHJ1Y3QgZHdhcGJfY29udGV4dDsNCj4gIA0KPiAgc3RydWN0IGR3
+YXBiX2dwaW9fcG9ydCB7DQo+ICAJc3RydWN0IGJncGlvX2NoaXAJYmdjOw0KPiAgCWJvb2wJCQlp
+c19yZWdpc3RlcmVkOw0KPiAgCXN0cnVjdCBkd2FwYl9ncGlvCSpncGlvOw0KPiArCXN0cnVjdCBk
+d2FwYl9jb250ZXh0CSpjdHg7DQo+ICsJdW5zaWduZWQgaW50CQlpZHg7DQo+ICB9Ow0KPiAgDQo+
+ICBzdHJ1Y3QgZHdhcGJfZ3BpbyB7DQo+IEBAIC0zNzcsNiArMzgwLDcgQEAgc3RhdGljIGludCBk
+d2FwYl9ncGlvX2FkZF9wb3J0KHN0cnVjdCBkd2FwYl9ncGlvICpncGlvLA0KPiAgDQo+ICAJcG9y
+dCA9ICZncGlvLT5wb3J0c1tvZmZzXTsNCj4gIAlwb3J0LT5ncGlvID0gZ3BpbzsNCj4gKwlwb3J0
+LT5pZHggPSBwcC0+aWR4Ow0KPiAgDQo+ICAJZGF0ID0gZ3Bpby0+cmVncyArIEdQSU9fRVhUX1BP
+UlRBICsgKHBwLT5pZHggKiBHUElPX0VYVF9QT1JUX1NJWkUpOw0KPiAgCXNldCA9IGdwaW8tPnJl
+Z3MgKyBHUElPX1NXUE9SVEFfRFIgKyAocHAtPmlkeCAqIEdQSU9fU1dQT1JUX0RSX1NJWkUpOw0K
+PiBAQCAtNTg0LDEwICs1ODgsMTE1IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lk
+IGR3YXBiX29mX21hdGNoW10gPSB7DQo+ICB9Ow0KPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
+ZHdhcGJfb2ZfbWF0Y2gpOw0KPiAgDQo+ICsjaWZkZWYgQ09ORklHX1BNX1NMRUVQDQo+ICsvKiBT
+dG9yZSBHUElPIGNvbnRleHQgYWNyb3NzIHN5c3RlbS13aWRlIHN1c3BlbmQvcmVzdW1lIHRyYW5z
+aXRpb25zICovDQo+ICtzdHJ1Y3QgZHdhcGJfY29udGV4dCB7DQo+ICsJdTMyIGRhdGE7DQo+ICsJ
+dTMyIGRpcjsNCj4gKwl1MzIgZXh0Ow0KPiArCXUzMiBpbnRfZW47DQo+ICsJdTMyIGludF9tYXNr
+Ow0KPiArCXUzMiBpbnRfdHlwZTsNCj4gKwl1MzIgaW50X3BvbDsNCj4gKwl1MzIgaW50X2RlYjsN
+Cj4gK307DQoNCj4gKw0KPiArc3RhdGljIGludCBkd2FwYl9ncGlvX3N1c3BlbmQoc3RydWN0IGRl
+dmljZSAqZGV2KQ0KPiArew0KPiArCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19w
+bGF0Zm9ybV9kZXZpY2UoZGV2KTsNCj4gKwlzdHJ1Y3QgZHdhcGJfZ3BpbyAqZ3BpbyA9IHBsYXRm
+b3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KPiArCXN0cnVjdCBiZ3Bpb19jaGlwICpiZ2MJPSAmZ3Bp
+by0+cG9ydHNbMF0uYmdjOw0KPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ICsJaW50IGk7DQo+
+ICsNCj4gKwlzcGluX2xvY2tfaXJxc2F2ZSgmYmdjLT5sb2NrLCBmbGFncyk7DQo+ICsJZm9yIChp
+ID0gMDsgaSA8IGdwaW8tPm5yX3BvcnRzOyBpKyspIHsNCj4gKwkJdW5zaWduZWQgaW50IG9mZnNl
+dDsNCj4gKwkJdW5zaWduZWQgaW50IGlkeCA9IGdwaW8tPnBvcnRzW2ldLmlkeDsNCj4gKwkJc3Ry
+dWN0IGR3YXBiX2NvbnRleHQgKmN0eCA9IGdwaW8tPnBvcnRzW2ldLmN0eDsNCj4gKw0KPiArCQlp
+ZiAoIWN0eCkgew0KPiArCQkJY3R4ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpjdHgpLCBH
+RlBfS0VSTkVMKTsNCj4gKwkJCWdwaW8tPnBvcnRzW2ldLmN0eCA9IGN0eDsNCj4gKwkJfQ0KDQpJ
+IGRvbid0IHRoaW5rIGl0J3MgYSByaWdodCBwbGFjZSB0byBhbGxvY2F0ZSB0aGlzIHJlc291cmNl
+LCBlc3BlY2lhbGx5DQp3aXRoIGRldm1fIGhlbHBlci4gQ2FuIHlvdSBtb3ZlIHRoaXMgdG8gcHJv
+YmUoKSBzdGFnZT8NCg0KT3IgeW91IGV2ZW4gY2FuIGVtYmVkIGNvbnRleCBzdHJ1Y3R1cmUgaW5z
+aWRlIGNoaXAgb25lIHdpdGggI2lmZGVmDQpDT05GSUdfUE1fU0xFRVAuDQoNCk1heWJlIG90aGVy
+cyBjb3VsZCBjb21tZW50IG9uIHRoaXMuDQoNCj4gKw0KPiArCQlvZmZzZXQgPSBHUElPX1NXUE9S
+VEFfRERSICsgKGlkeCAqIEdQSU9fU1dQT1JUX0REUl9TSVpFKTsNCg0KTm8gbmVlZCB0byBoYXZl
+IHBhcmVudGhlc2VzIGhlcmUuIENoZWNrIHRoZSBjb2RlIGJlbG93IGFzIHdlbGwuDQoNCj4gKwkJ
+Y3R4LT5kaXIgPSBkd2FwYl9yZWFkKGdwaW8sIG9mZnNldCk7DQo+ICsNCj4gKwkJb2Zmc2V0ID0g
+R1BJT19TV1BPUlRBX0RSICsgKGlkeCAqIEdQSU9fU1dQT1JUX0RSX1NJWkUpOw0KPiArCQljdHgt
+PmRhdGEgPSBkd2FwYl9yZWFkKGdwaW8sIG9mZnNldCk7DQo+ICsNCj4gKwkJb2Zmc2V0ID0gR1BJ
+T19FWFRfUE9SVEEgKyAoaWR4ICogR1BJT19FWFRfUE9SVF9TSVpFKTsNCj4gKwkJY3R4LT5leHQg
+PSBkd2FwYl9yZWFkKGdwaW8sIG9mZnNldCk7DQo+ICsNCj4gKwkJLyogT25seSBwb3J0IEEgY2Fu
+IHByb3ZpZGUgaW50ZXJydXB0cyAqLw0KPiArCQlpZiAoaWR4ID09IDApIHsNCj4gKwkJCWN0eC0+
+aW50X21hc2sJPSBkd2FwYl9yZWFkKGdwaW8sIEdQSU9fSU5UTUFTSyk7DQo+ICsJCQljdHgtPmlu
+dF9lbgk9IGR3YXBiX3JlYWQoZ3BpbywgR1BJT19JTlRFTik7DQo+ICsJCQljdHgtPmludF9wb2wJ
+PSBkd2FwYl9yZWFkKGdwaW8sIEdQSU9fSU5UX1BPTEFSSVRZKTsNCj4gKwkJCWN0eC0+aW50X3R5
+cGUJPSBkd2FwYl9yZWFkKGdwaW8sIEdQSU9fSU5UVFlQRV9MRVZFTCk7DQo+ICsJCQljdHgtPmlu
+dF9kZWIJPSBkd2FwYl9yZWFkKGdwaW8sIEdQSU9fUE9SVEFfREVCT1VOQ0UpOw0KPiArDQo+ICsJ
+CQkvKiBNYXNrIG91dCBpbnRlcnJ1cHRzICovDQo+ICsJCQlkd2FwYl93cml0ZShncGlvLCBHUElP
+X0lOVE1BU0ssIDB4ZmZmZmZmZmYpOw0KPiArCQl9DQo+ICsJfQ0KPiArCXNwaW5fdW5sb2NrX2ly
+cXJlc3RvcmUoJmJnYy0+bG9jaywgZmxhZ3MpOw0KPiArDQo+ICsJcmV0dXJuIDA7DQo+ICt9DQo+
+ICsNCj4gK3N0YXRpYyBpbnQgZHdhcGJfZ3Bpb19yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0K
+PiArew0KPiArCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYgPSB0b19wbGF0Zm9ybV9kZXZp
+Y2UoZGV2KTsNCj4gKwlzdHJ1Y3QgZHdhcGJfZ3BpbyAqZ3BpbyA9IHBsYXRmb3JtX2dldF9kcnZk
+YXRhKHBkZXYpOw0KPiArCXN0cnVjdCBiZ3Bpb19jaGlwICpiZ2MJPSAmZ3Bpby0+cG9ydHNbMF0u
+YmdjOw0KPiArCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ICsJaW50IGk7DQo+ICsNCj4gKwlzcGlu
+X2xvY2tfaXJxc2F2ZSgmYmdjLT5sb2NrLCBmbGFncyk7DQo+ICsJZm9yIChpID0gMDsgaSA8IGdw
+aW8tPm5yX3BvcnRzOyBpKyspIHsNCj4gKwkJdW5zaWduZWQgaW50IG9mZnNldDsNCj4gKwkJdW5z
+aWduZWQgaW50IGlkeCA9IGdwaW8tPnBvcnRzW2ldLmlkeDsNCj4gKwkJc3RydWN0IGR3YXBiX2Nv
+bnRleHQgKmN0eCA9IGdwaW8tPnBvcnRzW2ldLmN0eDsNCj4gKw0KPiArCQlCVUdfT04oY3R4ID09
+IDApOw0KPiArDQo+ICsJCW9mZnNldCA9IEdQSU9fU1dQT1JUQV9EUiArIChpZHggKiBHUElPX1NX
+UE9SVF9EUl9TSVpFKTsNCj4gKwkJZHdhcGJfd3JpdGUoZ3Bpbywgb2Zmc2V0LCBjdHgtPmRhdGEp
+Ow0KPiArDQo+ICsJCW9mZnNldCA9IEdQSU9fU1dQT1JUQV9ERFIgKyAoaWR4ICogR1BJT19TV1BP
+UlRfRERSX1NJWkUpOw0KPiArCQlkd2FwYl93cml0ZShncGlvLCBvZmZzZXQsIGN0eC0+ZGlyKTsN
+Cj4gKw0KPiArCQlvZmZzZXQgPSBHUElPX0VYVF9QT1JUQSArIChpZHggKiBHUElPX0VYVF9QT1JU
+X1NJWkUpOw0KPiArCQlkd2FwYl93cml0ZShncGlvLCBvZmZzZXQsIGN0eC0+ZXh0KTsNCj4gKw0K
+PiArCQkvKiBPbmx5IHBvcnQgQSBjYW4gcHJvdmlkZSBpbnRlcnJ1cHRzICovDQo+ICsJCWlmIChp
+ZHggPT0gMCkgew0KPiArCQkJZHdhcGJfd3JpdGUoZ3BpbywgR1BJT19JTlRUWVBFX0xFVkVMLCBj
+dHgtPmludF90eXBlKTsNCj4gKwkJCWR3YXBiX3dyaXRlKGdwaW8sIEdQSU9fSU5UX1BPTEFSSVRZ
+LCBjdHgtPmludF9wb2wpOw0KPiArCQkJZHdhcGJfd3JpdGUoZ3BpbywgR1BJT19QT1JUQV9ERUJP
+VU5DRSwgY3R4LT5pbnRfZGViKTsNCj4gKwkJCWR3YXBiX3dyaXRlKGdwaW8sIEdQSU9fSU5URU4s
+IGN0eC0+aW50X2VuKTsNCj4gKwkJCWR3YXBiX3dyaXRlKGdwaW8sIEdQSU9fSU5UTUFTSywgY3R4
+LT5pbnRfbWFzayk7DQo+ICsNCj4gKwkJCS8qIENsZWFyIG91dCBzcHVyaW91cyBpbnRlcnJ1cHRz
+ICovDQo+ICsJCQlkd2FwYl93cml0ZShncGlvLCBHUElPX1BPUlRBX0VPSSwgMHhmZmZmZmZmZik7
+DQo+ICsJCX0NCj4gKwl9DQo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmYmdjLT5sb2NrLCBm
+bGFncyk7DQo+ICsNCj4gKwlyZXR1cm4gMDsNCj4gK30NCj4gKyNlbmRpZg0KPiArDQo+ICtzdGF0
+aWMgU0lNUExFX0RFVl9QTV9PUFMoZHdhcGJfZ3Bpb19wbV9vcHMsIGR3YXBiX2dwaW9fc3VzcGVu
+ZCwNCj4gKwkJCSBkd2FwYl9ncGlvX3Jlc3VtZSk7DQo+ICsNCj4gIHN0YXRpYyBzdHJ1Y3QgcGxh
+dGZvcm1fZHJpdmVyIGR3YXBiX2dwaW9fZHJpdmVyID0gew0KPiAgCS5kcml2ZXIJCT0gew0KPiAg
+CQkubmFtZQk9ICJncGlvLWR3YXBiIiwNCj4gIAkJLm93bmVyCT0gVEhJU19NT0RVTEUsDQo+ICsJ
+CS5wbQk9ICZkd2FwYl9ncGlvX3BtX29wcywNCj4gIAkJLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0
+Y2hfcHRyKGR3YXBiX29mX21hdGNoKSwNCj4gIAl9LA0KPiAgCS5wcm9iZQkJPSBkd2FwYl9ncGlv
+X3Byb2JlLA0KDQoNCi0tIA0KQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5rb0BpbnRl
+bC5jb20+DQpJbnRlbCBGaW5sYW5kIE95DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KSW50ZWwgRmlubGFuZCBPeQpS
+ZWdpc3RlcmVkIEFkZHJlc3M6IFBMIDI4MSwgMDAxODEgSGVsc2lua2kgCkJ1c2luZXNzIElkZW50
+aXR5IENvZGU6IDAzNTc2MDYgLSA0IApEb21pY2lsZWQgaW4gSGVsc2lua2kgCgpUaGlzIGUtbWFp
+bCBhbmQgYW55IGF0dGFjaG1lbnRzIG1heSBjb250YWluIGNvbmZpZGVudGlhbCBtYXRlcmlhbCBm
+b3IKdGhlIHNvbGUgdXNlIG9mIHRoZSBpbnRlbmRlZCByZWNpcGllbnQocykuIEFueSByZXZpZXcg
+b3IgZGlzdHJpYnV0aW9uCmJ5IG90aGVycyBpcyBzdHJpY3RseSBwcm9oaWJpdGVkLiBJZiB5b3Ug
+YXJlIG5vdCB0aGUgaW50ZW5kZWQKcmVjaXBpZW50LCBwbGVhc2UgY29udGFjdCB0aGUgc2VuZGVy
+IGFuZCBkZWxldGUgYWxsIGNvcGllcy4K
 
