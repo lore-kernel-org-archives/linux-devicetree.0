@@ -1,42 +1,77 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v3] ARM: apq8064: Add pinmux and i2c pinctrl nodes
-Date: Tue, 16 Sep 2014 12:00:45 -0700
-Message-ID: <96034F94-3C6D-43FC-95EF-7FA705724F99@codeaurora.org>
-References: <1409052645-14984-1-git-send-email-kiran.padwal@smartplayin.com>  <20140916023922.GB2386@qualcomm.com> <1410871001.891126377@apps.rackspace.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1410871001.891126377@apps.rackspace.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: kiran.padwal@smartplayin.com
-Cc: Andy Gross <agross@codeaurora.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, afaerber@suse.de, devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v3 1/3] dt-bindings: add devicetree bindings for Fairchild FAN53555 regulators
+Date: Tue, 16 Sep 2014 21:22:52 +0200
+Message-ID: <1410895374-18367-2-git-send-email-heiko@sntech.de>
+References: <1410895374-18367-1-git-send-email-heiko@sntech.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410895374-18367-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Document the regulator and add a fairchild vendor-prefix.
 
-On Sep 16, 2014, at 5:36 AM, kiran.padwal@smartplayin.com wrote:
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ .../devicetree/bindings/regulator/fan53555.txt     | 23 ++++++++++++++=
+++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ 2 files changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/fan5355=
+5.txt
 
-> 
-> 
-> On Monday, September 15, 2014 10:39pm, "Andy Gross" <agross@codeaurora.org> said:
-> 
->> On Tue, Aug 26, 2014 at 05:00:45PM +0530, Kiran Padwal wrote:
->>> This patch adds pinmux and i2c pinctrl DT node for IFC6410 board.
->>> It also adds necessary DT support for i2c eeprom which is present on
->>> IFC6410.
->>> 
->>> Tested on IFC6410 board.
->> 
->> Looks fine
-> 
-> Thanks for review.
+diff --git a/Documentation/devicetree/bindings/regulator/fan53555.txt b=
+/Documentation/devicetree/bindings/regulator/fan53555.txt
+new file mode 100644
+index 0000000..8a51924
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/fan53555.txt
+@@ -0,0 +1,23 @@
++Binding for Fairchild FAN53555 regulators
++
++Required properties:
++  - compatible: "fcs,fan53555"
++  - reg: I2C address
++
++Optional properties:
++  - fcs,suspend-voltage-selector: declare which of the two available
++		voltage selector registers should be used for the suspend
++		voltage. The other one is used for the runtime voltage setting
++		Possible values are either <0> or <1>
++  - vin-supply: regulator supplying the vin pin
++
++Example:
++
++	regulator@40 {
++		compatible =3D "fcs,fan53555";
++		regulator-name =3D "fan53555";
++		regulator-min-microvolt =3D <1000000>;
++		regulator-max-microvolt =3D <1800000>;
++		vin-supply =3D <&parent_reg>;
++		fcs,suspend-voltage-selector =3D <1>;
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Do=
+cumentation/devicetree/bindings/vendor-prefixes.txt
+index ac7269f..24b92b3 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -49,6 +49,7 @@ epson	Seiko Epson Corp.
+ est	ESTeem Wireless Modems
+ eukrea  Eukr=C3=A9a Electromatique
+ excito	Excito
++fcs	Fairchild Semiconductor
+ fsl	Freescale Semiconductor
+ GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+--=20
+2.0.1
 
-Can you rebase this on:
-
- git://git.kernel.org/pub/scm/linux/kernel/git/galak/linux-qcom.git tags/qcom-dt-for-3.18
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
