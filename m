@@ -1,187 +1,46 @@
-Return-Path: <D.Lavnikevich@sam-solutions.com>
-From: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
-Subject: [PATCH v3 2/4] ARM: dts: pbab01: enable I2S audio on phyFLEX-i.MX6 boards
-Date: Tue, 16 Sep 2014 11:08:21 +0300
-Message-ID: <1410854903-26419-3-git-send-email-d.lavnikevich@sam-solutions.com>
-In-Reply-To: <1410854903-26419-1-git-send-email-d.lavnikevich@sam-solutions.com>
-References: <1410537872-17274-1-git-send-email-d.lavnikevich@sam-solutions.com>
- <1410854903-26419-1-git-send-email-d.lavnikevich@sam-solutions.com>
+Return-Path: <Shawn.Guo@freescale.com>
+Date: Tue, 16 Sep 2014 09:46:58 +0800
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [alsa-devel] [PATCH v2 2/4] ARM: dts: pbab01: enable I2S audio
+ on phyFLEX-i.MX6 boards
+Message-ID: <20140916014657.GB23450@dragon>
+References: <1410356809-26179-1-git-send-email-d.lavnikevich@sam-solutions.com>
+ <1410537872-17274-1-git-send-email-d.lavnikevich@sam-solutions.com>
+ <1410537872-17274-3-git-send-email-d.lavnikevich@sam-solutions.com>
+ <1410539161.314611261@f174.i.mail.ru>
+ <CAOMZO5C9_XwgcLvVWvxB1A306_Ehm17ZE111j6d+7MhudAhT0g@mail.gmail.com>
+ <5416D666.2050302@sam-solutions.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: shawn.guo@freescale.com, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, perex@perex.cz, tiwai@suse.de
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Dmitry
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5416D666.2050302@sam-solutions.net>
+To: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.net>
+Cc: Fabio Estevam <festevam@gmail.com>, Alexander Shiyan <shc_work@mail.ru>, Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>, Mark Rutland <mark.rutland@arm.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, linux-kernel <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, =devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Audio on phyFLEX boards is presented by tlv320aic3007 codec connected
-over SSI interface.
+On Mon, Sep 15, 2014 at 03:07:02PM +0300, Dmitry Lavnikevich wrote:
+> On 12/09/14 19:40, Fabio Estevam wrote:
+> >On Fri, Sep 12, 2014 at 1:26 PM, Alexander Shiyan <shc_work@mail.ru> wrote:
+> >>Fri, 12 Sep 2014 19:04:30 +0300 от Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>:
+> >>>Audio on phyFLEX boards is presented by tlv320aic3007 codec connected
+> >>>over SSI interface.
+> >>>
+> >>>Signed-off-by: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
+> >>>---
+> >>...
+> >>>+&ssi2 {
+> >>>+     fsl,mode = "i2s-slave";
+> >>>+     status = "okay";
+> >>>+     #sound-dai-cells = <0>;
+> >>>+};
+> >>I have already sent patch to add "#sound-dai-cells" into all i.MX DT-files.
+> >>Shawn, can you point us to this tree/commit?
+> >https://git.kernel.org/cgit/linux/kernel/git/shawnguo/linux.git/commit/?h=for-next&id=36c7e8826cf32dd4dd34c71b526653b800414355
+> So should I base my next patchset on for-next branch of
+> git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+> ?
 
-Signed-off-by: Dmitry Lavnikevich <d.lavnikevich@sam-solutions.com>
----
- arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi | 103 ++++++++++++++++++++++++++-
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi |  15 ++++
- 2 files changed, 116 insertions(+), 2 deletions(-)
+Yes, please.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-index f1bdcae5b97d..c0369673707b 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pbab01.dtsi
-@@ -9,10 +9,75 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
-+
- / {
- 	chosen {
- 		linux,stdout-path = &uart4;
- 	};
-+
-+	regulators {
-+		sound_1v8: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "i2s-audio-1v8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+
-+		sound_3v3: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+			regulator-name = "i2s-audio-3v3";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+	};
-+
-+	tlv320_mclk: oscillator {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <19200000>;
-+		clock-output-names = "tlv320-mclk";
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx6-phyflex-tlv320aic3007";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&dailink_master>;
-+		simple-audio-card,frame-master = <&dailink_master>;
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic Jack",
-+			"Line", "Line In",
-+			"Line", "Line Out",
-+			"Speaker", "Speaker",
-+			"Headphone", "Headphone Jack";
-+		simple-audio-card,routing =
-+			"Line Out", "LLOUT",
-+			"Line Out", "RLOUT",
-+			"Speaker", "SPOP",
-+			"Speaker", "SPOM",
-+			"Headphone Jack", "HPLOUT",
-+			"Headphone Jack", "HPROUT",
-+			"MIC3L", "Mic Jack",
-+			"MIC3R", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"LINE1L", "Line In",
-+			"LINE1R", "Line In";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&ssi2>;
-+		};
-+
-+		dailink_master: simple-audio-card,codec {
-+			sound-dai = <&codec>;
-+			clocks = <&tlv320_mclk>;
-+		};
-+	};
-+
- };
- 
- &fec {
-@@ -27,12 +92,46 @@
- 	status = "okay";
- };
- 
-+&ssi2 {
-+	fsl,mode = "i2s-slave";
-+	status = "okay";
-+};
-+
-+&audmux {
-+	status = "okay";
-+
-+	ssi2 {
-+		fsl,audmux-port = <1>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(4) |
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(4))
-+	                IMX_AUDMUX_V2_PDCR_RXDSEL(4)
-+		>;
-+	};
-+	pins5 {
-+		fsl,audmux-port = <4>;
-+		fsl,port-config = <
-+			0x00000000
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(1)
-+		>;
-+	};
-+};
-+
- &i2c2 {
- 	status = "okay";
- 
--	tlv320@18 {
--		compatible = "ti,tlv320aic3x";
-+	codec: tlv320@18 {
-+		compatible = "ti,tlv320aic3007";
-+		#sound-dai-cells = <0>;
- 		reg = <0x18>;
-+		ai3x-micbias-vg = <2>;
-+
-+		AVDD-supply = <&sound_3v3>;
-+		IOVDD-supply = <&sound_3v3>;
-+		DRVDD-supply = <&sound_3v3>;
-+		DVDD-supply = <&sound_1v8>;
- 	};
- 
- 	stmpe@41 {
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index aa2275671d2c..d7f34664e008 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -58,6 +58,12 @@
- 	};
- };
- 
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "disabled";
-+};
-+
- &ecspi3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_ecspi3>;
-@@ -319,6 +325,15 @@
- 				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29 0x80000000
- 			>;
- 		};
-+
-+		pinctrl_audmux: audmuxgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_DISP0_DAT16__AUD5_TXC	0x130b0
-+				MX6QDL_PAD_DISP0_DAT18__AUD5_TXFS	0x130b0
-+				MX6QDL_PAD_DISP0_DAT17__AUD5_TXD	0x110b0
-+				MX6QDL_PAD_DISP0_DAT19__AUD5_RXD	0x130b0
-+			>;
-+		};
- 	};
- };
- 
--- 
-2.1.0
+Shawn
