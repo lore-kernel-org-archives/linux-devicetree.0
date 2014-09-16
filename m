@@ -1,198 +1,52 @@
-From: Peter Chen <peter.chen@freescale.com>
-Subject: Re: [PATCH v5 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Tue, 16 Sep 2014 08:51:30 +0800
-Message-ID: <20140916005129.GC3379@peterchendt>
-References: <1410777378-12726-1-git-send-email-antoine.tenart@free-electrons.com>
- <1410777378-12726-8-git-send-email-antoine.tenart@free-electrons.com>
+From: "Chen, Alvin" <alvin.chen@intel.com>
+Subject: RE: [PATCH 1/4 v3] GPIO: gpio-dwapb: Enable platform driver binding
+ to MFD driver
+Date: Tue, 16 Sep 2014 01:07:31 +0000
+Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E9918D4@SHSMSX101.ccr.corp.intel.com>
+References: <1410286081-16653-1-git-send-email-alvin.chen@intel.com>
+  <1410286081-16653-2-git-send-email-alvin.chen@intel.com>
+  <alpine.DEB.2.02.1409101353500.2790@atx-linux-37>
+ <1410422381.7023.15.camel@intel.com>
+ <alpine.DEB.2.02.1409111020130.19272@atx-linux-37>
+ <4656BEB6164FC34F8171C6538F1A595B2E9915E6@SHSMSX101.ccr.corp.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410777378-12726-8-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine Tenart <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, balbi@ti.com, p.zabel@pengutronix.de, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <4656BEB6164FC34F8171C6538F1A595B2E9915E6@SHSMSX101.ccr.corp.intel.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+Cc: "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'robh+dt@kernel.org'" <robh+dt@kernel.org>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "'gnurou@gmail.com'" <gnurou@gmail.com>, "'linus.walleij@linaro.org'" <linus.walleij@linaro.org>, "'linux-gpio@vger.kernel.org'" <linux-gpio@vger.kernel.org>, "'sebastian@breakpoint.cc'" <sebastian@breakpoint.cc>, "'grant.likely@linaro.org'" <grant.likely@linaro.org>, "Westerberg, Mika" <mika.westerberg@intel.com>, "'dvhart@linux.intel.com'" <dvhart@linux.intel.com>, "'arnd@arndb.de'" <arnd@arndb.de>, 'atull' <atull@opensource.altera.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 12:36:13PM +0200, Antoine Tenart wrote:
-> Add a USB2 ChipIdea driver for ci13xxx, with optional PHY, clock
-> and DMA mask, to support USB2 ChipIdea controllers that don't need
-> specific functions.
-> 
-> Tested on the Marvell Berlin SoCs USB controllers.
-> 
-> Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
-> ---
->  drivers/usb/chipidea/Makefile       |   1 +
->  drivers/usb/chipidea/ci_hdrc_usb2.c | 137 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 138 insertions(+)
->  create mode 100644 drivers/usb/chipidea/ci_hdrc_usb2.c
-> 
-> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-> index 2f099c7df7b5..1fc86a2ca22d 100644
-> --- a/drivers/usb/chipidea/Makefile
-> +++ b/drivers/usb/chipidea/Makefile
-> @@ -10,6 +10,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
->  
->  # Glue/Bridge layers go here
->  
-> +obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_usb2.o
->  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
->  obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
->  
-> diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
-> new file mode 100644
-> index 000000000000..1ef0db79505a
-> --- /dev/null
-> +++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
-> @@ -0,0 +1,137 @@
-> +/*
-> + * Copyright (C) 2014 Marvell Technology Group Ltd.
-> + *
-> + * Antoine Tenart <antoine.tenart@free-electrons.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/usb/chipidea.h>
-> +#include <linux/usb/hcd.h>
-> +#include <linux/usb/ulpi.h>
-> +
-> +#include "ci.h"
-> +
-> +struct ci_hdrc_usb2_priv {
-> +	struct platform_device	*ci_pdev;
-> +	struct clk		*clk;
-> +};
-> +
-> +static int ci_hdrc_usb2_dt_probe(struct device *dev,
-> +				 struct ci_hdrc_platform_data *ci_pdata)
-> +{
-> +	ci_pdata->phy = of_phy_get(dev->of_node, 0);
-> +	if (IS_ERR(ci_pdata->phy)) {
-> +		if (PTR_ERR(ci_pdata->phy) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		/* PHY is optional */
-> +		ci_pdata->phy = NULL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct ci_hdrc_platform_data ci_default_pdata = {
-> +	.capoffset	= DEF_CAPOFFSET,
-> +	.flags		= CI_HDRC_REQUIRE_TRANSCEIVER |
-> +			  CI_HDRC_DISABLE_STREAMING,
-> +};
-> +
-> +static int ci_hdrc_usb2_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct ci_hdrc_usb2_priv *priv;
-> +	struct ci_hdrc_platform_data *ci_pdata = dev_get_platdata(&pdev->dev);
-> +	int ret;
-> +
-> +	if (!ci_pdata)
-> +		ci_pdata = &ci_default_pdata;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->clk = devm_clk_get(dev, NULL);
-> +	if (!IS_ERR(priv->clk)) {
-> +		ret = clk_prepare_enable(priv->clk);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable the clock: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (dev->of_node) {
-> +		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
-> +		if (ret)
-> +			goto clk_err;
-> +	} else {
-> +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> +		if (ret)
-> +			goto clk_err;
-> +	}
-> +
-> +	ci_pdata->name = dev_name(&pdev->dev);
-> +
-> +	priv->ci_pdev = ci_hdrc_add_device(dev, pdev->resource,
-> +					   pdev->num_resources, ci_pdata);
-> +	if (IS_ERR(priv->ci_pdev)) {
-> +		ret = PTR_ERR(priv->ci_pdev);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev,
-> +				"failed to register ci_hdrc platform device: %d\n",
-> +				ret);
-> +		goto clk_err;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	pm_runtime_no_callbacks(dev);
-> +	pm_runtime_enable(dev);
-> +
-> +	return 0;
-> +
-> +clk_err:
-> +	if (!IS_ERR(priv->clk))
-> +		clk_disable_unprepare(priv->clk);
-> +	return ret;
-> +}
-> +
-> +static int ci_hdrc_usb2_remove(struct platform_device *pdev)
-> +{
-> +	struct ci_hdrc_usb2_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	pm_runtime_disable(&pdev->dev);
-> +	ci_hdrc_remove_device(priv->ci_pdev);
-> +	clk_disable_unprepare(priv->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ci_hdrc_usb2_of_match[] = {
-> +	{ .compatible = "chipidea,usb2" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
-> +
-> +static struct platform_driver ci_hdrc_usb2_driver = {
-> +	.probe	= ci_hdrc_usb2_probe,
-> +	.remove	= ci_hdrc_usb2_remove,
-> +	.driver	= {
-> +		.name		= "chipidea-usb2",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= of_match_ptr(ci_hdrc_usb2_of_match),
-> +	},
-> +};
-> +module_platform_driver(ci_hdrc_usb2_driver);
-> +
-> +MODULE_DESCRIPTION("ChipIdea HDRC USB2 binding for ci13xxx");
-> +MODULE_AUTHOR("Antoine Tenart <antoine.tenart@free-electrons.com>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 1.9.1
-> 
 
-compile error:
+> 
+> > >
+> > > > >  static int dwapb_gpio_probe(struct platform_device *pdev)  {
+> > > > > +	int i;
+> > > > >  	struct resource *res;
+> > > > >  	struct dwapb_gpio *gpio;
+> > > > > -	struct device_node *np;
+> > > > >  	int err;
+> > > > > -	unsigned int offs = 0;
+> > > > > +	struct device *dev = &pdev->dev;
+> > > > > +	struct dwapb_platform_data *pdata = dev_get_platdata(dev);
+> > > > > +	bool is_pdata_alloc = !pdata;
+> > > >
+> > > > Please combine the int's in one line (int err, i;) and put them as
+> > > > the last one on this list.  It looks the same to the compiler of
+> > > > course, but more uniform for human eyes :)
+> > >
+> > > Do you think it's a good idea? In this case I, for example, would
+> > > like to see int err as a separate line at the end of definition
+> > > block. It would be better to distinguish counters and return code storage.
+> > > Moreover, often counters would be unsigned int.
+> >
+> > If they are both 'int' they should be combined.  If 'i' is changed to
+> > be an unsigned int they would be separate.
+> 
+> Linus, do you have any idea about it? I think it is not a big issue.
+> >
 
-/home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c: In function 'ci_hdrc_usb2_dt_probe':
-/home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c:30:2: error: implicit declaration of function 'of_phy_get' [-Werror=implicit-function-declaration]
-/home/peter/work/projects/usb/drivers/usb/chipidea/ci_hdrc_usb2.c:30:16: warning: assignment makes pointer from integer without a cast [enabled by default]
-
--- 
-Best Regards,
-Peter Chen
+Since no further feedbacks, I decide to use 'unsigned int i' to align the two feedbacks, since 'i' is just a counter.
+And will send a new version with just this changes later.
