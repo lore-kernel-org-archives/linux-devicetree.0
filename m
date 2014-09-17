@@ -1,100 +1,384 @@
-From: Zi Shen Lim <zlim.lnx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH] dt:numa: adding numa node mapping for memory nodes.
-Date: Wed, 17 Sep 2014 16:12:41 -0700
-Message-ID: <CAMDttNfSr5BrnEwLXqgy676jOZbFHhXcMtC0n7gBSniwhWCDRQ@mail.gmail.com>
-References: <1410944189-3608-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
-	<541A01B7.8030601@mentor.com>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] iio/adc: add support for axp288 adc
+Date: Wed, 17 Sep 2014 16:13:22 -0700
+Message-ID: <20140917161322.7cc7e061@ultegra>
+References: <1410912715-25903-1-git-send-email-jacob.jun.pan@linux.intel.com>
+	<1410912715-25903-3-git-send-email-jacob.jun.pan@linux.intel.com>
+	<541A0910.90806@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <541A01B7.8030601-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <541A0910.90806-Mmb7MZpHnFY@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+Cc: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dian>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 2:48 PM, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
-> On 09/17/2014 03:56 AM, Ganapatrao Kulkarni wrote:
->> From: Ganapatrao Kulkarni <ganapatrao.kulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>
->> This patch adds property "nid" to memory node to provide the memory range to
->> numa node id mapping.
->>
->> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>
->> ---
->>  Documentation/devicetree/bindings/numa.txt | 58 ++++++++++++++++++++++++++++++
->>  1 file changed, 58 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/numa.txt
->>
->> diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
->> new file mode 100644
->> index 0000000..c4a94f2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/numa.txt
->> @@ -0,0 +1,58 @@
->> +======================================================
->> +numa id binding description
->> +======================================================
->> +
->> +======================================================
->> +1 - Introduction
->> +======================================================
->> +The device node  property "nid(numa node id)" can be added to memory
->> +device node to map the range of memory addresses as defined in property "reg".
->> +The property "nid" maps the memory range to the numa node id, which is used to
->> +find the local and remory pages on numa aware systems.
->
-> "Local" and "remote" memory are notions that relate to some other
-> resource -- typically a CPU, but also I/O resources on some systems.  It
-> seems to me that a useful NUMA binding would at least specify a "nid"
-> property, or something like it, for both cpu and memory nodes.  But this
-> document speaks only of memory nodes.
->
-> As Kumar said, the device tree on powerpc server systems already has
-> properties that express NUMA information.  If you can get hold of a copy
-> of the PAPR (not ePAPR) from power.org, refer to the description of
-> "ibm,associativity" and related properties.  I recall that it's a bit
-> more complex than this proposal, though.
+On Thu, 18 Sep 2014 00:20:00 +0200
+Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org> wrote:
 
-I'm not able to find a link to the actual PAPR (not ePAPR)
-specification. Anyone has a linky?
+> Jacob Pan schrieb, Am 17.09.2014 02:11:
+> > Platform driver for X-Powers AXP288 ADC, which is a sub-device of
+> > the customized AXP288 PMIC for Intel Baytrail-CR platforms. GPADC
+> > device enumerates as one of the MFD cell devices. It uses IIO
+> > infrastructure to communicate with userspace and consumer drivers.
+> > 
+> > Usages of ADC channels include battery charging and thermal sensors.
+> > 
+> You are progressing, but still a few issues left. One thing is
+> indentation in some places (I feel like being pretty annoying about
+> this), others are commented in line.
+I don't see the indentation issue, perhaps it is the difference in the
+editors we use?
 
-I did find some code in tree, but couldn't find the bindings in
-Documentation/devicetree/.
+> > Based on initial work by:
+> > Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > ---
+> >  drivers/iio/adc/Kconfig      |   8 ++
+> >  drivers/iio/adc/Makefile     |   1 +
+> >  drivers/iio/adc/axp288_adc.c | 254
+> > +++++++++++++++++++++++++++++++++++++++++++ 3 files changed, 263
+> > insertions(+) create mode 100644 drivers/iio/adc/axp288_adc.c
+> > 
+> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > index 11b048a..db2681b 100644
+> > --- a/drivers/iio/adc/Kconfig
+> > +++ b/drivers/iio/adc/Kconfig
+> > @@ -127,6 +127,14 @@ config AT91_ADC
+> >  	help
+> >  	  Say yes here to build support for Atmel AT91 ADC.
+> >  
+> > +config AXP288_ADC
+> > +	tristate "X-Powers AXP288 ADC driver"
+> > +	depends on MFD_AXP20X
+> > +	help
+> > +	  Say yes here to have support for X-Powers power
+> > management IC (PMIC) ADC
+> > +	  device. Depending on platform configuration, this
+> > general purpose ADC can
+> > +	  be used for sampling sensors such as thermal resistors.
+> > +
+> >  config EXYNOS_ADC
+> >  	tristate "Exynos ADC driver support"
+> >  	depends on ARCH_EXYNOS || (OF && COMPILE_TEST)
+> > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> > index ad81b51..19640f9 100644
+> > --- a/drivers/iio/adc/Makefile
+> > +++ b/drivers/iio/adc/Makefile
+> > @@ -14,6 +14,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
+> >  obj-$(CONFIG_AD7887) += ad7887.o
+> >  obj-$(CONFIG_AD799X) += ad799x.o
+> >  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+> > +obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
+> >  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+> >  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+> >  obj-$(CONFIG_MAX1027) += max1027.o
+> > diff --git a/drivers/iio/adc/axp288_adc.c
+> > b/drivers/iio/adc/axp288_adc.c new file mode 100644
+> > index 0000000..333c624
+> > --- /dev/null
+> > +++ b/drivers/iio/adc/axp288_adc.c
+> > @@ -0,0 +1,254 @@
+> > +/*
+> > + * axp288_adc.c - X-Powers AXP288 PMIC ADC Driver
+> > + *
+> > + * Copyright (C) 2014 Intel Corporation
+> > + *
+> > + *
+> > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > modify
+> > + * it under the terms of the GNU General Public License as
+> > published by
+> > + * the Free Software Foundation; version 2 of the License.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > but
+> > + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See
+> > the GNU
+> > + * General Public License for more details.
+> > + *
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/mfd/axp20x.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include <linux/iio/iio.h>
+> > +#include <linux/iio/machine.h>
+> > +#include <linux/iio/driver.h>
+> > +
+> > +#define AXP288_ADC_EN_MASK		0xF1
+> > +#define AXP288_ADC_TS_PIN_GPADC		0xF2
+> > +#define AXP288_ADC_TS_PIN_ON		0xF3
+> > +
+> > +enum axp288_adc_id {
+> > +	AXP288_ADC_TS,
+> > +	AXP288_ADC_PMIC,
+> > +	AXP288_ADC_GP,
+> > +	AXP288_ADC_BATT_CHRG_I,
+> > +	AXP288_ADC_BATT_DISCHRG_I,
+> > +	AXP288_ADC_BATT_V,
+> > +	AXP288_ADC_NR_CHAN,
+> > +};
+> > +
+> > +struct axp288_adc_info {
+> > +	int irq;
+> > +	struct device *dev;
+> > +	struct regmap *regmap;
+> > +};
+> > +
+> > +static const struct iio_chan_spec const axp288_adc_channels[] = {
+> > +	{
+> > +		.indexed = 1,
+> > +		.type = IIO_TEMP,
+> > +		.channel = 0,
+> > +		.address = AXP288_TS_ADC_H,
+> > +		.datasheet_name = "CH0",
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_TEMP,
+> > +		.channel = 1,
+> > +		.address = AXP288_PMIC_ADC_H,
+> > +		.datasheet_name = "CH1",
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_TEMP,
+> > +		.channel = 2,
+> > +		.address = AXP288_GP_ADC_H,
+> > +		.datasheet_name = "CH2",
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_CURRENT,
+> > +		.channel = 3,
+> > +		.address = AXP20X_BATT_CHRG_I_H,
+> > +		.datasheet_name = "CH3",
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_CURRENT,
+> > +		.channel = 4,
+> > +		.address = AXP20X_BATT_DISCHRG_I_H,
+> > +		.datasheet_name = "CH4",
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_VOLTAGE,
+> > +		.channel = 5,
+> > +		.address = AXP20X_BATT_V_H,
+> > +		.datasheet_name = "CH5",
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+> > +	},
+> > +};
+> > +
+> > +#define AXP288_ADC_MAP(_adc_channel_label,
+> > _consumer_dev_name,	\
+> > +		_consumer_channel)				\
+> > +	{							\
+> > +		.adc_channel_label = _adc_channel_label,	\
+> > +		.consumer_dev_name = _consumer_dev_name,	\
+> > +		.consumer_channel =
+> > _consumer_channel,		\
+> > +	}
+> > +
+> > +/* for consumer drivers */
+> > +static struct iio_map axp288_adc_default_maps[] = {
+> > +	AXP288_ADC_MAP("TS_PIN", "axp288-batt",
+> > "axp288-batt-temp"),
+> > +	AXP288_ADC_MAP("PMIC_TEMP", "axp288-pmic",
+> > "axp288-pmic-temp"),
+> > +	AXP288_ADC_MAP("GPADC", "axp288-gpadc",
+> > "axp288-system-temp"),
+> > +	AXP288_ADC_MAP("BATT_CHG_I", "axp288-chrg",
+> > "axp288-chrg-curr"),
+> > +	AXP288_ADC_MAP("BATT_DISCHRG_I", "axp288-chrg",
+> > "axp288-chrg-d-curr"),
+> > +	AXP288_ADC_MAP("BATT_V", "axp288-batt",
+> > "axp288-batt-volt"),
+> > +	{},
+> > +};
+> > +
+> > +static int axp288_adc_read_raw(struct iio_dev *indio_dev,
+> > +			struct iio_chan_spec const *chan,
+> > +			int *val, int *val2, long mask)
+> > +{
+> > +	int ret;
+> > +	struct axp288_adc_info *info = iio_priv(indio_dev);
+> > +	u8 buf[2];
+> You could use __be16 instead. Then you just need to use
+> be16_to_cpu(), shift 4 bits to the right and mask the result with
+> 0xFF.
+> > +
+> > +	mutex_lock(&indio_dev->mlock);
+> > +	switch (mask) {
+> > +	case IIO_CHAN_INFO_RAW:
+> > +		/* special case for GPADC sample */
+> > +		if (chan->address == AXP288_GP_ADC_H) {
+> > +			ret = regmap_write(info->regmap,
+> > AXP288_ADC_TS_PIN_CTRL,
+> > +					AXP288_ADC_TS_PIN_GPADC);
+> > +			if (ret) {
+> > +				dev_err(&indio_dev->dev, "GPADC
+> > mode\n");
+> > +				mutex_unlock(&indio_dev->mlock);
+> > +				return ret;
+> You may even just goto the mutex_unlock at the end of the function.
+> Would safe a few bytes here in the source - up to you. More
+> interesting is, if the error message is required, as you don't have
+> one below, when switching to TS_PIN_ON.
+i don't have preference, the previous reviews don't like goto.
+> > +			}
+> > +		}
+> > +	case IIO_CHAN_INFO_PROCESSED:
+> > +		ret = regmap_bulk_read(info->regmap,
+> > chan->address, buf, 2);
+> > +		if (ret) {
+> > +			dev_err(&indio_dev->dev, "sample raw data
+> > failed\n");
+> > +			break;
+> > +		}
+> > +		*val = (buf[0] << 4) + ((buf[1] >> 4) & 0x0F);
+> > +		ret = IIO_VAL_INT;
+> > +		break;
+> > +	default:
+> > +		ret = -EINVAL;
+> > +	}
+> > +
+> > +	if (mask == IIO_CHAN_INFO_RAW && chan->address ==
+> > AXP288_GP_ADC_H)
+> > +		ret = regmap_write(info->regmap,
+> > AXP288_ADC_TS_PIN_CTRL,
+> > +			AXP288_ADC_TS_PIN_ON);
+> > +
+> > +	mutex_unlock(&indio_dev->mlock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int axp288_adc_enable(struct regmap *regmap, bool enable)
+> > +{
+> > +	unsigned int pin_on, adc_en;
+> > +
+> > +	if (enable) {
+> > +		pin_on = AXP288_ADC_TS_PIN_ON;
+> > +		adc_en = AXP288_ADC_EN_MASK;
+> > +	} else {
+> > +		pin_on = ~AXP288_ADC_TS_PIN_ON;
+> > +		adc_en = ~AXP288_ADC_EN_MASK;
+> > +	}
+> > +	if (regmap_write(regmap, AXP288_ADC_TS_PIN_CTRL, pin_on))
+> > +		return -EIO;
+> > +
+> > +	return regmap_write(regmap, AXP20X_ADC_EN1,
+> > ~AXP288_ADC_EN_MASK);
+> So, what's the deal about the variable adc_en?
+well, I am trying to be consistent with the data sheet. in axp202
+datasheet, register 82h is named "ADC Enable 1". In axp288 datasheet,
+the same register 82h is named ADC Enable. I am going with adc_en1 to
+better scale for more "ADC Enable X".
+> > +}
+> > +
+> > +static const struct iio_info axp288_adc_iio_info = {
+> > +	.read_raw = &axp288_adc_read_raw,
+> > +	.driver_module = THIS_MODULE,
+> > +};
+> > +
+> > +static int axp288_adc_probe(struct platform_device *pdev)
+> > +{
+> > +	int ret;
+> > +	struct axp288_adc_info *info;
+> > +	struct iio_dev *indio_dev;
+> > +	struct axp20x_dev *axp20x =
+> > dev_get_drvdata(pdev->dev.parent); +
+> > +	indio_dev = devm_iio_device_alloc(&pdev->dev,
+> > sizeof(*info));
+> > +	if (!indio_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	info = iio_priv(indio_dev);
+> > +	info->irq = platform_get_irq(pdev, 0);
+> > +	if (info->irq < 0) {
+> > +		dev_err(&pdev->dev, "no irq resource?\n");
+> > +		return info->irq;
+> > +	}
+> > +	platform_set_drvdata(pdev, indio_dev);
+> > +	info->regmap = axp20x->regmap;
+> > +	ret = axp288_adc_enable(axp20x->regmap, true);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Unable to enable ADC
+> > device\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	indio_dev->dev.parent = &pdev->dev;
+> > +	indio_dev->name = pdev->name;
+> > +	indio_dev->channels = axp288_adc_channels;
+> > +	indio_dev->num_channels = ARRAY_SIZE(axp288_adc_channels);
+> > +	indio_dev->info = &axp288_adc_iio_info;
+> > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > +	ret = iio_map_array_register(indio_dev,
+> > axp288_adc_default_maps);
+> > +	if (ret < 0)
+> > +		goto err_disable_dev;
+> > +
+> > +	ret = iio_device_register(indio_dev);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "unable to register iio
+> > device\n");
+> > +		goto err_array_unregister;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err_array_unregister:
+> > +	iio_map_array_unregister(indio_dev);
+> > +err_disable_dev:
+> > +	ret = axp288_adc_enable(axp20x->regmap, false);
+> Don't set ret here. We want to return the error code from the
+> function that failed above.
+> > +
+good point. thanks for the review.
 
-Seems like we'd care about form1?
------8<-----
-commit 41eab6f88f24124df89e38067b3766b7bef06ddb
-Author: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-Date:   Sun May 16 20:22:31 2010 +0000
+> > +	return ret;
+> > +}
+> > +
+> > +static int axp288_adc_remove(struct platform_device *pdev)
+> > +{
+> > +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> > +	struct axp20x_dev *axp20x =
+> > dev_get_drvdata(pdev->dev.parent); +
+> > +	if (axp288_adc_enable(axp20x->regmap, false))
+> > +		dev_err(&pdev->dev, "Unable to disable ADC
+> > device\n");
+> > +	iio_device_unregister(indio_dev);
+> > +	iio_map_array_unregister(indio_dev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct platform_driver axp288_adc_driver = {
+> > +	.probe = axp288_adc_probe,
+> > +	.remove = axp288_adc_remove,
+> > +	.driver = {
+> > +		.name = "axp288_adc",
+> > +		.owner = THIS_MODULE,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(axp288_adc_driver);
+> > +
+> > +MODULE_AUTHOR("Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+> > +MODULE_DESCRIPTION("X-Powers AXP288 ADC Driver");
+> > +MODULE_LICENSE("GPL");
+> > 
+> 
 
-    powerpc/numa: Use form 1 affinity to setup node distance
-
-    Form 1 affinity allows multiple entries in
-ibm,associativity-reference-points
-    which represent affinity domains in decreasing order of importance. The
-    Linux concept of a node is always the first entry, but using the other
-    values as an input to node_distance() allows the memory allocator to make
-    better decisions on which node to go first when local memory has been
-    exhausted.
-
-    We keep things simple and create an array indexed by NUMA node, capped at
-    4 entries. Each time we lookup an associativity property we initialise
-    the array which is overkill, but since we should only hit this path during
-    boot it didn't seem worth adding a per node valid bit.
-
-    Signed-off-by: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-    Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
------>8-----
-
-
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[Jacob Pan]
