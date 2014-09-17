@@ -1,65 +1,57 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v2 02/16] Driver core: Unified device properties
- interface for platform firmware
-Date: Wed, 17 Sep 2014 11:28:40 -0700
-Message-ID: <20140917182840.GA8346@kroah.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
- <1410868367-11056-3-git-send-email-mika.westerberg@linux.intel.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: add devicetree bindings for st-pwm
+ regulator
+Date: Wed, 17 Sep 2014 11:35:13 -0700
+Message-ID: <20140917183513.GS7960@sirena.org.uk>
+References: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
+ <1410959280-29662-3-git-send-email-zyw@rock-chips.com>
+ <CAD=FV=WCQ4oU1O9JcZ9SuwWJ7g+GLsUiE=wmQQoWvL41o24eWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MhDS85o8hQkNlKhq"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1410868367-11056-3-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+In-Reply-To: <CAD=FV=WCQ4oU1O9JcZ9SuwWJ7g+GLsUiE=wmQQoWvL41o24eWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 02:52:33PM +0300, Mika Westerberg wrote:
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> 
-> Add a uniform interface by which device drivers can request device
-> properties from the platform firmware by providing a property name
-> and the corresponding data type.  The purpose of it is to help to
-> write portable code that won't depend on any particular platform
-> firmware interface.
-> 
-> Three general helper functions, device_get_property(),
-> device_read_property() and device_read_property_array() are provided.
-> The first one allows the raw value of a given device property to be
-> accessed by the driver.  The remaining two allow the value of a numeric
-> or string property and multiple numeric or string values of one array
-> property to be acquired, respectively.  Static inline wrappers are also
-> provided for the various property data types that can be passed to
-> device_read_property() or device_read_property_array() for extra type
-> checking.
-> 
-> In addition to that new generic routines are provided for retrieving
-> properties from device description objects in the platform firmware
-> in case there are no struct device objects for them (either those
-> objects have not been created yet or they do not exist at all).
-> Again, three functions are provided, dev_node_get_property(),
-> dev_node_read_property(), dev_node_read_property_array(), in analogy
-> with device_get_property(), device_read_property() and
-> device_read_property_array() described above, respectively, along
-> with static inline wrappers for all of the propery data types that
-> can be used.  For all of them, the first argument is a pointer to
-> struct fw_dev_node (new type) that in turn contains exactly one
-> valid pointer to a device description object (depending on what
-> platform firmware interface is in use).
-> 
-> Finally, device_for_each_child_node() is added for iterating over
-> the children of the device description object associated with the
-> given device.
-> 
-> The interface covers both ACPI and Device Trees.
-> 
-> This change set includes material from Mika Westerberg and Aaron Lu.
-> 
-> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Looks good to me, feel free to take this through your tree with my:
+--MhDS85o8hQkNlKhq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Wed, Sep 17, 2014 at 11:16:23AM -0700, Doug Anderson wrote:
+
+> I _think_ that the "regulators" subnode and the "pwm-regulator"
+> subnode are not needed at all and should be removed.  Other instances
+> of devices that are "just" regulators don't have it (like
+> fixed-regulator, gpio-regulator, etc).
+>=20
+> I think your final example should be:
+
+Yes, please.
+
+--MhDS85o8hQkNlKhq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBAgAGBQJUGdRhAAoJECTWi3JdVIfQOfEH/2hWOhknUcktMz6EOsYsnngU
+1Gk3nXDFriOnIUyq0DiIXnyGL9EbUTEAb1PbM1DQilS+W3IjTdXKCO185n+w+BIc
+6iZJCdl6jdqR5cPZUfqNA68Whdk8+Zvl2y7PF/I3GgNXZnvxFf1cWAdGUHQyEF14
+hPjCEQnxZiwFT62bfp0A7SQfQn6IUyRgAOJWtnD1b7In6Cl6pCoSUyoKjwjmWDZ2
+Xtidc1UHUmuCbMGq+MjmGik8oxhsO8G99fBuULcKGk39xZIkoAAII50PbWNlxqku
+iNHI+ZbmK6ysZCZ8LvniBzNELHe2c0cRMfjrvOuob7ssehVYJfyUHdSpCHWKhG0=
+=WHIV
+-----END PGP SIGNATURE-----
+
+--MhDS85o8hQkNlKhq--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
