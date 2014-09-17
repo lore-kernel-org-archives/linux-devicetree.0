@@ -1,74 +1,57 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] of: amba: use of_dma_configure for AMBA devices
-Date: Wed, 17 Sep 2014 12:56:07 +0100
-Message-ID: <90bd1ff3c93b827c12e1b3dc9ad3f227632d0f6e.1410954967.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH 3/4] tty: omap-serial: use threaded interrupt handler
+Date: Wed, 17 Sep 2014 08:01:08 -0400
+Message-ID: <54197804.3020302@hurleysoftware.com>
+References: <1410789610-23059-1-git-send-email-frans.klaver@xsens.com> <1410789610-23059-4-git-send-email-frans.klaver@xsens.com> <54170823.7040801@hurleysoftware.com> <5417228C.5070503@hurleysoftware.com> <20140916085037.GI28458@ci00147.xsens-tech.local>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20140916085037.GI28458@ci00147.xsens-tech.local>
+Sender: linux-serial-owner@vger.kernel.org
+To: Frans Klaver <frans.klaver@xsens.com>
+Cc: Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Pelykh <alexey.pelykh@gmail.com>, Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 591c1e ("of: configure the platform device dma parameters)
-introduced a common mechanism to configure DMA from DT properties.
-AMBA devices created from DT can take advantage of this, too.
+On 09/16/2014 04:50 AM, Frans Klaver wrote:
+> On Mon, Sep 15, 2014 at 01:31:56PM -0400, Peter Hurley wrote:
+>> On 09/15/2014 11:39 AM, Peter Hurley wrote:
+>>> On 09/15/2014 10:00 AM, Frans Klaver wrote:
+>>>> At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we see 1600 uart
+>>>> rx buffer overflows within 30 seconds. Threading the interrupt handling reduces
+>>>> this to about 170 overflows in 10 minutes.
+>>>
+>>> Why is the threadirqs kernel boot option not sufficient?
+>>> Or conversely, shouldn't this be selectable?
+>>
+> 
+> I wasn't aware of the threadirqs boot option. I also wouldn't know if
+> this should be selectable. What would be a reason to favor the
+> non-threaded irq over the threaded irq?
 
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
- drivers/of/platform.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Not everyone cares enough about serial to dedicate kthreads to it :)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 0197725..3b64d0b 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -160,11 +160,10 @@ EXPORT_SYMBOL(of_device_alloc);
-  * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
-  * to fix up DMA configuration.
-  */
--static void of_dma_configure(struct platform_device *pdev)
-+static void of_dma_configure(struct device *dev)
- {
- =09u64 dma_addr, paddr, size;
- =09int ret;
--=09struct device *dev =3D &pdev->dev;
-=20
- =09/*
- =09 * Set default dma-mask to 32 bit. Drivers are expected to setup
-@@ -229,7 +228,7 @@ static struct platform_device *of_platform_device_creat=
-e_pdata(
- =09if (!dev)
- =09=09goto err_clear_flag;
-=20
--=09of_dma_configure(dev);
-+=09of_dma_configure(&dev->dev);
- =09dev->dev.bus =3D &platform_bus_type;
- =09dev->dev.platform_data =3D platform_data;
-=20
-@@ -291,7 +290,6 @@ static struct amba_device *of_amba_device_create(struct=
- device_node *node,
- =09}
-=20
- =09/* setup generic device info */
--=09dev->dev.coherent_dma_mask =3D ~0;
- =09dev->dev.of_node =3D of_node_get(node);
- =09dev->dev.parent =3D parent;
- =09dev->dev.platform_data =3D platform_data;
-@@ -299,6 +297,7 @@ static struct amba_device *of_amba_device_create(struct=
- device_node *node,
- =09=09dev_set_name(&dev->dev, "%s", bus_id);
- =09else
- =09=09of_device_make_bus_id(&dev->dev);
-+=09of_dma_configure(&dev->dev);
-=20
- =09/* Allow the HW Peripheral ID to be overridden */
- =09prop =3D of_get_property(node, "arm,primecell-periphid", NULL);
---=20
-1.9.1
+>> Also, do you see the same performance differential when you implement this
+>> in the 8250 driver (that is, on top of Sebastian's omap->8250 conversion)?
+>>
+> 
+> I haven't gotten Sebastian's driver to work properly yet on the console.
+> There was no reason for me yet to throw my omap changes on top of
+> Sebastian's queue.
+> 
+>>> PS - To overflow the 64 byte RX FIFO at those data rates means interrupt
+>>> latency in excess of 250us?
+> 
+> At 3686400 baud it should take about 174 us to fill a 64 byte buffer. I
+> haven't done any measurements on the interrupt latency though. If you
+> consider that we're sending about 1kB of data, 240 times a second, we're
+> spending a lot of time reading data from the uart. I can imagine the
+> system has other work to do as well.
 
+System work should not keep irqs from being serviced. Even 174us is a long
+time not to service an interrupt. Maybe console writes are keeping the isr
+from running?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Peter Hurley
+
