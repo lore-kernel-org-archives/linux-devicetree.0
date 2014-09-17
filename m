@@ -1,29 +1,73 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH v2 1/3] ARM: dts: imx6: add pm_power_off support for
- i.mx6 chips
-Date: Wed, 17 Sep 2014 12:50:02 +0800
-Message-ID: <20140917045001.GG4796@dragon>
-References: <1410511739-31122-1-git-send-email-b38343@freescale.com>
- <1410511739-31122-2-git-send-email-b38343@freescale.com>
- <20140917021044.GD4796@dragon> <20140917034514.GF27452@Robin-OptiPlex-780>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] ARM: zynq: DT: Fix GEM register area size
+Date: Wed, 17 Sep 2014 07:25:38 +0200
+Message-ID: <c52d905f-06e1-41a5-b79d-42c512f0ac27@BL2FFO11FD035.protection.gbl>
+References: <1410880118-3494-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="ESTdmtD3a2MFV6gPfPgvbaeuiGDLSTAQr"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140917034514.GF27452@Robin-OptiPlex-780>
+In-Reply-To: <1410880118-3494-1-git-send-email-soren.brinkmann@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Gong <b38343@freescale.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kernel@pengutronix.de, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Soren Brinkmann <soren.brinkmann@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 11:45:15AM +0800, Robin Gong wrote:
-> > BTW, the commit log of the driver patch [[PATCH v2 2/3] ] should be
-> > improved.
-> > 
-> > Shawn
-> >
-> You mean the above info need added into commit log ,right?
+--ESTdmtD3a2MFV6gPfPgvbaeuiGDLSTAQr
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Yes, that's what I mean.
+On 09/16/2014 05:08 PM, Soren Brinkmann wrote:
+> The size of the GEM's register area is only 0x1000 bytes.
+>=20
+> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+> ---
+>  arch/arm/boot/dts/zynq-7000.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-=
+7000.dtsi
+> index 6cc83d4c6c76..3eb12f25e669 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -190,7 +190,7 @@
+> =20
+>  		gem0: ethernet@e000b000 {
+>  			compatible =3D "cdns,gem";
+> -			reg =3D <0xe000b000 0x4000>;
+> +			reg =3D <0xe000b000 0x1000>;
+>  			status =3D "disabled";
+>  			interrupts =3D <0 22 4>;
+>  			clocks =3D <&clkc 30>, <&clkc 30>, <&clkc 13>;
+> @@ -199,7 +199,7 @@
+> =20
+>  		gem1: ethernet@e000c000 {
+>  			compatible =3D "cdns,gem";
+> -			reg =3D <0xe000c000 0x4000>;
+> +			reg =3D <0xe000c000 0x1000>;
+>  			status =3D "disabled";
+>  			interrupts =3D <0 45 4>;
+>  			clocks =3D <&clkc 31>, <&clkc 31>, <&clkc 14>;
+>=20
 
-Shawn
+Applied.
+
+Thanks,
+Michal
+
+
+--ESTdmtD3a2MFV6gPfPgvbaeuiGDLSTAQr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlQZG1IACgkQykllyylKDCFh7gCdHCCO/jlu8XvQpvbqXDx3wGVN
+fT4Aniomht/A/AdDAHpZx4rJwXy2DOHk
+=7eGI
+-----END PGP SIGNATURE-----
+
+--ESTdmtD3a2MFV6gPfPgvbaeuiGDLSTAQr--
