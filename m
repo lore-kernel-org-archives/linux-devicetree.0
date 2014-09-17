@@ -1,92 +1,70 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] dmaengine: sun6i: Add support for
- Allwinner A23 (sun8i) variant
-Date: Wed, 17 Sep 2014 17:55:40 +0200
-Message-ID: <20140917155540.GJ2166@lukather>
-References: <1410616381-30226-1-git-send-email-wens@csie.org>
- <1410616381-30226-3-git-send-email-wens@csie.org>
- <20140916103540.GF9948@lukather>
- <CAGb2v67jokpXHxR26YoCEB2Y_v07oQZXZfPuGJC_wO=r-SRZhg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v8 1/4] pci:host: APM X-Gene PCIe host controller driver
+Date: Wed, 17 Sep 2014 17:03:39 +0100
+Message-ID: <20140917160337.GA15261@e104818-lin.cambridge.arm.com>
+References: <1410476266-29426-1-git-send-email-tinamdar@apm.com>
+ <1410476266-29426-2-git-send-email-tinamdar@apm.com>
+ <20140912091816.GU27864@e106497-lin.cambridge.arm.com>
+ <CACoXjckWYhe=PpWE+xYSC9Q72FyAq__3uUh2gGeGtgpC5SrpzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Tu8ztk+XgTAiG9Id"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBA7A42QAKGQE22TRGRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v67jokpXHxR26YoCEB2Y_v07oQZXZfPuGJC_wO=r-SRZhg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACoXjckWYhe=PpWE+xYSC9Q72FyAq__3uUh2gGeGtgpC5SrpzQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-
---Tu8ztk+XgTAiG9Id
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 16, 2014 at 10:13:27PM +0800, Chen-Yu Tsai wrote:
-> >> +     /*
-> >> +      * sun8i variant requires us to toggle an undocumented register,
-> >> +      * as seen in Allwinner's SDK.
+On Tue, Sep 16, 2014 at 09:02:11PM +0100, Tanmay Inamdar wrote:
+> On Fri, Sep 12, 2014 at 2:18 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> > On Thu, Sep 11, 2014 at 11:57:43PM +0100, Tanmay Inamdar wrote:
+> >> This patch adds the AppliedMicro X-Gene SOC PCIe host controller driver.
+> >> X-Gene PCIe controller supports maximum up to 8 lanes and GEN3 speed.
+> >> X-Gene SOC supports maximum 5 PCIe ports.
+> >>
+> >> Signed-off-by: Tanmay Inamdar <tinamdar@apm.com>
 > >
-> > The BSP I have has this:
+> > It looks good to me now. You can add if you care:
 > >
-> > static void sunxi_dma_hw_init(struct sunxi_dmadev *dev)
-> > {
-> >         struct sunxi_dmadev *sunxi_dev =3D dev;
-> >
-> >         clk_prepare_enable(sunxi_dev->ahb_clk);
-> > #ifdef CONFIG_ARCH_SUN8IW3
-> >         writel(0x04, sunxi_dev->base + DMA_GATE);
-> > #endif
-> > }
-> >
-> > /* All is ok, and open the clock */
-> > sunxi_dma_hw_init(sunxi_dev);
-> >
-> > So I guess we can say that it's not that undocumented :)
->=20
-> That's right. I meant undocumented in the user manual.
-> I did reference the SDK in the comment, didn't I? :)
+> > Reviewed-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> 
+> I will have to send another version of patch as I forgot to add
+> 'dma-coherent' in device tree entry.
+> 
+> Secondly I see that setting 'dma-coherent' in device tree node sets
+> coherent_dma_ops for the root bus but for the endpoint another 'dev'
+> gets assigned. This causes endpoint to use non-coherent dma apis
+> causing failure in dma operations.
 
-So something like
+For PCIe, setting dma-coherent in the DT nodes wouldn't have any effect
+yet. We have of_dma_configure() being called for platform devices but it
+won't work for PCIe which are probed at run-time (nor for AMBA which
+require an additional patch).
 
-writel(DMA_GATE_ENABLE, base->DMA_GATE_REG) wouldn't be too far off :)
+So for arm64 currently we have some hooks in dma-mapping.c to intercept
+when a device is added to a bus. What I need to do though is check
+recursively whether the parent (bus) had the 'dma-coherent' property
+(pointed out by Jon). I think something like this would do (not tested):
 
-Maxime
+diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
+index 4164c5ace9f8..638475378f94 100644
+--- a/arch/arm64/mm/dma-mapping.c
++++ b/arch/arm64/mm/dma-mapping.c
+@@ -316,7 +316,7 @@ static int dma_bus_notifier(struct notifier_block *nb,
+ 	if (event != BUS_NOTIFY_ADD_DEVICE)
+ 		return NOTIFY_DONE;
+ 
+-	if (of_property_read_bool(dev->of_node, "dma-coherent"))
++	if (of_dma_is_coherent(dev->of_node))
+ 		set_dma_ops(dev, &coherent_swiotlb_dma_ops);
+ 
+ 	return NOTIFY_OK;
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+After this, we need to a bus notifier for PCIe as well. Since I don't
+think we have an of_node for a PCI device, we would need to check
+recursively on the parent device rather than the parent node until we
+find an OF node with the 'dma-coherent' property.
 
---Tu8ztk+XgTAiG9Id
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUGa78AAoJEBx+YmzsjxAgAYoP/iT+1ghRVNp19AojA8I6dkW9
-eiDmStZe056B22M7Vw8wnbQFv5Khz44ZoKt25AakUDhpB0WWkWRhRwJ+8oQTmjSF
-oq5B7JqP4Z8hBdEy3oxQQtWOEtVEUEUbdcmiBV5ENve2/6RkH3WCQYaGEFVgJY63
-GMnHRrEwNM6tt/Ju4xqDN7SPra0fBOiCfMcF46Q9MwuVhM2tCF2sKYxwHCPC+Mur
-s3MM9evDnVRUDR2HT9FIUkB1Ee14b0AgXBmsU+7A16AHQ6xkl3ZELlQDvBl85S+p
-FG3kTGVA6dsCUITlcBMKbqFEgvgO+Nr7YJwlsz8GxkiSpzpg/fQkHJ6QGjJUZrzt
-e1OMg2cwWrUkLmdxI0boR9Uo3vfKtU4Vkr7ed/YMzyoxLTVbmrlGmr/ipHZ+8+rb
-xlmCbwDbtleWqisjDBf71SDpDUIQaCrNmnsVbEyb0Oz5Jj7k6hLhBhD2E6TzZrET
-pFABoGdSZ5a6MaH7M7gviO3PKpZ/hqoSfNLZbM/g4S/39hdU7ihIZ8+i7ddXaRUQ
-+SXZ/OcOW3bCIhl7Aa8XN8/UiumdF1KDvBfc5ZJ2uvo8ufttXB3G38tiGtcQsEam
-eLFW+XvZyt0J+9OIu+wPLGz+gSrsYaS7ffiydaPIedZZjnjsZ50rLSRmkl9AjB25
-lM9svwtMO544di1mGHsn
-=xCUB
------END PGP SIGNATURE-----
-
---Tu8ztk+XgTAiG9Id--
+-- 
+Catalin
