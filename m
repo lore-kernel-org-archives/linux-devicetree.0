@@ -1,122 +1,51 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: add devicetree bindings for st-pwm regulator
-Date: Wed, 17 Sep 2014 11:16:23 -0700
-Message-ID: <CAD=FV=WCQ4oU1O9JcZ9SuwWJ7g+GLsUiE=wmQQoWvL41o24eWg@mail.gmail.com>
-References: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
-	<1410959280-29662-3-git-send-email-zyw@rock-chips.com>
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: Re: [PATCH v6 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
+ binding
+Date: Wed, 17 Sep 2014 11:19:40 -0700
+Message-ID: <20140917181939.GG10179@sonymobile.com>
+References: <1409029109-28769-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1409029109-28769-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <20140826072727.GB9574@lee--X1>
+ <20140917161554.GJ30918@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410959280-29662-3-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140917161554.GJ30918@lee--X1>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+On Wed 17 Sep 09:15 PDT 2014, Lee Jones wrote:
 
-On Wed, Sep 17, 2014 at 6:08 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Document the st-pwm regulator
->
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> ---
->
->  .../devicetree/bindings/regulator/st-pwm.txt       |   35 ++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/st-pwm.txt
->
-> diff --git a/Documentation/devicetree/bindings/regulator/st-pwm.txt b/Documentation/devicetree/bindings/regulator/st-pwm.txt
-> new file mode 100644
-> index 0000000..38fec1d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/st-pwm.txt
-> @@ -0,0 +1,35 @@
-> +st pwm regulator bindings
-> +
-> +Required properties:
-> +  - compatible: "pwm-regulator"
+> On Tue, 26 Aug 2014, Lee Jones wrote:
+> 
+> > On Mon, 25 Aug 2014, Bjorn Andersson wrote:
+> > 
+> > > Add binding for the Qualcomm Resource Power Manager (RPM) found in 8660,
+> > > 8960 and 8064 based devices. The binding currently describes the rpm
+> > > itself and the regulator subnodes.
+> > > 
+> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/qcom,rpm.txt |  246 ++++++++++++++++++++
+> > >  include/dt-bindings/mfd/qcom,rpm.h                 |  154 ++++++++++++
+> > >  2 files changed, 400 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.txt
+> > >  create mode 100644 include/dt-bindings/mfd/qcom,rpm.h
+> > 
+> > Please use the same filename formatting as the existing files.
+> 
+> Are you going to resubmit this (and answer my question on the
+> regulator patch)?
+> 
 
-This compatible string doesn't include "st,b2105-pwm-regulator".
+I'll resubmit all three parts after changing the filename of the dt header.
 
-Should be something like:
+The regulator driver have a strong dependency on the mfd driver, but Kconfig
+will make sure it's not selectable until the two parts merges again, so it
+should be fine. But I guess it's up to Mark?
 
-  - compatible: Should be "pwm-regulator" to get voltage table / regulator
-    period from the device tree.  Deprecated: if "st,b2105-pwm-regulator" then
-    voltage table and regulator will be handled by the driver.
-
-Assuming that everyone is OK calling "st,b2105-pwm-regulator" the
-deprecated way of doing things.
-
-
-> +  - pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
-> +  - voltage-table: voltage and duty table, include 2 merbers in each set of
-> +    brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
-> +  - pwm-reg-period: duration (in nanoseconds) of one cycle
-
-The voltage-table and pwm-reg-period should not be required if we're
-using "st,b2105-pwm-regulator".  If someone lists both
-"st,b2105-pwm-regulator" and "pwm-regulator" then I'd assume that
-you'd allow them to override via the device tree but fallback to the
-old hardcoded values.
-
-
-> +
-> +Any property defined as part of the core regulator binding defined in
-> +regulator.txt can also be used.
-> +
-> +Example:
-> +       pwm_regulator {
-> +                compatible = "st,b2105-pwm-regulator;
-> +                pwms = <&pwm1 0 1000000 0>;
-> +
-> +               voltage-table = <1114000 0>,
-> +                               <1095000 10>,
-> +                               <1076000 20>,
-> +                               <1056000 30>,
-> +                               <1036000 40>,
-> +                               <1016000 50>;
-> +
-> +               pwm-reg-period = <8448>;
-> +               regulators {
-> +                       vdd_logic: pwm-regulator {
-> +                               regulator-always-on;
-> +                               regulator-boot-on;
-> +                               regulator-min-microvolt = <1016000>;
-> +                               regulator-max-microvolt = <1114000>;
-> +                               regulator-name = "vdd_logic";
-> +                       };
-> +               };
-
-I _think_ that the "regulators" subnode and the "pwm-regulator"
-subnode are not needed at all and should be removed.  Other instances
-of devices that are "just" regulators don't have it (like
-fixed-regulator, gpio-regulator, etc).
-
-I think your final example should be:
-
-+       vdd_logic: pwm-regulator {
-+                compatible = "pwm-regulator;
-+                pwms = <&pwm1 0 1000000 0>;
-+
-+               voltage-table = <1114000 0>,
-+                               <1095000 10>,
-+                               <1076000 20>,
-+                               <1056000 30>,
-+                               <1036000 40>,
-+                               <1016000 50>;
-+
-+               pwm-reg-period = <8448>;
-+
-+               regulator-always-on;
-+               regulator-boot-on;
-+               regulator-min-microvolt = <1016000>;
-+               regulator-max-microvolt = <1114000>;
-+               regulator-name = "vdd_logic";
-+       };
-
--Doug
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
