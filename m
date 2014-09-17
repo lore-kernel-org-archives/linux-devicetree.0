@@ -1,121 +1,59 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip
- support
-Date: Wed, 17 Sep 2014 15:43:04 +0530
-Message-ID: <CAEC9eQOKYSVi+CG__wzo3bwMZTBc+y10WZuYnoz7A5=RJV2D2Q@mail.gmail.com>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOpmUsZKEJ_uK7Y73kn9Q5Rk8=n3jV9orBYwn2R4M0efA@mail.gmail.com>
- <20140730094053.GB29590@ulmo> <2405684.4GKZfmgcCP@avalon>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH v3 1/3] ARM: dts: imx6: add pm_power_off support for
+ i.mx6 chips
+Date: Wed, 17 Sep 2014 12:24:20 +0200
+Message-ID: <20140917102420.GW4992@pengutronix.de>
+References: <1410947881-7345-1-git-send-email-b38343@freescale.com>
+ <1410947881-7345-2-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2405684.4GKZfmgcCP@avalon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Doug Anderson <dianders@chromium.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, sunil joshi <joshi@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1410947881-7345-2-git-send-email-b38343@freescale.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Robin Gong <b38343@freescale.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@freescale.com, kernel@pengutronix.de, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKClBsZWFzZSBmaW5kIHRoZSBsYXRlc3Qgc2VyaWVzIGhlcmU6Cmh0dHA6Ly93
-d3cuc3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzY2NzQwLmh0bWwKCk9uIFdlZCwgU2Vw
-IDE3LCAyMDE0IGF0IDM6MjMgUE0sIExhdXJlbnQgUGluY2hhcnQKPGxhdXJlbnQucGluY2hhcnRA
-aWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6Cj4gSGkgVGhpZXJyeSwKPgo+IE9uIFdlZG5lc2RheSAz
-MCBKdWx5IDIwMTQgMTE6NDA6NTQgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4+IE9uIFdlZCwgSnVs
-IDMwLCAyMDE0IGF0IDExOjU0OjAwQU0gKzA1MzAsIEFqYXkga3VtYXIgd3JvdGU6Cj4+ID4gT24g
-VHVlLCBKdWwgMjksIDIwMTQgYXQgNToxNyBQTSwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4+ID4g
-PiBPbiBUdWUsIEp1bCAyOSwgMjAxNCBhdCAwMTo0MjowOVBNICswMjAwLCBBbmRyZWFzIEbDpHJi
-ZXIgd3JvdGU6Cj4+ID4gPj4gQW0gMjkuMDcuMjAxNCAxMzozNiwgc2NocmllYiBUaGllcnJ5IFJl
-ZGluZzoKPj4gPiA+PiA+IE9uIFR1ZSwgSnVsIDI5LCAyMDE0IGF0IDAxOjIxOjQ4UE0gKzAyMDAs
-IEFuZHJlYXMgRsOkcmJlciB3cm90ZToKPj4gPiA+PiA+PiBBbSAyOC4wNy4yMDE0IDA4OjEzLCBz
-Y2hyaWViIEFqYXkga3VtYXI6Cj4+ID4gPj4gPj4+IE9uIDcvMjcvMTQsIEFuZHJlYXMgRsOkcmJl
-ciA8YWZhZXJiZXJAc3VzZS5kZT4gd3JvdGU6Cj4+ID4gPj4gPj4+PiBBbSAyNS4wNy4yMDE0IDIx
-OjIyLCBzY2hyaWViIEFqYXkgS3VtYXI6Cj4+ID4gPj4gPj4+Pj4gVGhpcyBzZXJpZXMgaXMgYmFz
-ZWQgb24gZXh5bm9zLWRybS1uZXh0IGJyYW5jaCBvZiBJbmtpIERhZSdzIHRyZWUKPj4gPiA+PiA+
-Pj4+PiBhdDoKPj4gPiA+PiA+Pj4+PiBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
-L2tlcm5lbC9naXQvZGFlaW5raS9kcm0tZXh5bm9zLgo+PiA+ID4+ID4+Pj4+IGdpdAo+PiA+ID4+
-ID4+Pj4+Cj4+ID4gPj4gPj4+Pj4gSSBoYXZlIHRlc3RlZCB0aGlzIGFmdGVyIGFkZGluZyBmZXcg
-RFQgY2hhbmdlcyBmb3IKPj4gPiA+PiA+Pj4+PiBleHlub3M1MjUwLXNub3csCj4+ID4gPj4gPj4+
-Pj4gZXh5bm9zNTQyMC1wZWFjaC1waXQgYW5kIGV4eW5vczU4MDAtcGVhY2gtcGkgYm9hcmRzLgo+
-PiA+ID4+ID4+Pj4KPj4gPiA+PiA+Pj4+IEknbSB0cnlpbmcgdG8gdGVzdCB0aGlzIHdpdGggYSBt
-b2RpZmllZCBleHlub3M1MjUwLXNwcmluZyBEVAo+PiA+ID4+Cj4+ID4gPj4gWy4uLl0KPj4gPiA+
-Pgo+PiA+ID4+ID4+IFVuZm9ydHVuYXRlbHkgdGhlIG1vc3QgSSBnb3Qgb24gU3ByaW5nIHdpdGgg
-YXR0YWNoZWQgRFQgd2FzIGEgYmxhbmsKPj4gPiA+PiA+PiBzY3JlZW4gd2l0aCBhIHdoaXRlIGhv
-cml6b250YWwgbGluZSBpbiB0aGUgbWlkZGxlLgo+PiA+ID4+ID4+Cj4+ID4gPj4gPj4gRG8gSSBu
-ZWVkIHRvIHNwZWNpZnkgYSBzcGVjaWZpYyBwYW5lbCBtb2RlbCBmb3IgU3ByaW5nPwo+PiA+ID4+
-Cj4+ID4gPj4gWy4uLl0KPj4gPiA+Pgo+PiA+ID4+ID4+IEZyb20gOTE3MmEyNmE4ZjBkMGYwZDE3
-MGJkMjdlMWMxNTBhZDIwNGQ4MDg2YSBNb24gU2VwIDE3IDAwOjAwOjAwCj4+ID4gPj4gPj4gMjAw
-MQo+PiA+ID4+ID4+IEZyb206ID0/VVRGLTg/cT9BbmRyZWFzPTIwRj1DMz1BNHJiZXI/PSA8YWZh
-ZXJiZXJAc3VzZS5kZT4KPj4gPiA+PiA+PiBEYXRlOiBTdW4sIDI3IEp1bCAyMDE0IDIxOjU4OjA2
-ICswMjAwCj4+ID4gPj4gPj4gU3ViamVjdDogW1BBVENIXSBBUk06IGR0czogZXh5bm9zNTI1MDog
-QWRkIGVEUC9MVkRTIGJyaWRnZSB0byBTcHJpbmcKPj4gPiA+PiA+PiBNSU1FLVZlcnNpb246IDEu
-MAo+PiA+ID4+ID4+IENvbnRlbnQtVHlwZTogdGV4dC9wbGFpbjsgY2hhcnNldD1VVEYtOAo+PiA+
-ID4+ID4+IENvbnRlbnQtVHJhbnNmZXItRW5jb2Rpbmc6IDhiaXQKPj4gPiA+PiA+Pgo+PiA+ID4+
-ID4+IFNpZ25lZC1vZmYtYnk6IEFqYXkgS3VtYXIgPGFqYXlrdW1hci5yc0BzYW1zdW5nLmNvbT4K
-Pj4gPiA+PiA+PiBbQUY6IFJlZG9uZSBmb3IgdjZdCj4+ID4gPj4gPj4gU2lnbmVkLW9mZi1ieTog
-QW5kcmVhcyBGPz9yYmVyIDxhZmFlcmJlckBzdXNlLmRlPgo+PiA+ID4+ID4+IC0tLQo+PiA+ID4+
-ID4+Cj4+ID4gPj4gPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc3ByaW5nLmR0cyB8
-IDMyICsrKysrKysrKysrKysrKysrKysrKy0KPj4gPiA+PiA+PiAgMSBmaWxlIGNoYW5nZWQsIDMx
-IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPj4gPiA+PiA+Pgo+PiA+ID4+ID4+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1MjUwLXNwcmluZy5kdHMKPj4gPiA+PiA+
-PiBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc3ByaW5nLmR0cyBpbmRleAo+PiA+ID4+
-ID4+IDY4N2RmYWI4NmJjOC4uNTE3YjFmZjJiZmRmIDEwMDY0NAo+PiA+ID4+ID4+IC0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc3ByaW5nLmR0cwo+PiA+ID4+ID4+ICsrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczUyNTAtc3ByaW5nLmR0cwo+PiA+ID4+ID4+IEBAIC02NCwx
-MCArNjQsMTQgQEAKPj4gPiA+PiA+PiAgICAgICAgICAgIHZkZF9wbGwtc3VwcGx5ID0gPCZzNW1f
-bGRvOF9yZWc+Owo+PiA+ID4+ID4+ICAgIH07Cj4+ID4gPj4gPj4KPj4gPiA+PiA+PiArICBwYW5l
-bDogcGFuZWwgewo+PiA+ID4+ID4+ICsgICAgICAgICAgY29tcGF0aWJsZSA9ICJzaW1wbGUtcGFu
-ZWwiOwo+PiA+ID4+ID4+ICsgIH07Cj4+ID4gPj4gPgo+PiA+ID4+ID4gWW91IGNhbid0IGRvIHRo
-aXMuICJzaW1wbGUtcGFuZWwiIGlzbid0IGEgdmFsaWQgcGFuZWwgbW9kZWwuIEl0Cj4+ID4gPj4g
-PiBzaG91bGQgcHJvYmFibHkgYmUgcmVtb3ZlZCBmcm9tIHRoZSBwbGF0Zm9ybV9vZl9tYXRjaCB0
-YWJsZSBpbiB0aGUKPj4gPiA+PiA+IGRyaXZlci4KPj4gPiA+Pgo+PiA+ID4+IE9rYXksIHRoYXQg
-bWVhbnMgdGhlIFNub3cgRFQgaXMgd3JvbmcsIHRvbzoKPj4gPiA+PiBodHRwczovL3BhdGNod29y
-ay5rZXJuZWwub3JnL3BhdGNoLzQ2MjU0NDEvCj4+ID4gPj4KPj4gPiA+PiBBbmQgdGhlIG90aGVy
-cyBzcGVjaWZ5IGl0IGFzIGZhbGxiYWNrOgo+PiA+ID4+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
-bC5vcmcvcGF0Y2gvNDYyNTQ2MS8KPj4gPiA+PiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
-L3BhdGNoLzQ2MjU0NTEvCj4+ID4gPgo+PiA+ID4gQSBxdWljayBncmVwIHNob3dzIHRoYXQgbWFu
-eSAoYWxsPykgZGV2aWNlcyB0aGF0IHVzZSBEUk0gcGFuZWxzIHByb3ZpZGUKPj4gPiA+IHNpbXBs
-ZS1wYW5lbCBhcyBmYWxsYmFjay4gVGhhdCdzIHByb2JhYmx5IGZpbmUgYXMgbG9uZyBhcyB0aGV5
-IGFsc28gZG8KPj4gPiA+IHByb3ZpZGUgdGhlIHNwZWNpZmljIG1vZGVsLiBCdXQgZ2l2ZW4gdGhh
-dCBzaW1wbGUtcGFuZWwgZG9lcyBub3QgaGF2ZSBhCj4+ID4gPiBtb2RlIG9yIHBoeXNpY2FsIHNp
-emUsIEkgZG9uJ3QgdGhpbmsgZXZlbiB0aGF0IG1ha2VzIHNlbnNlLgo+PiA+Cj4+ID4gT24gc25v
-dywgdGhlIGJyaWRnZSBjaGlwIHByb3ZpZGVzIHRoZSBkaXNwbGF5IG1vZGUgaW5zdGVhZCBvZiB0
-aGUgcGFuZWwuCj4+ID4gVGhhdCBpcyB3aHkgZGlzcGxheSB3YXMgd29ya2luZyBmb3IgbWUuCj4+
-Cj4+IE9rYXksIEkgc3VwcG9zZSB1bmRlciBzb21lIGNpcmN1bXN0YW5jZXMgdGhhdCBtaWdodCBt
-YWtlIHNlbnNlLiBBbHRob3VnaAo+PiBpdCdzIHN0aWxsIGFsd2F5cyB0aGUgcGFuZWwgdGhhdCBk
-aWN0YXRlcyB0aGUgZGlzcGxheSB0aW1pbmdzLCBzbyB0aGUKPj4gcGFuZWwgbm9kZSBuZWVkcyB0
-byBoYXZlIGEgcGFuZWwgbW9kZWwgc3BlY2lmaWMgY29tcGF0aWJsZSB2YWx1ZSB3aXRoIGEKPj4g
-bWF0Y2hpbmcgZW50cnkgaW4gdGhlIHBhbmVsLXNpbXBsZSBkcml2ZXIgc28gdGhhdCBpdCBjYW4g
-ZXZlbiBiZSB1c2VkIGluCj4+IHNldHVwcyB3aXRob3V0IGEgYnJpZGdlLgo+Pgo+PiBPbmUgb3Ro
-ZXIgdGhpbmc6IGhvdyBkb2VzIHRoZSBicmlkZ2Uga25vdyB3aGljaCBtb2RlIHRvIGRyaXZlPyBJ
-IHN1c3BlY3QKPj4gdGhhdCBpdCBjYW4gZHJpdmUgbW9yZSB0aGFuIG9uZSBtb2RlPyBDYW4gaXQg
-ZnJlZWx5IGJlIGNvbmZpZ3VyZWQgb3IKPj4gZG9lcyBpdCBoYXZlIGEgcHJlZGVmaW5lZCBzZXQg
-b2YgbW9kZXM/IElmIHRoZSBsYXR0ZXIsIHRoZW4gYWNjb3JkaW5nIHRvCj4+IHdoYXQgeW91IHNh
-aWQgYWJvdmUgdGhlcmUgbmVlZHMgdG8gYmUgYSB3YXkgdG8gY29uZmlndXJlIHRoZSBicmlkZ2Ug
-KHZpYQo+PiBEVD8pIHNvIHRoYXQgaXQgcmVwb3J0cyB0aGUgbW9kZSBtYXRjaGluZyB0aGUgcGFu
-ZWwuIEkgd29uZGVyIGlmIHRoYXQKPj4gc2hvdWxkIGJlIGhhbmRsZWQgY29tcGxldGVseSBpbiBj
-b2RlLCBzbyB0aGF0IGZvciBleGFtcGxlIGEgYnJpZGdlIGhhcyBhCj4+IHBhbmVsIGF0dGFjaGVk
-IGl0IGNhbiB1c2UgdGhlIHBhbmVsJ3MgLmdldF9tb2RlcygpIGFuZCBzZWxlY3QgYSBtYXRjaGlu
-Zwo+PiBtb2RlIGFtb25nIHRoZSBzZXQgdGhhdCBpdCBzdXBwb3J0cy4KPgo+IFllcywgcHJldHR5
-IHBsZWFzZSA6LSkgSSBkb24ndCB0aGluayBpdCB3b3VsZCBiZSBhIGdvb2QgaWRlYSB0byBkdXBs
-aWNhdGUgbW9kZQo+IGluZm9ybWF0aW9uIGluIHRoZSBicmlkZ2UgRFQgbm9kZSwgYXMgdGhhdCdz
-IG5vdCBhIHByb3BlcnR5IG9mIHRoZSBicmlkZ2UuCj4gUXVlcnlpbmcgdGhlIG1vZGUgYXQgcnVu
-dGltZSBpcyBpbiBteSBvcGluaW9uIGEgbXVjaCBiZXR0ZXIgb3B0aW9uLCBhbmQgd291bGQKPiBh
-bHNvIGFsbG93IHN3aXRjaGluZyBiZXR3ZWVuIGRpZmZlcmVudCBtb2RlcyBhdCBydW50aW1lIHdo
-ZW4gdGhhdCBtYWtlcyBzZW5zZS4KPgo+IE5vdywgSSdtIG5vdCBzdXJlIHdoZXRoZXIgaXQgc2hv
-dWxkIGJlIHRoZSBicmlkZ2UgZHJpdmVyIHF1ZXJ5aW5nIHRoZSBwYW5lbAo+IGRyaXZlciBkaXJl
-Y3RseSwgb3IgdGhlIGRpc3BsYXkgY29udHJvbGxlciBkcml2ZXIgZG9pbmcgaXQgYW5kIHRoZW4K
-PiBjb25maWd1cmluZyB0aGUgYnJpZGdlIGFjY29yZGluZ2x5LiBUaGUgbGF0dGVyIHNlZW1zIG1v
-cmUgZ2VuZXJpYyB0byBtZSBhbmQKPiBkb2Vzbid0IHJlbHkgb24gdGhlIGFzc3VtcHRpb24gdGhh
-dCB0aGUgYnJpZGdlIG91dHB1dCB3aWxsIGFsd2F5cyBiZSBkaXJlY3RseQo+IGNvbm5lY3RlZCB0
-byBhIHBhbmVsLgo+Cj4gLS0KPiBSZWdhcmRzLAo+Cj4gTGF1cmVudCBQaW5jaGFydAo+Cl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Sep 17, 2014 at 05:57:58PM +0800, Robin Gong wrote:
+> All chips of i.mx6 can be powered off by programming SNVS.
+> For example :
+> On i.mx6q-sabresd board, PMIC_ON_REQ connect with external
+> pmic ON/OFF pin, that will cause the whole PMIC powered off
+> except VSNVS. And system can restart once PMIC_ON_REQ goes
+> high by push POWRER key.
+> 
+> Signed-off-by: Robin Gong <b38343@freescale.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl.dtsi |    5 +++++
+>  arch/arm/boot/dts/imx6sl.dtsi  |    5 +++++
+>  arch/arm/boot/dts/imx6sx.dtsi  |    5 +++++
+>  3 files changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index c701af9..fffa1c6 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -645,6 +645,11 @@
+>  					interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>,
+>  						     <0 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+> +
+> +				snvs-poweroff@38 {
+> +					compatible = "fsl,sec-v4.0-poweroff";
+> +					reg = <0x38 0x4>;
+> +				};
+
+As said: This makes board specific assumptions on SoC level. Whether or
+not this function is available is *BOARD* specific, so at SoC level this
+needs a status = "disabled";
+
+So: NACK.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
