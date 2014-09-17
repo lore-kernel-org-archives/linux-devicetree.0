@@ -1,119 +1,63 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V6 6/8] drm/bridge: Modify drm_bridge core to support
- driver model
-Date: Wed, 17 Sep 2014 14:37:30 +0530
-Message-ID: <CAEC9eQMYTELvK_0bcrs+wNk=qYXzS69bOqYGr-yLf6h18bfM4Q@mail.gmail.com>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
-	<1406316130-4744-7-git-send-email-ajaykumar.rs@samsung.com>
-	<2567411.1uGei9I2NP@avalon>
+From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
+ i.mx6dl
+Date: Wed, 17 Sep 2014 17:19:24 +0800
+Message-ID: <20140917091922.GA6551@Robin-OptiPlex-780>
+References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
+ <1410774073.3314.1.camel@pengutronix.de>
+ <20140916034123.GA20800@Robin-OptiPlex-780>
+ <1410861006.2746.1.camel@pengutronix.de>
+ <20140917084120.GA6369@Robin-OptiPlex-780>
+ <1410944156.2731.1.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2567411.1uGei9I2NP@avalon>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Clark <robdclark@gmail.com>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Paul <seanpaul@google.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Sean Cross <xobs@kosagi.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410944156.2731.1.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Mon, Sep 15, 2014 at 11:07 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Ajay,
->
-> Thank you for the patch.
->
-> I think we're moving in the right direction, but we're not there yet.
->
-> On Saturday 26 July 2014 00:52:08 Ajay Kumar wrote:
->> This patch tries to seperate drm_bridge implementation
->> into 2 parts, a drm part and a non_drm part.
->>
->> A set of helper functions are defined in this patch to make
->> bridge driver probe independent of the drm flow.
->>
->> The bridge devices register themselves on a lookup table
->> when they get probed by calling "drm_bridge_add_for_lookup".
->>
->> The parent encoder driver waits till the bridge is available in the
->> lookup table(by calling "of_drm_find_bridge") and then continues with
->> its initialization.
->
-> Before the introduction of the component framework I would have said this is
-> the way to go. Now, I think bridges should register themselves as components,
-> and the DRM master driver should use the component framework to get a
-> reference to the bridges it needs.
-Well, I have modified the bridge framework exactly the way Thierry wanted it
-to be, I mean the same way the current panel framework is.
-And, I don't think there is a problem with that.
-What problem are you facing with current bridge implementation?
-What is the advantage of using the component framework to register bridges?
-
->> The encoder driver should call "drm_bridge_attach_encoder" to pass on
->> the drm_device and the encoder pointers to the bridge object.
->>
->> Now that the drm_device pointer is available, the encoder then calls
->> "bridge->funcs->post_encoder_init" to allow the bridge to continue
->> registering itself with the drm core.
->
-> This is what really bothers me with DRM bridge.
->
-> The framework assumes that a bridge will always bridge an encoder and a
-> connector. Beside lacking support for chained bridges, this creates an
-> artificial split between bridges and encoders by modeling the same components
-> using drm_encoder or drm_bridge depending on their position in the video
-> output pipeline.
->
-> I would like to see drm_bridge becoming more self-centric, removing the
-> awareness of the upstream encoder and downstream connector. I'll give this a
-> try, but it will conflict with this patch, so I'd like to share opinions and
-> coordinate efforts sooner than later if possible.
-I am not really able to understand how you want "drm_bridge" to be.
-As of now, there are many platforms using drm_bridge and they don't
-have a problem with current implementation.
-Regarding chained bridges: Can't you add this once my patchset is merged?
-As an additional feature?
-
-To be honest, I have spent quite sometime for working on this patchset.
-All I started with was to add drm_panel support to drm_bridge.
-When I sent the first patchset for that, Daniel, Rob and Thierry raised a
-concern that current bridge framework itself is not proper and hence
-they asked me to fix that first. And we have reached till here based on
-their comments only.
-
-Without this patchset, you cannot bring an X server
-based display on snow and peach_pit. Also, day by day the number of
-platforms using drm_bridge is increasing. And, I don't really see a problem
-with the current approach(which is exactly the same way panel framework is).
-And, I am no decision maker here. I would expect the top guys to comment!
-
-Ajay
-
->> Also, non driver model based ptn3460 driver is removed in this patch.
->>
->> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->> ---
->>  .../devicetree/bindings/drm/bridge/ptn3460.txt     |   27 --
->>  drivers/gpu/drm/Makefile                           |    1 +
->>  drivers/gpu/drm/bridge/Kconfig                     |   12 +-
->>  drivers/gpu/drm/bridge/Makefile                    |    2 -
->>  drivers/gpu/drm/bridge/ptn3460.c                   |  343 -----------------
->>  drivers/gpu/drm/drm_bridge.c                       |   89 +++++
->>  drivers/gpu/drm/drm_crtc.c                         |    9 +-
->>  drivers/gpu/drm/exynos/Kconfig                     |    3 +-
->>  drivers/gpu/drm/exynos/exynos_dp_core.c            |   57 ++--
->>  drivers/gpu/drm/exynos/exynos_dp_core.h            |    1 +
->>  drivers/gpu/drm/msm/hdmi/hdmi_bridge.c             |    3 +-
->>  include/drm/bridge/ptn3460.h                       |   37 ---
->>  include/drm/drm_crtc.h                             |   16 +-
->>  13 files changed, 147 insertions(+), 453 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
->>  delete mode 100644 drivers/gpu/drm/bridge/ptn3460.c
->>  create mode 100644 drivers/gpu/drm/drm_bridge.c
->>  delete mode 100644 include/drm/bridge/ptn3460.h
->
-> --
+On Wed, Sep 17, 2014 at 10:55:56AM +0200, Lucas Stach wrote:
+> Am Mittwoch, den 17.09.2014, 16:41 +0800 schrieb Robin Gong:
+> > On Tue, Sep 16, 2014 at 11:50:06AM +0200, Lucas Stach wrote:
+> > > Hi Robin,
+> > > 
+> > > Am Dienstag, den 16.09.2014, 11:41 +0800 schrieb Robin Gong:
+> > > > Hi Lucas,
+> > > >   I understood your concern,but looks we have to break old DT.
+> > > 
+> > > Sorry, but this isn't going to happen. And honestly I don't even see the
+> > > need to do so.
+> > > 
+> > > > Our old DT
+> > > > support SPI DMA on i.mx6q/dl(v2,b3810c3dc1bcbc6a), but the DMA support patch
+> > > > for SPI driver is still in reviewing(v6).
+> > > 
+> > > So this means now is the time to fix this driver patch to not enable DMA
+> > > on imx6dl. Nobody will experience any breakage in this case.
+> > >
+> > Sorry, i.mx6q and i.mx6dl are totally same, not only IP but also clock. So we
+> > can't distinguish them except for different compatible name....
+> 
+> I know that, but I still don't see the problem.
+> 
+> If this issue is specific to the ECSPI IP integrated into a imx6dl SoC
+> you need to check for the machine compatible in the driver and disable
+> DMA support based on this. We generally avoid checking for the machine
+> compatible in drivers and prefer to have a specific IP block compatible
+> instead, but in that case it's the only reasonable thing to do.
+> 
 > Regards,
->
-> Laurent Pinchart
->
+> Lucas
+Sounds we make a agreement on use different compatible name, right? I will
+make patch for reviewing, thanks.
+> -- 
+> Pengutronix e.K.             | Lucas Stach                 |
+> Industrial Linux Solutions   | http://www.pengutronix.de/  |
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
