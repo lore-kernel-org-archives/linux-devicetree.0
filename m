@@ -1,50 +1,68 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v3 4/5] ASoC: davinci: HDMI audio build for AM33XX and
- TDA998x
-Date: Thu, 18 Sep 2014 00:13:09 +0300
-Message-ID: <5419F965.9060209@ti.com>
-References: <cover.1410898073.git.jsarha@ti.com> <270f1e048d9a5a17a7f367ecabc509475b8c1145.1410898073.git.jsarha@ti.com> <20140917194126.GV7960@sirena.org.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/2] dt-bindings: add devicetree bindings for st-pwm
+ regulator
+Date: Wed, 17 Sep 2014 14:22:20 -0700
+Message-ID: <20140917212220.GQ30918@lee--X1>
+References: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
+ <1410959280-29662-3-git-send-email-zyw@rock-chips.com>
+ <CAD=FV=WCQ4oU1O9JcZ9SuwWJ7g+GLsUiE=wmQQoWvL41o24eWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140917194126.GV7960@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, tony@atomide.com, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, t-kristo@ti.com, Jean-Francois Moine <moinejf@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WCQ4oU1O9JcZ9SuwWJ7g+GLsUiE=wmQQoWvL41o24eWg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Chris Zhong <zyw@rock-chips.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Tao Huang <huangtao@rock-chips.com>, Eddie Cai <cf@rock-chips.com>, zhangqing <zhangqing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2014 10:41 PM, Mark Brown wrote:
-> On Tue, Sep 16, 2014 at 11:40:17PM +0300, Jyri Sarha wrote:
->> Adds configuration option for HDMI audio support for AM33XX based
->> boards with NXP TDA998x HDMI transmitter. The audio is connected to
->> NXP TDA998x trough McASP running in i2s mode.
->
-> So, Jean-Francois is also trying to do things with the TDA998x - what's
-> the story with that, is this joined up at all?
->
+On Wed, 17 Sep 2014, Doug Anderson wrote:
+> On Wed, Sep 17, 2014 at 6:08 AM, Chris Zhong <zyw@rock-chips.com> wro=
+te:
+> > Document the st-pwm regulator
+> >
+> > Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> >
+> > ---
+> >
+> >  .../devicetree/bindings/regulator/st-pwm.txt       |   35 ++++++++=
+++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/regulator/st-=
+pwm.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/regulator/st-pwm.txt=
+ b/Documentation/devicetree/bindings/regulator/st-pwm.txt
+> > new file mode 100644
+> > index 0000000..38fec1d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/regulator/st-pwm.txt
+> > @@ -0,0 +1,35 @@
+> > +st pwm regulator bindings
+> > +
+> > +Required properties:
+> > +  - compatible: "pwm-regulator"
+>=20
+> This compatible string doesn't include "st,b2105-pwm-regulator".
+>=20
+> Should be something like:
+>=20
+>   - compatible: Should be "pwm-regulator" to get voltage table / regu=
+lator
+>     period from the device tree.  Deprecated: if "st,b2105-pwm-regula=
+tor" then
+>     voltage table and regulator will be handled by the driver.
+>=20
+> Assuming that everyone is OK calling "st,b2105-pwm-regulator" the
+> deprecated way of doing things.
 
-Not really. This basic functionality does not touch tda998x at all on 
-the fly, but just sets i2s configuation in the beginning and bangs the 
-bits trough McASP. But as long as the old platform data for tda998x 
-still works after Jean-Francois' patches I should be safe.
+It's okay not to deprecate "st,b2105-pwm-regulator" as there have
+never been any users.  The only DTS file with a reference to it is in
+my local repo.  Just rename it.
 
-The problem with the Jean-Francois' patches is the DT support. The BBB 
-HDMI video is implemented trough tilcdc-slave mechanism without a DT 
-node for the tda encoder, which renders Jean-Francois' approach unusable 
-for BBB.
-
-The whole tilcdc slave approach may not be the most elegant way to use 
-the tda driver, but it does not look like it is going to change any time 
-soon.
-
-Best regards,
-Jyri
-
-ps. I have been thinking on something similar to Jean-Francois' patch 
-for SiI9022 which I have been working on lately. Also I have been 
-wondering if it would be possible to come up with a generic ASoC codec 
-component driver or library that could be used with any HDMI encoder to 
-produce the ASoC codec component. Unfortunately I am in too early stage 
-to produce anything more concrete.
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
