@@ -1,57 +1,52 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: add devicetree bindings for st-pwm
- regulator
-Date: Wed, 17 Sep 2014 11:35:13 -0700
-Message-ID: <20140917183513.GS7960@sirena.org.uk>
-References: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
- <1410959280-29662-3-git-send-email-zyw@rock-chips.com>
- <CAD=FV=WCQ4oU1O9JcZ9SuwWJ7g+GLsUiE=wmQQoWvL41o24eWg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
+ binding
+Date: Wed, 17 Sep 2014 11:36:00 -0700
+Message-ID: <20140917183600.GT7960@sirena.org.uk>
+References: <1409029109-28769-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1409029109-28769-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <20140826072727.GB9574@lee--X1>
+ <20140917161554.GJ30918@lee--X1>
+ <20140917181939.GG10179@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MhDS85o8hQkNlKhq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="qAWpXEdoCCy57CK7"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=WCQ4oU1O9JcZ9SuwWJ7g+GLsUiE=wmQQoWvL41o24eWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20140917181939.GG10179@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---MhDS85o8hQkNlKhq
+--qAWpXEdoCCy57CK7
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 17, 2014 at 11:16:23AM -0700, Doug Anderson wrote:
+On Wed, Sep 17, 2014 at 11:19:40AM -0700, Bjorn Andersson wrote:
 
-> I _think_ that the "regulators" subnode and the "pwm-regulator"
-> subnode are not needed at all and should be removed.  Other instances
-> of devices that are "just" regulators don't have it (like
-> fixed-regulator, gpio-regulator, etc).
->=20
-> I think your final example should be:
+> The regulator driver have a strong dependency on the mfd driver, but Kconfig
+> will make sure it's not selectable until the two parts merges again, so it
+> should be fine. But I guess it's up to Mark?
 
-Yes, please.
+Yes, that's the normal approach.  I'd have applied it but a lot of the
+early discussion seemed to be about the register I/O interface.
 
---MhDS85o8hQkNlKhq
+--qAWpXEdoCCy57CK7
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBAgAGBQJUGdRhAAoJECTWi3JdVIfQOfEH/2hWOhknUcktMz6EOsYsnngU
-1Gk3nXDFriOnIUyq0DiIXnyGL9EbUTEAb1PbM1DQilS+W3IjTdXKCO185n+w+BIc
-6iZJCdl6jdqR5cPZUfqNA68Whdk8+Zvl2y7PF/I3GgNXZnvxFf1cWAdGUHQyEF14
-hPjCEQnxZiwFT62bfp0A7SQfQn6IUyRgAOJWtnD1b7In6Cl6pCoSUyoKjwjmWDZ2
-Xtidc1UHUmuCbMGq+MjmGik8oxhsO8G99fBuULcKGk39xZIkoAAII50PbWNlxqku
-iNHI+ZbmK6ysZCZ8LvniBzNELHe2c0cRMfjrvOuob7ssehVYJfyUHdSpCHWKhG0=
-=WHIV
+iQEcBAEBAgAGBQJUGdSPAAoJECTWi3JdVIfQrs8H/jAAOz2hwR9v9oCGfy6P1N8h
+zSNLAamZTQFrAo7km54+1kAxmhLQBpEeUNra6z/WYCuv9G6FkGSbIS74YDRx+jRV
+Sm1O2vr8ejFm0ERCosivnlicmA1x76b6/Kd2rsbmPVGOn+WcmqPCmKKbZHWwTRtl
+Fd6/08r1bd25S89Tz9QlAfEoEicqAz1UIXVs9LxAaw9Tnh+9/eGzdLk8nhczYJiA
+ciw9uP0DEvbQks4gkg+yFWFLlSFkyY6WJDI8yGXeHJ9oPnUFX6C3dH2kF3L14Rav
+p1YNwG99C+yEOuLPFq4hPIJFmQr904xO2lVKwu5MDN0jp3bcdoKe4QTy4S0h4Ss=
+=U6zP
 -----END PGP SIGNATURE-----
 
---MhDS85o8hQkNlKhq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--qAWpXEdoCCy57CK7--
