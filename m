@@ -1,63 +1,50 @@
-From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
- i.mx6dl
-Date: Wed, 17 Sep 2014 17:19:24 +0800
-Message-ID: <20140917091922.GA6551@Robin-OptiPlex-780>
-References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
- <1410774073.3314.1.camel@pengutronix.de>
- <20140916034123.GA20800@Robin-OptiPlex-780>
- <1410861006.2746.1.camel@pengutronix.de>
- <20140917084120.GA6369@Robin-OptiPlex-780>
- <1410944156.2731.1.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410944156.2731.1.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Janusz Uzycki <j.uzycki@elproma.com.pl>
+Subject: [PATCH 3/4] serial: mxs-auart: enable PPS support
+Date: Wed, 17 Sep 2014 11:15:32 +0200
+Message-ID: <1410945333-26250-3-git-send-email-j.uzycki@elproma.com.pl>
+References: <1410945333-26250-1-git-send-email-j.uzycki@elproma.com.pl>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1410945333-26250-1-git-send-email-j.uzycki@elproma.com.pl>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Janusz Uzycki <j.uzycki@elproma.com.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 10:55:56AM +0200, Lucas Stach wrote:
-> Am Mittwoch, den 17.09.2014, 16:41 +0800 schrieb Robin Gong:
-> > On Tue, Sep 16, 2014 at 11:50:06AM +0200, Lucas Stach wrote:
-> > > Hi Robin,
-> > > 
-> > > Am Dienstag, den 16.09.2014, 11:41 +0800 schrieb Robin Gong:
-> > > > Hi Lucas,
-> > > >   I understood your concern,but looks we have to break old DT.
-> > > 
-> > > Sorry, but this isn't going to happen. And honestly I don't even see the
-> > > need to do so.
-> > > 
-> > > > Our old DT
-> > > > support SPI DMA on i.mx6q/dl(v2,b3810c3dc1bcbc6a), but the DMA support patch
-> > > > for SPI driver is still in reviewing(v6).
-> > > 
-> > > So this means now is the time to fix this driver patch to not enable DMA
-> > > on imx6dl. Nobody will experience any breakage in this case.
-> > >
-> > Sorry, i.mx6q and i.mx6dl are totally same, not only IP but also clock. So we
-> > can't distinguish them except for different compatible name....
-> 
-> I know that, but I still don't see the problem.
-> 
-> If this issue is specific to the ECSPI IP integrated into a imx6dl SoC
-> you need to check for the machine compatible in the driver and disable
-> DMA support based on this. We generally avoid checking for the machine
-> compatible in drivers and prefer to have a specific IP block compatible
-> instead, but in that case it's the only reasonable thing to do.
-> 
-> Regards,
-> Lucas
-Sounds we make a agreement on use different compatible name, right? I will
-make patch for reviewing, thanks.
-> -- 
-> Pengutronix e.K.             | Lucas Stach                 |
-> Industrial Linux Solutions   | http://www.pengutronix.de/  |
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Enables PPS support in mxs-auart serial driver to make PPS API working.
+
+Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
+---
+ drivers/tty/serial/mxs-auart.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
+index 8276bbe..e298a52 100644
+--- a/drivers/tty/serial/mxs-auart.c
++++ b/drivers/tty/serial/mxs-auart.c
+@@ -804,6 +804,15 @@ static void mxs_auart_settermios(struct uart_port *u,
+ 		mxs_auart_disable_ms(u);
+ }
+ 
++static void mxs_auart_set_ldisc(struct uart_port *port, int new)
++{
++	if (new == N_PPS) {
++		port->flags |= UPF_HARDPPS_CD;
++		mxs_auart_enable_ms(port);
++	} else
++		port->flags &= ~UPF_HARDPPS_CD;
++}
++
+ static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
+ {
+ 	u32 istat;
+@@ -970,6 +979,7 @@ static struct uart_ops mxs_auart_ops = {
+ 	.startup	= mxs_auart_startup,
+ 	.shutdown       = mxs_auart_shutdown,
+ 	.set_termios    = mxs_auart_settermios,
++	.set_ldisc      = mxs_auart_set_ldisc,
+ 	.type	   	= mxs_auart_type,
+ 	.release_port   = mxs_auart_release_port,
+ 	.request_port   = mxs_auart_request_port,
+-- 
+1.7.11.3
+
