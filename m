@@ -1,55 +1,39 @@
-From: Kukjin Kim <kgene@kernel.org>
-Subject: RE: [PATCH RESEND] ARM: DTS: correct the capability string for mmc0
-Date: Wed, 17 Sep 2014 21:09:28 +0900
-Message-ID: <01ce01cfd270$3b3d31b0$b1b79510$@kernel.org>
-References: <1410857409-24767-1-git-send-email-gautam.vivek@samsung.com>
- <CAD=FV=U4rPsfGkTcSY3OYHPgCFOccaHTjG1qC6WAekOEV09Q7A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAD=FV=U4rPsfGkTcSY3OYHPgCFOccaHTjG1qC6WAekOEV09Q7A@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Doug Anderson' <dianders@chromium.org>, 'Vivek Gautam' <gautam.vivek@samsung.com>
-Cc: 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Seungwon Jeon' <tgih.jun@samsung.com>, 'Javier Martinez Canillas' <javier.martinez@collabora.co.uk>, 'Kevin Hilman' <khilman@linaro.org>, 'Naveen Krishna Chatradhi' <ch.naveen@samsung.com>
+From: Dmitry Lifshitz <lifshitz@compulab.co.il>
+Subject: [PATCH v2 0/6] ARM: dts: cm-t54: enable video out, touchscreen and USB3.0
+Date: Wed, 17 Sep 2014 15:10:02 +0300
+Message-ID: <1410955808-2174-1-git-send-email-lifshitz@compulab.co.il>
+References: <1410885322-5928-1-git-send-email-lifshitz@compulab.co.il>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1410885322-5928-1-git-send-email-lifshitz@compulab.co.il>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Dmitry Lifshitz <lifshitz@compulab.co.il>
 List-Id: devicetree@vger.kernel.org
 
-Doug Anderson wrote:
-> 
-> Vivek,
-> 
-Hi,
+Add CM-T54 DT nodes:
 
-> On Tue, Sep 16, 2014 at 1:50 AM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
-> > From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> >
-> > MMC capability for HS200 is parsed in mmc/core/host.c as
-> > dts string "mmc-hs200-1_8v".
-> >
-> > This patch corrects the dts string for Exynos5420 based peach-pit
-> > and Exynos5800 based peach-pi boards.
-> >
-> > Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+* enable HDMI/DVI/LCD video output support
+* add ADS7846 touchscreen support
+* enchance DWC3 setup to enable power supply for USB3.0 OTG port
 
-In this case, Vivek's sign is required here.
+v2: * Fixed comment style issue for mux mode.
+      Follow the convention mode0_name.modeX_name for pins
+      which mux mode differs from MUX_MODE0
 
-> > ---
-> >
-> > Hi Kukjin,
-> >
-> > As commented by Doug earlier for this patch, the two patches required
-> >   -- mmc: dw_mmc: Make sure we don't get stuck when we get an error
-> >   -- mmc: dw_mmc: change to use recommended reset procedure
-> > are now merged in upstream.
-> > So you can go ahead and pick this change.
-> >
-> >  arch/arm/boot/dts/exynos5420-peach-pit.dts |    2 +-
-> >  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
+    * Moved aliases node to the top of dts file
 
-Thanks, I will take this patch once Vivek replies his sign on this patch.
+Dmitry Lifshitz (6):
+  ARM: dts: sbc-t54: fix mux mode comment style
+  ARM: dts: cm-t54: fix mux mode comment style
+  ARM: dts: cm-t54: add HDMI/DVI display data
+  ARM: dts: cm-t54: add Startek LCD support
+  ARM: dts: cm-t54: add ADS7846 touchscreen support
+  ARM: dts: cm-t54: setup omap_dwc3
 
-- Kukjin
+ arch/arm/boot/dts/omap5-cm-t54.dts  |  272 ++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/omap5-sbc-t54.dts |    4 +-
+ 2 files changed, 272 insertions(+), 4 deletions(-)
+
+-- 
+1.7.5.4
+
