@@ -1,96 +1,247 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] ARM: dts: at_xdmac: add bindings documentation
-Date: Wed, 17 Sep 2014 10:30:34 +0200
-Message-ID: <541946AA.6070407@atmel.com>
-References: <1410792622-22621-1-git-send-email-ludovic.desroches@atmel.com> <1410792622-22621-3-git-send-email-ludovic.desroches@atmel.com>
+From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: atmel_nand: make PMECC lookup table and offset
+ property optional
+Date: Wed, 17 Sep 2014 16:31:29 +0800
+Message-ID: <541946E1.1070808@atmel.com>
+References: <1408345720-5402-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410792622-22621-3-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1408345720-5402-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgBrian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/09/2014 16:50, Ludovic Desroches :
-> Add bindings documentation for the new Atmel DMA controller (XDMAC)
-> introduced with SAMA5D4.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Hi,
+
+Ping...
+
+Is it any feedback for the patch?
+
+Best Regards,
+Josh Wu
+
+On 8/18/2014 3:08 PM, Josh Wu wrote:
+> If there is no PMECC lookup table stored in ROM, or lookup table offset is
+> not specified, PMECC driver should build it in DDR by itself.
+>
+> That make the PMECC driver work for some board which doesn't has PMECC
+> lookup table in ROM.
+>
+> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  .../devicetree/bindings/dma/atmel-xdma.txt         | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> new file mode 100644
-> index 0000000..647f099
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
-> @@ -0,0 +1,48 @@
-> +* Atmel Extensible Direct Memory Access Controller (XDMAC)
+> This patch is based on mtd-l2/next branch
+>
+> v1 -> v2:
+>    make create_lookup_table() static.
+>
+>
+>   .../devicetree/bindings/mtd/atmel-nand.txt         |   6 +-
+>   drivers/mtd/nand/atmel_nand.c                      | 136 ++++++++++++++++++++-
+>   2 files changed, 136 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> index c472883..75d1847 100644
+> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> @@ -5,7 +5,9 @@ Required properties:
+>   - reg : should specify localbus address and size used for the chip,
+>   	and hardware ECC controller if available.
+>   	If the hardware ECC is PMECC, it should contain address and size for
+> -	PMECC, PMECC Error Location controller and ROM which has lookup tables.
+> +	PMECC and PMECC Error Location controller.
+> +	The PMECC lookup table address and size in ROM is optional. If not
+> +	specified, driver will build it in runtime.
+>   - atmel,nand-addr-offset : offset for the address latch.
+>   - atmel,nand-cmd-offset : offset for the command latch.
+>   - #address-cells, #size-cells : Must be present if the device has sub-nodes
+> @@ -27,7 +29,7 @@ Optional properties:
+>     are: 512, 1024.
+>   - atmel,pmecc-lookup-table-offset : includes two offsets of lookup table in ROM
+>     for different sector size. First one is for sector size 512, the next is for
+> -  sector size 1024.
+> +  sector size 1024. If not specified, driver will build the table in runtime.
+>   - nand-bus-width : 8 or 16 bus width if not present 8
+>   - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
+>   - Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
+> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+> index effa7a29..84af313 100644
+> --- a/drivers/mtd/nand/atmel_nand.c
+> +++ b/drivers/mtd/nand/atmel_nand.c
+> @@ -124,6 +124,7 @@ struct atmel_nand_host {
+>   	bool			has_pmecc;
+>   	u8			pmecc_corr_cap;
+>   	u16			pmecc_sector_size;
+> +	bool			has_no_lookup_table;
+>   	u32			pmecc_lookup_table_offset;
+>   	u32			pmecc_lookup_table_offset_512;
+>   	u32			pmecc_lookup_table_offset_1024;
+> @@ -1109,12 +1110,121 @@ static int pmecc_choose_ecc(struct atmel_nand_host *host,
+>   	return 0;
+>   }
+>   
+> +static int pmecc_build_galois_table(int mm,
+> +		int16_t *index_of, int16_t *alpha_to)
+> +{
+> +	unsigned int i, mask, nn;
+> +	unsigned int p[PMECC_GF_DIMENSION_14 + 1];
 > +
-> +* XDMA Controller
-> +Required properties:
-> +- compatible: Should be "atmel,<chip>-dma".
+> +	nn = (1 << mm) - 1;
+> +	/* set default value */
+> +	for (i = 1; i < mm; i++)
+> +		p[i] = 0;
+> +
+> +	/* 1 + X^mm */
+> +	p[0]  = 1;
+> +	p[mm] = 1;
+> +
+> +	/* others  */
+> +	switch (mm) {
+> +	case 3:
+> +	case 4:
+> +	case 6:
+> +	case 15:
+> +		p[1] = 1;
+> +		break;
+> +	case 5:
+> +	case 11:
+> +		p[2] = 1;
+> +		break;
+> +	case 7:
+> +	case 10:
+> +		p[3] = 1;
+> +		break;
+> +	case 8:
+> +		p[2] = p[3] = p[4] = 1;
+> +		break;
+> +	case 9:
+> +		p[4] = 1;
+> +		break;
+> +	case 12:
+> +		p[1] = p[4] = p[6] = 1;
+> +		break;
+> +	case 13:
+> +		p[1] = p[3] = p[4] = 1;
+> +		break;
+> +	case 14:
+> +		p[1] = p[6] = p[10] = 1;
+> +		break;
+> +	default:
+> +		/* Error */
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Build alpha ^ mm it will help to generate the field (primitiv) */
+> +	alpha_to[mm] = 0;
+> +	for (i = 0; i < mm; i++)
+> +		if (p[i])
+> +			alpha_to[mm] |= 1 << i;
+> +
+> +	/*
+> +	 * Then build elements from 0 to mm - 1. As degree is less than mm
+> +	 * so it is just a logical shift.
+> +	 */
+> +	mask = 1;
+> +	for (i = 0; i < mm; i++) {
+> +		alpha_to[i] = mask;
+> +		index_of[alpha_to[i]] = i;
+> +		mask <<= 1;
+> +	}
+> +
+> +	index_of[alpha_to[mm]] = mm;
+> +
+> +	/* use a mask to select the MSB bit of the LFSR */
+> +	mask >>= 1;
+> +
+> +	/* then finish the building */
+> +	for (i = mm + 1; i <= nn; i++) {
+> +		/* check if the msb bit of the lfsr is set */
+> +		if (alpha_to[i - 1] & mask)
+> +			alpha_to[i] = alpha_to[mm] ^
+> +				((alpha_to[i - 1] ^ mask) << 1);
+> +		else
+> +			alpha_to[i] = alpha_to[i - 1] << 1;
+> +
+> +		index_of[alpha_to[i]] = i % nn;
+> +	}
+> +
+> +	/* index of 0 is undefined in a multiplicative field */
+> +	index_of[0] = -1;
+> +
+> +	return 0;
+> +}
+> +
+> +static uint16_t *create_lookup_table(struct device *dev, int sector_size)
+> +{
+> +	int table_size = (sector_size == 512) ?
+> +			PMECC_LOOKUP_TABLE_SIZE_512 :
+> +			PMECC_LOOKUP_TABLE_SIZE_1024;
+> +	int degree = (sector_size == 512) ?
+> +			PMECC_GF_DIMENSION_13 :
+> +			PMECC_GF_DIMENSION_14;
+> +	uint16_t *addr = devm_kzalloc(dev, 2 * table_size * sizeof(uint16_t),
+> +			GFP_KERNEL);
+> +
+> +	if (addr)
+> +		pmecc_build_galois_table(degree, addr, addr + table_size);
+> +
+> +	return addr;
+> +}
+> +
+>   static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
+>   					 struct atmel_nand_host *host)
+>   {
+>   	struct mtd_info *mtd = &host->mtd;
+>   	struct nand_chip *nand_chip = &host->nand_chip;
+>   	struct resource *regs, *regs_pmerr, *regs_rom;
+> +	uint16_t *galois_table;
+>   	int cap, sector_size, err_no;
+>   
+>   	err_no = pmecc_choose_ecc(host, &cap, &sector_size);
+> @@ -1160,8 +1270,24 @@ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
+>   	regs_rom = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+>   	host->pmecc_rom_base = devm_ioremap_resource(&pdev->dev, regs_rom);
+>   	if (IS_ERR(host->pmecc_rom_base)) {
+> -		err_no = PTR_ERR(host->pmecc_rom_base);
+> -		goto err;
+> +		if (!host->has_no_lookup_table)
+> +			/* Don't display the information again */
+> +			dev_err(host->dev, "Can not get I/O resource for ROM, will build a lookup table in runtime!\n");
+> +
+> +		host->has_no_lookup_table = true;
+> +	}
+> +
+> +	if (host->has_no_lookup_table) {
+> +		/* Build the look-up table in runtime */
+> +		galois_table = create_lookup_table(host->dev, sector_size);
+> +		if (!galois_table) {
+> +			dev_err(host->dev, "Failed to build a lookup table in runtime!\n");
+> +			err_no = -ENOMEM;
+> +			goto err;
+> +		}
+> +
+> +		host->pmecc_rom_base = galois_table;
+> +		host->pmecc_lookup_table_offset = 0;
+>   	}
+>   
+>   	nand_chip->ecc.size = sector_size;
+> @@ -1498,8 +1624,10 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
+>   
+>   	if (of_property_read_u32_array(np, "atmel,pmecc-lookup-table-offset",
+>   			offset, 2) != 0) {
+> -		dev_err(host->dev, "Cannot get PMECC lookup table offset\n");
+> -		return -EINVAL;
+> +		dev_err(host->dev, "Cannot get PMECC lookup table offset, will build a lookup table in runtime.\n");
+> +		host->has_no_lookup_table = true;
+> +		/* Will build a lookup table and initialize the offset later */
+> +		return 0;
+>   	}
+>   	if (!offset[0] && !offset[1]) {
+>   		dev_err(host->dev, "Invalid PMECC lookup table offset\n");
 
-You must add the "chip" used here: like:
-<chip> compatible description:
-- sama5d4: first SoC adding the XDMAC
-
-> +- reg: Should contain DMA registers location and length.
-> +- interrupts: Should contain DMA interrupt.
-> +- #dma-cells: Must be <2>, used to represent the number of integer cells in
-> +the dmas property of client devices.
-> +  - The 1st cell specifies the memory interface (16 most significant bits) and
-> +  the peripheral interface (16 less significant bits) to use.
-> +  - The 2nd cell specifies the channel configuration register:
-> +    - bit 30-24: PERID, peripheral identifier.
-> +
-> +Example:
-> +
-> +dma1: dma-controller@f0004000 {
-> +	compatible = "atmel,sama5d4-dma";
-> +	reg = <0xf0004000 0x200>;
-> +	interrupts = <50 4 0>;
-> +	#dma-cells = <2>;
-> +};
-> +
-> +
-> +* DMA clients
-> +DMA clients connected to the Atmel XDMA controller must use the format
-> +described in the dma.txt file, using a two-cell specifier for each channel.
-> +The three cells in order are:
-> +1. A phandle pointing to the DMA controller.
-> +2. The memory interface (16 most significant bits), the peripheral interface
-> +(16 less significant bits).
-> +3. Channel configuration register. Configurable fields are:
-> +  - bit 30-24: PERID, peripheral identifier.
-> +
-> +Example:
-> +
-> +i2c2: i2c@f8024000 {
-> +	compatible = "atmel,at91sam9x5-i2c";
-> +	reg = <0xf8024000 0x4000>;
-> +	interrupts = <34 4 6>;
-> +	dmas = <&dma1
-> +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
-> +		AT91_XDMAC_DT_PERID(6)>,
-> +	       <&dma1
-> +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
-> +		AT91_XDMAC_DT_PERID(7)>;
-> +	dma-names = "tx", "rx";
-> +};
-> 
-
-Otherwise, you can add my:
-
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Thanks, bye,
--- 
-Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
