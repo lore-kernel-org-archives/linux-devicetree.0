@@ -1,48 +1,32 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V2 2/2] mfd: twl4030-power: use 'ti,system-power-controller' as alternative way to support system power off
-Date: Wed, 17 Sep 2014 07:34:12 -0500
-Message-ID: <1410957252-764-3-git-send-email-nm@ti.com>
-References: <1410957252-764-1-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410957252-764-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/2] regulator: get voltage & duty table from dts for st-pwm
+Date: Wed, 17 Sep 2014 21:07:58 +0800
+Message-ID: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ti,system-power-controller is more or less the standard way of
-indicating that the PMIC is the system wide power controller and hence
-may be used to switch off the system. Almost ALL TI PMIC drivers and
-many Maxim PMIC drivers follow the same style.
+get voltage & duty table from device tree might be better, other platforms can also use this
+driver without any modify.
+Tested on a rk3288 sdk board as logic voltage regulator.
 
-So support 'ti,system-power-controller' in addition to the usual
-'ti,use_poweroff' to indicate that the PMIC instance has control for
-switching off the system.
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
+Chris Zhong (2):
+  regulator: st-pwm: get voltage and duty table from dts
+  dt-bindings: add devicetree bindings for st-pwm regulator
 
-V2: no change, picked up Tony's ack.
-V1: https://patchwork.kernel.org/patch/4836371/
- drivers/mfd/twl4030-power.c |    3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/regulator/st-pwm.txt       |   35 +++++++++
+ drivers/regulator/Kconfig                          |    1 -
+ drivers/regulator/st-pwm.c                         |   80 ++++++++++----------
+ 3 files changed, 77 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/st-pwm.txt
 
-diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
-index 3bc969a..1c129ba 100644
---- a/drivers/mfd/twl4030-power.c
-+++ b/drivers/mfd/twl4030-power.c
-@@ -627,6 +627,9 @@ static bool twl4030_power_use_poweroff(const struct twl4030_power_data *pdata,
- 	if (pdata && pdata->use_poweroff)
- 		return true;
- 
-+	if (of_property_read_bool(node, "ti,system-power-controller"))
-+		return true;
-+
- 	if (of_property_read_bool(node, "ti,use_poweroff"))
- 		return true;
- 
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
