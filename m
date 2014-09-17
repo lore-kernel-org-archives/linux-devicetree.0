@@ -1,128 +1,46 @@
-From: Kiran Padwal <kiran.padwal@smartplayin.com>
-Subject: [PATCH v4] ARM: DT: apq8064: Add i2c device nodes
-Date: Wed, 17 Sep 2014 16:00:25 +0530
-Message-ID: <1410949825-7631-1-git-send-email-kiran.padwal@smartplayin.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, davidb@codeaurora.org, afaerber@suse.de
-Cc: linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Kiran Padwal <kiran.padwal@smartplayin.com>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on i.mx6dl
+Date: Wed, 17 Sep 2014 12:56:24 +0200
+Message-ID: <541968D8.2060609@ahsoftware.de>
+References: <1410327012-31185-1-git-send-email-b38343@freescale.com> <5416D26A.4080707@ahsoftware.de> <20140916035204.GB20800@Robin-OptiPlex-780> <541805E3.6080003@ahsoftware.de> <20140917085106.GB6369@Robin-OptiPlex-780>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140917085106.GB6369@Robin-OptiPlex-780>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fugang.duan-KZfg59tc24xl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds i2c pinctrl DT node for IFC6410 board.
-It also adds necessary DT support for i2c eeprom which is present on
-IFC6410.
+Am 17.09.2014 10:51, schrieb Robin Gong:
+> On Tue, Sep 16, 2014 at 11:41:55AM +0200, Alexander Holler wrote:
+>> Am 16.09.2014 05:52, schrieb Robin Gong:
+>>> On Mon, Sep 15, 2014 at 01:50:02PM +0200, Alexander Holler wrote:
+>>>> Am 10.09.2014 07:30, schrieb Robin Gong:
+>>>>> There is one weird data in rxfifo after one full rx/tx transfer
+>>>>> done sometimes. It looks a design issue and hard to workaround
+>>>>> totally, so disable dma functhion here. And will re-enable it
+>>>>> once the root cause found.
+>>>>
+>>>> Hmm, I experience problems with DMA too but on uart3. I'm using the same
+>>>> workaround for the uart (I've just commented out the dma entries in the DT).
+>>>> The problem manifests itself here such, that brcm_patchram_plus
+>>>> hangs while uploading the firmware to a BCM4330 connected at uart3
+>>>> (reproducible).
 
-Tested on IFC6410 board.
+(...)
 
-Signed-off-by: Kiran Padwal <kiran.padwal@smartplayin.com>
----
-Changes since v3:
- - Removed pinctrl DT node.
+> Yes, we just have fixed the BT issue over high speed UART last month. Suggest
+> you trying our patches based on v3.10.
 
-Changes since v2:
- - Renamed pinmux i2c subnode "i2c1_pinmux" to "i2c1".
- - Removed labes of node.
- - Used canonical value as "okay" instead of "ok".
- - Used macros.
+Thanks for the pointer. Will look if I will find these patches.
 
-Changes since v1:
- - Renamed pinmux phandle "qcom_pinmux" to "tlmm_pinmux".
- - Updated pinmux interrupt.
+Regards,
 
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |   27 ++++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi        |   42 ++++++++++++++++++++++++++++
- 2 files changed, 69 insertions(+)
+Alexander Holler
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 90db8af..3573cd7 100644
---- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -5,6 +5,33 @@
- 	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
- 
- 	soc {
-+		pinctrl@800000 {
-+			i2c1_pins: i2c1 {
-+				mux {
-+					pins = "gpio20", "gpio21";
-+					function = "gsbi1";
-+				};
-+			};
-+		};
-+
-+		gsbi@12440000 {
-+			status = "okay";
-+			qcom,mode = <GSBI_PROT_I2C>;
-+
-+			i2c@12460000 {
-+				status = "okay";
-+				clock-frequency = <200000>;
-+				pinctrl-0 = <&i2c1_pins>;
-+				pinctrl-names = "default";
-+
-+				eeprom: eeprom@52 {
-+					compatible = "atmel,24c128";
-+					reg = <0x52>;
-+					pagesize = <32>;
-+				};
-+			};
-+		};
-+
- 		gsbi@16600000 {
- 			status = "ok";
- 			qcom,mode = <GSBI_PROT_I2C_UART>;
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index b1e476a..fddaeb7 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -156,6 +156,48 @@
- 			regulator;
- 		};
- 
-+		gsbi1: gsbi@12440000 {
-+			status = "disabled";
-+			compatible = "qcom,gsbi-v1.0.0";
-+			reg = <0x12440000 0x100>;
-+			clocks = <&gcc GSBI1_H_CLK>;
-+			clock-names = "iface";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			i2c1: i2c@12460000 {
-+				compatible = "qcom,i2c-qup-v1.1.1";
-+				reg = <0x12460000 0x1000>;
-+				interrupts = <0 194 IRQ_TYPE_NONE>;
-+				clocks = <&gcc GSBI1_QUP_CLK>, <&gcc GSBI1_H_CLK>;
-+				clock-names = "core", "iface";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
-+		gsbi2: gsbi@12480000 {
-+			status = "disabled";
-+			compatible = "qcom,gsbi-v1.0.0";
-+			reg = <0x12480000 0x100>;
-+			clocks = <&gcc GSBI2_H_CLK>;
-+			clock-names = "iface";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			i2c2: i2c@124a0000 {
-+				compatible = "qcom,i2c-qup-v1.1.1";
-+				reg = <0x124a0000 0x1000>;
-+				interrupts = <0 196 IRQ_TYPE_NONE>;
-+				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
-+				clock-names = "core", "iface";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
- 		gsbi7: gsbi@16600000 {
- 			status = "disabled";
- 			compatible = "qcom,gsbi-v1.0.0";
--- 
-1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
