@@ -1,171 +1,97 @@
-From: Weike Chen <alvin.chen@intel.com>
-Subject: [PATCH 4/4 v5] GPIO: gpio-dwapb: Suspend & Resume PM enabling
-Date: Wed, 17 Sep 2014 09:18:42 -0700
-Message-ID: <1410970722-8579-5-git-send-email-alvin.chen@intel.com>
-References: <1410970722-8579-1-git-send-email-alvin.chen@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410970722-8579-1-git-send-email-alvin.chen@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alvin Chen <alvin.chen@intel.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] ARM: dts: at_xdmac: add bindings documentation
+Date: Wed, 17 Sep 2014 10:30:34 +0200
+Message-ID: <541946AA.6070407@atmel.com>
+References: <1410792622-22621-1-git-send-email-ludovic.desroches@atmel.com> <1410792622-22621-3-git-send-email-ludovic.desroches@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410792622-22621-3-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables suspend and resume mode for the power management, and
-it is based on Josef Ahmad's previous work.
+On 15/09/2014 16:50, Ludovic Desroches :
+> Add bindings documentation for the new Atmel DMA controller (XDMAC)
+> introduced with SAMA5D4.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/dma/atmel-xdma.txt         | 48 ++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/atmel-xdma.txt b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> new file mode 100644
+> index 0000000..647f099
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/atmel-xdma.txt
+> @@ -0,0 +1,48 @@
+> +* Atmel Extensible Direct Memory Access Controller (XDMAC)
+> +
+> +* XDMA Controller
+> +Required properties:
+> +- compatible: Should be "atmel,<chip>-dma".
 
-Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
-Signed-off-by: Weike Chen <alvin.chen@intel.com>
----
- drivers/gpio/gpio-dwapb.c |  115 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 115 insertions(+)
+You must add the "chip" used here: like:
+<chip> compatible description:
+- sama5d4: first SoC adding the XDMAC
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index db059bb..7feaf9d 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -51,10 +51,28 @@
- 
- struct dwapb_gpio;
- 
-+#ifdef CONFIG_PM_SLEEP
-+/* Store GPIO context across system-wide suspend/resume transitions */
-+struct dwapb_context {
-+	u32 data;
-+	u32 dir;
-+	u32 ext;
-+	u32 int_en;
-+	u32 int_mask;
-+	u32 int_type;
-+	u32 int_pol;
-+	u32 int_deb;
-+};
-+#endif
-+
- struct dwapb_gpio_port {
- 	struct bgpio_chip	bgc;
- 	bool			is_registered;
- 	struct dwapb_gpio	*gpio;
-+#ifdef CONFIG_PM_SLEEP
-+	struct dwapb_context	*ctx;
-+#endif
-+	unsigned int		idx;
- };
- 
- struct dwapb_gpio {
-@@ -381,6 +399,13 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 
- 	port = &gpio->ports[offs];
- 	port->gpio = gpio;
-+	port->idx = pp->idx;
-+
-+#ifdef CONFIG_PM_SLEEP
-+	port->ctx = devm_kzalloc(gpio->dev, sizeof(*port->ctx), GFP_KERNEL);
-+	if (!port->ctx)
-+		return -ENOMEM;
-+#endif
- 
- 	dat = gpio->regs + GPIO_EXT_PORTA + (pp->idx * GPIO_EXT_PORT_SIZE);
- 	set = gpio->regs + GPIO_SWPORTA_DR + (pp->idx * GPIO_SWPORT_DR_SIZE);
-@@ -586,10 +611,100 @@ static const struct of_device_id dwapb_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, dwapb_of_match);
- 
-+#ifdef CONFIG_PM_SLEEP
-+static int dwapb_gpio_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
-+	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-+	unsigned long flags;
-+	int i;
-+
-+	spin_lock_irqsave(&bgc->lock, flags);
-+	for (i = 0; i < gpio->nr_ports; i++) {
-+		unsigned int offset;
-+		unsigned int idx = gpio->ports[i].idx;
-+		struct dwapb_context *ctx = gpio->ports[i].ctx;
-+
-+		BUG_ON(ctx == 0);
-+
-+		offset = GPIO_SWPORTA_DDR + idx * GPIO_SWPORT_DDR_SIZE;
-+		ctx->dir = dwapb_read(gpio, offset);
-+
-+		offset = GPIO_SWPORTA_DR + idx * GPIO_SWPORT_DR_SIZE;
-+		ctx->data = dwapb_read(gpio, offset);
-+
-+		offset = GPIO_EXT_PORTA + idx * GPIO_EXT_PORT_SIZE;
-+		ctx->ext = dwapb_read(gpio, offset);
-+
-+		/* Only port A can provide interrupts */
-+		if (idx == 0) {
-+			ctx->int_mask	= dwapb_read(gpio, GPIO_INTMASK);
-+			ctx->int_en	= dwapb_read(gpio, GPIO_INTEN);
-+			ctx->int_pol	= dwapb_read(gpio, GPIO_INT_POLARITY);
-+			ctx->int_type	= dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
-+			ctx->int_deb	= dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
-+
-+			/* Mask out interrupts */
-+			dwapb_write(gpio, GPIO_INTMASK, 0xffffffff);
-+		}
-+	}
-+	spin_unlock_irqrestore(&bgc->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int dwapb_gpio_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
-+	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
-+	unsigned long flags;
-+	int i;
-+
-+	spin_lock_irqsave(&bgc->lock, flags);
-+	for (i = 0; i < gpio->nr_ports; i++) {
-+		unsigned int offset;
-+		unsigned int idx = gpio->ports[i].idx;
-+		struct dwapb_context *ctx = gpio->ports[i].ctx;
-+
-+		BUG_ON(ctx == 0);
-+
-+		offset = GPIO_SWPORTA_DR + idx * GPIO_SWPORT_DR_SIZE;
-+		dwapb_write(gpio, offset, ctx->data);
-+
-+		offset = GPIO_SWPORTA_DDR + idx * GPIO_SWPORT_DDR_SIZE;
-+		dwapb_write(gpio, offset, ctx->dir);
-+
-+		offset = GPIO_EXT_PORTA + idx * GPIO_EXT_PORT_SIZE;
-+		dwapb_write(gpio, offset, ctx->ext);
-+
-+		/* Only port A can provide interrupts */
-+		if (idx == 0) {
-+			dwapb_write(gpio, GPIO_INTTYPE_LEVEL, ctx->int_type);
-+			dwapb_write(gpio, GPIO_INT_POLARITY, ctx->int_pol);
-+			dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, ctx->int_deb);
-+			dwapb_write(gpio, GPIO_INTEN, ctx->int_en);
-+			dwapb_write(gpio, GPIO_INTMASK, ctx->int_mask);
-+
-+			/* Clear out spurious interrupts */
-+			dwapb_write(gpio, GPIO_PORTA_EOI, 0xffffffff);
-+		}
-+	}
-+	spin_unlock_irqrestore(&bgc->lock, flags);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
-+			 dwapb_gpio_resume);
-+
- static struct platform_driver dwapb_gpio_driver = {
- 	.driver		= {
- 		.name	= "gpio-dwapb",
- 		.owner	= THIS_MODULE,
-+		.pm	= &dwapb_gpio_pm_ops,
- 		.of_match_table = of_match_ptr(dwapb_of_match),
- 	},
- 	.probe		= dwapb_gpio_probe,
+> +- reg: Should contain DMA registers location and length.
+> +- interrupts: Should contain DMA interrupt.
+> +- #dma-cells: Must be <2>, used to represent the number of integer cells in
+> +the dmas property of client devices.
+> +  - The 1st cell specifies the memory interface (16 most significant bits) and
+> +  the peripheral interface (16 less significant bits) to use.
+> +  - The 2nd cell specifies the channel configuration register:
+> +    - bit 30-24: PERID, peripheral identifier.
+> +
+> +Example:
+> +
+> +dma1: dma-controller@f0004000 {
+> +	compatible = "atmel,sama5d4-dma";
+> +	reg = <0xf0004000 0x200>;
+> +	interrupts = <50 4 0>;
+> +	#dma-cells = <2>;
+> +};
+> +
+> +
+> +* DMA clients
+> +DMA clients connected to the Atmel XDMA controller must use the format
+> +described in the dma.txt file, using a two-cell specifier for each channel.
+> +The three cells in order are:
+> +1. A phandle pointing to the DMA controller.
+> +2. The memory interface (16 most significant bits), the peripheral interface
+> +(16 less significant bits).
+> +3. Channel configuration register. Configurable fields are:
+> +  - bit 30-24: PERID, peripheral identifier.
+> +
+> +Example:
+> +
+> +i2c2: i2c@f8024000 {
+> +	compatible = "atmel,at91sam9x5-i2c";
+> +	reg = <0xf8024000 0x4000>;
+> +	interrupts = <34 4 6>;
+> +	dmas = <&dma1
+> +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> +		AT91_XDMAC_DT_PERID(6)>,
+> +	       <&dma1
+> +		(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1))
+> +		AT91_XDMAC_DT_PERID(7)>;
+> +	dma-names = "tx", "rx";
+> +};
+> 
+
+Otherwise, you can add my:
+
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Thanks, bye,
 -- 
-1.7.9.5
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
