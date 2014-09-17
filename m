@@ -1,7 +1,7 @@
 From: Joe.C <srv_yingjoe.chen@mediatek.com>
-Subject: [PATCH v2 1/7] arm: MTK: Add basic support for mt8127
-Date: Wed, 17 Sep 2014 22:24:08 +0800
-Message-ID: <1410963854-17154-2-git-send-email-srv_yingjoe.chen@mediatek.com>
+Subject: [PATCH v2 3/7] arm: MTK: Add basic support for mt8135
+Date: Wed, 17 Sep 2014 22:24:10 +0800
+Message-ID: <1410963854-17154-4-git-send-email-srv_yingjoe.chen@mediatek.com>
 References: <1410963854-17154-1-git-send-email-srv_yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,21 +23,21 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Joe.C" <yingjoe.chen@mediatek.com>
 
-This adds a basic dtsi for MT8127 SoC.
+This adds a basic dtsi for MT8135 based SoC.
 
 Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
 ---
- arch/arm/boot/dts/mt8127.dtsi     | 93 +++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-mediatek/mediatek.c |  1 +
- 2 files changed, 94 insertions(+)
- create mode 100644 arch/arm/boot/dts/mt8127.dtsi
+ arch/arm/boot/dts/mt8135.dtsi     | 115 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-mediatek/mediatek.c |   1 +
+ 2 files changed, 116 insertions(+)
+ create mode 100644 arch/arm/boot/dts/mt8135.dtsi
 
-diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
+diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
 new file mode 100644
-index 0000000..25c9f69
+index 0000000..90a56ad
 --- /dev/null
-+++ b/arch/arm/boot/dts/mt8127.dtsi
-@@ -0,0 +1,93 @@
++++ b/arch/arm/boot/dts/mt8135.dtsi
+@@ -0,0 +1,115 @@
 +/*
 + * Copyright (c) 2014 MediaTek Inc.
 + * Author: Joe.C <yingjoe.chen@mediatek.com>
@@ -57,34 +57,56 @@ index 0000000..25c9f69
 +#include "skeleton64.dtsi"
 +
 +/ {
-+	compatible = "mediatek,mt8127";
++	compatible = "mediatek,mt8135";
 +	interrupt-parent = <&gic>;
++
++	cpu-map {
++		cluster0 {
++			core0 {
++				cpu = <&cpu0>;
++			};
++			core1 {
++				cpu = <&cpu1>;
++			};
++		};
++
++		cluster1 {
++			core0 {
++				cpu = <&cpu2>;
++			};
++			core1 {
++				cpu = <&cpu3>;
++			};
++		};
++	};
 +
 +	cpus {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		cpu@0 {
++		cpu0: cpu@0 {
 +			device_type = "cpu";
 +			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+		};
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x2>;
-+		};
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x3>;
++			reg = <0x000>;
 +		};
 +
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x001>;
++		};
++
++		cpu2: cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <0x100>;
++		};
++
++		cpu3: cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <0x101>;
++		};
 +	};
 +
 +	clocks {
@@ -113,15 +135,15 @@ index 0000000..25c9f69
 +		ranges;
 +
 +		timer: timer@10008000 {
-+			compatible = "mediatek,mt8127-timer", "mediatek,mt6577-timer";
++			compatible = "mediatek,mt8135-timer", "mediatek,mt6577-timer";
 +			reg = <0 0x10008000 0 0x80>;
-+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
 +			clocks = <&system_clk>, <&rtc_clk>;
 +			clock-names = "system-clk", "rtc-clk";
 +		};
 +
 +		gic: interrupt-controller@10211000 {
-+			compatible = "arm,cortex-a7-gic";
++			compatible = "arm,cortex-a15-gic";
 +			interrupt-controller;
 +			#interrupt-cells = <3>;
 +			reg = <0 0x10211000 0 0x1000>,
@@ -132,14 +154,14 @@ index 0000000..25c9f69
 +	};
 +};
 diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-index f2acf07..7f478ce 100644
+index 7f478ce..48051a2 100644
 --- a/arch/arm/mach-mediatek/mediatek.c
 +++ b/arch/arm/mach-mediatek/mediatek.c
-@@ -19,6 +19,7 @@
- 
+@@ -20,6 +20,7 @@
  static const char * const mediatek_board_dt_compat[] = {
  	"mediatek,mt6589",
-+	"mediatek,mt8127",
+ 	"mediatek,mt8127",
++	"mediatek,mt8135",
  	NULL,
  };
  
