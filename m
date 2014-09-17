@@ -1,96 +1,65 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA7: Add PMU nodes
-Date: Wed, 17 Sep 2014 09:25:03 -0500
-Message-ID: <20140917142503.GA11856@kahuna>
-References: <1408456440-30171-1-git-send-email-nm@ti.com>
- <540719FC.5070803@ti.com>
+From: Joe.C <srv_yingjoe.chen@mediatek.com>
+Subject: [PATCH v2 2/7] arm: mediatek: add dts for 8127 Moose board
+Date: Wed, 17 Sep 2014 22:24:09 +0800
+Message-ID: <1410963854-17154-3-git-send-email-srv_yingjoe.chen@mediatek.com>
+References: <1410963854-17154-1-git-send-email-srv_yingjoe.chen@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <540719FC.5070803-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1410963854-17154-1-git-send-email-srv_yingjoe.chen@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Anders Berg <anders.berg@lsi.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, hc.yen@mediatek.com, Linus Walleij <linus.walleij@linaro.org>, yh.chen@mediatek.com, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, nathan.chung@mediatek.com, Kumar Gala <galak@codeaurora.org>, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08:39-20140903, Nishanth Menon wrote:
-> On 08/19/2014 08:54 AM, Nishanth Menon wrote:
-> > From: Lucas Weaver <l-weaver-l0cyMroinI0@public.gmane.org>
-> > 
-> > DRA74x and DRA72x family of processors vary slightly in the number
-> > of CPUs. So, add different instances of PMU for each of these processor
-> > groups. Further, since the interrupts bypass crossbar and are directly
-> > connected to GIC, mark the dts nodes with relevant information.
-> > 
-> > Tested with perf utility.
-> > 
-> > Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > Signed-off-by: Lucas Weaver <l-weaver-l0cyMroinI0@public.gmane.org>
-> > Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> > ---
-> Hi,
-> Gentle ping..
+From: "Joe.C" <yingjoe.chen@mediatek.com>
 
-Tony,
-I dont see this patch in omap-for-v3.18/dt
+Moose is a tablet evalutation board based on MT8127 SoC.
 
-Is there anyway you might consider pulling this for 3.18?
+Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
+---
+ arch/arm/boot/dts/mt8127-moose.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 arch/arm/boot/dts/mt8127-moose.dts
 
-Patchworks link:
-https://patchwork.kernel.org/patch/4743121/
-
-> 
-> Regards,
-> Nishanth Menon
-> >  arch/arm/boot/dts/dra72x.dtsi |    5 +++++
-> >  arch/arm/boot/dts/dra74x.dtsi |    6 ++++++
-> >  2 files changed, 11 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
-> > index f1ec22f..e5a3d23 100644
-> > --- a/arch/arm/boot/dts/dra72x.dtsi
-> > +++ b/arch/arm/boot/dts/dra72x.dtsi
-> > @@ -22,4 +22,9 @@
-> >  			reg = <0>;
-> >  		};
-> >  	};
-> > +
-> > +	pmu {
-> > +		compatible = "arm,cortex-a15-pmu";
-> > +		interrupts = <GIC_SPI DIRECT_IRQ(131) IRQ_TYPE_LEVEL_HIGH>;
-> > +	};
-> >  };
-> > diff --git a/arch/arm/boot/dts/dra74x.dtsi b/arch/arm/boot/dts/dra74x.dtsi
-> > index a4e8bb9..3be544c 100644
-> > --- a/arch/arm/boot/dts/dra74x.dtsi
-> > +++ b/arch/arm/boot/dts/dra74x.dtsi
-> > @@ -38,4 +38,10 @@
-> >  			reg = <1>;
-> >  		};
-> >  	};
-> > +
-> > +	pmu {
-> > +		compatible = "arm,cortex-a15-pmu";
-> > +		interrupts = <GIC_SPI DIRECT_IRQ(131) IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI DIRECT_IRQ(132) IRQ_TYPE_LEVEL_HIGH>;
-> > +	};
-> >  };
-> > 
-> 
-> 
-> -- 
-> Regards,
-> Nishanth Menon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
+diff --git a/arch/arm/boot/dts/mt8127-moose.dts b/arch/arm/boot/dts/mt8127-moose.dts
+new file mode 100644
+index 0000000..715e23c
+--- /dev/null
++++ b/arch/arm/boot/dts/mt8127-moose.dts
+@@ -0,0 +1,24 @@
++/*
++ * Copyright (c) 2014 MediaTek Inc.
++ * Author: Joe.C <yingjoe.chen@mediatek.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++#include "mt8127.dtsi"
++
++/ {
++	model = "mt8127-moose";
++
++	memory {
++		reg = <0 0x80000000 0 0x40000000>;
++	};
++};
 -- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.1.dirty
