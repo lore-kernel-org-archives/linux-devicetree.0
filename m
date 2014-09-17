@@ -1,52 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
- binding
-Date: Wed, 17 Sep 2014 11:36:00 -0700
-Message-ID: <20140917183600.GT7960@sirena.org.uk>
-References: <1409029109-28769-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1409029109-28769-2-git-send-email-bjorn.andersson@sonymobile.com>
- <20140826072727.GB9574@lee--X1>
- <20140917161554.GJ30918@lee--X1>
- <20140917181939.GG10179@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qAWpXEdoCCy57CK7"
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH] ARM: DT: ifc6410: Add board memory range.
+Date: Wed, 17 Sep 2014 12:03:37 -0700
+Message-ID: <FA9D8682-DB0E-48CF-A519-86A0465300E1@codeaurora.org>
+References: <1410932179-4652-1-git-send-email-srinivas.kandagatla@linaro.org> <54192B64.6070604@smartplayin.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140917181939.GG10179@sonymobile.com>
+In-Reply-To: <54192B64.6070604@smartplayin.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+To: Pramod Gurav <pramod.gurav@smartplayin.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---qAWpXEdoCCy57CK7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Sep 16, 2014, at 11:34 PM, Pramod Gurav <pramod.gurav@smartplayin.co=
+m> wrote:
 
-On Wed, Sep 17, 2014 at 11:19:40AM -0700, Bjorn Andersson wrote:
+> Hi Srini,
+>=20
+> Thanks for the patch.
+> Tested-by: Pramod Gurav <pramod.gurav@smartplayin.com>
+>=20
+> A minor nit.
+> On Wednesday 17 September 2014 11:06 AM, Srinivas Kandagatla wrote:
+>> This patch adds memory details of IFC6410 as this is necessary to
+>> fix the in-correct memory start comming from ATAGs.
+>>=20
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>> arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 5 +++++
+>> 1 file changed, 5 insertions(+)
+>>=20
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/b=
+oot/dts/qcom-apq8064-ifc6410.dts
+>> index 90db8af..3287f12 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>> @@ -4,6 +4,11 @@
+>> 	model =3D "Qualcomm APQ8064/IFC6410";
+>> 	compatible =3D "qcom,apq8064-ifc6410", "qcom,apq8064";
+>>=20
+>> +	memory{
+> Space before {?
+>> +		device_type =3D "memory";
+>> +		reg =3D <0x80000000 0x80000000>;
+>> +	};
+>> +
+>> 	soc {
+>> 		gsbi@16600000 {
+>> 			status =3D "ok=94;
 
-> The regulator driver have a strong dependency on the mfd driver, but Kconfig
-> will make sure it's not selectable until the two parts merges again, so it
-> should be fine. But I guess it's up to Mark?
+Hmm, this doesn=92t seem to work for me.
 
-Yes, that's the normal approach.  I'd have applied it but a lot of the
-early discussion seemed to be about the register I/O interface.
+- k
 
---qAWpXEdoCCy57CK7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUGdSPAAoJECTWi3JdVIfQrs8H/jAAOz2hwR9v9oCGfy6P1N8h
-zSNLAamZTQFrAo7km54+1kAxmhLQBpEeUNra6z/WYCuv9G6FkGSbIS74YDRx+jRV
-Sm1O2vr8ejFm0ERCosivnlicmA1x76b6/Kd2rsbmPVGOn+WcmqPCmKKbZHWwTRtl
-Fd6/08r1bd25S89Tz9QlAfEoEicqAz1UIXVs9LxAaw9Tnh+9/eGzdLk8nhczYJiA
-ciw9uP0DEvbQks4gkg+yFWFLlSFkyY6WJDI8yGXeHJ9oPnUFX6C3dH2kF3L14Rav
-p1YNwG99C+yEOuLPFq4hPIJFmQr904xO2lVKwu5MDN0jp3bcdoKe4QTy4S0h4Ss=
-=U6zP
------END PGP SIGNATURE-----
-
---qAWpXEdoCCy57CK7--
+--=20
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
