@@ -1,48 +1,37 @@
-From: Pramod Gurav <pramod.gurav@smartplayin.com>
-Subject: Re: [PATCH] ARM: DT: ifc6410: Add board memory range.
-Date: Wed, 17 Sep 2014 12:04:12 +0530
-Message-ID: <54192B64.6070604@smartplayin.com>
-References: <1410932179-4652-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: "Chen, Alvin" <alvin.chen@intel.com>
+Subject: RE: [PATCH 4/4 v4] GPIO: gpio-dwapb: Suspend & Resume PM enabling
+Date: Wed, 17 Sep 2014 06:46:11 +0000
+Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E99253F@SHSMSX101.ccr.corp.intel.com>
+References: <1410859335-11080-1-git-send-email-alvin.chen@intel.com>
+	 <1410859335-11080-5-git-send-email-alvin.chen@intel.com>
+ <1410852405.7023.48.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1410932179-4652-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1410852405.7023.48.camel@linux.intel.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srini,
-
-Thanks for the patch.
-Tested-by: Pramod Gurav <pramod.gurav@smartplayin.com>
-
-A minor nit.
-On Wednesday 17 September 2014 11:06 AM, Srinivas Kandagatla wrote:
-> This patch adds memory details of IFC6410 as this is necessary to
-> fix the in-correct memory start comming from ATAGs.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> index 90db8af..3287f12 100644
-> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-> @@ -4,6 +4,11 @@
->  	model = "Qualcomm APQ8064/IFC6410";
->  	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
->  
-> +	memory{
-Space before {?
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x80000000>;
-> +	};
-> +
->  	soc {
->  		gsbi@16600000 {
->  			status = "ok";
-> 
+PiANCj4gPiBSZXZpZXdlZC1ieTogSG9jayBMZW9uZyBLd2VoIDxob2NrLmxlb25nLmt3ZWhAaW50
+ZWwuY29tPg0KPiANCj4gWW91IHN0aWxsIGtlZXAgdGhhdCBndXkgYXMgcmV2aWV3ZXIgaW4gYSB3
+aG9sZSBzZXJpZXMsIGhvd2V2ZXIgSSBkaWRuJ3Qgc2VlIGENCj4gd29yZCBmcm9tIGhpbSBoZXJl
+LiBIb3cgaXMgaXQgcG9zc2libGU/DQpJbiBvdXIgaW50ZXJuYWwgcmV2aWV3LCBoZSBnYXZlIG1l
+IGEgbG90IG9mIHN1Z2dlc3Rpb25zLiANCg0KPiA+ICsJZm9yIChpID0gMDsgaSA8IGdwaW8tPm5y
+X3BvcnRzOyBpKyspIHsNCj4gPiArCQl1bnNpZ25lZCBpbnQgb2Zmc2V0Ow0KPiA+ICsJCXVuc2ln
+bmVkIGludCBpZHggPSBncGlvLT5wb3J0c1tpXS5pZHg7DQo+ID4gKwkJc3RydWN0IGR3YXBiX2Nv
+bnRleHQgKmN0eCA9IGdwaW8tPnBvcnRzW2ldLmN0eDsNCj4gPiArDQo+ID4gKwkJaWYgKCFjdHgp
+IHsNCj4gPiArCQkJY3R4ID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpjdHgpLCBHRlBfS0VS
+TkVMKTsNCj4gPiArCQkJZ3Bpby0+cG9ydHNbaV0uY3R4ID0gY3R4Ow0KPiA+ICsJCX0NCj4gDQo+
+IEkgZG9uJ3QgdGhpbmsgaXQncyBhIHJpZ2h0IHBsYWNlIHRvIGFsbG9jYXRlIHRoaXMgcmVzb3Vy
+Y2UsIGVzcGVjaWFsbHkgd2l0aCBkZXZtXw0KPiBoZWxwZXIuIENhbiB5b3UgbW92ZSB0aGlzIHRv
+IHByb2JlKCkgc3RhZ2U/DQo+IA0KPiBPciB5b3UgZXZlbiBjYW4gZW1iZWQgY29udGV4IHN0cnVj
+dHVyZSBpbnNpZGUgY2hpcCBvbmUgd2l0aCAjaWZkZWYNCj4gQ09ORklHX1BNX1NMRUVQLg0KPiAN
+Cg0KT0ssIEkgd2lsbCBpbXByb3ZlIGl0Lg0KDQo+IE1heWJlIG90aGVycyBjb3VsZCBjb21tZW50
+IG9uIHRoaXMuDQo+IA0KPiA+ICsNCj4gPiArCQlvZmZzZXQgPSBHUElPX1NXUE9SVEFfRERSICsg
+KGlkeCAqIEdQSU9fU1dQT1JUX0REUl9TSVpFKTsNCj4gDQo+IE5vIG5lZWQgdG8gaGF2ZSBwYXJl
+bnRoZXNlcyBoZXJlLiBDaGVjayB0aGUgY29kZSBiZWxvdyBhcyB3ZWxsLg0KT0suIEkgd2lsbCBy
+ZW1vdmUgdGhlbS4NCg==
