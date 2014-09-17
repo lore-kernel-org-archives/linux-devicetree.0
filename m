@@ -1,34 +1,96 @@
-From: Mikko Perttunen <mikko.perttunen@kapsi.fi>
-Subject: Re: [PATCH v3 0/9] Tegra xHCI support
-Date: Wed, 17 Sep 2014 16:45:19 +0300
-Message-ID: <5419906F.1060605@kapsi.fi>
-References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>	<CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>	<CAL1qeaF7U9aoBp5gQPS=r+pe6krKmXdP1qak2gjhNqQMoHFB8A@mail.gmail.com>	<CAAObsKAXO-pBtqd1jNj8faXqpE+5Wb0RFzPp+jn9FH0B=dHq8g@mail.gmail.com>	<CAL1qeaEk_r5XAKvvJfwXN9+Wi9EjC_2MgBfoP92TK=F+Ou9QTA@mail.gmail.com>	<CAAObsKAwgfx1g2p7PQP+=HudvAHHpcPi47gEH6BrxEgLu6w2VQ@mail.gmail.com>	<CAL1qeaEC9O8-jgjGC44cFctoZPpp4dRVfQ=mhSb_2on7GgiU0w@mail.gmail.com>	<54172B3F.9030901@wwwdotorg.org>	<CAL1qeaEK=C4j+G5CA_91xJNe25d=-y47EyZAYnaMh46fNYVDAw@mail.gmail.com>	<54185698.7020600@wwwdotorg.org> <CAL1qeaGf6JSuq=ekZY7Pp2zSAB0+0S9fZ70xWpct2MJ=pTSmug@mail.gmail.com> <5418BC5C.5020108@wwwdotorg.org>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: DRA7: Add PMU nodes
+Date: Wed, 17 Sep 2014 09:25:03 -0500
+Message-ID: <20140917142503.GA11856@kahuna>
+References: <1408456440-30171-1-git-send-email-nm@ti.com>
+ <540719FC.5070803@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5418BC5C.5020108@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Andrew Bresticker <abrestic@chromium.org>
-Cc: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.in>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <540719FC.5070803-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2014 01:40 AM, Stephen Warren wrote:
-> That's a huge time-sink, unless I work out NFS root,
-> which probably isn't properly or easily supported by any distro.
+On 08:39-20140903, Nishanth Menon wrote:
+> On 08/19/2014 08:54 AM, Nishanth Menon wrote:
+> > From: Lucas Weaver <l-weaver-l0cyMroinI0@public.gmane.org>
+> > 
+> > DRA74x and DRA72x family of processors vary slightly in the number
+> > of CPUs. So, add different instances of PMU for each of these processor
+> > groups. Further, since the interrupts bypass crossbar and are directly
+> > connected to GIC, mark the dts nodes with relevant information.
+> > 
+> > Tested with perf utility.
+> > 
+> > Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > Signed-off-by: Lucas Weaver <l-weaver-l0cyMroinI0@public.gmane.org>
+> > Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> > ---
+> Hi,
+> Gentle ping..
 
-FWIW, this is how I've been working, and it hasn't been /that/ difficult 
-to get working. The Tegra side is trivial, just append something like
+Tony,
+I dont see this patch in omap-for-v3.18/dt
 
-ip=dhcp root=/dev/nfs 
-nfsroot=host_ip:/your/nfsroot,v3,rsize=8192,wsize=8192,timeo=15
+Is there anyway you might consider pulling this for 3.18?
 
-(Granted, I had to do a bit of mucking around before finding this 
-working incantation..)
+Patchworks link:
+https://patchwork.kernel.org/patch/4743121/
 
-to the kernel boot arguments. I've used Ubuntu 12.04, 13.10 and Arch 
-Linux on my Jetson in this way. The more annoying part is the nfs host 
-machine, but there are guides for that. Anyway, I've had both Ubuntu 
-12.04 and Arch working as hosts without problems.
+> 
+> Regards,
+> Nishanth Menon
+> >  arch/arm/boot/dts/dra72x.dtsi |    5 +++++
+> >  arch/arm/boot/dts/dra74x.dtsi |    6 ++++++
+> >  2 files changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/dra72x.dtsi b/arch/arm/boot/dts/dra72x.dtsi
+> > index f1ec22f..e5a3d23 100644
+> > --- a/arch/arm/boot/dts/dra72x.dtsi
+> > +++ b/arch/arm/boot/dts/dra72x.dtsi
+> > @@ -22,4 +22,9 @@
+> >  			reg = <0>;
+> >  		};
+> >  	};
+> > +
+> > +	pmu {
+> > +		compatible = "arm,cortex-a15-pmu";
+> > +		interrupts = <GIC_SPI DIRECT_IRQ(131) IRQ_TYPE_LEVEL_HIGH>;
+> > +	};
+> >  };
+> > diff --git a/arch/arm/boot/dts/dra74x.dtsi b/arch/arm/boot/dts/dra74x.dtsi
+> > index a4e8bb9..3be544c 100644
+> > --- a/arch/arm/boot/dts/dra74x.dtsi
+> > +++ b/arch/arm/boot/dts/dra74x.dtsi
+> > @@ -38,4 +38,10 @@
+> >  			reg = <1>;
+> >  		};
+> >  	};
+> > +
+> > +	pmu {
+> > +		compatible = "arm,cortex-a15-pmu";
+> > +		interrupts = <GIC_SPI DIRECT_IRQ(131) IRQ_TYPE_LEVEL_HIGH>,
+> > +			     <GIC_SPI DIRECT_IRQ(132) IRQ_TYPE_LEVEL_HIGH>;
+> > +	};
+> >  };
+> > 
+> 
+> 
+> -- 
+> Regards,
+> Nishanth Menon
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Mikko
+-- 
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
