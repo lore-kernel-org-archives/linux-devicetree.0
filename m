@@ -1,57 +1,74 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v3 0/5] Beaglebone-Black HDMI audio
-Date: Wed, 17 Sep 2014 10:51:26 +0300
-Message-ID: <54193D7E.5050900@ti.com>
-References: <cover.1410898073.git.jsarha@ti.com> <CAPM=9txRReSdcB5j+0dKmrDNM94zANu-q7ZfWHtP2iA54Dieig@mail.gmail.com>
+From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: imx6: add pm_power_off support for
+ i.mx6 chips
+Date: Wed, 17 Sep 2014 16:16:22 +0800
+Message-ID: <20140917081609.GA6274@Robin-OptiPlex-780>
+References: <1410511739-31122-1-git-send-email-b38343@freescale.com>
+ <1410511739-31122-2-git-send-email-b38343@freescale.com>
+ <20140917021044.GD4796@dragon> <20140917034514.GF27452@Robin-OptiPlex-780>
+ <20140917060649.GJ4992@pengutronix.de>
+ <20140917071736.GA5545@Robin-OptiPlex-780>
+ <20140917072437.GP4992@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPM=9txRReSdcB5j+0dKmrDNM94zANu-q7ZfWHtP2iA54Dieig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140917072437.GP4992-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, peter.ujfalusi-l0cyMroinI0@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, t-kristo-l0cyMroinI0@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "tomi >> Valkeinen, Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2014 04:06 AM, Dave Airlie wrote:
-> On 17 September 2014 06:40, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
->> Changes since v2:
->> - Change compatible property from "ti,gpio-clock" to "ti,gpio-gate-clock"
->> - Some minor cleanups
->>
->> The code has a functional dependency to:
->> http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg109264.html
->>
->> Without the above patch the audio card does not probe.
->>
->> The code has been rebased on top of Linux 3.17-rc5. The patches
->> bellow, the above dependency, and couple of commits to add BBB HDMI audio
->> support to omap2plus_defconfig can be pulled from:
->>
->> https://github.com/jsarha/linux.git linux-master-bbb-hdmi-audio
->
-> How do you intend to get this merge, sending patchsets like this without
-> indication to maintainers on a merge strategy is kinda messy.
->
-> I'm not sure how maintained tilcdc is.
->
-
-Well, it is used but AFAIK the people who have been working with it the 
-most have left TI. I think eventually someone at TI needs to take it 
-over, but I do not know anything about that.
-
-I was hoping that because the change to tilcdc is quite minimal it could 
-go in via you. I am sure I could get a reviewed-by and tested-by from 
-from Darren how has bit more experience with tilcdc and maybe from Tomi 
-too if that helps. (Adding Tomi to cc).
-
-The "drm/tilcdc: Add I2S HDMI audio config for tda998x"-patch itself 
-just adds the audio configuration to pda998x pdata and fills the swap, 
-and mirr parameters with default values (they are usually coming in hard 
-coded at the beginning of tda998x_create()).
-
-Best regards,
-Jyri
+On Wed, Sep 17, 2014 at 09:24:37AM +0200, Sascha Hauer wrote:
+> On Wed, Sep 17, 2014 at 03:17:38PM +0800, Robin Gong wrote:
+> > On Wed, Sep 17, 2014 at 08:06:49AM +0200, Sascha Hauer wrote:
+> > > On Wed, Sep 17, 2014 at 11:45:15AM +0800, Robin Gong wrote:
+> > > > On Wed, Sep 17, 2014 at 10:10:45AM +0800, Shawn Guo wrote:
+> > > > > On Fri, Sep 12, 2014 at 04:48:57PM +0800, Robin Gong wrote:
+> > > > > > All chips of i.mx6 can be powered off by programming SNVS.
+> > > > > > For example :
+> > > > > > On i.mx6q-sabresd board, PMIC_ON_REQ connect with external
+> > > > > > pmic ON/OFF pin, that will cause the whole PMIC powered off
+> > > > > > except VSNVS. And system can restart once PMIC_ON_REQ goes
+> > > > > > high by push POWRER key.
+> > > > > 
+> > > > > What's the behavior for those boards on which PMIC_ON_REQ isn't
+> > > > > connected to anywhere?
+> > > > >
+> > > > System can't be powered off if not connect PMIC_ON_REQ. Although all of our
+> > > > reference design for i.mx6 chips are connecting  PMIC_ON_REQ with external
+> > > > PMIC, we need consider others may not use external PMIC. I'll add the info
+> > > > into commit log or Kconfig.
+> > > 
+> > > You should add the information to the dtsi file in form of a
+> > > status = "disabled" property so that boards that actually have the
+> > > feature can enable it.
+> > > 
+> > > Sascha
+> > Hi Sacha, but that's  SOC level feature and it's harmless even if others don't
+> > want to use this pin to control external PMIC.
+> 
+> Harmless? If a pm_power_off hook is registered I expect it to work, but
+> it doesn't work when my board does not have the connection between the
+> PMIC and the SoC. Even worse, if my board has some custom power of
+> method you overwrite my method in the snvs poweroff driver with a method
+> that does not work on my board.
+> 
+> Sascha
+Sorry, I suppose PMIC_ON_REQ is the only way to control external power ON/OFF.
+If they don't use PMIC_ON_REQ, I assume they drop poweroff feature.
+Yes, I agree with you that set status as 'disable' in DTS make things clear if
+they want to use other pins to control external power. But I'm not sure whether
+we need consider this special case to 'disable' the soc level feature and
+re-enable on many boards level DTS? Also, I don't understand why they give up
+PMIC_ON_REQ and consume another pin to do the same thing....But I'm ok if both
+you and Shawn agree with it.
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
