@@ -1,233 +1,265 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH v3 0/9] Tegra xHCI support
-Date: Tue, 16 Sep 2014 16:51:11 -0700
-Message-ID: <CAL1qeaHhabYHN6B5xCUf-y+ZuEWEBpURDPfmjY=KMpmUbuTg5w@mail.gmail.com>
-References: <1409693701-16520-1-git-send-email-abrestic@chromium.org>
-	<CAAObsKAYqpJMJnxSMxhkkRtnoEwLwgUa1y7ij5ZHvHf1jRok+Q@mail.gmail.com>
-	<CAL1qeaF7U9aoBp5gQPS=r+pe6krKmXdP1qak2gjhNqQMoHFB8A@mail.gmail.com>
-	<CAAObsKAXO-pBtqd1jNj8faXqpE+5Wb0RFzPp+jn9FH0B=dHq8g@mail.gmail.com>
-	<CAL1qeaEk_r5XAKvvJfwXN9+Wi9EjC_2MgBfoP92TK=F+Ou9QTA@mail.gmail.com>
-	<CAAObsKAwgfx1g2p7PQP+=HudvAHHpcPi47gEH6BrxEgLu6w2VQ@mail.gmail.com>
-	<CAL1qeaEC9O8-jgjGC44cFctoZPpp4dRVfQ=mhSb_2on7GgiU0w@mail.gmail.com>
-	<54172B3F.9030901@wwwdotorg.org>
-	<CAL1qeaEK=C4j+G5CA_91xJNe25d=-y47EyZAYnaMh46fNYVDAw@mail.gmail.com>
-	<54185698.7020600@wwwdotorg.org>
-	<CAL1qeaGf6JSuq=ekZY7Pp2zSAB0+0S9fZ70xWpct2MJ=pTSmug@mail.gmail.com>
-	<CAL1qeaHms021HBTBCnSkcBCHnCVYC0CnSD=JbBWFo_ZN4AKpOw@mail.gmail.com>
-	<5418C498.8030208@wwwdotorg.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/6] ARM: cygnus: Initial support for Broadcom Cygnus SoC
+Date: Wed, 17 Sep 2014 01:00:19 +0100
+Message-ID: <20140917000018.GI14191@leverpostej>
+References: <jonathar@broadcom.com>
+ <1410897497-27527-1-git-send-email-jonathar@broadcom.com>
+ <1410897497-27527-2-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5418C498.8030208@wwwdotorg.org>
+Content-Disposition: inline
+In-Reply-To: <1410897497-27527-2-git-send-email-jonathar@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Thierry Reding <thierry.reding@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.in>
+To: Jonathan Richardson <jonathar@broadcom.com>
+Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, JD Zheng <jdzheng@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 4:15 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 09/16/2014 04:46 PM, Andrew Bresticker wrote:
->>
->> On Tue, Sep 16, 2014 at 9:57 AM, Andrew Bresticker
->> <abrestic@chromium.org> wrote:
->>>
->>> On Tue, Sep 16, 2014 at 8:26 AM, Stephen Warren <swarren@wwwdotorg.org>
->>> wrote:
->>>>
->>>> On 09/15/2014 01:30 PM, Andrew Bresticker wrote:
->>>>>
->>>>>
->>>>> On Mon, Sep 15, 2014 at 11:09 AM, Stephen Warren
->>>>> <swarren@wwwdotorg.org>
->>>>> wrote:
->>>>>>
->>>>>>
->>>>>> On 09/15/2014 11:06 AM, Andrew Bresticker wrote:
->>>>>>>
->>>>>>>
->>>>>>> On Mon, Sep 15, 2014 at 12:00 AM, Tomeu Vizoso
->>>>>>> <tomeu@tomeuvizoso.net>
->>>>>>> wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>> On 12 September 2014 18:37, Andrew Bresticker
->>>>>>>> <abrestic@chromium.org>
->>>>>>>> wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On Tue, Sep 9, 2014 at 1:21 AM, Tomeu Vizoso
->>>>>>>>> <tomeu@tomeuvizoso.net>
->>>>>>>>> wrote:
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> On 8 September 2014 18:22, Andrew Bresticker
->>>>>>>>>> <abrestic@chromium.org>
->>>>>>>>>> wrote:
->>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> On Mon, Sep 8, 2014 at 8:34 AM, Tomeu Vizoso
->>>>>>>>>>> <tomeu@tomeuvizoso.net>
->>>>>>>>>>> wrote:
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> On 2 September 2014 23:34, Andrew Bresticker
->>>>>>>>>>>> <abrestic@chromium.org> wrote:
->>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> Tested on Venice2, Jetson TK1, and Big with a variety of USB2.0
->>>>>>>>>>>>> and
->>>>>>>>>>>>> USB3.0 memory sticks and ethernet dongles using controller
->>>>>>>>>>>>> firmware
->>>>>>>>>>>>> recently posted by Andrew Chew [2].
->>>>
->>>>
->>>> ...
->>>>>>>
->>>>>>>
->>>>>>> Stephen, Thierry, have either of you had a chance to test this
->>>>>>> series?
->>>>>>
->>>>>>
->>>>>>
->>>>>> I haven't had a chance to yet. I just went to try it out, and found
->>>>>> that
->>>>>> it
->>>>>> depends on a whole slew of other patches that I don't have. Is there a
->>>>>> git
->>>>>> branch somewhere to save me having to track down all the dependencies?
->>>>>
->>>>>
->>>>>
->>>>> Yes, Tomeu has the branch he used for testing here:
->>>>> http://cgit.collabora.com/git/user/tomeu/linux.git/log/?h=3.17rc4-xhci
->>>>
->>>>
->>>>
->>>> Hmm. That git server was quite reluctant to cough up its bits, but it
->>>> did
->>>> eventually.
->>>>
->>>>> You'll also need the firmware Andrew Chew posted:
->>>>> https://patchwork.ozlabs.org/patch/384013/
->>>>
->>>>
->>>>
->>>> The XHCI driver can't load its firmware unless it's a module; if I make
->>>> it
->>>> built-in, it fails immediately with error -2 during "Direct firmware
->>>> loading". The driver needs to work with either immediate or deferred
->>>> firmware loading.
->>>
->>>
->>> If you want the driver to be built-in, you'll either need to build the
->>> firmware in as well (i.e. EXTRA_FIRMWARE) or enable
->>> FW_LOADER_USER_HELPER_FALLBACK to load with userspace/uevent (though
->>> apparently this is deprecated).
->>>
->>>> The following USB2 devices had problems:
->>>>
->>>> 0b95:7720 ASIX Electronics Corp. AX88772
->>>>
->>>>> [  489.140536] usb 1-3: new high-speed USB device number 81 using
->>>>> xhci-tegra
->>>>> [  489.260860] usb 1-3: device descriptor read/64, error -71
->>>>> [  489.370804] xhci-tegra 70090000.usb: Setup ERROR: setup context
->>>>> command
->>>>> for slot 1.
->>>>> [  489.378463] usb 1-3: hub failed to enable device, error -22
->>>>> [  489.500531] usb 1-3: new high-speed USB device number 82 using
->>>>> xhci-tegra
->>>>> [  489.655708] usb 1-3: can't set config #1, error -71
->>>>> [  489.661231] usb 1-3: USB disconnect, device number 82
->>>>> [  489.940531] usb 1-3: new high-speed USB device number 83 using
->>>>> xhci-tegra
->>>>> [  490.060860] usb 1-3: device descriptor read/64, error -71
->>>>> [  490.170805] xhci-tegra 70090000.usb: Setup ERROR: setup context
->>>>> command
->>>>> for slot 1.
->>>>> [  490.178462] usb 1-3: hub failed to enable device, error -22
->>>>
->>>>
->>>> (repeats over and over)
->>>>
->>>> 15a4:1336 Afatech Technologies, Inc. SDHC/MicroSD/MMC/MS/M2/CF/XD Flash
->>>> Card
->>>> Reader
->>>>
->>>> The power light comes on, and the activity light just keeps flashing
->>>> fast.
->>>> Usually the activity light flashes a couple times and then turns off.
->>>> There
->>>> is nothing in dmesg at all for this device.
->>>>
->>>> 05e3:0608 Genesys Logic, Inc. USB-2.0 4-Port HUB
->>>>
->>>> Not detected. There is nothing in dmesg at all for this device.
->>>>
->>>> 1bcf:0c31 Sunplus Innovation Technology Inc. SPIF30x Serial-ATA bridge
->>>>
->>>> Not detected. There is nothing in dmesg at all for this device.
->>>
->>>
->>> Thanks, I'll try to figure out what's going on here.
->>
->>
->> Grr... this is due to the unfortunate UTMI pad controller design on Tegra.
->>
->> Here's the issue:  When UTMI pad 0 is assigned to the EHCI controller
->> (as is currently the case on Jetson-TK1), the UTMI parameters from
->> UTMIP_BIAS_CFG0 in the global UTMI pad register space are used
->> regardless of the owner of the UTMI pads.  If pad 0 is assigned to the
->> XUSB controller, then parameters in USB2_BIAS_PAD_CTL0 in the XUSB
->> register space are used for all UTMI pads (again, regardless of
->> ownership).
->>
->> I wasn't able to reproduce before because I always TFTP booted and
->> U-Boot programs the UTMI parameters correctly when starting the EHCI
->> controllers.  I suspect you and Tomeu were booting without starting
->> the EHCI controllers and thus were stuck with the POR values.
->
->
-> I am loading the kernel over the PCIe Ethernet on Jetson TK1. However, the
-> U-Boot boot scripts do "usb start" first, so I would assume all the USB set
-> is already done either way, before U-Boot attempts to probe USB devices.
+On Tue, Sep 16, 2014 at 08:58:12PM +0100, Jonathan Richardson wrote:
+> Adds initial support for the Cygnus SoC based on Broadcom=E2=80=99s i=
+Proc series.
+>=20
+> Reviewed-by: Ray Jui <rjui@broadcom.com>
+> Reviewed-by: Desmond Liu <desmondl@broadcom.com>
+> Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
+> Tested-by: Jonathan Richardson <jonathar@broadcom.com>
+> Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
+> ---
+>  arch/arm/mach-bcm/Kconfig            |   34 +++++++
+>  arch/arm/mach-bcm/Makefile           |    3 +
+>  arch/arm/mach-bcm/board_bcm_cygnus.c |  166 ++++++++++++++++++++++++=
+++++++++++
 
-Interesting - just doing "usb start" made the difference for me.
+Is Cygnus an SoC or a board?
 
->> The easiest way to fix this is to just assign UTMI port 0 (i.e. the
->> OTG port) to the XUSB controller.  AFAIK, device mode on Tegra isn't
->> supported yet in the kernel, so this shouldn't break any existing use
->> cases.  If we wanted to support device mode in the future, it would
->> just have to be done with the XUSB controller instead.  The
->> alternative is some ugly driver that programs the correct register set
->> depending on which controller UTMI port 0 is assigned to.
->>
->> BTW, here's a patch to assign UTMI port 0 to XUSB:
->>
->> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
->> b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
->> index a473750..dacb0d0 100644
->> --- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
->> +++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
->> @@ -1644,7 +1644,7 @@
->>
->>                  padctl_default: pinmux {
->>                          otg {
->> -                               nvidia,lanes = "otg-1", "otg-2";
->> +                               nvidia,lanes = "otg-0", "otg-1", "otg-2";
->>                                  nvidia,function = "xusb";
->>                          };
->
->
-> That's a bit better; I now see dmesg entries when I plug in my hub where
-> before I got none. However, I still get some descriptor read errors etc.,
+>  3 files changed, 203 insertions(+)
+>  create mode 100644 arch/arm/mach-bcm/board_bcm_cygnus.c
+>=20
+> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> index fc93800..58e0f20 100644
+> --- a/arch/arm/mach-bcm/Kconfig
+> +++ b/arch/arm/mach-bcm/Kconfig
+> @@ -5,6 +5,40 @@ menuconfig ARCH_BCM
+> =20
+>  if ARCH_BCM
+> =20
+> +config ARCH_BCM_IPROC
+> +	bool "Broadcom ARMv7 iProc boards" if ARCH_MULTI_V7
+> +	select ARM_GIC
+> +	select CACHE_L2X0
+> +	select HAVE_ARM_SCU if SMP
 
-I see those sometimes with my ethernet dongle too, but it still seems
-to work ok.
+I didn't spot any SMP code in this series.
 
-> and the USB HDD I have behind the hub isn't fully detected.
+> +	select HAVE_ARM_TWD if LOCAL_TIMERS
+> +	select HAVE_CLK
+> +	select CLKSRC_OF
+> +	select CLKSRC_MMIO
+> +	select LOCAL_TIMERS if SMP
+> +	select GENERIC_CLOCKEVENTS_BUILD
 
-Can you post the dmesg output?  Does it work when not behind the hub?
-So far I haven't seen any failures with my pile of USB devices after
-the above change.
+You don't need to select this.
 
-Thanks for testing this out!
+> +	select GENERIC_CLOCKEVENTS
+> +	select ARM_GLOBAL_TIMER
+> +	select ARCH_REQUIRE_GPIOLIB
+> +	select ARM_AMBA
+> +	select PINCTRL
+> +	select DEBUG_UART_8250
+> +	help
+> +	  This enables support for systems based on Broadcom IPROC architec=
+ted SoCs.
+> +	  The IPROC complex contains one or more ARM CPUs along with common
+> +	  core periperals. Application specific SoCs are created by adding =
+a
+> +	  uArchitecture containing peripherals outside of the IPROC complex=
+=2E
+> +	  Currently supported SoCs are Cygnus.
+> +
+> +menu "iProc SoC based Machine types"
+> +	depends on ARCH_BCM_IPROC
+> +
+> +	config ARCH_BCM_CYGNUS
+> +		bool "Support Broadcom Cygnus board"
+> +		select USB_ARCH_HAS_EHCI if USB_SUPPORT
+> +		help
+> +		  Support for Broadcom Cygnus SoC.
+> +endmenu
+> +
+>  config ARCH_BCM_MOBILE
+>  	bool "Broadcom Mobile SoC Support" if ARCH_MULTI_V7
+>  	select ARCH_REQUIRE_GPIOLIB
+> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+> index b19a396..dd14a10 100644
+> --- a/arch/arm/mach-bcm/Makefile
+> +++ b/arch/arm/mach-bcm/Makefile
+> @@ -10,6 +10,9 @@
+>  # of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>  # GNU General Public License for more details.
+> =20
+> +# Cygnus
+> +obj-$(CONFIG_ARCH_BCM_CYGNUS) +=3D  board_bcm_cygnus.o
+> +
+>  # BCM281XX
+>  obj-$(CONFIG_ARCH_BCM_281XX)	+=3D board_bcm281xx.o
+> =20
+> diff --git a/arch/arm/mach-bcm/board_bcm_cygnus.c b/arch/arm/mach-bcm=
+/board_bcm_cygnus.c
+> new file mode 100644
+> index 0000000..d67555a
+> --- /dev/null
+> +++ b/arch/arm/mach-bcm/board_bcm_cygnus.c
+> @@ -0,0 +1,166 @@
+> +/*
+> + * Copyright 2014 Broadcom Corporation.  All rights reserved.
+> + *
+> + * Unless you and Broadcom execute a separate written software licen=
+se
+> + * agreement governing use of this software, this software is licens=
+ed to you
+> + * under the terms of the GNU General Public License version 2, avai=
+lable at
+> + * http://www.broadcom.com/licenses/GPLv2.php (the "GPL").
+
+Why don't we point at the gnu.org copy as we do elsewhere?
+
+> + */
+> +
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/clocksource.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/map.h>
+> +#include <asm/proc-fns.h>
+> +#include <asm/hardware/cache-l2x0.h>
+> +
+> +#define CRMU_MAIL_BOX1      0x03024028
+
+Please don't hard code addresses in board files.
+
+> +#define CRMU_SOFT_RESET_CMD 0xFFFFFFFF
+> +
+> +/* CRU_RESET register */
+> +static void * __iomem crmu_mail_box1_reg;
+> +
+> +#ifdef CONFIG_NEON
+> +
+> +#define CRU_BASE                  0x1800e000
+
+Another hard coded address that needs to go.
+
+> +#define CRU_SIZE                  0x34
+> +#define CRU_CONTROL_OFFSET        0x0
+> +#define CRU_PWRDWN_EN_OFFSET      0x4
+> +#define CRU_PWRDWN_STATUS_OFFSET  0x8
+> +#define CRU_NEON0_HW_RESET  6
+> +#define CRU_CLAMP_ON_NEON0  20
+> +#define CRU_PWRONIN_NEON0   21
+> +#define CRU_PWRONOUT_NEON0  21
+> +#define CRU_PWROKIN_NEON0   22
+> +#define CRU_PWROKOUT_NEON0  22
+> +#define CRU_STATUS_DELAY_NS 500
+> +#define CRU_MAX_RETRY_COUNT 10
+> +#define CRU_RETRY_INTVL_US  1
+> +
+> +/* Power up the NEON/VFPv3 block. */
+> +static void bcm_cygnus_powerup_neon(void)
+> +{
+> +	void * __iomem cru_base =3D ioremap_nocache(CRU_BASE, CRU_SIZE);
+
+Why not plain ioremap?
+
+> +	u32 reg, i;
+> +
+> +	BUG_ON(!cru_base);
+
+This seems a little extreme. Can;t we continue without NEON?
+
+> +
+> +	/* De-assert the neon hardware block reset */
+> +	reg =3D readl(cru_base + CRU_CONTROL_OFFSET);
+> +	reg &=3D ~(1 << CRU_NEON0_HW_RESET);
+> +	writel(reg, cru_base + CRU_CONTROL_OFFSET);
+> +
+> +	/* Assert the power ON register bit */
+> +	reg =3D readl(cru_base + CRU_PWRDWN_EN_OFFSET);
+> +	reg |=3D (1 << CRU_PWRONIN_NEON0);
+> +	writel(reg, cru_base + CRU_PWRDWN_EN_OFFSET);
+> +
+> +	/*
+> +	 * Wait up to 10 usec in 1 usec increments for the
+> +	 * status register to acknowledge the power ON assert
+> +	 */
+> +	for (i =3D 0; i < CRU_MAX_RETRY_COUNT; i++) {
+> +		reg =3D readl(cru_base + CRU_PWRDWN_STATUS_OFFSET);
+> +		if (reg & CRU_PWRONOUT_NEON0)
+> +			break;
+> +
+> +		udelay(CRU_RETRY_INTVL_US);
+> +	}
+> +
+> +	if (i =3D=3D CRU_MAX_RETRY_COUNT)
+> +		panic("NEON power ON register not acknowledged\n");
+
+We can't just disable NEON if we fail to enable the HW block?
+
+[...]
+
+> +static void __init bcm_cygnus_timer_init(void)
+> +{
+> +	/* Initialize all clocks declared in device tree */
+> +	of_clk_init(NULL);
+> +
+> +	clocksource_of_init();
+> +}
+
+If you take a look at time_init in arch/arm/kernel/time.c you'll see
+this is redundant.
+
+Get rid of this.
+
+> +
+> +static void __init bcm_cygnus_init(void)
+> +{
+> +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> +
+> +	l2x0_of_init(0, ~0UL);
+> +
+> +	crmu_mail_box1_reg =3D ioremap_nocache(CRMU_MAIL_BOX1, SZ_4);
+
+Why not plain ioremap?
+
+> +	BUG_ON(!crmu_mail_box1_reg);
+
+We only use this for reboot later on, so do we need to blow up so
+spectacularly in this case?
+
+> +
+> +#ifdef CONFIG_NEON
+> +	bcm_cygnus_powerup_neon();
+> +#endif
+> +}
+> +
+> +/*
+> + * Reset the system
+> + */
+> +void bcm_cygnus_restart(enum reboot_mode mode, const char *cmd)
+> +{
+> +	/* Send reset command to M0 via Mailbox. */
+> +	writel(CRMU_SOFT_RESET_CMD, crmu_mail_box1_reg);
+> +	iounmap(crmu_mail_box1_reg);
+> +
+> +	/* Wait for M0 to reset the chip. */
+> +	while (1)
+> +		cpu_do_idle();
+> +}
+
+This doesn't have to live in the machine descriptor. It could be a
+separate driver.
+
+Thanks,
+Mark.
