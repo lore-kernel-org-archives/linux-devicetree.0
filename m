@@ -1,50 +1,47 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v6 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
- binding
-Date: Wed, 17 Sep 2014 09:15:54 -0700
-Message-ID: <20140917161554.GJ30918@lee--X1>
-References: <1409029109-28769-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1409029109-28769-2-git-send-email-bjorn.andersson@sonymobile.com>
- <20140826072727.GB9574@lee--X1>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] devicetree: cadence_ttc: Document binding for timer
+ width
+Date: Wed, 17 Sep 2014 17:17:38 +0100
+Message-ID: <20140917161737.GA7983@leverpostej>
+References: <3537996136ec435ea660da869102d0a019214979.1410964243.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140826072727.GB9574@lee--X1>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <3537996136ec435ea660da869102d0a019214979.1410964243.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Michal Simek <monstr@monstr.eu>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Aug 2014, Lee Jones wrote:
+On Wed, Sep 17, 2014 at 03:30:49PM +0100, Michal Simek wrote:
+> From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+> 
+> Modern TTC implementations can extend the timer width to 32 bit. This
+> feature is not self identifying so the driver needs to be made aware
+> via device tree.
+> 
+> Signed-off-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
+> index 993695c659e1..5439976eca6b 100644
+> --- a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
+> @@ -6,6 +6,9 @@ Required properties:
+>  - interrupts : A list of 3 interrupts; one per timer channel.
+>  - clocks: phandle to the source clock
+> 
+> +Optional properties:
+> +- timer-width: Bit width of the timer. Either 16 or 32 (default 16).
 
-> On Mon, 25 Aug 2014, Bjorn Andersson wrote:
->=20
-> > Add binding for the Qualcomm Resource Power Manager (RPM) found in =
-8660,
-> > 8960 and 8064 based devices. The binding currently describes the rp=
-m
-> > itself and the regulator subnodes.
-> >=20
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/qcom,rpm.txt |  246 ++++++++=
-++++++++++++
-> >  include/dt-bindings/mfd/qcom,rpm.h                 |  154 ++++++++=
-++++
-> >  2 files changed, 400 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.=
-txt
-> >  create mode 100644 include/dt-bindings/mfd/qcom,rpm.h
->=20
-> Please use the same filename formatting as the existing files.
+Are we expecting TTC implementations with widths other than 16 or 32?
 
-Are you going to resubmit this (and answer my question on the
-regulator patch)?
+This looks sane to me, but we might be able to just have a 32-bit-timer
+property if we don't expect arbitrary widths.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Mark.
