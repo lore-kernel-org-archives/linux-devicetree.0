@@ -1,38 +1,76 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v6] spi: spi-imx: add DMA support
-Date: Wed, 17 Sep 2014 02:49:17 +0200
-Message-ID: <201409170249.17597.marex@denx.de>
-References: <1410398324-15284-1-git-send-email-b38343@freescale.com> <20140915223944.GH7960@sirena.org.uk>
+From: Dave Airlie <airlied@gmail.com>
+Subject: Re: [alsa-devel] [PATCH v3 0/5] Beaglebone-Black HDMI audio
+Date: Wed, 17 Sep 2014 11:06:53 +1000
+Message-ID: <CAPM=9txRReSdcB5j+0dKmrDNM94zANu-q7ZfWHtP2iA54Dieig@mail.gmail.com>
+References: <cover.1410898073.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140915223944.GH7960-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Frank.Li-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1410898073.git.jsarha@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, t-kristo@ti.com, dri-devel <dri-devel@lists.freedesktop.org>, Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>, bcousson@baylibre.com, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, September 16, 2014 at 12:39:44 AM, Mark Brown wrote:
-> On Thu, Sep 11, 2014 at 09:18:44AM +0800, Robin Gong wrote:
-> > Enable DMA support on i.mx6. The read speed can increase from 600KB/s
-> > to 1.2MB/s on i.mx6q. You can disable or enable dma function in dts.
-> > If not set "dma-names" in dts, spi will use PIO mode. This patch only
-> > validate on i.mx6, not i.mx5, but encourage ones to apply this patch
-> > on i.mx5 since they share the same IP.
-> 
-> Adding Maerk (who I had to add to earlier versions of this patch).
+On 17 September 2014 06:40, Jyri Sarha <jsarha@ti.com> wrote:
+> Changes since v2:
+> - Change compatible property from "ti,gpio-clock" to "ti,gpio-gate-clock"
+> - Some minor cleanups
+>
+> The code has a functional dependency to:
+> http://www.mail-archive.com/linux-omap@vger.kernel.org/msg109264.html
+>
+> Without the above patch the audio card does not probe.
+>
+> The code has been rebased on top of Linux 3.17-rc5. The patches
+> bellow, the above dependency, and couple of commits to add BBB HDMI audio
+> support to omap2plus_defconfig can be pulled from:
+>
+> https://github.com/jsarha/linux.git linux-master-bbb-hdmi-audio
 
-Looks OK to me.
+How do you intend to get this merge, sending patchsets like this without
+indication to maintainers on a merge strategy is kinda messy.
 
-Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+I'm not sure how maintained tilcdc is.
 
-Thank you!
-
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Dave.
+>
+> Cheers,
+> Jyri
+>
+> Jyri Sarha (5):
+>   clk: ti: add "ti,gpio-gate-clock" controlled clock
+>   drm/tilcdc: Add I2S HDMI audio config for tda998x
+>   ASoC: davinci-evm: HDMI audio support for TDA998x trough McASP I2S
+>     bus
+>   ASoC: davinci: HDMI audio build for AM33XX and TDA998x
+>   ARM: dts: am335x-boneblack: Add HDMI audio support
+>
+>  .../bindings/clock/ti/gpio-gate-clock.txt          |   21 ++
+>  .../bindings/sound/davinci-evm-audio.txt           |    6 +-
+>  arch/arm/boot/dts/am335x-boneblack.dts             |   52 +++++
+>  drivers/clk/ti/Makefile                            |    2 +-
+>  drivers/clk/ti/gpio.c                              |  202 ++++++++++++++++++++
+>  drivers/gpu/drm/tilcdc/tilcdc_slave.c              |   24 ++-
+>  sound/soc/davinci/Kconfig                          |   12 ++
+>  sound/soc/davinci/davinci-evm.c                    |   82 +++++++-
+>  8 files changed, 395 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti/gpio-gate-clock.txt
+>  create mode 100644 drivers/clk/ti/gpio.c
+>
+> --
+> 1.7.9.5
+>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
