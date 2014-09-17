@@ -1,108 +1,59 @@
-From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH 04/13 v2] iommu/arm-smmu: Convert to iommu_capable() API
-	function function
-Date: Wed, 17 Sep 2014 10:53:12 +0200
-Message-ID: <20140917085312.GE2533@suse.de>
-References: <1409914384-21191-1-git-send-email-joro@8bytes.org>
-	<1409914384-21191-5-git-send-email-joro@8bytes.org>
-	<20140908165136.GW26030@arm.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
+ i.mx6dl
+Date: Wed, 17 Sep 2014 10:55:56 +0200
+Message-ID: <1410944156.2731.1.camel@pengutronix.de>
+References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
+	 <1410774073.3314.1.camel@pengutronix.de>
+	 <20140916034123.GA20800@Robin-OptiPlex-780>
+	 <1410861006.2746.1.camel@pengutronix.de>
+	 <20140917084120.GA6369@Robin-OptiPlex-780>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140908165136.GW26030-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140917084120.GA6369@Robin-OptiPlex-780>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
-
-On Mon, Sep 08, 2014 at 05:51:36PM +0100, Will Deacon wrote:
-> Hi Joerg,
-> 
-> [adding devicetree for the last paragraph]
-> 
-> On Fri, Sep 05, 2014 at 11:52:56AM +0100, Joerg Roedel wrote:
-> > From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+Am Mittwoch, den 17.09.2014, 16:41 +0800 schrieb Robin Gong:
+> On Tue, Sep 16, 2014 at 11:50:06AM +0200, Lucas Stach wrote:
+> > Hi Robin,
 > > 
-> > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> > Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-> > ---
-> >  drivers/iommu/arm-smmu.c | 35 ++++++++++++++++++++++++++---------
-> >  1 file changed, 26 insertions(+), 9 deletions(-)
+> > Am Dienstag, den 16.09.2014, 11:41 +0800 schrieb Robin Gong:
+> > > Hi Lucas,
+> > >   I understood your concern,but looks we have to break old DT.
+> > 
+> > Sorry, but this isn't going to happen. And honestly I don't even see the
+> > need to do so.
+> > 
+> > > Our old DT
+> > > support SPI DMA on i.mx6q/dl(v2,b3810c3dc1bcbc6a), but the DMA support patch
+> > > for SPI driver is still in reviewing(v6).
+> > 
+> > So this means now is the time to fix this driver patch to not enable DMA
+> > on imx6dl. Nobody will experience any breakage in this case.
+> >
+> Sorry, i.mx6q and i.mx6dl are totally same, not only IP but also clock. So we
+> can't distinguish them except for different compatible name....
 
-Okay, so here is the updated patch:
+I know that, but I still don't see the problem.
 
->From b5d895980849ba1a46a5250cd4cc5f3f9f28235d Mon Sep 17 00:00:00 2001
-From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-Date: Fri, 5 Sep 2014 10:49:34 +0200
-Subject: [PATCH 04/13] iommu/arm-smmu: Convert to iommu_capable() API function
+If this issue is specific to the ECSPI IP integrated into a imx6dl SoC
+you need to check for the machine compatible in the driver and disable
+DMA support based on this. We generally avoid checking for the machine
+compatible in drivers and prefer to have a specific IP block compatible
+instead, but in that case it's the only reasonable thing to do.
 
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
----
- drivers/iommu/arm-smmu.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index a83cc2a..f5cacf4 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1526,20 +1526,20 @@ static phys_addr_t arm_smmu_iova_to_phys(struct iommu_domain *domain,
- 	return __pfn_to_phys(pte_pfn(pte)) | (iova & ~PAGE_MASK);
- }
- 
--static int arm_smmu_domain_has_cap(struct iommu_domain *domain,
--				   unsigned long cap)
-+static bool arm_smmu_capable(enum iommu_cap cap)
- {
--	struct arm_smmu_domain *smmu_domain = domain->priv;
--	struct arm_smmu_device *smmu = smmu_domain->smmu;
--	u32 features = smmu ? smmu->features : 0;
--
- 	switch (cap) {
- 	case IOMMU_CAP_CACHE_COHERENCY:
--		return features & ARM_SMMU_FEAT_COHERENT_WALK;
-+		/*
-+		 * Return false here until we have a way to find out whether the
-+		 * SMMUs in the system a coherently connected and able to force
-+		 * DMA coherency.
-+		 */
-+		return false;
- 	case IOMMU_CAP_INTR_REMAP:
--		return 1; /* MSIs are just memory writes */
-+		return true; /* MSIs are just memory writes */
- 	default:
--		return 0;
-+		return false;
- 	}
- }
- 
-@@ -1609,6 +1609,7 @@ static void arm_smmu_remove_device(struct device *dev)
- }
- 
- static const struct iommu_ops arm_smmu_ops = {
-+	.capable	= arm_smmu_capable,
- 	.domain_init	= arm_smmu_domain_init,
- 	.domain_destroy	= arm_smmu_domain_destroy,
- 	.attach_dev	= arm_smmu_attach_dev,
-@@ -1616,7 +1617,6 @@ static const struct iommu_ops arm_smmu_ops = {
- 	.map		= arm_smmu_map,
- 	.unmap		= arm_smmu_unmap,
- 	.iova_to_phys	= arm_smmu_iova_to_phys,
--	.domain_has_cap	= arm_smmu_domain_has_cap,
- 	.add_device	= arm_smmu_add_device,
- 	.remove_device	= arm_smmu_remove_device,
- 	.pgsize_bitmap	= (SECTION_SIZE |
+Regards,
+Lucas
 -- 
-1.8.4.5
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
