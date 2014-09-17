@@ -1,47 +1,41 @@
-From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki@elproma.com.pl>
-Subject: Re: [PATCH 1/4] serial: mxs-auart: use mctrl_gpio helpers for handling
- modem signals (v2.2)
-Date: Wed, 17 Sep 2014 11:50:29 +0200
-Message-ID: <54195965.10007@elproma.com.pl>
-References: <1410945333-26250-1-git-send-email-j.uzycki@elproma.com.pl>
+From: Robin Gong <b38343@freescale.com>
+Subject: [PATCH v3 0/3] add power off driver for i.mx6
+Date: Wed, 17 Sep 2014 17:57:57 +0800
+Message-ID: <1410947881-7345-1-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1410945333-26250-1-git-send-email-j.uzycki@elproma.com.pl>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@freescale.com, kernel@pengutronix.de, sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, grant.likely@linaro.org, linux@arm.linux.org.uk
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add simple power off driver for i.mx6, including:
+- add basic imx-snvs-poweroff driver in drivers/power/reset
+- add device node in all dts files of i.mx6.
+- enable in config file
 
-W dniu 2014-09-17 11:15, Janusz Uzycki pisze:
->   static struct platform_device_id mxs_auart_devtype[] = {
-> @@ -417,6 +431,34 @@ static void mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
->   
->   	s->ctrl = mctrl;
->   	writel(ctrl, u->membase + AUART_CTRL2);
-> +
-> +	mctrl_gpio_set(s->gpios, mctrl);
-> +}
+Change from v2:
+- remove useless included head files
+- split device binding doc from dts patch
+- add description for the case that PMIC_ON_REQ not used as external power
+  control
 
-@@ -429,7 +429,12 @@ static void mxs_auart_set_mctrl(struct uart_port 
-*u, unsigned mctrl)
-                         ctrl |= AUART_CTRL2_RTS;
-         }
+Robin Gong (3):
+  ARM: dts: imx6: add pm_power_off support for i.mx6 chips
+  power: reset: imx-snvs-poweroff: add power off driver for i.mx6
+  ARM: configs: imx_v6_v7_defconfig: add power off driver
 
-+#if 0
-         s->ctrl = mctrl;
-+#else
-+       s->ctrl &= ~(TIOCM_RTS | TIOCM_DTR);
-+       s->ctrl |= mctrl & (TIOCM_RTS | TIOCM_DTR);
-+#endif
-         writel(ctrl, u->membase + AUART_CTRL2);
+ arch/arm/boot/dts/imx6qdl.dtsi          |  5 +++
+ arch/arm/boot/dts/imx6sl.dtsi           |  5 +++
+ arch/arm/boot/dts/imx6sx.dtsi           |  5 +++
+ arch/arm/configs/imx_v6_v7_defconfig    |  3 ++
+ drivers/power/reset/Kconfig             |  5 +++
+ drivers/power/reset/Makefile            |  1 +
+ drivers/power/reset/imx-snvs-poweroff.c | 69 +++++++++++++++++++++++++++++++++
+ 7 files changed, 93 insertions(+)
+ create mode 100644 drivers/power/reset/imx-snvs-poweroff.c
 
-         mctrl_gpio_set(s->gpios, mctrl);
-
-Does tty layer modify mctrl for input lines and code above is required?
-
-best regards
-Janusz
+-- 
+1.9.1
 
