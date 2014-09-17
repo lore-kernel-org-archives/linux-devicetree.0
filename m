@@ -1,99 +1,119 @@
-From: Ganapatrao Kulkarni <ganapatrao.kulkarni@caviumnetworks.com>
-Subject: [RFC PATCH] dt:numa: adding numa node mapping for memory nodes.
-Date: Wed, 17 Sep 2014 14:26:29 +0530
-Message-ID: <1410944189-3608-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V6 6/8] drm/bridge: Modify drm_bridge core to support
+ driver model
+Date: Wed, 17 Sep 2014 14:37:30 +0530
+Message-ID: <CAEC9eQMYTELvK_0bcrs+wNk=qYXzS69bOqYGr-yLf6h18bfM4Q@mail.gmail.com>
+References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com>
+	<1406316130-4744-7-git-send-email-ajaykumar.rs@samsung.com>
+	<2567411.1uGei9I2NP@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: gpkulkarni@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2567411.1uGei9I2NP@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Rob Clark <robdclark@gmail.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Paul <seanpaul@google.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Sean Cross <xobs@kosagi.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Hi Laurent,
 
-This patch adds property "nid" to memory node to provide the memory range to
-numa node id mapping.
+On Mon, Sep 15, 2014 at 11:07 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Ajay,
+>
+> Thank you for the patch.
+>
+> I think we're moving in the right direction, but we're not there yet.
+>
+> On Saturday 26 July 2014 00:52:08 Ajay Kumar wrote:
+>> This patch tries to seperate drm_bridge implementation
+>> into 2 parts, a drm part and a non_drm part.
+>>
+>> A set of helper functions are defined in this patch to make
+>> bridge driver probe independent of the drm flow.
+>>
+>> The bridge devices register themselves on a lookup table
+>> when they get probed by calling "drm_bridge_add_for_lookup".
+>>
+>> The parent encoder driver waits till the bridge is available in the
+>> lookup table(by calling "of_drm_find_bridge") and then continues with
+>> its initialization.
+>
+> Before the introduction of the component framework I would have said this is
+> the way to go. Now, I think bridges should register themselves as components,
+> and the DRM master driver should use the component framework to get a
+> reference to the bridges it needs.
+Well, I have modified the bridge framework exactly the way Thierry wanted it
+to be, I mean the same way the current panel framework is.
+And, I don't think there is a problem with that.
+What problem are you facing with current bridge implementation?
+What is the advantage of using the component framework to register bridges?
 
-Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+>> The encoder driver should call "drm_bridge_attach_encoder" to pass on
+>> the drm_device and the encoder pointers to the bridge object.
+>>
+>> Now that the drm_device pointer is available, the encoder then calls
+>> "bridge->funcs->post_encoder_init" to allow the bridge to continue
+>> registering itself with the drm core.
+>
+> This is what really bothers me with DRM bridge.
+>
+> The framework assumes that a bridge will always bridge an encoder and a
+> connector. Beside lacking support for chained bridges, this creates an
+> artificial split between bridges and encoders by modeling the same components
+> using drm_encoder or drm_bridge depending on their position in the video
+> output pipeline.
+>
+> I would like to see drm_bridge becoming more self-centric, removing the
+> awareness of the upstream encoder and downstream connector. I'll give this a
+> try, but it will conflict with this patch, so I'd like to share opinions and
+> coordinate efforts sooner than later if possible.
+I am not really able to understand how you want "drm_bridge" to be.
+As of now, there are many platforms using drm_bridge and they don't
+have a problem with current implementation.
+Regarding chained bridges: Can't you add this once my patchset is merged?
+As an additional feature?
 
----
- Documentation/devicetree/bindings/numa.txt | 58 ++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/numa.txt
+To be honest, I have spent quite sometime for working on this patchset.
+All I started with was to add drm_panel support to drm_bridge.
+When I sent the first patchset for that, Daniel, Rob and Thierry raised a
+concern that current bridge framework itself is not proper and hence
+they asked me to fix that first. And we have reached till here based on
+their comments only.
 
-diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
-new file mode 100644
-index 0000000..c4a94f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/numa.txt
-@@ -0,0 +1,58 @@
-+======================================================
-+numa id binding description
-+======================================================
-+
-+======================================================
-+1 - Introduction
-+======================================================
-+The device node  property "nid(numa node id)" can be added to memory
-+device node to map the range of memory addresses as defined in property "reg".
-+The property "nid" maps the memory range to the numa node id, which is used to
-+find the local and remory pages on numa aware systems.
-+
-+======================================================
-+2 - nid property
-+======================================================
-+Numa node id, "nid" is required property of memory device node for 
-+numa enabled platforms.
-+
-+|------------------------------------------------------|
-+|Property Type  | Usage | Value Type | Definition      |
-+|------------------------------------------------------|
-+|  nid          |  R    |    <u32>   | Numa Node id    |
-+|               |       |            | for this memory |
-+|------------------------------------------------------|
-+
-+========================================================
-+4 - Example memory nodes with numa node id mapping
-+========================================================
-+
-+Example 1 (2 memory nodes, each mapped to a numa node.):
-+
-+	memory@00000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x00000000 0x0 0x80000000>;
-+		nid = <0x0>;
-+	};
-+
-+	memory@10000000000 {
-+		device_type = "memory";
-+		reg = <0x100 0x00000000 0x0 0x80000000>;
-+		nid = <0x1>;
-+	};
-+
-+Example 2 (multiple memory ranges in each memory node and mapped to numa node):
-+
-+	memory@00000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x00000000 0x0 0x80000000>,
-+		      <0x0 0x80000000 0x0 0x80000000>;
-+		nid = <0x0>;
-+	};
-+
-+	memory@10000000000 {
-+		device_type = "memory";
-+		reg = <0x100 0x00000000 0x0 0x80000000>,
-+		      <0x100 0x80000000 0x0 0x80000000>;
-+		nid = <0x1>;
-+	};
--- 
-1.8.1.4
+Without this patchset, you cannot bring an X server
+based display on snow and peach_pit. Also, day by day the number of
+platforms using drm_bridge is increasing. And, I don't really see a problem
+with the current approach(which is exactly the same way panel framework is).
+And, I am no decision maker here. I would expect the top guys to comment!
+
+Ajay
+
+>> Also, non driver model based ptn3460 driver is removed in this patch.
+>>
+>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+>> ---
+>>  .../devicetree/bindings/drm/bridge/ptn3460.txt     |   27 --
+>>  drivers/gpu/drm/Makefile                           |    1 +
+>>  drivers/gpu/drm/bridge/Kconfig                     |   12 +-
+>>  drivers/gpu/drm/bridge/Makefile                    |    2 -
+>>  drivers/gpu/drm/bridge/ptn3460.c                   |  343 -----------------
+>>  drivers/gpu/drm/drm_bridge.c                       |   89 +++++
+>>  drivers/gpu/drm/drm_crtc.c                         |    9 +-
+>>  drivers/gpu/drm/exynos/Kconfig                     |    3 +-
+>>  drivers/gpu/drm/exynos/exynos_dp_core.c            |   57 ++--
+>>  drivers/gpu/drm/exynos/exynos_dp_core.h            |    1 +
+>>  drivers/gpu/drm/msm/hdmi/hdmi_bridge.c             |    3 +-
+>>  include/drm/bridge/ptn3460.h                       |   37 ---
+>>  include/drm/drm_crtc.h                             |   16 +-
+>>  13 files changed, 147 insertions(+), 453 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/drm/bridge/ptn3460.txt
+>>  delete mode 100644 drivers/gpu/drm/bridge/ptn3460.c
+>>  create mode 100644 drivers/gpu/drm/drm_bridge.c
+>>  delete mode 100644 include/drm/bridge/ptn3460.h
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
