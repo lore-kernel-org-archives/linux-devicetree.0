@@ -1,41 +1,121 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] of: amba: use of_dma_configure for AMBA devices
-Date: Wed, 17 Sep 2014 19:05:25 +0100
-Message-ID: <20140917180524.GG18532@arm.com>
-References: <90bd1ff3c93b827c12e1b3dc9ad3f227632d0f6e.1410954967.git.robin.murphy@arm.com>
- <20140917170338.GC18532@arm.com>
- <CAL_JsqKTZyPgbxy=pPmFPKRxa97oaWqC6u6pBvqvja_URLno4Q@mail.gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: add devicetree bindings for st-pwm regulator
+Date: Wed, 17 Sep 2014 11:16:23 -0700
+Message-ID: <CAD=FV=WCQ4oU1O9JcZ9SuwWJ7g+GLsUiE=wmQQoWvL41o24eWg@mail.gmail.com>
+References: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
+	<1410959280-29662-3-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKTZyPgbxy=pPmFPKRxa97oaWqC6u6pBvqvja_URLno4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1410959280-29662-3-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 06:47:19PM +0100, Rob Herring wrote:
-> On Wed, Sep 17, 2014 at 12:03 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Wed, Sep 17, 2014 at 12:56:07PM +0100, Robin Murphy wrote:
-> >> Commit 591c1e ("of: configure the platform device dma parameters)
-> >> introduced a common mechanism to configure DMA from DT properties.
-> >> AMBA devices created from DT can take advantage of this, too.
-> >>
-> >> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> >
-> >   Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> >
-> > It would be great if the arm-soc guys can pick this up.
-> 
-> Is this a dependency for something else? If so,
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Chris,
 
-Yeah, it's going to be needed by my IOMMU init rework so that AMBA devices
-get registered with their IOMMUs.
+On Wed, Sep 17, 2014 at 6:08 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> Document the st-pwm regulator
+>
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>
+> ---
+>
+>  .../devicetree/bindings/regulator/st-pwm.txt       |   35 ++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/st-pwm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/st-pwm.txt b/Documentation/devicetree/bindings/regulator/st-pwm.txt
+> new file mode 100644
+> index 0000000..38fec1d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/st-pwm.txt
+> @@ -0,0 +1,35 @@
+> +st pwm regulator bindings
+> +
+> +Required properties:
+> +  - compatible: "pwm-regulator"
 
-Will
+This compatible string doesn't include "st,b2105-pwm-regulator".
+
+Should be something like:
+
+  - compatible: Should be "pwm-regulator" to get voltage table / regulator
+    period from the device tree.  Deprecated: if "st,b2105-pwm-regulator" then
+    voltage table and regulator will be handled by the driver.
+
+Assuming that everyone is OK calling "st,b2105-pwm-regulator" the
+deprecated way of doing things.
+
+
+> +  - pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
+> +  - voltage-table: voltage and duty table, include 2 merbers in each set of
+> +    brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
+> +  - pwm-reg-period: duration (in nanoseconds) of one cycle
+
+The voltage-table and pwm-reg-period should not be required if we're
+using "st,b2105-pwm-regulator".  If someone lists both
+"st,b2105-pwm-regulator" and "pwm-regulator" then I'd assume that
+you'd allow them to override via the device tree but fallback to the
+old hardcoded values.
+
+
+> +
+> +Any property defined as part of the core regulator binding defined in
+> +regulator.txt can also be used.
+> +
+> +Example:
+> +       pwm_regulator {
+> +                compatible = "st,b2105-pwm-regulator;
+> +                pwms = <&pwm1 0 1000000 0>;
+> +
+> +               voltage-table = <1114000 0>,
+> +                               <1095000 10>,
+> +                               <1076000 20>,
+> +                               <1056000 30>,
+> +                               <1036000 40>,
+> +                               <1016000 50>;
+> +
+> +               pwm-reg-period = <8448>;
+> +               regulators {
+> +                       vdd_logic: pwm-regulator {
+> +                               regulator-always-on;
+> +                               regulator-boot-on;
+> +                               regulator-min-microvolt = <1016000>;
+> +                               regulator-max-microvolt = <1114000>;
+> +                               regulator-name = "vdd_logic";
+> +                       };
+> +               };
+
+I _think_ that the "regulators" subnode and the "pwm-regulator"
+subnode are not needed at all and should be removed.  Other instances
+of devices that are "just" regulators don't have it (like
+fixed-regulator, gpio-regulator, etc).
+
+I think your final example should be:
+
++       vdd_logic: pwm-regulator {
++                compatible = "pwm-regulator;
++                pwms = <&pwm1 0 1000000 0>;
++
++               voltage-table = <1114000 0>,
++                               <1095000 10>,
++                               <1076000 20>,
++                               <1056000 30>,
++                               <1036000 40>,
++                               <1016000 50>;
++
++               pwm-reg-period = <8448>;
++
++               regulator-always-on;
++               regulator-boot-on;
++               regulator-min-microvolt = <1016000>;
++               regulator-max-microvolt = <1114000>;
++               regulator-name = "vdd_logic";
++       };
+
+-Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
