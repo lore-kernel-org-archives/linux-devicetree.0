@@ -1,79 +1,60 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 9/9] mfd: syscon: add Atmel GPBR DT bindings
- documention
-Date: Wed, 17 Sep 2014 14:32:16 -0700
-Message-ID: <20140917213216.GS30918@lee--X1>
-References: <1410441525-25258-1-git-send-email-boris.brezillon@free-electrons.com>
- <1410441525-25258-10-git-send-email-boris.brezillon@free-electrons.com>
- <20140917163405.GM30918@lee--X1>
- <20140917195727.1c75a062@bbrezillon>
+Subject: Re: [PATCH V2 2/2] mfd: twl4030-power: use
+ 'ti,system-power-controller' as alternative way to support system power off
+Date: Wed, 17 Sep 2014 14:39:23 -0700
+Message-ID: <20140917213923.GT30918@lee--X1>
+References: <1410957252-764-1-git-send-email-nm@ti.com>
+ <1410957252-764-3-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140917195727.1c75a062@bbrezillon>
+In-Reply-To: <1410957252-764-3-git-send-email-nm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Sep 2014, Boris BREZILLON wrote:
-> On Wed, 17 Sep 2014 09:34:05 -0700
-> Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->=20
-> > On Thu, 11 Sep 2014, Boris BREZILLON wrote:
-> >=20
-> > > The GPBR block provides a set of battery-backed registers that ca=
-n be used
-> > > to save data which need to be kept when the system is powered dow=
-n and
-> > > VDD-core is maintained by an external battery.
-> > >=20
-> > > A typical usage is the RTT block (when used as an RTC) which need=
-s one of
-> > > those registers to save the current time.
-> > >=20
-> > > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTGGXanvQGlWp@public.gmane.org=
-m>
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/atmel,gpbr.txt | 15 ++++++=
-+++++++++
-> > >  1 file changed, 15 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/atmel,g=
-pbr.txt
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/mfd/atmel,gpbr.txt=
- b/Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
-> > > new file mode 100644
-> > > index 0000000..a285695
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
-> > > @@ -0,0 +1,15 @@
-> > > +* Device tree bindings for Atmel GPBR (General Purpose Backup Re=
-gisters)
-> > > +
-> > > +The GPBR are a set of battery-backed registers.
-> > > +
-> > > +Required properties:
-> > > +- compatible:		"atmel,at91sam9260-gpbr", "syscon"
-> > > +- reg:			contains offset/length value of the GPBR memory
-> > > +			region.
-> > > +
-> > > +Example:
-> > > +
-> > > +gpbr: gpbr@fffffd50 {
-> >=20
-> > Is something referencing this node via phandle?  If not, please rem=
-ove
-> > the label.
->=20
-> Yes, the rtt device is referencing it in its atmel,rtt-rtc-time-reg
-> property (see patch 8 of this series).
+On Wed, 17 Sep 2014, Nishanth Menon wrote:
 
-How can I?  You only sent me patch 9.
+> ti,system-power-controller is more or less the standard way of
+> indicating that the PMIC is the system wide power controller and henc=
+e
+> may be used to switch off the system. Almost ALL TI PMIC drivers and
+> many Maxim PMIC drivers follow the same style.
+>=20
+> So support 'ti,system-power-controller' in addition to the usual
+> 'ti,use_poweroff' to indicate that the PMIC instance has control for
+> switching off the system.
+>=20
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>=20
+> V2: no change, picked up Tony's ack.
+> V1: https://patchwork.kernel.org/patch/4836371/
+>  drivers/mfd/twl4030-power.c |    3 +++
+>  1 file changed, 3 insertions(+)
 
-Patch looks good, I'm going to apply it.
+Applied, thanks.
+
+> diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.=
+c
+> index 3bc969a..1c129ba 100644
+> --- a/drivers/mfd/twl4030-power.c
+> +++ b/drivers/mfd/twl4030-power.c
+> @@ -627,6 +627,9 @@ static bool twl4030_power_use_poweroff(const stru=
+ct twl4030_power_data *pdata,
+>  	if (pdata && pdata->use_poweroff)
+>  		return true;
+> =20
+> +	if (of_property_read_bool(node, "ti,system-power-controller"))
+> +		return true;
+> +
+>  	if (of_property_read_bool(node, "ti,use_poweroff"))
+>  		return true;
+> =20
 
 --=20
 Lee Jones
