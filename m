@@ -1,32 +1,65 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 0/2] regulator: get voltage & duty table from dts for st-pwm
-Date: Wed, 17 Sep 2014 21:07:58 +0800
-Message-ID: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH 2/2] dt-bindings: add devicetree bindings for st-pwm regulator
+Date: Wed, 17 Sep 2014 21:08:00 +0800
+Message-ID: <1410959280-29662-3-git-send-email-zyw@rock-chips.com>
+References: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410959280-29662-1-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dianders@chromium.org, heiko@sntech.de
+Cc: huangtao@rock-chips.com, cf@rock-chips.com, zhangqing@rock-chips.com, Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-get voltage & duty table from device tree might be better, other platforms can also use this
-driver without any modify.
-Tested on a rk3288 sdk board as logic voltage regulator.
+Document the st-pwm regulator
 
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 
-Chris Zhong (2):
-  regulator: st-pwm: get voltage and duty table from dts
-  dt-bindings: add devicetree bindings for st-pwm regulator
+---
 
- .../devicetree/bindings/regulator/st-pwm.txt       |   35 +++++++++
- drivers/regulator/Kconfig                          |    1 -
- drivers/regulator/st-pwm.c                         |   80 ++++++++++----------
- 3 files changed, 77 insertions(+), 39 deletions(-)
+ .../devicetree/bindings/regulator/st-pwm.txt       |   35 ++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/regulator/st-pwm.txt
 
+diff --git a/Documentation/devicetree/bindings/regulator/st-pwm.txt b/Documentation/devicetree/bindings/regulator/st-pwm.txt
+new file mode 100644
+index 0000000..38fec1d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/st-pwm.txt
+@@ -0,0 +1,35 @@
++st pwm regulator bindings
++
++Required properties:
++  - compatible: "pwm-regulator"
++  - pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
++  - voltage-table: voltage and duty table, include 2 merbers in each set of
++    brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
++  - pwm-reg-period: duration (in nanoseconds) of one cycle
++
++Any property defined as part of the core regulator binding defined in
++regulator.txt can also be used.
++
++Example:
++	pwm_regulator {
++                compatible = "st,b2105-pwm-regulator;
++                pwms = <&pwm1 0 1000000 0>;
++
++		voltage-table = <1114000 0>,
++				<1095000 10>,
++				<1076000 20>,
++				<1056000 30>,
++				<1036000 40>,
++				<1016000 50>;
++
++		pwm-reg-period = <8448>;
++		regulators {
++			vdd_logic: pwm-regulator {
++				regulator-always-on;
++				regulator-boot-on;
++				regulator-min-microvolt = <1016000>;
++				regulator-max-microvolt = <1114000>;
++				regulator-name = "vdd_logic";
++			};
++		};
++	};
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
