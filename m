@@ -1,86 +1,59 @@
-From: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+From: Robin Gong <b38343@freescale.com>
 Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
  i.mx6dl
-Date: Wed, 17 Sep 2014 16:41:22 +0800
-Message-ID: <20140917084120.GA6369@Robin-OptiPlex-780>
+Date: Wed, 17 Sep 2014 16:51:08 +0800
+Message-ID: <20140917085106.GB6369@Robin-OptiPlex-780>
 References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
- <1410774073.3314.1.camel@pengutronix.de>
- <20140916034123.GA20800@Robin-OptiPlex-780>
- <1410861006.2746.1.camel@pengutronix.de>
+ <5416D26A.4080707@ahsoftware.de> <20140916035204.GB20800@Robin-OptiPlex-780>
+ <541805E3.6080003@ahsoftware.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1410861006.2746.1.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+In-Reply-To: <541805E3.6080003@ahsoftware.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Holler <holler@ahsoftware.de>
+Cc: shawn.guo@freescale.com, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, fugang.duan@freescale.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 11:50:06AM +0200, Lucas Stach wrote:
-> Hi Robin,
+On Tue, Sep 16, 2014 at 11:41:55AM +0200, Alexander Holler wrote:
+> Am 16.09.2014 05:52, schrieb Robin Gong:
+> >On Mon, Sep 15, 2014 at 01:50:02PM +0200, Alexander Holler wrote:
+> >>Am 10.09.2014 07:30, schrieb Robin Gong:
+> >>>There is one weird data in rxfifo after one full rx/tx transfer
+> >>>done sometimes. It looks a design issue and hard to workaround
+> >>>totally, so disable dma functhion here. And will re-enable it
+> >>>once the root cause found.
+> >>
+> >>Hmm, I experience problems with DMA too but on uart3. I'm using the same
+> >>workaround for the uart (I've just commented out the dma entries in the DT).
+> >>The problem manifests itself here such, that brcm_patchram_plus
+> >>hangs while uploading the firmware to a BCM4330 connected at uart3
+> >>(reproducible).
+> >>
+> >>So maybe there is a bug in the DMA-engine which not only effects
+> >>SPI. Or both drivers contain the same error in handling DMA (maybe
+> >>through c&p).
+> >>But that's just specualtion from me, I haven't looked further into
+> >>that problem.
+> >>
+> >>Regards,
+> >>
+> >>Alexander Holler
+> >Thanks for your information share. But my issue should be caused by hardware,
+> >since everything is ok if it runs on other i.mx6 chip. Is your board also based
+> >on i.mx6 chip? If yes, hope you can raise your issue in freescale community or
+> >contact with Andy whose mail address added in CC list fugang.duan@freescale.cm.
+> >We have fix some bugs in UART DMA case.
 > 
-> Am Dienstag, den 16.09.2014, 11:41 +0800 schrieb Robin Gong:
-> > Hi Lucas,
-> >   I understood your concern,but looks we have to break old DT.
-> 
-> Sorry, but this isn't going to happen. And honestly I don't even see the
-> need to do so.
-> 
-> > Our old DT
-> > support SPI DMA on i.mx6q/dl(v2,b3810c3dc1bcbc6a), but the DMA support patch
-> > for SPI driver is still in reviewing(v6).
-> 
-> So this means now is the time to fix this driver patch to not enable DMA
-> on imx6dl. Nobody will experience any breakage in this case.
->
-Sorry, i.mx6q and i.mx6dl are totally same, not only IP but also clock. So we
-can't distinguish them except for different compatible name....
-> > So the violation you mentioned comes
-> > if someone use the DT during the time(from v2 to spi driver patch upstreamed).
-> >   The different behaviors on different chips(only i.mxdl can't pass strength
-> > test) are just found from last month, this is why I sent the patch for disable
-> > SPI DMA support on i.mx6dl during I sent v6 patch for spi driver. I think that's
-> > make sense, because DTs are also in development, new difference between different
-> > chips maybe found in the future although they share the same IP....
-> >   Yes, I can check cpu type by looking at DT in spi driver, but it's not nice.
-> 
-> Yeah it would have been nicer if we had an explicit DT compatible for
-> the imx6dl ecspi version, but it's not there, so we have to cope with
-> this.
-> 
-> > So I'm afraid that we have to break the old DTs in the gap between the two
-> > levels patch accepted cycle.
-> > 
-> > On Mon, Sep 15, 2014 at 11:41:13AM +0200, Lucas Stach wrote:
-> > > Am Mittwoch, den 10.09.2014, 13:30 +0800 schrieb Robin Gong:
-> > > > There is one weird data in rxfifo after one full rx/tx transfer
-> > > > done sometimes. It looks a design issue and hard to workaround
-> > > > totally, so disable dma functhion here. And will re-enable it
-> > > > once the root cause found.
-> > > > 
-> > > Sorry, I'm late to this as Shawn seems to already have picked up this
-> > > patch, but this isn't the right way to fix the problem.
-> > > 
-> > > We made it clear at kernel summit last year that we try to not break
-> > > existing DTs as booting a new kernel with an old DT is a valid use case.
-> > > While you don't strictly violate this rule what you do here is only
-> > > fixing systems booting with a new DT while leaving others broken.
-> > > 
-> > > If you are working around a hardware problem please disable DMA support
-> > > in the driver. This will also allow you to enable it again, if you find
-> > > another workaround without touching the DT again.
-> > > 
-> > > So this patch gets a NAK from me.
-> > > 
+> It's an i.mx6q (Wandboard quad c1) where I have this problem with
+> mainline and much older (but heavily patched freescale 3.10.x based)
+> kernels. A quick web-search suggests that this problem exists since
+> a long time (noticed mainly by people which try to use BT as this
+> seems to be the major use case for high speed serial communication).
 > 
 > Regards,
-> Lucas
-> -- 
-> Pengutronix e.K.             | Lucas Stach                 |
-> Industrial Linux Solutions   | http://www.pengutronix.de/  |
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Alexander Holler
+Yes, we just have fixed the BT issue over high speed UART last month. Suggest
+you trying our patches based on v3.10.
