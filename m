@@ -1,61 +1,57 @@
-From: Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH] dt:numa: adding numa node mapping for memory nodes.
-Date: Wed, 17 Sep 2014 16:48:39 -0500
-Message-ID: <541A01B7.8030601@mentor.com>
-References: <1410944189-3608-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] ARM: DT: ifc6410: Add board memory range.
+Date: Wed, 17 Sep 2014 22:49:39 +0100
+Message-ID: <541A01F3.4020303@linaro.org>
+References: <1410932179-4652-1-git-send-email-srinivas.kandagatla@linaro.org> <54192B64.6070604@smartplayin.com> <FA9D8682-DB0E-48CF-A519-86A0465300E1@codeaurora.org> <20140917191829.GC3749@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410944189-3608-1-git-send-email-ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140917191829.GC3749@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>, Kumar Gala <galak@codeaurora.org>
+Cc: Pramod Gurav <pramod.gurav@smartplayin.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2014 03:56 AM, Ganapatrao Kulkarni wrote:
-> From: Ganapatrao Kulkarni <ganapatrao.kulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> 
-> This patch adds property "nid" to memory node to provide the memory range to
-> numa node id mapping.
-> 
-> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> 
-> ---
->  Documentation/devicetree/bindings/numa.txt | 58 ++++++++++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/numa.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
-> new file mode 100644
-> index 0000000..c4a94f2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/numa.txt
-> @@ -0,0 +1,58 @@
-> +======================================================
-> +numa id binding description
-> +======================================================
-> +
-> +======================================================
-> +1 - Introduction
-> +======================================================
-> +The device node  property "nid(numa node id)" can be added to memory
-> +device node to map the range of memory addresses as defined in property "reg".
-> +The property "nid" maps the memory range to the numa node id, which is used to
-> +find the local and remory pages on numa aware systems.
 
-"Local" and "remote" memory are notions that relate to some other
-resource -- typically a CPU, but also I/O resources on some systems.  It
-seems to me that a useful NUMA binding would at least specify a "nid"
-property, or something like it, for both cpu and memory nodes.  But this
-document speaks only of memory nodes.
 
-As Kumar said, the device tree on powerpc server systems already has
-properties that express NUMA information.  If you can get hold of a copy
-of the PAPR (not ePAPR) from power.org, refer to the description of
-"ibm,associativity" and related properties.  I recall that it's a bit
-more complex than this proposal, though.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 17/09/14 20:18, Josh Cartwright wrote:
+> On Wed, Sep 17, 2014 at 12:03:37PM -0700, Kumar Gala wrote:
+>> On Sep 16, 2014, at 11:34 PM, Pramod Gurav <pramod.gurav@smartplayin.com> wrote:
+>>> On Wednesday 17 September 2014 11:06 AM, Srinivas Kandagatla wrote:
+>>>> This patch adds memory details of IFC6410 as this is necessary to
+>>>> fix the in-correct memory start comming from ATAGs.
+>>>>
+>>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>>> ---
+>>>> arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 5 +++++
+>>>> 1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>>>> index 90db8af..3287f12 100644
+>>>> --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>>>> +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+>>>> @@ -4,6 +4,11 @@
+>>>> 	model = "Qualcomm APQ8064/IFC6410";
+>>>> 	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
+>>>>
+>>>> +	memory{
+>>> Space before {?
+>>>> +		device_type = "memory";
+>>>> +		reg = <0x80000000 0x80000000>;
+>>>> +	};
+>>>> +
+>>>> 	soc {
+>>>> 		gsbi@16600000 {
+>>>> 			status = "ok?;
+>>
+>> Hmm, this doesn?t seem to work for me.
+>
+> I don't see how it could with qcom_defconfig, as we set
+> CONFIG_ARM_ATAG_DTB_COMPAT.  Is this patch fixing a real issue?
+No, its not fixing any thing by itself.
+
+However along with "ARM: zImage: Allow DTB to override broken ATAG_MEM" 
+patch atleast I get to boot my IFC6410 with multi_v7_defconfig.
+
+>
