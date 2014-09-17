@@ -1,75 +1,177 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] Documentation: dt-bindings: add dt binding info
- for rk3288-smp
-Date: Wed, 17 Sep 2014 20:50:22 +0100
-Message-ID: <20140917195022.GF7983@leverpostej>
-References: <1410864271-9277-1-git-send-email-kever.yang@rock-chips.com>
- <1410864271-9277-2-git-send-email-kever.yang@rock-chips.com>
- <20140916185439.GF14191@leverpostej>
- <5418DFFC.5030808@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5418DFFC.5030808-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: "heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org" <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org" <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Rohit Vaswani <rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree@vger.k>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: [PATCH v4 3/9] of: Update Tegra XUSB pad controller binding for USB
+Date: Wed, 17 Sep 2014 12:59:24 -0700
+Message-ID: <1410983970-7043-4-git-send-email-abrestic@chromium.org>
+References: <1410983970-7043-1-git-send-email-abrestic@chromium.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410983970-7043-1-git-send-email-abrestic@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org
+Cc: Andrew Bresticker <abrestic@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jassi Brar <jassisinghbrar@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 02:12:28AM +0100, Kever Yang wrote:
-> Hi Mark,
-> 
->      Thanks for your comment.
-> On 09/17/2014 02:54 AM, Mark Rutland wrote:
-> > On Tue, Sep 16, 2014 at 11:44:28AM +0100, Kever Yang wrote:
-> >> This add documentation for rk3288 smp dt binding
-> >>
-> >> Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> ---
-> >>
-> >> Changes in v2:
-> >> - add documentation
-> >>
-> >>   Documentation/devicetree/bindings/arm/cpus.txt | 1 +
-> >>   1 file changed, 1 insertion(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> >> index 298e2f6..4b46233 100644
-> >> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> >> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> >> @@ -195,6 +195,7 @@ nodes to be present and contain the properties described below.
-> >>   			    "qcom,kpss-acc-v1"
-> >>   			    "qcom,kpss-acc-v2"
-> >>   			    "rockchip,rk3066-smp"
-> >> +			    "rockchip,rk3288-smp"
-> > How do these differ?
-> rk3066 and rk3288 smp bring up code is quite different, so I need a new 
-> node "rockchip,rk3288-smp"
-> other than "rockchip,rk3066-smp".
+Add new bindings used for USB support by the Tegra XUSB pad controller.
+This includes additional PHY types, USB-specific pinconfig properties, etc.
 
-The code being different is a Linux detail. What is different in the HW
-that necessitates the code being different?
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
+---
+Changes from v2:
+ - Added nvidia,otg-hs-curr-level-offset property.
+ - Dropped "-otg" from VBUS supplies.
+ - Added mbox-names property.
+ - Removed extra whitespace.
+Changes from v1:
+ - Updated to use common mailbox bindings.
+ - Made USB3 port-to-lane mappins a top-level binding rather than a pinconfig
+   binding.
+ - Add #defines for the padctl lanes.
+---
+ .../pinctrl/nvidia,tegra124-xusb-padctl.txt        | 56 ++++++++++++++++++++--
+ include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h   | 20 ++++++++
+ 2 files changed, 72 insertions(+), 4 deletions(-)
 
-> > What does "rockchip,rk3288-smp" mean exactly?
-> The driver who using this node is in 2/3 of this patchset, it goes to 
-> linux-arm-kernel list and linux-rockchip
-> list, I'm not sure if you have get that, maybe I need a RESEND?
-
-Documentaiton and drivers are different things. A binding is a contract,
-and for that contract to be meaningful it needs to be described.
-
-> > Presumably other nodes / properties are required?
-> Base on linux-next, I think only "rockchip,rk3288-smp" is new node to my 
-> driver.
-
-But presumably there are other resources that you require (e.g. a system
-controller, perhaps a specific portion of sram). I can't just put
-"rockchip,rk3288-smp" into an otherwise empty DT and get SMP support, I
-would assume.
-
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+index 2f9c0bd..4a1b9475 100644
+--- a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+@@ -21,6 +21,18 @@ Required properties:
+   - padctl
+ - #phy-cells: Should be 1. The specifier is the index of the PHY to reference.
+   See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the list of valid values.
++- mboxes: Must contain an entry for the XUSB mailbox channel.
++  See ../mailbox/mailbox.txt for details.
++- mbox-names: Must include the following entries:
++  - xusb
++
++Optional properties:
++-------------------
++- vbus-{0,1,2}-supply: VBUS regulator for the corresponding UTMI pad.
++- vddio-hsic-supply: VDDIO regulator for the HSIC pads.
++- nvidia,usb3-port-{0,1}-lane: PCIe/SATA lane to which the corresponding USB3
++  port is mapped.  See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the list
++  of valid values.
+ 
+ Lane muxing:
+ ------------
+@@ -50,6 +62,17 @@ Optional properties:
+   pin or group should be assigned to. Valid values for function names are
+   listed below.
+ - nvidia,iddq: Enables IDDQ mode of the lane. (0: no, 1: yes)
++- nvidia,usb2-port-num: USB2 port (0, 1, or 2) to which the lane is mapped.
++- nvidia,hsic-strobe-trim: HSIC strobe trimmer value.
++- nvidia,hsic-rx-strobe-trim: HSIC RX strobe trimmer value.
++- nvidia,hsic-rx-data-trim: HSIC RX data trimmer value.
++- nvidia,hsic-tx-rtune-n: HSIC TX RTUNEN value.
++- nvidia,hsic-tx-rtune-p: HSIC TX RTUNEP value.
++- nvidia,hsic-tx-slew-n: HSIC TX SLEWN value.
++- nvidia,hsic-tx-slew-p: HSIC TX SLEWP value.
++- nvidia,hsic-auto-term: Enables HSIC AUTO_TERM. (0: no, 1: yes)
++- nvidia,otg-hs-curr-level-offset: Offset to be applied to the pad's fused
++  HS_CURR_LEVEL value.
+ 
+ Note that not all of these properties are valid for all lanes. Lanes can be
+ divided into three groups:
+@@ -58,18 +81,21 @@ divided into three groups:
+ 
+     Valid functions for this group are: "snps", "xusb", "uart", "rsvd".
+ 
+-    The nvidia,iddq property does not apply to this group.
++    The nvidia,otg-hs-curr-level-offset property only applies.
+ 
+   - ulpi-0, hsic-0, hsic-1:
+ 
+     Valid functions for this group are: "snps", "xusb".
+ 
+-    The nvidia,iddq property does not apply to this group.
++    The nvidia,hsic-* properties apply only to the pins hsic-{0,1} when
++    the function is xusb.
+ 
+   - pcie-0, pcie-1, pcie-2, pcie-3, pcie-4, sata-0:
+ 
+     Valid functions for this group are: "pcie", "usb3", "sata", "rsvd".
+ 
++    The nvidia,usb2-port-num property only applies and is required when
++    the function is usb3.
+ 
+ Example:
+ ========
+@@ -82,6 +108,8 @@ SoC file extract:
+ 		reg = <0x0 0x7009f000 0x0 0x1000>;
+ 		resets = <&tegra_car 142>;
+ 		reset-names = "padctl";
++		mboxes = <&xusb_mbox>;
++		mbox-names = "xusb";
+ 
+ 		#phy-cells = <1>;
+ 	};
+@@ -100,15 +128,35 @@ Board file extract:
+ 
+ 	...
+ 
++	usb@0,70090000 {
++		...
++
++		phys = <&padctl 5>, <&padctl 6>, <&padctl 7>;
++		phy-names = "utmi-1", "utmi-2", "usb3-0";
++
++		...
++	}
++
++	...
++
+ 	padctl: padctl@0,7009f000 {
+ 		pinctrl-0 = <&padctl_default>;
+ 		pinctrl-names = "default";
+ 
++		nvidia,usb3-port-0-lane = <TEGRA_XUSB_PADCTL_PIN_PCIE_0>;
++		vbus-2-supply = <&vdd_usb3_vbus>;
++
+ 		padctl_default: pinmux {
+-			usb3 {
+-				nvidia,lanes = "pcie-0", "pcie-1";
++			otg {
++				nvidia,lanes = "otg-1", "otg-2";
++				nvidia,function = "xusb";
++			};
++
++			usb3p0 {
++				nvidia,lanes = "pcie-0";
+ 				nvidia,function = "usb3";
+ 				nvidia,iddq = <0>;
++				nvidia,usb2-port-num = <2>;
+ 			};
+ 
+ 			pcie {
+diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h b/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
+index 914d56d..17b1aab 100644
+--- a/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
++++ b/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
+@@ -3,5 +3,25 @@
+ 
+ #define TEGRA_XUSB_PADCTL_PCIE 0
+ #define TEGRA_XUSB_PADCTL_SATA 1
++#define TEGRA_XUSB_PADCTL_USB3_P0 2
++#define TEGRA_XUSB_PADCTL_USB3_P1 3
++#define TEGRA_XUSB_PADCTL_UTMI_P0 4
++#define TEGRA_XUSB_PADCTL_UTMI_P1 5
++#define TEGRA_XUSB_PADCTL_UTMI_P2 6
++#define TEGRA_XUSB_PADCTL_HSIC_P0 7
++#define TEGRA_XUSB_PADCTL_HSIC_P1 8
++
++#define TEGRA_XUSB_PADCTL_PIN_OTG_0   0
++#define TEGRA_XUSB_PADCTL_PIN_OTG_1   1
++#define TEGRA_XUSB_PADCTL_PIN_OTG_2   2
++#define TEGRA_XUSB_PADCTL_PIN_ULPI_0  3
++#define TEGRA_XUSB_PADCTL_PIN_HSIC_0  4
++#define TEGRA_XUSB_PADCTL_PIN_HSIC_1  5
++#define TEGRA_XUSB_PADCTL_PIN_PCIE_0  6
++#define TEGRA_XUSB_PADCTL_PIN_PCIE_1  7
++#define TEGRA_XUSB_PADCTL_PIN_PCIE_2  8
++#define TEGRA_XUSB_PADCTL_PIN_PCIE_3  9
++#define TEGRA_XUSB_PADCTL_PIN_PCIE_4 10
++#define TEGRA_XUSB_PADCTL_PIN_SATA_0 11
+ 
+ #endif /* _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H */
+-- 
+2.1.0.rc2.206.gedb03e5
