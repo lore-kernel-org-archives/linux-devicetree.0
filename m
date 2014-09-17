@@ -1,99 +1,74 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Wed, 17 Sep 2014 14:52:42 +0300
-Message-ID: <5419760A.7020908@ti.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="w1e2rHFt46iGsneeBqEHjINkBS07KPaEW"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: inki.dae@samsung.com, thierry.reding@gmail.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] of: amba: use of_dma_configure for AMBA devices
+Date: Wed, 17 Sep 2014 12:56:07 +0100
+Message-ID: <90bd1ff3c93b827c12e1b3dc9ad3f227632d0f6e.1410954967.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---w1e2rHFt46iGsneeBqEHjINkBS07KPaEW
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+Commit 591c1e ("of: configure the platform device dma parameters)
+introduced a common mechanism to configure DMA from DT properties.
+AMBA devices created from DT can take advantage of this, too.
 
-On 27/08/14 17:39, Ajay Kumar wrote:
-> Add documentation for DT properties supported by ps8622/ps8625
-> eDP-LVDS converter.
->=20
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> ---
->  .../devicetree/bindings/video/bridge/ps8622.txt    |   20 ++++++++++++=
-++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/video/bridge/ps86=
-22.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/video/bridge/ps8622.txt =
-b/Documentation/devicetree/bindings/video/bridge/ps8622.txt
-> new file mode 100644
-> index 0000000..0ec8172
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/bridge/ps8622.txt
-> @@ -0,0 +1,20 @@
-> +ps8622-bridge bindings
-> +
-> +Required properties:
-> +	- compatible: "parade,ps8622" or "parade,ps8625"
-> +	- reg: first i2c address of the bridge
-> +	- sleep-gpios: OF device-tree gpio specification for PD_ pin.
-> +	- reset-gpios: OF device-tree gpio specification for RST_ pin.
-> +
-> +Optional properties:
-> +	- lane-count: number of DP lanes to use
-> +	- use-external-pwm: backlight will be controlled by an external PWM
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+---
+ drivers/of/platform.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-What does this mean? That the backlight support from ps8625 is not used?
-If so, maybe "disable-pwm" or something?
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 0197725..3b64d0b 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -160,11 +160,10 @@ EXPORT_SYMBOL(of_device_alloc);
+  * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
+  * to fix up DMA configuration.
+  */
+-static void of_dma_configure(struct platform_device *pdev)
++static void of_dma_configure(struct device *dev)
+ {
+ =09u64 dma_addr, paddr, size;
+ =09int ret;
+-=09struct device *dev =3D &pdev->dev;
+=20
+ =09/*
+ =09 * Set default dma-mask to 32 bit. Drivers are expected to setup
+@@ -229,7 +228,7 @@ static struct platform_device *of_platform_device_creat=
+e_pdata(
+ =09if (!dev)
+ =09=09goto err_clear_flag;
+=20
+-=09of_dma_configure(dev);
++=09of_dma_configure(&dev->dev);
+ =09dev->dev.bus =3D &platform_bus_type;
+ =09dev->dev.platform_data =3D platform_data;
+=20
+@@ -291,7 +290,6 @@ static struct amba_device *of_amba_device_create(struct=
+ device_node *node,
+ =09}
+=20
+ =09/* setup generic device info */
+-=09dev->dev.coherent_dma_mask =3D ~0;
+ =09dev->dev.of_node =3D of_node_get(node);
+ =09dev->dev.parent =3D parent;
+ =09dev->dev.platform_data =3D platform_data;
+@@ -299,6 +297,7 @@ static struct amba_device *of_amba_device_create(struct=
+ device_node *node,
+ =09=09dev_set_name(&dev->dev, "%s", bus_id);
+ =09else
+ =09=09of_device_make_bus_id(&dev->dev);
++=09of_dma_configure(&dev->dev);
+=20
+ =09/* Allow the HW Peripheral ID to be overridden */
+ =09prop =3D of_get_property(node, "arm,primecell-periphid", NULL);
+--=20
+1.9.1
 
-> +
-> +Example:
-> +	lvds-bridge@48 {
-> +		compatible =3D "parade,ps8622";
-> +		reg =3D <0x48>;
-> +		sleep-gpios =3D <&gpc3 6 1 0 0>;
-> +		reset-gpios =3D <&gpc3 1 1 0 0>;
-> +		lane-count =3D <1>;
-> +	};
->=20
 
-I wish all new display component bindings would use the video
-ports/endpoints to describe the connections. It will be very difficult
-to improve the display driver model later if we're missing such critical
-pieces from the DT bindings.
-
- Tomi
-
-
-
---w1e2rHFt46iGsneeBqEHjINkBS07KPaEW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUGXYKAAoJEPo9qoy8lh71AOgP/3fCOrwcDPTe9lq3AOmIN91G
-xowHY/h40oWxdPBHmgcrcPevUMVUWlMzI4ndArsQLNwIId4Z1l72l0lWFTNyJY63
-7DxxoaAURuj7aTpoH1mEqGEZoXBPcEhN8vGJNaUDGvvjbxwL5LKF7s/ScIjAm/rV
-l8FHjWQHIWLI9aAqtVU1so2ehnMwLyvJHeUp3tBTLQ5Hea0WtNovrP5Zsj97D+2K
-s+hjVEHSJ/WRa4n0voY+bY/9tSJZrPaV57Jwl4EhSUuoZWDiGnnsxzE/P1HHWPGI
-eM/xiTglowxsQYQBojr4KqdHUOvV7+w4wUvczJEqNj8qA8RTEPYJANJFH420Qjxo
-MiwSNouYxi2tan38pOp7EJ+IYA8GR9btM54mMgAD5XBo8v6e6/aq5hAiQ3nBp+PW
-rHHPSybZwM9SW5Ex87/GKZUqxSA8Jm7U8I0yAqRcjmSCl8MTNnKpaGFadA6Z+Z23
-hyyQFixaxIW8sftx4zTZw/E4SL3qoV75vtlGcRahpOW/9xYPOY+bJlyz0FKXyLD2
-Q15Q/RkQ73KC4TJ8W6ezQNVuPNIv2G6eZwrvK/gPfvctcsX79+kXZjIIfS8eagSo
-0KMT9Bpo9irFpRQCDi6JBSOdqbUcfMHmKwXx8s2riHj+UR4/HFtcvxgVsQmGIOWx
-k6mhzAWW0Hfc5PoWRHdz
-=fiiX
------END PGP SIGNATURE-----
-
---w1e2rHFt46iGsneeBqEHjINkBS07KPaEW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
