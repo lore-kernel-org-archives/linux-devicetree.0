@@ -1,76 +1,212 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 9/9] mfd: syscon: add Atmel GPBR DT bindings
- documention
-Date: Wed, 17 Sep 2014 09:34:05 -0700
-Message-ID: <20140917163405.GM30918@lee--X1>
-References: <1410441525-25258-1-git-send-email-boris.brezillon@free-electrons.com>
- <1410441525-25258-10-git-send-email-boris.brezillon@free-electrons.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 1/3] phy: exynos-dp-video: Use syscon support to control
+ pmu register
+Date: Wed, 17 Sep 2014 22:24:33 +0530
+Message-ID: <5419BCC9.6000607@ti.com>
+References: <1410840408-19954-1-git-send-email-gautam.vivek@samsung.com> <1410843726-4235-1-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1410441525-25258-10-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1410843726-4235-1-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: inki.dae@samsung.com, seanpaul@google.com, jg1.han@samsung.com, ajaykumar.rs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Sep 2014, Boris BREZILLON wrote:
 
-> The GPBR block provides a set of battery-backed registers that can be=
- used
-> to save data which need to be kept when the system is powered down an=
-d
-> VDD-core is maintained by an external battery.
->=20
-> A typical usage is the RTT block (when used as an RTC) which needs on=
-e of
-> those registers to save the current time.
->=20
-> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+On Tuesday 16 September 2014 10:32 AM, Vivek Gautam wrote:
+> Currently the DP_PHY_ENABLE register is mapped in the driver,
+> and accessed to control power to the PHY.
+> With mfd-syscon and regmap interface available at our disposal,
+> it's wise to use that instead of using a 'reg' property for the
+> controller and allocating a memory resource for that.
+> 
+> To facilitate this, we have added another compatible string
+> for Exynso5420 SoC to acquire driver data which contains
+> different DP-PHY-CONTROL register offset.
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Cc: Jingoo Han <jg1.han@samsung.com>
+> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+
+Taking this in linux-phy tree. If someone has already taken this patch, please
+let me know.
+
+Thanks
+Kishon
+
 > ---
->  Documentation/devicetree/bindings/mfd/atmel,gpbr.txt | 15 ++++++++++=
-+++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/atmel,gpbr.=
-txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/atmel,gpbr.txt b/D=
-ocumentation/devicetree/bindings/mfd/atmel,gpbr.txt
-> new file mode 100644
-> index 0000000..a285695
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
-> @@ -0,0 +1,15 @@
-> +* Device tree bindings for Atmel GPBR (General Purpose Backup Regist=
-ers)
-> +
-> +The GPBR are a set of battery-backed registers.
-> +
-> +Required properties:
-> +- compatible:		"atmel,at91sam9260-gpbr", "syscon"
-> +- reg:			contains offset/length value of the GPBR memory
-> +			region.
-> +
-> +Example:
-> +
-> +gpbr: gpbr@fffffd50 {
-
-Is something referencing this node via phandle?  If not, please remove
-the label.
-
-> +	compatible =3D "atmel,at91sam9260-gpbr", "syscon";
-> +	reg =3D <0xfffffd50 0x10>;
+> 
+> Changes since v2:
+>  - Using 'EXYNOS5_PHY_ENABLE' macro instead of 'EXYNOS_DPTX_PHY_ENABLE'
+>    since that's available with us in "linux/mfd/syscon/exynos5-pmu.h" file.
+> 
+> Changes since v1:
+>  - state->regs should have been "struct regmap *" instead of
+>    "void __iomem *". So corrected the same.
+> 
+>  .../devicetree/bindings/phy/samsung-phy.txt        |    7 +-
+>  drivers/phy/phy-exynos-dp-video.c                  |   79 +++++++++++++-------
+>  2 files changed, 59 insertions(+), 27 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> index 7a6feea..15e0f2c 100644
+> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> @@ -17,8 +17,11 @@ Samsung EXYNOS SoC series Display Port PHY
+>  -------------------------------------------------
+>  
+>  Required properties:
+> -- compatible : should be "samsung,exynos5250-dp-video-phy";
+> -- reg : offset and length of the Display Port PHY register set;
+> +- compatible : should be one of the following supported values:
+> +	 - "samsung,exynos5250-dp-video-phy"
+> +	 - "samsung,exynos5420-dp-video-phy"
+> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
+> +		      control pmu registers for power isolation.
+>  - #phy-cells : from the generic PHY bindings, must be 0;
+>  
+>  Samsung S5P/EXYNOS SoC series USB PHY
+> diff --git a/drivers/phy/phy-exynos-dp-video.c b/drivers/phy/phy-exynos-dp-video.c
+> index 8b3026e..53f44a0 100644
+> --- a/drivers/phy/phy-exynos-dp-video.c
+> +++ b/drivers/phy/phy-exynos-dp-video.c
+> @@ -13,44 +13,55 @@
+>  #include <linux/io.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/mfd/syscon/exynos5-pmu.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+>  
+> -/* DPTX_PHY_CONTROL register */
+> -#define EXYNOS_DPTX_PHY_ENABLE		(1 << 0)
+> +struct exynos_dp_video_phy_drvdata {
+> +	u32 phy_ctrl_offset;
 > +};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+>  struct exynos_dp_video_phy {
+> -	void __iomem *regs;
+> +	struct regmap *regs;
+> +	const struct exynos_dp_video_phy_drvdata *drvdata;
+>  };
+>  
+> -static int __set_phy_state(struct exynos_dp_video_phy *state, unsigned int on)
+> +static void exynos_dp_video_phy_pwr_isol(struct exynos_dp_video_phy *state,
+> +							unsigned int on)
+>  {
+> -	u32 reg;
+> +	unsigned int val;
+> +
+> +	if (IS_ERR(state->regs))
+> +		return;
+>  
+> -	reg = readl(state->regs);
+> -	if (on)
+> -		reg |= EXYNOS_DPTX_PHY_ENABLE;
+> -	else
+> -		reg &= ~EXYNOS_DPTX_PHY_ENABLE;
+> -	writel(reg, state->regs);
+> +	val = on ? 0 : EXYNOS5_PHY_ENABLE;
+>  
+> -	return 0;
+> +	regmap_update_bits(state->regs, state->drvdata->phy_ctrl_offset,
+> +			   EXYNOS5_PHY_ENABLE, val);
+>  }
+>  
+>  static int exynos_dp_video_phy_power_on(struct phy *phy)
+>  {
+>  	struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
+>  
+> -	return __set_phy_state(state, 1);
+> +	/* Disable power isolation on DP-PHY */
+> +	exynos_dp_video_phy_pwr_isol(state, 0);
+> +
+> +	return 0;
+>  }
+>  
+>  static int exynos_dp_video_phy_power_off(struct phy *phy)
+>  {
+>  	struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
+>  
+> -	return __set_phy_state(state, 0);
+> +	/* Enable power isolation on DP-PHY */
+> +	exynos_dp_video_phy_pwr_isol(state, 1);
+> +
+> +	return 0;
+>  }
+>  
+>  static struct phy_ops exynos_dp_video_phy_ops = {
+> @@ -59,11 +70,31 @@ static struct phy_ops exynos_dp_video_phy_ops = {
+>  	.owner		= THIS_MODULE,
+>  };
+>  
+> +static const struct exynos_dp_video_phy_drvdata exynos5250_dp_video_phy = {
+> +	.phy_ctrl_offset	= EXYNOS5_DPTX_PHY_CONTROL,
+> +};
+> +
+> +static const struct exynos_dp_video_phy_drvdata exynos5420_dp_video_phy = {
+> +	.phy_ctrl_offset	= EXYNOS5420_DPTX_PHY_CONTROL,
+> +};
+> +
+> +static const struct of_device_id exynos_dp_video_phy_of_match[] = {
+> +	{
+> +		.compatible = "samsung,exynos5250-dp-video-phy",
+> +		.data = &exynos5250_dp_video_phy,
+> +	}, {
+> +		.compatible = "samsung,exynos5420-dp-video-phy",
+> +		.data = &exynos5420_dp_video_phy,
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
+> +
+>  static int exynos_dp_video_phy_probe(struct platform_device *pdev)
+>  {
+>  	struct exynos_dp_video_phy *state;
+>  	struct device *dev = &pdev->dev;
+> -	struct resource *res;
+> +	const struct of_device_id *match;
+>  	struct phy_provider *phy_provider;
+>  	struct phy *phy;
+>  
+> @@ -71,11 +102,15 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
+>  	if (!state)
+>  		return -ENOMEM;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -
+> -	state->regs = devm_ioremap_resource(dev, res);
+> -	if (IS_ERR(state->regs))
+> +	state->regs = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +						      "samsung,pmu-syscon");
+> +	if (IS_ERR(state->regs)) {
+> +		dev_err(dev, "Failed to lookup PMU regmap\n");
+>  		return PTR_ERR(state->regs);
+> +	}
+> +
+> +	match = of_match_node(exynos_dp_video_phy_of_match, dev->of_node);
+> +	state->drvdata = match->data;
+>  
+>  	phy = devm_phy_create(dev, NULL, &exynos_dp_video_phy_ops, NULL);
+>  	if (IS_ERR(phy)) {
+> @@ -89,12 +124,6 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
+>  	return PTR_ERR_OR_ZERO(phy_provider);
+>  }
+>  
+> -static const struct of_device_id exynos_dp_video_phy_of_match[] = {
+> -	{ .compatible = "samsung,exynos5250-dp-video-phy" },
+> -	{ },
+> -};
+> -MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
+> -
+>  static struct platform_driver exynos_dp_video_phy_driver = {
+>  	.probe	= exynos_dp_video_phy_probe,
+>  	.driver = {
+> 
