@@ -1,71 +1,78 @@
-From: Frans Klaver <frans.klaver@xsens.com>
-Subject: Re: [PATCH 3/4] tty: omap-serial: use threaded interrupt handler
-Date: Wed, 17 Sep 2014 14:13:03 +0200
-Message-ID: <20140917121303.GB20438@ci00147.xsens-tech.local>
-References: <1410789610-23059-1-git-send-email-frans.klaver@xsens.com>
- <1410789610-23059-4-git-send-email-frans.klaver@xsens.com>
- <54170823.7040801@hurleysoftware.com>
- <5417228C.5070503@hurleysoftware.com>
- <20140916085037.GI28458@ci00147.xsens-tech.local>
- <54197804.3020302@hurleysoftware.com>
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RESEND] ARM: DTS: correct the capability string for mmc0
+Date: Wed, 17 Sep 2014 17:43:40 +0530
+Message-ID: <CAFp+6iE07b=juik2Ms4WEzzBw0FxPnAgbxtdqVGBBYZQ7fk5zA@mail.gmail.com>
+References: <1410857409-24767-1-git-send-email-gautam.vivek@samsung.com>
+	<CAD=FV=U4rPsfGkTcSY3OYHPgCFOccaHTjG1qC6WAekOEV09Q7A@mail.gmail.com>
+	<01ce01cfd270$3b3d31b0$b1b79510$@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54197804.3020302@hurleysoftware.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: Tony Lindgren <tony@atomide.com>, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Pelykh <alexey.pelykh@gmail.com>, Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <01ce01cfd270$3b3d31b0$b1b79510$@kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 08:01:08AM -0400, Peter Hurley wrote:
-> On 09/16/2014 04:50 AM, Frans Klaver wrote:
-> > On Mon, Sep 15, 2014 at 01:31:56PM -0400, Peter Hurley wrote:
-> >> On 09/15/2014 11:39 AM, Peter Hurley wrote:
-> >>> On 09/15/2014 10:00 AM, Frans Klaver wrote:
-> >>>> At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we see 1600 uart
-> >>>> rx buffer overflows within 30 seconds. Threading the interrupt handling reduces
-> >>>> this to about 170 overflows in 10 minutes.
-> >>>
-> >>> Why is the threadirqs kernel boot option not sufficient?
-> >>> Or conversely, shouldn't this be selectable?
-> >>
-> > 
-> > I wasn't aware of the threadirqs boot option. I also wouldn't know if
-> > this should be selectable. What would be a reason to favor the
-> > non-threaded irq over the threaded irq?
-> 
-> Not everyone cares enough about serial to dedicate kthreads to it :)
-
-Fair enough. In that light, we might not care enough about other
-subsystems to dedicate kthreads to it :). Selectable seems reasonable in
-that case.
+Hi Kukjin,
 
 
-> >> Also, do you see the same performance differential when you implement this
-> >> in the 8250 driver (that is, on top of Sebastian's omap->8250 conversion)?
-> >>
-> > 
-> > I haven't gotten Sebastian's driver to work properly yet on the console.
-> > There was no reason for me yet to throw my omap changes on top of
-> > Sebastian's queue.
-> > 
-> >>> PS - To overflow the 64 byte RX FIFO at those data rates means interrupt
-> >>> latency in excess of 250us?
-> > 
-> > At 3686400 baud it should take about 174 us to fill a 64 byte buffer. I
-> > haven't done any measurements on the interrupt latency though. If you
-> > consider that we're sending about 1kB of data, 240 times a second, we're
-> > spending a lot of time reading data from the uart. I can imagine the
-> > system has other work to do as well.
-> 
-> System work should not keep irqs from being serviced. Even 174us is a long
-> time not to service an interrupt. Maybe console writes are keeping the isr
-> from running?
+On Wed, Sep 17, 2014 at 5:39 PM, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Doug Anderson wrote:
+>>
+>> Vivek,
+>>
+> Hi,
+>
+>> On Tue, Sep 16, 2014 at 1:50 AM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> > From: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> >
+>> > MMC capability for HS200 is parsed in mmc/core/host.c as
+>> > dts string "mmc-hs200-1_8v".
+>> >
+>> > This patch corrects the dts string for Exynos5420 based peach-pit
+>> > and Exynos5800 based peach-pi boards.
+>> >
+>> > Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+> In this case, Vivek's sign is required here.
 
-That's quite possible. I'll have to redo the test setup I had for this to
-give you a decent answer. I'll have to do that anyway as Sebastian's
-8250 conversion improves.
+Ok, i will resend it with my Signed-off
 
-Thanks for the comments,
-Frans
+>
+>> > ---
+>> >
+>> > Hi Kukjin,
+>> >
+>> > As commented by Doug earlier for this patch, the two patches required
+>> >   -- mmc: dw_mmc: Make sure we don't get stuck when we get an error
+>> >   -- mmc: dw_mmc: change to use recommended reset procedure
+>> > are now merged in upstream.
+>> > So you can go ahead and pick this change.
+>> >
+>> >  arch/arm/boot/dts/exynos5420-peach-pit.dts |    2 +-
+>> >  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    2 +-
+>> >  2 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>
+> Thanks, I will take this patch once Vivek replies his sign on this patch.
+>
+> - Kukjin
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
