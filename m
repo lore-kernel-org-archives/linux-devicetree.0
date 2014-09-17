@@ -1,59 +1,186 @@
-From: Robin Gong <b38343@freescale.com>
-Subject: Re: [PATCH v2] ARM: dts: imx6dl: disable dma support for spi on
- i.mx6dl
-Date: Wed, 17 Sep 2014 16:51:08 +0800
-Message-ID: <20140917085106.GB6369@Robin-OptiPlex-780>
-References: <1410327012-31185-1-git-send-email-b38343@freescale.com>
- <5416D26A.4080707@ahsoftware.de> <20140916035204.GB20800@Robin-OptiPlex-780>
- <541805E3.6080003@ahsoftware.de>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 4/4 v5] GPIO: gpio-dwapb: Suspend & Resume PM enabling
+Date: Wed, 17 Sep 2014 11:50:08 +0300
+Message-ID: <1410943808.7023.64.camel@linux.intel.com>
+References: <1410970722-8579-1-git-send-email-alvin.chen@intel.com>
+	 <1410970722-8579-5-git-send-email-alvin.chen@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <541805E3.6080003@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: shawn.guo@freescale.com, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, fugang.duan@freescale.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1410970722-8579-5-git-send-email-alvin.chen@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Weike Chen <alvin.chen@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 11:41:55AM +0200, Alexander Holler wrote:
-> Am 16.09.2014 05:52, schrieb Robin Gong:
-> >On Mon, Sep 15, 2014 at 01:50:02PM +0200, Alexander Holler wrote:
-> >>Am 10.09.2014 07:30, schrieb Robin Gong:
-> >>>There is one weird data in rxfifo after one full rx/tx transfer
-> >>>done sometimes. It looks a design issue and hard to workaround
-> >>>totally, so disable dma functhion here. And will re-enable it
-> >>>once the root cause found.
-> >>
-> >>Hmm, I experience problems with DMA too but on uart3. I'm using the same
-> >>workaround for the uart (I've just commented out the dma entries in the DT).
-> >>The problem manifests itself here such, that brcm_patchram_plus
-> >>hangs while uploading the firmware to a BCM4330 connected at uart3
-> >>(reproducible).
-> >>
-> >>So maybe there is a bug in the DMA-engine which not only effects
-> >>SPI. Or both drivers contain the same error in handling DMA (maybe
-> >>through c&p).
-> >>But that's just specualtion from me, I haven't looked further into
-> >>that problem.
-> >>
-> >>Regards,
-> >>
-> >>Alexander Holler
-> >Thanks for your information share. But my issue should be caused by hardware,
-> >since everything is ok if it runs on other i.mx6 chip. Is your board also based
-> >on i.mx6 chip? If yes, hope you can raise your issue in freescale community or
-> >contact with Andy whose mail address added in CC list fugang.duan@freescale.cm.
-> >We have fix some bugs in UART DMA case.
+On Wed, 2014-09-17 at 09:18 -0700, Weike Chen wrote:
+> This patch enables suspend and resume mode for the power management, and
+> it is based on Josef Ahmad's previous work.
 > 
-> It's an i.mx6q (Wandboard quad c1) where I have this problem with
-> mainline and much older (but heavily patched freescale 3.10.x based)
-> kernels. A quick web-search suggests that this problem exists since
-> a long time (noticed mainly by people which try to use BT as this
-> seems to be the major use case for high speed serial communication).
+> Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
+
+Looks fine for me
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+
+
+> Signed-off-by: Weike Chen <alvin.chen@intel.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c |  115 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
 > 
-> Regards,
-> 
-> Alexander Holler
-Yes, we just have fixed the BT issue over high speed UART last month. Suggest
-you trying our patches based on v3.10.
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index db059bb..7feaf9d 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -51,10 +51,28 @@
+>  
+>  struct dwapb_gpio;
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +/* Store GPIO context across system-wide suspend/resume transitions */
+> +struct dwapb_context {
+> +	u32 data;
+> +	u32 dir;
+> +	u32 ext;
+> +	u32 int_en;
+> +	u32 int_mask;
+> +	u32 int_type;
+> +	u32 int_pol;
+> +	u32 int_deb;
+> +};
+> +#endif
+> +
+>  struct dwapb_gpio_port {
+>  	struct bgpio_chip	bgc;
+>  	bool			is_registered;
+>  	struct dwapb_gpio	*gpio;
+> +#ifdef CONFIG_PM_SLEEP
+> +	struct dwapb_context	*ctx;
+> +#endif
+> +	unsigned int		idx;
+>  };
+>  
+>  struct dwapb_gpio {
+> @@ -381,6 +399,13 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+>  
+>  	port = &gpio->ports[offs];
+>  	port->gpio = gpio;
+> +	port->idx = pp->idx;
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +	port->ctx = devm_kzalloc(gpio->dev, sizeof(*port->ctx), GFP_KERNEL);
+> +	if (!port->ctx)
+> +		return -ENOMEM;
+> +#endif
+>  
+>  	dat = gpio->regs + GPIO_EXT_PORTA + (pp->idx * GPIO_EXT_PORT_SIZE);
+>  	set = gpio->regs + GPIO_SWPORTA_DR + (pp->idx * GPIO_SWPORT_DR_SIZE);
+> @@ -586,10 +611,100 @@ static const struct of_device_id dwapb_of_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, dwapb_of_match);
+>  
+> +#ifdef CONFIG_PM_SLEEP
+> +static int dwapb_gpio_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
+> +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
+> +	unsigned long flags;
+> +	int i;
+> +
+> +	spin_lock_irqsave(&bgc->lock, flags);
+> +	for (i = 0; i < gpio->nr_ports; i++) {
+> +		unsigned int offset;
+> +		unsigned int idx = gpio->ports[i].idx;
+> +		struct dwapb_context *ctx = gpio->ports[i].ctx;
+> +
+> +		BUG_ON(ctx == 0);
+> +
+> +		offset = GPIO_SWPORTA_DDR + idx * GPIO_SWPORT_DDR_SIZE;
+> +		ctx->dir = dwapb_read(gpio, offset);
+> +
+> +		offset = GPIO_SWPORTA_DR + idx * GPIO_SWPORT_DR_SIZE;
+> +		ctx->data = dwapb_read(gpio, offset);
+> +
+> +		offset = GPIO_EXT_PORTA + idx * GPIO_EXT_PORT_SIZE;
+> +		ctx->ext = dwapb_read(gpio, offset);
+> +
+> +		/* Only port A can provide interrupts */
+> +		if (idx == 0) {
+> +			ctx->int_mask	= dwapb_read(gpio, GPIO_INTMASK);
+> +			ctx->int_en	= dwapb_read(gpio, GPIO_INTEN);
+> +			ctx->int_pol	= dwapb_read(gpio, GPIO_INT_POLARITY);
+> +			ctx->int_type	= dwapb_read(gpio, GPIO_INTTYPE_LEVEL);
+> +			ctx->int_deb	= dwapb_read(gpio, GPIO_PORTA_DEBOUNCE);
+> +
+> +			/* Mask out interrupts */
+> +			dwapb_write(gpio, GPIO_INTMASK, 0xffffffff);
+> +		}
+> +	}
+> +	spin_unlock_irqrestore(&bgc->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwapb_gpio_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct dwapb_gpio *gpio = platform_get_drvdata(pdev);
+> +	struct bgpio_chip *bgc	= &gpio->ports[0].bgc;
+> +	unsigned long flags;
+> +	int i;
+> +
+> +	spin_lock_irqsave(&bgc->lock, flags);
+> +	for (i = 0; i < gpio->nr_ports; i++) {
+> +		unsigned int offset;
+> +		unsigned int idx = gpio->ports[i].idx;
+> +		struct dwapb_context *ctx = gpio->ports[i].ctx;
+> +
+> +		BUG_ON(ctx == 0);
+> +
+> +		offset = GPIO_SWPORTA_DR + idx * GPIO_SWPORT_DR_SIZE;
+> +		dwapb_write(gpio, offset, ctx->data);
+> +
+> +		offset = GPIO_SWPORTA_DDR + idx * GPIO_SWPORT_DDR_SIZE;
+> +		dwapb_write(gpio, offset, ctx->dir);
+> +
+> +		offset = GPIO_EXT_PORTA + idx * GPIO_EXT_PORT_SIZE;
+> +		dwapb_write(gpio, offset, ctx->ext);
+> +
+> +		/* Only port A can provide interrupts */
+> +		if (idx == 0) {
+> +			dwapb_write(gpio, GPIO_INTTYPE_LEVEL, ctx->int_type);
+> +			dwapb_write(gpio, GPIO_INT_POLARITY, ctx->int_pol);
+> +			dwapb_write(gpio, GPIO_PORTA_DEBOUNCE, ctx->int_deb);
+> +			dwapb_write(gpio, GPIO_INTEN, ctx->int_en);
+> +			dwapb_write(gpio, GPIO_INTMASK, ctx->int_mask);
+> +
+> +			/* Clear out spurious interrupts */
+> +			dwapb_write(gpio, GPIO_PORTA_EOI, 0xffffffff);
+> +		}
+> +	}
+> +	spin_unlock_irqrestore(&bgc->lock, flags);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(dwapb_gpio_pm_ops, dwapb_gpio_suspend,
+> +			 dwapb_gpio_resume);
+> +
+>  static struct platform_driver dwapb_gpio_driver = {
+>  	.driver		= {
+>  		.name	= "gpio-dwapb",
+>  		.owner	= THIS_MODULE,
+> +		.pm	= &dwapb_gpio_pm_ops,
+>  		.of_match_table = of_match_ptr(dwapb_of_match),
+>  	},
+>  	.probe		= dwapb_gpio_probe,
+
+
+-- 
+Andy Shevchenko <andriy.shevchenko@intel.com>
+Intel Finland Oy
+
