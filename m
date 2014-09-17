@@ -1,60 +1,73 @@
-From: Andrew Bresticker <abrestic@google.com>
-Subject: Re: [PATCH 0/6] dts, kbuild: Implement support for dtb vendor subdirs
-Date: Tue, 16 Sep 2014 20:49:18 -0700
-Message-ID: <CAL1qeaGCeRyeKLo70E264bZcamOfBKoN9Y8_NDCjV5j4DoOw1Q@mail.gmail.com>
-References: <1409899692-1455-1-git-send-email-rric@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1409899692-1455-1-git-send-email-rric@kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Robert Richter <rric@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Michal Marek <mmarek@suse.cz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>
+From: Caesar Wang <caesar.wang@rock-chips.com>
+Subject: [PATCH v5 2/4] dt-bindings: document Rockchip thermal
+Date: Wed, 17 Sep 2014 11:59:11 +0800
+Message-ID: <1410926353-15674-3-git-send-email-caesar.wang@rock-chips.com>
+References: <1410926353-15674-1-git-send-email-caesar.wang@rock-chips.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1410926353-15674-1-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, dmitry.torokhov@gmail.com, addy.ke@rock-chips.com, zyf@rock-chips.com, cjf@rock-chips.com, Caesar Wang <caesar.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Robert,
+This add the necessary binding documentation for the thermal
+found on Rockchip SoCs
 
-> For arm64 we want to put dts files into vendor's subdirectories from
-> the beginning. This patch set implements this. As this is a generic
-> kbuild implementation, vendor subdirs will be also available for
-> arch/arm and other architectures. The subdirectory tree is also
-> reflected in the install path.
->
-> A new makefile variable dts-dirs is introduced to point to dts
-> subdirs. This variable is used by kbuild for building and installation
-> of dtb files.
->
-> A dts Makefile looks now as follows:
->
-> ----
-> dtb-$(CONFIG_...) += some_file_1.dtb
-> dtb-$(CONFIG_...) += some_file_2.dtb
->
-> dts-dirs          += dir_vendor_a
-> dts-dirs          += dir_vendor_b
->
-> # come always afterwards:
-> always         := $(dtb-y)
-> subdir-y       := $(dts-dirs)
-> clean-files    := *.dtb
-> ----
->
-> This patches also introduces the dtbs_install make target for
-> arm64. Install rules are moved to Makefile.dtbinst using the same
-> style and calling convention like for modinst and fwinst.
->
-> Robert Richter (6):
->   dts, arm64: Add dtbs_install make target
->   dts, kbuild: Factor out dtbs install rules to Makefile.dtbinst
->   dts, arm/arm64: Remove dtbs build rules in sub-makes
->   dts, kbuild: Implement support for dtb vendor subdirs
->   dts, arm64: Move dts files to vendor subdirs
->   dts, arm: Remove $(MACHINE) variable from dtbs make recipes
+Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+---
+ .../bindings/thermal/rockchip-thermal.txt          | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
 
-I've tested this for arm64 and by adding a vendor sub-directory
-locally for arm.  This series is also the base for my MIPS DT vendor
-sub-directory series
-(http://www.linux-mips.org/archives/linux-mips/2014-09/msg00217.html).
-So, for the entire series,
+diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+new file mode 100644
+index 0000000..6fc8bc3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+@@ -0,0 +1,41 @@
++* Temperature Sensor ADC (TSADC) on rockchip SoCs
++
++Required properties:
++- compatible: "rockchip,rk3288-tsadc"
++- reg: physical base address of the controller and length of memory mapped
++       region.
++- interrupts: The interrupt number to the cpu. The interrupt specifier format
++	      depends on the interrupt controller.
++- clocks: Must contain an entry for each entry in clock-names.
++- clock-names: Shall be "tsadc" for the converter-clock, and "apb_pclk" for
++	       the peripheral clock.
++- num-trips:  number of total trip points, this is required, set it 0 if none,
++  	      if greater than 0, the following properties must be defined;
++- tripN-temp: temperature of trip point N, should be in ascending order;
++- tripN-type: type of trip point N, should be one of "active" "passive" "hot"
++	      "critical";
++- tripN-cdev-num: number of the cooling devices which can be bound to trip
++		  point N, this is required if trip point N is defined, set it 0 if none,
++		  otherwise the following cooling device names must be defined;
++- tripN-cdev-nameM: name of the No. M cooling device of trip point N;
++
++Example:
++tsadc: tsadc@ff280000 {
++	compatible = "rockchip,rk3288-tsadc";
++	reg = <0xff280000 0x100>;
++	interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
++	clock-names = "tsadc", "apb_pclk";
++
++	num-trips = <2>;
++
++	trip0-temp = <80>;
++	trip0-type = "passive";
++	trip0-cdev-num = <1>;
++	trip0-cdev-name0 = "thermal-cpufreq-0";
++
++	trip1-temp = <100>;
++	trip1-type = "critical";
++	trip1-cdev-num = <1>;
++	trip1-cdev-name0 = "thermal-cpufreq-0";
++};
+-- 
+1.9.1
 
-Tested-by: Andrew Bresticker <abrestic@chromium.org>
+
