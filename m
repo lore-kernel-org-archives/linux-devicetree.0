@@ -1,57 +1,122 @@
-From: Kever Yang <kever.yang@rock-chips.com>
-Subject: Re: [PATCH v2 1/3] Documentation: dt-bindings: add dt binding info
- for rk3288-smp
-Date: Wed, 17 Sep 2014 09:12:28 +0800
-Message-ID: <5418DFFC.5030808@rock-chips.com>
-References: <1410864271-9277-1-git-send-email-kever.yang@rock-chips.com> <1410864271-9277-2-git-send-email-kever.yang@rock-chips.com> <20140916185439.GF14191@leverpostej>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: imx6: add pm_power_off support for
+ i.mx6 chips
+Date: Wed, 17 Sep 2014 09:47:24 +0800
+Message-ID: <20140917014723.GB4796@dragon>
+References: <1410511739-31122-1-git-send-email-b38343@freescale.com>
+ <1410511739-31122-2-git-send-email-b38343@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140916185439.GF14191@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "heiko@sntech.de" <heiko@sntech.de>, "dianders@chromium.org" <dianders@chromium.org>, "sonnyrao@chromium.org" <sonnyrao@chromium.org>, "addy.ke@rock-chips.com" <addy.ke@rock-chips.com>, "cf@rock-chips.com" <cf@rock-chips.com>, "xjq@rock-chips.com" <xjq@rock-chips.com>, "hj@rock-chips.com" <hj@rock-chips.com>, "huangtao@rock-chips.com" <huangtao@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Olof Johansson <olof@lixom.net>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Rohit Vaswani <rvaswani@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.k>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1410511739-31122-2-git-send-email-b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Fri, Sep 12, 2014 at 04:48:57PM +0800, Robin Gong wrote:
+> All chips of i.mx6 can be powered off by programming SNVS.
+> For example :
+> On i.mx6q-sabresd board, PMIC_ON_REQ connect with external
+> pmic ON/OFF pin, that will cause the whole PMIC powered off
+> except VSNVS. And system can restart once PMIC_ON_REQ goes
+> high by push POWRER key.
+> 
+> Signed-off-by: Robin Gong <b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  .../bindings/power_supply/imx-snvs-poweroff.txt     | 21 +++++++++++++++++++++
 
-     Thanks for your comment.
-On 09/17/2014 02:54 AM, Mark Rutland wrote:
-> On Tue, Sep 16, 2014 at 11:44:28AM +0100, Kever Yang wrote:
->> This add documentation for rk3288 smp dt binding
->>
->> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
->> ---
->>
->> Changes in v2:
->> - add documentation
->>
->>   Documentation/devicetree/bindings/arm/cpus.txt | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->> index 298e2f6..4b46233 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> @@ -195,6 +195,7 @@ nodes to be present and contain the properties described below.
->>   			    "qcom,kpss-acc-v1"
->>   			    "qcom,kpss-acc-v2"
->>   			    "rockchip,rk3066-smp"
->> +			    "rockchip,rk3288-smp"
-> How do these differ?
-rk3066 and rk3288 smp bring up code is quite different, so I need a new 
-node "rockchip,rk3288-smp"
-other than "rockchip,rk3066-smp".
->
-> What does "rockchip,rk3288-smp" mean exactly?
-The driver who using this node is in 2/3 of this patchset, it goes to 
-linux-arm-kernel list and linux-rockchip
-list, I'm not sure if you have get that, maybe I need a RESEND?
->
-> Presumably other nodes / properties are required?
-Base on linux-next, I think only "rockchip,rk3288-smp" is new node to my 
-driver.
+Binding docs should be generally a separate patch or in the driver
+patch, which uses the bindings.
 
-BR
--Kever
+Shawn
+
+>  arch/arm/boot/dts/imx6qdl.dtsi                      |  5 +++++
+>  arch/arm/boot/dts/imx6sl.dtsi                       |  5 +++++
+>  arch/arm/boot/dts/imx6sx.dtsi                       |  5 +++++
+>  4 files changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt b/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
+> new file mode 100644
+> index 0000000..1a3ab9a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
+> @@ -0,0 +1,21 @@
+> +i.mx6 Poweroff Driver
+> +
+> +SNVS_LPCR in SNVS module can power off the whole system by pull
+> +PMIC_ON_REQ low.
+> +
+> +Required Properties:
+> +-compatible: "fsl,sec-v4.0-poweroff"
+> +-reg: Specifies the physical address of the SNVS_LPCR register
+> +
+> +Example:
+> +	snvs@020cc000 {
+> +		compatible = "fsl,sec-v4.0-mon", "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0x020cc000 0x4000>;
+> +		.....
+> +		snvs-poweroff@38 {
+> +			compatible = "fsl,sec-v4.0-poweroff";
+> +			reg = <0x38 0x4>;
+> +		};
+> +	}
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index 70d7207..d2d7563 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -650,6 +650,11 @@
+>  					interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>,
+>  						     <0 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+> +
+> +				snvs-poweroff@38 {
+> +					compatible = "fsl,sec-v4.0-poweroff";
+> +					reg = <0x38 0x4>;
+> +				};
+>  			};
+>  
+>  			epit1: epit@020d0000 { /* EPIT1 */
+> diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+> index ba67714..6e1d8f6 100644
+> --- a/arch/arm/boot/dts/imx6sl.dtsi
+> +++ b/arch/arm/boot/dts/imx6sl.dtsi
+> @@ -568,6 +568,11 @@
+>  					interrupts = <0 19 IRQ_TYPE_LEVEL_HIGH>,
+>  						     <0 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+> +
+> +				snvs-poweroff@38 {
+> +					compatible = "fsl,sec-v4.0-poweroff";
+> +					reg = <0x38 0x4>;
+> +				};
+>  			};
+>  
+>  			epit1: epit@020d0000 {
+> diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+> index d137caca..c1f937e 100644
+> --- a/arch/arm/boot/dts/imx6sx.dtsi
+> +++ b/arch/arm/boot/dts/imx6sx.dtsi
+> @@ -671,6 +671,11 @@
+>  					reg = <0x34 0x58>;
+>  					interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>, <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+>  				};
+> +
+> +				snvs-poweroff@38 {
+> +					compatible = "fsl,sec-v4.0-poweroff";
+> +					reg = <0x38 0x4>;
+> +				};
+>  			};
+>  
+>  			epit1: epit@020d0000 {
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
