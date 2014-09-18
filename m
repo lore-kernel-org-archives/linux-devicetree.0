@@ -1,128 +1,39 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Thu, 18 Sep 2014 12:57:20 +0300
-Message-ID: <541AAC80.1090708@mm-sol.com>
-References: <1410448403-19402-1-git-send-email-svarbanov@mm-sol.com> <1410448403-19402-2-git-send-email-svarbanov@mm-sol.com> <54138151.8010902@gmx.de> <54147E97.60808@kernel.org> <5416F3E2.3030009@mm-sol.com> <4dbc485f-599a-4b50-854c-c2e1c44d4810@email.android.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4dbc485f-599a-4b50-854c-c2e1c44d4810-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd@code>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: [PATCH 3/3] dt/bindings: dmaengine: qcom_bam_dma: Add compatible string for BAM v1.3.0
+Date: Thu, 18 Sep 2014 16:22:55 +0530
+Message-ID: <1411037575-13153-3-git-send-email-architt@codeaurora.org>
+References: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: agross@codeaurora.org
+Cc: galak@codeaurora.org, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+Add compatible string for BAM v1.3.0 in the DT bindings documentation. Mentioned
+a few more SoCs which have BAM v1.4.0 in them.
 
-On 09/15/2014 07:11 PM, Jonathan Cameron wrote:
-> 
-> 
-> On September 15, 2014 3:12:50 PM GMT+01:00, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi Jonathan,
->>
->> Thanks for the review!
->>
->> On 09/13/2014 08:27 PM, Jonathan Cameron wrote:
->>> On 13/09/14 00:27, Hartmut Knaack wrote:
->>>> Stanimir Varbanov schrieb, Am 11.09.2014 17:13:
->>>>> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
->>>>> 15bits resolution and register space inside PMIC accessible across
->>>>> SPMI bus.
->>>>>
->>>>> The vadc driver registers itself through IIO interface.
->>>>>
->>>> Looks already pretty good. Things you should consider in regard of
->> common coding style are to use the variable name ret instead of rc,
->> since it is used in almost all adc drivers and thus makes reviewing a
->> bit easier. Besides that, you seem to use unsigned as well as unsigned
->> int, so to be consistent, please stick to one of them. Other comments
->> in line.
->>>
->>> A few additional comments from me.  My biggest question is whether
->>> you are actually making life difficult for yourself by having
->>> vadc_channels and vadc->channels (don't like the similar naming btw!)
->>> in different orders.  I think you can move the ordering into the
->> device
->>> tree reading code rather than doing it in lots of other places. 
->> Hence
->>> rather than an order based on the device tree description, put the
->>> data into a fixed ofer in vadc->channels.
->>>
->>> Entirely possible I'm missing something though :)
->>>>> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->>>>> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->>>>> ---
->>>>>  drivers/iio/adc/Kconfig                       |   11 +
->>>>>  drivers/iio/adc/Makefile                      |    1 +
->>>>>  drivers/iio/adc/qcom-spmi-vadc.c              |  999
->> +++++++++++++++++++++++++
->>>>>  include/dt-bindings/iio/qcom,spmi-pmic-vadc.h |  119 +++
->>>>>  4 files changed, 1130 insertions(+), 0 deletions(-)
->>>>>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
->>>>>  create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Archit Taneja <architt@codeaurora.org>
+---
+ Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-<snip>
-
->>>>> +	vchan = vadc_find_channel(vadc, chan->channel);
->>>>> +	if (!vchan)
->>>>> +		return -EINVAL;
->>>>> +
->>>>> +	if (!vadc->is_ref_measured) {
->>>>> +		rc = vadc_measure_reference_points(vadc);
->>>>> +		if (rc)
->>>>> +			return rc;
->>>>> +
->>>>> +		vadc->is_ref_measured = true;
->>>>> +	}
->>>>> +
->>>>> +	switch (mask) {
->>>>> +	case IIO_CHAN_INFO_PROCESSED:
->>>>> +		rc = vadc_do_conversion(vadc, vchan, &result.adc_code);
->>>>> +		if (rc)
->>>>> +			return rc;
->>>>> +
->>>>> +		vadc_calibrate(vadc, vchan, &result);
->>>>> +
->>>>> +		*val = result.physical;
->>> I'm a little suspicious here.  Are the resulting values in milivolts
->> for
->>> all the channels?  Very handy if so, but seems a little unlikely with
->> 15 bit
->>> ADC that you'd have no part of greater accuracy than a milivolt.
->>
->> In fact *val is in microvolts. What is the expected unit from IIO ADC
->> users?
-> See Documentation/ABI/sysfs-bus-iio
-> Millivolts I think... We copied hwmon where possible.
-
-I'm a bit confused about these units. I searched references of
-iio_read_channel_processed() and found a few.
-
-The iio_hwmon expecting milivolts. On the other side lp8788-charger.c
-registers a get_property method in charger-manager.c, which expects
-microvolts in get_batt_uV().
-
-I also wonder how to implement IIO read_raw() method so as not to lose
-precision (if assume we must return millivolts). As far I can see it
-should be some combination of IIO_CHAN_INFO_RAW and IIO_CHAN_INFO_SCALE
-masks. Any hints?
-
->>
->>>>> +		rc = IIO_VAL_INT;
->>>> return IIO_VAL_INT;
->>>>> +		break;
->>>>> +	default:
->>>>> +		rc = -EINVAL;
->>>>> +		break;
->>>> Drop default case, or leave empty.
->>>>> +	}
->>>>> +
->>>>> +	return rc;
->>>> return -EINVAL;
->>>>> +}
-
-
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+index d75a9d7..83c8e57 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+@@ -1,7 +1,9 @@
+ QCOM BAM DMA controller
+ 
+ Required properties:
+-- compatible: must contain "qcom,bam-v1.4.0" for MSM8974
++- compatible: must be one of the following:
++ * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
++ * "qcom,bam-v1.3.0" for APQ8064 and MSM8960
+ - reg: Address range for DMA registers
+ - interrupts: Should contain the one interrupt shared by all channels
+ - #dma-cells: must be <1>, the cell in the dmas property of the client device
 -- 
-regards,
-Stan
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
