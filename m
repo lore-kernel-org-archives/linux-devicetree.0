@@ -1,57 +1,55 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5 1/4] thermal: rockchip: add driver for Thermal
-Date: Thu, 18 Sep 2014 10:02:49 -0700
-Message-ID: <20140918170249.GC14809@core.coreip.homeip.net>
-References: <1410926353-15674-1-git-send-email-caesar.wang@rock-chips.com>
- <1410926353-15674-2-git-send-email-caesar.wang@rock-chips.com>
- <20140917170223.GB25297@core.coreip.homeip.net>
- <541A985C.6030301@rock-chips.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: keystone: k2l: Fix chip selects for SPI devices
+Date: Thu, 18 Sep 2014 20:15:24 +0300
+Message-ID: <1411060524-25077-4-git-send-email-grygorii.strashko@ti.com>
+References: <1411060524-25077-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <541A985C.6030301@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, addy.ke@rock-chips.com, zyf@rock-chips.com, cjf@rock-chips.com, =?utf-8?B?6ZKf5YuH5rGq?= <zyw@rock-chips.com>, zhengsq@rock-chips.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411060524-25077-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 
-On Thu, Sep 18, 2014 at 04:31:24PM +0800, Caesar Wang wrote:
-> Dear Dmitry,
->=20
->=20
-> =E5=9C=A8 2014=E5=B9=B409=E6=9C=8818=E6=97=A5 01:02, Dmitry Torokhov =
-=E5=86=99=E9=81=93:
-> >Hi Caesar,
-> >
-> >On Wed, Sep 17, 2014 at 11:59:10AM +0800, Caesar Wang wrote:
-> >>+{
-> >>+	int i;
-> >>+
-> >>+	for (i =3D 0; i < ARRAY_SIZE(v2_code_table) - 1; i++) {
-> >>+		if (code >=3D v2_code_table[i].code)
-> >>+			return v2_code_table[i].temp;
-> >>+	}
-> >>+
-> >>+	return 0;
-> >I think if we do not find the code we should be returning max
-> >temperature, not 0.
-> Agree.
-> >And also WARN_ON() as this should not be happening.
-> >
-> Maybe,I will fix it as the follows:
->=20
-> pr_warn("Don't find code from v2_code_table\n");
-> return 125;
->=20
-> Do you agree?
+There are 5 chip selects per SPI0 and SPI2 and 3 per SPI1. SPI2 needs
+to be pinned out to use and by default they are disabled. So keep the
+state disabled to reflect default.
 
-Sounds good.
+Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/k2l.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Thanks.
+diff --git a/arch/arm/boot/dts/k2l.dtsi b/arch/arm/boot/dts/k2l.dtsi
+index e3bb142..291db43 100644
+--- a/arch/arm/boot/dts/k2l.dtsi
++++ b/arch/arm/boot/dts/k2l.dtsi
+@@ -81,3 +81,17 @@
+ 		};
+ 	};
+ };
++
++&spi0 {
++       ti,davinci-spi-num-cs = <5>;
++};
++
++&spi1 {
++       ti,davinci-spi-num-cs = <3>;
++};
++
++&spi2 {
++       ti,davinci-spi-num-cs = <5>;
++       /* Pin muxed. Enabled and configured by Bootloader */
++       status = "disabled";
++};
+-- 
+1.9.1
 
---=20
-Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
