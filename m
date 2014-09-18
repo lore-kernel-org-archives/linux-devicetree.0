@@ -1,51 +1,57 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA7: Add PMU nodes
-Date: Thu, 18 Sep 2014 09:58:18 -0700
-Message-ID: <20140918165817.GI14505@atomide.com>
-References: <1408456440-30171-1-git-send-email-nm@ti.com>
- <540719FC.5070803@ti.com>
- <20140917142503.GA11856@kahuna>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 1/4] thermal: rockchip: add driver for Thermal
+Date: Thu, 18 Sep 2014 10:02:49 -0700
+Message-ID: <20140918170249.GC14809@core.coreip.homeip.net>
+References: <1410926353-15674-1-git-send-email-caesar.wang@rock-chips.com>
+ <1410926353-15674-2-git-send-email-caesar.wang@rock-chips.com>
+ <20140917170223.GB25297@core.coreip.homeip.net>
+ <541A985C.6030301@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140917142503.GA11856@kahuna>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <541A985C.6030301@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, addy.ke@rock-chips.com, zyf@rock-chips.com, cjf@rock-chips.com, =?utf-8?B?6ZKf5YuH5rGq?= <zyw@rock-chips.com>, zhengsq@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [140917 07:26]:
-> On 08:39-20140903, Nishanth Menon wrote:
-> > On 08/19/2014 08:54 AM, Nishanth Menon wrote:
-> > > From: Lucas Weaver <l-weaver-l0cyMroinI0@public.gmane.org>
-> > > 
-> > > DRA74x and DRA72x family of processors vary slightly in the number
-> > > of CPUs. So, add different instances of PMU for each of these processor
-> > > groups. Further, since the interrupts bypass crossbar and are directly
-> > > connected to GIC, mark the dts nodes with relevant information.
-> > > 
-> > > Tested with perf utility.
-> > > 
-> > > Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > > Signed-off-by: Lucas Weaver <l-weaver-l0cyMroinI0@public.gmane.org>
-> > > Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> > > ---
-> > Hi,
-> > Gentle ping..
-> 
-> Tony,
-> I dont see this patch in omap-for-v3.18/dt
-> 
-> Is there anyway you might consider pulling this for 3.18?
-> 
-> Patchworks link:
-> https://patchwork.kernel.org/patch/4743121/
+Hi Caesar,
 
-Thanks applying into omap-for-v3.18/dt.
+On Thu, Sep 18, 2014 at 04:31:24PM +0800, Caesar Wang wrote:
+> Dear Dmitry,
+>=20
+>=20
+> =E5=9C=A8 2014=E5=B9=B409=E6=9C=8818=E6=97=A5 01:02, Dmitry Torokhov =
+=E5=86=99=E9=81=93:
+> >Hi Caesar,
+> >
+> >On Wed, Sep 17, 2014 at 11:59:10AM +0800, Caesar Wang wrote:
+> >>+{
+> >>+	int i;
+> >>+
+> >>+	for (i =3D 0; i < ARRAY_SIZE(v2_code_table) - 1; i++) {
+> >>+		if (code >=3D v2_code_table[i].code)
+> >>+			return v2_code_table[i].temp;
+> >>+	}
+> >>+
+> >>+	return 0;
+> >I think if we do not find the code we should be returning max
+> >temperature, not 0.
+> Agree.
+> >And also WARN_ON() as this should not be happening.
+> >
+> Maybe,I will fix it as the follows:
+>=20
+> pr_warn("Don't find code from v2_code_table\n");
+> return 125;
+>=20
+> Do you agree?
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sounds good.
+
+Thanks.
+
+--=20
+Dmitry
