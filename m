@@ -1,92 +1,48 @@
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-Subject: Re: [PATCH v5 2/4] dt-bindings: document Rockchip thermal
-Date: Thu, 18 Sep 2014 11:27:45 +0200
-Message-ID: <CAAObsKA61Ano85P6PehOY7WqR0FgTz_Rfur8UAt56ZXoNyoyqQ@mail.gmail.com>
-References: <1410926353-15674-1-git-send-email-caesar.wang@rock-chips.com> <1410926353-15674-3-git-send-email-caesar.wang@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1410926353-15674-3-git-send-email-caesar.wang@rock-chips.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Caesar Wang <caesar.wang@rock-chips.com>
-Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, dmitry.torokhov@gmail.com, addy.ke@rock-chips.com, zyf@rock-chips.com, cjf@rock-chips.com
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/5] Add drm driver for Rockchip Socs
+Date: Thu, 18 Sep 2014 17:34:44 +0800
+Message-ID: <1411032884-9233-1-git-send-email-mark.yao@rock-chips.com>
+References: <1407127274-1356-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1407127274-1356-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark yao <yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 September 2014 05:59, Caesar Wang <caesar.wang@rock-chips.com> wrote:
-> This add the necessary binding documentation for the thermal
-> found on Rockchip SoCs
+From: mark yao <yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Hi Caesar,
+This a series of patches is a DRM Driver for Rockchip Socs, add support
+for vop devices, eDP. Future patches will add additional encoders/connectors,
+such as HDMI.
 
-is there any reason to not use the existing thermal bindings? You can
-find a description in
-Documentation/devicetree/bindings/thermal/thermal.txt and example code
-in omap, or in the patches for Tegra recently posted by Mikko
-Perttunen.
+The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
+the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two similar
+Vop devices. Vop devices support iommu mapping, we use dma-mapping API with
+ARM_DMA_USE_IOMMU.
 
-Regards,
+Changes in v2:
+- add DRM master device node to list all display nodes that comprise
+  the graphics subsystem.
+- use the component framework to defer main drm driver probe
+  until all VOP devices have been probed.
+- use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+  master device and each vop device can shared the drm dma mapping.
+- use drm_crtc_init_with_planes and drm_universal_plane_init.
+- remove unnecessary middle layers.
+- add cursor set, move funcs to rockchip drm crtc.
+- use panel-simple driver for primary display.
+- add vop and edp reset.
 
-Tomeu
+Tested on rk3288 pinky board, use eDP encoders/connector, boot and display OK
 
-> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
-> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
-> ---
->  .../bindings/thermal/rockchip-thermal.txt          | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
->
-> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> new file mode 100644
-> index 0000000..6fc8bc3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
-> @@ -0,0 +1,41 @@
-> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
-> +
-> +Required properties:
-> +- compatible: "rockchip,rk3288-tsadc"
-> +- reg: physical base address of the controller and length of memory mapped
-> +       region.
-> +- interrupts: The interrupt number to the cpu. The interrupt specifier format
-> +             depends on the interrupt controller.
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +- clock-names: Shall be "tsadc" for the converter-clock, and "apb_pclk" for
-> +              the peripheral clock.
-> +- num-trips:  number of total trip points, this is required, set it 0 if none,
-> +             if greater than 0, the following properties must be defined;
-> +- tripN-temp: temperature of trip point N, should be in ascending order;
-> +- tripN-type: type of trip point N, should be one of "active" "passive" "hot"
-> +             "critical";
-> +- tripN-cdev-num: number of the cooling devices which can be bound to trip
-> +                 point N, this is required if trip point N is defined, set it 0 if none,
-> +                 otherwise the following cooling device names must be defined;
-> +- tripN-cdev-nameM: name of the No. M cooling device of trip point N;
-> +
-> +Example:
-> +tsadc: tsadc@ff280000 {
-> +       compatible = "rockchip,rk3288-tsadc";
-> +       reg = <0xff280000 0x100>;
-> +       interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-> +       clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
-> +       clock-names = "tsadc", "apb_pclk";
-> +
-> +       num-trips = <2>;
-> +
-> +       trip0-temp = <80>;
-> +       trip0-type = "passive";
-> +       trip0-cdev-num = <1>;
-> +       trip0-cdev-name0 = "thermal-cpufreq-0";
-> +
-> +       trip1-temp = <100>;
-> +       trip1-type = "critical";
-> +       trip1-cdev-num = <1>;
-> +       trip1-cdev-name0 = "thermal-cpufreq-0";
-> +};
-> --
-> 1.9.1
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark yao (5):
+  drm/rockchip: Add basic drm driver
+  dt-bindings: video: Add for rockchip display subsytem
+  dt-bindings: video: Add documentation for rockchip vop
+  dt-bindings: video: Add documentation for rockchip edp
+  drm/rockchip: Add support for Rockchip Soc EDP
+
+
+-- 
+1.7.9.5
