@@ -1,97 +1,58 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v11] Add support for PCI in AArch64
-Date: Thu, 18 Sep 2014 02:31:12 +0100
-Message-ID: <1411003873-21574-1-git-send-email-Liviu.Dudau@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 2/3] dmaengine: sun6i: Add support for
+ Allwinner A23 (sun8i) variant
+Date: Thu, 18 Sep 2014 09:57:42 +0800
+Message-ID: <CAGb2v65p4QPJY+eiLps6C2kAZjhPd99D5YYauwUjLJnnj54B1A@mail.gmail.com>
+References: <1410616381-30226-1-git-send-email-wens@csie.org>
+ <1410616381-30226-3-git-send-email-wens@csie.org> <20140916103540.GF9948@lukather>
+ <CAGb2v67jokpXHxR26YoCEB2Y_v07oQZXZfPuGJC_wO=r-SRZhg@mail.gmail.com> <20140917155540.GJ2166@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLHY5CQAKGQENIQU27Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140917155540.GJ2166@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Sep 17, 2014 at 11:55 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Tue, Sep 16, 2014 at 10:13:27PM +0800, Chen-Yu Tsai wrote:
+>> >> +     /*
+>> >> +      * sun8i variant requires us to toggle an undocumented register,
+>> >> +      * as seen in Allwinner's SDK.
+>> >
+>> > The BSP I have has this:
+>> >
+>> > static void sunxi_dma_hw_init(struct sunxi_dmadev *dev)
+>> > {
+>> >         struct sunxi_dmadev *sunxi_dev = dev;
+>> >
+>> >         clk_prepare_enable(sunxi_dev->ahb_clk);
+>> > #ifdef CONFIG_ARCH_SUN8IW3
+>> >         writel(0x04, sunxi_dev->base + DMA_GATE);
+>> > #endif
+>> > }
+>> >
+>> > /* All is ok, and open the clock */
+>> > sunxi_dma_hw_init(sunxi_dev);
+>> >
+>> > So I guess we can say that it's not that undocumented :)
+>>
+>> That's right. I meant undocumented in the user manual.
+>> I did reference the SDK in the comment, didn't I? :)
+>
+> So something like
+>
+> writel(DMA_GATE_ENABLE, base->DMA_GATE_REG) wouldn't be too far off :)
 
-This patch adds support for PCIe to AArch64. It depends on my v11 patch
-that adds support for creating generic host bridge resources from device
-trees. With that in place, I was able to boot a platform that
-has PCIe host bridge support and use a PCIe network card.
+Sure. Will also update the comment to reflect the naming.
 
-Changes from v10:
- - Added Catalin's Acked-by
-
-Changes from v9:
- - Moved the pcibios_add_device() patch that parses the IRQ number from DT into here.
- - Moved the arm64-specific redefine of pgprot_device here from the generic patchset.
- - Readability fix for definition of IO_SPACE_LIMIT
-
-Changes from v8:
-  - Added support for generic PCI domains
-
-Changes from v7:
-  - Rebased to v3.16-rc3
-  - Removed pci_ioremap_io() function as it is provided by my v8 generic
-    PCI host bridge patches under a different name.
-
-Changes from v6:
-  - Guard the pci_domain_nr() inline implementation with #ifdef CONFIG_PCI as
-    to avoid conflict with default empty version present in include/linux/pci.h.
-    Thanks to Jingoo Han for catching this.
-
-Changes from v5:
-  - Removed pcibios_fixup_bridge_ranges() as the week default version is fine.
-  - Removed the ALIGN() call in pcibios_align_resource()
-  - Stopped exporting pcibios_align_resource()
-
-Changes from v4:
-  - Fixed the pci_domain_nr() implementation for arm64. Now we use
-    find_pci_host_bride() to find the host bridge before we retrieve
-    the domain number.
-
-Changes from v3:
-  - Added Acks accumulated so far ;)
-  - Still carrying Catalin's patch for moving the PCI_IO_BASE until it
-    lands in linux-next or mainline, in order to ease applying the series
-
-Changes from v2:
-  - Implement an arch specific version of pci_register_io_range() and
-    pci_address_to_pio().
-  - Return 1 from pci_proc_domain().
-
-Changes from v1:
-  - Added Catalin's patch for moving the PCI_IO_BASE location and extend
-    its size to 16MB
-  - Integrated Arnd's version of pci_ioremap_io that uses a bitmap for
-    keeping track of assigned IO space and returns an io_offset. At the
-    moment the code is added in arch/arm64 but it can be moved in drivers/pci.
-  - Added a fix for the generic ioport_map() function when !CONFIG_GENERIC_IOMAP
-    as suggested by Arnd.
-
-v10 thread here: https://lkml.org/lkml/2014/9/8/325
-v9 thread here: https://lkml.org/lkml/2014/8/12/394
-v8 thread here: https://lkml.org/lkml/2014/7/1/705
-v7 thread here: https://lkml.org/lkml/2014/3/14/320
-v6 thread here: https://lkml.org/lkml/2014/3/5/41
-v5 thread here: https://lkml.org/lkml/2014/3/4/307
-v4 thread here: https://lkml.org/lkml/2014/3/3/298
-v3 thread here: https://lkml.org/lkml/2014/2/28/211
-v2 thread here: https://lkml.org/lkml/2014/2/27/255
-v1 thread here: https://lkml.org/lkml/2014/2/3/389
-
-Best regards,
-Liviu
-
-Liviu Dudau (1):
-  arm64: Add architectural support for PCIe
-
- arch/arm64/Kconfig               | 22 ++++++++++++++-
- arch/arm64/include/asm/Kbuild    |  1 +
- arch/arm64/include/asm/io.h      |  3 +-
- arch/arm64/include/asm/pci.h     | 37 +++++++++++++++++++++++++
- arch/arm64/include/asm/pgtable.h |  2 ++
- arch/arm64/kernel/Makefile       |  1 +
- arch/arm64/kernel/pci.c          | 59 ++++++++++++++++++++++++++++++++++++++++
- 7 files changed, 123 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/include/asm/pci.h
- create mode 100644 arch/arm64/kernel/pci.c
-
--- 
-2.1.0
+ChenYu
