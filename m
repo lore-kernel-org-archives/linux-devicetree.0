@@ -1,56 +1,128 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V6 0/8] drm/exynos: few patches to enhance bridge chip support
-Date: Thu, 18 Sep 2014 12:54:02 +0300
-Message-ID: <3187222.N10z9QsVIV@avalon>
-References: <1406316130-4744-1-git-send-email-ajaykumar.rs@samsung.com> <2405684.4GKZfmgcCP@avalon> <CAEC9eQOKYSVi+CG__wzo3bwMZTBc+y10WZuYnoz7A5=RJV2D2Q@mail.gmail.com>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Thu, 18 Sep 2014 12:57:20 +0300
+Message-ID: <541AAC80.1090708@mm-sol.com>
+References: <1410448403-19402-1-git-send-email-svarbanov@mm-sol.com> <1410448403-19402-2-git-send-email-svarbanov@mm-sol.com> <54138151.8010902@gmx.de> <54147E97.60808@kernel.org> <5416F3E2.3030009@mm-sol.com> <4dbc485f-599a-4b50-854c-c2e1c44d4810@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAEC9eQOKYSVi+CG__wzo3bwMZTBc+y10WZuYnoz7A5=RJV2D2Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Prashanth G <prashanth.g@samsung.com>, Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4dbc485f-599a-4b50-854c-c2e1c44d4810-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Angelo Compagnucci <angelo.compagnucci-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Collins <collinsd@code>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ajay,
+Hi Jonathan,
 
-On Wednesday 17 September 2014 15:43:04 Ajay kumar wrote:
-> Hi Laurent,
+On 09/15/2014 07:11 PM, Jonathan Cameron wrote:
 > 
-> Please find the latest series here:
-> http://www.spinics.net/lists/dri-devel/msg66740.html
+> 
+> On September 15, 2014 3:12:50 PM GMT+01:00, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org> wrote:
+>> Hi Jonathan,
+>>
+>> Thanks for the review!
+>>
+>> On 09/13/2014 08:27 PM, Jonathan Cameron wrote:
+>>> On 13/09/14 00:27, Hartmut Knaack wrote:
+>>>> Stanimir Varbanov schrieb, Am 11.09.2014 17:13:
+>>>>> The voltage ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+>>>>> 15bits resolution and register space inside PMIC accessible across
+>>>>> SPMI bus.
+>>>>>
+>>>>> The vadc driver registers itself through IIO interface.
+>>>>>
+>>>> Looks already pretty good. Things you should consider in regard of
+>> common coding style are to use the variable name ret instead of rc,
+>> since it is used in almost all adc drivers and thus makes reviewing a
+>> bit easier. Besides that, you seem to use unsigned as well as unsigned
+>> int, so to be consistent, please stick to one of them. Other comments
+>> in line.
+>>>
+>>> A few additional comments from me.  My biggest question is whether
+>>> you are actually making life difficult for yourself by having
+>>> vadc_channels and vadc->channels (don't like the similar naming btw!)
+>>> in different orders.  I think you can move the ordering into the
+>> device
+>>> tree reading code rather than doing it in lots of other places. 
+>> Hence
+>>> rather than an order based on the device tree description, put the
+>>> data into a fixed ofer in vadc->channels.
+>>>
+>>> Entirely possible I'm missing something though :)
+>>>>> Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>>>>> Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>>>>> ---
+>>>>>  drivers/iio/adc/Kconfig                       |   11 +
+>>>>>  drivers/iio/adc/Makefile                      |    1 +
+>>>>>  drivers/iio/adc/qcom-spmi-vadc.c              |  999
+>> +++++++++++++++++++++++++
+>>>>>  include/dt-bindings/iio/qcom,spmi-pmic-vadc.h |  119 +++
+>>>>>  4 files changed, 1130 insertions(+), 0 deletions(-)
+>>>>>  create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+>>>>>  create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
 
-Thank you. My comment was meant to be general though, not just for your patch 
-series.
+<snip>
 
-> On Wed, Sep 17, 2014 at 3:23 PM, Laurent Pinchart wrote:
-> > On Wednesday 30 July 2014 11:40:54 Thierry Reding wrote:
+>>>>> +	vchan = vadc_find_channel(vadc, chan->channel);
+>>>>> +	if (!vchan)
+>>>>> +		return -EINVAL;
+>>>>> +
+>>>>> +	if (!vadc->is_ref_measured) {
+>>>>> +		rc = vadc_measure_reference_points(vadc);
+>>>>> +		if (rc)
+>>>>> +			return rc;
+>>>>> +
+>>>>> +		vadc->is_ref_measured = true;
+>>>>> +	}
+>>>>> +
+>>>>> +	switch (mask) {
+>>>>> +	case IIO_CHAN_INFO_PROCESSED:
+>>>>> +		rc = vadc_do_conversion(vadc, vchan, &result.adc_code);
+>>>>> +		if (rc)
+>>>>> +			return rc;
+>>>>> +
+>>>>> +		vadc_calibrate(vadc, vchan, &result);
+>>>>> +
+>>>>> +		*val = result.physical;
+>>> I'm a little suspicious here.  Are the resulting values in milivolts
+>> for
+>>> all the channels?  Very handy if so, but seems a little unlikely with
+>> 15 bit
+>>> ADC that you'd have no part of greater accuracy than a milivolt.
+>>
+>> In fact *val is in microvolts. What is the expected unit from IIO ADC
+>> users?
+> See Documentation/ABI/sysfs-bus-iio
+> Millivolts I think... We copied hwmon where possible.
 
-[snip]
+I'm a bit confused about these units. I searched references of
+iio_read_channel_processed() and found a few.
 
-> >> One other thing: how does the bridge know which mode to drive? I suspect
-> >> that it can drive more than one mode? Can it freely be configured or
-> >> does it have a predefined set of modes? If the latter, then according to
-> >> what you said above there needs to be a way to configure the bridge (via
-> >> DT?) so that it reports the mode matching the panel. I wonder if that
-> >> should be handled completely in code, so that for example a bridge has a
-> >> panel attached it can use the panel's .get_modes() and select a matching
-> >> mode among the set that it supports.
-> > 
-> > Yes, pretty please :-) I don't think it would be a good idea to duplicate
-> > mode information in the bridge DT node, as that's not a property of the
-> > bridge. Querying the mode at runtime is in my opinion a much better
-> > option, and would also allow switching between different modes at runtime
-> > when that makes sense.
-> > 
-> > Now, I'm not sure whether it should be the bridge driver querying the
-> > panel driver directly, or the display controller driver doing it and then
-> > configuring the bridge accordingly. The latter seems more generic to me
-> > and doesn't rely on the assumption that the bridge output will always be
-> > directly connected to a panel.
+The iio_hwmon expecting milivolts. On the other side lp8788-charger.c
+registers a get_property method in charger-manager.c, which expects
+microvolts in get_batt_uV().
+
+I also wonder how to implement IIO read_raw() method so as not to lose
+precision (if assume we must return millivolts). As far I can see it
+should be some combination of IIO_CHAN_INFO_RAW and IIO_CHAN_INFO_SCALE
+masks. Any hints?
+
+>>
+>>>>> +		rc = IIO_VAL_INT;
+>>>> return IIO_VAL_INT;
+>>>>> +		break;
+>>>>> +	default:
+>>>>> +		rc = -EINVAL;
+>>>>> +		break;
+>>>> Drop default case, or leave empty.
+>>>>> +	}
+>>>>> +
+>>>>> +	return rc;
+>>>> return -EINVAL;
+>>>>> +}
+
 
 -- 
-Regards,
-
-Laurent Pinchart
+regards,
+Stan
