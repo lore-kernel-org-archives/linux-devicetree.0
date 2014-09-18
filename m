@@ -1,104 +1,124 @@
-From: Shreyas B Prabhu <shreyas@linux.vnet.ibm.com>
-Subject: Re: [PATCH 0/9] powerpc/powernv: Support for fastsleep and winkle
-Date: Thu, 18 Sep 2014 08:41:11 +0530
-Message-ID: <541A4D4F.1090307@linux.vnet.ibm.com>
-References: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 2/3] dmaengine: sun6i: Add support for
+ Allwinner A23 (sun8i) variant
+Date: Thu, 18 Sep 2014 11:24:39 +0800
+Message-ID: <1411010680-4481-3-git-send-email-wens@csie.org>
+References: <1411010680-4481-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1408989673-14137-1-git-send-email-shreyas@linux.vnet.ibm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "Srivatsa S. Bhat" <srivatsa@MIT.EDU>, "Preeti U. Murthy" <preeti@linux.vnet.ibm.com>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB7VA5GQAKGQER62SXQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1411010680-4481-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The A23 SoC has the same dma engine as the A31 (sun6i), with a
+reduced amount of endpoints and physical channels. Add the proper
+config data and compatible string to support it.
 
-In this patch series we use winkle for offlined cores. I successfully
-tested the working of this with subcore functionality.
+A slight difference in sun8i is an undocumented register needs
+to be toggled for dma to function.
 
-Test scenario was as follows:
-1. Set SMT mode to 1, Set subores-per-core to 1
-2. Offline a core, in this case cpu 32 (sending it to winkle)
-3. Set subcores-per-core to 4
-4. Online the core
-5. Start a guest (Topology 1 core 2 threads) on a subcore, in this case
-on cpu 36
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ .../devicetree/bindings/dma/sun6i-dma.txt          |  2 +-
+ drivers/dma/Kconfig                                |  4 ++--
+ drivers/dma/sun6i-dma.c                            | 27 ++++++++++++++++++++++
+ 3 files changed, 30 insertions(+), 3 deletions(-)
 
-This works without any glitch.
-
-Thanks,
-Shreyas
-
-On Monday 25 August 2014 11:31 PM, Shreyas B. Prabhu wrote:
-> Fast sleep is an idle state, where the core and the L1 and L2
-> caches are brought down to a threshold voltage. This also means that
-> the communication between L2 and L3 caches have to be fenced. However
-> the current P8 chips have a bug wherein this fencing between L2 and
-> L3 caches get delayed by a cpu cycle. This can delay L3 response to
-> the other cpus if they request for data during this time. Thus they
-> would fetch the same data from the memory which could lead to data
-> corruption if L3 cache is not flushed.
-> Patch 4 adds support to work around this.
-> 
-> 'Deep Winkle' is a deeper idle state where core and private L2 are powered
-> off. While it offers higher power savings, it is at the cost of losing
-> hypervisor register state and higher latency.
-> Patch 5-9 adds support for winkle and uses it for offline cpus.
-> 
-> Patch 1 - Moves parameters required discover idle states to a location 
-> common to both cpuidle driver and powernv core code
-> Patch 2 - Populates idle state details from device tree
-> Patch 3 - Enables cpus to run guest after waking up from fastsleep/winkle
-> 
-> 
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Srivatsa S. Bhat <srivatsa@MIT.EDU>
-> Cc: Preeti U. Murthy <preeti@linux.vnet.ibm.com>
-> Cc: Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> 
-> Preeti U Murthy (2):
->   cpuidle/powernv: Populate cpuidle state details by querying the
->     device-tree
->   powerpc/powernv/cpuidle: Add workaround to enable fastsleep
-> 
-> Shreyas B. Prabhu (6):
->   powerpc/kvm/book3s_hv: Enable CPUs to run guest after waking up from
->     fast-sleep
->   powerpc/powernv: Add OPAL call to save and restore
->   powerpc: Adding macro for accessing Thread Switch Control Register
->   powerpc/powernv: Add winkle infrastructure
->   powerpc/powernv: Discover and enable winkle
->   powerpc/powernv: Enter deepest supported idle state in offline
-> 
-> Srivatsa S. Bhat (1):
->   powerpc/powernv: Enable Offline CPUs to enter deep idle states
-> 
->  arch/powerpc/include/asm/machdep.h             |   4 +
->  arch/powerpc/include/asm/opal.h                |  10 ++
->  arch/powerpc/include/asm/paca.h                |   3 +
->  arch/powerpc/include/asm/ppc-opcode.h          |   2 +
->  arch/powerpc/include/asm/processor.h           |   6 +-
->  arch/powerpc/include/asm/reg.h                 |   1 +
->  arch/powerpc/kernel/asm-offsets.c              |   1 +
->  arch/powerpc/kernel/exceptions-64s.S           |  37 ++---
->  arch/powerpc/kernel/idle.c                     |  30 ++++
->  arch/powerpc/kernel/idle_power7.S              |  83 +++++++++-
->  arch/powerpc/platforms/powernv/opal-wrappers.S |   2 +
->  arch/powerpc/platforms/powernv/powernv.h       |   8 +
->  arch/powerpc/platforms/powernv/setup.c         | 217 +++++++++++++++++++++++++
->  arch/powerpc/platforms/powernv/smp.c           |  13 +-
->  arch/powerpc/platforms/powernv/subcore.c       |  15 ++
->  drivers/cpuidle/cpuidle-powernv.c              |  40 ++++-
->  16 files changed, 439 insertions(+), 33 deletions(-)
-> 
-
+diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+index 3e145c1..9cdcba24d 100644
+--- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
++++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+@@ -4,7 +4,7 @@ This driver follows the generic DMA bindings defined in dma.txt.
+ 
+ Required properties:
+ 
+-- compatible:	Must be "allwinner,sun6i-a31-dma"
++- compatible:	Must be "allwinner,sun6i-a31-dma" or "allwinner,sun8i-a23-dma"
+ - reg:		Should contain the registers base address and length
+ - interrupts:	Should contain a reference to the interrupt used by this device
+ - clocks:	Should contain a reference to the parent AHB clock
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 9b1ea0e..5361aa7 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -395,12 +395,12 @@ config XILINX_VDMA
+ 
+ config DMA_SUN6I
+ 	tristate "Allwinner A31 SoCs DMA support"
+-	depends on MACH_SUN6I || COMPILE_TEST
++	depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
+ 	depends on RESET_CONTROLLER
+ 	select DMA_ENGINE
+ 	select DMA_VIRTUAL_CHANNELS
+ 	help
+-	  Support for the DMA engine for Allwinner A31 SoCs.
++	  Support for the DMA engine first found in Allwinner A31 SoCs.
+ 
+ config NBPFAXI_DMA
+ 	tristate "Renesas Type-AXI NBPF DMA support"
+diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+index 89ca0c4..cb9aa43 100644
+--- a/drivers/dma/sun6i-dma.c
++++ b/drivers/dma/sun6i-dma.c
+@@ -43,6 +43,12 @@
+ #define DMA_STAT		0x30
+ 
+ /*
++ * sun8i specific registers
++ */
++#define SUN8I_DMA_GATE		0x20
++#define SUN8I_DMA_GATE_ENABLE	0x4
++
++/*
+  * Channels specific registers
+  */
+ #define DMA_CHAN_ENABLE		0x00
+@@ -878,8 +884,20 @@ static struct sun6i_dma_config sun6i_a31_dma_cfg = {
+ 	.nr_max_vchans   = 53,
+ };
+ 
++/*
++ * The A23 only has 8 physical channels, a maximum DRQ port id of 24,
++ * and a total of 37 usable source and destination endpoints.
++ */
++
++static struct sun6i_dma_config sun8i_a23_dma_cfg = {
++	.nr_max_channels = 8,
++	.nr_max_requests = 24,
++	.nr_max_vchans   = 37,
++};
++
+ static struct of_device_id sun6i_dma_match[] = {
+ 	{ .compatible = "allwinner,sun6i-a31-dma", .data = &sun6i_a31_dma_cfg },
++	{ .compatible = "allwinner,sun8i-a23-dma", .data = &sun8i_a23_dma_cfg },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -1008,6 +1026,15 @@ static int sun6i_dma_probe(struct platform_device *pdev)
+ 		goto err_dma_unregister;
+ 	}
+ 
++	/*
++	 * sun8i variant requires us to toggle a dma gating register,
++	 * as seen in Allwinner's SDK. This register is not documented
++	 * in the A23 user manual.
++	 */
++	if (of_device_is_compatible(pdev->dev.of_node,
++				    "allwinner,sun8i-a23-dma"))
++		writel(SUN8I_DMA_GATE_ENABLE, sdc->base + SUN8I_DMA_GATE);
++
+ 	return 0;
+ 
+ err_dma_unregister:
+-- 
+2.1.0
