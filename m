@@ -1,250 +1,209 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V2 3/3] mfd: palmas: Add support for optional wakeup
-Date: Thu, 18 Sep 2014 10:33:27 -0700
-Message-ID: <20140918173327.GD8740@lee--X1>
-References: <1409950311-25236-1-git-send-email-nm@ti.com>
- <1409950311-25236-4-git-send-email-nm@ti.com>
- <alpine.DEB.2.10.1409052311210.5472@nanos>
- <20140908154109.GA12336@kahuna>
- <541AE40F.1090101@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 2/3] power: reset: imx-snvs-poweroff: add power off
+ driver for i.mx6
+Date: Thu, 18 Sep 2014 18:53:16 +0100
+Message-ID: <20140918175316.GA10911@leverpostej>
+References: <1410947881-7345-1-git-send-email-b38343@freescale.com>
+ <1410947881-7345-3-git-send-email-b38343@freescale.com>
+ <20140917175244.GC7983@leverpostej>
+ <20140918022125.GA8150@Robin-OptiPlex-780>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <541AE40F.1090101@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Mark Brown <broonie@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20140918022125.GA8150@Robin-OptiPlex-780>
+Sender: linux-pm-owner@vger.kernel.org
+To: Robin Gong <b38343@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "sre@kernel.org" <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "shawn.guo@freescale.com" <shawn.guo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Sep 2014, Nishanth Menon wrote:
+On Thu, Sep 18, 2014 at 03:21:27AM +0100, Robin Gong wrote:
+> On Wed, Sep 17, 2014 at 06:52:44PM +0100, Mark Rutland wrote:
+> > On Wed, Sep 17, 2014 at 10:57:59AM +0100, Robin Gong wrote:
+> > > This driver register pm_power_off with snvs power off function. If
+> > > your boards NOT use PMIC_ON_REQ to turn on/off external pmic, or use
+> > > other pin to do, please disable the driver in dts, otherwise, your
+> > > pm_power_off maybe overwrote by this driver.
+> > > 
+> > > Signed-off-by: Robin Gong <b38343@freescale.com>
+> > > ---
+> > >  .../bindings/power_supply/imx-snvs-poweroff.txt    |   23 +++++++
+> > >  drivers/power/reset/Kconfig                        |    9 +++
+> > >  drivers/power/reset/Makefile                       |    1 +
+> > >  drivers/power/reset/imx-snvs-poweroff.c            |   66 ++++++++++++++++++++
+> > >  4 files changed, 99 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
+> > >  create mode 100644 drivers/power/reset/imx-snvs-poweroff.c
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt b/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
+> > > new file mode 100644
+> > > index 0000000..6caf64e
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
+> > > @@ -0,0 +1,23 @@
+> > > +i.mx6 Poweroff Driver
+> > > +
+> > > +SNVS_LPCR in SNVS module can power off the whole system by pull
+> > > +PMIC_ON_REQ low if PMIC_ON_REQ is connected with external PMIC.
+> > > +If you don't want to use PMIC_ON_REQ as power on/off control,
+> > > +please set status='disabled' to disable this driver.
+> > > +
+> > > +Required Properties:
+> > > +-compatible: "fsl,sec-v4.0-poweroff"
+> > > +-reg: Specifies the physical address of the SNVS_LPCR register
+> > 
+> > As you describe above, this is part of the SNVS module. So why does this
+> > need a separate node?
+> > 
+> > Surely there should just be a property on the SNVS node that desribers
+> > whether or not this can be used?
+> > 
+> > Mark.
+> >
+> Yes, put this function in rtc-snvs make things easier, honestly,this is our way
+> in internal tree. But looks more and more power off driver put in drivers/power
+> /reset,so we decided to add new power off driver. If it is ok to register
+> pm_power_off hook in drivers/rtc/rtc-snvs.c, I can drop this patch.
 
-> On 09/08/2014 10:41 AM, Nishanth Menon wrote:
-> > On 23:13-20140905, Thomas Gleixner wrote:
-> >> On Fri, 5 Sep 2014, Nishanth Menon wrote:
-> >>> +	if (!palmas->wakeirq)
-> >>> +		goto no_wake_irq;
-> >>> +
-> >>> +	ret =3D devm_request_irq(palmas->dev, palmas->wakeirq,
-> >>> +			       palmas_wake_irq,
-> >>> +			       IRQF_ONESHOT | pdata->irq_flags,
-> >>
-> >> Why is this marked IRQF_ONESHOT?
-> >=20
-> > Uggh.. should have dropped it. my bad.. removed in the revision bel=
-ow.
-> > Thanks for catching it.
-> >>
-> >>> +			       dev_name(palmas->dev),
-> >>> +			       &palmas);
-> >>> +	if (ret < 0)
-> >>> +		goto err_i2c;
-> >>
-> >> Why err and not doing the obvious clearing of palmas->wakeirq and
-> >> keep at least the i2c functional?
-> > Hmmm.. true.. we can stay alive even though without wakeup capabili=
-ty if
-> > someone messes up configuration..
-> >=20
-> > Fixed version below. Let me know if you are ok with the following.
->=20
-> Gentle ping. Would you like me to repost this series over again?
+My view would be that the ability to power off the system is a feature
+of some SNVS modules, and that the SNVS_LPCR register is not a
+sufficiently large sub-block to be described separately. I am not a fan
+of partitioning HW to match Linux implementation details rather than its
+logical structure.
 
-Yes, always.
+So, asuming the layout of the SNS block is well-defined I'd just expect
+a top-level SNVS node, with a driver that can decompose the block
+appropriately and portion it out to different drivers as necessary.
 
-> > ----8<----
-> > From 6da58ac66eedea46cf7282c6644c76c8f328f5ee Mon Sep 17 00:00:00 2=
-001
-> > From: Nishanth Menon <nm@ti.com>
-> > Date: Tue, 12 Aug 2014 12:00:52 -0500
-> > Subject: [PATCH V3 3/3] mfd: palmas: Add support for optional wakeu=
-p
-> >=20
-> > With the recent pinctrl-single changes, omaps can treat wake-up eve=
-nts
-> > from deeper power  states as interrupts.
-> >=20
-> > This is to handle the case where the system needs two interrupt
-> > sources when SoC is in deep sleep(1 to exit from deep power mode su=
-ch
-> > as sleep, and other from the module handling the actual event durin=
-g
-> > system active state). This is not the same as threaded interrupts a=
-s the
-> > wakeup interrupt source is used only as part of deeper power saving
-> > mode.
-> >=20
-> > Let's add support for the optional second interrupt for wake-up
-> > events. And then SoC can wakeup and handle the event using it's
-> > regular handler.
-> >=20
-> > This is similar in approach to commit 2a0b965cfb6e ("serial: omap: =
-Add
-> > support for optional wake-up")
-> >=20
-> > Signed-off-by: Nishanth Menon <nm@ti.com>
-> > ---
-> >  drivers/mfd/palmas.c       |   62 ++++++++++++++++++++++++++++++++=
-++++++++++++
-> >  include/linux/mfd/palmas.h |    2 ++
-> >  2 files changed, 64 insertions(+)
-> >=20
-> > diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
-> > index 28cb048..de7d204 100644
-> > --- a/drivers/mfd/palmas.c
-> > +++ b/drivers/mfd/palmas.c
-> > @@ -24,6 +24,7 @@
-> >  #include <linux/mfd/core.h>
-> >  #include <linux/mfd/palmas.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/of_irq.h>
-> > =20
-> >  static const struct regmap_config palmas_regmap_config[PALMAS_NUM_=
-CLIENTS] =3D {
-> >  	{
-> > @@ -326,6 +327,16 @@ static struct regmap_irq_chip tps65917_irq_chi=
-p =3D {
-> >  			PALMAS_INT1_MASK),
-> >  };
-> > =20
-> > +static irqreturn_t palmas_wake_irq(int irq, void *_palmas)
-> > +{
-> > +	/*
-> > +	 * Return Not handled so that interrupt is disabled.
-> > +	 * Level event ensures that the event is eventually handled
-> > +	 * by the appropriate chip handler already registered
-> > +	 */
-> > +	return IRQ_NONE;
-> > +}
-> > +
-> >  int palmas_ext_control_req_config(struct palmas *palmas,
-> >  	enum palmas_external_requestor_id id,  int ext_ctrl, bool enable)
-> >  {
-> > @@ -409,6 +420,7 @@ static void palmas_dt_to_pdata(struct i2c_clien=
-t *i2c,
-> >  		pdata->mux_from_pdata =3D 1;
-> >  		pdata->pad2 =3D prop;
-> >  	}
-> > +	pdata->wakeirq =3D irq_of_parse_and_map(node, 1);
-> > =20
-> >  	/* The default for this register is all masked */
-> >  	ret =3D of_property_read_u32(node, "ti,power-ctrl", &prop);
-> > @@ -521,6 +533,7 @@ static int palmas_i2c_probe(struct i2c_client *=
-i2c,
-> >  	i2c_set_clientdata(i2c, palmas);
-> >  	palmas->dev =3D &i2c->dev;
-> >  	palmas->irq =3D i2c->irq;
-> > +	palmas->wakeirq =3D pdata->wakeirq;
-> > =20
-> >  	match =3D of_match_device(of_palmas_match_tbl, &i2c->dev);
-> > =20
-> > @@ -587,6 +600,25 @@ static int palmas_i2c_probe(struct i2c_client =
-*i2c,
-> >  	if (ret < 0)
-> >  		goto err_i2c;
-> > =20
-> > +	if (!palmas->wakeirq)
-> > +		goto no_wake_irq;
-> > +
-> > +	ret =3D devm_request_irq(palmas->dev, palmas->wakeirq,
-> > +			       palmas_wake_irq,
-> > +			       pdata->irq_flags,
-> > +			       dev_name(palmas->dev),
-> > +			       &palmas);
-> > +	if (ret < 0) {
-> > +		dev_err(palmas->dev, "Invalid wakeirq(%d) (res: %d), skiping\n",
-> > +			palmas->wakeirq, ret);
-> > +		palmas->wakeirq =3D 0;
-> > +	} else {
-> > +		/* We use wakeirq only during suspend-resume path */
-> > +		device_set_wakeup_capable(palmas->dev, true);
-> > +		disable_irq_nosync(palmas->wakeirq);
-> > +	}
-> > +
-> > +no_wake_irq:
-> >  no_irq:
-> >  	slave =3D PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
-> >  	addr =3D PALMAS_BASE_TO_REG(PALMAS_PU_PD_OD_BASE,
-> > @@ -706,6 +738,34 @@ static int palmas_i2c_remove(struct i2c_client=
- *i2c)
-> >  	return 0;
-> >  }
-> > =20
-> > +static int palmas_i2c_suspend(struct i2c_client *i2c,  pm_message_=
-t mesg)
-> > +{
-> > +	struct palmas *palmas =3D i2c_get_clientdata(i2c);
-> > +	struct device *dev =3D &i2c->dev;
-> > +
-> > +	if (!palmas->wakeirq)
-> > +		return 0;
-> > +
-> > +	if (device_may_wakeup(dev))
-> > +		enable_irq(palmas->wakeirq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int palmas_i2c_resume(struct i2c_client *i2c)
-> > +{
-> > +	struct palmas *palmas =3D i2c_get_clientdata(i2c);
-> > +	struct device *dev =3D &i2c->dev;
-> > +
-> > +	if (!palmas->wakeirq)
-> > +		return 0;
-> > +
-> > +	if (device_may_wakeup(dev))
-> > +		disable_irq_nosync(palmas->wakeirq);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  static const struct i2c_device_id palmas_i2c_id[] =3D {
-> >  	{ "palmas", },
-> >  	{ "twl6035", },
-> > @@ -721,6 +781,8 @@ static struct i2c_driver palmas_i2c_driver =3D =
-{
-> >  		   .of_match_table =3D of_palmas_match_tbl,
-> >  		   .owner =3D THIS_MODULE,
-> >  	},
-> > +	.suspend =3D palmas_i2c_suspend,
-> > +	.resume =3D palmas_i2c_resume,
-> >  	.probe =3D palmas_i2c_probe,
-> >  	.remove =3D palmas_i2c_remove,
-> >  	.id_table =3D palmas_i2c_id,
-> > diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.=
-h
-> > index fb0390a..e8cf4c2 100644
-> > --- a/include/linux/mfd/palmas.h
-> > +++ b/include/linux/mfd/palmas.h
-> > @@ -75,6 +75,7 @@ struct palmas {
-> >  	/* IRQ Data */
-> >  	int irq;
-> >  	u32 irq_mask;
-> > +	int wakeirq;
-> >  	struct mutex irq_lock;
-> >  	struct regmap_irq_chip_data *irq_data;
-> > =20
-> > @@ -377,6 +378,7 @@ struct palmas_clk_platform_data {
-> > =20
-> >  struct palmas_platform_data {
-> >  	int irq_flags;
-> > +	int wakeirq;
-> >  	int gpio_base;
-> > =20
-> >  	/* bit value to be loaded to the POWER_CTRL register */
-> >=20
->=20
->=20
+I am not familiar with the hardware, so perhaps that is not a good idea.
+How variable is the SNVS block?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Mark.
+
+> > > +
+> > > +Example:
+> > > +	snvs@020cc000 {
+> > > +		compatible = "fsl,sec-v4.0-mon", "simple-bus";
+> > > +		#address-cells = <1>;
+> > > +		#size-cells = <1>;
+> > > +		ranges = <0 0x020cc000 0x4000>;
+> > > +		.....
+> > > +		snvs-poweroff@38 {
+> > > +			compatible = "fsl,sec-v4.0-poweroff";
+> > > +			reg = <0x38 0x4>;
+> > > +		};
+> > > +	}
+> > > diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> > > index ca41523..b26c547 100644
+> > > --- a/drivers/power/reset/Kconfig
+> > > +++ b/drivers/power/reset/Kconfig
+> > > @@ -45,6 +45,15 @@ config POWER_RESET_HISI
+> > >  	help
+> > >  	  Reboot support for Hisilicon boards.
+> > >  
+> > > +config POWER_RESET_IMX
+> > > +	bool "IMX6 power-off driver"
+> > > +	depends on POWER_RESET && SOC_IMX6
+> > > +	help
+> > > +	  This driver support power off external PMIC by PMIC_ON_REQ on i.mx6
+> > > +	  boards.If you want to use other pin to control external power,please
+> > > +	  say N here or disable in dts to make sure pm_power_off never be
+> > > +	  overwrote wrongly by this driver.
+> > > +
+> > >  config POWER_RESET_MSM
+> > >  	bool "Qualcomm MSM power-off driver"
+> > >  	depends on POWER_RESET && ARCH_QCOM
+> > > diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+> > > index a42e70e..2524daf 100644
+> > > --- a/drivers/power/reset/Makefile
+> > > +++ b/drivers/power/reset/Makefile
+> > > @@ -3,6 +3,7 @@ obj-$(CONFIG_POWER_RESET_AXXIA) += axxia-reset.o
+> > >  obj-$(CONFIG_POWER_RESET_BRCMSTB) += brcmstb-reboot.o
+> > >  obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+> > >  obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
+> > > +obj-$(CONFIG_POWER_RESET_IMX) += imx-snvs-poweroff.o
+> > >  obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
+> > >  obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
+> > >  obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
+> > > diff --git a/drivers/power/reset/imx-snvs-poweroff.c b/drivers/power/reset/imx-snvs-poweroff.c
+> > > new file mode 100644
+> > > index 0000000..d726ac4
+> > > --- /dev/null
+> > > +++ b/drivers/power/reset/imx-snvs-poweroff.c
+> > > @@ -0,0 +1,66 @@
+> > > +/* Power off driver for i.mx6
+> > > + * Copyright (c) 2014, FREESCALE CORPORATION.  All rights reserved.
+> > > + *
+> > > + * based on msm-poweroff.c
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or modify
+> > > + * it under the terms of the GNU General Public License version 2 and
+> > > + * only version 2 as published by the Free Software Foundation.
+> > > + *
+> > > + * This program is distributed in the hope that it will be useful,
+> > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > > + * GNU General Public License for more details.
+> > > + *
+> > > + */
+> > > +
+> > > +#include <linux/err.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +static void __iomem *snvs_base;
+> > > +
+> > > +static void do_imx_poweroff(void)
+> > > +{
+> > > +	u32 value = readl(snvs_base);
+> > > +
+> > > +	/* set TOP and DP_EN bit */
+> > > +	writel(value | 0x60, snvs_base);
+> > > +}
+> > > +
+> > > +static int imx_poweroff_probe(struct platform_device *pdev)
+> > > +{
+> > > +	snvs_base = of_iomap(pdev->dev.of_node, 0);
+> > > +	if (!snvs_base) {
+> > > +		dev_err(&pdev->dev, "failed to get memory\n");
+> > > +		return -EIO;
+> > > +	}
+> > > +
+> > > +	pm_power_off = do_imx_poweroff;
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct of_device_id of_imx_poweroff_match[] = {
+> > > +	{ .compatible = "fsl,sec-v4.0-poweroff", },
+> > > +	{},
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, of_imx_poweroff_match);
+> > > +
+> > > +static struct platform_driver imx_poweroff_driver = {
+> > > +	.probe = imx_poweroff_probe,
+> > > +	.driver = {
+> > > +		.name = "imx-snvs-poweroff",
+> > > +		.of_match_table = of_match_ptr(of_imx_poweroff_match),
+> > > +	},
+> > > +};
+> > > +
+> > > +static int __init imx_poweroff_init(void)
+> > > +{
+> > > +	return platform_driver_register(&imx_poweroff_driver);
+> > > +}
+> > > +device_initcall(imx_poweroff_init);
+> > > -- 
+> > > 1.7.9.5
+> > > 
+> > > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
