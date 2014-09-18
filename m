@@ -1,37 +1,35 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH] i2c designware add support of I2C standard mode
-Date: Thu, 18 Sep 2014 10:52:24 -0500
-Message-ID: <alpine.DEB.2.02.1409181050190.29539@atx-linux-37>
-References: <20140820124231.GD21734@leverpostej> <1408544948-22339-1-git-send-email-romainba@abilis.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v4 6/8] arm64: exynos7: Enable ARMv8 based Exynos7 (SoC)
+ support
+Date: Thu, 18 Sep 2014 17:18:33 +0100
+Message-ID: <20140918161832.GD25330@e104818-lin.cambridge.arm.com>
+References: <1410535592-5782-1-git-send-email-ch.naveen@samsung.com>
+ <1410535592-5782-8-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408544948-22339-1-git-send-email-romainba@abilis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Christian Ruppert <christian.ruppert@abilis.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, baruch@tkos.co.il, grant.likely@linaro.org, robh+dt@kernel.org, skuribay@pobox.com, alan@linux.intel.com, devicetree@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Romain Baeriswyl <romainba@abilis.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1410535592-5782-8-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Alim Akhtar <alim.akhtar@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Aug 2014, Romain Baeriswyl wrote:
-
-> From: Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
+On Fri, Sep 12, 2014 at 04:26:30PM +0100, Naveen Krishna Chatradhi wrote:
+> From: Alim Akhtar <alim.akhtar@samsung.com>
 > 
-> Some legacy devices support ony I2C standard mode at 100kHz.
-> This patch allows to select the standard mode through the DTS
-> with the use of the existing clock-frequency parameter.
+> This patch adds the necessary Kconfig entries to enable
+> support for the ARMv8 based Exynos7 SoC.
 > 
-> When clock-frequency parameter is not set, the fast mode is selected.
-> Only when the parameter is set at 100000, the standard mode is selected.
-> 
-> Signed-off-by: Romain Baeriswyl <romainba@abilis.com>
-> Reviewed-by: Christian Ruppert <christian.ruppert@abilis.com>
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
 > ---
->  drivers/i2c/busses/i2c-designware-platdrv.c |   23 +++++++++++++++++++++--
->  1 files changed, 21 insertions(+), 2 deletions(-)
-> 
+>  arch/arm64/Kconfig |   12 ++++++++++++
 
-Hi Wolfram,
+Please update the defconfig as well as we want the default image build
+to contain all the available platforms.
 
-This patch is really useful for us.  Is it going to be picked up?
-
-Alan
+-- 
+Catalin
