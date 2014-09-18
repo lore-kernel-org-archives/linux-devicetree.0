@@ -1,39 +1,53 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: [PATCH 3/3] dt/bindings: dmaengine: qcom_bam_dma: Add compatible string for BAM v1.3.0
-Date: Thu, 18 Sep 2014 16:22:55 +0530
-Message-ID: <1411037575-13153-3-git-send-email-architt@codeaurora.org>
-References: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: agross@codeaurora.org
-Cc: galak@codeaurora.org, linux-arm-msm@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, devicetree@vger.kernel.org
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] of: amba: use of_dma_configure for AMBA devices
+Date: Thu, 18 Sep 2014 12:35:32 +0100
+Message-ID: <541AC384.8010806@arm.com>
+References: <90bd1ff3c93b827c12e1b3dc9ad3f227632d0f6e.1410954967.git.robin.murphy@arm.com> <20140917170338.GC18532@arm.com> <CAL_JsqKTZyPgbxy=pPmFPKRxa97oaWqC6u6pBvqvja_URLno4Q@mail.gmail.com> <20140917180524.GG18532@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140917180524.GG18532-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible string for BAM v1.3.0 in the DT bindings documentation. Mentioned
-a few more SoCs which have BAM v1.4.0 in them.
+Thanks Catalin/Will/Rob,
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Archit Taneja <architt@codeaurora.org>
----
- Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 17/09/14 19:05, Will Deacon wrote:
+> On Wed, Sep 17, 2014 at 06:47:19PM +0100, Rob Herring wrote:
+>> On Wed, Sep 17, 2014 at 12:03 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> On Wed, Sep 17, 2014 at 12:56:07PM +0100, Robin Murphy wrote:
+>>>> Commit 591c1e ("of: configure the platform device dma parameters)
+>>>> introduced a common mechanism to configure DMA from DT properties.
+>>>> AMBA devices created from DT can take advantage of this, too.
+>>>>
+>>>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+>>>
+>>>    Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+>>>
+>>> It would be great if the arm-soc guys can pick this up.
+>>
+>> Is this a dependency for something else? If so,
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Yeah, it's going to be needed by my IOMMU init rework so that AMBA devices
+> get registered with their IOMMUs.
+>
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-index d75a9d7..83c8e57 100644
---- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-+++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-@@ -1,7 +1,9 @@
- QCOM BAM DMA controller
- 
- Required properties:
--- compatible: must contain "qcom,bam-v1.4.0" for MSM8974
-+- compatible: must be one of the following:
-+ * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
-+ * "qcom,bam-v1.3.0" for APQ8064 and MSM8960
- - reg: Address range for DMA registers
- - interrupts: Should contain the one interrupt shared by all channels
- - #dma-cells: must be <1>, the cell in the dmas property of the client device
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Noob question: Does that mean I should resend (with ACKs) to 
+arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org? (I wasn't entirely sure where this should go, hence just 
+throwing at the list with CCs)
+
+Robin.
+
+> Will
+>
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
