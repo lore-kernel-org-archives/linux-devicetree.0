@@ -1,124 +1,142 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [v4,1/9] ACPI / PM: Let acpi_dev_pm_detach() return an error code
-Date: Thu, 18 Sep 2014 02:35:44 +0200
-Message-ID: <CAPDyKFoPBfAYfP9gwSxWvdUvNSjMxxNeJ_BfRkgvOZLTNpzJXA@mail.gmail.com>
-References: <1410262570-22785-2-git-send-email-ulf.hansson@linaro.org>
-	<6318611.DnX9cEgMjk@vostro.rjw.lan>
-	<20140915165359.GA13080@core.coreip.homeip.net>
-	<4451285.EDb1j6ttbA@vostro.rjw.lan>
-	<CAPDyKFq6FZcuU=TCMh0JE0ymbS73_eLtNrTgmgKA4OxEp=_zpw@mail.gmail.com>
-	<20140917201025.GC25297@core.coreip.homeip.net>
-	<CAPDyKFqM27C9L86fn8wNxJewv9AvxymPgzzVo3CFh+=3Vo04Uw@mail.gmail.com>
-	<20140917234331.GA28771@core.coreip.homeip.net>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v11 06/10] PCI: Introduce generic domain handling for PCI
+ busses.
+Date: Thu, 18 Sep 2014 02:30:21 +0100
+Message-ID: <1411003825-21521-7-git-send-email-Liviu.Dudau@arm.com>
+References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140917234331.GA28771-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ben Dooks <ben-linux@fluff>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Sinan Kaya <okaya@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, Device Tree ML <devicetree@vger.kernel.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Jingoo Han <jg1.han@samsung.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 September 2014 01:43, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Sep 18, 2014 at 01:20:49AM +0200, Ulf Hansson wrote:
->> On 17 September 2014 22:10, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > On Wed, Sep 17, 2014 at 08:25:44PM +0200, Ulf Hansson wrote:
->> >> On 16 September 2014 01:36, Rafael J. Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> wrote:
->> >> > On Monday, September 15, 2014 09:53:59 AM Dmitry Torokhov wrote:
->> >> >> On Sun, Sep 14, 2014 at 06:38:58PM +0200, Rafael J. Wysocki wrote:
->> >> >> > On Friday, September 12, 2014 02:05:53 PM Dmitry Torokhov wrote:
->> >> >> > > Hi Ulf,
->> >> >> > >
->> >> >> > > On Tue, Sep 09, 2014 at 01:36:02PM +0200, Ulf Hansson wrote:
->> >> >> > > > To give callers the option of acting on a errors while removing the
->> >> >> > > > pm_domain ops for the device in the ACPI PM domain, let
->> >> >> > > > acpi_dev_pm_detach() return an int to provide the error code.
->> >> >> > >
->> >> >> > > So how would callers handle the errors? As far as I can see
->> >> >> > > acpi_dev_pm_detach() is called from ->remove() and ->shutdown() methods, where
->> >> >> > > there is no meaningful strategy to handle errors as you are past the point of
->> >> >> > > no return and you keep on tearing down the device.
->> >>
->> >> The benefit is only relevant when ACPI and genpd PM domains would
->> >> co-exist. In that case we might be able to skip genpd_dev_pm_detach()
->> >> if acpi_dev_pm_detach() succeeds. So, currently there are  no benefit,
->> >> but still it doesn't hurt.
->> >
->> > It doe snot have any negative material effect, the drawback is purely
->> > from API perspective.
->> >
->> >>
->> >> >> >
->> >> >> > This is specifically for what patch [3/9] is doing AFAICS.
->> >> >> >
->> >> >> > The existing callers don't need to worry about this.
->> >> >>
->> >> >> OK, so I have the very same comment about patch 3 then: we have
->> >> >> dev_pm_domain_detach() returning error. How would the callers handle errors?
->> >> >
->> >> > Ulf?
->> >>
->> >> I see your point. How about making dev_pm_domain_detach() to be a void
->> >> function instead?
->> >
->> > Yes, please.
->>
->> OK!
->>
->> >
->> >>
->> >> >
->> >> >> WRT this patch: I'd rater we did not just return generic "error code" just
->> >> >> because we do not know who manages PD for the device. Can we add API to check
->> >> >> if we are using ACPI to manage power domains? Then patch #3 could check if it
->> >> >> needs to use ACPI or generic power domain API.
->> >>
->> >> The problem is scalability. If we have other PM domains implementation
->> >> in future, each of them need to be checked prior invoking the attach
->> >> functions.
->> >> Also, how would we distinguish between genpd and a new PM domain XYZ?
->> >
->> > I do not think that trying all available methods to detach a pm domain,
->> > i.e.
->> >
->> >         err = acpi_dev_pm_detach();
->> >         if (err)
->> >                 err = blah_dev_pm_detach();
->> >         if (err)
->> >                 err = flab_dev_pm_detach();
->> >         if (err)
->> >                 err = gen_dev_pm_detach();
->> >
->> > is any better from scalability point of view. If you need to do that you
->> > will probably have to store something like "struct pd_ops *pd_ops" in
->> > your device and call appropriate implementation via it.
->>
->> No, that's not needed. Go ahead and have look at both ACPI and genpd,
->> the interesting part is the validation of struct dev_pm_domain pointer
->> in the struct device. That's all there is to it, no additional data
->> are required.
->
-> OK, so can you simply put the needed method into struct dev_pm_domain and then
-> dev_pm_domain_detach() would become:
->
-> void dev_pm_domain_detach(struct device *dev, bool power_off)
-> {
->         if (dev->pm_domain)
->                 dev->pm_domain->detach(dev, power_off);
-> }
->
-> Thanks.
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-Ohh, didn't quite follow that this is what you meant. That would be a
-great improvement, I will adopt in the next version.
+The handling of PCI domains (or PCI segments in ACPI speak) is
+usually a straightforward affair but its implementation is
+currently left to the architectural code, with pci_domain_nr(b)
+querying the value of the domain associated with bus b.
 
-Kind regards
-Uffe
+This patch introduces CONFIG_PCI_DOMAINS_GENERIC as an
+option that can be selected if an architecture want a
+simple implementation where the value of the domain
+associated with a bus is stored in struct pci_bus.
 
->
-> --
-> Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The architectures that select CONFIG_PCI_DOMAINS_GENERIC will
+then have to implement pci_bus_assign_domain_nr() as a way
+of setting the domain number associated with a root bus.
+All child busses except the root bus will inherit the domain_nr
+value from their parent.
+
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Catalin Marinas <Catalin.Marinas@arm.com>
+[Renamed pci_set_domain_nr() to pci_bus_assign_domain_nr()]
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+---
+ drivers/pci/probe.c | 11 ++++++++---
+ include/linux/pci.h | 21 +++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 5ff72ec..ef891d2 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -485,7 +485,7 @@ void pci_read_bridge_bases(struct pci_bus *child)
+ 	}
+ }
+ 
+-static struct pci_bus *pci_alloc_bus(void)
++static struct pci_bus *pci_alloc_bus(struct pci_bus *parent)
+ {
+ 	struct pci_bus *b;
+ 
+@@ -500,6 +500,10 @@ static struct pci_bus *pci_alloc_bus(void)
+ 	INIT_LIST_HEAD(&b->resources);
+ 	b->max_bus_speed = PCI_SPEED_UNKNOWN;
+ 	b->cur_bus_speed = PCI_SPEED_UNKNOWN;
++#ifdef CONFIG_PCI_DOMAINS_GENERIC
++	if (parent)
++		b->domain_nr = parent->domain_nr;
++#endif
+ 	return b;
+ }
+ 
+@@ -672,7 +676,7 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 	/*
+ 	 * Allocate a new bus, and inherit stuff from the parent..
+ 	 */
+-	child = pci_alloc_bus();
++	child = pci_alloc_bus(parent);
+ 	if (!child)
+ 		return NULL;
+ 
+@@ -1768,13 +1772,14 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
+ 
+ 	bridge->dev.parent = parent;
+ 
+-	b = pci_alloc_bus();
++	b = pci_alloc_bus(NULL);
+ 	if (!b)
+ 		goto err_out;
+ 
+ 	b->sysdata = sysdata;
+ 	b->ops = ops;
+ 	b->number = b->busn_res.start = bus;
++	pci_bus_assign_domain_nr(b, parent);
+ 	b2 = pci_find_bus(pci_domain_nr(b), bus);
+ 	if (b2) {
+ 		/* If we already got to this bus through a different bridge, ignore it */
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 61978a4..a494e5d 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -456,6 +456,9 @@ struct pci_bus {
+ 	unsigned char	primary;	/* number of primary bridge */
+ 	unsigned char	max_bus_speed;	/* enum pci_bus_speed */
+ 	unsigned char	cur_bus_speed;	/* enum pci_bus_speed */
++#ifdef CONFIG_PCI_DOMAINS_GENERIC
++	int		domain_nr;
++#endif
+ 
+ 	char		name[48];
+ 
+@@ -1288,6 +1291,24 @@ static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
+ static inline int pci_proc_domain(struct pci_bus *bus) { return 0; }
+ #endif /* CONFIG_PCI_DOMAINS */
+ 
++/*
++ * Generic implementation for PCI domain support. If your
++ * architecture does not need custom management of PCI
++ * domains then this implementation will be used
++ */
++#ifdef CONFIG_PCI_DOMAINS_GENERIC
++static inline int pci_domain_nr(struct pci_bus *bus)
++{
++	return bus->domain_nr;
++}
++void pci_bus_assign_domain_nr(struct pci_bus *bus, struct device *parent);
++#else
++static inline void pci_bus_assign_domain_nr(struct pci_bus *bus,
++					struct device *parent)
++{
++}
++#endif
++
+ /* some architectures require additional setup to direct VGA traffic */
+ typedef int (*arch_set_vga_state_t)(struct pci_dev *pdev, bool decode,
+ 		      unsigned int command_bits, u32 flags);
+-- 
+2.1.0
