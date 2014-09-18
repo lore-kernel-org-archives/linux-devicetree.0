@@ -1,41 +1,40 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 0/6] Add initial support for Broadcom Cygnus SoC
-Date: Fri, 19 Sep 2014 00:31:54 +0200
-Message-ID: <541B5D5A.10800@hauke-m.de>
-References: <Jonathan Richardson <jonathar@broadcom.com> <1410897497-27527-1-git-send-email-jonathar@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1410897497-27527-1-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: [PATCH 0/3] watchdog: add support for QCOM WDT
+Date: Thu, 18 Sep 2014 17:26:58 -0500
+Message-ID: <cover.1411078425.git.joshc@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/16/2014 09:58 PM, Jonathan Richardson wrote:
-> Hi,
-> 
-> This patchset contains initial support for Broadcom's Cygnus SoC based on our
-> iProc architecture. Initial support is minimal and includes just the mach
-> platform code, clock driver, and a basic device tree configuration. Peripheral
-> drivers will be submitted soon, as will device tree configurations for other
-> Cygnus board variants.
+This patchset provides support for the Watchdog Timer (WDT) found in the Krait
+Processor Sub-system (KPSS) of the MSM8960, APQ8064, and IPQ8064 chips.
 
-This SoC looks similar to the BCM5301X (Northstar) SoCs even some cores
-are at the same memory addresses. Does this SoC use an AXI bus with
-Broadcom Plugins at address 0x18000000 ?
+This driver is implemented ontop of WATCHDOG_CORE, and therefore its primary
+interface is through userspace.  The implemantion is currently very basic (i.e.
+it doesn't support PRETIMEOUT, even though it could be implemented through the
+WDT's BARK functionality).  It should also be fairly easy to extend this driver
+in the future to support newer chipsets as well.
 
-The BCM5301X (Northstar) SoCs also has an iProc Clock Control Unit and I
-will try to use your driver for that SoC.
+Patch 3 also extends the driver to also register a restart_notifier, making it
+possible for the WDT to act as a restart mechanism if more favorable mechanisms
+don't work.  This is important for some boards which don't support PS_HOLD,
+like the IPQ8064-based AP148 board.
 
-Is Broadcom Cygnus similar to BCM563XX or is it actually the same SoC?
+Josh Cartwright (3):
+  watchdog: qcom: add support for KPSS WDT
+  watchdog: qcom: document device tree bindings
+  watchdog: qcom: register a restart notifier
 
-Do you have some description of the hardware features of this SoC? Does
-it have PCIe, or Ethernet?
+ .../devicetree/bindings/watchdog/qcom-wdt.txt      |  21 +++
+ drivers/watchdog/Kconfig                           |  10 ++
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/qcom-wdt.c                        | 176 +++++++++++++++++++++
+ 4 files changed, 208 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+ create mode 100644 drivers/watchdog/qcom-wdt.c
 
-Hauke
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
