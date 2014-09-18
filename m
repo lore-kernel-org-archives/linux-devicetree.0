@@ -1,53 +1,162 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH] ARM: DT: ifc6410: Add board memory range.
-Date: Thu, 18 Sep 2014 15:16:37 +0100
-Message-ID: <541AE945.9030203@linaro.org>
-References: <1410932179-4652-1-git-send-email-srinivas.kandagatla@linaro.org>	<54192B64.6070604@smartplayin.com>	<FA9D8682-DB0E-48CF-A519-86A0465300E1@codeaurora.org>	<20140917191829.GC3749@joshc.qualcomm.com>	<541A01F3.4020303@linaro.org> <CAJAp7Og5v-ADm6ekMVUs8++CL5NP+OEw-vZ7mKdChOZyBTBZpA@mail.gmail.com>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Subject: Re: [PATCH v5 2/4] dt-bindings: document Rockchip thermal
+Date: Thu, 18 Sep 2014 16:19:26 +0200
+Message-ID: <CAAObsKCYGEBNEvDTs=iQD9KT0YomQWHg0W-vwHG4nLZbqogF=g@mail.gmail.com>
+References: <1410926353-15674-1-git-send-email-caesar.wang@rock-chips.com>
+ <1410926353-15674-3-git-send-email-caesar.wang@rock-chips.com>
+ <CAAObsKA61Ano85P6PehOY7WqR0FgTz_Rfur8UAt56ZXoNyoyqQ@mail.gmail.com> <541ADD58.7070901@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7Og5v-ADm6ekMVUs8++CL5NP+OEw-vZ7mKdChOZyBTBZpA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Josh Cartwright <joshc@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Pramod Gurav <pramod.gurav@smartplayin.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <541ADD58.7070901@rock-chips.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, dmitry.torokhov@gmail.com, addy.ke@rock-chips.com, zyf@rock-chips.com, cjf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 18/09/14 05:37, Bjorn Andersson wrote:
-> On Wed, Sep 17, 2014 at 2:49 PM, Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->>
->> On 17/09/14 20:18, Josh Cartwright wrote:
->>>
->>> On Wed, Sep 17, 2014 at 12:03:37PM -0700, Kumar Gala wrote:
-> [..]
->>>> Hmm, this doesn?t seem to work for me.
->>>
->>>
->>> I don't see how it could with qcom_defconfig, as we set
->>> CONFIG_ARM_ATAG_DTB_COMPAT.  Is this patch fixing a real issue?
->>
->> No, its not fixing any thing by itself.
->>
->> However along with "ARM: zImage: Allow DTB to override broken ATAG_MEM"
->> patch atleast I get to boot my IFC6410 with multi_v7_defconfig.
+On 18 September 2014 15:25, Caesar Wang <caesar.wang@rock-chips.com> wr=
+ote:
+> Tomeu,
 >
-> But that patch was rejected by various people.
-> Instead have a look at [1], it solves the problem for you (and have
-> reference to the original source).
+> =E5=9C=A8 2014=E5=B9=B409=E6=9C=8818=E6=97=A5 17:27, Tomeu Vizoso =E5=
+=86=99=E9=81=93:
+>>
+>> On 17 September 2014 05:59, Caesar Wang <caesar.wang@rock-chips.com>
+>> wrote:
+>>>
+>>> This add the necessary binding documentation for the thermal
+>>> found on Rockchip SoCs
+>>
+>> Hi Caesar,
+>>
+>> is there any reason to not use the existing thermal bindings? You ca=
+n
+>> find a description in
+>> Documentation/devicetree/bindings/thermal/thermal.txt and example co=
+de
+>> in omap, or in the patches for Tegra recently posted by Mikko
+>> Perttunen.
+>>
+>> Regards,
+>>
+>> Tomeu
 >
-> [1] https://github.com/andersson/kernel/commit/d4c0061cf7be8a341e6d06a97c85ecb69284e74c
-Looks cool.. I think we can ignore this patch with this fixup.
-On IFC6410 now that we have some way to unbrick the board we could even 
-try to fix this at bootloader level.
-
-Thanks to Kumar and You for redirecting me to this link.
-
---srini
 >
-> Regards,
-> Bjorn
+> Why should I use the existing thermal bindings?
+
+Because otherwise, you are asking to merge duplicated code. There's a
+generic way to define thermal zones, trip points, cooling devices,
+etc. And also code to parse and plug them together. Why add
+soc-specific code to do the same?
+
+> I believe omap,tegar and rockchip are  the three seperate thermals dr=
+iver.
+
+Yes, and OMAP is already using the generic bindings, and the proposed
+patches for Tegra as well, and I think it would make sense for
+Rockchip to also use them (unless I'm missing something).
+
+Regards,
+
+Tomeu
+
+> So far, I submitted the series Patchs for rockchip thermal.
+>
+>>
+>>> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+>>> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+>>> ---
+>>>   .../bindings/thermal/rockchip-thermal.txt          | 41
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 41 insertions(+)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>>> b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>>> new file mode 100644
+>>> index 0000000..6fc8bc3
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.tx=
+t
+>>> @@ -0,0 +1,41 @@
+>>> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+>>> +
+>>> +Required properties:
+>>> +- compatible: "rockchip,rk3288-tsadc"
+>>> +- reg: physical base address of the controller and length of memor=
+y
+>>> mapped
+>>> +       region.
+>>> +- interrupts: The interrupt number to the cpu. The interrupt speci=
+fier
+>>> format
+>>> +             depends on the interrupt controller.
+>>> +- clocks: Must contain an entry for each entry in clock-names.
+>>> +- clock-names: Shall be "tsadc" for the converter-clock, and "apb_=
+pclk"
+>>> for
+>>> +              the peripheral clock.
+>>> +- num-trips:  number of total trip points, this is required, set i=
+t 0 if
+>>> none,
+>>> +             if greater than 0, the following properties must be
+>>> defined;
+>>> +- tripN-temp: temperature of trip point N, should be in ascending =
+order;
+>>> +- tripN-type: type of trip point N, should be one of "active" "pas=
+sive"
+>>> "hot"
+>>> +             "critical";
+>>> +- tripN-cdev-num: number of the cooling devices which can be bound=
+ to
+>>> trip
+>>> +                 point N, this is required if trip point N is defi=
+ned,
+>>> set it 0 if none,
+>>> +                 otherwise the following cooling device names must=
+ be
+>>> defined;
+>>> +- tripN-cdev-nameM: name of the No. M cooling device of trip point=
+ N;
+>>> +
+>>> +Example:
+>>> +tsadc: tsadc@ff280000 {
+>>> +       compatible =3D "rockchip,rk3288-tsadc";
+>>> +       reg =3D <0xff280000 0x100>;
+>>> +       interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>>> +       clocks =3D <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+>>> +       clock-names =3D "tsadc", "apb_pclk";
+>>> +
+>>> +       num-trips =3D <2>;
+>>> +
+>>> +       trip0-temp =3D <80>;
+>>> +       trip0-type =3D "passive";
+>>> +       trip0-cdev-num =3D <1>;
+>>> +       trip0-cdev-name0 =3D "thermal-cpufreq-0";
+>>> +
+>>> +       trip1-temp =3D <100>;
+>>> +       trip1-type =3D "critical";
+>>> +       trip1-cdev-num =3D <1>;
+>>> +       trip1-cdev-name0 =3D "thermal-cpufreq-0";
+>>> +};
+>>> --
+>>> 1.9.1
+>>>
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-pm"=
+ in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>
+>>
+>
+> --
+> Best regards,
+> Caesar
+>
 >
