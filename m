@@ -1,209 +1,105 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 2/3] power: reset: imx-snvs-poweroff: add power off
- driver for i.mx6
-Date: Thu, 18 Sep 2014 18:53:16 +0100
-Message-ID: <20140918175316.GA10911@leverpostej>
-References: <1410947881-7345-1-git-send-email-b38343@freescale.com>
- <1410947881-7345-3-git-send-email-b38343@freescale.com>
- <20140917175244.GC7983@leverpostej>
- <20140918022125.GA8150@Robin-OptiPlex-780>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH v3 4/5] ASoC: davinci: HDMI audio build for AM33XX and
+ TDA998x
+Date: Thu, 18 Sep 2014 21:36:21 +0300
+Message-ID: <541B2625.2040600@ti.com>
+References: <cover.1410898073.git.jsarha@ti.com>	<270f1e048d9a5a17a7f367ecabc509475b8c1145.1410898073.git.jsarha@ti.com>	<20140917194126.GV7960@sirena.org.uk>	<5419F965.9060209@ti.com> <20140918102544.26b28b6b@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140918022125.GA8150@Robin-OptiPlex-780>
-Sender: linux-pm-owner@vger.kernel.org
-To: Robin Gong <b38343@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "sre@kernel.org" <sre@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "shawn.guo@freescale.com" <shawn.guo@freescale.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140918102544.26b28b6b@armhf>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Mark Brown <broonie@kernel.org>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, tony@atomide.com, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 18, 2014 at 03:21:27AM +0100, Robin Gong wrote:
-> On Wed, Sep 17, 2014 at 06:52:44PM +0100, Mark Rutland wrote:
-> > On Wed, Sep 17, 2014 at 10:57:59AM +0100, Robin Gong wrote:
-> > > This driver register pm_power_off with snvs power off function. If
-> > > your boards NOT use PMIC_ON_REQ to turn on/off external pmic, or use
-> > > other pin to do, please disable the driver in dts, otherwise, your
-> > > pm_power_off maybe overwrote by this driver.
-> > > 
-> > > Signed-off-by: Robin Gong <b38343@freescale.com>
-> > > ---
-> > >  .../bindings/power_supply/imx-snvs-poweroff.txt    |   23 +++++++
-> > >  drivers/power/reset/Kconfig                        |    9 +++
-> > >  drivers/power/reset/Makefile                       |    1 +
-> > >  drivers/power/reset/imx-snvs-poweroff.c            |   66 ++++++++++++++++++++
-> > >  4 files changed, 99 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
-> > >  create mode 100644 drivers/power/reset/imx-snvs-poweroff.c
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt b/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
-> > > new file mode 100644
-> > > index 0000000..6caf64e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/power_supply/imx-snvs-poweroff.txt
-> > > @@ -0,0 +1,23 @@
-> > > +i.mx6 Poweroff Driver
-> > > +
-> > > +SNVS_LPCR in SNVS module can power off the whole system by pull
-> > > +PMIC_ON_REQ low if PMIC_ON_REQ is connected with external PMIC.
-> > > +If you don't want to use PMIC_ON_REQ as power on/off control,
-> > > +please set status='disabled' to disable this driver.
-> > > +
-> > > +Required Properties:
-> > > +-compatible: "fsl,sec-v4.0-poweroff"
-> > > +-reg: Specifies the physical address of the SNVS_LPCR register
-> > 
-> > As you describe above, this is part of the SNVS module. So why does this
-> > need a separate node?
-> > 
-> > Surely there should just be a property on the SNVS node that desribers
-> > whether or not this can be used?
-> > 
-> > Mark.
-> >
-> Yes, put this function in rtc-snvs make things easier, honestly,this is our way
-> in internal tree. But looks more and more power off driver put in drivers/power
-> /reset,so we decided to add new power off driver. If it is ok to register
-> pm_power_off hook in drivers/rtc/rtc-snvs.c, I can drop this patch.
+On 09/18/2014 11:25 AM, Jean-Francois Moine wrote:
+ > On Thu, 18 Sep 2014 00:13:09 +0300
+ > Jyri Sarha <jsarha@ti.com> wrote:
+ >
+ >>> So, Jean-Francois is also trying to do things with the TDA998x - what's
+ >>> the story with that, is this joined up at all?
+ >>
+ >> Not really. This basic functionality does not touch tda998x at all on
+ >> the fly, but just sets i2s configuation in the beginning and bangs the
+ >> bits trough McASP. But as long as the old platform data for tda998x
+ >> still works after Jean-Francois' patches I should be safe.
+ >
+ > It should. And you may test it.
+ >
 
-My view would be that the ability to power off the system is a feature
-of some SNVS modules, and that the SNVS_LPCR register is not a
-sufficiently large sub-block to be described separately. I am not a fan
-of partitioning HW to match Linux implementation details rather than its
-logical structure.
+I tested by BBB HDMI audio patches with "[PATCH v5] ASoC: tda998x: Add
+a codec to the HDMI transmitter", and it works otherwise, but the
+default for CTS_N_K has changed from 3 to 2. I just needed to change the
+supported format from S32_LE to S24_LE to compensate the change.
 
-So, asuming the layout of the SNS block is well-defined I'd just expect
-a top-level SNVS node, with a driver that can decompose the block
-appropriately and portion it out to different drivers as necessary.
+ >> The problem with the Jean-Francois' patches is the DT support. The BBB
+ >> HDMI video is implemented trough tilcdc-slave mechanism without a DT
+ >> node for the tda encoder, which renders Jean-Francois' approach unusable
+ >> for BBB.
+ >
+ > I used the TDA998x with DT support for a long time with a hack by using
+ > parts of drm_i2c_encoder_init(). Now, I think that this function could
+ > be used as it is just setting no platform_data in info.
+ >
+ >> The whole tilcdc slave approach may not be the most elegant way to use
+ >> the tda driver, but it does not look like it is going to change any time
+ >> soon.
+ >
+ > Right: I proposed a patch for that and it was rejected.
+ >
 
-I am not familiar with the hardware, so perhaps that is not a good idea.
-How variable is the SNVS block?
+The tilcdc is not actively maintained by anybody ATM and that is why
+it is so hard to make any bigger changes to it. I hope we can change
+this at some point, but for now I am just trying to get a simple HDMI
+audio working on BBB with minimal changes.
 
-Mark.
+ >> Best regards,
+ >> Jyri
+ >>
+ >> ps. I have been thinking on something similar to Jean-Francois' patch
+ >> for SiI9022 which I have been working on lately. Also I have been
+ >> wondering if it would be possible to come up with a generic ASoC codec
+ >> component driver or library that could be used with any HDMI encoder to
+ >> produce the ASoC codec component. Unfortunately I am in too early stage
+ >> to produce anything more concrete.
+ >
+ > Here are some thoughts about this topic.
+ >
+ > The video and audio worlds don't know about each other.
+ > The only solution I found is to let the encoder create the codec as
+ > a child device. Then, the codec knows from which encoder it depends.
+ > This could have been done using Russell's components, but the codec
+ > should have been declared in the DT. This is not useful.
+ >
 
-> > > +
-> > > +Example:
-> > > +	snvs@020cc000 {
-> > > +		compatible = "fsl,sec-v4.0-mon", "simple-bus";
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <1>;
-> > > +		ranges = <0 0x020cc000 0x4000>;
-> > > +		.....
-> > > +		snvs-poweroff@38 {
-> > > +			compatible = "fsl,sec-v4.0-poweroff";
-> > > +			reg = <0x38 0x4>;
-> > > +		};
-> > > +	}
-> > > diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> > > index ca41523..b26c547 100644
-> > > --- a/drivers/power/reset/Kconfig
-> > > +++ b/drivers/power/reset/Kconfig
-> > > @@ -45,6 +45,15 @@ config POWER_RESET_HISI
-> > >  	help
-> > >  	  Reboot support for Hisilicon boards.
-> > >  
-> > > +config POWER_RESET_IMX
-> > > +	bool "IMX6 power-off driver"
-> > > +	depends on POWER_RESET && SOC_IMX6
-> > > +	help
-> > > +	  This driver support power off external PMIC by PMIC_ON_REQ on i.mx6
-> > > +	  boards.If you want to use other pin to control external power,please
-> > > +	  say N here or disable in dts to make sure pm_power_off never be
-> > > +	  overwrote wrongly by this driver.
-> > > +
-> > >  config POWER_RESET_MSM
-> > >  	bool "Qualcomm MSM power-off driver"
-> > >  	depends on POWER_RESET && ARCH_QCOM
-> > > diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> > > index a42e70e..2524daf 100644
-> > > --- a/drivers/power/reset/Makefile
-> > > +++ b/drivers/power/reset/Makefile
-> > > @@ -3,6 +3,7 @@ obj-$(CONFIG_POWER_RESET_AXXIA) += axxia-reset.o
-> > >  obj-$(CONFIG_POWER_RESET_BRCMSTB) += brcmstb-reboot.o
-> > >  obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
-> > >  obj-$(CONFIG_POWER_RESET_HISI) += hisi-reboot.o
-> > > +obj-$(CONFIG_POWER_RESET_IMX) += imx-snvs-poweroff.o
-> > >  obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
-> > >  obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
-> > >  obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
-> > > diff --git a/drivers/power/reset/imx-snvs-poweroff.c b/drivers/power/reset/imx-snvs-poweroff.c
-> > > new file mode 100644
-> > > index 0000000..d726ac4
-> > > --- /dev/null
-> > > +++ b/drivers/power/reset/imx-snvs-poweroff.c
-> > > @@ -0,0 +1,66 @@
-> > > +/* Power off driver for i.mx6
-> > > + * Copyright (c) 2014, FREESCALE CORPORATION.  All rights reserved.
-> > > + *
-> > > + * based on msm-poweroff.c
-> > > + *
-> > > + * This program is free software; you can redistribute it and/or modify
-> > > + * it under the terms of the GNU General Public License version 2 and
-> > > + * only version 2 as published by the Free Software Foundation.
-> > > + *
-> > > + * This program is distributed in the hope that it will be useful,
-> > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > > + * GNU General Public License for more details.
-> > > + *
-> > > + */
-> > > +
-> > > +#include <linux/err.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/platform_device.h>
-> > > +
-> > > +static void __iomem *snvs_base;
-> > > +
-> > > +static void do_imx_poweroff(void)
-> > > +{
-> > > +	u32 value = readl(snvs_base);
-> > > +
-> > > +	/* set TOP and DP_EN bit */
-> > > +	writel(value | 0x60, snvs_base);
-> > > +}
-> > > +
-> > > +static int imx_poweroff_probe(struct platform_device *pdev)
-> > > +{
-> > > +	snvs_base = of_iomap(pdev->dev.of_node, 0);
-> > > +	if (!snvs_base) {
-> > > +		dev_err(&pdev->dev, "failed to get memory\n");
-> > > +		return -EIO;
-> > > +	}
-> > > +
-> > > +	pm_power_off = do_imx_poweroff;
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static const struct of_device_id of_imx_poweroff_match[] = {
-> > > +	{ .compatible = "fsl,sec-v4.0-poweroff", },
-> > > +	{},
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, of_imx_poweroff_match);
-> > > +
-> > > +static struct platform_driver imx_poweroff_driver = {
-> > > +	.probe = imx_poweroff_probe,
-> > > +	.driver = {
-> > > +		.name = "imx-snvs-poweroff",
-> > > +		.of_match_table = of_match_ptr(of_imx_poweroff_match),
-> > > +	},
-> > > +};
-> > > +
-> > > +static int __init imx_poweroff_init(void)
-> > > +{
-> > > +	return platform_driver_register(&imx_poweroff_driver);
-> > > +}
-> > > +device_initcall(imx_poweroff_init);
-> > > -- 
-> > > 1.7.9.5
-> > > 
-> > > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+There is anothere option of putting the ASoC codec code into an ASoC
+library module and registering the ASoC codec component under the HDMI
+encoder device. However, this approach does not allow building the
+ASoC as modules if the HDMI encoder driver is built in. So a separate
+platform device for the codec component is probably better.
+
+ > The codec interacts with the encoder in 2 ways:
+ > - it uses the HDMI parameters retrieved by the encoder,
+ > - it gives the audio source type to the encoder.
+ > I used exported functions for that, but, for a generic codec, theses
+ > functions could be given through the codec platform_data.
+ >
+ > The codec declares the DAI(s) prior to know the encoder. The DAI table
+ > must be in the codec because of the snd_soc_dai_ops.
+ > For a generic codec, this DAI table could be built dynamically from
+ > information (name, id) also given through the codec platform_data.
+ >
+
+This is pretty much what I have been thinking too. The API between the
+generic ASoC HDMI codec could use already existing the linux headers
+derived HDMI standard. The ASoC side code should build the hdmi audio
+infoframe and configure the stream header bits etc, so basically do
+all the generic stuff coming from HDMI standard. Writing the bits
+to the appropriate registers in the encoder chip would be left to the
+HDMI encoder driver.
+
+Best regards,
+Jyri
+
