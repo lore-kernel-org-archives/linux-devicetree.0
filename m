@@ -1,236 +1,69 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 1/3] phy: exynos-dp-video: Use syscon support to control
- pmu register
-Date: Thu, 18 Sep 2014 11:21:33 +0530
-Message-ID: <541A72E5.4000809@ti.com>
-References: <1410840408-19954-1-git-send-email-gautam.vivek@samsung.com>	<1410843726-4235-1-git-send-email-gautam.vivek@samsung.com>	<5419BCC9.6000607@ti.com> <CAFp+6iGNNygVrpQFaEao+aGAad=vgb6EDpJqRj8cA+5XSC8ZSg@mail.gmail.com>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: [PATCH] mfd: syscon: binding: Add syscon endianness support.
+Date: Thu, 18 Sep 2014 15:27:29 +0800
+Message-ID: <1411025249-34333-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iGNNygVrpQFaEao+aGAad=vgb6EDpJqRj8cA+5XSC8ZSg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, inki.dae@samsung.com, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, ajaykumar.rs@samsung.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: B29396@freescale.com, pankaj.dubey@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
+For many drivers which will support rich endianness of Devices
+need define DT properties by itself with the binding support.
+
+The regmap core has already support endianness of the following
+case:
+Index      Device     DT properties needed
+------------------------------------------
+1          BE         'big-endian'
+2          LE         'little-endian'
+
+Please see the regmap binding for more detail information of
+the endianness support.
+
+Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+---
 
 
-On Thursday 18 September 2014 08:55 AM, Vivek Gautam wrote:
-> Hi Kishon,
-> 
-> 
-> On Wed, Sep 17, 2014 at 10:24 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->>
->> On Tuesday 16 September 2014 10:32 AM, Vivek Gautam wrote:
->>> Currently the DP_PHY_ENABLE register is mapped in the driver,
->>> and accessed to control power to the PHY.
->>> With mfd-syscon and regmap interface available at our disposal,
->>> it's wise to use that instead of using a 'reg' property for the
->>> controller and allocating a memory resource for that.
->>>
->>> To facilitate this, we have added another compatible string
->>> for Exynso5420 SoC to acquire driver data which contains
->>> different DP-PHY-CONTROL register offset.
->>>
->>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->>> Cc: Jingoo Han <jg1.han@samsung.com>
->>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->>
->> Taking this in linux-phy tree. If someone has already taken this patch, please
->> let me know.
-> 
-> Thanks for taking this. But just one check, i think i need to separate
-> out the Documentation
-> to a separate patch even before this driver patch. Isn't it ?
+This patch hasn't any dependency with Pankaj Dubey's:
+    mfd: syscon: Decouple syscon interface from platform devices
 
-no.. that's alright.
 
-Thanks
-Kishon
-> 
->>
->> Thanks
->> Kishon
->>
->>> ---
->>>
->>> Changes since v2:
->>>  - Using 'EXYNOS5_PHY_ENABLE' macro instead of 'EXYNOS_DPTX_PHY_ENABLE'
->>>    since that's available with us in "linux/mfd/syscon/exynos5-pmu.h" file.
->>>
->>> Changes since v1:
->>>  - state->regs should have been "struct regmap *" instead of
->>>    "void __iomem *". So corrected the same.
->>>
->>>  .../devicetree/bindings/phy/samsung-phy.txt        |    7 +-
->>>  drivers/phy/phy-exynos-dp-video.c                  |   79 +++++++++++++-------
->>>  2 files changed, 59 insertions(+), 27 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->>> index 7a6feea..15e0f2c 100644
->>> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
->>> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->>> @@ -17,8 +17,11 @@ Samsung EXYNOS SoC series Display Port PHY
->>>  -------------------------------------------------
->>>
->>>  Required properties:
->>> -- compatible : should be "samsung,exynos5250-dp-video-phy";
->>> -- reg : offset and length of the Display Port PHY register set;
->>> +- compatible : should be one of the following supported values:
->>> +      - "samsung,exynos5250-dp-video-phy"
->>> +      - "samsung,exynos5420-dp-video-phy"
->>> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
->>> +                   control pmu registers for power isolation.
->>>  - #phy-cells : from the generic PHY bindings, must be 0;
->>>
->>>  Samsung S5P/EXYNOS SoC series USB PHY
->>> diff --git a/drivers/phy/phy-exynos-dp-video.c b/drivers/phy/phy-exynos-dp-video.c
->>> index 8b3026e..53f44a0 100644
->>> --- a/drivers/phy/phy-exynos-dp-video.c
->>> +++ b/drivers/phy/phy-exynos-dp-video.c
->>> @@ -13,44 +13,55 @@
->>>  #include <linux/io.h>
->>>  #include <linux/kernel.h>
->>>  #include <linux/module.h>
->>> +#include <linux/mfd/syscon.h>
->>> +#include <linux/mfd/syscon/exynos5-pmu.h>
->>>  #include <linux/of.h>
->>>  #include <linux/of_address.h>
->>>  #include <linux/phy/phy.h>
->>>  #include <linux/platform_device.h>
->>> +#include <linux/regmap.h>
->>>
->>> -/* DPTX_PHY_CONTROL register */
->>> -#define EXYNOS_DPTX_PHY_ENABLE               (1 << 0)
->>> +struct exynos_dp_video_phy_drvdata {
->>> +     u32 phy_ctrl_offset;
->>> +};
->>>
->>>  struct exynos_dp_video_phy {
->>> -     void __iomem *regs;
->>> +     struct regmap *regs;
->>> +     const struct exynos_dp_video_phy_drvdata *drvdata;
->>>  };
->>>
->>> -static int __set_phy_state(struct exynos_dp_video_phy *state, unsigned int on)
->>> +static void exynos_dp_video_phy_pwr_isol(struct exynos_dp_video_phy *state,
->>> +                                                     unsigned int on)
->>>  {
->>> -     u32 reg;
->>> +     unsigned int val;
->>> +
->>> +     if (IS_ERR(state->regs))
->>> +             return;
->>>
->>> -     reg = readl(state->regs);
->>> -     if (on)
->>> -             reg |= EXYNOS_DPTX_PHY_ENABLE;
->>> -     else
->>> -             reg &= ~EXYNOS_DPTX_PHY_ENABLE;
->>> -     writel(reg, state->regs);
->>> +     val = on ? 0 : EXYNOS5_PHY_ENABLE;
->>>
->>> -     return 0;
->>> +     regmap_update_bits(state->regs, state->drvdata->phy_ctrl_offset,
->>> +                        EXYNOS5_PHY_ENABLE, val);
->>>  }
->>>
->>>  static int exynos_dp_video_phy_power_on(struct phy *phy)
->>>  {
->>>       struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
->>>
->>> -     return __set_phy_state(state, 1);
->>> +     /* Disable power isolation on DP-PHY */
->>> +     exynos_dp_video_phy_pwr_isol(state, 0);
->>> +
->>> +     return 0;
->>>  }
->>>
->>>  static int exynos_dp_video_phy_power_off(struct phy *phy)
->>>  {
->>>       struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
->>>
->>> -     return __set_phy_state(state, 0);
->>> +     /* Enable power isolation on DP-PHY */
->>> +     exynos_dp_video_phy_pwr_isol(state, 1);
->>> +
->>> +     return 0;
->>>  }
->>>
->>>  static struct phy_ops exynos_dp_video_phy_ops = {
->>> @@ -59,11 +70,31 @@ static struct phy_ops exynos_dp_video_phy_ops = {
->>>       .owner          = THIS_MODULE,
->>>  };
->>>
->>> +static const struct exynos_dp_video_phy_drvdata exynos5250_dp_video_phy = {
->>> +     .phy_ctrl_offset        = EXYNOS5_DPTX_PHY_CONTROL,
->>> +};
->>> +
->>> +static const struct exynos_dp_video_phy_drvdata exynos5420_dp_video_phy = {
->>> +     .phy_ctrl_offset        = EXYNOS5420_DPTX_PHY_CONTROL,
->>> +};
->>> +
->>> +static const struct of_device_id exynos_dp_video_phy_of_match[] = {
->>> +     {
->>> +             .compatible = "samsung,exynos5250-dp-video-phy",
->>> +             .data = &exynos5250_dp_video_phy,
->>> +     }, {
->>> +             .compatible = "samsung,exynos5420-dp-video-phy",
->>> +             .data = &exynos5420_dp_video_phy,
->>> +     },
->>> +     { },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
->>> +
->>>  static int exynos_dp_video_phy_probe(struct platform_device *pdev)
->>>  {
->>>       struct exynos_dp_video_phy *state;
->>>       struct device *dev = &pdev->dev;
->>> -     struct resource *res;
->>> +     const struct of_device_id *match;
->>>       struct phy_provider *phy_provider;
->>>       struct phy *phy;
->>>
->>> @@ -71,11 +102,15 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
->>>       if (!state)
->>>               return -ENOMEM;
->>>
->>> -     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> -
->>> -     state->regs = devm_ioremap_resource(dev, res);
->>> -     if (IS_ERR(state->regs))
->>> +     state->regs = syscon_regmap_lookup_by_phandle(dev->of_node,
->>> +                                                   "samsung,pmu-syscon");
->>> +     if (IS_ERR(state->regs)) {
->>> +             dev_err(dev, "Failed to lookup PMU regmap\n");
->>>               return PTR_ERR(state->regs);
->>> +     }
->>> +
->>> +     match = of_match_node(exynos_dp_video_phy_of_match, dev->of_node);
->>> +     state->drvdata = match->data;
->>>
->>>       phy = devm_phy_create(dev, NULL, &exynos_dp_video_phy_ops, NULL);
->>>       if (IS_ERR(phy)) {
->>> @@ -89,12 +124,6 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
->>>       return PTR_ERR_OR_ZERO(phy_provider);
->>>  }
->>>
->>> -static const struct of_device_id exynos_dp_video_phy_of_match[] = {
->>> -     { .compatible = "samsung,exynos5250-dp-video-phy" },
->>> -     { },
->>> -};
->>> -MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
->>> -
->>>  static struct platform_driver exynos_dp_video_phy_driver = {
->>>       .probe  = exynos_dp_video_phy_probe,
->>>       .driver = {
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
+
+ Documentation/devicetree/bindings/mfd/syscon.txt | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+index fe8150b..7c33178 100644
+--- a/Documentation/devicetree/bindings/mfd/syscon.txt
++++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+@@ -10,11 +10,22 @@ OS driver) to determine the location of the registers, and access the
+ registers directly.
+ 
+ Required properties:
+-- compatible: Should contain "syscon".
+-- reg: the register region can be accessed from syscon
++- compatible:		Should contain "syscon".
++- reg:			The register region can be accessed from syscon
+ 
+-Examples:
++Optional property:
++- {big,little}-endian:	Boolean property. Please see ../regmap/regmap.txt
++			for more information.
++
++Example 1:
+ gpr: iomuxc-gpr@020e0000 {
+ 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
+ 	reg = <0x020e0000 0x38>;
+ };
++
++Example 2:
++dcfg: dcfg@1ee0000 {
++	compatible = "fsl,ls1021a-dcfg", "syscon";
++	reg = <0x0 0x1ee0000 0x0 0x10000>;
++	big-endian;
++};
+-- 
+2.1.0.27.g96db324
