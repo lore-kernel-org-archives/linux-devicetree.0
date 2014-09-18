@@ -1,95 +1,234 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: sun8i: Add DMA controller node
-Date: Thu, 18 Sep 2014 11:24:40 +0800
-Message-ID: <1411010680-4481-4-git-send-email-wens@csie.org>
-References: <1411010680-4481-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: Re: [PATCH v3 1/3] phy: exynos-dp-video: Use syscon support to
+ control pmu register
+Date: Thu, 18 Sep 2014 08:55:58 +0530
+Message-ID: <CAFp+6iGNNygVrpQFaEao+aGAad=vgb6EDpJqRj8cA+5XSC8ZSg@mail.gmail.com>
+References: <1410840408-19954-1-git-send-email-gautam.vivek@samsung.com>
+	<1410843726-4235-1-git-send-email-gautam.vivek@samsung.com>
+	<5419BCC9.6000607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB7VA5GQAKGQER62SXQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1411010680-4481-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5419BCC9.6000607@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: dri-devel@lists.freedesktop.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, inki.dae@samsung.com, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, ajaykumar.rs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add the DMA controller node and DMA bindings to the supported devices.
+Hi Kishon,
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a23.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
-index cc8c650..46a8cc9 100644
---- a/arch/arm/boot/dts/sun8i-a23.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23.dtsi
-@@ -203,6 +203,15 @@
- 		#size-cells = <1>;
- 		ranges;
- 
-+		dma: dma-controller@01c02000 {
-+			compatible = "allwinner,sun8i-a23-dma";
-+			reg = <0x01c02000 0x1000>;
-+			interrupts = <0 50 4>;
-+			clocks = <&ahb1_gates 6>;
-+			resets = <&ahb1_rst 6>;
-+			#dma-cells = <1>;
-+		};
-+
- 		mmc0: mmc@01c0f000 {
- 			compatible = "allwinner,sun5i-a13-mmc";
- 			reg = <0x01c0f000 0x1000>;
-@@ -332,6 +341,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 16>;
- 			resets = <&apb2_rst 16>;
-+			dmas = <&dma 6>, <&dma 6>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -343,6 +354,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 17>;
- 			resets = <&apb2_rst 17>;
-+			dmas = <&dma 7>, <&dma 7>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -354,6 +367,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 18>;
- 			resets = <&apb2_rst 18>;
-+			dmas = <&dma 8>, <&dma 8>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -365,6 +380,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 19>;
- 			resets = <&apb2_rst 19>;
-+			dmas = <&dma 9>, <&dma 9>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
-@@ -376,6 +393,8 @@
- 			reg-io-width = <4>;
- 			clocks = <&apb2_gates 20>;
- 			resets = <&apb2_rst 20>;
-+			dmas = <&dma 10>, <&dma 10>;
-+			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
- 
+On Wed, Sep 17, 2014 at 10:24 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+>
+> On Tuesday 16 September 2014 10:32 AM, Vivek Gautam wrote:
+>> Currently the DP_PHY_ENABLE register is mapped in the driver,
+>> and accessed to control power to the PHY.
+>> With mfd-syscon and regmap interface available at our disposal,
+>> it's wise to use that instead of using a 'reg' property for the
+>> controller and allocating a memory resource for that.
+>>
+>> To facilitate this, we have added another compatible string
+>> for Exynso5420 SoC to acquire driver data which contains
+>> different DP-PHY-CONTROL register offset.
+>>
+>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> Cc: Jingoo Han <jg1.han@samsung.com>
+>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+>
+> Taking this in linux-phy tree. If someone has already taken this patch, please
+> let me know.
+
+Thanks for taking this. But just one check, i think i need to separate
+out the Documentation
+to a separate patch even before this driver patch. Isn't it ?
+
+>
+> Thanks
+> Kishon
+>
+>> ---
+>>
+>> Changes since v2:
+>>  - Using 'EXYNOS5_PHY_ENABLE' macro instead of 'EXYNOS_DPTX_PHY_ENABLE'
+>>    since that's available with us in "linux/mfd/syscon/exynos5-pmu.h" file.
+>>
+>> Changes since v1:
+>>  - state->regs should have been "struct regmap *" instead of
+>>    "void __iomem *". So corrected the same.
+>>
+>>  .../devicetree/bindings/phy/samsung-phy.txt        |    7 +-
+>>  drivers/phy/phy-exynos-dp-video.c                  |   79 +++++++++++++-------
+>>  2 files changed, 59 insertions(+), 27 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> index 7a6feea..15e0f2c 100644
+>> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> @@ -17,8 +17,11 @@ Samsung EXYNOS SoC series Display Port PHY
+>>  -------------------------------------------------
+>>
+>>  Required properties:
+>> -- compatible : should be "samsung,exynos5250-dp-video-phy";
+>> -- reg : offset and length of the Display Port PHY register set;
+>> +- compatible : should be one of the following supported values:
+>> +      - "samsung,exynos5250-dp-video-phy"
+>> +      - "samsung,exynos5420-dp-video-phy"
+>> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
+>> +                   control pmu registers for power isolation.
+>>  - #phy-cells : from the generic PHY bindings, must be 0;
+>>
+>>  Samsung S5P/EXYNOS SoC series USB PHY
+>> diff --git a/drivers/phy/phy-exynos-dp-video.c b/drivers/phy/phy-exynos-dp-video.c
+>> index 8b3026e..53f44a0 100644
+>> --- a/drivers/phy/phy-exynos-dp-video.c
+>> +++ b/drivers/phy/phy-exynos-dp-video.c
+>> @@ -13,44 +13,55 @@
+>>  #include <linux/io.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/module.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/mfd/syscon/exynos5-pmu.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_address.h>
+>>  #include <linux/phy/phy.h>
+>>  #include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>>
+>> -/* DPTX_PHY_CONTROL register */
+>> -#define EXYNOS_DPTX_PHY_ENABLE               (1 << 0)
+>> +struct exynos_dp_video_phy_drvdata {
+>> +     u32 phy_ctrl_offset;
+>> +};
+>>
+>>  struct exynos_dp_video_phy {
+>> -     void __iomem *regs;
+>> +     struct regmap *regs;
+>> +     const struct exynos_dp_video_phy_drvdata *drvdata;
+>>  };
+>>
+>> -static int __set_phy_state(struct exynos_dp_video_phy *state, unsigned int on)
+>> +static void exynos_dp_video_phy_pwr_isol(struct exynos_dp_video_phy *state,
+>> +                                                     unsigned int on)
+>>  {
+>> -     u32 reg;
+>> +     unsigned int val;
+>> +
+>> +     if (IS_ERR(state->regs))
+>> +             return;
+>>
+>> -     reg = readl(state->regs);
+>> -     if (on)
+>> -             reg |= EXYNOS_DPTX_PHY_ENABLE;
+>> -     else
+>> -             reg &= ~EXYNOS_DPTX_PHY_ENABLE;
+>> -     writel(reg, state->regs);
+>> +     val = on ? 0 : EXYNOS5_PHY_ENABLE;
+>>
+>> -     return 0;
+>> +     regmap_update_bits(state->regs, state->drvdata->phy_ctrl_offset,
+>> +                        EXYNOS5_PHY_ENABLE, val);
+>>  }
+>>
+>>  static int exynos_dp_video_phy_power_on(struct phy *phy)
+>>  {
+>>       struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
+>>
+>> -     return __set_phy_state(state, 1);
+>> +     /* Disable power isolation on DP-PHY */
+>> +     exynos_dp_video_phy_pwr_isol(state, 0);
+>> +
+>> +     return 0;
+>>  }
+>>
+>>  static int exynos_dp_video_phy_power_off(struct phy *phy)
+>>  {
+>>       struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
+>>
+>> -     return __set_phy_state(state, 0);
+>> +     /* Enable power isolation on DP-PHY */
+>> +     exynos_dp_video_phy_pwr_isol(state, 1);
+>> +
+>> +     return 0;
+>>  }
+>>
+>>  static struct phy_ops exynos_dp_video_phy_ops = {
+>> @@ -59,11 +70,31 @@ static struct phy_ops exynos_dp_video_phy_ops = {
+>>       .owner          = THIS_MODULE,
+>>  };
+>>
+>> +static const struct exynos_dp_video_phy_drvdata exynos5250_dp_video_phy = {
+>> +     .phy_ctrl_offset        = EXYNOS5_DPTX_PHY_CONTROL,
+>> +};
+>> +
+>> +static const struct exynos_dp_video_phy_drvdata exynos5420_dp_video_phy = {
+>> +     .phy_ctrl_offset        = EXYNOS5420_DPTX_PHY_CONTROL,
+>> +};
+>> +
+>> +static const struct of_device_id exynos_dp_video_phy_of_match[] = {
+>> +     {
+>> +             .compatible = "samsung,exynos5250-dp-video-phy",
+>> +             .data = &exynos5250_dp_video_phy,
+>> +     }, {
+>> +             .compatible = "samsung,exynos5420-dp-video-phy",
+>> +             .data = &exynos5420_dp_video_phy,
+>> +     },
+>> +     { },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
+>> +
+>>  static int exynos_dp_video_phy_probe(struct platform_device *pdev)
+>>  {
+>>       struct exynos_dp_video_phy *state;
+>>       struct device *dev = &pdev->dev;
+>> -     struct resource *res;
+>> +     const struct of_device_id *match;
+>>       struct phy_provider *phy_provider;
+>>       struct phy *phy;
+>>
+>> @@ -71,11 +102,15 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
+>>       if (!state)
+>>               return -ENOMEM;
+>>
+>> -     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -
+>> -     state->regs = devm_ioremap_resource(dev, res);
+>> -     if (IS_ERR(state->regs))
+>> +     state->regs = syscon_regmap_lookup_by_phandle(dev->of_node,
+>> +                                                   "samsung,pmu-syscon");
+>> +     if (IS_ERR(state->regs)) {
+>> +             dev_err(dev, "Failed to lookup PMU regmap\n");
+>>               return PTR_ERR(state->regs);
+>> +     }
+>> +
+>> +     match = of_match_node(exynos_dp_video_phy_of_match, dev->of_node);
+>> +     state->drvdata = match->data;
+>>
+>>       phy = devm_phy_create(dev, NULL, &exynos_dp_video_phy_ops, NULL);
+>>       if (IS_ERR(phy)) {
+>> @@ -89,12 +124,6 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
+>>       return PTR_ERR_OR_ZERO(phy_provider);
+>>  }
+>>
+>> -static const struct of_device_id exynos_dp_video_phy_of_match[] = {
+>> -     { .compatible = "samsung,exynos5250-dp-video-phy" },
+>> -     { },
+>> -};
+>> -MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
+>> -
+>>  static struct platform_driver exynos_dp_video_phy_driver = {
+>>       .probe  = exynos_dp_video_phy_probe,
+>>       .driver = {
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-2.1.0
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
