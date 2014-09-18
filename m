@@ -1,142 +1,64 @@
-From: Rene Kolarik <rene.kolarik@gmail.com>
-Subject: iMX Coding Style Patch
-Date: Thu, 18 Sep 2014 23:55:36 +0200
-Message-ID: <20140918215536.GA15195@rendy-i5>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: add devicetree bindings for st-pwm
+ regulator
+Date: Thu, 18 Sep 2014 15:22:30 -0700
+Message-ID: <20140918222230.GG7960@sirena.org.uk>
+References: <1411025505-21628-1-git-send-email-zyw@rock-chips.com>
+ <1411025505-21628-3-git-send-email-zyw@rock-chips.com>
+ <CAD=FV=UdSQZqGqY5XvLwKpkSbEWvtXG0s1vuk3xfdX0AJ27TBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="HlL+5n6rz5pIUxbD"
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0za9BfvgN4c4+/Ah"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: shawn.guo@freescale.com, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devel@driverdev.osuosl.org, fabio.estevam@freescale.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, gregkh@linuxfoundation.org, lambert.quentin@gmail.com, valentina.manea.m@gmail.com, vincent.stehle@laposte.net, daniel.vetter@ffwll.ch, denis@eukrea.com, devicetree@vger.kernel.org, robh+dt@kernel.org, p.zabel@pengutronix.de, galak@codeaurora.org, rmk+kernel@arm.linux.org.uk, Ying.Liu@freescale.com, linux-kernel@vger.kernel.org
+In-Reply-To: <CAD=FV=UdSQZqGqY5XvLwKpkSbEWvtXG0s1vuk3xfdX0AJ27TBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---HlL+5n6rz5pIUxbD
+--0za9BfvgN4c4+/Ah
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hello,
+On Thu, Sep 18, 2014 at 02:27:59PM -0700, Doug Anderson wrote:
+> On Thu, Sep 18, 2014 at 12:31 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
 
-I'm sending this as a part of Eudyptula Challenge.
+> I would be tempted to say that you should add a few required properties:
 
-Rene Kolarik 
+> * regulator-boot-on
+> * regulator-always-on
+> * regulator-initial-microvolts
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="imx-coding-style.patch"
+> From my understanding of how PWM-based regulators work there is no way
+> to "disable" them.  If you drive them low then they get their biggest
+> voltage.  If you drive them high then they get their smallest voltage.
+> If you make them floating then it's equivalent to 50% duty cycle
+> (right?)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-index e935d7d..4004bb8 100644
---- a/Documentation/devicetree/bindings/arm/fsl.txt
-+++ b/Documentation/devicetree/bindings/arm/fsl.txt
-@@ -71,6 +71,10 @@ i.MX53 generic board
- Required root node properties:
-     - compatible = "fsl,imx53";
- 
-+i.MX53 Television Encoder
-+Required root node properties:
-+    - compatible = "fsl,imx53-tve";
-+
- i.MX6q generic board
- Required root node properties:
-     - compatible = "fsl,imx6q";
-diff --git a/drivers/staging/imx-drm/imx-drm-core.c b/drivers/staging/imx-drm/imx-drm-core.c
-index e9fba97..a04b3ef 100644
---- a/drivers/staging/imx-drm/imx-drm-core.c
-+++ b/drivers/staging/imx-drm/imx-drm-core.c
-@@ -630,7 +630,8 @@ static int imx_drm_platform_probe(struct platform_device *pdev)
- 				continue;
- 			}
- 
--			component_match_add(&pdev->dev, &match, compare_of, remote);
-+			component_match_add(&pdev->dev, &match, compare_of,
-+				remote);
- 			of_node_put(remote);
- 		}
- 		of_node_put(port);
-diff --git a/drivers/staging/imx-drm/imx-hdmi.c b/drivers/staging/imx-drm/imx-hdmi.c
-index 18c9ccd..aaec6b2 100644
---- a/drivers/staging/imx-drm/imx-hdmi.c
-+++ b/drivers/staging/imx-drm/imx-hdmi.c
-@@ -323,8 +323,7 @@ static unsigned int hdmi_compute_cts(unsigned int freq, unsigned long pixel_clk,
- 	}
- 	if (ratio == 100)
- 		return cts;
--	else
--		return (cts * ratio) / 100;
-+	return (cts * ratio) / 100;
- }
- 
- static void hdmi_set_clk_regenerator(struct imx_hdmi *hdmi,
-diff --git a/drivers/staging/imx-drm/imx-tve.c b/drivers/staging/imx-drm/imx-tve.c
-index 31fe7cf..a12202a 100644
---- a/drivers/staging/imx-drm/imx-tve.c
-+++ b/drivers/staging/imx-drm/imx-tve.c
-@@ -430,10 +430,9 @@ static long clk_tve_di_round_rate(struct clk_hw *hw, unsigned long rate,
- 	div = *prate / rate;
- 	if (div >= 4)
- 		return *prate / 4;
--	else if (div >= 2)
-+	if (div >= 2)
- 		return *prate / 2;
--	else
--		return *prate;
-+	return *prate;
- }
- 
- static int clk_tve_di_set_rate(struct clk_hw *hw, unsigned long rate,
-@@ -538,7 +537,7 @@ static struct regmap_config tve_regmap_config = {
- 	.max_register = 0xdc,
- };
- 
--static const char *imx_tve_modes[] = {
-+static const char * const imx_tve_modes[] = {
- 	[TVE_MODE_TVOUT]  = "tvout",
- 	[TVE_MODE_VGA] = "vga",
- };
-@@ -666,7 +665,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
- 
- 	ret = regmap_read(tve->regmap, TVE_COM_CONF_REG, &val);
- 	if (ret < 0) {
--		dev_err(dev, "failed to read configuration register: %d\n", ret);
-+		dev_err(dev, "failed to read configuration register: %d\n",
-+			ret);
- 		return ret;
- 	}
- 	if (val != 0x00100000) {
-diff --git a/drivers/staging/imx-drm/parallel-display.c b/drivers/staging/imx-drm/parallel-display.c
-index 1998846..601439b 100644
---- a/drivers/staging/imx-drm/parallel-display.c
-+++ b/drivers/staging/imx-drm/parallel-display.c
-@@ -228,7 +228,8 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
- 		else if (!strcmp(fmt, "bgr666"))
- 			imxpd->interface_pix_fmt = V4L2_PIX_FMT_BGR666;
- 		else if (!strcmp(fmt, "lvds666"))
--			imxpd->interface_pix_fmt = v4l2_fourcc('L', 'V', 'D', '6');
-+			imxpd->interface_pix_fmt = v4l2_fourcc(
-+				'L', 'V', 'D', '6');
- 	}
- 
- 	panel_node = of_parse_phandle(np, "fsl,panel", 0);
+No, if there is no disable operation then there is no point in
+specifying any properties to do with enabling and disabling as they
+won't do anything.  This is only relevant if the operation is there.
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+--0za9BfvgN4c4+/Ah
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
---HlL+5n6rz5pIUxbD--
+iQEcBAEBAgAGBQJUG1sjAAoJECTWi3JdVIfQ90cH/3AAZKacvouTl2ZFS5tSIJL9
++iqPwnjD98RRl5mSKgV8EVf37P5x6awgoVX/F5IPWHdPJk9pbVKZQLT3xucFCXtm
+YLLsqDTZljKGUfPUpq7OjCk2qfuxGK7IDTTHPn+WYXaUCWWJaB7eduwPU0VgTWq9
+/z/nKy5kRBH8EktvnbSkRj3Hj6fkdiOUBnSzPiZjTKcbUlS+WxxWBzJrgzLlJWWf
+aucCqKGKhtpz/7gBruPfqsV1eI6h/A1zCFQFbbnQHevwW47bJPLZrj9wJ1ciR44g
+93eNkehYCoTpFnGoTt54CKaWlPwResNwmapjvvo1MFjH+G587XCf66MbyJwHHuE=
+=VlF1
+-----END PGP SIGNATURE-----
+
+--0za9BfvgN4c4+/Ah--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
