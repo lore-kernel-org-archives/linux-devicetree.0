@@ -1,69 +1,43 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCH] mfd: syscon: binding: Add syscon endianness support.
-Date: Thu, 18 Sep 2014 15:27:29 +0800
-Message-ID: <1411025249-34333-1-git-send-email-Li.Xiubo@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: B29396@freescale.com, pankaj.dubey@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sameo@linux.intel.com, lee.jones@linaro.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/2] regulator: get voltage & duty table from dts for st-pwm
+Date: Thu, 18 Sep 2014 15:31:43 +0800
+Message-ID: <1411025505-21628-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For many drivers which will support rich endianness of Devices
-need define DT properties by itself with the binding support.
+get voltage & duty table from device tree might be better, other platforms can also use this
+driver without any modify.
+Tested on a rk3288 sdk board as logic voltage regulator.
 
-The regmap core has already support endianness of the following
-case:
-Index      Device     DT properties needed
-------------------------------------------
-1          BE         'big-endian'
-2          LE         'little-endian'
+Changes in v2:
+Adviced by Lee Jones
+- rename the documentation
+Adviced by Doug Anderson
+- update the example
+Adviced by Mark Rutland
+- remove pwm-reg-period
 
-Please see the regmap binding for more detail information of
-the endianness support.
+Chris Zhong (2):
+  regulator: st-pwm: get voltage and duty table from dts
+  dt-bindings: add devicetree bindings for st-pwm regulator
 
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
----
+ .../bindings/regulator/pwm-regulator.txt           |   29 +++
+ drivers/regulator/Kconfig                          |    8 +-
+ drivers/regulator/Makefile                         |    2 +-
+ drivers/regulator/pwm-regulator.c                  |  195 ++++++++++++++++++++
+ drivers/regulator/st-pwm.c                         |  190 -------------------
+ 5 files changed, 229 insertions(+), 195 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+ create mode 100644 drivers/regulator/pwm-regulator.c
+ delete mode 100644 drivers/regulator/st-pwm.c
 
-
-This patch hasn't any dependency with Pankaj Dubey's:
-    mfd: syscon: Decouple syscon interface from platform devices
-
-
-
- Documentation/devicetree/bindings/mfd/syscon.txt | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index fe8150b..7c33178 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -10,11 +10,22 @@ OS driver) to determine the location of the registers, and access the
- registers directly.
- 
- Required properties:
--- compatible: Should contain "syscon".
--- reg: the register region can be accessed from syscon
-+- compatible:		Should contain "syscon".
-+- reg:			The register region can be accessed from syscon
- 
--Examples:
-+Optional property:
-+- {big,little}-endian:	Boolean property. Please see ../regmap/regmap.txt
-+			for more information.
-+
-+Example 1:
- gpr: iomuxc-gpr@020e0000 {
- 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
- 	reg = <0x020e0000 0x38>;
- };
-+
-+Example 2:
-+dcfg: dcfg@1ee0000 {
-+	compatible = "fsl,ls1021a-dcfg", "syscon";
-+	reg = <0x0 0x1ee0000 0x0 0x10000>;
-+	big-endian;
-+};
 -- 
-2.1.0.27.g96db324
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
