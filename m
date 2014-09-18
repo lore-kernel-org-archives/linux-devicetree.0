@@ -1,112 +1,257 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [v4,1/9] ACPI / PM: Let acpi_dev_pm_detach() return an error code
-Date: Wed, 17 Sep 2014 16:43:32 -0700
-Message-ID: <20140917234331.GA28771@core.coreip.homeip.net>
-References: <1410262570-22785-2-git-send-email-ulf.hansson@linaro.org>
- <6318611.DnX9cEgMjk@vostro.rjw.lan>
- <20140915165359.GA13080@core.coreip.homeip.net>
- <4451285.EDb1j6ttbA@vostro.rjw.lan>
- <CAPDyKFq6FZcuU=TCMh0JE0ymbS73_eLtNrTgmgKA4OxEp=_zpw@mail.gmail.com>
- <20140917201025.GC25297@core.coreip.homeip.net>
- <CAPDyKFqM27C9L86fn8wNxJewv9AvxymPgzzVo3CFh+=3Vo04Uw@mail.gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] mtd: atmel_nand: make PMECC lookup table and offset
+ property optional
+Date: Wed, 17 Sep 2014 17:32:58 -0700
+Message-ID: <20140918003258.GD1193@ld-irv-0074>
+References: <1408345720-5402-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFqM27C9L86fn8wNxJewv9AvxymPgzzVo3CFh+=3Vo04Uw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Russell King <linux@arm.linux.org.uk>, Philipp Zabel <philipp.zabel@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chris Ball <chris@printf.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Ben Dooks <ben-linux@fluff>
+In-Reply-To: <1408345720-5402-1-git-send-email-josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 18, 2014 at 01:20:49AM +0200, Ulf Hansson wrote:
-> On 17 September 2014 22:10, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> > On Wed, Sep 17, 2014 at 08:25:44PM +0200, Ulf Hansson wrote:
-> >> On 16 September 2014 01:36, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> >> > On Monday, September 15, 2014 09:53:59 AM Dmitry Torokhov wrote:
-> >> >> On Sun, Sep 14, 2014 at 06:38:58PM +0200, Rafael J. Wysocki wrote:
-> >> >> > On Friday, September 12, 2014 02:05:53 PM Dmitry Torokhov wrote:
-> >> >> > > Hi Ulf,
-> >> >> > >
-> >> >> > > On Tue, Sep 09, 2014 at 01:36:02PM +0200, Ulf Hansson wrote:
-> >> >> > > > To give callers the option of acting on a errors while removing the
-> >> >> > > > pm_domain ops for the device in the ACPI PM domain, let
-> >> >> > > > acpi_dev_pm_detach() return an int to provide the error code.
-> >> >> > >
-> >> >> > > So how would callers handle the errors? As far as I can see
-> >> >> > > acpi_dev_pm_detach() is called from ->remove() and ->shutdown() methods, where
-> >> >> > > there is no meaningful strategy to handle errors as you are past the point of
-> >> >> > > no return and you keep on tearing down the device.
-> >>
-> >> The benefit is only relevant when ACPI and genpd PM domains would
-> >> co-exist. In that case we might be able to skip genpd_dev_pm_detach()
-> >> if acpi_dev_pm_detach() succeeds. So, currently there are  no benefit,
-> >> but still it doesn't hurt.
-> >
-> > It doe snot have any negative material effect, the drawback is purely
-> > from API perspective.
-> >
-> >>
-> >> >> >
-> >> >> > This is specifically for what patch [3/9] is doing AFAICS.
-> >> >> >
-> >> >> > The existing callers don't need to worry about this.
-> >> >>
-> >> >> OK, so I have the very same comment about patch 3 then: we have
-> >> >> dev_pm_domain_detach() returning error. How would the callers handle errors?
-> >> >
-> >> > Ulf?
-> >>
-> >> I see your point. How about making dev_pm_domain_detach() to be a void
-> >> function instead?
-> >
-> > Yes, please.
+On Mon, Aug 18, 2014 at 03:08:40PM +0800, Josh Wu wrote:
+> If there is no PMECC lookup table stored in ROM, or lookup table offset is
+> not specified, PMECC driver should build it in DDR by itself.
 > 
-> OK!
+> That make the PMECC driver work for some board which doesn't has PMECC
+> lookup table in ROM.
 > 
-> >
-> >>
-> >> >
-> >> >> WRT this patch: I'd rater we did not just return generic "error code" just
-> >> >> because we do not know who manages PD for the device. Can we add API to check
-> >> >> if we are using ACPI to manage power domains? Then patch #3 could check if it
-> >> >> needs to use ACPI or generic power domain API.
-> >>
-> >> The problem is scalability. If we have other PM domains implementation
-> >> in future, each of them need to be checked prior invoking the attach
-> >> functions.
-> >> Also, how would we distinguish between genpd and a new PM domain XYZ?
-> >
-> > I do not think that trying all available methods to detach a pm domain,
-> > i.e.
-> >
-> >         err = acpi_dev_pm_detach();
-> >         if (err)
-> >                 err = blah_dev_pm_detach();
-> >         if (err)
-> >                 err = flab_dev_pm_detach();
-> >         if (err)
-> >                 err = gen_dev_pm_detach();
-> >
-> > is any better from scalability point of view. If you need to do that you
-> > will probably have to store something like "struct pd_ops *pd_ops" in
-> > your device and call appropriate implementation via it.
+> Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> This patch is based on mtd-l2/next branch
 > 
-> No, that's not needed. Go ahead and have look at both ACPI and genpd,
-> the interesting part is the validation of struct dev_pm_domain pointer
-> in the struct device. That's all there is to it, no additional data
-> are required.
+> v1 -> v2:
+>   make create_lookup_table() static.
 
-OK, so can you simply put the needed method into struct dev_pm_domain and then
-dev_pm_domain_detach() would become:
+sparse gives me several new complaints:
 
-void dev_pm_domain_detach(struct device *dev, bool power_off)
-{
-	if (dev->pm_domain)
-		dev->pm_domain->detach(dev, power_off);
-}
++drivers/mtd/nand/atmel_nand.c:1219:50: warning: incorrect type in argument 2 (different signedness) [sparse]
++drivers/mtd/nand/atmel_nand.c:1219:50:    expected signed short [usertype] *index_of [sparse]
++drivers/mtd/nand/atmel_nand.c:1219:50:    got unsigned short [usertype] *addr [sparse]
++drivers/mtd/nand/atmel_nand.c:1219:61: warning: incorrect type in argument 3 (different signedness) [sparse]
++drivers/mtd/nand/atmel_nand.c:1219:61:    expected signed short [usertype] *alpha_to [sparse]
++drivers/mtd/nand/atmel_nand.c:1219:61:    got unsigned short [usertype] * [sparse]
++drivers/mtd/nand/atmel_nand.c:1292:38: warning: incorrect type in assignment (different address spaces) [sparse]
++drivers/mtd/nand/atmel_nand.c:1292:38:    expected void [noderef] <asn:2>*pmecc_rom_base [sparse]
++drivers/mtd/nand/atmel_nand.c:1292:38:    got unsigned short [usertype] *[assigned] galois_table [sparse]
 
-Thanks.
+The third one might be a false positive. I suppose it's safe to use
+regular memory with __iomem accessors (but not vice versa).
 
--- 
-Dmitry
+>  .../devicetree/bindings/mtd/atmel-nand.txt         |   6 +-
+>  drivers/mtd/nand/atmel_nand.c                      | 136 ++++++++++++++++++++-
+>  2 files changed, 136 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> index c472883..75d1847 100644
+> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+> @@ -5,7 +5,9 @@ Required properties:
+>  - reg : should specify localbus address and size used for the chip,
+>  	and hardware ECC controller if available.
+>  	If the hardware ECC is PMECC, it should contain address and size for
+> -	PMECC, PMECC Error Location controller and ROM which has lookup tables.
+> +	PMECC and PMECC Error Location controller.
+> +	The PMECC lookup table address and size in ROM is optional. If not
+> +	specified, driver will build it in runtime.
+>  - atmel,nand-addr-offset : offset for the address latch.
+>  - atmel,nand-cmd-offset : offset for the command latch.
+>  - #address-cells, #size-cells : Must be present if the device has sub-nodes
+> @@ -27,7 +29,7 @@ Optional properties:
+>    are: 512, 1024.
+>  - atmel,pmecc-lookup-table-offset : includes two offsets of lookup table in ROM
+>    for different sector size. First one is for sector size 512, the next is for
+> -  sector size 1024.
+> +  sector size 1024. If not specified, driver will build the table in runtime.
+>  - nand-bus-width : 8 or 16 bus width if not present 8
+>  - nand-on-flash-bbt: boolean to enable on flash bbt option if not present false
+>  - Nand Flash Controller(NFC) is a slave driver under Atmel nand flash
+> diff --git a/drivers/mtd/nand/atmel_nand.c b/drivers/mtd/nand/atmel_nand.c
+> index effa7a29..84af313 100644
+> --- a/drivers/mtd/nand/atmel_nand.c
+> +++ b/drivers/mtd/nand/atmel_nand.c
+> @@ -124,6 +124,7 @@ struct atmel_nand_host {
+>  	bool			has_pmecc;
+>  	u8			pmecc_corr_cap;
+>  	u16			pmecc_sector_size;
+> +	bool			has_no_lookup_table;
+>  	u32			pmecc_lookup_table_offset;
+>  	u32			pmecc_lookup_table_offset_512;
+>  	u32			pmecc_lookup_table_offset_1024;
+> @@ -1109,12 +1110,121 @@ static int pmecc_choose_ecc(struct atmel_nand_host *host,
+>  	return 0;
+>  }
+>  
+> +static int pmecc_build_galois_table(int mm,
+> +		int16_t *index_of, int16_t *alpha_to)
+> +{
+> +	unsigned int i, mask, nn;
+> +	unsigned int p[PMECC_GF_DIMENSION_14 + 1];
+> +
+> +	nn = (1 << mm) - 1;
+> +	/* set default value */
+> +	for (i = 1; i < mm; i++)
+> +		p[i] = 0;
+> +
+> +	/* 1 + X^mm */
+> +	p[0]  = 1;
+> +	p[mm] = 1;
+> +
+> +	/* others  */
+> +	switch (mm) {
+> +	case 3:
+> +	case 4:
+> +	case 6:
+> +	case 15:
+> +		p[1] = 1;
+> +		break;
+> +	case 5:
+> +	case 11:
+> +		p[2] = 1;
+> +		break;
+> +	case 7:
+> +	case 10:
+> +		p[3] = 1;
+> +		break;
+> +	case 8:
+> +		p[2] = p[3] = p[4] = 1;
+> +		break;
+> +	case 9:
+> +		p[4] = 1;
+> +		break;
+> +	case 12:
+> +		p[1] = p[4] = p[6] = 1;
+> +		break;
+> +	case 13:
+> +		p[1] = p[3] = p[4] = 1;
+> +		break;
+> +	case 14:
+> +		p[1] = p[6] = p[10] = 1;
+> +		break;
+> +	default:
+> +		/* Error */
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Build alpha ^ mm it will help to generate the field (primitiv) */
+> +	alpha_to[mm] = 0;
+> +	for (i = 0; i < mm; i++)
+> +		if (p[i])
+> +			alpha_to[mm] |= 1 << i;
+> +
+> +	/*
+> +	 * Then build elements from 0 to mm - 1. As degree is less than mm
+> +	 * so it is just a logical shift.
+> +	 */
+> +	mask = 1;
+> +	for (i = 0; i < mm; i++) {
+> +		alpha_to[i] = mask;
+> +		index_of[alpha_to[i]] = i;
+> +		mask <<= 1;
+> +	}
+> +
+> +	index_of[alpha_to[mm]] = mm;
+> +
+> +	/* use a mask to select the MSB bit of the LFSR */
+> +	mask >>= 1;
+> +
+> +	/* then finish the building */
+> +	for (i = mm + 1; i <= nn; i++) {
+> +		/* check if the msb bit of the lfsr is set */
+> +		if (alpha_to[i - 1] & mask)
+> +			alpha_to[i] = alpha_to[mm] ^
+> +				((alpha_to[i - 1] ^ mask) << 1);
+> +		else
+> +			alpha_to[i] = alpha_to[i - 1] << 1;
+> +
+> +		index_of[alpha_to[i]] = i % nn;
+> +	}
+> +
+> +	/* index of 0 is undefined in a multiplicative field */
+> +	index_of[0] = -1;
+> +
+> +	return 0;
+> +}
+
+Is this algorithm documented? How did you come up with this?
+
+> +
+> +static uint16_t *create_lookup_table(struct device *dev, int sector_size)
+> +{
+> +	int table_size = (sector_size == 512) ?
+> +			PMECC_LOOKUP_TABLE_SIZE_512 :
+> +			PMECC_LOOKUP_TABLE_SIZE_1024;
+> +	int degree = (sector_size == 512) ?
+> +			PMECC_GF_DIMENSION_13 :
+> +			PMECC_GF_DIMENSION_14;
+> +	uint16_t *addr = devm_kzalloc(dev, 2 * table_size * sizeof(uint16_t),
+> +			GFP_KERNEL);
+> +
+> +	if (addr)
+> +		pmecc_build_galois_table(degree, addr, addr + table_size);
+> +
+> +	return addr;
+> +}
+> +
+>  static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
+>  					 struct atmel_nand_host *host)
+>  {
+>  	struct mtd_info *mtd = &host->mtd;
+>  	struct nand_chip *nand_chip = &host->nand_chip;
+>  	struct resource *regs, *regs_pmerr, *regs_rom;
+> +	uint16_t *galois_table;
+>  	int cap, sector_size, err_no;
+>  
+>  	err_no = pmecc_choose_ecc(host, &cap, &sector_size);
+> @@ -1160,8 +1270,24 @@ static int atmel_pmecc_nand_init_params(struct platform_device *pdev,
+>  	regs_rom = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+>  	host->pmecc_rom_base = devm_ioremap_resource(&pdev->dev, regs_rom);
+>  	if (IS_ERR(host->pmecc_rom_base)) {
+> -		err_no = PTR_ERR(host->pmecc_rom_base);
+> -		goto err;
+> +		if (!host->has_no_lookup_table)
+> +			/* Don't display the information again */
+> +			dev_err(host->dev, "Can not get I/O resource for ROM, will build a lookup table in runtime!\n");
+> +
+> +		host->has_no_lookup_table = true;
+> +	}
+> +
+> +	if (host->has_no_lookup_table) {
+> +		/* Build the look-up table in runtime */
+> +		galois_table = create_lookup_table(host->dev, sector_size);
+> +		if (!galois_table) {
+> +			dev_err(host->dev, "Failed to build a lookup table in runtime!\n");
+> +			err_no = -ENOMEM;
+> +			goto err;
+> +		}
+> +
+> +		host->pmecc_rom_base = galois_table;
+> +		host->pmecc_lookup_table_offset = 0;
+>  	}
+>  
+>  	nand_chip->ecc.size = sector_size;
+> @@ -1498,8 +1624,10 @@ static int atmel_of_init_port(struct atmel_nand_host *host,
+>  
+>  	if (of_property_read_u32_array(np, "atmel,pmecc-lookup-table-offset",
+>  			offset, 2) != 0) {
+> -		dev_err(host->dev, "Cannot get PMECC lookup table offset\n");
+> -		return -EINVAL;
+> +		dev_err(host->dev, "Cannot get PMECC lookup table offset, will build a lookup table in runtime.\n");
+> +		host->has_no_lookup_table = true;
+> +		/* Will build a lookup table and initialize the offset later */
+> +		return 0;
+>  	}
+>  	if (!offset[0] && !offset[1]) {
+>  		dev_err(host->dev, "Invalid PMECC lookup table offset\n");
+
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
