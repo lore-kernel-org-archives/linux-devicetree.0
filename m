@@ -1,58 +1,62 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/3] dmaengine: sun6i: Add support for
- Allwinner A23 (sun8i) variant
-Date: Thu, 18 Sep 2014 09:57:42 +0800
-Message-ID: <CAGb2v65p4QPJY+eiLps6C2kAZjhPd99D5YYauwUjLJnnj54B1A@mail.gmail.com>
-References: <1410616381-30226-1-git-send-email-wens@csie.org>
- <1410616381-30226-3-git-send-email-wens@csie.org> <20140916103540.GF9948@lukather>
- <CAGb2v67jokpXHxR26YoCEB2Y_v07oQZXZfPuGJC_wO=r-SRZhg@mail.gmail.com> <20140917155540.GJ2166@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: <suravee.suthikulpanit@amd.com>
+Subject: [PATCH 0/2 V7] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Wed, 17 Sep 2014 19:08:24 -0700
+Message-ID: <1411006106-17339-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBLHY5CQAKGQENIQU27Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140917155540.GJ2166@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
+Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 11:55 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Sep 16, 2014 at 10:13:27PM +0800, Chen-Yu Tsai wrote:
->> >> +     /*
->> >> +      * sun8i variant requires us to toggle an undocumented register,
->> >> +      * as seen in Allwinner's SDK.
->> >
->> > The BSP I have has this:
->> >
->> > static void sunxi_dma_hw_init(struct sunxi_dmadev *dev)
->> > {
->> >         struct sunxi_dmadev *sunxi_dev = dev;
->> >
->> >         clk_prepare_enable(sunxi_dev->ahb_clk);
->> > #ifdef CONFIG_ARCH_SUN8IW3
->> >         writel(0x04, sunxi_dev->base + DMA_GATE);
->> > #endif
->> > }
->> >
->> > /* All is ok, and open the clock */
->> > sunxi_dma_hw_init(sunxi_dev);
->> >
->> > So I guess we can say that it's not that undocumented :)
->>
->> That's right. I meant undocumented in the user manual.
->> I did reference the SDK in the comment, didn't I? :)
->
-> So something like
->
-> writel(DMA_GATE_ENABLE, base->DMA_GATE_REG) wouldn't be too far off :)
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
-Sure. Will also update the comment to reflect the naming.
+This patch set introduces support for MSI(-X) in GICv2m specification,
+which is implemented in some variation of GIC400.
 
-ChenYu
+This depends on and has been tested with the following patch set which
+implements PCI supports for ARM64:
+
+    [PATCH v10 00/10] Support for creating generic PCI host bridges from DT
+    https://lkml.org/lkml/2014/9/8/333
+
+    [PATCH v10] Add support for PCI in AArch64
+    https://lkml.org/lkml/2014/9/8/325
+ 
+Changes in V7:
+    * Fix error handling logic in gicv2m_of_init() and gicv2m_init_one().
+      per Marc suggestions.
+    * Restructure the patch to integrate the multi-MSI support for V2m
+      into the patch 2/2.
+    * Introduce "arm,gic-v2m-frame" compatible ID for the v2m DT binding.
+    * Introduce "arm,msi-base-spi" and "arm,msi-num-spi" property in the
+      v2m DT binding for overwriting value in MSI_TYPER register.
+    * Add irq-gic-v2m.c: is_msi_spi_valid() to validate the SPI base and
+      number of SPIs.
+    * Fix various comments from Marc (Many thanks).
+    * Add the missing CONFIG_ARM_GICV2M (per Marcin Juszkiewicz comment)
+
+Suravee Suthikulpanit (2):
+  irqchip: gic: Add support for multiple MSI for ARM64
+  irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
+
+ Documentation/devicetree/bindings/arm/gic.txt |  55 ++++
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/kernel/Makefile                    |   1 +
+ arch/arm64/kernel/msi.c                       |  41 +++
+ drivers/irqchip/Kconfig                       |   7 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-gic-common.c              |  12 +
+ drivers/irqchip/irq-gic-common.h              |   4 +
+ drivers/irqchip/irq-gic-v2m.c                 | 356 ++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic.c                     |  82 +++---
+ drivers/irqchip/irq-gic.h                     |  54 ++++
+ 11 files changed, 584 insertions(+), 30 deletions(-)
+ create mode 100644 arch/arm64/kernel/msi.c
+ create mode 100644 drivers/irqchip/irq-gic-v2m.c
+ create mode 100644 drivers/irqchip/irq-gic.h
+
+-- 
+1.9.3
+
