@@ -1,45 +1,37 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/6] ARM: dts: cm-t54: enable video out, touchscreen
- and USB3.0
-Date: Thu, 18 Sep 2014 09:08:26 -0700
-Message-ID: <20140918160826.GE14505@atomide.com>
-References: <1410885322-5928-1-git-send-email-lifshitz@compulab.co.il>
- <1410955808-2174-1-git-send-email-lifshitz@compulab.co.il>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH] i2c designware add support of I2C standard mode
+Date: Thu, 18 Sep 2014 10:52:24 -0500
+Message-ID: <alpine.DEB.2.02.1409181050190.29539@atx-linux-37>
+References: <20140820124231.GD21734@leverpostej> <1408544948-22339-1-git-send-email-romainba@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1410955808-2174-1-git-send-email-lifshitz@compulab.co.il>
-Sender: linux-omap-owner@vger.kernel.org
-To: Dmitry Lifshitz <lifshitz@compulab.co.il>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1408544948-22339-1-git-send-email-romainba@abilis.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Christian Ruppert <christian.ruppert@abilis.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, baruch@tkos.co.il, grant.likely@linaro.org, robh+dt@kernel.org, skuribay@pobox.com, alan@linux.intel.com, devicetree@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, yvanderv@opensource.altera.com, Romain Baeriswyl <romainba@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-* Dmitry Lifshitz <lifshitz@compulab.co.il> [140917 05:10]:
-> Add CM-T54 DT nodes:
-> 
-> * enable HDMI/DVI/LCD video output support
-> * add ADS7846 touchscreen support
-> * enchance DWC3 setup to enable power supply for USB3.0 OTG port
-> 
-> v2: * Fixed comment style issue for mux mode.
->       Follow the convention mode0_name.modeX_name for pins
->       which mux mode differs from MUX_MODE0
-> 
->     * Moved aliases node to the top of dts file
-> 
-> Dmitry Lifshitz (6):
->   ARM: dts: sbc-t54: fix mux mode comment style
->   ARM: dts: cm-t54: fix mux mode comment style
->   ARM: dts: cm-t54: add HDMI/DVI display data
->   ARM: dts: cm-t54: add Startek LCD support
->   ARM: dts: cm-t54: add ADS7846 touchscreen support
->   ARM: dts: cm-t54: setup omap_dwc3
-> 
->  arch/arm/boot/dts/omap5-cm-t54.dts  |  272 ++++++++++++++++++++++++++++++++++-
->  arch/arm/boot/dts/omap5-sbc-t54.dts |    4 +-
->  2 files changed, 272 insertions(+), 4 deletions(-)
+On Wed, 20 Aug 2014, Romain Baeriswyl wrote:
 
-Applying all into omap-for-v3.18/dt thanks.
+> From: Romain Baeriswyl <Romain.Baeriswyl@abilis.com>
+> 
+> Some legacy devices support ony I2C standard mode at 100kHz.
+> This patch allows to select the standard mode through the DTS
+> with the use of the existing clock-frequency parameter.
+> 
+> When clock-frequency parameter is not set, the fast mode is selected.
+> Only when the parameter is set at 100000, the standard mode is selected.
+> 
+> Signed-off-by: Romain Baeriswyl <romainba@abilis.com>
+> Reviewed-by: Christian Ruppert <christian.ruppert@abilis.com>
+> ---
+>  drivers/i2c/busses/i2c-designware-platdrv.c |   23 +++++++++++++++++++++--
+>  1 files changed, 21 insertions(+), 2 deletions(-)
+> 
 
-Tony
+Hi Wolfram,
+
+This patch is really useful for us.  Is it going to be picked up?
+
+Alan
