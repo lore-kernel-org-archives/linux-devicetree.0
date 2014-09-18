@@ -1,74 +1,39 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] devicetree: cadence_ttc: Document binding for timer
- width
-Date: Thu, 18 Sep 2014 19:36:26 +0100
-Message-ID: <20140918183626.GB10911@leverpostej>
-References: <3537996136ec435ea660da869102d0a019214979.1410964243.git.michal.simek@xilinx.com>
- <20140917161737.GA7983@leverpostej>
- <db43281a-06bc-436b-a082-212d1f95d974@BL2FFO11FD034.protection.gbl>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH V3 0/3] mfd: palmas: add optional wakeup irq
+Date: Thu, 18 Sep 2014 14:04:43 -0500
+Message-ID: <1411067086-16613-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <db43281a-06bc-436b-a082-212d1f95d974@BL2FFO11FD034.protection.gbl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Michal Simek <monstr@monstr.eu>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 18, 2014 at 06:07:40AM +0100, Michal Simek wrote:
-> On 09/17/2014 06:17 PM, Mark Rutland wrote:
-> > On Wed, Sep 17, 2014 at 03:30:49PM +0100, Michal Simek wrote:
-> >> From: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-> >>
-> >> Modern TTC implementations can extend the timer width to 32 bit. This
-> >> feature is not self identifying so the driver needs to be made aware
-> >> via device tree.
-> >>
-> >> Signed-off-by: Peter Crosthwaite <peter.crosthwaite@xilinx.com>
-> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> >> ---
-> >>
-> >>  Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt | 4 ++++
-> >>  1 file changed, 4 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
-> >> index 993695c659e1..5439976eca6b 100644
-> >> --- a/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
-> >> +++ b/Documentation/devicetree/bindings/timer/cadence,ttc-timer.txt
-> >> @@ -6,6 +6,9 @@ Required properties:
-> >>  - interrupts : A list of 3 interrupts; one per timer channel.
-> >>  - clocks: phandle to the source clock
-> >>
-> >> +Optional properties:
-> >> +- timer-width: Bit width of the timer. Either 16 or 32 (default 16).
-> > 
-> > Are we expecting TTC implementations with widths other than 16 or 32?
-> 
-> IRC if you use 32bit timer and setup for example 24bit width it should work
-> too and you are just ignoring that upper bits.
+Hi,
+V3 update for the previous series:
+Changes in V3 (from review updates):
+	- Allow driver to function even if wakeirq fails
+	- Fix irq flags
 
-Sure, but what I'd like to know is whether we expect HW implementations
-other than 16 or 32 bit rather than whether or not the driver will work
-in that case. I'm not saying no to this patch; I'm just curious.
+V2: http://marc.info/?l=linux-kernel&m=140995041418575&w=2
+v1: https://patchwork.kernel.org/patch/4743321/
 
-> > This looks sane to me, but we might be able to just have a 32-bit-timer
-> > property if we don't expect arbitrary widths.
-> 
-> Definitely model different timer width is easily possible to do in qemu
-> that's why I think having more generic property timer-width is just better than
-> having property used just for one case.
+Nishanth Menon (3):
+  Documentation: dt-bindings: mfd: palmas: Fix example style of i2c
+    peripheral
+  Documentation: dt-bindings: mfd: palmas: document optional wakeup IRQ
+  mfd: palmas: Add support for optional wakeup
 
-Ok, so if you want to support that can we change the documentation
-wording to be:
+ Documentation/devicetree/bindings/mfd/palmas.txt |   22 +++++++-
+ drivers/mfd/palmas.c                             |   62 ++++++++++++++++++++++
+ include/linux/mfd/palmas.h                       |    2 +
+ 3 files changed, 85 insertions(+), 1 deletion(-)
 
-- timer-width: Bit width of the timer, necessary if not 16.
+-- 
+1.7.9.5
 
-That implies support for other bit widths, and when the property needs
-to be set (IMO 'default' sounds too much like a driver description than
-a contract description).
-
-Does this apply to one timer register, or are multiple registers
-affected?
-
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
