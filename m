@@ -1,111 +1,92 @@
-From: "Wang, Yalin" <Yalin.Wang-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: [RFC] fdt:free the fdt reserved memory
-Date: Thu, 18 Sep 2014 17:25:12 +0800
-Message-ID: <35FD53F367049845BC99AC72306C23D103D6DB49161A@CNBJMBX05.corpusers.net>
+From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Subject: Re: [PATCH v5 2/4] dt-bindings: document Rockchip thermal
+Date: Thu, 18 Sep 2014 11:27:45 +0200
+Message-ID: <CAAObsKA61Ano85P6PehOY7WqR0FgTz_Rfur8UAt56ZXoNyoyqQ@mail.gmail.com>
+References: <1410926353-15674-1-git-send-email-caesar.wang@rock-chips.com> <1410926353-15674-3-git-send-email-caesar.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "'grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org'" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "'robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org'" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "'pawel.moll-5wv7dgnIgG8@public.gmane.org'" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "'mark.rutland-5wv7dgnIgG8@public.gmane.org'" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "'ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org'" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "'linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1410926353-15674-3-git-send-email-caesar.wang@rock-chips.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Caesar Wang <caesar.wang@rock-chips.com>
+Cc: heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, dtor@chromium.org, dmitry.torokhov@gmail.com, addy.ke@rock-chips.com, zyf@rock-chips.com, cjf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-This patch make some change to unflatten_dt_node(), make sure the
-device_node don't reference to fdt raw blob memory, so that we can
-free the raw blob reserved memory after initcalls.
+On 17 September 2014 05:59, Caesar Wang <caesar.wang@rock-chips.com> wrote:
+> This add the necessary binding documentation for the thermal
+> found on Rockchip SoCs
 
-Signed-off-by: Yalin Wang <yalin.wang-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
----
- drivers/of/fdt.c       | 27 +++++++++++++++++++++++----
- include/linux/of_fdt.h |  2 ++
- 2 files changed, 25 insertions(+), 4 deletions(-)
+Hi Caesar,
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 79cb831..e891ef6 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -240,6 +240,7 @@ static void * unflatten_dt_node(void *blob,
- 	     (offset = fdt_next_property_offset(blob, offset))) {
- 		const char *pname;
- 		u32 sz;
-+		int name_len;
- 
- 		if (!(p = fdt_getprop_by_offset(blob, offset, &pname, &sz))) {
- 			offset = -FDT_ERR_INTERNAL;
-@@ -250,10 +251,12 @@ static void * unflatten_dt_node(void *blob,
- 			pr_info("Can't find property name in list !\n");
- 			break;
- 		}
-+		name_len = strlen(pname);
- 		if (strcmp(pname, "name") == 0)
- 			has_name = 1;
--		pp = unflatten_dt_alloc(&mem, sizeof(struct property),
--					__alignof__(struct property));
-+		pp = unflatten_dt_alloc(&mem,
-+				ALIGN(sizeof(struct property) + name_len + 1, 4)
-+				+ sz, __alignof__(struct property));
- 		if (allnextpp) {
- 			/* We accept flattened tree phandles either in
- 			 * ePAPR-style "phandle" properties, or the
-@@ -270,9 +273,11 @@ static void * unflatten_dt_node(void *blob,
- 			 * stuff */
- 			if (strcmp(pname, "ibm,phandle") == 0)
- 				np->phandle = be32_to_cpup(p);
--			pp->name = (char *)pname;
-+			pp->name = (char *)memcpy(pp + 1, pname, name_len + 1);
- 			pp->length = sz;
--			pp->value = (__be32 *)p;
-+			pp->value = (__be32 *)memcpy((void *)pp +
-+					ALIGN(sizeof(struct property) +
-+						name_len + 1, 4), p, sz);
- 			*prev_pp = pp;
- 			prev_pp = &pp->next;
- 		}
-@@ -564,6 +569,20 @@ void __init early_init_fdt_scan_reserved_mem(void)
- 	fdt_init_reserved_mem();
- }
- 
-+void __init free_early_init_fdt_scan_reserved_mem(void)
-+{
-+	unsigned long start, end, size;
-+	if (!initial_boot_params)
-+		return;
-+
-+	size = fdt_totalsize(initial_boot_params);
-+	memblock_free(__pa(initial_boot_params), size);
-+	start = round_down((unsigned long)initial_boot_params, PAGE_SIZE);
-+	end = round_up((unsigned long)initial_boot_params + size, PAGE_SIZE);
-+	free_reserved_area((void *)start, (void *)end, 0, "fdt");
-+	initial_boot_params = 0;
-+}
-+
- /**
-  * of_scan_flat_dt - scan flattened tree blob and call callback on each.
-  * @it: callback function
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 0ff360d..21d51ce 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -62,6 +62,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern void early_init_fdt_scan_reserved_mem(void);
-+extern void free_early_init_fdt_scan_reserved_mem(void);
- extern void early_init_dt_add_memory_arch(u64 base, u64 size);
- extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
- 					     bool no_map);
-@@ -89,6 +90,7 @@ extern u64 fdt_translate_address(const void *blob, int node_offset);
- extern void of_fdt_limit_memory(int limit);
- #else /* CONFIG_OF_FLATTREE */
- static inline void early_init_fdt_scan_reserved_mem(void) {}
-+static inline void free_early_init_fdt_scan_reserved_mem(void) {}
- static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
- static inline void unflatten_device_tree(void) {}
- static inline void unflatten_and_copy_device_tree(void) {}
--- 
-2.1.0
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+is there any reason to not use the existing thermal bindings? You can
+find a description in
+Documentation/devicetree/bindings/thermal/thermal.txt and example code
+in omap, or in the patches for Tegra recently posted by Mikko
+Perttunen.
+
+Regards,
+
+Tomeu
+
+> Signed-off-by: zhaoyifeng <zyf@rock-chips.com>
+> Signed-off-by: Caesar Wang <caesar.wang@rock-chips.com>
+> ---
+>  .../bindings/thermal/rockchip-thermal.txt          | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> new file mode 100644
+> index 0000000..6fc8bc3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/rockchip-thermal.txt
+> @@ -0,0 +1,41 @@
+> +* Temperature Sensor ADC (TSADC) on rockchip SoCs
+> +
+> +Required properties:
+> +- compatible: "rockchip,rk3288-tsadc"
+> +- reg: physical base address of the controller and length of memory mapped
+> +       region.
+> +- interrupts: The interrupt number to the cpu. The interrupt specifier format
+> +             depends on the interrupt controller.
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +- clock-names: Shall be "tsadc" for the converter-clock, and "apb_pclk" for
+> +              the peripheral clock.
+> +- num-trips:  number of total trip points, this is required, set it 0 if none,
+> +             if greater than 0, the following properties must be defined;
+> +- tripN-temp: temperature of trip point N, should be in ascending order;
+> +- tripN-type: type of trip point N, should be one of "active" "passive" "hot"
+> +             "critical";
+> +- tripN-cdev-num: number of the cooling devices which can be bound to trip
+> +                 point N, this is required if trip point N is defined, set it 0 if none,
+> +                 otherwise the following cooling device names must be defined;
+> +- tripN-cdev-nameM: name of the No. M cooling device of trip point N;
+> +
+> +Example:
+> +tsadc: tsadc@ff280000 {
+> +       compatible = "rockchip,rk3288-tsadc";
+> +       reg = <0xff280000 0x100>;
+> +       interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+> +       clocks = <&cru SCLK_TSADC>, <&cru PCLK_TSADC>;
+> +       clock-names = "tsadc", "apb_pclk";
+> +
+> +       num-trips = <2>;
+> +
+> +       trip0-temp = <80>;
+> +       trip0-type = "passive";
+> +       trip0-cdev-num = <1>;
+> +       trip0-cdev-name0 = "thermal-cpufreq-0";
+> +
+> +       trip1-temp = <100>;
+> +       trip1-type = "critical";
+> +       trip1-cdev-num = <1>;
+> +       trip1-cdev-name0 = "thermal-cpufreq-0";
+> +};
+> --
+> 1.9.1
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
