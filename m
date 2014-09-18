@@ -1,234 +1,118 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: Re: [PATCH v3 1/3] phy: exynos-dp-video: Use syscon support to
- control pmu register
-Date: Thu, 18 Sep 2014 08:55:58 +0530
-Message-ID: <CAFp+6iGNNygVrpQFaEao+aGAad=vgb6EDpJqRj8cA+5XSC8ZSg@mail.gmail.com>
-References: <1410840408-19954-1-git-send-email-gautam.vivek@samsung.com>
-	<1410843726-4235-1-git-send-email-gautam.vivek@samsung.com>
-	<5419BCC9.6000607@ti.com>
+From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH] dt:numa: adding numa node mapping for memory nodes.
+Date: Thu, 18 Sep 2014 09:32:16 +0530
+Message-ID: <CAFpQJXUs+6Qvj0SqgajA8_D8UdEh_EQVgTQDz0bPSn-VpEty9g@mail.gmail.com>
+References: <1410944189-3608-1-git-send-email-ganapatrao.kulkarni@caviumnetworks.com>
+	<541A01B7.8030601@mentor.com>
+	<CAMDttNfSr5BrnEwLXqgy676jOZbFHhXcMtC0n7gBSniwhWCDRQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5419BCC9.6000607@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: dri-devel@lists.freedesktop.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, inki.dae@samsung.com, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, ajaykumar.rs@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMDttNfSr5BrnEwLXqgy676jOZbFHhXcMtC0n7gBSniwhWCDRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zi Shen Lim <zlim.lnx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Ganapatrao Kulkarni <ganapatrao.kulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+On Thu, Sep 18, 2014 at 4:42 AM, Zi Shen Lim <zlim.lnx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Sep 17, 2014 at 2:48 PM, Nathan Lynch <Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+>> On 09/17/2014 03:56 AM, Ganapatrao Kulkarni wrote:
+>>> From: Ganapatrao Kulkarni <ganapatrao.kulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>>
+>>> This patch adds property "nid" to memory node to provide the memory range to
+>>> numa node id mapping.
+>>>
+>>> Signed-off-by: Ganapatrao Kulkarni <ganapatrao.kulkarni-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+>>>
+>>> ---
+>>>  Documentation/devicetree/bindings/numa.txt | 58 ++++++++++++++++++++++++++++++
+>>>  1 file changed, 58 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/numa.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
+>>> new file mode 100644
+>>> index 0000000..c4a94f2
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/numa.txt
+>>> @@ -0,0 +1,58 @@
+>>> +======================================================
+>>> +numa id binding description
+>>> +======================================================
+>>> +
+>>> +======================================================
+>>> +1 - Introduction
+>>> +======================================================
+>>> +The device node  property "nid(numa node id)" can be added to memory
+>>> +device node to map the range of memory addresses as defined in property "reg".
+>>> +The property "nid" maps the memory range to the numa node id, which is used to
+>>> +find the local and remory pages on numa aware systems.
+>>
+>> "Local" and "remote" memory are notions that relate to some other
+>> resource -- typically a CPU, but also I/O resources on some systems.  It
+>> seems to me that a useful NUMA binding would at least specify a "nid"
+>> property, or something like it, for both cpu and memory nodes.  But this
+>> document speaks only of memory nodes.
+IMO, nid can be extended to cpu node also if the arch dont have any
+other way to do mapping, in fact this can be scaled to any node.
+for ARM arch, cpu mapping can be fetched from topology parsing and
+more over cpu mapping is required much later when secondary cpus comes
+online.
+i have added for memory, since this is parsed very early in the boot
+sequence and there is no support for dt based map at this moment(at
+least i am not aware off).
+numa distance matrix can also be defined, if the architecture has
+variable node distance other than just local/remote.
+>>
+>> As Kumar said, the device tree on powerpc server systems already has
+>> properties that express NUMA information.  If you can get hold of a copy
+>> of the PAPR (not ePAPR) from power.org, refer to the description of
+>> "ibm,associativity" and related properties.  I recall that it's a bit
+>> more complex than this proposal, though.
+>
+> I'm not able to find a link to the actual PAPR (not ePAPR)
+> specification. Anyone has a linky?
+>
+> I did find some code in tree, but couldn't find the bindings in
+> Documentation/devicetree/.
+yes, there is nothing in Documentation, if PPC are using since several
+years, then i humbly request to publish the documentation for numa
+bindings.
+No point in reinventing the wheel. Also i did not find any spec named
+PAPR, is it open spec, available to all like ePAPR?
 
-
-On Wed, Sep 17, 2014 at 10:24 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>
+> Seems like we'd care about form1?
+> -----8<-----
+> commit 41eab6f88f24124df89e38067b3766b7bef06ddb
+> Author: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+> Date:   Sun May 16 20:22:31 2010 +0000
+>
+>     powerpc/numa: Use form 1 affinity to setup node distance
+>
+>     Form 1 affinity allows multiple entries in
+> ibm,associativity-reference-points
+>     which represent affinity domains in decreasing order of importance. The
+>     Linux concept of a node is always the first entry, but using the other
+>     values as an input to node_distance() allows the memory allocator to make
+>     better decisions on which node to go first when local memory has been
+>     exhausted.
+>
+>     We keep things simple and create an array indexed by NUMA node, capped at
+>     4 entries. Each time we lookup an associativity property we initialise
+>     the array which is overkill, but since we should only hit this path during
+>     boot it didn't seem worth adding a per node valid bit.
+>
+>     Signed-off-by: Anton Blanchard <anton-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+>     Signed-off-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> ----->8-----
 >
 >
-> On Tuesday 16 September 2014 10:32 AM, Vivek Gautam wrote:
->> Currently the DP_PHY_ENABLE register is mapped in the driver,
->> and accessed to control power to the PHY.
->> With mfd-syscon and regmap interface available at our disposal,
->> it's wise to use that instead of using a 'reg' property for the
->> controller and allocating a memory resource for that.
 >>
->> To facilitate this, we have added another compatible string
->> for Exynso5420 SoC to acquire driver data which contains
->> different DP-PHY-CONTROL register offset.
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> Cc: Jingoo Han <jg1.han@samsung.com>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->
-> Taking this in linux-phy tree. If someone has already taken this patch, please
-> let me know.
-
-Thanks for taking this. But just one check, i think i need to separate
-out the Documentation
-to a separate patch even before this driver patch. Isn't it ?
-
->
-> Thanks
-> Kishon
->
->> ---
->>
->> Changes since v2:
->>  - Using 'EXYNOS5_PHY_ENABLE' macro instead of 'EXYNOS_DPTX_PHY_ENABLE'
->>    since that's available with us in "linux/mfd/syscon/exynos5-pmu.h" file.
->>
->> Changes since v1:
->>  - state->regs should have been "struct regmap *" instead of
->>    "void __iomem *". So corrected the same.
->>
->>  .../devicetree/bindings/phy/samsung-phy.txt        |    7 +-
->>  drivers/phy/phy-exynos-dp-video.c                  |   79 +++++++++++++-------
->>  2 files changed, 59 insertions(+), 27 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> index 7a6feea..15e0f2c 100644
->> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> @@ -17,8 +17,11 @@ Samsung EXYNOS SoC series Display Port PHY
->>  -------------------------------------------------
->>
->>  Required properties:
->> -- compatible : should be "samsung,exynos5250-dp-video-phy";
->> -- reg : offset and length of the Display Port PHY register set;
->> +- compatible : should be one of the following supported values:
->> +      - "samsung,exynos5250-dp-video-phy"
->> +      - "samsung,exynos5420-dp-video-phy"
->> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
->> +                   control pmu registers for power isolation.
->>  - #phy-cells : from the generic PHY bindings, must be 0;
->>
->>  Samsung S5P/EXYNOS SoC series USB PHY
->> diff --git a/drivers/phy/phy-exynos-dp-video.c b/drivers/phy/phy-exynos-dp-video.c
->> index 8b3026e..53f44a0 100644
->> --- a/drivers/phy/phy-exynos-dp-video.c
->> +++ b/drivers/phy/phy-exynos-dp-video.c
->> @@ -13,44 +13,55 @@
->>  #include <linux/io.h>
->>  #include <linux/kernel.h>
->>  #include <linux/module.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/mfd/syscon/exynos5-pmu.h>
->>  #include <linux/of.h>
->>  #include <linux/of_address.h>
->>  #include <linux/phy/phy.h>
->>  #include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->>
->> -/* DPTX_PHY_CONTROL register */
->> -#define EXYNOS_DPTX_PHY_ENABLE               (1 << 0)
->> +struct exynos_dp_video_phy_drvdata {
->> +     u32 phy_ctrl_offset;
->> +};
->>
->>  struct exynos_dp_video_phy {
->> -     void __iomem *regs;
->> +     struct regmap *regs;
->> +     const struct exynos_dp_video_phy_drvdata *drvdata;
->>  };
->>
->> -static int __set_phy_state(struct exynos_dp_video_phy *state, unsigned int on)
->> +static void exynos_dp_video_phy_pwr_isol(struct exynos_dp_video_phy *state,
->> +                                                     unsigned int on)
->>  {
->> -     u32 reg;
->> +     unsigned int val;
->> +
->> +     if (IS_ERR(state->regs))
->> +             return;
->>
->> -     reg = readl(state->regs);
->> -     if (on)
->> -             reg |= EXYNOS_DPTX_PHY_ENABLE;
->> -     else
->> -             reg &= ~EXYNOS_DPTX_PHY_ENABLE;
->> -     writel(reg, state->regs);
->> +     val = on ? 0 : EXYNOS5_PHY_ENABLE;
->>
->> -     return 0;
->> +     regmap_update_bits(state->regs, state->drvdata->phy_ctrl_offset,
->> +                        EXYNOS5_PHY_ENABLE, val);
->>  }
->>
->>  static int exynos_dp_video_phy_power_on(struct phy *phy)
->>  {
->>       struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
->>
->> -     return __set_phy_state(state, 1);
->> +     /* Disable power isolation on DP-PHY */
->> +     exynos_dp_video_phy_pwr_isol(state, 0);
->> +
->> +     return 0;
->>  }
->>
->>  static int exynos_dp_video_phy_power_off(struct phy *phy)
->>  {
->>       struct exynos_dp_video_phy *state = phy_get_drvdata(phy);
->>
->> -     return __set_phy_state(state, 0);
->> +     /* Enable power isolation on DP-PHY */
->> +     exynos_dp_video_phy_pwr_isol(state, 1);
->> +
->> +     return 0;
->>  }
->>
->>  static struct phy_ops exynos_dp_video_phy_ops = {
->> @@ -59,11 +70,31 @@ static struct phy_ops exynos_dp_video_phy_ops = {
->>       .owner          = THIS_MODULE,
->>  };
->>
->> +static const struct exynos_dp_video_phy_drvdata exynos5250_dp_video_phy = {
->> +     .phy_ctrl_offset        = EXYNOS5_DPTX_PHY_CONTROL,
->> +};
->> +
->> +static const struct exynos_dp_video_phy_drvdata exynos5420_dp_video_phy = {
->> +     .phy_ctrl_offset        = EXYNOS5420_DPTX_PHY_CONTROL,
->> +};
->> +
->> +static const struct of_device_id exynos_dp_video_phy_of_match[] = {
->> +     {
->> +             .compatible = "samsung,exynos5250-dp-video-phy",
->> +             .data = &exynos5250_dp_video_phy,
->> +     }, {
->> +             .compatible = "samsung,exynos5420-dp-video-phy",
->> +             .data = &exynos5420_dp_video_phy,
->> +     },
->> +     { },
->> +};
->> +MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
->> +
->>  static int exynos_dp_video_phy_probe(struct platform_device *pdev)
->>  {
->>       struct exynos_dp_video_phy *state;
->>       struct device *dev = &pdev->dev;
->> -     struct resource *res;
->> +     const struct of_device_id *match;
->>       struct phy_provider *phy_provider;
->>       struct phy *phy;
->>
->> @@ -71,11 +102,15 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
->>       if (!state)
->>               return -ENOMEM;
->>
->> -     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> -
->> -     state->regs = devm_ioremap_resource(dev, res);
->> -     if (IS_ERR(state->regs))
->> +     state->regs = syscon_regmap_lookup_by_phandle(dev->of_node,
->> +                                                   "samsung,pmu-syscon");
->> +     if (IS_ERR(state->regs)) {
->> +             dev_err(dev, "Failed to lookup PMU regmap\n");
->>               return PTR_ERR(state->regs);
->> +     }
->> +
->> +     match = of_match_node(exynos_dp_video_phy_of_match, dev->of_node);
->> +     state->drvdata = match->data;
->>
->>       phy = devm_phy_create(dev, NULL, &exynos_dp_video_phy_ops, NULL);
->>       if (IS_ERR(phy)) {
->> @@ -89,12 +124,6 @@ static int exynos_dp_video_phy_probe(struct platform_device *pdev)
->>       return PTR_ERR_OR_ZERO(phy_provider);
->>  }
->>
->> -static const struct of_device_id exynos_dp_video_phy_of_match[] = {
->> -     { .compatible = "samsung,exynos5250-dp-video-phy" },
->> -     { },
->> -};
->> -MODULE_DEVICE_TABLE(of, exynos_dp_video_phy_of_match);
->> -
->>  static struct platform_driver exynos_dp_video_phy_driver = {
->>       .probe  = exynos_dp_video_phy_probe,
->>       .driver = {
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
