@@ -1,63 +1,40 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: add devicetree bindings for st-pwm
- regulator
-Date: Thu, 18 Sep 2014 15:22:30 -0700
-Message-ID: <20140918222230.GG7960@sirena.org.uk>
-References: <1411025505-21628-1-git-send-email-zyw@rock-chips.com>
- <1411025505-21628-3-git-send-email-zyw@rock-chips.com>
- <CAD=FV=UdSQZqGqY5XvLwKpkSbEWvtXG0s1vuk3xfdX0AJ27TBg@mail.gmail.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 0/6] Add initial support for Broadcom Cygnus SoC
+Date: Fri, 19 Sep 2014 00:31:54 +0200
+Message-ID: <541B5D5A.10800@hauke-m.de>
+References: <Jonathan Richardson <jonathar@broadcom.com> <1410897497-27527-1-git-send-email-jonathar@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0za9BfvgN4c4+/Ah"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=UdSQZqGqY5XvLwKpkSbEWvtXG0s1vuk3xfdX0AJ27TBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1410897497-27527-1-git-send-email-jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, JD Zheng <jdzheng-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 09/16/2014 09:58 PM, Jonathan Richardson wrote:
+> Hi,
+> 
+> This patchset contains initial support for Broadcom's Cygnus SoC based on our
+> iProc architecture. Initial support is minimal and includes just the mach
+> platform code, clock driver, and a basic device tree configuration. Peripheral
+> drivers will be submitted soon, as will device tree configurations for other
+> Cygnus board variants.
 
---0za9BfvgN4c4+/Ah
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This SoC looks similar to the BCM5301X (Northstar) SoCs even some cores
+are at the same memory addresses. Does this SoC use an AXI bus with
+Broadcom Plugins at address 0x18000000 ?
 
-On Thu, Sep 18, 2014 at 02:27:59PM -0700, Doug Anderson wrote:
-> On Thu, Sep 18, 2014 at 12:31 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+The BCM5301X (Northstar) SoCs also has an iProc Clock Control Unit and I
+will try to use your driver for that SoC.
 
-> I would be tempted to say that you should add a few required properties:
+Is Broadcom Cygnus similar to BCM563XX or is it actually the same SoC?
 
-> * regulator-boot-on
-> * regulator-always-on
-> * regulator-initial-microvolts
+Do you have some description of the hardware features of this SoC? Does
+it have PCIe, or Ethernet?
 
-> From my understanding of how PWM-based regulators work there is no way
-> to "disable" them.  If you drive them low then they get their biggest
-> voltage.  If you drive them high then they get their smallest voltage.
-> If you make them floating then it's equivalent to 50% duty cycle
-> (right?)
-
-No, if there is no disable operation then there is no point in
-specifying any properties to do with enabling and disabling as they
-won't do anything.  This is only relevant if the operation is there.
-
---0za9BfvgN4c4+/Ah
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBAgAGBQJUG1sjAAoJECTWi3JdVIfQ90cH/3AAZKacvouTl2ZFS5tSIJL9
-+iqPwnjD98RRl5mSKgV8EVf37P5x6awgoVX/F5IPWHdPJk9pbVKZQLT3xucFCXtm
-YLLsqDTZljKGUfPUpq7OjCk2qfuxGK7IDTTHPn+WYXaUCWWJaB7eduwPU0VgTWq9
-/z/nKy5kRBH8EktvnbSkRj3Hj6fkdiOUBnSzPiZjTKcbUlS+WxxWBzJrgzLlJWWf
-aucCqKGKhtpz/7gBruPfqsV1eI6h/A1zCFQFbbnQHevwW47bJPLZrj9wJ1ciR44g
-93eNkehYCoTpFnGoTt54CKaWlPwResNwmapjvvo1MFjH+G587XCf66MbyJwHHuE=
-=VlF1
------END PGP SIGNATURE-----
-
---0za9BfvgN4c4+/Ah--
+Hauke
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
