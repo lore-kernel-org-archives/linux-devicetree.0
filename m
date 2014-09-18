@@ -1,157 +1,71 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: keystone: add dsp gpio controllers nodes
-Date: Thu, 18 Sep 2014 20:15:23 +0300
-Message-ID: <1411060524-25077-3-git-send-email-grygorii.strashko@ti.com>
-References: <1411060524-25077-1-git-send-email-grygorii.strashko@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 2/4] dt-bindings: document Rockchip thermal
+Date: Thu, 18 Sep 2014 10:18:12 -0700
+Message-ID: <20140918171809.GD14809@core.coreip.homeip.net>
+References: <1410926353-15674-1-git-send-email-caesar.wang@rock-chips.com>
+ <1410926353-15674-3-git-send-email-caesar.wang@rock-chips.com>
+ <CAAObsKA61Ano85P6PehOY7WqR0FgTz_Rfur8UAt56ZXoNyoyqQ@mail.gmail.com>
+ <541ADD58.7070901@rock-chips.com>
+ <CAAObsKCYGEBNEvDTs=iQD9KT0YomQWHg0W-vwHG4nLZbqogF=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411060524-25077-1-git-send-email-grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAObsKCYGEBNEvDTs=iQD9KT0YomQWHg0W-vwHG4nLZbqogF=g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+Cc: Caesar Wang <caesar.wang@rock-chips.com>, heiko@sntech.de, rui.zhang@intel.com, edubezval@gmail.com, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, huangtao@rock-chips.com, cf@rock-chips.com, dianders@chromium.org, addy.ke@rock-chips.com, zyf@rock-chips.com, cjf@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-Add Keystone 2 DSP GPIO nodes for SoCs:
-k2hk:
- DSP GPIO banks 0-7 correspond to DSP0-DSP7
-k2l:
- DSP GPIO banks 0-3 correspond to DSP0-DSP3
-k2e:
- DSP GPIO bank 0 corresponds to DSP0
+On Thu, Sep 18, 2014 at 04:19:26PM +0200, Tomeu Vizoso wrote:
+> On 18 September 2014 15:25, Caesar Wang <caesar.wang@rock-chips.com> =
+wrote:
+> > Tomeu,
+> >
+> > =E5=9C=A8 2014=E5=B9=B409=E6=9C=8818=E6=97=A5 17:27, Tomeu Vizoso =E5=
+=86=99=E9=81=93:
+> >>
+> >> On 17 September 2014 05:59, Caesar Wang <caesar.wang@rock-chips.co=
+m>
+> >> wrote:
+> >>>
+> >>> This add the necessary binding documentation for the thermal
+> >>> found on Rockchip SoCs
+> >>
+> >> Hi Caesar,
+> >>
+> >> is there any reason to not use the existing thermal bindings? You =
+can
+> >> find a description in
+> >> Documentation/devicetree/bindings/thermal/thermal.txt and example =
+code
+> >> in omap, or in the patches for Tegra recently posted by Mikko
+> >> Perttunen.
+> >>
+> >> Regards,
+> >>
+> >> Tomeu
+> >
+> >
+> > Why should I use the existing thermal bindings?
+>=20
+> Because otherwise, you are asking to merge duplicated code. There's a
+> generic way to define thermal zones, trip points, cooling devices,
+> etc. And also code to parse and plug them together. Why add
+> soc-specific code to do the same?
+>=20
+> > I believe omap,tegar and rockchip are  the three seperate thermals =
+driver.
+>=20
+> Yes, and OMAP is already using the generic bindings, and the proposed
+> patches for Tegra as well, and I think it would make sense for
+> Rockchip to also use them (unless I'm missing something).
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/k2e.dtsi  |  7 ++++++
- arch/arm/boot/dts/k2hk.dtsi | 56 +++++++++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/k2l.dtsi  | 28 +++++++++++++++++++++++
- 3 files changed, 91 insertions(+)
+You are talking about drivers/thermal/of-thermal.c, right? Yes, I think
+Rockchip should be using the same generic framework if possible.
 
-diff --git a/arch/arm/boot/dts/k2e.dtsi b/arch/arm/boot/dts/k2e.dtsi
-index 03d0190..13cf35a 100644
---- a/arch/arm/boot/dts/k2e.dtsi
-+++ b/arch/arm/boot/dts/k2e.dtsi
-@@ -76,5 +76,12 @@
- 				usb-phy = <&usb1_phy>, <&usb1_phy>;
- 			};
- 		};
-+
-+		dspgpio0: keystone_dsp_gpio@02620240 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x240>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/k2hk.dtsi b/arch/arm/boot/dts/k2hk.dtsi
-index c73899c..d721f4b 100644
---- a/arch/arm/boot/dts/k2hk.dtsi
-+++ b/arch/arm/boot/dts/k2hk.dtsi
-@@ -42,5 +42,61 @@
- 
- 	soc {
- 		/include/ "k2hk-clocks.dtsi"
-+
-+		dspgpio0: keystone_dsp_gpio@02620240 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x240>;
-+		};
-+
-+		dspgpio1: keystone_dsp_gpio@2620244 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x244>;
-+		};
-+
-+		dspgpio2: keystone_dsp_gpio@2620248 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x248>;
-+		};
-+
-+		dspgpio3: keystone_dsp_gpio@262024c {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x24c>;
-+		};
-+
-+		dspgpio4: keystone_dsp_gpio@2620250 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x250>;
-+		};
-+
-+		dspgpio5: keystone_dsp_gpio@2620254 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x254>;
-+		};
-+
-+		dspgpio6: keystone_dsp_gpio@2620258 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x258>;
-+		};
-+
-+		dspgpio7: keystone_dsp_gpio@262025c {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x25c>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/k2l.dtsi b/arch/arm/boot/dts/k2l.dtsi
-index 1f7f479..e3bb142 100644
---- a/arch/arm/boot/dts/k2l.dtsi
-+++ b/arch/arm/boot/dts/k2l.dtsi
-@@ -51,5 +51,33 @@
- 			clocks	= <&clkuart3>;
- 			interrupts = <GIC_SPI 435 IRQ_TYPE_EDGE_RISING>;
- 		};
-+
-+		dspgpio0: keystone_dsp_gpio@02620240 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x240>;
-+		};
-+
-+		dspgpio1: keystone_dsp_gpio@2620244 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x244>;
-+		};
-+
-+		dspgpio2: keystone_dsp_gpio@2620248 {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x248>;
-+		};
-+
-+		dspgpio3: keystone_dsp_gpio@262024c {
-+			compatible = "ti,keystone-dsp-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio,syscon-dev = <&devctrl 0x24c>;
-+		};
- 	};
- };
--- 
-1.9.1
+Thanks.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Dmitry
