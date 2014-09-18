@@ -1,214 +1,53 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 3/3] mfd: palmas: Add support for optional wakeup
-Date: Thu, 18 Sep 2014 08:54:23 -0500
-Message-ID: <541AE40F.1090101@ti.com>
-References: <1409950311-25236-1-git-send-email-nm@ti.com> <1409950311-25236-4-git-send-email-nm@ti.com> <alpine.DEB.2.10.1409052311210.5472@nanos> <20140908154109.GA12336@kahuna>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] ARM: DT: ifc6410: Add board memory range.
+Date: Thu, 18 Sep 2014 15:16:37 +0100
+Message-ID: <541AE945.9030203@linaro.org>
+References: <1410932179-4652-1-git-send-email-srinivas.kandagatla@linaro.org>	<54192B64.6070604@smartplayin.com>	<FA9D8682-DB0E-48CF-A519-86A0465300E1@codeaurora.org>	<20140917191829.GC3749@joshc.qualcomm.com>	<541A01F3.4020303@linaro.org> <CAJAp7Og5v-ADm6ekMVUs8++CL5NP+OEw-vZ7mKdChOZyBTBZpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140908154109.GA12336@kahuna>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Mark Brown <broonie@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7Og5v-ADm6ekMVUs8++CL5NP+OEw-vZ7mKdChOZyBTBZpA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Josh Cartwright <joshc@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Pramod Gurav <pramod.gurav@smartplayin.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2014 10:41 AM, Nishanth Menon wrote:
-> On 23:13-20140905, Thomas Gleixner wrote:
->> On Fri, 5 Sep 2014, Nishanth Menon wrote:
->>> +	if (!palmas->wakeirq)
->>> +		goto no_wake_irq;
->>> +
->>> +	ret = devm_request_irq(palmas->dev, palmas->wakeirq,
->>> +			       palmas_wake_irq,
->>> +			       IRQF_ONESHOT | pdata->irq_flags,
+
+
+On 18/09/14 05:37, Bjorn Andersson wrote:
+> On Wed, Sep 17, 2014 at 2:49 PM, Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
 >>
->> Why is this marked IRQF_ONESHOT?
-> 
-> Uggh.. should have dropped it. my bad.. removed in the revision below.
-> Thanks for catching it.
 >>
->>> +			       dev_name(palmas->dev),
->>> +			       &palmas);
->>> +	if (ret < 0)
->>> +		goto err_i2c;
+>> On 17/09/14 20:18, Josh Cartwright wrote:
+>>>
+>>> On Wed, Sep 17, 2014 at 12:03:37PM -0700, Kumar Gala wrote:
+> [..]
+>>>> Hmm, this doesn?t seem to work for me.
+>>>
+>>>
+>>> I don't see how it could with qcom_defconfig, as we set
+>>> CONFIG_ARM_ATAG_DTB_COMPAT.  Is this patch fixing a real issue?
 >>
->> Why err and not doing the obvious clearing of palmas->wakeirq and
->> keep at least the i2c functional?
-> Hmmm.. true.. we can stay alive even though without wakeup capability if
-> someone messes up configuration..
-> 
-> Fixed version below. Let me know if you are ok with the following.
+>> No, its not fixing any thing by itself.
+>>
+>> However along with "ARM: zImage: Allow DTB to override broken ATAG_MEM"
+>> patch atleast I get to boot my IFC6410 with multi_v7_defconfig.
+>
+> But that patch was rejected by various people.
+> Instead have a look at [1], it solves the problem for you (and have
+> reference to the original source).
+>
+> [1] https://github.com/andersson/kernel/commit/d4c0061cf7be8a341e6d06a97c85ecb69284e74c
+Looks cool.. I think we can ignore this patch with this fixup.
+On IFC6410 now that we have some way to unbrick the board we could even 
+try to fix this at bootloader level.
 
-Gentle ping. Would you like me to repost this series over again?
+Thanks to Kumar and You for redirecting me to this link.
 
-> ----8<----
-> From 6da58ac66eedea46cf7282c6644c76c8f328f5ee Mon Sep 17 00:00:00 2001
-> From: Nishanth Menon <nm@ti.com>
-> Date: Tue, 12 Aug 2014 12:00:52 -0500
-> Subject: [PATCH V3 3/3] mfd: palmas: Add support for optional wakeup
-> 
-> With the recent pinctrl-single changes, omaps can treat wake-up events
-> from deeper power  states as interrupts.
-> 
-> This is to handle the case where the system needs two interrupt
-> sources when SoC is in deep sleep(1 to exit from deep power mode such
-> as sleep, and other from the module handling the actual event during
-> system active state). This is not the same as threaded interrupts as the
-> wakeup interrupt source is used only as part of deeper power saving
-> mode.
-> 
-> Let's add support for the optional second interrupt for wake-up
-> events. And then SoC can wakeup and handle the event using it's
-> regular handler.
-> 
-> This is similar in approach to commit 2a0b965cfb6e ("serial: omap: Add
-> support for optional wake-up")
-> 
-> Signed-off-by: Nishanth Menon <nm@ti.com>
-> ---
->  drivers/mfd/palmas.c       |   62 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/palmas.h |    2 ++
->  2 files changed, 64 insertions(+)
-> 
-> diff --git a/drivers/mfd/palmas.c b/drivers/mfd/palmas.c
-> index 28cb048..de7d204 100644
-> --- a/drivers/mfd/palmas.c
-> +++ b/drivers/mfd/palmas.c
-> @@ -24,6 +24,7 @@
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/palmas.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_irq.h>
->  
->  static const struct regmap_config palmas_regmap_config[PALMAS_NUM_CLIENTS] = {
->  	{
-> @@ -326,6 +327,16 @@ static struct regmap_irq_chip tps65917_irq_chip = {
->  			PALMAS_INT1_MASK),
->  };
->  
-> +static irqreturn_t palmas_wake_irq(int irq, void *_palmas)
-> +{
-> +	/*
-> +	 * Return Not handled so that interrupt is disabled.
-> +	 * Level event ensures that the event is eventually handled
-> +	 * by the appropriate chip handler already registered
-> +	 */
-> +	return IRQ_NONE;
-> +}
-> +
->  int palmas_ext_control_req_config(struct palmas *palmas,
->  	enum palmas_external_requestor_id id,  int ext_ctrl, bool enable)
->  {
-> @@ -409,6 +420,7 @@ static void palmas_dt_to_pdata(struct i2c_client *i2c,
->  		pdata->mux_from_pdata = 1;
->  		pdata->pad2 = prop;
->  	}
-> +	pdata->wakeirq = irq_of_parse_and_map(node, 1);
->  
->  	/* The default for this register is all masked */
->  	ret = of_property_read_u32(node, "ti,power-ctrl", &prop);
-> @@ -521,6 +533,7 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
->  	i2c_set_clientdata(i2c, palmas);
->  	palmas->dev = &i2c->dev;
->  	palmas->irq = i2c->irq;
-> +	palmas->wakeirq = pdata->wakeirq;
->  
->  	match = of_match_device(of_palmas_match_tbl, &i2c->dev);
->  
-> @@ -587,6 +600,25 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
->  	if (ret < 0)
->  		goto err_i2c;
->  
-> +	if (!palmas->wakeirq)
-> +		goto no_wake_irq;
-> +
-> +	ret = devm_request_irq(palmas->dev, palmas->wakeirq,
-> +			       palmas_wake_irq,
-> +			       pdata->irq_flags,
-> +			       dev_name(palmas->dev),
-> +			       &palmas);
-> +	if (ret < 0) {
-> +		dev_err(palmas->dev, "Invalid wakeirq(%d) (res: %d), skiping\n",
-> +			palmas->wakeirq, ret);
-> +		palmas->wakeirq = 0;
-> +	} else {
-> +		/* We use wakeirq only during suspend-resume path */
-> +		device_set_wakeup_capable(palmas->dev, true);
-> +		disable_irq_nosync(palmas->wakeirq);
-> +	}
-> +
-> +no_wake_irq:
->  no_irq:
->  	slave = PALMAS_BASE_TO_SLAVE(PALMAS_PU_PD_OD_BASE);
->  	addr = PALMAS_BASE_TO_REG(PALMAS_PU_PD_OD_BASE,
-> @@ -706,6 +738,34 @@ static int palmas_i2c_remove(struct i2c_client *i2c)
->  	return 0;
->  }
->  
-> +static int palmas_i2c_suspend(struct i2c_client *i2c,  pm_message_t mesg)
-> +{
-> +	struct palmas *palmas = i2c_get_clientdata(i2c);
-> +	struct device *dev = &i2c->dev;
-> +
-> +	if (!palmas->wakeirq)
-> +		return 0;
-> +
-> +	if (device_may_wakeup(dev))
-> +		enable_irq(palmas->wakeirq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int palmas_i2c_resume(struct i2c_client *i2c)
-> +{
-> +	struct palmas *palmas = i2c_get_clientdata(i2c);
-> +	struct device *dev = &i2c->dev;
-> +
-> +	if (!palmas->wakeirq)
-> +		return 0;
-> +
-> +	if (device_may_wakeup(dev))
-> +		disable_irq_nosync(palmas->wakeirq);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct i2c_device_id palmas_i2c_id[] = {
->  	{ "palmas", },
->  	{ "twl6035", },
-> @@ -721,6 +781,8 @@ static struct i2c_driver palmas_i2c_driver = {
->  		   .of_match_table = of_palmas_match_tbl,
->  		   .owner = THIS_MODULE,
->  	},
-> +	.suspend = palmas_i2c_suspend,
-> +	.resume = palmas_i2c_resume,
->  	.probe = palmas_i2c_probe,
->  	.remove = palmas_i2c_remove,
->  	.id_table = palmas_i2c_id,
-> diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
-> index fb0390a..e8cf4c2 100644
-> --- a/include/linux/mfd/palmas.h
-> +++ b/include/linux/mfd/palmas.h
-> @@ -75,6 +75,7 @@ struct palmas {
->  	/* IRQ Data */
->  	int irq;
->  	u32 irq_mask;
-> +	int wakeirq;
->  	struct mutex irq_lock;
->  	struct regmap_irq_chip_data *irq_data;
->  
-> @@ -377,6 +378,7 @@ struct palmas_clk_platform_data {
->  
->  struct palmas_platform_data {
->  	int irq_flags;
-> +	int wakeirq;
->  	int gpio_base;
->  
->  	/* bit value to be loaded to the POWER_CTRL register */
-> 
-
-
--- 
-Regards,
-Nishanth Menon
+--srini
+>
+> Regards,
+> Bjorn
+>
