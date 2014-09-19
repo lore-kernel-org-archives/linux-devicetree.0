@@ -1,133 +1,101 @@
-From: <srv_hongzhou.yang@mediatek.com>
-Subject: [PATCH 4/4] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
-Date: Fri, 19 Sep 2014 19:48:26 +0800
-Message-ID: <1411127306-13677-5-git-send-email-srv_hongzhou.yang@mediatek.com>
-References: <1411127306-13677-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] iio: iadc: Qualcomm SPMI PMIC current ADC driver
+Date: Fri, 19 Sep 2014 15:16:34 +0300
+Message-ID: <1411128994.3997.19.camel@iivanov-dev>
+References: <1411046123-30625-1-git-send-email-iivanov@mm-sol.com>
+	 <541C032F.3080206@smartplayin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411127306-13677-1-git-send-email-srv_hongzhou.yang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-kernel@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, =Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "Joe.C" <yingjoe.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <541C032F.3080206-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kiran Padwal <kiran.padwal-edOiRQu9Xnj5XLMNweQjbQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hongzhou Yang <hongzhou.yang@mediatek.com>
 
-Add devicetree bindings for Mediatek SoC pinctrl driver.
+Hi Kiran,
 
-Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
----
- .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt | 92 ++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+On Fri, 2014-09-19 at 15:49 +0530, Kiran Padwal wrote:
+> Hi Ivan,
+>=20
+> On Thursday 18 September 2014 06:45 PM, Ivan T. Ivanov wrote:
+> > The current ADC is peripheral of Qualcomm SPMI PMIC chips. It has
+> > 16 bits resolution and register space inside PMIC accessible across
+> > SPMI bus.
+> >=20
+> > The driver registers itself through IIO interface.
+> >=20
+> > Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/iio/adc/qcom,spmi-iadc.txt |  61 ++
+>=20
+> <snip>
+>=20
+> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > index 11b048a..77274e4 100644
+> > --- a/drivers/iio/adc/Kconfig
+> > +++ b/drivers/iio/adc/Kconfig
+> > @@ -279,4 +279,15 @@ config XILINX_XADC
+> >  	  The driver can also be build as a module. If so, the module wil=
+l be called
+> >  	  xilinx-xadc.
+> > =20
+> > +config QCOM_SPMI_IADC
+> > +	tristate "Qualcomm SPMI PMIC current ADC"
+> > +	select REGMAP_SPMI
+> > +	depends on IIO
+>=20
+> May be you need to add "SPMI" in depends on because without enabling =
+that it breaks.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-new file mode 100644
-index 0000000..e2deff6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
-@@ -0,0 +1,92 @@
-+* Mediatek MT65XX Pin Controller
-+
-+The Mediatek's Pin controller is used to control GPIO pins.
-+
-+Required properties:
-+- compatible: value should be either of the following.
-+    (a) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
-+- reg: Should contain the register physical address and length for the
-+  pin controller.
-+- gpio-controller : Marks the device node as a gpio controller.
-+- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
-+  binding is used, the amount of cells must be specified as 2. See the below
-+  mentioned gpio binding representation for description of particular cells.
-+
-+	Eg: <&pio 6 0>
-+	<[phandle of the gpio controller node]
-+	[pin number within the gpio controller]
-+	[flags]>
-+
-+	Values for gpio specifier:
-+	- Pin number: is a value between 0 to 202.
-+	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
-+            Only the following flags are supported:
-+            0 - GPIO_ACTIVE_HIGH
-+            1 - GPIO_ACTIVE_LOW
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices.
-+
-+A pinctrl node should contain at least one subnodes representing the
-+pinctrl groups available on the machine. Each subnode will list the
-+pins it needs, and how they should be configured, with regard to muxer
-+configuration and pullups. If one of these options is
-+not set, its actual value will be unspecified.
-+
-+Required subnode-properties:
-+
-+- mediatek,pinfunc: List of gpio number and function to mux.
-+
-+The mediatek,pinfunc can use defines directly,
-+which are already defind in boot/dts/mt8135-pinfunc.h.
-+
-+Optional subnode-properties:
-+- mediatek,pull: Integer, defines in dt-bindings/pinctrl/mt65xx.h.
-+    MT_PIN_PULL_DISABLE: No resistor
-+    MT_PIN_CONF_PULL_UP: Pull-up resistor
-+    MT_PIN_CONF_PULL_DOWN: Pull-down resistor
-+
-+The mediatek,pull can be either a single value or an array.
-+If it is a single value, that means all pins use use this value for same.
-+If it is an array, the means one value per pin.
-+
-+Examples:
-+
-+pinctrl@01c20800 {
-+	compatible = "mediatek,mt8135-pinctrl";
-+	reg = <0x01c20800 0x400>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+
-+	i2c0_pins_a: i2c0@0 {
-+		mediatek,pinfunc = <MT8135_PIN_100_SDA0__FUNC_SDA0 MT8135_PIN_101_SCL0__FUNC_SCL0>;
-+		mediatek,pull = <MT_PIN_PULL_DISABLE>;
-+	};
-+
-+	i2c1_pins_a: i2c1@0 {
-+		mediatek,pinfunc = <MT8135_PIN_195_SDA1__FUNC_SDA1 MT8135_PIN_196_SCL1__FUNC_SCL1>;
-+		mediatek,pull = <MT_PIN_PULL_DISABLE>;
-+	};
-+
-+	i2c2_pins_a: i2c2@0 {
-+		mediatek,pinfunc = <MT8135_PIN_193_SDA2__FUNC_SDA2 MT8135_PIN_194_SCL2__FUNC_SCL2>;
-+		mediatek,pull = <MT_PIN_PULL_DISABLE>;
-+	};
-+
-+	i2c3_pins_a: i2c3@0 {
-+		mediatek,pinfunc = <MT8135_PIN_35_SCL3__FUNC_SCL3 MT8135_PIN_36_SDA3__FUNC_SDA3>;
-+		mediatek,pull = <MT_PIN_PULL_DISABLE>;
-+	};
-+
-+	uart2_pins_a: uart2@0 {
-+		mediatek,pinfunc = <MT8135_PIN_53_URXD2__FUNC_URXD2 MT8135_PIN_54_UTXD2__FUNC_UTXD2>;
-+		mediatek,pull = <MT_PIN_PULL_DISABLE>;
-+	};
-+
-+	uart3_pins_a: uart3@0 {
-+		mediatek,pinfunc = <MT8135_PIN_191_URXD3__FUNC_URXD3 MT8135_PIN_192_UTXD3__FUNC_UTXD3>;
-+		mediatek,pull = <MT_PIN_PULL_DISABLE>;
-+	};
-+	...
-+
-+};
--- 
-1.8.1.1.dirty
+Right.=20
+
+>=20
+> > +	help
+> > +	  This is the IIO Current ADC driver for Qualcomm QPNP IADC Chip.
+> > +
+> > +	  The driver supports single mode operation to read from upto sev=
+en channel
+> > +	  configuration that include reading the external/internal Rsense=
+, CSP_EX,
+> > +	  CSN_EX pair along with the gain and offset calibration.
+> > +
+> >  endmenu
+>=20
+> <snip>
+>=20
+> > +
+> > +	return iadc_write(iadc, IADC_EN_CTL1, data);
+> > +}
+> > +
+> > +static void iadc_status_show(struct iadc_chip *iadc)
+> > +{
+> > +	u8 mode, sta1, chan, dig, en, req;
+>=20
+> During compilation, getting a waring as below for all variables,
+>=20
+> rivers/iio/adc/qcom-spmi-iadc.c: In function =E2=80=98iadc_poll_wait_=
+eoc=E2=80=99:
+> drivers/iio/adc/qcom-spmi-iadc.c:227:10: warning: =E2=80=98en=E2=80=99=
+ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   dev_warn(iadc->dev,
+>           ^
+>=20
+
+Right. I am not sure why I am not getting this warning.
+
+> > +	int ret;
+> > +
+> > +	ret =3D iadc_read(iadc, IADC_MODE_CTL, &mode);
+> > +	if (ret < 0)
+> > +		return;
+> > +
+> > +	ret =3D iadc_read(iadc, IADC_DIG_PARAM, &dig);
+>=20
+
+Thank you for review.
+
+Regards,
+Ivan
