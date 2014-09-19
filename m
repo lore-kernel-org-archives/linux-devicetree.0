@@ -1,33 +1,44 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/3] Introduce of_match_machine() helper
-Date: Fri, 19 Sep 2014 16:12:45 +0300
-Message-ID: <20140919131245.GQ26779@tbergstrom-lnx.Nvidia.com>
-References: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>
- <53FB7642.1000808@wwwdotorg.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v3 1/5] clk: ti: add "ti,gpio-gate-clock" controlled clock
+Date: Fri, 19 Sep 2014 08:12:40 -0500
+Message-ID: <541C2BC8.3020207@ti.com>
+References: <cover.1410898073.git.jsarha@ti.com> <71e8bdf16f8a3bff5db6ba80dcab9d21de05e939.1410898073.git.jsarha@ti.com> <541C2A77.9070406@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53FB7642.1000808-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <541C2A77.9070406@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, Mike Turquette <mturquette@linaro.org>
+Cc: tony@atomide.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 25, 2014 at 07:45:38PM +0200, Stephen Warren wrote:
-> On 08/07/2014 05:01 PM, Tuomas Tynkkynen wrote:
-> > Some mach-specific drivers that don't require their own node in the device tree
-> > (for example drivers/soc/*, cpufreq, cpuidle etc.) want to match on the device
-> > tree root compatible property instead. Instead of open-coding (and forgetting
-> > to call of_node_put on the root node) everywhere, add a helper to the OF core.
+On 09/19/2014 08:07 AM, Tomi Valkeinen wrote:
+> On 16/09/14 23:40, Jyri Sarha wrote:
+>> The added ti,gpio-gate-clock is a basic clock that can be enabled and
+>> disabled trough a gpio output. The DT binding document for the clock
+>> is also added. For EPROBE_DEFER handling the registering of the clock
+>> has to be delayed until of_clk_get() call time.
+>>
+>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>> ---
+>>  .../bindings/clock/ti/gpio-gate-clock.txt          |   21 ++
+>>  drivers/clk/ti/Makefile                            |    2 +-
+>>  drivers/clk/ti/gpio.c                              |  202 ++++++++++++++++++++
+>>  3 files changed, 224 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/ti/gpio-gate-clock.txt
+>>  create mode 100644 drivers/clk/ti/gpio.c
 > 
-> Tuomas, I assume there will be a new version of this series to address 
-> the review comments? For now, I'm not intending on applying this.
+> Why is this a TI clock? Sounds like a generic one to me.
 
-Given that Tuomas's internship ended, I'm willing to push this patch set
-forward, if there is interest. So are people still interested in this idea
-or should we drop it?
+Like thread: https://lkml.org/lkml/2014/9/5/284 ?
+> 
+> In any case, this should go through Mike.
+> 
+yep - should have been posted independent of this series :).
 
-Thanks,
 
-Peter.
+
+-- 
+Regards,
+Nishanth Menon
