@@ -1,62 +1,33 @@
-From: David Herrmann <dh.herrmann@gmail.com>
-Subject: Re: [PATCH v5 05/11] drm: add Atmel HLCDC Display Controller support
-Date: Fri, 19 Sep 2014 15:10:02 +0200
-Message-ID: <CANq1E4TYv-ZCgZHbocVvqM54=hrYYSf3B-VY4FR8+WEp6EMMjg@mail.gmail.com>
-References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
- <1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/3] Introduce of_match_machine() helper
+Date: Fri, 19 Sep 2014 16:12:45 +0300
+Message-ID: <20140919131245.GQ26779@tbergstrom-lnx.Nvidia.com>
+References: <1407452515-2390-1-git-send-email-ttynkkynen@nvidia.com>
+ <53FB7642.1000808@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Andrew Victor <linux@maxim.org.za>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53FB7642.1000808-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Tuomas Tynkkynen <ttynkkynen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Mon, Aug 25, 2014 at 07:45:38PM +0200, Stephen Warren wrote:
+> On 08/07/2014 05:01 PM, Tuomas Tynkkynen wrote:
+> > Some mach-specific drivers that don't require their own node in the device tree
+> > (for example drivers/soc/*, cpufreq, cpuidle etc.) want to match on the device
+> > tree root compatible property instead. Instead of open-coding (and forgetting
+> > to call of_node_put on the root node) everywhere, add a helper to the OF core.
+> 
+> Tuomas, I assume there will be a new version of this series to address 
+> the review comments? For now, I'm not intending on applying this.
 
-On Mon, Sep 8, 2014 at 10:43 AM, Boris BREZILLON
-<boris.brezillon@free-electrons.com> wrote:
-[snip]
-> +static int atmel_hlcdc_dc_drm_probe(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +
-> +       ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = drm_platform_init(&atmel_hlcdc_dc_driver, pdev);
-> +       if (ret)
-> +               return ret;
+Given that Tuomas's internship ended, I'm willing to push this patch set
+forward, if there is interest. So are people still interested in this idea
+or should we drop it?
 
-Please avoid any use of drm_platform_*(). Use drm_dev_alloc(),
-drm_dev_register() directly. See my response on
-  "[PATCH v3 1/5] drm/rockchip: Add basic drm driver":
-for details. Also have a look at the tegra driver how to do it.
+Thanks,
 
-> +
-> +       return 0;
-> +}
-> +
-> +static int atmel_hlcdc_dc_drm_remove(struct platform_device *pdev)
-> +{
-> +       drm_put_dev(platform_get_drvdata(pdev));
-
-Same here: please use dev_dev_*() directly:
-
-drm_dev_unregister(ddev);
-drm_dev_unref(ddev);
-
-
-Thanks
-David
+Peter.
