@@ -1,152 +1,61 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] rtc: omap: Support regulator supply for RTC
-Date: Fri, 19 Sep 2014 07:54:46 -0500
-Message-ID: <541C2796.7030300@ti.com>
-References: <1411119994-8234-1-git-send-email-lokeshvutla@ti.com> <541BFBFC.5070505@ti.com>
+From: David Herrmann <dh.herrmann@gmail.com>
+Subject: Re: [PATCH v3 1/5] drm/rockchip: Add basic drm driver
+Date: Fri, 19 Sep 2014 15:04:34 +0200
+Message-ID: <CANq1E4Ti0yOQ+jCiXy7=NtFQ9cbWLOSLf6q-HWVdDFtMB1n29Q@mail.gmail.com>
+References: <1411105668-32722-1-git-send-email-mark.yao@rock-chips.com>
+	<1411105668-32722-2-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <541BFBFC.5070505@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, a.zummo@towertech.it, rtc-linux@googlegroups.com
-Cc: nsekhar@ti.com, t-kristo@ti.com, j-keerthy@ti.com, balbi@ti.com, tony@atomide.com, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411105668-32722-2-git-send-email-mark.yao@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark yao <mark.yao@rock-chips.com>
+Cc: heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Linux API <linux-api@vger.kernel.org>, linux-rockchip@lists.infradead.org, dianders@chromium.org, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, dbehr@chromium.org, Olof
 List-Id: devicetree@vger.kernel.org
 
-On 09/19/2014 04:48 AM, Lokesh Vutla wrote:
-> +linux-omap, linux-arm-kernel, devicetree
-> On Friday 19 September 2014 03:16 PM, Lokesh Vutla wrote:
->> On some Soc's RTC is powered by an external power regulator.
->> e.g. RTC on DRA7 SoC. Make the OMAP RTC driver support a
->> power regulator.
->> And also making the driver as module_platform_driver to
->> support probe deferal.
->>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->> ---
->> Tested on DRA7. Logs here: http://fpaste.org/134804/11200041/
+Hi
 
-Is that the only platform using rtc-omap.c?
+On Fri, Sep 19, 2014 at 7:47 AM, Mark yao <mark.yao@rock-chips.com> wrote:
+[snip]
+> +static int rockchip_drm_bind(struct device *dev)
+> +{
+> +       return drm_platform_init(&rockchip_drm_driver, to_platform_device(dev));
 
->>
->>  Documentation/devicetree/bindings/rtc/rtc-omap.txt |  3 +++
->>  drivers/rtc/rtc-omap.c                             | 28 ++++++++++++++++++++--
->>  2 files changed, 29 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->> index 5a0f02d..c9f963a 100644
->> --- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->> +++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
->> @@ -10,6 +10,9 @@ Required properties:
->>  - interrupts: rtc timer, alarm interrupts in order
->>  - interrupt-parent: phandle for the interrupt controller
->>  
->> +Optional Properties:
->> + - rtc-supply : phandle to the regulator device tree node if needed.
->> +
->>  Example:
->>  
->>  rtc@1c23000 {
->> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
->> index 21142e6..4473d1d 100644
->> --- a/drivers/rtc/rtc-omap.c
->> +++ b/drivers/rtc/rtc-omap.c
->> @@ -24,6 +24,7 @@
->>  #include <linux/of_device.h>
->>  #include <linux/pm_runtime.h>
->>  #include <linux/io.h>
->> +#include <linux/regulator/consumer.h>
->>  
->>  /* The OMAP1 RTC is a year/month/day/hours/minutes/seconds BCD clock
->>   * with century-range alarm matching, driven by the 32kHz clock.
->> @@ -121,6 +122,7 @@
->>  #define OMAP_RTC_HAS_32KCLK_EN		BIT(2)
->>  
->>  static void __iomem	*rtc_base;
+Please avoid drm_platform_*() usage. We're about to drop all the
+drm_bus midlayers. See the tegra driver how to do it, but basically
+just this:
 
-^^ this can easily be removed by allocating data in probe.
+struct drm_device *ddev;
 
->> +static struct regulator	*rtc_reg;
+ddev = drm_dev_alloc(&rockchip_drm_driver, &to_platform_device(dev)->dev);
+if (!ddev)
+        return -ENOMEM;
 
-So, two instances cannot have different RTC supplies? we dont need to
-do this.
+r = drm_dev_set_unique(ddev, dev_name(&ddev->dev));
+if (r < 0) {
+        drm_dev_unref(ddev);
+        return r;
+}
 
->>  
->>  #define rtc_read(addr)		readb(rtc_base + (addr))
->>  #define rtc_write(val, addr)	writeb(val, rtc_base + (addr))
->> @@ -372,11 +374,12 @@ static const struct of_device_id omap_rtc_of_match[] = {
->>  };
->>  MODULE_DEVICE_TABLE(of, omap_rtc_of_match);
->>  
->> -static int __init omap_rtc_probe(struct platform_device *pdev)
->> +static int omap_rtc_probe(struct platform_device *pdev)
->>  {
->>  	struct resource		*res;
->>  	struct rtc_device	*rtc;
->>  	u8			reg, new_ctrl;
->> +	int			ret;
->>  	const struct platform_device_id *id_entry;
->>  	const struct of_device_id *of_id;
->>  
->> @@ -402,6 +405,23 @@ static int __init omap_rtc_probe(struct platform_device *pdev)
->>  		return -ENOENT;
->>  	}
->>  
->> +	rtc_reg =  devm_regulator_get_optional(&pdev->dev, "rtc");
->> +	if (IS_ERR(rtc_reg)) {
->> +		if (PTR_ERR(rtc_reg) == -EPROBE_DEFER) {
->> +			dev_err(&pdev->dev, "regulator not ready, retry\n");
->> +			return -EPROBE_DEFER;
->> +		}
->> +		rtc_reg = NULL;
->> +	}
->> +
->> +	if (rtc_reg) {
->> +		ret = regulator_enable(rtc_reg);
->> +		if (ret) {
->> +			dev_dbg(&pdev->dev, "regulator enable failed\n");
->> +			return ret;
->> +		}
->> +	}
->> +
+r = drm_dev_register(ddev);
+if (r < 0) {
+        drm_dev_unref(ddev);
+        return r;
+}
 
-Do you have a specific voltage you need for your rtc device?
+> +}
+> +
+> +static void rockchip_drm_unbind(struct device *dev)
+> +{
+> +       drm_put_dev(dev_get_drvdata(dev));
 
->>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>  	rtc_base = devm_ioremap_resource(&pdev->dev, res);
->>  	if (IS_ERR(rtc_base))
->> @@ -517,6 +537,9 @@ static int __exit omap_rtc_remove(struct platform_device *pdev)
->>  	pm_runtime_put_sync(&pdev->dev);
->>  	pm_runtime_disable(&pdev->dev);
->>  
->> +	if (rtc_reg)
->> +		regulator_disable(rtc_reg);
->> +
->>  	return 0;
->>  }
->>  
->> @@ -565,6 +588,7 @@ static void omap_rtc_shutdown(struct platform_device *pdev)
->>  
->>  MODULE_ALIAS("platform:omap_rtc");
->>  static struct platform_driver omap_rtc_driver = {
->> +	.probe		= omap_rtc_probe,
->>  	.remove		= __exit_p(omap_rtc_remove),
->>  	.shutdown	= omap_rtc_shutdown,
->>  	.driver		= {
->> @@ -576,7 +600,7 @@ static struct platform_driver omap_rtc_driver = {
->>  	.id_table	= omap_rtc_devtype,
->>  };
->>  
->> -module_platform_driver_probe(omap_rtc_driver, omap_rtc_probe);
->> +module_platform_driver(omap_rtc_driver);
+Please use:
 
->>  
->>  MODULE_AUTHOR("George G. Davis (and others)");
->>  MODULE_LICENSE("GPL");
->>
-> 
+struct drm_device *ddev = dev_get_drvdata(dev);
+
+drm_dev_unregister(ddev);
+drm_dev_unref(ddev);
 
 
--- 
-Regards,
-Nishanth Menon
+Thanks
+David
