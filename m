@@ -1,253 +1,36 @@
-From: Jonathan Richardson <jonathar@broadcom.com>
-Subject: Re: [PATCH 2/6] clk: Clock driver support for Broadcom Cygnus SoC
-Date: Thu, 18 Sep 2014 16:43:32 -0700
-Message-ID: <541B6E24.7020800@broadcom.com>
-References: <jonathar@broadcom.com> <1410897497-27527-1-git-send-email-jonathar@broadcom.com> <1410897497-27527-3-git-send-email-jonathar@broadcom.com> <20140917004753.GJ14191@leverpostej>
+From: Jon Masters <jcm@redhat.com>
+Subject: Re: [PATCH v8 1/4] pci:host: APM X-Gene PCIe host controller driver
+Date: Thu, 18 Sep 2014 20:21:30 -0400
+Message-ID: <541B770A.8070502@redhat.com>
+References: <1410476266-29426-1-git-send-email-tinamdar@apm.com> <1410476266-29426-2-git-send-email-tinamdar@apm.com> <20140912091816.GU27864@e106497-lin.cambridge.arm.com> <CACoXjckWYhe=PpWE+xYSC9Q72FyAq__3uUh2gGeGtgpC5SrpzQ@mail.gmail.com> <20140917160337.GA15261@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140917004753.GJ14191@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, JD Zheng <jdzheng@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140917160337.GA15261@e104818-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Tanmay Inamdar <tinamdar@apm.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 14-09-16 05:47 PM, Mark Rutland wrote:
-> On Tue, Sep 16, 2014 at 08:58:13PM +0100, Jonathan Richardson wrote:
->> The iProc clock driver controls PLL's common across iProc chips. The
-> 
-> Nit: s/PLL's/PLLs/ (we aren't greengrocers [1]).
+On 09/17/2014 12:03 PM, Catalin Marinas wrote:
 
-Will fix.
+> So for arm64 currently we have some hooks in dma-mapping.c to intercept
+> when a device is added to a bus. What I need to do though is check
+> recursively whether the parent (bus) had the 'dma-coherent' property
+> (pointed out by Jon). I think something like this would do (not tested):
 
-> 
->> cygnus driver controls cygnus specific features and variations.
->>
->> Reviewed-by: Ray Jui <rjui@broadcom.com>
->> Tested-by: Jonathan Richardson <jonathar@broadcom.com>
->> Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
->> Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
->> ---
->>  drivers/clk/Makefile         |    1 +
->>  drivers/clk/bcm/Makefile     |    2 +
->>  drivers/clk/bcm/clk-cygnus.c | 1179 ++++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/bcm/clk-iproc.c  |  446 ++++++++++++++++
->>  4 files changed, 1628 insertions(+)
->>  create mode 100644 drivers/clk/bcm/clk-cygnus.c
->>  create mode 100644 drivers/clk/bcm/clk-iproc.c
->  
-> [...]
-> 
->> +/*
->> + * Enable clocks controlled through the top clock gating control.
->> + *
->> + * @param state true = enable clock, false = disable clock
->> + */
->> +static void cygnus_clkgate_enable(void __iomem *clkgate_reg,
->> +       enum cygnus_top_clk_gating_ctrl_offsets offset, bool state)
->> +{
->> +       u32 val = readl(clkgate_reg);
->> +
->> +       /* Enable or disable the clock. */
-> 
-> This function is misnamed if it does both, and 'state' is not a very
-> descriptive name.
+We've got a patch now that I posted internally and we've tested. I've
+asked Mark Salter to send it upstream (but hey, you'll probably just
+want to switch the default over to recurse up the tree and then simply
+add a new notifier register for pci_bus_type). For this stuff to work,
+we need v10 of the APM X-Gene patches because (as I noticed earlier when
+going through their code and testing on a board with an actual card -
+and a modified devicetree node for the PCI root) that's the point they
+add a call to setup the root of_nodes correctly via pci_scan_root_bus.
+Prior to that the trivially obvious patch for dma-coherent doesn't work.
+Today, there are two platform PCIe devices that do it right, plus the
+latest APM rev of their driver just posted.
 
-Will fix.
+Jon.
 
-> 
->> +       if (state)
->> +               val |= 1 << offset;
->> +       else
->> +               val &= ~(1 << offset);
->> +
->> +       writel(val, clkgate_reg);
->> +}
->> +
->> +/*
->> + * Powers on/off the MIPI GENPLL using CRMU_PLL_AON_CTRL register.
->> + *
->> + * @param state true to power on PLL, false to power off
->> + */
->> +static void cygnus_mipi_genpll_poweron(void __iomem *pll_ctrl_reg,
->> +       bool state)
->> +{
->> +       u32 val;
->> +       u32 pll_ldo_on = ((1 << ASIU_MIPI_GENPLL_PWRON_SHIFT) |
->> +               (1 << ASIU_MIPI_GENPLL_PWRON_PLL_SHIFT) |
->> +               (1 << ASIU_MIPI_GENPLL_PWRON_BG_SHIFT)  |
->> +               (1 << ASIU_MIPI_GENPLL_PWRON_LDO_SHIFT));
->> +
->> +       val = readl(pll_ctrl_reg);
->> +
->> +       /*
->> +        * Set PLL on/off. Set input isolation mode to 1 when disabled, 0 when
->> +        * enabled.
->> +        */
-> 
-> As with cygnus_clkgate_enable, this function is misnamed and 'state' is
-> a confusing parameter name.
-
-Will fix.
-
-> 
->> +       if (state) {
->> +               val |= pll_ldo_on;
->> +               val &= ~(1 << ASIU_MIPI_GENPLL_ISO_IN_SHIFT);
->> +       } else {
->> +               val &= ~pll_ldo_on;
->> +               val |= 1 << ASIU_MIPI_GENPLL_ISO_IN_SHIFT;
->> +       }
->> +
->> +       writel(val, pll_ctrl_reg);
->> +}
->> +
->> +/*
->> + * Powers on/off the audio PLL using CRMU_PLL_AON_CTRL register.
->> + *
->> + * @param state true to power on PLL, false to power off
->> + */
->> +static void cygnus_audio_genpll_poweron(void __iomem *pll_ctrl_reg,
->> +       bool state)
->> +{
->> +       u32 val;
->> +       u32 pll_ldo_on = ((1 << ASIU_AUDIO_GENPLL_PWRON_PLL_SHIFT) |
->> +               (1 << ASIU_AUDIO_GENPLL_PWRON_BG_SHIFT) |
->> +               (1 << ASIU_AUDIO_GENPLL_PWRON_LDO_SHIFT));
->> +
->> +       val = readl(pll_ctrl_reg);
->> +
->> +       /*
->> +        * Set PLL on/off. Set input isolation mode to 1 when disabled, 0 when
->> +        * enabled.
->> +        */
-> 
-> Misnamed function, confusing parameter name.
-
-Will fix.
-
-> 
->> +       if (state) {
->> +               val |= pll_ldo_on;
->> +               val &= ~(1 << ASIU_AUDIO_GENPLL_ISO_IN);
->> +       } else {
->> +               val &= ~pll_ldo_on;
->> +               val |= 1 << ASIU_AUDIO_GENPLL_ISO_IN;
->> +       }
->> +
->> +       writel(val, pll_ctrl_reg);
->> +}
-> 
-> [...]
-> 
->> +static __init struct clk *cygnus_clock_init(struct device_node *node,
->> +       const struct clk_ops *ops)
->> +{
->> +       u32 channel = 0;
->> +       struct clk *clk;
->> +       struct cygnus_clk *cygnus_clk;
->> +       const char *clk_name = node->name;
->> +       const char *parent_name;
->> +       struct clk_init_data init;
->> +       int rc;
->> +
->> +       pr_debug("Clock name %s\n", node->name);
->> +
->> +       of_property_read_u32(node, "channel", &channel);
->> +       cygnus_clk = kzalloc(sizeof(*cygnus_clk), GFP_KERNEL);
->> +       if (WARN_ON(!cygnus_clk))
->> +               return NULL;
->> +
->> +       cygnus_clk->state = CLK_DISABLED;
->> +
->> +       /* Read base address from device tree and map to virtual address. */
->> +       cygnus_clk->regs_base = of_iomap(node, CYGNUS_CLK_BASE_REG);
->> +       if (WARN_ON(!cygnus_clk->regs_base))
->> +               goto err_alloc;
->> +
->> +       /* Read optional base addresses for PLL control and clock gating. */
->> +       cygnus_clk->clock_gate_ctrl_reg = of_iomap(node,
->> +               CYGNUS_CLK_GATE_CTRL_REG);
->> +       cygnus_clk->pll_ctrl_reg = of_iomap(node, CYGNUS_PLL_CTRL_REG);
->> +
->> +       of_property_read_u32(node, "channel", &channel);
-> 
-> Why do we read this twice?
-
-Missed that one. Will fix.
-
-> 
->> +       cygnus_clk->chan = channel;
->> +       of_property_read_string(node, "clock-output-names", &clk_name);
-> 
-> What happens if this is missing from the dt?
-
-It will (and does) fail and uses the name of the DT node instead. Please
-see default value at beginning of function:
-
-const char *clk_name = node->name;
-
-> 
->> +
->> +       /*
->> +        * Internal divider is optional and used for PLL derived clocks with
->> +        * hardcoded dividers.
->> +        */
->> +       cygnus_clk->internal_div = CLK_RATE_NO_DIV;
->> +       of_property_read_u32(node, "div", &cygnus_clk->internal_div);
->> +
->> +       init.name = clk_name;
->> +       init.ops = ops;
->> +       init.flags = CLK_GET_RATE_NOCACHE;
->> +       parent_name = of_clk_get_parent_name(node, 0);
->> +       init.parent_names = &parent_name;
->> +       init.num_parents = 1;
->> +
->> +       cygnus_clk->hw.init = &init;
->> +
->> +       clk = clk_register(NULL, &cygnus_clk->hw);
->> +       if (WARN_ON(IS_ERR(clk)))
->> +               goto err_unmap;
->> +
->> +       rc = of_clk_add_provider(node, of_clk_src_simple_get, clk);
->> +       if (WARN_ON(IS_ERR_VALUE(rc)))
->> +               goto err_unregister;
->> +
->> +       rc = clk_register_clkdev(clk, clk_name, NULL);
->> +       if (WARN_ON(IS_ERR_VALUE(rc)))
->> +               goto err_provider;
->> +
->> +       return clk;
->> +
->> +err_provider:
->> +       of_clk_del_provider(node);
->> +
->> +err_unregister:
->> +       clk_unregister(clk);
->> +
->> +err_unmap:
->> +       iounmap(cygnus_clk->regs_base);
->> +       iounmap(cygnus_clk->clock_gate_ctrl_reg);
->> +       iounmap(cygnus_clk->pll_ctrl_reg);
->> +
->> +err_alloc:
->> +       kfree(cygnus_clk);
->> +
->> +       return NULL;
->> +}
-> 
-> Thanks,
-> Mark.
-> 
-> [1] http://en.wikipedia.org/wiki/Apostrophe#Superfluous_apostrophes_.28.22greengrocers.27_apostrophes.22.29
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
-
-Thanks for the feedback.
-
-Jon
