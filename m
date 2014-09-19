@@ -1,72 +1,114 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH V3 3/3] mfd: palmas: Add support for optional wakeup
-Date: Fri, 19 Sep 2014 12:46:29 -0700 (PDT)
-Message-ID: <alpine.DEB.2.10.1409191233590.4213@nanos>
-References: <1411067086-16613-1-git-send-email-nm@ti.com> <1411067086-16613-4-git-send-email-nm@ti.com> <alpine.DEB.2.10.1409181749170.4206@nanos> <20140919030333.GA6088@kahuna> <alpine.DEB.2.10.1409190710320.5612@nanos> <20140919161927.GA28613@kahuna>
- <alpine.DEB.2.10.1409191027330.5612@nanos> <20140919191649.GQ14505@atomide.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140919191649.GQ14505-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v6 2/5] usb: gadget: pxa27x_udc: add devicetree support
+Date: Fri, 19 Sep 2014 21:46:23 +0200
+Message-ID: <1411155986-14895-2-git-send-email-robert.jarzmik@free.fr>
+References: <1411155986-14895-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411155986-14895-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 19 Sep 2014, Tony Lindgren wrote:
-> * Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> [140919 10:37]:
-> >From hardware point of view the wake-up events behave like interrupts
-> and could also be used as the only interrupt in some messed up cases.
-> That avoids all kinds of custom APIs from driver point.
-> 
-> The re-entrancy problem we've most likely had ever since we enabled
-> the PRCM interrupts, and maybe that's why I did not even consider
-> that part. I think before that we were calling the driver interrupt
-> after waking up from the PM code..
-> 
-> Anyways, how about the following to deal with the re-entrancy problem:
-> 
-> 1. The wake-up interrupt handler must have a separate interrupt
->    handler that just calls tasklet_schedule()
-> 
-> 2. The device interrupt handler also just calls tasklet_schedule()
-> 
-> 3. The tasklet then does pm_runtime_get, handles the registers, and
->    so on.
-> 
-> Or would we still have a re-entrancy problem somewhere else with
-> that?
+Add support for device-tree device discovery. If devicetree is not
+provided, fallback to legacy platform data "discovery".
 
-Why on earth are you wanting tasklets in there? That's just silly,
-really.
+Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-The wakeup handler is supposed to bring the thing out of deep sleep
-and nothing else. All you want it to do is to mask itself and save the
-information that the real device irq is pending.
+---
+Since V1: change OF id mrvl,pxa27x_udc -> marvell,pxa27x-udc
+          This is a consequence of other DT reviews on the marvell
+          namings.
+Since V2: address Mark's comments:
+            - wildcard pxa27x becomes pxa270
+            - pullup gpio is described as standard dt gpio
+            - bool XXX_probe_dt becomes int XXX_probe_dt
+Since v5: split out into 2 patches, this one being the second
+---
+ drivers/usb/gadget/udc/pxa27x_udc.c | 44 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
-A stub handler for the wakeup irq is enough. We can have that in the
-irq/pm core and all it would do is simply:
+diff --git a/drivers/usb/gadget/udc/pxa27x_udc.c b/drivers/usb/gadget/udc/pxa27x_udc.c
+index 0e356c0..42f4929 100644
+--- a/drivers/usb/gadget/udc/pxa27x_udc.c
++++ b/drivers/usb/gadget/udc/pxa27x_udc.c
+@@ -26,6 +26,8 @@
+ #include <linux/prefetch.h>
+ #include <linux/byteorder/generic.h>
+ #include <linux/platform_data/pxa2xx_udc.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ 
+ #include <linux/usb.h>
+ #include <linux/usb/ch9.h>
+@@ -2405,6 +2407,41 @@ static struct pxa_udc memory = {
+ 	}
+ };
+ 
++static struct of_device_id udc_pxa_dt_ids[] = {
++	{ .compatible = "marvell,pxa270-udc" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, udc_pxa_dt_ids);
++
++/**
++ * pxa_udc_probe_dt - device tree specific probe
++ * @pdev: platform data
++ * @udc: pxa_udc structure to fill
++ *
++ * Fills udc from platform data out of device tree.
++ *
++ * Returns 0 if DT found, 1 if DT not found, and <0 on error
++ */
++static int pxa_udc_probe_dt(struct platform_device *pdev, struct pxa_udc *udc)
++{
++	struct device_node *np = pdev->dev.of_node;
++	const struct of_device_id *of_id =
++			of_match_device(udc_pxa_dt_ids, &pdev->dev);
++	u32 gpio_pullup;
++	enum of_gpio_flags flags;
++
++	if (!np || !of_id)
++		return 1;
++	pdev->id = -1;
++
++	gpio_pullup = of_get_gpio_flags(np, 0, &flags);
++	if (gpio_pullup >= 0) {
++		udc->gpio_pullup = gpio_pullup;
++		udc->gpio_pullup_inverted = (flags & OF_GPIO_ACTIVE_LOW);
++	}
++	return 0;
++}
++
+ /**
+  * pxa_udc_probe_pdata - legacy platform data probe
+  * @pdev: platform device
+@@ -2433,7 +2470,11 @@ static int pxa_udc_probe(struct platform_device *pdev)
+ 	struct pxa_udc *udc = &memory;
+ 	int retval = 0;
+ 
+-	pxa_udc_probe_pdata(pdev, udc);
++	retval = pxa_udc_probe_dt(pdev, udc);
++	if (retval < 0)
++		return retval;
++	if (retval > 0)
++		pxa_udc_probe_pdata(pdev, udc);
+ 
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!regs)
+@@ -2633,6 +2674,7 @@ static struct platform_driver udc_driver = {
+ 	.driver		= {
+ 		.name	= "pxa27x-udc",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(udc_pxa_dt_ids),
+ 	},
+ 	.probe		= pxa_udc_probe,
+ 	.remove		= pxa_udc_remove,
+-- 
+2.0.0.rc2
 
-irqreturn_t handle_jinxed_wakeup_irq(unsigned irq, void *dev_id)
-{
-	unsigned device_irq = get_dev_irq(dev_id);
-
-	force_mask(irq);
-	set_irq_pending(device_irq);
-	return HANDLED;	
-}
-
-So on resume_device_irqs() the real device interrupt gets reenabled
-and unmasked (if it was masked) and the interrupt gets resent either
-in hardware (level or retrigger) or by the software resend mechanism.
-
-That completely avoids tasklets, reentrant irq handlers and all other
-crap which might be required.
-
-Thanks,
-
-	tglx
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
