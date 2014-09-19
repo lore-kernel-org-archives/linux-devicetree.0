@@ -1,161 +1,62 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V3 3/3] mfd: palmas: Add support for optional wakeup
-Date: Fri, 19 Sep 2014 11:19:27 -0500
-Message-ID: <20140919161927.GA28613@kahuna>
-References: <1411067086-16613-1-git-send-email-nm@ti.com>
- <1411067086-16613-4-git-send-email-nm@ti.com>
- <alpine.DEB.2.10.1409181749170.4206@nanos>
- <20140919030333.GA6088@kahuna>
- <alpine.DEB.2.10.1409190710320.5612@nanos>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH 1/3] watchdog: qcom: add support for KPSS WDT
+Date: Fri, 19 Sep 2014 11:25:50 -0500
+Message-ID: <20140919162550.GI3749@joshc.qualcomm.com>
+References: <cover.1411078425.git.joshc@codeaurora.org>
+ <32d17907ad1dfdcafe4e76f33adc2ff22631cd28.1411078425.git.joshc@codeaurora.org>
+ <541B97CD.60400@roeck-us.net>
+ <20140919032416.GE3749@joshc.qualcomm.com>
+ <541BA5F7.1030704@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.10.1409190710320.5612@nanos>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: lee.jones@linaro.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>, Mark Brown <broonie@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, LAK <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@linaro.org>
+In-Reply-To: <541BA5F7.1030704@roeck-us.net>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08:37-20140919, Thomas Gleixner wrote:
-> On Thu, 18 Sep 2014, Nishanth Menon wrote:
-> > On 17:57-20140918, Thomas Gleixner wrote:
-> > 
-> > I suppose I can improve the commit message to elaborate this better?
-> > Will that help?
+On Thu, Sep 18, 2014 at 08:41:43PM -0700, Guenter Roeck wrote:
+> On 09/18/2014 08:24 PM, Josh Cartwright wrote:
+> >On Thu, Sep 18, 2014 at 07:41:17PM -0700, Guenter Roeck wrote:
+> >>On 09/18/2014 03:26 PM, Josh Cartwright wrote:
+> >>>Add a driver for the watchdog timer block found in the Krait Processor
+> >>>Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
+> >>>
+> >>>Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> >>
+> >>Hi Josh,
+> >>
+> >>comments inline.
+> >
+> >Thanks for taking a look!
+> >
+[..]
+> >>>+	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
+> >>
+> >>That leaves you with no default timeout if timeout-sec is not set in devicetree,
+> >>which if I understand the code correctly might result in an immediate reset.
+> >>Is this really what you want to happen ?
+> >
+> >I think I'd like to handle timeout-sec being unspecified as an error at
+> >probe.  If someone explicitly sets timeout-sec = <0>, then they get what
+> >they ask for.  I'll take another look to see how to make this happen.
+> >
 > 
-> You also want to improve the comment in the empty handler.
-OK. will do the same. Thanks for suggesting.
+> Hmm.. kind of unusual. Usual would be to initialize the timeout together
+> with min_timeout / max_timeout above and only force the user to specify
+> a value if the default timeout is not desirable. You don't really gain
+> anything by making timeout-sec mandatory.
 
-> 
-> > > 
-> > > > +	 */
-> > > > +	return IRQ_NONE;
-> 
-> And it still does not explain WHY you think that returning IRQ_NONE is
-> the right thing to do here. You actually handle the interrupt, right?
-> Just because the handler is an NOP does not mean you did not handle
-> it.
+Making timeout-sec mandatory makes it so I don't have to decide what a
+"sane default" is. :)
 
-Hmm.. My motivation for IRQ_NONE was because this specific handler does
-not handle the interrupt. Now, from this discussion, I understand that I
-should rather use IRQ_HANDLED since the event is indeed handled (just
-not here).
-
-Thank you for correcting my understanding. Will update in my next rev
-(once we solve the following discussion)..
-
-> 
-> > > > +static int palmas_i2c_suspend(struct i2c_client *i2c,  pm_message_t mesg)
-> > > > +{
-> > > > +	struct palmas *palmas = i2c_get_clientdata(i2c);
-> > > > +	struct device *dev = &i2c->dev;
-> > > > +
-> > > > +	if (!palmas->wakeirq)
-> > > > +		return 0;
-> > > > +
-> > > > +	if (device_may_wakeup(dev))
-> > > > +		enable_irq(palmas->wakeirq);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int palmas_i2c_resume(struct i2c_client *i2c)
-> > > > +{
-> > > > +	struct palmas *palmas = i2c_get_clientdata(i2c);
-> > > > +	struct device *dev = &i2c->dev;
-> > > > +
-> > > > +	if (!palmas->wakeirq)
-> > > > +		return 0;
-> > > > +
-> > > > +	if (device_may_wakeup(dev))
-> > > > +		disable_irq_nosync(palmas->wakeirq);
-> > > 
-> > > Again, why nosync?
-> > true - nosync is not necessary at here. disable_irq is however necessary
-> > as we are not interested in wakeup events for level changes.
-> > 
-> > We just use the enable/disable to control when we'd want to arm the pin
-> > for waking up from suspend state.
-> 
-> And what is issuing the call to enable/disable_irq_wake()? 
-> 
-> So if that interrupt is not marked proper then you can bring your
-> device into a wont resume state easily
-> 
->        start suspend
->        enable wakeirq
->        disable_device_irqs()
-> 	   if (!iswakeup_irq())
-> 	      disable_irq() // does not mask due to lazy masking
-> 
->        ....
->        wakeirq fires
->           if (irq_is_disabled())
-> 	     mask_irq();
-> 
->        transition into suspend
-> 
-> Now your pinctrl irq is masked at the HW level and wont wake the
-> machine up ever again.
-True.
-
-> 
-> So now looking at that pinctrl irq chip thing, which seems to be
-> designed to handle these kind of wakeups. That thing looks massivly
-> wrong as well, simply because it enforces to use
-> enable_irq/disable_irq().
-> 
-> So because the sole purpose of this chip is to handle the separate
-> wakeup style interrupt, it should actually NOT enable the interrupt in
-> the irq_unmask callback.
-> 
-> Simply because during normal operation nothing is interested in the
-> interrupt and any operation which might enable it (including request
-> irq) is just making the system handle completely pointless interrupts
-> and hoops and loops juggling with enable/disable irq.
-> 
-> So the right thing here is to have an empty unmask function and do the
-> actual unmask only in the irq_set_wake() callback. mask of course
-> needs to do what it says. The point is, that the following sequence of
-> code will just work w/o generating an interrupt on the wakeirq line
-> outside of the wake enabled context.
-> 
-> dev_init()
-> 	request_wakeirq();
-> 
-> suspend()
-> 	if (may_wake())
-> 	   enable_irq_wake();
-> 
-> resume()
-> 	if (may_wake())
-> 	   disable_irq_wake();
-> 
-> The other omap drivers using this have the same issue ... And of
-> course they are subtly different.
-> 
-> The uart one handles the actual device interrupt, which is violating
-> the general rule of possible interrupt reentrancy in the pm-runtime
-> case if the two interrupts are affine to two different cores. Yes,
-> it's protected by a lock and works by chance ....
-> 
-> The mmc one issues a disable_irq_nosync() in the wakeup irq handler
-> itself.
-> 
-> WHY does one driver need that and the other does not? You are not even
-> able to come up with a common scheme for OMAP. I don't want to see the
-> mess others are going to create when this stuff becomes more used.
-> 
-> Thanks,
-> 
-> 	tglx
-
-I think I understand your concern - I request Tony to comment about
-this. I mean, I can try and hook things like uart in other drivers
-(like https://patchwork.kernel.org/patch/4759171/ ), but w.r.t overall
-generic usage guideline wise, I would prefer Tony to comment.
+It's even less clear about what a sane default is looking at the other
+watchdog drivers.  From the drivers I looked at, it ranges any where
+from 30s to 2mins.  Am I just to choose?  Why do these even differ
+between all of the drivers?
 
 -- 
-Regards,
-Nishanth Menon
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
