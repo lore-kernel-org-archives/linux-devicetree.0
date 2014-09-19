@@ -1,86 +1,85 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] regulator: st-pwm: get voltage and duty table from dts
-Date: Fri, 19 Sep 2014 13:22:54 -0700
-Message-ID: <CAD=FV=Vm-XgNvfQjtaXML3_1ROoir5Kv2fosSr94jkcG6K3P6A@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 2/2] dt-bindings: add devicetree bindings for st-pwm regulator
+Date: Fri, 19 Sep 2014 13:29:34 -0700
+Message-ID: <CAD=FV=Utonj4PJXMwbs7pJKOqdr3ztAd62OUabj_uMcYXdZkjg@mail.gmail.com>
 References: <1411113739-1934-1-git-send-email-zyw@rock-chips.com>
-	<1411113739-1934-2-git-send-email-zyw@rock-chips.com>
+	<1411113739-1934-3-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411113739-1934-2-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411113739-1934-3-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Chris,
 
-On Fri, Sep 19, 2014 at 1:02 AM, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Get voltage & duty table from device tree might be better, other platforms can also use this
-> driver without any modify.
+On Fri, Sep 19, 2014 at 1:02 AM, Chris Zhong <zyw@rock-chips.com> wrote:
+> Document the st-pwm regulator
 >
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 >
 > ---
 >
 > Changes in v3:
 > Adviced by Doug Anderson
-> - Make Kconfig & Makefile alphabetical
-> - remove pwm_reg_period from pwm_regulator_data
-> - modify the calculation in pwm_regulator_set_voltage_sel
-> - add length validity check
+> - update the Example
 >
 > Changes in v2:
 > Adviced by Lee Jones
-> - rename the file
-> - remove all the prefix st_
-> - add depend on PWM in Kconfig
+> - rename the documentation
+> Adviced by Doug Anderson
+> - update the example
+> Adviced by Mark Rutland
+> - remove pwm-reg-period
 >
->  drivers/regulator/Kconfig         |   13 +--
->  drivers/regulator/Makefile        |    2 +-
->  drivers/regulator/pwm-regulator.c |  197 +++++++++++++++++++++++++++++++++++++
->  drivers/regulator/st-pwm.c        |  190 -----------------------------------
->  4 files changed, 205 insertions(+), 197 deletions(-)
->  create mode 100644 drivers/regulator/pwm-regulator.c
->  delete mode 100644 drivers/regulator/st-pwm.c
+>  .../bindings/regulator/pwm-regulator.txt           |   29 ++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/pwm-regulator.txt
 >
-> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-> index fb32bab..320751a 100644
-> --- a/drivers/regulator/Kconfig
-> +++ b/drivers/regulator/Kconfig
-> @@ -449,6 +449,13 @@ config REGULATOR_PFUZE100
->           Say y here to support the regulators found on the Freescale
->           PFUZE100/PFUZE200 PMIC.
->
-> +config REGULATOR_PWM
-> +       tristate "PWM voltage regulator"
-> +       depends on PWM
-> +       help
-> +         This driver supports PWM controlled voltage regulators. Config PWM
-> +         duty can increasing or decreasing the voltage.
+> diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+> new file mode 100644
+> index 0000000..eb46f7b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+> @@ -0,0 +1,29 @@
+> +pwm regulator bindings
+> +
+> +Required properties:
+> +- compatible: Should be "pwm-regulator"
+> +- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
+> +- voltage-table: voltage and duty table, include 2 merbers in each set of
+> +  brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
+> +
+> +Any property defined as part of the core regulator binding defined in
+> +regulator.txt can also be used.
+> +
+> +Example:
+> +       pwm_regulator {
+> +               compatible = "pwm-regulator;
+> +               pwms = <&pwm1 0 8448 0>;
+> +
+> +               voltage-table = <1114000 0>,
+> +                               <1095000 10>,
+> +                               <1076000 20>,
+> +                               <1056000 30>,
+> +                               <1036000 40>,
+> +                               <1016000 50>;
+> +
+> +               regulator-always-on;
+> +               regulator-boot-on;
 
-Slightly more proper English:
-        This driver supports PWM controlled voltage regulators. PWM
-        duty cycle can increase or decrease the voltage.
+I think Mark suggested that the two properties above were not useful
+on a regulator that is always enabled.  That seems to match the code:
 
+/* If we don't know then assume that the regulator is always on */
+if (!rdev->desc->ops->is_enabled)
+  return 1;
 
-> +static struct regulator_desc pwm_regulator_desc = {
-> +       .name           = "pwm-regulator",
-> +       .ops            = &pwm_regulator_voltage_ops,
-> +       .type           = REGULATOR_VOLTAGE,
-> +       .owner          = THIS_MODULE,
-> +       .supply_name    = "pwm",
-> +};
+...so I'd remove them from your example...
 
-nit: the pwm_regulator_desc can now be "const".
+Again, if there's no additional feedback you'd need Mark's advice
+about whether he wants a respin.
 
-
-Neither of those is huge.  If you get no other feedback, Mark could
-maybe give advice on whether you should spin your series or whether
-he'd like to fix them when he applies.
-
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Doug Anderson <dianders@chromium.org>
