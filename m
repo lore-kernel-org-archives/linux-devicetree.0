@@ -1,17 +1,19 @@
-Return-Path: <srv_hongzhou.yang@mediatek.com>
-From: <srv_hongzhou.yang@mediatek.com>
-Subject: [PATCH 2/4] ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
-Date: Fri, 19 Sep 2014 19:48:24 +0800
-Message-ID: <1411127306-13677-3-git-send-email-srv_hongzhou.yang@mediatek.com>
-In-Reply-To: <1411127306-13677-1-git-send-email-srv_hongzhou.yang@mediatek.com>
-References: <1411127306-13677-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+Return-Path: <srv_yingjoe.chen@mediatek.com>
+From: Joe.C <srv_yingjoe.chen@mediatek.com>
+Subject: [PATCH 2/4][RESEND] ARM: mediatek: Add Pinctrl/GPIO driver for mt8135.
+Date: Fri, 19 Sep 2014 20:54:39 +0800
+Message-ID: <1411131281-17698-2-git-send-email-srv_yingjoe.chen@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, =Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, "Joe.C" <yingjoe.chen@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: srv_heupstream@mediatek.com, yingjoe.chen@gmail.com, yingjoe.chen@mediatek.com, hc.yen@mediatek.com, eddie.huang@mediatek.com, nathan.chung@mediatek.com, yh.chen@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
 From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+
+[It seems Hongzhou's mail account have some problem, and the most
+important part of the series is missing. Resend to see if I have
+better luck]
 
 The mediatek SoCs have GPIO controller that handle both the muxing
 and GPIOs.
