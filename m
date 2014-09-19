@@ -1,59 +1,51 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH 2/2] GPIO: 74xx-mmio: Add DT bindings documentation
-Date: Fri, 19 Sep 2014 11:40:04 +0400
-Message-ID: <1411112404-16040-3-git-send-email-shc_work@mail.ru>
-References: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org
-Cc: Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v3 0/2] regulator: get voltage & duty table from dts for st-pwm
+Date: Fri, 19 Sep 2014 16:02:17 +0800
+Message-ID: <1411113739-1934-1-git-send-email-zyw@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dianders@chromium.org, heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, lee.jones@linaro.org, broonie@kernel.org, Chris Zhong <zyw@rock-chips.com>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding documentation for the 74xx-mmio GPIO driver.
+get voltage & duty table from device tree might be better, other platforms can also use this
+driver without any modify.
+Tested on a rk3288 sdk board as logic voltage regulator.
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
----
- .../devicetree/bindings/gpio/gpio-74xx-mmio.txt    | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
+Changes in v3:
+Adviced by Doug Anderson
+- Make Kconfig & Makefile alphabetical
+- remove pwm_reg_period from pwm_regulator_data
+- modify the calculation in pwm_regulator_set_voltage_sel
+- add length validity check
+Adviced by Doug Anderson
+- update the Example
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
-new file mode 100644
-index 0000000..202dce7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
-@@ -0,0 +1,30 @@
-+* 74XX MMIO GPIO driver
-+
-+Required properties:
-+- compatible: Should contain one of the following:
-+   "ti,74ahc1g125": for 74AHC1G125 (1-bit Input),
-+   "ti,74auc1g174": for 74AUC1G74 (1-bit Output),
-+   "ti,74lvc2g125": for 74LVC2G125 (2-bit Input),
-+   "ti,74hc74":     for 74HC74 (2-bit Output),
-+   "ti,74hc125":    for 74HC125 (4-bit Input),
-+   "ti,74hc175":    for 74HC175 (4-bit Output),
-+   "ti,74hc365":    for 74HC365 (6-bit Input),
-+   "ti,74hc174":    for 74HC174 (6-bit Output),
-+   "ti,74hc244":    for 74HC244 (8-bit Input),
-+   "ti,74hc273":    for 74HC273 (8-bit Output),
-+   "ti,74ac1624":   for 74AC1624 (16-bit Input),
-+   "ti,74ac16374":  for 74AC16374 (16-bit Output).
-+- reg: Physical base address and length where IC resides.
-+- gpio-controller: Marks the device node as a gpio controller.
-+- #gpio-cells: Should be two. The first cell is the pin number and
-+   the second cell is used to specify the GPIO polarity:
-+    0 = Active High,
-+    1 = Active Low.
-+
-+Example:
-+	ctrl: gpio@30008004 {
-+		compatible = "ti,74hc174";
-+		reg = <0x30008004 0x1>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
+Changes in v2:
+Adviced by Lee Jones
+- rename the file
+- remove all the prefix st_
+- add depend on PWM in Kconfig
+Adviced by Lee Jones
+- rename the documentation
+Adviced by Doug Anderson
+- update the example
+Adviced by Mark Rutland
+- remove pwm-reg-period
+
+Chris Zhong (2):
+  regulator: st-pwm: get voltage and duty table from dts
+  dt-bindings: add devicetree bindings for st-pwm regulator
+
+ .../bindings/regulator/pwm-regulator.txt           |   29 +++
+ drivers/regulator/Kconfig                          |   13 +-
+ drivers/regulator/Makefile                         |    2 +-
+ drivers/regulator/pwm-regulator.c                  |  197 ++++++++++++++++++++
+ drivers/regulator/st-pwm.c                         |  190 -------------------
+ 5 files changed, 234 insertions(+), 197 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+ create mode 100644 drivers/regulator/pwm-regulator.c
+ delete mode 100644 drivers/regulator/st-pwm.c
+
 -- 
-1.8.5.5
-
+1.7.9.5
