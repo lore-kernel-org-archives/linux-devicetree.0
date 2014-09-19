@@ -1,243 +1,127 @@
-From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki@elproma.com.pl>
-Subject: Re: [PATCH 1/4] serial: mxs-auart: use mctrl_gpio helpers for handling
- modem signals (v2.2c)
-Date: Fri, 19 Sep 2014 20:13:30 +0200
-Message-ID: <541C724A.8030207@elproma.com.pl>
-References: <1411150136-30791-1-git-send-email-j.uzycki@elproma.com.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1411150136-30791-1-git-send-email-j.uzycki@elproma.com.pl>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-serial@vger.kernel.org, devicetree@vger.kernel.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v5 00/11] PM / Domains: Generic OF-based support
+Date: Fri, 19 Sep 2014 20:27:33 +0200
+Message-ID: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Please discard this and before resend. Sorry.
-I've used bad domain for linux-arm-kernel list...
-The next one is ok.
+Changes in v5:
+	- Converted dev_pm_domain_detach() to a void function
+	- Added a ->detach() callback to the PM domain struct, invoked from the
+	  dev_pm_domain_detach().
+	- Make ACPI and genpd both assign the ->detach() callback at successfull
+	  attachment.
+	- The above changes made it possible to make acpi_pm_domain_detach() to
+	  be static, added a separate patch for that.
 
-best regards
-Janusz
+Changes in v4:
+	- Rebased patch "PM / Domains: Add generic OF-based PM domain look-up" -
+	  and updated the author and the commit message.
+	- Adopted review comments for "PM / Domains: Add APIs to attach/detach
+	  a PM domain for a device".
+	- Updated author and commit message for "ARM: exynos: Move to generic
+	  PM domain DT bindings".
+	- Added some acks and reviewed by tags.
+	- Started to use the "--in-reply-to" option to git-send-email. It should
+	  provide the option to show a better diffstat per patch.
 
-W dniu 2014-09-19 20:08, Janusz Uzycki pisze:
-> Dedicated CTS and RTS pins are unusable together with a lot of other
-> peripherals because they share the same line. Pinctrl is limited.
->
-> Moreover, the AUART controller doesn't handle DTR/DSR/DCD/RI signals,
-> so we have to control them via GPIO.
->
-> This patch permits to use GPIOs to control the CTS/RTS/DTR/DSR/DCD/RI
-> signals.
->
-> Signed-off-by: Janusz Uzycki <j.uzycki@elproma.com.pl>
-> ---
->   .../devicetree/bindings/serial/fsl-mxs-auart.txt   | 10 ++-
->   drivers/tty/serial/Kconfig           |  1 +
->   drivers/tty/serial/mxs-auart.c       | 77 +++++++++++++++++++++-
->   3 files changed, 84 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
-> index 59a40f1..7c408c8 100644
-> --- a/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
-> +++ b/Documentation/devicetree/bindings/serial/fsl-mxs-auart.txt
-> @@ -11,8 +11,13 @@ Required properties:
->   - dma-names: "rx" for RX channel, "tx" for TX channel.
->   
->   Optional properties:
-> -- fsl,uart-has-rtscts : Indicate the UART has RTS and CTS lines,
-> +- fsl,uart-has-rtscts : Indicate the UART has RTS and CTS lines
-> +  for hardware flow control,
->   	it also means you enable the DMA support for this UART.
-> +- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
-> +  line respectively. It will use specified PIO instead of the peripheral
-> +  function pin for the USART feature.
-> +  If unsure, don't specify this property.
->   
->   Example:
->   auart0: serial@8006a000 {
-> @@ -21,6 +26,9 @@ auart0: serial@8006a000 {
->   	interrupts = <112>;
->   	dmas = <&dma_apbx 8>, <&dma_apbx 9>;
->   	dma-names = "rx", "tx";
-> +	cts-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-> +	dsr-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
-> +	dcd-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
->   };
->   
->   Note: Each auart port should have an alias correctly numbered in "aliases"
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 4fe8ca1..90e8516 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -1357,6 +1357,7 @@ config SERIAL_MXS_AUART
->   	depends on ARCH_MXS
->   	tristate "MXS AUART support"
->   	select SERIAL_CORE
-> +	select SERIAL_MCTRL_GPIO if GPIOLIB
->   	help
->   	  This driver supports the MXS Application UART (AUART) port.
->   
-> diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-> index 52d14e3..4690200 100644
-> --- a/drivers/tty/serial/mxs-auart.c
-> +++ b/drivers/tty/serial/mxs-auart.c
-> @@ -38,6 +38,9 @@
->   
->   #include <asm/cacheflush.h>
->   
-> +#include <linux/err.h>
-> +#include "serial_mctrl_gpio.h"
-> +
->   #define MXS_AUART_MAJOR 242
->   #define MXS_AUART_PORTS 5
->   #define MXS_AUART_FIFO_SIZE		16
-> @@ -156,6 +159,8 @@ struct mxs_auart_port {
->   	struct scatterlist rx_sgl;
->   	struct dma_chan	*rx_dma_chan;
->   	void *rx_dma_buf;
-> +
-> +	struct mctrl_gpios	*gpios;
->   };
->   
->   static struct platform_device_id mxs_auart_devtype[] = {
-> @@ -415,8 +420,43 @@ static void mxs_auart_set_mctrl(struct uart_port *u, unsigned mctrl)
->   			ctrl |= AUART_CTRL2_RTS;
->   	}
->   
-> +	/* Does tty layer modify mctrl for input lines
-> +	 * and the code below is required? */
-> +#if 0
->   	s->ctrl = mctrl;
-> +#else
-> +	s->ctrl &= ~(TIOCM_RTS | TIOCM_DTR);
-> +	s->ctrl |= mctrl & (TIOCM_RTS | TIOCM_DTR);
-> +#endif
->   	writel(ctrl, u->membase + AUART_CTRL2);
-> +
-> +	mctrl_gpio_set(s->gpios, mctrl);
-> +}
-> +
-> +/* mxs_auart_modem_status() based on 8250.c,
-> + * similar function could be as serial's helper... */
-> +#define MCTRL_ANY_DELTA        (TIOCM_RI | TIOCM_DSR | TIOCM_CD | TIOCM_CTS)
-> +static u32 mxs_auart_modem_status(struct mxs_auart_port *s, u32 mctrl)
-> +{
-> +	u32 mctrl_diff;
-> +
-> +	mctrl_diff = mctrl ^ s->ctrl;
-> +	s->ctrl = mctrl;
-> +	if (mctrl_diff & MCTRL_ANY_DELTA &&
-> +			/*interrupt_enabled &&*/
-> +			s->port.state != NULL) {
-> +		if (mctrl_diff & TIOCM_RI)
-> +			s->port.icount.rng++;
-> +		if (mctrl_diff & TIOCM_DSR)
-> +			s->port.icount.dsr++;
-> +		if (mctrl_diff & TIOCM_CD)
-> +			uart_handle_dcd_change(&s->port, mctrl & TIOCM_CD);
-> +		if (mctrl_diff & TIOCM_CTS)
-> +			uart_handle_cts_change(&s->port, mctrl & TIOCM_CTS);
-> +
-> +		wake_up_interruptible(&s->port.state->port.delta_msr_wait);
-> +	}
-> +	return mctrl;
->   }
->   
->   static u32 mxs_auart_get_mctrl(struct uart_port *u)
-> @@ -433,7 +473,9 @@ static u32 mxs_auart_get_mctrl(struct uart_port *u)
->   	if (ctrl2 & AUART_CTRL2_RTS)
->   		mctrl |= TIOCM_RTS;
->   
-> -	return mctrl;
-> +	/* should mxs_auart_modem_status() be in interrupt only? */
-> +	return mxs_auart_modem_status(s,
-> +			mctrl_gpio_get(s->gpios, &mctrl));
->   }
->   
->   static int mxs_auart_dma_prep_rx(struct mxs_auart_port *s);
-> @@ -637,7 +679,12 @@ static void mxs_auart_settermios(struct uart_port *u,
->   		ctrl |= AUART_LINECTRL_STP2;
->   
->   	/* figure out the hardware flow control settings */
-> -	if (cflag & CRTSCTS) {
-> +	/*FIXME: DMA for hardware flow control only? */
-> +	if (cflag & CRTSCTS &&
-> +			(IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
-> +					 UART_GPIO_RTS)) ||
-> +			 IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
-> +					 UART_GPIO_CTS)))) {
->   		/*
->   		 * The DMA has a bug(see errata:2836) in mx23.
->   		 * So we can not implement the DMA for auart in mx23,
-> @@ -696,8 +743,14 @@ static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
->   		| AUART_INTR_CTSMIS),
->   			s->port.membase + AUART_INTR_CLR);
->   
-> +	mxs_auart_modem_status(s,
-> +			mctrl_gpio_get(s->gpios, &s->ctrl));
-> +
->   	if (istat & AUART_INTR_CTSMIS) {
-> -		uart_handle_cts_change(&s->port, stat & AUART_STAT_CTS);
-> +		if (IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(s->gpios,
-> +						UART_GPIO_CTS)))
-> +			uart_handle_cts_change(&s->port,
-> +					stat & AUART_STAT_CTS);
->   		writel(AUART_INTR_CTSMIS,
->   				s->port.membase + AUART_INTR_CLR);
->   		istat &= ~AUART_INTR_CTSMIS;
-> @@ -758,6 +811,8 @@ static int mxs_auart_startup(struct uart_port *u)
->   	 */
->   	writel(AUART_LINECTRL_FEN, u->membase + AUART_LINECTRL_SET);
->   
-> +	/* get initial status of modem lines */
-> +	mctrl_gpio_get(s->gpios, &s->ctrl);
->   	return 0;
->   }
->   
-> @@ -1021,6 +1076,14 @@ static int serial_mxs_probe_dt(struct mxs_auart_port *s,
->   	return 0;
->   }
->   
-> +static int mxs_auart_init_gpios(struct mxs_auart_port *s, struct device *dev)
-> +{
-> +	s->gpios = mctrl_gpio_init(dev, 0);
-> +	if (IS_ERR_OR_NULL(s->gpios))
-> +		return -1;
-> +	return 0;
-> +}
-> +
->   static int mxs_auart_probe(struct platform_device *pdev)
->   {
->   	const struct of_device_id *of_id =
-> @@ -1078,6 +1141,11 @@ static int mxs_auart_probe(struct platform_device *pdev)
->   
->   	platform_set_drvdata(pdev, s);
->   
-> +	ret = mxs_auart_init_gpios(s, &pdev->dev);
-> +	if (ret < 0)
-> +		dev_err(&pdev->dev, "%s",
-> +			"Failed to initialize GPIOs. The serial port may not work as expected");
-> +
->   	auart_port[s->port.line] = s;
->   
->   	mxs_auart_reset(&s->port);
-> @@ -1094,6 +1162,7 @@ static int mxs_auart_probe(struct platform_device *pdev)
->   	return 0;
->   
->   out_free_irq:
-> +	mctrl_gpio_free(&pdev->dev, s->gpios);	/*useless?*/
->   	auart_port[pdev->id] = NULL;
->   	free_irq(s->irq, s);
->   out_free_clk:
-> @@ -1112,6 +1181,8 @@ static int mxs_auart_remove(struct platform_device *pdev)
->   
->   	auart_port[pdev->id] = NULL;
->   
-> +	mctrl_gpio_free(&pdev->dev, s->gpios);	/*useless?*/
-> +
->   	clk_put(s->clk);
->   	free_irq(s->irq, s);
->   	kfree(s);
+Changes in v3:
+	- Aligned on terminology, now using "PM domain" in comments and commit
+	- messages/headers.
+	- Improved English and grammar in comments and commit messages/headers.
+	- Adopted proposal from Geert, to have compile-time-check wrapper
+	  functions for the API that adds xlate_simple and xlate_onecell
+	  providers.
+ 	- Renamed "domain_num" to "num_domains", in genpd_onecell_data struct.
+	- Handle non-contiguous arrays for onecell PM domain providers.
+	- Rebased the Exynos patch to follow the new genpd API changes.
+
+
+Changes in v2:
+	- Fix the ACPI patch, it didn't even compile for CONFIG_ACPI.
+	- Updated some comments in code and in commit messages.
+	- Fixed the dev_pm_domain_attach API to handle EPROBE_DEFER properly.
+	- Rebased the ARM Exynos patch.
+	- Added some Tested-by tags.
+
+
+This patchset has a bit of a history and some parts of it has been posted
+earlier.
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/262725.html
+
+In the first revision I intentially didn't increase version number of the
+patches, since I think it would have cause more confusion than clarity.
+
+A summary of changes in V1 and since the last patchset, from the link above:
+	- Instead of letting driver core handling the device to power domain
+	binding/unbinding, follow the behavior of how the ACPI power domain
+	is handled.
+
+
+This is a summary of what these patches are intended to do:
+
+1)
+Add generic power domain OF-based support which also includes APIs to handle
+attach/detach of generic power domains to devices.
+
+2)
+Adding a common API to attach/detach power domains and include support for the
+ACPI and the generic power domain in there.
+
+3)
+>From subsystem level code, at probe/remove, convert from invoking the ACPI
+specific power domain attach/detach functions to the new common attach/detach
+APIs.
+
+4)
+Add support for the AMBA bus to attach/detach power domains, using the new
+common APIs.
+
+5)
+Convert Exynos to use the new generic power domain OF support.
+
+Obviously, there are dependencies througout this patchset, which means if they
+get accepted the all need to go together. It might also be convenient to share
+them through an immutable branch.
+
+
+Tomasz Figa (2):
+  PM / Domains: Add generic OF-based PM domain look-up
+  ARM: exynos: Move to generic PM domain DT bindings
+
+Ulf Hansson (9):
+  PM / Domains: Add a detach callback to the struct dev_pm_domain
+  ACPI / PM: Assign the ->detach() callback when attaching the PM domain
+  PM / Domains: Add APIs to attach/detach a PM domain for a device
+  drivercore / platform: Convert to dev_pm_domain_attach|detach()
+  i2c: core: Convert to dev_pm_domain_attach|detach()
+  mmc: sdio: Convert to dev_pm_domain_attach|detach()
+  spi: core: Convert to dev_pm_domain_attach|detach()
+  amba: Add support for attach/detach of PM domains
+  ACPI / PM: Convert acpi_dev_pm_detach() into a static function
+
+ .../bindings/arm/exynos/power_domain.txt           |  13 +-
+ .../devicetree/bindings/power/power_domain.txt     |  49 ++++
+ arch/arm/mach-exynos/pm_domains.c                  |  78 +-----
+ drivers/acpi/device_pm.c                           |  71 ++---
+ drivers/amba/bus.c                                 |  10 +-
+ drivers/base/platform.c                            |  15 +-
+ drivers/base/power/common.c                        |  52 ++++
+ drivers/base/power/domain.c                        | 289 +++++++++++++++++++++
+ drivers/i2c/i2c-core.c                             |  13 +-
+ drivers/mmc/core/sdio_bus.c                        |   4 +-
+ drivers/spi/spi.c                                  |  12 +-
+ include/linux/acpi.h                               |   2 -
+ include/linux/pm.h                                 |  12 +
+ include/linux/pm_domain.h                          |  52 ++++
+ kernel/power/Kconfig                               |   4 +
+ 15 files changed, 535 insertions(+), 141 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
+
+-- 
+1.9.1
 
