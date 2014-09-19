@@ -1,138 +1,31 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/3] watchdog: qcom: add support for KPSS WDT
-Date: Thu, 18 Sep 2014 20:41:43 -0700
-Message-ID: <541BA5F7.1030704@roeck-us.net>
-References: <cover.1411078425.git.joshc@codeaurora.org> <32d17907ad1dfdcafe4e76f33adc2ff22631cd28.1411078425.git.joshc@codeaurora.org> <541B97CD.60400@roeck-us.net> <20140919032416.GE3749@joshc.qualcomm.com>
+From: ALIM AKHTAR <alim.akhtar@samsung.com>
+Subject: Re: Re: [PATCH v4 6/8] arm64: exynos7: Enable ARMv8 based Exynos7
+ (SoC) support
+Date: Fri, 19 Sep 2014 03:47:17 +0000 (GMT)
+Message-ID: <27421386.12411411098435761.JavaMail.weblogic@epv6ml11>
+Reply-To: alim.akhtar@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140919032416.GE3749@joshc.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: base64
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, NAVEEN KRISHNA CHATRADHI <ch.naveen@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "naveenkrishna.ch@gmail.com" <naveenkrishna.ch@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tomasz.figa@gmail.com" <tomasz.figa@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/2014 08:24 PM, Josh Cartwright wrote:
-> On Thu, Sep 18, 2014 at 07:41:17PM -0700, Guenter Roeck wrote:
->> On 09/18/2014 03:26 PM, Josh Cartwright wrote:
->>> Add a driver for the watchdog timer block found in the Krait Processor
->>> Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
->>>
->>> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
->>
->> Hi Josh,
->>
->> comments inline.
->
-> Thanks for taking a look!
->
-> [..]
->>> +static int qcom_watchdog_probe(struct platform_device *pdev)
->>> +{
->>> +	struct qcom_wdt *wdt;
->>> +	struct resource *res;
->>> +	u32 tmp;
->>> +	int ret;
->>> +
->>> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
->>> +	if (!wdt)
->>> +		return -ENOMEM;
->>> +
->>> +	platform_set_drvdata(pdev, wdt);
->>> +
->>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +	wdt->base = devm_ioremap_resource(&pdev->dev, res);
->>> +	if (IS_ERR(wdt->base))
->>> +		return PTR_ERR(wdt->base);
->>> +
->>> +	ret = of_property_read_u32(pdev->dev.of_node, "clock-frequency", &tmp);
->>> +	if (ret) {
->>> +		dev_err(&pdev->dev, "unable to get clock-frequency\n");
->>> +		return ret;
->>> +	}
->>> +
->>
->> You might want to use a clock property here, and the complete sequence of
->> 	devm_clk_get
->> 	clk_prepare_enable
->> 	clk_disable_unprepare
->> 	clk_get_rate
->
-> Agreed.  I think this would be ideal.  I'll need to take a closer look
-> at how this thing is clocked, and how/if the clocks are currently
-> being modelled.
->
-
-I think you should be able to specify some kind of "fixed" clock.
-Other watchdog drivers use the mechanism; maybe you can find some examples.
-
->>> +	wdt->freq = tmp;
->>> +
->>> +	wdt->wdd.dev = &pdev->dev;
->>> +	wdt->wdd.info = &qcom_wdt_info;
->>> +	wdt->wdd.ops = &qcom_wdt_ops;
->>> +	wdt->wdd.min_timeout = 1;
->>> +	wdt->wdd.max_timeout = 0x10000000U / wdt->freq;
->>
->> As written, wdt->freq can be 0, which results in a nice division by zero here.
->
-> Indeed.  I'll add a check.
->
->>> +	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
->>
->> That leaves you with no default timeout if timeout-sec is not set in devicetree,
->> which if I understand the code correctly might result in an immediate reset.
->> Is this really what you want to happen ?
->
-> I think I'd like to handle timeout-sec being unspecified as an error at
-> probe.  If someone explicitly sets timeout-sec = <0>, then they get what
-> they ask for.  I'll take another look to see how to make this happen.
->
-
-Hmm.. kind of unusual. Usual would be to initialize the timeout together
-with min_timeout / max_timeout above and only force the user to specify
-a value if the default timeout is not desirable. You don't really gain
-anything by making timeout-sec mandatory.
-
->>> +
->>> +	ret = watchdog_register_device(&wdt->wdd);
->>> +	if (ret) {
->>> +		dev_err(&pdev->dev, "failed to register watchdog\n");
->>> +		return ret;
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static const struct of_device_id qcom_wdt_of_table[] = {
->>> +	{ .compatible = "qcom,kpss-wdt-msm8960", },
->>> +	{ .compatible = "qcom,kpss-wdt-apq8064", },
->>> +	{ .compatible = "qcom,kpss-wdt-ipq8064", },
->>> +	{ },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
->>> +
->>> +static struct platform_driver qcom_watchdog_driver = {
->>> +	.probe	= qcom_watchdog_probe,
->>
->> No remove function ?
->>
->> Yes, you don't need it, because the driver can only be built into the kernel,
->> but there is a practical impact: It means the driver must always be built
->> into the kernel even if the image is supposed to be used on different systems,
->> some of which may not support this specific watchdog.
->>
->> Sure, you might say that you don't care about images supporting more than one
->> hardware, but the tendency seems to be multi-target images nowadays.
->
-> This was motivated by the addition of the restart_handler bits in patch
-> 3.  For some reason I was thinking there were race conditions between
-> module unloading/the restart_handler mechanism, but looking at it again,
-> I'm not so sure.  Is it safe to implement these handlers in modules?  If
-> so, I'll revisit this.
->
-Yes, it is safe. To ensure there are no race conditions was one of the reasons
-for implementing the restart handler as notifier call chain.
-
-Guenter
+SGkgQ2F0YWxpbiwNCg0KPiAtLS0tLS0tIE9yaWdpbmFsIE1lc3NhZ2UgLS0tLS0tLQ0KPiBTZW5k
+ZXIgOiBDYXRhbGluIE1hcmluYXM8Y2F0YWxpbi5tYXJpbmFzQGFybS5jb20+DQo+IERhdGUgOiBT
+ZXAgMTksIDIwMTQgMDE6MTggKEdNVCswOTowMCkNCj4gVGl0bGUgOiBSZTogW1BBVENIIHY0IDYv
+OF0gYXJtNjQ6IGV4eW5vczc6IEVuYWJsZSBBUk12OCBiYXNlZCBFeHlub3M3IChTb0MpIHN1cHBv
+cnQNCg0KPiBPbiBGcmksIFNlcCAxMiwgMjAxNCBhdCAwNDoyNjozMFBNICswMTAwLCBOYXZlZW4g
+S3Jpc2huYSBDaGF0cmFkaGkgd3JvdGU6DQo+PiBGcm9tOiBBbGltIEFraHRhciANCj4+IA0KPj4g
+VGhpcyBwYXRjaCBhZGRzIHRoZSBuZWNlc3NhcnkgS2NvbmZpZyBlbnRyaWVzIHRvIGVuYWJsZQ0K
+Pj4gc3VwcG9ydCBmb3IgdGhlIEFSTXY4IGJhc2VkIEV4eW5vczcgU29DLg0KPj4gDQo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBBbGltIEFraHRhciANCj4+IFNpZ25lZC1vZmYtYnk6IE5hdmVlbiBLcmlzaG5h
+IENoYXRyYWRoaSANCj4+IENjOiBSb2IgSGVycmluZyANCj4+IENjOiBDYXRhbGluIE1hcmluYXMg
+DQo+PiAtLS0NCj4+ICBhcmNoL2FybTY0L0tjb25maWcgfCAgIDEyICsrKysrKysrKysrKw0KDQo+
+IFBsZWFzZSB1cGRhdGUgdGhlIGRlZmNvbmZpZyBhcyB3ZWxsIGFzIHdlIHdhbnQgdGhlIGRlZmF1
+bHQgaW1hZ2UgYnVpbGQNCj4gdG8gY29udGFpbiBhbGwgdGhlIGF2YWlsYWJsZSBwbGF0Zm9ybXMu
+DQpPaywgd2lsbCBzZW5kIGEgcGF0Y2ggdG8gZW5hYmxlIGV4eW5vczcgaW4gZGVmYXVsdCBjb25m
+aWcuDQpUaGFua3MuDQo+IC0tIA0KPiBDYXRhbGluDQoNClJlZ2FyZHMsDQpBbGlt
