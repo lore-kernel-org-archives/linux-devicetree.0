@@ -1,76 +1,155 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 1/5] clk: ti: add "ti,gpio-gate-clock" controlled clock
-Date: Fri, 19 Sep 2014 16:25:48 +0300
-Message-ID: <541C2EDC.2050707@ti.com>
-References: <cover.1410898073.git.jsarha@ti.com> <71e8bdf16f8a3bff5db6ba80dcab9d21de05e939.1410898073.git.jsarha@ti.com> <541C2A77.9070406@ti.com> <541C2BC8.3020207@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 4/4] dt-bindings: Add pinctrl bindings for mt65xx/mt81xx.
+Date: Fri, 19 Sep 2014 15:48:57 +0200
+Message-ID: <8504020.ELHUosuJMo@diego>
+References: <1411127306-13677-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+ <1411127306-13677-5-git-send-email-srv_hongzhou.yang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="PAumHMipg7PqfU3lxae0HmlHp11O89ekQ"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <541C2BC8.3020207@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, Mike Turquette <mturquette@linaro.org>
-Cc: tony@atomide.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, t-kristo@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411127306-13677-5-git-send-email-srv_hongzhou.yang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_hongzhou.yang@mediatek.com, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, srv_heupstream@mediatek.com, Ian Campbell <ijc+devicetree@hellion.org.uk>Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, =Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Joe.C" <yingjoe.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
---PAumHMipg7PqfU3lxae0HmlHp11O89ekQ
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+Am Freitag, 19. September 2014, 19:48:26 schrieb 
+srv_hongzhou.yang@mediatek.com:
+> From: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> 
+> Add devicetree bindings for Mediatek SoC pinctrl driver.
+> 
+> Signed-off-by: Hongzhou Yang <hongzhou.yang@mediatek.com>
+> ---
+>  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt | 92
+> ++++++++++++++++++++++ 1 file changed, 92 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+> b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt new file
+> mode 100644
+> index 0000000..e2deff6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt
+> @@ -0,0 +1,92 @@
+> +* Mediatek MT65XX Pin Controller
+> +
+> +The Mediatek's Pin controller is used to control GPIO pins.
+> +
+> +Required properties:
+> +- compatible: value should be either of the following.
+> +    (a) "mediatek,mt8135-pinctrl", compatible with mt8135 pinctrl.
+> +- reg: Should contain the register physical address and length for the
+> +  pin controller.
+> +- gpio-controller : Marks the device node as a gpio controller.
+> +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+> +  binding is used, the amount of cells must be specified as 2. See the
+> below +  mentioned gpio binding representation for description of
+> particular cells. +
+> +	Eg: <&pio 6 0>
+> +	<[phandle of the gpio controller node]
+> +	[pin number within the gpio controller]
+> +	[flags]>
+> +
+> +	Values for gpio specifier:
+> +	- Pin number: is a value between 0 to 202.
+> +	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
+> +            Only the following flags are supported:
+> +            0 - GPIO_ACTIVE_HIGH
+> +            1 - GPIO_ACTIVE_LOW
+> +
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices.
+> +
+> +A pinctrl node should contain at least one subnodes representing the
+> +pinctrl groups available on the machine. Each subnode will list the
+> +pins it needs, and how they should be configured, with regard to muxer
+> +configuration and pullups. If one of these options is
+> +not set, its actual value will be unspecified.
+> +
+> +Required subnode-properties:
+> +
+> +- mediatek,pinfunc: List of gpio number and function to mux.
+> +
+> +The mediatek,pinfunc can use defines directly,
+> +which are already defind in boot/dts/mt8135-pinfunc.h.
+> +
+> +Optional subnode-properties:
+> +- mediatek,pull: Integer, defines in dt-bindings/pinctrl/mt65xx.h.
+> +    MT_PIN_PULL_DISABLE: No resistor
+> +    MT_PIN_CONF_PULL_UP: Pull-up resistor
+> +    MT_PIN_CONF_PULL_DOWN: Pull-down resistor
 
-On 19/09/14 16:12, Nishanth Menon wrote:
-> On 09/19/2014 08:07 AM, Tomi Valkeinen wrote:
->> On 16/09/14 23:40, Jyri Sarha wrote:
->>> The added ti,gpio-gate-clock is a basic clock that can be enabled and=
+Please use the generic pinconfig for such options instead of defining your own.
 
->>> disabled trough a gpio output. The DT binding document for the clock
->>> is also added. For EPROBE_DEFER handling the registering of the clock=
+For examples on how to do this in a devicetree-context using 
+pinconf_generic_parse_dt_config() you could look at
 
->>> has to be delayed until of_clk_get() call time.
->>>
->>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->>> ---
->>>  .../bindings/clock/ti/gpio-gate-clock.txt          |   21 ++
->>>  drivers/clk/ti/Makefile                            |    2 +-
->>>  drivers/clk/ti/gpio.c                              |  202 ++++++++++=
-++++++++++
->>>  3 files changed, 224 insertions(+), 1 deletion(-)
->>>  create mode 100644 Documentation/devicetree/bindings/clock/ti/gpio-g=
-ate-clock.txt
->>>  create mode 100644 drivers/clk/ti/gpio.c
->>
->> Why is this a TI clock? Sounds like a generic one to me.
->=20
-> Like thread: https://lkml.org/lkml/2014/9/5/284 ?
-
-Right, I should've read the earlier versions before making any smart
-comments =3D).
-
- Tomi
+drivers/pinctrl/nomadik/pinctrl-abx500.c
+drivers/pinctrl/pinctrl-tz1090.c
+drivers/pinctrl/sh-pfc/pinctrl.c
 
 
+Heiko
 
---PAumHMipg7PqfU3lxae0HmlHp11O89ekQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUHC7cAAoJEPo9qoy8lh71NMkQAKCfsYhgs6aR3gCDHidHeXbC
-PCOibPdhdzeAUHZZd8dJKP8EiTyTBXbUtRTE76j1a/Ku+OxqD3yoxC9t8ESi67MU
-R++DU28ysW5wMTp3wPHi41zjiRZ717LTvrdIQ08dUUk2o3pxC/Re46wwwpkwTSdx
-QIUGsg3lqEEss8fRgkxLParBJskOLQutAlBojotpCO++SuCzIJLkO6WEiId6JU2M
-BQGid7TjQX6HL8r/9N/ncfyEf3fSykXXrmAoxD4Arek7OZ0BOnWUqTz0AAVvBDZK
-mgnVO2Hod1aiVbb5D3wTH547lr4CfwFvGxBWg74DRBDHkfqL5fIWVNNOF1IdKOfb
-WXjS+9jbej8JemHObD1pgbocI7Fo+Bjl5igqRIM/BsWbWyu+f1K1ekAWoJJKCZRn
-r/2ei9GVFiBzaDxixHOs4c2k+wt2m5P+A473dH921PCC7/qQTOlbFvyLn563O+FO
-W2hOOFLyJbnrNU8qJU9rApqwUiYTAPIrondn5E3G62SwSlGHV6DsdOMMbieHBLDR
-cc7JYAsXnyw+xDrmDzfHGlx6JSQIC99m6ZDng3wRTK7Jj+VsSWZZxpBKRiYjm+6f
-RAXmy5jljPk/hXQ3vkzZb2qoUnOoLul4NjS8i1eR4C9GEt+P9/+nxs6EwDb3tHbg
-MIS4GO4bCKhOSz+UpZbd
-=ZRpG
------END PGP SIGNATURE-----
-
---PAumHMipg7PqfU3lxae0HmlHp11O89ekQ--
+> +
+> +The mediatek,pull can be either a single value or an array.
+> +If it is a single value, that means all pins use use this value for same.
+> +If it is an array, the means one value per pin.
+> +
+> +Examples:
+> +
+> +pinctrl@01c20800 {
+> +	compatible = "mediatek,mt8135-pinctrl";
+> +	reg = <0x01c20800 0x400>;
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +
+> +	i2c0_pins_a: i2c0@0 {
+> +		mediatek,pinfunc = <MT8135_PIN_100_SDA0__FUNC_SDA0
+> MT8135_PIN_101_SCL0__FUNC_SCL0>; +		mediatek,pull = 
+<MT_PIN_PULL_DISABLE>;
+> +	};
+> +
+> +	i2c1_pins_a: i2c1@0 {
+> +		mediatek,pinfunc = <MT8135_PIN_195_SDA1__FUNC_SDA1
+> MT8135_PIN_196_SCL1__FUNC_SCL1>; +		mediatek,pull = 
+<MT_PIN_PULL_DISABLE>;
+> +	};
+> +
+> +	i2c2_pins_a: i2c2@0 {
+> +		mediatek,pinfunc = <MT8135_PIN_193_SDA2__FUNC_SDA2
+> MT8135_PIN_194_SCL2__FUNC_SCL2>; +		mediatek,pull = 
+<MT_PIN_PULL_DISABLE>;
+> +	};
+> +
+> +	i2c3_pins_a: i2c3@0 {
+> +		mediatek,pinfunc = <MT8135_PIN_35_SCL3__FUNC_SCL3
+> MT8135_PIN_36_SDA3__FUNC_SDA3>; +		mediatek,pull = 
+<MT_PIN_PULL_DISABLE>;
+> +	};
+> +
+> +	uart2_pins_a: uart2@0 {
+> +		mediatek,pinfunc = <MT8135_PIN_53_URXD2__FUNC_URXD2
+> MT8135_PIN_54_UTXD2__FUNC_UTXD2>; +		mediatek,pull = 
+<MT_PIN_PULL_DISABLE>;
+> +	};
+> +
+> +	uart3_pins_a: uart3@0 {
+> +		mediatek,pinfunc = <MT8135_PIN_191_URXD3__FUNC_URXD3
+> MT8135_PIN_192_UTXD3__FUNC_UTXD3>; +		mediatek,pull =
+> <MT_PIN_PULL_DISABLE>;
+> +	};
+> +	...
+> +
+> +};
