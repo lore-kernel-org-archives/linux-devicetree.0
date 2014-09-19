@@ -1,53 +1,97 @@
-From: Janusz Uzycki <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Subject: [PATCH 3/4] serial: mxs-auart: enable PPS support
-Date: Fri, 19 Sep 2014 20:13:18 +0200
-Message-ID: <1411150399-30902-3-git-send-email-j.uzycki@elproma.com.pl>
-References: <1411150399-30902-1-git-send-email-j.uzycki@elproma.com.pl>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [GIT PULL] RealView Device Tree support for v3.18
+Date: Fri, 19 Sep 2014 11:12:51 -0700
+Message-ID: <CACRpkdbHcJgnXDxO=yjuqbppT6OSR=N=4T80FFsrwKNM9Dy=sA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411150399-30902-1-git-send-email-j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Janusz Uzycki <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+To: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enables PPS support in mxs-auart serial driver to make PPS API working.
+Hi ARM SoC maintainers,
 
-Signed-off-by: Janusz Uzycki <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
----
- drivers/tty/serial/mxs-auart.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+this is the push forward for DT on the ARM RealView boards.
+I've tried to fix up the patches and get ACKs from the maintainers
+as far as possible.
 
-diff --git a/drivers/tty/serial/mxs-auart.c b/drivers/tty/serial/mxs-auart.c
-index c2f24f8..9381732 100644
---- a/drivers/tty/serial/mxs-auart.c
-+++ b/drivers/tty/serial/mxs-auart.c
-@@ -797,6 +797,15 @@ static void mxs_auart_settermios(struct uart_port *u,
- 		mxs_auart_disable_ms(u);
- }
- 
-+static void mxs_auart_set_ldisc(struct uart_port *port, int new)
-+{
-+	if (new == N_PPS) {
-+		port->flags |= UPF_HARDPPS_CD;
-+		mxs_auart_enable_ms(port);
-+	} else
-+		port->flags &= ~UPF_HARDPPS_CD;
-+}
-+
- static irqreturn_t mxs_auart_irq_handle(int irq, void *context)
- {
- 	u32 istat;
-@@ -963,6 +972,7 @@ static struct uart_ops mxs_auart_ops = {
- 	.startup	= mxs_auart_startup,
- 	.shutdown       = mxs_auart_shutdown,
- 	.set_termios    = mxs_auart_settermios,
-+	.set_ldisc      = mxs_auart_set_ldisc,
- 	.type	   	= mxs_auart_type,
- 	.release_port   = mxs_auart_release_port,
- 	.request_port   = mxs_auart_request_port,
--- 
-1.7.11.3
+Outstanding issue: no ACK from LED maintainers Bryan Wu or
+Richard Purdie on the syscon LED stuff. I have requested this
+early in the series and now for two weeks on the latest patch set.
+The driver is reviewed by others, I foresee no problems with
+merging it.
 
+The rest is throroughly reviewed and discussions on the DT
+bindings appear to have settled.
+
+Please pull this in so we can get some rotation in linux-next now,
+we need to move forward with device tree conversion.
+
+Yours,
+Linus Walleij
+
+The following changes since commit 69e273c0b0a3c337a521d083374c918dc52c666f:
+
+  Linux 3.17-rc3 (2014-08-31 18:23:04 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git
+tags/realview-dt-for-v3.18
+
+for you to fetch changes up to 56660647c5400f6ea2b3497f112f036e744cf75b:
+
+  ARM: realview: basic device tree implementation (2014-09-19 13:00:34 -0500)
+
+----------------------------------------------------------------
+This is the RealView Device Tree support branch for v3.18
+- A new syscon LEDs driver
+- A new reset driver for the versatile family
+- Setting up the L2$ from DT
+- Base DT support code for all RealView boards
+- Booting to serial console plus LEDs and reset on PB1176
+
+----------------------------------------------------------------
+Linus Walleij (6):
+      leds: add a driver for syscon-based LEDs
+      leds: add device tree bindings for register bit LEDs
+      power: reset: driver for the Versatile syscon reboot
+      soc: add driver for the ARM RealView
+      ARM: l2c: parse cache properties from ePAPR definitions
+      ARM: realview: basic device tree implementation
+
+ Documentation/devicetree/bindings/arm/arm-boards   |  65 ++++++
+ Documentation/devicetree/bindings/arm/gic.txt      |   1 +
+ Documentation/devicetree/bindings/arm/l2cc.txt     |  10 +
+ .../devicetree/bindings/leds/register-bit-led.txt  |  99 +++++++++
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/arm-realview-pb1176.dts          | 247 +++++++++++++++++++++
+ arch/arm/mach-realview/Kconfig                     |  13 ++
+ arch/arm/mach-realview/Makefile                    |   1 +
+ arch/arm/mach-realview/realview-dt.c               |  32 +++
+ arch/arm/mm/cache-l2x0.c                           | 121 ++++++++++
+ drivers/irqchip/irq-gic.c                          |   2 +
+ drivers/leds/Kconfig                               |  10 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-syscon.c                         | 166 ++++++++++++++
+ drivers/power/reset/Kconfig                        |   9 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/arm-versatile-reboot.c         | 111 +++++++++
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/versatile/Kconfig                      |  10 +
+ drivers/soc/versatile/Makefile                     |   1 +
+ drivers/soc/versatile/soc-realview.c               | 144 ++++++++++++
+ 22 files changed, 1047 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/register-bit-led.txt
+ create mode 100644 arch/arm/boot/dts/arm-realview-pb1176.dts
+ create mode 100644 arch/arm/mach-realview/realview-dt.c
+ create mode 100644 drivers/leds/leds-syscon.c
+ create mode 100644 drivers/power/reset/arm-versatile-reboot.c
+ create mode 100644 drivers/soc/versatile/Kconfig
+ create mode 100644 drivers/soc/versatile/Makefile
+ create mode 100644 drivers/soc/versatile/soc-realview.c
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
