@@ -1,133 +1,87 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] fbdev: fsl-sii902x: HDMI support for Freescale SoCs
-Date: Fri, 19 Sep 2014 16:45:21 +0300
-Message-ID: <541C3371.8080100@ti.com>
-References: <1409892517-29816-1-git-send-email-Li.Xiubo@freescale.com> <5412BE19.2010302@ti.com> <d94bf53d85884b4da0fb4da3041e5742@BY2PR0301MB0613.namprd03.prod.outlook.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Fri, 19 Sep 2014 19:29:29 +0530
+Message-ID: <CAEC9eQMQrM289J+ukkshKtTo9dB=G4cvg-4zF6LR6snqE5BL0A@mail.gmail.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+ <5419760A.7020908@ti.com>
+ <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
+ <5419B52D.4060107@ti.com>
+ <CAEC9eQO2rfmVEKTCUJk+SpfdeUr81gN3stYV3wE6yR3E=-zonA@mail.gmail.com>
+ <541C279A.2030601@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="kD6sMA5N5Mi0pHR01MnRK5aRQa8d1eKFC"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d94bf53d85884b4da0fb4da3041e5742@BY2PR0301MB0613.namprd03.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "peter.griffin@linaro.org" <peter.griffin@linaro.org>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "robdclark@gmail.com" <robdclark@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <541C279A.2030601@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---kD6sMA5N5Mi0pHR01MnRK5aRQa8d1eKFC
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-On 15/09/14 05:17, Li.Xiubo@freescale.com wrote:
-> Hi Tomi,
->=20
-> Thanks very much for your comments.
->=20
->=20
->> Subject: Re: [PATCH] fbdev: fsl-sii902x: HDMI support for Freescale So=
-Cs
->>
->> Hi,
->>
->> On 05/09/14 07:48, Xiubo Li wrote:
->>> Some Freescale SoCs, there has an DVI/HDMI controller and a PHY,
->>> attached to one of their display controller unit's LCDC interfaces.
->>> This patch adds a preliminary static support for such controllers.
+On Fri, Sep 19, 2014 at 6:24 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 18/09/14 08:50, Ajay kumar wrote:
+>
+>>>> Why do we need a complex graph when it can be handled using a simple phandle?
 >>>
->>> This will support for many modes and a dynamic switching between
->>> them.
+>>> Maybe in your case you can handle it with simple phandle. Can you
+>>> guarantee that it's enough for everyone, on all platforms?
+>> Yes, as of now exynos5420-peach-pit and exynos5250-spring boards use
+>> this. In case of both, the phandle to bridge node is passed to the
+>> exynos_dp node.
+>>
+>>> The point of the ports/endpoint graph is to also support more
+>>> complicated scenarios. If you now create ps8622 bindings that do not
+>>> support those graphs, the no one else using ps8622 can use
+>>> ports/endpoint graphs either.
 >>>
->>> Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
->>> ---
->>>  .../devicetree/bindings/video/fsl-sii902x.txt      |  17 +
->>>  drivers/video/fbdev/Kconfig                        |   7 +
->>>  drivers/video/fbdev/Makefile                       |   1 +
->>>  drivers/video/fbdev/fsl-sii902x.c                  | 526
->> +++++++++++++++++++++
->>>  4 files changed, 551 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/video/fsl-sii90=
-2x.txt
->>>  create mode 100644 drivers/video/fbdev/fsl-sii902x.c
->>
->> I don't know how you picked the names of the people you sent this patc=
-h
->> to, but looks to me that most of them are probably not interested in
->> this patch.
->>
->=20
-> I just using the get_maintainer.pl script.
+>>> Btw, is there an example how the bridge with these bindings is used in a
+>>> board's .dts file? I couldn't find any example with a quick search. So
+>>> it's unclear to me what the "simple phandle" actually is.
+>> Please refer to the following link:
+>> https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/tree/arch/arm/boot/dts/exynos5420-peach-pit.dts?id=samsung-dt#n129
+>> Let me know if you still think we would need to describe it as a complex graph!
+>
+> Yes, I think so. I'm not the DRM maintainer, though.
+>
+> I think we have two options:
+>
+> 1) Describe the video component connections with the ports/endpoints
+> properly for all new display device bindings, and know that it's
+> (hopefully) future proof and covers even the more complex boards that
+> use the devices.
+>
+> or
+>
+> 2) Use some simple methods to describe the links, like single phandle as
+> you do, knowing that we can't support more complex boards in the future.
+I am not really able to understand, what's stopping us from using this
+bridge on a board with "complex" display connections. To use ps8622 driver,
+one needs to "attach" it to the DRM framework. For this, the DRM driver
+would need the DT node for ps8622 bridge. For which I use a phandle.
 
-Yes, and that's good, but you have to use your judgment also.
-get_maintainer.pl gives you names of people who have at some point
-touched the files or directories you are changing. Usually only the
-first names returned by get_maintainer.pl are relevant.
+If some XYZ platform wishes to pick the DT node via a different method,
+they are always welcome to do it. Just because I am not specifying a
+video port/endpoint in the DT binding example, would it mean that platform
+cannot make use of ports in future? If that is the case, I can add something
+like this:
+http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/panel/samsung,ld9040.txt#L61
 
->> Anyway, a few quick comments on the patch:
->>
->> - You should probably use regmap instead of direct i2c calls.
->> Interestingly, you define regmap variable, but you never use it.
->=20
-> Yes, this it's my another version in my local machine using regmap whic=
-h
-> need much more test.
->=20
->> - Use defines for register offsets, instead of magic numbers.
->=20
-> This will be fixed together with regmap using.
+Regards,
+Ajay kumar
 
-Well, it's better to send the patch only when you have tested and
-cleaned up your driver.
-
->> - You should not use static variables. They prevent having multiple
->> instances of the device.
->>
->=20
-> Okay.
->=20
->> So the SiI902x chip is on the SoC, not on the board? And it's a plain
->> standard SiI902x in other aspects?
->>
->=20
-> No, it's on board.
->=20
-> And it will be used for i.MX and LS1+ platforms.
-
-Ok. In that case, I would suggest you to move to the DRM framework. The
-fbdev framework is not suited to adding external encoders. The end
-result with fbdev will be a SoC/board specific hack driver.
-
-That said, we already have such drivers for fbdev, so I'm not 100%
-against adding a new one. But I'm very very seriously recommending
-moving to DRM.
-
-And if this driver is added to fbdev, I think the device tree bindings
-should use the video ports/endpoints to describe the connections.
-
- Tomi
-
-
-
---kD6sMA5N5Mi0pHR01MnRK5aRQa8d1eKFC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUHDNxAAoJEPo9qoy8lh717+AP/j5nC1pCwcV3FVBtDn8EzTB9
-u+I8CFqAUQvdE+dlt2ayeK8rdUZMNDPK+AOGGGQ/hyymI3+VuTWO70SzPzW1JlFT
-y+P/KQ0i0Zk8E9vb3NpclxUAfannmfuUMOC80cyGJYXXHS55wAl8cG6SjIv9m2SW
-B0ZoUyBMY07Zc+IRstxtp/+s2CzwTKjS8m0myoqSWfQjb89f3/fVmejJIvkZd84/
-06EEBnTpj/tLoMSgpxsgjrhDVFGAwyYDjIcf2qvSurOQa90WaHphQAxHxpPbOpWG
-Tdk2q3ZL4MlPkWAw8DkWnRf2rtMvFsy6TDkbwscETfFgIGTKrYSTNrJVtp4RlHZC
-UfOaN2j2MTzQQ+SxgJbuGxIw1Xd/tMz0aj2+RI+crt70lp7LeBLWvowX3Gh1PBJX
-qutseE5AueMXzSTM6bg6f/3+w2hYB2flfnvdgh6G9pqnHKQQQujT2Q1esO33Gz8Z
-kEoAGz4BaZAxsE8ucIhu2h/LTeOBOi9N5MxDN1vtpn5DWWjyXOWDndnqWgV1Nmxk
-qQq06hZS94FgZZC7/0rOHfDX3cuLyB7YsOid814gsodFBrcTjcA/6w857Ij2pbSI
-XQKM+svRNB8ajaSI7Q/qoWF1YT7Bu5biJnAVIj8z7vEER8M/rDGeuQUw0FgOwBvT
-x+saK8ydZMTtNzRjQqlB
-=WqBq
------END PGP SIGNATURE-----
-
---kD6sMA5N5Mi0pHR01MnRK5aRQa8d1eKFC--
+> I see some exynos boards already using the ports/endpoints, like
+> arch/arm/boot/dts/exynos4412-trats2.dts. Why not use it for all new
+> display devices?
+>
+>  Tomi
+>
+>
