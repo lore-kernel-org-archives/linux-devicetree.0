@@ -1,71 +1,27 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v3 2/2] dt-bindings: add devicetree bindings for st-pwm regulator
-Date: Fri, 19 Sep 2014 16:02:19 +0800
-Message-ID: <1411113739-1934-3-git-send-email-zyw@rock-chips.com>
-References: <1411113739-1934-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411113739-1934-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, lee.jones@linaro.org, broonie@kernel.org, Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [RFC PATCH v2 09/16] leds: leds-gpio: Add support for GPIO descriptors
+Date: Fri, 19 Sep 2014 17:18:44 +0900
+Message-ID: <CAAVeFuLxv-jK4G_0RHvMLsQM1arXZbFabjv8L0Fco6=BvSSceQ@mail.gmail.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+ <1410868367-11056-10-git-send-email-mika.westerberg@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1410868367-11056-10-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the st-pwm regulator
+On Tue, Sep 16, 2014 at 8:52 PM, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> GPIO descriptors are the preferred way over legacy GPIO numbers
+> nowadays. Convert the driver to use GPIO descriptors internally but
+> still allow passing legacy GPIO numbers from platform data to support
+> existing platforms.
+>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+Obviously a good thing to do.
 
----
-
-Changes in v3:
-Adviced by Doug Anderson
-- update the Example
-
-Changes in v2:
-Adviced by Lee Jones
-- rename the documentation
-Adviced by Doug Anderson
-- update the example
-Adviced by Mark Rutland
-- remove pwm-reg-period
-
- .../bindings/regulator/pwm-regulator.txt           |   29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-new file mode 100644
-index 0000000..eb46f7b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -0,0 +1,29 @@
-+pwm regulator bindings
-+
-+Required properties:
-+- compatible: Should be "pwm-regulator"
-+- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
-+- voltage-table: voltage and duty table, include 2 merbers in each set of
-+  brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
-+
-+Any property defined as part of the core regulator binding defined in
-+regulator.txt can also be used.
-+
-+Example:
-+	pwm_regulator {
-+		compatible = "pwm-regulator;
-+		pwms = <&pwm1 0 8448 0>;
-+
-+		voltage-table = <1114000 0>,
-+				<1095000 10>,
-+				<1076000 20>,
-+				<1056000 30>,
-+				<1036000 40>,
-+				<1016000 50>;
-+
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <1016000>;
-+		regulator-max-microvolt = <1114000>;
-+		regulator-name = "vdd_logic";
-+	};
--- 
-1.7.9.5
+Acked-by: Alexandre Courbot <acourbot@nvidia.com>
