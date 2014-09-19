@@ -1,88 +1,75 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V3 3/3] mfd: palmas: Add support for optional wakeup
-Date: Fri, 19 Sep 2014 12:57:38 -0700
-Message-ID: <20140919195738.GR14505@atomide.com>
-References: <1411067086-16613-1-git-send-email-nm@ti.com>
- <1411067086-16613-4-git-send-email-nm@ti.com>
- <alpine.DEB.2.10.1409181749170.4206@nanos>
- <20140919030333.GA6088@kahuna>
- <alpine.DEB.2.10.1409190710320.5612@nanos>
- <20140919161927.GA28613@kahuna>
- <alpine.DEB.2.10.1409191027330.5612@nanos>
- <20140919191649.GQ14505@atomide.com>
- <alpine.DEB.2.10.1409191233590.4213@nanos>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
+Date: Fri, 19 Sep 2014 22:14:36 +0200
+Message-ID: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.10.1409191233590.4213@nanos>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> [140919 12:47]:
-> On Fri, 19 Sep 2014, Tony Lindgren wrote:
-> > * Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> [140919 10:37]:
-> > >From hardware point of view the wake-up events behave like interrupts
-> > and could also be used as the only interrupt in some messed up cases.
-> > That avoids all kinds of custom APIs from driver point.
-> > 
-> > The re-entrancy problem we've most likely had ever since we enabled
-> > the PRCM interrupts, and maybe that's why I did not even consider
-> > that part. I think before that we were calling the driver interrupt
-> > after waking up from the PM code..
-> > 
-> > Anyways, how about the following to deal with the re-entrancy problem:
-> > 
-> > 1. The wake-up interrupt handler must have a separate interrupt
-> >    handler that just calls tasklet_schedule()
-> > 
-> > 2. The device interrupt handler also just calls tasklet_schedule()
-> > 
-> > 3. The tasklet then does pm_runtime_get, handles the registers, and
-> >    so on.
-> > 
-> > Or would we still have a re-entrancy problem somewhere else with
-> > that?
-> 
-> Why on earth are you wanting tasklets in there? That's just silly,
-> really.
+Guys,
 
-Lack of a framework on driver side to cope with this in a generic
-way? :p
- 
-> The wakeup handler is supposed to bring the thing out of deep sleep
-> and nothing else. All you want it to do is to mask itself and save the
-> information that the real device irq is pending.
+this is a patch set preparing barebox support for ix4-300d. As usual,
+I stumbled upon a few nice-to-haves before actually touching ix4-300d
+dts. As it is a mach-mvebu thing, I just added the related mailing
+lists instead of each of the DT maintainers.
 
-Yes that is enough.
- 
-> A stub handler for the wakeup irq is enough. We can have that in the
-> irq/pm core and all it would do is simply:
-> 
-> irqreturn_t handle_jinxed_wakeup_irq(unsigned irq, void *dev_id)
-> {
-> 	unsigned device_irq = get_dev_irq(dev_id);
-> 
-> 	force_mask(irq);
-> 	set_irq_pending(device_irq);
-> 	return HANDLED;	
-> }
-> 
-> So on resume_device_irqs() the real device interrupt gets reenabled
-> and unmasked (if it was masked) and the interrupt gets resent either
-> in hardware (level or retrigger) or by the software resend mechanism.
-> 
-> That completely avoids tasklets, reentrant irq handlers and all other
-> crap which might be required.
+First 5 patches consolidate SoC-specific pinctrl nodes to one common
+node in armada-xp.dtsi, compatible overwrites for each SoC, and node
+alias usage for each board. Also, ge{0,1} pinctrl settings are moved
+to the common node from one board specific node.
 
-Okie dokie, that sounds good to me. Having this generic for the
-drivers would be excellent, that's the missing piece.
+Last 3 patches then use that ge{0,1} pinctrl settings on ix4-300d which
+is vital for bootloader init. During exploration of ix4-300d, I also
+found a i2c eeprom that has not been added to the dts, yet. Finally,
+there is only one 74hc595 on ix4 mainboard while dts property is set
+for two.
 
-Thanks,
+I cannot recall in detail what is on that eeprom, but IIRC it is nothing
+important. Some reg,addr pairs for some init stuff that should have
+already been done by stock u-boot. Anyway, adding the node will do no
+harm.
 
-Tony
+Patches are based on v3.17-rc1 and intended for v3.18 but I am not in
+a hurry. I only compile tested this, so a formal Tested-by from Benoit
+for the ix4 and any other Armada XP board would be great.
+
+Sebastian
+
+Sebastian Hesselbarth (8):
+  ARM: mvebu: armada-xp: Consolidate pinctrl node
+  ARM: mvebu: armada-xp: Add node alias to pinctrl and add base address
+  ARM: mvebu: armada-xp: Use pinctrl node alias
+  ARM: mvebu: armada-xp: Move GE0/1 pinctrl settings for RGMII
+  ARM: mvebu: armada-xp: Add GE0 pinctrl settings for GMII
+  ARM: mvebu: armada-xp: Add RGMII pinctrl to Lenovo ix4-300d
+  ARM: mvebu: armada-xp: Add I2C eeprom on Lenovo ix4-300d
+  ARM: mvebu: armada-xp: Fix 74hc595 count for Lenovo ix4-300d
+
+ arch/arm/boot/dts/armada-xp-axpwifiap.dts        |  58 +++-----
+ arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts  |  73 +++++-----
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi         |  15 +--
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi         |  15 +--
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi         |  15 +--
+ arch/arm/boot/dts/armada-xp-netgear-rn2120.dts   | 164 +++++++++++------------
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |  14 +-
+ arch/arm/boot/dts/armada-xp.dtsi                 |  37 +++++
+ 8 files changed, 202 insertions(+), 189 deletions(-)
+
+---
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Benoit Masson <yahoo-+V3Jd3LB6RBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+-- 
+2.0.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
