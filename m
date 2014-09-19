@@ -1,99 +1,73 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 04/13 v2] iommu/arm-smmu: Convert to iommu_capable() API
-	function function
-Date: Fri, 19 Sep 2014 17:42:20 +0100
-Message-ID: <20140919164220.GI20773@arm.com>
-References: <1409914384-21191-1-git-send-email-joro@8bytes.org>
-	<1409914384-21191-5-git-send-email-joro@8bytes.org>
-	<20140908165136.GW26030@arm.com> <20140917085312.GE2533@suse.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/3] watchdog: qcom: add support for KPSS WDT
+Date: Fri, 19 Sep 2014 09:56:31 -0700
+Message-ID: <20140919165631.GA32457@roeck-us.net>
+References: <cover.1411078425.git.joshc@codeaurora.org>
+ <32d17907ad1dfdcafe4e76f33adc2ff22631cd28.1411078425.git.joshc@codeaurora.org>
+ <541B97CD.60400@roeck-us.net>
+ <20140919032416.GE3749@joshc.qualcomm.com>
+ <541BA5F7.1030704@roeck-us.net>
+ <20140919162550.GI3749@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140917085312.GE2533-l3A5Bk7waGM@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140919162550.GI3749@joshc.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 09:53:12AM +0100, Joerg Roedel wrote:
-> Hi Will,
-
-Hello Joerg,
-
-> On Mon, Sep 08, 2014 at 05:51:36PM +0100, Will Deacon wrote:
-> > On Fri, Sep 05, 2014 at 11:52:56AM +0100, Joerg Roedel wrote:
-> > > From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-> > > 
-> > > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> > > Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-> > > ---
-> > >  drivers/iommu/arm-smmu.c | 35 ++++++++++++++++++++++++++---------
-> > >  1 file changed, 26 insertions(+), 9 deletions(-)
+On Fri, Sep 19, 2014 at 11:25:50AM -0500, Josh Cartwright wrote:
+> On Thu, Sep 18, 2014 at 08:41:43PM -0700, Guenter Roeck wrote:
+> > On 09/18/2014 08:24 PM, Josh Cartwright wrote:
+> > >On Thu, Sep 18, 2014 at 07:41:17PM -0700, Guenter Roeck wrote:
+> > >>On 09/18/2014 03:26 PM, Josh Cartwright wrote:
+> > >>>Add a driver for the watchdog timer block found in the Krait Processor
+> > >>>Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
+> > >>>
+> > >>>Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> > >>
+> > >>Hi Josh,
+> > >>
+> > >>comments inline.
+> > >
+> > >Thanks for taking a look!
+> > >
+> [..]
+> > >>>+	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
+> > >>
+> > >>That leaves you with no default timeout if timeout-sec is not set in devicetree,
+> > >>which if I understand the code correctly might result in an immediate reset.
+> > >>Is this really what you want to happen ?
+> > >
+> > >I think I'd like to handle timeout-sec being unspecified as an error at
+> > >probe.  If someone explicitly sets timeout-sec = <0>, then they get what
+> > >they ask for.  I'll take another look to see how to make this happen.
+> > >
+> > 
+> > Hmm.. kind of unusual. Usual would be to initialize the timeout together
+> > with min_timeout / max_timeout above and only force the user to specify
+> > a value if the default timeout is not desirable. You don't really gain
+> > anything by making timeout-sec mandatory.
 > 
-> Okay, so here is the updated patch:
-
-Thanks, comments inline.
-
-> From b5d895980849ba1a46a5250cd4cc5f3f9f28235d Mon Sep 17 00:00:00 2001
-> From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-> Date: Fri, 5 Sep 2014 10:49:34 +0200
-> Subject: [PATCH 04/13] iommu/arm-smmu: Convert to iommu_capable() API function
+> Making timeout-sec mandatory makes it so I don't have to decide what a
+> "sane default" is. :)
 > 
-> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-> ---
->  drivers/iommu/arm-smmu.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+Bad excuse ;-). You just force others to make the decision for you.
+
+> It's even less clear about what a sane default is looking at the other
+> watchdog drivers.  From the drivers I looked at, it ranges any where
+> from 30s to 2mins.  Am I just to choose?  Why do these even differ
+> between all of the drivers?
 > 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index a83cc2a..f5cacf4 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -1526,20 +1526,20 @@ static phys_addr_t arm_smmu_iova_to_phys(struct iommu_domain *domain,
->  	return __pfn_to_phys(pte_pfn(pte)) | (iova & ~PAGE_MASK);
->  }
->  
-> -static int arm_smmu_domain_has_cap(struct iommu_domain *domain,
-> -				   unsigned long cap)
-> +static bool arm_smmu_capable(enum iommu_cap cap)
->  {
-> -	struct arm_smmu_domain *smmu_domain = domain->priv;
-> -	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> -	u32 features = smmu ? smmu->features : 0;
-> -
->  	switch (cap) {
->  	case IOMMU_CAP_CACHE_COHERENCY:
-> -		return features & ARM_SMMU_FEAT_COHERENT_WALK;
-> +		/*
-> +		 * Return false here until we have a way to find out whether the
-> +		 * SMMUs in the system a coherently connected and able to force
-> +		 * DMA coherency.
-> +		 */
+Sanity is defined as the majority opinion, as expressed quite nicely in
+"Everyone is insane but me".
 
-s/a/are/
+Just pick something in between. If you don't want to make a decision, pick
+30 seconds and blame it on me.
 
-However, I thought about this a bit more and the coherency isn't necessarily
-a global property of the SMMU. In reality, it is dependent on the IOTLBs in
-use by the domain, so it's not going to be possible to report true here in
-many cases.
+Maybe someone at some point finds a common ground. Until then it is per driver.
 
-That means we'd need a way to say `this device is dma coherent when its
-downstream IOMMU is enabled with IOMMU_CACHE mappings'. For the moment,
-people will probably just add `dma-coherent' to the endpoint and dma-mapping
-will request IOMMU_CACHE mappings regardless of the features advertised by
-the IOMMU. In that case, it might make more sense to return `true' here as
-we can always generated cacheable transactions from the SMMU. The
-dma-coherent property on the device would then indicate whether those
-transactions will snoop the CPU caches.
-
-Will
+Thanks,
+Guenter
