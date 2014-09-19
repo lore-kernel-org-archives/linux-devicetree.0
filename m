@@ -1,64 +1,94 @@
-From: Joe.C <srv_yingjoe.chen@mediatek.com>
-Subject: [PATCH 1/4] arm: mediatek: Add config option for mediatek SoCs.
-Date: Fri, 19 Sep 2014 20:52:35 +0800
-Message-ID: <1411131158-16549-1-git-send-email-srv_yingjoe.chen@mediatek.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Fri, 19 Sep 2014 15:54:50 +0300
+Message-ID: <541C279A.2030601@ti.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>	<5419760A.7020908@ti.com>	<CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>	<5419B52D.4060107@ti.com> <CAEC9eQO2rfmVEKTCUJk+SpfdeUr81gN3stYV3wE6yR3E=-zonA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Hongzhou Yang <hongzhou.yang@mediatek.com>, yh.chen@mediatek.com, nathan.chung@mediatek.com, Grant Likely <grant.likely@linaro.org>, yingjoe.chen@mediatek.com, devicetree@vger.kernel.org, Vladimir Murzin <vladimir.murzin@arm.com>, yingjoe.chen@gmail.com, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com, hc.yen@mediatek.com, linux-kernel@vger.kernel.org, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="AxLQKvb7qRmNVrJuVJ1DKjsPXB884rf3D"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAEC9eQO2rfmVEKTCUJk+SpfdeUr81gN3stYV3wE6yR3E=-zonA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay kumar <ajaynumb@gmail.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "Joe.C" <yingjoe.chen@mediatek.com>
+--AxLQKvb7qRmNVrJuVJ1DKjsPXB884rf3D
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Add config options for ARCH_MT6589, ARCH_MT8127, ARCH_MT8135. This
-allow drivers to isolate support base on these options.
+On 18/09/14 08:50, Ajay kumar wrote:
 
-Change-Id: I120d9151941716949425979c99c11ed8996bf968
-Signed-off-by: Joe.C <yingjoe.chen@mediatek.com>
----
- arch/arm/mach-mediatek/Kconfig | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+>>> Why do we need a complex graph when it can be handled using a simple =
+phandle?
+>>
+>> Maybe in your case you can handle it with simple phandle. Can you
+>> guarantee that it's enough for everyone, on all platforms?
+> Yes, as of now exynos5420-peach-pit and exynos5250-spring boards use
+> this. In case of both, the phandle to bridge node is passed to the
+> exynos_dp node.
+>=20
+>> The point of the ports/endpoint graph is to also support more
+>> complicated scenarios. If you now create ps8622 bindings that do not
+>> support those graphs, the no one else using ps8622 can use
+>> ports/endpoint graphs either.
+>>
+>> Btw, is there an example how the bridge with these bindings is used in=
+ a
+>> board's .dts file? I couldn't find any example with a quick search. So=
 
-diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
-index 2c043a2..25fe6cf 100644
---- a/arch/arm/mach-mediatek/Kconfig
-+++ b/arch/arm/mach-mediatek/Kconfig
-@@ -1,6 +1,22 @@
--config ARCH_MEDIATEK
--	bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
-+menuconfig ARCH_MEDIATEK
-+	bool "Mediatek MT65xx & MT81xx SoC" if ARCH_MULTI_V7
- 	select ARM_GIC
- 	select MTK_TIMER
- 	help
--	  Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
-+	  Support for Mediatek MT65xx & MT81xx SoCs
-+
-+if ARCH_MEDIATEK
-+
-+config MACH_MT6589
-+	bool "MediaTek MT6589 SoCs support"
-+	default ARCH_MEDIATEK
-+
-+config MACH_MT8127
-+	bool "MediaTek MT8127 SoCs support"
-+	default ARCH_MEDIATEK
-+
-+config MACH_MT8135
-+	bool "MediaTek MT8135 SoCs support"
-+	default ARCH_MEDIATEK
-+
-+endif
--- 
-1.8.1.1.dirty
+>> it's unclear to me what the "simple phandle" actually is.
+> Please refer to the following link:
+> https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/tr=
+ee/arch/arm/boot/dts/exynos5420-peach-pit.dts?id=3Dsamsung-dt#n129
+> Let me know if you still think we would need to describe it as a comple=
+x graph!
+
+Yes, I think so. I'm not the DRM maintainer, though.
+
+I think we have two options:
+
+1) Describe the video component connections with the ports/endpoints
+properly for all new display device bindings, and know that it's
+(hopefully) future proof and covers even the more complex boards that
+use the devices.
+
+or
+
+2) Use some simple methods to describe the links, like single phandle as
+you do, knowing that we can't support more complex boards in the future.
+
+I see some exynos boards already using the ports/endpoints, like
+arch/arm/boot/dts/exynos4412-trats2.dts. Why not use it for all new
+display devices?
+
+ Tomi
+
+
+
+--AxLQKvb7qRmNVrJuVJ1DKjsPXB884rf3D
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUHCeaAAoJEPo9qoy8lh71kCkP/iPA5hM0uWtOdH9vBriFc36Z
+wKuwJ2QRQn/Vy9St8y02PMyZe0jjC5tx1NphRBPhuJ7SwbL6kxzwq5rppoZdvPgs
+zB2qzaFUdSOp7CHeb6ezAKTp8kpXNh4Z3dfVyItC6RdXFXJgZVeoFmIr6lWQjDM3
+tNdGjOFhJWlt2kA0PiZ2ZphebnBQ5CKd8yQZH5Eg3bb607uRUZoN7Jz1bisNb32G
+y4xJjmYqi9q7oFFjrsYMZz5qbZA4+zFJ1969HUavaxalz7/i1SRNWMDlGPq1uBj/
+M3hGY88J9rdv6p/g6ciRfkIVCfjjSQkQ5BbyxQyselwKpMGVyaVrofmJV6gOCudk
+kChHoAa4XoDlh+oRK3Fc66CbAKSkrcCKycoaEcwygyPPIsxaGQC05nr9GO8CrZiP
+vSj4LmnscOcmlwD7Oj0lAtmD8WzylZmfc6QwS1PbjNBLFHX2cwlPdqP9Kvw45VW5
+NEjhSb6pRcgpv7Gxaq/I8iDH7WOCnTAlzoPWF8v6SGSr+ideelks1zmDKOvaEYwQ
+6z/dCyGfWzq3a3UaAwMV4n+ijNs9Owy9tDWYPlys6aBxiv+jHqAw0CnGHQPPkY3L
+0DdOgx38XW9PTBtDbBAuacDtc5fzCVR94TThVcWtP+JvCj7TG8pNqQ60jUGvfCRQ
+UKZlIhV31xrxKpksH2dQ
+=VVVN
+-----END PGP SIGNATURE-----
+
+--AxLQKvb7qRmNVrJuVJ1DKjsPXB884rf3D--
