@@ -1,77 +1,63 @@
-From: Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH 0/6] Add initial support for Broadcom Cygnus SoC
-Date: Thu, 18 Sep 2014 17:58:51 -0700
-Message-ID: <541B7FCB.1090102@broadcom.com>
-References: <Jonathan Richardson <jonathar@broadcom.com> <1410897497-27527-1-git-send-email-jonathar@broadcom.com> <541B5D5A.10800@hauke-m.de> <541B5F16.6030005@openwrt.org> <541B62BE.8050909@hauke-m.de>
+From: yaozq <yzq@rock-chips.com>
+Subject: Re: [PATCH v2 1/5] drm/rockchip: Add basic drm driver
+Date: Fri, 19 Sep 2014 10:03:09 +0800
+Message-ID: <541B8EDD.4090809@rock-chips.com>
+References: <1411032884-9233-1-git-send-email-mark.yao@rock-chips.com> <1411032991-9280-1-git-send-email-mark.yao@rock-chips.com> <20140918145214.GA15734@phenom.ffwll.local> <20140918145354.GB15734@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <541B62BE.8050909@hauke-m.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>, Florian Fainelli <florian@openwrt.org>, Jonathan Richardson <jonathar@broadcom.com>, Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, JD Zheng <jdzheng@broadcom.com>
-Cc: devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140918145354.GB15734@phenom.ffwll.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark yao <mark.yao@rock-chips.com>, heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, linux-doc@vger.kernel.org, kever.yang@rock-chips.com, dri-devel@lists.freedesktop.org, dianders@chromium.org, xjq@rock-chips.com, zyw@rock-chips.com, cym@rock-chips.com, linux-rockchip@lists.infradead.org, kfx@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, yxj@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 14-09-18 03:54 PM, Hauke Mehrtens wrote:
-> On 09/19/2014 12:39 AM, Florian Fainelli wrote:
->> On 09/18/2014 03:31 PM, Hauke Mehrtens wrote:
->>> On 09/16/2014 09:58 PM, Jonathan Richardson wrote:
->>>> Hi,
->>>>
->>>> This patchset contains initial support for Broadcom's Cygnus SoC based on our
->>>> iProc architecture. Initial support is minimal and includes just the mach
->>>> platform code, clock driver, and a basic device tree configuration. Peripheral
->>>> drivers will be submitted soon, as will device tree configurations for other
->>>> Cygnus board variants.
+On 2014=E5=B9=B409=E6=9C=8818=E6=97=A5 22:53, Daniel Vetter wrote:
+> On Thu, Sep 18, 2014 at 04:52:14PM +0200, Daniel Vetter wrote:
+>> On Thu, Sep 18, 2014 at 05:36:31PM +0800, Mark yao wrote:
+>>> This patch adds the basic structure of a DRM Driver for Rockchip So=
+cs.
 >>>
->>> This SoC looks similar to the BCM5301X (Northstar) SoCs even some cores
->>> are at the same memory addresses. Does this SoC use an AXI bus with
->>> Broadcom Plugins at address 0x18000000 ?
+>>> Signed-off-by: Mark yao <mark.yao@rock-chips.com>
+>>> ---
+>>> Changes in v2:
+>>> - use the component framework to defer main drm driver probe
+>>>    until all VOP devices have been probed.
+>>> - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+>>>    master device and each vop device can shared the drm dma mapping=
+=2E
+>>> - use drm_crtc_init_with_planes and drm_universal_plane_init.
+>>> - remove unnecessary middle layers.
+>>> - add cursor set, move funcs to rockchip drm crtc.
+>>> - use vop reset at first init
+>>> - reference framebuffer when used and unreference when swap out vop
 >>>
->>> The BCM5301X (Northstar) SoCs also has an iProc Clock Control Unit and I
->>> will try to use your driver for that SoC.
->>>
->>> Is Broadcom Cygnus similar to BCM563XX or is it actually the same SoC?
-Cygnus is a next generation product with similarities to other Broadcom 
-SoC's.  It takes technology from other parts for sure.  Our first step 
-is to upstream the core IPROC code and Cygnus code.  From there we will 
-upstream individual drivers which are reusable on some other Broadcom 
-chips (or will need minor additions/quirks added as identified).  There 
-are also other IPROC-based Broadcom chips that can also be upstreamed 
-more easily with this patchset going forward.
+>>> +static const struct drm_crtc_funcs rockchip_crtc_funcs =3D {
+>>> +	.set_config =3D drm_crtc_helper_set_config,
+>>> +	.page_flip =3D rockchip_drm_crtc_page_flip,
+>>> +	.destroy =3D rockchip_drm_crtc_destroy,
+>>> +	.cursor_set =3D vop_crtc_cursor_set,
+>>> +	.cursor_move =3D vop_crtc_cursor_move,
+>> If you expose your cursor plane as a universal you don't need to imp=
+lement
+>> these two cursor functions at all. Actually the core never calls the=
+m, see
+>> drm_mode_cursor_universal. So if you want to expose cursors, please =
+use
+>> universal cursor plane support (like i915).
+>>
+>> In general that's how new drivers should expose cursors since withou=
+t
+>> universal planes support cursors will not be supported with the atom=
+ic
+>> ioctl. Since your cursor code just calls the relevant plane function=
+s that
+>> should even simplify your driver ;-)
+> Actually you already initialize with cursor universal planes, so all =
+this
+> code can simply be removed.
+> -Daniel
+I see, drm_mode_cursor_universal is nice, I would test and use it.
+-Mark
 
-I know the BCM5301X iProc Clock Control Unit is an older.  I think you 
-may run into some difficulties running this code as is.  But hopefully 
-we can build up more support for other chips from this initial 
-submission for Cygnus support.
->>
->> According to this link:
->> http://lists.denx.de/pipermail/u-boot/2014-August/186086.html
->>
->> these SoCs, in particular BCM58622 would belong to the StrataGX network
->> processors:
->> http://www.broadcom.com/products/Processors/Home-and-Small-Business/BCM5862X-Series.
->
-> Broadcom claims that this SoC is pin and software compatible to BCM5301X:
->> Pin compatible and software compatible products with previous
->> generation BCM5301x products enable single design with easy
->> upgradeable path
->
->>> Do you have some description of the hardware features of this SoC? Does
->>> it have PCIe, or Ethernet?
-Yes, Some variants of Cygnus do have PCIe or Ethernet.  Drivers to be 
-upstreamed once cleaned up fully.  The drivers will be built into our 
-bcm_cygnus_defconfig and then enabled in device tree.
->>
->>  From the link above, it has Ethernet for sure, and certainly PCIe since
->> the Wi-Fi chips mentioned in the link above are PCIe chips.
->>
->> It would be really good if all the work you and Rafal did was usable for
->> the Cygnus SoCs.
->
-> I also hope you can use much of the code and improve it. ;-)
->
-> Hauke
-
->
