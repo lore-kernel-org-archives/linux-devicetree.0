@@ -1,33 +1,34 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
-Date: Fri, 19 Sep 2014 11:48:49 -0700
-Message-ID: <20140919184849.GA14832@core.coreip.homeip.net>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
-Mime-Version: 1.0
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 3/3] dt/bindings: dmaengine: qcom_bam_dma: Add compatible string for BAM v1.3.0
+Date: Fri, 19 Sep 2014 12:00:56 -0700
+Message-ID: <9869932A-0528-4332-8357-1724277179A3@codeaurora.org>
+References: <1411037575-13153-1-git-send-email-architt@codeaurora.org> <1411037575-13153-3-git-send-email-architt@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1411037575-13153-3-git-send-email-architt@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: agross@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
 
-On Fri, Sep 19, 2014 at 08:27:33PM +0200, Ulf Hansson wrote:
-> Changes in v5:
-> 	- Converted dev_pm_domain_detach() to a void function
-> 	- Added a ->detach() callback to the PM domain struct, invoked from the
-> 	  dev_pm_domain_detach().
-> 	- Make ACPI and genpd both assign the ->detach() callback at successfull
-> 	  attachment.
-> 	- The above changes made it possible to make acpi_pm_domain_detach() to
-> 	  be static, added a separate patch for that.
+On Sep 18, 2014, at 3:52 AM, Archit Taneja <architt@codeaurora.org> wrote:
 
-Thank you for making these changes. For the series:
+> Add compatible string for BAM v1.3.0 in the DT bindings documentation. Mentioned
+> a few more SoCs which have BAM v1.4.0 in them.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> ---
+> Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 4 +++-
+> 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Kumar Gala <galak@codeaurora.org>
+
+- k
 
 -- 
-Dmitry
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
