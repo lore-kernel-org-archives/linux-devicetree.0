@@ -1,42 +1,38 @@
-From: Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH 0/6] dts, kbuild: Implement support for dtb vendor subdirs
-Date: Fri, 19 Sep 2014 14:30:56 +0200
-Message-ID: <20140919123056.GC20170@rric.localhost>
-References: <1409899692-1455-1-git-send-email-rric@kernel.org>
- <CAL1qeaGCeRyeKLo70E264bZcamOfBKoN9Y8_NDCjV5j4DoOw1Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL1qeaGCeRyeKLo70E264bZcamOfBKoN9Y8_NDCjV5j4DoOw1Q@mail.gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@google.com>
-Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Michal Marek <mmarek@suse.cz>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kbuild@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>
+From: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: Remove "regulator-always-on" in vcc_rmii for Radxa Rock
+Date: Fri, 19 Sep 2014 12:36:27 +0000
+Message-ID: <1411130187-4966-1-git-send-email-romain.perier@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 16.09.14 20:49:18, Andrew Bresticker wrote:
+On Rockchip RK3188 SoCs the platform driver emac_rockchip is used. This variant driver
+enables this regulator when the device driver is loaded. The phy no longer needs
+to be always on.
 
-> > Robert Richter (6):
-> >   dts, arm64: Add dtbs_install make target
-> >   dts, kbuild: Factor out dtbs install rules to Makefile.dtbinst
-> >   dts, arm/arm64: Remove dtbs build rules in sub-makes
-> >   dts, kbuild: Implement support for dtb vendor subdirs
-> >   dts, arm64: Move dts files to vendor subdirs
-> >   dts, arm: Remove $(MACHINE) variable from dtbs make recipes
-> 
-> I've tested this for arm64 and by adding a vendor sub-directory
-> locally for arm.  This series is also the base for my MIPS DT vendor
-> sub-directory series
-> (http://www.linux-mips.org/archives/linux-mips/2014-09/msg00217.html).
-> So, for the entire series,
-> 
-> Tested-by: Andrew Bresticker <abrestic@chromium.org>
+Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3188-radxarock.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-Andrew, thanks for testing and great this also works on mips.
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index e04bf8f..d95f881 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -176,7 +176,6 @@
+ 				regulator-name = "VCC_RMII";
+ 				regulator-min-microvolt = <3300000>;
+ 				regulator-max-microvolt = <3300000>;
+-				regulator-always-on;
+ 			};
+ 
+ 			vccio_wl: REG10 {
+-- 
+1.9.1
 
-Anyone willing to take the patches for 3.18? Are any further acks
-needed?
-
-Thanks,
-
--Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
