@@ -1,61 +1,69 @@
-From: David Herrmann <dh.herrmann@gmail.com>
-Subject: Re: [PATCH v3 1/5] drm/rockchip: Add basic drm driver
-Date: Fri, 19 Sep 2014 15:04:34 +0200
-Message-ID: <CANq1E4Ti0yOQ+jCiXy7=NtFQ9cbWLOSLf6q-HWVdDFtMB1n29Q@mail.gmail.com>
-References: <1411105668-32722-1-git-send-email-mark.yao@rock-chips.com>
-	<1411105668-32722-2-git-send-email-mark.yao@rock-chips.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v3 1/5] clk: ti: add "ti,gpio-gate-clock" controlled clock
+Date: Fri, 19 Sep 2014 16:07:03 +0300
+Message-ID: <541C2A77.9070406@ti.com>
+References: <cover.1410898073.git.jsarha@ti.com> <71e8bdf16f8a3bff5db6ba80dcab9d21de05e939.1410898073.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411105668-32722-2-git-send-email-mark.yao@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark yao <mark.yao@rock-chips.com>
-Cc: heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Linux API <linux-api@vger.kernel.org>, linux-rockchip@lists.infradead.org, dianders@chromium.org, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, dbehr@chromium.org, Olof
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="1uXkGQadUj5AAmolLFvO8fMQ1WbffHaIn"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <71e8bdf16f8a3bff5db6ba80dcab9d21de05e939.1410898073.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org, Mike Turquette <mturquette@linaro.org>
+Cc: tony@atomide.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, peter.ujfalusi@ti.com, detheridge@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi
+--1uXkGQadUj5AAmolLFvO8fMQ1WbffHaIn
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 19, 2014 at 7:47 AM, Mark yao <mark.yao@rock-chips.com> wrote:
-[snip]
-> +static int rockchip_drm_bind(struct device *dev)
-> +{
-> +       return drm_platform_init(&rockchip_drm_driver, to_platform_device(dev));
+On 16/09/14 23:40, Jyri Sarha wrote:
+> The added ti,gpio-gate-clock is a basic clock that can be enabled and
+> disabled trough a gpio output. The DT binding document for the clock
+> is also added. For EPROBE_DEFER handling the registering of the clock
+> has to be delayed until of_clk_get() call time.
+>=20
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  .../bindings/clock/ti/gpio-gate-clock.txt          |   21 ++
+>  drivers/clk/ti/Makefile                            |    2 +-
+>  drivers/clk/ti/gpio.c                              |  202 ++++++++++++=
+++++++++
+>  3 files changed, 224 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti/gpio-gat=
+e-clock.txt
+>  create mode 100644 drivers/clk/ti/gpio.c
 
-Please avoid drm_platform_*() usage. We're about to drop all the
-drm_bus midlayers. See the tegra driver how to do it, but basically
-just this:
+Why is this a TI clock? Sounds like a generic one to me.
 
-struct drm_device *ddev;
+In any case, this should go through Mike.
 
-ddev = drm_dev_alloc(&rockchip_drm_driver, &to_platform_device(dev)->dev);
-if (!ddev)
-        return -ENOMEM;
-
-r = drm_dev_set_unique(ddev, dev_name(&ddev->dev));
-if (r < 0) {
-        drm_dev_unref(ddev);
-        return r;
-}
-
-r = drm_dev_register(ddev);
-if (r < 0) {
-        drm_dev_unref(ddev);
-        return r;
-}
-
-> +}
-> +
-> +static void rockchip_drm_unbind(struct device *dev)
-> +{
-> +       drm_put_dev(dev_get_drvdata(dev));
-
-Please use:
-
-struct drm_device *ddev = dev_get_drvdata(dev);
-
-drm_dev_unregister(ddev);
-drm_dev_unref(ddev);
+ Tomi
 
 
-Thanks
-David
+
+--1uXkGQadUj5AAmolLFvO8fMQ1WbffHaIn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUHCp3AAoJEPo9qoy8lh71nhEQAJO46f7xMmo3VjBWVDtoNo64
++PIeMqqNAOUeGbxiQ6Ac0EyMTSI6wuKr2L/Nc99SYMpCD6Svm0zXzcpY3+xtJ8Kc
+4dHoC+S9nwRwA0AFR7d9C5drwYCQv+NgKTPyR35gKCKyDnuDTnLh9JD2nxy2Qut5
+YjfDX/kw/V4qFouZJr/l4EUrqp6UN1hE1EVuapQWa+RwyUjbhXTzVC+j+I0MqLD8
+VE7q22+O8Cp4zb+JDeGgtqkZjoUFWNWfJP5etcAh/T4dsl/K5RQX46ZzC8CoVmzM
+TvBPgow1oJmvXulRtHdU3Es5AAqzICzmz3GEm3djBd5u0D1Ksle9TzQsl0E1BM8p
+43jBIeGVJ4raLbSYWAyZF9oY+G9bn50VN2YFQYsFCh5KxeFzdW0XQVJoSgLUlpA1
+mo1eyA1+vFnwdHxh9hijmzwZudDjdnrLmZHPNN8K++kN1pDvZrrFSc89J9wlayDg
+kpz+O+ErTnppulRbLwiYpEUwTD1Hrr75pnB2oORN0kufD2o9oBMrJTn6xDEvIpmq
+bn29qI8mB9CNmxeyo3f1UeodvUPWSFR5gtW8o1xBt2qhX7K+FHXFLxVPzD5HOZWe
+WU6J2qXO72MfV3ZMttKfU+ngdKBFBLFVCSG0C6BBYuhamAZQG3ZJ8uLC4JXBFf8G
+r1D2KMAgLMiHGj4/Yl1b
+=UN+w
+-----END PGP SIGNATURE-----
+
+--1uXkGQadUj5AAmolLFvO8fMQ1WbffHaIn--
