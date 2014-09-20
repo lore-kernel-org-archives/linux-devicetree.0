@@ -1,67 +1,98 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] mtd: nand: add sunxi NAND flash
- controller support
-Date: Sat, 20 Sep 2014 13:03:15 +0200
-Message-ID: <20140920130315.197ab359@bbrezillon>
-References: <1408382788-32153-1-git-send-email-boris.brezillon@free-electrons.com>
-	<20140920043438.GD8127@brian-ubuntu>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Sat, 20 Sep 2014 16:52:05 +0530
+Message-ID: <CAEC9eQNshrP6wW_9mEDbFR5hRpW6Hy=GBFzV=rf05Wpxz6gtiw@mail.gmail.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+	<5419760A.7020908@ti.com>
+	<CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
+	<5419B52D.4060107@ti.com>
+	<CAEC9eQO2rfmVEKTCUJk+SpfdeUr81gN3stYV3wE6yR3E=-zonA@mail.gmail.com>
+	<541C279A.2030601@ti.com>
+	<CAEC9eQMQrM289J+ukkshKtTo9dB=G4cvg-4zF6LR6snqE5BL0A@mail.gmail.com>
+	<541C3D95.7080200@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB5V56WQAKGQE34T6L2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140920043438.GD8127@brian-ubuntu>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Dmitriy B." <rzk333-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Meyer <quitte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <541C3D95.7080200@ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+On Fri, Sep 19, 2014 at 7:58 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 19/09/14 16:59, Ajay kumar wrote:
+>
+>> I am not really able to understand, what's stopping us from using this
+>> bridge on a board with "complex" display connections. To use ps8622 driver,
+>> one needs to "attach" it to the DRM framework. For this, the DRM driver
+>
+> Remember that when we talk about DT bindings, there's no such thing as
+> DRM. We talk about hardware. The same bindings need to work on any
+> operating system.
+Agreed.
 
-On Fri, 19 Sep 2014 21:34:38 -0700
-Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> would need the DT node for ps8622 bridge. For which I use a phandle.
+>
+> A complex one could be for example a case where you have two different
+> panels connected to ps8622, and you can switch between the two panels
+> with, say, a gpio. How do you present that with a simple phandle?
+>
+> In the exynos5420-peach-pit.dts, which you linked earlier, I see a
+> "panel" property in the ps8625 node. That's missing from the bindings in
+> this patch. Why is that? How is the panel linked in this version?
+Oops, my bad!  Panel should also be present in the DT binding(for which,
+I am using a phandle for panel node)
 
-> Hi Boris,
-> 
-> On Mon, Aug 18, 2014 at 07:26:26PM +0200, Boris BREZILLON wrote:
-> > This patch series adds support for the sunxi NAND Flash Controller (NFC)
-> > block.
-> > 
-> > These two patches only add support for the basic NAND stuff:
-> >  - NAND controller operations
-> >  - SW and HW ECC handling (with both syndrome and normal ECC scheme)
-> > 
-> > If you want support for advanced features you can find it on my github
-> > repo [1]:
-> >  - HW randomization support
-> >  - per partition ECC/Randomizer to handle bootloader partitions
-> > 
-> > DMA transfers are not supported yet, but I have reworked the OOB layout
-> > when using the HW ECC scheme to match the one used when accessing the NAND
-> > with DMA transfers (the available OOB bytes are placed at the end of the
-> > OOB area).
-> > 
-> > This patch series depends on this other one [2] which adds support for ONFI
-> > timing mode retrieval on non-ONFI NANDs.
-> 
-> Were you planning to send v2 of your series [2]? I see you made a
-> mistake you were planning on fixing:
-> 
->   https://lkml.org/lkml/2014/7/30/423
+>> If some XYZ platform wishes to pick the DT node via a different method,
+>> they are always welcome to do it. Just because I am not specifying a
+>> video port/endpoint in the DT binding example, would it mean that platform
+>> cannot make use of ports in future? If that is the case, I can add something
+>
+> All the platforms share the same bindings for ps8622. If you now specify
+> that ps8622 bindings use a simple phandle, then anyone who uses ps8622
+> should support that.
+>
+> Of course the bindings can be extended in the future. In that case the
+> drivers need to support both the old and the new bindings, which is
+> always a hassle.
+>
+> Generally speaking, I sense that we have different views of how display
+> devices and drivers are structured. You say "If some XYZ platform wishes
+> to pick the DT node via a different method, they are always welcome to
+> do it.". This sounds to me that you see the connections between display
+> devices as something handled by a platform specific driver.
+> I, on the other hand, see connections between display devices as common
+> properties.
+Well, I am okay with using video ports to describe the relationship
+between the encoder, bridge and the panel.
+But, its just that I need to make use of 2 functions when phandle
+does it using just one function ;)
+-        panel_node = of_parse_phandle(dev->of_node, "panel", 0)
++       endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
++       if (!endpoint)
++               return -EPROBE_DEFER;
++
++       panel_node = of_graph_get_remote_port_parent(endpoint);
++       if (!panel_node)
++               return -EPROBE_DEFER;
 
-Yep, I was just waiting for your feedback before fixing it ;-).
 
-Best Regards,
+If nobody else has objections over using of_graph functions instead
+of phandles, I can respin this patchset by making use of video ports.
 
-Boris
+Ajay
 
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> Say, we could have a display board, with a panel and an encoder and
+> maybe some other components, which takes parallel RGB as input. The same
+> display board could as well be connected to an OMAP board or to an
+> Exynos board.
+>
+> I think the exact same display-board.dtsi file, which describes the
+> devices and connections in the display board, should be usable on both
+> OMAP and Exynos platforms. This means we need to have a common way to
+> describe video devices, just as we have for other things.
+>
+>  Tomi
+>
+>
