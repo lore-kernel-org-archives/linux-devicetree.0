@@ -1,52 +1,69 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] Migrate PXA27x platforms to clock framework
-Date: Sat, 20 Sep 2014 18:13:45 +0200
-Message-ID: <874mw2xoau.fsf@free.fr>
-References: <1406753464-15000-1-git-send-email-robert.jarzmik@free.fr>
-	<1465795.XsPpj3dZHX@wuerfel> <87d2bq43pc.fsf@free.fr>
-	<201408241408.19861.arnd@arndb.de>
-	<20140903184956.11368.47800@quantum>
+From: <suravee.suthikulpanit@amd.com>
+Subject: [V8 0/2] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Sat, 20 Sep 2014 09:31:36 -0700
+Message-ID: <1411230698-8081-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140903184956.11368.47800@quantum> (Mike Turquette's message of
-	"Wed, 03 Sep 2014 11:49:56 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
+Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
-> Quoting Arnd Bergmann (2014-08-24 05:08:19)
->> On Sunday 24 August 2014, Robert Jarzmik wrote:
->> > > By default, I'd expect Haojian to pick up the patches and send
->> > > us a pull request. He sent an Ack, but also didn't make it clear
->> > > that we should pick them up.
->> > I was thinking that they would go through the clk maintainers, hence Haojian's
->> > ack. If they should go through arm-soc, they would need Mike's ack.
->
-> Robert,
->
-> I'm happy to take the patches but they will need to be rebased onto
-> clk-next and refactored to take into account Tomeu's api split[0].
+This patch set introduces support for MSI(-X) in GICv2m specification,
+which is implemented in some variation of GIC400.
 
-Hi Mike,
+This depends on and has been tested with the following patch set which
+implements PCI supports for ARM64:
 
-I have had a look at clk-next and Tomeu's split.
-My current understanding is that Tomeu's patches don't apply on your clk-next,
-as I get conflicts.
+    [PATCH v11 00/10] Support for creating generic PCI host bridges from DT
+    https://lkml.org/lkml/2014/9/17/732
 
-So either I rebase my patches on top of Tomeu's tree (as this is what will drive
-most of the rebase work AFAIU), or I wait for Tomeu's tree to be merged into
-your clk-next. Is there any chance Tomeu's work ends up in your clk-next tree
-soon ?
+    [PATCH v11] Add support for PCI in AArch64
+    https://lkml.org/lkml/2014/9/17/736
 
-Cheers.
+This patch set is rebased from:
+    git://git.infradead.org/users/jcooper/linux.git irqchip/core
+ 
+Changes in V8:
+    * Minor clean up suggested by Marc
+    * Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+
+Changes in V7:
+    * Fix error handling logic in gicv2m_of_init() and gicv2m_init_one().
+      per Marc suggestions.
+    * Restructure the patch to integrate the multi-MSI support for V2m
+      into the patch 2/2.
+    * Introduce "arm,gic-v2m-frame" compatible ID for the v2m DT binding.
+    * Introduce "arm,msi-base-spi" and "arm,msi-num-spi" property in the
+      v2m DT binding for overwriting value in MSI_TYPER register.
+    * Add irq-gic-v2m.c: is_msi_spi_valid() to validate the SPI base and
+      number of SPIs.
+    * Fix various comments from Marc (Many thanks).
+    * Add the missing CONFIG_ARM_GICV2M (per Marcin Juszkiewicz comment)
+
+Suravee Suthikulpanit (2):
+  irqchip: gic: Add support for multiple MSI for ARM64
+  irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
+
+ Documentation/devicetree/bindings/arm/gic.txt |  55 ++++
+ arch/arm64/Kconfig                            |   1 +
+ arch/arm64/kernel/Makefile                    |   1 +
+ arch/arm64/kernel/msi.c                       |  41 +++
+ drivers/irqchip/Kconfig                       |   5 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-gic-common.c              |  12 +
+ drivers/irqchip/irq-gic-common.h              |   4 +
+ drivers/irqchip/irq-gic-v2m.c                 | 356 ++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic.c                     |  82 +++---
+ drivers/irqchip/irq-gic.h                     |  54 ++++
+ 11 files changed, 582 insertions(+), 30 deletions(-)
+ create mode 100644 arch/arm64/kernel/msi.c
+ create mode 100644 drivers/irqchip/irq-gic-v2m.c
+ create mode 100644 drivers/irqchip/irq-gic.h
 
 -- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.3
+
