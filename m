@@ -1,48 +1,51 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 5/5] ARM: mvebu: armada-xp: Configure ix4-300d PCIe0 to x4
-Date: Sat, 20 Sep 2014 20:06:31 +0200
-Message-ID: <1411236391-422-6-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1411236391-422-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411236391-422-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Ben Gamari <bgamari.foss@gmail.com>
+Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
+Date: Sat, 20 Sep 2014 17:37:19 -0400
+Message-ID: <87fvfmynw0.fsf@gmail.com>
+References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com> <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com> <20131219164109.GB27409@kroah.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20131219164109.GB27409@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon@overkiz.com>
+Cc: Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-The PCIe controller on Port 0 of Lenovo ix4-300d is configured as
-quad-lane x4. Correct the marvell,pcie-lane property accordingly.
+--=-=-=
+Content-Type: text/plain
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Cc: Rob Herring <robh+dt@kernel.org> 
-Cc: Pawel Moll <pawel.moll@arm.com> 
-Cc: Mark Rutland <mark.rutland@arm.com> 
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk> 
-Cc: Kumar Gala <galak@codeaurora.org> 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jason Cooper <jason@lakedaemon.net> 
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com> 
-Cc: devicetree@vger.kernel.org 
-Cc: linux-kernel@vger.kernel.org 
-Cc: linux-arm-kernel@lists.infradead.org
----
- arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts | 1 +
- 1 file changed, 1 insertion(+)
+Hi Boris,
 
-diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-index 86be971f8fec..11f483c960b0 100644
---- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-+++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
-@@ -249,6 +249,7 @@
- 
- /* Quad port SATA: Marvell 88SX7042 */
- &pcie00 {
-+	marvell,pcie-lane = <0 1 2 3>;
- 	status = "okay";
- };
- 
--- 
-2.0.0
+I'm just returning to this now.
+
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+
+> I don't understand what makes GPIO's "special" enough to get included in
+> the driver core like this, and called for each and every device that is
+> added to the system.
+>
+I'm also a bit confused why GPIOs ended up in the driver core but
+perhaps I'm missing something. What was your motivation here?
+
+Cheers,
+
+- Ben
+
+--=-=-=
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQEcBAEBAgAGBQJUHfOPAAoJEErkyLZmeNiD/ucIAKfJqb41jB7GYeFrwAQ6nP0L
+M7s45uYdzwLj4OSd2UAxqZ+4wOcFRs8pim78cGIhelnVa/da94WYLiUARLW80OPq
+yZQ4xZY5c1O1tI882lvsiE1lmHLKtlm4mzfQPjJ0xHgmBnF/kfkbsOIL3qHofiau
+Tvd5GBBEIc2KpIk7pN8QR1X1sNS5QUembBeVARA8QDZeEiOuLUUYA1UZbRQr2iFd
+jrwW1W6E3yji31Get4SB7TDTMtsunu5o8XnX0KSaEeqK5TZylHVTELcJX8gehetJ
+XrMO1Z9H20+sION0d4M8gHyfIC04G1q+aSsIrqje3iQuFlQDqMBr7VP0otxW4/4=
+=KM9x
+-----END PGP SIGNATURE-----
+--=-=-=--
