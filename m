@@ -1,96 +1,52 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] mtd: nand: add sunxi NAND flash
- controller support
-Date: Fri, 19 Sep 2014 21:34:38 -0700
-Message-ID: <20140920043438.GD8127@brian-ubuntu>
-References: <1408382788-32153-1-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBYUH6SQAKGQE4C2GFIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1408382788-32153-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-Content-Disposition: inline
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "Dmitriy B." <rzk333-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonas Meyer <quitte-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH 3/3] spi: clps711x: dts: Add bindings documentation for the CLPS711X SPI driver
+Date: Sat, 20 Sep 2014 11:05:36 +0400
+Message-ID: <1411196736-5019-1-git-send-email-shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+This patch adds the devicetree documentation for the
+Cirrus Logic CLPS711X SPI driver.
 
-On Mon, Aug 18, 2014 at 07:26:26PM +0200, Boris BREZILLON wrote:
-> This patch series adds support for the sunxi NAND Flash Controller (NFC)
-> block.
-> 
-> These two patches only add support for the basic NAND stuff:
->  - NAND controller operations
->  - SW and HW ECC handling (with both syndrome and normal ECC scheme)
-> 
-> If you want support for advanced features you can find it on my github
-> repo [1]:
->  - HW randomization support
->  - per partition ECC/Randomizer to handle bootloader partitions
-> 
-> DMA transfers are not supported yet, but I have reworked the OOB layout
-> when using the HW ECC scheme to match the one used when accessing the NAND
-> with DMA transfers (the available OOB bytes are placed at the end of the
-> OOB area).
-> 
-> This patch series depends on this other one [2] which adds support for ONFI
-> timing mode retrieval on non-ONFI NANDs.
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ .../devicetree/bindings/spi/spi-clps711x.txt         | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-clps711x.txt
 
-Were you planning to send v2 of your series [2]? I see you made a
-mistake you were planning on fixing:
+diff --git a/Documentation/devicetree/bindings/spi/spi-clps711x.txt b/Documentation/devicetree/bindings/spi/spi-clps711x.txt
+new file mode 100644
+index 0000000..43712c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-clps711x.txt
+@@ -0,0 +1,20 @@
++* Cirrus Logic ARM CLPS711X Serial Peripheral Interface (SPI)
++
++Required properties:
++- compatible: Shall contain "cirrus,clps711x-spi".
++- reg: Offset and length of the register set for the device.
++- interrupts: Should contain SPI interrupt.
++- clocks: phandle to SPI reference clock.
++- cs-gpios: Specifies the GPIO pins to be used for chipselects.
++
++Example:
++	spi: spi@80000500 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "cirrus,ep7312-spi", "cirrus,clps711x-spi";
++		reg = <0x80000500 0x4>;
++		interrupts = <15>;
++		clocks = <&clks CLPS711X_CLK_SPIREF>;
++		cs-gpios = <&portb 4 GPIO_ACTIVE_LOW>,
++			   <&portb 5 GPIO_ACTIVE_LOW>;
++	};
+-- 
+1.8.5.5
 
-  https://lkml.org/lkml/2014/7/30/423
-
-Brian
-
-> Best Regards,
-> 
-> Boris
-> 
-> [1]https://github.com/bbrezillon/linux-sunxi/tree/sunxi-nand-v4
-> [2]https://lkml.org/lkml/2014/7/28/156
-> 
-> Changes since v3:
->  - removed nand core code modifications from the patch series (submitted
->    separately)
->  - added documentation to the code
->  - forced timeout (a default timeout is used when none is provided by the
->    caller) on controller operations
->  - fixed coding style issues
->  - removed unneeded irq field from the sunxi_nfc struct
->  - fixed several memory leaks
->  - reworked the NFC reset code (to avoid potential garbage config from the
->    bootloader)
->  - made use of ECC_EXCEPTION flag to prevent erased page from generating
->    ECC errors
->  - changed the OOB layout for HW ECC scheme
-> 
-> Changes since v2:
->  - merge HW ECC implementation in base implementation patch
->  - fix timing config when interfacing with an ONFI compatible chip
-> 
-> Changes since v1:
->  - add HW ECC support
->  - rework NAND timings retrieval (use ONFI timing mode instead of raw timings)
->  - add nand-ecc-level property to specify NAND ECC requirements from DT
-> 
-> Boris BREZILLON (2):
->   mtd: nand: add sunxi NAND flash controller support
->   mtd: nand: add sunxi NFC dt bindings doc
-> 
->  .../devicetree/bindings/mtd/sunxi-nand.txt         |   45 +
->  drivers/mtd/nand/Kconfig                           |    6 +
->  drivers/mtd/nand/Makefile                          |    1 +
->  drivers/mtd/nand/sunxi_nand.c                      | 1362 ++++++++++++++++++++
->  4 files changed, 1414 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/sunxi-nand.txt
->  create mode 100644 drivers/mtd/nand/sunxi_nand.c
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
