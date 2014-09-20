@@ -1,56 +1,111 @@
-From: Ben Gamari <bgamari.foss@gmail.com>
-Subject: Re: [RFC PATCH] gpio: add GPIO hogging mechanism
-Date: Sat, 20 Sep 2014 18:26:54 -0400
-Message-ID: <87a95uylld.fsf@gmail.com>
-References: <1387463671-1164-1-git-send-email-b.brezillon@overkiz.com> <1387463671-1164-2-git-send-email-b.brezillon@overkiz.com> <20131219164109.GB27409@kroah.com> <87fvfmynw0.fsf@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v5 06/11] i2c: core: Convert to dev_pm_domain_attach|detach()
+Date: Sun, 21 Sep 2014 01:48:57 +0200
+Message-ID: <2089327.LENgA8tdGF@vostro.rjw.lan>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org> <1411151264-16245-7-git-send-email-ulf.hansson@linaro.org> <20140920122318.GC3850@katana>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <87fvfmynw0.fsf@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Jiri Prchal <jiri.prchal@aksignal.cz>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20140920122318.GC3850@katana>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>, Dmitry Torokhov <dmitry.torokhov@gmail.co>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Saturday, September 20, 2014 02:23:19 PM Wolfram Sang wrote:
+> 
+> --bAmEntskrkuBymla
+> Content-Type: text/plain; charset=us-ascii
+> Content-Disposition: inline
+> Content-Transfer-Encoding: quoted-printable
+> 
+> On Fri, Sep 19, 2014 at 08:27:39PM +0200, Ulf Hansson wrote:
+> > Previously only the ACPI PM domain was supported by the i2c bus.
+> >=20
+> > Let's convert to the common attach/detach functions for PM domains,
+> > which currently means we are extending the support to include the
+> > generic PM domain as well.
+> >=20
+> > Cc: linux-i2c@vger.kernel.org
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > Reviewed-by: Kevin Hilman <khilman@linaro.org>
+> 
+> Looks good to me, but I'd like to give Mika a chance to look at it,
+> since he does ACPI with I2C. Adding to CC.
 
-Ben Gamari <bgamari.foss@gmail.com> writes:
+It is not applicable without the [4/9] in this series anyway.
 
-> Hi Boris,
->
-> I'm just returning to this now.
->
->
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->
->> I don't understand what makes GPIO's "special" enough to get included in
->> the driver core like this, and called for each and every device that is
->> added to the system.
->>
-> I'm also a bit confused why GPIOs ended up in the driver core but
-> perhaps I'm missing something. What was your motivation here?
->
-Somehow I overlooked the message in which you responded to this. Ignore
-the above.
+> > ---
+> >  drivers/i2c/i2c-core.c | 13 ++++++++-----
+> >  1 file changed, 8 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> > index 632057a..3cd8f11 100644
+> > --- a/drivers/i2c/i2c-core.c
+> > +++ b/drivers/i2c/i2c-core.c
+> > @@ -279,10 +279,13 @@ static int i2c_device_probe(struct device *dev)
+> >  	if (status < 0)
+> >  		return status;
+> > =20
+> > -	acpi_dev_pm_attach(&client->dev, true);
+> > -	status =3D driver->probe(client, i2c_match_id(driver->id_table, client)=
+> );
+> > -	if (status)
+> > -		acpi_dev_pm_detach(&client->dev, true);
+> > +	status =3D dev_pm_domain_attach(&client->dev, true);
+> > +	if (status !=3D -EPROBE_DEFER) {
+> > +		status =3D driver->probe(client, i2c_match_id(driver->id_table,
+> > +					client));
+> 
+> Very minor: I think it is more readable to keep this in one line.
 
-Cheers,
+Agreed.
 
-- Ben
+> > +		if (status)
+> > +			dev_pm_domain_detach(&client->dev, true);
+> > +	}
+> > =20
+> >  	return status;
+> >  }
+> > @@ -302,7 +305,7 @@ static int i2c_device_remove(struct device *dev)
+> >  		status =3D driver->remove(client);
+> >  	}
+> > =20
+> > -	acpi_dev_pm_detach(&client->dev, true);
+> > +	dev_pm_domain_detach(&client->dev, true);
+> >  	return status;
+> >  }
+> > =20
+> > --=20
+> > 1.9.1
+> >=20
+> 
+> --bAmEntskrkuBymla
+> Content-Type: application/pgp-signature; name="signature.asc"
+> Content-Description: Digital signature
+> 
+> -----BEGIN PGP SIGNATURE-----
+> Version: GnuPG v1
+> 
+> iQIcBAEBAgAGBQJUHXG2AAoJEBQN5MwUoCm2E7EP/1ykOCTRgrozlYwdbXxO9X8Z
+> b6ad23VambrSiQJTZcYheydiVW9qrXIsn8TQf1flWChXtkD06odQRy8tGN8Vw3MQ
+> MTdhyB19x1Z0TMkdmcrbhohsRchjsaeMgcpCNklW8ul8nASuDjY9KUdhVfUaY07q
+> O1zyZxrA5ykPCq/xP2gakHTTOrB6pj0zwOlDe4yQOd1hJcWrhX0/EBxY4DgvvQIr
+> o05w2rdr+s6qCCgV3WSY9EJ0JBOqNhvvGpGnpZe6tms8e1RmrEnSil3piBC1nhHP
+> LPeZr/ZHdoRbEgUPNnr/otLhufVeE5uMLu7FFhmZi3DTVXXVb+kMjE17C6XYc3mM
+> DIumY2ubMBInCIZDjFZa0BvwuodKqkWrG5cmgimDw8VywhDfmCXm7Q1immbKZ0rw
+> p9R4YHkBl5ii0KCyTSrf5M4+ksV80iplb4jmIwfmU0kKnOIan1fgkmyHXR/WN67M
+> d6sZUpMsuCUNTRj7Axe6LdKuuQe/EbO9GC66umjxtckJIesM/BSHHgGAGqnxQolQ
+> q/NnP2JBTVz6sSjoBRb+EMw5cri2Yb2M1Ak24nw+uoveiqBGGMuFFQGoHyV9UXVP
+> zA0MaUKKESiwO1RIaqhYe5lRwIwFSUktD5s/yYQqKbSF0zGAeRn79O+U2ei7xI9a
+> gv2ABkxPmYxBPoSf9y1B
+> =izqF
+> -----END PGP SIGNATURE-----
+> 
+> --bAmEntskrkuBymla--
+> 
 
---=-=-=
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQEcBAEBAgAGBQJUHf8uAAoJEErkyLZmeNiDA3QH+wRXGjXScBmI5Urn09LLfQX+
-XSkYi9g9MB93LRhdpHdJ5RINzR4BdfqmUXn6M8oia16OiaoxMHdA/o5HmJGUWYBr
-5+gf4wAkc7xtefV2KMmkeH44u7tpdpLvyRv/NALdSjsl68fefk8k+q6/LqrSOmOH
-0Dqz6rq6TvEHoONoX6yzs1cgl3zTXdIxmQYgL44w/+q6vQRjEkOiXUV/0LRY+EkD
-jex4wmKbfPVdHATLw5Rn9CIaLFMBXHb/GaynSEOtpzLicClKgwgUQn4iVuniMvp/
-/gbymKQy5dxfztLqmdD8H46YWC1CtbWQNUqlOue3EMkH2edAQ/mRC/pPWFnIcGY=
-=UOUS
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
