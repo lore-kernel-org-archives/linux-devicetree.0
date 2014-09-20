@@ -1,78 +1,77 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v11 07/10] OF: Introduce helper function for getting PCI
- domain_nr
-Date: Sat, 20 Sep 2014 12:52:44 -0500
-Message-ID: <541DBEEC.6010305@gmail.com>
-References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com> <1411003825-21521-8-git-send-email-Liviu.Dudau@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1411003825-21521-8-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/5] PCI: mvebu: Count number of lanes
+Date: Sat, 20 Sep 2014 20:06:28 +0200
+Message-ID: <1411236391-422-3-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1411236391-422-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411236391-422-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2014 08:30 PM, Liviu Dudau wrote:
-> Add of_pci_get_domain_nr() to retrieve the PCI domain number
-> of a given device from DT. If the information is not present,
-> the function can be requested to allocate a new domain number.
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> ---
+Some PCIe controllers found on Armada XP SoCs can be configured as
+either four single-lane x1 or one quad-lane x4 PCIe. Although we are
+not (yet) interested in the physical configuration of the PCIe
+controller, we will need it when proper PHY support for PCIe is added.
+Adapt the driver to the amended DT semantic and count the number of
+PCIe lanes.
 
-[...]
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> 
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> 
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> 
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> 
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> 
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org 
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org 
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+---
+ drivers/pci/host/pci-mvebu.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-> +/**
-> + * This function will try to obtain the host bridge domain number by
-> + * using of_alias_get_id() call with "pci-domain" as a stem. If that
-> + * fails, a local allocator will be used. The local allocator can
-> + * be requested to return a new domain_nr if the information is missing
-> + * from the device tree.
-> + *
-> + * @node: device tree node with the domain information
-> + * @allocate_if_missing: if DT lacks information about the domain nr,
-> + * allocate a new number.
-> + *
-> + * Returns the associated domain number from DT, or a new domain number
-> + * if DT information is missing and @allocate_if_missing is true. If
-> + * @allocate_if_missing is false then the last allocated domain number
-> + * will be returned.
-> + */
-> +int of_pci_get_domain_nr(struct device_node *node, bool allocate_if_missing)
-> +{
-> +	int domain;
-> +
-> +	domain = atomic_read(&of_domain_nr);
-> +	if (domain == -1) {
-> +		/* first run, get max defined domain nr in device tree */
-> +		domain = of_get_max_pci_domain_nr();
-> +		/* then set the start value for allocator to be max + 1 */
-> +		atomic_set(&of_domain_nr, domain + 1);
+diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
+index a8c6f1a92e0f..0feee6cd395c 100644
+--- a/drivers/pci/host/pci-mvebu.c
++++ b/drivers/pci/host/pci-mvebu.c
+@@ -115,6 +115,7 @@ struct mvebu_pcie_port {
+ 	void __iomem *base;
+ 	u32 port;
+ 	u32 lane;
++	int num_lanes;
+ 	int devfn;
+ 	unsigned int mem_target;
+ 	unsigned int mem_attr;
+@@ -982,9 +983,17 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
+ 			continue;
+ 		}
+ 
+-		if (of_property_read_u32(child, "marvell,pcie-lane",
+-					 &port->lane))
++		/*
++		 * If there are multiple lanes, we are only interested in the
++		 * number of the first lane and the lane count.
++		 */
++		if (of_property_read_u32_index(child, "marvell,pcie-lane",
++					       0, &port->lane))
+ 			port->lane = 0;
++		port->num_lanes = of_property_count_u32_elems(child,
++						      "marvell,pcie-lane");
++		if (!port->num_lanes)
++			port->num_lanes = 1;
+ 
+ 		port->name = kasprintf(GFP_KERNEL, "pcie%d.%d",
+ 				       port->port, port->lane);
+-- 
+2.0.0
 
-atomic_read followed by atomic_set is not an atomic operation.
-
-As I previously said, I don't like how this function is a mixture of
-data retrieval and domian # allocation. I think we need 2 functions.
-
-> +	}
-> +	domain = of_alias_get_id(node, "pci-domain");
-
-I still do not like using aliases here. Just put pci-domain or
-linux,pci-domain into the PCI node.
-
-I think we should assume all PCI root buses either have a domain
-property or they don't and a mixture is an error. I'm not sure if that
-simplifies the code or not though.
-
-In the interest of merging, I think you should just do a simple
-allocation and add the DT domain handling as a second step. You will
-also need to document the DT part.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
