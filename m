@@ -1,76 +1,63 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Sat, 20 Sep 2014 17:27:50 +0200
-Message-ID: <CABxcv=kGTmYtjDc0isgy=-Ga+w69zVefJwK1qQY7dmER5fhhJg@mail.gmail.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
-	<5419760A.7020908@ti.com>
-	<CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
-	<5419B52D.4060107@ti.com>
-	<CAEC9eQO2rfmVEKTCUJk+SpfdeUr81gN3stYV3wE6yR3E=-zonA@mail.gmail.com>
-	<541C279A.2030601@ti.com>
-	<CAEC9eQMQrM289J+ukkshKtTo9dB=G4cvg-4zF6LR6snqE5BL0A@mail.gmail.com>
-	<541C3D95.7080200@ti.com>
-	<CAEC9eQNshrP6wW_9mEDbFR5hRpW6Hy=GBFzV=rf05Wpxz6gtiw@mail.gmail.com>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] bcma: register bcma as device tree driver
+Date: Sat, 20 Sep 2014 21:10:08 +0530
+Message-ID: <541D9FD8.4000404@gmail.com>
+References: <1411218125-32670-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAEC9eQNshrP6wW_9mEDbFR5hRpW6Hy=GBFzV=rf05Wpxz6gtiw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411218125-32670-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[adding Kukjin as cc]
+On Saturday 20 September 2014 06:32 PM, Hauke Mehrtens wrote:
+> This driver is used by the bcm53xx ARM SoC code. Now it is possible to
+> give the address of the chipcommon core in device tree and bcma will
+> search for all the other cores.
 
-Hello Ajay,
+(...)
 
-On Sat, Sep 20, 2014 at 1:22 PM, Ajay kumar <ajaynumb@gmail.com> wrote:
->> Generally speaking, I sense that we have different views of how display
->> devices and drivers are structured. You say "If some XYZ platform wishes
->> to pick the DT node via a different method, they are always welcome to
->> do it.". This sounds to me that you see the connections between display
->> devices as something handled by a platform specific driver.
->> I, on the other hand, see connections between display devices as common
->> properties.
-> Well, I am okay with using video ports to describe the relationship
-> between the encoder, bridge and the panel.
-> But, its just that I need to make use of 2 functions when phandle
-> does it using just one function ;)
-> -        panel_node = of_parse_phandle(dev->of_node, "panel", 0)
-> +       endpoint = of_graph_get_next_endpoint(dev->of_node, NULL);
-> +       if (!endpoint)
-> +               return -EPROBE_DEFER;
 > +
-> +       panel_node = of_graph_get_remote_port_parent(endpoint);
-> +       if (!panel_node)
-> +               return -EPROBE_DEFER;
->
->
-> If nobody else has objections over using of_graph functions instead
-> of phandles, I can respin this patchset by making use of video ports.
+> +static const struct of_device_id bcma_host_soc_of_match[] = {
+> +	{ .compatible = "brcm,bus-axi", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, bcma_host_soc_of_match);
+> +
+> +static struct platform_driver bcma_host_soc_driver = {
+> +	.driver = {
+> +		.name = "bcma-host-soc",
+> +		.owner = THIS_MODULE,
 
-I certainly have no objections about re-using the video
-ports/endpoints DT bindings for the bridges but just wanted to point
-out that Kukjin has already merged on his tree the DTS changes for
-display on Snow and Peach Pit using the current binding and also sent
-the pull request [0] to ARM SoC maintainers since he probably was
-expecting this series to make ti for 3.18. So that should be handled
-somehow.
+This field updated automatically...
 
-Tomi,
+> +		.of_match_table = bcma_host_soc_of_match,
+> +	},
+> +	.probe		= bcma_host_soc_probe,
+> +	.remove		= bcma_host_soc_remove,
+> +};
+> +
+> +int __init bcma_host_soc_register_driver(void)
+> +{
+> +	return platform_driver_register(&bcma_host_soc_driver);
+> +}
+> +
+> +void __exit bcma_host_soc_unregister_driver(void)
+> +{
+> +	platform_driver_unregister(&bcma_host_soc_driver);
+> +}
+> +#endif /* CONFIG_OF */
 
-I see that Documentation/devicetree/bindings/video/ti,omap-dss.txt
-mentions that the Video Ports binding documentation is in
-Documentation/devicetree/bindings/video/video-ports.txt but I don't
-see that this file exists in the kernel [1]. I see though that is was
-included on your series adding DSS DT support [2].
+Why dont you use module_platform_driver(...)...?
 
-Do you know what happened with this file?
+-- 
+Regards,
+Varka Bhadram.
 
-Best regards,
-Javier
-
-[0]: https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg36681.html
-[1]: https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/video
-[2]: http://lists.infradead.org/pipermail/linux-arm-kernel/2014-January/227088.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
