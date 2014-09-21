@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 1/6] ARM: sunxi: Introduce Allwinner A80 support
-Date: Sun, 21 Sep 2014 22:58:08 +0800
-Message-ID: <1411311493-24344-2-git-send-email-wens@csie.org>
+Subject: [PATCH 2/6] ARM: sunxi: Add debug uart used by sun9i
+ (Allwinner A80)
+Date: Sun, 21 Sep 2014 22:58:09 +0800
+Message-ID: <1411311493-24344-3-git-send-email-wens@csie.org>
 References: <1411311493-24344-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBFGP7OQAKGQEJRIZHMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBE6P7OQAKGQE2AMI4NA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1411311493-24344-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,46 +20,48 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, yhf-HcjymKqD97rQT0dZR+AlfA@public.gmane.org, ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner A80 is a new Cortex octo-core A7/A15 big.LITTLE SoC.
-While it's processor cores and interconnecting bus are new, it
-re-uses many peripherals found in earlier Allwinner SoCs.
+The uarts on sun9i are still compatible with the dw_8250, but are
+located at different addresses.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/mach-sunxi/Kconfig | 5 +++++
- arch/arm/mach-sunxi/sunxi.c | 9 +++++++++
- 2 files changed, 14 insertions(+)
+ arch/arm/Kconfig.debug | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-index 1aaa1e1..72f222b 100644
---- a/arch/arm/mach-sunxi/Kconfig
-+++ b/arch/arm/mach-sunxi/Kconfig
-@@ -42,4 +42,9 @@ config MACH_SUN8I
- 	select MFD_SUN6I_PRCM
- 	select RESET_CONTROLLER
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index b11ad54..58b5218 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -707,6 +707,14 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on SOCFPGA based platforms.
  
-+config MACH_SUN9I
-+	bool "Allwinner A80 (sun9i) SoCs support"
-+	default ARCH_SUNXI
-+	select ARM_GIC
++	config DEBUG_SUN9I_UART0
++		bool "Kernel low-level debugging messages via sun9i UART0"
++		depends on ARCH_SUNXI && MACH_SUN9I
++		select DEBUG_UART_8250
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on Allwinner A80 based platforms on the UART0.
 +
- endif
-diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-index 42d4753..4bd2117 100644
---- a/arch/arm/mach-sunxi/sunxi.c
-+++ b/arch/arm/mach-sunxi/sunxi.c
-@@ -139,3 +139,12 @@ static const char * const sun8i_board_dt_compat[] = {
- DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i (A23) Family")
- 	.dt_compat	= sun8i_board_dt_compat,
- MACHINE_END
-+
-+static const char * const sun9i_board_dt_compat[] = {
-+	"allwinner,sun9i-a80",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(SUN9I_DT, "Allwinner sun9i (A80) Family")
-+	.dt_compat	= sun9i_board_dt_compat,
-+MACHINE_END
+ 	config DEBUG_SUNXI_UART0
+ 		bool "Kernel low-level debugging messages via sunXi UART0"
+ 		depends on ARCH_SUNXI
+@@ -1068,6 +1076,7 @@ config DEBUG_UART_PHYS
+ 	default 0x02530c00 if DEBUG_KEYSTONE_UART0
+ 	default 0x02531000 if DEBUG_KEYSTONE_UART1
+ 	default 0x03010fe0 if ARCH_RPC
++	default 0x07000000 if DEBUG_SUN9I_UART0
+ 	default 0x10009000 if DEBUG_REALVIEW_STD_PORT || DEBUG_CNS3XXX || \
+ 				DEBUG_VEXPRESS_UART0_CA9
+ 	default 0x1010c000 if DEBUG_REALVIEW_PB1176_PORT
+@@ -1145,6 +1154,7 @@ config DEBUG_UART_VIRT
+ 	default 0xf2100000 if DEBUG_PXA_UART1
+ 	default 0xf4090000 if ARCH_LPC32XX
+ 	default 0xf4200000 if ARCH_GEMINI
++	default 0xf7000000 if DEBUG_SUN9I_UART0
+ 	default 0xf7000000 if DEBUG_S3C24XX_UART && (DEBUG_S3C_UART0 || \
+ 				DEBUG_S3C2410_UART0)
+ 	default 0xf7004000 if DEBUG_S3C24XX_UART && (DEBUG_S3C_UART1 || \
 -- 
 2.1.0
