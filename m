@@ -1,14 +1,14 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Subject: Re: [PATCH v2 1/6] V4L2: Add Renesas R-Car JPEG codec driver.
-Date: Sun, 21 Sep 2014 21:56:20 +0400
-Message-ID: <541F1144.3050808@cogentembedded.com>
+Date: Sun, 21 Sep 2014 21:56:34 +0400
+Message-ID: <541F1152.5000200@cogentembedded.com>
 References: <1408452653-14067-2-git-send-email-mikhail.ulyanov@cogentembedded.com> <1408969787-23132-1-git-send-email-mikhail.ulyanov@cogentembedded.com> <53FB2E95.7040505@xs4all.nl> <53FB30E3.2050304@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <53FB30E3.2050304@xs4all.nl>
-Sender: linux-sh-owner@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, horms@verge.net.au, magnus.damm@gmail.com, m.chehab@samsung.com, robh+dt@kernel.org, grant.likely@linaro.org
 Cc: laurent.pinchart@ideasonboard.com, hans.verkuil@cisco.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
@@ -36,7 +36,7 @@ On 08/25/2014 04:49 PM, Hans Verkuil wrote:
 > So I will change v4l2-compliance instead.
 
     I take it we don't need to change the driver? Asking because the driver 
-seems stuck for nearly a months now.
+seems stuck for nearly a month now.
     I'm myself still seeing a place for improvement (register macro naming of 
 the top of my head). Perhaps it's time to take this driver into my own hands...
 
@@ -44,4 +44,3 @@ the top of my head). Perhaps it's time to take this driver into my own hands...
 > 	Hans
 
 WBR, Sergei
-
