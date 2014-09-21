@@ -1,319 +1,47 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 3/6] ARM: dts: sunxi: Add Allwinner A80 dtsi
-Date: Sun, 21 Sep 2014 22:58:10 +0800
-Message-ID: <1411311493-24344-4-git-send-email-wens@csie.org>
-References: <1411311493-24344-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 1/6] V4L2: Add Renesas R-Car JPEG codec driver.
+Date: Sun, 21 Sep 2014 21:56:20 +0400
+Message-ID: <541F1144.3050808@cogentembedded.com>
+References: <1408452653-14067-2-git-send-email-mikhail.ulyanov@cogentembedded.com> <1408969787-23132-1-git-send-email-mikhail.ulyanov@cogentembedded.com> <53FB2E95.7040505@xs4all.nl> <53FB30E3.2050304@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBFGP7OQAKGQEJRIZHMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1411311493-24344-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, yhf-HcjymKqD97rQT0dZR+AlfA@public.gmane.org, ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <53FB30E3.2050304@xs4all.nl>
+Sender: linux-sh-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>, horms@verge.net.au, magnus.damm@gmail.com, m.chehab@samsung.com, robh+dt@kernel.org, grant.likely@linaro.org
+Cc: laurent.pinchart@ideasonboard.com, hans.verkuil@cisco.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner A80 is a new multi-purpose SoC with 4 Cortex-A7 and
-4 Cortex-A15 cores in a big.LITTLE architecture, and a 64-core
-PowerVR G6230 GPU.
+Hello.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun9i-a80.dtsi | 280 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 280 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun9i-a80.dtsi
+On 08/25/2014 04:49 PM, Hans Verkuil wrote:
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-new file mode 100644
-index 0000000..f23ea59
---- /dev/null
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -0,0 +1,280 @@
-+/*
-+ * Copyright 2014 Chen-Yu Tsai
-+ *
-+ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
-+		serial5 = &uart5;
-+		serial6 = &r_uart;
-+	};
-+
-+	cpu-map {
-+		cluster0 {
-+			core0 {
-+				cpu = <&cpu0>;
-+			};
-+			core1 {
-+				cpu = <&cpu1>;
-+			};
-+			core2 {
-+				cpu = <&cpu2>;
-+			};
-+			core3 {
-+				cpu = <&cpu3>;
-+			};
-+		};
-+
-+		cluster1 {
-+			core0 {
-+				cpu = <&cpu4>;
-+			};
-+			core1 {
-+				cpu = <&cpu5>;
-+			};
-+			core2 {
-+				cpu = <&cpu6>;
-+			};
-+			core3 {
-+				cpu = <&cpu7>;
-+			};
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0x0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0x1>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0x2>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0x3>;
-+		};
-+
-+		cpu4: cpu@100 {
-+			compatible = "arm,cortex-a15";
-+			device_type = "cpu";
-+			reg = <0x100>;
-+		};
-+
-+		cpu5: cpu@101 {
-+			compatible = "arm,cortex-a15";
-+			device_type = "cpu";
-+			reg = <0x101>;
-+		};
-+
-+		cpu6: cpu@102 {
-+			compatible = "arm,cortex-a15";
-+			device_type = "cpu";
-+			reg = <0x102>;
-+		};
-+
-+		cpu7: cpu@103 {
-+			compatible = "arm,cortex-a15";
-+			device_type = "cpu";
-+			reg = <0x103>;
-+		};
-+	};
-+
-+	memory {
-+		reg = <0x20000000 0x40000000>;
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		osc24M: osc24M_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+			clock-output-names = "osc24M";
-+		};
-+
-+		osc32k: osc32k_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+			clock-output-names = "osc32k";
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		gic: interrupt-controller@01c41000 {
-+			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
-+			reg = <0x01c41000 0x1000>,
-+			      <0x01c42000 0x1000>,
-+			      <0x01c44000 0x2000>,
-+			      <0x01c46000 0x2000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupts = <1 9 0xf04>;
-+		};
-+
-+		timer@06000c00 {
-+			compatible = "allwinner,sun4i-a10-timer";
-+			reg = <0x06000c00 0xa0>;
-+			interrupts = <0 18 4>,
-+				     <0 19 4>,
-+				     <0 20 4>,
-+				     <0 21 4>,
-+				     <0 22 4>,
-+				     <0 23 4>;
-+
-+			clocks = <&osc24M>;
-+		};
-+
-+		uart0: serial@07000000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x07000000 0x400>;
-+			interrupts = <0 0 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@07000400 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x07000400 0x400>;
-+			interrupts = <0 1 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@07000800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x07000800 0x400>;
-+			interrupts = <0 2 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@07000c00 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x07000c00 0x400>;
-+			interrupts = <0 3 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@07001000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x07001000 0x400>;
-+			interrupts = <0 4 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart5: serial@07001400 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x07001400 0x400>;
-+			interrupts = <0 5 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		r_wdt: watchdog@08001000 {
-+			compatible = "allwinner,sun6i-a31-wdt";
-+			reg = <0x08001000 0x20>;
-+			interrupts = <0 36 4>;
-+		};
-+
-+		r_uart: serial@08002800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x08002800 0x400>;
-+			interrupts = <0 38 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+	};
-+};
--- 
-2.1.0
+>>> This patch contains driver for Renesas R-Car JPEG codec.
+
+>>> Cnanges since v1:
+>>>      - s/g_fmt function simplified
+>>>      - default format for queues added
+>>>      - dumb vidioc functions added to be in compliance with standard api:
+>>>          jpu_s_priority, jpu_g_priority
+
+>> Oops, that's a bug elsewhere. Don't add these empty prio ops, this needs to be
+>> solved in the v4l2 core.
+
+>> I'll post a patch for this.
+
+> After some thought I've decided to allow prio handling for m2m devices. It is
+> actually useful if some application wants exclusive access to the m2m hardware.
+
+> So I will change v4l2-compliance instead.
+
+    I take it we don't need to change the driver? Asking because the driver 
+seems stuck for nearly a months now.
+    I'm myself still seeing a place for improvement (register macro naming of 
+the top of my head). Perhaps it's time to take this driver into my own hands...
+
+> Regards,
+> 	Hans
+
+WBR, Sergei
+
