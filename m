@@ -1,91 +1,76 @@
-From: Benoit Masson <benoitm@perenite.com>
-Subject: Re: [PATCH 0/8] Armada XP pinctrl consolidation and ix4-300d fixes
-Date: Sun, 21 Sep 2014 16:11:23 +0200
-Message-ID: <-7443282711873112734@unknownmsgid>
-References: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411157684-6991-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Benoit Masson <yahoo@perenite.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 0/6] ARM: sunxi: Add basic support for Allwinner
+ A80 SoC
+Date: Sun, 21 Sep 2014 22:58:07 +0800
+Message-ID: <1411311493-24344-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBFGP7OQAKGQEJRIZHMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <http://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, yhf-HcjymKqD97rQT0dZR+AlfA@public.gmane.org, ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Le 19 sept. 2014 =C3=A0 22:14, Sebastian Hesselbarth <sebastian.hesse=
-lbarth@gmail.com> a =C3=A9crit :
->
-> Guys,
-Hi
->
-> this is a patch set preparing barebox support for ix4-300d. As usual,
-> I stumbled upon a few nice-to-haves before actually touching ix4-300d
-> dts. As it is a mach-mvebu thing, I just added the related mailing
-> lists instead of each of the DT maintainers.
->
-> First 5 patches consolidate SoC-specific pinctrl nodes to one common
-> node in armada-xp.dtsi, compatible overwrites for each SoC, and node
-> alias usage for each board. Also, ge{0,1} pinctrl settings are moved
-> to the common node from one board specific node.
->
-> Last 3 patches then use that ge{0,1} pinctrl settings on ix4-300d whi=
-ch
-> is vital for bootloader init. During exploration of ix4-300d, I also
-> found a i2c eeprom that has not been added to the dts, yet. Finally,
-> there is only one 74hc595 on ix4 mainboard while dts property is set
-> for two.
->
-> I cannot recall in detail what is on that eeprom, but IIRC it is noth=
-ing
-> important. Some reg,addr pairs for some init stuff that should have
-> already been done by stock u-boot. Anyway, adding the node will do no
-> harm.
->
-> Patches are based on v3.17-rc1 and intended for v3.18 but I am not in
-> a hurry. I only compile tested this, so a formal Tested-by from Benoi=
-t
-> for the ix4 and any other Armada XP board would be great.
-I'm not sure what to test since I only receive some patch from the
-series of 8. Should I get all 8 or only those you sent me. I'll be
-able to test during next week.
->
-> S=C3=A9bastien
->
-Thanks beno=C3=AEt
->
-> Sebastian Hesselbarth (8):
->  ARM: mvebu: armada-xp: Consolidate pinctrl node
->  ARM: mvebu: armada-xp: Add node alias to pinctrl and add base addres=
-s
->  ARM: mvebu: armada-xp: Use pinctrl node alias
->  ARM: mvebu: armada-xp: Move GE0/1 pinctrl settings for RGMII
->  ARM: mvebu: armada-xp: Add GE0 pinctrl settings for GMII
->  ARM: mvebu: armada-xp: Add RGMII pinctrl to Lenovo ix4-300d
->  ARM: mvebu: armada-xp: Add I2C eeprom on Lenovo ix4-300d
->  ARM: mvebu: armada-xp: Fix 74hc595 count for Lenovo ix4-300d
->
-> arch/arm/boot/dts/armada-xp-axpwifiap.dts        |  58 +++-----
-> arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts  |  73 +++++-----
-> arch/arm/boot/dts/armada-xp-mv78230.dtsi         |  15 +--
-> arch/arm/boot/dts/armada-xp-mv78260.dtsi         |  15 +--
-> arch/arm/boot/dts/armada-xp-mv78460.dtsi         |  15 +--
-> arch/arm/boot/dts/armada-xp-netgear-rn2120.dts   | 164 +++++++++++---=
----------
-> arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |  14 +-
-> arch/arm/boot/dts/armada-xp.dtsi                 |  37 +++++
-> 8 files changed, 202 insertions(+), 189 deletions(-)
->
-> ---
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Gregory Clement <gregory.clement@free-electrons.com>
-> Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: Benoit Masson <yahoo@perenite.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> --
-> 2.0.0
->
+Hi everyone,
+
+This patch series adds very basic support for Allwinner's A80 SoC,
+a big.LITTLE architecture with 4 Cortex-A7s and 4 Cortex-A15s.
+
+Development is done on the A80 Optimus Board, the defacto development
+board for the A80, with the accompanying SDK as a reference. 
+
+So far I've been unable to get the board to boot from MMC, or
+using Android fastboot. I'm using Allwinner's FEL mode to load
+the bootloader and kernel+dtb image over USB. Notes on my attempts
+can be found here: http://linux-sunxi.org/User:Wens#A80_Optimus
+
+
+Patch 1 introduces the compatible string for the A80.
+
+Patch 2 adds options to use UART0 on the A80 as the debug port for
+earlyprintk.
+
+Patch 3 adds a barebone dtsi with just the cpu, memory and uart nodes.
+
+Patch 4 adds a barebone dts for the A80 Optimus Board.
+
+Patch 5 documents the vendor prefix for Merrii Technology Co., Ltd,
+the designer and vendor of the A80 Optimus Board.
+
+Patch 6 documents all the Allwinner SoCs we currently support.
+
+
+Cheers
+ChenYu
+
+Chen-Yu Tsai (6):
+  ARM: sunxi: Introduce Allwinner A80 support
+  ARM: sunxi: Add debug uart used by sun9i (Allwinner A80)
+  ARM: dts: sunxi: Add Allwinner A80 dtsi
+  ARM: dts: sun9i: Add A80 Optimus Board support
+  devicetree: bindings: Add vendor prefix for Merrii Technology Co.,
+    Ltd.
+  devicetree: bindings: Document supported Allwinner sunxi SoCs
+
+ Documentation/devicetree/bindings/arm/sunxi.txt    |  12 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/Kconfig.debug                             |  10 +
+ arch/arm/boot/dts/Makefile                         |   2 +
+ arch/arm/boot/dts/sun9i-a80-optimus.dts            |  66 +++++
+ arch/arm/boot/dts/sun9i-a80.dtsi                   | 280 +++++++++++++++++++++
+ arch/arm/mach-sunxi/Kconfig                        |   5 +
+ arch/arm/mach-sunxi/sunxi.c                        |   9 +
+ 8 files changed, 385 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/sunxi.txt
+ create mode 100644 arch/arm/boot/dts/sun9i-a80-optimus.dts
+ create mode 100644 arch/arm/boot/dts/sun9i-a80.dtsi
+
+-- 
+2.1.0
