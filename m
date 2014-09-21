@@ -1,126 +1,116 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 6/7] ARM: dts: sun6i: Add required ahb1
- clock parent and rates for dma controller
-Date: Sun, 21 Sep 2014 16:31:06 +0800
-Message-ID: <CAGb2v67cf+UQW2Sp=vS1jSu1jCAgG-wXz8cvh7K4RM4zhJgjkA@mail.gmail.com>
-References: <1410000448-9999-1-git-send-email-wens@csie.org>
- <1410000448-9999-7-git-send-email-wens@csie.org> <20140911211531.GN31276@lukather>
- <CAGb2v64+RxJ52DzawhAtYCn=sw+28e4Q11jzG02KQE=8hxa0tQ@mail.gmail.com>
- <20140916154849.GE2166@lukather> <CAGb2v64BLvB3v8Wnep5Fqh1COTXYJ5_uyeuevejqD-KpYiptQg@mail.gmail.com>
- <20140920095927.GQ2166@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH 1/3] cap1106: Add support for various cap11xx devices
+Date: Sun, 21 Sep 2014 11:58:33 +0200
+Message-ID: <541EA149.5000408@zonque.org>
+References: <1411268469-21283-1-git-send-email-mranostay@gmail.com> <1411268469-21283-2-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBXUZ7KQAKGQE2VNEUKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140920095927.GQ2166@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1411268469-21283-2-git-send-email-mranostay@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>, galak@codeaurora.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 20, 2014 at 5:59 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Wed, Sep 17, 2014 at 12:01:46AM +0800, Chen-Yu Tsai wrote:
->> On Tue, Sep 16, 2014 at 11:48 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Fri, Sep 12, 2014 at 10:10:25AM +0800, Chen-Yu Tsai wrote:
->> >> On Fri, Sep 12, 2014 at 5:15 AM, Maxime Ripard
->> >> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> > On Sat, Sep 06, 2014 at 06:47:27PM +0800, Chen-Yu Tsai wrote:
->> >> >> The DMA controller requires AHB1 bus clock to be clocked from PLL6.
->> >> >>
->> >> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> >> >> ---
->> >> >>  arch/arm/boot/dts/sun6i-a31.dtsi | 5 +++++
->> >> >>  1 file changed, 5 insertions(+)
->> >> >>
->> >> >> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
->> >> >> index 8eb2c6d..1117989 100644
->> >> >> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
->> >> >> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
->> >> >> @@ -317,6 +317,11 @@
->> >> >>                       clocks = <&ahb1_gates 6>;
->> >> >>                       resets = <&ahb1_rst 6>;
->> >> >>                       #dma-cells = <1>;
->> >> >> +
->> >> >> +                     /* DMA controller requires AHB1 clocked from PLL6 */
->> >> >> +                     assigned-clocks = <&ahb1>;
->> >> >> +                     assigned-clock-parents = <&pll6>;
->> >> >> +                     assigned-clock-rates = <200000000>;
->> >> >
->> >> > Where did you get that from?
->> >> >
->> >> > The user manual says that it should be clocked at 600MHz, and I'm not
->> >> > sure it should be enforced there either.
->> >>
->> >> The bindings mean that ahb1 should be clocked from pll6 and at 200 MHz,
->> >> not "pll6 should be 200 MHz". I assume you were misled by them.
->> >>
->> >> Clocking ahb1 from pll6 and at 200 MHz with the /3 pre-divider is the
->> >> vendor BSP default:
->> >>
->> >> On sun6i, the clock init code calls aw_ccu_switch_ahb_2_pll6(), which muxes
->> >> ahb1 from pll6 with the highest dividers, then sets the rate for ahb1 to
->> >> pll6, which sets pre-divider to /3 and divider to /1.
->> >>
->> >> Hope this clears it up. :)
->> >
->> > It does, thanks :)
->> >
->> > But still, I find it the wrong place to enforce such a limit. This
->> > should go into the clock driver itself. The DMA controller requires
->> > such a parenting, but it doesn't require any specific rate, this is
->> > more something of the global system policy.
->>
->> But I am guessing the AHB bus clock cannot be clock at any arbitrary
->> rate. Just muxing without setting a specific clock rate might result
->> in a hang. We could address this with per clock limitations, like the
->> patch you posted earlier. Not sure if there's anything in the kernel
->> like that at the moment, or how the clock framework handles clock rates
->> after re-parenting.
->
-> There's the Tomeu patch series that allows to set clock rate
-> requirements from the user side, I guess that could be easily extended
-> to integrate some clock side boundaries. That's why I stopped working
-> on the sun5i MMC clock issue until that patch is merged.
+Hi,
 
-I could take a look, but AFAIK none of our drivers need to propagate
-clock rate changes.
+On 09/21/2014 05:01 AM, Matt Ranostay wrote:
+> Several other variants of the cap11xx device exists with a varying
+> number of capacitance detection channels. Add support for creating
+> the channels dynamically.
 
->> Or we could just specify in the clock driver, or in the DT via clock
->> supplier defaults, that the AHB bus should be clocked from PLL6 @ 200 MHz.
->>
->> The latter seems easier to do.
->
-> IIRC, there was some opposition to having the muxing assignment in the
-> clock driver.
->
->> Also, I tested the DMA controller using dmatest on my A31 Hummingbird
->> without this re-parenting patch. It worked fine. How did your tests fail?
->
-> It was just timeouting, and actually, it was only working to the SRAM,
-> and not the DRAM.
->
-> Maybe the bootloader sets up the clock muxing already?
+Thanks for the patches!
 
-I just reran my tests on the A31, and dmatest indeed passes.
-I'm using your A31 sdcard.img, replaced u-boot with one built from
-u-boot-sunxi, so it supports DT.
+> 
+> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+> ---
+>  drivers/input/keyboard/cap1106.c | 54 +++++++++++++++++++---------------------
 
-I also checked both the clock framework and the raw registers.
-AHB1 is indeed clocked from AXI on my system.
+Please also add a patch to rename the file to cap11xx.c, and make sure
+to export the patch with 'git format-patch -M' to detect the rename.
 
-Full log: https://gist.github.com/wens/ae17aed6728b83c0a9c3
+> diff --git a/drivers/input/keyboard/cap1106.c b/drivers/input/keyboard/cap1106.c
+> index d70b65a..b9c43b5 100644
+> --- a/drivers/input/keyboard/cap1106.c
+> +++ b/drivers/input/keyboard/cap1106.c
+> @@ -55,8 +55,6 @@
+>  #define CAP1106_REG_MANUFACTURER_ID	0xfe
+>  #define CAP1106_REG_REVISION		0xff
+>  
+> -#define CAP1106_NUM_CHN 6
+> -#define CAP1106_PRODUCT_ID	0x55
+>  #define CAP1106_MANUFACTURER_ID	0x5d
+>  
+>  struct cap1106_priv {
+> @@ -64,7 +62,8 @@ struct cap1106_priv {
+>  	struct input_dev *idev;
+>  
+>  	/* config */
+> -	unsigned short keycodes[CAP1106_NUM_CHN];
+> +	u32 *keycodes;
 
-If you (or someone else with A31) can verify the results,
-maybe we can just drop this patch.
+unsigned short *, please. See below.
+
+> @@ -189,27 +188,23 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
+>  	struct cap1106_priv *priv;
+>  	struct device_node *node;
+>  	int i, error, irq, gain = 0;
+> -	unsigned int val, rev;
+> -	u32 gain32, keycodes[CAP1106_NUM_CHN];
+> +	unsigned int val, prod, rev;
+> +	u32 gain32;
+>  
+>  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>  	if (!priv)
+>  		return -ENOMEM;
+>  
+> +	priv->num_channels = (unsigned long) id->driver_data;
+
+priv->num_channels is unsigned int.
+
+Also, a BUG_ON(!priv->num_channels) wouldn't harm.
+
+> +	priv->keycodes = devm_kzalloc(dev,
+> +		sizeof(u32) * priv->num_channels, GFP_KERNEL);
+
+Use devm_kcalloc() to allocate an array.
+
+> @@ -235,17 +234,12 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
+>  			dev_err(dev, "Invalid sensor-gain value %d\n", gain32);
+>  	}
+>  
+> -	BUILD_BUG_ON(ARRAY_SIZE(keycodes) != ARRAY_SIZE(priv->keycodes));
+> -
+>  	/* Provide some useful defaults */
+> -	for (i = 0; i < ARRAY_SIZE(keycodes); i++)
+> -		keycodes[i] = KEY_A + i;
+> +	for (i = 0; i < priv->num_channels; i++)
+> +		priv->keycodes[i] = KEY_A + i;
+>  
+>  	of_property_read_u32_array(node, "linux,keycodes",
+> -				   keycodes, ARRAY_SIZE(keycodes));
+> -
+> -	for (i = 0; i < ARRAY_SIZE(keycodes); i++)
+> -		priv->keycodes[i] = keycodes[i];
+> +				  priv->keycodes, priv->num_channels);
+
+Hmm, no. Internally, you have to store the keycodes as unsigned short,
+otherwise EVIOC{G|S}KEYCODE from usespace doesn't work.
+
+of_property_read_u16_array() should work here for unsigned short, I
+guess. Otherwise, you'd have to open-code the routine.
+
+> @@ -313,12 +307,16 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
+>  
+>  static const struct of_device_id cap1106_dt_ids[] = {
+>  	{ .compatible = "microchip,cap1106", },
+> +	{ .compatible = "microchip,cap1126", },
+> +	{ .compatible = "microchip,cap1188", },
+
+Hmm, how can that work unless you set .data to the number of channels
+here? Did you test that with a DT-enabled board?
 
 
-Cheers
-ChenYu
+Thanks,
+Daniel
