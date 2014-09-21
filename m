@@ -1,112 +1,130 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH v4 2/2] bcma: get IRQ numbers from dt
-Date: Mon, 22 Sep 2014 00:38:28 +0200
-Message-ID: <1411339108-22307-2-git-send-email-hauke@hauke-m.de>
-References: <1411339108-22307-1-git-send-email-hauke@hauke-m.de>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411339108-22307-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+From: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] cap1106: Add support for various cap11xx devices
+Date: Sun, 21 Sep 2014 15:46:48 -0700
+Message-ID: <CAKzfze--CZ3EVMpRgNy393ddDE64pPm0sibkVBFxWjEm8wL=dA@mail.gmail.com>
+References: <1411268469-21283-1-git-send-email-mranostay@gmail.com>
+	<1411268469-21283-2-git-send-email-mranostay@gmail.com>
+	<541EA149.5000408@zonque.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <541EA149.5000408-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It is not possible to auto detect the irq numbers used by the cores on
-an arm SoC. If bcma was registered with device tree it will search for
-some device tree nodes with the irq number and add it to the core
-configuration.
+On Sun, Sep 21, 2014 at 2:58 AM, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org> wrote:
+>
+> Hi,
+>
+> On 09/21/2014 05:01 AM, Matt Ranostay wrote:
+> > Several other variants of the cap11xx device exists with a varying
+> > number of capacitance detection channels. Add support for creating
+> > the channels dynamically.
+>
+> Thanks for the patches!
+>
+> >
+> > Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  drivers/input/keyboard/cap1106.c | 54 +++++++++++++++++++---------------------
+>
+> Please also add a patch to rename the file to cap11xx.c, and make sure
+> to export the patch with 'git format-patch -M' to detect the rename.
+>
+> > diff --git a/drivers/input/keyboard/cap1106.c b/drivers/input/keyboard/cap1106.c
+> > index d70b65a..b9c43b5 100644
+> > --- a/drivers/input/keyboard/cap1106.c
+> > +++ b/drivers/input/keyboard/cap1106.c
+> > @@ -55,8 +55,6 @@
+> >  #define CAP1106_REG_MANUFACTURER_ID  0xfe
+> >  #define CAP1106_REG_REVISION         0xff
+> >
+> > -#define CAP1106_NUM_CHN 6
+> > -#define CAP1106_PRODUCT_ID   0x55
+> >  #define CAP1106_MANUFACTURER_ID      0x5d
+> >
+> >  struct cap1106_priv {
+> > @@ -64,7 +62,8 @@ struct cap1106_priv {
+> >       struct input_dev *idev;
+> >
+> >       /* config */
+> > -     unsigned short keycodes[CAP1106_NUM_CHN];
+> > +     u32 *keycodes;
+>
+> unsigned short *, please. See below.
+>
+> > @@ -189,27 +188,23 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
+> >       struct cap1106_priv *priv;
+> >       struct device_node *node;
+> >       int i, error, irq, gain = 0;
+> > -     unsigned int val, rev;
+> > -     u32 gain32, keycodes[CAP1106_NUM_CHN];
+> > +     unsigned int val, prod, rev;
+> > +     u32 gain32;
+> >
+> >       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >       if (!priv)
+> >               return -ENOMEM;
+> >
+> > +     priv->num_channels = (unsigned long) id->driver_data;
+>
+> priv->num_channels is unsigned int.
+>
+> Also, a BUG_ON(!priv->num_channels) wouldn't harm.
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
----
- drivers/bcma/main.c | 49 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 48 insertions(+), 1 deletion(-)
+Oops. Will fix..
 
-This is based on wireless-testing and should go into that tree.
+>
+> > +     priv->keycodes = devm_kzalloc(dev,
+> > +             sizeof(u32) * priv->num_channels, GFP_KERNEL);
+>
+> Use devm_kcalloc() to allocate an array.
+>
+> > @@ -235,17 +234,12 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
+> >                       dev_err(dev, "Invalid sensor-gain value %d\n", gain32);
+> >       }
+> >
+> > -     BUILD_BUG_ON(ARRAY_SIZE(keycodes) != ARRAY_SIZE(priv->keycodes));
+> > -
+> >       /* Provide some useful defaults */
+> > -     for (i = 0; i < ARRAY_SIZE(keycodes); i++)
+> > -             keycodes[i] = KEY_A + i;
+> > +     for (i = 0; i < priv->num_channels; i++)
+> > +             priv->keycodes[i] = KEY_A + i;
+> >
+> >       of_property_read_u32_array(node, "linux,keycodes",
+> > -                                keycodes, ARRAY_SIZE(keycodes));
+> > -
+> > -     for (i = 0; i < ARRAY_SIZE(keycodes); i++)
+> > -             priv->keycodes[i] = keycodes[i];
+> > +                               priv->keycodes, priv->num_channels);
+>
+> Hmm, no. Internally, you have to store the keycodes as unsigned short,
+> otherwise EVIOC{G|S}KEYCODE from usespace doesn't work.
+>
+> of_property_read_u16_array() should work here for unsigned short, I
+> guess. Otherwise, you'd have to open-code the routine.
+>
+Ok I'l test that.
 
-changes since:
-v2:
- - use of_translate_address() to support ranges
+> > @@ -313,12 +307,16 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
+> >
+> >  static const struct of_device_id cap1106_dt_ids[] = {
+> >       { .compatible = "microchip,cap1106", },
+> > +     { .compatible = "microchip,cap1126", },
+> > +     { .compatible = "microchip,cap1188", },
+>
+> Hmm, how can that work unless you set .data to the number of channels
+> here? Did you test that with a DT-enabled board?
+>
+Yes it was tested on a BBB.  The num_channels is set from cap1106_i2c_ids
 
-RFC:
- - add #ifdef CONFIG_OF
-
-diff --git a/drivers/bcma/main.c b/drivers/bcma/main.c
-index 19ef685..5e7a3d4 100644
---- a/drivers/bcma/main.c
-+++ b/drivers/bcma/main.c
-@@ -10,6 +10,8 @@
- #include <linux/platform_device.h>
- #include <linux/bcma/bcma.h>
- #include <linux/slab.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
- 
- MODULE_DESCRIPTION("Broadcom's specific AMBA driver");
- MODULE_LICENSE("GPL");
-@@ -131,6 +133,45 @@ static bool bcma_is_core_needed_early(u16 core_id)
- 	return false;
- }
- 
-+#ifdef CONFIG_OF
-+static struct device_node *bcma_of_find_child_device(struct platform_device *parent,
-+						     struct bcma_device *core)
-+{
-+	struct device_node *node;
-+	u64 size;
-+	const __be32 *reg;
-+
-+	if (!parent || !parent->dev.of_node)
-+		return NULL;
-+
-+	for_each_child_of_node(parent->dev.of_node, node) {
-+		reg = of_get_address(node, 0, &size, NULL);
-+		if (!reg)
-+			continue;
-+		if (of_translate_address(node, reg) == core->addr)
-+			return node;
-+	}
-+	return NULL;
-+}
-+
-+static void bcma_of_fill_device(struct platform_device *parent,
-+				struct bcma_device *core)
-+{
-+	struct device_node *node;
-+
-+	node = bcma_of_find_child_device(parent, core);
-+	if (!node)
-+		return;
-+	core->dev.of_node = node;
-+	core->irq = irq_of_parse_and_map(node, 0);
-+}
-+#else
-+static void bcma_of_fill_device(struct platform_device *parent,
-+				struct bcma_device *core)
-+{
-+}
-+#endif /* CONFIG_OF */
-+
- static void bcma_register_core(struct bcma_bus *bus, struct bcma_device *core)
- {
- 	int err;
-@@ -147,7 +188,13 @@ static void bcma_register_core(struct bcma_bus *bus, struct bcma_device *core)
- 		break;
- 	case BCMA_HOSTTYPE_SOC:
- 		core->dev.dma_mask = &core->dev.coherent_dma_mask;
--		core->dma_dev = &core->dev;
-+		if (bus->host_pdev) {
-+			core->dma_dev = &bus->host_pdev->dev;
-+			core->dev.parent = &bus->host_pdev->dev;
-+			bcma_of_fill_device(bus->host_pdev, core);
-+		} else {
-+			core->dma_dev = &core->dev;
-+		}
- 		break;
- 	case BCMA_HOSTTYPE_SDIO:
- 		break;
--- 
-1.9.1
-
+>
+> Thanks,
+> Daniel
 --
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
