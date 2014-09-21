@@ -1,80 +1,102 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 3/5] ARM: mvebu: armada-xp: Correct misnumbered PCIe port
- nodes
-Date: Sun, 21 Sep 2014 01:46:03 +0200
-Message-ID: <541E11BB.7070202@gmail.com>
-References: <1411236391-422-1-git-send-email-sebastian.hesselbarth@gmail.com> <1411236391-422-4-git-send-email-sebastian.hesselbarth@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411236391-422-4-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bjorn Helgaas <bhelgaas@google.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC PATCH v2 00/16] Add ACPI _DSD and unified device properties support
+Date: Sun, 21 Sep 2014 02:26:05 +0200
+Message-ID: <1582936.0FiE8Cvqie@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2014 08:06 PM, Sebastian Hesselbarth wrote:
-> Currently, Armada XP PCIe nodes are numbered pcie@<N>,0 with N just
-> incrementing. To reflect port/lane relationship, rename the nodes
-> to pcie@<port>,<lane>. While at it, add node aliases to each of pcie
-> controller and port nodes and get rid of now redundant port/lane
-> comments.
+On Tuesday, September 16, 2014 02:52:31 PM Mika Westerberg wrote:
+> This is a second revision of the patches first submitted here [1].
 > 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> ---
-
-After thinking a while about the current numbering scheme, I have to
-admit that it is correct. The @numbers represent assigned-address of
-the pcie port and this what it is right now.
-
-If there are no more comments, I'll resend the series without messing
-with the numbering scheme.
-
-Sebastian
-
-> ---
->  arch/arm/boot/dts/armada-xp-axpwifiap.dts        | 11 ++++-------
->  arch/arm/boot/dts/armada-xp-db.dts               | 20 +++++++-------------
->  arch/arm/boot/dts/armada-xp-gp.dts               | 11 ++++-------
->  arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts  |  8 +++-----
->  arch/arm/boot/dts/armada-xp-matrix.dts           |  5 ++---
->  arch/arm/boot/dts/armada-xp-mv78230.dtsi         | 12 ++++++------
->  arch/arm/boot/dts/armada-xp-mv78260.dtsi         | 20 ++++++++++----------
->  arch/arm/boot/dts/armada-xp-mv78460.dtsi         | 22 +++++++++++-----------
->  arch/arm/boot/dts/armada-xp-netgear-rn2120.dts   | 11 ++++-------
->  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |  5 ++---
->  10 files changed, 53 insertions(+), 72 deletions(-)
+> The recent publication of the ACPI 5.1 specification [2] adds a reserved name
+> for Device Specific Data (_DSD, Section 6.2.5). This mechanism allows for
+> passing arbitrary hardware description data to the OS. The exact format of the
+> _DSD data is specific to the UUID paired with it [3].   
 > 
-> diff --git a/arch/arm/boot/dts/armada-xp-axpwifiap.dts b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-> index 0e53fad111de..1b2dd3a4000b 100644
-> --- a/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-> +++ b/arch/arm/boot/dts/armada-xp-axpwifiap.dts
-> @@ -37,24 +37,21 @@
->  		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
->  			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000>;
->  
-> -		pcie-controller {
-> +		pcie: pcie-controller {
->  			status = "okay";
->  
->  			/* First mini-PCIe port */
-> -			pcie@1,0 {
-> -				/* Port 0, Lane 0 */
-> +			pcie00: pcie@0,0 {
->  				status = "okay";
->  			};
->  
->  			/* Second mini-PCIe port */
-> -			pcie@2,0 {
-> -				/* Port 0, Lane 1 */
-> +			pcie01: pcie@0,1 {
->  				status = "okay";
->  			};
->  
->  			/* Renesas uPD720202 USB 3.0 controller */
-> -			pcie@3,0 {
-> -				/* Port 0, Lane 3 */
-> +			pcie03: pcie@0,3 {
->  				status = "okay";
->  			};
->  		};
-[...]
+> An ACPI Device Properties UUID has been defined [4] to provide a format
+> compatible with existing device tree schemas. The purpose for this was to
+> allow for the reuse of the existing schemas and encourage the development
+> of firmware agnostic device drivers.
+> 
+> This series accomplishes the following (as well as some other dependencies):
+> 
+>  * Add _DSD support to the ACPI core
+>    This simply reads the UUID and the accompanying Package
+> 
+>  * Add ACPI Device Properties _DSD format support
+>    This understands the hierarchical key:value pair structure
+>    defined by the Device Properties UUID
+> 
+>  * Add a unified device properties API with ACPI and OF backends
+>    This provides for the firmware agnostic device properties
+>    Interface to be used by drivers
+> 
+>  * Provides 3 example drivers that were previously Device Tree aware that
+>    can now be used with either Device Tree or ACPI Device Properties. The
+>    drivers use "PRP0001" as their _HID which means that the match should be
+>    done using driver's .of_match_table instead.
+> 
+> The patch series has been tested on Minnoboard and Minnowboard MAX and the
+> relevant part of DSDTs are at the end of this cover letter.
+> 
+> This series does not provide for a means to append to a system DSDT. That
+> will ultimately be required to make the most effective use of the _DSD
+> mechanism. Work is underway on that as a separate effort.
+> 
+> Most important changes to the previous RFC version:
+> 
+>   * Added wrapper functions for most used property types
+>   * Return -EOVERFLOW in case integer would not fit to a type
+>   * Dropped dev_prop_ops
+>   * We now have dev_node_xxx() functions to access firmware node
+>     properties without dev pointer
+>   * The accessor function names try to be close to their corresponding of_*
+>     counterpart
+>   * Tried to have a bit better examples in the documentation patch
+>   * gpiolib got support for _DSD and also it now understand firmware node
+>     properties with dev_node_get_named_gpiod() that requests the GPIO
+>     properly.
+>   * Support for "PRP0001" _HID/_CID. This means that the match should be
+>     done using driver .of_match_table instead.
+>   * Add unified property support for at25 SPI eeprom driver as well.
+> 
+> [1] https://lkml.org/lkml/2014/8/17/10
+> [2] http://www.uefi.org/sites/default/files/resources/ACPI_5_1release.pdf
+> [3] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
+> [4] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
+> 
+> Aaron Lu (2):
+>   input: gpio_keys_polled - Add support for GPIO descriptors
+>   input: gpio_keys_polled - Make use of device property API
+> 
+> Max Eliaser (2):
+>   leds: leds-gpio: Make use of device property API
+>   leds: leds-gpio: Add ACPI probing support
+> 
+> Mika Westerberg (11):
+>   ACPI: Add support for device specific properties
+>   ACPI: Allow drivers to match using Device Tree compatible property
+>   ACPI: Document ACPI device specific properties
+>   mfd: Add ACPI support
+>   gpio / ACPI: Add support for _DSD device properties
+>   gpio: Add support for unified device properties interface
+>   gpio: sch: Consolidate core and resume banks
+>   leds: leds-gpio: Add support for GPIO descriptors
+>   input: gpio_keys_polled - Add ACPI probing support
+>   misc: at25: Make use of device property API
+>   misc: at25: Add ACPI probing support
+
+Given the ACKs that we've got already (the Greg's one in particular) and
+the apparent lack of objections (or indeed any comments at all), I'm about
+to queue this up for 3.18 next week.
+
+Rafael
+
