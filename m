@@ -1,42 +1,56 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 4/9] rtc: at91sam9: add DT support
-Date: Mon, 22 Sep 2014 17:26:38 +0200
-Message-ID: <20140922172638.1c699ec9@bbrezillon>
-References: <1411377058-26155-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1411377058-26155-5-git-send-email-boris.brezillon@free-electrons.com>
-	<20140922151754.GH5237@localhost>
+From: Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH v11 10/10] PCI: Introduce pci_remap_iospace() for
+ remapping PCI I/O bus resources into CPU space
+Date: Mon, 22 Sep 2014 17:29:48 +0200
+Message-ID: <20140922152948.GB20256@rric.localhost>
+References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
+ <1411003825-21521-11-git-send-email-Liviu.Dudau@arm.com>
+ <20140919215400.GA30239@google.com>
+ <201409200420.31433.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140922151754.GH5237@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201409200420.31433.arnd@arndb.de>
+Sender: linux-arch-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Sep 2014 17:17:54 +0200
-Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On 20.09.14 04:20:31, Arnd Bergmann wrote:
+> On Friday 19 September 2014, Bjorn Helgaas wrote:
+> > On Thu, Sep 18, 2014 at 02:30:25AM +0100, Liviu Dudau wrote:
+>=20
+> > PCI_IOBASE is a virtual address.  So PCI_IOBASE + res->start is als=
+o a
+> > virtual address (only for IORESOURCE_IO).
+> >=20
+> > Since res->start is normally a *physical* address, I think it would=
+ be less
+> > confusing to do something like this:
+> >=20
+> >     vaddr =3D PCI_IOBASE + res->start;
+> >     ioremap_page_range(vaddr, vaddr + resource_size(res), ...);
+> >=20
+> > so we have a hint that the first two ioremap_page_range() parameter=
+s are
+> > virtual addresses.  It's also confusing that it uses "unsigned long=
+" for
+> > the virtual addresses, when we usually use "void *".  But that's ou=
+t of
+> > scope for this patch.
+>=20
+> Good idea. I think it will have to be (unsigned long)PCI_IOBASE above=
+ then,
+> since ioremap_page_range takes a 'unsigned long' virtual address and =
+PCI_IOBASE
+> should really remain an __iomem pointer.
 
-> [ Please don't drop people from CC. ]
-> 
-> On Mon, Sep 22, 2014 at 11:10:53AM +0200, Boris BREZILLON wrote:
-> > Add of_match_table to the existing driver so that rtc nodes defined in at91
-> > DTs can be attached to this driver.
-> 
-> That should be rtt nodes.
+Right, I see this warning here:
 
-Oh crap! Hopefully this is the last occurrence of 'rtc' in my commit logs :-).
+drivers/pci/pci.c: In function =E2=80=98pci_remap_iospace=E2=80=99:
+drivers/pci/pci.c:2728:8: warning: assignment makes integer from pointe=
+r without a cast [enabled by default]
 
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Robert
