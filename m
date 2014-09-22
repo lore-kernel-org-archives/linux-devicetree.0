@@ -1,118 +1,385 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [V8 2/2] irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
-Date: Mon, 22 Sep 2014 18:37:34 +0100
-Message-ID: <20140922173734.GO3290@leverpostej>
-References: <1411230698-8081-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1411230698-8081-3-git-send-email-suravee.suthikulpanit@amd.com>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] iio/adc: add support for axp288 adc
+Date: Mon, 22 Sep 2014 10:46:02 -0700
+Message-ID: <20140922104602.0e16b50a@ultegra>
+References: <1410912715-25903-1-git-send-email-jacob.jun.pan@linux.intel.com>
+	<1410912715-25903-3-git-send-email-jacob.jun.pan@linux.intel.com>
+	<541ECF29.8060006@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411230698-8081-3-git-send-email-suravee.suthikulpanit@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <541ECF29.8060006-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: IIO <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DEVICE TREE <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Fugang Duan <B38611-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Zubair Lutfullah <zubair.lutfullah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Johannes Thumshirn <johannes.thumshirn-csrFAY9JiS4@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, Angelo Compagnucci <angelo.compagnuc>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suravee,
+On Sun, 21 Sep 2014 14:14:17 +0100
+Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-This looks good, I just have a few fixups that would be nice to apply
-below.
-
-On Sat, Sep 20, 2014 at 05:31:38PM +0100, suravee.suthikulpanit@amd.com wrote:
-> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> On 17/09/14 01:11, Jacob Pan wrote:
+> > Platform driver for X-Powers AXP288 ADC, which is a sub-device of
+> > the customized AXP288 PMIC for Intel Baytrail-CR platforms. GPADC
+> > device enumerates as one of the MFD cell devices. It uses IIO
+> > infrastructure to communicate with userspace and consumer drivers.
+> >
+> > Usages of ADC channels include battery charging and thermal sensors.
+> >
+> > Based on initial work by:
+> > Ramakrishna Pallala <ramakrishna.pallala-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> >
+> > Signed-off-by: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> A few more bits from me...
 > 
-> ARM GICv2m specification extends GICv2 to support MSI(-X) with
-> a new set of register frame. This patch introduces support for
-> the non-secure GICv2m register frame. Currently, GICV2m is available
-> in certain version of GIC-400.
+> Jonathan
+> > ---
+> >  drivers/iio/adc/Kconfig      |   8 ++
+> >  drivers/iio/adc/Makefile     |   1 +
+> >  drivers/iio/adc/axp288_adc.c | 254
+> > +++++++++++++++++++++++++++++++++++++++++++ 3 files changed, 263
+> > insertions(+) create mode 100644 drivers/iio/adc/axp288_adc.c
+> >
+> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > index 11b048a..db2681b 100644
+> > --- a/drivers/iio/adc/Kconfig
+> > +++ b/drivers/iio/adc/Kconfig
+> > @@ -127,6 +127,14 @@ config AT91_ADC
+> >  	help
+> >  	  Say yes here to build support for Atmel AT91 ADC.
+> >
+> > +config AXP288_ADC
+> > +	tristate "X-Powers AXP288 ADC driver"
+> > +	depends on MFD_AXP20X
+> > +	help
+> > +	  Say yes here to have support for X-Powers power
+> > management IC (PMIC) ADC
+> > +	  device. Depending on platform configuration, this
+> > general purpose ADC can
+> > +	  be used for sampling sensors such as thermal resistors.
+> > +
+> >  config EXYNOS_ADC
+> >  	tristate "Exynos ADC driver support"
+> >  	depends on ARCH_EXYNOS || (OF && COMPILE_TEST)
+> > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> > index ad81b51..19640f9 100644
+> > --- a/drivers/iio/adc/Makefile
+> > +++ b/drivers/iio/adc/Makefile
+> > @@ -14,6 +14,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
+> >  obj-$(CONFIG_AD7887) += ad7887.o
+> >  obj-$(CONFIG_AD799X) += ad799x.o
+> >  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+> > +obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
+> >  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+> >  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+> >  obj-$(CONFIG_MAX1027) += max1027.o
+> > diff --git a/drivers/iio/adc/axp288_adc.c
+> > b/drivers/iio/adc/axp288_adc.c new file mode 100644
+> > index 0000000..333c624
+> > --- /dev/null
+> > +++ b/drivers/iio/adc/axp288_adc.c
+> > @@ -0,0 +1,254 @@
+> > +/*
+> > + * axp288_adc.c - X-Powers AXP288 PMIC ADC Driver
+> > + *
+> > + * Copyright (C) 2014 Intel Corporation
+> > + *
+> > + *
+> > ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > modify
+> > + * it under the terms of the GNU General Public License as
+> > published by
+> > + * the Free Software Foundation; version 2 of the License.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > but
+> > + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See
+> > the GNU
+> > + * General Public License for more details.
+> > + *
+> > + */
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/mfd/axp20x.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include <linux/iio/iio.h>
+> > +#include <linux/iio/machine.h>
+> > +#include <linux/iio/driver.h>
+> > +
+> > +#define AXP288_ADC_EN_MASK		0xF1
+> > +#define AXP288_ADC_TS_PIN_GPADC		0xF2
+> > +#define AXP288_ADC_TS_PIN_ON		0xF3
+> > +
+> > +enum axp288_adc_id {
+> > +	AXP288_ADC_TS,
+> > +	AXP288_ADC_PMIC,
+> > +	AXP288_ADC_GP,
+> > +	AXP288_ADC_BATT_CHRG_I,
+> > +	AXP288_ADC_BATT_DISCHRG_I,
+> > +	AXP288_ADC_BATT_V,
+> > +	AXP288_ADC_NR_CHAN,
+> > +};
+> > +
+> > +struct axp288_adc_info {
+> > +	int irq;
+> > +	struct device *dev;
+> Is the dev element ever used?
 > 
-> The patch introduces a new property in ARM gic binding, the v2m subnode.
-> It is optional.
+> > +	struct regmap *regmap;
+> > +};
+> > +
+> > +static const struct iio_chan_spec const axp288_adc_channels[] = {
+> > +	{
+> > +		.indexed = 1,
+> > +		.type = IIO_TEMP,
+> > +		.channel = 0,
+> > +		.address = AXP288_TS_ADC_H,
+> > +		.datasheet_name = "CH0",
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_TEMP,
+> > +		.channel = 1,
+> > +		.address = AXP288_PMIC_ADC_H,
+> > +		.datasheet_name = "CH1",
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_TEMP,
+> > +		.channel = 2,
+> > +		.address = AXP288_GP_ADC_H,
+> > +		.datasheet_name = "CH2",
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_CURRENT,
+> > +		.channel = 3,
+> > +		.address = AXP20X_BATT_CHRG_I_H,
+> > +		.datasheet_name = "CH3",
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_CURRENT,
+> > +		.channel = 4,
+> > +		.address = AXP20X_BATT_DISCHRG_I_H,
+> > +		.datasheet_name = "CH4",
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+> > +	}, {
+> > +		.indexed = 1,
+> > +		.type = IIO_VOLTAGE,
+> > +		.channel = 5,
+> > +		.address = AXP20X_BATT_V_H,
+> > +		.datasheet_name = "CH5",
+> > +		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
+> > +	},
+> > +};
+> > +
+> > +#define AXP288_ADC_MAP(_adc_channel_label,
+> > _consumer_dev_name,	\
+> > +		_consumer_channel)				\
+> > +	{							\
+> > +		.adc_channel_label = _adc_channel_label,	\
+> > +		.consumer_dev_name = _consumer_dev_name,	\
+> > +		.consumer_channel =
+> > _consumer_channel,		\
+> > +	}
+> > +
+> > +/* for consumer drivers */
+> > +static struct iio_map axp288_adc_default_maps[] = {
+> > +	AXP288_ADC_MAP("TS_PIN", "axp288-batt",
+> > "axp288-batt-temp"),
+> > +	AXP288_ADC_MAP("PMIC_TEMP", "axp288-pmic",
+> > "axp288-pmic-temp"),
+> > +	AXP288_ADC_MAP("GPADC", "axp288-gpadc",
+> > "axp288-system-temp"),
+> > +	AXP288_ADC_MAP("BATT_CHG_I", "axp288-chrg",
+> > "axp288-chrg-curr"),
+> > +	AXP288_ADC_MAP("BATT_DISCHRG_I", "axp288-chrg",
+> > "axp288-chrg-d-curr"),
+> > +	AXP288_ADC_MAP("BATT_V", "axp288-batt",
+> > "axp288-batt-volt"),
+> > +	{},
+> > +};
+> > +
+> > +static int axp288_adc_read_raw(struct iio_dev *indio_dev,
+> > +			struct iio_chan_spec const *chan,
+> > +			int *val, int *val2, long mask)
+> > +{
+> > +	int ret;
+> > +	struct axp288_adc_info *info = iio_priv(indio_dev);
+> > +	u8 buf[2];
+> > +
+> > +	mutex_lock(&indio_dev->mlock);
+> > +	switch (mask) {
+> > +	case IIO_CHAN_INFO_RAW:
+> > +		/* special case for GPADC sample */
+> > +		if (chan->address == AXP288_GP_ADC_H) {
+> > +			ret = regmap_write(info->regmap,
+> > AXP288_ADC_TS_PIN_CTRL,
+> > +					AXP288_ADC_TS_PIN_GPADC);
+> > +			if (ret) {
+> > +				dev_err(&indio_dev->dev, "GPADC
+> > mode\n");
+> > +				mutex_unlock(&indio_dev->mlock);
+> > +				return ret;
+> > +			}
+> > +		}
+> > +	case IIO_CHAN_INFO_PROCESSED:
+> > +		ret = regmap_bulk_read(info->regmap,
+> > chan->address, buf, 2);
+> > +		if (ret) {
+> > +			dev_err(&indio_dev->dev, "sample raw data
+> > failed\n");
+> > +			break;
+> > +		}
+> > +		*val = (buf[0] << 4) + ((buf[1] >> 4) & 0x0F);
+> > +		ret = IIO_VAL_INT;
+> > +		break;
+> > +	default:
+
+> > +		ret = -EINVAL;
+> > +	}
+> > +
+> Why is this statement down here rather than in the relevant case entry
+> above?
+
+I think you meant the line below, why I need to check the same
+conditions again for INFO_RAW. The reason is that the regmap_write()
+call is preparing a valid mode for the regmap_bulk_read below. I could
+move the statement in the case statement and duplicate the
+regmap_bulk_read() such that INFO_RAW and INFO_PROCESSED has its own
+break statement. That should make a code more readable but with
+duplicated code.
+
+
+> > +	if (mask == IIO_CHAN_INFO_RAW && chan->address ==
+> > AXP288_GP_ADC_H)
+> > +		ret = regmap_write(info->regmap,
+> > AXP288_ADC_TS_PIN_CTRL,
+> > +			AXP288_ADC_TS_PIN_ON);
+> > +
+> > +	mutex_unlock(&indio_dev->mlock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int axp288_adc_enable(struct regmap *regmap, bool enable)
+> It's fussy, but axp288_adc_set_state or similar would be slightly
+> less confusing as enable with a parameter of false, just means
+> don't enable, not disable as i would imagine you intend...
+agreed.
 > 
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Acked-by: Marc Zyngier <Marc.Zyngier@arm.com>
-> Cc: Mark Rutland <Mark.Rutland@arm.com>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Catalin Marinas <Catalin.Marinas@arm.com>
-> Cc: Will Deacon <Will.Deacon@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/gic.txt |  55 ++++
->  arch/arm64/Kconfig                            |   1 +
->  drivers/irqchip/Kconfig                       |   5 +
->  drivers/irqchip/Makefile                      |   1 +
->  drivers/irqchip/irq-gic-common.c              |  12 +
->  drivers/irqchip/irq-gic-common.h              |   4 +
->  drivers/irqchip/irq-gic-v2m.c                 | 356 ++++++++++++++++++++++++++
->  drivers/irqchip/irq-gic.c                     |  82 +++---
->  drivers/irqchip/irq-gic.h                     |  54 ++++
->  9 files changed, 540 insertions(+), 30 deletions(-)
->  create mode 100644 drivers/irqchip/irq-gic-v2m.c
->  create mode 100644 drivers/irqchip/irq-gic.h
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
-> index c7d2fa1..38b2156 100644
-> --- a/Documentation/devicetree/bindings/arm/gic.txt
-> +++ b/Documentation/devicetree/bindings/arm/gic.txt
-> @@ -96,3 +96,58 @@ Example:
->                       <0x2c006000 0x2000>;
->                 interrupts = <1 9 0xf04>;
->         };
-> +
-> +
-> +* GICv2m extension for MSI/MSI-x support (Optional)
-> +
-> +Certain revision of GIC-400 supports MSI/MSI-x via V2M register frame.
-> +This is enabled by specifying v2m sub-node.
+> > +{
+> > +	unsigned int pin_on, adc_en;
+> > +
+> > +	if (enable) {
+> > +		pin_on = AXP288_ADC_TS_PIN_ON;
+> > +		adc_en = AXP288_ADC_EN_MASK;
+> > +	} else {
+> > +		pin_on = ~AXP288_ADC_TS_PIN_ON;
+> > +		adc_en = ~AXP288_ADC_EN_MASK;
+> > +	}
+> > +	if (regmap_write(regmap, AXP288_ADC_TS_PIN_CTRL, pin_on))
+> > +		return -EIO;
+> > +
+> > +	return regmap_write(regmap, AXP20X_ADC_EN1,
+> > ~AXP288_ADC_EN_MASK); +}
+> > +
+> > +static const struct iio_info axp288_adc_iio_info = {
+> > +	.read_raw = &axp288_adc_read_raw,
+> > +	.driver_module = THIS_MODULE,
+> > +};
+> > +
+> > +static int axp288_adc_probe(struct platform_device *pdev)
+> > +{
+> > +	int ret;
+> > +	struct axp288_adc_info *info;
+> > +	struct iio_dev *indio_dev;
+> > +	struct axp20x_dev *axp20x =
+> > dev_get_drvdata(pdev->dev.parent); +
+> > +	indio_dev = devm_iio_device_alloc(&pdev->dev,
+> > sizeof(*info));
+> > +	if (!indio_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	info = iio_priv(indio_dev);
+> > +	info->irq = platform_get_irq(pdev, 0);
+> > +	if (info->irq < 0) {
+> > +		dev_err(&pdev->dev, "no irq resource?\n");
+> > +		return info->irq;
+> > +	}
+> > +	platform_set_drvdata(pdev, indio_dev);
+> > +	info->regmap = axp20x->regmap;
+> > +	ret = axp288_adc_enable(axp20x->regmap, true);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Unable to enable ADC
+> > device\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	indio_dev->dev.parent = &pdev->dev;
+> > +	indio_dev->name = pdev->name;
+> > +	indio_dev->channels = axp288_adc_channels;
+> > +	indio_dev->num_channels = ARRAY_SIZE(axp288_adc_channels);
+> > +	indio_dev->info = &axp288_adc_iio_info;
+> > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > +	ret = iio_map_array_register(indio_dev,
+> > axp288_adc_default_maps);
+> > +	if (ret < 0)
+> > +		goto err_disable_dev;
+> > +
+> > +	ret = iio_device_register(indio_dev);
+> > +	if (ret < 0) {
+> > +		dev_err(&pdev->dev, "unable to register iio
+> > device\n");
+> > +		goto err_array_unregister;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +err_array_unregister:
+> > +	iio_map_array_unregister(indio_dev);
+> > +err_disable_dev:
+> > +	ret = axp288_adc_enable(axp20x->regmap, false);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int axp288_adc_remove(struct platform_device *pdev)
+> > +{
+> > +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> > +	struct axp20x_dev *axp20x =
+> > dev_get_drvdata(pdev->dev.parent);
+> Would feel a little more consistent to get the regmap from
+> info->regmap, but doesn't really matter I suppose...
+> > +
+> > +	if (axp288_adc_enable(axp20x->regmap, false))
+> > +		dev_err(&pdev->dev, "Unable to disable ADC
+> > device\n");
+> > +	iio_device_unregister(indio_dev);
+> > +	iio_map_array_unregister(indio_dev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct platform_driver axp288_adc_driver = {
+> > +	.probe = axp288_adc_probe,
+> > +	.remove = axp288_adc_remove,
+> > +	.driver = {
+> > +		.name = "axp288_adc",
+> > +		.owner = THIS_MODULE,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(axp288_adc_driver);
+> > +
+> > +MODULE_AUTHOR("Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+> > +MODULE_DESCRIPTION("X-Powers AXP288 ADC Driver");
+> > +MODULE_LICENSE("GPL");
+> >
 
-It looks like this was missed when the binding was updated for multiple
-frames, so:
-
-s/revision/revisions/
-s/frame/frame(s)/
-s/sub-node/sub-node(s)/
-
-> +
-> +Required properties:
-> +
-> +- compatible        : The value here should be "arm,gic-v2m-frame".
-
-- compatible: should contain "arm,gic-v2m-frame".
-
-> +
-> +- msi-controller    : Identifies the node as an MSI controller.
-> +
-> +- reg               : GICv2m MSI interface register base and size
-> +
-> +Optional properties:
-> +
-> +- arm,msi-base-spi  : Specify base SPI the MSI frame.
-> +                      The SPI base value can be from 32 to 1019.
-> +
-> +- arm,msi-num-spi   : Returns the number of contiguous SPIs assigned
-> +                     to the frame.
-> +
-> +Note: "arm,msi-base-spi" and "arm,msi-num-spi" are used mainly for
-> +       providing HW workaround in the case where the MSI_TYPER register
-> +       is corrupted.
-
-s/num-spi/num-spis/ please
-
-Can we get rid of the note and reword this like:
-
-- arm,msi-base-spi: When the MSI_TYPER register contains an incorrect
-                    value, this property should contain the SPI base of
-		    the MSI frame, overriding the HW value.
-
-- arm,msi-num-spis: When the MSI_TYPER register contains an incorrect
-                    value, this property should contain the number of
-                    SPIs assigned to the frame, overriding the HW value.
-
-I realise it's a little redundant, but it's very easy to miss usage
-constraints in notes.
-
-With that, for the binding:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
+[Jacob Pan]
