@@ -1,55 +1,37 @@
-From: Anders Berg <anders.berg@avagotech.com>
-Subject: Re: [PATCH] i2c: axxia: Add I2C driver for AXM55xx
-Date: Mon, 22 Sep 2014 14:18:24 +0200
-Message-ID: <CAE0=X_2bZQSk=hBm4FoffOiVNwebHRm7XmnBwOa=rUhXHjsuLQ@mail.gmail.com>
-References: <1408967482-17723-1-git-send-email-anders.berg@avagotech.com>
-	<20140920121242.GA3833@katana>
-	<CAE0=X_0VQ8rWrUgbsgKm1MwCP8bwWm3UJPq9p=xNDfjP4CC7Bg@mail.gmail.com>
-	<20140922095939.GB1406@katana>
-	<CAE0=X_1v_1eNr=dPTgofamFuy6zP9ff=LS7dyexj4CeutDqaPA@mail.gmail.com>
-	<20140922110455.GA1463@katana>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v9 06/12] ARM: integrator: Correct usage of of_pci_range_to_resource()
+Date: Mon, 22 Sep 2014 14:47:16 +0200
+Message-ID: <CACRpkdanh8vb2-jxVvhmYLXEcvaEKv+BCiom8sPkT3uX_dhG6g@mail.gmail.com>
+References: <1407860725-25202-1-git-send-email-Liviu.Dudau@arm.com>
+	<1407860725-25202-7-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140922110455.GA1463@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1407860725-25202-7-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-pci <linux-pci@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 1:04 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
->
->> >> >> +     if (msg->len == 0 || msg->len > 255)
->> >> >> +             return -EINVAL;
->> >> >
->> >> > Ouch, really? Maybe we should warn the user here.
->> >>
->> >> Yeah, the transfer length register limits the length to 255. I'll add
->> >> a warning here.
->> >
->> > Please also add this information to the Kconfig description and
->> > somewhere at the top of the source file. This is an important flaw which
->> > people should easily find out about.
->> >
->>
->> You are referring to the "len <= 255" restriction being the flaw here,
->> right? I'll add a note to Kconfig and the driver about that.
->
-> Yes, I meant that. I just remembered we should do something else:
->
-> Remove I2C_FUNC_I2C (because it cannot do endless transfers) from
-> functionality and simply use I2C_FUNC_SMBUS_I2C_BLOCK which does I2C
-> like transfers with the SMBus Limit of 32 bytes. It seems PMBus allows
-> for 255 byte which this HW could support, yet I don't recall we have
-> support for that size currently.
->
+On Tue, Aug 12, 2014 at 6:25 PM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
 
-Just tried this out... With the above change (I2C_FUNC_I2C replaced
-with I2C_FUNC_SMBUS_I2C_BLOCK) an EEPROM device fails (at24 driver)
-since it can't do a 16-bit offset when using the SMBUS_I2C_BLOCK
-transfer.
+> Previously, of_pci_range_to_resource() would return a resource
+> that contained physical addresses of the IO space even if the
+> IORESOURCE_IO flags mandate a logical port set of values. Now
+> that the function has been fixed we need to update the drivers
+> that were taking advantage of the old behaviour.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-Would you be OK with keeping the I2C_FUNC_I2C capability and
-documenting the restriction (as per your initial suggestion)?
+I guess you know what you're doing so:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-/Anders
+I expect this patch to go through the PCI tree or so? Or do you
+expect me to funnel it?
+
+Yours,
+Linus Walleij
