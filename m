@@ -1,81 +1,67 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH] i2c: axxia: Add I2C driver for AXM55xx
-Date: Mon, 22 Sep 2014 13:04:55 +0200
-Message-ID: <20140922110455.GA1463@katana>
-References: <1408967482-17723-1-git-send-email-anders.berg@avagotech.com>
- <20140920121242.GA3833@katana>
- <CAE0=X_0VQ8rWrUgbsgKm1MwCP8bwWm3UJPq9p=xNDfjP4CC7Bg@mail.gmail.com>
- <20140922095939.GB1406@katana>
- <CAE0=X_1v_1eNr=dPTgofamFuy6zP9ff=LS7dyexj4CeutDqaPA@mail.gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v11 07/10] OF: Introduce helper function for getting PCI
+ domain_nr
+Date: Mon, 22 Sep 2014 12:05:22 +0100
+Message-ID: <20140922110522.GK1994@e106497-lin.cambridge.arm.com>
+References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
+ <1411003825-21521-8-git-send-email-Liviu.Dudau@arm.com>
+ <20140919210313.GH19374@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140919210313.GH19374@google.com>
 Content-Disposition: inline
-In-Reply-To: <CAE0=X_1v_1eNr=dPTgofamFuy6zP9ff=LS7dyexj4CeutDqaPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> >> >> +     if (msg->len =3D=3D 0 || msg->len > 255)
-> >> >> +             return -EINVAL;
-> >> >
-> >> > Ouch, really? Maybe we should warn the user here.
-> >>
-> >> Yeah, the transfer length register limits the length to 255. I'll add
-> >> a warning here.
-> >
-> > Please also add this information to the Kconfig description and
-> > somewhere at the top of the source file. This is an important flaw which
-> > people should easily find out about.
-> >
+On Fri, Sep 19, 2014 at 10:03:13PM +0100, Bjorn Helgaas wrote:
+> On Thu, Sep 18, 2014 at 02:30:22AM +0100, Liviu Dudau wrote:
+> > Add of_pci_get_domain_nr() to retrieve the PCI domain number
+> > of a given device from DT. If the information is not present,
+> > the function can be requested to allocate a new domain number.
 >=20
-> You are referring to the "len <=3D 255" restriction being the flaw here,
-> right? I'll add a note to Kconfig and the driver about that.
+> Is of_pci_get_domain_nr() used somewhere?  If the use is in some futu=
+re
+> series, please mention it explicitly.  I'm just trying to avoid mergi=
+ng
+> unused code.
 
-Yes, I meant that. I just remembered we should do something else:
+It is used in the arm64 specific patch that I have dropped out of my
+pull request. After discussions with Catalin I will add the patch back
+into the tree that you've pulled from as he is OK with your tree carryi=
+ng
+the whole package.
 
-Remove I2C_FUNC_I2C (because it cannot do endless transfers) from
-functionality and simply use I2C_FUNC_SMBUS_I2C_BLOCK which does I2C
-like transfers with the SMBus Limit of 32 bytes. It seems PMBus allows
-for 255 byte which this HW could support, yet I don't recall we have
-support for that size currently.
+I need to ask for some guidance here: for addressing some of your comme=
+nts
+and Rob's I can add more patches in my v11 branch and you can pull them
+when you think they are ready. But one of your comments was requesting
+splitting a patch into two blocks - one that moves of_pci_range_to_reso=
+urce()
+into drivers/of/address.c and one that fixes it's behaviour - and I don=
+'t
+know how you would like that handled. Should I revert the original patc=
+h
+and add the new ones, or should I rebase the whole series into a differ=
+ent
+branch that you can pull from?
 
-> The other part of the condition (msg->len =3D=3D 0) should actually go
-> away. The controller can do zero-length-data transfers. I'll fix that
-> for next round.
+Best regards,
+Liviu
 
-Great!
+>=20
+> Bjorn
+>=20
 
-
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUIAJXAAoJEBQN5MwUoCm2ot4P/idz7ZXL1HjoDH8KMlAruwpZ
-2fBWLCGGBhf4hJJsykZcXdkdFWcgolHPfc8XPy9vn+FpseCPwZgkJl8h228lZi16
-hRyNEF6wP1KsWbGMbRXkb6oqpx/mcNSp/C8JkbNtQ9PkFGJxuET3OIjxLb6KyYvD
-+vpLBa33D+fiP2UCF6Far2yu2LMYQsn9Cd5ClJYrCqv3xXfrHuTSwrtW4Dm1WnCz
-ObYYCO2T37sYPI/iSgmST1sukkwdgHBAUgwOD0s8F3U9A72TbnrQ1vBycRa43dIJ
-W7j+IwzzZZ+kFdpusrXaiJTyYzQKINAjOswv3neZyLkc6da/Nwl9oCQ1KZYMp6J1
-RRpAkQaOMZ0INHCpA4+Mn2ruaxpry5YLsQC0yk5t/p1W4yIqgZl3bBRtK9rh1eym
-wtr4nNivyPXgB0rO8qMRlmOXTaRHA8txyDcxT6CdUE+uUIgpabyrUCENSM3PW50b
-H/LxPbDY1bzs4WQoQGtdAoEzBvImIEANc4mdYT9tLD/mrZNunS4nwZ0gjcc1ka0D
-FP6cTYMNQgOjvh6IRNdWdWkofFsQOYYu4d0UNnXeTVQPCtdwoyZ9ySwk3VXBk35f
-OzwkSzvumUDNEx3u5YeezzDeVy8jUPpl2hQQhjZlojBFvhukTMtfPoV7e2Vja50d
-QKSGgarrn94AaCQxB0dj
-=/9Zg
------END PGP SIGNATURE-----
-
---YiEDa0DAkWCtVeE4--
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
