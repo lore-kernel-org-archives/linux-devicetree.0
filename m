@@ -1,104 +1,98 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
-Date: Mon, 22 Sep 2014 12:11:54 +0200
-Message-ID: <20140922101153.GN1470@ulmo>
-References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
- <1411376456.2599.1.camel@pengutronix.de>
+From: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Subject: Re: [PATCH] i2c: axxia: Add I2C driver for AXM55xx
+Date: Mon, 22 Sep 2014 12:24:39 +0200
+Message-ID: <CAE0=X_3JVt3+a8Hjm9Keyw0-TPMS+MpOnDCx9XhwdoPzxJ7ikg@mail.gmail.com>
+References: <1408967482-17723-1-git-send-email-anders.berg@avagotech.com>
+	<20140920121242.GA3833@katana>
+	<CAE0=X_0VQ8rWrUgbsgKm1MwCP8bwWm3UJPq9p=xNDfjP4CC7Bg@mail.gmail.com>
+	<20140922095939.GB1406@katana>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0169981433=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1411376456.2599.1.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140922095939.GB1406@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 22, 2014 at 11:59 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>
+>> >> +             if (idev->msg_xfrd == 0 && i2c_m_recv_len(msg)) {
+>> >> +                     /*
+>> >> +                      * Check length byte for SMBus block read
+>> >> +                      */
+>> >> +                     if (c <= 0) {
+>> >> +                             idev->msg_err = -EPROTO;
+>> >> +                             i2c_int_disable(idev, ~0);
+>> >> +                             complete(&idev->msg_complete);
+>> >> +                             break;
+>> >> +                     } else if (c > I2C_SMBUS_BLOCK_MAX) {
+>> >> +                             c = I2C_SMBUS_BLOCK_MAX;
+>> >
+>> > What about returning -EPROTO here as well? I don't think that reading
+>> > just a slice of all the data is helpful.
+>> >
+>>
+>> Right, that is probably true. This came from the device I was using to
+>> test the block-read operation. This device violated the
+>> I2C_SMBUS_BLOCK_MAX limit, so I added this truncation to at least get
+>> something out...
+>
+> Which device was it? I know there are some doing that, yet I like to
+> know which ones.
 
---===============0169981433==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Zl+NncWK+U5aSfTo"
-Content-Disposition: inline
+It was a LTC2974, register MFR_FAULT_LOG (0xee).
+
+>
+>> >> +{
+>> >> +     struct axxia_i2c_dev *idev = _dev;
+>> >> +     u32 status;
+>> >> +
+>> >> +     if (!idev->msg)
+>> >> +             return IRQ_NONE;
+>> >
+>> > This is actually not true. There might be interrupt bits set, so there
+>> > is an IRQ. There shouldn't be one, right, but that's another case IMO.
+>> >
+>>
+>> You could see it as: there is no interrupt that this handler is
+>> interested in serving. I'd like to keep this test as there is some
+>> legacy software that could be run on platforms with this driver that
+>> access the I2C controller directly. If this happens, this test assures
+>> that the user get an informative "unhandled irq" error message
+>> (instead of a null pointer dereference).
+>
+> IRQ_NONE is "this interrupt wasn't by me" so for shared IRQs, the next
+> handler can check. You shouldn't remove the check per se. Still,  since
+> this interrupt was definately from the I2C core, you should return
+> IRQ_HANDLED and print an error message to the logs.
+>
+
+Ok, I'll do that.
 
 
---Zl+NncWK+U5aSfTo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> >> +static int
+>> >> +axxia_i2c_xfer_msg(struct axxia_i2c_dev *idev, struct i2c_msg *msg)
+>> >> +{
+>> >> +     u32 int_mask = MST_STATUS_ERR | MST_STATUS_SNS;
+>> >> +     u32 rx_xfer, tx_xfer;
+>> >> +     u32 addr_1, addr_2;
+>> >> +     int ret;
+>> >> +
+>> >> +     if (msg->len == 0 || msg->len > 255)
+>> >> +             return -EINVAL;
+>> >
+>> > Ouch, really? Maybe we should warn the user here.
+>>
+>> Yeah, the transfer length register limits the length to 255. I'll add
+>> a warning here.
+>
+> Please also add this information to the Kconfig description and
+> somewhere at the top of the source file. This is an important flaw which
+> people should easily find out about.
+>
 
-On Mon, Sep 22, 2014 at 11:00:56AM +0200, Lucas Stach wrote:
-> Am Freitag, den 19.09.2014, 15:53 -0400 schrieb Sean Paul:
-> > Per NVidia, this clock rate should be around 70MHz in
-> > order to properly sample reads on data lane 0. In order
-> > to achieve this rate, we need to reparent the clock from
-> > clk_m which can only achieve 12MHz. Add parent_lp to the
-> > dts bindings and set the parent & rate on init.
-> >=20
-> > Signed-off-by: Sean Paul <seanpaul@chromium.org>
->=20
-> NACK
->=20
-> You are pushing SoC integration details into the binding of the device.
->=20
-> You have two reasonable routes to go here: either the clock driver needs
-> to be made smarter to reparent the clock in case the required clock rate
-> could not be achieved with the current parent or you go the easy route
-> and reparent the clock as part of the initial configuration.
+Ok.
 
-Agreed. There doesn't seem to be a case where it would make sense to
-have this configurable per-board. Can you achieve the same effect by
-adding this to the clock initialization table?
-
-Oh, I just see that we have this in the Tegra124 clock initialization
-table:
-
-	{TEGRA114_CLK_DSIALP, TEGRA114_CLK_PLL_P, 68000000, 0},
-	{TEGRA114_CLK_DSIBLP, TEGRA114_CLK_PLL_P, 68000000, 0},
-
-Doesn't that work for you already? If not that'd be a bug that should be
-fixed in the clock driver.
-
-Thierry
-
---Zl+NncWK+U5aSfTo
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUH/XpAAoJEN0jrNd/PrOh1M8P/AxtZOLbNbgA++oJ1E8pGueE
-jH2q86Z/wR9KC7pMDQQBZOObA6q97gWsw1KYRn/wt6hFkPqbwiLcQjxPiqU4byJp
-AUky5JgAqUtpnh8scN7fYYMY5xw6QA9swScpZOJAU5QIBwjhq60BMC3qzUey/1Cw
-iMiaWRyg2rz4BMSLq024JHprbR9Ghl2GeLcIhoziVl6q9PdWix6MGq3ZAlUbqEUt
-RxK4ReS0mEq2/QkjujVRciKJZVm9DdKESAUHH2a5Y/d4Md3ejp/Gq6QtPfxv/4fL
-cVyhksfiTVaCL8LFJ8r7OfWXtu60x5V6a93laHBvek2xK+EGL89R6EN0iHcTyEFL
-qf81RcpcKl5N/nazqzZEzj1RlybeVY2vRg9a/GV04JYwEnWziDbDrO62Is9Szqak
-Bbv0eXpgSojxGGzIXWnY5CXhUzupNq2CESPNXGP3yT5zR5Nbaz4HL7mtCkEXl18A
-Ib3cOKeqOIXj/3xIDCmMPEExwoN3G7mvRVeG4CfOWahoCQKW+b/aDe8UkVCnrzn3
-GBwmqsMrB8ZwzVMGzM0m/TTlFOs6MVuPxgwbm2JrOSTfbQSEsAvTcysVZw0rdYJu
-QWxJ3VLblTALgEA8hv/Ubs8MjFueE0ueI+WfsDp09N1emD2Vbhp1wXdaFUhIMZQ9
-JJEl62DwGffoSR/QwO1j
-=gwge
------END PGP SIGNATURE-----
-
---Zl+NncWK+U5aSfTo--
-
---===============0169981433==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0169981433==--
+Thanks,
+Anders
