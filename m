@@ -1,95 +1,63 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv10 2/4] mailbox: Introduce framework for mailbox
-Date: Mon, 22 Sep 2014 19:33:32 +0100
-Message-ID: <54206B7C.60501@arm.com>
-References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>	<1406896296-4863-1-git-send-email-jaswinder.singh@linaro.org> <CAJ5Y-eZ5gNMQ2YRN4iS5QTU7qUrgxGdTHXhQZ_2ut4iBsEZHGg@mail.gmail.com> <5420675C.6040805@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5420675C.6040805-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones@linaro>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 10/16] of: Add vendor prefix for MIPS Technologies, Inc.
+Date: Mon, 22 Sep 2014 14:01:03 -0500
+Message-ID: <1E0E7540-B04F-4E89-91F7-B6FAC3C5D889@codeaurora.org>
+References: <1409938218-9026-1-git-send-email-abrestic@chromium.org> <1409938218-9026-11-git-send-email-abrestic@chromium.org> <CAL_JsqKGG3ei9=Od74VSL9Sm_=+vsW4U+WBgXmCEtK3iTDfJ0g@mail.gmail.com> <CAL1qeaGgBpkuGyxu_P9BNdHjncLA1pfPc-yE98UBj9Ot1koLrA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaGgBpkuGyxu_P9BNdHjncLA1pfPc-yE98UBj9Ot1koLrA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Rob Herring <robherring2@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
+On Sep 22, 2014, at 11:28 AM, Andrew Bresticker <abrestic@chromium.org>=
+ wrote:
 
-On 22/09/14 19:15, Sudeep Holla wrote:
->
->
-> On 22/09/14 19:01, Ashwin Chaugule wrote:
->> Hi Jassi,
->>
->> On 1 August 2014 08:31, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> Introduce common framework for client/protocol drivers and
->>> controller drivers of Inter-Processor-Communication (IPC).
->>>
->>> Client driver developers should have a look at
->>>    include/linux/mailbox_client.h to understand the part of
->>> the API exposed to client drivers.
->>> Similarly controller driver developers should have a look
->>> at include/linux/mailbox_controller.h
->>>
->>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> On Mon, Sep 22, 2014 at 7:23 AM, Rob Herring <robherring2@gmail.com> =
+wrote:
+>> On Fri, Sep 5, 2014 at 12:30 PM, Andrew Bresticker
+>> <abrestic@chromium.org> wrote:
+>>> Add the vendor prefix "mti" for MIPS Technologies, Inc.
+>>>=20
+>>> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
 >>> ---
->>>    MAINTAINERS                        |   8 +
->>>    drivers/mailbox/Makefile           |   4 +
->>>    drivers/mailbox/mailbox.c          | 466 +++++++++++++++++++++++++++++++++++++
->>>    include/linux/mailbox_client.h     |  46 ++++
->>>    include/linux/mailbox_controller.h | 135 +++++++++++
->>>    5 files changed, 659 insertions(+)
->>>    create mode 100644 drivers/mailbox/mailbox.c
->>>    create mode 100644 include/linux/mailbox_client.h
->>>    create mode 100644 include/linux/mailbox_controller.h
->>>
->>
->> [..]
->>
->>> +
->>> +static void poll_txdone(unsigned long data)
->>> +{
->>> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
->>> +       bool txdone, resched = false;
->>> +       int i;
->>> +
->>> +       for (i = 0; i < mbox->num_chans; i++) {
->>> +               struct mbox_chan *chan = &mbox->chans[i];
->>> +
->>> +               if (chan->active_req && chan->cl) {
->>> +                       resched = true;
->>> +                       txdone = chan->mbox->ops->last_tx_done(chan);
->>> +                       if (txdone)
->>> +                               tx_tick(chan, 0);
->>> +               }
->>> +       }
->>> +
->>> +       if (resched)
->>> +               mod_timer(&mbox->poll, jiffies +
->>> +                               msecs_to_jiffies(mbox->period));
->>
->> While preparing a different patch which uses the Mbox framework, I
->> noticed that mbox->period might not be initialized anywhere. Also, how
->> is mbox->txpoll_period to be used? It appears from the description of
->> txpoll_period in mbox_controller.h that you'd want to use that value
->> in the mod_timer above, or equate the two somewhere in the controller
->> registration or eliminate one of the two. FWIW I also looked at your
->> code in [1].
->>
->
-> IIUC the controller needs to set the txpoll_period if it sets
-> txdone_poll, may be a sanity check for !0 would be good.
->
+>>> New for v2.
+>>> ---
+>>> Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>> 1 file changed, 1 insertion(+)
+>>>=20
+>>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt =
+b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>> index ac7269f..efa5a5b 100644
+>>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>>> @@ -86,6 +86,7 @@ microchip     Microchip Technology Inc.
+>>> mosaixtech     Mosaix Technologies, Inc.
+>>> moxa   Moxa
+>>> mpl    MPL AG
+>>> +mti    MIPS Technologies, Inc.
+>>=20
+>> Why not mips as that is more common and the stock ticker.
+>=20
+> "mti" is already in use, see
+> Documentation/devicetree/bindings/mips/cpu_irq.txt,
+> arch/mips/mti-sead3/sead3.dts, and arch/mips/ralink/dts/*.dtsi.
 
-Ah, sorry I confused mbox->period to txpoll_period.
-You are right mbox->period is not set, the header claims it to be
-private, and hence I assume it needs to be handled only in core mailbox
-library. Not sure if we need both mbox->period and txpoll_period though.
+Isn=92t mips already used as well:
 
-Regards,
-Sudeep
+arch/mips/lantiq/dts/danube.dtsi:			compatible =3D "mips,mips24Kc";
+arch/mips/ralink/dts/mt7620a.dtsi:			compatible =3D "mips,mips24KEc";
+arch/mips/ralink/dts/rt2880.dtsi:			compatible =3D "mips,mips4KEc";
+arch/mips/ralink/dts/rt3050.dtsi:			compatible =3D "mips,mips24KEc";
+arch/mips/ralink/dts/rt3883.dtsi:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- k
+
+--=20
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
