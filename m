@@ -1,47 +1,186 @@
-From: "Kim, Milo" <Milo.Kim@ti.com>
-Subject: RE: [PATCH v2 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
-Date: Mon, 22 Sep 2014 01:01:12 +0000
-Message-ID: <A874F61F95741C4A9BA573A70FE3998FBC4743E2@DQHE06.ent.ti.com>
-References: <1410448403-19402-1-git-send-email-svarbanov@mm-sol.com>
- <1410448403-19402-2-git-send-email-svarbanov@mm-sol.com>
- <54138151.8010902@gmx.de> <54147E97.60808@kernel.org>
- <5416F3E2.3030009@mm-sol.com>
- <4dbc485f-599a-4b50-854c-c2e1c44d4810@email.android.com>
- <541AAC80.1090708@mm-sol.com> <541ED2C0.4040801@kernel.org>
+From: Ming Lei <tom.leiming@gmail.com>
+Subject: Re: [PATCH v9 0/4] APM X-Gene PCIe host controller
+Date: Mon, 22 Sep 2014 09:23:51 +0800
+Message-ID: <CACVXFVMWTeOnVMp2SCzjhPEc1M=zTLg4O8yFhv_jDPYn_6DfeQ@mail.gmail.com>
+References: <1410906824-9321-1-git-send-email-tinamdar@apm.com>
+	<CACVXFVNEFSMjA=h_pyNF1AyYX4C336iM9nkYY=ocGQxjGpDCJA@mail.gmail.com>
+	<CACoXjc=eA0nnK2_dRxktFeSKsfV6fQr=mDfN09sbe34H4GADrA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <541ED2C0.4040801@kernel.org>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CACoXjc=eA0nnK2_dRxktFeSKsfV6fQr=mDfN09sbe34H4GADrA@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gSm9uYXRoYW4gYW5kIFN0YW5pbWlyLA0KDQo+ID4+IFNlZSBEb2N1bWVudGF0aW9uL0FC
-SS9zeXNmcy1idXMtaWlvDQo+ID4+IE1pbGxpdm9sdHMgSSB0aGluay4uLiBXZSBjb3BpZWQgaHdt
-b24gd2hlcmUgcG9zc2libGUuDQo+ID4NCj4gPiBJJ20gYSBiaXQgY29uZnVzZWQgYWJvdXQgdGhl
-c2UgdW5pdHMuIEkgc2VhcmNoZWQgcmVmZXJlbmNlcyBvZg0KPiA+IGlpb19yZWFkX2NoYW5uZWxf
-cHJvY2Vzc2VkKCkgYW5kIGZvdW5kIGEgZmV3Lg0KPiA+DQo+ID4gVGhlIGlpb19od21vbiBleHBl
-Y3RpbmcgbWlsaXZvbHRzLiBPbiB0aGUgb3RoZXIgc2lkZSBscDg3ODgtY2hhcmdlci5jDQo+ID4g
-cmVnaXN0ZXJzIGEgZ2V0X3Byb3BlcnR5IG1ldGhvZCBpbiBjaGFyZ2VyLW1hbmFnZXIuYywgd2hp
-Y2ggZXhwZWN0cw0KPiA+IG1pY3Jvdm9sdHMgaW4gZ2V0X2JhdHRfdVYoKS4NCj4gSXQncyBkZWZp
-bml0ZWx5IG1lYW50IHRvIGJlIG1pbGxpdm9sdHMgKGxpZnRlZCBmcm9tIGh3bW9uIGEgd2hpbGUg
-YmFjaykuDQo+IFNlZSBEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWJ1cy1paW8NCj4g
-DQo+IExvb2tzIGxpa2Ugd2UgaGF2ZSBhIGJ1ZyBpbiBscDg3ODgtY2hhcmdlciAtIGl0IG1pZ2h0
-IGJlIG1hdGNoZWQgd2l0aCBvbmUgaW4NCj4gbHA4Nzg4LWFkYywgYnV0IHRoZW4gdGhlcmUgd2ls
-bCBiZSBhIGJ1ZyB0aGVyZS4uLg0KPiANCj4gQ2MnZCBNaWxvIEtpbS4NCg0KJ2xwODc4OC1jaGFy
-Z2VyJyByZWdpc3RlcnMgbm90IGNoYXJnZXItbWFuYWdlciBidXQgcG93ZXItc3VwcGx5IHN1YnN5
-c3RlbS4NCidscDg3ODgtYWRjJyBpcyB0aGUgSUlPIGRyaXZlci4NCidscDg3ODgtY2hhcmdlcicg
-aXMgdGhlIElJTyBjb25zdW1lciBvZiBscDg3ODgtYWRjLg0KDQooSG93IHRvIGNvbW11bmljYXRl
-IGJldHdlZW4gbHA4Nzg4LWFkYyBhbmQgbHA4Nzg4LWNoYXJnZXIpDQoxLiBBcHBsaWNhdGlvbiBy
-ZXF1ZXN0cyB2YmF0dChiYXR0ZXJ5IHZvbHRhZ2UpIGJ5IGFjY2Vzc2luZyAvc3lzL2NsYXNzL3Bv
-d2VyLw0KMi4gbHA4Nzg4LWNoYXJnZXIgYXNrcyBscDg3ODgtYWRjIHRvIGdldCBjb252ZXJ0ZWQg
-dmJhdHQgdmFsdWUNCjMuIGxwODc4OC1hZGMgZ2V0IHRoZSBiYXR0ZXJ5IEFEQyBmcm9tIHRoZSBk
-ZXZpY2UuDQogICBJdCByZXR1cm5zIGNhbGN1bGF0ZWQgbWljcm8gdm9sdGFnZSB0byBscDg3ODgt
-Y2hhcmdlci4NCjQuIGxwODc4OC1jaGFyZ2VyIHJlcG9ydHMgdGhpcyB1ViB2YWx1ZSB0byB0aGUg
-YXBwbGljYXRpb24NCjUuIEFwcGxpY2F0aW9uIHVzZXMgdVYgb3IgY29udmVydHMgdG8gbVYgb3Ig
-ViB1bml0LiBJdCdzIHVwIHRvIHRoZSBhcHAuDQoNClBsZWFzZSBub3RlIHRoYXQgYmF0dGVyeSBh
-cHAgYWNjZXNzZXMgbm90IC9zeXMvYnVzL2lpbyBidXQgL3N5cy9jbGFzcy9wb3dlci8uDQoNCkJl
-c3QgcmVnYXJkcywNCk1pbG8NCg==
+Hi Tanmay,
+
+On Sat, Sep 20, 2014 at 1:15 AM, Tanmay Inamdar <tinamdar@apm.com> wrote:
+> Hi Ming Lei,
+>
+> On Thu, Sep 18, 2014 at 8:08 PM, Ming Lei <tom.leiming@gmail.com> wrote:
+>> Hi Tanmay,
+>>
+>> On Wed, Sep 17, 2014 at 6:33 AM, Tanmay Inamdar <tinamdar@apm.com> wrote:
+>>> This patch adds support for AppliedMicro X-Gene PCIe host controller. The
+>>> driver is tested on X-Gene platform with different gen1/2/3 PCIe endpoint
+>>> cards.
+>>>
+>>> X-Gene PCIe controller driver has depedency on the pcie arm64 arch support.
+>>> Liviu Dudau from ARM has sent a patch set for pcie arm64 arch support and
+>>> support for creating generic pcie bridge from device tree. Liviu's patches
+>>> are available here
+>>> https://lkml.org/lkml/2014/9/8/333
+>>>
+>>> If someone wishes to test PCIe on X-Gene with this patch set, above mentioned
+>>> patches from Liviu must be applied before the patches in this patch set. Also
+>>> please use latest xgene u-boot firmware.
+>>>
+>>> changes since V8:
+>>> 1. Add 'dma-coherent' attribute in device node.
+>>
+>>
+>> I just tested your V9 patches plus Liviu's V10 PCI/ARM64 patches
+>> against 3.17-rc5 on Mustang, and the following failure is triggered:
+>>
+>> [    1.190131] bnx2x: Broadcom NetXtreme II 5771x/578xx 10/20-Gigabit
+>> Ethernet Driver bnx2x 1.78.19-0 (2014/02/10)
+>> [    1.200249] tg3.c:v3.137 (May 11, 2014)
+>> [    1.204087] ------------[ cut here ]------------
+>> [    1.208682] WARNING: CPU: 1 PID: 1 at drivers/pci/pci.c:131
+>> pci_ioremap_bar+0x70/0x78()
+>> [    1.216646] Modules linked in:
+>> [    1.219696] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 3.17.0-rc5+ #1
+>> [    1.226018] Call trace:
+>> [    1.228453] [<ffffffc0000884f0>] dump_backtrace+0x0/0x16c
+>> [    1.233826] [<ffffffc00008866c>] show_stack+0x10/0x1c
+>> [    1.238851] [<ffffffc0006e3210>] dump_stack+0x74/0x94
+>> [    1.243878] [<ffffffc0000a934c>] warn_slowpath_common+0x88/0xb0
+>> [    1.249767] [<ffffffc0000a9438>] warn_slowpath_null+0x14/0x20
+>> [    1.255485] [<ffffffc0003994c4>] pci_ioremap_bar+0x6c/0x78
+>> [    1.260942] [<ffffffc0005598cc>] tg3_init_one+0x148/0x16f4
+>> [    1.266401] [<ffffffc00039ccf0>] pci_device_probe+0x78/0xd4
+>> [    1.271946] [<ffffffc00042785c>] driver_probe_device+0x94/0x390
+>> [    1.277834] [<ffffffc000427c44>] __driver_attach+0x98/0xa0
+>> [    1.283293] [<ffffffc000425a54>] bus_for_each_dev+0x54/0x98
+>> [    1.288835] [<ffffffc00042730c>] driver_attach+0x1c/0x28
+>> [    1.294121] [<ffffffc000426f04>] bus_add_driver+0x164/0x240
+>> [    1.299663] [<ffffffc000428430>] driver_register+0x64/0x130
+>> [    1.305207] [<ffffffc00039c97c>] __pci_register_driver+0x3c/0x48
+>> [    1.311181] [<ffffffc000aa8a5c>] tg3_driver_init+0x1c/0x28
+>> [    1.316640] [<ffffffc0000814e0>] do_one_initcall+0xc4/0x1b4
+>> [    1.322186] [<ffffffc000a74b64>] kernel_init_freeable+0x1b8/0x25c
+>> [    1.328246] [<ffffffc0006de318>] kernel_init+0xc/0xd4
+>> [    1.333278] ---[ end trace f4dca5ab5b436080 ]---
+>> [    1.337871] tg3 0000:01:00.0: Cannot map device registers, aborting
+>> [    1.344122] tg3: probe of 0000:01:00.0 failed with error -12
+>>
+>>
+>
+> Thanks for trying out the patches. Which firmware version are you
+> using? We may have release new firmware version for PCI to work if not
+> released yet.
+
+U-Boot 2013.04-mustang_sw_1.13.28-beta (Aug 25 2014 - 14:16:10)
+
+I will check if there is newer fw available.
+
+> Also can you please send out the entire boot log?
+
+Please see below link:
+
+      http://pastebin.com/fLqaDn6t
+
+Thanks,
+--
+Ming Lei
+
+>
+> Thanks,
+> Tanmay
+>
+>>
+>> Thanks,
+>>
+>>>
+>>> changes since V7:
+>>> 1. Fix outbound region mapping for IO region. Thanks Liviu for the catch.
+>>>
+>>> changes since V6:
+>>> 1. Port driver to changed interface as per Liviu's v10 series.
+>>>
+>>> changes since V5:
+>>> 1. Port driver to changed interface of 'of_create_pci_host_bridge'
+>>> 2. Fix the prefetch bit setting
+>>> 3. Removed bunch of register programming which is already done by firmware
+>>>
+>>> changes since V4:
+>>> 1. fix section mismatch warnings
+>>> 2. fix the patch description
+>>> 3. fix indentation
+>>> 4. update read/write cfg functions by passing both addr and offset.
+>>> 5. use 'time_before' for timeout.
+>>> 6. remove unnecessary 'IS_ERR_OR_NULL'. Keep 'IS_ERR' for 'clk_get'
+>>> 7. remove BUG_ON for pci_ioremap_io.
+>>>
+>>> changes since V3:
+>>> 1. remove 'struct hw_pci' and supporting ops in hw_pci
+>>> 2. add code to create the host bridge from dts
+>>> 3. add code to scan the the host bridge
+>>> 4. modify outbound windows setup function to get resource information from
+>>>    'bridge->windows'
+>>> 5. add compatible string in pcie dts node with current X-Gene SOC name.
+>>>
+>>> changes since V2:
+>>> 1. redefined each PCI port in different PCI domain correctly.
+>>> 2. removed setup_lane and setup_link functions from driver.
+>>> 3. removed scan_bus wrapper and set_primary_bus hack.
+>>> 4. added pci_ioremap_io for io resources.
+>>>
+>>> changes since V1:
+>>> 1. added PCI domain support
+>>> 2. reading cpu and pci addresses from device tree to configure regions.
+>>> 3. got rid of unnecessary wrappers for readl and writel.
+>>> 4. got rid of endpoint configuration code.
+>>> 5. added 'dma-ranges' property support to read inbound region configuration.
+>>> 6. renamed host driver file to 'pci-xgene.c' from 'pcie-xgene.c'
+>>> 7. dropped 'clock-names' property from bindings
+>>> 8. added comments whereever requested.
+>>>
+>>>
+>>> Tanmay Inamdar (4):
+>>>   pci:host: APM X-Gene PCIe host controller driver
+>>>   arm64: dts: APM X-Gene PCIe device tree nodes
+>>>   dt-bindings: pci: xgene pcie device tree bindings
+>>>   MAINTAINERS: entry for APM X-Gene PCIe host driver
+>>>
+>>>  .../devicetree/bindings/pci/xgene-pci.txt          |  57 ++
+>>>  MAINTAINERS                                        |   8 +
+>>>  arch/arm64/boot/dts/apm-mustang.dts                |   8 +
+>>>  arch/arm64/boot/dts/apm-storm.dtsi                 | 165 ++++++
+>>>  drivers/pci/host/Kconfig                           |  10 +
+>>>  drivers/pci/host/Makefile                          |   1 +
+>>>  drivers/pci/host/pci-xgene.c                       | 646 +++++++++++++++++++++
+>>>  7 files changed, 895 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/pci/xgene-pci.txt
+>>>  create mode 100644 drivers/pci/host/pci-xgene.c
+>>>
+>>> --
+>>> 1.9.1
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> Please read the FAQ at  http://www.tux.org/lkml/
+>>
+>>
+>>
+>> --
+>> Ming Lei
+
+
+
+-- 
+Ming Lei
