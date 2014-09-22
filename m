@@ -1,93 +1,95 @@
-From: Johannes Pointner <johannes.pointner@gmail.com>
-Subject: [PATCH] mfd: tps65217: add compatible string for subdevices
-Date: Mon, 22 Sep 2014 20:18:15 +0200
-Message-ID: <5439652.jHp5aCCfrZ@lenovobook>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv10 2/4] mailbox: Introduce framework for mailbox
+Date: Mon, 22 Sep 2014 19:33:32 +0100
+Message-ID: <54206B7C.60501@arm.com>
+References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>	<1406896296-4863-1-git-send-email-jaswinder.singh@linaro.org> <CAJ5Y-eZ5gNMQ2YRN4iS5QTU7qUrgxGdTHXhQZ_2ut4iBsEZHGg@mail.gmail.com> <5420675C.6040805@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, AnilKumar Ch <anilkumar@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5420675C.6040805-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones@linaro>
 List-Id: devicetree@vger.kernel.org
 
-The TPS65217 is missing of_compatible string in the mfd_cell for its
-subdevices. This compatible string is necessary to use functions like
-of_find_backlight_by_node in backlight.c.
 
-Signed-off-by: Johannes Pointner <johannes.pointner@br-automation.com>
----
- Documentation/devicetree/bindings/regulator/tps65217.txt            | 5 ++++-
- .../devicetree/bindings/video/backlight/tps65217-backlight.txt      | 6 +++---
- drivers/mfd/tps65217.c                                              | 2 ++
- 3 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/tps65217.txt b/Documentation/devicetree/bindings/regulator/tps65217.txt
-index 4f05d20..ba835e2 100644
---- a/Documentation/devicetree/bindings/regulator/tps65217.txt
-+++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
-@@ -5,6 +5,7 @@ Required properties:
- - reg: I2C slave address
- - regulators: list of regulators provided by this controller, must be named
-   after their hardware counterparts: dcdc[1-3] and ldo[1-4]
-+- compatible: "ti,tps65217-pmic"
- - regulators: This is the list of child nodes that specify the regulator
-   initialization data for defined regulators. Not all regulators for the given
-   device need to be present. The definition for each of these nodes is defined
-@@ -23,9 +24,11 @@ Example:
- 
- 	tps: tps@24 {
- 		compatible = "ti,tps65217";
-+		reg = <0x24>;
- 		ti,pmic-shutdown-controller;
- 
--		regulators {
-+		tps_pmic: regulators {
-+			compatible = "ti,tps65217-pmic";
- 			dcdc1_reg: dcdc1 {
- 				regulator-min-microvolt = <900000>;
- 				regulator-max-microvolt = <1800000>;
-diff --git a/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
-index 5fb9279..c3fb649 100644
---- a/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
-+++ b/Documentation/devicetree/bindings/video/backlight/tps65217-backlight.txt
-@@ -7,18 +7,18 @@ Required properties:
- - compatible: "ti,tps65217"
- - reg: I2C slave address
- - backlight: node for specifying WLED1 and WLED2 lines in TPS65217
-+- compatible: "ti,tps65217-bl"
- - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 for ISEL2 (high-level)
- - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
- - default-brightness: valid values: 0-100
- 
--Each regulator is defined using the standard binding for regulators.
--
- Example:
- 
- 	tps: tps@24 {
- 		reg = <0x24>;
- 		compatible = "ti,tps65217";
--		backlight {
-+		tps_bl: backlight {
-+			compatible = "ti,tps65217-bl";
- 			isel = <1>;  /* 1 - ISET1, 2 ISET2 */
- 			fdim = <100>; /* TPS65217_BL_FDIM_100HZ */
- 			default-brightness = <50>;
-diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
-index 3cc4c70..77708f9 100644
---- a/drivers/mfd/tps65217.c
-+++ b/drivers/mfd/tps65217.c
-@@ -33,9 +33,11 @@
- static const struct mfd_cell tps65217s[] = {
- 	{
- 		.name = "tps65217-pmic",
-+		.of_compatible = "ti,tps65217-pmic",
- 	},
- 	{
- 		.name = "tps65217-bl",
-+		.of_compatible = "ti,tps65217-bl",
- 	},
- };
- 
--- 
-2.1.0
+On 22/09/14 19:15, Sudeep Holla wrote:
+>
+>
+> On 22/09/14 19:01, Ashwin Chaugule wrote:
+>> Hi Jassi,
+>>
+>> On 1 August 2014 08:31, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> Introduce common framework for client/protocol drivers and
+>>> controller drivers of Inter-Processor-Communication (IPC).
+>>>
+>>> Client driver developers should have a look at
+>>>    include/linux/mailbox_client.h to understand the part of
+>>> the API exposed to client drivers.
+>>> Similarly controller driver developers should have a look
+>>> at include/linux/mailbox_controller.h
+>>>
+>>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>    MAINTAINERS                        |   8 +
+>>>    drivers/mailbox/Makefile           |   4 +
+>>>    drivers/mailbox/mailbox.c          | 466 +++++++++++++++++++++++++++++++++++++
+>>>    include/linux/mailbox_client.h     |  46 ++++
+>>>    include/linux/mailbox_controller.h | 135 +++++++++++
+>>>    5 files changed, 659 insertions(+)
+>>>    create mode 100644 drivers/mailbox/mailbox.c
+>>>    create mode 100644 include/linux/mailbox_client.h
+>>>    create mode 100644 include/linux/mailbox_controller.h
+>>>
+>>
+>> [..]
+>>
+>>> +
+>>> +static void poll_txdone(unsigned long data)
+>>> +{
+>>> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
+>>> +       bool txdone, resched = false;
+>>> +       int i;
+>>> +
+>>> +       for (i = 0; i < mbox->num_chans; i++) {
+>>> +               struct mbox_chan *chan = &mbox->chans[i];
+>>> +
+>>> +               if (chan->active_req && chan->cl) {
+>>> +                       resched = true;
+>>> +                       txdone = chan->mbox->ops->last_tx_done(chan);
+>>> +                       if (txdone)
+>>> +                               tx_tick(chan, 0);
+>>> +               }
+>>> +       }
+>>> +
+>>> +       if (resched)
+>>> +               mod_timer(&mbox->poll, jiffies +
+>>> +                               msecs_to_jiffies(mbox->period));
+>>
+>> While preparing a different patch which uses the Mbox framework, I
+>> noticed that mbox->period might not be initialized anywhere. Also, how
+>> is mbox->txpoll_period to be used? It appears from the description of
+>> txpoll_period in mbox_controller.h that you'd want to use that value
+>> in the mod_timer above, or equate the two somewhere in the controller
+>> registration or eliminate one of the two. FWIW I also looked at your
+>> code in [1].
+>>
+>
+> IIUC the controller needs to set the txpoll_period if it sets
+> txdone_poll, may be a sanity check for !0 would be good.
+>
+
+Ah, sorry I confused mbox->period to txpoll_period.
+You are right mbox->period is not set, the header claims it to be
+private, and hence I assume it needs to be handled only in core mailbox
+library. Not sure if we need both mbox->period and txpoll_period though.
+
+Regards,
+Sudeep
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
