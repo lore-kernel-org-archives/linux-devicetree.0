@@ -1,38 +1,65 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 1/2] regulator: st-pwm: get voltage and duty table from dts
-Date: Sun, 21 Sep 2014 21:18:10 -0700
-Message-ID: <CAD=FV=VxqQhp8A_yGMe8U+_Z1DNzLvMp-Bsj_iEx=5mumeHpvw@mail.gmail.com>
-References: <1411354380-14326-1-git-send-email-zyw@rock-chips.com>
-	<1411354380-14326-2-git-send-email-zyw@rock-chips.com>
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Subject: Re: [PATCH v4 2/8] clk: samsung: Factor out the common code to clk.c
+Date: Mon, 22 Sep 2014 09:53:22 +0530
+Message-ID: <CAM4voa=DE2CC2jftmnnscP1iHhcktaXKhgViOARsZR0b4+benA@mail.gmail.com>
+References: <1410535592-5782-1-git-send-email-ch.naveen@samsung.com>
+	<1410535592-5782-4-git-send-email-ch.naveen@samsung.com>
+	<5414286C.40103@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411354380-14326-2-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5414286C.40103@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, robh@kernel.org, catalin.marinas@arm.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, gregkh@linuxfoundation.org, Naveen Krishna <naveenkrishna.ch@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+Hi Tomasz,
 
-On Sun, Sep 21, 2014 at 7:52 PM, Chris Zhong <zyw@rock-chips.com> wrote:
-> Get voltage & duty table from device tree might be better, other platforms can also use this
-> driver without any modify.
+Naveen is no longer with Samsung, so I will be taking this patchset forward.
+
+On Sat, Sep 13, 2014 at 4:50 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Naveen,
 >
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Please see my comments inline.
 >
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-
-No need to re-spin, but please remember that all tags should be
-bunched together (no blank lines).  In other words,
-
-YES:
-
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-
-NO:
-
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> On 12.09.2014 17:26, Naveen Krishna Chatradhi wrote:
+>> While adding clock support for Exynos5260, the infrastructure to
+>> register multiple clock controllers was introduced. Factor out the
+>> support for registering multiple clock controller from Exynos5260
+>> clock code to common samsung clock code so that it can be used by
+>> other Exynos SoC which have multiple clock controllers.
 >
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> [snip]
+>
+>> @@ -268,7 +135,7 @@ struct samsung_gate_clock aud_gate_clks[] __initdata = {
+>>
+>>  static void __init exynos5260_clk_aud_init(struct device_node *np)
+>>  {
+>> -     struct exynos5260_cmu_info cmu = {0};
+>> +     struct exynos_cmu_info cmu = {0};
+>>
+>>       cmu.mux_clks = aud_mux_clks;
+>>       cmu.nr_mux_clks = ARRAY_SIZE(aud_mux_clks);
+>> @@ -280,7 +147,7 @@ static void __init exynos5260_clk_aud_init(struct device_node *np)
+>>       cmu.clk_regs = aud_clk_regs;
+>>       cmu.nr_clk_regs = ARRAY_SIZE(aud_clk_regs);
+>>
+>> -     exynos5260_cmu_register_one(np, &cmu);
+>> +     exynos_cmu_register_one(np, &cmu);
+>
+> I'd suggest changing the namespace prefix from exynos to just samsung to
+> be consistent with other helpers. Otherwise looks good.
+
+Will fix this.
+
+Regards,
+Abhilash
+>
+> Best regards,
+> Tomasz
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
