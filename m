@@ -1,115 +1,119 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [V8 1/2] irqchip: gic: Add support for multiple MSI for ARM64
-Date: Tue, 23 Sep 2014 01:08:25 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1409222349560.4604@nanos>
-References: <1411230698-8081-1-git-send-email-suravee.suthikulpanit@amd.com> <1411230698-8081-2-git-send-email-suravee.suthikulpanit@amd.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 2/5] extcon: gpio: Convert the driver to use gpio desc API's
+Date: Tue, 23 Sep 2014 08:14:03 +0900
+Message-ID: <5420AD3B.2080306@samsung.com>
+References: <1410236078-11713-1-git-send-email-george.cherian@ti.com>
+ <1410236078-11713-3-git-send-email-george.cherian@ti.com>
+ <541FD8CD.1060400@samsung.com> <541FF138.7040908@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1411230698-8081-2-git-send-email-suravee.suthikulpanit@amd.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: marc.zyngier@arm.com, Mark Rutland <mark.rutland@arm.com>, jason@lakedaemon.net, pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <541FF138.7040908@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, rongjun.ying@csr.com, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 20 Sep 2014, suravee.suthikulpanit@amd.com wrote:
-
-> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+On 09/22/2014 06:51 PM, George Cherian wrote:
 > 
-> This patch implelments the ARM64 version of arch_setup_msi_irqs(),
-> which does not return 1 for when PCI_CAP_ID_MSI and nvec > 1.
+> On 09/22/2014 01:37 PM, Chanwoo Choi wrote:
+>> Hi George,
+>>
+>> This patch removes 'gpio_active_low' field of struct gpio_extcon_data.
+>> But, include/linux/extcon-gpio.h has the description of 'gpio_active_low' field.
+> Yes didn't want the platform data users to break.
+> Actually I couldn't find any platform users for this driver. Could you please point me to
+> one if in case I missed it. If non present then why cant we get rid of platform data altogether.
 
-I can see that myself. What your changelog is missing is the reason
-WHY you think that copying that code from drivers/pci/msi.c and
-removing the "PCI_CAP_ID_MSI and nvec > 1" has any value.
- 
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Acked-by: Marc Zyngier <Marc.Zyngier@arm.com>
+Right,
+But, Why do you support platform data on as following your patch?
+- [PATCH 3/5] extcon: gpio: Add dt support for the driver.
+According to your comment, you had to remove the support for platform data.
 
-....
+IMO,
+I think this patchset must need to reorder the sequence of patchset.
+Also, this patchset is more detailed description.
 
->  arch/arm64/kernel/Makefile |  1 +
->  arch/arm64/kernel/msi.c    | 41 +++++++++++++++++++++++++++++++++++++++++
+>>
+>> Also,
+>> This patch has not included the any description/comment of removing 'gpio_active_low'.
+>>
+>> Also,
+>> How to set 'FLAG_ACTIVE_LOW' bit for gpio when using platform data?
+> Now that we are using gpiod_* API's  we need not check for gpio_active_low from this driver.
 
-And that new function "arm64_setup_msi_irqs" is declared in which
-header file exactly?
+This patch just use gpiod API instead of legacy gpio API.
 
-> diff --git a/arch/arm64/kernel/msi.c b/arch/arm64/kernel/msi.c
-> new file mode 100644
-> index 0000000..a295862
-> --- /dev/null
-> +++ b/arch/arm64/kernel/msi.c
-> @@ -0,0 +1,41 @@
-> +/*
-> + * ARM64 architectural MSI implemention
-> + *
-> + * Support for Message Signalelled Interrupts for systems that
-> + * implement ARM Generic Interrupt Controller: GICv2m.
-> + *
-> + * Copyright (C) 2014 Advanced Micro Devices, Inc.
-> + * Authors: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+I think that if extcon-gpio don't need to check gpio_activ_low field,
+you have to implement dt support patch before this patch.
 
-Copying stuff from A to B makes a real case for copyright, i.e. I'm
-impressed by your ability to copy right.
-
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published
-> + * by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/irq.h>
-> +#include <linux/msi.h>
-> +#include <linux/pci.h>
-> +
-> +/*
-> + * ARM64 function for seting up MSI irqs.
-> + * Based on driver/pci/msi.c: arch_setup_msi_irqs().
-
-This is not based on. This is a verbatim copy with the omission of two
-lines. Very creative that ...
-
-> + *
-> + * Note:
-> + * Current implementation assumes that all interrupt controller used in
-> + * ARM64 architecture _MUST_ supports multi-MSI.
-
-Great assumption....
-
-> + */
-> +int arm64_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
-
-What the heck is calling that code? The follow up patch does not and
-due to lack of a declaration this patch is completely pointless.
-
-So you add a new file with a pointless changelog and a boasting
-copyright notice which adds completely useless functionality?
-
-Well done.
-
-At least you are consistent on the useless side of affairs:
-
-> +{
-> +	struct msi_desc *entry;
-> +	int ret;
-> +
-> +	list_for_each_entry(entry, &dev->msi_list, list) {
-> +		ret = arch_setup_msi_irq(dev, entry);
-
-Anyone who has the slightest idea how multi-MSI works will know that
-this CANNOT work at all, but that's none of my business.
-
-What's part of my business is to state that in my role as the
-maintainer of all things related to interrupts this is the worst patch
-I've seen in the last 10 years. Along with the saddening fact that it
-carries the Acked-by of someone who should have known better.
-
-At least if confirms my suspicion that ARM64 is a dignified successor
-of the already infamous ARM32 universe.
-
-I really can't bear the suspension to see the first 1500+ vendor patch
-series of dubious quality supporting a real ARM64.
-
-Thanks,
-
-	tglx
+> 
+>> This patch don't call 'set_bit()' function to set FLAG_ACTIVE_LOW flag.
+>>
+>> Thanks,
+>> Chanwoo Choi
+>>
+>> On 09/09/2014 01:14 PM, George Cherian wrote:
+>>> Convert the driver to use gpiod_* API's.
+>>>
+>>> Signed-off-by: George Cherian <george.cherian@ti.com>
+>>> ---
+>>>   drivers/extcon/extcon-gpio.c | 18 +++++++-----------
+>>>   1 file changed, 7 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+>>> index 72f19a3..25269f6 100644
+>>> --- a/drivers/extcon/extcon-gpio.c
+>>> +++ b/drivers/extcon/extcon-gpio.c
+>>> @@ -33,8 +33,7 @@
+>>>     struct gpio_extcon_data {
+>>>       struct extcon_dev *edev;
+>>> -    unsigned gpio;
+>>> -    bool gpio_active_low;
+>>> +    struct gpio_desc *gpiod;
+>>>       const char *state_on;
+>>>       const char *state_off;
+>>>       int irq;
+>>> @@ -50,9 +49,7 @@ static void gpio_extcon_work(struct work_struct *work)
+>>>           container_of(to_delayed_work(work), struct gpio_extcon_data,
+>>>                    work);
+>>>   -    state = gpio_get_value(data->gpio);
+>>> -    if (data->gpio_active_low)
+>>> -        state = !state;
+>>> +    state = gpiod_get_value(data->gpiod);
+>>>       extcon_set_state(data->edev, state);
+>>>   }
+>>>   @@ -106,22 +103,21 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>>>       }
+>>>       extcon_data->edev->name = pdata->name;
+>>>   -    extcon_data->gpio = pdata->gpio;
+>>> -    extcon_data->gpio_active_low = pdata->gpio_active_low;
+>>> +    extcon_data->gpiod = gpio_to_desc(pdata->gpio);
+>>>       extcon_data->state_on = pdata->state_on;
+>>>       extcon_data->state_off = pdata->state_off;
+>>>       extcon_data->check_on_resume = pdata->check_on_resume;
+>>>       if (pdata->state_on && pdata->state_off)
+>>>           extcon_data->edev->print_state = extcon_gpio_print_state;
+>>>   -    ret = devm_gpio_request_one(&pdev->dev, extcon_data->gpio, GPIOF_DIR_IN,
+>>> +    ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
+>>>                       pdev->name);
+>>>       if (ret < 0)
+>>>           return ret;
+>>>         if (pdata->debounce) {
+>>> -        ret = gpio_set_debounce(extcon_data->gpio,
+>>> -                    pdata->debounce * 1000);
+>>> +        ret = gpiod_set_debounce(extcon_data->gpiod,
+>>> +                     pdata->debounce * 1000);
+>>>           if (ret < 0)
+>>>               extcon_data->debounce_jiffies =
+>>>                   msecs_to_jiffies(pdata->debounce);
+>>> @@ -133,7 +129,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>>>         INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
+>>>   -    extcon_data->irq = gpio_to_irq(extcon_data->gpio);
+>>> +    extcon_data->irq = gpiod_to_irq(extcon_data->gpiod);
+>>>       if (extcon_data->irq < 0)
+>>>           return extcon_data->irq;
+>>>  
+> 
+> 
