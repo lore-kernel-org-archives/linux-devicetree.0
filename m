@@ -1,43 +1,53 @@
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 3/3] MAINTAINERS: add entry for Atmel XDMA driver
-Date: Mon, 22 Sep 2014 15:22:18 +0200
-Message-ID: <1411392138-5014-4-git-send-email-ludovic.desroches@atmel.com>
-References: <1411392138-5014-1-git-send-email-ludovic.desroches@atmel.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH][resend] of: Add vendor 2nd prefix for Asahi Kasei Corp
+Date: Mon, 22 Sep 2014 15:24:24 +0200
+Message-ID: <CAMuHMdX22z97SbGS1HDiYfJ1PXxyEN2S8D7w4sr+4bUwD+mJZw@mail.gmail.com>
+References: <87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>
+	<539815E6.2050304@codethink.co.uk>
+	<20140611165410.GK5099@sirena.org.uk>
+	<CAMuHMdUT0hEBGbN+W-Oz5zJ0N8S2VDMndqtDO=EtWF3jG2MEew@mail.gmail.com>
+	<20140611170233.GL5099@sirena.org.uk>
+	<5398A53D.3020706@wwwdotorg.org>
+	<20140611190444.GN5099@sirena.org.uk>
+	<5398AB07.4040304@wwwdotorg.org>
+	<87sinbdk44.wl%kuninori.morimoto.gx@renesas.com>
+	<878ulzx6hr.wl%kuninori.morimoto.gx@gmail.com>
+	<20140922130026.GK3290@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411392138-5014-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20140922130026.GK3290@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Hi Mark,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 65cc66d..5f0849d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1684,6 +1684,13 @@ F:	drivers/dma/at_hdmac.c
- F:	drivers/dma/at_hdmac_regs.h
- F:	include/linux/platform_data/dma-atmel.h
- 
-+ATMEL XDMA DRIVER
-+M:	Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-+L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-+L:	dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Supported
-+F:	drivers/dma/at_xdmac.c
-+
- ATMEL I2C DRIVER
- M:	Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
- L:	linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
--- 
-2.0.3
+On Mon, Sep 22, 2014 at 3:00 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> Given all that, I think we should get rid of the "ak" prefix entirely,
+> fix up the seaboard dts, and leave the legacy matching for "ak,ak8975"
+> up to the i2c framework. However, that would imply deleting from
+> vendor-prefixes.txt (if we want people to be warned on use of "ak"), and
+> that's not a good precedent to set.
 
+Instead of deleting, we can deprecate, like was done for powervr:
+
+powervr PowerVR (deprecated, use img)
+
+Still missing is an update for checkpatch to warn when a deprecated
+vendor prefix is used.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
