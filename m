@@ -1,86 +1,34 @@
-From: Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH v11 08/10] OF: PCI: Add support for parsing PCI host
- bridge resources from DT
-Date: Mon, 22 Sep 2014 11:32:28 +0200
-Message-ID: <20140922093228.GA20256@rric.localhost>
-References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
- <1411003825-21521-9-git-send-email-Liviu.Dudau@arm.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v5 06/11] i2c: core: Convert to
+ dev_pm_domain_attach|detach()
+Date: Mon, 22 Sep 2014 12:52:53 +0300
+Message-ID: <20140922095253.GO1786@lahna.fi.intel.com>
+References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
+ <1411151264-16245-7-git-send-email-ulf.hansson@linaro.org>
+ <20140920122318.GC3850@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1411003825-21521-9-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Sunil Goutham <sunil.goutham@caviumnetworks.com>
+In-Reply-To: <20140920122318.GC3850@katana>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 18.09.14 02:30:23, Liviu Dudau wrote:
-> +int of_pci_get_host_bridge_resources(struct device_node *dev,
-> +			unsigned char busno, unsigned char bus_max,
-> +			struct list_head *resources, resource_size_t *io_base)
-> +{
-> +	struct resource *res;
-> +	struct resource *bus_range;
-> +	struct of_pci_range range;
-> +	struct of_pci_range_parser parser;
-> +	char range_type[4];
-> +	int err;
-> +
-> +	if (!io_base)
-> +		return -EINVAL;
-> +	*io_base = OF_BAD_ADDR;
+On Sat, Sep 20, 2014 at 02:23:19PM +0200, Wolfram Sang wrote:
+> On Fri, Sep 19, 2014 at 08:27:39PM +0200, Ulf Hansson wrote:
+> > Previously only the ACPI PM domain was supported by the i2c bus.
+> > 
+> > Let's convert to the common attach/detach functions for PM domains,
+> > which currently means we are extending the support to include the
+> > generic PM domain as well.
+> > 
+> > Cc: linux-i2c@vger.kernel.org
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > Reviewed-by: Kevin Hilman <khilman@linaro.org>
+> 
+> Looks good to me, but I'd like to give Mika a chance to look at it,
+> since he does ACPI with I2C. Adding to CC.
 
-This breaks for mem-mapped pci host controllers. The patch below fixes
-this.
-
-This series was tested with the fix on top for Cavium Thunder.
-
-Tested-by: Robert Richter <rrichter@cavium.com>
-
--Robert
-
-
-
->From e798af4fc2f664d1aff7e863489b8298f90e716e Mon Sep 17 00:00:00 2001
-From: Robert Richter <rrichter@cavium.com>
-Date: Mon, 22 Sep 2014 10:46:01 +0200
-Subject: [PATCH] OF: PCI: Fix creation of mem-mapped pci host bridges
-
-The pci host bridge was not created if io_base was not set when
-calling of_pci_get_host_bridge_resources(). This is esp. the case for
-mem-mapped io (IORESOURCE_MEM). This patch fixes this. Function
-parameter io_base is optional now.
-
-Signed-off-by: Robert Richter <rrichter@cavium.com>
----
- drivers/of/of_pci.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index ffdb45ed8682..1f0e7c2505ee 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -182,9 +182,8 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 	char range_type[4];
- 	int err;
- 
--	if (!io_base)
--		return -EINVAL;
--	*io_base = OF_BAD_ADDR;
-+	if (io_base)
-+		*io_base = OF_BAD_ADDR;
- 
- 	bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
- 	if (!bus_range)
-@@ -242,7 +241,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
- 			goto parse_failed;
- 		}
- 
--		if (resource_type(res) == IORESOURCE_IO) {
-+		if (io_base && resource_type(res) == IORESOURCE_IO) {
- 			if (*io_base != OF_BAD_ADDR)
- 				pr_warn("More than one I/O resource converted. CPU offset for old range lost!\n");
- 			*io_base = range.cpu_addr;
--- 
-2.1.0
+Looks fine to me.
