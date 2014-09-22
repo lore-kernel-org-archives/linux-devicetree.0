@@ -1,77 +1,118 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v11 04/10] PCI: OF: Fix the conversion of IO ranges into
- IO resources.
-Date: Mon, 22 Sep 2014 12:18:42 -0500
-Message-ID: <CAL_JsqL9heHCEyXV5e4pOS3iWN51Q7KAQ-FxW_rzcWudqjwcdQ@mail.gmail.com>
-References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
- <1411003825-21521-5-git-send-email-Liviu.Dudau@arm.com> <541DBA57.2000903@gmail.com>
- <20140922153207.GA1994@e106497-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [V8 2/2] irqchip: gicv2m: Add supports for ARM GICv2m MSI(-X)
+Date: Mon, 22 Sep 2014 18:37:34 +0100
+Message-ID: <20140922173734.GO3290@leverpostej>
+References: <1411230698-8081-1-git-send-email-suravee.suthikulpanit@amd.com>
+ <1411230698-8081-3-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140922153207.GA1994@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1411230698-8081-3-git-send-email-suravee.suthikulpanit@amd.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>
+Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 10:32 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> On Sat, Sep 20, 2014 at 06:33:11PM +0100, Rob Herring wrote:
->> On 09/17/2014 08:30 PM, Liviu Dudau wrote:
->> > The ranges property for a host bridge controller in DT describes
->> > the mapping between the PCI bus address and the CPU physical address.
->> > The resources framework however expects that the IO resources start
->> > at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
->> > The conversion from pci ranges to resources failed to take that into account.
+Hi Suravee,
 
-[...]
+This looks good, I just have a few fixups that would be nice to apply
+below.
 
->> >               if ((range.flags & IORESOURCE_MEM) &&
->> >                       (range.flags & IORESOURCE_PREFETCH)) {
->> >                       pre_mem_pci = range.pci_addr;
->> >                       pre_mem_pci_sz = range.size;
->> > -                     of_pci_range_to_resource(&range, np, &pre_mem);
->> > +                     ret = of_pci_range_to_resource(&range, np, &pre_mem);
->> >                       pre_mem.name = "PCIv3 prefetched mem";
->> >               }
->> > -     }
->> >
->> > -     if (!conf_mem.start || !io_mem.start ||
->> > -         !non_mem.start || !pre_mem.start) {
->> > -             dev_err(&pdev->dev, "missing ranges in device node\n");
->> > -             return -EINVAL;
->> > +             if (ret < 0) {
->> > +                     dev_err(&pdev->dev, "missing ranges in device node\n");
->> > +                     return -EINVAL;
->>
->> You should return ret rather than potentially changing the return value.
->
-> I was trying to keep the existing behaviour, which was to return -EINVAL if the
-> parsing has failed. But I can return ret and propagate the original error code.
+On Sat, Sep 20, 2014 at 05:31:38PM +0100, suravee.suthikulpanit@amd.com wrote:
+> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> 
+> ARM GICv2m specification extends GICv2 to support MSI(-X) with
+> a new set of register frame. This patch introduces support for
+> the non-secure GICv2m register frame. Currently, GICV2m is available
+> in certain version of GIC-400.
+> 
+> The patch introduces a new property in ARM gic binding, the v2m subnode.
+> It is optional.
+> 
+> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> Acked-by: Marc Zyngier <Marc.Zyngier@arm.com>
+> Cc: Mark Rutland <Mark.Rutland@arm.com>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Catalin Marinas <Catalin.Marinas@arm.com>
+> Cc: Will Deacon <Will.Deacon@arm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/gic.txt |  55 ++++
+>  arch/arm64/Kconfig                            |   1 +
+>  drivers/irqchip/Kconfig                       |   5 +
+>  drivers/irqchip/Makefile                      |   1 +
+>  drivers/irqchip/irq-gic-common.c              |  12 +
+>  drivers/irqchip/irq-gic-common.h              |   4 +
+>  drivers/irqchip/irq-gic-v2m.c                 | 356 ++++++++++++++++++++++++++
+>  drivers/irqchip/irq-gic.c                     |  82 +++---
+>  drivers/irqchip/irq-gic.h                     |  54 ++++
+>  9 files changed, 540 insertions(+), 30 deletions(-)
+>  create mode 100644 drivers/irqchip/irq-gic-v2m.c
+>  create mode 100644 drivers/irqchip/irq-gic.h
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index c7d2fa1..38b2156 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -96,3 +96,58 @@ Example:
+>                       <0x2c006000 0x2000>;
+>                 interrupts = <1 9 0xf04>;
+>         };
+> +
+> +
+> +* GICv2m extension for MSI/MSI-x support (Optional)
+> +
+> +Certain revision of GIC-400 supports MSI/MSI-x via V2M register frame.
+> +This is enabled by specifying v2m sub-node.
 
-A valid concern, but I checked and I believe the return from
-of_pci_range_to_resource is currently -EINVAL.
+It looks like this was missed when the binding was updated for multiple
+frames, so:
 
->> > +int of_pci_range_to_resource(struct of_pci_range *range,
->> > +     struct device_node *np, struct resource *res)
->> > +{
->> > +     int err;
->> > +     res->flags = range->flags;
->> > +     res->parent = res->child = res->sibling = NULL;
->> > +     res->name = np->full_name;
->> > +
->> > +     if (res->flags & IORESOURCE_IO) {
->> > +             unsigned long port = -1;
->>
->> Assigning a signed value to unsigned...
->
-> Ooops, sorry about that. Removed the initialisation now.
->
->>
->> Does port need to be 64-bit on 64-bit hosts?
->
-> I'm following existing APIs. Basically my function is a variant of __of_address_to_resource()
+s/revision/revisions/
+s/frame/frame(s)/
+s/sub-node/sub-node(s)/
 
-Okay.
+> +
+> +Required properties:
+> +
+> +- compatible        : The value here should be "arm,gic-v2m-frame".
 
-Rob
+- compatible: should contain "arm,gic-v2m-frame".
+
+> +
+> +- msi-controller    : Identifies the node as an MSI controller.
+> +
+> +- reg               : GICv2m MSI interface register base and size
+> +
+> +Optional properties:
+> +
+> +- arm,msi-base-spi  : Specify base SPI the MSI frame.
+> +                      The SPI base value can be from 32 to 1019.
+> +
+> +- arm,msi-num-spi   : Returns the number of contiguous SPIs assigned
+> +                     to the frame.
+> +
+> +Note: "arm,msi-base-spi" and "arm,msi-num-spi" are used mainly for
+> +       providing HW workaround in the case where the MSI_TYPER register
+> +       is corrupted.
+
+s/num-spi/num-spis/ please
+
+Can we get rid of the note and reword this like:
+
+- arm,msi-base-spi: When the MSI_TYPER register contains an incorrect
+                    value, this property should contain the SPI base of
+		    the MSI frame, overriding the HW value.
+
+- arm,msi-num-spis: When the MSI_TYPER register contains an incorrect
+                    value, this property should contain the number of
+                    SPIs assigned to the frame, overriding the HW value.
+
+I realise it's a little redundant, but it's very easy to miss usage
+constraints in notes.
+
+With that, for the binding:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
