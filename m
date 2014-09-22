@@ -1,156 +1,86 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC][PATCH] devicetree: Add master-id-bits property to the
-	iommu device
-Date: Mon, 22 Sep 2014 11:23:23 +0200
-Message-ID: <20140922092322.GI1470@ulmo>
-References: <1410718646-9710-1-git-send-email-Varun.Sethi@freescale.com>
-	<201409150438.29649.arnd@arndb.de>
-	<bfdff6494d7f46ab9a9f00f94159e9e1@BL2PR03MB468.namprd03.prod.outlook.com>
-	<201409151857.05463.arnd@arndb.de>
-	<febe4a288f2f438ca95988929ee71580@BL2PR03MB468.namprd03.prod.outlook.com>
+From: Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH v11 08/10] OF: PCI: Add support for parsing PCI host
+ bridge resources from DT
+Date: Mon, 22 Sep 2014 11:32:28 +0200
+Message-ID: <20140922093228.GA20256@rric.localhost>
+References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
+ <1411003825-21521-9-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2452411381798826894=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <febe4a288f2f438ca95988929ee71580-AZ66ij2kwaacCcN9WK45f+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "Mark.Rutland-5wv7dgnIgG8@public.gmane.org" <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1411003825-21521-9-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Sunil Goutham <sunil.goutham@caviumnetworks.com>
 List-Id: devicetree@vger.kernel.org
 
+On 18.09.14 02:30:23, Liviu Dudau wrote:
+> +int of_pci_get_host_bridge_resources(struct device_node *dev,
+> +			unsigned char busno, unsigned char bus_max,
+> +			struct list_head *resources, resource_size_t *io_base)
+> +{
+> +	struct resource *res;
+> +	struct resource *bus_range;
+> +	struct of_pci_range range;
+> +	struct of_pci_range_parser parser;
+> +	char range_type[4];
+> +	int err;
+> +
+> +	if (!io_base)
+> +		return -EINVAL;
+> +	*io_base = OF_BAD_ADDR;
 
---===============2452411381798826894==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7IgncvKP0CVPV/ZZ"
-Content-Disposition: inline
+This breaks for mem-mapped pci host controllers. The patch below fixes
+this.
 
+This series was tested with the fix on top for Cavium Thunder.
 
---7IgncvKP0CVPV/ZZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested-by: Robert Richter <rrichter@cavium.com>
 
-On Tue, Sep 16, 2014 at 06:04:48PM +0000, Varun Sethi wrote:
-> Hi Arnd,
->=20
-> > -----Original Message-----
-> > From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
-> > bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Arnd Bergmann
-> > Sent: Monday, September 15, 2014 10:27 PM
-> > To: Sethi Varun-B16395
-> > Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Yoder Stuart-B08248;
-> > robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org;
-> > thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > Subject: Re: [RFC][PATCH] devicetree: Add master-id-bits property to the
-> > iommu device
-> >=20
-> > On Monday 15 September 2014, Varun Sethi wrote:
-> > > >
-> > > > This seems rather specific to MMU-500. I don't think that most
-> > > > IOMMUs would use the term 'master ID', 'stream ID' or even the
-> > > > general concept, and you don't expand the acronym 'TBU'. I've seen
-> > > > many IOMMUs and I don't even know what that means.
-> > >
-> > > TBU refers to the translation buffer unit, which is responsible for c=
-aching
-> > page translations. In case of translation miss in the cache, translatio=
-n request is
-> > forwarded to the TCU (Translation control unit). The master id forwarde=
-d to
-> > TCU would also contain the TBU ID.  Using the master-id-bits property w=
-e can
-> > mask out the additional TBU bits at the TCU. This is a cause of concern=
- when we
-> > want to share master id for devices which are connected to different TB=
-Us. We
-> > have a hot pluggable bus architecture, where a device group can have mu=
-ltiple
-> > devices connected to different TBUs. So, we need a mechanism to mask out
-> > additional TBIU bits.
-> >=20
-> > Ok, I think I understand now
-> >=20
-> > > > Why do you think this is something that is needed to be known at the
-> > > > global level, rather than a property for some individual drivers?
-> > > >
-> > > In case of Freescale Layerscape SOCs, number of bits used for definin=
-g a
-> > stream id are specific to a given platform.
-> > >
-> > > Are you suggesting that this property should be added to the master d=
-evice
-> > node, rather than the iommu node?
-> >=20
-> > Most importantly, I think this needs to be part of the (iommu) device s=
-pecific
-> > binding, not the generic binding that is used for all iommus that may o=
-r may not
-> > have this concept.
-> >=20
-> > I believe in case of the ARM SMMU, it should actually go into the maste=
-r node
-> > as part of the 'iommus' property, because the mask can be different for=
- each
-> > master. If your IOMMU has a fixed mask that is used for all devices, th=
-at's fine
-> > and you can put it into the iommu node itself but document it in the bi=
-nding for
-> > your IOMMU.
-> >=20
-> > For hot-pluggable buses, you probably need to have the 'iommus' propert=
-y in
-> > the node that corresponds to the bus controller, and that will have a m=
-ask that
-> > is used for all devices plugged into it.
-> Can I add a note to the generic binding about representing the "mask"
-> as a part of the "iommus" property. This would similar to the note
-> about the "dma-ranges"
-
-I think the concept of a mask is fairly device-specific. Adding a note
-to it in the generic binding could be confusing to people working with
-IOMMUs that don't know the concept.
-
-dma-ranges on the other hand is a generic property, so referring to it
-in the generic binding makes sense.
-
-Thierry
-
---7IgncvKP0CVPV/ZZ
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUH+qKAAoJEN0jrNd/PrOh05MP/0OL1tmtGZhZmq5LShiOVggd
-m9XL+IKVycTjF++FpmQjwSBSzWFyEoM5SeRfnWZMm+gyTv5euqg5SJF1vUWCUSrI
-YK8fhqj9iJZbfW6dP0bKEy+16S+IrsPRJBDBIP7Sp1Lh3dMIm3kR/vW5KgLV1pfR
-wViOcuatemB0Dtt3inj6BM3KkQhZl+9u/xZUSMggrAueVW44XkAZ9CxJVlYmGBja
-I21Lchn5Vbpwf92l6ZTbFE0M6SKTOcjarXzOIXw647/tK++86CLkbsx5ejDRVntP
-uqneT7xde+ope+YC3/BTBUwc9Zg0MFdtjQ4qiK80cpFrt9TtXRJHvSruGqPwkrTL
-u2JaPHw7bkoaJBhWCemHYkn0l8/1ft3w+3BtsFrfAMDct0HKghwhUy6GUkK/TXz0
-Ta2ZZLXF0E4+jFqd1gTQLYdH0MMSw3WmCUezDX3YhvCiRsjDEk8Oxxw6Nge/sE48
-+n+g9nmPoafImtU8nJbJEOSaOv5XUMke/w+nyxUPGEOz09Z2qkfyHNfHULO85iAC
-qhxrGmxaXyFJHNOr1kkKUP8Ob6amTA9GdjxdiHaoC6+t1OPafmG6DQQY2fGf8t65
-KE8Dc3FA4hWyDzI0OBsxSVRjSYflkOM0LWY2CpKcj3aFq9Js1qxNkaxfaOUaRIb+
-ah37VDeyTSDM5G0QA1NO
-=inWs
------END PGP SIGNATURE-----
-
---7IgncvKP0CVPV/ZZ--
-
---===============2452411381798826894==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+-Robert
 
 
---===============2452411381798826894==--
+
+>From e798af4fc2f664d1aff7e863489b8298f90e716e Mon Sep 17 00:00:00 2001
+From: Robert Richter <rrichter@cavium.com>
+Date: Mon, 22 Sep 2014 10:46:01 +0200
+Subject: [PATCH] OF: PCI: Fix creation of mem-mapped pci host bridges
+
+The pci host bridge was not created if io_base was not set when
+calling of_pci_get_host_bridge_resources(). This is esp. the case for
+mem-mapped io (IORESOURCE_MEM). This patch fixes this. Function
+parameter io_base is optional now.
+
+Signed-off-by: Robert Richter <rrichter@cavium.com>
+---
+ drivers/of/of_pci.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index ffdb45ed8682..1f0e7c2505ee 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -182,9 +182,8 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+ 	char range_type[4];
+ 	int err;
+ 
+-	if (!io_base)
+-		return -EINVAL;
+-	*io_base = OF_BAD_ADDR;
++	if (io_base)
++		*io_base = OF_BAD_ADDR;
+ 
+ 	bus_range = kzalloc(sizeof(*bus_range), GFP_KERNEL);
+ 	if (!bus_range)
+@@ -242,7 +241,7 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+ 			goto parse_failed;
+ 		}
+ 
+-		if (resource_type(res) == IORESOURCE_IO) {
++		if (io_base && resource_type(res) == IORESOURCE_IO) {
+ 			if (*io_base != OF_BAD_ADDR)
+ 				pr_warn("More than one I/O resource converted. CPU offset for old range lost!\n");
+ 			*io_base = range.cpu_addr;
+-- 
+2.1.0
