@@ -1,57 +1,50 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: [PATCH v4 2/5] dt-bindings: video: Add for rockchip display subsytem
-Date: Mon, 22 Sep 2014 18:50:56 +0800
-Message-ID: <1411383056-1839-1-git-send-email-mark.yao@rock-chips.com>
-References: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] power: twl4030-madc-battery: Convert to iio consumer.
+Date: Mon, 22 Sep 2014 11:52:36 +0100
+Message-ID: <20140922105236.GH3290@leverpostej>
+References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
+ <1394052739-8589-2-git-send-email-marek@goldelico.com>
+ <20140305232513.GA9542@earth.universe>
+ <CAAfyv34X1naNEyht0q+bD3QUjCxLJribmfWfZkP073WS7ve4kA@mail.gmail.com>
+ <CAAfyv35Hi-aE+SnTiN9O39ANi63gkNMz-Bz6hqCkkxJARSFcOg@mail.gmail.com>
+ <20140814210324.GA22572@earth.universe>
+ <CAAfyv36FUqCU=sdJ2izs0zMSNuSO4Q0TLg2e61AKkeDrdg_F4Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <CAAfyv36FUqCU=sdJ2izs0zMSNuSO4Q0TLg2e61AKkeDrdg_F4Q@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-chips.com, zyw@rock-chips.com, xxm@rock-chips.com, huangtao@rock-chips.com, kever.yang@rock-chips.com, yxj@rock-chips.com, wxt@rock-chips.com, xw@rock-chips.com, Mark yao <mark.yao@rock-chips.com>
+To: Belisko Marek <marek.belisko@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This add a display subsystem comprise the all display interface nodes.
+On Thu, Sep 18, 2014 at 09:13:47PM +0100, Belisko Marek wrote:
+> Hi Sebastian,
+> 
+> On Thu, Aug 14, 2014 at 11:03 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> > Hi Marek,
+> >
+> > On Mon, Aug 11, 2014 at 09:52:52PM +0200, Belisko Marek wrote:
+> >> can you please take this series (I'll post update version with
+> >> removing debug code). Thanks.
+> >
+> > mh. I will not pull this with "(dis)charging-calibration-data" as
+> > DT property name without an ACK from the DT binding maintainers.
+> DT maintainers ping.
 
-Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
----
-Changes in v2:
-- add DRM master device node to list all display nodes that comprise
-  the graphics subsystem.
+Apologies for the delay. I will take a look at the bidning shortly.
 
-Changes in v3: None
+> >
+> > I would feel fine with pulling this when they are prefixed with
+> > "ti,". Otherwise the series looks good to me.
+> Why it should be prefixed by "ti"? Isn't enough to have "ti" prefix for driver
+> compatible property? Thanks.
 
-Changes in v4: None
+Because if we want to add a similar generic property, the names will
+clash.
 
- .../devicetree/bindings/video/rockchip-drm.txt     |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/rockchip-drm.txt
+Ideally bindings should use prefixed properties by default -- those can
+be replaced with generic properties as commonality becomes apparent.
 
-diff --git a/Documentation/devicetree/bindings/video/rockchip-drm.txt b/Documentation/devicetree/bindings/video/rockchip-drm.txt
-new file mode 100644
-index 0000000..7fff582
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/rockchip-drm.txt
-@@ -0,0 +1,19 @@
-+Rockchip DRM master device
-+================================
-+
-+The Rockchip DRM master device is a virtual device needed to list all
-+vop devices or other display interface nodes that comprise the
-+graphics subsystem.
-+
-+Required properties:
-+- compatible: Should be "rockchip,display-subsystem"
-+- ports: Should contain a list of phandles pointing to display interface port
-+  of vop devices. vop definitions as defined in
-+  Documentation/devicetree/bindings/video/rockchip-vop.txt
-+
-+example:
-+
-+display-subsystem {
-+	compatible = "rockchip,display-subsystem";
-+	ports = <&vopl_out>, <&vopb_out>;
-+};
--- 
-1.7.9.5
-
-
+Mark.
