@@ -1,62 +1,51 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] i2c: axxia: Add I2C driver for AXM55xx
-Date: Mon, 22 Sep 2014 15:16:40 +0200
-Message-ID: <20140922131640.GU3755@pengutronix.de>
-References: <1408967482-17723-1-git-send-email-anders.berg@avagotech.com>
- <20140920121242.GA3833@katana>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Remove "regulator-always-on" in vcc_rmii for Radxa Rock
+Date: Mon, 22 Sep 2014 15:16:57 +0200
+Message-ID: <1553574.dVZvoE0Ofh@phil>
+References: <1411130187-4966-1-git-send-email-romain.perier@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140920121242.GA3833@katana>
+In-Reply-To: <1411130187-4966-1-git-send-email-romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 20, 2014 at 02:12:43PM +0200, Wolfram Sang wrote:
-> Hi,
->=20
-> thanks for the submission.
->=20
-> On Mon, Aug 25, 2014 at 01:51:22PM +0200, Anders Berg wrote:
-> > Add I2C bus driver for the controller found in the LSI Axxia family=
- SoCs. The
-> > driver implements 10-bit addressing and SMBus transfer modes via em=
-ulation
-> > (including SMBus block data read).
-> >=20
-> > Signed-off-by: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
->=20
-> Looks pretty good already. Still, some comments:
->=20
-> > +config I2C_AXXIA
-> > +	tristate "Axxia I2C controller"
-> > +	depends on ARCH_AXXIA
-> > +	help
-> > +	  Say yes if you want to support the I2C bus on Axxia platforms.
-> > +
-> > +	  If you don't know, say Y.
->=20
-> I'd say skip this sentence and consider 'default y' if it is really
-> needed on this platform.
-Still better:
+Am Freitag, 19. September 2014, 12:36:27 schrieb Romain Perier:
+> On Rockchip RK3188 SoCs the platform driver emac_rockchip is used. This
+> variant driver enables this regulator when the device driver is loaded. The
+> phy no longer needs to be always on.
+> 
+> Signed-off-by: Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-	depends on ARCH_AXXIA || COMPILE_TEST
-	default ARCH_AXXIA
+Added to my dts branch and included in the latest pull request to arm-soc
 
-Best regards
-Uwe
+Please also include linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (the list for all 
+things arm) in future submissions
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+
+Heiko
+
+> ---
+>  arch/arm/boot/dts/rk3188-radxarock.dts | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts
+> b/arch/arm/boot/dts/rk3188-radxarock.dts index e04bf8f..d95f881 100644
+> --- a/arch/arm/boot/dts/rk3188-radxarock.dts
+> +++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+> @@ -176,7 +176,6 @@
+>  				regulator-name = "VCC_RMII";
+>  				regulator-min-microvolt = <3300000>;
+>  				regulator-max-microvolt = <3300000>;
+> -				regulator-always-on;
+>  			};
+> 
+>  			vccio_wl: REG10 {
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
