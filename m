@@ -1,122 +1,47 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: Re: [PATCH 1/3] cap1106: Add support for various cap11xx devices
-Date: Sun, 21 Sep 2014 17:28:05 -0700
-Message-ID: <CAKzfze-3gmQX6oPKZvXPAqC1WxvPKS9QW1omXNA9+CSPW50BXw@mail.gmail.com>
-References: <1411268469-21283-1-git-send-email-mranostay@gmail.com>
-	<1411268469-21283-2-git-send-email-mranostay@gmail.com>
-	<541EA149.5000408@zonque.org>
+From: "Kim, Milo" <Milo.Kim@ti.com>
+Subject: RE: [PATCH v2 1/2] iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+Date: Mon, 22 Sep 2014 01:01:12 +0000
+Message-ID: <A874F61F95741C4A9BA573A70FE3998FBC4743E2@DQHE06.ent.ti.com>
+References: <1410448403-19402-1-git-send-email-svarbanov@mm-sol.com>
+ <1410448403-19402-2-git-send-email-svarbanov@mm-sol.com>
+ <54138151.8010902@gmx.de> <54147E97.60808@kernel.org>
+ <5416F3E2.3030009@mm-sol.com>
+ <4dbc485f-599a-4b50-854c-c2e1c44d4810@email.android.com>
+ <541AAC80.1090708@mm-sol.com> <541ED2C0.4040801@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <541EA149.5000408@zonque.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: Kumar Gala <galak@codeaurora.org>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <541ED2C0.4040801@kernel.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 21, 2014 at 2:58 AM, Daniel Mack <daniel@zonque.org> wrote:
-> Hi,
->
-> On 09/21/2014 05:01 AM, Matt Ranostay wrote:
->> Several other variants of the cap11xx device exists with a varying
->> number of capacitance detection channels. Add support for creating
->> the channels dynamically.
->
-> Thanks for the patches!
->
->>
->> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
->> ---
->>  drivers/input/keyboard/cap1106.c | 54 +++++++++++++++++++---------------------
->
-> Please also add a patch to rename the file to cap11xx.c, and make sure
-> to export the patch with 'git format-patch -M' to detect the rename.
->
->> diff --git a/drivers/input/keyboard/cap1106.c b/drivers/input/keyboard/cap1106.c
->> index d70b65a..b9c43b5 100644
->> --- a/drivers/input/keyboard/cap1106.c
->> +++ b/drivers/input/keyboard/cap1106.c
->> @@ -55,8 +55,6 @@
->>  #define CAP1106_REG_MANUFACTURER_ID  0xfe
->>  #define CAP1106_REG_REVISION         0xff
->>
->> -#define CAP1106_NUM_CHN 6
->> -#define CAP1106_PRODUCT_ID   0x55
->>  #define CAP1106_MANUFACTURER_ID      0x5d
->>
->>  struct cap1106_priv {
->> @@ -64,7 +62,8 @@ struct cap1106_priv {
->>       struct input_dev *idev;
->>
->>       /* config */
->> -     unsigned short keycodes[CAP1106_NUM_CHN];
->> +     u32 *keycodes;
->
-> unsigned short *, please. See below.
->
->> @@ -189,27 +188,23 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
->>       struct cap1106_priv *priv;
->>       struct device_node *node;
->>       int i, error, irq, gain = 0;
->> -     unsigned int val, rev;
->> -     u32 gain32, keycodes[CAP1106_NUM_CHN];
->> +     unsigned int val, prod, rev;
->> +     u32 gain32;
->>
->>       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->>       if (!priv)
->>               return -ENOMEM;
->>
->> +     priv->num_channels = (unsigned long) id->driver_data;
->
-> priv->num_channels is unsigned int.
->
-> Also, a BUG_ON(!priv->num_channels) wouldn't harm.
->
->> +     priv->keycodes = devm_kzalloc(dev,
->> +             sizeof(u32) * priv->num_channels, GFP_KERNEL);
->
-> Use devm_kcalloc() to allocate an array.
->
->> @@ -235,17 +234,12 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
->>                       dev_err(dev, "Invalid sensor-gain value %d\n", gain32);
->>       }
->>
->> -     BUILD_BUG_ON(ARRAY_SIZE(keycodes) != ARRAY_SIZE(priv->keycodes));
->> -
->>       /* Provide some useful defaults */
->> -     for (i = 0; i < ARRAY_SIZE(keycodes); i++)
->> -             keycodes[i] = KEY_A + i;
->> +     for (i = 0; i < priv->num_channels; i++)
->> +             priv->keycodes[i] = KEY_A + i;
->>
->>       of_property_read_u32_array(node, "linux,keycodes",
->> -                                keycodes, ARRAY_SIZE(keycodes));
->> -
->> -     for (i = 0; i < ARRAY_SIZE(keycodes); i++)
->> -             priv->keycodes[i] = keycodes[i];
->> +                               priv->keycodes, priv->num_channels);
->
-> Hmm, no. Internally, you have to store the keycodes as unsigned short,
-> otherwise EVIOC{G|S}KEYCODE from usespace doesn't work.
->
-> of_property_read_u16_array() should work here for unsigned short, I
-> guess. Otherwise, you'd have to open-code the routine.
->
-Problem with u16 is you'll to mark it */bits/ 16* in the device tree
-entry.. I doubt that is acceptable
-
-
->> @@ -313,12 +307,16 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
->>
->>  static const struct of_device_id cap1106_dt_ids[] = {
->>       { .compatible = "microchip,cap1106", },
->> +     { .compatible = "microchip,cap1126", },
->> +     { .compatible = "microchip,cap1188", },
->
-> Hmm, how can that work unless you set .data to the number of channels
-> here? Did you test that with a DT-enabled board?
->
->
-> Thanks,
-> Daniel
+SGVsbG8gSm9uYXRoYW4gYW5kIFN0YW5pbWlyLA0KDQo+ID4+IFNlZSBEb2N1bWVudGF0aW9uL0FC
+SS9zeXNmcy1idXMtaWlvDQo+ID4+IE1pbGxpdm9sdHMgSSB0aGluay4uLiBXZSBjb3BpZWQgaHdt
+b24gd2hlcmUgcG9zc2libGUuDQo+ID4NCj4gPiBJJ20gYSBiaXQgY29uZnVzZWQgYWJvdXQgdGhl
+c2UgdW5pdHMuIEkgc2VhcmNoZWQgcmVmZXJlbmNlcyBvZg0KPiA+IGlpb19yZWFkX2NoYW5uZWxf
+cHJvY2Vzc2VkKCkgYW5kIGZvdW5kIGEgZmV3Lg0KPiA+DQo+ID4gVGhlIGlpb19od21vbiBleHBl
+Y3RpbmcgbWlsaXZvbHRzLiBPbiB0aGUgb3RoZXIgc2lkZSBscDg3ODgtY2hhcmdlci5jDQo+ID4g
+cmVnaXN0ZXJzIGEgZ2V0X3Byb3BlcnR5IG1ldGhvZCBpbiBjaGFyZ2VyLW1hbmFnZXIuYywgd2hp
+Y2ggZXhwZWN0cw0KPiA+IG1pY3Jvdm9sdHMgaW4gZ2V0X2JhdHRfdVYoKS4NCj4gSXQncyBkZWZp
+bml0ZWx5IG1lYW50IHRvIGJlIG1pbGxpdm9sdHMgKGxpZnRlZCBmcm9tIGh3bW9uIGEgd2hpbGUg
+YmFjaykuDQo+IFNlZSBEb2N1bWVudGF0aW9uL0FCSS90ZXN0aW5nL3N5c2ZzLWJ1cy1paW8NCj4g
+DQo+IExvb2tzIGxpa2Ugd2UgaGF2ZSBhIGJ1ZyBpbiBscDg3ODgtY2hhcmdlciAtIGl0IG1pZ2h0
+IGJlIG1hdGNoZWQgd2l0aCBvbmUgaW4NCj4gbHA4Nzg4LWFkYywgYnV0IHRoZW4gdGhlcmUgd2ls
+bCBiZSBhIGJ1ZyB0aGVyZS4uLg0KPiANCj4gQ2MnZCBNaWxvIEtpbS4NCg0KJ2xwODc4OC1jaGFy
+Z2VyJyByZWdpc3RlcnMgbm90IGNoYXJnZXItbWFuYWdlciBidXQgcG93ZXItc3VwcGx5IHN1YnN5
+c3RlbS4NCidscDg3ODgtYWRjJyBpcyB0aGUgSUlPIGRyaXZlci4NCidscDg3ODgtY2hhcmdlcicg
+aXMgdGhlIElJTyBjb25zdW1lciBvZiBscDg3ODgtYWRjLg0KDQooSG93IHRvIGNvbW11bmljYXRl
+IGJldHdlZW4gbHA4Nzg4LWFkYyBhbmQgbHA4Nzg4LWNoYXJnZXIpDQoxLiBBcHBsaWNhdGlvbiBy
+ZXF1ZXN0cyB2YmF0dChiYXR0ZXJ5IHZvbHRhZ2UpIGJ5IGFjY2Vzc2luZyAvc3lzL2NsYXNzL3Bv
+d2VyLw0KMi4gbHA4Nzg4LWNoYXJnZXIgYXNrcyBscDg3ODgtYWRjIHRvIGdldCBjb252ZXJ0ZWQg
+dmJhdHQgdmFsdWUNCjMuIGxwODc4OC1hZGMgZ2V0IHRoZSBiYXR0ZXJ5IEFEQyBmcm9tIHRoZSBk
+ZXZpY2UuDQogICBJdCByZXR1cm5zIGNhbGN1bGF0ZWQgbWljcm8gdm9sdGFnZSB0byBscDg3ODgt
+Y2hhcmdlci4NCjQuIGxwODc4OC1jaGFyZ2VyIHJlcG9ydHMgdGhpcyB1ViB2YWx1ZSB0byB0aGUg
+YXBwbGljYXRpb24NCjUuIEFwcGxpY2F0aW9uIHVzZXMgdVYgb3IgY29udmVydHMgdG8gbVYgb3Ig
+ViB1bml0LiBJdCdzIHVwIHRvIHRoZSBhcHAuDQoNClBsZWFzZSBub3RlIHRoYXQgYmF0dGVyeSBh
+cHAgYWNjZXNzZXMgbm90IC9zeXMvYnVzL2lpbyBidXQgL3N5cy9jbGFzcy9wb3dlci8uDQoNCkJl
+c3QgcmVnYXJkcywNCk1pbG8NCg==
