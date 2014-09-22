@@ -1,89 +1,38 @@
-From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 4/4] clk: hix5hd2: add I2C clocks
-Date: Mon, 22 Sep 2014 11:20:16 +0800
-Message-ID: <1411356016-20553-5-git-send-email-zhangfei.gao@linaro.org>
-References: <1411356016-20553-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411356016-20553-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 1/2] regulator: st-pwm: get voltage and duty table from dts
+Date: Sun, 21 Sep 2014 21:18:10 -0700
+Message-ID: <CAD=FV=VxqQhp8A_yGMe8U+_Z1DNzLvMp-Bsj_iEx=5mumeHpvw@mail.gmail.com>
+References: <1411354380-14326-1-git-send-email-zyw@rock-chips.com>
+	<1411354380-14326-2-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411354380-14326-2-git-send-email-zyw@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Chris,
 
-hix5hd2 add I2C clocks (I2C0~i2C5)
+On Sun, Sep 21, 2014 at 7:52 PM, Chris Zhong <zyw@rock-chips.com> wrote:
+> Get voltage & duty table from device tree might be better, other platforms can also use this
+> driver without any modify.
+>
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
 
-Signed-off-by: Wei Yan <sledge.yanwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/clk/hisilicon/clk-hix5hd2.c       |   25 +++++++++++++++++++++++++
- include/dt-bindings/clock/hix5hd2-clock.h |   12 ++++++++++++
- 2 files changed, 37 insertions(+)
+No need to re-spin, but please remember that all tags should be
+bunched together (no blank lines).  In other words,
 
-diff --git a/drivers/clk/hisilicon/clk-hix5hd2.c b/drivers/clk/hisilicon/clk-hix5hd2.c
-index 6e97e54..3f369c6 100644
---- a/drivers/clk/hisilicon/clk-hix5hd2.c
-+++ b/drivers/clk/hisilicon/clk-hix5hd2.c
-@@ -100,6 +100,31 @@ static struct hisi_gate_clock hix5hd2_gate_clks[] __initdata = {
- 		CLK_SET_RATE_PARENT, 0x178, 0, 0, },
- 	{ HIX5HD2_WDG0_RST, "rst_wdg0", "clk_wdg0",
- 		CLK_SET_RATE_PARENT, 0x178, 4, CLK_GATE_SET_TO_DISABLE, },
-+	/* I2C */
-+	{HIX5HD2_I2C0_CLK, "clk_i2c0", "100m",
-+		 CLK_SET_RATE_PARENT, 0x06c, 4, 0, },
-+	{HIX5HD2_I2C0_RST, "rst_i2c0", "clk_i2c0",
-+		 CLK_SET_RATE_PARENT, 0x06c, 5, CLK_GATE_SET_TO_DISABLE, },
-+	{HIX5HD2_I2C1_CLK, "clk_i2c1", "100m",
-+		 CLK_SET_RATE_PARENT, 0x06c, 8, 0, },
-+	{HIX5HD2_I2C1_RST, "rst_i2c1", "clk_i2c1",
-+		 CLK_SET_RATE_PARENT, 0x06c, 9, CLK_GATE_SET_TO_DISABLE, },
-+	{HIX5HD2_I2C2_CLK, "clk_i2c2", "100m",
-+		 CLK_SET_RATE_PARENT, 0x06c, 12, 0, },
-+	{HIX5HD2_I2C2_RST, "rst_i2c2", "clk_i2c2",
-+		 CLK_SET_RATE_PARENT, 0x06c, 13, CLK_GATE_SET_TO_DISABLE, },
-+	{HIX5HD2_I2C3_CLK, "clk_i2c3", "100m",
-+		 CLK_SET_RATE_PARENT, 0x06c, 16, 0, },
-+	{HIX5HD2_I2C3_RST, "rst_i2c3", "clk_i2c3",
-+		 CLK_SET_RATE_PARENT, 0x06c, 17, CLK_GATE_SET_TO_DISABLE, },
-+	{HIX5HD2_I2C4_CLK, "clk_i2c4", "100m",
-+		 CLK_SET_RATE_PARENT, 0x06c, 20, 0, },
-+	{HIX5HD2_I2C4_RST, "rst_i2c4", "clk_i2c4",
-+		 CLK_SET_RATE_PARENT, 0x06c, 21, CLK_GATE_SET_TO_DISABLE, },
-+	{HIX5HD2_I2C5_CLK, "clk_i2c5", "100m",
-+		 CLK_SET_RATE_PARENT, 0x06c, 0, 0, },
-+	{HIX5HD2_I2C5_RST, "rst_i2c5", "clk_i2c5",
-+		 CLK_SET_RATE_PARENT, 0x06c, 1, CLK_GATE_SET_TO_DISABLE, },
- };
- 
- enum hix5hd2_clk_type {
-diff --git a/include/dt-bindings/clock/hix5hd2-clock.h b/include/dt-bindings/clock/hix5hd2-clock.h
-index b8e3c9d..fd29c17 100644
---- a/include/dt-bindings/clock/hix5hd2-clock.h
-+++ b/include/dt-bindings/clock/hix5hd2-clock.h
-@@ -62,6 +62,18 @@
- #define HIX5HD2_SD_CIU_RST		138
- #define HIX5HD2_WDG0_CLK		139
- #define HIX5HD2_WDG0_RST		140
-+#define HIX5HD2_I2C0_CLK		141
-+#define HIX5HD2_I2C0_RST		142
-+#define HIX5HD2_I2C1_CLK		143
-+#define HIX5HD2_I2C1_RST		144
-+#define HIX5HD2_I2C2_CLK		145
-+#define HIX5HD2_I2C2_RST		146
-+#define HIX5HD2_I2C3_CLK		147
-+#define HIX5HD2_I2C3_RST		148
-+#define HIX5HD2_I2C4_CLK		149
-+#define HIX5HD2_I2C4_RST		150
-+#define HIX5HD2_I2C5_CLK		151
-+#define HIX5HD2_I2C5_RST		152
- 
- /* complex */
- #define HIX5HD2_MAC0_CLK		192
--- 
-1.7.9.5
+YES:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+
+NO:
+
+> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
