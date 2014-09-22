@@ -1,322 +1,156 @@
-From: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Subject: Re: [PATCH] i2c: axxia: Add I2C driver for AXM55xx
-Date: Mon, 22 Sep 2014 11:19:00 +0200
-Message-ID: <CAE0=X_0VQ8rWrUgbsgKm1MwCP8bwWm3UJPq9p=xNDfjP4CC7Bg@mail.gmail.com>
-References: <1408967482-17723-1-git-send-email-anders.berg@avagotech.com>
-	<20140920121242.GA3833@katana>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC][PATCH] devicetree: Add master-id-bits property to the
+	iommu device
+Date: Mon, 22 Sep 2014 11:23:23 +0200
+Message-ID: <20140922092322.GI1470@ulmo>
+References: <1410718646-9710-1-git-send-email-Varun.Sethi@freescale.com>
+	<201409150438.29649.arnd@arndb.de>
+	<bfdff6494d7f46ab9a9f00f94159e9e1@BL2PR03MB468.namprd03.prod.outlook.com>
+	<201409151857.05463.arnd@arndb.de>
+	<febe4a288f2f438ca95988929ee71580@BL2PR03MB468.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140920121242.GA3833@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2452411381798826894=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <febe4a288f2f438ca95988929ee71580-AZ66ij2kwaacCcN9WK45f+O6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "Mark.Rutland-5wv7dgnIgG8@public.gmane.org" <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org" <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 20, 2014 at 2:12 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> Hi,
->
-> thanks for the submission.
 
-Sure. Thanks for the comments. I'll update the patch and submit a v2.
-
->
-> On Mon, Aug 25, 2014 at 01:51:22PM +0200, Anders Berg wrote:
->> Add I2C bus driver for the controller found in the LSI Axxia family SoCs. The
->> driver implements 10-bit addressing and SMBus transfer modes via emulation
->> (including SMBus block data read).
->>
->> Signed-off-by: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
->
-> Looks pretty good already. Still, some comments:
->
->> +config I2C_AXXIA
->> +     tristate "Axxia I2C controller"
->> +     depends on ARCH_AXXIA
->> +     help
->> +       Say yes if you want to support the I2C bus on Axxia platforms.
->> +
->> +       If you don't know, say Y.
->
-> I'd say skip this sentence and consider 'default y' if it is really
-> needed on this platform.
-
-Ok. Dropped the last sentence and defaulting to 'y'.
-
->
->> diff --git a/drivers/i2c/busses/i2c-axxia.c b/drivers/i2c/busses/i2c-axxia.c
->> new file mode 100644
->> index 0000000..e6c9b88
->> --- /dev/null
->> +++ b/drivers/i2c/busses/i2c-axxia.c
->> @@ -0,0 +1,591 @@
->> +/*
->> + * drivers/i2c/busses/i2c-axxia.c
->
-> No pathnames please, they might get stale.
->
-
-Got it.
-
->> + *
->> + * This driver implements I2C master functionality using the LSI API2C
->> + * controller.
->> + *
->> + * This software is licensed under the terms of the GNU General Public
->> + * License version 2, as published by the Free Software Foundation, and
->> + * may be copied, distributed, and modified under those terms.
->> + */
->> +#include <linux/clk.h>
->> +#include <linux/clkdev.h>
->> +#include <linux/err.h>
->> +#include <linux/i2c.h>
->> +#include <linux/init.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/module.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/platform_device.h>
->
-> At least of.h, too?
->
-
-Ok, added.
-
->> +
->> +#define SCL_WAIT_TIMEOUT_NS 25000000
->> +#define I2C_XFER_TIMEOUT    (msecs_to_jiffies(250))
->> +#define I2C_STOP_TIMEOUT    (msecs_to_jiffies(100))
->> +#define FIFO_SIZE           8
->> +
->> +#define GLOBAL_CONTROL               0x00
->> +#define   GLOBAL_MST_EN         BIT(0)
->> +#define   GLOBAL_SLV_EN         BIT(1)
->> +#define   GLOBAL_IBML_EN        BIT(2)
->> +#define INTERRUPT_STATUS     0x04
->> +#define INTERRUPT_ENABLE     0x08
->> +#define   INT_SLV               BIT(1)
->> +#define   INT_MST               BIT(0)
->> +#define WAIT_TIMER_CONTROL   0x0c
->> +#define   WT_EN                      BIT(15)
->> +#define   WT_VALUE(_x)               ((_x) & 0x7fff)
->> +#define IBML_TIMEOUT         0x10
->> +#define IBML_LOW_MEXT                0x14
->> +#define IBML_LOW_SEXT                0x18
->> +#define TIMER_CLOCK_DIV              0x1c
->> +#define I2C_BUS_MONITOR              0x20
->> +#define SOFT_RESET           0x24
->> +#define MST_COMMAND          0x28
->> +#define   CMD_BUSY           (1<<3)
->
-> The whole driver has 'spaces around operator' issues, please fix them.
->
-
-Ok.
-
-> ...
->
->
->> +     /* Find the prescaler value that makes tmo_clk fit in 15-bits counter.
->> +      */
->
-> Minor: Make this a one line comment. Better readable.
->
-> ...
->
->
->> +/**
->> + * axxia_i2c_empty_rx_fifo - Fetch data from RX FIFO and update SMBus block
->> + * transfer length if this is the first byte of such a transfer.
->> + */
->> +static int
->> +axxia_i2c_empty_rx_fifo(struct axxia_i2c_dev *idev)
->> +{
->> +     struct i2c_msg *msg = idev->msg;
->> +     size_t rx_fifo_avail = readl(idev->base + MST_RX_FIFO);
->> +     int bytes_to_transfer = min(rx_fifo_avail, msg->len - idev->msg_xfrd);
->> +
->> +     while (0 < bytes_to_transfer--) {
->
-> Please put constants on the right side. Reading this is very
-> twisting.
-
-Ok.
-
->
->> +             int c = readl(idev->base + MST_DATA);
->> +
->> +             if (idev->msg_xfrd == 0 && i2c_m_recv_len(msg)) {
->> +                     /*
->> +                      * Check length byte for SMBus block read
->> +                      */
->> +                     if (c <= 0) {
->> +                             idev->msg_err = -EPROTO;
->> +                             i2c_int_disable(idev, ~0);
->> +                             complete(&idev->msg_complete);
->> +                             break;
->> +                     } else if (c > I2C_SMBUS_BLOCK_MAX) {
->> +                             c = I2C_SMBUS_BLOCK_MAX;
->
-> What about returning -EPROTO here as well? I don't think that reading
-> just a slice of all the data is helpful.
->
-
-Right, that is probably true. This came from the device I was using to
-test the block-read operation. This device violated the
-I2C_SMBUS_BLOCK_MAX limit, so I added this truncation to at least get
-something out...
-
-But I agree, for real-world use it makes no sense to truncate the
-message like this. I'll remove it.
-
-> ...
->
->> +static irqreturn_t
->> +axxia_i2c_isr(int irq, void *_dev)
->
-> Merge those into a single line please.
->
-
-I'll fix all occurrences of this.
-
->> +{
->> +     struct axxia_i2c_dev *idev = _dev;
->> +     u32 status;
->> +
->> +     if (!idev->msg)
->> +             return IRQ_NONE;
->
-> This is actually not true. There might be interrupt bits set, so there
-> is an IRQ. There shouldn't be one, right, but that's another case IMO.
->
-
-You could see it as: there is no interrupt that this handler is
-interested in serving. I'd like to keep this test as there is some
-legacy software that could be run on platforms with this driver that
-access the I2C controller directly. If this happens, this test assures
-that the user get an informative "unhandled irq" error message
-(instead of a null pointer dereference).
-
-> ...
->
->> +static int
->> +axxia_i2c_xfer_msg(struct axxia_i2c_dev *idev, struct i2c_msg *msg)
->> +{
->> +     u32 int_mask = MST_STATUS_ERR | MST_STATUS_SNS;
->> +     u32 rx_xfer, tx_xfer;
->> +     u32 addr_1, addr_2;
->> +     int ret;
->> +
->> +     if (msg->len == 0 || msg->len > 255)
->> +             return -EINVAL;
->
-> Ouch, really? Maybe we should warn the user here.
-
-Yeah, the transfer length register limits the length to 255. I'll add
-a warning here.
-
->
->> +
->> +     idev->msg = msg;
->> +     idev->msg_xfrd = 0;
->> +     idev->msg_err = 0;
->> +     init_completion(&idev->msg_complete);
->
-> reinit_completion?
-
-Ok (learned something new there... :-)
-
->
->> +     ret = wait_for_completion_timeout(&idev->msg_complete,
->> +                                       I2C_XFER_TIMEOUT);
->> +
->> +     i2c_int_disable(idev, int_mask);
->> +
->> +     WARN_ON(readl(idev->base + MST_COMMAND) & CMD_BUSY);
->> +
->> +     if (ret == 0) {
->> +             dev_warn(idev->dev, "xfer timeout (%#x)\n", msg->addr);
->
-> But no warning here. Timeouts can easily happen.
-
-Ok.
-
->
->> +             idev->msg_err = -ETIMEDOUT;
->> +     }
->> +
->> +     if (unlikely(idev->msg_err))
->> +             axxia_i2c_init(idev);
->> +
->> +     return idev->msg_err;
->> +}
->> +
->> +static int
->> +axxia_i2c_stop(struct axxia_i2c_dev *idev)
->> +{
->> +     u32 int_mask = MST_STATUS_ERR | MST_STATUS_SCC;
->> +     int ret;
->> +
->> +     init_completion(&idev->msg_complete);
->
-> reinit_completion
->
->> +
->> +     /* Issue stop */
->> +     writel(0xb, idev->base + MST_COMMAND);
->> +     i2c_int_enable(idev, int_mask);
->> +     ret = wait_for_completion_timeout(&idev->msg_complete,
->> +                                       I2C_STOP_TIMEOUT);
->> +     i2c_int_disable(idev, int_mask);
->> +     if (ret == 0)
->> +             return -ETIMEDOUT;
->> +
->> +     WARN_ON(readl(idev->base + MST_COMMAND) & CMD_BUSY);
->
-> Message saying that bus is stuck should be enough? The call trace won't
-> help here.
->
-
-Agreed.
+--===============2452411381798826894==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7IgncvKP0CVPV/ZZ"
+Content-Disposition: inline
 
 
-> ...
->
->> +#ifdef CONFIG_PM
->> +static int axxia_i2c_suspend(struct platform_device *pdev, pm_message_t state)
->> +{
->> +     return -EOPNOTSUPP;
->> +}
->> +
->> +static int axxia_i2c_resume(struct platform_device *pdev)
->> +{
->> +     return -EOPNOTSUPP;
->> +}
->> +#else
->> +#define axxia_i2c_suspend NULL
->> +#define axxia_i2c_resume NULL
->> +#endif
->
-> Is this really better than to keep them empty?
+--7IgncvKP0CVPV/ZZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Probably not. I'll remove these.
+On Tue, Sep 16, 2014 at 06:04:48PM +0000, Varun Sethi wrote:
+> Hi Arnd,
+>=20
+> > -----Original Message-----
+> > From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
+> > bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Arnd Bergmann
+> > Sent: Monday, September 15, 2014 10:27 PM
+> > To: Sethi Varun-B16395
+> > Cc: Mark.Rutland-5wv7dgnIgG8@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Yoder Stuart-B08248;
+> > robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org;
+> > thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Subject: Re: [RFC][PATCH] devicetree: Add master-id-bits property to the
+> > iommu device
+> >=20
+> > On Monday 15 September 2014, Varun Sethi wrote:
+> > > >
+> > > > This seems rather specific to MMU-500. I don't think that most
+> > > > IOMMUs would use the term 'master ID', 'stream ID' or even the
+> > > > general concept, and you don't expand the acronym 'TBU'. I've seen
+> > > > many IOMMUs and I don't even know what that means.
+> > >
+> > > TBU refers to the translation buffer unit, which is responsible for c=
+aching
+> > page translations. In case of translation miss in the cache, translatio=
+n request is
+> > forwarded to the TCU (Translation control unit). The master id forwarde=
+d to
+> > TCU would also contain the TBU ID.  Using the master-id-bits property w=
+e can
+> > mask out the additional TBU bits at the TCU. This is a cause of concern=
+ when we
+> > want to share master id for devices which are connected to different TB=
+Us. We
+> > have a hot pluggable bus architecture, where a device group can have mu=
+ltiple
+> > devices connected to different TBUs. So, we need a mechanism to mask out
+> > additional TBIU bits.
+> >=20
+> > Ok, I think I understand now
+> >=20
+> > > > Why do you think this is something that is needed to be known at the
+> > > > global level, rather than a property for some individual drivers?
+> > > >
+> > > In case of Freescale Layerscape SOCs, number of bits used for definin=
+g a
+> > stream id are specific to a given platform.
+> > >
+> > > Are you suggesting that this property should be added to the master d=
+evice
+> > node, rather than the iommu node?
+> >=20
+> > Most importantly, I think this needs to be part of the (iommu) device s=
+pecific
+> > binding, not the generic binding that is used for all iommus that may o=
+r may not
+> > have this concept.
+> >=20
+> > I believe in case of the ARM SMMU, it should actually go into the maste=
+r node
+> > as part of the 'iommus' property, because the mask can be different for=
+ each
+> > master. If your IOMMU has a fixed mask that is used for all devices, th=
+at's fine
+> > and you can put it into the iommu node itself but document it in the bi=
+nding for
+> > your IOMMU.
+> >=20
+> > For hot-pluggable buses, you probably need to have the 'iommus' propert=
+y in
+> > the node that corresponds to the bus controller, and that will have a m=
+ask that
+> > is used for all devices plugged into it.
+> Can I add a note to the generic binding about representing the "mask"
+> as a part of the "iommus" property. This would similar to the note
+> about the "dma-ranges"
 
->
->> +static struct platform_driver axxia_i2c_driver = {
->> +     .probe   = axxia_i2c_probe,
->> +     .remove  = axxia_i2c_remove,
->> +     .suspend = axxia_i2c_suspend,
->> +     .resume  = axxia_i2c_resume,
->> +     .driver  = {
->> +             .name  = "axxia-i2c",
->> +             .owner = THIS_MODULE,
->
-> owner can be dropped.
+I think the concept of a mask is fairly device-specific. Adding a note
+to it in the generic binding could be confusing to people working with
+IOMMUs that don't know the concept.
 
-... and this.
+dma-ranges on the other hand is a generic property, so referring to it
+in the generic binding makes sense.
 
-/Anders
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--7IgncvKP0CVPV/ZZ
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUH+qKAAoJEN0jrNd/PrOh05MP/0OL1tmtGZhZmq5LShiOVggd
+m9XL+IKVycTjF++FpmQjwSBSzWFyEoM5SeRfnWZMm+gyTv5euqg5SJF1vUWCUSrI
+YK8fhqj9iJZbfW6dP0bKEy+16S+IrsPRJBDBIP7Sp1Lh3dMIm3kR/vW5KgLV1pfR
+wViOcuatemB0Dtt3inj6BM3KkQhZl+9u/xZUSMggrAueVW44XkAZ9CxJVlYmGBja
+I21Lchn5Vbpwf92l6ZTbFE0M6SKTOcjarXzOIXw647/tK++86CLkbsx5ejDRVntP
+uqneT7xde+ope+YC3/BTBUwc9Zg0MFdtjQ4qiK80cpFrt9TtXRJHvSruGqPwkrTL
+u2JaPHw7bkoaJBhWCemHYkn0l8/1ft3w+3BtsFrfAMDct0HKghwhUy6GUkK/TXz0
+Ta2ZZLXF0E4+jFqd1gTQLYdH0MMSw3WmCUezDX3YhvCiRsjDEk8Oxxw6Nge/sE48
++n+g9nmPoafImtU8nJbJEOSaOv5XUMke/w+nyxUPGEOz09Z2qkfyHNfHULO85iAC
+qhxrGmxaXyFJHNOr1kkKUP8Ob6amTA9GdjxdiHaoC6+t1OPafmG6DQQY2fGf8t65
+KE8Dc3FA4hWyDzI0OBsxSVRjSYflkOM0LWY2CpKcj3aFq9Js1qxNkaxfaOUaRIb+
+ah37VDeyTSDM5G0QA1NO
+=inWs
+-----END PGP SIGNATURE-----
+
+--7IgncvKP0CVPV/ZZ--
+
+--===============2452411381798826894==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2452411381798826894==--
