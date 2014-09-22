@@ -1,111 +1,116 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: Re: [PATCH 2/5] extcon: gpio: Convert the driver to use gpio desc
- API's
-Date: Mon, 22 Sep 2014 15:21:52 +0530
-Message-ID: <541FF138.7040908@ti.com>
-References: <1410236078-11713-1-git-send-email-george.cherian@ti.com> <1410236078-11713-3-git-send-email-george.cherian@ti.com> <541FD8CD.1060400@samsung.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] i2c: axxia: Add I2C driver for AXM55xx
+Date: Mon, 22 Sep 2014 11:59:39 +0200
+Message-ID: <20140922095939.GB1406@katana>
+References: <1408967482-17723-1-git-send-email-anders.berg@avagotech.com>
+ <20140920121242.GA3833@katana>
+ <CAE0=X_0VQ8rWrUgbsgKm1MwCP8bwWm3UJPq9p=xNDfjP4CC7Bg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <541FD8CD.1060400@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, rongjun.ying@csr.com, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XF85m9dhOBO43t/C"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAE0=X_0VQ8rWrUgbsgKm1MwCP8bwWm3UJPq9p=xNDfjP4CC7Bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 09/22/2014 01:37 PM, Chanwoo Choi wrote:
-> Hi George,
->
-> This patch removes 'gpio_active_low' field of struct gpio_extcon_data.
-> But, include/linux/extcon-gpio.h has the description of 'gpio_active_low' field.
-Yes didn't want the platform data users to break.
-Actually I couldn't find any platform users for this driver. Could you 
-please point me to
-one if in case I missed it. If non present then why cant we get rid of 
-platform data altogether.
->
-> Also,
-> This patch has not included the any description/comment of removing 'gpio_active_low'.
->
-> Also,
-> How to set 'FLAG_ACTIVE_LOW' bit for gpio when using platform data?
-Now that we are using gpiod_* API's  we need not check for 
-gpio_active_low from this driver.
+--XF85m9dhOBO43t/C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> This patch don't call 'set_bit()' function to set FLAG_ACTIVE_LOW flag.
->
-> Thanks,
-> Chanwoo Choi
->
-> On 09/09/2014 01:14 PM, George Cherian wrote:
->> Convert the driver to use gpiod_* API's.
->>
->> Signed-off-by: George Cherian <george.cherian@ti.com>
->> ---
->>   drivers/extcon/extcon-gpio.c | 18 +++++++-----------
->>   1 file changed, 7 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
->> index 72f19a3..25269f6 100644
->> --- a/drivers/extcon/extcon-gpio.c
->> +++ b/drivers/extcon/extcon-gpio.c
->> @@ -33,8 +33,7 @@
->>   
->>   struct gpio_extcon_data {
->>   	struct extcon_dev *edev;
->> -	unsigned gpio;
->> -	bool gpio_active_low;
->> +	struct gpio_desc *gpiod;
->>   	const char *state_on;
->>   	const char *state_off;
->>   	int irq;
->> @@ -50,9 +49,7 @@ static void gpio_extcon_work(struct work_struct *work)
->>   		container_of(to_delayed_work(work), struct gpio_extcon_data,
->>   			     work);
->>   
->> -	state = gpio_get_value(data->gpio);
->> -	if (data->gpio_active_low)
->> -		state = !state;
->> +	state = gpiod_get_value(data->gpiod);
->>   	extcon_set_state(data->edev, state);
->>   }
->>   
->> @@ -106,22 +103,21 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->>   	}
->>   	extcon_data->edev->name = pdata->name;
->>   
->> -	extcon_data->gpio = pdata->gpio;
->> -	extcon_data->gpio_active_low = pdata->gpio_active_low;
->> +	extcon_data->gpiod = gpio_to_desc(pdata->gpio);
->>   	extcon_data->state_on = pdata->state_on;
->>   	extcon_data->state_off = pdata->state_off;
->>   	extcon_data->check_on_resume = pdata->check_on_resume;
->>   	if (pdata->state_on && pdata->state_off)
->>   		extcon_data->edev->print_state = extcon_gpio_print_state;
->>   
->> -	ret = devm_gpio_request_one(&pdev->dev, extcon_data->gpio, GPIOF_DIR_IN,
->> +	ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
->>   				    pdev->name);
->>   	if (ret < 0)
->>   		return ret;
->>   
->>   	if (pdata->debounce) {
->> -		ret = gpio_set_debounce(extcon_data->gpio,
->> -					pdata->debounce * 1000);
->> +		ret = gpiod_set_debounce(extcon_data->gpiod,
->> +					 pdata->debounce * 1000);
->>   		if (ret < 0)
->>   			extcon_data->debounce_jiffies =
->>   				msecs_to_jiffies(pdata->debounce);
->> @@ -133,7 +129,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
->>   
->>   	INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
->>   
->> -	extcon_data->irq = gpio_to_irq(extcon_data->gpio);
->> +	extcon_data->irq = gpiod_to_irq(extcon_data->gpiod);
->>   	if (extcon_data->irq < 0)
->>   		return extcon_data->irq;
->>   
->>
+
+> >> +             if (idev->msg_xfrd =3D=3D 0 && i2c_m_recv_len(msg)) {
+> >> +                     /*
+> >> +                      * Check length byte for SMBus block read
+> >> +                      */
+> >> +                     if (c <=3D 0) {
+> >> +                             idev->msg_err =3D -EPROTO;
+> >> +                             i2c_int_disable(idev, ~0);
+> >> +                             complete(&idev->msg_complete);
+> >> +                             break;
+> >> +                     } else if (c > I2C_SMBUS_BLOCK_MAX) {
+> >> +                             c =3D I2C_SMBUS_BLOCK_MAX;
+> >
+> > What about returning -EPROTO here as well? I don't think that reading
+> > just a slice of all the data is helpful.
+> >
+>=20
+> Right, that is probably true. This came from the device I was using to
+> test the block-read operation. This device violated the
+> I2C_SMBUS_BLOCK_MAX limit, so I added this truncation to at least get
+> something out...
+
+Which device was it? I know there are some doing that, yet I like to
+know which ones.
+
+> >> +{
+> >> +     struct axxia_i2c_dev *idev =3D _dev;
+> >> +     u32 status;
+> >> +
+> >> +     if (!idev->msg)
+> >> +             return IRQ_NONE;
+> >
+> > This is actually not true. There might be interrupt bits set, so there
+> > is an IRQ. There shouldn't be one, right, but that's another case IMO.
+> >
+>=20
+> You could see it as: there is no interrupt that this handler is
+> interested in serving. I'd like to keep this test as there is some
+> legacy software that could be run on platforms with this driver that
+> access the I2C controller directly. If this happens, this test assures
+> that the user get an informative "unhandled irq" error message
+> (instead of a null pointer dereference).
+
+IRQ_NONE is "this interrupt wasn't by me" so for shared IRQs, the next
+handler can check. You shouldn't remove the check per se. Still,  since
+this interrupt was definately from the I2C core, you should return
+IRQ_HANDLED and print an error message to the logs.
+
+> >> +static int
+> >> +axxia_i2c_xfer_msg(struct axxia_i2c_dev *idev, struct i2c_msg *msg)
+> >> +{
+> >> +     u32 int_mask =3D MST_STATUS_ERR | MST_STATUS_SNS;
+> >> +     u32 rx_xfer, tx_xfer;
+> >> +     u32 addr_1, addr_2;
+> >> +     int ret;
+> >> +
+> >> +     if (msg->len =3D=3D 0 || msg->len > 255)
+> >> +             return -EINVAL;
+> >
+> > Ouch, really? Maybe we should warn the user here.
+>=20
+> Yeah, the transfer length register limits the length to 255. I'll add
+> a warning here.
+
+Please also add this information to the Kconfig description and
+somewhere at the top of the source file. This is an important flaw which
+people should easily find out about.
+
+
+--XF85m9dhOBO43t/C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUH/MKAAoJEBQN5MwUoCm2ymYP/1JbkMkXmmKIVrRuwQht2Q5T
+6JoCLwzMGNOoip8e8PsgjQUeiHrI45QPL2o81SZIxikQkfQKDTtrkIc2gm1wywub
+cKziXpQaPhQgXyoDIxml1v3m12Tyr5pczi55pge9U/WOtt5dAyU8RdAQj068m+Pq
+DGNlv2lF2ZGB3Xx46hXC9QyUF/V033eXvt3pJTphDKCsalWf7c/Ew60xioU36bxp
+dHLj43u9V+ITRE3ZkWWul5D9sWfn9kSt6/uWvM8FZQUQmC5YbDxcV7hHNosFBC9R
+I2B0ejXakpjtZ8d68cj8yvcqniul/ee6kQlWBE/EaD9SHSU/a/r6AlUNAEfD9KY2
+sPnbJU1qZSRXtDg0611jY++sVZ2fMUUIh2Malqp1vyCiVb4seW02rrDzUquMyRJr
+i4LuvbMCdTd1fXCvuKGFVdiEyHJs5wdyKIo4bQffYD/rbzmPs4m55GnFQ8lMFOBE
+cjHtgou8FEbzmS/IhLQ37+4uLdPnM4h2ScqLSLDmakz2IW6tq0gJdUJrU7X4nRaA
+nEmTDOwxsniy15Op9oReYya1QsPxl8ynC82qu5fe2YC/noCVJ08oAXUPPAQXec6E
+t6KTQVXz7X4mHDol7Al/gUSHNZc+6zN9vTZw9IHXN4gKtp6r65B9MxHYkU7nVaZF
+kACawNtgt9TUEkLnUehO
+=tNHL
+-----END PGP SIGNATURE-----
+
+--XF85m9dhOBO43t/C--
