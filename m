@@ -1,83 +1,51 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v11 07/10] OF: Introduce helper function for getting PCI
- domain_nr
-Date: Mon, 22 Sep 2014 16:33:12 +0100
-Message-ID: <20140922153311.GB1994@e106497-lin.cambridge.arm.com>
-References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
- <1411003825-21521-8-git-send-email-Liviu.Dudau@arm.com>
- <20140919210313.GH19374@google.com>
- <20140922110522.GK1994@e106497-lin.cambridge.arm.com>
- <CAErSpo7bnOFo4-uZmVsMqNpVQS+dQaMNedjmJ=sH_d9Kp2fGPg@mail.gmail.com>
+From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 04/13 v2] iommu/arm-smmu: Convert to iommu_capable() API
+	function function
+Date: Mon, 22 Sep 2014 17:36:28 +0200
+Message-ID: <20140922153628.GA10438@suse.de>
+References: <1409914384-21191-1-git-send-email-joro@8bytes.org>
+	<1409914384-21191-5-git-send-email-joro@8bytes.org>
+	<20140908165136.GW26030@arm.com> <20140917085312.GE2533@suse.de>
+	<20140919164220.GI20773@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo7bnOFo4-uZmVsMqNpVQS+dQaMNedjmJ=sH_d9Kp2fGPg@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+In-Reply-To: <20140919164220.GI20773-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 04:25:13PM +0100, Bjorn Helgaas wrote:
-> On Mon, Sep 22, 2014 at 5:05 AM, Liviu Dudau <Liviu.Dudau@arm.com> wr=
-ote:
-> > On Fri, Sep 19, 2014 at 10:03:13PM +0100, Bjorn Helgaas wrote:
-> >> On Thu, Sep 18, 2014 at 02:30:22AM +0100, Liviu Dudau wrote:
-> >> > Add of_pci_get_domain_nr() to retrieve the PCI domain number
-> >> > of a given device from DT. If the information is not present,
-> >> > the function can be requested to allocate a new domain number.
-> >>
-> >> Is of_pci_get_domain_nr() used somewhere?  If the use is in some f=
-uture
-> >> series, please mention it explicitly.  I'm just trying to avoid me=
-rging
-> >> unused code.
-> >
-> > It is used in the arm64 specific patch that I have dropped out of m=
-y
-> > pull request. After discussions with Catalin I will add the patch b=
-ack
-> > into the tree that you've pulled from as he is OK with your tree ca=
-rrying
-> > the whole package.
-> >
-> > I need to ask for some guidance here: for addressing some of your c=
-omments
-> > and Rob's I can add more patches in my v11 branch and you can pull =
-them
-> > when you think they are ready. But one of your comments was request=
-ing
-> > splitting a patch into two blocks - one that moves of_pci_range_to_=
-resource()
-> > into drivers/of/address.c and one that fixes it's behaviour - and I=
- don't
-> > know how you would like that handled. Should I revert the original =
-patch
-> > and add the new ones, or should I rebase the whole series into a di=
-fferent
-> > branch that you can pull from?
->=20
-> I guess the easiest thing is probably just to send a v12 series.  I
-> was hoping we were close enough for me to just hand-integrate minor
-> tweaks into my branch, but I think that will just create more
-> confusion.
+Hi Will,
 
-OK, I will send v12 then with all the acquired ACKs and fixes.
+On Fri, Sep 19, 2014 at 05:42:20PM +0100, Will Deacon wrote:
+> However, I thought about this a bit more and the coherency isn't necessarily
+> a global property of the SMMU. In reality, it is dependent on the IOTLBs in
+> use by the domain, so it's not going to be possible to report true here in
+> many cases.
+> 
+> That means we'd need a way to say `this device is dma coherent when its
+> downstream IOMMU is enabled with IOMMU_CACHE mappings'. For the moment,
+> people will probably just add `dma-coherent' to the endpoint and dma-mapping
+> will request IOMMU_CACHE mappings regardless of the features advertised by
+> the IOMMU. In that case, it might make more sense to return `true' here as
+> we can always generated cacheable transactions from the SMMU. The
+> dma-coherent property on the device would then indicate whether those
+> transactions will snoop the CPU caches.
 
-Best regards,
-Liviu
+Okay, when the SMMU can always generate cachable transactions it is
+surely fine to return true here. I'll change that before I add the
+patches to my tree.
 
->=20
-> Bjorn
->=20
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+	Joerg
