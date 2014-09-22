@@ -1,73 +1,50 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 0/9] rtc: at91sam9: add DT support
-Date: Mon, 22 Sep 2014 11:10:49 +0200
-Message-ID: <1411377058-26155-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v5 4/9] rtc: at91sam9: add DT support
+Date: Mon, 22 Sep 2014 11:10:53 +0200
+Message-ID: <1411377058-26155-5-git-send-email-boris.brezillon@free-electrons.com>
+References: <1411377058-26155-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411377058-26155-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add of_match_table to the existing driver so that rtc nodes defined in at91
+DTs can be attached to this driver.
 
-This patch series adds DT support to the atmel at91sam9 RTC driver.
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+ drivers/rtc/rtc-at91sam9.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-It also removes any machine specific inclusions to prepare the migration
-to multi platform kernel support, and retain the slow clock to prevent
-the CCF from disabling it at the end of boot.
-  
-Best Regards,
-
-Boris
-
-Changes since v4:
- - add a TODO comment to remember removing non DT board support code
-
-Changes since v3:
- - add GPBR DT bindings doc
- - fix a coding style issues
- - add Alexandre's Acked-by
- - change RTT DT bindings
-
-Changes since v2:
- - make use of syscon/regmap to avoid directly requesting/mapping a GPBR
-   memory region in the RTT driver
-
-Changes since v1:
- - remove non CCF specific case by adding the appropriate clk_lookup
-   entries in arch/arm/mach-at91/<soc-name>.c files
-
-Boris BREZILLON (9):
-  rtc: at91sam9: remove references to mach specific headers
-  rtc: at91sam9: use standard readl/writel functions instead of raw
-    versions
-  rtc: at91sam9: replace devm_ioremap by devm_ioremap_resource
-  rtc: at91sam9: add DT support
-  rtc: at91sam9: make use of syscon/regmap to access GPBR registers
-  ARM: at91: add clk_lookup entry for RTT devices
-  rtc: at91sam9: use clk API instead of relying on AT91_SLOW_CLOCK
-  rtc: at91sam9: add DT bindings documentation
-  mfd: syscon: add Atmel GPBR DT bindings documention
-
- .../devicetree/bindings/mfd/atmel,gpbr.txt         |  15 +++
- .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt |  23 ++++
- arch/arm/mach-at91/at91sam9260.c                   |   2 +
- arch/arm/mach-at91/at91sam9261.c                   |   2 +
- arch/arm/mach-at91/at91sam9263.c                   |   4 +
- arch/arm/mach-at91/at91sam9g45.c                   |   2 +
- arch/arm/mach-at91/at91sam9rl.c                    |   2 +
- arch/arm/mach-at91/clock.c                         |   2 +-
- arch/arm/mach-at91/clock.h                         |   1 +
- drivers/rtc/Kconfig                                |   1 +
- drivers/rtc/rtc-at91sam9.c                         | 138 ++++++++++++++++-----
- 11 files changed, 162 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index 38a2693..d72c34d 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -445,6 +445,14 @@ static int at91_rtc_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(at91_rtc_pm_ops, at91_rtc_suspend, at91_rtc_resume);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id at91_rtc_dt_ids[] = {
++	{ .compatible = "atmel,at91sam9260-rtt" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, at91_rtc_dt_ids);
++#endif
++
+ static struct platform_driver at91_rtc_driver = {
+ 	.probe		= at91_rtc_probe,
+ 	.remove		= at91_rtc_remove,
+@@ -453,6 +461,7 @@ static struct platform_driver at91_rtc_driver = {
+ 		.name	= "rtc-at91sam9",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &at91_rtc_pm_ops,
++		.of_match_table = of_match_ptr(at91_rtc_dt_ids),
+ 	},
+ };
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
