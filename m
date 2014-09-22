@@ -1,72 +1,80 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 06/11] i2c: core: Convert to
- dev_pm_domain_attach|detach()
-Date: Mon, 22 Sep 2014 12:00:34 +0200
-Message-ID: <20140922100033.GC1406@katana>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
- <1411151264-16245-7-git-send-email-ulf.hansson@linaro.org>
- <20140920122318.GC3850@katana>
- <20140922095253.GO1786@lahna.fi.intel.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
+Date: Mon, 22 Sep 2014 12:07:47 +0200
+Message-ID: <20140922100746.GM1470@ulmo>
+References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Pk6IbRAofICFmK5e"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140922095253.GO1786@lahna.fi.intel.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
+Content-Type: multipart/mixed; boundary="===============0999733503=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
 
---Pk6IbRAofICFmK5e
+--===============0999733503==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hnsKUeImFCk/igEn"
+Content-Disposition: inline
+
+
+--hnsKUeImFCk/igEn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 22, 2014 at 12:52:53PM +0300, Mika Westerberg wrote:
-> On Sat, Sep 20, 2014 at 02:23:19PM +0200, Wolfram Sang wrote:
-> > On Fri, Sep 19, 2014 at 08:27:39PM +0200, Ulf Hansson wrote:
-> > > Previously only the ACPI PM domain was supported by the i2c bus.
-> > >=20
-> > > Let's convert to the common attach/detach functions for PM domains,
-> > > which currently means we are extending the support to include the
-> > > generic PM domain as well.
-> > >=20
-> > > Cc: linux-i2c@vger.kernel.org
-> > > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > > Reviewed-by: Kevin Hilman <khilman@linaro.org>
-> >=20
-> > Looks good to me, but I'd like to give Mika a chance to look at it,
-> > since he does ACPI with I2C. Adding to CC.
->=20
-> Looks fine to me.
+On Fri, Sep 19, 2014 at 03:53:48PM -0400, Sean Paul wrote:
+> Per NVidia, this clock rate should be around 70MHz in
+> order to properly sample reads on data lane 0.
 
-Thanks! So:
+Can you point out where you get 70 MHz from? I only see the TRM mention
+72 MHz that are needed for calibration.
 
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
+Also, what's the effect of doing this? Does it fix an issue that you're
+seeing?
 
+Thierry
 
---Pk6IbRAofICFmK5e
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--hnsKUeImFCk/igEn
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJUH/NBAAoJEBQN5MwUoCm2ZicP/2lZDckidVBryENydPPD+566
-Y7aPhIngEirxJ64E0ukHQDtEMZgZHN0bfniANlK5fPFcQetZRwOv9WQWS31fTbq3
-+mT6rSHY/WXFJVw3C3Ldqlh8ojPf8TDroiA0EeTjvwQdLZ8kkV7LP89EVic0YY2Z
-eT9eWTMziynsIjOo56FQGUk6+DVZJwO92egBePbn2GPKjajmI/fKaL8e85yCcBso
-LTFziCpB8M3UHKWIxVIaGyRnZAFgj221Gw88NBXu9zYF0gn3u9WY1wLDFAwUaAz8
-jPHKA8TrJWsR0+nXJ6TW47p0oCzzCFci71ytMYiubhSjRygqtMtHIUZiGW7eqspc
-HZquFskDoAp/k9qA35MK/L/5Zu6flH1z07DCJzdlA5pRKOVNDk/QUQBsmFCDAzaQ
-99QBLoEN3CavGqxVRoxQnK1OdD/NZsnU8aeWiESUacjKAtt+9M32vDkabLuT1Ds4
-i+ppDGl1F3fNKBYjN0fxEbDghFNuY53oi3brE2mD285E946T0O01CJ4i3KPGXW/S
-61N9tcsZcHIGPgBuidCxazaJ1GrVPFSp1gleElcmNWHJxj+7GNPc0G4121FEpihf
-/addqf2bQtI5YdG7cZ947OOI1M5ITbqwH8QMvGvq6UNNBtpxU7QlPTTFqNAD5b+v
-2C+/IR792rWyoYFIZwWC
-=Qq1w
+iQIcBAEBAgAGBQJUH/TyAAoJEN0jrNd/PrOh2KcP/j9ZYkY6QpsUNmpOS+XEy3Cx
+UiKwYou96LqzURPuqvyx0ONcJtyG88ChQGJCmHhTKbOitFNBqeHqIrSTwIpSvIAy
+OjRAmBVQOoSMfFXEHg3V/Gq63nP3PYaEZQ9rB+s9pPpKQ2nknqEPdfd2lJmpyqi7
+Y+y+UvUK0FSaPsUrFdDPXuJMtLgd2BfxxQLKovcxK3CRk7puAp+m0UpnO0rn20D3
+Tb7wbrmI68Lx5zXPSWWhu98DHlbSUz8SLP7opfGtF80wnqCq9IiRo62Emws+EKX0
+mL5mCZvGxnPv4wE/xHwc3yElrWQDI/9zsoTgwgzu68PPXpdQ/LfX5Flfdxt3WjCG
+EILyNJc3O8mKTLsZbTfyioW/GI+00YBUObg5pBdaeo5BYtn6mKB5LBKpVdrvkMoX
+R0Ho3Or614/y2rfcD1ut7gOXzeRJujOEREycQOoNDICTgsJrk8wRl8ginoB7XIDQ
+UZVDXBE+4f2US8njGEQkBaRpaOcDwt3XAQSRLQwUwhbZnnsMaw+ktzxt98N7rrvP
+VJ8hc72HRvqO36fCSpC5MycVfMD5MJO3mmYZSXb5S7oWRWioyAuntCBbKWKD+R5L
+bUakTn+9zDB93580SZXyl0gDJ2aybs8EUBPtlY84xhBsdTJ1EFMGigEyrGWVsKgP
+kzllZ6KY5AALP7Sdb0p2
+=6qjI
 -----END PGP SIGNATURE-----
 
---Pk6IbRAofICFmK5e--
+--hnsKUeImFCk/igEn--
+
+--===============0999733503==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0999733503==--
