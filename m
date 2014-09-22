@@ -1,63 +1,164 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Mon, 22 Sep 2014 18:05:10 +0300
-Message-ID: <54203AA6.1040103@ti.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>	<5419760A.7020908@ti.com>	<CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>	<5419B52D.4060107@ti.com>	<CAEC9eQO2rfmVEKTCUJk+SpfdeUr81gN3stYV3wE6yR3E=-zonA@mail.gmail.com>	<541C279A.2030601@ti.com>	<CAEC9eQMQrM289J+ukkshKtTo9dB=G4cvg-4zF6LR6snqE5BL0A@mail.gmail.com>	<541C3D95.7080200@ti.com>	<CAEC9eQNshrP6wW_9mEDbFR5hRpW6Hy=GBFzV=rf05Wpxz6gtiw@mail.gmail.com> <CABxcv=kGTmYtjDc0isgy=-Ga+w69zVefJwK1qQY7dmER5fhhJg@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 5/9] rtc: at91sam9: make use of syscon/regmap to
+ access GPBR registers
+Date: Mon, 22 Sep 2014 17:06:30 +0200
+Message-ID: <20140922150630.GB3026@piout.net>
+References: <1411377058-26155-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1411377058-26155-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="uETLxIdIjLxgMxAJkuvWeJct2rhTw8vF8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=kGTmYtjDc0isgy=-Ga+w69zVefJwK1qQY7dmER5fhhJg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1411377058-26155-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---uETLxIdIjLxgMxAJkuvWeJct2rhTw8vF8
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On 22/09/2014 at 11:10:54 +0200, Boris Brezillon wrote :
+> The GPBR registers are not part of the RTT block and thus should not be
+> defined in the reg property of the rtt node.
+> 
+> Use syscon to provide a proper DT representation and reference the GPBR
+> syscon device in a new "atmel,time-reg" property which store both the
+> syscon device phandle and the register offset within the GPBR block.
+> 
+> When using non DT boards, we won't be able to retrieve the syscon regmap,
+> hence we need to create our own regmap using the memory region defined
+> in the 2nd memory resource assigned to the RTT platform device.
+> 
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-On 20/09/14 18:27, Javier Martinez Canillas wrote:
+> ---
+>  drivers/rtc/Kconfig        |  1 +
+>  drivers/rtc/rtc-at91sam9.c | 64 +++++++++++++++++++++++++++++++++++++++-------
+>  2 files changed, 56 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index a168e96..7d76da8 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1081,6 +1081,7 @@ config RTC_DRV_AT91RM9200
+>  config RTC_DRV_AT91SAM9
+>  	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
+>  	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
+> +	select MFD_SYSCON
+>  	help
+>  	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
+>  	  (Real Time Timer). These timers are powered by the backup power
+> diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+> index d72c34d..902cd01 100644
+> --- a/drivers/rtc/rtc-at91sam9.c
+> +++ b/drivers/rtc/rtc-at91sam9.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/platform_data/atmel.h>
+>  #include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+>  
+>  /*
+>   * This driver uses two configurable hardware resources that live in the
+> @@ -72,7 +74,8 @@ struct sam9_rtc {
+>  	void __iomem		*rtt;
+>  	struct rtc_device	*rtcdev;
+>  	u32			imr;
+> -	void __iomem		*gpbr;
+> +	struct regmap		*gpbr;
+> +	unsigned int		gpbr_offset;
+>  	int 			irq;
+>  };
+>  
+> @@ -81,10 +84,19 @@ struct sam9_rtc {
+>  #define rtt_writel(rtc, field, val) \
+>  	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
+>  
+> -#define gpbr_readl(rtc) \
+> -	readl((rtc)->gpbr)
+> -#define gpbr_writel(rtc, val) \
+> -	writel((val), (rtc)->gpbr)
+> +static inline unsigned int gpbr_readl(struct sam9_rtc *rtc)
+> +{
+> +	unsigned int val;
+> +
+> +	regmap_read(rtc->gpbr, rtc->gpbr_offset, &val);
+> +
+> +	return val;
+> +}
+> +
+> +static inline void gpbr_writel(struct sam9_rtc *rtc, unsigned int val)
+> +{
+> +	regmap_write(rtc->gpbr, rtc->gpbr_offset, val);
+> +}
+>  
+>  /*
+>   * Read current time and date in RTC
+> @@ -301,6 +313,12 @@ static const struct rtc_class_ops at91_rtc_ops = {
+>  	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
+>  };
+>  
+> +static struct regmap_config gpbr_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +};
+> +
+>  /*
+>   * Initialize and install RTC driver
+>   */
+> @@ -334,10 +352,38 @@ static int at91_rtc_probe(struct platform_device *pdev)
+>  	if (IS_ERR(rtc->rtt))
+>  		return PTR_ERR(rtc->rtt);
+>  
+> -	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
+> -	if (IS_ERR(rtc->gpbr))
+> -		return PTR_ERR(rtc->rtt);
+> +	if (!pdev->dev.of_node) {
+> +		/*
+> +		 * TODO: Remove this code chunk when when removing non DT
+> +		 * board support. Remember to remove the gpbr_regmap_config
+> +		 * variable too.
+> +		 */
+> +		void __iomem *gpbr;
+> +
+> +		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +		gpbr = devm_ioremap_resource(&pdev->dev, r);
+> +		if (IS_ERR(gpbr))
+> +			return PTR_ERR(gpbr);
+> +
+> +		rtc->gpbr = regmap_init_mmio(NULL, gpbr,
+> +					     &gpbr_regmap_config);
+> +	} else {
+> +		struct of_phandle_args args;
+> +
+> +		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
+> +						"atmel,rtt-rtc-time-reg", 1, 0,
+> +						&args);
+> +		if (ret)
+> +			return ret;
+> +
+> +		rtc->gpbr = syscon_node_to_regmap(args.np);
+> +		rtc->gpbr_offset = args.args[0];
+> +	}
+> +
+> +	if (IS_ERR(rtc->gpbr)) {
+> +		dev_err(&pdev->dev, "failed to retrieve gpbr regmap, aborting.\n");
+> +		return -ENOMEM;
+> +	}
+>  
+>  	mr = rtt_readl(rtc, MR);
+>  
+> -- 
+> 1.9.1
+> 
 
-> I see that Documentation/devicetree/bindings/video/ti,omap-dss.txt
-> mentions that the Video Ports binding documentation is in
-> Documentation/devicetree/bindings/video/video-ports.txt but I don't
-> see that this file exists in the kernel [1]. I see though that is was
-> included on your series adding DSS DT support [2].
->=20
-> Do you know what happened with this file?
-
-Ah, I need to update the link. This describes the graph:
-
-Documentation/devicetree/bindings/graph.txt
-
- Tomi
-
-
-
---uETLxIdIjLxgMxAJkuvWeJct2rhTw8vF8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUIDqmAAoJEPo9qoy8lh71uTQP/0siZUpdAtIjQ93wXYQwoQeU
-l5jLP5VSGX1ZNKGWDlYiH5yUeItoSE/yTVK0kyRaS6MI2KpFAf3FH5SOWQs4QbAE
-3E826Sea968z/MjKzUttIweXLIi4KQS5qpDCQfsJUq29TzOEB7QuXLsWnbFR2Ump
-woKo5/TaVf1LwBNxzPSoYHnIXXNj4ICcN7egJZ+bwjhB5oZMnqfdA20e88VsPcZU
-NkVNPtPWKFuR8nGee9OGzG765dMPpvGv/4mYGHTi3kyiFJr1OkDLcY/amwhNjZfu
-xZVLTaTO9p8cmSv5ingIQcK7J2odrTXCGh5DzoAtxe8WZ3013N6/Or/o78M06ihI
-U9sWSbPf97R2oljrO+qM4nRFAH4fE5xlVZ6ub/TDOnoIv8j8ccxyos7VhhUvNw+F
-ml6jCqS/AhJ2Ksa7I6E/dYtrywXDE/U3rN2HBY0i0Kw+T9pNDqe4eVuqWQnxpZp5
-y2ltFvY/gqDv2p6T2Rzedc2Df/XCOq4uBr4JfFovP2RiWnntYOt99wULmxtXvQTe
-hgPfen0mPZQT/P+Af9wkGECwMDZ1DCgBvZ3PA/ImQCONJQ14t+VdvCqauAq/pc02
-l58/ORO2eYr0qkc/4JFIiD0uXQUW4pWIBguY2cyqPYVtjuLVK9oin5Hc52HyWxLi
-njir1K7Ntk33puTwqYnv
-=AXUC
------END PGP SIGNATURE-----
-
---uETLxIdIjLxgMxAJkuvWeJct2rhTw8vF8--
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
