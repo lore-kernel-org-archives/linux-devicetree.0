@@ -1,69 +1,117 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] bcma: register bcma as device tree driver
-Date: Mon, 22 Sep 2014 09:26:51 +0200
-Message-ID: <4345256.UGZH9SeRYG@wuerfel>
-References: <1411339108-22307-1-git-send-email-hauke@hauke-m.de>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
+Date: Mon, 22 Sep 2014 09:28:35 +0200
+Message-ID: <541FCFA3.4080206@samsung.com>
+References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411339108-22307-1-git-send-email-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1411156429-19797-1-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 September 2014 00:38:27 Hauke Mehrtens wrote:
-> +
-> +- reg : iomem address range of chipcommon core
-> +
-> +The cores on the AXI bus are automatically detected by bcma with the
-> +memory ranges they are using and they get registered afterwards.
-> +Automatic detection of the IRQ number is not reliable on
-> +BCM47xx/BCM53xx ARM SoCs. To assign IRQ numbers to the cores, provide
-> +them manually through device tree. The IRQ number and the device tree
-> +child entry will get assigned to the core with the matching reg address.
-> +
-> +Example:
-> +
-> +       axi@18000000 {
-> +               compatible = "brcm,bus-axi";
-> +               reg = <0x18000000 0x1000>;
-> +               ranges = <0x00000000 0x18000000 0x00100000>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +
-> +               pcie@12000 {
-> +                       reg = <0x00012000 0x1000>;
-> +                       interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +
-> +               ethernet@24000 {
-> +                       reg = <0x00024000 0x1000>;
-> +                       interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +
-> +               ethernet@25000 {
-> +                       reg = <0x00025000 0x1000>;
-> +                       interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +       };
+Hi Sean,
+
+On 09/19/2014 09:53 PM, Sean Paul wrote:
+> Per NVidia, this clock rate should be around 70MHz in
+> order to properly sample reads on data lane 0. In order
+> to achieve this rate, we need to reparent the clock from
+> clk_m which can only achieve 12MHz. Add parent_lp to the
+> dts bindings and set the parent & rate on init.
 > 
+> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpu/nvidia,tegra20-host1x.txt  | 10 ++++++++--
+>  drivers/gpu/drm/tegra/dsi.c                            | 18 ++++++++++++++++++
+>  drivers/gpu/drm/tegra/dsi.h                            |  3 +++
+>  3 files changed, 29 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+> index b48f4ef..fef2918 100644
+> --- a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+> +++ b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
+> @@ -191,6 +191,10 @@ of the following host1x client modules:
+>    - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
+>    - nvidia,edid: supplies a binary EDID blob
+>    - nvidia,panel: phandle of a display panel
+> +  - clock-names: Can include the following entries:
+> +    - lp_parent: The parent clock for lp
+> +  - clocks: Must contain an entry for each optional entry in clock-names.
 
-While reading through this new version, I had a new idea about how
-this could be handled better for any machines that have a unique
-number in the interrupt field: If you do the same thing as PCI
-and add an interrupt-map property [1], you can translate that
-number into a real interrupt specifier for the child nodes.
+Have you looked at assigned-clocks, assigned-clock-parents,
+assigned-clock-rates common clock properties, they seems to fit to this
+scenario.
 
-This can work even if every device lists the local interrupt
-as '0', since you can have device-specific lookup entries if you
-use the correct interrupt-map-mask property.
+Regards
+Andrzej
 
-	Arnd
 
-[1] http://www.openfirmware.org/1275/practice/imap/imap0_9d.pdf
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +    See ../clocks/clock-bindings.txt for details.
+>  
+>  - sor: serial output resource
+>  
+> @@ -360,8 +364,10 @@ Example:
+>  			compatible = "nvidia,tegra20-dsi";
+>  			reg = <0x54300000 0x00040000>;
+>  			clocks = <&tegra_car TEGRA20_CLK_DSI>,
+> -				 <&tegra_car TEGRA20_CLK_PLL_D_OUT0>;
+> -			clock-names = "dsi", "parent";
+> +				 <&tegra_car TEGRA124_CLK_DSIALP>,
+> +				 <&tegra_car TEGRA20_CLK_PLL_D_OUT0>,
+> +				 <&tegra_car TEGRA124_CLK_PLL_P>;
+> +			clock-names = "dsi", "lp", "parent", "lp_parent";
+>  			resets = <&tegra_car 48>;
+>  			reset-names = "dsi";
+>  			status = "disabled";
+> diff --git a/drivers/gpu/drm/tegra/dsi.c b/drivers/gpu/drm/tegra/dsi.c
+> index f787445..c0258ae 100644
+> --- a/drivers/gpu/drm/tegra/dsi.c
+> +++ b/drivers/gpu/drm/tegra/dsi.c
+> @@ -837,6 +837,7 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+>  	struct tegra_dsi *dsi;
+>  	struct resource *regs;
+>  	int err;
+> +	struct clk *lp_parent;
+>  
+>  	dsi = devm_kzalloc(&pdev->dev, sizeof(*dsi), GFP_KERNEL);
+>  	if (!dsi)
+> @@ -879,6 +880,23 @@ static int tegra_dsi_probe(struct platform_device *pdev)
+>  		return PTR_ERR(dsi->clk_lp);
+>  	}
+>  
+> +	lp_parent = devm_clk_get(&pdev->dev, "lp_parent");
+> +	if (!IS_ERR(lp_parent)) {
+> +		err = clk_set_parent(dsi->clk_lp, lp_parent);
+> +		if (err < 0) {
+> +			dev_err(&pdev->dev, "cannot set lp clock parent\n");
+> +			return err;
+> +		}
+> +	} else {
+> +		dev_info(&pdev->dev, "no lp clock parent, using hw default\n");
+> +	}
+> +
+> +	err = clk_set_rate(dsi->clk_lp, DSI_LP_CLK_RATE);
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "cannot set low-power clock rate\n");
+> +		return err;
+> +	}
+> +
+>  	err = clk_prepare_enable(dsi->clk_lp);
+>  	if (err < 0) {
+>  		dev_err(&pdev->dev, "cannot enable low-power clock\n");
+> diff --git a/drivers/gpu/drm/tegra/dsi.h b/drivers/gpu/drm/tegra/dsi.h
+> index 5ce610d..a332caf 100644
+> --- a/drivers/gpu/drm/tegra/dsi.h
+> +++ b/drivers/gpu/drm/tegra/dsi.h
+> @@ -127,4 +127,7 @@ enum tegra_dsi_format {
+>  	TEGRA_DSI_FORMAT_24P,
+>  };
+>  
+> +/* default lp clock rate */
+> +#define DSI_LP_CLK_RATE			(70 * 1000 * 1000)
+> +
+>  #endif
+> 
