@@ -1,80 +1,38 @@
-From: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv10 2/4] mailbox: Introduce framework for mailbox
-Date: Mon, 22 Sep 2014 14:01:08 -0400
-Message-ID: <CAJ5Y-eZ5gNMQ2YRN4iS5QTU7qUrgxGdTHXhQZ_2ut4iBsEZHGg@mail.gmail.com>
-References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>
-	<1406896296-4863-1-git-send-email-jaswinder.singh@linaro.org>
+From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Subject: Re: Adding selftest testdata dynamically into live tree
+Date: Mon, 22 Sep 2014 20:05:37 +0200
+Message-ID: <542064F1.4000601@elproma.com.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1406896296-4863-1-git-send-email-jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Hi.
 
-On 1 August 2014 08:31, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Introduce common framework for client/protocol drivers and
-> controller drivers of Inter-Processor-Communication (IPC).
->
-> Client driver developers should have a look at
->  include/linux/mailbox_client.h to understand the part of
-> the API exposed to client drivers.
-> Similarly controller driver developers should have a look
-> at include/linux/mailbox_controller.h
->
-> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  MAINTAINERS                        |   8 +
->  drivers/mailbox/Makefile           |   4 +
->  drivers/mailbox/mailbox.c          | 466 +++++++++++++++++++++++++++++++++++++
->  include/linux/mailbox_client.h     |  46 ++++
->  include/linux/mailbox_controller.h | 135 +++++++++++
->  5 files changed, 659 insertions(+)
->  create mode 100644 drivers/mailbox/mailbox.c
->  create mode 100644 include/linux/mailbox_client.h
->  create mode 100644 include/linux/mailbox_controller.h
->
+On 3.17.0-rc6-next-20140922+ with CONFIG_OF_SELFTEST enabled
+zImage is recreated every time I call "make" despite I've not done
+any change in source files and zImage was the same.
+This is caused by the rm line:
+   CALL    scripts/checksyscalls.sh
+   CHK     include/generated/compile.h
+   DTC     drivers/of/testcase-data/testcases.dtb
+   DTB     drivers/of/testcase-data/testcases.dtb.S
+   AS      drivers/of/testcase-data/testcases.dtb.o
+   LD      drivers/of/of_selftest.o
+   LD      drivers/of/built-in.o
+rm drivers/of/testcase-data/testcases.dtb.S 
+drivers/of/testcase-data/testcases.dtb
+   LD      drivers/built-in.o
+   LINK    vmlinux
+   LD      vmlinux.o
 
-[..]
+best regards
+Janusz
 
-> +
-> +static void poll_txdone(unsigned long data)
-> +{
-> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
-> +       bool txdone, resched = false;
-> +       int i;
-> +
-> +       for (i = 0; i < mbox->num_chans; i++) {
-> +               struct mbox_chan *chan = &mbox->chans[i];
-> +
-> +               if (chan->active_req && chan->cl) {
-> +                       resched = true;
-> +                       txdone = chan->mbox->ops->last_tx_done(chan);
-> +                       if (txdone)
-> +                               tx_tick(chan, 0);
-> +               }
-> +       }
-> +
-> +       if (resched)
-> +               mod_timer(&mbox->poll, jiffies +
-> +                               msecs_to_jiffies(mbox->period));
-
-While preparing a different patch which uses the Mbox framework, I
-noticed that mbox->period might not be initialized anywhere. Also, how
-is mbox->txpoll_period to be used? It appears from the description of
-txpoll_period in mbox_controller.h that you'd want to use that value
-in the mod_timer above, or equate the two somewhere in the controller
-registration or eliminate one of the two. FWIW I also looked at your
-code in [1].
-
-
-Thanks,
-Ashwin
-
-[1] - http://git.linaro.org/landing-teams/working/fujitsu/integration.git/shortlog/refs/heads/mailbox-for-next
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
