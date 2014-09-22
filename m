@@ -1,94 +1,50 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v11 00/10] Support for creating generic PCI host bridges
- from DT
-Date: Mon, 22 Sep 2014 12:35:23 +0100
-Message-ID: <20140922113523.GM1994@e106497-lin.cambridge.arm.com>
-References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
- <20140919215905.GB30239@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2] GPIO: 74xx-mmio: Add DT bindings documentation
+Date: Mon, 22 Sep 2014 13:39:26 +0200
+Message-ID: <CAMuHMdV2gkx+tVoYL_zcYg0ZtYkkascQiTOaTfDUuRVMxFkdTw@mail.gmail.com>
+References: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
+	<1411112404-16040-3-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20140919215905.GB30239@google.com>
-Content-Disposition: inline
-Sender: linux-arch-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1411112404-16040-3-git-send-email-shc_work@mail.ru>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 19, 2014 at 10:59:05PM +0100, Bjorn Helgaas wrote:
-> On Thu, Sep 18, 2014 at 02:30:15AM +0100, Liviu Dudau wrote:
-> > This is my version 11 of the attempt at adding support for generic =
-PCI host
-> > bridge controllers that make use of device tree information to
-> > configure themselves. It contains minor cleanups compared with v10 =
-to address
-> > the existing comments.
-> > ...
-> > Catalin Marinas (1):
-> >   PCI: Introduce generic domain handling for PCI busses.
-> >=20
-> > Liviu Dudau (9):
-> >   Fix ioport_map() for !CONFIG_GENERIC_IOMAP cases.
-> >   PCI: Introduce helper functions to deal with PCI I/O ranges.
-> >   ARM: Define PCI_IOBASE as the base of virtual PCI IO space.
-> >   PCI: OF: Fix the conversion of IO ranges into IO resources.
-> >   PCI: Create pci_host_bridge before its associated bus in
-> >     pci_create_root_bus.
-> >   OF: Introduce helper function for getting PCI domain_nr
-> >   OF: PCI: Add support for parsing PCI host bridge resources from D=
-T
-> >   PCI: Assign unassigned bus resources in pci_scan_root_bus()
-> >   PCI: Introduce pci_remap_iospace() for remapping PCI I/O bus reso=
-urces
-> >     into CPU space
-> >=20
-> >  arch/arm/include/asm/io.h         |   1 +
-> >  arch/arm/mach-integrator/pci_v3.c |  23 +++---
-> >  drivers/of/address.c              | 146 ++++++++++++++++++++++++++=
-++++++
-> >  drivers/of/of_pci.c               | 170 ++++++++++++++++++++++++++=
-++++++++++++
-> >  drivers/pci/host/pci-tegra.c      |  10 ++-
-> >  drivers/pci/host/pcie-rcar.c      |  21 +++--
-> >  drivers/pci/pci.c                 |  33 ++++++++
-> >  drivers/pci/probe.c               |  46 +++++++----
-> >  include/asm-generic/io.h          |   2 +-
-> >  include/asm-generic/pgtable.h     |   4 +
-> >  include/linux/of_address.h        |  15 +---
-> >  include/linux/of_pci.h            |  18 ++++
-> >  include/linux/pci.h               |  24 ++++++
-> >  13 files changed, 463 insertions(+), 50 deletions(-)
->=20
-> I put this on a pci/liviu-generic-v11 branch.  I mentioned a couple t=
-hings
-> in response to the individual patches, so I'm hoping you can send me
-> incremental patches to address them.  Then I'll update this branch, r=
-ename
-> it, and get it into linux-next.
+On Fri, Sep 19, 2014 at 9:40 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
+> @@ -0,0 +1,30 @@
+> +* 74XX MMIO GPIO driver
+> +
+> +Required properties:
+> +- compatible: Should contain one of the following:
+> +   "ti,74ahc1g125": for 74AHC1G125 (1-bit Input),
+> +   "ti,74auc1g174": for 74AUC1G74 (1-bit Output),
+> +   "ti,74lvc2g125": for 74LVC2G125 (2-bit Input),
+> +   "ti,74hc74":     for 74HC74 (2-bit Output),
+> +   "ti,74hc125":    for 74HC125 (4-bit Input),
+> +   "ti,74hc175":    for 74HC175 (4-bit Output),
+> +   "ti,74hc365":    for 74HC365 (6-bit Input),
+> +   "ti,74hc174":    for 74HC174 (6-bit Output),
+> +   "ti,74hc244":    for 74HC244 (8-bit Input),
+> +   "ti,74hc273":    for 74HC273 (8-bit Output),
+> +   "ti,74ac1624":   for 74AC1624 (16-bit Input),
+> +   "ti,74ac16374":  for 74AC16374 (16-bit Output).
 
-Thanks a lot for that!
+As the actual implementation technology doesn't matter, I think you
+should use the base name where appropriate.
+E.g. "ti,7474" instead of "ti,74hc74".
 
-As I've mentioned in the other email, I can send incremental patches fo=
-r most
-of the comments (and Acks?). Don't know how to handle the split of=20
-"[PATH v11 4/10] PCI: OF: Fix the conversion of IO ranges into IO resou=
-rces."
-that you are asking for.
+Gr{oetje,eeting}s,
 
-Best regards,
-Liviu
+                        Geert
 
->=20
-> Bjorn
->=20
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
