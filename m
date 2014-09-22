@@ -1,51 +1,77 @@
-From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 04/13 v2] iommu/arm-smmu: Convert to iommu_capable() API
-	function function
-Date: Mon, 22 Sep 2014 17:36:28 +0200
-Message-ID: <20140922153628.GA10438@suse.de>
-References: <1409914384-21191-1-git-send-email-joro@8bytes.org>
-	<1409914384-21191-5-git-send-email-joro@8bytes.org>
-	<20140908165136.GW26030@arm.com> <20140917085312.GE2533@suse.de>
-	<20140919164220.GI20773@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140919164220.GI20773-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 0/9] rtc: at91sam9: add DT support
+Date: Mon, 22 Sep 2014 17:42:34 +0200
+Message-ID: <1411400563-570-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
+Hello,
 
-On Fri, Sep 19, 2014 at 05:42:20PM +0100, Will Deacon wrote:
-> However, I thought about this a bit more and the coherency isn't necessarily
-> a global property of the SMMU. In reality, it is dependent on the IOTLBs in
-> use by the domain, so it's not going to be possible to report true here in
-> many cases.
-> 
-> That means we'd need a way to say `this device is dma coherent when its
-> downstream IOMMU is enabled with IOMMU_CACHE mappings'. For the moment,
-> people will probably just add `dma-coherent' to the endpoint and dma-mapping
-> will request IOMMU_CACHE mappings regardless of the features advertised by
-> the IOMMU. In that case, it might make more sense to return `true' here as
-> we can always generated cacheable transactions from the SMMU. The
-> dma-coherent property on the device would then indicate whether those
-> transactions will snoop the CPU caches.
+This patch series adds DT support to the atmel at91sam9 RTC driver.
 
-Okay, when the SMMU can always generate cachable transactions it is
-surely fine to return true here. I'll change that before I add the
-patches to my tree.
+It also removes any machine specific inclusions to prepare the migration
+to multi platform kernel support, and retain the slow clock to prevent
+the CCF from disabling it at the end of boot.
+  
+Best Regards,
 
+Boris
 
-	Joerg
+Changes since v4:
+ - replace 'rtc' by 'rtt' where appropriate
+ - fix commit messages
+
+Changes since v4:
+ - add a TODO comment to remember removing non DT board support code
+
+Changes since v3:
+ - add GPBR DT bindings doc
+ - fix a coding style issues
+ - add Alexandre's Acked-by
+ - change RTT DT bindings
+
+Changes since v2:
+ - make use of syscon/regmap to avoid directly requesting/mapping a GPBR
+   memory region in the RTT driver
+
+Changes since v1:
+ - remove non CCF specific case by adding the appropriate clk_lookup
+   entries in arch/arm/mach-at91/<soc-name>.c files
+
+Boris BREZILLON (9):
+  rtc: at91sam9: remove references to mach specific headers
+  rtc: at91sam9: use standard readl/writel functions instead of raw
+    versions
+  rtc: at91sam9: replace devm_ioremap by devm_ioremap_resource
+  rtc: at91sam9: add DT support
+  rtc: at91sam9: make use of syscon/regmap to access GPBR registers
+  ARM: at91: add clk_lookup entry for RTT devices
+  rtc: at91sam9: use clk API instead of relying on AT91_SLOW_CLOCK
+  rtc: at91sam9: add DT bindings documentation
+  mfd: syscon: add Atmel GPBR DT bindings documention
+
+ .../devicetree/bindings/mfd/atmel,gpbr.txt         |  15 +++
+ .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt |  23 ++++
+ arch/arm/mach-at91/at91sam9260.c                   |   2 +
+ arch/arm/mach-at91/at91sam9261.c                   |   2 +
+ arch/arm/mach-at91/at91sam9263.c                   |   4 +
+ arch/arm/mach-at91/at91sam9g45.c                   |   2 +
+ arch/arm/mach-at91/at91sam9rl.c                    |   2 +
+ arch/arm/mach-at91/clock.c                         |   2 +-
+ arch/arm/mach-at91/clock.h                         |   1 +
+ drivers/rtc/Kconfig                                |   1 +
+ drivers/rtc/rtc-at91sam9.c                         | 138 ++++++++++++++++-----
+ 11 files changed, 162 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
