@@ -1,88 +1,116 @@
-From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v4 4/5] dt-bindings: video: Add documentation for rockchip edp
-Date: Mon, 22 Sep 2014 18:58:35 +0800
-Message-ID: <1411383515-2035-1-git-send-email-mark.yao@rock-chips.com>
-References: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411382820-1615-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jeff Chen <jeff.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] Documentation: DT: Document twl4030-madc-battery
+ bindings.
+Date: Mon, 22 Sep 2014 12:03:20 +0100
+Message-ID: <20140922110320.GI3290@leverpostej>
+References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
+ <1394052739-8589-4-git-send-email-marek@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1394052739-8589-4-git-send-email-marek@goldelico.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "hns@goldelico.com" <hns@goldelico.com>, "sre@debian.org" <sre@debian.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Rockchip SoC EDP driver.
+Hi,
 
-Signed-off-by: Jeff Chen <jeff.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-Changes in v2:
-- add edp reset
-- add panel node
-- add port for display-subsystem
+On Wed, Mar 05, 2014 at 08:52:19PM +0000, Marek Belisko wrote:
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> ---
+>  .../bindings/power_supply/twl4030_madc_battery.txt | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+> new file mode 100644
+> index 0000000..fd0b6d2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power_supply/twl4030_madc_battery.txt
+> @@ -0,0 +1,43 @@
+> +twl4030_madc_battery
+> +
+> +Required properties:
+> + - compatible : "ti,twl4030-madc-battery"
 
-Changes in v3: None
+I'm rather confused by this; the code seems to have stripped away all
+the twl4030 dependencies and this now seems to be a generic ADC battery
+status driver. So why does this need to be specific to twl4030?
 
-Changes in v4: None
+> + - capacity : battery capacity in uAh
 
- .../devicetree/bindings/video/rockchip-edp.txt     |   50 ++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/rockchip-edp.txt
+I would make the units explicit in the name; "capacity" can be measured
+in many ways.
 
-diff --git a/Documentation/devicetree/bindings/video/rockchip-edp.txt b/Documentation/devicetree/bindings/video/rockchip-edp.txt
-new file mode 100644
-index 0000000..515e806
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/rockchip-edp.txt
-@@ -0,0 +1,50 @@
-+Rockchip RK3288 EDP interface
-+================================
-+
-+Required properties:
-+- compatible: "rockchip,rk3288-edp";
-+
-+- reg: physical base address of the controller and length
-+- clocks: from common clock binding: handle to dp clock.
-+	of memory mapped region.
-+- clock-names: from common clock binding:
-+	Required elements: "clk_edp"
-+			"clk_edp_24m"
-+			"pclk_edp"
-+- resets: Must contain an entry for each entry in reset-names.
-+	See ../reset/reset.txt for details.
-+- reset-names: Must include the name "edp"
-+
-+- rockchip,grf: this soc should set GRF regs, so need get grf here.
-+- rockchip,panel: required a simple panel node as described by
-+	Documentation/devicetree/bindings/panel/simple-panel.txt
-+
-+- ports: contain a port node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+	edp: edp@ff970000 {
-+		compatible = "rockchip,rk3288-edp";
-+		reg = <0xff970000 0x4000>;
-+		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_EDP>, <&cru SCLK_EDP_24M>, <&cru PCLK_EDP_CTRL>;
-+		clock-names = "clk_edp", "clk_edp_24m", "pclk_edp";
-+		rockchip,grf = <&grf>;
-+		resets = <&cru 111>;
-+		reset-names = "edp";
-+		rockchip,panel = <&panel>;
-+		ports {
-+			edp_in: port {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				edp_in_vopb: endpoint@0 {
-+					reg = <0>;
-+					remote-endpoint = <&vopb_out_edp>;
-+				};
-+				edp_in_vopl: endpoint@1 {
-+					reg = <1>;
-+					remote-endpoint = <&vopl_out_edp>;
-+				};
-+			};
-+		};
-+	};
--- 
-1.7.9.5
+> + - charging-calibration-data : list of voltage(mV):level(%) values
+> +	for charging calibration (see example)
+> + - discharging-calibration-data : list of voltage(mV):level(%) values
+> +	for discharging calibration (see example)
+
+Regardless of the prefixing of these property names, the specifics are
+unclear to me.
+
+Does this apply to vbat?
+
+Is vbat guaranteed to read in mV?
+
+Is any particular order required? The example seems to go be in
+descending percentage values.
+
+Is any particular interpolation expected on behalf of the OS, or is this
+just an informative set of measurements that hte OS can use as it sees
+fit?
+
+> + - io-channels: Should contain IIO channel specifiers
+> +	for each element in io-channel-names.
+> +- io-channel-names: Should contain the following values:
+> + * "temp" - The ADC channel for temperature reading
+
+Which units? Where is this used?
+
+> + * "ichg" - The ADC channel for battery charging status
+
+How exactly is this used to detect the charging status?
+
+> + * "vbat" - The ADC channel to measure the battery voltage
+> +
+> +Example:
+> +	madc-battery {
+> +		compatible = "ti,twl4030-madc-battery";
+> +		capacity = <1200000>;
+> +		charging-calibration-data = <4200 100
+> +					     4100 75
+> +					     4000 55
+> +					     3900 25
+> +					     3800 5
+> +					     3700 2
+> +					     3600 1
+> +					     3300 0>;
+
+Please bracket list entries individually (as you've done with
+io-channels).
+
+Thanks,
+Mark.
+
+> +
+> +		discharging-calibration-data = <4200 100
+> +						4100 95
+> +						4000 70
+> +						3800 50
+> +						3700 10
+> +						3600 5
+> +						3300 0>;
+> +		io-channels = <&twl_madc 1>,
+> +	                      <&twl_madc 10>,
+> +			      <&twl_madc 12>;
+> +		io-channel-names = "temp",
+> +		                   "ichg",
+> +		                   "vbat";
+> +	};
+> -- 
+> 1.8.3.2
+> 
+> 
