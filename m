@@ -1,50 +1,157 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] power: twl4030-madc-battery: Convert to iio consumer.
-Date: Mon, 22 Sep 2014 11:52:36 +0100
-Message-ID: <20140922105236.GH3290@leverpostej>
-References: <1394052739-8589-1-git-send-email-marek@goldelico.com>
- <1394052739-8589-2-git-send-email-marek@goldelico.com>
- <20140305232513.GA9542@earth.universe>
- <CAAfyv34X1naNEyht0q+bD3QUjCxLJribmfWfZkP073WS7ve4kA@mail.gmail.com>
- <CAAfyv35Hi-aE+SnTiN9O39ANi63gkNMz-Bz6hqCkkxJARSFcOg@mail.gmail.com>
- <20140814210324.GA22572@earth.universe>
- <CAAfyv36FUqCU=sdJ2izs0zMSNuSO4Q0TLg2e61AKkeDrdg_F4Q@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] of: amba: use of_dma_configure for AMBA devices
+Date: Mon, 22 Sep 2014 11:55:18 +0100
+Message-ID: <20140922105515.GI30085@e104818-lin.cambridge.arm.com>
+References: <90bd1ff3c93b827c12e1b3dc9ad3f227632d0f6e.1410954967.git.robin.murphy@arm.com>
+ <20140917170338.GC18532@arm.com>
+ <CAL_JsqKTZyPgbxy=pPmFPKRxa97oaWqC6u6pBvqvja_URLno4Q@mail.gmail.com>
+ <20140917180524.GG18532@arm.com>
+ <541AC384.8010806@arm.com>
+ <20140918125535.GB17701@e104818-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAAfyv36FUqCU=sdJ2izs0zMSNuSO4Q0TLg2e61AKkeDrdg_F4Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Belisko Marek <marek.belisko@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20140918125535.GB17701-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 18, 2014 at 09:13:47PM +0100, Belisko Marek wrote:
-> Hi Sebastian,
+On Thu, Sep 18, 2014 at 01:55:36PM +0100, Catalin Marinas wrote:
+> On Thu, Sep 18, 2014 at 12:35:32PM +0100, Robin Murphy wrote:
+> > On 17/09/14 19:05, Will Deacon wrote:
+> > > On Wed, Sep 17, 2014 at 06:47:19PM +0100, Rob Herring wrote:
+> > >> On Wed, Sep 17, 2014 at 12:03 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> > >>> On Wed, Sep 17, 2014 at 12:56:07PM +0100, Robin Murphy wrote:
+> > >>>> Commit 591c1e ("of: configure the platform device dma parameters)
+> > >>>> introduced a common mechanism to configure DMA from DT properties.
+> > >>>> AMBA devices created from DT can take advantage of this, too.
+> > >>>>
+> > >>>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> > >>>
+> > >>>    Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> > >>>
+> > >>> It would be great if the arm-soc guys can pick this up.
+> > >>
+> > >> Is this a dependency for something else? If so,
+> > >>
+> > >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > >
+> > > Yeah, it's going to be needed by my IOMMU init rework so that AMBA devices
+> > > get registered with their IOMMUs.
+> > 
+> > Noob question: Does that mean I should resend (with ACKs) to 
+> > arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org? (I wasn't entirely sure where this should go, hence just 
+> > throwing at the list with CCs)
 > 
-> On Thu, Aug 14, 2014 at 11:03 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> > Hi Marek,
-> >
-> > On Mon, Aug 11, 2014 at 09:52:52PM +0200, Belisko Marek wrote:
-> >> can you please take this series (I'll post update version with
-> >> removing debug code). Thanks.
-> >
-> > mh. I will not pull this with "(dis)charging-calibration-data" as
-> > DT property name without an ACK from the DT binding maintainers.
-> DT maintainers ping.
+> If it is not part of a larger series you want to merge, Rob could pick
+> it up (he could add the acks as well).
+> 
+> Alternatively, I can get it via the arm64 tree together with an
+> additional patch removing the bus hooks in dma-mapping.c (maybe that's a
+> better option if no-one objects).
 
-Apologies for the delay. I will take a look at the bidning shortly.
+So I plan to take this patch via the arm64 tree together with the patch
+below (after some more testing):
 
-> >
-> > I would feel fine with pulling this when they are prefixed with
-> > "ti,". Otherwise the series looks good to me.
-> Why it should be prefixed by "ti"? Isn't enough to have "ti" prefix for driver
-> compatible property? Thanks.
+----8<----------------------------
 
-Because if we want to add a similar generic property, the names will
-clash.
+>From 2189064795dc3fb4101e5c34d28c6b62b8a3bfd9 Mon Sep 17 00:00:00 2001
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Date: Mon, 22 Sep 2014 11:48:31 +0100
+Subject: [PATCH] arm64: Implement set_arch_dma_coherent_ops() to replace bus
+ notifiers
 
-Ideally bindings should use prefixed properties by default -- those can
-be replaced with generic properties as commonality becomes apparent.
+Commit 6ecba8eb51b7 (arm64: Use bus notifiers to set per-device coherent
+DMA ops) introduced bus notifiers to set the coherent dma ops based on
+the 'dma-coherent' DT property. Since the generic of_dma_configure()
+handles this property for platform and AMBA devices, replace the
+notifiers with set_arch_dma_coherent_ops().
 
-Mark.
+Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/include/asm/dma-mapping.h |  7 +++++++
+ arch/arm64/mm/dma-mapping.c          | 31 -------------------------------
+ 2 files changed, 7 insertions(+), 31 deletions(-)
+
+diff --git a/arch/arm64/include/asm/dma-mapping.h b/arch/arm64/include/asm/dma-mapping.h
+index dc82e52acdb3..adeae3f6f0fc 100644
+--- a/arch/arm64/include/asm/dma-mapping.h
++++ b/arch/arm64/include/asm/dma-mapping.h
+@@ -52,6 +52,13 @@ static inline void set_dma_ops(struct device *dev, struct dma_map_ops *ops)
+ 	dev->archdata.dma_ops = ops;
+ }
+ 
++static inline int set_arch_dma_coherent_ops(struct device *dev)
++{
++	set_dma_ops(dev, &coherent_swiotlb_dma_ops);
++	return 0;
++}
++#define set_arch_dma_coherent_ops	set_arch_dma_coherent_ops
++
+ #include <asm-generic/dma-mapping-common.h>
+ 
+ static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
+index 4164c5ace9f8..d6ceb3df0047 100644
+--- a/arch/arm64/mm/dma-mapping.c
++++ b/arch/arm64/mm/dma-mapping.c
+@@ -22,11 +22,8 @@
+ #include <linux/slab.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dma-contiguous.h>
+-#include <linux/of.h>
+-#include <linux/platform_device.h>
+ #include <linux/vmalloc.h>
+ #include <linux/swiotlb.h>
+-#include <linux/amba/bus.h>
+ 
+ #include <asm/cacheflush.h>
+ 
+@@ -308,40 +305,12 @@ struct dma_map_ops coherent_swiotlb_dma_ops = {
+ };
+ EXPORT_SYMBOL(coherent_swiotlb_dma_ops);
+ 
+-static int dma_bus_notifier(struct notifier_block *nb,
+-			    unsigned long event, void *_dev)
+-{
+-	struct device *dev = _dev;
+-
+-	if (event != BUS_NOTIFY_ADD_DEVICE)
+-		return NOTIFY_DONE;
+-
+-	if (of_property_read_bool(dev->of_node, "dma-coherent"))
+-		set_dma_ops(dev, &coherent_swiotlb_dma_ops);
+-
+-	return NOTIFY_OK;
+-}
+-
+-static struct notifier_block platform_bus_nb = {
+-	.notifier_call = dma_bus_notifier,
+-};
+-
+-static struct notifier_block amba_bus_nb = {
+-	.notifier_call = dma_bus_notifier,
+-};
+-
+ extern int swiotlb_late_init_with_default_size(size_t default_size);
+ 
+ static int __init swiotlb_late_init(void)
+ {
+ 	size_t swiotlb_size = min(SZ_64M, MAX_ORDER_NR_PAGES << PAGE_SHIFT);
+ 
+-	/*
+-	 * These must be registered before of_platform_populate().
+-	 */
+-	bus_register_notifier(&platform_bus_type, &platform_bus_nb);
+-	bus_register_notifier(&amba_bustype, &amba_bus_nb);
+-
+ 	dma_ops = &noncoherent_swiotlb_dma_ops;
+ 
+ 	return swiotlb_late_init_with_default_size(swiotlb_size);
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
