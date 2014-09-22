@@ -1,50 +1,138 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] GPIO: 74xx-mmio: Add DT bindings documentation
-Date: Mon, 22 Sep 2014 13:39:26 +0200
-Message-ID: <CAMuHMdV2gkx+tVoYL_zcYg0ZtYkkascQiTOaTfDUuRVMxFkdTw@mail.gmail.com>
-References: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
-	<1411112404-16040-3-git-send-email-shc_work@mail.ru>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v11 08/10] OF: PCI: Add support for parsing PCI host
+ bridge resources from DT
+Date: Mon, 22 Sep 2014 12:43:17 +0100
+Message-ID: <20140922114317.GN1994@e106497-lin.cambridge.arm.com>
+References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
+ <1411003825-21521-9-git-send-email-Liviu.Dudau@arm.com>
+ <20140922093228.GA20256@rric.localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1411112404-16040-3-git-send-email-shc_work@mail.ru>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20140922093228.GA20256@rric.localhost>
+Content-Disposition: inline
+Sender: linux-arch-owner@vger.kernel.org
+To: Robert Richter <rric@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>Sunil Goutham <s>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 19, 2014 at 9:40 AM, Alexander Shiyan <shc_work@mail.ru> wrote:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
-> @@ -0,0 +1,30 @@
-> +* 74XX MMIO GPIO driver
-> +
-> +Required properties:
-> +- compatible: Should contain one of the following:
-> +   "ti,74ahc1g125": for 74AHC1G125 (1-bit Input),
-> +   "ti,74auc1g174": for 74AUC1G74 (1-bit Output),
-> +   "ti,74lvc2g125": for 74LVC2G125 (2-bit Input),
-> +   "ti,74hc74":     for 74HC74 (2-bit Output),
-> +   "ti,74hc125":    for 74HC125 (4-bit Input),
-> +   "ti,74hc175":    for 74HC175 (4-bit Output),
-> +   "ti,74hc365":    for 74HC365 (6-bit Input),
-> +   "ti,74hc174":    for 74HC174 (6-bit Output),
-> +   "ti,74hc244":    for 74HC244 (8-bit Input),
-> +   "ti,74hc273":    for 74HC273 (8-bit Output),
-> +   "ti,74ac1624":   for 74AC1624 (16-bit Input),
-> +   "ti,74ac16374":  for 74AC16374 (16-bit Output).
+On Mon, Sep 22, 2014 at 10:32:28AM +0100, Robert Richter wrote:
+> On 18.09.14 02:30:23, Liviu Dudau wrote:
+> > +int of_pci_get_host_bridge_resources(struct device_node *dev,
+> > +			unsigned char busno, unsigned char bus_max,
+> > +			struct list_head *resources, resource_size_t *io_base)
+> > +{
+> > +	struct resource *res;
+> > +	struct resource *bus_range;
+> > +	struct of_pci_range range;
+> > +	struct of_pci_range_parser parser;
+> > +	char range_type[4];
+> > +	int err;
+> > +
+> > +	if (!io_base)
+> > +		return -EINVAL;
+> > +	*io_base =3D OF_BAD_ADDR;
+>=20
 
-As the actual implementation technology doesn't matter, I think you
-should use the base name where appropriate.
-E.g. "ti,7474" instead of "ti,74hc74".
+Hi Robert,
 
-Gr{oetje,eeting}s,
+> This breaks for mem-mapped pci host controllers. The patch below fixe=
+s
+> this.
 
-                        Geert
+I think you mean PCI host controller that have only memory mapped range=
+s,
+am I right? Initially I've read your reply as to mean that the host
+controller is accessed through some memory mapped area, which I believe=
+ is
+the case for all host controllers.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>=20
+> This series was tested with the fix on top for Cavium Thunder.
+>=20
+> Tested-by: Robert Richter <rrichter@cavium.com>
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks for that!
+
+>=20
+> -Robert
+>=20
+>=20
+>=20
+> From e798af4fc2f664d1aff7e863489b8298f90e716e Mon Sep 17 00:00:00 200=
+1
+> From: Robert Richter <rrichter@cavium.com>
+> Date: Mon, 22 Sep 2014 10:46:01 +0200
+> Subject: [PATCH] OF: PCI: Fix creation of mem-mapped pci host bridges
+>=20
+> The pci host bridge was not created if io_base was not set when
+> calling of_pci_get_host_bridge_resources(). This is esp. the case for
+> mem-mapped io (IORESOURCE_MEM). This patch fixes this. Function
+> parameter io_base is optional now.
+
+I think the message is misleading. What you want to do is make io_base
+optional for the case where the PCI host bridge only expects to have on=
+ly
+IORESOURCE_MEM ranges and doesn't care about IORESOURCE_IO ones.
+
+As I'm going to touch this area again to address a comment from Bjorn,
+do you mind if I roll this patch into mine with your Signed-off-by and
+the mention that you have made io_base optional?
+
+Best regards,
+Liviu
+
+>=20
+> Signed-off-by: Robert Richter <rrichter@cavium.com>
+> ---
+>  drivers/of/of_pci.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index ffdb45ed8682..1f0e7c2505ee 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -182,9 +182,8 @@ int of_pci_get_host_bridge_resources(struct devic=
+e_node *dev,
+>  	char range_type[4];
+>  	int err;
+> =20
+> -	if (!io_base)
+> -		return -EINVAL;
+> -	*io_base =3D OF_BAD_ADDR;
+> +	if (io_base)
+> +		*io_base =3D OF_BAD_ADDR;
+> =20
+>  	bus_range =3D kzalloc(sizeof(*bus_range), GFP_KERNEL);
+>  	if (!bus_range)
+> @@ -242,7 +241,7 @@ int of_pci_get_host_bridge_resources(struct devic=
+e_node *dev,
+>  			goto parse_failed;
+>  		}
+> =20
+> -		if (resource_type(res) =3D=3D IORESOURCE_IO) {
+> +		if (io_base && resource_type(res) =3D=3D IORESOURCE_IO) {
+>  			if (*io_base !=3D OF_BAD_ADDR)
+>  				pr_warn("More than one I/O resource converted. CPU offset for ol=
+d range lost!\n");
+>  			*io_base =3D range.cpu_addr;
+> --=20
+> 2.1.0
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
+in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
