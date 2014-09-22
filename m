@@ -1,47 +1,78 @@
-From: Anders Berg <anders.berg@avagotech.com>
-Subject: Re: [PATCH] i2c: axxia: Add I2C driver for AXM55xx
-Date: Mon, 22 Sep 2014 12:47:59 +0200
-Message-ID: <CAE0=X_1v_1eNr=dPTgofamFuy6zP9ff=LS7dyexj4CeutDqaPA@mail.gmail.com>
-References: <1408967482-17723-1-git-send-email-anders.berg@avagotech.com>
-	<20140920121242.GA3833@katana>
-	<CAE0=X_0VQ8rWrUgbsgKm1MwCP8bwWm3UJPq9p=xNDfjP4CC7Bg@mail.gmail.com>
-	<20140922095939.GB1406@katana>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140922095939.GB1406@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/5] Add drm driver for Rockchip Socs
+Date: Mon, 22 Sep 2014 18:47:00 +0800
+Message-ID: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 11:59 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
->> >> +static int
->> >> +axxia_i2c_xfer_msg(struct axxia_i2c_dev *idev, struct i2c_msg *msg)
->> >> +{
->> >> +     u32 int_mask = MST_STATUS_ERR | MST_STATUS_SNS;
->> >> +     u32 rx_xfer, tx_xfer;
->> >> +     u32 addr_1, addr_2;
->> >> +     int ret;
->> >> +
->> >> +     if (msg->len == 0 || msg->len > 255)
->> >> +             return -EINVAL;
->> >
->> > Ouch, really? Maybe we should warn the user here.
->>
->> Yeah, the transfer length register limits the length to 255. I'll add
->> a warning here.
->
-> Please also add this information to the Kconfig description and
-> somewhere at the top of the source file. This is an important flaw which
-> people should easily find out about.
->
+This a series of patches is a DRM Driver for Rockchip Socs, add support
+for vop devices, eDP. Future patches will add additional encoders/connectors,
+such as HDMI.
 
-You are referring to the "len <= 255" restriction being the flaw here,
-right? I'll add a note to Kconfig and the driver about that.
+The basic "crtc" for rockchip is a "VOP" - Video Output Processor.
+the vop devices found on Rockchip rk3288 Soc, rk3288 soc have two similar
+Vop devices. Vop devices support iommu mapping, we use dma-mapping API with
+ARM_DMA_USE_IOMMU.
 
-The other part of the condition (msg->len == 0) should actually go
-away. The controller can do zero-length-data transfers. I'll fix that
-for next round.
+Changes in v2:
+- add DRM master device node to list all display nodes that comprise
+  the graphics subsystem.
+- use the component framework to defer main drm driver probe
+  until all VOP devices have been probed.
+- use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
+  master device and each vop device can shared the drm dma mapping.
+- use drm_crtc_init_with_planes and drm_universal_plane_init.
+- remove unnecessary middle layers.
+- add cursor set, move funcs to rockchip drm crtc.
+- use panel-simple driver for primary display.
+- add vop and edp reset.
 
-/Anders
+Changes in v3:
+- change "crtc->fb" to "crtc->primary-fb"
+Adviced by Daniel Vetter
+- init cursor plane with universal api, remove unnecessary cursor set,move 
+
+Changes in v4:
+Adviced by David Herrmann
+- remove drm_platform_*() usage, use register drm device directly.
+Adviced by Rob Clark
+- remove special mmap ioctl, do userspace mmap with normal mmap() or mmap offset
+
+Tested on rk3288 pinky board, use eDP encoders/connector, boot and display OK
+
+Mark yao (5):
+  drm/rockchip: Add basic drm driver
+  dt-bindings: video: Add for rockchip display subsytem
+  dt-bindings: video: Add documentation for rockchip vop
+  dt-bindings: video: Add documentation for rockchip edp
+  drm/rockchip: Add support for Rockchip Soc EDP
+
+ .../devicetree/bindings/video/rockchip-drm.txt     |   19 +
+ .../devicetree/bindings/video/rockchip-edp.txt     |   50 +
+ .../devicetree/bindings/video/rockchip-vop.txt     |   58 +
+ drivers/gpu/drm/Kconfig                            |    2 +
+ drivers/gpu/drm/Makefile                           |    1 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   28 +
+ drivers/gpu/drm/rockchip/Makefile                  |   12 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  524 ++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |  120 ++
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c         |  201 +++
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.h         |   28 +
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c      |  231 ++++
+ drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h      |   20 +
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c        |  404 ++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.h        |   72 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 1372 ++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  187 +++
+ drivers/gpu/drm/rockchip/rockchip_edp_core.c       |  853 ++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_edp_core.h       |  309 +++++
+ drivers/gpu/drm/rockchip/rockchip_edp_reg.c        | 1202 +++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_edp_reg.h        |  345 +++++
+ include/uapi/drm/rockchip_drm.h                    |   75 ++
+ 22 files changed, 6113 insertions(+)
+
+-- 
+1.7.9.5
