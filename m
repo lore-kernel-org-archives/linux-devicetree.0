@@ -1,29 +1,61 @@
-From: "Chen, Alvin" <alvin.chen@intel.com>
-Subject: RE: [PATCH 3/3 v2] GPIO: gpio-dwapb: Suspend & Resume PM enabling
-Date: Mon, 22 Sep 2014 01:37:05 +0000
-Message-ID: <4656BEB6164FC34F8171C6538F1A595B2E994914@SHSMSX101.ccr.corp.intel.com>
-References: <1409928798-31895-1-git-send-email-alvin.chen@intel.com>
-	<1409928798-31895-4-git-send-email-alvin.chen@intel.com>
- <CACRpkdZOZu4aj7aWnkVaQXLND6Cf7k-LNZikQr7DcKkp2cgwRg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZOZu4aj7aWnkVaQXLND6Cf7k-LNZikQr7DcKkp2cgwRg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ong, Boon Leong" <boon.leong.ong@intel.com>, "Kweh, Hock Leong" <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, "Westerberg, Mika" <mika.westerberg@intel.com>, "Shevchenko, Andriy" <andriy.shevchenko@intel.com>
+From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/2] regulator: get voltage & duty table from dts for st-pwm
+Date: Mon, 22 Sep 2014 10:52:58 +0800
+Message-ID: <1411354380-14326-1-git-send-email-zyw@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiANCj4gPiArLyogU3RvcmUgR1BJTyBjb250ZXh0IGFjcm9zcyBzeXN0ZW0td2lkZSBzdXNwZW5k
-L3Jlc3VtZSB0cmFuc2l0aW9ucw0KPiA+ICsqLyBzdGF0aWMgc3RydWN0IGR3YXBiX2NvbnRleHQg
-ew0KPiA+ICsgICAgICAgdTMyIGRhdGFbRFdBUEJfTUFYX1BPUlRTXTsNCj4gPiArICAgICAgIHUz
-MiBkaXJbRFdBUEJfTUFYX1BPUlRTXTsNCj4gPiArICAgICAgIHUzMiBleHRbRFdBUEJfTUFYX1BP
-UlRTXTsNCj4gPiArICAgICAgIHUzMiBpbnRfZW47DQo+ID4gKyAgICAgICB1MzIgaW50X21hc2s7
-DQo+ID4gKyAgICAgICB1MzIgaW50X3R5cGU7DQo+ID4gKyAgICAgICB1MzIgaW50X3BvbDsNCj4g
-PiArICAgICAgIHUzMiBpbnRfZGViOw0KPiA+ICt9IGR3YXBiX2NvbnRleHQ7DQo+IA0KPiBOQUss
-IHRoaXMgc2hvdWxkIFNUSUxMIGJlIHBhcnQgb2YgdGhlIGRldmljZSBzdGF0ZSBjb250YWluZXIu
-IE5vdCBhIGxvY2FsDQo+IHZhcmlhYmxlLg0KPiANCj4gSSd2ZSBzYWlkIHRoaXMgYmVmb3JlLiBQ
-bGVhc2UgZml4IHRoaXMsIHRoYW5rcy4NCj4gDQpMaW51cywgcGxlYXNlIHJldmlldyBWZXJzaW9u
-IDUgdGhhdCBJIHNlbnQgb24gU2VwLjE3dGguIEkgaGF2ZSBmaXhlZCBpdCBpbiB0aGUgdjUuDQo=
+get voltage & duty table from device tree might be better, other platforms can also use this
+driver without any modify.
+Tested on a rk3288 sdk board as logic voltage regulator.
+
+Changes in v4:
+Adviced by Doug Anderson
+- improve kconfig
+- add const for desc structure
+
+Changes in v3:
+Adviced by Doug Anderson
+- Make Kconfig & Makefile alphabetical
+- remove pwm_reg_period from pwm_regulator_data
+- modify the calculation in pwm_regulator_set_voltage_sel
+- add length validity check
+Adviced by Doug Anderson
+- update the Example
+
+Changes in v2:
+Adviced by Lee Jones
+- rename the file
+- remove all the prefix st_
+- add depend on PWM in Kconfig
+Adviced by Lee Jones
+- rename the documentation
+Adviced by Doug Anderson
+- update the example
+Adviced by Mark Rutland
+- remove pwm-reg-period
+
+Chris Zhong (2):
+  regulator: st-pwm: get voltage and duty table from dts
+  dt-bindings: add devicetree bindings for st-pwm regulator
+
+ .../bindings/regulator/pwm-regulator.txt           |   27 +++
+ drivers/regulator/Kconfig                          |   13 +-
+ drivers/regulator/Makefile                         |    2 +-
+ drivers/regulator/pwm-regulator.c                  |  197 ++++++++++++++++++++
+ drivers/regulator/st-pwm.c                         |  190 -------------------
+ 5 files changed, 232 insertions(+), 197 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+ create mode 100644 drivers/regulator/pwm-regulator.c
+ delete mode 100644 drivers/regulator/st-pwm.c
+
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
