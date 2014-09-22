@@ -1,34 +1,111 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v5 06/11] i2c: core: Convert to
- dev_pm_domain_attach|detach()
-Date: Mon, 22 Sep 2014 12:52:53 +0300
-Message-ID: <20140922095253.GO1786@lahna.fi.intel.com>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org>
- <1411151264-16245-7-git-send-email-ulf.hansson@linaro.org>
- <20140920122318.GC3850@katana>
+From: George Cherian <george.cherian@ti.com>
+Subject: Re: [PATCH 2/5] extcon: gpio: Convert the driver to use gpio desc
+ API's
+Date: Mon, 22 Sep 2014 15:21:52 +0530
+Message-ID: <541FF138.7040908@ti.com>
+References: <1410236078-11713-1-git-send-email-george.cherian@ti.com> <1410236078-11713-3-git-send-email-george.cherian@ti.com> <541FD8CD.1060400@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140920122318.GC3850@katana>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Chris Ball <chris@printf.net>, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <541FD8CD.1060400@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, myungjoo.ham@samsung.com, grant.likely@linaro.org, rongjun.ying@csr.com, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 20, 2014 at 02:23:19PM +0200, Wolfram Sang wrote:
-> On Fri, Sep 19, 2014 at 08:27:39PM +0200, Ulf Hansson wrote:
-> > Previously only the ACPI PM domain was supported by the i2c bus.
-> > 
-> > Let's convert to the common attach/detach functions for PM domains,
-> > which currently means we are extending the support to include the
-> > generic PM domain as well.
-> > 
-> > Cc: linux-i2c@vger.kernel.org
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> > Reviewed-by: Kevin Hilman <khilman@linaro.org>
-> 
-> Looks good to me, but I'd like to give Mika a chance to look at it,
-> since he does ACPI with I2C. Adding to CC.
 
-Looks fine to me.
+On 09/22/2014 01:37 PM, Chanwoo Choi wrote:
+> Hi George,
+>
+> This patch removes 'gpio_active_low' field of struct gpio_extcon_data.
+> But, include/linux/extcon-gpio.h has the description of 'gpio_active_low' field.
+Yes didn't want the platform data users to break.
+Actually I couldn't find any platform users for this driver. Could you 
+please point me to
+one if in case I missed it. If non present then why cant we get rid of 
+platform data altogether.
+>
+> Also,
+> This patch has not included the any description/comment of removing 'gpio_active_low'.
+>
+> Also,
+> How to set 'FLAG_ACTIVE_LOW' bit for gpio when using platform data?
+Now that we are using gpiod_* API's  we need not check for 
+gpio_active_low from this driver.
+
+> This patch don't call 'set_bit()' function to set FLAG_ACTIVE_LOW flag.
+>
+> Thanks,
+> Chanwoo Choi
+>
+> On 09/09/2014 01:14 PM, George Cherian wrote:
+>> Convert the driver to use gpiod_* API's.
+>>
+>> Signed-off-by: George Cherian <george.cherian@ti.com>
+>> ---
+>>   drivers/extcon/extcon-gpio.c | 18 +++++++-----------
+>>   1 file changed, 7 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+>> index 72f19a3..25269f6 100644
+>> --- a/drivers/extcon/extcon-gpio.c
+>> +++ b/drivers/extcon/extcon-gpio.c
+>> @@ -33,8 +33,7 @@
+>>   
+>>   struct gpio_extcon_data {
+>>   	struct extcon_dev *edev;
+>> -	unsigned gpio;
+>> -	bool gpio_active_low;
+>> +	struct gpio_desc *gpiod;
+>>   	const char *state_on;
+>>   	const char *state_off;
+>>   	int irq;
+>> @@ -50,9 +49,7 @@ static void gpio_extcon_work(struct work_struct *work)
+>>   		container_of(to_delayed_work(work), struct gpio_extcon_data,
+>>   			     work);
+>>   
+>> -	state = gpio_get_value(data->gpio);
+>> -	if (data->gpio_active_low)
+>> -		state = !state;
+>> +	state = gpiod_get_value(data->gpiod);
+>>   	extcon_set_state(data->edev, state);
+>>   }
+>>   
+>> @@ -106,22 +103,21 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>>   	}
+>>   	extcon_data->edev->name = pdata->name;
+>>   
+>> -	extcon_data->gpio = pdata->gpio;
+>> -	extcon_data->gpio_active_low = pdata->gpio_active_low;
+>> +	extcon_data->gpiod = gpio_to_desc(pdata->gpio);
+>>   	extcon_data->state_on = pdata->state_on;
+>>   	extcon_data->state_off = pdata->state_off;
+>>   	extcon_data->check_on_resume = pdata->check_on_resume;
+>>   	if (pdata->state_on && pdata->state_off)
+>>   		extcon_data->edev->print_state = extcon_gpio_print_state;
+>>   
+>> -	ret = devm_gpio_request_one(&pdev->dev, extcon_data->gpio, GPIOF_DIR_IN,
+>> +	ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
+>>   				    pdev->name);
+>>   	if (ret < 0)
+>>   		return ret;
+>>   
+>>   	if (pdata->debounce) {
+>> -		ret = gpio_set_debounce(extcon_data->gpio,
+>> -					pdata->debounce * 1000);
+>> +		ret = gpiod_set_debounce(extcon_data->gpiod,
+>> +					 pdata->debounce * 1000);
+>>   		if (ret < 0)
+>>   			extcon_data->debounce_jiffies =
+>>   				msecs_to_jiffies(pdata->debounce);
+>> @@ -133,7 +129,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>>   
+>>   	INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
+>>   
+>> -	extcon_data->irq = gpio_to_irq(extcon_data->gpio);
+>> +	extcon_data->irq = gpiod_to_irq(extcon_data->gpiod);
+>>   	if (extcon_data->irq < 0)
+>>   		return extcon_data->irq;
+>>   
+>>
