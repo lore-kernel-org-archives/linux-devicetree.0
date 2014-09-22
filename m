@@ -1,69 +1,163 @@
 From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: (unknown)
-Date: Mon, 22 Sep 2014 15:45:46 +0800
-Message-ID: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
+Subject: [PATCHv4 3/6] ARM: dts: Add initial LS1021A TWR board dts support
+Date: Mon, 22 Sep 2014 15:45:49 +0800
+Message-ID: <1411371952-5618-4-git-send-email-jingchang.lu@freescale.com>
+References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Subject: 
+In-Reply-To: <1411371952-5618-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chen Lu <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series contain the support for Freescale LS1021A CPU and LS1021A-QDS
-and LS1021A-TWR board.
-
-The LS1021A SoC combines two ARM Cortex-A7 cores that have been optimized
-for high reliability and pack the highest level of integration available
-for sub-3W embedded communications processors and with a comprehensive
-enablement model focused on ease of programmability.
-
-The LS1021A SoC shares IPs with i.MX family, Vybrid family and Freescale
-PowerPC platform. 
-
-For the detail information about LS1021A SoC, please refer to the RM doc.
-
+Signed-off-by: Chen Lu <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-changes in v4:
-add "syscon" compatible to device tree scfg and dcfg node, and 
-remove uncompleted dcsr related node.
-remove mxc_restart reference in DT_MACHINE_START.
-remove dma_zone_size defination in DT_MACHINE_START.
-
-changes in v3:
-rewrite scfg and dcfg binding doc description.
-remove sai related node leaving to the driver support.
-
-changes in v2:
-remove unused nodes.
-wakeup the secondary core by IPI call to u-boot standby procedure. 
-add dt-bindings for LS1021A SoC and platform gerenal configuration nodes.
-
-----------------------------------------------------------------
-Jingchang Lu (6):
-	ARM: dts: Add SoC level device tree support for LS1021A
-	ARM: dts: Add initial LS1021A QDS board dts support
-	ARM: dts: Add initial LS1021A TWR board dts support
-	dt-bindings: arm: add Freescale LS1021A SoC device tree binding
-	ARM: imx: Add initial support for Freescale LS1021A
-	ARM: imx: Add Freescale LS1021A SMP support
-
- Documentation/devicetree/bindings/arm/fsl.txt |  38 ++++
- arch/arm/boot/dts/Makefile                    |   2 +
- arch/arm/boot/dts/ls1021a-qds.dts             | 285 ++++++++++++++++++++++++++
- arch/arm/boot/dts/ls1021a-twr.dts             | 117 +++++++++++
- arch/arm/boot/dts/ls1021a.dtsi                | 539 ++++++++++++++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-imx/Kconfig                     |  14 ++
- arch/arm/mach-imx/Makefile                    |   4 +-
- arch/arm/mach-imx/common.h                    |   1 +
- arch/arm/mach-imx/mach-ls1021a.c              |  22 +++
- arch/arm/mach-imx/platsmp.c                   |  32 +++
- 10 files changed, 1053 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
+ arch/arm/boot/dts/Makefile        |   1 +
+ arch/arm/boot/dts/ls1021a-twr.dts | 117 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 118 insertions(+)
  create mode 100755 arch/arm/boot/dts/ls1021a-twr.dts
- create mode 100644 arch/arm/boot/dts/ls1021a.dtsi
- create mode 100644 arch/arm/mach-imx/mach-ls1021a.c
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 384aa74..f716461 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx6sl-evk.dtb \
+ 	imx6sx-sdb.dtb \
+ 	ls1021a-qds.dtb \
++	ls1021a-twr.dtb \
+ 	vf610-colibri-eval-v3.dtb \
+ 	vf610-cosmic.dtb \
+ 	vf610-twr.dtb
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+new file mode 100755
+index 0000000..1a7e9fb
+--- /dev/null
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -0,0 +1,117 @@
++/*
++ * Copyright 2013-2014 Freescale Semiconductor, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++/dts-v1/;
++#include "ls1021a.dtsi"
++
++/ {
++	model = "LS1021A TWR Board";
++
++	aliases {
++		enet2_rgmii_phy = &rgmii_phy1;
++		enet0_sgmii_phy = &sgmii_phy2;
++		enet1_sgmii_phy = &sgmii_phy0;
++	};
++};
++
++&dspi1 {
++	bus-num = <0>;
++	status = "okay";
++
++	dspiflash: s25fl064k@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl064k";
++		spi-max-frequency = <16000000>;
++		spi-cpol;
++		spi-cpha;
++		reg = <0>;
++	};
++};
++
++&enet0 {
++	tbi-handle = <&tbi1>;
++	phy-handle = <&sgmii_phy2>;
++	phy-connection-type = "sgmii";
++	status = "okay";
++};
++
++&enet1 {
++	tbi-handle = <&tbi1>;
++	phy-handle = <&sgmii_phy0>;
++	phy-connection-type = "sgmii";
++	status = "okay";
++};
++
++&enet2 {
++	phy-handle = <&rgmii_phy1>;
++	phy-connection-type = "rgmii-id";
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
++};
++
++&ifc {
++	status = "okay";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	/* NOR, and CPLD on board */
++	ranges = <0x0 0x0 0x0 0x60000000 0x08000000>;
++
++		nor@0,0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "cfi-flash";
++			reg = <0x0 0x0 0x8000000>;
++			bank-width = <2>;
++			device-width = <1>;
++		};
++};
++
++&lpuart0 {
++	status = "okay";
++};
++
++&mdio0 {
++	sgmii_phy0: ethernet-phy@0 {
++		reg = <0x0>;
++	};
++	rgmii_phy1: ethernet-phy@1 {
++		reg = <0x1>;
++	};
++	sgmii_phy2: ethernet-phy@2 {
++		reg = <0x2>;
++	};
++	tbi1: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&pwm6 {
++	status = "okay";
++};
++
++&pwm7 {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
+-- 
+1.8.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
