@@ -1,54 +1,47 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: Re: [PATCH 3/3] dt/bindings: dmaengine: qcom_bam_dma: Add compatible
- string for BAM v1.3.0
-Date: Sun, 21 Sep 2014 23:56:04 -0500
-Message-ID: <20140922045604.GE4148@qualcomm.com>
-References: <1411037575-13153-1-git-send-email-architt@codeaurora.org>
- <1411037575-13153-3-git-send-email-architt@codeaurora.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/3] cap1106: support for active-high interrupt option
+Date: Sun, 21 Sep 2014 22:56:56 -0700
+Message-ID: <20140922055656.GA4147@core.coreip.homeip.net>
+References: <1411268469-21283-1-git-send-email-mranostay@gmail.com>
+ <1411268469-21283-3-git-send-email-mranostay@gmail.com>
+ <541EA326.1070404@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1411037575-13153-3-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: galak@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <541EA326.1070404@zonque.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: Matt Ranostay <mranostay@gmail.com>, galak@codeaurora.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 18, 2014 at 04:22:55PM +0530, Archit Taneja wrote:
-> Add compatible string for BAM v1.3.0 in the DT bindings documentation. Mentioned
-> a few more SoCs which have BAM v1.4.0 in them.
+On Sun, Sep 21, 2014 at 12:06:30PM +0200, Daniel Mack wrote:
+> On 09/21/2014 05:01 AM, Matt Ranostay wrote:
+> > Some applications need to use the active-high push-pull interrupt
+> > option. This allows it be enabled in the device tree child node.
+> > 
+> > Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+> > ---
+> >  drivers/input/keyboard/cap1106.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/input/keyboard/cap1106.c b/drivers/input/keyboard/cap1106.c
+> > index b9c43b5..33e2590 100644
+> > --- a/drivers/input/keyboard/cap1106.c
+> > +++ b/drivers/input/keyboard/cap1106.c
+> > @@ -234,6 +234,12 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
+> >  			dev_err(dev, "Invalid sensor-gain value %d\n", gain32);
+> >  	}
+> >  
+> > +	if (of_property_read_bool(node, "microchip,active-high")) {
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> index d75a9d7..83c8e57 100644
-> --- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> @@ -1,7 +1,9 @@
->  QCOM BAM DMA controller
->  
->  Required properties:
-> -- compatible: must contain "qcom,bam-v1.4.0" for MSM8974
-> +- compatible: must be one of the following:
-> + * "qcom,bam-v1.4.0" for MSM8974, APQ8074 and APQ8084
-> + * "qcom,bam-v1.3.0" for APQ8064 and MSM8960
+> I think the name of that property should make clear it's only changing
+> the interrupt output driver configuration. What about
+> "microchip,irq-active-high"?
 
-Add in IPQ8064 as well for 1.3.0
+Can we infer the setting from IRQ flags by chance?
 
->  - reg: Address range for DMA registers
->  - interrupts: Should contain the one interrupt shared by all channels
->  - #dma-cells: must be <1>, the cell in the dmas property of the client device
-
-Otherwise, looks good.
-
-Reviewed-by: Andy Gross <agross@codeaurora.org>
+Thanks.
 
 -- 
-sent by an employee of the Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Dmitry
