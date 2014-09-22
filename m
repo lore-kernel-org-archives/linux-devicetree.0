@@ -1,88 +1,115 @@
-From: Tanmay Inamdar <tinamdar@apm.com>
-Subject: Re: [PATCH v9 1/4] pci:host: APM X-Gene PCIe host controller driver
-Date: Mon, 22 Sep 2014 15:59:35 -0700
-Message-ID: <CACoXjcmuVZbAQcHyunxu4DaY3Wew2tttydWsSmneYiUf73dRow@mail.gmail.com>
-References: <1410906824-9321-1-git-send-email-tinamdar@apm.com>
-	<1410906824-9321-2-git-send-email-tinamdar@apm.com>
-	<20140919223258.GA32208@google.com>
-	<CACoXjcnVU3+fQHQ0-zEVRjoedrrod-aua6AVybj7UuSHO9HBaw@mail.gmail.com>
-	<CAErSpo4C_6mh7hais14254rYBeMYArvf=nETmgvBjgP290aD4Q@mail.gmail.com>
-	<20140922222727.GC15822@obsidianresearch.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [V8 1/2] irqchip: gic: Add support for multiple MSI for ARM64
+Date: Tue, 23 Sep 2014 01:08:25 +0200 (CEST)
+Message-ID: <alpine.DEB.2.10.1409222349560.4604@nanos>
+References: <1411230698-8081-1-git-send-email-suravee.suthikulpanit@amd.com> <1411230698-8081-2-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140922222727.GC15822@obsidianresearch.com>
+In-Reply-To: <1411230698-8081-2-git-send-email-suravee.suthikulpanit@amd.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Jon Masters <jcm@redhat.com>
+To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: marc.zyngier@arm.com, Mark Rutland <mark.rutland@arm.com>, jason@lakedaemon.net, pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 3:27 PM, Jason Gunthorpe
-<jgunthorpe@obsidianresearch.com> wrote:
-> On Mon, Sep 22, 2014 at 04:09:03PM -0600, Bjorn Helgaas wrote:
->> On Mon, Sep 22, 2014 at 3:33 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
->>
->> >>> +static void xgene_pcie_fixup_bridge(struct pci_dev *dev)
->> >>> +{
->> >>> +     int i;
->> >>> +
->> >>> +     /* Hide the PCI host BARs from the kernel as their content doesn't
->> >>> +      * fit well in the resource management
->> >>> +      */
->> >>
->> >> This needs a better explanation than "doesn't fit well."
->> >>
->> >> I *think* you're probably talking about something similar to the MVEBU
->> >> devices mentioned here:
->> >> http://lkml.kernel.org/r/CAErSpo56jB1Bf2JtYCGKXZBZqRF1jXFxGmeewPX_e6vSXueGyA@mail.gmail.com
->> >>
->> >> where the device can be configured as either an endpoint or a root port,
->> >> and the endpoint BARs are still visible when configured as a root port.
->> >>
->> >
->> > It is true that X-Gene PCIe port can be configured as EP, however the
->> > the FIXUP is required not because of the BARs are still visible when
->> > configured as EP in past. X-Gene PCIe port, when configured as RC,
->> > uses BAR0-BAR1 of RC's configuration space as inbound BARs. Entire DDR
->> > region is mapped in these BARs so that it is accessible for EP devices
->> > for DMA. So if the fixup is not done during enumeration, whole
->> > outbound memory resource space gets assigned to RC and nothing is left
->> > EP devices.
->>
->> I'm not familiar with the concept of an "inbound BAR"; at least I'm
->> not aware of anything like this in the PCI specs.  I think it might
->> reduce confusion if we avoided calling them "BARs".  They happen to be
->> at the same addresses where real BARs would be, but they certainly
->> don't behave like real BARs.
->
-> So what does the lspci look like?
->
+On Sat, 20 Sep 2014, suravee.suthikulpanit@amd.com wrote:
 
-[root@mustang ~]# lspci -s 0000:00:00.0 -v
-0000:00:00.0 PCI bridge: Applied Micro Circuits Corp. Device e004 (rev
-04) (prog-if 00 [Normal decode])
-Flags: bus master, fast devsel, latency 0
-Memory at <ignored> (64-bit, prefetchable)
-Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-Memory behind bridge: 80800000-809fffff
-Prefetchable memory behind bridge: 0000000080000000-00000000807fffff
-Capabilities: [40] Express Root Port (Slot+), MSI 00
-Capabilities: [80] Power Management version 3
-Capabilities: [100] Advanced Error Reporting
-Capabilities: [180] #19
-Capabilities: [150] Vendor Specific Information: ID=0001 Rev=1 Len=010 <?>
-Kernel driver in use: pcieport
+> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> 
+> This patch implelments the ARM64 version of arch_setup_msi_irqs(),
+> which does not return 1 for when PCI_CAP_ID_MSI and nvec > 1.
 
-> If x-gene has an otherwise correct bridge config space and only the
-> 0/1 BARs have a non-standard meaning, that I'd agree with Bjorn, hide
-> all access to these registers from the kernel (and tell your HW crew
-> to read the specs, because it is very clear what those registers are
-> supposed to do) .
->
+I can see that myself. What your changelog is missing is the reason
+WHY you think that copying that code from drivers/pci/msi.c and
+removing the "PCI_CAP_ID_MSI and nvec > 1" has any value.
+ 
+> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> Acked-by: Marc Zyngier <Marc.Zyngier@arm.com>
 
-Ok.
+....
 
-> If x-gene doesn't even have a bridge config space, then there are much
-> bigger problems, and these corrupt BARs are just the start.
->
-> Jason
+>  arch/arm64/kernel/Makefile |  1 +
+>  arch/arm64/kernel/msi.c    | 41 +++++++++++++++++++++++++++++++++++++++++
+
+And that new function "arm64_setup_msi_irqs" is declared in which
+header file exactly?
+
+> diff --git a/arch/arm64/kernel/msi.c b/arch/arm64/kernel/msi.c
+> new file mode 100644
+> index 0000000..a295862
+> --- /dev/null
+> +++ b/arch/arm64/kernel/msi.c
+> @@ -0,0 +1,41 @@
+> +/*
+> + * ARM64 architectural MSI implemention
+> + *
+> + * Support for Message Signalelled Interrupts for systems that
+> + * implement ARM Generic Interrupt Controller: GICv2m.
+> + *
+> + * Copyright (C) 2014 Advanced Micro Devices, Inc.
+> + * Authors: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+
+Copying stuff from A to B makes a real case for copyright, i.e. I'm
+impressed by your ability to copy right.
+
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2 as published
+> + * by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/irq.h>
+> +#include <linux/msi.h>
+> +#include <linux/pci.h>
+> +
+> +/*
+> + * ARM64 function for seting up MSI irqs.
+> + * Based on driver/pci/msi.c: arch_setup_msi_irqs().
+
+This is not based on. This is a verbatim copy with the omission of two
+lines. Very creative that ...
+
+> + *
+> + * Note:
+> + * Current implementation assumes that all interrupt controller used in
+> + * ARM64 architecture _MUST_ supports multi-MSI.
+
+Great assumption....
+
+> + */
+> +int arm64_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+
+What the heck is calling that code? The follow up patch does not and
+due to lack of a declaration this patch is completely pointless.
+
+So you add a new file with a pointless changelog and a boasting
+copyright notice which adds completely useless functionality?
+
+Well done.
+
+At least you are consistent on the useless side of affairs:
+
+> +{
+> +	struct msi_desc *entry;
+> +	int ret;
+> +
+> +	list_for_each_entry(entry, &dev->msi_list, list) {
+> +		ret = arch_setup_msi_irq(dev, entry);
+
+Anyone who has the slightest idea how multi-MSI works will know that
+this CANNOT work at all, but that's none of my business.
+
+What's part of my business is to state that in my role as the
+maintainer of all things related to interrupts this is the worst patch
+I've seen in the last 10 years. Along with the saddening fact that it
+carries the Acked-by of someone who should have known better.
+
+At least if confirms my suspicion that ARM64 is a dignified successor
+of the already infamous ARM32 universe.
+
+I really can't bear the suspension to see the first 1500+ vendor patch
+series of dubious quality supporting a real ARM64.
+
+Thanks,
+
+	tglx
