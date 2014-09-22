@@ -1,48 +1,61 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v6 9/9] mfd: syscon: add Atmel GPBR DT bindings documention
-Date: Mon, 22 Sep 2014 17:42:43 +0200
-Message-ID: <1411400563-570-10-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v6 4/9] rtc: at91sam9: add DT support
+Date: Mon, 22 Sep 2014 17:42:38 +0200
+Message-ID: <1411400563-570-5-git-send-email-boris.brezillon@free-electrons.com>
 References: <1411400563-570-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1411400563-570-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The GPBR block provides a set of battery-backed registers that can be used
-to save data which need to be kept when the system is powered down and
-VDD-core is maintained by an external battery.
-
-A typical usage is the RTT block (when used as an RTC) which needs one of
-those registers to save the current time.
+Add of_match_table to the existing driver so that rtt nodes defined in at91
+DTs can be attached to this driver.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 ---
- Documentation/devicetree/bindings/mfd/atmel,gpbr.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
+ drivers/rtc/rtc-at91sam9.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/atmel,gpbr.txt b/Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
-new file mode 100644
-index 0000000..a285695
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
-@@ -0,0 +1,15 @@
-+* Device tree bindings for Atmel GPBR (General Purpose Backup Registers)
-+
-+The GPBR are a set of battery-backed registers.
-+
-+Required properties:
-+- compatible:		"atmel,at91sam9260-gpbr", "syscon"
-+- reg:			contains offset/length value of the GPBR memory
-+			region.
-+
-+Example:
-+
-+gpbr: gpbr@fffffd50 {
-+	compatible = "atmel,at91sam9260-gpbr", "syscon";
-+	reg = <0xfffffd50 0x10>;
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index 38a2693..d72c34d 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -445,6 +445,14 @@ static int at91_rtc_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(at91_rtc_pm_ops, at91_rtc_suspend, at91_rtc_resume);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id at91_rtc_dt_ids[] = {
++	{ .compatible = "atmel,at91sam9260-rtt" },
++	{ /* sentinel */ }
 +};
++MODULE_DEVICE_TABLE(of, at91_rtc_dt_ids);
++#endif
++
+ static struct platform_driver at91_rtc_driver = {
+ 	.probe		= at91_rtc_probe,
+ 	.remove		= at91_rtc_remove,
+@@ -453,6 +461,7 @@ static struct platform_driver at91_rtc_driver = {
+ 		.name	= "rtc-at91sam9",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &at91_rtc_pm_ops,
++		.of_match_table = of_match_ptr(at91_rtc_dt_ids),
+ 	},
+ };
+ 
 -- 
 1.9.1
