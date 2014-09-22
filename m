@@ -1,74 +1,44 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v4 2/2] dt-bindings: add devicetree bindings for st-pwm regulator
-Date: Mon, 22 Sep 2014 10:53:00 +0800
-Message-ID: <1411354380-14326-3-git-send-email-zyw@rock-chips.com>
-References: <1411354380-14326-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411354380-14326-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, heiko@sntech.de
-Cc: linux-rockchip@lists.infradead.org, lee.jones@linaro.org, broonie@kernel.org, Chris Zhong <zyw@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 0/4] clk: hix5hd2: clocks update
+Date: Mon, 22 Sep 2014 11:20:12 +0800
+Message-ID: <1411356016-20553-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the st-pwm regulator
+v5:
+0001:
+Suggested by Mike, change to clk_ether_prepare since delay required inside
 
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+v4:
+Drop ir clock, whose register is not in the same region
 
-Adviced by Doug Anderson
-- remove regulator-always-on and regulator-boot-on from the Example
+v3: 
+Add patches 3, 4, 5 for clocks of watchdog, ir, and i2c
+Patches 1, 2 are same as v2
 
-Reviewed-by: Doug Anderson <dianders@chromium.org>
----
+Guoxiong Yan (1):
+  clk: hix5hd2: add watchdog0 clocks
 
-Changes in v4: None
-Changes in v3:
-Adviced by Doug Anderson
-- update the Example
+Jiancheng Xue (1):
+  clk: hix5hd2: add sd clk
 
-Changes in v2:
-Adviced by Lee Jones
-- rename the documentation
-Adviced by Doug Anderson
-- update the example
-Adviced by Mark Rutland
-- remove pwm-reg-period
+Wei Yan (1):
+  clk: hix5hd2: add I2C clocks
 
- .../bindings/regulator/pwm-regulator.txt           |   27 ++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+Zhangfei Gao (1):
+  clk: hix5hd2: add complex clk
 
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-new file mode 100644
-index 0000000..c6756a9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -0,0 +1,27 @@
-+pwm regulator bindings
-+
-+Required properties:
-+- compatible: Should be "pwm-regulator"
-+- pwms: OF device-tree PWM specification (see PWM binding pwm.txt)
-+- voltage-table: voltage and duty table, include 2 merbers in each set of
-+  brackets, first one is voltage(unit: uv), the next is duty(unit: percent)
-+
-+Any property defined as part of the core regulator binding defined in
-+regulator.txt can also be used.
-+
-+Example:
-+	pwm_regulator {
-+		compatible = "pwm-regulator;
-+		pwms = <&pwm1 0 8448 0>;
-+
-+		voltage-table = <1114000 0>,
-+				<1095000 10>,
-+				<1076000 20>,
-+				<1056000 30>,
-+				<1036000 40>,
-+				<1016000 50>;
-+
-+		regulator-min-microvolt = <1016000>;
-+		regulator-max-microvolt = <1114000>;
-+		regulator-name = "vdd_logic";
-+	};
+ drivers/clk/hisilicon/clk-hix5hd2.c       |  236 ++++++++++++++++++++++++++++-
+ include/dt-bindings/clock/hix5hd2-clock.h |   27 ++++
+ 2 files changed, 257 insertions(+), 6 deletions(-)
+
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
