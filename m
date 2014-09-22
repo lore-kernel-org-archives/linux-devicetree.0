@@ -1,94 +1,63 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 3/9] rtc: at91sam9: replace devm_ioremap by
- devm_ioremap_resource
-Date: Mon, 22 Sep 2014 17:04:19 +0200
-Message-ID: <20140922150418.GA3026@piout.net>
-References: <1411377058-26155-1-git-send-email-boris.brezillon@free-electrons.com>
- <1411377058-26155-4-git-send-email-boris.brezillon@free-electrons.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Mon, 22 Sep 2014 18:05:10 +0300
+Message-ID: <54203AA6.1040103@ti.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>	<5419760A.7020908@ti.com>	<CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>	<5419B52D.4060107@ti.com>	<CAEC9eQO2rfmVEKTCUJk+SpfdeUr81gN3stYV3wE6yR3E=-zonA@mail.gmail.com>	<541C279A.2030601@ti.com>	<CAEC9eQMQrM289J+ukkshKtTo9dB=G4cvg-4zF6LR6snqE5BL0A@mail.gmail.com>	<541C3D95.7080200@ti.com>	<CAEC9eQNshrP6wW_9mEDbFR5hRpW6Hy=GBFzV=rf05Wpxz6gtiw@mail.gmail.com> <CABxcv=kGTmYtjDc0isgy=-Ga+w69zVefJwK1qQY7dmER5fhhJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411377058-26155-4-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="uETLxIdIjLxgMxAJkuvWeJct2rhTw8vF8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=kGTmYtjDc0isgy=-Ga+w69zVefJwK1qQY7dmER5fhhJg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>, Ajay kumar <ajaynumb@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 22/09/2014 at 11:10:52 +0200, Boris Brezillon wrote :
-> Replace devm_ioremap calls by devm_ioremap_resource which already check
-> resource consistency (resource != NULL) and print an error in case of
-> failure.
-> 
-> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--uETLxIdIjLxgMxAJkuvWeJct2rhTw8vF8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On 20/09/14 18:27, Javier Martinez Canillas wrote:
 
-> ---
->  drivers/rtc/rtc-at91sam9.c | 29 ++++++++++-------------------
->  1 file changed, 10 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-> index 74a9ca0..38a2693 100644
-> --- a/drivers/rtc/rtc-at91sam9.c
-> +++ b/drivers/rtc/rtc-at91sam9.c
-> @@ -306,18 +306,11 @@ static const struct rtc_class_ops at91_rtc_ops = {
->   */
->  static int at91_rtc_probe(struct platform_device *pdev)
->  {
-> -	struct resource	*r, *r_gpbr;
-> +	struct resource	*r;
->  	struct sam9_rtc	*rtc;
->  	int		ret, irq;
->  	u32		mr;
->  
-> -	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	r_gpbr = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -	if (!r || !r_gpbr) {
-> -		dev_err(&pdev->dev, "need 2 ressources\n");
-> -		return -ENODEV;
-> -	}
-> -
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
->  		dev_err(&pdev->dev, "failed to get interrupt resource\n");
-> @@ -335,18 +328,16 @@ static int at91_rtc_probe(struct platform_device *pdev)
->  		device_init_wakeup(&pdev->dev, 1);
->  
->  	platform_set_drvdata(pdev, rtc);
-> -	rtc->rtt = devm_ioremap(&pdev->dev, r->start, resource_size(r));
-> -	if (!rtc->rtt) {
-> -		dev_err(&pdev->dev, "failed to map registers, aborting.\n");
-> -		return -ENOMEM;
-> -	}
->  
-> -	rtc->gpbr = devm_ioremap(&pdev->dev, r_gpbr->start,
-> -				resource_size(r_gpbr));
-> -	if (!rtc->gpbr) {
-> -		dev_err(&pdev->dev, "failed to map gpbr registers, aborting.\n");
-> -		return -ENOMEM;
-> -	}
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	rtc->rtt = devm_ioremap_resource(&pdev->dev, r);
-> +	if (IS_ERR(rtc->rtt))
-> +		return PTR_ERR(rtc->rtt);
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
-> +	if (IS_ERR(rtc->gpbr))
-> +		return PTR_ERR(rtc->rtt);
->  
->  	mr = rtt_readl(rtc, MR);
->  
-> -- 
-> 1.9.1
-> 
+> I see that Documentation/devicetree/bindings/video/ti,omap-dss.txt
+> mentions that the Video Ports binding documentation is in
+> Documentation/devicetree/bindings/video/video-ports.txt but I don't
+> see that this file exists in the kernel [1]. I see though that is was
+> included on your series adding DSS DT support [2].
+>=20
+> Do you know what happened with this file?
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ah, I need to update the link. This describes the graph:
+
+Documentation/devicetree/bindings/graph.txt
+
+ Tomi
+
+
+
+--uETLxIdIjLxgMxAJkuvWeJct2rhTw8vF8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUIDqmAAoJEPo9qoy8lh71uTQP/0siZUpdAtIjQ93wXYQwoQeU
+l5jLP5VSGX1ZNKGWDlYiH5yUeItoSE/yTVK0kyRaS6MI2KpFAf3FH5SOWQs4QbAE
+3E826Sea968z/MjKzUttIweXLIi4KQS5qpDCQfsJUq29TzOEB7QuXLsWnbFR2Ump
+woKo5/TaVf1LwBNxzPSoYHnIXXNj4ICcN7egJZ+bwjhB5oZMnqfdA20e88VsPcZU
+NkVNPtPWKFuR8nGee9OGzG765dMPpvGv/4mYGHTi3kyiFJr1OkDLcY/amwhNjZfu
+xZVLTaTO9p8cmSv5ingIQcK7J2odrTXCGh5DzoAtxe8WZ3013N6/Or/o78M06ihI
+U9sWSbPf97R2oljrO+qM4nRFAH4fE5xlVZ6ub/TDOnoIv8j8ccxyos7VhhUvNw+F
+ml6jCqS/AhJ2Ksa7I6E/dYtrywXDE/U3rN2HBY0i0Kw+T9pNDqe4eVuqWQnxpZp5
+y2ltFvY/gqDv2p6T2Rzedc2Df/XCOq4uBr4JfFovP2RiWnntYOt99wULmxtXvQTe
+hgPfen0mPZQT/P+Af9wkGECwMDZ1DCgBvZ3PA/ImQCONJQ14t+VdvCqauAq/pc02
+l58/ORO2eYr0qkc/4JFIiD0uXQUW4pWIBguY2cyqPYVtjuLVK9oin5Hc52HyWxLi
+njir1K7Ntk33puTwqYnv
+=AXUC
+-----END PGP SIGNATURE-----
+
+--uETLxIdIjLxgMxAJkuvWeJct2rhTw8vF8--
