@@ -1,51 +1,159 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH v2 10/16] of: Add vendor prefix for MIPS Technologies, Inc.
-Date: Mon, 22 Sep 2014 09:28:11 -0700
-Message-ID: <CAL1qeaGgBpkuGyxu_P9BNdHjncLA1pfPc-yE98UBj9Ot1koLrA@mail.gmail.com>
-References: <1409938218-9026-1-git-send-email-abrestic@chromium.org>
-        <1409938218-9026-11-git-send-email-abrestic@chromium.org>
-        <CAL_JsqKGG3ei9=Od74VSL9Sm_=+vsW4U+WBgXmCEtK3iTDfJ0g@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/3] power: gpio-charger: add device tree support
+Date: Mon, 22 Sep 2014 09:48:33 -0700
+Message-ID: <CAD=FV=W6q7wMDWWDkwdC_KF4EHJt2q8afxSGCpPEC+Nk2Jp2Ag@mail.gmail.com>
+References: <1411329923-15912-1-git-send-email-heiko@sntech.de>
+	<1411329923-15912-3-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <CAL_JsqKGG3ei9=Od74VSL9Sm_=+vsW4U+WBgXmCEtK3iTDfJ0g@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Rob Herring <robherring2@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Jeffrey Deans <jeffrey.deans@imgtec.com>, Markos Chandras <markos.chandras@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Arnd Bergmann <arnd@arndb.de>, John Crispin <blogic@openwrt.org>, David Daney <ddaney.cavm@gmail.com>, Linux-MIPS <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411329923-15912-3-git-send-email-heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: sre@kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko.stuebner@bq.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 7:23 AM, Rob Herring <robherring2@gmail.com> wrote:
-> On Fri, Sep 5, 2014 at 12:30 PM, Andrew Bresticker
-> <abrestic@chromium.org> wrote:
->> Add the vendor prefix "mti" for MIPS Technologies, Inc.
->>
->> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
->> ---
->> New for v2.
->> ---
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index ac7269f..efa5a5b 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -86,6 +86,7 @@ microchip     Microchip Technology Inc.
->>  mosaixtech     Mosaix Technologies, Inc.
->>  moxa   Moxa
->>  mpl    MPL AG
->> +mti    MIPS Technologies, Inc.
->
-> Why not mips as that is more common and the stock ticker.
+Heiko
 
-"mti" is already in use, see
-Documentation/devicetree/bindings/mips/cpu_irq.txt,
-arch/mips/mti-sead3/sead3.dts, and arch/mips/ralink/dts/*.dtsi.
+On Sun, Sep 21, 2014 at 1:05 PM, Heiko Stuebner <heiko@sntech.de> wrote:
+> From: Heiko Stuebner <heiko.stuebner@bq.com>
+>
+> Add the ability to parse gpio-charger data from a devicetree node.
+>
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+> ---
+>  drivers/power/gpio-charger.c | 66 ++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 63 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/power/gpio-charger.c b/drivers/power/gpio-charger.c
+> index a0024b2..5fe6879 100644
+> --- a/drivers/power/gpio-charger.c
+> +++ b/drivers/power/gpio-charger.c
+> @@ -22,6 +22,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/power_supply.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+>
+>  #include <linux/power/gpio-charger.h>
+>
+> @@ -69,17 +71,68 @@ static enum power_supply_property gpio_charger_properties[] = {
+>         POWER_SUPPLY_PROP_ONLINE,
+>  };
+>
+> +static
+> +struct gpio_charger_platform_data *gpio_charger_parse_dt(struct device *dev)
+> +{
+> +       struct device_node *np = dev->of_node;
+> +       struct gpio_charger_platform_data *pdata;
+> +       const char *chargetype;
+> +       enum of_gpio_flags flags;
+> +       int ret;
+> +
+> +       if (!np)
+> +               return ERR_PTR(-ENOENT);
+> +
+> +       pdata = devm_kzalloc(dev, sizeof(struct gpio_charger_platform_data),
+
+nit: sizeof(*pdata) is smaller / cleaner.
+
+> +                            GFP_KERNEL);
+> +       if (!pdata)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       pdata->name = np->name;
+> +
+> +       pdata->gpio = of_get_gpio_flags(np, 0, &flags);
+
+It would be nice to check the gpio for errors here, including handling
+the possibility of EPROBE_DEFER.
+
+
+> +       pdata->gpio_active_low = flags & OF_GPIO_ACTIVE_LOW;
+> +
+> +       pdata->type = POWER_SUPPLY_TYPE_UNKNOWN;
+> +       ret = of_property_read_string(np, "charger-type", &chargetype);
+> +       if (ret >= 0) {
+> +               if (!strncmp("unknown", chargetype, 7))
+> +                       pdata->type = POWER_SUPPLY_TYPE_UNKNOWN;
+> +               else if (!strncmp("battery", chargetype, 7))
+> +                       pdata->type = POWER_SUPPLY_TYPE_BATTERY;
+> +               else if (!strncmp("ups", chargetype, 3))
+> +                       pdata->type = POWER_SUPPLY_TYPE_UPS;
+> +               else if (!strncmp("mains", chargetype, 5))
+> +                       pdata->type = POWER_SUPPLY_TYPE_MAINS;
+> +               else if (!strncmp("usb-sdp", chargetype, 7))
+> +                       pdata->type = POWER_SUPPLY_TYPE_USB;
+> +               else if (!strncmp("usb-dcp", chargetype, 7))
+> +                       pdata->type = POWER_SUPPLY_TYPE_USB_DCP;
+> +               else if (!strncmp("usb-cdp", chargetype, 7))
+> +                       pdata->type = POWER_SUPPLY_TYPE_USB_CDP;
+> +               else if (!strncmp("usb-aca", chargetype, 7))
+> +                       pdata->type = POWER_SUPPLY_TYPE_USB_ACA;
+> +               else
+> +                       dev_warn(dev, "unknown charger type %s\n", chargetype);
+> +       }
+> +
+> +       return pdata;
+> +}
+> +
+>  static int gpio_charger_probe(struct platform_device *pdev)
+>  {
+> -       const struct gpio_charger_platform_data *pdata = pdev->dev.platform_data;
+> +       struct gpio_charger_platform_data *pdata = pdev->dev.platform_data;
+
+Do you really need to remove const?  If I remember correctly the const
+here is not saying that the variable "pdata" won't change but that the
+data pointed to by pdata won't change.  I think that's still the case
+(from the perspective of this function).
+
+
+>         struct gpio_charger *gpio_charger;
+>         struct power_supply *charger;
+>         int ret;
+>         int irq;
+>
+>         if (!pdata) {
+> -               dev_err(&pdev->dev, "No platform data\n");
+> -               return -EINVAL;
+> +               pdata = gpio_charger_parse_dt(&pdev->dev);
+> +               if (IS_ERR(pdata)) {
+> +                       dev_err(&pdev->dev, "No platform data\n");
+> +                       return -EINVAL;
+
+Probably should pass back the error code since it might be
+EPROBE_DEFER.  ...and <sigh> I guess you need the special case of
+"don't print if it's EPROBE_DEFER".  I almost wish we had a helper
+function for that.  ;)
+
+
+> +               }
+>         }
+>
+>         if (!gpio_is_valid(pdata->gpio)) {
+> @@ -189,6 +242,12 @@ static int gpio_charger_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(gpio_charger_pm_ops,
+>                 gpio_charger_suspend, gpio_charger_resume);
+>
+> +static const struct of_device_id gpio_charger_match[] = {
+> +       { .compatible = "gpio-charger" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, gpio_charger_match);
+> +
+>  static struct platform_driver gpio_charger_driver = {
+>         .probe = gpio_charger_probe,
+>         .remove = gpio_charger_remove,
+> @@ -196,6 +255,7 @@ static struct platform_driver gpio_charger_driver = {
+>                 .name = "gpio-charger",
+>                 .owner = THIS_MODULE,
+>                 .pm = &gpio_charger_pm_ops,
+> +               .of_match_table = of_match_ptr(gpio_charger_match),
+
+Given that you don't have any #ifdefs with "CONFIG_OF", I think
+gpio_charger_match will always exist.  It seems like you should remove
+the of_match_ptr or add some #ifdefs.  I can't quite keep up with what
+the currently suggested best practice is here, though.
+
+-Doug
