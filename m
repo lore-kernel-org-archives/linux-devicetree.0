@@ -1,157 +1,96 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] of: amba: use of_dma_configure for AMBA devices
-Date: Mon, 22 Sep 2014 11:55:18 +0100
-Message-ID: <20140922105515.GI30085@e104818-lin.cambridge.arm.com>
-References: <90bd1ff3c93b827c12e1b3dc9ad3f227632d0f6e.1410954967.git.robin.murphy@arm.com>
- <20140917170338.GC18532@arm.com>
- <CAL_JsqKTZyPgbxy=pPmFPKRxa97oaWqC6u6pBvqvja_URLno4Q@mail.gmail.com>
- <20140917180524.GG18532@arm.com>
- <541AC384.8010806@arm.com>
- <20140918125535.GB17701@e104818-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140918125535.GB17701-M2fw3Uu6cmfZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 3/5] dt-bindings: video: Add documentation for rockchip vop
+Date: Mon, 22 Sep 2014 18:57:09 +0800
+Message-ID: <1411383429-1974-1-git-send-email-mark.yao@rock-chips.com>
+References: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411382820-1615-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 18, 2014 at 01:55:36PM +0100, Catalin Marinas wrote:
-> On Thu, Sep 18, 2014 at 12:35:32PM +0100, Robin Murphy wrote:
-> > On 17/09/14 19:05, Will Deacon wrote:
-> > > On Wed, Sep 17, 2014 at 06:47:19PM +0100, Rob Herring wrote:
-> > >> On Wed, Sep 17, 2014 at 12:03 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> > >>> On Wed, Sep 17, 2014 at 12:56:07PM +0100, Robin Murphy wrote:
-> > >>>> Commit 591c1e ("of: configure the platform device dma parameters)
-> > >>>> introduced a common mechanism to configure DMA from DT properties.
-> > >>>> AMBA devices created from DT can take advantage of this, too.
-> > >>>>
-> > >>>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> > >>>
-> > >>>    Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> > >>>
-> > >>> It would be great if the arm-soc guys can pick this up.
-> > >>
-> > >> Is this a dependency for something else? If so,
-> > >>
-> > >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >
-> > > Yeah, it's going to be needed by my IOMMU init rework so that AMBA devices
-> > > get registered with their IOMMUs.
-> > 
-> > Noob question: Does that mean I should resend (with ACKs) to 
-> > arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org? (I wasn't entirely sure where this should go, hence just 
-> > throwing at the list with CCs)
-> 
-> If it is not part of a larger series you want to merge, Rob could pick
-> it up (he could add the acks as well).
-> 
-> Alternatively, I can get it via the arm64 tree together with an
-> additional patch removing the bus hooks in dma-mapping.c (maybe that's a
-> better option if no-one objects).
+This adds binding documentation for Rockchip SoC VOP driver.
 
-So I plan to take this patch via the arm64 tree together with the patch
-below (after some more testing):
-
-----8<----------------------------
-
->From 2189064795dc3fb4101e5c34d28c6b62b8a3bfd9 Mon Sep 17 00:00:00 2001
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Date: Mon, 22 Sep 2014 11:48:31 +0100
-Subject: [PATCH] arm64: Implement set_arch_dma_coherent_ops() to replace bus
- notifiers
-
-Commit 6ecba8eb51b7 (arm64: Use bus notifiers to set per-device coherent
-DMA ops) introduced bus notifiers to set the coherent dma ops based on
-the 'dma-coherent' DT property. Since the generic of_dma_configure()
-handles this property for platform and AMBA devices, replace the
-notifiers with set_arch_dma_coherent_ops().
-
-Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- arch/arm64/include/asm/dma-mapping.h |  7 +++++++
- arch/arm64/mm/dma-mapping.c          | 31 -------------------------------
- 2 files changed, 7 insertions(+), 31 deletions(-)
+Changes in v2:
+- rename "lcdc" to "vop"
+- add vop reset
+- add iommu node
+- add port for display-subsystem
 
-diff --git a/arch/arm64/include/asm/dma-mapping.h b/arch/arm64/include/asm/dma-mapping.h
-index dc82e52acdb3..adeae3f6f0fc 100644
---- a/arch/arm64/include/asm/dma-mapping.h
-+++ b/arch/arm64/include/asm/dma-mapping.h
-@@ -52,6 +52,13 @@ static inline void set_dma_ops(struct device *dev, struct dma_map_ops *ops)
- 	dev->archdata.dma_ops = ops;
- }
- 
-+static inline int set_arch_dma_coherent_ops(struct device *dev)
-+{
-+	set_dma_ops(dev, &coherent_swiotlb_dma_ops);
-+	return 0;
-+}
-+#define set_arch_dma_coherent_ops	set_arch_dma_coherent_ops
+Changes in v3: None
+
+Changes in v4: None
+
+ .../devicetree/bindings/video/rockchip-vop.txt     |   58 ++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/rockchip-vop.txt
+
+diff --git a/Documentation/devicetree/bindings/video/rockchip-vop.txt b/Documentation/devicetree/bindings/video/rockchip-vop.txt
+new file mode 100644
+index 0000000..d15351f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/rockchip-vop.txt
+@@ -0,0 +1,58 @@
++device-tree bindings for rockchip soc display controller (vop)
 +
- #include <asm-generic/dma-mapping-common.h>
- 
- static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
-diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-index 4164c5ace9f8..d6ceb3df0047 100644
---- a/arch/arm64/mm/dma-mapping.c
-+++ b/arch/arm64/mm/dma-mapping.c
-@@ -22,11 +22,8 @@
- #include <linux/slab.h>
- #include <linux/dma-mapping.h>
- #include <linux/dma-contiguous.h>
--#include <linux/of.h>
--#include <linux/platform_device.h>
- #include <linux/vmalloc.h>
- #include <linux/swiotlb.h>
--#include <linux/amba/bus.h>
- 
- #include <asm/cacheflush.h>
- 
-@@ -308,40 +305,12 @@ struct dma_map_ops coherent_swiotlb_dma_ops = {
- };
- EXPORT_SYMBOL(coherent_swiotlb_dma_ops);
- 
--static int dma_bus_notifier(struct notifier_block *nb,
--			    unsigned long event, void *_dev)
--{
--	struct device *dev = _dev;
--
--	if (event != BUS_NOTIFY_ADD_DEVICE)
--		return NOTIFY_DONE;
--
--	if (of_property_read_bool(dev->of_node, "dma-coherent"))
--		set_dma_ops(dev, &coherent_swiotlb_dma_ops);
--
--	return NOTIFY_OK;
--}
--
--static struct notifier_block platform_bus_nb = {
--	.notifier_call = dma_bus_notifier,
--};
--
--static struct notifier_block amba_bus_nb = {
--	.notifier_call = dma_bus_notifier,
--};
--
- extern int swiotlb_late_init_with_default_size(size_t default_size);
- 
- static int __init swiotlb_late_init(void)
- {
- 	size_t swiotlb_size = min(SZ_64M, MAX_ORDER_NR_PAGES << PAGE_SHIFT);
- 
--	/*
--	 * These must be registered before of_platform_populate().
--	 */
--	bus_register_notifier(&platform_bus_type, &platform_bus_nb);
--	bus_register_notifier(&amba_bustype, &amba_bus_nb);
--
- 	dma_ops = &noncoherent_swiotlb_dma_ops;
- 
- 	return swiotlb_late_init_with_default_size(swiotlb_size);
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++VOP (Visual Output Processor) is the Display Controller for the Rockchip
++series of SoCs which transfers the image data from a video memory
++buffer to an external LCD interface.
++
++Required properties:
++- compatible: value should be one of the following
++		"rockchip,rk3288-vop";
++
++- interrupts: should contain a list of all VOP IP block interrupts in the
++		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
++		 format depends on the interrupt controller used.
++
++- clocks: must include clock specifiers corresponding to entries in the
++		clock-names property.
++
++- clock-names: Must contain
++		aclk_vop: for ddr buffer transfer.
++		hclk_vop: for ahb bus to R/W the phy regs.
++		dclk_vop: pixel clock.
++
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: Must include the following entries:
++  - axi
++  - ahb
++  - dclk
++
++- iommus: required a iommu node
++
++- port: A port node with endpoint definitions as defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++SoC specific DT entry:
++	vopb: vopb@ff930000 {
++		compatible = "rockchip,rk3288-vop";
++		reg = <0xff930000 0x19c>;
++		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
++		reset-names = "axi", "ahb", "dclk";
++		iommus = <&vopb_mmu>;
++		vopb_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			vopb_out_edp: endpoint@0 {
++				reg = <0>;
++				remote-endpoint=<&edp_in_vopb>;
++			};
++			vopb_out_hdmi: endpoint@1 {
++				reg = <1>;
++				remote-endpoint=<&hdmi_in_vopb>;
++			};
++		};
++	};
+-- 
+1.7.9.5
