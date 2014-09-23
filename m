@@ -1,52 +1,89 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v7 09/10] rtc: at91sam9: add DT bindings documentation
-Date: Tue, 23 Sep 2014 11:38:49 +0200
-Message-ID: <1411465130-29011-10-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v7 03/10] rtc: at91sam9: replace devm_ioremap by
+ devm_ioremap_resource
+Date: Tue, 23 Sep 2014 11:38:43 +0200
+Message-ID: <1411465130-29011-4-git-send-email-boris.brezillon@free-electrons.com>
 References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add RTT bindings documentation.
+Replace devm_ioremap calls by devm_ioremap_resource which already check
+resource consistency (resource != NULL) and print an error in case of
+failure.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 ---
- .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+ drivers/rtc/rtc-at91sam9.c | 29 ++++++++++-------------------
+ 1 file changed, 10 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-new file mode 100644
-index 0000000..f307a1d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-@@ -0,0 +1,23 @@
-+Atmel AT91SAM9260 Real Time Timer
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index 74a9ca0..38a2693 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -306,18 +306,11 @@ static const struct rtc_class_ops at91_rtc_ops = {
+  */
+ static int at91_rtc_probe(struct platform_device *pdev)
+ {
+-	struct resource	*r, *r_gpbr;
++	struct resource	*r;
+ 	struct sam9_rtc	*rtc;
+ 	int		ret, irq;
+ 	u32		mr;
+ 
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	r_gpbr = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	if (!r || !r_gpbr) {
+-		dev_err(&pdev->dev, "need 2 ressources\n");
+-		return -ENODEV;
+-	}
+-
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "failed to get interrupt resource\n");
+@@ -335,18 +328,16 @@ static int at91_rtc_probe(struct platform_device *pdev)
+ 		device_init_wakeup(&pdev->dev, 1);
+ 
+ 	platform_set_drvdata(pdev, rtc);
+-	rtc->rtt = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+-	if (!rtc->rtt) {
+-		dev_err(&pdev->dev, "failed to map registers, aborting.\n");
+-		return -ENOMEM;
+-	}
+ 
+-	rtc->gpbr = devm_ioremap(&pdev->dev, r_gpbr->start,
+-				resource_size(r_gpbr));
+-	if (!rtc->gpbr) {
+-		dev_err(&pdev->dev, "failed to map gpbr registers, aborting.\n");
+-		return -ENOMEM;
+-	}
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	rtc->rtt = devm_ioremap_resource(&pdev->dev, r);
++	if (IS_ERR(rtc->rtt))
++		return PTR_ERR(rtc->rtt);
 +
-+Required properties:
-+- compatible: should be: "atmel,at91sam9260-rtt"
-+- reg: should encode the memory region of the RTT controller
-+- interrupts: rtt alarm/event interrupt
-+- clocks: should contain one clock pointing to the slow clk
-+- atmel,rtt-rtc-time-reg: should encode the GPBR register used to store
-+	the time base when the RTT is used as an RTC.
-+	The first cell should point to the GPBR node and the second one
-+	encode the offset within the GPBR block (or in other words, the
-+	GPBR register used to store the time base).
-+
-+
-+Example:
-+
-+rtt@fffffe00 {
-+	compatible = "atmel,at91sam9260-rtt";
-+	reg = <0xfffffd20 0x10>;
-+	interrupts = <1 4 7>;
-+	clocks = <&clk32k>;
-+	atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
-+};
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
++	if (IS_ERR(rtc->gpbr))
++		return PTR_ERR(rtc->rtt);
+ 
+ 	mr = rtt_readl(rtc, MR);
+ 
 -- 
 1.9.1
