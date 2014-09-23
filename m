@@ -1,76 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 3/9] Documentation: bindings: net: add the Marvell PXA168 Ethernet controller
-Date: Tue, 23 Sep 2014 20:18:19 +0200
-Message-ID: <3847496.NqfTxpsf9X@wuerfel>
-References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com> <5150779.ibmzDh88cj@wuerfel> <5421AE7C.30504@gmail.com>
+From: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+Subject: Device tree vs hardware configurations
+Date: Tue, 23 Sep 2014 21:58:08 +0400
+Message-ID: <5421B4B0.1020306@dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5421AE7C.30504-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gennady Kuznetsov <kuznetsovg-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>, Aleksey Makarov <amakarov-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 September 2014 19:31:40 Sebastian Hesselbarth wrote:
-> It has been a while I looked it up in the pxa168 datasheet, but IIRC
-> there is only one port per controller. FWIW, there actually is also
-> just one port per controller for Orion SoCs. The multiple ports per
-> controller comes from the PPC system controllers, i.e. mv643xx hence
-> the name. We just made the binding look like it is more ports available
-> to make it backwards compatible.. although I doubt anyone is still using
-> mv643xx anywhere.
+Hi
 
-Ok, I see.
+I'm currently forward-porting a BSP for imx6-based custom board from 
+pre-devicetree kernel to modern kernel.
 
-> > If there is only one port and we just have to know which one that is,
-> > I don't think we need the child nodes, but if one can have multiple
-> > ports operate independently then the driver will need a rework
-> > to actually be usable with that configuration.
-> 
-> I doubt pxa168 needs port nodes at all, i.e. we have the phy-handle
-> directly as property of the controller node.
+In old BSP there was a board setup file, that registered all board's 
+devices. For new BSP, I need to replace that with device tree based 
+solution.
 
-Ah, good.
+However, old BSP used conditional code to register devices differently 
+based on GPIO inputs and on kernel command line. This approach was used to
 
-> The HEC PHY node itself will be a sub-node of some future CEC node,
-> while the (internal) MII PHY node can stay as a sub-node of the
-> controller, e.g.
-> 
-> (one final example to make sure we agree on the same)
-> 
-> eth0: ethernet@f7b90000 {
->         compatible = "marvell,pxa168-eth";
->         reg = <...>;
->         #address-cells = <1>;
->         #size-cells = <0>;
->         phy-handle = <&ethphy0>;
-> 
->         ethphy0: ethernet-phy@0 {
->                 reg = <0>;
->         };
-> };
-> 
-> cec0: cec@f7f00baa {
->         compatible = "marvell,berlin-cec";
->         reg = <...>;
->         #address-cells = <1>;
->         #size-cells = <0>;
->         
->         hecphy0: hdmi-ethernet-phy@0 {
->                 reg = <0>;
->         };
-> };
-> 
-> With berlin2cd-google-chromecast.dts overwriting
-> 
-> &eth0 { phy-handle = <&hecphy0>; };
+- handle board's jumper that switches SPI CS lines: current jumper 
+setting is available over gpio, depending on that old BSP registered 
+chips differently,
 
-Ok, now I also understood how the cec fits into this. Yes, I think this
-looks very good.
+- handle different i2c connections on different board revisions: board 
+has 5 i2c busses with quite a few devices connected, these busses are 
+routed to different hardware busses on different board revisions, board 
+revision could be read over gpios.
 
-	Arnd
+- handle different possible display connections (lvds vs lcd, 6bit vs 
+8bit hw interface) based on kernel command line options
+
+- handle different possible camera connections by registered camera 
+differently based on kernel command line option
+
+... and more,
+
+
+Device tree describes hardware unconditionally. I already have to 
+provide 2 dts files for imx6q and imx6dl based setups (both just include 
+a common dtsi) ...  But providing separate dts file for every possible 
+hardware configuration will result into 2^n device trees, which is 
+inconvenient visible regression against old BSP that "just worked" on 
+all hardware configurations.
+
+
+Is there a sane way to handle hardware configurations like above in 
+device tree based kernel?
+
+
+Nikita Yushchenko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
