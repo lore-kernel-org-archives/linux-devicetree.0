@@ -1,69 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 3/9] Documentation: bindings: net: add the Marvell PXA168 Ethernet controller
-Date: Tue, 23 Sep 2014 19:02:33 +0200
-Message-ID: <5150779.ibmzDh88cj@wuerfel>
-References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com> <9401592.hUYDkriFVO@wuerfel> <5421A28E.7060600@gmail.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAyLzJdIEdQSU86IDc0eHgtbW1pbzogQWRkIERUIGJpbmRp?=
+ =?UTF-8?B?bmdzIGRvY3VtZW50YXRpb24=?=
+Date: Tue, 23 Sep 2014 20:51:27 +0400
+Message-ID: <1411491087.608315333@f51.i.mail.ru>
+References: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
+ <1411112404-16040-3-git-send-email-shc_work@mail.ru>
+ <CAMuHMdV2gkx+tVoYL_zcYg0ZtYkkascQiTOaTfDUuRVMxFkdTw@mail.gmail.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5421A28E.7060600@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV2gkx+tVoYL_zcYg0ZtYkkascQiTOaTfDUuRVMxFkdTw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: =?UTF-8?B?R2VlcnQgVXl0dGVyaG9ldmVu?= <geert@linux-m68k.org>
+Cc: =?UTF-8?B?bGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc=?= <linux-gpio@vger.kernel.org>, =?UTF-8?B?QWxleGFuZHJlIENvdXJib3Q=?= <gnurou@gmail.com>, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 September 2014 18:40:46 Sebastian Hesselbarth wrote:
-> On 09/23/2014 06:29 PM, Arnd Bergmann wrote:
-> > On Tuesday 23 September 2014 17:45:52 Sebastian Hesselbarth wrote:
-> >> For reference, this is what we have for MVEBU SoCs with multiple ports
-> >> per controller:
-> >>
-> >> eth: ethernet-ctrl@72000 {
-> >>          compatible = "marvell,orion-eth";
-> ...
-> >>          reg = <0x72000 0x4000>;
-> ...
-> >>
-> >>          ethernet-port@0 {
-> >>                  compatible = "marvell,orion-eth-port";
-> ...
-> >>                  phy-handle = <&ethphy>;
-> >>          };
-> >> };
-> >>
-> >> mdio: mdio-bus@72004 {
-> >>          compatible = "marvell,orion-mdio";
-> ...
-> >>          reg = <0x72004 0x84>;
-> ..
-> >>          ethphy: ethernet-phy {
-> >>                  /* set phy address in board file */
-> >>          };
-> >> };
-> 
-> > But in this example, you have the same registers and the same
-> > clocks in two nodes, which are even used by the same device driver
-> > at the moment. It's not a big issue, but my feeling is that Antoine's
-> > approach was actually better because it more closely reflects
-> > the way that the hardware is built.
-> 
-> I was not referring to the separate mdio bus node, but putting the
-> ethernet-phy node as a child of ethernet-ctrl.
-
-Ah, got it (I think). Yes, that makes sense.
-
-The part I don't understand yet is how one uses multiple ports. pxa168_eth.c
-seems to be written with the assumption that only one port is ever used at
-a time, while mv643xx_eth.c can actually use multiple ports simultaneously.
-
-Do you think that is that a hardware limitation of pxa168_eth or a feature
-that nobody so far has needed from the driver?
-
-If there is only one port and we just have to know which one that is,
-I don't think we need the child nodes, but if one can have multiple
-ports operate independently then the driver will need a rework 
-to actually be usable with that configuration.
-
-
-	Arnd
+TW9uLCAyMiBTZXAgMjAxNCAxMzozOToyNiArMDIwMCDQvtGCIEdlZXJ0IFV5dHRlcmhvZXZlbiA8
+Z2VlcnRAbGludXgtbTY4ay5vcmc+Ogo+IE9uIEZyaSwgU2VwIDE5LCAyMDE0IGF0IDk6NDAgQU0s
+IEFsZXhhbmRlciBTaGl5YW4gPHNoY193b3JrQG1haWwucnU+IHdyb3RlOgo+ID4gLS0tIC9kZXYv
+bnVsbAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vZ3Bp
+by03NHh4LW1taW8udHh0Cj4gPiBAQCAtMCwwICsxLDMwIEBACj4gPiArKiA3NFhYIE1NSU8gR1BJ
+TyBkcml2ZXIKPiA+ICsKPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gKy0gY29tcGF0aWJs
+ZTogU2hvdWxkIGNvbnRhaW4gb25lIG9mIHRoZSBmb2xsb3dpbmc6Cj4gPiArICAgInRpLDc0YWhj
+MWcxMjUiOiBmb3IgNzRBSEMxRzEyNSAoMS1iaXQgSW5wdXQpLAo+ID4gKyAgICJ0aSw3NGF1YzFn
+MTc0IjogZm9yIDc0QVVDMUc3NCAoMS1iaXQgT3V0cHV0KSwKPiA+ICsgICAidGksNzRsdmMyZzEy
+NSI6IGZvciA3NExWQzJHMTI1ICgyLWJpdCBJbnB1dCksCj4gPiArICAgInRpLDc0aGM3NCI6ICAg
+ICBmb3IgNzRIQzc0ICgyLWJpdCBPdXRwdXQpLAo+ID4gKyAgICJ0aSw3NGhjMTI1IjogICAgZm9y
+IDc0SEMxMjUgKDQtYml0IElucHV0KSwKPiA+ICsgICAidGksNzRoYzE3NSI6ICAgIGZvciA3NEhD
+MTc1ICg0LWJpdCBPdXRwdXQpLAo+ID4gKyAgICJ0aSw3NGhjMzY1IjogICAgZm9yIDc0SEMzNjUg
+KDYtYml0IElucHV0KSwKPiA+ICsgICAidGksNzRoYzE3NCI6ICAgIGZvciA3NEhDMTc0ICg2LWJp
+dCBPdXRwdXQpLAo+ID4gKyAgICJ0aSw3NGhjMjQ0IjogICAgZm9yIDc0SEMyNDQgKDgtYml0IElu
+cHV0KSwKPiA+ICsgICAidGksNzRoYzI3MyI6ICAgIGZvciA3NEhDMjczICg4LWJpdCBPdXRwdXQp
+LAo+ID4gKyAgICJ0aSw3NGFjMTYyNCI6ICAgZm9yIDc0QUMxNjI0ICgxNi1iaXQgSW5wdXQpLAo+
+ID4gKyAgICJ0aSw3NGFjMTYzNzQiOiAgZm9yIDc0QUMxNjM3NCAoMTYtYml0IE91dHB1dCkuCj4g
+Cj4gQXMgdGhlIGFjdHVhbCBpbXBsZW1lbnRhdGlvbiB0ZWNobm9sb2d5IGRvZXNuJ3QgbWF0dGVy
+LCBJIHRoaW5rIHlvdQo+IHNob3VsZCB1c2UgdGhlIGJhc2UgbmFtZSB3aGVyZSBhcHByb3ByaWF0
+ZS4KPiBFLmcuICJ0aSw3NDc0IiBpbnN0ZWFkIG9mICJ0aSw3NGhjNzQiLgoKTWFrZSBzZW5zZS4K
+CkxpbnVzLCB3aGF0IHlvdSB0aGluayBvdmVyYWxsIGFib3V0IHRoaXMgZHJpdmVyPwoKLS0tCgo=
