@@ -1,86 +1,69 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
-Date: Tue, 23 Sep 2014 18:25:01 +0200
-Message-ID: <2895905.coa5UvrkJk@vostro.rjw.lan>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <CACRpkdaZJt_6cd1vtDw-Ys+YqUhNb0aXazUxGCX8mk4=6EmdHw@mail.gmail.com> <12538216.vu4CbU01qP@wuerfel>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH 0/3 v3] Fix Exynos USB on kernels with USB Gadget support
+Date: Wed, 24 Sep 2014 01:04:04 +0900
+Message-ID: <542199F4.3090601@samsung.com>
+References: <1410778354-31210-1-git-send-email-sjoerd.simons@collabora.co.uk>
+ <1411112614.29071.1.camel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <12538216.vu4CbU01qP@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411112614.29071.1.camel@collabora.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, September 23, 2014 05:45:57 PM Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 17:25:50 Linus Walleij wrote:
-> > On Tue, Sep 16, 2014 at 1:52 PM, Mika Westerberg
-> > <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> > 
-> > > Some drivers need to deal with only firmware representation of its
-> > > GPIOs. An example would be a GPIO button array driver where each button
-> > > is described as a separate firmware node in device tree. Typically these
-> > > child nodes do not have physical representation in the Linux device
-> > > model.
-> > >
-> > > In order to help device drivers to handle such firmware child nodes we
-> > > add dev[m]_node_get_named_gpiod() that takes a firmware node pointer as
-> > > parameter, finds the GPIO using whatever is the underlying firmware
-> > > method, and requests the GPIO properly.
-> > >
-> > > Signed-off-by: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > 
-> > I have a hard time figuring out if this is what we want for common
-> > accessors between DT and ACPI.
-> > 
-> > Can I get some input from Grant, Arnd, Mark, Darren...?
-> 
-> I just took a brief look at this. My first impression is that the
-> fw_dev_node structure is weird when all callers just do (in patch 2)
-> 
-> +	struct fw_dev_node fdn = {
-> +		.of_node = dev->of_node,
-> +		.acpi_node = ACPI_COMPANION(dev),
-> +	};
-> 
-> I'd much rather see an interface that passes the 'struct device'
-> pointer down to dev_get_named_gpiod() and all other exported
-> functions, and then internally does the conversion at the point
-> where the access is done.
-
-The problem is iteration over child nodes of a given one where there
-may not be struct device objects.
-
-For example (from patch [2/16]):
-
-+int acpi_for_each_child_node(struct acpi_device *adev,
-+                             int (*fn)(struct fw_dev_node *fdn, void *data),
-+                             void *data)
-+{
-+       struct acpi_device *child;
-+       int ret = 0;
-+
-+       list_for_each_entry(child, &adev->children, node) {
-+               struct fw_dev_node fdn = { .acpi_node = child, };
-+
-+               ret = fn(&fdn, data);
-+               if (ret)
-+                       break;
-+       }
-+       return ret;
-+}
-
-and then fn() can be made work for both DTs and ACPI.  Without this we'd
-need to have two versions of fn(), one for DTs and one for ACPI (and possibly
-more for some other FW protocols), which isn't necessary in general (and
-duplicates code etc.). 
-
-That actually is used by some patches down in the series (eg. [10/16]).
-
-Rafael
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDkvMTkvMTQgMTY6NDMsIFNqb2VyZCBTaW1vbnMgd3JvdGU6Cj4gSGV5IEt1a2ppbiwKPgpI
+aSwKClNvcnJ5IGZvciBsYXRlIHJlc3BvbnNlLi4uCgo+IEl0J3MgYmVlbiBhbG1vc3QgYSBtb250
+aCBzaW5jZSBJIHBvc3RlZCB0aGUgZmlyc3QgaXRlcmF0aW9uIG9mIHRoaXMKPiBwYXRjaHNldCBv
+biB0aGUgbGlzdCwgd2l0aCBvbmx5IHRyaXZpYWwgY29zbWV0aWMgY2hhbmdlcyBhbmQgYW4gYWRk
+aXRpb24KPiBvZiBhIHNpbWlsYXIgZml4IGZvciBBcm5kYWxlIE9jdGEgYm9hcmRzLiBEbyB5b3Ug
+ZmVlbCBpdCBuZWVkcyBtb3JlCj4gcmV2aWV3IGZyb20gc3BlY2lmaWMgZm9sa3MgYmVmb3JlIHB1
+bGxpbmcgaXQgaW4gb3IgPwo+Cj4gU2VlbXMgYSBiaXQgb2YgYSBzaGFtZSBpZiB0aGlzIHdvdWxk
+IGZhaWwgdG8gbWFrZSBpdCBmb3IgMy4xOCAob25lIGNvdWxkCj4gZXZlbiBhcmd1ZSB0aGUgZHQg
+cGF0Y2hlcyBhcmUgMy4xNyBSQyBtYXRlcmlhbCEpIGFzIGl0IGZpeGVzIFVTQgo+IGZ1bmN0aW9u
+YWxpdHkgYmVpbmcgYnJva2VuIGRlcGVuZGluZyBvbiB0aGUga2VybmVsIGNvbmZpZ3VyYXRpb24g
+dXNlZC4KPgo+Cj4gT24gTW9uLCAyMDE0LTA5LTE1IGF0IDEyOjUyICswMjAwLCBTam9lcmQgU2lt
+b25zIHdyb3RlOgo+PiBXaGVuIGJ1aWxkaW5nIGEga2VybmVsIHdpdGggc3VwcG9ydCBmb3IgYm90
+aCBVU0IgaG9zdCBhbmQgVVNCIEdhZGdldCBzdXBwb3J0IG9uCj4+IHRoZSBkd2MzIGNvbnRyb2xs
+ZXIgb24gdGhlIEV4eW5vczUgc29jIHdpbGwgZ28gaW50byBVU0IgT1RHIG1vZGUgdW5sZXNzCj4+
+IG90aGVyd2lzZSBzcGVjaWZpZWQgaW4gdGhlIGR0Yiwgd2hpY2ggaXMgdW5oZWxwZnVsIGZvciBi
+b2FyZHMgaG9va2VkIHVwIHRvIHJ1bgo+PiBhcyBVU0IgaG9zdC4KPj4KPj4gRmlyc3QgcGF0Y2gg
+aW4gdGhpcyBzZXQgZXhwbGljaXRlbHkgc2V0IHRoZSBkdWFsLXJvbGUgbW9kZSBmb3IgdGhlIGR3
+YzMKPj4gY29udHJvbGxlciBvbiBQZWFjaCBwaSBhbmQgUGVhY2ggcGl0IGJvYXJkcyB0byBob3N0
+IG1vZGUuIFNlY29uZCBwYXRjaCBhZGRzCj4+IHNpbWlsYXIgdXBkYXRlcyBmb3IgQXJuZGFsZSBP
+Y3RhIGFzIHJlcG9ydGVkIGJ5IEFuZHJlYXMgRsOkcmJlci4gTGFzdCBwYXRjaAo+PiBlbmFibGVz
+IGdhZGdldCBtb2RlIGluIHRoZSBkZWZhdWx0IGV4eW5vcyBjb25maWcgdG8gbW9yZSBlYXNpbHkg
+Y2F0Y2gvdHJpZ2dlcgo+PiBpc3N1ZXMgbGlrZSB0aGVzZS4KPj4KPj4gSSBzdXNwZWN0IHRoZSBT
+YW1zdW5nIFNNREs1NDIwIERUUyBtaWdodCBuZWVkIHNpbWlsYXIgY2hhbmdlcywgc28gaXQgd291
+bGQgYmUKPj4gZ3JlYXQgaWYgdXNlcnMgb2YgdGhvc2UgYm9hcmQgY291bGQgdmVyaWZ5IHRoaXMu
+Cj4+Cj4+IENoYW5nZXMgaW4gdjI6IGFscGhhYmV0aWNhbGx5IHNvcnQgdGhlIGR0cyBlbnRyaWVz
+Cj4+IENoYW5nZXMgaW4gdjM6IEFkZCBEVFMgdXBkYXRlcyBmb3IgYXJuZGFsZSBvY3RhCj4+Cj4+
+IFNqb2VyZCBTaW1vbnMgKDMpOgo+PiAgICBBUk06IGR0czogZXh5bm9zOiBFeHBsaWNpdGx5IHNl
+dCBkcl9tb2RlIG9uIHBlYWNoLXBpdCBhbmQgcGVhY2gtcGkKPj4gICAgQVJNOiBkdHM6IGV4eW5v
+czogRXhwbGljaXRseSBzZXQgZHJfbW9kZSBvbiBhcm5kYWxlLW9jdGEKPj4gICAgQVJNOiBleHlu
+b3NfZGVmY29uZmlnOiBlbmFibGUgVVNCIGdhZGdldCBzdXBwb3J0Cj4+Cj4+ICAgYXJjaC9hcm0v
+Ym9vdC9kdHMvZXh5bm9zNTQyMC1hcm5kYWxlLW9jdGEuZHRzIHwgNCArKysrCj4+ICAgYXJjaC9h
+cm0vYm9vdC9kdHMvZXh5bm9zNTQyMC1wZWFjaC1waXQuZHRzICAgIHwgOCArKysrKysrKwo+PiAg
+IGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAuZHRzaSAgICAgICAgICAgICB8IDQgKystLQo+
+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU4MDAtcGVhY2gtcGkuZHRzICAgICB8IDggKysr
+KysrKysKPj4gICBhcmNoL2FybS9jb25maWdzL2V4eW5vc19kZWZjb25maWcgICAgICAgICAgICAg
+fCAxICsKPj4gICA1IGZpbGVzIGNoYW5nZWQsIDIzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
+KC0pCj4+CkkgaGF2ZSBubyBvYmplY3Rpb24gb24gdGhpcyBzZXJpZXMgYnV0IG5lZWRzIHRvIGJl
+IHJlYmFzZWQgb24gbXkgdHJlZSwgCmNhbiB5b3UgcGxlYXNlIHJlc3BpbiBvbiB0b3Agb2YgbXkg
+dHJlZT8KClRoYW5rcywKS3VramluCi0tIApUaGFua3MuCgpCZXN0IHJlZ2FyZHMsCktnZW5lLgot
+LQpLdWtqaW4gS2ltIDxrZ2VuZS5raW1Ac2Ftc3VuZy5jb20+LCBTZW5pb3IgRW5naW5lZXIsClNX
+IFNvbHV0aW9uIERldmVsb3BtZW50IFRlYW0sIFNhbXN1bmcgRWxlY3Ryb25pY3MgQ28uLCBMdGQu
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
+cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
+a2VybmVsCg==
