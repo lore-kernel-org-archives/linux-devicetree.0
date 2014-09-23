@@ -1,127 +1,71 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 12:30:20 +0300
-Message-ID: <54213DAC.5010806@ti.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <5419760A.7020908@ti.com> <20140922075424.GB1470@ulmo> <54202C86.3040808@ti.com> <20140923062111.GE30514@ulmo>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="JA1RRkHUaiKhBwAvN1671poC2TP1HN21I"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140923062111.GE30514@ulmo>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v7 01/10] rtc: at91sam9: remove references to mach specific headers
+Date: Tue, 23 Sep 2014 11:38:41 +0200
+Message-ID: <1411465130-29011-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411465130-29011-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---JA1RRkHUaiKhBwAvN1671poC2TP1HN21I
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+In order to support multi platform kernel drivers should not include
+machine specific headers.
+Copy RTT macros in the driver code and remove any machine specific
+headers.
 
-On 23/09/14 09:21, Thierry Reding wrote:
+Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ drivers/rtc/rtc-at91sam9.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
->> Well, I can write almost any kind of bindings, and then evidently my
->> device would work. For me, on my board.
->=20
-> Well, that's the whole problem with DT. For many devices we only have a=
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index 5963743..51f0038 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -22,10 +22,6 @@
+ #include <linux/platform_data/atmel.h>
+ #include <linux/io.h>
+ 
+-#include <mach/at91_rtt.h>
+-#include <mach/cpu.h>
+-#include <mach/hardware.h>
+-
+ /*
+  * This driver uses two configurable hardware resources that live in the
+  * AT91SAM9 backup power domain (intended to be powered at all times)
+@@ -47,6 +43,24 @@
+  * registers available, likewise usable for more than "RTC" support.
+  */
+ 
++#define AT91_RTT_MR		0x00			/* Real-time Mode Register */
++#define AT91_RTT_RTPRES		(0xffff << 0)		/* Real-time Timer Prescaler Value */
++#define AT91_RTT_ALMIEN		(1 << 16)		/* Alarm Interrupt Enable */
++#define AT91_RTT_RTTINCIEN	(1 << 17)		/* Real Time Timer Increment Interrupt Enable */
++#define AT91_RTT_RTTRST		(1 << 18)		/* Real Time Timer Restart */
++
++#define AT91_RTT_AR		0x04			/* Real-time Alarm Register */
++#define AT91_RTT_ALMV		(0xffffffff)		/* Alarm Value */
++
++#define AT91_RTT_VR		0x08			/* Real-time Value Register */
++#define AT91_RTT_CRTV		(0xffffffff)		/* Current Real-time Value */
++
++#define AT91_RTT_SR		0x0c			/* Real-time Status Register */
++#define AT91_RTT_ALMS		(1 << 0)		/* Real-time Alarm Status */
++#define AT91_RTT_RTTINC		(1 << 1)		/* Real-time Timer Increment */
++
++#define AT91_SLOW_CLOCK		32768
++
+ /*
+  * We store ALARM_DISABLED in ALMV to record that no alarm is set.
+  * It's also the reset value for that field.
+-- 
+1.9.1
 
-> single setup to test against. And even when we have several they often
-> are derived from each other. But the alternative would be to defer
-> (possibly indefinitely) merging support for a device until a second,
-> wildly different setup shows up. That's completely unreasonable and we
-> need to start somewhere.
-
-Yes, but in this case we know of existing boards that have complex
-setups. It's not theoretical.
-
-I'm not saying we should stop everything until we have a 100% solution
-for the rare complex cases. But we should keep them in mind and, when
-possible, solve problems in a way that will work for the complex cases al=
-so.
-
->> I guess non-video devices haven't had need for those. I have had lots =
-of
->> boards with video setup that cannot be represented with simple phandle=
-s.
->> I'm not sure if I have just been unlucky or what, but my understand is=
-
->> that other people have encountered such boards also. Usually the
->> problems encountered there have been circumvented with some hacky vide=
-o
->> driver for that specific board, or maybe a static configuration handle=
-d
->> by the boot loader.
->=20
-> I have yet to encounter such a setup. Can you point me at a DTS for one=
-
-> such setup? I do remember a couple of hypothetical cases being discusse=
-d
-> at one time or another, but I haven't seen any actual DTS content where=
-
-> this was needed.
-
-No, I can't point to them as they are not in the mainline (at least the
-ones I've been working on), for obvious reasons.
-
-With a quick glance, I have the following devices in my cabinet that
-have more complex setups: OMAP 4430 SDP, BeagleBoneBlack + LCD, AM43xx
-EVM. Many Nokia devices used to have such setups, usually so that the
-LCD and tv-out were connected to the same video source.
-
->> Do we have a standard way of representing the video pipeline with simp=
-le
->> phandles? Or does everyone just do their own version? If there's no
->> standard way, it sounds it'll be a mess to support in the future.
->=20
-> It doesn't matter all that much whether the representation is standard.=
-
-
-Again, I disagree.
-
-> phandles should simply point to the next element in the pipeline and th=
-e
-> OS abstractions should be good enough to handle the details about how t=
-o
-> chain the elements.
-
-I, on the other hand, would rather see the links the other way around.
-Panel having a link to the video source, etc.
-
-The video graphs have two-way links, which of course is the safest
-options, but also more verbose and redundant.
-
-When this was discussed earlier, it was unclear which way the links
-should be. It's true that only links to one direction are strictly
-needed, but the question raised was that if in the drivers we end up
-always going the links the other way, the performance penalty may be
-somewhat big. (If I recall right).
-
- Tomi
-
-
-
---JA1RRkHUaiKhBwAvN1671poC2TP1HN21I
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUIT2sAAoJEPo9qoy8lh71b/wP/R34f0wHQrgZVWwJsZ0jc0b4
-l8G24kKy4R7hQJj/7BoLzmuyofcuwOjYDhlJeJIZ6BYcOQppBpxQpRAR9OF8cxdM
-lW59bBK5hYLQVjtoQQWQR/aQKr0rRdCuDV9+eQ9GEWiebHPa8rL8kLKQ3aCtZaS2
-7Xq9atFuWFRrLYdOhFigTe66i3FQWmLudni7BN5mtJCWJv4fs1BscWjYkvGtmccg
-nM7csOKhVFPxMJyElz2AnCYASdRjPOakcQeEGfoe0onv1vqV1p1FpeBcQ/n+Abf9
-WlAHdBCfywYb6dEvSCIIYMafpzBiK/5yMcY5xvV7bUDIsQG3xa/o/Ep1ywkra162
-pfN+MC1h0ljggXcStOb72Zmxrv2xaAOGIpQd6hddOnkrAeHP/W4KPUvnxabL5fmZ
-lBNe2fW3Mzu2yJqY/0xAGKnpbUPBxfm2vbRdD/ufv2TYsPUOzpG4W//CpVRRc9cI
-60e9SFV+1sRBXAENqMHXpDOgDQzhgodw4oTfSFdQr8c+90TDBhVWr5NglLiLU32y
-VFjI5l6+/ncttUojXEobHP0H5jvuhTq2uJ+5PJlD0p7T4Xo5m3zKr9lW512QX84D
-Q9zMrw+hO1+6ViEY/OTrDqJs7ZqSMpKRODFTSBdBKuKe3si+hBpfqY7if+jnJ4Jq
-h1nHuVvLZrum0KsaqPpU
-=q+qF
------END PGP SIGNATURE-----
-
---JA1RRkHUaiKhBwAvN1671poC2TP1HN21I--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
