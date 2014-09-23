@@ -1,118 +1,246 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/9] Documentation: bindings: net: add the Marvell
- PXA168 Ethernet controller
-Date: Tue, 23 Sep 2014 19:31:40 +0200
-Message-ID: <5421AE7C.30504@gmail.com>
-References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com> <9401592.hUYDkriFVO@wuerfel> <5421A28E.7060600@gmail.com> <5150779.ibmzDh88cj@wuerfel>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5150779.ibmzDh88cj@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 23 Sep 2014 19:37:25 +0200
+Message-ID: <62705234.gKJDtUQLyT@wuerfel>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com> <5140494.LzvyOiyY3U@wuerfel> <20140923165515.GA26604@saruman>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140923165515.GA26604@saruman>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2014 07:02 PM, Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 18:40:46 Sebastian Hesselbarth wrote:
->> On 09/23/2014 06:29 PM, Arnd Bergmann wrote:
->>> On Tuesday 23 September 2014 17:45:52 Sebastian Hesselbarth wrote:
->>>> For reference, this is what we have for MVEBU SoCs with multiple ports
->>>> per controller:
->>>>
->>>> eth: ethernet-ctrl@72000 {
->>>>           compatible = "marvell,orion-eth";
->> ...
->>>>           reg = <0x72000 0x4000>;
->> ...
->>>>
->>>>           ethernet-port@0 {
->>>>                   compatible = "marvell,orion-eth-port";
->> ...
->>>>                   phy-handle = <&ethphy>;
->>>>           };
->>>> };
->>>>
->>>> mdio: mdio-bus@72004 {
->>>>           compatible = "marvell,orion-mdio";
->> ...
->>>>           reg = <0x72004 0x84>;
->> ..
->>>>           ethphy: ethernet-phy {
->>>>                   /* set phy address in board file */
->>>>           };
->>>> };
->>
->>> But in this example, you have the same registers and the same
->>> clocks in two nodes, which are even used by the same device driver
->>> at the moment. It's not a big issue, but my feeling is that Antoine's
->>> approach was actually better because it more closely reflects
->>> the way that the hardware is built.
->>
->> I was not referring to the separate mdio bus node, but putting the
->> ethernet-phy node as a child of ethernet-ctrl.
->
-> Ah, got it (I think). Yes, that makes sense.
+On Tuesday 23 September 2014 11:55:15 Felipe Balbi wrote:
+> On Tue, Sep 23, 2014 at 06:44:40PM +0200, Arnd Bergmann wrote:
+> > On Tuesday 23 September 2014 15:36:45 Antoine Tenart wrote:
+> > > On Tue, Sep 23, 2014 at 12:39:04PM +0200, Arnd Bergmann wrote:
+> > > > On Tuesday 23 September 2014 12:28:03 Antoine Tenart wrote:
+> > > > > +       if (dev->of_node) {
+> > > > > +               ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+> > > > > +               if (ret)
+> > > > > +                       goto clk_err;
+> > > > > +       } else {
+> > > > > +               ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> > > > > +               if (ret)
+> > > > > +                       goto clk_err;
+> > > > > +       }
+> > > > > 
+> > > > 
+> > > > Why do you care about the non-DT case here? I think it would be nicer to
+> > > > open-code the ci_hdrc_usb2_dt_probe() function in here and remove
+> > > > the dma_set_mask_and_coherent(), which should not even be necessary for
+> > > > the case where you have a hardwired platform device.
+> > > > 
+> > > 
+> > > I thought we agreed to call dma_set_mask_and_coherent():
+> > > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/273335.html
+> > > 
+> > > I do not have a strong opinion on this as I only use the dt case for my
+> > > usage.
+> > 
+> > The question is more about who actually wants the non-DT case.
+> > 
+> > Since this is a new driver, I suspect that the answer is "nobody",
+> > as the existing board files are all for legacy platforms that we
+> > are not going to adapt for this driver.
+> 
+> wait a minute... will the legacy platforms be adapted to DT and, thus,
+> to this driver in the future ? I really don't want to keep several
+> copies of chipidea driver just because there are still some legacy
+> platforms still using them. I have said in the past and will say again,
+> everybody should move to the generic chipidea driver at the earliest
+> opportunity so we avoid duplication of work.
+> 
 
-> The part I don't understand yet is how one uses multiple ports. pxa168_eth.c
-> seems to be written with the assumption that only one port is ever used at
-> a time, while mv643xx_eth.c can actually use multiple ports simultaneously.
->
-> Do you think that is that a hardware limitation of pxa168_eth or a feature
-> that nobody so far has needed from the driver?
+Sorry, my mistake. The intention that this new driver is meant to
+replace the existing ones wasn't clear to me from the changelog,
+and if I'd been involved in the discussion before, then I've forgotten
+about it.
 
-It has been a while I looked it up in the pxa168 datasheet, but IIRC
-there is only one port per controller. FWIW, there actually is also
-just one port per controller for Orion SoCs. The multiple ports per
-controller comes from the PPC system controllers, i.e. mv643xx hence
-the name. We just made the binding look like it is more ports available
-to make it backwards compatible.. although I doubt anyone is still using
-mv643xx anywhere.
+It absolutely makes sense to migrate to a common driver, and in that
+case we should keep the platform_data handling and dma_set_mask_and_coherent()
+call in there, so we can do the two conversions (migrating from platform
+specific frontends to the generic one, and migrating from platform_data
+to DT) on independent schedules. Eventually I'd like all of the existing
+users of the platform_data path to move to DT, but that should not
+hold up the other cleanup if it takes longer.
 
-> If there is only one port and we just have to know which one that is,
-> I don't think we need the child nodes, but if one can have multiple
-> ports operate independently then the driver will need a rework
-> to actually be usable with that configuration.
+There is however still my point that we shouldn't have an extra platform
+device that is not attached to the device node. I think the generic driver
+should just be part of the common code, without an extra framework.
+Something like the (entirely untested) patch below.
 
-I doubt pxa168 needs port nodes at all, i.e. we have the phy-handle
-directly as property of the controller node.
+	Arnd
 
-The HEC PHY node itself will be a sub-node of some future CEC node,
-while the (internal) MII PHY node can stay as a sub-node of the
-controller, e.g.
-
-(one final example to make sure we agree on the same)
-
-eth0: ethernet@f7b90000 {
-	compatible = "marvell,pxa168-eth";
-	reg = <...>;
-	#address-cells = <1>;
-	#size-cells = <0>;
-	phy-handle = <&ethphy0>;
-
-	ethphy0: ethernet-phy@0 {
-		reg = <0>;
-	};
-};
-
-cec0: cec@f7f00baa {
-	compatible = "marvell,berlin-cec";
-	reg = <...>;
-	#address-cells = <1>;
-	#size-cells = <0>;
-	
-	hecphy0: hdmi-ethernet-phy@0 {
-		reg = <0>;
-	};
-};
-
-With berlin2cd-google-chromecast.dts overwriting
-
-&eth0 { phy-handle = <&hecphy0>; };
-
-Sebastian
+---
+diff --git a/drivers/usb/chipidea/ci.h b/drivers/usb/chipidea/ci.h
+index 9563cb56d564..a2b20c1342f1 100644
+--- a/drivers/usb/chipidea/ci.h
++++ b/drivers/usb/chipidea/ci.h
+@@ -207,6 +207,7 @@ struct ci_hdrc {
+ 	bool				id_event;
+ 	bool				b_sess_valid_event;
+ 	bool				imx28_write_fix;
++	struct clk			*clk;
+ };
+ 
+ static inline struct ci_role_driver *ci_role(struct ci_hdrc *ci)
+diff --git a/drivers/usb/chipidea/ci_hdrc_usb2.c b/drivers/usb/chipidea/ci_hdrc_usb2.c
+index 6eae1de587f2..03ef35997dd8 100644
+--- a/drivers/usb/chipidea/ci_hdrc_usb2.c
++++ b/drivers/usb/chipidea/ci_hdrc_usb2.c
+@@ -70,6 +70,7 @@ static int ci_hdrc_usb2_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (dev->of_node) {
++		ret = ci_get_platdata(dev, platdata);
+ 		ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+ 		if (ret)
+ 			goto clk_err;
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 619d13e29995..32613751e731 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -478,6 +478,15 @@ static int ci_get_platdata(struct device *dev,
+ 	if (of_usb_get_maximum_speed(dev->of_node) == USB_SPEED_FULL)
+ 		platdata->flags |= CI_HDRC_FORCE_FULLSPEED;
+ 
++	platdata->phy = of_phy_get(dev->of_node, 0);
++	if (IS_ERR(platdata->phy)) {
++		if (PTR_ERR(platdata->phy) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		/* PHY is optional */
++		platdata->phy = NULL;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -559,6 +568,12 @@ static void ci_get_otg_capable(struct ci_hdrc *ci)
+ 		dev_dbg(ci->dev, "It is OTG capable controller\n");
+ }
+ 
++static const struct ci_hdrc_platform_data ci_default_pdata = {
++	.capoffset	= DEF_CAPOFFSET,
++	.flags		= CI_HDRC_REQUIRE_TRANSCEIVER |
++			  CI_HDRC_DISABLE_STREAMING,
++};
++
+ static int ci_hdrc_probe(struct platform_device *pdev)
+ {
+ 	struct device	*dev = &pdev->dev;
+@@ -568,11 +583,6 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	int		ret;
+ 	enum usb_dr_mode dr_mode;
+ 
+-	if (!dev_get_platdata(dev)) {
+-		dev_err(dev, "platform data missing\n");
+-		return -ENODEV;
+-	}
+-
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(base))
+@@ -586,6 +596,32 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 
+ 	ci->dev = dev;
+ 	ci->platdata = dev_get_platdata(dev);
++	if (!ci->platdata) {
++		ci->platdata = devm_kmemdup(dev, &ci_default_pdata,
++					    sizeof(ci_default_pdata),
++					    GFP_KERNEL);
++
++		if (!ci->platdata)
++			return -ENOMEM;
++
++		ret = ci_get_platdata(dev, platdata);
++		if (ret)
++			return ERR_PTR(ret);
++	}
++
++	priv->clk = devm_clk_get(dev, NULL);
++	if (!IS_ERR(priv->clk)) {
++		ret = clk_prepare_enable(priv->clk);
++		if (ret) {
++			dev_err(dev, "failed to enable the clock: %d\n", ret);
++			return ret;
++		}
++	}
++
++	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++	if (ret)
++		return ret;
++
+ 	ci->imx28_write_fix = !!(ci->platdata->flags &
+ 		CI_HDRC_IMX28_WRITE_FIX);
+ 
+@@ -702,8 +738,8 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	platform_set_drvdata(pdev, ci);
+-	ret = request_irq(ci->irq, ci_irq, IRQF_SHARED, ci->platdata->name,
+-			  ci);
++	ret = devm_request_irq(ci->irq, ci_irq, IRQF_SHARED,
++			       ci->platdata->name, ci);
+ 	if (ret)
+ 		goto stop;
+ 
+@@ -711,10 +747,13 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+ 		ci_hdrc_otg_fsm_start(ci);
+ 
+ 	ret = dbg_create_files(ci);
+-	if (!ret)
+-		return 0;
++	if (ret)
++		goto stop;
++
++	pm_runtime_no_callbacks(dev);
++	pm_runtime_enable(dev);
++	return 0;
+ 
+-	free_irq(ci->irq, ci);
+ stop:
+ 	ci_role_destroy(ci);
+ deinit_phy:
+@@ -727,22 +766,32 @@ static int ci_hdrc_remove(struct platform_device *pdev)
+ {
+ 	struct ci_hdrc *ci = platform_get_drvdata(pdev);
+ 
++	pm_runtime_disable(&pdev->dev);
+ 	dbg_remove_files(ci);
+ 	free_irq(ci->irq, ci);
+ 	ci_role_destroy(ci);
+ 	ci_hdrc_enter_lpm(ci, true);
+ 	usb_phy_shutdown(ci->transceiver);
+ 	kfree(ci->hw_bank.regmap);
++	clk_disable_unprepare(ci->clk);
+ 
+ 	return 0;
+ }
+ 
++static const struct of_device_id ci_hdrc_usb2_of_match[] = {
++	{ .compatible = "chipidea,usb2" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ci_hdrc_usb2_of_match);
++
++
+ static struct platform_driver ci_hdrc_driver = {
+ 	.probe	= ci_hdrc_probe,
+ 	.remove	= ci_hdrc_remove,
+ 	.driver	= {
+ 		.name	= "ci_hdrc",
+ 		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(ci_hdrc_usb2_of_match),
+ 	},
+ };
+ 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
