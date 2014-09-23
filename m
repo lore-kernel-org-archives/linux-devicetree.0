@@ -1,144 +1,110 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH 2/4] pinctrl: exynos: Add irq_chip instance for Exynos7
- wakeup interrupts
-Date: Tue, 23 Sep 2014 12:34:33 +0530
-Message-ID: <CAM4voam5KW+gO5QDB_CHOON6v9GXp=7tCpZ-9A9jO99yj+G-=A@mail.gmail.com>
-References: <1410598252-30931-1-git-send-email-a.kesavan@samsung.com>
-	<1410598252-30931-4-git-send-email-a.kesavan@samsung.com>
-	<54142A36.5050703@gmail.com>
-	<CAM4voamF8aydh7-2aC+vLrO1rmPm5GL3Pn6i6rZ3XnzCDHzgJg@mail.gmail.com>
-	<541FD60F.8060008@gmail.com>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH v4 1/5] drm/rockchip: Add basic drm driver
+Date: Tue, 23 Sep 2014 15:05:41 +0800
+Message-ID: <54211BC5.8050700@rock-chips.com>
+References: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com> <1411382934-1763-1-git-send-email-mark.yao@rock-chips.com> <3036415.u40f3Xnhod@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <541FD60F.8060008@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "robh@kernel.org" <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thomas P Abraham <thomas.ab@samsung.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <3036415.u40f3Xnhod@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: heiko@sntech.de, Boris BREZILLON <boris.brezillon@free-electrons.com>, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-c
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On 2014=E5=B9=B409=E6=9C=8822=E6=97=A5 22:43, Arnd Bergmann wrote:
+> On Monday 22 September 2014 18:48:54 Mark yao wrote:
+>> diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rock=
+chip/Kconfig
+>> new file mode 100644
+>> index 0000000..7146c80
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/rockchip/Kconfig
+>> @@ -0,0 +1,19 @@
+>> +config DRM_ROCKCHIP
+>> +	tristate "DRM Support for Rockchip"
+>> +	depends on DRM && ROCKCHIP_IOMMU
+>> +	select ARM_DMA_USE_IOMMU
+>> +	select IOMMU_API
+>> +	select DRM_KMS_HELPER
+>> +	select DRM_KMS_FB_HELPER
+>> +	select DRM_PANEL
+>> +	select FB_CFB_FILLRECT
+>> +	select FB_CFB_COPYAREA
+>> +	select FB_CFB_IMAGEBLIT
+>> +	select VT_HW_CONSOLE_BINDING if FRAMEBUFFER_CONSOLE
+>> +	select VIDEOMODE_HELPERS
+> Be careful with 'select', at least some of these should be 'depends o=
+n'.
+> In particular IOMMU_API and ARM_DMA_USE_IOMMU, but possibly others
+> as well. Just check how the symbols are used normally, if you get thi=
+s
+> wrong, we can end up with incorrect dependencies or loops.
+>
+I see, I will change it.
+>> diff --git a/drivers/gpu/drm/rockchip/Makefile b/drivers/gpu/drm/roc=
+kchip/Makefile
+>> new file mode 100644
+>> index 0000000..6e6d468
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/rockchip/Makefile
+>> @@ -0,0 +1,10 @@
+>> +#
+>> +# Makefile for the drm device driver.  This driver provides support=
+ for the
+>> +# Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher=
+=2E
+>> +
+>> +ccflags-y :=3D -Iinclude/drm -Idrivers/gpu/drm/rockchip
+> The second one should not be required.
+Sure, I will change it.
+>> +static int rockchip_drm_load(struct drm_device *drm_dev, unsigned l=
+ong flags)
+>> +{
+>> +	struct rockchip_drm_private *private;
+>> +	struct dma_iommu_mapping *mapping;
+>> +	struct device *dev =3D drm_dev->dev;
+>> +	int ret;
+>> +
+>> +	private =3D devm_kzalloc(drm_dev->dev, sizeof(*private), GFP_KERNE=
+L);
+>> +	if (!private)
+>> +		return -ENOMEM;
+>> +
+>> +	dev_set_drvdata(drm_dev->dev, dev);
+>> +	drm_dev->dev_private =3D private;
+>> +
+>> +	drm_mode_config_init(drm_dev);
+>> +
+>> +	rockchip_drm_mode_config_init(drm_dev);
+>> +
+>> +	dev->dma_parms =3D devm_kzalloc(dev, sizeof(*dev->dma_parms),
+>> +				      GFP_KERNEL);
+>> +	if (!dev->dma_parms) {
+>> +		ret =3D -ENOMEM;
+>> +		goto err_config_cleanup;
+>> +	}
+>> +
+>> +	/* TODO(djkurtz): fetch the mapping start/size from somewhere */
+>> +	mapping =3D arm_iommu_create_mapping(&platform_bus_type, 0x1000000=
+0,
+>> +					   SZ_1G);
+>> +	if (IS_ERR(mapping)) {
+>> +		ret =3D PTR_ERR(mapping);
+>> +		goto err_config_cleanup;
+>> +	}
+>> +
+>> +	dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+> This is the default coherent mask. If you call this function, you
+> should normally check the return value, or call dma_set_mask first,
+> which you apparently don't do here, and in another place in this
+> patch.
+>
+> 	Arnd
+>
+>
+>
 
-On Mon, Sep 22, 2014 at 1:25 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On 22.09.2014 08:17, Abhilash Kesavan wrote:
->> Hi Tomasz,
->>
->> On Sat, Sep 13, 2014 at 4:57 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->>> Hi Abhilash,
->>>
->>> Please see my comments inline.
->>>
->>> On 13.09.2014 10:50, Abhilash Kesavan wrote:
->>>> Exynos7 uses different offsets for wakeup interrupt configuration registers.
->>>> So a new irq_chip instance for Exynos7 wakeup interrupts is added. The irq_chip
->>>> selection is now based on the wakeup interrupt controller compatible string.
->>>
->>> [snip]
->>>
->>>> @@ -328,9 +322,11 @@ static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
->>>>  /*
->>>>   * irq_chip for wakeup interrupts
->>>>   */
->>>> -static struct exynos_irq_chip exynos_wkup_irq_chip = {
->>>> +static struct exynos_irq_chip exynos_wkup_irq_chip;
->>>> +
->>>
->>> Why do you still need this, if you have both variants below?
->>
->> After adding __initdata to the two variants, I will require to have a
->> copy of one of them.
->>
->>>
->>>> +static struct exynos_irq_chip exynos4210_wkup_irq_chip = {
->>>>       .chip = {
->>>> -             .name = "exynos_wkup_irq_chip",
->>>> +             .name = "exynos4210_wkup_irq_chip",
->>>>               .irq_unmask = exynos_irq_unmask,
->>>>               .irq_mask = exynos_irq_mask,
->>>>               .irq_ack = exynos_irq_ack,
->>>> @@ -342,6 +338,29 @@ static struct exynos_irq_chip exynos_wkup_irq_chip = {
->>>>       .eint_pend = EXYNOS_WKUP_EPEND_OFFSET,
->>>>  };
->>>>
->>>> +static struct exynos_irq_chip exynos7_wkup_irq_chip = {
->>>> +     .chip = {
->>>> +             .name = "exynos7_wkup_irq_chip",
->>>> +             .irq_unmask = exynos_irq_unmask,
->>>> +             .irq_mask = exynos_irq_mask,
->>>> +             .irq_ack = exynos_irq_ack,
->>>> +             .irq_set_type = exynos_irq_set_type,
->>>> +             .irq_set_wake = exynos_wkup_irq_set_wake,
->>>> +     },
->>>> +     .eint_con = EXYNOS7_WKUP_ECON_OFFSET,
->>>> +     .eint_mask = EXYNOS7_WKUP_EMASK_OFFSET,
->>>> +     .eint_pend = EXYNOS7_WKUP_EPEND_OFFSET,
->>>> +};
->>>> +
->>>> +/* list of external wakeup controllers supported */
->>>> +static const struct of_device_id exynos_wkup_irq_ids[] = {
->>>> +     { .compatible = "samsung,exynos4210-wakeup-eint",
->>>> +                     .data = &exynos4210_wkup_irq_chip },
->>>> +     { .compatible = "samsung,exynos7-wakeup-eint",
->>>> +                     .data = &exynos7_wkup_irq_chip },
->>>> +     { }
->>>> +};
->>>> +
->>>>  /* interrupt handler for wakeup interrupts 0..15 */
->>>>  static void exynos_irq_eint0_15(unsigned int irq, struct irq_desc *desc)
->>>>  {
->>>> @@ -434,7 +453,12 @@ static int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
->>>>       int idx, irq;
->>>>
->>>>       for_each_child_of_node(dev->of_node, np) {
->>>> -             if (of_match_node(exynos_wkup_irq_ids, np)) {
->>>> +             const struct of_device_id *match;
->>>> +
->>>> +             match = of_match_node(exynos_wkup_irq_ids, np);
->>>> +             if (match) {
->>>> +                     memcpy(&exynos_wkup_irq_chip, match->data,
->>>> +                             sizeof(struct exynos_irq_chip));
->>>
->>> Hmm, this doesn't look correct to me. You are modifying a static struct
->>> here. Why couldn't you simply use the exynos irq chip pointed by
->>> match->data in further registration code?
->>
->> That will not be available later once I use __initdata.
->>
->
-> Then either __initdata shouldn't be necessary or kmemdup() should be
-> used to allocate a copy.
-Will fix this and send out a new version soon.
 
-Regards,
-Abhilash
->
->>>
->>>>                       wkup_np = np;
->>>>                       break;
->>>>               }
->>>> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/samsung/pinctrl-exynos.h
->>>> index e060722..0db1e52 100644
->>>> --- a/drivers/pinctrl/samsung/pinctrl-exynos.h
->>>> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
->>>> @@ -25,6 +25,9 @@
->>>>  #define EXYNOS_WKUP_ECON_OFFSET              0xE00
->>>>  #define EXYNOS_WKUP_EMASK_OFFSET     0xF00
->>>>  #define EXYNOS_WKUP_EPEND_OFFSET     0xF40
->>>> +#define EXYNOS7_WKUP_ECON_OFFSET     0x700
->>>> +#define EXYNOS7_WKUP_EMASK_OFFSET    0x900
->>>> +#define EXYNOS7_WKUP_EPEND_OFFSET    0xA00
->>>
->>> Interestingly enough, the offsets look just like the normal GPIO
->>> interrupt controller of previous Exynos SoCs. Are you sure those are
->>> correct? Also if somehow the controller now resembles the normal one,
->>> doesn't it have the SVC register making it possible to reuse the non
->>> wake-up code instead?
->>
->> The wakeup interrupt register offsets are the same as the GPIO
->> interrupt offsets in earlier Exynos SoCs. There is no SVC register for
->> the wakeup interrupt block.
->
-> OK, your code is fine then.
->
-> Best regards,
-> Tomasz
