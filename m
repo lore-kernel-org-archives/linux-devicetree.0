@@ -1,83 +1,83 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 06/10] rtc: at91sam9: rework the Kconfig description
-Date: Tue, 23 Sep 2014 12:39:23 +0200
-Message-ID: <20140923103923.GB404@localhost>
-References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
- <1411465130-29011-7-git-send-email-boris.brezillon@free-electrons.com>
- <542146AF.3060807@atmel.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v11 08/10] OF: PCI: Add support for parsing PCI host
+ bridge resources from DT
+Date: Tue, 23 Sep 2014 11:49:18 +0100
+Message-ID: <20140923104918.GP1994@e106497-lin.cambridge.arm.com>
+References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
+ <20140922093228.GA20256@rric.localhost>
+ <20140922114317.GN1994@e106497-lin.cambridge.arm.com>
+ <8687285.EH4RPBeOB5@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <8687285.EH4RPBeOB5@wuerfel>
 Content-Disposition: inline
-In-Reply-To: <542146AF.3060807-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, linux-arch <linux-arch@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Device Tree ML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Sinan Kaya <okaya@codeaurora.org>, Sunil Goutham <sunil.goutham@caviumnetworks.com>, LKML <linux-kernel@>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 12:08:47PM +0200, Nicolas Ferre wrote:
-> On 23/09/2014 11:38, Boris BREZILLON :
-> > Remove all references to AT91CAP9 SoC which has been removed.
-> > Rework the help message to remove any specific references to AT91SAM9 SoCs.
-> > 
-> > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  drivers/rtc/Kconfig | 17 +++++++++--------
-> >  1 file changed, 9 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> > index 7d76da8..455f2c3 100644
-> > --- a/drivers/rtc/Kconfig
-> > +++ b/drivers/rtc/Kconfig
-> > @@ -1079,17 +1079,18 @@ config RTC_DRV_AT91RM9200
-> >  	  this is powered by the backup power supply.
-> >  
-> >  config RTC_DRV_AT91SAM9
-> > -	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
-> > +	tristate "AT91SAM9 RTT as RTC"
-> >  	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
-> >  	select MFD_SYSCON
-> >  	help
-> > -	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
-> > -	  (Real Time Timer). These timers are powered by the backup power
-> > -	  supply (such as a small coin cell battery), but do not need to
-> > -	  be used as RTCs.
-> > -
-> > -	  (On AT91SAM9rl and AT91SAM9G45 chips you probably want to use the
-> > -	  dedicated RTC module and leave the RTT available for other uses.)
-> > +	  Some AT91SAM9 SoCs provide an RTT (Real Time Timer) block which
-> > +	  can be used as an RTC thanks to the backup power supply (e.g. a
-> > +	  small coin cell battery) which keeps this block and the GPBR
-> > +	  (General Purpose Backup Registers) block powered when the device
-> > +	  is shutdown.
-> > +	  Some AT91SAM9 SoCs provide a real RTC block, on those ones you'd
-> > +	  probably want to use the real RTC block instead of the RTT as an
-> > +	  RTT driver.
-> 
-> You mean:
-> "instead of the RTT as an RTC"
+On Tue, Sep 23, 2014 at 08:56:37AM +0100, Arnd Bergmann wrote:
+> On Monday 22 September 2014 12:43:17 Liviu Dudau wrote:
+> > >=20
+> > > From e798af4fc2f664d1aff7e863489b8298f90e716e Mon Sep 17 00:00:00=
+ 2001
+> > > From: Robert Richter <rrichter@cavium.com>
+> > > Date: Mon, 22 Sep 2014 10:46:01 +0200
+> > > Subject: [PATCH] OF: PCI: Fix creation of mem-mapped pci host bri=
+dges
+> > >=20
+> > > The pci host bridge was not created if io_base was not set when
+> > > calling of_pci_get_host_bridge_resources(). This is esp. the case=
+ for
+> > > mem-mapped io (IORESOURCE_MEM). This patch fixes this. Function
+> > > parameter io_base is optional now.
+> >=20
+> > I think the message is misleading. What you want to do is make io_b=
+ase
+> > optional for the case where the PCI host bridge only expects to hav=
+e only
+> > IORESOURCE_MEM ranges and doesn't care about IORESOURCE_IO ones.
+> >=20
+> > As I'm going to touch this area again to address a comment from Bjo=
+rn,
+> > do you mind if I roll this patch into mine with your Signed-off-by =
+and
+> > the mention that you have made io_base optional?
+>=20
+> I think the best way to deal with this is to move the check for=20
+> io_base down into the place where it is used: As long as the DT only
+> specifies IORESOURCE_MEM windows, we don't need to look at io_base,
+> but if the host controller driver does not support IORESOURCE_IO
+> while the DT specifies it, I guess it would be nice to return an
+> error.
 
-Boris, perhaps you should also update the Kconfig entries for
-RTC_DRV_AT91SAM9_RTT and RTC_DRV_AT91SAM9_GPBR to clarify that they are
-only used for legacy booting (and otherwise have no effect)?
+Because the detection of IORESOURCE_{IO|MEM} happens in a loop I still
+need to initialise the io_base to some invalid value before going into =
+the
+for_each_of_pci_range() {...} body. I have added a check in v12 for the
+lack of valid io_base pointer if IORESOURCE_IO range is found.
 
-> With that, good description: thanks!
-> 
-> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> 
-> So, now we can think of what to do with the series:
-> 
-> - Johan, do you want to "Ack" it?
+Best regards,
+Liviu
 
-I had one comment to the slow-clock patch, but feel free to add my
+>=20
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
+in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+>=20
 
-Acked-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-to the whole series.
-
-Thanks,
-Johan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
