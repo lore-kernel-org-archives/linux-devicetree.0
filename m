@@ -1,56 +1,74 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [RESEND PATCH 1/4] ARM: STi: DT: STiH407: 407 DT Entry for clockgen
- A0
-Date: Tue, 23 Sep 2014 09:44:11 +0200
-Message-ID: <542124CB.1080307@st.com>
-References: <1408977888-10473-1-git-send-email-gabriel.fernandez@linaro.org> <1408977888-10473-2-git-send-email-gabriel.fernandez@linaro.org>
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: RE: [PATCH v5 8/8] arm64: dts: add <dt-bindings/> symlink
+Date: Tue, 23 Sep 2014 16:46:33 +0900
+Message-ID: <012f01cfd702$7ed15c30$7c741490$@samsung.com>
+References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
+ <1411361228-18279-9-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1408977888-10473-2-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, olof@lixom.net
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Olivier Bideau <olivier.bideau@st.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1411361228-18279-9-git-send-email-a.kesavan@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Abhilash Kesavan' <a.kesavan@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, catalin.marinas@arm.com
+Cc: naveenkrishna.ch@gmail.com, kesavan.abhilash@gmail.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On 08/25/2014 04:44 PM, Gabriel FERNANDEZ wrote:
-> Patch adds DT entries for clockgen A0
->
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+> -----Original Message-----
+> From: linux-arm-kernel [mailto:linux-arm-kernel-
+> bounces@lists.infradead.org] On Behalf Of Abhilash Kesavan
+> Sent: Monday, September 22, 2014 1:47 PM
+> To: linux-samsung-soc@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> catalin.marinas@arm.com
+> Cc: naveenkrishna.ch@gmail.com; kesavan.abhilash@gmail.com;
+> tomasz.figa@gmail.com
+> Subject: [PATCH v5 8/8] arm64: dts: add <dt-bindings/> symlink
+> 
+> From: Pankaj Dubey <pankaj.dubey@samsung.com>
+> 
+> Add symlink to include/dt-bindings from arch/arm64/boot/dts/include/ to
+> match the ones in ARM architectures so that preprocessed device
+> tree files can include various useful constant definitions.
+> 
+> See commit c58299aa8754 ("kbuild: create an "include chroot" for DT
+> bindings")
+> merged in v3.10-rc1 for details.
+> 
+> CC: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+> Reviewed-by: Thomas Abraham <thomas.ab@samsung.com>
+> Tested-by: Thomas Abraham <thomas.ab@samsung.com>
 > ---
->   arch/arm/boot/dts/stih407-clock.dtsi | 32 ++++++++++++++++++++++++++++++++
->   1 file changed, 32 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
-> index 800f46f..e03e86e 100644
-> --- a/arch/arm/boot/dts/stih407-clock.dtsi
-> +++ b/arch/arm/boot/dts/stih407-clock.dtsi
-> @@ -7,6 +7,10 @@
->    */
->   / {
->   	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
->   		/*
->   		 * Fixed 30MHz oscillator inputs to SoC
->   		 */
-> @@ -35,5 +39,33 @@
->   			clock-frequency = <200000000>;
->   			clock-output-names = "clk-s-icn-reg-0";
->   		};
-> +
-> +		/*
-> +		 * ClockGenAs on SASG2
-> +		 */
-Note that I removed this comment since no SASG2 on STiH407.
+>  arch/arm64/boot/dts/include/dt-bindings | 1 +
+>  1 file changed, 1 insertion(+)
+>  create mode 120000 arch/arm64/boot/dts/include/dt-bindings
+> 
+> diff --git a/arch/arm64/boot/dts/include/dt-bindings
+> b/arch/arm64/boot/dts/include/dt-bindings
+> new file mode 120000
+> index 0000000..1e89bce
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/include/dt-bindings
+> @@ -0,0 +1 @@
+> +../../../../../include/dt-bindings/
+> \ No newline at end of file
+^
+It generates incorrect symlink. Please remove last line like below:
 
-> +		clockgen-a@090ff000 {
-> +			compatible = "st,clkgen-c32";
-> +			reg = <0x90ff000 0x1000>;
-...
+diff --git a/arch/arm64/boot/dts/include/dt-bindings
+b/arch/arm64/boot/dts/include/dt-bindings
+new file mode 120000
+index 0000000..499472b
+--- /dev/null
++++ b/arch/arm64/boot/dts/include/dt-bindings
+@@ -0,0 +1 @@
++../../../../../include/dt-bindings/
+--
+
+Best Regards,
+Chanho Park
