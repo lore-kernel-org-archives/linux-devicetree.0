@@ -1,296 +1,76 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: [PATCH v6 05/12] phy: add the Berlin USB PHY driver
-Date: Tue, 23 Sep 2014 12:28:01 +0200
-Message-ID: <1411468088-5702-6-git-send-email-antoine.tenart@free-electrons.com>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 23 Sep 2014 12:34:54 +0200
+Message-ID: <54214CCE.7050102@samsung.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+ <5419760A.7020908@ti.com>
+ <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
+ <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
+ <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo>
+ <5421201C.6000509@samsung.com> <20140923083514.GM30514@ulmo>
+ <542140D3.8080806@samsung.com> <20140923101032.GU30514@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140923101032.GU30514@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the driver driving the Marvell Berlin USB PHY. This allows to
-initialize the PHY and to use it from the USB driver later.
+On 09/23/2014 12:10 PM, Thierry Reding wrote:
+> On Tue, Sep 23, 2014 at 11:43:47AM +0200, Andrzej Hajda wrote:
+>> On 09/23/2014 10:35 AM, Thierry Reding wrote:
+> [...]
+>>> But I agree that it would be nice to unify bridges and encoders more. It
+>>> should be possible to make encoder always a bridge (or perhaps even
+>>> replace encoders with bridges altogether). Then once you're out of the
+>>> DRM device everything would be a bridge until you get to a panel.
+>> I agree that some sort of unification of bridges, (slave) encoders is a good
+>> thing, this way we stay only with bridges and panels as receivers.
+>> But we will still have to deal with the code like:
+>>     if (on the other end of the link is panel)
+>>         do panel framework specific things
+>>     else
+>>         do bridge framework specific things
+>>
+>> The code in both branches usually does similar things but due to framework
+>> differences it is difficult to merge.
+> That's because they are inherently different entities. You can perform
+> operations on a panel that don't make sense for a bridge and vice-versa.
+>
+>> Ideally it would be best to get rid of such constructs. For example by
+>> trying to
+>> make frameworks per interface type exposed by device (eg. video_sink) and
+>> not by device type (drm_bridge, drm_panel).
+> But then you loose all information about the real type of device.
+Driver knows type of its device anyway. Why should it know device
+type of devices it is connected to? It is enough it knows how to talk to
+other device.
+Like in real world, why desktop PC should know it is connected to DVI
+monitor or to
+DVI/HDMI converter which is connected to TV?
+>  Or you
+> have to create a common base class. And then you're still back to
+> dealing with the two specific cases in many places, so the gain seems
+> rather minimal.
 
-Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
----
- drivers/phy/Kconfig          |   7 ++
- drivers/phy/Makefile         |   1 +
- drivers/phy/phy-berlin-usb.c | 224 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 232 insertions(+)
- create mode 100644 drivers/phy/phy-berlin-usb.c
+For example RGB panel and RGB/??? bridge have the same hardware input
+interface.
+Why shall they have different representation in kernel?
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 0dd742719154..d1d73dd8c1fb 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -15,6 +15,13 @@ config GENERIC_PHY
- 	  phy users can obtain reference to the PHY. All the users of this
- 	  framework should select this config.
- 
-+config PHY_BERLIN_USB
-+	tristate "Marvell Berlin USB PHY Driver"
-+	depends on ARCH_BERLIN && HAS_IOMEM && OF
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the USB PHY on Marvell Berlin SoCs.
-+
- config PHY_BERLIN_SATA
- 	tristate "Marvell Berlin SATA PHY driver"
- 	depends on ARCH_BERLIN && HAS_IOMEM && OF
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 95c69ed5ed45..b12e84b69c23 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -3,6 +3,7 @@
- #
- 
- obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
-+obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
- obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
- obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
- obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
-diff --git a/drivers/phy/phy-berlin-usb.c b/drivers/phy/phy-berlin-usb.c
-new file mode 100644
-index 000000000000..f9f13067f50f
---- /dev/null
-+++ b/drivers/phy/phy-berlin-usb.c
-@@ -0,0 +1,224 @@
-+/*
-+ * Copyright (C) 2014 Marvell Technology Group Ltd.
-+ *
-+ * Antoine Tenart <antoine.tenart@free-electrons.com>
-+ * Jisheng Zhang <jszhang@marvell.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/gpio.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+#define USB_PHY_PLL		0x04
-+#define USB_PHY_PLL_CONTROL	0x08
-+#define USB_PHY_TX_CTRL0	0x10
-+#define USB_PHY_TX_CTRL1	0x14
-+#define USB_PHY_TX_CTRL2	0x18
-+#define USB_PHY_RX_CTRL		0x20
-+#define USB_PHY_ANALOG		0x34
-+
-+/* USB_PHY_PLL */
-+#define CLK_REF_DIV(x)		((x) << 4)
-+#define FEEDBACK_CLK_DIV(x)	((x) << 8)
-+
-+/* USB_PHY_PLL_CONTROL */
-+#define CLK_STABLE		BIT(0)
-+#define PLL_CTRL_PIN		BIT(1)
-+#define PLL_CTRL_REG		BIT(2)
-+#define PLL_ON			BIT(3)
-+#define PHASE_OFF_TOL_125	(0x0 << 5)
-+#define PHASE_OFF_TOL_250	BIT(5)
-+#define KVC0_CALIB		(0x0 << 9)
-+#define KVC0_REG_CTRL		BIT(9)
-+#define KVC0_HIGH		(0x0 << 10)
-+#define KVC0_LOW		(0x3 << 10)
-+#define CLK_BLK_EN		BIT(13)
-+
-+/* USB_PHY_TX_CTRL0 */
-+#define EXT_HS_RCAL_EN		BIT(3)
-+#define EXT_FS_RCAL_EN		BIT(4)
-+#define IMPCAL_VTH_DIV(x)	((x) << 5)
-+#define EXT_RS_RCAL_DIV(x)	((x) << 8)
-+#define EXT_FS_RCAL_DIV(x)	((x) << 12)
-+
-+/* USB_PHY_TX_CTRL1 */
-+#define TX_VDD15_14		(0x0 << 4)
-+#define TX_VDD15_15		BIT(4)
-+#define TX_VDD15_16		(0x2 << 4)
-+#define TX_VDD15_17		(0x3 << 4)
-+#define TX_VDD12_VDD		(0x0 << 6)
-+#define TX_VDD12_11		BIT(6)
-+#define TX_VDD12_12		(0x2 << 6)
-+#define TX_VDD12_13		(0x3 << 6)
-+#define LOW_VDD_EN		BIT(8)
-+#define TX_OUT_AMP(x)		((x) << 9)
-+
-+/* USB_PHY_TX_CTRL2 */
-+#define TX_CHAN_CTRL_REG(x)	((x) << 0)
-+#define DRV_SLEWRATE(x)		((x) << 4)
-+#define IMP_CAL_FS_HS_DLY_0	(0x0 << 6)
-+#define IMP_CAL_FS_HS_DLY_1	BIT(6)
-+#define IMP_CAL_FS_HS_DLY_2	(0x2 << 6)
-+#define IMP_CAL_FS_HS_DLY_3	(0x3 << 6)
-+#define FS_DRV_EN_MASK(x)	((x) << 8)
-+#define HS_DRV_EN_MASK(x)	((x) << 12)
-+
-+/* USB_PHY_RX_CTRL */
-+#define PHASE_FREEZE_DLY_2_CL	(0x0 << 0)
-+#define PHASE_FREEZE_DLY_4_CL	BIT(0)
-+#define ACK_LENGTH_8_CL		(0x0 << 2)
-+#define ACK_LENGTH_12_CL	BIT(2)
-+#define ACK_LENGTH_16_CL	(0x2 << 2)
-+#define ACK_LENGTH_20_CL	(0x3 << 2)
-+#define SQ_LENGTH_3		(0x0 << 4)
-+#define SQ_LENGTH_6		BIT(4)
-+#define SQ_LENGTH_9		(0x2 << 4)
-+#define SQ_LENGTH_12		(0x3 << 4)
-+#define DISCON_THRESHOLD_260	(0x0 << 6)
-+#define DISCON_THRESHOLD_270	BIT(6)
-+#define DISCON_THRESHOLD_280	(0x2 << 6)
-+#define DISCON_THRESHOLD_290	(0x3 << 6)
-+#define SQ_THRESHOLD(x)		((x) << 8)
-+#define LPF_COEF(x)		((x) << 12)
-+#define INTPL_CUR_10		(0x0 << 14)
-+#define INTPL_CUR_20		BIT(14)
-+#define INTPL_CUR_30		(0x2 << 14)
-+#define INTPL_CUR_40		(0x3 << 14)
-+
-+/* USB_PHY_ANALOG */
-+#define ANA_PWR_UP		BIT(1)
-+#define ANA_PWR_DOWN		BIT(2)
-+#define V2I_VCO_RATIO(x)	((x) << 7)
-+#define R_ROTATE_90		(0x0 << 10)
-+#define R_ROTATE_0		BIT(10)
-+#define MODE_TEST_EN		BIT(11)
-+#define ANA_TEST_DC_CTRL(x)	((x) << 12)
-+
-+#define to_phy_berlin_usb_priv(p)	\
-+	container_of((p), struct phy_berlin_usb_priv, phy)
-+
-+static const u32 phy_berlin_pll_dividers[] = {
-+	/* Berlin 2 */
-+	CLK_REF_DIV(0xc) | FEEDBACK_CLK_DIV(0x54),
-+	/* Berlin 2CD */
-+	CLK_REF_DIV(0x6) | FEEDBACK_CLK_DIV(0x55),
-+};
-+
-+struct phy_berlin_usb_priv {
-+	void __iomem		*base;
-+	struct phy		*phy;
-+	struct reset_control	*rst_ctrl;
-+	u32			pll_divider;
-+};
-+
-+static int phy_berlin_usb_power_on(struct phy *phy)
-+{
-+	struct phy_berlin_usb_priv *priv = dev_get_drvdata(phy->dev.parent);
-+
-+	reset_control_reset(priv->rst_ctrl);
-+
-+	writel(priv->pll_divider,
-+	       priv->base + USB_PHY_PLL);
-+	writel(CLK_STABLE | PLL_CTRL_REG | PHASE_OFF_TOL_250 | KVC0_REG_CTRL |
-+	       CLK_BLK_EN, priv->base + USB_PHY_PLL_CONTROL);
-+	writel(V2I_VCO_RATIO(0x5) | R_ROTATE_0 | ANA_TEST_DC_CTRL(0x5),
-+	       priv->base + USB_PHY_ANALOG);
-+	writel(PHASE_FREEZE_DLY_4_CL | ACK_LENGTH_16_CL | SQ_LENGTH_12 |
-+	       DISCON_THRESHOLD_260 | SQ_THRESHOLD(0xa) | LPF_COEF(0x2) |
-+	       INTPL_CUR_30, priv->base + USB_PHY_RX_CTRL);
-+
-+	writel(TX_VDD12_13 | TX_OUT_AMP(0x3), priv->base + USB_PHY_TX_CTRL1);
-+	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4),
-+	       priv->base + USB_PHY_TX_CTRL0);
-+
-+	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4) |
-+	       EXT_FS_RCAL_DIV(0x2), priv->base + USB_PHY_TX_CTRL0);
-+
-+	writel(EXT_HS_RCAL_EN | IMPCAL_VTH_DIV(0x3) | EXT_RS_RCAL_DIV(0x4),
-+	       priv->base + USB_PHY_TX_CTRL0);
-+	writel(TX_CHAN_CTRL_REG(0xf) | DRV_SLEWRATE(0x3) | IMP_CAL_FS_HS_DLY_3 |
-+	       FS_DRV_EN_MASK(0xd), priv->base + USB_PHY_TX_CTRL2);
-+
-+	return 0;
-+}
-+
-+static struct phy_ops phy_berlin_usb_ops = {
-+	.power_on	= phy_berlin_usb_power_on,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id phy_berlin_sata_of_match[] = {
-+	{
-+		.compatible = "marvell,berlin2-usb-phy",
-+		.data = &phy_berlin_pll_dividers[0],
-+	},
-+	{
-+		.compatible = "marvell,berlin2cd-usb-phy",
-+		.data = &phy_berlin_pll_dividers[1],
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, phy_berlin_sata_of_match);
-+
-+static int phy_berlin_usb_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match =
-+		of_match_device(phy_berlin_sata_of_match, &pdev->dev);
-+	struct phy_berlin_usb_priv *priv;
-+	struct resource *res;
-+	struct phy_provider *phy_provider;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->rst_ctrl = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(priv->rst_ctrl))
-+		return PTR_ERR(priv->rst_ctrl);
-+
-+	priv->pll_divider = *((u32 *)match->data);
-+
-+	priv->phy = devm_phy_create(&pdev->dev, NULL, &phy_berlin_usb_ops,
-+				    NULL);
-+	if (IS_ERR(priv->phy)) {
-+		dev_err(&pdev->dev, "failed to create PHY\n");
-+		return PTR_ERR(priv->phy);
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	phy_provider =
-+		devm_of_phy_provider_register(&pdev->dev, of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver phy_berlin_usb_driver = {
-+	.probe	= phy_berlin_usb_probe,
-+	.driver	= {
-+		.name		= "phy-berlin-usb",
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= phy_berlin_sata_of_match,
-+	 },
-+};
-+module_platform_driver(phy_berlin_usb_driver);
-+
-+MODULE_AUTHOR("Antoine Tenart <antoine.tenart@free-electrons.com>");
-+MODULE_DESCRIPTION("Marvell Berlin PHY driver for USB");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
+Regards
+Andrzej
+
+>
+> Thierry
