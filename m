@@ -1,255 +1,132 @@
-From: Kamil Debski <k.debski@samsung.com>
-Subject: RE: [PATCH v2 1/6] V4L2: Add Renesas R-Car JPEG codec driver.
-Date: Tue, 23 Sep 2014 15:31:07 +0200
-Message-ID: <085201cfd732$a2849bd0$e78dd370$%debski@samsung.com>
-References: <1408452653-14067-2-git-send-email-mikhail.ulyanov@cogentembedded.com>
- <1408969787-23132-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
+Date: Tue, 23 Sep 2014 15:35:14 +0200
+Message-ID: <4228539.nCGoXxuRMK@amdc1032>
+References: <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140912103257.GB24416@localhost> <20140912112643.GA10623@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-reply-to: <1408969787-23132-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
-Content-language: pl
-Sender: linux-sh-owner@vger.kernel.org
-To: 'Mikhail Ulyanov' <mikhail.ulyanov@cogentembedded.com>, horms@verge.net.au, magnus.damm@gmail.com, m.chehab@samsung.com, robh+dt@kernel.org, grant.likely@linaro.org
-Cc: laurent.pinchart@ideasonboard.com, hans.verkuil@cisco.com, linux-sh@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20140912112643.GA10623@red-moon>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter
 List-Id: devicetree@vger.kernel.org
 
-Hi Mikhail,
 
-> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
-> owner@vger.kernel.org] On Behalf Of Mikhail Ulyanov
-> Sent: Monday, August 25, 2014 2:30 PM
-> 
-> This patch contains driver for Renesas R-Car JPEG codec.
-> 
-> Cnanges since v1:
->     - s/g_fmt function simplified
->     - default format for queues added
->     - dumb vidioc functions added to be in compliance with standard
-> api:
->         jpu_s_priority, jpu_g_priority
->     - standard v4l2_ctrl_subscribe_event and v4l2_event_unsubscribe
->       now in use by the same reason
+Hi,
 
-The patch looks good to me. However, I would suggest using the BIT macro
-and making some short functions inline.
+On Friday, September 12, 2014 12:26:43 PM Lorenzo Pieralisi wrote:
+> On Fri, Sep 12, 2014 at 11:32:57AM +0100, Catalin Marinas wrote:
+> > Daniel, Lorenzo,
+> > 
+> > On Thu, Sep 11, 2014 at 10:32:48AM +0100, Daniel Lezcano wrote:
+> > > On 09/11/2014 10:57 AM, Lorenzo Pieralisi wrote:
+> > > > There is no ARM code in my series. So to sum it up:
+> > > >
+> > > > a) I send a pull request to Catalin for arm64 patches on top of the branch
+> > > >     you are creating with my patches
+> > >  >
+> > > > b) You take care of merging the CPUidle related patches through your
+> > > >     tree
+> > > >
+> > > > Is the above what you meant ?
+> > > 
+> > > Right, that allows to share a branch across the trees and resolve the 
+> > > dependencies when a patchset is touching different subsystems.
+> > > 
+> > > I realize the dependency is inverted regarding what I proposed 
+> > > initially, so it is up to Catalin to create the branch and I will share 
+> > > it with him.
+> > 
+> > I created the branch below with the arm64 specific patches for cpuidle.
+> > I won't rebase it and it should appear in -next tomorrow.
+> > 
+> > Lorenzo, please send a pull request to Daniel with the additional
+> > patches on top of the arm64 branch. Thanks.
+> 
+> Thank you very much, done. Pull request attached for information.
+> 
+> As Daniel knows, last two patches are still pending, waiting for Samsung
+> acks, and will be dropped if we do not get them in time.
+> 
+> Lorenzo
+> 
+> The following changes since commit 18910ab0d916b1a87016d69efd027714a80521dd:
+> 
+>   arm64: add PSCI CPU_SUSPEND based cpu_suspend support (2014-09-12 10:48:56 +0100)
+> 
+> are available in the git repository at:
+> 
+>   git://linux-arm.org/linux-2.6-lp.git for-upstream/arm-generic-cpuidle
+> 
+> for you to fetch changes up to dda773655f9b97570884c4396ad4d63daf177107:
+> 
+>   drivers: cpuidle: initialize Exynos driver through DT (2014-09-12 11:37:43 +0100)
+> 
+> ----------------------------------------------------------------
+> Bartlomiej Zolnierkiewicz (1):
+>       ARM: dts: add CPU nodes for Exynos4 SoCs
+
+This patch got broken during merge.  It differs from the version I posted
+on the list by not having the closing "};" which causes a dtb build failure:
+
+Error: arch/arm/boot/dts/exynos4210-origen.dts:21.1-2 syntax error
+FATAL ERROR: Unable to parse input tree
+make[1]: *** [arch/arm/boot/dts/exynos4210-origen.dtb] Error 1
+make: *** [dtbs] Error 2
+make: *** Waiting for unfinished jobs....
+
+Please regenarate your branch with the fixed version of the patch
+(you can squash the fix below to the broken patch).
+
+---
+ arch/arm/boot/dts/exynos4210.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
+
+Index: b/arch/arm/boot/dts/exynos4210.dtsi
+===================================================================
+--- a/arch/arm/boot/dts/exynos4210.dtsi	2014-09-23 14:14:29.793571708 +0200
++++ b/arch/arm/boot/dts/exynos4210.dtsi	2014-09-23 14:17:22.029565827 +0200
+@@ -39,6 +39,7 @@
+ 			<&clock CLK_OUT_CPU>, <&clock CLK_XXTI>,
+ 			<&clock CLK_XUSBXTI>;
+ 		#clock-cells = <1>;
++	};
  
-> Signed-off-by: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
-> ---
->  drivers/media/platform/Kconfig  |   11 +
->  drivers/media/platform/Makefile |    2 +
->  drivers/media/platform/jpu.c | 1628
-> ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1641 insertions(+)
->  create mode 100644 drivers/media/platform/jpu.c
+ 	cpus {
+ 		#address-cells = <1>;
+
+> Lorenzo Pieralisi (4):
+>       drivers: cpuidle: implement DT based idle states infrastructure
+>       drivers: cpuidle: CPU idle ARM64 driver
+>       drivers: cpuidle: initialize big.LITTLE driver through DT
+>       drivers: cpuidle: initialize Exynos driver through DT
 > 
-> diff --git a/drivers/media/platform/Kconfig
-> b/drivers/media/platform/Kconfig index 6d86646..1b8c846 100644
-> --- a/drivers/media/platform/Kconfig
-> +++ b/drivers/media/platform/Kconfig
-> @@ -220,6 +220,17 @@ config VIDEO_RENESAS_VSP1
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called vsp1.
-> 
-> +config VIDEO_RENESAS_JPU
-> +	tristate "Renesas JPEG Processing Unit"
-> +	depends on VIDEO_DEV && VIDEO_V4L2
-> +	select VIDEOBUF2_DMA_CONTIG
-> +	select V4L2_MEM2MEM_DEV
-> +	---help---
-> +	  This is a V4L2 driver for the Renesas JPEG Processing Unit.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called jpu.
-> +
->  config VIDEO_TI_VPE
->  	tristate "TI VPE (Video Processing Engine) driver"
->  	depends on VIDEO_DEV && VIDEO_V4L2 && SOC_DRA7XX diff --git
-> a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-> index e5269da..e438534 100644
-> --- a/drivers/media/platform/Makefile
-> +++ b/drivers/media/platform/Makefile
-> @@ -47,6 +47,8 @@ obj-$(CONFIG_SOC_CAMERA)		+= soc_camera/
-> 
->  obj-$(CONFIG_VIDEO_RENESAS_VSP1)	+= vsp1/
-> 
-> +obj-$(CONFIG_VIDEO_RENESAS_JPU)	+= jpu.o
-> +
->  obj-y	+= davinci/
-> 
->  obj-$(CONFIG_ARCH_OMAP)	+= omap/
-> diff --git a/drivers/media/platform/jpu.c
-> b/drivers/media/platform/jpu.c new file mode 100644 index
-> 0000000..da70491
-> --- /dev/null
-> +++ b/drivers/media/platform/jpu.c
-> @@ -0,0 +1,1628 @@
-> +/*
-> + * Author: Mikhail Ulyanov  <source@cogentembedded.com>
-> + * Copyright (C) 2014 Cogent Embedded, Inc.
-> + * Copyright (C) 2014 Renesas Electronics Corporation
-> + *
-> + * This is based on the drivers/media/platform/s5p-jpu driver by
-> + * Andrzej Pietrasiewicz and Jacek Anaszewski.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/gfp.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/string.h>
-> +#include <linux/videodev2.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/v4l2-event.h>
-> +#include <media/v4l2-fh.h>
-> +#include <media/v4l2-mem2mem.h>
-> +#include <media/v4l2-ioctl.h>
-> +#include <media/videobuf2-core.h>
-> +#include <media/videobuf2-dma-contig.h>
-> +
-> +
-> +#define JPU_M2M_NAME "jpu"
-> +
-> +#define JPU_WIDTH_MIN		16
-> +#define JPU_HEIGHT_MIN		16
-> +#define JPU_WIDTH_MAX		4096
-> +#define JPU_HEIGHT_MAX		4096
-> +#define JPU_DEFAULT_WIDTH	640
-> +#define JPU_DEFAULT_HEIGHT	480
-> +
-> +#define JPU_ENCODE		0
-> +#define JPU_DECODE		1
-> +
-> +/* Flags that indicate a format can be used for capture/output */
-> +#define JPU_FMT_TYPE_OUTPUT	0
-> +#define JPU_FMT_TYPE_CAPTURE	1
-> +#define JPU_ENC_CAPTURE		(1 << 0)
-> +#define JPU_ENC_OUTPUT		(1 << 1)
-> +#define JPU_DEC_CAPTURE		(1 << 2)
-> +#define JPU_DEC_OUTPUT		(1 << 3)
+>  arch/arm/boot/dts/exynos4210.dtsi          |  27 ++++
+>  arch/arm/boot/dts/exynos4212.dtsi          |  17 +++
+>  arch/arm/boot/dts/exynos4412.dtsi          |  29 ++++
+>  arch/arm/boot/dts/exynos5250.dtsi          |  11 ++
+>  arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts |  23 ++++
+>  drivers/cpuidle/Kconfig                    |   8 ++
+>  drivers/cpuidle/Kconfig.arm                |   2 +
+>  drivers/cpuidle/Kconfig.arm64              |  14 ++
+>  drivers/cpuidle/Makefile                   |   5 +
+>  drivers/cpuidle/cpuidle-arm64.c            | 133 ++++++++++++++++++
+>  drivers/cpuidle/cpuidle-big_little.c       |  19 +++
+>  drivers/cpuidle/cpuidle-exynos.c           |  18 ++-
+>  drivers/cpuidle/dt_idle_states.c           | 213 +++++++++++++++++++++++++++++
+>  drivers/cpuidle/dt_idle_states.h           |   7 +
+>  14 files changed, 525 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/cpuidle/Kconfig.arm64
+>  create mode 100644 drivers/cpuidle/cpuidle-arm64.c
+>  create mode 100644 drivers/cpuidle/dt_idle_states.c
+>  create mode 100644 drivers/cpuidle/dt_idle_states.h
 
-The BIT macro could be used here.
-
-> +
-> +/*
-> + * JPEG registers and bits
-> + */
-> +
-> +/* JPEG code mode register */
-> +#define JCMOD	0x00
-> +#define JCMOD_SOI_DISABLE	(1 << 8)
-> +#define JCMOD_SOI_ENABLE	(0 << 8)
-> +#define JCMOD_PCTR		(1 << 7)
-> +#define JCMOD_MSKIP_DISABLE	(0 << 5)
-> +#define JCMOD_MSKIP_ENABLE	(1 << 5)
-> +#define JCMOD_DSP_ENC		(0 << 3)
-> +#define JCMOD_DSP_DEC		(1 << 3)
-> +#define JCMOD_REDU		(7 << 0)
-> +#define JCMOD_REDU_422		(1 << 0)
-> +#define JCMOD_REDU_420		(2 << 0)
-> +
-> +/* JPEG code command register */
-> +#define JCCMD	0x04
-> +#define JCCMD_SRST	(1 << 12)
-> +#define JCCMD_BRST	(1 << 7)
-> +#define JCCMD_JEND	(1 << 2)
-> +#define JCCMD_JSRT	(1 << 0)
-> +
-> +/* JPEG code quantanization table number register */
-> +#define JCQTN	0x0C
-> +#define JCQTN_SHIFT(t)		(((t) - 1) << 1)
-> +
-> +/* JPEG code Huffman table number register */
-> +#define JCHTN	0x10
-> +#define JCHTN_AC_SHIFT(t)	(((t) << 1) - 1)
-> +#define JCHTN_DC_SHIFT(t)	(((t) - 1) << 1)
-> +
-
-[snip]
-
-> =
-> +=====
-> + * video ioctl operations
-> + *
-> +======================================================================
-> =
-> +=====
-> + */
-> +static void put_byte(unsigned long *p, u8 v) {
-> +	u8 *addr = (u8 *)*p;
-> +
-> +	*addr = v;
-> +	(*p)++;
-> +}
-> +
-> +static void put_short_be(unsigned long *p, u16 v) {
-> +	u16 *addr = (u16 *)*p;
-> +
-> +	*addr = cpu_to_be16(v);
-> +	*p += 2;
-> +}
-> +
-> +static void put_word_be(unsigned long *p, u32 v) {
-> +	u32 *addr = (u32 *)*p;
-> +
-> +	*addr = cpu_to_be32(v);
-> +	*p += 4;
-> +}
-
-The 3 above function could be inline.
-
-> +
-> +static void put_blob_byte(unsigned long *p, const unsigned char *blob,
-> +			  unsigned int len)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < len; i++)
-> +		put_byte(p, blob[i]);
-> +}
-
-I think this function could also be inline.
-
-> +
-> +static void put_qtbl(unsigned long *p, unsigned char id,
-> +		     const unsigned int *qtbl)
-> +{
-> +	int i;
-> +
-> +	put_byte(p, id);
-> +	for (i = 0; i < ARRAY_SIZE(zigzag); i++)
-> +		put_byte(p, *((u8 *)qtbl + zigzag[i])); }
-> +
-> +static void put_htbl(unsigned long *p, unsigned char tc,
-> +		     const unsigned int *htbl, unsigned int len) {
-> +	int i;
-> +
-> +	put_byte(p, tc);
-> +	for (i = 0; i < len; i++)
-> +		put_word_be(p, htbl[i]);
-> +}
-> +
-
-[snip]
-
-Best wishes,
--- 
-Kamil Debski
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
 Samsung R&D Institute Poland
-
+Samsung Electronics
 
