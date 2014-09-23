@@ -1,170 +1,127 @@
-From: Matt Ranostay <mranostay@gmail.com>
-Subject: [PATCH v2 1/2] cap1106: Add support for various cap11xx devices
-Date: Mon, 22 Sep 2014 21:04:16 -0700
-Message-ID: <1411445057-30048-2-git-send-email-mranostay@gmail.com>
-References: <1411445057-30048-1-git-send-email-mranostay@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411445057-30048-1-git-send-email-mranostay@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: galak@codeaurora.org, dmitry.torokhov@gmail.com, zonque@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>
+From: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/5] extcon: gpio: Convert the driver to use gpio desc
+ API's
+Date: Tue, 23 Sep 2014 10:44:21 +0530
+Message-ID: <542101AD.5010406@ti.com>
+References: <1410236078-11713-1-git-send-email-george.cherian@ti.com> <1410236078-11713-3-git-send-email-george.cherian@ti.com> <541FD8CD.1060400@samsung.com> <541FF138.7040908@ti.com> <5420AD3B.2080306@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5420AD3B.2080306-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rongjun.ying-kQvG35nSl+M@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Several other variants of the cap11xx device exists with a varying
-number of capacitance detection channels. Add support for creating
-the channels dynamically.
 
-Signed-off-by: Matt Ranostay <mranostay@gmail.com>
----
- drivers/input/keyboard/cap1106.c | 64 +++++++++++++++++++++++++++-------------
- 1 file changed, 44 insertions(+), 20 deletions(-)
+On 09/23/2014 04:44 AM, Chanwoo Choi wrote:
+> On 09/22/2014 06:51 PM, George Cherian wrote:
+>> On 09/22/2014 01:37 PM, Chanwoo Choi wrote:
+>>> Hi George,
+>>>
+>>> This patch removes 'gpio_active_low' field of struct gpio_extcon_data.
+>>> But, include/linux/extcon-gpio.h has the description of 'gpio_active_low' field.
+>> Yes didn't want the platform data users to break.
+>> Actually I couldn't find any platform users for this driver. Could you please point me to
+>> one if in case I missed it. If non present then why cant we get rid of platform data altogether.
+> Right,
+> But, Why do you support platform data on as following your patch?
+> - [PATCH 3/5] extcon: gpio: Add dt support for the driver.
+> According to your comment, you had to remove the support for platform data.
+My intention with this series was to add dt support by keeping the 
+existing platform data.
+Now that we know there are no platform data users I will rework on this 
+and keep only dt
+support.
+>
+> IMO,
+> I think this patchset must need to reorder the sequence of patchset.
+> Also, this patchset is more detailed description.
+I will rework and submit a v2.
+>>> Also,
+>>> This patch has not included the any description/comment of removing 'gpio_active_low'.
+>>>
+>>> Also,
+>>> How to set 'FLAG_ACTIVE_LOW' bit for gpio when using platform data?
+>> Now that we are using gpiod_* API's  we need not check for gpio_active_low from this driver.
+> This patch just use gpiod API instead of legacy gpio API.
+>
+> I think that if extcon-gpio don't need to check gpio_activ_low field,
+> you have to implement dt support patch before this patch.
+yes will do in v2
 
-diff --git a/drivers/input/keyboard/cap1106.c b/drivers/input/keyboard/cap1106.c
-index d70b65a..07f9e88 100644
---- a/drivers/input/keyboard/cap1106.c
-+++ b/drivers/input/keyboard/cap1106.c
-@@ -55,8 +55,6 @@
- #define CAP1106_REG_MANUFACTURER_ID	0xfe
- #define CAP1106_REG_REVISION		0xff
- 
--#define CAP1106_NUM_CHN 6
--#define CAP1106_PRODUCT_ID	0x55
- #define CAP1106_MANUFACTURER_ID	0x5d
- 
- struct cap1106_priv {
-@@ -64,7 +62,25 @@ struct cap1106_priv {
- 	struct input_dev *idev;
- 
- 	/* config */
--	unsigned short keycodes[CAP1106_NUM_CHN];
-+	u32 *keycodes;
-+	unsigned int num_channels;
-+};
-+
-+struct cap11xx_hw_model {
-+	uint8_t product_id;
-+	unsigned int num_channels;
-+};
-+
-+enum {
-+	CAP1106,
-+	CAP1126,
-+	CAP1188,
-+};
-+
-+struct cap11xx_hw_model cap11xx_devices[] = {
-+	[CAP1106] = { .product_id = 0x55, .num_channels = 6 },
-+	[CAP1126] = { .product_id = 0x53, .num_channels = 6 },
-+	[CAP1188] = { .product_id = 0x50, .num_channels = 8 },
- };
- 
- static const struct reg_default cap1106_reg_defaults[] = {
-@@ -151,7 +167,7 @@ static irqreturn_t cap1106_thread_func(int irq_num, void *data)
- 	if (ret < 0)
- 		goto out;
- 
--	for (i = 0; i < CAP1106_NUM_CHN; i++)
-+	for (i = 0; i < priv->num_channels; i++)
- 		input_report_key(priv->idev, priv->keycodes[i],
- 				 status & (1 << i));
- 
-@@ -188,14 +204,23 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
- 	struct device *dev = &i2c_client->dev;
- 	struct cap1106_priv *priv;
- 	struct device_node *node;
-+	struct cap11xx_hw_model *cap = &cap11xx_devices[id->driver_data];
- 	int i, error, irq, gain = 0;
- 	unsigned int val, rev;
--	u32 gain32, keycodes[CAP1106_NUM_CHN];
-+	u32 gain32;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	BUG_ON(!cap->num_channels);
-+
-+	priv->num_channels = cap->num_channels;
-+	priv->keycodes = devm_kcalloc(dev,
-+		priv->num_channels, sizeof(u32), GFP_KERNEL);
-+	if (!priv->keycodes)
-+		return -ENOMEM;
-+
- 	priv->regmap = devm_regmap_init_i2c(i2c_client, &cap1106_regmap_config);
- 	if (IS_ERR(priv->regmap))
- 		return PTR_ERR(priv->regmap);
-@@ -204,9 +229,9 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
- 	if (error)
- 		return error;
- 
--	if (val != CAP1106_PRODUCT_ID) {
-+	if (val != cap->product_id) {
- 		dev_err(dev, "Product ID: Got 0x%02x, expected 0x%02x\n",
--			val, CAP1106_PRODUCT_ID);
-+			val, cap->product_id);
- 		return -ENODEV;
- 	}
- 
-@@ -235,17 +260,12 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
- 			dev_err(dev, "Invalid sensor-gain value %d\n", gain32);
- 	}
- 
--	BUILD_BUG_ON(ARRAY_SIZE(keycodes) != ARRAY_SIZE(priv->keycodes));
--
- 	/* Provide some useful defaults */
--	for (i = 0; i < ARRAY_SIZE(keycodes); i++)
--		keycodes[i] = KEY_A + i;
-+	for (i = 0; i < priv->num_channels; i++)
-+		priv->keycodes[i] = KEY_A + i;
- 
- 	of_property_read_u32_array(node, "linux,keycodes",
--				   keycodes, ARRAY_SIZE(keycodes));
--
--	for (i = 0; i < ARRAY_SIZE(keycodes); i++)
--		priv->keycodes[i] = keycodes[i];
-+		priv->keycodes, priv->num_channels);
- 
- 	error = regmap_update_bits(priv->regmap, CAP1106_REG_MAIN_CONTROL,
- 				   CAP1106_REG_MAIN_CONTROL_GAIN_MASK,
-@@ -269,17 +289,17 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
- 	if (of_property_read_bool(node, "autorepeat"))
- 		__set_bit(EV_REP, priv->idev->evbit);
- 
--	for (i = 0; i < CAP1106_NUM_CHN; i++)
-+	for (i = 0; i < priv->num_channels; i++)
- 		__set_bit(priv->keycodes[i], priv->idev->keybit);
- 
- 	__clear_bit(KEY_RESERVED, priv->idev->keybit);
- 
- 	priv->idev->keycode = priv->keycodes;
--	priv->idev->keycodesize = sizeof(priv->keycodes[0]);
--	priv->idev->keycodemax = ARRAY_SIZE(priv->keycodes);
-+	priv->idev->keycodesize = sizeof(u32);
-+	priv->idev->keycodemax = priv->num_channels;
- 
- 	priv->idev->id.vendor = CAP1106_MANUFACTURER_ID;
--	priv->idev->id.product = CAP1106_PRODUCT_ID;
-+	priv->idev->id.product = cap->product_id;
- 	priv->idev->id.version = rev;
- 
- 	priv->idev->open = cap1106_input_open;
-@@ -313,12 +333,16 @@ static int cap1106_i2c_probe(struct i2c_client *i2c_client,
- 
- static const struct of_device_id cap1106_dt_ids[] = {
- 	{ .compatible = "microchip,cap1106", },
-+	{ .compatible = "microchip,cap1126", },
-+	{ .compatible = "microchip,cap1188", },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, cap1106_dt_ids);
- 
- static const struct i2c_device_id cap1106_i2c_ids[] = {
--	{ "cap1106", 0 },
-+	{ "cap1106", CAP1106 },
-+	{ "cap1126", CAP1126 },
-+	{ "cap1188", CAP1188 },
- 	{}
- };
- MODULE_DEVICE_TABLE(i2c, cap1106_i2c_ids);
--- 
-1.9.1
+Thanks for your review.
+>>> This patch don't call 'set_bit()' function to set FLAG_ACTIVE_LOW flag.
+>>>
+>>> Thanks,
+>>> Chanwoo Choi
+>>>
+>>> On 09/09/2014 01:14 PM, George Cherian wrote:
+>>>> Convert the driver to use gpiod_* API's.
+>>>>
+>>>> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+>>>> ---
+>>>>    drivers/extcon/extcon-gpio.c | 18 +++++++-----------
+>>>>    1 file changed, 7 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
+>>>> index 72f19a3..25269f6 100644
+>>>> --- a/drivers/extcon/extcon-gpio.c
+>>>> +++ b/drivers/extcon/extcon-gpio.c
+>>>> @@ -33,8 +33,7 @@
+>>>>      struct gpio_extcon_data {
+>>>>        struct extcon_dev *edev;
+>>>> -    unsigned gpio;
+>>>> -    bool gpio_active_low;
+>>>> +    struct gpio_desc *gpiod;
+>>>>        const char *state_on;
+>>>>        const char *state_off;
+>>>>        int irq;
+>>>> @@ -50,9 +49,7 @@ static void gpio_extcon_work(struct work_struct *work)
+>>>>            container_of(to_delayed_work(work), struct gpio_extcon_data,
+>>>>                     work);
+>>>>    -    state = gpio_get_value(data->gpio);
+>>>> -    if (data->gpio_active_low)
+>>>> -        state = !state;
+>>>> +    state = gpiod_get_value(data->gpiod);
+>>>>        extcon_set_state(data->edev, state);
+>>>>    }
+>>>>    @@ -106,22 +103,21 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>>>>        }
+>>>>        extcon_data->edev->name = pdata->name;
+>>>>    -    extcon_data->gpio = pdata->gpio;
+>>>> -    extcon_data->gpio_active_low = pdata->gpio_active_low;
+>>>> +    extcon_data->gpiod = gpio_to_desc(pdata->gpio);
+>>>>        extcon_data->state_on = pdata->state_on;
+>>>>        extcon_data->state_off = pdata->state_off;
+>>>>        extcon_data->check_on_resume = pdata->check_on_resume;
+>>>>        if (pdata->state_on && pdata->state_off)
+>>>>            extcon_data->edev->print_state = extcon_gpio_print_state;
+>>>>    -    ret = devm_gpio_request_one(&pdev->dev, extcon_data->gpio, GPIOF_DIR_IN,
+>>>> +    ret = devm_gpio_request_one(&pdev->dev, pdata->gpio, GPIOF_DIR_IN,
+>>>>                        pdev->name);
+>>>>        if (ret < 0)
+>>>>            return ret;
+>>>>          if (pdata->debounce) {
+>>>> -        ret = gpio_set_debounce(extcon_data->gpio,
+>>>> -                    pdata->debounce * 1000);
+>>>> +        ret = gpiod_set_debounce(extcon_data->gpiod,
+>>>> +                     pdata->debounce * 1000);
+>>>>            if (ret < 0)
+>>>>                extcon_data->debounce_jiffies =
+>>>>                    msecs_to_jiffies(pdata->debounce);
+>>>> @@ -133,7 +129,7 @@ static int gpio_extcon_probe(struct platform_device *pdev)
+>>>>          INIT_DELAYED_WORK(&extcon_data->work, gpio_extcon_work);
+>>>>    -    extcon_data->irq = gpio_to_irq(extcon_data->gpio);
+>>>> +    extcon_data->irq = gpiod_to_irq(extcon_data->gpiod);
+>>>>        if (extcon_data->irq < 0)
+>>>>            return extcon_data->irq;
+>>>>   
+>>
+
+-George
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
