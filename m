@@ -1,64 +1,61 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 3/9] Documentation: bindings: net: add the Marvell
- PXA168 Ethernet controller
-Date: Tue, 23 Sep 2014 18:40:46 +0200
-Message-ID: <5421A28E.7060600@gmail.com>
-References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com> <4014272.rJbSfrLcuB@wuerfel> <542195B0.6080706@gmail.com> <9401592.hUYDkriFVO@wuerfel>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9401592.hUYDkriFVO@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 23 Sep 2014 18:44:40 +0200
+Message-ID: <5140494.LzvyOiyY3U@wuerfel>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com> <2909480.SL9c0XWUbW@wuerfel> <20140923133645.GA18924@kwain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140923133645.GA18924@kwain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2014 06:29 PM, Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 17:45:52 Sebastian Hesselbarth wrote:
->> For reference, this is what we have for MVEBU SoCs with multiple ports
->> per controller:
->>
->> eth: ethernet-ctrl@72000 {
->>          compatible = "marvell,orion-eth";
-...
->>          reg = <0x72000 0x4000>;
-...
->>
->>          ethernet-port@0 {
->>                  compatible = "marvell,orion-eth-port";
-...
->>                  phy-handle = <&ethphy>;
->>          };
->> };
->>
->> mdio: mdio-bus@72004 {
->>          compatible = "marvell,orion-mdio";
-...
->>          reg = <0x72004 0x84>;
-..
->>          ethphy: ethernet-phy {
->>                  /* set phy address in board file */
->>          };
->> };
+On Tuesday 23 September 2014 15:36:45 Antoine Tenart wrote:
+> On Tue, Sep 23, 2014 at 12:39:04PM +0200, Arnd Bergmann wrote:
+> > On Tuesday 23 September 2014 12:28:03 Antoine Tenart wrote:
+> > > +       if (dev->of_node) {
+> > > +               ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+> > > +               if (ret)
+> > > +                       goto clk_err;
+> > > +       } else {
+> > > +               ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> > > +               if (ret)
+> > > +                       goto clk_err;
+> > > +       }
+> > > 
+> > 
+> > Why do you care about the non-DT case here? I think it would be nicer to
+> > open-code the ci_hdrc_usb2_dt_probe() function in here and remove
+> > the dma_set_mask_and_coherent(), which should not even be necessary for
+> > the case where you have a hardwired platform device.
+> > 
+> 
+> I thought we agreed to call dma_set_mask_and_coherent():
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/273335.html
+> 
+> I do not have a strong opinion on this as I only use the dt case for my
+> usage.
 
-> But in this example, you have the same registers and the same
-> clocks in two nodes, which are even used by the same device driver
-> at the moment. It's not a big issue, but my feeling is that Antoine's
-> approach was actually better because it more closely reflects
-> the way that the hardware is built.
+The question is more about who actually wants the non-DT case.
 
-I was not referring to the separate mdio bus node, but putting the
-ethernet-phy node as a child of ethernet-ctrl.
+Since this is a new driver, I suspect that the answer is "nobody",
+as the existing board files are all for legacy platforms that we
+are not going to adapt for this driver.
 
-Anyway, I can live with the ethernet-phy being a child of the controller
-node until we discover where it is hooked up.
+I see in the thread that at least Peter Chen was assuming the non-DT
+case was still needed, but I can't find a reason for this in the code.
+If we no longer care about that, the call to dev_get_platdata()
+can also get removed.
 
-For the internal MII PHY the controller node maybe is the only sane
-place to put it in. The HEC PHY will reside within the CEC IP node but
-that is compatible with Antoine's proposal.
+Looking through the code some more, I also notice that it's using
+a strange way of doing the abstraction: ci_hdrc_add_device()
+actually creates a child device node, while the preferred way would
+be to just call into ci_hdrc_probe(), or a generalized version of
+that.
+That should probably be changed, but can be done as a later cleanup.
 
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+	Arnd
