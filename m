@@ -1,95 +1,178 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 06/10] rtc: at91sam9: rework the Kconfig description
-Date: Tue, 23 Sep 2014 12:11:44 +0200
-Message-ID: <20140923121144.0fd5d3c8@bbrezillon>
-References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1411465130-29011-7-git-send-email-boris.brezillon@free-electrons.com>
-	<542146AF.3060807@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542146AF.3060807-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 01/12] reset: add the Berlin reset controller driver
+Date: Tue, 23 Sep 2014 12:27:57 +0200
+Message-ID: <1411468088-5702-2-git-send-email-antoine.tenart@free-electrons.com>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411468088-5702-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Sep 2014 12:08:47 +0200
-Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+Add a reset controller for Marvell Berlin SoCs which is used by the
+USB PHYs drivers (for now).
 
-> On 23/09/2014 11:38, Boris BREZILLON :
-> > Remove all references to AT91CAP9 SoC which has been removed.
-> > Rework the help message to remove any specific references to AT91SAM9 SoCs.
-> > 
-> > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  drivers/rtc/Kconfig | 17 +++++++++--------
-> >  1 file changed, 9 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> > index 7d76da8..455f2c3 100644
-> > --- a/drivers/rtc/Kconfig
-> > +++ b/drivers/rtc/Kconfig
-> > @@ -1079,17 +1079,18 @@ config RTC_DRV_AT91RM9200
-> >  	  this is powered by the backup power supply.
-> >  
-> >  config RTC_DRV_AT91SAM9
-> > -	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
-> > +	tristate "AT91SAM9 RTT as RTC"
-> >  	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
-> >  	select MFD_SYSCON
-> >  	help
-> > -	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
-> > -	  (Real Time Timer). These timers are powered by the backup power
-> > -	  supply (such as a small coin cell battery), but do not need to
-> > -	  be used as RTCs.
-> > -
-> > -	  (On AT91SAM9rl and AT91SAM9G45 chips you probably want to use the
-> > -	  dedicated RTC module and leave the RTT available for other uses.)
-> > +	  Some AT91SAM9 SoCs provide an RTT (Real Time Timer) block which
-> > +	  can be used as an RTC thanks to the backup power supply (e.g. a
-> > +	  small coin cell battery) which keeps this block and the GPBR
-> > +	  (General Purpose Backup Registers) block powered when the device
-> > +	  is shutdown.
-> > +	  Some AT91SAM9 SoCs provide a real RTC block, on those ones you'd
-> > +	  probably want to use the real RTC block instead of the RTT as an
-> > +	  RTT driver.
-> 
-> You mean:
-> "instead of the RTT as an RTC"
+Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/reset/Makefile       |   1 +
+ drivers/reset/reset-berlin.c | 131 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 132 insertions(+)
+ create mode 100644 drivers/reset/reset-berlin.c
 
-Yep, that's what I meant.
-
-> 
-> With that, good description: thanks!
-> 
-> Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> 
-> So, now we can think of what to do with the series:
-> 
-> - Johan, do you want to "Ack" it?
-> - may I take it through the arm-soc git tree (likely for the 3.19 dev.
-> phase).
-> 
-> Your thoughts?
-> 
-> Bye,
-> 
-> >  
-> >  config RTC_DRV_AT91SAM9_RTT
-> >  	int
-> > 
-> 
-> 
-
-
-
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 60fed3d7820b..157d421f755b 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -1,4 +1,5 @@
+ obj-$(CONFIG_RESET_CONTROLLER) += core.o
+ obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
++obj-$(CONFIG_ARCH_BERLIN) += reset-berlin.o
+ obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
+ obj-$(CONFIG_ARCH_STI) += sti/
+diff --git a/drivers/reset/reset-berlin.c b/drivers/reset/reset-berlin.c
+new file mode 100644
+index 000000000000..f8b48a13cf0b
+--- /dev/null
++++ b/drivers/reset/reset-berlin.c
+@@ -0,0 +1,131 @@
++/*
++ * Copyright (C) 2014 Marvell Technology Group Ltd.
++ *
++ * Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ * Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/reset-controller.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++#define BERLIN_MAX_RESETS	32
++
++#define to_berlin_reset_priv(p)		\
++	container_of((p), struct berlin_reset_priv, rcdev)
++
++struct berlin_reset_priv {
++	void __iomem			*base;
++	unsigned int			size;
++	struct reset_controller_dev	rcdev;
++};
++
++static int berlin_reset_reset(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	struct berlin_reset_priv *priv = to_berlin_reset_priv(rcdev);
++	int offset = id >> 8;
++	int mask = BIT(id & 0x1f);
++
++	writel(mask, priv->base + offset);
++
++	/* let the reset be effective */
++	udelay(10);
++
++	return 0;
++}
++
++static struct reset_control_ops berlin_reset_ops = {
++	.reset	= berlin_reset_reset,
++};
++
++static int berlin_reset_xlate(struct reset_controller_dev *rcdev,
++			      const struct of_phandle_args *reset_spec)
++{
++	struct berlin_reset_priv *priv = to_berlin_reset_priv(rcdev);
++	unsigned offset, bit;
++
++	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
++		return -EINVAL;
++
++	offset = reset_spec->args[0];
++	bit = reset_spec->args[1];
++
++	if (offset >= priv->size)
++		return -EINVAL;
++
++	if (bit >= BERLIN_MAX_RESETS)
++		return -EINVAL;
++
++	return (offset << 8) | bit;
++}
++
++static int __berlin_reset_init(struct device_node *np)
++{
++	struct berlin_reset_priv *priv;
++	struct resource res;
++	resource_size_t size;
++	int ret;
++
++	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	ret = of_address_to_resource(np, 0, &res);
++	if (ret)
++		goto err;
++
++	size = resource_size(&res);
++	priv->base = ioremap(res.start, size);
++	if (!priv->base) {
++		ret = -ENOMEM;
++		goto err;
++	}
++	priv->size = size;
++
++	priv->rcdev.owner = THIS_MODULE;
++	priv->rcdev.ops = &berlin_reset_ops;
++	priv->rcdev.of_node = np;
++	priv->rcdev.of_reset_n_cells = 2;
++	priv->rcdev.of_xlate = berlin_reset_xlate;
++
++	reset_controller_register(&priv->rcdev);
++
++	return 0;
++
++err:
++	kfree(priv);
++	return ret;
++}
++
++static const struct of_device_id berlin_reset_of_match[] __initconst = {
++	{ .compatible = "marvell,berlin2-chip-ctrl" },
++	{ .compatible = "marvell,berlin2cd-chip-ctrl" },
++	{ .compatible = "marvell,berlin2q-chip-ctrl" },
++	{ },
++};
++
++static int __init berlin_reset_init(void)
++{
++	struct device_node *np;
++	int ret;
++
++	for_each_matching_node(np, berlin_reset_of_match) {
++		ret = __berlin_reset_init(np);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++arch_initcall(berlin_reset_init);
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.1
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
