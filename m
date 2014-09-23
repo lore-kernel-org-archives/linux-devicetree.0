@@ -1,132 +1,90 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] drm/rockchip: Add support for Rockchip Soc EDP
-Date: Tue, 23 Sep 2014 09:56:36 -0400
-Message-ID: <CAF6AEGuGKitXGE8S-fE-d+-MWDBxU-XqG_AH7q9FD0y5YkBFVQ@mail.gmail.com>
-References: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>
-	<1411383728-2075-1-git-send-email-mark.yao@rock-chips.com>
-	<CAF6AEGtxUGr2i+mK7dtfTXaf2SxHkokxw2sNCviwRR6Hn7RE2w@mail.gmail.com>
-	<5421338B.3020302@rock-chips.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v11 08/10] OF: PCI: Add support for parsing PCI host
+ bridge resources from DT
+Date: Tue, 23 Sep 2014 14:58:28 +0100
+Message-ID: <20140923135828.GS1994@e106497-lin.cambridge.arm.com>
+References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
+ <20140922093228.GA20256@rric.localhost>
+ <20140922114317.GN1994@e106497-lin.cambridge.arm.com>
+ <8687285.EH4RPBeOB5@wuerfel>
+ <CAL_JsqK3yH-uf++haBovWdX6er1PtzeiZ-2-yT1TRfYPxAjFow@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5421338B.3020302-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cym <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK3yH-uf++haBovWdX6er1PtzeiZ-2-yT1TRfYPxAjFow@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-arch-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, linux-arch <linux-arch@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Device Tree ML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Sinan Kaya <okaya@codeaurora.org>, Sunil Goutham <sunil.goutham@caviumnet>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 4:47 AM, cym <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->
-> On Tuesday, September 23, 2014 03:20 AM, Rob Clark wrote:
->>
->> On Mon, Sep 22, 2014 at 7:02 AM, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->>>
->>> This adds support for Rockchip soc edp found on rk3288
->>>
->>> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> Signed-off-by: Jeff Chen <jeff.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> ---
->>> Changes in v2:
->>> - fix code sytle
->>> - use some define from drm_dp_helper.h
->>> - use panel-simple driver for primary display.
->>> - remove unnecessary clock clk_24m_parent.
->>>
->>> Changes in v3: None
->>>
->>> Changes in v4: None
->>>
->>>   drivers/gpu/drm/rockchip/Kconfig             |    9 +
->>>   drivers/gpu/drm/rockchip/Makefile            |    2 +
->>>   drivers/gpu/drm/rockchip/rockchip_edp_core.c |  853 ++++++++++++++++++
->>>   drivers/gpu/drm/rockchip/rockchip_edp_core.h |  309 +++++++
->>>   drivers/gpu/drm/rockchip/rockchip_edp_reg.c  | 1202
->>> ++++++++++++++++++++++++++
->>>   drivers/gpu/drm/rockchip/rockchip_edp_reg.h  |  345 ++++++++
->>>   6 files changed, 2720 insertions(+)
->>>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_edp_core.c
->>>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_edp_core.h
->>>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_edp_reg.c
->>>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_edp_reg.h
->>>
->>> diff --git a/drivers/gpu/drm/rockchip/Kconfig
->>> b/drivers/gpu/drm/rockchip/Kconfig
->>> index 7146c80..04b1f8c 100644
->>> --- a/drivers/gpu/drm/rockchip/Kconfig
->>> +++ b/drivers/gpu/drm/rockchip/Kconfig
->>> @@ -17,3 +17,12 @@ config DRM_ROCKCHIP
->>>            management to userspace. This driver does not provides
->>>            2D or 3D acceleration; acceleration is performed by other
->>>            IP found on the SoC.
->>> +
->>> +config ROCKCHIP_EDP
->>> +       bool "Rockchip edp support"
->>> +       depends on DRM_ROCKCHIP
->>> +       help
->>> +         Choose this option if you have a Rockchip eDP.
->>> +         Rockchip rk3288 SoC has eDP TX Controller can be used.
->>> +         If you have an Embedded DisplayPort Panel, say Y to enable its
->>> +         driver.
->>> diff --git a/drivers/gpu/drm/rockchip/Makefile
->>> b/drivers/gpu/drm/rockchip/Makefile
->>> index 6e6d468..a0fc3a1 100644
->>> --- a/drivers/gpu/drm/rockchip/Makefile
->>> +++ b/drivers/gpu/drm/rockchip/Makefile
->>> @@ -7,4 +7,6 @@ ccflags-y := -Iinclude/drm -Idrivers/gpu/drm/rockchip
->>>   rockchipdrm-y := rockchip_drm_drv.o rockchip_drm_fb.o
->>> rockchip_drm_fbdev.o \
->>>                  rockchip_drm_gem.o rockchip_drm_vop.o
->>>
->>> +rockchipdrm-$(CONFIG_ROCKCHIP_EDP) += rockchip_edp_core.o
->>> rockchip_edp_reg.o
->>> +
->>>   obj-$(CONFIG_DRM_ROCKCHIP) += rockchipdrm.o
->>> diff --git a/drivers/gpu/drm/rockchip/rockchip_edp_core.c
->>> b/drivers/gpu/drm/rockchip/rockchip_edp_core.c
->>> new file mode 100644
->>> index 0000000..5450d1fa
->>> --- /dev/null
->>> +++ b/drivers/gpu/drm/rockchip/rockchip_edp_core.c
->>> @@ -0,0 +1,853 @@
->>> +/*
->>> +* Copyright (C) Fuzhou Rockchip Electronics Co.Ltd
->>> +* Author:
->>> +*      Andy yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> +*      Jeff chen <jeff.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> +*
->>> +* based on exynos_dp_core.c
->>> +*
->>
->> hmm, did you look at all at drm_dp_helpers?  The exynos code probably
->> pre-dates the helpers, so might not be the best example to work off
->> of..
->>
->> If there is actually a valid reason not to use the dp-helpers, then
->> you should mention the reasons, at least in the commit msg if not the
->> code
->>
->> BR,
->> -R
->
-> Thanks Rob,Because RK3288 eDP controller IP design is similar to exynos.They
-> from same IP vendors but have some difference.
-> So we choosed exynos_dp as example to work off of.exynos_dp only used some
-> defines from drm_dp_helper.h like DPCD.
->
+On Tue, Sep 23, 2014 at 02:30:08PM +0100, Rob Herring wrote:
+> On Tue, Sep 23, 2014 at 2:56 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Monday 22 September 2014 12:43:17 Liviu Dudau wrote:
+> >> >
+> >> > From e798af4fc2f664d1aff7e863489b8298f90e716e Mon Sep 17 00:00:0=
+0 2001
+> >> > From: Robert Richter <rrichter@cavium.com>
+> >> > Date: Mon, 22 Sep 2014 10:46:01 +0200
+> >> > Subject: [PATCH] OF: PCI: Fix creation of mem-mapped pci host br=
+idges
+> >> >
+> >> > The pci host bridge was not created if io_base was not set when
+> >> > calling of_pci_get_host_bridge_resources(). This is esp. the cas=
+e for
+> >> > mem-mapped io (IORESOURCE_MEM). This patch fixes this. Function
+> >> > parameter io_base is optional now.
+> >>
+> >> I think the message is misleading. What you want to do is make io_=
+base
+> >> optional for the case where the PCI host bridge only expects to ha=
+ve only
+> >> IORESOURCE_MEM ranges and doesn't care about IORESOURCE_IO ones.
+> >>
+> >> As I'm going to touch this area again to address a comment from Bj=
+orn,
+> >> do you mind if I roll this patch into mine with your Signed-off-by=
+ and
+> >> the mention that you have made io_base optional?
+> >
+> > I think the best way to deal with this is to move the check for
+> > io_base down into the place where it is used: As long as the DT onl=
+y
+> > specifies IORESOURCE_MEM windows, we don't need to look at io_base,
+> > but if the host controller driver does not support IORESOURCE_IO
+> > while the DT specifies it, I guess it would be nice to return an
+> > error.
+>=20
+> The DT may specify it, but the h/w could be broken in some way so the
+> host driver chooses to ignore it. I don't think we should force the
+> host driver to provide a pointer in that case. Also, would we want it
+> added to the resource list if it is not going to be used?
 
+This is only for scanning the DT ranges. If the hardware is broken and
+the driver knows about that then it can filter out the I/O ranges
+before it passes them on to pci_scan_root_bus() or pci_create_root_bus(=
+).
 
-Hmm, it sounds like it perhaps should be refactored out into a
-drm_bridge so more of it can be shared between rockchip and exynos.
+Lets not complicate this function any further. If you get an I/O range
+it should be expected to also pass an io_base pointer to store the
+CPU address of the range, otherwise it will get lost in the conversion
+to an IORESOURCE_IO resource. You want later to discard the resource
+and forget the CPU address, then don't use it!
 
-Either way, it should be using the drm_dp_helpers..  That "the code I
-copied did it wrong" isn't a terribly good reason for new drivers to
-do it wrong.
+Best regards,
+Liviu
 
-So NAK for the eDP part until you use the helpers.
+>=20
+> Rob
+>=20
 
-BR,
--R
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
