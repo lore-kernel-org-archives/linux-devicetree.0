@@ -1,27 +1,36 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 0/4] Qualcomm SPMI PMIC pin controller drivers
-Date: Tue, 23 Sep 2014 17:16:33 +0200
-Message-ID: <CACRpkdaT0LEsFBx2-eTXdq+QY=L3BDRJpxwhuxGDbG7zBs3O-g@mail.gmail.com>
-References: <1410792254-24126-1-git-send-email-iivanov@mm-sol.com>
+Subject: Re: [PATCH v2 1/5] pinctrl: exynos: Generalize the eint16_31 demux code
+Date: Tue, 23 Sep 2014 17:18:20 +0200
+Message-ID: <CACRpkdZcN0Zszt9QmW309fYDjOm-syA9kpL8nhRK640eKNB1Aw@mail.gmail.com>
+References: <1411460169-30536-1-git-send-email-a.kesavan@samsung.com>
+	<1411460169-30536-2-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1410792254-24126-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, David Collins <collinsd@codeaurora.org>, Wu Fenglin <fenglinw@qti.qualcomm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1411460169-30536-2-git-send-email-a.kesavan@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Abhilash Kesavan <a.kesavan@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Abraham <thomas.ab@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 15, 2014 at 4:44 PM, Ivan T. Ivanov <iivanov@mm-sol.com> wr=
-ote:
+On Tue, Sep 23, 2014 at 10:16 AM, Abhilash Kesavan
+<a.kesavan@samsung.com> wrote:
 
-> This is forth version of the patches posted earlier here[1].
+> The function exynos_irq_demux_eint16_31 uses pre-defined offsets for external
+> interrupt pending status and mask registers. So this function is not extensible
+> for Exynos7 SoC which have these registers at different offsets. So generalize
+> the exynos_irq_demux_eint16_31 function by using the pending/mask register
+> offset values from the exynos_irq_chip structure.
+>
+> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+> Reviewed-by: Thomas Abraham <thomas.ab@samsung.com>
+> Tested-by: Thomas Abraham <thomas.ab@samsung.com>
+> Cc: Thomas Abraham <thomas.ab@samsung.com>
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
 
-I mainly want you and Bj=C3=B6rn to cross-ACK each others' patches
-and then I'm ready to merge this.
-
-Bj=C3=B6rn are these 4 patches OK with you?
+I'm waiting for the maintainers to ACK these patches
+before I take them.
 
 Yours,
 Linus Walleij
