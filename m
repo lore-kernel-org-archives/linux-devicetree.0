@@ -1,76 +1,65 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 12:34:54 +0200
-Message-ID: <54214CCE.7050102@samsung.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
- <5419760A.7020908@ti.com>
- <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
- <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
- <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo>
- <5421201C.6000509@samsung.com> <20140923083514.GM30514@ulmo>
- <542140D3.8080806@samsung.com> <20140923101032.GU30514@ulmo>
+From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 08/10] rtc: at91sam9: use clk API instead of relying
+ on AT91_SLOW_CLOCK
+Date: Tue, 23 Sep 2014 12:33:26 +0200
+Message-ID: <20140923103326.GA404@localhost>
+References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1411465130-29011-9-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20140923101032.GU30514@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1411465130-29011-9-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2014 12:10 PM, Thierry Reding wrote:
-> On Tue, Sep 23, 2014 at 11:43:47AM +0200, Andrzej Hajda wrote:
->> On 09/23/2014 10:35 AM, Thierry Reding wrote:
-> [...]
->>> But I agree that it would be nice to unify bridges and encoders more. It
->>> should be possible to make encoder always a bridge (or perhaps even
->>> replace encoders with bridges altogether). Then once you're out of the
->>> DRM device everything would be a bridge until you get to a panel.
->> I agree that some sort of unification of bridges, (slave) encoders is a good
->> thing, this way we stay only with bridges and panels as receivers.
->> But we will still have to deal with the code like:
->>     if (on the other end of the link is panel)
->>         do panel framework specific things
->>     else
->>         do bridge framework specific things
->>
->> The code in both branches usually does similar things but due to framework
->> differences it is difficult to merge.
-> That's because they are inherently different entities. You can perform
-> operations on a panel that don't make sense for a bridge and vice-versa.
->
->> Ideally it would be best to get rid of such constructs. For example by
->> trying to
->> make frameworks per interface type exposed by device (eg. video_sink) and
->> not by device type (drm_bridge, drm_panel).
-> But then you loose all information about the real type of device.
-Driver knows type of its device anyway. Why should it know device
-type of devices it is connected to? It is enough it knows how to talk to
-other device.
-Like in real world, why desktop PC should know it is connected to DVI
-monitor or to
-DVI/HDMI converter which is connected to TV?
->  Or you
-> have to create a common base class. And then you're still back to
-> dealing with the two specific cases in many places, so the gain seems
-> rather minimal.
+On Tue, Sep 23, 2014 at 11:38:48AM +0200, Boris BREZILLON wrote:
 
-For example RGB panel and RGB/??? bridge have the same hardware input
-interface.
-Why shall they have different representation in kernel?
+> @@ -328,6 +328,7 @@ static int at91_rtc_probe(struct platform_device *pdev)
+>  	struct sam9_rtc	*rtc;
+>  	int		ret, irq;
+>  	u32		mr;
+> +	unsigned int	sclk_rate;
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+> @@ -385,11 +386,27 @@ static int at91_rtc_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  	}
+>  
+> +	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(rtc->sclk))
+> +		return PTR_ERR(rtc->sclk);
+> +
+> +	sclk_rate = clk_get_rate(rtc->sclk);
+> +	if (!sclk_rate || sclk_rate > AT91_RTT_RTTRST) {
 
-Regards
-Andrzej
+You probably meant AT91_RTT_RTPRES here.
 
->
-> Thierry
+> +		dev_err(&pdev->dev, "Invalid slow clock rate");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = clk_prepare_enable(rtc->sclk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Could not enable slow clock");
+> +		return ret;
+> +	}
+> +
+>  	mr = rtt_readl(rtc, MR);
+>  
+>  	/* unless RTT is counting at 1 Hz, re-initialize it */
+> -	if ((mr & AT91_RTT_RTPRES) != AT91_SLOW_CLOCK) {
+> -		mr = AT91_RTT_RTTRST | (AT91_SLOW_CLOCK & AT91_RTT_RTPRES);
+> +	if ((mr & AT91_RTT_RTPRES) != sclk_rate) {
+> +		mr = AT91_RTT_RTTRST | (sclk_rate & AT91_RTT_RTPRES);
+>  		gpbr_writel(rtc, 0);
+>  	}
+
+Johan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
