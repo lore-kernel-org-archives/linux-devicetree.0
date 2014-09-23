@@ -1,90 +1,77 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v8 00/10] rtc: at91sam9: add DT support
-Date: Tue, 23 Sep 2014 13:23:54 +0200
-Message-ID: <1411471444-2764-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v8 06/10] rtc: at91sam9: rework the Kconfig description
+Date: Tue, 23 Sep 2014 13:24:00 +0200
+Message-ID: <1411471444-2764-7-git-send-email-boris.brezillon@free-electrons.com>
+References: <1411471444-2764-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411471444-2764-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Remove all references to AT91CAP9 SoC which has been removed.
+Rework help message to remove any specific references to AT91SAM9 SoCs.
+State that RTC_DRV_AT91SAM9_RTT and RTC_DRV_AT91SAM9_GPBR options are only
+used when booting non DT boards.
 
-This patch series adds DT support to the atmel at91sam9 RTC driver.
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Acked-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/rtc/Kconfig | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-It also removes any machine specific inclusions to prepare the migration
-to multi platform kernel support, and retain the slow clock to prevent
-the CCF from disabling it at the end of boot.
-  
-Best Regards,
-
-Boris
-
-Changes since v7:
- - fix typo
- - fix sclk_rate test
- - state that RTC_DRV_AT91SAM9_RTT and RTC_DRV_AT91SAM9_GPBR are no longer
-   used when booting a DT board
-
-Changes since v6:
- - fix typos
- - add missing commit messages
- - rework the Kconfig description
-
-Changes since v5:
- - replace 'rtc' by 'rtt' where appropriate
- - fix commit messages
-
-Changes since v4:
- - add a TODO comment to remember removing non DT board support code
-
-Changes since v3:
- - add GPBR DT bindings doc
- - fix a coding style issues
- - add Alexandre's Acked-by
- - change RTT DT bindings
-
-Changes since v2:
- - make use of syscon/regmap to avoid directly requesting/mapping a GPBR
-   memory region in the RTT driver
-
-Changes since v1:
- - remove non CCF specific case by adding the appropriate clk_lookup
-   entries in arch/arm/mach-at91/<soc-name>.c files
-
-
-Boris BREZILLON (10):
-  rtc: at91sam9: remove references to mach specific headers
-  rtc: at91sam9: use standard readl/writel functions instead of raw
-    versions
-  rtc: at91sam9: replace devm_ioremap by devm_ioremap_resource
-  rtc: at91sam9: add DT support
-  rtc: at91sam9: make use of syscon/regmap to access GPBR registers
-  rtc: at91sam9: rework the Kconfig description
-  ARM: at91: add clk_lookup entry for RTT devices
-  rtc: at91sam9: use clk API instead of relying on AT91_SLOW_CLOCK
-  rtc: at91sam9: add DT bindings documentation
-  mfd: syscon: add Atmel GPBR DT bindings documention
-
- .../devicetree/bindings/mfd/atmel,gpbr.txt         |  15 +++
- .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt |  23 ++++
- arch/arm/mach-at91/at91sam9260.c                   |   2 +
- arch/arm/mach-at91/at91sam9261.c                   |   2 +
- arch/arm/mach-at91/at91sam9263.c                   |   4 +
- arch/arm/mach-at91/at91sam9g45.c                   |   2 +
- arch/arm/mach-at91/at91sam9rl.c                    |   2 +
- arch/arm/mach-at91/clock.c                         |   2 +-
- arch/arm/mach-at91/clock.h                         |   1 +
- drivers/rtc/Kconfig                                |  24 ++--
- drivers/rtc/rtc-at91sam9.c                         | 138 ++++++++++++++++-----
- 11 files changed, 177 insertions(+), 38 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
- create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 7d76da8..9b56882 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1079,17 +1079,18 @@ config RTC_DRV_AT91RM9200
+ 	  this is powered by the backup power supply.
+ 
+ config RTC_DRV_AT91SAM9
+-	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
++	tristate "AT91SAM9 RTT as RTC"
+ 	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
+ 	select MFD_SYSCON
+ 	help
+-	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
+-	  (Real Time Timer). These timers are powered by the backup power
+-	  supply (such as a small coin cell battery), but do not need to
+-	  be used as RTCs.
+-
+-	  (On AT91SAM9rl and AT91SAM9G45 chips you probably want to use the
+-	  dedicated RTC module and leave the RTT available for other uses.)
++	  Some AT91SAM9 SoCs provide an RTT (Real Time Timer) block which
++	  can be used as an RTC thanks to the backup power supply (e.g. a
++	  small coin cell battery) which keeps this block and the GPBR
++	  (General Purpose Backup Registers) block powered when the device
++	  is shutdown.
++	  Some AT91SAM9 SoCs provide a real RTC block, on those ones you'd
++	  probably want to use the real RTC block instead of the "RTT as an
++	  RTC" driver.
+ 
+ config RTC_DRV_AT91SAM9_RTT
+ 	int
+@@ -1098,6 +1099,9 @@ config RTC_DRV_AT91SAM9_RTT
+ 	prompt "RTT module Number" if ARCH_AT91SAM9263
+ 	depends on RTC_DRV_AT91SAM9
+ 	help
++	  This option is only relevant for legacy board support and
++	  won't be used when booting a DT board.
++
+ 	  More than one RTT module is available. You can choose which
+ 	  one will be used as an RTC. The default of zero is normally
+ 	  OK to use, though some systems use that for non-RTC purposes.
+@@ -1110,6 +1114,9 @@ config RTC_DRV_AT91SAM9_GPBR
+ 	prompt "Backup Register Number"
+ 	depends on RTC_DRV_AT91SAM9
+ 	help
++	  This option is only relevant for legacy board support and
++	  won't be used when booting a DT board.
++
+ 	  The RTC driver needs to use one of the General Purpose Backup
+ 	  Registers (GPBRs) as well as the RTT. You can choose which one
+ 	  will be used. The default of zero is normally OK to use, but
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
