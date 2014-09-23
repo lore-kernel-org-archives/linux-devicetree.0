@@ -1,25 +1,64 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] serial: of-serial: add PM suspend/resume support
-Date: Tue, 23 Sep 2014 16:49:20 +0200
-Message-ID: <2797100.gg6LuU6gNo@wuerfel>
-References: <1411461252-8730-1-git-send-email-jingchang.lu@freescale.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v9 09/10] rtc: at91sam9: add DT bindings documentation
+Date: Tue, 23 Sep 2014 16:48:44 +0200
+Message-ID: <1411483725-31532-10-git-send-email-boris.brezillon@free-electrons.com>
+References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411461252-8730-1-git-send-email-jingchang.lu@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jingchang Lu <jingchang.lu@freescale.com>
-Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "Acked-by: Arnd Bergmann" <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 September 2014 16:34:12 Jingchang Lu wrote:
-> This adds PM suspend/resume support for the of-serial driver
-> to provide power management support on devices attatched to it.
-> 
-> Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
-> 
+Add RTT bindings documentation.
 
-Looks good to me,
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Acked-by: Johan Hovold <johan@kernel.org>
+---
+ .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+new file mode 100644
+index 0000000..6ae79d1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+@@ -0,0 +1,23 @@
++Atmel AT91SAM9260 Real Time Timer
++
++Required properties:
++- compatible: should be: "atmel,at91sam9260-rtt"
++- reg: should encode the memory region of the RTT controller
++- interrupts: rtt alarm/event interrupt
++- clocks: should contain the 32 KHz slow clk that will drive the RTT block.
++- atmel,rtt-rtc-time-reg: should encode the GPBR register used to store
++	the time base when the RTT is used as an RTC.
++	The first cell should point to the GPBR node and the second one
++	encode the offset within the GPBR block (or in other words, the
++	GPBR register used to store the time base).
++
++
++Example:
++
++rtt@fffffd20 {
++	compatible = "atmel,at91sam9260-rtt";
++	reg = <0xfffffd20 0x10>;
++	interrupts = <1 4 7>;
++	clocks = <&clk32k>;
++	atmel,rtt-rtc-time-reg = <&gpbr 0x0>;
++};
+-- 
+1.9.1
