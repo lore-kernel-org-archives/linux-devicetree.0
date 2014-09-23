@@ -1,20 +1,15 @@
-From: Frans Klaver <frans.klaver@xsens.com>
-Subject: Re: [PATCH 3/4] tty: omap-serial: use threaded interrupt handler
-Date: Tue, 23 Sep 2014 10:24:45 +0200
-Message-ID: <20140923082445.GA16218@ci00147.xsens-tech.local>
-References: <1410789610-23059-1-git-send-email-frans.klaver@xsens.com>
- <1410789610-23059-4-git-send-email-frans.klaver@xsens.com>
- <54170823.7040801@hurleysoftware.com>
- <5417228C.5070503@hurleysoftware.com>
- <20140916085037.GI28458@ci00147.xsens-tech.local>
- <54197804.3020302@hurleysoftware.com>
- <20140917121303.GB20438@ci00147.xsens-tech.local>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v6 5/9] rtc: at91sam9: make use of syscon/regmap to access
+ GPBR registers
+Date: Tue, 23 Sep 2014 10:31:19 +0200
+Message-ID: <54212FD7.6080209@atmel.com>
+References: <1411400563-570-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1411400563-570-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140917121303.GB20438@ci00147.xsens-tech.local>
+In-Reply-To: <1411400563-570-6-git-send-email-boris.brezillon@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,74 +19,168 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Hurley <peter@hurleysoftware.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Alexey Pelykh <alexey.pelykh@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Jean-Christophe
+ Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 02:13:03PM +0200, Frans Klaver wrote:
-> On Wed, Sep 17, 2014 at 08:01:08AM -0400, Peter Hurley wrote:
-> > On 09/16/2014 04:50 AM, Frans Klaver wrote:
-> > > On Mon, Sep 15, 2014 at 01:31:56PM -0400, Peter Hurley wrote:
-> > >> On 09/15/2014 11:39 AM, Peter Hurley wrote:
-> > >>> On 09/15/2014 10:00 AM, Frans Klaver wrote:
-> > >>>> At 3.6Mbaud, with slightly over 2Mbit/s data coming in, we see 1600 uart
-> > >>>> rx buffer overflows within 30 seconds. Threading the interrupt handling reduces
-> > >>>> this to about 170 overflows in 10 minutes.
-> > >>>
-> > >>> Why is the threadirqs kernel boot option not sufficient?
-> > >>> Or conversely, shouldn't this be selectable?
-> > >>
-> > > 
-> > > I wasn't aware of the threadirqs boot option. I also wouldn't know if
-> > > this should be selectable. What would be a reason to favor the
-> > > non-threaded irq over the threaded irq?
-> > 
-> > Not everyone cares enough about serial to dedicate kthreads to it :)
+On 22/09/2014 17:42, Boris BREZILLON :
+> The GPBR registers are not part of the RTT block and thus should not be
+> defined in the reg property of the rtt node.
 > 
-> Fair enough. In that light, we might not care enough about other
-> subsystems to dedicate kthreads to it :). Selectable seems reasonable in
-> that case.
+> Use syscon to provide a proper DT representation and reference the GPBR
+> syscon device in a new "atmel,rtt-rtc-time-reg" property which store both
+> the syscon device phandle and the register offset within the GPBR block.
 > 
+> When using non DT boards, we won't be able to retrieve the syscon regmap,
+> hence we need to create our own regmap using the memory region defined
+> in the 2nd memory resource assigned to the RTT platform device.
 > 
-> > >> Also, do you see the same performance differential when you implement this
-> > >> in the 8250 driver (that is, on top of Sebastian's omap->8250 conversion)?
-> > >>
-> > > 
-> > > I haven't gotten Sebastian's driver to work properly yet on the console.
-> > > There was no reason for me yet to throw my omap changes on top of
-> > > Sebastian's queue.
-
-Doing the threaded interrupt change on the 8250 driver doesn't seem as
-trivial. Unless I'm mistaken, that version of this patch would mess with
-all other 8250 based serial drivers, if it's done properly. Incidentally
-I did try using threadirqs, but that didn't give my any significant
-results. I mostly noticed a difference in the console.
-
-
-> > > 
-> > >>> PS - To overflow the 64 byte RX FIFO at those data rates means interrupt
-> > >>> latency in excess of 250us?
-> > > 
-> > > At 3686400 baud it should take about 174 us to fill a 64 byte buffer. I
-> > > haven't done any measurements on the interrupt latency though. If you
-> > > consider that we're sending about 1kB of data, 240 times a second, we're
-> > > spending a lot of time reading data from the uart. I can imagine the
-> > > system has other work to do as well.
-> > 
-> > System work should not keep irqs from being serviced. Even 174us is a long
-> > time not to service an interrupt. Maybe console writes are keeping the isr
-> > from running?
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
+>  drivers/rtc/Kconfig        |  1 +
+>  drivers/rtc/rtc-at91sam9.c | 64 +++++++++++++++++++++++++++++++++++++++-------
+>  2 files changed, 56 insertions(+), 9 deletions(-)
 > 
-> That's quite possible. I'll have to redo the test setup I had for this to
-> give you a decent answer. I'll have to do that anyway as Sebastian's
-> 8250 conversion improves.
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index a168e96..7d76da8 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1081,6 +1081,7 @@ config RTC_DRV_AT91RM9200
+>  config RTC_DRV_AT91SAM9
+>  	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
 
-I haven't had time yet to look into this any further. I'll accept that
-this patch may fix a case most people aren't the least interested in.
-I'll also happily accept that I probably need a better argumentation
-than "this works better for us".Would it make sense to drop this patch
-and resubmit the other three? As I mentioned in the previous run, I
-think these are useful in any case.
+BTW, while we are at it, can we remove mention of the CAP9 here ^^^
 
-Thanks,
-Frans
+>  	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
+> +	select MFD_SYSCON
+>  	help
+>  	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
+
+And there ^^^ and refine the Kconfig "help" message which can be
+confusing (not all SAM9's have this rtt or need for it). We can also
+remove the explicit mention of 9rl and 9g45 as many other AT91 SoCs can
+use the "real" RTC...
+
+Thanks ;-)
+
+
+>  	  (Real Time Timer). These timers are powered by the backup power
+> diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+> index d72c34d..902cd01 100644
+> --- a/drivers/rtc/rtc-at91sam9.c
+> +++ b/drivers/rtc/rtc-at91sam9.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/platform_data/atmel.h>
+>  #include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+>  
+>  /*
+>   * This driver uses two configurable hardware resources that live in the
+> @@ -72,7 +74,8 @@ struct sam9_rtc {
+>  	void __iomem		*rtt;
+>  	struct rtc_device	*rtcdev;
+>  	u32			imr;
+> -	void __iomem		*gpbr;
+> +	struct regmap		*gpbr;
+> +	unsigned int		gpbr_offset;
+>  	int 			irq;
+>  };
+>  
+> @@ -81,10 +84,19 @@ struct sam9_rtc {
+>  #define rtt_writel(rtc, field, val) \
+>  	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
+>  
+> -#define gpbr_readl(rtc) \
+> -	readl((rtc)->gpbr)
+> -#define gpbr_writel(rtc, val) \
+> -	writel((val), (rtc)->gpbr)
+> +static inline unsigned int gpbr_readl(struct sam9_rtc *rtc)
+> +{
+> +	unsigned int val;
+> +
+> +	regmap_read(rtc->gpbr, rtc->gpbr_offset, &val);
+> +
+> +	return val;
+> +}
+> +
+> +static inline void gpbr_writel(struct sam9_rtc *rtc, unsigned int val)
+> +{
+> +	regmap_write(rtc->gpbr, rtc->gpbr_offset, val);
+> +}
+>  
+>  /*
+>   * Read current time and date in RTC
+> @@ -301,6 +313,12 @@ static const struct rtc_class_ops at91_rtc_ops = {
+>  	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
+>  };
+>  
+> +static struct regmap_config gpbr_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +};
+> +
+>  /*
+>   * Initialize and install RTC driver
+>   */
+> @@ -334,10 +352,38 @@ static int at91_rtc_probe(struct platform_device *pdev)
+>  	if (IS_ERR(rtc->rtt))
+>  		return PTR_ERR(rtc->rtt);
+>  
+> -	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> -	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
+> -	if (IS_ERR(rtc->gpbr))
+> -		return PTR_ERR(rtc->rtt);
+> +	if (!pdev->dev.of_node) {
+> +		/*
+> +		 * TODO: Remove this code chunk when when removing non DT
+> +		 * board support. Remember to remove the gpbr_regmap_config
+> +		 * variable too.
+
+Thanks for having add this: very useful in the near future!
+
+> +		 */
+> +		void __iomem *gpbr;
+> +
+> +		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +		gpbr = devm_ioremap_resource(&pdev->dev, r);
+> +		if (IS_ERR(gpbr))
+> +			return PTR_ERR(gpbr);
+> +
+> +		rtc->gpbr = regmap_init_mmio(NULL, gpbr,
+> +					     &gpbr_regmap_config);
+> +	} else {
+> +		struct of_phandle_args args;
+> +
+> +		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
+> +						"atmel,rtt-rtc-time-reg", 1, 0,
+> +						&args);
+> +		if (ret)
+> +			return ret;
+> +
+> +		rtc->gpbr = syscon_node_to_regmap(args.np);
+> +		rtc->gpbr_offset = args.args[0];
+> +	}
+> +
+> +	if (IS_ERR(rtc->gpbr)) {
+> +		dev_err(&pdev->dev, "failed to retrieve gpbr regmap, aborting.\n");
+> +		return -ENOMEM;
+> +	}
+>  
+>  	mr = rtt_readl(rtc, MR);
+>  
+> 
+
+Okay: look pretty good: thanks for having handling this Boris!
+
+
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+Bye,
+
+-- 
+Nicolas Ferre
