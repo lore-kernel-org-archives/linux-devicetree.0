@@ -1,36 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/5] pinctrl: exynos: Generalize the eint16_31 demux code
-Date: Tue, 23 Sep 2014 17:18:20 +0200
-Message-ID: <CACRpkdZcN0Zszt9QmW309fYDjOm-syA9kpL8nhRK640eKNB1Aw@mail.gmail.com>
-References: <1411460169-30536-1-git-send-email-a.kesavan@samsung.com>
-	<1411460169-30536-2-git-send-email-a.kesavan@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device
+ properties interface
+Date: Tue, 23 Sep 2014 17:25:50 +0200
+Message-ID: <CACRpkdaZJt_6cd1vtDw-Ys+YqUhNb0aXazUxGCX8mk4=6EmdHw@mail.gmail.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+	<1410868367-11056-8-git-send-email-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1411460169-30536-2-git-send-email-a.kesavan@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Abhilash Kesavan <a.kesavan@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thomas Abraham <thomas.ab@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1410868367-11056-8-git-send-email-mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaron Lu <aaron.lu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 10:16 AM, Abhilash Kesavan
-<a.kesavan@samsung.com> wrote:
+On Tue, Sep 16, 2014 at 1:52 PM, Mika Westerberg
+<mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
 
-> The function exynos_irq_demux_eint16_31 uses pre-defined offsets for external
-> interrupt pending status and mask registers. So this function is not extensible
-> for Exynos7 SoC which have these registers at different offsets. So generalize
-> the exynos_irq_demux_eint16_31 function by using the pending/mask register
-> offset values from the exynos_irq_chip structure.
+> Some drivers need to deal with only firmware representation of its
+> GPIOs. An example would be a GPIO button array driver where each button
+> is described as a separate firmware node in device tree. Typically these
+> child nodes do not have physical representation in the Linux device
+> model.
 >
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> Reviewed-by: Thomas Abraham <thomas.ab@samsung.com>
-> Tested-by: Thomas Abraham <thomas.ab@samsung.com>
-> Cc: Thomas Abraham <thomas.ab@samsung.com>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
+> In order to help device drivers to handle such firmware child nodes we
+> add dev[m]_node_get_named_gpiod() that takes a firmware node pointer as
+> parameter, finds the GPIO using whatever is the underlying firmware
+> method, and requests the GPIO properly.
+>
+> Signed-off-by: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-I'm waiting for the maintainers to ACK these patches
-before I take them.
+I have a hard time figuring out if this is what we want for common
+accessors between DT and ACPI.
+
+Can I get some input from Grant, Arnd, Mark, Darren...?
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
