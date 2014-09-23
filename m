@@ -1,104 +1,61 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v4 0/3] Support for Qualcomm QPNP PMIC's
-Date: Tue, 23 Sep 2014 15:33:37 +0300
-Message-ID: <542168A1.5000406@mm-sol.com>
-References: <1406903450-27283-1-git-send-email-svarbanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1406903450-27283-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v4 5/9] net: pxa168_eth: set the mac address on the Ethernet controller
+Date: Tue, 23 Sep 2014 14:15:32 +0200
+Message-ID: <1411474536-22626-6-git-send-email-antoine.tenart@free-electrons.com>
+References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+When changing the MAC address, in addition to updating the dev_addr in
+the net_device structure, this patch also update the MAC address
+registers (high and low) of the Ethernet controller with the new MAC.
+The address stored in these registers is used for IEEE 802.3x Ethernet
+flow control, which is already enabled.
 
-There are no comments on this set for more then month,
-could you queue up 1/3 and 2/3 for 3.18 merge window?
+Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+---
+ drivers/net/ethernet/marvell/pxa168_eth.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-On 08/01/2014 05:30 PM, Stanimir Varbanov wrote:
-> Hello all,
-> 
-> Changes since v3:
->  - rename the driver to qcom-spmi-pmic - suggested by David Collins
->  - spmi regmap config now initialize .fast_io to true
->  - added generalized comptatible string in DT binding document and driver
->  - I dropped the pm8921 rename patch for now, it will be subject of another
->    patchset later on.
-> 
-> regards,
-> Stan
-> 
-> --------------------------------------------------------------------------------
-> 
-> Changes since v2:
->  - 1/4 - added new line, signed-off-by / acked-by and module_authors.
->  - 3/4 - the subject has been changed.
-> 
-> The previous v2 can be found at [1].
-> 
-> I'm still waiting Acks for:
->  - 4/4 from Qualcomm folks.
->  - 2/4 and 3/4 from DT folks.
-> 
-> The patchset is ready to merge version and also it can be treated as an
-> intermediate step until we find a solution for non-translatable peripheral
-> addresses.
-> 
-> [1] https://lkml.org/lkml/2014/7/17/877
-> 
-> --------------------------------------------------------------------------------
-> 
-> Hello everyone,
-> 
-> Here is the continuation of patch sets sent recently about Qualcomm
-> QPNP SPMI PMICs.
-> 
-> The previous version of the patch set can be found at [1].
-> 
-> Changes since v1:
->  - removed completely custom *of* parser
->  - renamed the mfd driver from qpnp-spmi to pm8xxx-spmi
->  - now MFD_PM8XXX_SPMI Kconfig option depends on SPMI
-> 
-> Removing of the custom *of* parser leads to that that the *reg* devicetree
-> property cannot exist and therefore cannot be parsed to get PMIC peripheral
-> resources. I took this step aside because no one from mfd drivers does this
-> parsing. This will lead to inconvenience in the peripheral drivers to define
-> internally the SPMI base addresses depending on the compatible property
-> i.e. PMIC version. 
-> 
-> Comments are welcome!
-> 
-> [1] https://lkml.org/lkml/2014/7/8/428
-> 
-> --------------------------------------------------------------------------------
-> 
-> Josh Cartwright (1):
->   mfd: add support for Qualcomm SPMI PMICs
-> 
-> Stanimir Varbanov (2):
->   mfd: document DT bindings for Qualcomm SPMI PMICs
->   ARM: dts: qcom: add pm8941 and pm8841 PMICs device nodes
-> 
->  .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |   64 +++++++++++++++++++
->  arch/arm/boot/dts/qcom-msm8974.dtsi                |   37 +++++++++++
->  drivers/mfd/Kconfig                                |   15 +++++
->  drivers/mfd/Makefile                               |    1 +
->  drivers/mfd/qcom-spmi-pmic.c                       |   67 ++++++++++++++++++++
->  5 files changed, 184 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->  create mode 100644 drivers/mfd/qcom-spmi-pmic.c
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
-
+diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
+index 5aa2ce2625b4..897589455186 100644
+--- a/drivers/net/ethernet/marvell/pxa168_eth.c
++++ b/drivers/net/ethernet/marvell/pxa168_eth.c
+@@ -60,6 +60,8 @@
+ #define PORT_COMMAND		0x0410
+ #define PORT_STATUS		0x0418
+ #define HTPR			0x0428
++#define MAC_ADDR_LOW		0x0430
++#define MAC_ADDR_HIGH		0x0438
+ #define SDMA_CONFIG		0x0440
+ #define SDMA_CMD		0x0448
+ #define INT_CAUSE		0x0450
+@@ -609,11 +611,22 @@ static int pxa168_eth_set_mac_address(struct net_device *dev, void *addr)
+ 	struct sockaddr *sa = addr;
+ 	struct pxa168_eth_private *pep = netdev_priv(dev);
+ 	unsigned char oldMac[ETH_ALEN];
++	u32 mac_h, mac_l;
+ 
+ 	if (!is_valid_ether_addr(sa->sa_data))
+ 		return -EADDRNOTAVAIL;
+ 	memcpy(oldMac, dev->dev_addr, ETH_ALEN);
+ 	memcpy(dev->dev_addr, sa->sa_data, ETH_ALEN);
++
++	mac_h = sa->sa_data[0] << 24;
++	mac_h |= sa->sa_data[1] << 16;
++	mac_h |= sa->sa_data[2] << 8;
++	mac_h |= sa->sa_data[3];
++	mac_l = sa->sa_data[4] << 8;
++	mac_l |= sa->sa_data[5];
++	wrl(pep, MAC_ADDR_HIGH, mac_h);
++	wrl(pep, MAC_ADDR_LOW, mac_l);
++
+ 	netif_addr_lock_bh(dev);
+ 	update_hash_table_mac_address(pep, oldMac, dev->dev_addr);
+ 	netif_addr_unlock_bh(dev);
 -- 
-regards,
-Stan
+1.9.1
