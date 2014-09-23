@@ -1,44 +1,47 @@
-From: Antoine Tenart <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v4 0/9] ARM: Berlin: Ethernet support
-Date: Tue, 23 Sep 2014 16:01:52 +0200
-Message-ID: <20140923140152.GD18924@kwain>
-References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com>
- <3200502.7xjfrZcKCM@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/6] V4L2: Add Renesas R-Car JPEG codec driver.
+Date: Tue, 23 Sep 2014 16:02:14 +0200
+Message-ID: <CAMuHMdWnMz3P8tk_f_EQoZjgYS7SzH_2jYv_32aPnfM_hQgr1A@mail.gmail.com>
+References: <1408452653-14067-1-git-send-email-mikhail.ulyanov@cogentembedded.com>
+	<1408452653-14067-2-git-send-email-mikhail.ulyanov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3200502.7xjfrZcKCM@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1408452653-14067-2-git-send-email-mikhail.ulyanov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mikhail Ulyanov <mikhail.ulyanov@cogentembedded.com>
+Cc: Mauro Carvalho Chehab <m.chehab@samsung.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 02:41:47PM +0200, Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 14:15:27 Antoine Tenart wrote:
-> >=20
-> > This series introduce support for the Ethernet controller on Berlin=
- SoCs,
-> > using the existing pxa168 Ethernet driver. In order to do this, DT
-> > support is added to the driver alongside some other modifications a=
-nd
-> > fixes.
-> >=20
->=20
-> Looks great overall, I've commented on two issues I've found, but onl=
-y
-> the phy-addr one really needs to be addressed. Once that is out of th=
-e
-> way, please add
->=20
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+On Tue, Aug 19, 2014 at 2:50 PM, Mikhail Ulyanov
+<mikhail.ulyanov@cogentembedded.com> wrote:
+> +static void put_short_be(unsigned long *p, u16 v)
+> +{
+> +       u16 *addr = (u16 *)*p;
+> +
+> +       *addr = cpu_to_be16(v);
+> +       *p += 2;
+> +}
+> +
+> +static void put_word_be(unsigned long *p, u32 v)
+> +{
+> +       u32 *addr = (u32 *)*p;
+> +
+> +       *addr = cpu_to_be32(v);
+> +       *p += 4;
+> +}
 
-Thanks!
+Is the address in *p guaranteed to be aligned to 2 resp. 4  bytes?
 
-Antoine
+If not, you can use put_unaligned*().
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
