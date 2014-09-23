@@ -1,115 +1,155 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 16:45:10 +0200
-Message-ID: <20140923144509.GF5982@ulmo>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
- <5419760A.7020908@ti.com>
- <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
- <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
- <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo>
- <54213543.7000306@ti.com> <20140923093916.GR30514@ulmo>
- <54215A17.8050606@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1063126265=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <54215A17.8050606@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v9 05/10] rtc: at91sam9: make use of syscon/regmap to access GPBR registers
+Date: Tue, 23 Sep 2014 16:48:40 +0200
+Message-ID: <1411483725-31532-6-git-send-email-boris.brezillon@free-electrons.com>
+References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411483725-31532-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Acked-by: Arnd Bergmann" <arnd-r2nGTMty4D4@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The GPBR registers are not part of the RTT block and thus should not be
+defined in the reg property of the rtt node.
 
---===============1063126265==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Zi0sgQQBxRFxMTsj"
-Content-Disposition: inline
+Use syscon to provide a proper DT representation and reference the GPBR
+syscon device in a new "atmel,rtt-rtc-time-reg" property which store both
+the syscon device phandle and the register offset within the GPBR block.
 
+When using non DT boards, we won't be able to retrieve the syscon regmap,
+hence we need to create our own regmap using the memory region defined
+in the 2nd memory resource assigned to the RTT platform device.
 
---Zi0sgQQBxRFxMTsj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+ drivers/rtc/Kconfig        |  1 +
+ drivers/rtc/rtc-at91sam9.c | 64 +++++++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 56 insertions(+), 9 deletions(-)
 
-On Tue, Sep 23, 2014 at 02:31:35PM +0300, Tomi Valkeinen wrote:
-> On 23/09/14 12:39, Thierry Reding wrote:
->=20
-> > My point is that if you use plain phandles you usually have the
-> > meta-data already. Referring to the above example, bridge0 knows that it
-> > should look for a bridge with phandle &bridge1, whereas bridge1 knows
-> > that the device it is connected to is a panel.
->=20
-> The bridge should not care what kind of device is there on the other
-> end. The bridge just has an output, going to another video component.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index a168e96..7d76da8 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1081,6 +1081,7 @@ config RTC_DRV_AT91RM9200
+ config RTC_DRV_AT91SAM9
+ 	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
+ 	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
++	select MFD_SYSCON
+ 	help
+ 	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
+ 	  (Real Time Timer). These timers are powered by the backup power
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index d72c34d..be9c28b 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -21,6 +21,8 @@
+ #include <linux/slab.h>
+ #include <linux/platform_data/atmel.h>
+ #include <linux/io.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
+ 
+ /*
+  * This driver uses two configurable hardware resources that live in the
+@@ -72,7 +74,8 @@ struct sam9_rtc {
+ 	void __iomem		*rtt;
+ 	struct rtc_device	*rtcdev;
+ 	u32			imr;
+-	void __iomem		*gpbr;
++	struct regmap		*gpbr;
++	unsigned int		gpbr_offset;
+ 	int 			irq;
+ };
+ 
+@@ -81,10 +84,19 @@ struct sam9_rtc {
+ #define rtt_writel(rtc, field, val) \
+ 	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
+ 
+-#define gpbr_readl(rtc) \
+-	readl((rtc)->gpbr)
+-#define gpbr_writel(rtc, val) \
+-	writel((val), (rtc)->gpbr)
++static inline unsigned int gpbr_readl(struct sam9_rtc *rtc)
++{
++	unsigned int val;
++
++	regmap_read(rtc->gpbr, rtc->gpbr_offset, &val);
++
++	return val;
++}
++
++static inline void gpbr_writel(struct sam9_rtc *rtc, unsigned int val)
++{
++	regmap_write(rtc->gpbr, rtc->gpbr_offset, val);
++}
+ 
+ /*
+  * Read current time and date in RTC
+@@ -301,6 +313,12 @@ static const struct rtc_class_ops at91_rtc_ops = {
+ 	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
+ };
+ 
++static struct regmap_config gpbr_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++};
++
+ /*
+  * Initialize and install RTC driver
+  */
+@@ -334,10 +352,38 @@ static int at91_rtc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(rtc->rtt))
+ 		return PTR_ERR(rtc->rtt);
+ 
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
+-	if (IS_ERR(rtc->gpbr))
+-		return PTR_ERR(rtc->rtt);
++	if (!pdev->dev.of_node) {
++		/*
++		 * TODO: Remove this code chunk when removing non DT board
++		 * support. Remember to remove the gpbr_regmap_config
++		 * variable too.
++		 */
++		void __iomem *gpbr;
++
++		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++		gpbr = devm_ioremap_resource(&pdev->dev, r);
++		if (IS_ERR(gpbr))
++			return PTR_ERR(gpbr);
++
++		rtc->gpbr = regmap_init_mmio(NULL, gpbr,
++					     &gpbr_regmap_config);
++	} else {
++		struct of_phandle_args args;
++
++		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
++						"atmel,rtt-rtc-time-reg", 1, 0,
++						&args);
++		if (ret)
++			return ret;
++
++		rtc->gpbr = syscon_node_to_regmap(args.np);
++		rtc->gpbr_offset = args.args[0];
++	}
++
++	if (IS_ERR(rtc->gpbr)) {
++		dev_err(&pdev->dev, "failed to retrieve gpbr regmap, aborting.\n");
++		return -ENOMEM;
++	}
+ 
+ 	mr = rtt_readl(rtc, MR);
+ 
+-- 
+1.9.1
 
-You'll need to know at some point that one of the devices in a panel,
-otherwise you can't treat it like a panel.
-
-> >> Well, I can't say about this particular bridge, but afaik you can
-> >> connect a parallel RGB signal to multiple panels just like that, witho=
-ut
-> >> any muxing.
-> >=20
-> > Right, but in that case you're not reconfiguring the signal in any way
-> > for each of the panels. You send one single signal to all of them. For
->=20
-> Yes, that's one use case, cloning. But I was not talking about that.
->=20
-> > all intents and purposes there is only one panel. Well, I guess you
-> > could have separate backlights for the panels. In that case though it
-> > seems better to represent it at least as a virtual mux or bridge, or
-> > perhaps a "mux panel".
->=20
-> I was talking about the case where you have two totally different
-> devices, let's say panels, connected to the same output. One could take
-> a 16-bit parallel RGB signal, the other 24-bit. Only one of them can  be
-> enabled at a time (from HW perspective both can be enabled at the same
-> time, but then the other one shows garbage).
-
-So we're essentially back to a mux, albeit maybe a virtual one.
-
-Thierry
-
---Zi0sgQQBxRFxMTsj
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUIYd1AAoJEN0jrNd/PrOh2BQP/R/JcsK7BJ/7kgVMxmguOsI3
-3OzzR2hROlFxLx9n45Fp1SegKrZhSZn1DPJwG1cQGirRqDVhUIAADA1TwGyWw9fT
-A2VV82JdEzSnBbMVFoeaWZ+k+2ROc9wVGf/QoTbtq3Qe5J4LFU11iqNwOy95aBeY
-S7T842B1ljRQxQzOiUdeaCO9HMVT3Z8V1XpNlEepigMB9iezaMMbvDYEFRYiSZd1
-KImRFc/Ydoah3B6GjqARHmfDWWBCDXzPfxP3MrB2Y/0TYOrZSDGTziReqfry/2ZW
-IkgAWuZEvzYPeJ0vq7RQ1zCJHPOrBSxe0/9GUmKyCKkPwq/3LMdoGXe7IDN4W35a
-RkYzSh++w1Xok99L7y4C+TYECgHcMXqb7WPIAXLAjE+Ff+F1GcpFAXmnC20+iBaa
-+brQWIeKqKhTyA3IzS78KC9vk7uv3zVWB8a1N0WO68p3zudJcDuNR25hAVBMoJig
-mXm+UTw2Nt4yTk5dZEpAX8xN1hpfzO6Bswl9OWq9W3ZduXXKQdrZ+S7v/qr2+aoQ
-OwTNAd8C9n07sIpryVGVUjQCvRMBs0ULwdhrv9pmxmkkReNG3rz5YcUVj9tUuvc7
-MwuFh4WtLbLDBWR5h94CL9lJtqdYDAScd1I5joNDftneEKQ3q6pjpGWRlwXW5X/N
-WVRDaXXbB0LpVASfb2Pk
-=WXti
------END PGP SIGNATURE-----
-
---Zi0sgQQBxRFxMTsj--
-
---===============1063126265==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1063126265==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
