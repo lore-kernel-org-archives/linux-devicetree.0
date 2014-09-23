@@ -1,66 +1,51 @@
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [RESEND PATCH 1/4] ARM: STi: DT: STiH407: 407 DT Entry for clockgen
- A0
-Date: Tue, 23 Sep 2014 09:58:56 +0200
-Message-ID: <54212840.60508@st.com>
-References: <1408977888-10473-1-git-send-email-gabriel.fernandez@linaro.org> <1408977888-10473-2-git-send-email-gabriel.fernandez@linaro.org> <542124CB.1080307@st.com>
+From: Johan Hovold <jhovold@gmail.com>
+Subject: Re: [PATCH v6 8/9] rtc: at91sam9: add DT bindings documentation
+Date: Tue, 23 Sep 2014 09:57:50 +0200
+Message-ID: <20140923075750.GP5237@localhost>
+References: <1411400563-570-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1411400563-570-9-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542124CB.1080307-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1411400563-570-9-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Maxime !
+On Mon, Sep 22, 2014 at 05:42:42PM +0200, Boris BREZILLON wrote:
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>  .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> new file mode 100644
+> index 0000000..e94e2ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
+> @@ -0,0 +1,23 @@
+> +Atmel AT91SAM9260 Real Time Timer
+> +
+> +Required properties:
+> +- compatible: should be: "atmel,at91sam9260-rtt"
+> +- reg: should encode the memory region of the RTT controller
+> +- interrupts: rtt alarm/event interrupt
+> +- clocks: should contain one clock pointing the the slow clk
 
-On 09/23/2014 09:44 AM, Maxime Coquelin wrote:
->
->
-> On 08/25/2014 04:44 PM, Gabriel FERNANDEZ wrote:
->> Patch adds DT entries for clockgen A0
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/stih407-clock.dtsi | 32 
->> ++++++++++++++++++++++++++++++++
->>   1 file changed, 32 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/stih407-clock.dtsi 
->> b/arch/arm/boot/dts/stih407-clock.dtsi
->> index 800f46f..e03e86e 100644
->> --- a/arch/arm/boot/dts/stih407-clock.dtsi
->> +++ b/arch/arm/boot/dts/stih407-clock.dtsi
->> @@ -7,6 +7,10 @@
->>    */
->>   / {
->>       clocks {
->> +        #address-cells = <1>;
->> +        #size-cells = <1>;
->> +        ranges;
->> +
->>           /*
->>            * Fixed 30MHz oscillator inputs to SoC
->>            */
->> @@ -35,5 +39,33 @@
->>               clock-frequency = <200000000>;
->>               clock-output-names = "clk-s-icn-reg-0";
->>           };
->> +
->> +        /*
->> +         * ClockGenAs on SASG2
->> +         */
-> Note that I removed this comment since no SASG2 on STiH407.
->
->> +        clockgen-a@090ff000 {
->> +            compatible = "st,clkgen-c32";
->> +            reg = <0x90ff000 0x1000>;
-> ...
+Just noticed: s/the the/to the/
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- atmel,rtt-rtc-time-reg: should encode the GPBR register used to store
+> +	the time base when the RTT is used as an RTC.
+> +	The first cell should point to the GPBR node and the second one
+> +	encode the offset within the GPBR block (or in other words, the
+> +	GPBR register used to store the current time value).
+
+s/current time value/time base/.
+
+Looks good to me otherwise.
+
+Thanks,
+Johan
