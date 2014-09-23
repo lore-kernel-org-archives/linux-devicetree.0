@@ -1,74 +1,122 @@
-From: Chanho Park <chanho61.park@samsung.com>
-Subject: RE: [PATCH v5 8/8] arm64: dts: add <dt-bindings/> symlink
-Date: Tue, 23 Sep 2014 16:46:33 +0900
-Message-ID: <012f01cfd702$7ed15c30$7c741490$@samsung.com>
-References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
- <1411361228-18279-9-git-send-email-a.kesavan@samsung.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3 1/5] drm/rockchip: Add basic drm driver
+Date: Tue, 23 Sep 2014 09:48:31 +0200
+Message-ID: <20140923074831.GR15734@phenom.ffwll.local>
+References: <1411105668-32722-1-git-send-email-mark.yao@rock-chips.com>
+ <1411105668-32722-2-git-send-email-mark.yao@rock-chips.com>
+ <CAF6AEGsPoj6+PdKCJk5BPPzHS51Tz1FGqS2SjpartaRw7i=Pxg@mail.gmail.com>
+ <541F7C23.8000103@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1411361228-18279-9-git-send-email-a.kesavan@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Abhilash Kesavan' <a.kesavan@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, catalin.marinas@arm.com
-Cc: naveenkrishna.ch@gmail.com, kesavan.abhilash@gmail.com, tomasz.figa@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <541F7C23.8000103@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark yao <mark.yao@rock-chips.com>
+Cc: Rob Clark <robdclark@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, linux-doc@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jianqun Xu <xjq@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, linux-api@vger.kernel.org, jeff chen <cym@rock-chips.com>, linux-rockchip@lists.infradead.org, kfx@rock-chips.com, Grant Likely <grant.likely@linaro.org>, wxt@rock-chips.com, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, yxj@rock-chips.com, Eddie Cai <cf@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Sep 22, 2014 at 09:32:19AM +0800, Mark yao wrote:
+> On 2014=E5=B9=B409=E6=9C=8820=E6=97=A5 08:03, Rob Clark wrote:
+> >On Fri, Sep 19, 2014 at 1:47 AM, Mark yao <mark.yao@rock-chips.com> =
+wrote:
+> >>diff --git a/include/uapi/drm/rockchip_drm.h b/include/uapi/drm/roc=
+kchip_drm.h
+> >>new file mode 100644
+> >>index 0000000..8f8e60e
+> >>--- /dev/null
+> >>+++ b/include/uapi/drm/rockchip_drm.h
+> >>@@ -0,0 +1,97 @@
+> >>+/*
+> >>+ *
+> >>+ * Copyright (c) Fuzhou Rockchip Electronics Co.Ltd
+> >>+ * Authors:
+> >>+ *       Mark Yao <yzq@rock-chips.com>
+> >>+ *
+> >>+ * base on exynos_drm.h
+> >>+ *
+> >>+ * This program is free software; you can redistribute  it and/or =
+modify it
+> >>+ * under  the terms of  the GNU General  Public License as publish=
+ed by the
+> >>+ * Free Software Foundation;  either version 2 of the  License, or=
+ (at your
+> >>+ * option) any later version.
+> >>+ */
+> >>+
+> >>+#ifndef _UAPI_ROCKCHIP_DRM_H
+> >>+#define _UAPI_ROCKCHIP_DRM_H
+> >>+
+> >>+#include <drm/drm.h>
+> >>+
+> >>+/**
+> >>+ * User-desired buffer creation information structure.
+> >>+ *
+> >>+ * @size: user-desired memory allocation size.
+> >>+ * @flags: user request for setting memory type or cache attribute=
+s.
+> >>+ * @handle: returned a handle to created gem object.
+> >>+ *     - this handle will be set by gem module of kernel side.
+> >>+ */
+> >>+struct drm_rockchip_gem_create {
+> >>+       uint64_t size;
+> >>+       uint32_t flags;
+> >>+       uint32_t handle;
+> >>+};
+> >>+
+> >>+/**
+> >>+ * A structure for getting buffer offset.
+> >>+ *
+> >>+ * @handle: a pointer to gem object created.
+> >>+ * @pad: just padding to be 64-bit aligned.
+> >>+ * @offset: relatived offset value of the memory region allocated.
+> >>+ *     - this value should be set by user.
+> >>+ */
+> >>+struct drm_rockchip_gem_map_off {
+> >>+       uint32_t handle;
+> >>+       uint32_t pad;
+> >>+       uint64_t offset;
+> >>+};
+> >>+
+> >>+/**
+> >>+ * A structure for mapping buffer.
+> >>+ *
+> >>+ * @handle: a handle to gem object created.
+> >>+ * @pad: just padding to be 64-bit aligned.
+> >>+ * @size: memory size to be mapped.
+> >>+ * @mapped: having user virtual address mmaped.
+> >>+ *      - this variable would be filled by rockchip gem module
+> >>+ *      of kernel side with user virtual address which is allocate=
+d
+> >>+ *      by do_mmap().
+> >>+ */
+> >>+struct drm_rockchip_gem_mmap {
+> >>+       uint32_t handle;
+> >>+       uint32_t pad;
+> >>+       uint64_t size;
+> >>+       uint64_t mapped;
+> >>+};
+> >Could we do without the mmap ioctl?  It has been a source of problem=
+s
+> >in other drivers, and the ioctl to get mmap offset, plus normal mmap=
+()
+> >on drm device file should be sufficient
+> >
+> >BR,
+> >-R
+> OK, I will try to move the special mmap ioctl and use drm generic mma=
+p
+> interface.
 
-> -----Original Message-----
-> From: linux-arm-kernel [mailto:linux-arm-kernel-
-> bounces@lists.infradead.org] On Behalf Of Abhilash Kesavan
-> Sent: Monday, September 22, 2014 1:47 PM
-> To: linux-samsung-soc@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; devicetree@vger.kernel.org;
-> catalin.marinas@arm.com
-> Cc: naveenkrishna.ch@gmail.com; kesavan.abhilash@gmail.com;
-> tomasz.figa@gmail.com
-> Subject: [PATCH v5 8/8] arm64: dts: add <dt-bindings/> symlink
-> 
-> From: Pankaj Dubey <pankaj.dubey@samsung.com>
-> 
-> Add symlink to include/dt-bindings from arch/arm64/boot/dts/include/ to
-> match the ones in ARM architectures so that preprocessed device
-> tree files can include various useful constant definitions.
-> 
-> See commit c58299aa8754 ("kbuild: create an "include chroot" for DT
-> bindings")
-> merged in v3.10-rc1 for details.
-> 
-> CC: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> Reviewed-by: Thomas Abraham <thomas.ab@samsung.com>
-> Tested-by: Thomas Abraham <thomas.ab@samsung.com>
-> ---
->  arch/arm64/boot/dts/include/dt-bindings | 1 +
->  1 file changed, 1 insertion(+)
->  create mode 120000 arch/arm64/boot/dts/include/dt-bindings
-> 
-> diff --git a/arch/arm64/boot/dts/include/dt-bindings
-> b/arch/arm64/boot/dts/include/dt-bindings
-> new file mode 120000
-> index 0000000..1e89bce
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/include/dt-bindings
-> @@ -0,0 +1 @@
-> +../../../../../include/dt-bindings/
-> \ No newline at end of file
-^
-It generates incorrect symlink. Please remove last line like below:
+Actually you probably should drop all this and just implement the dummy
+object support for now. Until you have proper hw accel there's no reaso=
+n
+to expose a driver-private gem create/mmap interface at all.
 
-diff --git a/arch/arm64/boot/dts/include/dt-bindings
-b/arch/arm64/boot/dts/include/dt-bindings
-new file mode 120000
-index 0000000..499472b
---- /dev/null
-+++ b/arch/arm64/boot/dts/include/dt-bindings
-@@ -0,0 +1 @@
-+../../../../../include/dt-bindings/
---
-
-Best Regards,
-Chanho Park
+A pure kms driver really shouldn't have it's on uapi/foo_drm.h file.
+-Daniel
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
