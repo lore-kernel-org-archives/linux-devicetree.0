@@ -1,78 +1,71 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] clk: Add PWM clock driver
-Date: Tue, 23 Sep 2014 10:51:31 +0200
-Message-ID: <20140923085130.GO30514@ulmo>
-References: <5410AEFD.5030302@elproma.com.pl>
+From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] serial: of-serial: add PM suspend/resume support
+Date: Tue, 23 Sep 2014 16:34:12 +0800
+Message-ID: <1411461252-8730-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="f0PSjARDFl/vfYT5"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5410AEFD.5030302-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Janusz =?utf-8?Q?U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds PM suspend/resume support for the of-serial driver
+to provide power management support on devices attatched to it.
 
---f0PSjARDFl/vfYT5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/tty/serial/of_serial.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-On Wed, Sep 10, 2014 at 10:05:17PM +0200, Janusz U=C5=BCycki wrote:
-> Hi,
->=20
-> http://patchwork.ozlabs.org/patch/359069/
-> https://lkml.org/lkml/2014/6/12/186
->=20
-> Will the patch ever included to linux-next?
+diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+index 27981e2..8bc2563 100644
+--- a/drivers/tty/serial/of_serial.c
++++ b/drivers/tty/serial/of_serial.c
+@@ -240,6 +240,32 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int of_serial_suspend(struct device *dev)
++{
++	struct of_serial_info *info = dev_get_drvdata(dev);
++
++	serial8250_suspend_port(info->line);
++	if (info->clk)
++		clk_disable_unprepare(info->clk);
++
++	return 0;
++}
++
++static int of_serial_resume(struct device *dev)
++{
++	struct of_serial_info *info = dev_get_drvdata(dev);
++
++	if (info->clk)
++		clk_prepare_enable(info->clk);
++
++	serial8250_resume_port(info->line);
++
++	return 0;
++}
++#endif
++static SIMPLE_DEV_PM_OPS(of_serial_pm_ops, of_serial_suspend, of_serial_resume);
++
+ /*
+  * A few common types, add more as needed.
+  */
+@@ -271,6 +297,7 @@ static struct platform_driver of_platform_serial_driver = {
+ 		.name = "of_serial",
+ 		.owner = THIS_MODULE,
+ 		.of_match_table = of_platform_serial_table,
++		.pm = &of_serial_pm_ops,
+ 	},
+ 	.probe = of_platform_serial_probe,
+ 	.remove = of_platform_serial_remove,
+-- 
+1.8.0
 
-I've never seen this patch before. From a quick look it doesn't seem
-like it would work as is, but the idea is certainly interesting. If
-somebody decides to continue work on it, please Cc me and the linux-pwm
-mailing list.
-
-> pwm_config()  API could be extended to support
-> not only period [ns] and duty [ns] time
-> but also frequency [Hz] and duty cycle fraction [1/1000?]
-> (instead of time in ns) as parameters.
-> Then  ns (rounded by pwm) to freq. conversion problem
-> inclk_pwm_recalc_rate() usingpwm_get_period()
-> could be avoided.
-> To extend the API pwm_config() can support
-> new flags forduty_ns and period_ns,
-> eg. PWM_DUTY_PERCENT and PWM_PERIOD_HZ.
-
-Is that rounding really a problem? Also the PWM chips will most likely
-use the concept of period and duty-cycle internally anyway, so it will
-convert back from Hz/percentage to nanoseconds and fall victim to
-similar rounding effects.
-
-Thierry
-
---f0PSjARDFl/vfYT5
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUITSSAAoJEN0jrNd/PrOhMKkP/01lPka/hbsq3eDqEaJn0y41
-QrVcSIbKff6BOv+kJ/dY8e64PKOilOfNH3vfA1GBvIytZix/IA0XPZoyteWXb1mm
-unh5lbW/kSBCZoabTUuk0mbRGjZipXT+M3yMBVNf+gW4kJ1w70RyFVyqSrUXmN3T
-3BOC1d8bdGwTqIGLSFRAF/TCbayyT9ERB0wLZ6xaNIez9rEyroyhB3bVNQbo1vnB
-He3miKj96s7ct54hx0EsOY7GfDtoRASpjjRw4IZ/b+Aa4mXlRdl/flGlecsIfj+3
-2hvSgPIbbbPf8VQQOIUMeKzjqenVWWARz6P8+LHeeNxP/gU+Ua7riGLE9OP9XvXl
-cfZTrwr7TSUiCy/iCWipYZncIkTQC/qlzCMzIQ4aOHT+gNX52IZ97RcgXmgFiXbd
-P5cSRvs04heZyFy35gvD4r0bFRbWdfAoVfdQ1HTMW8nZy8FzGnhK/h7ygTvVXnxP
-mR/jFu1RDOMzPsEGkV95sV1gEdc9KzbCwObcOyjgh83PYVmuLuMSOmda1c8NiVFV
-/oFREai0upScFOUsZMWmHgJZ80K4lyjc8OdL3Kdd58lM2MLWsp7eU+RDKcEb38vy
-5EIZcj3aUtC6a67BhCRKiG2C6+4HQNfFl2N3HRl3HwbCGZtFDTkNCr8l1oXTcJpO
-ycWPIZcHHc3k6VwScFaY
-=39v8
------END PGP SIGNATURE-----
-
---f0PSjARDFl/vfYT5--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
