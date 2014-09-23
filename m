@@ -1,31 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/4 v5] GPIO: gpio-dwapb: Enable platform driver binding
- to MFD driver
-Date: Tue, 23 Sep 2014 14:09:28 +0200
-Message-ID: <CACRpkdaczdSkygXzbwcAudf3hPLbSwrZB7zLysHZrkTyx3g=Bw@mail.gmail.com>
-References: <1410970722-8579-1-git-send-email-alvin.chen@intel.com>
-	<1410970722-8579-2-git-send-email-alvin.chen@intel.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v4 4/9] net: pxa168_eth: fix Ethernet flow control status
+Date: Tue, 23 Sep 2014 14:15:31 +0200
+Message-ID: <1411474536-22626-5-git-send-email-antoine.tenart@free-electrons.com>
+References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1410970722-8579-2-git-send-email-alvin.chen@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sebastian.hesselbarth@gmail.com
+Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 6:18 PM, Weike Chen <alvin.chen@intel.com> wrote:
+IEEE 802.3x Ethernet flow control is disabled when bit (1 << 2) is set
+in the port status register. Fix the flow control detection in the link
+event handling function which was relying on the opposite assumption.
 
-> The Synopsys DesignWare APB GPIO driver only supports open firmware devices.
-> But, like Intel Quark X1000 SOC, which has a single PCI function exporting
-> a GPIO and an I2C controller, it is a Multifunction device. This patch is
-> to enable the current Synopsys DesignWare APB GPIO driver to support the
-> Multifunction device which exports the designware GPIO controller.
->
-> Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
-> Signed-off-by: Weike Chen <alvin.chen@intel.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+---
+ drivers/net/ethernet/marvell/pxa168_eth.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-OK no further comments, patch applied.
-
-Yours,
-Linus Walleij
+diff --git a/drivers/net/ethernet/marvell/pxa168_eth.c b/drivers/net/ethernet/marvell/pxa168_eth.c
+index a27cd85c030d..5aa2ce2625b4 100644
+--- a/drivers/net/ethernet/marvell/pxa168_eth.c
++++ b/drivers/net/ethernet/marvell/pxa168_eth.c
+@@ -163,7 +163,7 @@
+ /* Bit definitions for Port status */
+ #define PORT_SPEED_100		(1 << 0)
+ #define FULL_DUPLEX		(1 << 1)
+-#define FLOW_CONTROL_ENABLED	(1 << 2)
++#define FLOW_CONTROL_DISABLED	(1 << 2)
+ #define LINK_UP			(1 << 3)
+ 
+ /* Bit definitions for work to be done */
+@@ -885,7 +885,7 @@ static void handle_link_event(struct pxa168_eth_private *pep)
+ 		speed = 10;
+ 
+ 	duplex = (port_status & FULL_DUPLEX) ? 1 : 0;
+-	fc = (port_status & FLOW_CONTROL_ENABLED) ? 1 : 0;
++	fc = (port_status & FLOW_CONTROL_DISABLED) ? 0 : 1;
+ 	netdev_info(dev, "link up, %d Mb/s, %s duplex, flow control %sabled\n",
+ 		    speed, duplex ? "full" : "half", fc ? "en" : "dis");
+ 	if (!netif_carrier_ok(dev))
+-- 
+1.9.1
