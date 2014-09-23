@@ -1,487 +1,138 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH] iio: iadc: Qualcomm SPMI PMIC current ADC driver
-Date: Tue, 23 Sep 2014 11:31:32 +0300
-Message-ID: <1411461092.18580.30.camel@iivanov-dev>
-References: <1411046123-30625-1-git-send-email-iivanov@mm-sol.com>
-	 <541EDAE5.50307@kernel.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 23 Sep 2014 10:35:15 +0200
+Message-ID: <20140923083514.GM30514@ulmo>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+ <5419760A.7020908@ti.com>
+ <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
+ <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
+ <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo>
+ <5421201C.6000509@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <541EDAE5.50307@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0388174224=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5421201C.6000509@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi, 
+--===============0388174224==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/jvaajy/zP2g41+Q"
+Content-Disposition: inline
 
-On Sun, 2014-09-21 at 15:04 +0100, Jonathan Cameron wrote:
-> On 18/09/14 14:15, Ivan T. Ivanov wrote:
 
-<snip>
+--/jvaajy/zP2g41+Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +config QCOM_SPMI_IADC
-> > +	tristate "Qualcomm SPMI PMIC current ADC"
-> > +	select REGMAP_SPMI
-> > +	depends on IIO
-> > +	help
-> > +	  This is the IIO Current ADC driver for Qualcomm QPNP IADC Chip.
-> > +
-> > +	  The driver supports single mode operation to read from upto seven channel
-> channels?  You only seem to register one...
+On Tue, Sep 23, 2014 at 09:24:12AM +0200, Andrzej Hajda wrote:
+> Hi Thierry, Tomi,
+>=20
+> On 09/23/2014 08:04 AM, Thierry Reding wrote:
+> > On Mon, Sep 22, 2014 at 05:23:25PM +0300, Tomi Valkeinen wrote:
+> >> On 22/09/14 11:06, Thierry Reding wrote:
+> >>
+> >>>>> Why do we need a complex graph when it can be handled using a simpl=
+e phandle?
+> >>>>
+> >>>> Maybe in your case you can handle it with simple phandle. Can you
+> >>>> guarantee that it's enough for everyone, on all platforms?
+> >>>
+> >>> Nobody can guarantee that. An interesting effect that DT ABI stability
+> >>> has had is that people now try to come up with overly generic concepts
+> >>> to describe devices in an attempt to make them more future-proof. I
+> >>> don't think we're doing ourselves a favour with that approach.
+> >>
+> >> I kind of agree. However, there are boards that need a more complex
+> >> approach than just a simple phandle. They are nothing new.
+> >>
+> >> So while it may be true that this specific encoder has never been used
+> >> in such a complex way, and there's a chance that it never will, my
+> >> comments are not really about this particular encoder.
+> >>
+> >> What I want is a standard way to describe the video components. If we
+> >> have a standard complex one (video graphs) and a standard simple one
+> >> (simple phandles), it's ok for me.
+> >=20
+> > I certainly agree that it's useful to have standard ways to describe at
+> > least various aspects. For example I think it would be useful to add
+> > standard properties for a bridge's connections, such as "bridge" or
+> > "panel" to allow bridge chaining and attaching them to panels.
+> >=20
+> > But I think that should be the end of it. Mandating anything other than
+> > that will just complicate things and limit what people can do in the
+> > binding.
+> >=20
+> > One of the disadvantages of the video graph bindings is that they are
+> > overly vague in that they don't carry information about what type a
+> > device is. Bindings then have to require additional meta-data, at which
+> > point it's become far easier to describe things with a custom property
+> > that already provides context.
+>=20
+> I think it is opposite, graph bindings should describe only the link and
+> certainly not what type of device is behind the endpoint. The fact we
+> may need that information is a disadvantage of Linux frameworks and
+> should be corrected in Linux, not by adding Linux specific properties to
+> DT. For example display controller should not care where its output goes
+> to: panel, encoder, bridge, whatever. It should care only if the
+> parameters of the link are agreed with the receiver.
 
-Will reword.
+Well, a display controller is never going to attach to a panel directly.
+But I agree that it would be nice to unify bridges and encoders more. It
+should be possible to make encoder always a bridge (or perhaps even
+replace encoders with bridges altogether). Then once you're out of the
+DRM device everything would be a bridge until you get to a panel.
 
-> > +	  configuration that include reading the external/internal Rsense, CSP_EX,
-> > +	  CSN_EX pair along with the gain and offset calibration.
-> > +
-> >  endmenu
+I think we discussed this a while back in the context of bridge
+chaining.
 
-<snip>
+Thierry
 
-> > +struct iadc_chip {
-> > +	struct regmap *regmap;
-> > +	struct device *dev;
-> > +	u8 factory;
-> > +	u16 base;
-> > +	u16 trim_rds;
-> > +	int rsense;
-> > +	bool ext_sense;
-> > +	bool poll_eoc;
-> > +	u16 offset_raw;
-> > +	u16 gain_raw;
-> > +	struct mutex lock;
-> > +	struct completion complete;
-> > +	struct iio_chan_spec iio_chan;
-> As explained below, better to have this as static const outside of
-> here.
+--/jvaajy/zP2g41+Q
+Content-Type: application/pgp-signature
 
-Thanks, already done as per Peter comments.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> > +};
-> > +
-> > +static int iadc_read(struct iadc_chip *iadc, u16 offset, u8 *data)
-> > +{
-> > +	unsigned int val;
-> > +	int ret;
-> > +
-> > +	ret = regmap_read(iadc->regmap, iadc->base + offset, &val);
-> > +	if (!ret)
-> > +		*data = val;
-> > +
-> > +	return ret;
-> > +}
-> Borderline whether these wrappers add significant value... I suppose they
-> hide the application of the offset.
+iQIcBAEBAgAGBQJUITDCAAoJEN0jrNd/PrOhrmoP/1PTvVhXY6izh+Kt41Yy3HAE
+pOZ4fl1NL+NXabu/MEZgN0fHGH4xQQl57WA+CXHHqOW2hi/u/k953tvclHyF+noq
+tZqXktZcplelqSfcwZZSisoaoq4zdvztOZ6g/wrHwcT4ET/gnOOx9g9cmnnITvNN
+Op8FLQe8gjMfcDMW9gOqt22D3YtGlQ91a7wBw81QFmKfkJqfQElt0XyUEpTeZAo/
+yz5rkOGYH2doBCeiPXuyACwSmu8oGTQefMOlGX9GFVRcLo5LFxF9BasJAsZM5t8D
+0mZz14WTPQshw1Wk3K0YPxAikTaHZ3+9N0QlPsK5YB08khplFydGp431N38gDwlH
+2TGOSwI2mfNma9HJeU03wNDPUHa1ManAIEthFG15LDJiK8K6vnW2/NnUOeLcR1ey
+9kAgf3hFtjlRXVVbhFnPuTmsUyYLMWoG7yBEilS+HPOcjlGjNYl0b2YcewYPPLnZ
+ecb5uHIc/sAEtOvLJYVEs9YtPM6Z8mOlCz1Ky3GGFf5/HkLSn5ZEkS9hUdlyjBnj
+EzJ6+EqI6wU+aoIorTcBoFqIrCLCzP+y/vzTf50ABL7MzVIxexcPJEIJFm0bu2X8
+vDexF29Maz1oAwO493jb3RIEnA9/bW0xj4fgB6ckv9NFKwk4WhqKFwZIVw/EDDfX
+px3t5gauIvhsdQ+9Cqtw
+=KoGf
+-----END PGP SIGNATURE-----
 
-Yes, and will like to keep them.
+--/jvaajy/zP2g41+Q--
 
-> > +
-> > +static int iadc_write(struct iadc_chip *iadc, u16 offset, u8 data)
-> > +{
-> > +	return regmap_write(iadc->regmap, iadc->base + offset, data);
-> > +}
-> > +
-> > +static int iadc_reset(struct iadc_chip *iadc)
-> > +{
-> > +	u8 data;
-> > +	int ret;
-> > +
-> > +	ret = iadc_write(iadc, IADC_SEC_ACCESS, IADC_SEC_ACCESS_DATA);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = iadc_read(iadc, IADC_PERH_RESET_CTL3, &data);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = iadc_write(iadc, IADC_SEC_ACCESS, IADC_SEC_ACCESS_DATA);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	data |= IADC_FOLLOW_WARM_RB;
-> > +
-> > +	return iadc_write(iadc, IADC_PERH_RESET_CTL3, data);
-> > +}
-> > +
-> > +static int iadc_enable(struct iadc_chip *iadc, bool state)
-> iadc_set_state prefered as enable(false) does not necessarily mean
-> disable.
+--===============0388174224==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Ok.
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-> > +static int iadc_poll_wait_eoc(struct iadc_chip *iadc, int interval_us)
-> > +{
-> > +	int ret, count, retry;
-> > +	u8 sta1;
-> > +
-> > +	retry = interval_us / IADC_CONV_TIME_MIN_US;
-> > +
-> > +	for (count = 0; count < retry; count++) {
-> > +		ret = iadc_read(iadc, IADC_STATUS1, &sta1);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +
-> > +		sta1 &= IADC_STATUS1_REQ_STS_EOC_MASK;
-> > +		if (sta1 == IADC_STATUS1_EOC)
-> > +			return 0;
-> > +
-> > +		usleep_range(IADC_CONV_TIME_MIN_US, IADC_CONV_TIME_MAX_US);
-> > +	}
-> > +
-> > +	iadc_status_show(iadc);
-> What is this for?  Left over from debugging the driver?
-
-This should not generally happen, but will be useful to see what was 
-ADC configuration and statuses, when conversion time outs.
-
-> > +
-> > +	return -ETIMEDOUT;
-> > +}
-> > +
-
-<snip>
-
-> > +static int iadc_read_raw(struct iio_dev *indio_dev,
-> > +			 struct iio_chan_spec const *chan,
-> > +			 int *val, int *val2, long mask)
-> > +{
-> > +	struct iadc_chip *iadc = iio_priv(indio_dev);
-> > +	long rsense_ua, rsense_uv, rsense_raw;
-> > +	int ret = -EINVAL, negative;
-> > +	u16 adc_raw;
-> > +
-> > +	mutex_lock(&iadc->lock);
-> > +
-> > +	switch (mask) {
-> > +	case IIO_CHAN_INFO_PROCESSED:
-> > +		ret = iadc_do_conversion(iadc, chan->channel, &adc_raw);
-> > +		if (ret < 0)
-> > +			goto exit;
-> > +
-> > +		rsense_raw = adc_raw - iadc->offset_raw;
-> > +
-> > +		rsense_uv = (rsense_raw * IADC_REF_GAIN_MICRO_VOLTS);
-> > +		rsense_uv /= iadc->gain_raw - iadc->offset_raw;
-> > +
-> > +		negative = 0;
-> > +		if (rsense_uv < 0) {
-> > +			negative = 1;
-> > +			rsense_uv = -rsense_uv;
-> > +		}
-> > +
-> > +		rsense_ua = rsense_uv;
-> > +
-> > +		do_div(rsense_ua, iadc->rsense);
-> > +
-> > +		if (negative)
-> > +			rsense_ua = -rsense_ua;
-> > +
-> > +		dev_dbg(iadc->dev, "offset %d, gain %d, adc %d, V=%ld,uV, I=%ld,uA\n",
-> > +			iadc->offset_raw, iadc->gain_raw, adc_raw,
-> > +			rsense_uv, rsense_ua);
-> > +
-> > +		*val = rsense_ua;
-> Given the naming this seems unlikely to be in millamps?
-
-Yes, it is micro amps. I was unable to find what should be correct
-dimension. There is nothing in sysfs-bus-iio or bindings/iio.
-
-> > +		ret = IIO_VAL_INT;
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> > +exit:
-> > +	mutex_unlock(&iadc->lock);
-> > +
-> > +	return ret;
-> > +}
-> > +
-
-<snip>
-
-> > +
-> > +static int iadc_update_trim_offset(struct iadc_chip *iadc)
-> > +{
-> > +	u16 adc_raw;
-> > +	u8  lsb, msb;
-> > +	int ret, chan;
-> > +
-> > +	ret = iadc_do_conversion(iadc, IADC_GAIN_17P857MV, &adc_raw);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	iadc->gain_raw = adc_raw;
-> There is no real purpose in having the local variable adc_raw.
-> It won't get written unless everything is fine anyway so why
-> not use iadc->gain_raw directly in the do_conversion call.
-> 
-> > +
-> > +	chan = IADC_OFFSET_CSP2_CSN2;
-> > +	if (iadc->ext_sense)
-> > +		chan = IADC_OFFSET_CSP_CSN;
-> > +
-> > +	ret = iadc_do_conversion(iadc, chan, &adc_raw);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	iadc->offset_raw = adc_raw;
-> > +
-> > +	if ((iadc->gain_raw - iadc->offset_raw) == 0) {
-> > +		dev_err(iadc->dev, "error: offset %d gain %d\n",
-> > +			iadc->offset_raw, iadc->gain_raw);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	msb = adc_raw >> 8;
-> > +	lsb = adc_raw & 0xff;
-> Do these directly where needed rather than bothering with local
-> variables.
-
-Ok. No local variables, I get it :-)
-
-> > +
-> > +	ret = iadc_write(iadc, IADC_SEC_ACCESS, IADC_SEC_ACCESS_DATA);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = iadc_write(iadc, IADC_MSB_OFFSET, msb);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret = iadc_write(iadc, IADC_SEC_ACCESS, IADC_SEC_ACCESS_DATA);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return iadc_write(iadc, IADC_LSB_OFFSET, lsb);
-> > +}
-> > +
-
-> > +
-> > +static int iadc_rsense_read(struct iadc_chip *iadc, struct device_node *node)
-> > +{
-> > +	unsigned int trim_val;
-> > +	u8  rsense, const_rds;
-> > +	int ret, negative;
-> > +	u32 trim_type;
-> > +
-> > +	ret = of_property_read_u32(node, "qcom,rsense", &iadc->rsense);
-> > +	if (!ret) {
-> > +		iadc->ext_sense = true;
-> > +		return 0;
-> > +	}
-
-User specify external sense resistor value, which means external
-channel should be used.
-
-> > +
-> > +	ret = iadc_read(iadc, IADC_NOMINAL_RSENSE, &rsense);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	negative = 0;
-> > +	if (rsense & IADC_NOMINAL_RSENSE_SIGN_MASK)
-> > +		negative = 1;
-> I'm a little confused.  The docs say that rsense is a resistor value in
-> ohms (u32).  Why does bit 7 allow encode other information?
-
-External sense resistor value not specified, driver will use internal
-ADC channel and internal sense resistor, so read what was trimmed
-during manufacturing process. Sense register value is read from
-register. If bit 7 of value is set value in register is negative.
-Register itself didn't contain value in ohms, but difference between
-desired and actual value. 
-
-> > +
-> > +	rsense &= ~IADC_NOMINAL_RSENSE_SIGN_MASK;
-> > +
-> > +	iadc->rsense = IADC_INTERNAL_RSENSE_OHMS;
-> > +	if (negative)
-> > +		iadc->rsense -=	rsense * IADC_RSENSE_OHMS_PER_BIT;
-> > +	else
-> > +		iadc->rsense +=	rsense * IADC_RSENSE_OHMS_PER_BIT;
-
-internal rsense = 10000000 + sign * 15625 * value;
-
-> > +
-> > +	if (rsense < IADC_TRIM2_FULLSCALE)
-> > +		return 0;
-> > +	/*
-> > +	 * Trim register is "saturated", check for specific trim value
-> > +	 * based on manufacturer and RDS constant
-> > +	 */
-> > +	ret = of_property_read_u32(node, "qcom,rds-trim", &trim_type);
-> > +	if (ret)
-> > +		return 0;
-> > +
-> > +	ret = regmap_read(iadc->regmap, iadc->trim_rds, &trim_val);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	const_rds = trim_val & IADC_TRIM_CNST_RDS_MASK;
-> > +
-> > +	dev_dbg(iadc->dev, "factory %d trim type %d rsense %d const %d\n",
-> > +		iadc->factory, trim_type, rsense, const_rds);
-> > +
-> > +	switch (trim_type) {
-> > +	case 0:
-> > +		if (const_rds == 2)
-> > +			iadc->rsense = IADC_RSENSE_DEFAULT_VALUE;
-> So this is overwriting rsense if properties are obeyed.  Would it not
-> make sense to do this before using the rsense value above (if these
-> constraints are not met?)
-
-We are coming here only if value trimmed into IADC_NOMINAL_RSENSE
-register is saturated i.e, u8 value is 127, bit 7 is sign bit. Which 
-means that internal resistor is far from desired value. And this 
-depends on the factory used for manufacturing the chip. The whole 
-logic here is simplified version, I believe, on the downstream 
-implementation, which could be found here[1].
-
-[1] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/hwmon/qpnp-adc-current.c?h=msm-3.10
-
-> > +		break;
-> > +	case 1:
-> > +		if (const_rds >= 2) {
-> > +			iadc->rsense = IADC_RSENSE_DEFAULT_VALUE;
-> > +		} else if (const_rds < 2) {
-> > +			if (iadc->factory == IADC_FACTORY_GF)
-> > +				iadc->rsense = IADC_RSENSE_DEFAULT_GF;
-> > +			else if (iadc->factory == IADC_FACTORY_SMIC)
-> > +				iadc->rsense = IADC_RSENSE_DEFAULT_SMIC;
-> > +		}
-> > +		break;
-> > +	case 2:
-> > +		if (const_rds > 0 && const_rds <= 2)
-> > +			iadc->rsense = IADC_RSENSE_DEFAULT_VALUE;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int iadc_probe(struct platform_device *pdev)
-> > +{
-> > +	struct device_node *node = pdev->dev.of_node;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct iio_chan_spec *iio_chan;
-> > +	struct iio_dev *indio_dev;
-> > +	struct iadc_chip *iadc;
-> > +	struct resource *res;
-> > +	struct regmap *regmap;
-> > +	int ret, irq_eoc;
-> > +
-> > +	regmap = dev_get_regmap(dev->parent, NULL);
-> > +	if (!regmap)
-> > +		return -ENODEV;
-> > +
-> > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*iadc));
-> > +	if (!indio_dev)
-> > +		return -ENOMEM;
-> Spinning the order of the regmap get and iio_device_alloc would perhaps
-> give a cleaner result as you could then fill iadc->regmap directly...
-> (marginal!)
-
-No local variables, right? :-)
-
-> > +
-> > +	iadc = iio_priv(indio_dev);
-> > +	iadc->dev = dev;
-> > +	iadc->regmap = regmap;
-> > +	init_completion(&iadc->complete);
-> > +	mutex_init(&iadc->lock);
-> > +
-> > +	platform_set_drvdata(pdev, iadc);
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> > +	if (!res)
-> > +		return -ENODEV;
-> > +
-> > +	iadc->base = res->start;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_REG, 1);
-> > +	if (!res)
-> > +		return -ENODEV;
-> > +
-> > +	iadc->trim_rds = res->start;
-> > +
-> > +	ret = iadc_version_check(iadc);
-> > +	if (ret < 0)
-> > +		return -ENODEV;
-> > +
-> > +	ret = iadc_rsense_read(iadc, node);
-> > +	if (ret < 0)
-> > +		return -ENODEV;
-> > +
-> > +	dev_dbg(iadc->dev, "%s sense resistor %d Ohm\n", iadc->ext_sense ?
-> > +		"external" : "internal", iadc->rsense);
-> > +
-> > +	irq_eoc = platform_get_irq(pdev, 0);
-> > +	if (irq_eoc == -EPROBE_DEFER)
-> > +		return irq_eoc;
-> > +
-> > +	if (irq_eoc < 0)
-> > +		iadc->poll_eoc = true;
-> > +
-> > +	ret = iadc_reset(iadc);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "reset failed\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	if (!iadc->poll_eoc) {
-> > +		ret = devm_request_irq(dev, irq_eoc, iadc_isr, 0,
-> > +					"spmi-iadc", iadc);
-> > +		if (!ret)
-> > +			enable_irq_wake(irq_eoc);
-> > +		else
-> > +			return ret;
-> > +	} else {
-> > +		device_init_wakeup(iadc->dev, 1);
-> > +	}
-> > +
-> > +	ret = iadc_update_trim_offset(iadc);
-> > +	if (ret < 0) {
-> > +		dev_err(dev, "failed trim offset calibration\n");
-> > +		return ret;
-> > +	}
-> > +
-> This stuff is basically constant configuration data, except that you
-> have two choices.   Just have two static const struct iio_chan entries
-> outside here and pick between them based on ext_sense.
-> Also, why give them different channel numbers?  Looks like it is just
-> to distinguish them in driver.  If so, use address instead.
-> e.g.
-> 
-> static const struct iio_chan_spec iadc_channel_ext_rsense = {
->        .type = IIO_CURRENT,
->        .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
->        .address = 1,
->        .datasheet_name = "EXTERNAL_RSENSE",
-> };
-> 
-> static const struct iio_chan_spec iadc_channel_int_rsense = {
->        .type = IIO_CURRENT,
->        .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
->        .address = 0,
->        .datasheet_name = "INTERNAL_RSENSE",
-> };
-> 
-> No need to have a copy in iadc then...
-> 
-> The only time dynamic allocation of iio_chan_spec structures
-> makes sense is when there are lots of combinations and the
-> static const approach becomes too unweildy.
-
-Already done.
-
-Thank you for review.
-
-Regards,
-Ivan
+--===============0388174224==--
