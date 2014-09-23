@@ -1,122 +1,70 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3 1/5] drm/rockchip: Add basic drm driver
-Date: Tue, 23 Sep 2014 09:48:31 +0200
-Message-ID: <20140923074831.GR15734@phenom.ffwll.local>
-References: <1411105668-32722-1-git-send-email-mark.yao@rock-chips.com>
- <1411105668-32722-2-git-send-email-mark.yao@rock-chips.com>
- <CAF6AEGsPoj6+PdKCJk5BPPzHS51Tz1FGqS2SjpartaRw7i=Pxg@mail.gmail.com>
- <541F7C23.8000103@rock-chips.com>
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: RE: [PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7 SoC
+Date: Tue, 23 Sep 2014 16:50:07 +0900
+Message-ID: <013001cfd702$feb42900$fc1c7b00$@samsung.com>
+References: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <541F7C23.8000103@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark yao <mark.yao@rock-chips.com>
-Cc: Rob Clark <robdclark@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, linux-doc@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jianqun Xu <xjq@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, linux-api@vger.kernel.org, jeff chen <cym@rock-chips.com>, linux-rockchip@lists.infradead.org, kfx@rock-chips.com, Grant Likely <grant.likely@linaro.org>, wxt@rock-chips.com, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, yxj@rock-chips.com, Eddie Cai <cf@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1411361228-18279-1-git-send-email-a.kesavan@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Abhilash Kesavan' <a.kesavan@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, catalin.marinas@arm.com
+Cc: naveenkrishna.ch@gmail.com, kesavan.abhilash@gmail.com, tomasz.figa@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 09:32:19AM +0800, Mark yao wrote:
-> On 2014=E5=B9=B409=E6=9C=8820=E6=97=A5 08:03, Rob Clark wrote:
-> >On Fri, Sep 19, 2014 at 1:47 AM, Mark yao <mark.yao@rock-chips.com> =
-wrote:
-> >>diff --git a/include/uapi/drm/rockchip_drm.h b/include/uapi/drm/roc=
-kchip_drm.h
-> >>new file mode 100644
-> >>index 0000000..8f8e60e
-> >>--- /dev/null
-> >>+++ b/include/uapi/drm/rockchip_drm.h
-> >>@@ -0,0 +1,97 @@
-> >>+/*
-> >>+ *
-> >>+ * Copyright (c) Fuzhou Rockchip Electronics Co.Ltd
-> >>+ * Authors:
-> >>+ *       Mark Yao <yzq@rock-chips.com>
-> >>+ *
-> >>+ * base on exynos_drm.h
-> >>+ *
-> >>+ * This program is free software; you can redistribute  it and/or =
-modify it
-> >>+ * under  the terms of  the GNU General  Public License as publish=
-ed by the
-> >>+ * Free Software Foundation;  either version 2 of the  License, or=
- (at your
-> >>+ * option) any later version.
-> >>+ */
-> >>+
-> >>+#ifndef _UAPI_ROCKCHIP_DRM_H
-> >>+#define _UAPI_ROCKCHIP_DRM_H
-> >>+
-> >>+#include <drm/drm.h>
-> >>+
-> >>+/**
-> >>+ * User-desired buffer creation information structure.
-> >>+ *
-> >>+ * @size: user-desired memory allocation size.
-> >>+ * @flags: user request for setting memory type or cache attribute=
-s.
-> >>+ * @handle: returned a handle to created gem object.
-> >>+ *     - this handle will be set by gem module of kernel side.
-> >>+ */
-> >>+struct drm_rockchip_gem_create {
-> >>+       uint64_t size;
-> >>+       uint32_t flags;
-> >>+       uint32_t handle;
-> >>+};
-> >>+
-> >>+/**
-> >>+ * A structure for getting buffer offset.
-> >>+ *
-> >>+ * @handle: a pointer to gem object created.
-> >>+ * @pad: just padding to be 64-bit aligned.
-> >>+ * @offset: relatived offset value of the memory region allocated.
-> >>+ *     - this value should be set by user.
-> >>+ */
-> >>+struct drm_rockchip_gem_map_off {
-> >>+       uint32_t handle;
-> >>+       uint32_t pad;
-> >>+       uint64_t offset;
-> >>+};
-> >>+
-> >>+/**
-> >>+ * A structure for mapping buffer.
-> >>+ *
-> >>+ * @handle: a handle to gem object created.
-> >>+ * @pad: just padding to be 64-bit aligned.
-> >>+ * @size: memory size to be mapped.
-> >>+ * @mapped: having user virtual address mmaped.
-> >>+ *      - this variable would be filled by rockchip gem module
-> >>+ *      of kernel side with user virtual address which is allocate=
-d
-> >>+ *      by do_mmap().
-> >>+ */
-> >>+struct drm_rockchip_gem_mmap {
-> >>+       uint32_t handle;
-> >>+       uint32_t pad;
-> >>+       uint64_t size;
-> >>+       uint64_t mapped;
-> >>+};
-> >Could we do without the mmap ioctl?  It has been a source of problem=
-s
-> >in other drivers, and the ioctl to get mmap offset, plus normal mmap=
-()
-> >on drm device file should be sufficient
-> >
-> >BR,
-> >-R
-> OK, I will try to move the special mmap ioctl and use drm generic mma=
-p
-> interface.
+Hi,
 
-Actually you probably should drop all this and just implement the dummy
-object support for now. Until you have proper hw accel there's no reaso=
-n
-to expose a driver-private gem create/mmap interface at all.
+> -----Original Message-----
+> From: linux-arm-kernel [mailto:linux-arm-kernel-
+> bounces@lists.infradead.org] On Behalf Of Abhilash Kesavan
+> Sent: Monday, September 22, 2014 1:47 PM
+> To: linux-samsung-soc@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; devicetree@vger.kernel.org;
+> catalin.marinas@arm.com
+> Cc: naveenkrishna.ch@gmail.com; kesavan.abhilash@gmail.com;
+> tomasz.figa@gmail.com
+> Subject: [PATCH v5 0/8] arch: arm64: Enable support for Samsung Exynos7
+> SoC
+> 
+> Changes since v4:
+> - Fixed comments from Tomasz Figa:
+> 	- Changed the namespace prefix from exynos to samsung
+> 	- Defined bindings to take all input clocks
+> 	- Sorted the Kconfig entries alphabetically in clock Makefile
+> 	- Used consistent 1 tab line breaks across the clock file
+> 	- Statically initialized the samsung_cmu_info struct
+> - Enabled exynos7 in the arm64 defconfig as per Catalin Marinas' comment.
+> - Added Kukjin Kim's ack along with Thomas Abraham's tested and reviewed
+> tags.
+> 
+> Changes since v3:
+> - Removed aliases for serial controllers from dtsi file and moved it
+>   into board specific dts file as suggested by Arnd.
+> - Based this series on Robert Richter's patches for adding vendor
+>   device tree sub-directories for arm64.
+>   http://comments.gmane.org/gmane.linux.kbuild.devel/12131
+> 
+> This patchset supports the new Exynos7 Samsung SoC based on Cortex-A57.
+> Exynos7 is a System-On-Chip (SoC) that is based on 64-bit ARMv8 RISC
+> processor.
+> 
+> The following patches are tested based on linux-next tree (20140919).
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/
+> 
+> Following patches are required for this series:
+> 1- "tty/serial: fix config dependencies for samsung serial"
+>    https://www.mail-archive.com/linux-samsung-soc <at>
+> vger.kernel.org/msg36208.html
+> 2- "dts, kbuild: Implement support for dtb vendor subdirs" patchset
+>    http://comments.gmane.org/gmane.linux.kbuild.devel/12131
 
-A pure kms driver really shouldn't have it's on uapi/foo_drm.h file.
--Daniel
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Maybe you make this patch on top of the Robert's patch.
+As I know, Robert's patch is not yet merged in mainline.
+You should specify this dependency in mail thread.
+
+[1]: https://lkml.org/lkml/2014/9/5/64
+
+Best Regards,
+Chanho Park
