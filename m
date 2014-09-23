@@ -1,363 +1,137 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [PATCH v4 1/5] drm/rockchip: Add basic drm driver
-Date: Tue, 23 Sep 2014 13:59:22 +0800
-Message-ID: <54210C3A.50001@rock-chips.com>
-References: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>	<1411382934-1763-1-git-send-email-mark.yao@rock-chips.com> <20140922152448.5c5cd178@bbrezillon>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 23 Sep 2014 08:04:53 +0200
+Message-ID: <20140923060452.GD30514@ulmo>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+ <5419760A.7020908@ti.com>
+ <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
+ <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
+ <542030DD.3060906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140922152448.5c5cd178@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: heiko@sntech.de, David Airlie <airlied@gmail.com>, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, John Stultz <john.stultz@linaro.org>, Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-api@vger.kernel.org, linux-rockchip@lists.infradead.org, dianders@chromium.org, marcheu@chromium.org, dbehr@chromium.org, olof@lixom.net, djkurtz@chromium.org, xjq@rock-chips.com, kfx@rock-chips.com, cym@rock-chips.com, cf@rock-chips.com, zyw@rock-chips.com, xxm@rock-chips.com, huang
+Content-Type: multipart/mixed; boundary="===============0385659742=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <542030DD.3060906@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2014=E5=B9=B409=E6=9C=8822=E6=97=A5 21:24, Boris BREZILLON wrote:
-> Hi Mark,
->
-> You'll find some comments inline.
-> Anyway, I wouldn't call it a review (your driver is using some concep=
-ts
-> I'm not used to, like IOMMUs) but rather a collection of nitpicks :-)=
-=2E
->
-> I haven't been through the whole driver yet, but I'll get back to it
-> soon ;-).
->
-> And remember this is a 2 way thing, I wait for your review too
-> (here is the last version of my driver [1]) :-)
->
->
-> On Mon, 22 Sep 2014 18:48:54 +0800
-> Mark yao <mark.yao@rock-chips.com> wrote:
->
->> This patch adds the basic structure of a DRM Driver for Rockchip Soc=
-s.
->>
->> Signed-off-by: Mark yao <mark.yao@rock-chips.com>
->> ---
->> Changes in v2:
->> - use the component framework to defer main drm driver probe
->>    until all VOP devices have been probed.
->> - use dma-mapping API with ARM_DMA_USE_IOMMU, create dma mapping by
->>    master device and each vop device can shared the drm dma mapping.
->> - use drm_crtc_init_with_planes and drm_universal_plane_init.
->> - remove unnecessary middle layers.
->> - add cursor set, move funcs to rockchip drm crtc.
->> - use vop reset at first init
->> - reference framebuffer when used and unreference when swap out vop
->>
->> Changes in v3:
->> - change "crtc->fb" to "crtc->primary-fb"
->> Adviced by Daniel Vetter
->> - init cursor plane with universal api, remove unnecessary cursor se=
-t,move
->>
->> Changes in v4:
->> Adviced by David Herrmann
->> - remove drm_platform_*() usage, use register drm device directly.
->> Adviced by Rob Clark
->> - remove special mmap ioctl, do userspace mmap with normal mmap() or=
- mmap offset
->>
->>   drivers/gpu/drm/Kconfig                       |    2 +
->>   drivers/gpu/drm/Makefile                      |    1 +
->>   drivers/gpu/drm/rockchip/Kconfig              |   19 +
->>   drivers/gpu/drm/rockchip/Makefile             |   10 +
->>   drivers/gpu/drm/rockchip/rockchip_drm_drv.c   |  524 ++++++++++
->>   drivers/gpu/drm/rockchip/rockchip_drm_drv.h   |  120 +++
->>   drivers/gpu/drm/rockchip/rockchip_drm_fb.c    |  201 ++++
->>   drivers/gpu/drm/rockchip/rockchip_drm_fb.h    |   28 +
->>   drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c |  231 +++++
->>   drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h |   20 +
->>   drivers/gpu/drm/rockchip/rockchip_drm_gem.c   |  404 ++++++++
->>   drivers/gpu/drm/rockchip/rockchip_drm_gem.h   |   72 ++
->>   drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 1372 +++++++++++++=
-++++++++++++
->>   drivers/gpu/drm/rockchip/rockchip_drm_vop.h   |  187 ++++
->>   include/uapi/drm/rockchip_drm.h               |   75 ++
->>   15 files changed, 3266 insertions(+)
->>   create mode 100644 drivers/gpu/drm/rockchip/Kconfig
->>   create mode 100644 drivers/gpu/drm/rockchip/Makefile
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.c
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_drv.h
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.c
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fb.h
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.c
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_fbdev.h
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.c
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_gem.h
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.c
->>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_vop.h
->>   create mode 100644 include/uapi/drm/rockchip_drm.h
->>
->> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
->> index b066bb3..7c4c3c6 100644
->> --- a/drivers/gpu/drm/Kconfig
->> +++ b/drivers/gpu/drm/Kconfig
->> @@ -171,6 +171,8 @@ config DRM_SAVAGE
->>  =20
->>   source "drivers/gpu/drm/exynos/Kconfig"
->>  =20
->> +source "drivers/gpu/drm/rockchip/Kconfig"
->> +
->>   source "drivers/gpu/drm/vmwgfx/Kconfig"
->>  =20
->>   source "drivers/gpu/drm/gma500/Kconfig"
->> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
->> index 4a55d59..d03387a 100644
->> --- a/drivers/gpu/drm/Makefile
->> +++ b/drivers/gpu/drm/Makefile
->> @@ -52,6 +52,7 @@ obj-$(CONFIG_DRM_VMWGFX)+=3D vmwgfx/
->>   obj-$(CONFIG_DRM_VIA)	+=3Dvia/
->>   obj-$(CONFIG_DRM_NOUVEAU) +=3Dnouveau/
->>   obj-$(CONFIG_DRM_EXYNOS) +=3Dexynos/
->> +obj-$(CONFIG_DRM_ROCKCHIP) +=3Drockchip/
->>   obj-$(CONFIG_DRM_GMA500) +=3D gma500/
->>   obj-$(CONFIG_DRM_UDL) +=3D udl/
->>   obj-$(CONFIG_DRM_AST) +=3D ast/
->> diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rock=
-chip/Kconfig
->> new file mode 100644
->> index 0000000..7146c80
->> --- /dev/null
->> +++ b/drivers/gpu/drm/rockchip/Kconfig
->> @@ -0,0 +1,19 @@
->> +config DRM_ROCKCHIP
->> +	tristate "DRM Support for Rockchip"
->> +	depends on DRM && ROCKCHIP_IOMMU
->> +	select ARM_DMA_USE_IOMMU
->> +	select IOMMU_API
->> +	select DRM_KMS_HELPER
->> +	select DRM_KMS_FB_HELPER
->> +	select DRM_PANEL
->> +	select FB_CFB_FILLRECT
->> +	select FB_CFB_COPYAREA
->> +	select FB_CFB_IMAGEBLIT
->> +	select VT_HW_CONSOLE_BINDING if FRAMEBUFFER_CONSOLE
->> +	select VIDEOMODE_HELPERS
->> +	help
->> +	  Choose this option if you have a Rockchip soc chipset.
->> +	  This driver provides kernel mode setting and buffer
->> +	  management to userspace. This driver does not provides
->> +	  2D or 3D acceleration; acceleration is performed by other
->> +	  IP found on the SoC.
->> diff --git a/drivers/gpu/drm/rockchip/Makefile b/drivers/gpu/drm/roc=
-kchip/Makefile
->> new file mode 100644
->> index 0000000..6e6d468
->> --- /dev/null
->> +++ b/drivers/gpu/drm/rockchip/Makefile
->> @@ -0,0 +1,10 @@
->> +#
->> +# Makefile for the drm device driver.  This driver provides support=
- for the
->> +# Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher=
-=2E
->> +
->> +ccflags-y :=3D -Iinclude/drm -Idrivers/gpu/drm/rockchip
-> Do you really need those specific CFLAGS (AFAIK, these path are
-> already set, though you'll have to include <drm/xxx.h> instead of
-> "xxx.h" if you're referencing drm headers, but you're already
-> referencing the correct patch anyway) ?
-Sure, I will do it.
->> +
->> +rockchipdrm-y :=3D rockchip_drm_drv.o rockchip_drm_fb.o rockchip_dr=
-m_fbdev.o \
->> +		rockchip_drm_gem.o rockchip_drm_vop.o
->> +
->> +obj-$(CONFIG_DRM_ROCKCHIP) +=3D rockchipdrm.o
->> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/g=
-pu/drm/rockchip/rockchip_drm_drv.c
->> new file mode 100644
->> index 0000000..94926cb
->> --- /dev/null
->> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
->> @@ -0,0 +1,524 @@
->> +/*
->> + * Copyright (C) Fuzhou Rockchip Electronics Co.Ltd
->> + * Author:Mark Yao <mark.yao@rock-chips.com>
->> + *
->> + * based on exynos_drm_drv.c
->> + *
->> + * This software is licensed under the terms of the GNU General Pub=
-lic
->> + * License version 2, as published by the Free Software Foundation,=
- and
->> + * may be copied, distributed, and modified under those terms.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
-> [...]
->
->> +
->> +static int rockchip_drm_load(struct drm_device *drm_dev, unsigned l=
-ong flags)
->> +{
->> +	struct rockchip_drm_private *private;
->> +	struct dma_iommu_mapping *mapping;
->> +	struct device *dev =3D drm_dev->dev;
->> +	int ret;
->> +
->> +	private =3D devm_kzalloc(drm_dev->dev, sizeof(*private), GFP_KERNE=
-L);
->> +	if (!private)
->> +		return -ENOMEM;
->> +
->> +	dev_set_drvdata(drm_dev->dev, dev);
->> +	drm_dev->dev_private =3D private;
->> +
->> +	drm_mode_config_init(drm_dev);
->> +
->> +	rockchip_drm_mode_config_init(drm_dev);
->> +
->> +	dev->dma_parms =3D devm_kzalloc(dev, sizeof(*dev->dma_parms),
->> +				      GFP_KERNEL);
->> +	if (!dev->dma_parms) {
->> +		ret =3D -ENOMEM;
->> +		goto err_config_cleanup;
->> +	}
->> +
->> +	/* TODO(djkurtz): fetch the mapping start/size from somewhere */
->> +	mapping =3D arm_iommu_create_mapping(&platform_bus_type, 0x1000000=
-0,
->> +					   SZ_1G);
->> +	if (IS_ERR(mapping)) {
->> +		ret =3D PTR_ERR(mapping);
->> +		goto err_config_cleanup;
->> +	}
->> +
->> +	dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
->> +	dma_set_max_seg_size(dev, 0xffffffffu);
->> +
->> +	ret =3D arm_iommu_attach_device(dev, mapping);
->> +	if (ret)
->> +		goto err_release_mapping;
->> +
->> +	/* Try to bind all sub drivers. */
->> +	ret =3D component_bind_all(dev, drm_dev);
->> +	if (ret)
->> +		goto err_detach_device;
->> +
->> +	/* init kms poll for handling hpd */
->> +	drm_kms_helper_poll_init(drm_dev);
->> +
->> +	/*
->> +	 * enable drm irq mode.
->> +	 * - with irq_enabled =3D true, we can use the vblank feature.
->> +	 */
->> +	drm_dev->irq_enabled =3D true;
->> +
->> +	/*
->> +	 * with vblank_disable_allowed =3D true, vblank interrupt will be =
-disabled
->> +	 * by drm timer once a current process gives up ownership of
->> +	 * vblank event.(after drm_vblank_put function is called)
->> +	 */
->> +	drm_dev->vblank_disable_allowed =3D true;
->> +
->> +	ret =3D drm_vblank_init(drm_dev, ROCKCHIP_MAX_CRTC);
->> +	if (ret)
->> +		goto err_kms_helper_poll_fini;
->> +
->> +	rockchip_drm_fbdev_init(drm_dev);
->> +
->> +	/* force connectors detection */
->> +	drm_helper_hpd_irq_event(drm_dev);
->> +
->> +	return 0;
->> +
->> +err_kms_helper_poll_fini:
->> +	drm_kms_helper_poll_fini(drm_dev);
->> +	component_unbind_all(dev, drm_dev);
->> +err_detach_device:
->> +	arm_iommu_detach_device(dev);
->> +err_release_mapping:
->> +	arm_iommu_release_mapping(dev->archdata.mapping);
->> +err_config_cleanup:
->> +	drm_mode_config_cleanup(drm_dev);
->> +	drm_dev->dev_private =3D NULL;
->> +	dev_set_drvdata(dev, NULL);
->
-> Not sure you need to set driver data to NULL.
->
->
-oh, dev_set_drvdata is no used now, I will remove it.
->> +	return ret;
->> +}
->> +
-> [...]
->
->> +
->> +#ifdef CONFIG_PM_SLEEP
->> +static int rockchip_drm_sys_suspend(struct device *dev)
->> +{
->> +	struct drm_device *drm_dev =3D dev_get_drvdata(dev);
->> +	pm_message_t message;
->> +
->> +	if (pm_runtime_suspended(dev))
->> +		return 0;
->> +
->> +	message.event =3D PM_EVENT_SUSPEND;
->> +
->> +	return rockchip_drm_suspend(drm_dev, message);
->> +}
->> +
->> +static int rockchip_drm_sys_resume(struct device *dev)
->> +{
->> +	struct drm_device *drm_dev =3D dev_get_drvdata(dev);
->> +
->> +	if (pm_runtime_suspended(dev))
-> You meant
->
-> 	if (!pm_runtime_suspended(dev))
->
-> right ?
->
-> BTW, I see the same mistake in exynos driver [2]
-yes, you are right.
->
->> +		return 0;
->> +
->> +	return rockchip_drm_resume(drm_dev);
->> +}
->> +#endif
->> +
->> +static const struct dev_pm_ops rockchip_drm_pm_ops =3D {
->> +	SET_SYSTEM_SLEEP_PM_OPS(rockchip_drm_sys_suspend,
->> +				rockchip_drm_sys_resume)
->> +};
->> +
->> +int rockchip_drm_add_crtc(struct drm_device *drm, struct drm_crtc *=
-crtc,
->> +			  struct device_node *np)
->> +{
->> +	struct rockchip_drm_private *priv =3D drm->dev_private;
->> +	struct device_node *port;
->> +	int pipe;
->> +
->> +	if (priv->num_pipe >=3D ROCKCHIP_MAX_CRTC)
->> +		return -EINVAL;
->> +
->> +	port =3D of_get_child_by_name(np, "port");
->> +	of_node_put(np);
-> Not sure you should call of_node_put on a node pointer passed as an
-> argument (unless you previously called of_node_get which is not the c=
-ase
-> in this function)...
-right, I will remove it.
->
-> Best Regards,
->
-> Boris
->
-> [1]http://thread.gmane.org/gmane.comp.video.dri.devel/114064
-> [2]https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/t=
-ree/drivers/gpu/drm/exynos/exynos_drm_drv.c?id=3Drefs/tags/next-2014092=
-2#n373
+
+--===============0385659742==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7DO5AaGCk89r4vaK"
+Content-Disposition: inline
+
+
+--7DO5AaGCk89r4vaK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Sep 22, 2014 at 05:23:25PM +0300, Tomi Valkeinen wrote:
+> On 22/09/14 11:06, Thierry Reding wrote:
+>=20
+> >>> Why do we need a complex graph when it can be handled using a simple =
+phandle?
+> >>
+> >> Maybe in your case you can handle it with simple phandle. Can you
+> >> guarantee that it's enough for everyone, on all platforms?
+> >=20
+> > Nobody can guarantee that. An interesting effect that DT ABI stability
+> > has had is that people now try to come up with overly generic concepts
+> > to describe devices in an attempt to make them more future-proof. I
+> > don't think we're doing ourselves a favour with that approach.
+>=20
+> I kind of agree. However, there are boards that need a more complex
+> approach than just a simple phandle. They are nothing new.
+>=20
+> So while it may be true that this specific encoder has never been used
+> in such a complex way, and there's a chance that it never will, my
+> comments are not really about this particular encoder.
+>=20
+> What I want is a standard way to describe the video components. If we
+> have a standard complex one (video graphs) and a standard simple one
+> (simple phandles), it's ok for me.
+
+I certainly agree that it's useful to have standard ways to describe at
+least various aspects. For example I think it would be useful to add
+standard properties for a bridge's connections, such as "bridge" or
+"panel" to allow bridge chaining and attaching them to panels.
+
+But I think that should be the end of it. Mandating anything other than
+that will just complicate things and limit what people can do in the
+binding.
+
+One of the disadvantages of the video graph bindings is that they are
+overly vague in that they don't carry information about what type a
+device is. Bindings then have to require additional meta-data, at which
+point it's become far easier to describe things with a custom property
+that already provides context.
+
+> >> The point of the ports/endpoint graph is to also support more
+> >> complicated scenarios.
+> >=20
+> > But the scenario will always remain the same for this bridge. There will
+> > always be an input signal and a translation to some output signal along
+> > with some parameters to control how that translation happens. More
+> > complicated scenarios will likely need to be represented differently at
+> > a higher level than the bridge.
+>=20
+> Yes, there's always one active input and one output for this bridge.
+> What the video graphs would bring is to have the possibility to have
+> multiple inputs and outputs, of which a single ones could be active at a
+> time. The different inputs and outputs could even have different
+> settings required (say, first output requires this bit set, but when
+> using second output that bit must be cleared).
+
+As discussed elsewhere this should be handled at a different level then.
+DT should describe the hardware and this particular bridge device simply
+doesn't have a means to connect more than a single input or more than a
+single output.
+
+Thierry
+
+--7DO5AaGCk89r4vaK
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUIQ2EAAoJEN0jrNd/PrOhTpYQAI9XyPrIb5zyS9oj67TEP7W2
+TXqJxHB+z6fmfqUcyPOZPbGYBSJM74hPTrctHuRerKl8azA6TH5hTPzpz72zAbOr
+DRygtPlNCkYEtbp+GEYRwoECNxatGnsHGobw+c6U87xqExlGcOSH1O+IgalmnfPx
+QUs+LYW3NJxNkwtl9BhyuvYCE5RCVJC6O0DKCJeYMFhUuEjvgqZY12DORAWhI8vD
+3RQVPoVVLcDPZLfxtCUq9hxuBdtnJ6pXTDFhQEll+aL1UYtOiR+ApC3g/bOjrE5K
+q6zp3+S1ziBPwLf6wbnNYwLdmj59XZboc1HMyH7b0ww9/i1Re5HaVNmNHpF7u4z6
+ktTQwulH1cOQihoY1H26AhVS/D9MWf/fMznK3YnbyQFJSKU3OQls3f9gFyxs+CM7
+X6M4q9GS9jLdfmu4oaTn2pV39joE3/o28IgQkXz0VquyltbiPsx+6bePV117aboH
+MCDpcg01rRRSKKmAgCZzT0OeP8PGIlFGrZifxVOqT+R2+owvNXq3pi50aORX20kb
+3i+2qBAxJmUc7YE0Mu47Jy8MTqIlshSkYlQVn4RxISivjqY0sug0BYBzZdJOkTOo
+Cnr2AB9zCwwcG76Cq1N33jhEDZoQiZv9EkanFJh8mW8HtzhUkc3esexLClBtIM3/
+SmazL8i+Aae5DRC2Ibst
+=j3pt
+-----END PGP SIGNATURE-----
+
+--7DO5AaGCk89r4vaK--
+
+--===============0385659742==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0385659742==--
