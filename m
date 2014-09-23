@@ -1,105 +1,77 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v7 08/10] rtc: at91sam9: use clk API instead of relying on AT91_SLOW_CLOCK
-Date: Tue, 23 Sep 2014 11:38:48 +0200
-Message-ID: <1411465130-29011-9-git-send-email-boris.brezillon@free-electrons.com>
-References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 23 Sep 2014 12:40:24 +0300
+Message-ID: <54214008.4040105@ti.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <5419760A.7020908@ti.com> <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com> <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo> <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo> <5421201C.6000509@samsung.com> <20140923083514.GM30514@ulmo>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="jgPCRJOE9GamS4RJAFkDs7x7i3DQ7dEj4"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140923083514.GM30514@ulmo>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The RTT block is using the slow clock which is accessible through the clk
-API.
-Use the clk API to retrieve, enable and get the slow clk rate instead of
-the AT91_SLOW_CLOCK macro (which hardcodes the slow clk rate).
-Doing this allows us to reference the clk thus preventing the CCF from
-disabling it during the "disable unused" phase.
+--jgPCRJOE9GamS4RJAFkDs7x7i3DQ7dEj4
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- drivers/rtc/rtc-at91sam9.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+On 23/09/14 11:35, Thierry Reding wrote:
 
-diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-index be9c28b..d3bbe29 100644
---- a/drivers/rtc/rtc-at91sam9.c
-+++ b/drivers/rtc/rtc-at91sam9.c
-@@ -23,6 +23,7 @@
- #include <linux/io.h>
- #include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
-+#include <linux/clk.h>
- 
- /*
-  * This driver uses two configurable hardware resources that live in the
-@@ -61,8 +62,6 @@
- #define AT91_RTT_ALMS		(1 << 0)		/* Real-time Alarm Status */
- #define AT91_RTT_RTTINC		(1 << 1)		/* Real-time Timer Increment */
- 
--#define AT91_SLOW_CLOCK		32768
--
- /*
-  * We store ALARM_DISABLED in ALMV to record that no alarm is set.
-  * It's also the reset value for that field.
-@@ -77,6 +76,7 @@ struct sam9_rtc {
- 	struct regmap		*gpbr;
- 	unsigned int		gpbr_offset;
- 	int 			irq;
-+	struct clk		*sclk;
- };
- 
- #define rtt_readl(rtc, field) \
-@@ -328,6 +328,7 @@ static int at91_rtc_probe(struct platform_device *pdev)
- 	struct sam9_rtc	*rtc;
- 	int		ret, irq;
- 	u32		mr;
-+	unsigned int	sclk_rate;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
-@@ -385,11 +386,27 @@ static int at91_rtc_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(rtc->sclk))
-+		return PTR_ERR(rtc->sclk);
-+
-+	sclk_rate = clk_get_rate(rtc->sclk);
-+	if (!sclk_rate || sclk_rate > AT91_RTT_RTTRST) {
-+		dev_err(&pdev->dev, "Invalid slow clock rate");
-+		return -EINVAL;
-+	}
-+
-+	ret = clk_prepare_enable(rtc->sclk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Could not enable slow clock");
-+		return ret;
-+	}
-+
- 	mr = rtt_readl(rtc, MR);
- 
- 	/* unless RTT is counting at 1 Hz, re-initialize it */
--	if ((mr & AT91_RTT_RTPRES) != AT91_SLOW_CLOCK) {
--		mr = AT91_RTT_RTTRST | (AT91_SLOW_CLOCK & AT91_RTT_RTPRES);
-+	if ((mr & AT91_RTT_RTPRES) != sclk_rate) {
-+		mr = AT91_RTT_RTTRST | (sclk_rate & AT91_RTT_RTPRES);
- 		gpbr_writel(rtc, 0);
- 	}
- 
-@@ -434,6 +451,9 @@ static int at91_rtc_remove(struct platform_device *pdev)
- 	/* disable all interrupts */
- 	rtt_writel(rtc, MR, mr & ~(AT91_RTT_ALMIEN | AT91_RTT_RTTINCIEN));
- 
-+	if (!IS_ERR(rtc->sclk))
-+		clk_disable_unprepare(rtc->sclk);
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+> Well, a display controller is never going to attach to a panel directly=
+=2E
+
+With parallel RGB, that (almost) happens. There's voltage level shifting
+probably in the middle, but I don't see anything else there.
+
+> But I agree that it would be nice to unify bridges and encoders more. I=
+t
+> should be possible to make encoder always a bridge (or perhaps even
+> replace encoders with bridges altogether). Then once you're out of the
+> DRM device everything would be a bridge until you get to a panel.
+
+What exactly is a bridge and what is an encoder? Those are DRM
+constructs, aren't they?
+
+As I see it, a video pipeline consist of a video source (display
+controller usually), a chain of encoders (all of which may not be
+strictly "encoders", they could be level shifters, muxes, ESD protection
+devices or such), and either a display device like a panel or a
+connector to outside world.
+
+Am I right that in DRM world the encoder is the first device in the
+display chain after the display controller, and the next is a bridge?
+That sounds totally artificial, and I hope we don't reflect that in the
+DT side in any way.
+
+ Tomi
+
+
+
+--jgPCRJOE9GamS4RJAFkDs7x7i3DQ7dEj4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUIUAIAAoJEPo9qoy8lh71bQkQALID0gvQwN2K5pzBAC/4w2Kk
+8XxJyySfCoAy72MKHSAWXTZ41QzMQ5FFErHeR589EtzJkzxxQ2zSz7+r0dYq2is2
+E9p06RR0p2EuYNmx2PZme1iGeLYJcITbvRwwdTQBy7I1a5cbzHQGZdI2s8gB7c3N
+EgaVYT9FL0mBDU8foTJVCNdtP8yohElgScE2EuIwigykrK26SGmXmFXHd33dUo9s
+KWrN6wNSxtdNHDcYe2BvwUefuiU0O+1O5kYbgOs02aIg73A3ksv1a2RDPW2KoR9k
+TfGVr27Cvbf2diw1fiv6yKYGuCkBOGIK89Rt5bc8gRmUpXYvbc37QVwE1QFSyBb0
+jJWquHhhLqtPdmFn5fpOA7f86GN4ncxaz49DkbA3oCp+fLXS+pp4oIFVrYkALEA/
+g4GpOvMEevyrIgrmyoUEk3KXcZu7eo714YS65/jM3hK8e8rr90rYMbddvLcKUGwr
+L2ffaZeYbdgvqQFvhjv85/XhAE0xuy5RJBMhfhbko4jRuYg6A5eq8Ga8DbOgea4P
+S+m0jF5XheJU8deCE/c2VX4KBB0ophj5IFELZ8W8FG0f32NzrASSCAMXZprs1WvI
+3BGqM2OwNUUdb9yF/WLEn4FdEyXmvcUxODMDslWRLP7KQqUVqHPcwBq6ThgvWbGb
+Ze+VdOPpTZAmVGirAshW
+=ZVuj
+-----END PGP SIGNATURE-----
+
+--jgPCRJOE9GamS4RJAFkDs7x7i3DQ7dEj4--
