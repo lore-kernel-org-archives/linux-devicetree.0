@@ -1,43 +1,66 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v11 08/10] OF: PCI: Add support for parsing PCI host bridge resources from DT
-Date: Tue, 23 Sep 2014 09:56:37 +0200
-Message-ID: <8687285.EH4RPBeOB5@wuerfel>
-References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com> <20140922093228.GA20256@rric.localhost> <20140922114317.GN1994@e106497-lin.cambridge.arm.com>
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [RESEND PATCH 1/4] ARM: STi: DT: STiH407: 407 DT Entry for clockgen
+ A0
+Date: Tue, 23 Sep 2014 09:58:56 +0200
+Message-ID: <54212840.60508@st.com>
+References: <1408977888-10473-1-git-send-email-gabriel.fernandez@linaro.org> <1408977888-10473-2-git-send-email-gabriel.fernandez@linaro.org> <542124CB.1080307@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140922114317.GN1994@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Robert Richter <rric@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, linux-arch <linux-arch@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Device Tree ML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Sinan Kaya <okaya@codeaurora.org>, Sunil Goutham <sunil.goutham@caviumnetworks.com>, LKML <linux-kernel@vger.kernel.org>, Suravee Suthikulanit <surav>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <542124CB.1080307-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 September 2014 12:43:17 Liviu Dudau wrote:
-> > 
-> > From e798af4fc2f664d1aff7e863489b8298f90e716e Mon Sep 17 00:00:00 2001
-> > From: Robert Richter <rrichter@cavium.com>
-> > Date: Mon, 22 Sep 2014 10:46:01 +0200
-> > Subject: [PATCH] OF: PCI: Fix creation of mem-mapped pci host bridges
-> > 
-> > The pci host bridge was not created if io_base was not set when
-> > calling of_pci_get_host_bridge_resources(). This is esp. the case for
-> > mem-mapped io (IORESOURCE_MEM). This patch fixes this. Function
-> > parameter io_base is optional now.
-> 
-> I think the message is misleading. What you want to do is make io_base
-> optional for the case where the PCI host bridge only expects to have only
-> IORESOURCE_MEM ranges and doesn't care about IORESOURCE_IO ones.
-> 
-> As I'm going to touch this area again to address a comment from Bjorn,
-> do you mind if I roll this patch into mine with your Signed-off-by and
-> the mention that you have made io_base optional?
+Thanks Maxime !
 
-I think the best way to deal with this is to move the check for 
-io_base down into the place where it is used: As long as the DT only
-specifies IORESOURCE_MEM windows, we don't need to look at io_base,
-but if the host controller driver does not support IORESOURCE_IO
-while the DT specifies it, I guess it would be nice to return an
-error.
+On 09/23/2014 09:44 AM, Maxime Coquelin wrote:
+>
+>
+> On 08/25/2014 04:44 PM, Gabriel FERNANDEZ wrote:
+>> Patch adds DT entries for clockgen A0
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Olivier Bideau <olivier.bideau-qxv4g6HH51o@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/stih407-clock.dtsi | 32 
+>> ++++++++++++++++++++++++++++++++
+>>   1 file changed, 32 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/stih407-clock.dtsi 
+>> b/arch/arm/boot/dts/stih407-clock.dtsi
+>> index 800f46f..e03e86e 100644
+>> --- a/arch/arm/boot/dts/stih407-clock.dtsi
+>> +++ b/arch/arm/boot/dts/stih407-clock.dtsi
+>> @@ -7,6 +7,10 @@
+>>    */
+>>   / {
+>>       clocks {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <1>;
+>> +        ranges;
+>> +
+>>           /*
+>>            * Fixed 30MHz oscillator inputs to SoC
+>>            */
+>> @@ -35,5 +39,33 @@
+>>               clock-frequency = <200000000>;
+>>               clock-output-names = "clk-s-icn-reg-0";
+>>           };
+>> +
+>> +        /*
+>> +         * ClockGenAs on SASG2
+>> +         */
+> Note that I removed this comment since no SASG2 on STiH407.
+>
+>> +        clockgen-a@090ff000 {
+>> +            compatible = "st,clkgen-c32";
+>> +            reg = <0x90ff000 0x1000>;
+> ...
 
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
