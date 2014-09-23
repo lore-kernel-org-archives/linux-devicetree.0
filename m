@@ -1,142 +1,93 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 16:58:34 +0200
-Message-ID: <20140923145833.GI5982@ulmo>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
- <5419760A.7020908@ti.com> <20140922075424.GB1470@ulmo>
- <54202C86.3040808@ti.com> <20140923062111.GE30514@ulmo>
- <54213DAC.5010806@ti.com> <20140923095314.GS30514@ulmo>
- <542160DF.2040008@ti.com>
+From: Joe.C <srv_yingjoe.chen@mediatek.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
+Date: Tue, 23 Sep 2014 23:08:51 +0800
+Message-ID: <1411484931.21299.45.camel@mtksdaap41>
+References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+ <1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
+ <2770365.r419rjIAOU@wuerfel> <1411480694.21299.18.camel@mtksdaap41>
+ <CAGb2v67F_3CCA2LA887X4TbewUcFj+bXzq912x6t5K4t2X_9mA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1217406036=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <542160DF.2040008@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, daniel.vetter@ffwll.ch, joshi@samsung.com, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ajaynumb@gmail.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v67F_3CCA2LA887X4TbewUcFj+bXzq912x6t5K4t2X_9mA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Hongzhou. Yang" <srv_hongzhou.yang@mediatek.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, dandan.he@mediatek.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1217406036==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GBuTPvBEOL0MYPgd"
-Content-Disposition: inline
-
-
---GBuTPvBEOL0MYPgd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 23, 2014 at 03:00:31PM +0300, Tomi Valkeinen wrote:
-> On 23/09/14 12:53, Thierry Reding wrote:
->=20
-> >> Yes, but in this case we know of existing boards that have complex
-> >> setups. It's not theoretical.
-> >=20
-> > Complex setups involving /this particular/ bridge and binding are
-> > theoretical at this point, however.
->=20
-> Right, but this discussion, at least from my part, has not so much been
-> about this particular bridge, but bridges in general.
->=20
-> So I don't have any requirements for this bridge driver/bindings to
-> support complex use cases at the time being.
->=20
-> But I do want us to have an option to use the bridge in the future in
-> such complex case. And yes, we can't guarantee that we'd hit the
-> bindings right whatever we do, but we should think about it and at least
-> try.
->=20
-> >>> phandles should simply point to the next element in the pipeline and =
-the
-> >>> OS abstractions should be good enough to handle the details about how=
- to
-> >>> chain the elements.
+On Tue, 2014-09-23 at 22:16 +0800, Chen-Yu Tsai wrote:
+> Hi,
+> 
+> On Tue, Sep 23, 2014 at 9:58 PM, Joe.C <srv_yingjoe.chen@mediatek.com> wrote:
+> > On Tue, 2014-09-23 at 15:03 +0200, Arnd Bergmann wrote:
+> >> On Tuesday 23 September 2014 11:39:05 Hongzhou. Yang wrote:
+> >> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_GPIO0 (MT_PIN_NO(0) | 0)
+> >> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_MSDC0_DAT7 (MT_PIN_NO(0) | 1)
+> >> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_EINT49 (MT_PIN_NO(0) | 2)
+> >> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_I2SOUT_DAT (MT_PIN_NO(0) | 3)
+> >> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_DAC_DAT_OUT (MT_PIN_NO(0) | 4)
+> >> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_PCM1_DO (MT_PIN_NO(0) | 5)
+> >> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_SPI1_MO (MT_PIN_NO(0) | 6)
+> >> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_NALE (MT_PIN_NO(0) | 7)
+> >> > +
 > >>
-> >> I, on the other hand, would rather see the links the other way around.
-> >> Panel having a link to the video source, etc.
-> >=20
-> > Why? It seems much more natural to describe this using the natural flow
-> > of data. The device furthest away from the CPU should be the target of
-> > the phandle. That way the DT can be used to trace the flow of data down
-> > the pipeline.
->=20
-> Because I see video components "using" their video sources. A panel uses
-> an encoder to produce video data for the panel. An encoder uses its
-> video source to produce video data. A bit like a device uses a gpio, or
-> a pwm.
->=20
-> Especially with more complex encoders/panels having the panel/encoder in
-> control of its video source is often the easiest (only?) way to manage
-> the job. This has worked well on OMAP, whereas the earlier model where
-> the video source controlled the video sink was full of problems. Not
-> that that exactly proves anything, but that's my experience, and I
-> didn't find any easy solutions when the video source was in control.
->=20
-> So while the video data flows from SoC to the panel, the control goes
-> the other way. Whether the DT links should model the video data or
-> control, I don't know. Both feel natural to me.
->=20
-> But if a panel driver controls its video source, it makes sense for the
-> panel driver to get its video source in its probe, and that happens
-> easiest if the panel has a link to the video source.
+> >> This list looks like it just describes the hardware, I think it would
+> >> be better to put the values directly into the DT, rather than
+> >> using such macros.
+> >
+> > Hi,
+> >
+> > Thanks for review.
+> > The intend for these macros is helpin pinctrl user to write DT node.
+> > With these macro, we could write like this for i2c0:
+> >
+> > mediatek,pinfunc = <MT8135_PIN_100_SDA0__FUNC_SDA0
+> >                         MT8135_PIN_101_SCL0__FUNC_SCL0>;
+> >
+> > We feel this is less error prone and easier to write than this:
+> >
+> > mediatek,pinfunc = <MT_PIN_FUNC(100, 1) MT_PIN_FUNC(101, 1)>
+> 
+> 
+> Since you've already imposed the following limit in the DT bindings:
+> 
+>   The mediatek,pinfunc can be either a single value or an array.
+>   If it is an array, that means all pins use same config in this node.
+> 
+> Maybe you could split the bindings into
+> 
+>   mediatek,pins = <1 2 3 4>;
+>   mediatek,func = <1>;  (or some macro)
+> 
+> Or better yet, since you've already defined all the function names
+> in the pinctrl driver, you could just match by name for the functions.
+> That makes it very verbose and explicit about what you specify.
+> 
+> That's how we do it for sunxi anyway. Of course we have all the pin
+> function documentation open, so users and reviewers alike can double
+> check. Just a suggestion. :)
+> 
+> 
+> Cheers
+> ChenYu
 
-That's an orthogonal problem. You speak about the link in software here,
-whereas the phandles only represent the link in the description of
-hardware. Now DT describes hardware from the perspective of the CPU, so
-it's sort of like a cave that you're trying to explore. You start at the
-top with the address bus, from where a couple of tunnels lead to the
-various peripherals on the address bus. A display controller might have
-another tunnel to a panel, etc.
+Actually, this is exactly what we do in our first version(matching names
+and use separate pins/func). That's why the source code and
+pinctrl-mtk-mt8135.h are very simlar to sunxi one (Thanks :))
 
-If you go the other way around, how do you detect how things connect?
-Where do you get the information about the panel so you can trace back
-to the origin?
+But we think it might worth to reduce string mathching at boot time,
+that's why we changed to use integer + macro in this version.
 
-Thierry
+Unfortunately, we still can't release documents openly now. I hope we
+could change that someday.
 
---GBuTPvBEOL0MYPgd
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUIYqZAAoJEN0jrNd/PrOhSb8P/0K0y3azLeHKMiuWOnoQ8iWr
-nziobwpUwwZe9//aHxfj9ymI0ZVdcT9pSCTcS53DYxHGksOua95SGrdSssja7U2c
-a/E6I7fsjuQRSVAJNcyQx+uqzM/D6iUIZ3BJ5Dg7gSAFOlzIvNQUuUC0wOQDklVp
-VVqmV4Kdi3m+6uF+TWbsn0g57qknFYqEcgqNkj7pZGxM1YSpqczy9Y01JODs2NKy
-fMbxq7o0u47ocsalvsxB0w62kuJZKEKmER9kBQM3J1HL/Mn516uUARggPWen00HS
-KCgRnjPlYruplTTuW3Z0seREDb4IlMLyLYi+bimB2+OvoBZNCjuVY2Olrzy14ngV
-ambB2O4zGIjhYphVeo0RtCnWVz9RzvoRG4ZEwNCoImwF61ePG0N5rHEjL708Ho3Q
-bfB+J7mBgMgK2RP78fSEzw11AM1THKCIEwx9+Y/eg0iv0L6XPfxeS5cQMVbBSYM8
-4E0rCnLdHxWsWcMJrOspNtaEo1pwk+krZH0RALYm+bHvGeI8OQX0TZf7Et89wbm/
-s3zoDgCwIL0EA1bbsUvnCPw54wzTZjKm+AP4oi6OLBmCq0bfuZn/5JOG4A4mnfSO
-brVYkMIumwSv5vniZ5WUFNocwhW8wOqF096jLW+Mmb9Evh62zwMjTBuAYnXXsJoj
-4Br/TVpcEjFu/7NEvgNk
-=yJpC
------END PGP SIGNATURE-----
-
---GBuTPvBEOL0MYPgd--
-
---===============1217406036==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1217406036==--
+Joe.C
