@@ -1,171 +1,70 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v9 07/10] ARM: at91: add clk_lookup entry for RTT devices
-Date: Tue, 23 Sep 2014 16:48:42 +0200
-Message-ID: <1411483725-31532-8-git-send-email-boris.brezillon@free-electrons.com>
-References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] pinctrl: exynos: Add irq_chip instance for Exynos7
+ wakeup interrupts
+Date: Tue, 23 Sep 2014 16:49:38 +0200
+Message-ID: <54218882.1050401@gmail.com>
+References: <1411460169-30536-1-git-send-email-a.kesavan@samsung.com> <1411460169-30536-3-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "Acked-by: Arnd Bergmann" <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411460169-30536-3-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-First export the clk32k clk.
-Then add clk_lookup entries for RTT devices so that rtc-at91sam9 driver
-can retrieve and manipulate the slow clk.
+On 23.09.2014 10:16, Abhilash Kesavan wrote:
+[snip]
+> @@ -383,9 +377,11 @@ static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
+>  /*
+>   * irq_chip for wakeup interrupts
+>   */
+> -static struct exynos_irq_chip exynos_wkup_irq_chip = {
+> +static struct exynos_irq_chip *exynos_wkup_irq_chip;
+> +
+[snip]
+> @@ -459,7 +480,7 @@ static void exynos_irq_demux_eint16_31(unsigned int irq, struct irq_desc *desc)
+>  static int exynos_wkup_irq_map(struct irq_domain *h, unsigned int virq,
+>  					irq_hw_number_t hw)
+>  {
+> -	irq_set_chip_and_handler(virq, &exynos_wkup_irq_chip.chip,
+> +	irq_set_chip_and_handler(virq, &exynos_wkup_irq_chip->chip,
+>  					handle_level_irq);
+>  	irq_set_chip_data(virq, h->host_data);
+>  	set_irq_flags(virq, IRQF_VALID);
+> @@ -491,7 +512,12 @@ static int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
+>  	int idx, irq;
+>  
+>  	for_each_child_of_node(dev->of_node, np) {
+> -		if (of_match_node(exynos_wkup_irq_ids, np)) {
+> +		const struct of_device_id *match;
+> +
+> +		match = of_match_node(exynos_wkup_irq_ids, np);
+> +		if (match) {
+> +			exynos_wkup_irq_chip = kmemdup(match->data,
+> +				sizeof(struct exynos_irq_chip), GFP_KERNEL);
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-at91/at91sam9260.c | 2 ++
- arch/arm/mach-at91/at91sam9261.c | 2 ++
- arch/arm/mach-at91/at91sam9263.c | 4 ++++
- arch/arm/mach-at91/at91sam9g45.c | 2 ++
- arch/arm/mach-at91/at91sam9rl.c  | 2 ++
- arch/arm/mach-at91/clock.c       | 2 +-
- arch/arm/mach-at91/clock.h       | 1 +
- 7 files changed, 14 insertions(+), 1 deletion(-)
+That's not exactly what I had in my mind.
 
-diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
-index 3477ba9..a853d4c 100644
---- a/arch/arm/mach-at91/at91sam9260.c
-+++ b/arch/arm/mach-at91/at91sam9260.c
-@@ -217,6 +217,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("pclk", "fffbc000.ssc", &ssc_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9260.0", &twi_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9g20.0", &twi_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
- 	/* more usart lookup table for DT entries */
- 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
- 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
-@@ -237,6 +238,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("mci_clk", "fffa8000.mmc", &mmc_clk),
- 	CLKDEV_CON_DEV_ID("spi_clk", "fffc8000.spi", &spi0_clk),
- 	CLKDEV_CON_DEV_ID("spi_clk", "fffcc000.spi", &spi1_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
- 	/* fake hclk clock */
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
-diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-index fb164a5..3f5a299 100644
---- a/arch/arm/mach-at91/at91sam9261.c
-+++ b/arch/arm/mach-at91/at91sam9261.c
-@@ -192,6 +192,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
- 	CLKDEV_CON_ID("pioB", &pioB_clk),
- 	CLKDEV_CON_ID("pioC", &pioC_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
- 	/* more lookup table for DT entries */
- 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
- 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
-@@ -209,6 +210,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "fffff400.gpio", &pioA_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioB_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioC_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
- };
- 
- static struct clk_lookup usart_clocks_lookups[] = {
-diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
-index 810fa5f..bef5b96 100644
---- a/arch/arm/mach-at91/at91sam9263.c
-+++ b/arch/arm/mach-at91/at91sam9263.c
-@@ -201,6 +201,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("t0_clk", "atmel_tcb.0", &tcb_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "i2c-at91sam9260.0", &twi_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "at91sam9rl-pwm", &pwm_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.1", &clk32k),
- 	/* fake hclk clock */
- 	CLKDEV_CON_DEV_ID("hclk", "at91_ohci", &ohci_clk),
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
-@@ -227,6 +229,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioCDE_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioCDE_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffb8000.pwm", &pwm_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd50.rtc", &clk32k),
- };
- 
- static struct clk_lookup usart_clocks_lookups[] = {
-diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-index 9d45496..69fdfcc 100644
---- a/arch/arm/mach-at91/at91sam9g45.c
-+++ b/arch/arm/mach-at91/at91sam9g45.c
-@@ -253,6 +253,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "atmel_tdes", &aestdessha_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "atmel_aes", &aestdessha_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "at91sam9rl-pwm", &pwm_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
- 	/* more usart lookup table for DT entries */
- 	CLKDEV_CON_DEV_ID("usart", "ffffee00.serial", &mck),
- 	CLKDEV_CON_DEV_ID("usart", "fff8c000.serial", &usart0_clk),
-@@ -279,6 +280,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioC_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioDE_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioDE_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
- 
- 	CLKDEV_CON_ID("pioA", &pioA_clk),
- 	CLKDEV_CON_ID("pioB", &pioB_clk),
-diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
-index 878d501..a82dc61 100644
---- a/arch/arm/mach-at91/at91sam9rl.c
-+++ b/arch/arm/mach-at91/at91sam9rl.c
-@@ -205,6 +205,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_ID("pioB", &pioB_clk),
- 	CLKDEV_CON_ID("pioC", &pioC_clk),
- 	CLKDEV_CON_ID("pioD", &pioD_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "rtc-at91sam9.0", &clk32k),
- 	/* more lookup table for DT entries */
- 	CLKDEV_CON_DEV_ID("usart", "fffff200.serial", &mck),
- 	CLKDEV_CON_DEV_ID("usart", "fffb0000.serial", &usart0_clk),
-@@ -223,6 +224,7 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID(NULL, "fffff600.gpio", &pioB_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffff800.gpio", &pioC_clk),
- 	CLKDEV_CON_DEV_ID(NULL, "fffffa00.gpio", &pioD_clk),
-+	CLKDEV_CON_DEV_ID(NULL, "fffffd20.rtc", &clk32k),
- 	CLKDEV_CON_ID("adc_clk", &tsc_clk),
- };
- 
-diff --git a/arch/arm/mach-at91/clock.c b/arch/arm/mach-at91/clock.c
-index 034529d..f5cfed75 100644
---- a/arch/arm/mach-at91/clock.c
-+++ b/arch/arm/mach-at91/clock.c
-@@ -115,7 +115,7 @@ static u32 at91_pllb_usb_init;
-  * 48 MHz (unless no USB function clocks are needed).  The main clock and
-  * both PLLs are turned off to run in "slow clock mode" (system suspend).
-  */
--static struct clk clk32k = {
-+struct clk clk32k = {
- 	.name		= "clk32k",
- 	.rate_hz	= AT91_SLOW_CLOCK,
- 	.users		= 1,		/* always on */
-diff --git a/arch/arm/mach-at91/clock.h b/arch/arm/mach-at91/clock.h
-index a98a39b..6eb825a 100644
---- a/arch/arm/mach-at91/clock.h
-+++ b/arch/arm/mach-at91/clock.h
-@@ -34,6 +34,7 @@ struct clk {
- extern int __init clk_register(struct clk *clk);
- extern struct clk mck;
- extern struct clk utmi_clk;
-+extern struct clk clk32k;
- 
- #define CLKDEV_CON_ID(_id, _clk)			\
- 	{						\
--- 
-1.9.1
+You just changed the code to write to another global variable. This is
+not the best practice and might cause hard to track issues in future,
+when extending the driver.
+
+>From what I can see, the best solution would be to add .irq_chip field
+to samsung_pin_bank struct. Then exynos_wkup_irq_map() could access it
+through h->host_data pointer and exynos_irq_demux_eint16_31() could also
+retrieve the irq chip through bank struct without the need too add chip
+field to exynos_muxed_weint_data struct.
+
+As a side effect, it would be possible to consolidate
+exynos_wkup_irqd_ops with exynos_gpio_irqd_ops, which currently only
+differ in irq chip passed as argument to irq_set_chip_and_handler() in
+.map() callback.
+
+Best regards,
+Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
