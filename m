@@ -1,246 +1,135 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: [PATCH v2 1/3] watchdog: qcom: add support for KPSS WDT
-Date: Tue, 23 Sep 2014 18:04:36 -0500
-Message-ID: <8f4be0230a7fea8c299a0e878d0eb826eaba6099.1411513109.git.joshc@codeaurora.org>
-References: <cover.1411513109.git.joshc@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1411513109.git.joshc@codeaurora.org>
-In-Reply-To: <cover.1411513109.git.joshc@codeaurora.org>
-References: <cover.1411513109.git.joshc@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] drm/rockchip: Add support for Rockchip Soc EDP
+Date: Tue, 23 Sep 2014 19:35:04 -0400
+Message-ID: <CAF6AEGtZGypyV4EnWZr4LziEnOriKZr1ggn+AtkuPnf2ud5gBw@mail.gmail.com>
+References: <1411382820-1615-1-git-send-email-mark.yao@rock-chips.com>
+	<1411383728-2075-1-git-send-email-mark.yao@rock-chips.com>
+	<CAF6AEGtxUGr2i+mK7dtfTXaf2SxHkokxw2sNCviwRR6Hn7RE2w@mail.gmail.com>
+	<5421338B.3020302@rock-chips.com>
+	<CAF6AEGuGKitXGE8S-fE-d+-MWDBxU-XqG_AH7q9FD0y5YkBFVQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAF6AEGuGKitXGE8S-fE-d+-MWDBxU-XqG_AH7q9FD0y5YkBFVQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cym <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the watchdog timer block found in the Krait Processor
-Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
+On Tue, Sep 23, 2014 at 9:56 AM, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Sep 23, 2014 at 4:47 AM, cym <cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>>
+>> On Tuesday, September 23, 2014 03:20 AM, Rob Clark wrote:
+>>>
+>>> On Mon, Sep 22, 2014 at 7:02 AM, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>>>>
+>>>> This adds support for Rockchip soc edp found on rk3288
+>>>>
+>>>> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> Signed-off-by: Jeff Chen <jeff.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> ---
+>>>> Changes in v2:
+>>>> - fix code sytle
+>>>> - use some define from drm_dp_helper.h
+>>>> - use panel-simple driver for primary display.
+>>>> - remove unnecessary clock clk_24m_parent.
+>>>>
+>>>> Changes in v3: None
+>>>>
+>>>> Changes in v4: None
+>>>>
+>>>>   drivers/gpu/drm/rockchip/Kconfig             |    9 +
+>>>>   drivers/gpu/drm/rockchip/Makefile            |    2 +
+>>>>   drivers/gpu/drm/rockchip/rockchip_edp_core.c |  853 ++++++++++++++++++
+>>>>   drivers/gpu/drm/rockchip/rockchip_edp_core.h |  309 +++++++
+>>>>   drivers/gpu/drm/rockchip/rockchip_edp_reg.c  | 1202
+>>>> ++++++++++++++++++++++++++
+>>>>   drivers/gpu/drm/rockchip/rockchip_edp_reg.h  |  345 ++++++++
+>>>>   6 files changed, 2720 insertions(+)
+>>>>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_edp_core.c
+>>>>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_edp_core.h
+>>>>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_edp_reg.c
+>>>>   create mode 100644 drivers/gpu/drm/rockchip/rockchip_edp_reg.h
+>>>>
+>>>> diff --git a/drivers/gpu/drm/rockchip/Kconfig
+>>>> b/drivers/gpu/drm/rockchip/Kconfig
+>>>> index 7146c80..04b1f8c 100644
+>>>> --- a/drivers/gpu/drm/rockchip/Kconfig
+>>>> +++ b/drivers/gpu/drm/rockchip/Kconfig
+>>>> @@ -17,3 +17,12 @@ config DRM_ROCKCHIP
+>>>>            management to userspace. This driver does not provides
+>>>>            2D or 3D acceleration; acceleration is performed by other
+>>>>            IP found on the SoC.
+>>>> +
+>>>> +config ROCKCHIP_EDP
+>>>> +       bool "Rockchip edp support"
+>>>> +       depends on DRM_ROCKCHIP
+>>>> +       help
+>>>> +         Choose this option if you have a Rockchip eDP.
+>>>> +         Rockchip rk3288 SoC has eDP TX Controller can be used.
+>>>> +         If you have an Embedded DisplayPort Panel, say Y to enable its
+>>>> +         driver.
+>>>> diff --git a/drivers/gpu/drm/rockchip/Makefile
+>>>> b/drivers/gpu/drm/rockchip/Makefile
+>>>> index 6e6d468..a0fc3a1 100644
+>>>> --- a/drivers/gpu/drm/rockchip/Makefile
+>>>> +++ b/drivers/gpu/drm/rockchip/Makefile
+>>>> @@ -7,4 +7,6 @@ ccflags-y := -Iinclude/drm -Idrivers/gpu/drm/rockchip
+>>>>   rockchipdrm-y := rockchip_drm_drv.o rockchip_drm_fb.o
+>>>> rockchip_drm_fbdev.o \
+>>>>                  rockchip_drm_gem.o rockchip_drm_vop.o
+>>>>
+>>>> +rockchipdrm-$(CONFIG_ROCKCHIP_EDP) += rockchip_edp_core.o
+>>>> rockchip_edp_reg.o
+>>>> +
+>>>>   obj-$(CONFIG_DRM_ROCKCHIP) += rockchipdrm.o
+>>>> diff --git a/drivers/gpu/drm/rockchip/rockchip_edp_core.c
+>>>> b/drivers/gpu/drm/rockchip/rockchip_edp_core.c
+>>>> new file mode 100644
+>>>> index 0000000..5450d1fa
+>>>> --- /dev/null
+>>>> +++ b/drivers/gpu/drm/rockchip/rockchip_edp_core.c
+>>>> @@ -0,0 +1,853 @@
+>>>> +/*
+>>>> +* Copyright (C) Fuzhou Rockchip Electronics Co.Ltd
+>>>> +* Author:
+>>>> +*      Andy yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> +*      Jeff chen <jeff.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> +*
+>>>> +* based on exynos_dp_core.c
+>>>> +*
+>>>
+>>> hmm, did you look at all at drm_dp_helpers?  The exynos code probably
+>>> pre-dates the helpers, so might not be the best example to work off
+>>> of..
+>>>
+>>> If there is actually a valid reason not to use the dp-helpers, then
+>>> you should mention the reasons, at least in the commit msg if not the
+>>> code
+>>>
+>>> BR,
+>>> -R
+>>
+>> Thanks Rob,Because RK3288 eDP controller IP design is similar to exynos.They
+>> from same IP vendors but have some difference.
+>> So we choosed exynos_dp as example to work off of.exynos_dp only used some
+>> defines from drm_dp_helper.h like DPCD.
+>>
+>
+>
+> Hmm, it sounds like it perhaps should be refactored out into a
+> drm_bridge so more of it can be shared between rockchip and exynos.
+>
+> Either way, it should be using the drm_dp_helpers..  That "the code I
+> copied did it wrong" isn't a terribly good reason for new drivers to
+> do it wrong.
+>
+> So NAK for the eDP part until you use the helpers.
 
-Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
----
- drivers/watchdog/Kconfig    |  13 ++++
- drivers/watchdog/Makefile   |   1 +
- drivers/watchdog/qcom-wdt.c | 176 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 190 insertions(+)
- create mode 100644 drivers/watchdog/qcom-wdt.c
+and btw, if it wasn't clear, go ahead and at least repost the core
+part of the driver.. the first patch just needed a few small tweaks to
+get my r-b even if it takes longer to sort out something sane for the
+DP part..
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 1d1330a..0479e3f 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -443,6 +443,19 @@ config TEGRA_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called tegra_wdt.
- 
-+config QCOM_WDT
-+	tristate "QCOM watchdog"
-+	depends on HAS_IOMEM
-+	depends on ARCH_QCOM
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include Watchdog timer support for the watchdog found
-+	  on QCOM chipsets.  Currently supported targets are the MSM8960,
-+	  APQ8064, and IPQ8064.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called qcom_wdt.
-+
- # AVR32 Architecture
- 
- config AT32AP700X_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 468c320..d645448 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -57,6 +57,7 @@ obj-$(CONFIG_RETU_WATCHDOG) += retu_wdt.o
- obj-$(CONFIG_BCM2835_WDT) += bcm2835_wdt.o
- obj-$(CONFIG_MOXART_WDT) += moxart_wdt.o
- obj-$(CONFIG_SIRFSOC_WATCHDOG) += sirfsoc_wdt.o
-+obj-$(CONFIG_QCOM_WDT) += qcom-wdt.o
- obj-$(CONFIG_BCM_KONA_WDT) += bcm_kona_wdt.o
- obj-$(CONFIG_TEGRA_WATCHDOG) += tegra_wdt.o
- 
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-new file mode 100644
-index 0000000..d5e46e2
---- /dev/null
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -0,0 +1,176 @@
-+/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/watchdog.h>
-+
-+#define WDT_RST		0x0
-+#define WDT_EN		0x8
-+#define WDT_BITE_TIME	0x24
-+
-+struct qcom_wdt {
-+	struct watchdog_device	wdd;
-+	struct clk		*clk;
-+	void __iomem		*base;
-+};
-+
-+static inline
-+struct qcom_wdt *to_qcom_wdt(struct watchdog_device *wdd)
-+{
-+	return container_of(wdd, struct qcom_wdt, wdd);
-+}
-+
-+static int qcom_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+	unsigned long bite_time;
-+
-+	bite_time = wdd->timeout * clk_get_rate(wdt->clk);
-+
-+	writel(0, wdt->base + WDT_EN);
-+	writel(1, wdt->base + WDT_RST);
-+	writel(bite_time, wdt->base + WDT_BITE_TIME);
-+	writel(1, wdt->base + WDT_EN);
-+	return 0;
-+}
-+
-+static int qcom_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+
-+	writel(0, wdt->base + WDT_EN);
-+	return 0;
-+}
-+
-+static int qcom_wdt_ping(struct watchdog_device *wdd)
-+{
-+	struct qcom_wdt *wdt = to_qcom_wdt(wdd);
-+
-+	writel(1, wdt->base + WDT_RST);
-+	return 0;
-+}
-+
-+static int qcom_wdt_set_timeout(struct watchdog_device *wdd,
-+				unsigned int timeout)
-+{
-+	wdd->timeout = timeout;
-+	return qcom_wdt_start(wdd);
-+}
-+
-+static const struct watchdog_ops qcom_wdt_ops = {
-+	.start		= qcom_wdt_start,
-+	.stop		= qcom_wdt_stop,
-+	.ping		= qcom_wdt_ping,
-+	.set_timeout	= qcom_wdt_set_timeout,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct watchdog_info qcom_wdt_info = {
-+	.options	= WDIOF_KEEPALIVEPING
-+			| WDIOF_MAGICCLOSE
-+			| WDIOF_SETTIMEOUT,
-+	.identity	= KBUILD_MODNAME,
-+};
-+
-+static int qcom_wdt_probe(struct platform_device *pdev)
-+{
-+	struct qcom_wdt *wdt;
-+	struct resource *res;
-+	unsigned long freq;
-+	int ret;
-+
-+	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wdt->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(wdt->base))
-+		return PTR_ERR(wdt->base);
-+
-+	wdt->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(wdt->clk))
-+		return PTR_ERR(wdt->clk);
-+
-+	ret = clk_prepare_enable(wdt->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to setup clock\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * We use the clock rate to calculate the max timeout, so ensure it's
-+	 * not zero to avoid a divide-by-zero exception.
-+	 */
-+	freq = clk_get_rate(wdt->clk);
-+	if (freq == 0) {
-+		dev_err(&pdev->dev, "invalid clock rate\n");
-+		return -EINVAL;
-+	}
-+
-+	wdt->wdd.dev = &pdev->dev;
-+	wdt->wdd.info = &qcom_wdt_info;
-+	wdt->wdd.ops = &qcom_wdt_ops;
-+	wdt->wdd.min_timeout = 1;
-+	wdt->wdd.max_timeout = 0x10000000U / freq;
-+
-+	/*
-+	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
-+	 * default.
-+	 */
-+	if (watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev))
-+		wdt->wdd.timeout = 30;
-+
-+	ret = watchdog_register_device(&wdt->wdd);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register watchdog\n");
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, wdt);
-+	return 0;
-+}
-+
-+static int qcom_wdt_remove(struct platform_device *pdev)
-+{
-+	struct qcom_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	watchdog_unregister_device(&wdt->wdd);
-+	clk_disable_unprepare(wdt->clk);
-+	return 0;
-+}
-+
-+static const struct of_device_id qcom_wdt_of_table[] = {
-+	{ .compatible = "qcom,kpss-wdt-msm8960", },
-+	{ .compatible = "qcom,kpss-wdt-apq8064", },
-+	{ .compatible = "qcom,kpss-wdt-ipq8064", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qcom_wdt_of_table);
-+
-+static struct platform_driver qcom_watchdog_driver = {
-+	.probe	= qcom_wdt_probe,
-+	.remove	= qcom_wdt_remove,
-+	.driver	= {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= qcom_wdt_of_table,
-+	},
-+};
-+module_platform_driver(qcom_watchdog_driver);
-+
-+MODULE_DESCRIPTION("QCOM KPSS Watchdog Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+BR,
+-R
