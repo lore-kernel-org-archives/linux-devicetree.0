@@ -1,39 +1,70 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
 Subject: Re: [PATCH v2 4/4] ARM: dts: mt8135: Add pinctrl node for mt8135.
-Date: Tue, 23 Sep 2014 16:10:09 +0200
-Message-ID: <7840459.vtELiqVIOL@wuerfel>
-References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com> <2770365.r419rjIAOU@wuerfel> <1411480694.21299.18.camel@mtksdaap41>
+Date: Tue, 23 Sep 2014 22:16:47 +0800
+Message-ID: <CAGb2v67F_3CCA2LA887X4TbewUcFj+bXzq912x6t5K4t2X_9mA@mail.gmail.com>
+References: <1411443545-24951-1-git-send-email-srv_hongzhou.yang@mediatek.com>
+ <1411443545-24951-5-git-send-email-srv_hongzhou.yang@mediatek.com>
+ <2770365.r419rjIAOU@wuerfel> <1411480694.21299.18.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1411480694.21299.18.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Joe. C" <srv_yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Hongzhou. Yang" <srv_hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dandan.he-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Joe.C" <srv_yingjoe.chen@mediatek.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, "Hongzhou. Yang" <srv_hongzhou.yang@mediatek.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Russell King <linux@arm.linux.org.uk>, srv_heupstream@mediatek.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>Hongzhou Yang <hongzhou.yang@mediatek.com>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, dandan.he@mediatek.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 September 2014 21:58:14 Joe. C wrote:
-> Thanks for review. 
+Hi,
+
+On Tue, Sep 23, 2014 at 9:58 PM, Joe.C <srv_yingjoe.chen@mediatek.com> wrote:
+> On Tue, 2014-09-23 at 15:03 +0200, Arnd Bergmann wrote:
+>> On Tuesday 23 September 2014 11:39:05 Hongzhou. Yang wrote:
+>> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_GPIO0 (MT_PIN_NO(0) | 0)
+>> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_MSDC0_DAT7 (MT_PIN_NO(0) | 1)
+>> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_EINT49 (MT_PIN_NO(0) | 2)
+>> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_I2SOUT_DAT (MT_PIN_NO(0) | 3)
+>> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_DAC_DAT_OUT (MT_PIN_NO(0) | 4)
+>> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_PCM1_DO (MT_PIN_NO(0) | 5)
+>> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_SPI1_MO (MT_PIN_NO(0) | 6)
+>> > +#define MT8135_PIN_0_MSDC0_DAT7__FUNC_NALE (MT_PIN_NO(0) | 7)
+>> > +
+>>
+>> This list looks like it just describes the hardware, I think it would
+>> be better to put the values directly into the DT, rather than
+>> using such macros.
+>
+> Hi,
+>
+> Thanks for review.
 > The intend for these macros is helpin pinctrl user to write DT node.
 > With these macro, we could write like this for i2c0:
-> 
-> mediatek,pinfunc = <MT8135_PIN_100_SDA0__FUNC_SDA0 
+>
+> mediatek,pinfunc = <MT8135_PIN_100_SDA0__FUNC_SDA0
 >                         MT8135_PIN_101_SCL0__FUNC_SCL0>;
-> 
+>
 > We feel this is less error prone and easier to write than this:
-> 
+>
 > mediatek,pinfunc = <MT_PIN_FUNC(100, 1) MT_PIN_FUNC(101, 1)>
 
-But you don't actually use the same macros in the driver, so in effect
-you just move the definitions from the file they are needed in to another
-file as a macro.
 
-It is no less error prone to define those macros in mt8135-pinfunc.h
-than in the pinctrl node, just less readable.
+Since you've already imposed the following limit in the DT bindings:
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  The mediatek,pinfunc can be either a single value or an array.
+  If it is an array, that means all pins use same config in this node.
+
+Maybe you could split the bindings into
+
+  mediatek,pins = <1 2 3 4>;
+  mediatek,func = <1>;  (or some macro)
+
+Or better yet, since you've already defined all the function names
+in the pinctrl driver, you could just match by name for the functions.
+That makes it very verbose and explicit about what you specify.
+
+That's how we do it for sunxi anyway. Of course we have all the pin
+function documentation open, so users and reviewers alike can double
+check. Just a suggestion. :)
+
+
+Cheers
+ChenYu
