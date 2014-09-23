@@ -1,51 +1,85 @@
-From: Johan Hovold <jhovold@gmail.com>
-Subject: Re: [PATCH v6 8/9] rtc: at91sam9: add DT bindings documentation
-Date: Tue, 23 Sep 2014 09:57:50 +0200
-Message-ID: <20140923075750.GP5237@localhost>
-References: <1411400563-570-1-git-send-email-boris.brezillon@free-electrons.com>
- <1411400563-570-9-git-send-email-boris.brezillon@free-electrons.com>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH v3 1/5] drm/rockchip: Add basic drm driver
+Date: Tue, 23 Sep 2014 16:00:43 +0800
+Message-ID: <542128AB.5030905@rock-chips.com>
+References: <1411105668-32722-1-git-send-email-mark.yao@rock-chips.com>
+ <1411105668-32722-2-git-send-email-mark.yao@rock-chips.com>
+ <CAF6AEGsPoj6+PdKCJk5BPPzHS51Tz1FGqS2SjpartaRw7i=Pxg@mail.gmail.com>
+ <541F7C23.8000103@rock-chips.com> <20140923074831.GR15734@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411400563-570-9-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140923074831.GR15734@phenom.ffwll.local>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>, linux-doc@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jianqun Xu <xjq@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, linux-api@vger.kernel.org, jeff chen <cym@rock-chips.com>, linux-rockchip@lists.infradead.org, kfx@rock-chips.com, Grant Likely <grant.likely@linaro.org>, wxt@rock-chips.com, Tao Huang <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, yxj@rock-chips.com, Eddie Cai <cf@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?U3TDqXBoYW5lIE1hcmNoZXNpbg==?= <marcheu@chr>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 05:42:42PM +0200, Boris BREZILLON wrote:
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> ---
->  .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> new file mode 100644
-> index 0000000..e94e2ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
-> @@ -0,0 +1,23 @@
-> +Atmel AT91SAM9260 Real Time Timer
-> +
-> +Required properties:
-> +- compatible: should be: "atmel,at91sam9260-rtt"
-> +- reg: should encode the memory region of the RTT controller
-> +- interrupts: rtt alarm/event interrupt
-> +- clocks: should contain one clock pointing the the slow clk
-
-Just noticed: s/the the/to the/
-
-> +- atmel,rtt-rtc-time-reg: should encode the GPBR register used to store
-> +	the time base when the RTT is used as an RTC.
-> +	The first cell should point to the GPBR node and the second one
-> +	encode the offset within the GPBR block (or in other words, the
-> +	GPBR register used to store the current time value).
-
-s/current time value/time base/.
-
-Looks good to me otherwise.
-
-Thanks,
-Johan
+T24gMjAxNOW5tDA55pyIMjPml6UgMTU6NDgsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4gT24gTW9u
+LCBTZXAgMjIsIDIwMTQgYXQgMDk6MzI6MTlBTSArMDgwMCwgTWFyayB5YW8gd3JvdGU6Cj4+IE9u
+IDIwMTTlubQwOeaciDIw5pelIDA4OjAzLCBSb2IgQ2xhcmsgd3JvdGU6Cj4+PiBPbiBGcmksIFNl
+cCAxOSwgMjAxNCBhdCAxOjQ3IEFNLCBNYXJrIHlhbyA8bWFyay55YW9Acm9jay1jaGlwcy5jb20+
+IHdyb3RlOgo+Pj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL3VhcGkvZHJtL3JvY2tjaGlwX2RybS5o
+IGIvaW5jbHVkZS91YXBpL2RybS9yb2NrY2hpcF9kcm0uaAo+Pj4+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0Cj4+Pj4gaW5kZXggMDAwMDAwMC4uOGY4ZTYwZQo+Pj4+IC0tLSAvZGV2L251bGwKPj4+PiAr
+KysgYi9pbmNsdWRlL3VhcGkvZHJtL3JvY2tjaGlwX2RybS5oCj4+Pj4gQEAgLTAsMCArMSw5NyBA
+QAo+Pj4+ICsvKgo+Pj4+ICsgKgo+Pj4+ICsgKiBDb3B5cmlnaHQgKGMpIEZ1emhvdSBSb2NrY2hp
+cCBFbGVjdHJvbmljcyBDby5MdGQKPj4+PiArICogQXV0aG9yczoKPj4+PiArICogICAgICAgTWFy
+ayBZYW8gPHl6cUByb2NrLWNoaXBzLmNvbT4KPj4+PiArICoKPj4+PiArICogYmFzZSBvbiBleHlu
+b3NfZHJtLmgKPj4+PiArICoKPj4+PiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7
+IHlvdSBjYW4gcmVkaXN0cmlidXRlICBpdCBhbmQvb3IgbW9kaWZ5IGl0Cj4+Pj4gKyAqIHVuZGVy
+ICB0aGUgdGVybXMgb2YgIHRoZSBHTlUgR2VuZXJhbCAgUHVibGljIExpY2Vuc2UgYXMgcHVibGlz
+aGVkIGJ5IHRoZQo+Pj4+ICsgKiBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247ICBlaXRoZXIgdmVy
+c2lvbiAyIG9mIHRoZSAgTGljZW5zZSwgb3IgKGF0IHlvdXIKPj4+PiArICogb3B0aW9uKSBhbnkg
+bGF0ZXIgdmVyc2lvbi4KPj4+PiArICovCj4+Pj4gKwo+Pj4+ICsjaWZuZGVmIF9VQVBJX1JPQ0tD
+SElQX0RSTV9ICj4+Pj4gKyNkZWZpbmUgX1VBUElfUk9DS0NISVBfRFJNX0gKPj4+PiArCj4+Pj4g
+KyNpbmNsdWRlIDxkcm0vZHJtLmg+Cj4+Pj4gKwo+Pj4+ICsvKioKPj4+PiArICogVXNlci1kZXNp
+cmVkIGJ1ZmZlciBjcmVhdGlvbiBpbmZvcm1hdGlvbiBzdHJ1Y3R1cmUuCj4+Pj4gKyAqCj4+Pj4g
+KyAqIEBzaXplOiB1c2VyLWRlc2lyZWQgbWVtb3J5IGFsbG9jYXRpb24gc2l6ZS4KPj4+PiArICog
+QGZsYWdzOiB1c2VyIHJlcXVlc3QgZm9yIHNldHRpbmcgbWVtb3J5IHR5cGUgb3IgY2FjaGUgYXR0
+cmlidXRlcy4KPj4+PiArICogQGhhbmRsZTogcmV0dXJuZWQgYSBoYW5kbGUgdG8gY3JlYXRlZCBn
+ZW0gb2JqZWN0Lgo+Pj4+ICsgKiAgICAgLSB0aGlzIGhhbmRsZSB3aWxsIGJlIHNldCBieSBnZW0g
+bW9kdWxlIG9mIGtlcm5lbCBzaWRlLgo+Pj4+ICsgKi8KPj4+PiArc3RydWN0IGRybV9yb2NrY2hp
+cF9nZW1fY3JlYXRlIHsKPj4+PiArICAgICAgIHVpbnQ2NF90IHNpemU7Cj4+Pj4gKyAgICAgICB1
+aW50MzJfdCBmbGFnczsKPj4+PiArICAgICAgIHVpbnQzMl90IGhhbmRsZTsKPj4+PiArfTsKPj4+
+PiArCj4+Pj4gKy8qKgo+Pj4+ICsgKiBBIHN0cnVjdHVyZSBmb3IgZ2V0dGluZyBidWZmZXIgb2Zm
+c2V0Lgo+Pj4+ICsgKgo+Pj4+ICsgKiBAaGFuZGxlOiBhIHBvaW50ZXIgdG8gZ2VtIG9iamVjdCBj
+cmVhdGVkLgo+Pj4+ICsgKiBAcGFkOiBqdXN0IHBhZGRpbmcgdG8gYmUgNjQtYml0IGFsaWduZWQu
+Cj4+Pj4gKyAqIEBvZmZzZXQ6IHJlbGF0aXZlZCBvZmZzZXQgdmFsdWUgb2YgdGhlIG1lbW9yeSBy
+ZWdpb24gYWxsb2NhdGVkLgo+Pj4+ICsgKiAgICAgLSB0aGlzIHZhbHVlIHNob3VsZCBiZSBzZXQg
+YnkgdXNlci4KPj4+PiArICovCj4+Pj4gK3N0cnVjdCBkcm1fcm9ja2NoaXBfZ2VtX21hcF9vZmYg
+ewo+Pj4+ICsgICAgICAgdWludDMyX3QgaGFuZGxlOwo+Pj4+ICsgICAgICAgdWludDMyX3QgcGFk
+Owo+Pj4+ICsgICAgICAgdWludDY0X3Qgb2Zmc2V0Owo+Pj4+ICt9Owo+Pj4+ICsKPj4+PiArLyoq
+Cj4+Pj4gKyAqIEEgc3RydWN0dXJlIGZvciBtYXBwaW5nIGJ1ZmZlci4KPj4+PiArICoKPj4+PiAr
+ICogQGhhbmRsZTogYSBoYW5kbGUgdG8gZ2VtIG9iamVjdCBjcmVhdGVkLgo+Pj4+ICsgKiBAcGFk
+OiBqdXN0IHBhZGRpbmcgdG8gYmUgNjQtYml0IGFsaWduZWQuCj4+Pj4gKyAqIEBzaXplOiBtZW1v
+cnkgc2l6ZSB0byBiZSBtYXBwZWQuCj4+Pj4gKyAqIEBtYXBwZWQ6IGhhdmluZyB1c2VyIHZpcnR1
+YWwgYWRkcmVzcyBtbWFwZWQuCj4+Pj4gKyAqICAgICAgLSB0aGlzIHZhcmlhYmxlIHdvdWxkIGJl
+IGZpbGxlZCBieSByb2NrY2hpcCBnZW0gbW9kdWxlCj4+Pj4gKyAqICAgICAgb2Yga2VybmVsIHNp
+ZGUgd2l0aCB1c2VyIHZpcnR1YWwgYWRkcmVzcyB3aGljaCBpcyBhbGxvY2F0ZWQKPj4+PiArICog
+ICAgICBieSBkb19tbWFwKCkuCj4+Pj4gKyAqLwo+Pj4+ICtzdHJ1Y3QgZHJtX3JvY2tjaGlwX2dl
+bV9tbWFwIHsKPj4+PiArICAgICAgIHVpbnQzMl90IGhhbmRsZTsKPj4+PiArICAgICAgIHVpbnQz
+Ml90IHBhZDsKPj4+PiArICAgICAgIHVpbnQ2NF90IHNpemU7Cj4+Pj4gKyAgICAgICB1aW50NjRf
+dCBtYXBwZWQ7Cj4+Pj4gK307Cj4+PiBDb3VsZCB3ZSBkbyB3aXRob3V0IHRoZSBtbWFwIGlvY3Rs
+PyAgSXQgaGFzIGJlZW4gYSBzb3VyY2Ugb2YgcHJvYmxlbXMKPj4+IGluIG90aGVyIGRyaXZlcnMs
+IGFuZCB0aGUgaW9jdGwgdG8gZ2V0IG1tYXAgb2Zmc2V0LCBwbHVzIG5vcm1hbCBtbWFwKCkKPj4+
+IG9uIGRybSBkZXZpY2UgZmlsZSBzaG91bGQgYmUgc3VmZmljaWVudAo+Pj4KPj4+IEJSLAo+Pj4g
+LVIKPj4gT0ssIEkgd2lsbCB0cnkgdG8gbW92ZSB0aGUgc3BlY2lhbCBtbWFwIGlvY3RsIGFuZCB1
+c2UgZHJtIGdlbmVyaWMgbW1hcAo+PiBpbnRlcmZhY2UuCj4gQWN0dWFsbHkgeW91IHByb2JhYmx5
+IHNob3VsZCBkcm9wIGFsbCB0aGlzIGFuZCBqdXN0IGltcGxlbWVudCB0aGUgZHVtbXkKPiBvYmpl
+Y3Qgc3VwcG9ydCBmb3Igbm93LiBVbnRpbCB5b3UgaGF2ZSBwcm9wZXIgaHcgYWNjZWwgdGhlcmUn
+cyBubyByZWFzb24KPiB0byBleHBvc2UgYSBkcml2ZXItcHJpdmF0ZSBnZW0gY3JlYXRlL21tYXAg
+aW50ZXJmYWNlIGF0IGFsbC4KPgo+IEEgcHVyZSBrbXMgZHJpdmVyIHJlYWxseSBzaG91bGRuJ3Qg
+aGF2ZSBpdCdzIG9uIHVhcGkvZm9vX2RybS5oIGZpbGUuCj4gLURhbmllbApyaWdodCwgSSB3aWxs
+IHRyeSB0byBkbyBpdC4KCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
