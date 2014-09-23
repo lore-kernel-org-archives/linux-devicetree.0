@@ -1,43 +1,34 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] tty: omap-serial: use threaded interrupt handler
-Date: Tue, 23 Sep 2014 11:38:38 -0700
-Message-ID: <20140923183838.GA3122@atomide.com>
-References: <1410789610-23059-1-git-send-email-frans.klaver@xsens.com>
- <1410789610-23059-4-git-send-email-frans.klaver@xsens.com>
- <54170823.7040801@hurleysoftware.com>
- <5417228C.5070503@hurleysoftware.com>
- <20140916085037.GI28458@ci00147.xsens-tech.local>
- <54197804.3020302@hurleysoftware.com>
- <20140917121303.GB20438@ci00147.xsens-tech.local>
- <20140923082445.GA16218@ci00147.xsens-tech.local>
- <5421AB20.8040606@hurleysoftware.com>
- <88924386-79bc-44c7-9a07-249900cbd359@email.android.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <88924386-79bc-44c7-9a07-249900cbd359@email.android.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Frans Klaver <fransklaver@gmail.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>, Frans Klaver <frans.klaver@xsens.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexey Pelykh <alexey.pelykh@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH] ARM: zynq: DT: Remove 222 MHz OPP
+Date: Tue, 23 Sep 2014 11:55:20 -0700
+Message-ID: <1411498520-8117-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Frans Klaver <fransklaver@gmail.com> [140923 11:12]:
-> On 23 September 2014 19:17:20 CEST, Peter Hurley <peter@hurleysoftware.com> wrote:
-> >
-> >I would've thought the first 2 patches had already been picked up
-> >because
-> >they fix div-by-zero faults.
-> 
-> I've had no confirmation of that happening so far. I also don't
-> know if I should expect one. Who'd take these patches? Tony? 
+Due to dependencies between timer and CPU frequency, only changes by
+powers of two are allowed. The clocksource driver prevents other
+changes, but with cpufreq and its governors it can result in being
+spammed with error messages constantly. Hence, remove the 222 MHz OPP.
 
-$ scripts/get_maintainer.pl -f drivers/tty/serial/omap-serial.c
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+---
+ arch/arm/boot/dts/zynq-7000.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-Shows they should be sent to Greg and linux-serial. Please also Cc
-linux-omap. And if it's a fix, please make sure the subject has the
-magic word fix :)
-
-Regards,
-
-Tony
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 6cc83d4c6c76..a0ed01d68328 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -30,7 +30,6 @@
+ 				/* kHz    uV */
+ 				666667  1000000
+ 				333334  1000000
+-				222223  1000000
+ 			>;
+ 		};
+ 
+-- 
+2.1.0.1.g27b9230
