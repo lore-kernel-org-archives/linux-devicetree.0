@@ -1,102 +1,36 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
-Date: Tue, 23 Sep 2014 22:47:36 +0200
-Message-ID: <1579761.oeYleOAY1N@vostro.rjw.lan>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <2895905.coa5UvrkJk@vostro.rjw.lan> <2809308.3y5s7TV5Ip@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2809308.3y5s7TV5Ip@wuerfel>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v4 0/3] gpio-charger: add devicetree support
+Date: Tue, 23 Sep 2014 22:42:13 +0200
+Message-ID: <1411504936-21026-1-git-send-email-heiko@sntech.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dianders@chromium.org, heiko@sntech.de
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, September 23, 2014 06:26:07 PM Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 18:25:01 Rafael J. Wysocki wrote:
-> > The problem is iteration over child nodes of a given one where there
-> > may not be struct device objects.
-> > 
-> > For example (from patch [2/16]):
-> > 
-> > +int acpi_for_each_child_node(struct acpi_device *adev,
-> > +                             int (*fn)(struct fw_dev_node *fdn, void *data),
-> > +                             void *data)
-> > +{
-> > +       struct acpi_device *child;
-> > +       int ret = 0;
-> > +
-> > +       list_for_each_entry(child, &adev->children, node) {
-> > +               struct fw_dev_node fdn = { .acpi_node = child, };
-> > +
-> > +               ret = fn(&fdn, data);
-> > +               if (ret)
-> > +                       break;
-> > +       }
-> > +       return ret;
-> > +}
-> > 
-> > and then fn() can be made work for both DTs and ACPI.  Without this we'd
-> > need to have two versions of fn(), one for DTs and one for ACPI (and possibly
-> > more for some other FW protocols), which isn't necessary in general (and
-> > duplicates code etc.). 
-> > 
-> > That actually is used by some patches down in the series (eg. [10/16]).
-> > 
-> 
-> Ok, I understand what you are doing now.
-> 
-> Looking at the example you point to (http://www.spinics.net/lists/devicetree/msg49502.html), I still feel
-> that this is adding more abstraction than what is good for us, and
-> I'd be happier with an implementation of gpio_leds_create() that
-> has a bit more duplication and less abstraction.
-> 
-> The important part should be that the driver-side interface is
-> sensible, other than that an implementation like
-> 
-> static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
-> {
-> 	if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node)
-> 		return gpio_leds_create_of(pdev);
-> 	else if (IS_ENABLED(CONFIG_ACPI))
-> 		return gpio_leds_create_of(acpi);
-> 	return ERR_PTR(-ENXIO);
-> }
-> 
-> would keep either side of it relatively simple, by leaving out the
-> indirect function calls and new for_each_available_child_of_node()
-> macro.
+This series adds devicetree support to the gpio-charger and fixes a small
+issue with the return value of gpio_get_value.
 
-Quite frankly, I'm not sure what you're asking for.
-
-It seems to mean "I kind of don't like the current implementation", but
-then the last part is quite unclear to me.  Are you suggesting to add more
-"if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) etc" type of checks to
-device drivers?  That I'd like to avoid to be honest.
-
-Instead of the current proposal we can introduce something like
-
-int device_get_child_property(struct device *dev, void *child_node,
-                              const char *propname, void **valptr);
-
-(and analogously for device_read_property*) and use that in the drivers that
-need to iterate over child nodes of a device.  Quite along the lines of what
-Dmitry is suggesting.
-
-Then, fn() in acpi_for_each_child_node() (and the of_ counterpart of it)
-would become
-
-int (*fn)(struct device *dev, void *child_node, void *data)
-
-and so on.
-
-Would you prefer that?
+changes since v3:
+- remove of_match_ptr. All used of_xx function have stubs for !OF
+  and of_device_id also is always defined, so no need for of_match_ptr
+changes since v2:
+- fix (hopefully all) issues pointed out by Doug Anderson
+- add missing of_node assignment to charger
+changes since v1:
+- adapt binding example to show how the charger fits into the
+  power-supplies structure
 
 
-> How many other users of fw_dev_node do you have at the moment?
+Heiko Stuebner (3):
+  dt-bindings: document gpio-charger bindings
+  power: gpio-charger: add device tree support
+  power: gpio-charger: do not use gpio value directly
 
-One more, gpio_keys_polled in patch [13/16] (https://patchwork.kernel.org/patch/4917311/).
+ .../bindings/power_supply/gpio-charger.txt         | 27 ++++++++
+ drivers/power/gpio-charger.c                       | 74 +++++++++++++++++++++-
+ 2 files changed, 98 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/gpio-charger.txt
 
-Rafael
-
+-- 
+2.1.0
