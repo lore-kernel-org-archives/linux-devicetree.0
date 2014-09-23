@@ -1,70 +1,119 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] pinctrl: exynos: Add irq_chip instance for Exynos7
- wakeup interrupts
-Date: Tue, 23 Sep 2014 16:49:38 +0200
-Message-ID: <54218882.1050401@gmail.com>
-References: <1411460169-30536-1-git-send-email-a.kesavan@samsung.com> <1411460169-30536-3-git-send-email-a.kesavan@samsung.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v9 08/10] rtc: at91sam9: use clk API instead of relying on
+ AT91_SLOW_CLOCK
+Date: Tue, 23 Sep 2014 16:48:43 +0200
+Message-ID: <1411483725-31532-9-git-send-email-boris.brezillon@free-electrons.com>
+References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411460169-30536-3-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "Acked-by: Arnd Bergmann" <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.09.2014 10:16, Abhilash Kesavan wrote:
-[snip]
-> @@ -383,9 +377,11 @@ static int exynos_wkup_irq_set_wake(struct irq_data *irqd, unsigned int on)
->  /*
->   * irq_chip for wakeup interrupts
->   */
-> -static struct exynos_irq_chip exynos_wkup_irq_chip = {
-> +static struct exynos_irq_chip *exynos_wkup_irq_chip;
-> +
-[snip]
-> @@ -459,7 +480,7 @@ static void exynos_irq_demux_eint16_31(unsigned int irq, struct irq_desc *desc)
->  static int exynos_wkup_irq_map(struct irq_domain *h, unsigned int virq,
->  					irq_hw_number_t hw)
->  {
-> -	irq_set_chip_and_handler(virq, &exynos_wkup_irq_chip.chip,
-> +	irq_set_chip_and_handler(virq, &exynos_wkup_irq_chip->chip,
->  					handle_level_irq);
->  	irq_set_chip_data(virq, h->host_data);
->  	set_irq_flags(virq, IRQF_VALID);
-> @@ -491,7 +512,12 @@ static int exynos_eint_wkup_init(struct samsung_pinctrl_drv_data *d)
->  	int idx, irq;
->  
->  	for_each_child_of_node(dev->of_node, np) {
-> -		if (of_match_node(exynos_wkup_irq_ids, np)) {
-> +		const struct of_device_id *match;
-> +
-> +		match = of_match_node(exynos_wkup_irq_ids, np);
-> +		if (match) {
-> +			exynos_wkup_irq_chip = kmemdup(match->data,
-> +				sizeof(struct exynos_irq_chip), GFP_KERNEL);
+The RTT block is using the slow clock which is accessible through the clk
+API.
+Use the clk API to retrieve, enable and get the slow clk rate instead of
+the AT91_SLOW_CLOCK macro (which hardcodes the slow clk rate).
+Doing this allows us to reference the clk thus preventing the CCF from
+disabling it during the "disable unused" phase.
 
-That's not exactly what I had in my mind.
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Acked-by: Johan Hovold <johan@kernel.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/rtc/rtc-at91sam9.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
 
-You just changed the code to write to another global variable. This is
-not the best practice and might cause hard to track issues in future,
-when extending the driver.
-
->From what I can see, the best solution would be to add .irq_chip field
-to samsung_pin_bank struct. Then exynos_wkup_irq_map() could access it
-through h->host_data pointer and exynos_irq_demux_eint16_31() could also
-retrieve the irq chip through bank struct without the need too add chip
-field to exynos_muxed_weint_data struct.
-
-As a side effect, it would be possible to consolidate
-exynos_wkup_irqd_ops with exynos_gpio_irqd_ops, which currently only
-differ in irq chip passed as argument to irq_set_chip_and_handler() in
-.map() callback.
-
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index be9c28b..abac38a 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -23,6 +23,7 @@
+ #include <linux/io.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
++#include <linux/clk.h>
+ 
+ /*
+  * This driver uses two configurable hardware resources that live in the
+@@ -61,8 +62,6 @@
+ #define AT91_RTT_ALMS		(1 << 0)		/* Real-time Alarm Status */
+ #define AT91_RTT_RTTINC		(1 << 1)		/* Real-time Timer Increment */
+ 
+-#define AT91_SLOW_CLOCK		32768
+-
+ /*
+  * We store ALARM_DISABLED in ALMV to record that no alarm is set.
+  * It's also the reset value for that field.
+@@ -77,6 +76,7 @@ struct sam9_rtc {
+ 	struct regmap		*gpbr;
+ 	unsigned int		gpbr_offset;
+ 	int 			irq;
++	struct clk		*sclk;
+ };
+ 
+ #define rtt_readl(rtc, field) \
+@@ -328,6 +328,7 @@ static int at91_rtc_probe(struct platform_device *pdev)
+ 	struct sam9_rtc	*rtc;
+ 	int		ret, irq;
+ 	u32		mr;
++	unsigned int	sclk_rate;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+@@ -385,11 +386,27 @@ static int at91_rtc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
++	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(rtc->sclk))
++		return PTR_ERR(rtc->sclk);
++
++	sclk_rate = clk_get_rate(rtc->sclk);
++	if (!sclk_rate || sclk_rate > AT91_RTT_RTPRES) {
++		dev_err(&pdev->dev, "Invalid slow clock rate\n");
++		return -EINVAL;
++	}
++
++	ret = clk_prepare_enable(rtc->sclk);
++	if (ret) {
++		dev_err(&pdev->dev, "Could not enable slow clock\n");
++		return ret;
++	}
++
+ 	mr = rtt_readl(rtc, MR);
+ 
+ 	/* unless RTT is counting at 1 Hz, re-initialize it */
+-	if ((mr & AT91_RTT_RTPRES) != AT91_SLOW_CLOCK) {
+-		mr = AT91_RTT_RTTRST | (AT91_SLOW_CLOCK & AT91_RTT_RTPRES);
++	if ((mr & AT91_RTT_RTPRES) != sclk_rate) {
++		mr = AT91_RTT_RTTRST | (sclk_rate & AT91_RTT_RTPRES);
+ 		gpbr_writel(rtc, 0);
+ 	}
+ 
+@@ -434,6 +451,9 @@ static int at91_rtc_remove(struct platform_device *pdev)
+ 	/* disable all interrupts */
+ 	rtt_writel(rtc, MR, mr & ~(AT91_RTT_ALMIEN | AT91_RTT_RTTINCIEN));
+ 
++	if (!IS_ERR(rtc->sclk))
++		clk_disable_unprepare(rtc->sclk);
++
+ 	return 0;
+ }
+ 
+-- 
+1.9.1
