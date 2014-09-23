@@ -1,55 +1,81 @@
-From: Robert Richter <rric@kernel.org>
-Subject: Re: [PATCH 0/6] dts, kbuild: Implement support for dtb vendor subdirs
-Date: Tue, 23 Sep 2014 13:26:19 +0200
-Message-ID: <20140923112619.GG20170@rric.localhost>
-References: <1409899692-1455-1-git-send-email-rric@kernel.org>
- <CAL1qeaGCeRyeKLo70E264bZcamOfBKoN9Y8_NDCjV5j4DoOw1Q@mail.gmail.com>
- <20140919123056.GC20170@rric.localhost>
- <20140919140856.GG2295@e104818-lin.cambridge.arm.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 23 Sep 2014 14:31:35 +0300
+Message-ID: <54215A17.8050606@ti.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <5419760A.7020908@ti.com> <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com> <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo> <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo> <54213543.7000306@ti.com> <20140923093916.GR30514@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140919140856.GG2295@e104818-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Andrew Bresticker <abrestic@google.com>, Michal Marek <mmarek@suse.cz>, Mark Rutland <Mark.Rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="iOhc9gDveE6KeQx1KUdtGl57Q11mAl98r"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140923093916.GR30514@ulmo>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ajay kumar <ajaynumb@gmail.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19.09.14 15:08:56, Catalin Marinas wrote:
-> On Fri, Sep 19, 2014 at 01:30:56PM +0100, Robert Richter wrote:
-> > On 16.09.14 20:49:18, Andrew Bresticker wrote:
-> > > > Robert Richter (6):
-> > > >   dts, arm64: Add dtbs_install make target
-> > > >   dts, kbuild: Factor out dtbs install rules to Makefile.dtbinst
-> > > >   dts, arm/arm64: Remove dtbs build rules in sub-makes
-> > > >   dts, kbuild: Implement support for dtb vendor subdirs
-> > > >   dts, arm64: Move dts files to vendor subdirs
-> > > >   dts, arm: Remove $(MACHINE) variable from dtbs make recipes
-> > > 
-> > > I've tested this for arm64 and by adding a vendor sub-directory
-> > > locally for arm.  This series is also the base for my MIPS DT vendor
-> > > sub-directory series
-> > > (http://www.linux-mips.org/archives/linux-mips/2014-09/msg00217.html).
-> > > So, for the entire series,
-> > > 
-> > > Tested-by: Andrew Bresticker <abrestic@chromium.org>
-> > 
-> > Andrew, thanks for testing and great this also works on mips.
-> > 
-> > Anyone willing to take the patches for 3.18? Are any further acks
-> > needed?
-> 
-> For the arm64 bits in this series:
-> 
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> 
-> I think the patches can be merged via arm-soc.
+--iOhc9gDveE6KeQx1KUdtGl57Q11mAl98r
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 
-Olof,
+On 23/09/14 12:39, Thierry Reding wrote:
 
-please apply the patches.
+> My point is that if you use plain phandles you usually have the
+> meta-data already. Referring to the above example, bridge0 knows that i=
+t
+> should look for a bridge with phandle &bridge1, whereas bridge1 knows
+> that the device it is connected to is a panel.
 
-Thanks,
+The bridge should not care what kind of device is there on the other
+end. The bridge just has an output, going to another video component.
 
--Robert
+>> Well, I can't say about this particular bridge, but afaik you can
+>> connect a parallel RGB signal to multiple panels just like that, witho=
+ut
+>> any muxing.
+>=20
+> Right, but in that case you're not reconfiguring the signal in any way
+> for each of the panels. You send one single signal to all of them. For
+
+Yes, that's one use case, cloning. But I was not talking about that.
+
+> all intents and purposes there is only one panel. Well, I guess you
+> could have separate backlights for the panels. In that case though it
+> seems better to represent it at least as a virtual mux or bridge, or
+> perhaps a "mux panel".
+
+I was talking about the case where you have two totally different
+devices, let's say panels, connected to the same output. One could take
+a 16-bit parallel RGB signal, the other 24-bit. Only one of them can  be
+enabled at a time (from HW perspective both can be enabled at the same
+time, but then the other one shows garbage).
+
+ Tomi
+
+
+
+--iOhc9gDveE6KeQx1KUdtGl57Q11mAl98r
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJUIVoXAAoJEPo9qoy8lh71pBwQAJPxNFrzypbdnDNTwHey5jn0
+R4rHlE1UGl3FdMifVL7HR2Nb0YG5GwrUmWGUwzbCLrX8OsUlefNopeLi5TGu5oBP
+t69htKvuP1im56zYFVPTGtRwHGh7VRvRapCg1kLTV89hn/zjLCKwTODAbbNmtQ+h
+ozfNSL+QXFictxpYABlCV79dvR/c7Zg5V5z9i1tjhnqOpXOwVcgmArl9drdsMliF
+0Nu19Mgx12OJlEk2XdNwur8JOIUtE/u6J7eTsCrgyCSizzcKnNaKKm5IS1RnSF07
+WvHUh8vMZne9Ymc87zscMdTK2YH+NSObbgZJYUbrnoxvrU1+vqTOmit54MBC1uuK
+R87dp8oJM7ouijDrimhjL6APdyLcgPDnC4tlkWNRSjaidoAhbZiWNpZGAo5tGUi6
+SK0hj7Ahn4QmBl21yMoosxLwStxGHEE0UO0qedqXjmAfknEpIfASPZ09VJlhR9LR
+QfrlvuZcC98M8HGAkblWYXtlodlwD99FgH8JFhV2+8hx3mzLPDQUa2rEy0Tq+Nyi
+82P3EjeFTTbcYbPxMl8JvB094ZxtJAllUSAgKSVgrf4/y9MB2tcrYJ3ABPsq5Tlg
+fQCoLHROfLWbM1hf0lTH9iihD1oMc/n5LkxeNl3tFJDSAbtWHjK1bhUH83GEdjXA
+K03aM8hlalJ2/ZBXhAx4
+=qIaK
+-----END PGP SIGNATURE-----
+
+--iOhc9gDveE6KeQx1KUdtGl57Q11mAl98r--
