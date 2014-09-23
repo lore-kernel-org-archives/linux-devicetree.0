@@ -1,132 +1,61 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
-Date: Tue, 23 Sep 2014 15:35:14 +0200
-Message-ID: <4228539.nCGoXxuRMK@amdc1032>
-References: <1409585324-3678-7-git-send-email-lorenzo.pieralisi@arm.com>
- <20140912103257.GB24416@localhost> <20140912112643.GA10623@red-moon>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 23 Sep 2014 15:36:45 +0200
+Message-ID: <20140923133645.GA18924@kwain>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com>
+ <2909480.SL9c0XWUbW@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <20140912112643.GA10623@red-moon>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Geoff Levand <geoff@infradead.org>, Peter
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2909480.SL9c0XWUbW@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Arnd,
 
-Hi,
+On Tue, Sep 23, 2014 at 12:39:04PM +0200, Arnd Bergmann wrote:
+> On Tuesday 23 September 2014 12:28:03 Antoine Tenart wrote:
+> > +       if (dev->of_node) {
+> > +               ret =3D ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+> > +               if (ret)
+> > +                       goto clk_err;
+> > +       } else {
+> > +               ret =3D dma_set_mask_and_coherent(&pdev->dev, DMA_B=
+IT_MASK(32));
+> > +               if (ret)
+> > +                       goto clk_err;
+> > +       }
+> >=20
+>=20
+> Why do you care about the non-DT case here? I think it would be nicer=
+ to
+> open-code the ci_hdrc_usb2_dt_probe() function in here and remove
+> the dma_set_mask_and_coherent(), which should not even be necessary f=
+or
+> the case where you have a hardwired platform device.
+>=20
 
-On Friday, September 12, 2014 12:26:43 PM Lorenzo Pieralisi wrote:
-> On Fri, Sep 12, 2014 at 11:32:57AM +0100, Catalin Marinas wrote:
-> > Daniel, Lorenzo,
-> > 
-> > On Thu, Sep 11, 2014 at 10:32:48AM +0100, Daniel Lezcano wrote:
-> > > On 09/11/2014 10:57 AM, Lorenzo Pieralisi wrote:
-> > > > There is no ARM code in my series. So to sum it up:
-> > > >
-> > > > a) I send a pull request to Catalin for arm64 patches on top of the branch
-> > > >     you are creating with my patches
-> > >  >
-> > > > b) You take care of merging the CPUidle related patches through your
-> > > >     tree
-> > > >
-> > > > Is the above what you meant ?
-> > > 
-> > > Right, that allows to share a branch across the trees and resolve the 
-> > > dependencies when a patchset is touching different subsystems.
-> > > 
-> > > I realize the dependency is inverted regarding what I proposed 
-> > > initially, so it is up to Catalin to create the branch and I will share 
-> > > it with him.
-> > 
-> > I created the branch below with the arm64 specific patches for cpuidle.
-> > I won't rebase it and it should appear in -next tomorrow.
-> > 
-> > Lorenzo, please send a pull request to Daniel with the additional
-> > patches on top of the arm64 branch. Thanks.
-> 
-> Thank you very much, done. Pull request attached for information.
-> 
-> As Daniel knows, last two patches are still pending, waiting for Samsung
-> acks, and will be dropped if we do not get them in time.
-> 
-> Lorenzo
-> 
-> The following changes since commit 18910ab0d916b1a87016d69efd027714a80521dd:
-> 
->   arm64: add PSCI CPU_SUSPEND based cpu_suspend support (2014-09-12 10:48:56 +0100)
-> 
-> are available in the git repository at:
-> 
->   git://linux-arm.org/linux-2.6-lp.git for-upstream/arm-generic-cpuidle
-> 
-> for you to fetch changes up to dda773655f9b97570884c4396ad4d63daf177107:
-> 
->   drivers: cpuidle: initialize Exynos driver through DT (2014-09-12 11:37:43 +0100)
-> 
-> ----------------------------------------------------------------
-> Bartlomiej Zolnierkiewicz (1):
->       ARM: dts: add CPU nodes for Exynos4 SoCs
+I thought we agreed to call dma_set_mask_and_coherent():
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/273335.=
+html
 
-This patch got broken during merge.  It differs from the version I posted
-on the list by not having the closing "};" which causes a dtb build failure:
+I do not have a strong opinion on this as I only use the dt case for my
+usage.
 
-Error: arch/arm/boot/dts/exynos4210-origen.dts:21.1-2 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [arch/arm/boot/dts/exynos4210-origen.dtb] Error 1
-make: *** [dtbs] Error 2
-make: *** Waiting for unfinished jobs....
 
-Please regenarate your branch with the fixed version of the patch
-(you can squash the fix below to the broken patch).
+Antoine
 
----
- arch/arm/boot/dts/exynos4210.dtsi |    1 +
- 1 file changed, 1 insertion(+)
-
-Index: b/arch/arm/boot/dts/exynos4210.dtsi
-===================================================================
---- a/arch/arm/boot/dts/exynos4210.dtsi	2014-09-23 14:14:29.793571708 +0200
-+++ b/arch/arm/boot/dts/exynos4210.dtsi	2014-09-23 14:17:22.029565827 +0200
-@@ -39,6 +39,7 @@
- 			<&clock CLK_OUT_CPU>, <&clock CLK_XXTI>,
- 			<&clock CLK_XUSBXTI>;
- 		#clock-cells = <1>;
-+	};
- 
- 	cpus {
- 		#address-cells = <1>;
-
-> Lorenzo Pieralisi (4):
->       drivers: cpuidle: implement DT based idle states infrastructure
->       drivers: cpuidle: CPU idle ARM64 driver
->       drivers: cpuidle: initialize big.LITTLE driver through DT
->       drivers: cpuidle: initialize Exynos driver through DT
-> 
->  arch/arm/boot/dts/exynos4210.dtsi          |  27 ++++
->  arch/arm/boot/dts/exynos4212.dtsi          |  17 +++
->  arch/arm/boot/dts/exynos4412.dtsi          |  29 ++++
->  arch/arm/boot/dts/exynos5250.dtsi          |  11 ++
->  arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts |  23 ++++
->  drivers/cpuidle/Kconfig                    |   8 ++
->  drivers/cpuidle/Kconfig.arm                |   2 +
->  drivers/cpuidle/Kconfig.arm64              |  14 ++
->  drivers/cpuidle/Makefile                   |   5 +
->  drivers/cpuidle/cpuidle-arm64.c            | 133 ++++++++++++++++++
->  drivers/cpuidle/cpuidle-big_little.c       |  19 +++
->  drivers/cpuidle/cpuidle-exynos.c           |  18 ++-
->  drivers/cpuidle/dt_idle_states.c           | 213 +++++++++++++++++++++++++++++
->  drivers/cpuidle/dt_idle_states.h           |   7 +
->  14 files changed, 525 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/cpuidle/Kconfig.arm64
->  create mode 100644 drivers/cpuidle/cpuidle-arm64.c
->  create mode 100644 drivers/cpuidle/dt_idle_states.c
->  create mode 100644 drivers/cpuidle/dt_idle_states.h
-
-Best regards,
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
