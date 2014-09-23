@@ -1,80 +1,95 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for ps8622 DT properties
-Date: Tue, 23 Sep 2014 14:12:52 +0300
-Message-ID: <8067599.NmrXQIO5A1@avalon>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <54213DAC.5010806@ti.com> <20140923095314.GS30514@ulmo>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: net: stmmac glue layer for Amlogic Meson SoCs
+Date: Tue, 23 Sep 2014 13:15:00 +0200
+Message-ID: <20140923111459.GA4487@gmail.com>
+References: <1411219757-9201-1-git-send-email-b.galvani@gmail.com>
+ <54211032.6010009@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140923095314.GS30514@ulmo>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <54211032.6010009@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, Jerry Cao <jerry.cao@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 September 2014 11:53:15 Thierry Reding wrote:
-> On Tue, Sep 23, 2014 at 12:30:20PM +0300, Tomi Valkeinen wrote:
-> > On 23/09/14 09:21, Thierry Reding wrote:
-> > >> Well, I can write almost any kind of bindings, and then evidently my
-> > >> device would work. For me, on my board.
-> > > 
-> > > Well, that's the whole problem with DT. For many devices we only have a
-> > > single setup to test against. And even when we have several they often
-> > > are derived from each other. But the alternative would be to defer
-> > > (possibly indefinitely) merging support for a device until a second,
-> > > wildly different setup shows up. That's completely unreasonable and we
-> > > need to start somewhere.
-> > 
-> > Yes, but in this case we know of existing boards that have complex
-> > setups. It's not theoretical.
+On Tue, Sep 23, 2014 at 08:16:18AM +0200, Giuseppe CAVALLARO wrote:
+> On 9/20/2014 3:29 PM, Beniamino Galvani wrote:
+> >Hi,
+> >
+> >the Ethernet controller available in Amlogic Meson6 and Meson8 SoCs is
+> >a Synopsys DesignWare MAC IP core, already supported by the stmmac
+> >driver.
+> >
+> >These patches add a glue layer to the driver for the platform-specific
+> >settings required by the Amlogic variant.
+> >
+> >This has been tested on a Amlogic S802 device with the initial Meson
+> >support submitted by Carlo Caione [1].
 > 
-> Complex setups involving /this particular/ bridge and binding are
-> theoretical at this point, however.
+> patches look fine just a warning with checkpatch as shown below then
 > 
-> > > phandles should simply point to the next element in the pipeline and the
-> > > OS abstractions should be good enough to handle the details about how to
-> > > chain the elements.
-> > 
-> > I, on the other hand, would rather see the links the other way around.
-> > Panel having a link to the video source, etc.
+> Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 > 
-> Why? It seems much more natural to describe this using the natural flow
-> of data. The device furthest away from the CPU should be the target of
-> the phandle. That way the DT can be used to trace the flow of data down
-> the pipeline.
 > 
-> > The video graphs have two-way links, which of course is the safest
-> > options, but also more verbose and redundant.
+> [cavagiu@lxmcdt5 net.git]$ git-format-patch -2
+> 0001-net-stmmac-add-Amlogic-Meson-glue-layer.patch
+> 0002-net-stmmac-meson-document-device-tree-bindings.patch
+> [cavagiu@lxmcdt5 net.git]$ !./
+> ./scripts/checkpatch.pl 000*
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #57:
+> new file mode 100644
 > 
-> Right. If we take that line of thinking to the extreme we end up listing
-> individual registers in DT so that we can safely assume that we can
-> control all possible aspects of the device.
+> WARNING: DT compatible string vendor "amlogic" appears un-documented
+> -- check ./Documentation/devicetree/bindings/vendor-prefixes.txt
+> #152: FILE: drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c:34:
+> +	{ .compatible = "amlogic,meson6-dwmac", .data = &meson6_dwmac_data},
 
-And the other extreme would be to have a single DT node for the logical video 
-device with all information pertaining to it stored in C code. Extremes are 
-never good, we need to find a reasonable middle-ground here. I believe OF 
-graph fulfills that requirement, it might be slightly more verbose than a 
-single phandle, but it's also much more versatile. 
+Hi Giuseppe,
 
-> Like I said, this seems to be the latest response to DT ABI stability
-> requirement. Add as much data to a DT node as possible so that it has
-> higher chances of being complete. The result is often overly complex DT
-> content that doesn't add any real value.
+thanks for the review. The amlogic vendor prefix is documented as part
+of the initial Meson support in the series reported in the cover
+letter.
+
+Beniamino
+
 > 
-> > When this was discussed earlier, it was unclear which way the links
-> > should be. It's true that only links to one direction are strictly
-> > needed, but the question raised was that if in the drivers we end up
-> > always going the links the other way, the performance penalty may be
-> > somewhat big. (If I recall right).
+> total: 0 errors, 2 warnings, 0 checks, 108 lines checked
 > 
-> I doubt that graphs will become so complex that walking it would become
-> a performance bottleneck. In fact if we're constantly walking the graph
-> we're already doing something wrong. It should only be necessary when
-> the pipeline configuration changes, which should hopefully not be very
-> often (i.e. not several times per second).
-
--- 
-Regards,
-
-Laurent Pinchart
+> 0001-net-stmmac-add-Amlogic-Meson-glue-layer.patch has style
+> problems, please review.
+> 
+> If any of these errors are false positives, please report
+> them to the maintainer, see CHECKPATCH in MAINTAINERS.
+> WARNING: added, moved or deleted file(s), does MAINTAINERS need updating?
+> #17:
+> new file mode 100644
+> 
+> total: 0 errors, 1 warnings, 25 lines checked
+> 
+> 0002-net-stmmac-meson-document-device-tree-bindings.patch has style
+> problems, please review.
+> 
+> If any of these errors are false positives, please report
+> them to the maintainer, see CHECKPATCH in MAINTAINERS.
+> 
+> >
+> >[1] http://lwn.net/Articles/612000/
+> >
+> >Beniamino Galvani (2):
+> >   net: stmmac: add Amlogic Meson glue layer
+> >   net: stmmac: meson: document device tree bindings
+> >
+> >  .../devicetree/bindings/net/meson-dwmac.txt        | 25 ++++++++
+> >  drivers/net/ethernet/stmicro/stmmac/Kconfig        | 10 ++++
+> >  drivers/net/ethernet/stmicro/stmmac/Makefile       |  1 +
+> >  drivers/net/ethernet/stmicro/stmmac/dwmac-meson.c  | 67 ++++++++++++++++++++++
+> >  drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  3 +
+> >  .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |  3 +
+> >  6 files changed, 109 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/meson-dwmac.txt
+> >  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-meson.c
+> >
+> 
