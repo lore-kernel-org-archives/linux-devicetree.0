@@ -1,27 +1,64 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 4/4 v5] GPIO: gpio-dwapb: Suspend & Resume PM enabling
-Date: Tue, 23 Sep 2014 16:41:09 +0200
-Message-ID: <CACRpkdZTRunfAb=W8dJo4BDvdSikU8EPM_AGQTSKU-zVraYsEA@mail.gmail.com>
-References: <1410970722-8579-1-git-send-email-alvin.chen@intel.com>
-	<1410970722-8579-5-git-send-email-alvin.chen@intel.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v4 3/9] Documentation: bindings: net: add the Marvell
+ PXA168 Ethernet controller
+Date: Tue, 23 Sep 2014 16:41:18 +0200
+Message-ID: <20140923144118.GF18924@kwain>
+References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com>
+ <51745791.Wuu5QiQB2e@wuerfel>
+ <20140923140113.GC18924@kwain>
+ <3708177.kEGF9Dk44n@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410970722-8579-5-git-send-email-alvin.chen@intel.com>
+Content-Disposition: inline
+In-Reply-To: <3708177.kEGF9Dk44n@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 6:18 PM, Weike Chen <alvin.chen@intel.com> wrote:
+On Tue, Sep 23, 2014 at 04:33:48PM +0200, Arnd Bergmann wrote:
+> On Tuesday 23 September 2014 16:01:13 Antoine Tenart wrote:
+> >=20
+> > On Tue, Sep 23, 2014 at 02:38:39PM +0200, Arnd Bergmann wrote:
+> > > On Tuesday 23 September 2014 14:15:30 Antoine Tenart wrote:
+> > > > +Optional properties:
+> > > > +- port-id: should be '0','1' or '2'.
+> > > > +- phy-addr: MDIO address of the PHY.
+> > > > +- local-mac-address: see ethernet.txt file in the same directo=
+ry.
+> > > > +
+> > > >=20
+> > >=20
+> > > I believe new bindings should not use "phy-addr" properties, but
+> > > instead use a phy-handle property pointing to a phy device instea=
+d.
+> >=20
+> > That's the MDIO address of the PHY. It's a bit difficult to use a p=
+hy
+> > device as the driver uses the libphy. And that would break the plat=
+form
+> > using it.
+> >=20
+> > Or maybe you have something in mind?
+>=20
+> I don't understand what you mean. Doesn't libphy imply using a phy_de=
+vice?
+> What I meant was that you should be able to just call the standard
+> of_phy_connect() and other interfaces to deal with phylib.
+>=20
 
-> This patch enables suspend and resume mode for the power management, and
-> it is based on Josef Ahmad's previous work.
->
-> Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
-> Signed-off-by: Weike Chen <alvin.chen@intel.com>
+Yes sure, I read again my answer and... well I should have had a better
+look on the matter.
 
-Patch applied with Andy's review tag.
+Anyway, as the proposed binding seems to be OK with you, I'll update th=
+e
+series accordingly.
 
-Yours,
-Linus Walleij
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
