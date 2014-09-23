@@ -1,36 +1,26 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v2 2/3] power: gpio-charger: add device tree support
-Date: Tue, 23 Sep 2014 14:03:17 +0200
-Message-ID: <1549304.qklrgkYl3q@phil>
-References: <1411329923-15912-1-git-send-email-heiko@sntech.de> <1411329923-15912-3-git-send-email-heiko@sntech.de> <CAD=FV=W6q7wMDWWDkwdC_KF4EHJt2q8afxSGCpPEC+Nk2Jp2Ag@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/4 v5] GPIO: gpio-dwapb: Change readl&writel to dwapb_read&dwapb_write
+Date: Tue, 23 Sep 2014 14:10:48 +0200
+Message-ID: <CACRpkdYuDux776OtQGMtN7HvW-LNahV42Ltwa6PzgA1oApig3g@mail.gmail.com>
+References: <1410970722-8579-1-git-send-email-alvin.chen@intel.com>
+	<1410970722-8579-3-git-send-email-alvin.chen@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=W6q7wMDWWDkwdC_KF4EHJt2q8afxSGCpPEC+Nk2Jp2Ag@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: sre@kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1410970722-8579-3-git-send-email-alvin.chen@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Weike Chen <alvin.chen@intel.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 22. September 2014, 09:48:33 schrieb Doug Anderson:
-> > @@ -196,6 +255,7 @@ static struct platform_driver gpio_charger_driver = {
-> > 
-> >                 .name = "gpio-charger",
-> >                 .owner = THIS_MODULE,
-> >                 .pm = &gpio_charger_pm_ops,
-> > 
-> > +               .of_match_table = of_match_ptr(gpio_charger_match),
-> 
-> Given that you don't have any #ifdefs with "CONFIG_OF", I think
-> gpio_charger_match will always exist.  It seems like you should remove
-> the of_match_ptr or add some #ifdefs.  I can't quite keep up with what
-> the currently suggested best practice is here, though.
+On Wed, Sep 17, 2014 at 6:18 PM, Weike Chen <alvin.chen@intel.com> wrote:
 
-I've kept the of_match_ptr in v3. The dt parsing functions (of_read_foo,...) 
-define stubs for the !CONFIG_OF case which we use here in this case and 
-of_match_ptr is also defined differently for both OF and !OF, so it feels like 
-it should be there ;-)
+> This patch replaces 'readl&writel' with 'dwapb_read&dwapb_write'.
+>
+> Reviewed-by: Shevchenko, Andriy <andriy.shevchenko@intel.com>
+> Signed-off-by: Weike Chen <alvin.chen@intel.com>
 
+Patch applied.
 
-Heiko
+Yours,
+Linus Walleij
