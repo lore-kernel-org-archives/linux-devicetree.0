@@ -1,94 +1,104 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v8 08/10] rtc: at91sam9: use clk API instead of relying
- on AT91_SLOW_CLOCK
-Date: Tue, 23 Sep 2014 14:14:55 +0200
-Message-ID: <20140923121455.GC404@localhost>
-References: <1411471444-2764-1-git-send-email-boris.brezillon@free-electrons.com>
- <1411471444-2764-9-git-send-email-boris.brezillon@free-electrons.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH v4 0/3] Support for Qualcomm QPNP PMIC's
+Date: Tue, 23 Sep 2014 15:33:37 +0300
+Message-ID: <542168A1.5000406@mm-sol.com>
+References: <1406903450-27283-1-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1411471444-2764-9-git-send-email-boris.brezillon@free-electrons.com>
+In-Reply-To: <1406903450-27283-1-git-send-email-svarbanov@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 01:24:02PM +0200, Boris BREZILLON wrote:
-> The RTT block is using the slow clock which is accessible through the clk
-> API.
-> Use the clk API to retrieve, enable and get the slow clk rate instead of
-> the AT91_SLOW_CLOCK macro (which hardcodes the slow clk rate).
-> Doing this allows us to reference the clk thus preventing the CCF from
-> disabling it during the "disable unused" phase.
+Hi Lee,
+
+There are no comments on this set for more then month,
+could you queue up 1/3 and 2/3 for 3.18 merge window?
+
+On 08/01/2014 05:30 PM, Stanimir Varbanov wrote:
+> Hello all,
 > 
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Acked-by: Johan Hovold <johan@kernel.org>
-> ---
->  drivers/rtc/rtc-at91sam9.c | 28 ++++++++++++++++++++++++----
->  1 file changed, 24 insertions(+), 4 deletions(-)
+> Changes since v3:
+>  - rename the driver to qcom-spmi-pmic - suggested by David Collins
+>  - spmi regmap config now initialize .fast_io to true
+>  - added generalized comptatible string in DT binding document and driver
+>  - I dropped the pm8921 rename patch for now, it will be subject of another
+>    patchset later on.
 > 
-> diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-> index be9c28b..2eca624 100644
-> --- a/drivers/rtc/rtc-at91sam9.c
-> +++ b/drivers/rtc/rtc-at91sam9.c
-> @@ -23,6 +23,7 @@
->  #include <linux/io.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/regmap.h>
-> +#include <linux/clk.h>
->  
->  /*
->   * This driver uses two configurable hardware resources that live in the
-> @@ -61,8 +62,6 @@
->  #define AT91_RTT_ALMS		(1 << 0)		/* Real-time Alarm Status */
->  #define AT91_RTT_RTTINC		(1 << 1)		/* Real-time Timer Increment */
->  
-> -#define AT91_SLOW_CLOCK		32768
-> -
->  /*
->   * We store ALARM_DISABLED in ALMV to record that no alarm is set.
->   * It's also the reset value for that field.
-> @@ -77,6 +76,7 @@ struct sam9_rtc {
->  	struct regmap		*gpbr;
->  	unsigned int		gpbr_offset;
->  	int 			irq;
-> +	struct clk		*sclk;
->  };
->  
->  #define rtt_readl(rtc, field) \
-> @@ -328,6 +328,7 @@ static int at91_rtc_probe(struct platform_device *pdev)
->  	struct sam9_rtc	*rtc;
->  	int		ret, irq;
->  	u32		mr;
-> +	unsigned int	sclk_rate;
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
-> @@ -385,11 +386,27 @@ static int at91_rtc_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	}
->  
-> +	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(rtc->sclk))
-> +		return PTR_ERR(rtc->sclk);
-> +
-> +	sclk_rate = clk_get_rate(rtc->sclk);
-> +	if (!sclk_rate || sclk_rate > AT91_RTT_RTPRES) {
-> +		dev_err(&pdev->dev, "Invalid slow clock rate");
+> regards,
+> Stan
+> 
+> --------------------------------------------------------------------------------
+> 
+> Changes since v2:
+>  - 1/4 - added new line, signed-off-by / acked-by and module_authors.
+>  - 3/4 - the subject has been changed.
+> 
+> The previous v2 can be found at [1].
+> 
+> I'm still waiting Acks for:
+>  - 4/4 from Qualcomm folks.
+>  - 2/4 and 3/4 from DT folks.
+> 
+> The patchset is ready to merge version and also it can be treated as an
+> intermediate step until we find a solution for non-translatable peripheral
+> addresses.
+> 
+> [1] https://lkml.org/lkml/2014/7/17/877
+> 
+> --------------------------------------------------------------------------------
+> 
+> Hello everyone,
+> 
+> Here is the continuation of patch sets sent recently about Qualcomm
+> QPNP SPMI PMICs.
+> 
+> The previous version of the patch set can be found at [1].
+> 
+> Changes since v1:
+>  - removed completely custom *of* parser
+>  - renamed the mfd driver from qpnp-spmi to pm8xxx-spmi
+>  - now MFD_PM8XXX_SPMI Kconfig option depends on SPMI
+> 
+> Removing of the custom *of* parser leads to that that the *reg* devicetree
+> property cannot exist and therefore cannot be parsed to get PMIC peripheral
+> resources. I took this step aside because no one from mfd drivers does this
+> parsing. This will lead to inconvenience in the peripheral drivers to define
+> internally the SPMI base addresses depending on the compatible property
+> i.e. PMIC version. 
+> 
+> Comments are welcome!
+> 
+> [1] https://lkml.org/lkml/2014/7/8/428
+> 
+> --------------------------------------------------------------------------------
+> 
+> Josh Cartwright (1):
+>   mfd: add support for Qualcomm SPMI PMICs
+> 
+> Stanimir Varbanov (2):
+>   mfd: document DT bindings for Qualcomm SPMI PMICs
+>   ARM: dts: qcom: add pm8941 and pm8841 PMICs device nodes
+> 
+>  .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |   64 +++++++++++++++++++
+>  arch/arm/boot/dts/qcom-msm8974.dtsi                |   37 +++++++++++
+>  drivers/mfd/Kconfig                                |   15 +++++
+>  drivers/mfd/Makefile                               |    1 +
+>  drivers/mfd/qcom-spmi-pmic.c                       |   67 ++++++++++++++++++++
+>  5 files changed, 184 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+>  create mode 100644 drivers/mfd/qcom-spmi-pmic.c
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-dev_err message needs a newline.
 
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = clk_prepare_enable(rtc->sclk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Could not enable slow clock");
-
-Here too.
-
-Johan
+-- 
+regards,
+Stan
