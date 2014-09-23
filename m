@@ -1,61 +1,107 @@
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
-Date: Tue, 23 Sep 2014 15:36:45 +0200
-Message-ID: <20140923133645.GA18924@kwain>
-References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
- <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com>
- <2909480.SL9c0XWUbW@wuerfel>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v8 6/8] drivers: cpuidle: CPU idle ARM64 driver
+Date: Tue, 23 Sep 2014 15:42:48 +0200
+Message-ID: <2444560.uIlK6FC0A9@amdc1032>
+References: <1409585324-3678-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140911085727.GA25773@e102568-lin.cambridge.arm.com>
+ <5415C968.90303@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2909480.SL9c0XWUbW@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <5415C968.90303@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, Chander Kashyap <k.chander@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
 
-On Tue, Sep 23, 2014 at 12:39:04PM +0200, Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 12:28:03 Antoine Tenart wrote:
-> > +       if (dev->of_node) {
-> > +               ret =3D ci_hdrc_usb2_dt_probe(dev, ci_pdata);
-> > +               if (ret)
-> > +                       goto clk_err;
-> > +       } else {
-> > +               ret =3D dma_set_mask_and_coherent(&pdev->dev, DMA_B=
-IT_MASK(32));
-> > +               if (ret)
-> > +                       goto clk_err;
-> > +       }
-> >=20
->=20
-> Why do you care about the non-DT case here? I think it would be nicer=
- to
-> open-code the ci_hdrc_usb2_dt_probe() function in here and remove
-> the dma_set_mask_and_coherent(), which should not even be necessary f=
-or
-> the case where you have a hardwired platform device.
->=20
+Hi,
 
-I thought we agreed to call dma_set_mask_and_coherent():
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/273335.=
-html
+On Sunday, September 14, 2014 06:59:20 PM Tomasz Figa wrote:
+> [dropping my old @samsung.com address]
+> 
+> On 11.09.2014 10:57, Lorenzo Pieralisi wrote:
+> > On Thu, Sep 11, 2014 at 09:28:06AM +0100, Daniel Lezcano wrote:
+> >> On 09/05/2014 05:34 PM, Lorenzo Pieralisi wrote:
+> >>> On Fri, Sep 05, 2014 at 10:21:20AM +0100, Will Deacon wrote:
+> >>>> On Thu, Sep 04, 2014 at 06:29:10PM +0100, Lorenzo Pieralisi wrote:
+> >>>>> On Thu, Sep 04, 2014 at 05:03:20PM +0100, Catalin Marinas wrote:
+> >>>>>> On Wed, Sep 03, 2014 at 06:37:40PM +0100, Lorenzo Pieralisi wrote:
+> >>>>>>> This patch should be ready to go too, is it ok if I split the series
+> >>>>>>> in arm64 arch specific patches (will ask Catalin to pull) and CPUidle ones
+> >>>>>>> (inclusive of DT bindings and !!this patch!!) and send two separate pull
+> >>>>>>> requests ?
+> >>>>>>
+> >>>>>> If Daniel/Rafael don't have any objection, I can take the whole series
+> >>>>>> through the arm64 tree (it seems that patches have been already acked by
+> >>>>>> Daniel).
+> >>>>>
+> >>>>> Thanks a lot Catalin. Since this one is a brand new CPUidle driver and it
+> >>>>> follows a different pattern from arm legacy drivers I would like to get
+> >>>>> Daniel's ack on this patch too before pushing it. For the records I have
+> >>>>> just added two pr_err to signal driver probing error, ultraminor changes
+> >>>>> that do not justify a repost.
+> >>>>>
+> >>>>> If Samsung guys do not manifest themselves I would drop patch 8 from
+> >>>>> the series till it gets tested and its patch dependency queued too.
+> >>>>
+> >>>> The last patch also has a dependency, as you mentioned to Daniel. I think
+> >>>> we can certainly merge the arm64 parts, and if Daniel doesn't object, then
+> >>>> we can take the driver stuff too but leaving the exynos bits out (i.e. drop
+> >>>> the last patch).
+> >>>>
+> >>>> Anyway, if you could repost with the acks you've collected and rearrange it
+> >>>> so the arm64 patches are first in the series, that would be great.
+> >>>
+> >>> I can repost it with the acks and rearrange the patches, but for the
+> >>> pull request I have to know what code can be merged, since there are
+> >>> some arm64 patches (PSCI and CPUidle arm64 back-end) that are strictly
+> >>> tied to the arm64 CPUidle driver, so I *have* to know if the arm64
+> >>> CPUidle driver (this patch) can get merged and that requires an ack.
+> >>>
+> >>> If I do not hear from Samsung guys I will drop patch 8.
+> >>
+> >> Well I would prefer to have this patch merged (Cc'ing Tomasz).
+> > 
+> > Ok, but:
+> > 
+> > a) I only compile tested it
+> > b) There is a dts patch dependency for patch 8 to apply cleanly and it
+> >    hasn't been acked (I can't really do it since I can't test it)
+> > 
+> >    http://lists.infradead.org/pipermail/linux-arm-kernel/2014-July/274179.html
+> > 
+> > So, what should we do ? Tomasz ?
+> 
+> Sorry for late reply. I don't work for Samsung anymore so I don't focus
+> that much on areas other than I still maintain.
+> 
+> As for b) I believe all my patches have been already merged and now
+> we're just waiting for Kukjin to apply Bart's patch (although it's been
+> sitting on the ML since July, so probably needs rebasing).
+> 
+> About the patch 8 alone, somebody would have to test it. Maybe Bart or
+> Krzysztof could find some time to look at this? Other than that, I'm not
+> quite sure about entry latency you specified. It would look like
+> entering the state takes longer time than leaving, which I believe is
+> not the case. However I can't find any place in the code which would use
+> entry latency, so it might not be that important for now.
 
-I do not have a strong opinion on this as I only use the dt case for my
-usage.
+I tested this patch series on both Exynos4210 (Origen board) and Exynos5250
+(Arndale board).  On Exynos4210 AFTR cpuidle mode is still working fine
+with the patch series applied.  On Exynos5250 AFTR is not working but it is
+an upstream problem (same happens with v3.17-rc4).
 
+Lorenzo, you can add
 
-Antoine
+Tested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+to the Exynos patch (patch #8).
+
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
