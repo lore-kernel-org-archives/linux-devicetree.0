@@ -1,148 +1,152 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v7 05/10] rtc: at91sam9: make use of syscon/regmap to access GPBR registers
-Date: Tue, 23 Sep 2014 11:38:45 +0200
-Message-ID: <1411465130-29011-6-git-send-email-boris.brezillon@free-electrons.com>
-References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Johan Hovold <jhovold@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 23 Sep 2014 11:39:17 +0200
+Message-ID: <20140923093916.GR30514@ulmo>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+ <5419760A.7020908@ti.com>
+ <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
+ <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
+ <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo>
+ <54213543.7000306@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1849815195=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <54213543.7000306@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The GPBR registers are not part of the RTT block and thus should not be
-defined in the reg property of the rtt node.
 
-Use syscon to provide a proper DT representation and reference the GPBR
-syscon device in a new "atmel,rtt-rtc-time-reg" property which store both
-the syscon device phandle and the register offset within the GPBR block.
+--===============1849815195==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3XZQkxCYp0f/VEFS"
+Content-Disposition: inline
 
-When using non DT boards, we won't be able to retrieve the syscon regmap,
-hence we need to create our own regmap using the memory region defined
-in the 2nd memory resource assigned to the RTT platform device.
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
----
- drivers/rtc/Kconfig        |  1 +
- drivers/rtc/rtc-at91sam9.c | 64 +++++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 56 insertions(+), 9 deletions(-)
+--3XZQkxCYp0f/VEFS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index a168e96..7d76da8 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1081,6 +1081,7 @@ config RTC_DRV_AT91RM9200
- config RTC_DRV_AT91SAM9
- 	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
- 	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
-+	select MFD_SYSCON
- 	help
- 	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
- 	  (Real Time Timer). These timers are powered by the backup power
-diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-index d72c34d..be9c28b 100644
---- a/drivers/rtc/rtc-at91sam9.c
-+++ b/drivers/rtc/rtc-at91sam9.c
-@@ -21,6 +21,8 @@
- #include <linux/slab.h>
- #include <linux/platform_data/atmel.h>
- #include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- 
- /*
-  * This driver uses two configurable hardware resources that live in the
-@@ -72,7 +74,8 @@ struct sam9_rtc {
- 	void __iomem		*rtt;
- 	struct rtc_device	*rtcdev;
- 	u32			imr;
--	void __iomem		*gpbr;
-+	struct regmap		*gpbr;
-+	unsigned int		gpbr_offset;
- 	int 			irq;
- };
- 
-@@ -81,10 +84,19 @@ struct sam9_rtc {
- #define rtt_writel(rtc, field, val) \
- 	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
- 
--#define gpbr_readl(rtc) \
--	readl((rtc)->gpbr)
--#define gpbr_writel(rtc, val) \
--	writel((val), (rtc)->gpbr)
-+static inline unsigned int gpbr_readl(struct sam9_rtc *rtc)
-+{
-+	unsigned int val;
-+
-+	regmap_read(rtc->gpbr, rtc->gpbr_offset, &val);
-+
-+	return val;
-+}
-+
-+static inline void gpbr_writel(struct sam9_rtc *rtc, unsigned int val)
-+{
-+	regmap_write(rtc->gpbr, rtc->gpbr_offset, val);
-+}
- 
- /*
-  * Read current time and date in RTC
-@@ -301,6 +313,12 @@ static const struct rtc_class_ops at91_rtc_ops = {
- 	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
- };
- 
-+static struct regmap_config gpbr_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
- /*
-  * Initialize and install RTC driver
-  */
-@@ -334,10 +352,38 @@ static int at91_rtc_probe(struct platform_device *pdev)
- 	if (IS_ERR(rtc->rtt))
- 		return PTR_ERR(rtc->rtt);
- 
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	rtc->gpbr = devm_ioremap_resource(&pdev->dev, r);
--	if (IS_ERR(rtc->gpbr))
--		return PTR_ERR(rtc->rtt);
-+	if (!pdev->dev.of_node) {
-+		/*
-+		 * TODO: Remove this code chunk when removing non DT board
-+		 * support. Remember to remove the gpbr_regmap_config
-+		 * variable too.
-+		 */
-+		void __iomem *gpbr;
-+
-+		r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		gpbr = devm_ioremap_resource(&pdev->dev, r);
-+		if (IS_ERR(gpbr))
-+			return PTR_ERR(gpbr);
-+
-+		rtc->gpbr = regmap_init_mmio(NULL, gpbr,
-+					     &gpbr_regmap_config);
-+	} else {
-+		struct of_phandle_args args;
-+
-+		ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-+						"atmel,rtt-rtc-time-reg", 1, 0,
-+						&args);
-+		if (ret)
-+			return ret;
-+
-+		rtc->gpbr = syscon_node_to_regmap(args.np);
-+		rtc->gpbr_offset = args.args[0];
-+	}
-+
-+	if (IS_ERR(rtc->gpbr)) {
-+		dev_err(&pdev->dev, "failed to retrieve gpbr regmap, aborting.\n");
-+		return -ENOMEM;
-+	}
- 
- 	mr = rtt_readl(rtc, MR);
- 
--- 
-1.9.1
+On Tue, Sep 23, 2014 at 11:54:27AM +0300, Tomi Valkeinen wrote:
+> On 23/09/14 09:04, Thierry Reding wrote:
+>=20
+> > I certainly agree that it's useful to have standard ways to describe at
+> > least various aspects. For example I think it would be useful to add
+> > standard properties for a bridge's connections, such as "bridge" or
+> > "panel" to allow bridge chaining and attaching them to panels.
+>=20
+> I don't see a need for such properties. Do you have examples where they
+> would be needed?
+>=20
+> The driver for the respective device does know if it's a bridge or a
+> panel, so that information is there as soon as the driver has loaded.
+
+These are used for chaining not identifying the device. For example:
+
+	bridge0: ... {
+		...
+		bridge =3D <&bridge1>;
+		...
+	};
+
+	bridge1: ... {
+		...
+		panel =3D <&panel>;
+		...
+	};
+
+	panel: ... {
+		...
+	};
+
+> > But I think that should be the end of it. Mandating anything other than
+> > that will just complicate things and limit what people can do in the
+> > binding.
+> >=20
+> > One of the disadvantages of the video graph bindings is that they are
+> > overly vague in that they don't carry information about what type a
+> > device is. Bindings then have to require additional meta-data, at which
+> > point it's become far easier to describe things with a custom property
+> > that already provides context.
+>=20
+> I don't see why the graphs and such metadata are connected in any way.
+> They are separate issues. If we need such metadata, it needs to be added
+> in any case. That is not related to the graphs.
+
+My point is that if you use plain phandles you usually have the
+meta-data already. Referring to the above example, bridge0 knows that it
+should look for a bridge with phandle &bridge1, whereas bridge1 knows
+that the device it is connected to is a panel.
+
+> >> Yes, there's always one active input and one output for this bridge.
+> >> What the video graphs would bring is to have the possibility to have
+> >> multiple inputs and outputs, of which a single ones could be active at=
+ a
+> >> time. The different inputs and outputs could even have different
+> >> settings required (say, first output requires this bit set, but when
+> >> using second output that bit must be cleared).
+> >=20
+> > As discussed elsewhere this should be handled at a different level then.
+> > DT should describe the hardware and this particular bridge device simply
+> > doesn't have a means to connect more than a single input or more than a
+> > single output.
+>=20
+> Well, I can't say about this particular bridge, but afaik you can
+> connect a parallel RGB signal to multiple panels just like that, without
+> any muxing.
+
+Right, but in that case you're not reconfiguring the signal in any way
+for each of the panels. You send one single signal to all of them. For
+all intents and purposes there is only one panel. Well, I guess you
+could have separate backlights for the panels. In that case though it
+seems better to represent it at least as a virtual mux or bridge, or
+perhaps a "mux panel".
+
+Thierry
+
+--3XZQkxCYp0f/VEFS
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJUIT/EAAoJEN0jrNd/PrOhSjgP/2gtt/eZzZkAT5YwkL10R06M
+9i9znOh/kZ4/B5g0uQ5HY3lKGENc9puanEbs0ancezT802f6/Ntz/4+aVHJ3NP1m
+lFMLwVe2B10eeFlEC5EP1gEtsMuBGxfzb0eYULs4WCOtYPkHqmUGbwd+JDw7RYvi
+G2c47hOebx9+lX9E3rZkr0pUlJuk6C5UdJvADYFNV3k5YFq6ARiek/Wfb7V5BYBg
+XUpjwas1wF76jVm8UYrS+kpah4K6eF13bNxLKh+4AcyNhc12JxlTkdHiuKtvRIZz
+xWZS6DnXY6LduSwupgEGvVBZxY4OzrKZ10RGlHtSTLjIFDuDH+VXCHLs+IzRlDnK
+BSbyEJCnI57MNavl7QlRADVs9RF6RMAD8br0BlZoEQKWSYutcoCftxgVBnRk/eFe
+f2GQOkMbYWs45KbR0uUv4P8m1MXu2jr0BfAYgfajk4/QPXKU72CkAuCmASmMUrG1
+Zf1XhC3D7g01EyJLywTdQVw9zwewlfaNDUZPLNqnO43ZoZQbYbzD7YBU1HmoLx46
+1zw34ib7AG2FqF5rsivksmPNWl8gV2ahQSsvvXuUNwtqTeGKFmuQ3mBpyh9cDaN+
+uqxPtX7KZVVlLkPsgQ9iUII/WM5ZUadzz1V80lUmFT8AX0NeYTtmMCLDGDd1DueW
+oPXVtEbDsZnERoOfdPbb
+=Z7o9
+-----END PGP SIGNATURE-----
+
+--3XZQkxCYp0f/VEFS--
+
+--===============1849815195==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1849815195==--
