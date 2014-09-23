@@ -1,98 +1,46 @@
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: Re: [V8 1/2] irqchip: gic: Add support for multiple MSI for ARM64
-Date: Tue, 23 Sep 2014 10:04:37 -0700
-Message-ID: <5421A825.70201@amd.com>
-References: <1411230698-8081-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1411230698-8081-2-git-send-email-suravee.suthikulpanit@amd.com>
- <alpine.DEB.2.10.1409222349560.4604@nanos>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzNdIHNwaTogY2xwczcxMXg6IGR0czogQWRkIGJpbmRp?=
+ =?UTF-8?B?bmdzIGRvY3VtZW50YXRpb24gZm9yIHRoZSBDTFBTNzExWCBTUEkgZHJpdmVy?=
+Date: Tue, 23 Sep 2014 20:49:34 +0400
+Message-ID: <1411490974.406069578@f51.i.mail.ru>
+References: <1411196736-5019-1-git-send-email-shc_work@mail.ru>
+ <20140922180852.GA23666@leverpostej>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.10.1409222349560.4604@nanos>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: marc.zyngier@arm.com, Mark Rutland <mark.rutland@arm.com>, jason@lakedaemon.net, pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, liviu.dudau@arm.com, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140922180852.GA23666@leverpostej>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: =?UTF-8?B?bGludXgtc3BpQHZnZXIua2VybmVsLm9yZw==?= <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?TWFyayBCcm93bg==?= <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thomas,
-
-Sorry again for the mistake on my part. Let me try to address some other 
-concerns you have below.
-
-
-On 09/22/2014 04:08 PM, Thomas Gleixner wrote:
-> On Sat, 20 Sep 2014, suravee.suthikulpanit@amd.com wrote:
->
->> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->>
->> This patch implelments the ARM64 version of arch_setup_msi_irqs(),
->> which does not return 1 for when PCI_CAP_ID_MSI and nvec > 1.
->
-> I can see that myself. What your changelog is missing is the reason
-> WHY you think that copying that code from drivers/pci/msi.c and
-> removing the "PCI_CAP_ID_MSI and nvec > 1" has any value.
-
-[Suravee] This is mainly be cause the weak version of 
-arch_setup_msi_irqs() in the drivers/pci/msi.c doesn't support 
-multi-MSI. Sorry for not being clear in the commit message.
-
->
-> And that new function "arm64_setup_msi_irqs" is declared in which
-> header file exactly?
-
-[Suravee] This was supposed to be arch_setup_msi_irqs(). My bad. I'm 
-fixing this in the next version.
-
-......
-
->> + *
->> + * Note:
->> + * Current implementation assumes that all interrupt controller used in
->> + * ARM64 architecture _MUST_ supports multi-MSI.
->
-> Great assumption....
->
-
-[Suravee] So, Marc and I have discussed in the past that at this point, 
-we are not seeing the case that there will be interrupt or 
-MSI-controller that will not support multi-MSI.  If you think this 
-should not be the case, would you please share your thought.
-
-......
-
->
-> At least you are consistent on the useless side of affairs:
->
->> +{
->> +	struct msi_desc *entry;
->> +	int ret;
->> +
->> +	list_for_each_entry(entry, &dev->msi_list, list) {
->> +		ret = arch_setup_msi_irq(dev, entry);
->
-> Anyone who has the slightest idea how multi-MSI works will know that
-> this CANNOT work at all, but that's none of my business.
-
-[Suravee] I noticed that in the x86 version, there is a callback that 
-each MSI controller need to register for handling the multi-MSI stuff.
-
-In gicv2m_setup_msi_irq(), there is logic which handles the setup for 
-multi-MSI and MSIx separately. In case of multi-MSI, the vectors are 
-allocated on the first call to arch_setup_msi_irq(). Here, Marc and I 
-are trying to simplify the arch-specific code so that each GIC 
-controller (V2m and V3) would not need to implement and register the 
-callbacks separately for handling multi-MSI.
-
-The thing that is broken here is the error handling where the 
-arch_setup_msi_irqs() is supposed to return the number of available MSI 
-vectors. It would fail to do so because the arch_setup_msi_irq() would 
-not return positive value. We should be able to fix this by 
-re-implementing the arch_setup_msi_irq() and arch_setup_msi_irqs() to 
-allow returning of positive values.
-
-Please let me know what you think. I am open for suggestions :)
-
-Thanks,
-
-Suravee
+K0NDOiBBcm5kIEJlcmdtYW5uIAoKTW9uLCAyMiBTZXAgMjAxNCAxOTowODo1MiArMDEwMCDQvtGC
+IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+Ogo+IE9uIFNhdCwgU2VwIDIwLCAy
+MDE0IGF0IDA4OjA1OjM2QU0gKzAxMDAsIEFsZXhhbmRlciBTaGl5YW4gd3JvdGU6Cj4gPiBUaGlz
+IHBhdGNoIGFkZHMgdGhlIGRldmljZXRyZWUgZG9jdW1lbnRhdGlvbiBmb3IgdGhlCj4gPiBDaXJy
+dXMgTG9naWMgQ0xQUzcxMVggU1BJIGRyaXZlci4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogQWxl
+eGFuZGVyIFNoaXlhbiA8c2hjX3dvcmtAbWFpbC5ydT4KPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3NwaS9zcGktY2xwczcxMXgudHh0ICAgICAgICAgfCAyMCArKysrKysrKysr
+KysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4gPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zcGkvc3Bp
+LWNscHM3MTF4LnR4dAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3NwaS9zcGktY2xwczcxMXgudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3NwaS9zcGktY2xwczcxMXgudHh0Cj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NAo+ID4gaW5kZXggMDAwMDAwMC4uNDM3MTJjMAo+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NwaS9zcGktY2xwczcxMXgudHh0Cj4g
+PiBAQCAtMCwwICsxLDIwIEBACj4gPiArKiBDaXJydXMgTG9naWMgQVJNIENMUFM3MTFYIFNlcmlh
+bCBQZXJpcGhlcmFsIEludGVyZmFjZSAoU1BJKQo+ID4gKwo+ID4gK1JlcXVpcmVkIHByb3BlcnRp
+ZXM6Cj4gPiArLSBjb21wYXRpYmxlOiBTaGFsbCBjb250YWluICJjaXJydXMsY2xwczcxMXgtc3Bp
+Ii4KPiAKPiBJcyB0aGVyZSBhIHNwZWNpZmljICJjbHBzMTF4IiBkZXZpY2UsIG9yIGlzIHRoYXQg
+J3gnIGEgd2lsZGNhcmQ/Cj4gCj4gUGxlYXNlIGRvbid0IHVzZSB3aWxkY2FyZHMgaW4gYmluZGlu
+Z3MuIENob29zZSBhIHBhcnRpY3VsYXIgZGV2aWNlIGFzCj4gdGhlIGZhbGxiYWNrIHN0cmluZyB0
+byB1c2UuCgpXZSBoYXZlIGFncmVlZCB0byB1c2Ugc3VjaCBjb21wYXRpYmxlIHN0cmluZyBmb3Jt
+YXQgZm9yIHRoaXMgcGxhdGZvcm0uCmh0dHA6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvbGludXgt
+cHdtL21zZzAwOTU4Lmh0bWwKQWxsIENMUFM3MTFYLWRyaXZlcnMgdXNlIHRoaXMgZm9ybWF0LgoK
+LS0tCgo=
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
