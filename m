@@ -1,108 +1,77 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 09:24:12 +0200
-Message-ID: <5421201C.6000509@samsung.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
- <5419760A.7020908@ti.com>
- <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
- <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
- <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v5 05/11] drm: add Atmel HLCDC Display Controller
+ support
+Date: Tue, 23 Sep 2014 09:24:36 +0200
+Message-ID: <20140923092436.12b1f2c4@bbrezillon>
+References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com>
+	<20140922211811.11279ff0@bbrezillon>
+	<20140923063232.GG30514@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20140923060452.GD30514@ulmo>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20140923063232.GG30514@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry, Tomi,
+Hi Thierry,
 
-On 09/23/2014 08:04 AM, Thierry Reding wrote:
-> On Mon, Sep 22, 2014 at 05:23:25PM +0300, Tomi Valkeinen wrote:
->> On 22/09/14 11:06, Thierry Reding wrote:
->>
->>>>> Why do we need a complex graph when it can be handled using a simple phandle?
->>>>
->>>> Maybe in your case you can handle it with simple phandle. Can you
->>>> guarantee that it's enough for everyone, on all platforms?
->>>
->>> Nobody can guarantee that. An interesting effect that DT ABI stability
->>> has had is that people now try to come up with overly generic concepts
->>> to describe devices in an attempt to make them more future-proof. I
->>> don't think we're doing ourselves a favour with that approach.
->>
->> I kind of agree. However, there are boards that need a more complex
->> approach than just a simple phandle. They are nothing new.
->>
->> So while it may be true that this specific encoder has never been used
->> in such a complex way, and there's a chance that it never will, my
->> comments are not really about this particular encoder.
->>
->> What I want is a standard way to describe the video components. If we
->> have a standard complex one (video graphs) and a standard simple one
->> (simple phandles), it's ok for me.
-> 
-> I certainly agree that it's useful to have standard ways to describe at
-> least various aspects. For example I think it would be useful to add
-> standard properties for a bridge's connections, such as "bridge" or
-> "panel" to allow bridge chaining and attaching them to panels.
-> 
-> But I think that should be the end of it. Mandating anything other than
-> that will just complicate things and limit what people can do in the
-> binding.
-> 
-> One of the disadvantages of the video graph bindings is that they are
-> overly vague in that they don't carry information about what type a
-> device is. Bindings then have to require additional meta-data, at which
-> point it's become far easier to describe things with a custom property
-> that already provides context.
+On Tue, 23 Sep 2014 08:32:33 +0200
+Thierry Reding <thierry.reding@gmail.com> wrote:
 
-I think it is opposite, graph bindings should describe only the link and
-certainly not what type of device is behind the endpoint. The fact we
-may need that information is a disadvantage of Linux frameworks and
-should be corrected in Linux, not by adding Linux specific properties to
-DT. For example display controller should not care where its output goes
-to: panel, encoder, bridge, whatever. It should care only if the
-parameters of the link are agreed with the receiver.
+> On Mon, Sep 22, 2014 at 09:18:11PM +0200, Boris BREZILLON wrote:
+> > On Mon,  8 Sep 2014 10:43:36 +0200 Boris BREZILLON <boris.brezillon@free-electrons.com> wrote:
+> [...]
+> > > diff --git a/drivers/gpu/drm/atmel-hlcdc/Kconfig b/drivers/gpu/drm/atmel-hlcdc/Kconfig
+> > > new file mode 100644
+> > > index 0000000..6d0d785
+> > > --- /dev/null
+> > > +++ b/drivers/gpu/drm/atmel-hlcdc/Kconfig
+> > > @@ -0,0 +1,13 @@
+> > > +config DRM_ATMEL_HLCDC
+> > > +	tristate "DRM Support for ATMEL HLCDC Display Controller"
+> > > +	depends on DRM && OF && MFD_ATMEL_HLCDC && COMMON_CLK
+> > 
+> > I forgot to remove MFD_ATMEL_HLCDC dependency which is now selected...
+> > 
+> > 
+> > > +	select DRM_GEM_CMA_HELPER
+> > > +	select DRM_KMS_HELPER
+> > > +	select DRM_KMS_FB_HELPER
+> > > +	select DRM_KMS_CMA_HELPER
+> > > +	select DRM_PANEL
+> > > +	select MFD_ATMEL_HLCDC
+> > 
+> > here.
+> 
+> Maybe this was discussed earlier, but can you remind me why this was
+> done? The changelog says it was to "simplify", but there's been some
+> recent discussion that select should never be used for symbols that
+> are user-visible because that can lead to issues.
+> 
+> What were the problems having this as "depends on"?
 
-On the other side I agree graph bindings are bloated and it should be
-possible to simplify them to single phandle if we do not need extra
-parameters.
+I had several people complaining about the complexity introduced by
+this dependency scheme: if one wants to select the HLCDC KMS driver, he
+has to select the HLCDC MFD driver first, which is kind of tricky.
 
-Regards
-Andrzej
+The MFD_ATMEL_HLCDC symbol is now hidden (see patch 1) which should
+solve part of the issue.
 
-> 
->>>> The point of the ports/endpoint graph is to also support more
->>>> complicated scenarios.
->>>
->>> But the scenario will always remain the same for this bridge. There will
->>> always be an input signal and a translation to some output signal along
->>> with some parameters to control how that translation happens. More
->>> complicated scenarios will likely need to be represented differently at
->>> a higher level than the bridge.
->>
->> Yes, there's always one active input and one output for this bridge.
->> What the video graphs would bring is to have the possibility to have
->> multiple inputs and outputs, of which a single ones could be active at a
->> time. The different inputs and outputs could even have different
->> settings required (say, first output requires this bit set, but when
->> using second output that bit must be cleared).
-> 
-> As discussed elsewhere this should be handled at a different level then.
-> DT should describe the hardware and this particular bridge device simply
-> doesn't have a means to connect more than a single input or more than a
-> single output.
-> 
-> Thierry
-> 
-> 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+Now that I have your attention :-), could you review this series [1] ?
+The HLCDC KMS depends on those changes (which you and Laurent
+suggested).
+
+Best Regards,
+
+Boris
+
+[1]https://lkml.org/lkml/2014/7/22/300
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
