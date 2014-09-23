@@ -1,59 +1,37 @@
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 7/9] net: pxa168_eth: allow Berlin SoCs to use the
- pxa168_eth driver
-Date: Tue, 23 Sep 2014 15:50:07 +0200
-Message-ID: <20140923135007.GB18924@kwain>
-References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com>
- <1411474536-22626-8-git-send-email-antoine.tenart@free-electrons.com>
- <4458671.9hKSvmlZNz@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] DT: mfd: pm8xxx: Add new compatible string
+Date: Tue, 23 Sep 2014 16:52:40 +0300
+Message-ID: <1411480360-18091-1-git-send-email-svarbanov@mm-sol.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4458671.9hKSvmlZNz@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
+The rtc driver now supports PM8941 PMIC device, reflect this
+in the binding document.
 
-On Tue, Sep 23, 2014 at 02:40:01PM +0200, Arnd Bergmann wrote:
-> On Tuesday 23 September 2014 14:15:34 Antoine Tenart wrote:
-> > diff --git a/drivers/net/ethernet/marvell/Kconfig b/drivers/net/eth=
-ernet/marvell/Kconfig
-> > index 1b4fc7c639e6..48b9466d1781 100644
-> > --- a/drivers/net/ethernet/marvell/Kconfig
-> > +++ b/drivers/net/ethernet/marvell/Kconfig
-> > @@ -64,7 +64,7 @@ config MVPP2
-> > =20
-> >  config PXA168_ETH
-> >         tristate "Marvell pxa168 ethernet support"
-> > -       depends on CPU_PXA168
-> > +       depends on CPU_PXA168 || ARCH_BERLIN
-> >         select PHYLIB
-> >         ---help---
-> >           This driver supports the pxa168 Ethernet ports.
-> >=20
->=20
-> Myabe you can also add '|| COMPILE_TEST' here, to allow building it
+Signed-off-by: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/mfd/qcom,pm8xxx.txt        |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-We can add this.
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+index 03518dc..f24f334 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom,pm8xxx.txt
+@@ -61,6 +61,7 @@ The below bindings specify the set of valid subnodes.
+ 	Definition: must be one of:
+ 		    "qcom,pm8058-rtc"
+ 		    "qcom,pm8921-rtc"
++		    "qcom,pm8941-rtc"
+ 
+ - reg:
+ 	Usage: required
+-- 
+1.7.0.4
 
-> on other architectures. Check if you need 'depends on OF' though.
-
-I don't think that's needed, the driver still supports non-dt cases.
-I'll check.
-
-Antoine
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
