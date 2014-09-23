@@ -1,126 +1,90 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 14:23:04 +0300
-Message-ID: <26633587.NifLIetGL4@avalon>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
- <1976136.tncNOd9b1d@avalon> <54215706.802@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <54215706.802@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, daniel.vetter@ffwll.ch, joshi@samsung.com, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, ajaynumb@gmail.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v8 00/10] rtc: at91sam9: add DT support
+Date: Tue, 23 Sep 2014 13:23:54 +0200
+Message-ID: <1411471444-2764-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 September 2014 13:18:30 Andrzej Hajda wrote:
-> On 09/23/2014 01:10 PM, Laurent Pinchart wrote:
-> > On Tuesday 23 September 2014 12:02:45 Andrzej Hajda wrote:
-> >> On 09/23/2014 11:30 AM, Tomi Valkeinen wrote:
-> >>> On 23/09/14 09:21, Thierry Reding wrote:
-> >>>>> Well, I can write almost any kind of bindings, and then evidently my
-> >>>>> device would work. For me, on my board.
-> >>>> 
-> >>>> Well, that's the whole problem with DT. For many devices we only have a
-> >>>> single setup to test against. And even when we have several they often
-> >>>> are derived from each other. But the alternative would be to defer
-> >>>> (possibly indefinitely) merging support for a device until a second,
-> >>>> wildly different setup shows up. That's completely unreasonable and we
-> >>>> need to start somewhere.
-> >>> 
-> >>> Yes, but in this case we know of existing boards that have complex
-> >>> setups. It's not theoretical.
-> >>> 
-> >>> I'm not saying we should stop everything until we have a 100% solution
-> >>> for the rare complex cases. But we should keep them in mind and, when
-> >>> possible, solve problems in a way that will work for the complex cases
-> >>> also.
-> >>> 
-> >>>>> I guess non-video devices haven't had need for those. I have had lots
-> >>>>> of boards with video setup that cannot be represented with simple
-> >>>>> phandles. I'm not sure if I have just been unlucky or what, but my
-> >>>>> understand is that other people have encountered such boards also.
-> >>>>> Usually the problems encountered there have been circumvented with
-> >>>>> some hacky video driver for that specific board, or maybe a static
-> >>>>> configuration handled by the boot loader.
-> >>>> 
-> >>>> I have yet to encounter such a setup. Can you point me at a DTS for one
-> >>>> such setup? I do remember a couple of hypothetical cases being
-> >>>> discussed at one time or another, but I haven't seen any actual DTS
-> >>>> content where this was needed.
-> >>> 
-> >>> No, I can't point to them as they are not in the mainline (at least the
-> >>> ones I've been working on), for obvious reasons.
-> >>> 
-> >>> With a quick glance, I have the following devices in my cabinet that
-> >>> have more complex setups: OMAP 4430 SDP, BeagleBoneBlack + LCD, AM43xx
-> >>> EVM. Many Nokia devices used to have such setups, usually so that the
-> >>> LCD and tv-out were connected to the same video source.
-> >>> 
-> >>>>> Do we have a standard way of representing the video pipeline with
-> >>>>> simple phandles? Or does everyone just do their own version? If
-> >>>>> there's no standard way, it sounds it'll be a mess to support in the
-> >>>>> future.
-> >>>> 
-> >>>> It doesn't matter all that much whether the representation is standard.
-> >>> 
-> >>> Again, I disagree.
-> >>> 
-> >>>> phandles should simply point to the next element in the pipeline and
-> >>>> the OS abstractions should be good enough to handle the details about
-> >>>> how to chain the elements.
-> >>> 
-> >>> I, on the other hand, would rather see the links the other way around.
-> >>> Panel having a link to the video source, etc.
-> >>> 
-> >>> The video graphs have two-way links, which of course is the safest
-> >>> options, but also more verbose and redundant.
-> >>> 
-> >>> When this was discussed earlier, it was unclear which way the links
-> >>> should be. It's true that only links to one direction are strictly
-> >>> needed, but the question raised was that if in the drivers we end up
-> >>> always going the links the other way, the performance penalty may be
-> >>> somewhat big. (If I recall right).
-> >> 
-> >> I do not see why performance may drop significantly?
-> >> If the link is one-way it should probably work as below:
-> >> - the destination registers itself in some framework,
-> >> - the source looks for the destination in this framework using phandle,
-> >> - the source starts to communicate with the destination - since now full
-> >> two way link can be established dynamically.
-> >> 
-> >> Where do you see here big performance penalty?
-> > 
-> > The performance-related problems arise when you need to locate the remote
-> > device in the direction opposite to the phandle link direction. Traversing
-> > a link forward just involves a phandle lookup, but traversing it
-> > backwards isn't possible the same way.
-> 
-> But you do not need to traverse backwards. You just wait when the source
-> start to communicate with the destination, at this moment destination can
-> build back-link dynamically.
+Hello,
 
-Your driver might not need it today for your use cases, but can you be certain 
-that no driver on any OS would need to ?
+This patch series adds DT support to the atmel at91sam9 RTC driver.
 
-This becomes an issue even on Linux when considering video-related devices 
-that can be part of either a capture pipeline or a display pipeline. If the 
-link always goes in the data flow direction, then it will be easy to locate 
-the downstream device (bridge or panel) from the display controller driver, 
-but it would be much more difficult to locate the same device from a camera 
-driver as all of a sudden the device would become an upstream device.
+It also removes any machine specific inclusions to prepare the migration
+to multi platform kernel support, and retain the slow clock to prevent
+the CCF from disabling it at the end of boot.
+  
+Best Regards,
+
+Boris
+
+Changes since v7:
+ - fix typo
+ - fix sclk_rate test
+ - state that RTC_DRV_AT91SAM9_RTT and RTC_DRV_AT91SAM9_GPBR are no longer
+   used when booting a DT board
+
+Changes since v6:
+ - fix typos
+ - add missing commit messages
+ - rework the Kconfig description
+
+Changes since v5:
+ - replace 'rtc' by 'rtt' where appropriate
+ - fix commit messages
+
+Changes since v4:
+ - add a TODO comment to remember removing non DT board support code
+
+Changes since v3:
+ - add GPBR DT bindings doc
+ - fix a coding style issues
+ - add Alexandre's Acked-by
+ - change RTT DT bindings
+
+Changes since v2:
+ - make use of syscon/regmap to avoid directly requesting/mapping a GPBR
+   memory region in the RTT driver
+
+Changes since v1:
+ - remove non CCF specific case by adding the appropriate clk_lookup
+   entries in arch/arm/mach-at91/<soc-name>.c files
+
+
+Boris BREZILLON (10):
+  rtc: at91sam9: remove references to mach specific headers
+  rtc: at91sam9: use standard readl/writel functions instead of raw
+    versions
+  rtc: at91sam9: replace devm_ioremap by devm_ioremap_resource
+  rtc: at91sam9: add DT support
+  rtc: at91sam9: make use of syscon/regmap to access GPBR registers
+  rtc: at91sam9: rework the Kconfig description
+  ARM: at91: add clk_lookup entry for RTT devices
+  rtc: at91sam9: use clk API instead of relying on AT91_SLOW_CLOCK
+  rtc: at91sam9: add DT bindings documentation
+  mfd: syscon: add Atmel GPBR DT bindings documention
+
+ .../devicetree/bindings/mfd/atmel,gpbr.txt         |  15 +++
+ .../devicetree/bindings/rtc/atmel,at91sam9-rtc.txt |  23 ++++
+ arch/arm/mach-at91/at91sam9260.c                   |   2 +
+ arch/arm/mach-at91/at91sam9261.c                   |   2 +
+ arch/arm/mach-at91/at91sam9263.c                   |   4 +
+ arch/arm/mach-at91/at91sam9g45.c                   |   2 +
+ arch/arm/mach-at91/at91sam9rl.c                    |   2 +
+ arch/arm/mach-at91/clock.c                         |   2 +-
+ arch/arm/mach-at91/clock.h                         |   1 +
+ drivers/rtc/Kconfig                                |  24 ++--
+ drivers/rtc/rtc-at91sam9.c                         | 138 ++++++++++++++++-----
+ 11 files changed, 177 insertions(+), 38 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/atmel,gpbr.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91sam9-rtc.txt
 
 -- 
-Regards,
+1.9.1
 
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
