@@ -1,143 +1,108 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] drm/tegra: Set the dsi lp clk parent and rate
-Date: Tue, 23 Sep 2014 09:22:05 +0200
-Message-ID: <20140923072204.GJ30514@ulmo>
-References: <1411156429-19797-1-git-send-email-seanpaul@chromium.org>
- <20140922174652.GP3290@leverpostej>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
+ ps8622 DT properties
+Date: Tue, 23 Sep 2014 09:24:12 +0200
+Message-ID: <5421201C.6000509@samsung.com>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
+ <5419760A.7020908@ti.com>
+ <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com>
+ <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo>
+ <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1477018014=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140922174652.GP3290@leverpostej>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, mike.turquette@linaro.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20140923060452.GD30514@ulmo>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Thierry, Tomi,
 
---===============1477018014==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="07FIeBX8hApXX6Bi"
-Content-Disposition: inline
+On 09/23/2014 08:04 AM, Thierry Reding wrote:
+> On Mon, Sep 22, 2014 at 05:23:25PM +0300, Tomi Valkeinen wrote:
+>> On 22/09/14 11:06, Thierry Reding wrote:
+>>
+>>>>> Why do we need a complex graph when it can be handled using a simple phandle?
+>>>>
+>>>> Maybe in your case you can handle it with simple phandle. Can you
+>>>> guarantee that it's enough for everyone, on all platforms?
+>>>
+>>> Nobody can guarantee that. An interesting effect that DT ABI stability
+>>> has had is that people now try to come up with overly generic concepts
+>>> to describe devices in an attempt to make them more future-proof. I
+>>> don't think we're doing ourselves a favour with that approach.
+>>
+>> I kind of agree. However, there are boards that need a more complex
+>> approach than just a simple phandle. They are nothing new.
+>>
+>> So while it may be true that this specific encoder has never been used
+>> in such a complex way, and there's a chance that it never will, my
+>> comments are not really about this particular encoder.
+>>
+>> What I want is a standard way to describe the video components. If we
+>> have a standard complex one (video graphs) and a standard simple one
+>> (simple phandles), it's ok for me.
+> 
+> I certainly agree that it's useful to have standard ways to describe at
+> least various aspects. For example I think it would be useful to add
+> standard properties for a bridge's connections, such as "bridge" or
+> "panel" to allow bridge chaining and attaching them to panels.
+> 
+> But I think that should be the end of it. Mandating anything other than
+> that will just complicate things and limit what people can do in the
+> binding.
+> 
+> One of the disadvantages of the video graph bindings is that they are
+> overly vague in that they don't carry information about what type a
+> device is. Bindings then have to require additional meta-data, at which
+> point it's become far easier to describe things with a custom property
+> that already provides context.
 
+I think it is opposite, graph bindings should describe only the link and
+certainly not what type of device is behind the endpoint. The fact we
+may need that information is a disadvantage of Linux frameworks and
+should be corrected in Linux, not by adding Linux specific properties to
+DT. For example display controller should not care where its output goes
+to: panel, encoder, bridge, whatever. It should care only if the
+parameters of the link are agreed with the receiver.
 
---07FIeBX8hApXX6Bi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On the other side I agree graph bindings are bloated and it should be
+possible to simplify them to single phandle if we do not need extra
+parameters.
 
-On Mon, Sep 22, 2014 at 06:46:52PM +0100, Mark Rutland wrote:
-> On Fri, Sep 19, 2014 at 08:53:48PM +0100, Sean Paul wrote:
-> > Per NVidia, this clock rate should be around 70MHz in
-> > order to properly sample reads on data lane 0. In order
-> > to achieve this rate, we need to reparent the clock from
-> > clk_m which can only achieve 12MHz. Add parent_lp to the
-> > dts bindings and set the parent & rate on init.
-> >=20
-> > Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> > ---
-> >  .../devicetree/bindings/gpu/nvidia,tegra20-host1x.txt  | 10 ++++++++--
-> >  drivers/gpu/drm/tegra/dsi.c                            | 18 ++++++++++=
-++++++++
-> >  drivers/gpu/drm/tegra/dsi.h                            |  3 +++
-> >  3 files changed, 29 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1=
-x.txt b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> > index b48f4ef..fef2918 100644
-> > --- a/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> > +++ b/Documentation/devicetree/bindings/gpu/nvidia,tegra20-host1x.txt
-> > @@ -191,6 +191,10 @@ of the following host1x client modules:
-> >    - nvidia,hpd-gpio: specifies a GPIO used for hotplug detection
-> >    - nvidia,edid: supplies a binary EDID blob
-> >    - nvidia,panel: phandle of a display panel
-> > +  - clock-names: Can include the following entries:
-> > +    - lp_parent: The parent clock for lp
-> > +  - clocks: Must contain an entry for each optional entry in clock-nam=
-es.
-> > +    See ../clocks/clock-bindings.txt for details.
->=20
-> Did this driver previously acquire clocks?
->=20
-> What order or names did it expect if so?
+Regards
+Andrzej
 
-This is badly placed. There are clocks and clock-names properties in a
-"Required properties" section above this hunk which lists all the clocks
-that this module uses. Presumably this was added to the optional section
-because it isn't always needed.
-
-> >  - sor: serial output resource
-> > =20
-> > @@ -360,8 +364,10 @@ Example:
-> >  			compatible =3D "nvidia,tegra20-dsi";
-> >  			reg =3D <0x54300000 0x00040000>;
-> >  			clocks =3D <&tegra_car TEGRA20_CLK_DSI>,
-> > -				 <&tegra_car TEGRA20_CLK_PLL_D_OUT0>;
-> > -			clock-names =3D "dsi", "parent";
-> > +				 <&tegra_car TEGRA124_CLK_DSIALP>,
-> > +				 <&tegra_car TEGRA20_CLK_PLL_D_OUT0>,
-> > +				 <&tegra_car TEGRA124_CLK_PLL_P>;
-> > +			clock-names =3D "dsi", "lp", "parent", "lp_parent";
->=20
-> Please document _all_ the names you expect.
->=20
-> What exactly are these two new clocks?
-
-"lp" isn't actually new, it's just missing from the example.
-
-> Is this all the clocks that feed into the DSI block? Are any of these
-> not directly wired to the DSI block?
->=20
-> Why exactly do you need to reparent it to this particular clock, and why
-> do you need a reference here in order to do so, given it presumably
-> doesn't feed directly into the DSI block?
-
-It seems like the hardware default is to use a parent clock unsuitable
-for the DSI low-power mode, but as discussed elsewhere this should be
-fixed in the clock driver where we already have a way to statically set
-the parent clock at boot time.
-
-Thierry
-
---07FIeBX8hApXX6Bi
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUIR+cAAoJEN0jrNd/PrOhPkgQAJ10fdd97TiZtmNa5oiMTbWk
-f6RB+B//7oaU9RjGzDlCO7fVpuyH1wBWh2siKVeZUBJLplHftG7+ma3sJg8twL5q
-2T/dJNzk1/OlovCK/UCI25r0TJw/VmiZpJQTj7i9PUS6vOKmpCRqU3mA3Jxx0NWT
-IRX6dNziRFHwWr76mhNqXBXnR/uW+qCptgXFh/iWgFZZJD3dU6Xm2Z0DLjPO/soj
-snIudZSspZNjnMQY2yDnFTfZ0T2AQQTVSn6oHCdisN6D0EcgcIrErnBXzbWSZLtL
-hsSD4OUVCfGwlpwv95xcTZ+rgWIGz6tdyLfnRj4NfDeoe2eZluofz86fAO5L9AJh
-KdOriCs1AV5uPMt1UptcG4EC4s/SMIJ5kxvexZP0fcuz2fCND/DI9ZYdo3inpEQW
-InC3aEodGWcipR4yNwdhzEbqF5Rj6T1R3eX2zVAXs4dse9LIi+zKZdofDfp0aFk+
-xi2nMmB35cBPnRnux3NRPJGf1thahRcYbAhr5oP3AueXgIMuxt8VmGL+N+hZt1f0
-HtyWiWpVM/ktB0DCH+pfcPWyReCRK2fOj70Wt6yR7gFtuj632Ur2YKe4nUrhP/o1
-uf+8tQ7n4IjzF9hucjIKNej8zuLk0u4ordv7QytH571vCVHWDCs0PSNwnZ3ElPLe
-zGYJu8PfzTHnidEsez8a
-=+LYY
------END PGP SIGNATURE-----
-
---07FIeBX8hApXX6Bi--
-
---===============1477018014==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1477018014==--
+> 
+>>>> The point of the ports/endpoint graph is to also support more
+>>>> complicated scenarios.
+>>>
+>>> But the scenario will always remain the same for this bridge. There will
+>>> always be an input signal and a translation to some output signal along
+>>> with some parameters to control how that translation happens. More
+>>> complicated scenarios will likely need to be represented differently at
+>>> a higher level than the bridge.
+>>
+>> Yes, there's always one active input and one output for this bridge.
+>> What the video graphs would bring is to have the possibility to have
+>> multiple inputs and outputs, of which a single ones could be active at a
+>> time. The different inputs and outputs could even have different
+>> settings required (say, first output requires this bit set, but when
+>> using second output that bit must be cleared).
+> 
+> As discussed elsewhere this should be handled at a different level then.
+> DT should describe the hardware and this particular bridge device simply
+> doesn't have a means to connect more than a single input or more than a
+> single output.
+> 
+> Thierry
+> 
+> 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
