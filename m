@@ -1,7 +1,7 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v8 06/10] rtc: at91sam9: rework the Kconfig description
-Date: Tue, 23 Sep 2014 13:24:00 +0200
-Message-ID: <1411471444-2764-7-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v8 02/10] rtc: at91sam9: use standard readl/writel functions instead of raw versions
+Date: Tue, 23 Sep 2014 13:23:56 +0200
+Message-ID: <1411471444-2764-3-git-send-email-boris.brezillon@free-electrons.com>
 References: <1411471444-2764-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1411471444-2764-1-git-send-email-boris.brezillon@free-electrons.com>
@@ -10,68 +10,44 @@ To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <p
 Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove all references to AT91CAP9 SoC which has been removed.
-Rework help message to remove any specific references to AT91SAM9 SoCs.
-State that RTC_DRV_AT91SAM9_RTT and RTC_DRV_AT91SAM9_GPBR options are only
-used when booting non DT boards.
+Raw versions of writel and writel should not be directly used and should
+be replaced by their relaxed versions (readl/writel_relaxed), which take
+endianness conversion into account.
+
+In this driver we prefer the standard readl/writel function which add the
+appropriate memory barrier around the access (the performance penalty is
+negligible for this kind of application).
 
 Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 Acked-by: Johan Hovold <johan@kernel.org>
 ---
- drivers/rtc/Kconfig | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ drivers/rtc/rtc-at91sam9.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 7d76da8..9b56882 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1079,17 +1079,18 @@ config RTC_DRV_AT91RM9200
- 	  this is powered by the backup power supply.
+diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
+index 51f0038..74a9ca0 100644
+--- a/drivers/rtc/rtc-at91sam9.c
++++ b/drivers/rtc/rtc-at91sam9.c
+@@ -77,14 +77,14 @@ struct sam9_rtc {
+ };
  
- config RTC_DRV_AT91SAM9
--	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
-+	tristate "AT91SAM9 RTT as RTC"
- 	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
- 	select MFD_SYSCON
- 	help
--	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
--	  (Real Time Timer). These timers are powered by the backup power
--	  supply (such as a small coin cell battery), but do not need to
--	  be used as RTCs.
--
--	  (On AT91SAM9rl and AT91SAM9G45 chips you probably want to use the
--	  dedicated RTC module and leave the RTT available for other uses.)
-+	  Some AT91SAM9 SoCs provide an RTT (Real Time Timer) block which
-+	  can be used as an RTC thanks to the backup power supply (e.g. a
-+	  small coin cell battery) which keeps this block and the GPBR
-+	  (General Purpose Backup Registers) block powered when the device
-+	  is shutdown.
-+	  Some AT91SAM9 SoCs provide a real RTC block, on those ones you'd
-+	  probably want to use the real RTC block instead of the "RTT as an
-+	  RTC" driver.
+ #define rtt_readl(rtc, field) \
+-	__raw_readl((rtc)->rtt + AT91_RTT_ ## field)
++	readl((rtc)->rtt + AT91_RTT_ ## field)
+ #define rtt_writel(rtc, field, val) \
+-	__raw_writel((val), (rtc)->rtt + AT91_RTT_ ## field)
++	writel((val), (rtc)->rtt + AT91_RTT_ ## field)
  
- config RTC_DRV_AT91SAM9_RTT
- 	int
-@@ -1098,6 +1099,9 @@ config RTC_DRV_AT91SAM9_RTT
- 	prompt "RTT module Number" if ARCH_AT91SAM9263
- 	depends on RTC_DRV_AT91SAM9
- 	help
-+	  This option is only relevant for legacy board support and
-+	  won't be used when booting a DT board.
-+
- 	  More than one RTT module is available. You can choose which
- 	  one will be used as an RTC. The default of zero is normally
- 	  OK to use, though some systems use that for non-RTC purposes.
-@@ -1110,6 +1114,9 @@ config RTC_DRV_AT91SAM9_GPBR
- 	prompt "Backup Register Number"
- 	depends on RTC_DRV_AT91SAM9
- 	help
-+	  This option is only relevant for legacy board support and
-+	  won't be used when booting a DT board.
-+
- 	  The RTC driver needs to use one of the General Purpose Backup
- 	  Registers (GPBRs) as well as the RTT. You can choose which one
- 	  will be used. The default of zero is normally OK to use, but
+ #define gpbr_readl(rtc) \
+-	__raw_readl((rtc)->gpbr)
++	readl((rtc)->gpbr)
+ #define gpbr_writel(rtc, val) \
+-	__raw_writel((val), (rtc)->gpbr)
++	writel((val), (rtc)->gpbr)
+ 
+ /*
+  * Read current time and date in RTC
 -- 
 1.9.1
