@@ -1,144 +1,239 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v4 2/3] power: gpio-charger: add device tree support
-Date: Tue, 23 Sep 2014 22:42:15 +0200
-Message-ID: <1411504936-21026-3-git-send-email-heiko@sntech.de>
-References: <1411504936-21026-1-git-send-email-heiko@sntech.de>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1411504936-21026-1-git-send-email-heiko@sntech.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dianders@chromium.org, heiko@sntech.de, Heiko Stuebner <heiko.stuebner@bq.com>
+From: Jonathan Richardson <jonathar@broadcom.com>
+Subject: [PATCH v2 3/6] dt-bindings: Document Broadcom Cygnus SoC and clock
+ driver
+Date: Tue, 23 Sep 2014 14:17:34 -0700
+Message-ID: <1411507057-14771-4-git-send-email-jonathar@broadcom.com>
+References: <Jonathan Richardson <jonathar@broadcom.com>
+ <1411507057-14771-1-git-send-email-jonathar@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411507057-14771-1-git-send-email-jonathar@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christian Daudt <bcm@fixthebug.org>, Matt Porter <mporter@linaro.org>, Russell King <linux@arm.linux.org.uk>, Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, JD Zheng <jdzheng@broadcom.com>
+Cc: devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Jonathan Richardson <jonathar@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@bq.com>
-
-Add the ability to parse gpio-charger data from a devicetree node.
-
-Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Tested-by: Doug Anderson <dianders@chromium.org>
+Reviewed-by: Arun Parameswaran <aparames@broadcom.com>
+Tested-by: Jonathan Richardson <jonathar@broadcom.com>
+Reviewed-by: JD (Jiandong) Zheng <jdzheng@broadcom.com>
+Signed-off-by: Jonathan Richardson <jonathar@broadcom.com>
 ---
- drivers/power/gpio-charger.c | 72 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 70 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/cygnus.txt   |   12 ++
+ .../devicetree/bindings/clock/clk-cygnus.txt       |  121 ++++++++++++++++++++
+ .../devicetree/bindings/clock/clk-iproc.txt        |   48 ++++++++
+ 3 files changed, 181 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cygnus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/clk-cygnus.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/clk-iproc.txt
 
-diff --git a/drivers/power/gpio-charger.c b/drivers/power/gpio-charger.c
-index a0024b2..22f084a 100644
---- a/drivers/power/gpio-charger.c
-+++ b/drivers/power/gpio-charger.c
-@@ -22,6 +22,8 @@
- #include <linux/platform_device.h>
- #include <linux/power_supply.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- 
- #include <linux/power/gpio-charger.h>
- 
-@@ -69,6 +71,59 @@ static enum power_supply_property gpio_charger_properties[] = {
- 	POWER_SUPPLY_PROP_ONLINE,
- };
- 
-+static
-+struct gpio_charger_platform_data *gpio_charger_parse_dt(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct gpio_charger_platform_data *pdata;
-+	const char *chargetype;
-+	enum of_gpio_flags flags;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/arm/cygnus.txt b/Documentation/devicetree/bindings/arm/cygnus.txt
+new file mode 100644
+index 0000000..a210377
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cygnus.txt
+@@ -0,0 +1,12 @@
++Broadcom Cygnus device tree bindings
++------------------------------------
 +
-+	if (!np)
-+		return ERR_PTR(-ENOENT);
++All Cygnus boards shall have the following properties:
 +
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
++Required root node property:
++	- compatible = "brcm,cygnus";
 +
-+	pdata->name = np->name;
++Boards variants shall have the following additional properties:
 +
-+	pdata->gpio = of_get_gpio_flags(np, 0, &flags);
-+	if (pdata->gpio < 0) {
-+		if (pdata->gpio != -EPROBE_DEFER)
-+			dev_err(dev, "could not get charger gpio\n");
-+		return ERR_PTR(pdata->gpio);
-+	}
++Required root node property for the BCM911360_ENTPHN board:
++	- compatible = "brcm,bcm911360_entphn";
+diff --git a/Documentation/devicetree/bindings/clock/clk-cygnus.txt b/Documentation/devicetree/bindings/clock/clk-cygnus.txt
+new file mode 100644
+index 0000000..7e03837
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/clk-cygnus.txt
+@@ -0,0 +1,121 @@
++Broadcom Cygnus Clock Controller
 +
-+	pdata->gpio_active_low = !!(flags & OF_GPIO_ACTIVE_LOW);
++This binding uses the common clock binding:
++Documentation/devicetree/bindings/clock/clock-bindings.txt
 +
-+	pdata->type = POWER_SUPPLY_TYPE_UNKNOWN;
-+	ret = of_property_read_string(np, "charger-type", &chargetype);
-+	if (ret >= 0) {
-+		if (!strncmp("unknown", chargetype, 7))
-+			pdata->type = POWER_SUPPLY_TYPE_UNKNOWN;
-+		else if (!strncmp("battery", chargetype, 7))
-+			pdata->type = POWER_SUPPLY_TYPE_BATTERY;
-+		else if (!strncmp("ups", chargetype, 3))
-+			pdata->type = POWER_SUPPLY_TYPE_UPS;
-+		else if (!strncmp("mains", chargetype, 5))
-+			pdata->type = POWER_SUPPLY_TYPE_MAINS;
-+		else if (!strncmp("usb-sdp", chargetype, 7))
-+			pdata->type = POWER_SUPPLY_TYPE_USB;
-+		else if (!strncmp("usb-dcp", chargetype, 7))
-+			pdata->type = POWER_SUPPLY_TYPE_USB_DCP;
-+		else if (!strncmp("usb-cdp", chargetype, 7))
-+			pdata->type = POWER_SUPPLY_TYPE_USB_CDP;
-+		else if (!strncmp("usb-aca", chargetype, 7))
-+			pdata->type = POWER_SUPPLY_TYPE_USB_ACA;
-+		else
-+			dev_warn(dev, "unknown charger type %s\n", chargetype);
-+	}
++The Cygnus clock controller manages several PLL's and their channels, found only
++on the Cygnus chip. Clocks that are common to iProc can be found in the iProc
++clock controller. The controllers are split into a parent-child relationship
++where the parent is the PLL and the child controls the PLL's channels.
 +
-+	return pdata;
-+}
++All PLL's are derived from a 25MHz oscillator. The PLL's controlled are the
++GENPLL, LCPLL, the MIPI PLL. In addition, there are two clocks derived from
++GENPLL channel 0, and three that are derived directly from the oscillator.
 +
- static int gpio_charger_probe(struct platform_device *pdev)
- {
- 	const struct gpio_charger_platform_data *pdata = pdev->dev.platform_data;
-@@ -78,8 +133,13 @@ static int gpio_charger_probe(struct platform_device *pdev)
- 	int irq;
- 
- 	if (!pdata) {
--		dev_err(&pdev->dev, "No platform data\n");
--		return -EINVAL;
-+		pdata = gpio_charger_parse_dt(&pdev->dev);
-+		if (IS_ERR(pdata)) {
-+			ret = PTR_ERR(pdata);
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(&pdev->dev, "No platform data\n");
-+			return ret;
-+		}
- 	}
- 
- 	if (!gpio_is_valid(pdata->gpio)) {
-@@ -103,6 +163,7 @@ static int gpio_charger_probe(struct platform_device *pdev)
- 	charger->get_property = gpio_charger_get_property;
- 	charger->supplied_to = pdata->supplied_to;
- 	charger->num_supplicants = pdata->num_supplicants;
-+	charger->of_node = pdev->dev.of_node;
- 
- 	ret = gpio_request(pdata->gpio, dev_name(&pdev->dev));
- 	if (ret) {
-@@ -189,6 +250,12 @@ static int gpio_charger_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(gpio_charger_pm_ops,
- 		gpio_charger_suspend, gpio_charger_resume);
- 
-+static const struct of_device_id gpio_charger_match[] = {
-+	{ .compatible = "gpio-charger" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_charger_match);
++Required properties:
++- compatible: Must be one of the following:
++    "brcm,cygnus-lcpll-clk" - Controls LCPLL.
++    "brcm,cygnus-lcpll-ch" -  Controls LCPLL (parent) channels
++    "brcm,cygnus-genpll-clk" - Controls parent GENPLL
++    "brcm,cygnus-genpll-ch" - Controls GENPLL (parent) channels
++    "brcm,cygnus-mipipll-clk" - Controls MIPI PLL
++    "brcm,cygnus-mipipll-ch" - Controls parent MIPI PLL (parent) channels
++    "brcm,cygnus-osc-derived" - Controls oscillator (parent) derived channels
++        not controlled by any PLL.
++    "brcm,cygnus-pll-derived" - Controls clocks derived from GENPLL channel 0.
++	  These clocks have hard wired internal dividers and their clock rates
++	  scale according to the GENPLL channel.
 +
- static struct platform_driver gpio_charger_driver = {
- 	.probe = gpio_charger_probe,
- 	.remove = gpio_charger_remove,
-@@ -196,6 +263,7 @@ static struct platform_driver gpio_charger_driver = {
- 		.name = "gpio-charger",
- 		.owner = THIS_MODULE,
- 		.pm = &gpio_charger_pm_ops,
-+		.of_match_table = gpio_charger_match,
- 	},
- };
- 
++- reg: First register is the base address of the PLL. Register 2 and 3 are
++  required by some clocks. They are the top clock gating control used to
++  enable/disable clocks (ch 1), and the CRMU PLL AON CONTROL register which
++  powers on PLL/LDO's (ch 2).
++
++- clocks: The input parent clock phandle for the clock. This is either a PLL,
++  oscillator, or GENPLL channel 0.
++
++- channel: The PLL channel that the clock belongs to. This is used for
++  "brcm,cygnus-lcpll-ch", "brcm,cygnus-genpll-ch", "brcm,cygnus-mipipll-ch",
++  "brcm,cygnus-osc-derived" only.
++
++- div: Used by "brcm,cygnus-pll-derived" to define the hard coded internal
++  divider value. Used by "brcm,cygnus-osc-derived" to specify the programmable
++  divider.
++
++- #clock-cells: From common clock binding; shall be set to 0.
++
++Examples:
++
++		osc: oscillator {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <25000000>;
++		};
++
++		lcpll: lcpll@0301d02c {
++			#clock-cells = <0>;
++			compatible = "brcm,cygnus-lcpll-clk";
++			reg = <0x0301d02c 0x1c>;
++			clocks = <&osc>;
++		};
++
++		genpll: genpll@0301d000 {
++			#clock-cells = <0>;
++			compatible = "brcm,cygnus-genpll-clk";
++			reg = <0x0301d000 0x2c>,
++				  <0x180AA024 0x4>,
++				  <0x0301C020 0x4>;
++			clocks = <&osc>;
++		};
++
++		axi21_clk: genpll_ch0@0301d000 {
++			#clock-cells = <0>;
++			compatible = "brcm,cygnus-genpll-ch";
++			reg = <0x0301d000 0x2c>;
++			clocks = <&genpll>;
++			channel = <0>;
++		};
++
++		pcie_clk: lcpll_ch0@0301d02c {
++			compatible = "brcm,cygnus-lcpll-ch";
++			reg = <0x0301d02c 0x1c>;
++			#clock-cells = <0>;
++			clocks = <&lcpll>;
++			channel = <0>;
++		};
++
++		axi41_clk: axi41_clk {
++			reg = <0x0301d000 0x2c>;
++			#clock-cells = <0>;
++			compatible = "brcm,cygnus-pll-derived";
++			clocks = <&axi21_clk>;
++			div = <2>;
++		};
++
++		keypad_clk: keypad_clk@0301D048 {
++			compatible = "brcm,cygnus-osc-derived";
++			reg = <0x0301D048 0x4>,
++				  <0x180AA024 0x4>;
++			#clock-cells = <0>;
++			clocks = <&osc>;
++			channel = <0>;
++			div = <392>;
++		};
++
++		mipipll: mipipll@180a9800 {
++			#clock-cells = <0>;
++			compatible = "brcm,cygnus-mipipll-clk";
++			reg = <0x180a9800 0x2c>,
++				  top_clk_gating_ctrl: <0x180AA024 0x4>,
++				  crmu_pll_aon_ctrl: <0x0301C020 0x4>;
++			clocks = <&osc>;
++		};
++
++		lcd_clk: mipipll_ch1@180a9800 {
++			#clock-cells = <0>;
++			compatible = "brcm,cygnus-mipipll-ch";
++			reg = <0x180a9800 0x2c>,
++				  <0x180AA024 0x4>;
++			clocks = <&mipipll>;
++			channel = <1>;
++		};
+diff --git a/Documentation/devicetree/bindings/clock/clk-iproc.txt b/Documentation/devicetree/bindings/clock/clk-iproc.txt
+new file mode 100644
+index 0000000..b5d4f08
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/clk-iproc.txt
+@@ -0,0 +1,48 @@
++Broadcom iProc Clock Controller
++
++This binding uses the common clock binding:
++Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++The iProc clock controller manages clocks that are common to iProc chips.
++The controllers are split into a parent-child relationship where the parent is
++the PLL and the child controls the PLL's channels.
++
++The only PLL controlled is the ARM PLL which is derived from a 25MHz crystal.
++
++Required properties:
++- compatible: Must be one of the following:
++    "brcm,iproc-arm-a9pll" - Controls ARM PLL.
++    "brcm,iproc-arm-ch" -  Controls ARM PLL (parent) channels
++
++- reg: The base address of the PLL.
++
++- clocks: The input parent clock phandle for the clock. This is either a PLL,
++  or oscillator.
++
++- channel: The PLL channel that the clock belongs to. This is used for
++  "brcm,iproc-arm-ch" only.
++
++- #clock-cells: From common clock binding; shall be set to 0.
++
++Example:
++
++	osc: oscillator {
++		#clock-cells = <0>;
++		compatible = "fixed-clock";
++		clock-frequency = <25000000>;
++	};
++
++	a9pll: arm_clk@19000000 {
++		compatible = "brcm,iproc-arm-a9pll";
++		reg = <0x19000000 0x1000>;
++		#clock-cells = <0>;
++		clocks = <&osc>;
++	};
++
++	periph_clk: periph_clk@19000000 {
++		compatible = "brcm,iproc-arm-ch";
++		reg = <0x19000000 0x1000>;
++		#clock-cells = <0>;
++		clocks = <&a9pll>;
++		channel = <3>;
++	};
 -- 
-2.1.0
-
+1.7.9.5
