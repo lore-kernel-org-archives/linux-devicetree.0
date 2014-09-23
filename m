@@ -1,131 +1,94 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 18:33:56 +0300
-Message-ID: <542192E4.70007@ti.com>
-References: <CAEC9eQPn63upE6XEZZtJWGdOAhWWNvU9EhfOXJ=x0i467q+iMQ@mail.gmail.com> <5419B52D.4060107@ti.com> <20140922080629.GC1470@ulmo> <542030DD.3060906@ti.com> <20140923060452.GD30514@ulmo> <5421201C.6000509@samsung.com> <20140923083514.GM30514@ulmo> <54214008.4040105@ti.com> <20140923100139.GT30514@ulmo> <54216308.2050500@ti.com> <20140923143854.GD5982@ulmo>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Vmdnb98vIaeNujKO45Rdwubr57Umr90wh"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140923143854.GD5982@ulmo>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ajay kumar <ajaynumb@gmail.com>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v4 3/9] Documentation: bindings: net: add the Marvell
+ PXA168 Ethernet controller
+Date: Tue, 23 Sep 2014 17:45:52 +0200
+Message-ID: <542195B0.6080706@gmail.com>
+References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com> <20140923140113.GC18924@kwain> <20140923142922.GE18924@kwain> <4014272.rJbSfrLcuB@wuerfel>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4014272.rJbSfrLcuB@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
---Vmdnb98vIaeNujKO45Rdwubr57Umr90wh
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
-
-On 23/09/14 17:38, Thierry Reding wrote:
-> On Tue, Sep 23, 2014 at 03:09:44PM +0300, Tomi Valkeinen wrote:
->> On 23/09/14 13:01, Thierry Reding wrote:
->>> On Tue, Sep 23, 2014 at 12:40:24PM +0300, Tomi Valkeinen wrote:
-> [...]
->>>> What exactly is a bridge and what is an encoder? Those are DRM
->>>> constructs, aren't they?
->>>
->>> Yes. I think bridges are mostly a superset of encoders.
+On 09/23/2014 04:37 PM, Arnd Bergmann wrote:
+> On Tuesday 23 September 2014 16:29:22 Antoine Tenart wrote:
 >>
->> Superset in what way? If I have a SiI9022 RGB-to-HDMI encoder embedded=
-
->> into my SoC (i.e. a DRM encoder), or I have a board with a SiI9022
->> encoder on the board (i.e. a DRM bridge), what is different?
->=20
-> Superset in what they represent from a software point of view. As in:
-> an encoder /is a/ bridge. Though they aren't currently implemented that=
-
-> way.
-
-So they are equal, not superset? Or what does an encoder do that a
-bridge doesn't?
-
->>>> As I see it, a video pipeline consist of a video source (display
->>>> controller usually), a chain of encoders (all of which may not be
->>>> strictly "encoders", they could be level shifters, muxes, ESD protec=
-tion
->>>> devices or such), and either a display device like a panel or a
->>>> connector to outside world.
->>>
->>> Well, the panel itself is attached to a connector. The connector is
->>> really what userspace uses to control the output and indirectly the
->>> panel.
+>> So I had a look on other Ethernet bindings. Would you agree with
+>> something like the following?
 >>
->> Yep. That's also something that should be fixed. A connector SW entity=
+>>          eth0: ethernet@f7b90000 {
+>>                  ...
+>>                  #address-cells = <1>;
+>>                  #size-cells = <0>;
+>>                  phy-handle = <&ethphy0>;
+>>
+>>                  ethphy0: ethernet-phy@0 {
+>>                          reg = <0>;
+>>                  };
+>>          };
+>
+> Yes, that looks good.
 
->> is fine when connecting an external monitor, but a panel directly
->> connected to the SoC does not have a connector, and it's the panel tha=
-t
->> should be controlled from the userspace.
->=20
-> I disagree. A panel is usually also attached using some sort of
-> connector. Maybe not an HDMI, VGA or DP connector, but still some sort
-> of connector where often it can even be removed.
+nit: ethernet-phy@0 should not be part of the ethernet controller
+but either part of a separate mdio-ctrl node or a separate node itself.
 
-Yes, but a normal panel connector is really just an extension of wires.
-There is no difference if you wire the panel directly to the video
-source, or if there's a connector.
+AFAIKS, Berlin SoCs have internal PHYs, i.e. no MII/MDIO-pins exposed
+but only MLT-3 differential pairs. At least BG2CD also can connect its
+ethernet IP to a PHY capable of HDMI Ethernet Channel (HEC).
 
-I think usually connectors to the external world are not quite as
-simple, as there may be some protection components or such, but even if
-there's nothing extra, they are still a clear component visible to
-outside world. For HDMI you (sometimes) even need properties for the
-connector, like source for +5V, i2c bus, hotplug pin.
+So for BG2CD this has to look something like:
 
-But even if there are no extra properties like that, I still think it's
-good to have a connector entity for a connector to outside world.
-Whereas I don't see any need for such when the connector is internal.
-That said, I don't see any reason to prevent that either.
+eth0: ethernet@f7b90000 {
+	...
+	phy-handle = <&hec>;
+};
 
-> Panels are theoretically hot-pluggable, too, much in the same way that
-> monitors are.
+cec: cec@f7f00baa {
+	compatible = "marvell,berlin-cec";
+	reg = <0xf7f00baa 0x1234>;
 
-So are encoders, in the same way. I have a main board, with a video
-connector. That goes to an encoder on display board, and that again has
-a connector, to which the panel is connected.
+	/* CEC unit contains HEC PHY */
+	hec: ethernet-phy {
+		bla;
+	};
+}
 
-I also have a panel that can be conneted directly to the main board's
-video output.
+For reference, this is what we have for MVEBU SoCs with multiple ports
+per controller:
 
->> But again, the legacy...
->=20
-> You've got to make the abstraction somewhere, and I'm quite surprised
-> actually how well the DRM abstractions are working out. I mean we can
-> support anything from HDMI to DP to eDP, DSI and LVDS with just the
-> connector abstraction and it all just works. That makes it a pretty
-> good abstraction in my book.
+eth: ethernet-ctrl@72000 {
+	compatible = "marvell,orion-eth";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	reg = <0x72000 0x4000>;
+	clocks = <&gate_clk 2>;
+	marvell,tx-checksum-limit = <1600>;
+	status = "disabled";
 
-Yes, I agree it's good in the sense that it works. And much better than
-fbdev, which has nothing. But it's not good in the sense that it's not
-what I'd design if I could start from scratch.
+	ethernet-port@0 {
+		compatible = "marvell,orion-eth-port";
+		reg = <0>;
+		interrupts = <29>;
+		/* overwrite MAC address in bootloader */
+		local-mac-address = [00 00 00 00 00 00];
+		phy-handle = <&ethphy>;
+	};
+};
 
- Tomi
+mdio: mdio-bus@72004 {
+	compatible = "marvell,orion-mdio";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	reg = <0x72004 0x84>;
+	interrupts = <30>;
+	clocks = <&gate_clk 2>;
+	status = "disabled";
+	ethphy: ethernet-phy {
+		/* set phy address in board file */
+	};
+};
 
-
-
---Vmdnb98vIaeNujKO45Rdwubr57Umr90wh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUIZLkAAoJEPo9qoy8lh71GZ8QALHkbERHVUntoY56uoQqpTPz
-0vM5X1IYHw7UwYqgjbsEKwGL1jm/uHJkmH6rKgyx63GBKvE1N4TbqBlwp7zsrmQo
-hhQefPyWlWhO4dDjurhhXVk58K01mplJEp1gEzWsj4O76omJLLUGQ6yHCZ+b9MUu
-Q25XlVN5YXT7dYWCLOd3+IY65lNAduS6dUfHkAERvmTj4ec45bwXbGwPErsMZ7Gk
-1OwO7MJvo8YMKi8pcTXzOk15Ezmp5ZwBnKRgO0FwW83aVeatjE3v9dqR7w7s2BOv
-1eeSCWYg7BfmXREGNA7AKxklrZBOk9HKyHHTnO/BmDiKqgkI8aGejh3kXjNn34oj
-0e6jJRAppNWZYPcxxqAahtB5eASE7QAyAJ9BvqcNqlPlSQNaaVmGKJA9z7kujsGF
-6kOw6YjX/natCtzB5LAKwcLT8w0URMtM9/GWr0WUZDuZVjdcmgjaC3BqrcbNw0OJ
-FEXH6cmt3RFnYT+ALjF+8U1eLFPKfj4IaT7kzMbUOsORB5MIU19eWuzUJhuQhuan
-OM0KOCQQ9VhAqNhLB7j/Y6pB3w+rtViJrF5nORvrHQiGzc4Giiy0Vi6YCUCbVhOa
-Gqz6o790Imdk8yB6sLiLWTNwkJQrlmCnVYJ9nMDAMNG9bhZTaCPyevsu0blGu34v
-gcRmohpCHXJ91lMmHfMU
-=B9JS
------END PGP SIGNATURE-----
-
---Vmdnb98vIaeNujKO45Rdwubr57Umr90wh--
+Sebastian
