@@ -1,60 +1,43 @@
-From: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
-Subject: Device tree vs hardware configurations
-Date: Tue, 23 Sep 2014 21:58:08 +0400
-Message-ID: <5421B4B0.1020306@dev.rtsoft.ru>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 3/4] tty: omap-serial: use threaded interrupt handler
+Date: Tue, 23 Sep 2014 11:38:38 -0700
+Message-ID: <20140923183838.GA3122@atomide.com>
+References: <1410789610-23059-1-git-send-email-frans.klaver@xsens.com>
+ <1410789610-23059-4-git-send-email-frans.klaver@xsens.com>
+ <54170823.7040801@hurleysoftware.com>
+ <5417228C.5070503@hurleysoftware.com>
+ <20140916085037.GI28458@ci00147.xsens-tech.local>
+ <54197804.3020302@hurleysoftware.com>
+ <20140917121303.GB20438@ci00147.xsens-tech.local>
+ <20140923082445.GA16218@ci00147.xsens-tech.local>
+ <5421AB20.8040606@hurleysoftware.com>
+ <88924386-79bc-44c7-9a07-249900cbd359@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gennady Kuznetsov <kuznetsovg-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>, Aleksey Makarov <amakarov-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <88924386-79bc-44c7-9a07-249900cbd359@email.android.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Frans Klaver <fransklaver@gmail.com>
+Cc: Peter Hurley <peter@hurleysoftware.com>, Frans Klaver <frans.klaver@xsens.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexey Pelykh <alexey.pelykh@gmail.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+* Frans Klaver <fransklaver@gmail.com> [140923 11:12]:
+> On 23 September 2014 19:17:20 CEST, Peter Hurley <peter@hurleysoftware.com> wrote:
+> >
+> >I would've thought the first 2 patches had already been picked up
+> >because
+> >they fix div-by-zero faults.
+> 
+> I've had no confirmation of that happening so far. I also don't
+> know if I should expect one. Who'd take these patches? Tony? 
 
-I'm currently forward-porting a BSP for imx6-based custom board from 
-pre-devicetree kernel to modern kernel.
+$ scripts/get_maintainer.pl -f drivers/tty/serial/omap-serial.c
 
-In old BSP there was a board setup file, that registered all board's 
-devices. For new BSP, I need to replace that with device tree based 
-solution.
+Shows they should be sent to Greg and linux-serial. Please also Cc
+linux-omap. And if it's a fix, please make sure the subject has the
+magic word fix :)
 
-However, old BSP used conditional code to register devices differently 
-based on GPIO inputs and on kernel command line. This approach was used to
+Regards,
 
-- handle board's jumper that switches SPI CS lines: current jumper 
-setting is available over gpio, depending on that old BSP registered 
-chips differently,
-
-- handle different i2c connections on different board revisions: board 
-has 5 i2c busses with quite a few devices connected, these busses are 
-routed to different hardware busses on different board revisions, board 
-revision could be read over gpios.
-
-- handle different possible display connections (lvds vs lcd, 6bit vs 
-8bit hw interface) based on kernel command line options
-
-- handle different possible camera connections by registered camera 
-differently based on kernel command line option
-
-... and more,
-
-
-Device tree describes hardware unconditionally. I already have to 
-provide 2 dts files for imx6q and imx6dl based setups (both just include 
-a common dtsi) ...  But providing separate dts file for every possible 
-hardware configuration will result into 2^n device trees, which is 
-inconvenient visible regression against old BSP that "just worked" on 
-all hardware configurations.
-
-
-Is there a sane way to handle hardware configurations like above in 
-device tree based kernel?
-
-
-Nikita Yushchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
