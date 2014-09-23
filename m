@@ -1,77 +1,41 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v5 05/11] drm: add Atmel HLCDC Display Controller
- support
-Date: Tue, 23 Sep 2014 09:24:36 +0200
-Message-ID: <20140923092436.12b1f2c4@bbrezillon>
-References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com>
-	<20140922211811.11279ff0@bbrezillon>
-	<20140923063232.GG30514@ulmo>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [RESEND PATCH 0/4] Enables STMicroelectronics Flexgen Clock support
+Date: Tue, 23 Sep 2014 09:43:26 +0200
+Message-ID: <5421249E.2000700@st.com>
+References: <1408977888-10473-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140923063232.GG30514@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1408977888-10473-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+Hi Gabi,
 
-On Tue, 23 Sep 2014 08:32:33 +0200
-Thierry Reding <thierry.reding@gmail.com> wrote:
+	Series applied to sti-dt-for-v3.18.
 
-> On Mon, Sep 22, 2014 at 09:18:11PM +0200, Boris BREZILLON wrote:
-> > On Mon,  8 Sep 2014 10:43:36 +0200 Boris BREZILLON <boris.brezillon@free-electrons.com> wrote:
-> [...]
-> > > diff --git a/drivers/gpu/drm/atmel-hlcdc/Kconfig b/drivers/gpu/drm/atmel-hlcdc/Kconfig
-> > > new file mode 100644
-> > > index 0000000..6d0d785
-> > > --- /dev/null
-> > > +++ b/drivers/gpu/drm/atmel-hlcdc/Kconfig
-> > > @@ -0,0 +1,13 @@
-> > > +config DRM_ATMEL_HLCDC
-> > > +	tristate "DRM Support for ATMEL HLCDC Display Controller"
-> > > +	depends on DRM && OF && MFD_ATMEL_HLCDC && COMMON_CLK
-> > 
-> > I forgot to remove MFD_ATMEL_HLCDC dependency which is now selected...
-> > 
-> > 
-> > > +	select DRM_GEM_CMA_HELPER
-> > > +	select DRM_KMS_HELPER
-> > > +	select DRM_KMS_FB_HELPER
-> > > +	select DRM_KMS_CMA_HELPER
-> > > +	select DRM_PANEL
-> > > +	select MFD_ATMEL_HLCDC
-> > 
-> > here.
-> 
-> Maybe this was discussed earlier, but can you remind me why this was
-> done? The changelog says it was to "simplify", but there's been some
-> recent discussion that select should never be used for symbols that
-> are user-visible because that can lead to issues.
-> 
-> What were the problems having this as "depends on"?
+Thanks!
+Maxime
 
-I had several people complaining about the complexity introduced by
-this dependency scheme: if one wants to select the HLCDC KMS driver, he
-has to select the HLCDC MFD driver first, which is kind of tricky.
-
-The MFD_ATMEL_HLCDC symbol is now hidden (see patch 1) which should
-solve part of the issue.
-
-Now that I have your attention :-), could you review this series [1] ?
-The HLCDC KMS depends on those changes (which you and Laurent
-suggested).
-
-Best Regards,
-
-Boris
-
-[1]https://lkml.org/lkml/2014/7/22/300
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+On 08/25/2014 04:44 PM, Gabriel FERNANDEZ wrote:
+> These patches enables clock drivers for STih407 boards.
+>
+> Gabriel Fernandez (4):
+>    ARM: STi: DT: STiH407: 407 DT Entry for clockgen A0
+>    ARM: STi: DT: STiH407: 407 DT Entry for clockgen C0
+>    ARM: STi: DT: STiH407: 407 DT Entry for clockgen D0/D2/D3
+>    ARM: STi: DT: STiH407: 407 DT Entry for clockgenA9
+>
+>   arch/arm/boot/dts/stih407-clock.dtsi     | 295 ++++++++++++++++++++++++++++++-
+>   arch/arm/boot/dts/stih407.dtsi           |  18 +-
+>   include/dt-bindings/clock/stih407-clks.h |  11 ++
+>   3 files changed, 307 insertions(+), 17 deletions(-)
+>   create mode 100644 include/dt-bindings/clock/stih407-clks.h
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
