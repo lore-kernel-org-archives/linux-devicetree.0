@@ -1,28 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4 v5] GPIO: gpio-dwapb: Support Debounce
-Date: Tue, 23 Sep 2014 14:12:56 +0200
-Message-ID: <CACRpkda=MOFp_zSoa4s_3VPbg8U__LCa7khmcCN0wzYDDHE5VQ@mail.gmail.com>
-References: <1410970722-8579-1-git-send-email-alvin.chen@intel.com>
-	<1410970722-8579-4-git-send-email-alvin.chen@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410970722-8579-4-git-send-email-alvin.chen@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Weike Chen <alvin.chen@intel.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, atull <atull@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Boon Leong Ong <boon.leong.ong@intel.com>, Hock Leong Kweh <hock.leong.kweh@intel.com>, Darren Hart <dvhart@linux.intel.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Mika Westerberg <mika.westerberg@intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 8/9] ARM: dts: berlin: add the Ethernet node
+Date: Tue, 23 Sep 2014 14:15:35 +0200
+Message-ID: <1411474536-22626-9-git-send-email-antoine.tenart@free-electrons.com>
+References: <1411474536-22626-1-git-send-email-antoine.tenart@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411474536-22626-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 17, 2014 at 6:18 PM, Weike Chen <alvin.chen@intel.com> wrote:
+This patch adds the Ethernet node, enabling the network unit on Berlin
+BG2Q SoCs.
 
-> This patch enables 'debounce' for the designware GPIO, and
-> it is based on Josef Ahmad's previous work.
->
-> Reviewed-by: Hock Leong Kweh <hock.leong.kweh@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Weike Chen <alvin.chen@intel.com>
+Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/berlin2q.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Patch applied.
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 902eddb19cd8..a88db4097b47 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -114,6 +114,16 @@
+ 			#interrupt-cells = <3>;
+ 		};
+ 
++		eth0: ethernet@b90000 {
++			compatible = "marvell,pxa168-eth";
++			reg = <0xb90000 0x10000>;
++			clocks = <&chip CLKID_GETH0>;
++			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
++			/* set by bootloader */
++			local-mac-address = [00 00 00 00 00 00];
++			status = "disabled";
++		};
++
+ 		cpu-ctrl@dd0000 {
+ 			compatible = "marvell,berlin-cpu-ctrl";
+ 			reg = <0xdd0000 0x10000>;
+-- 
+1.9.1
 
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
