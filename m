@@ -1,64 +1,36 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 08/10] rtc: at91sam9: use clk API instead of relying
- on AT91_SLOW_CLOCK
-Date: Tue, 23 Sep 2014 12:33:26 +0200
-Message-ID: <20140923103326.GA404@localhost>
-References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com>
- <1411465130-29011-9-git-send-email-boris.brezillon@free-electrons.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Tue, 23 Sep 2014 12:39:04 +0200
+Message-ID: <2909480.SL9c0XWUbW@wuerfel>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com> <1411468088-5702-8-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1411465130-29011-9-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1411468088-5702-8-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 11:38:48AM +0200, Boris BREZILLON wrote:
+On Tuesday 23 September 2014 12:28:03 Antoine Tenart wrote:
+> +       if (dev->of_node) {
+> +               ret = ci_hdrc_usb2_dt_probe(dev, ci_pdata);
+> +               if (ret)
+> +                       goto clk_err;
+> +       } else {
+> +               ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> +               if (ret)
+> +                       goto clk_err;
+> +       }
+> 
 
-> @@ -328,6 +328,7 @@ static int at91_rtc_probe(struct platform_device *pdev)
->  	struct sam9_rtc	*rtc;
->  	int		ret, irq;
->  	u32		mr;
-> +	unsigned int	sclk_rate;
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
-> @@ -385,11 +386,27 @@ static int at91_rtc_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	}
->  
-> +	rtc->sclk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(rtc->sclk))
-> +		return PTR_ERR(rtc->sclk);
-> +
-> +	sclk_rate = clk_get_rate(rtc->sclk);
-> +	if (!sclk_rate || sclk_rate > AT91_RTT_RTTRST) {
+Why do you care about the non-DT case here? I think it would be nicer to
+open-code the ci_hdrc_usb2_dt_probe() function in here and remove
+the dma_set_mask_and_coherent(), which should not even be necessary for
+the case where you have a hardwired platform device.
 
-You probably meant AT91_RTT_RTPRES here.
-
-> +		dev_err(&pdev->dev, "Invalid slow clock rate");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = clk_prepare_enable(rtc->sclk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Could not enable slow clock");
-> +		return ret;
-> +	}
-> +
->  	mr = rtt_readl(rtc, MR);
->  
->  	/* unless RTT is counting at 1 Hz, re-initialize it */
-> -	if ((mr & AT91_RTT_RTPRES) != AT91_SLOW_CLOCK) {
-> -		mr = AT91_RTT_RTTRST | (AT91_SLOW_CLOCK & AT91_RTT_RTPRES);
-> +	if ((mr & AT91_RTT_RTPRES) != sclk_rate) {
-> +		mr = AT91_RTT_RTTRST | (sclk_rate & AT91_RTT_RTPRES);
->  		gpbr_writel(rtc, 0);
->  	}
-
-Johan
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
