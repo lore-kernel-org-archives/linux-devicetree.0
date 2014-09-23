@@ -1,130 +1,91 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 11:53:15 +0200
-Message-ID: <20140923095314.GS30514@ulmo>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
- <5419760A.7020908@ti.com> <20140922075424.GB1470@ulmo>
- <54202C86.3040808@ti.com> <20140923062111.GE30514@ulmo>
- <54213DAC.5010806@ti.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v5 05/11] drm: add Atmel HLCDC Display Controller support
+Date: Tue, 23 Sep 2014 11:55:42 +0200
+Message-ID: <5421439E.80501@atmel.com>
+References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com> <1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com> <20140922211811.11279ff0@bbrezillon> <20140923063232.GG30514@ulmo> <20140923092436.12b1f2c4@bbrezillon> <20140923084228.GN30514@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1945492364=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <54213DAC.5010806@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, daniel.vetter@ffwll.ch, joshi@samsung.com, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ajaynumb@gmail.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20140923084228.GN30514@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Thierry,
 
---===============1945492364==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/KohU7xR/z4Rz7fl"
-Content-Disposition: inline
+On 23/09/2014 10:42, Thierry Reding :
+> On Tue, Sep 23, 2014 at 09:24:36AM +0200, Boris BREZILLON wrote:
+>> Hi Thierry,
+>>
+>> On Tue, 23 Sep 2014 08:32:33 +0200
+>> Thierry Reding <thierry.reding@gmail.com> wrote:
+>>
+>>> On Mon, Sep 22, 2014 at 09:18:11PM +0200, Boris BREZILLON wrote:
+>>>> On Mon,  8 Sep 2014 10:43:36 +0200 Boris BREZILLON <boris.brezillon@free-electrons.com> wrote:
+>>> [...]
+>>>>> diff --git a/drivers/gpu/drm/atmel-hlcdc/Kconfig b/drivers/gpu/drm/atmel-hlcdc/Kconfig
+>>>>> new file mode 100644
+>>>>> index 0000000..6d0d785
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/gpu/drm/atmel-hlcdc/Kconfig
+>>>>> @@ -0,0 +1,13 @@
+>>>>> +config DRM_ATMEL_HLCDC
+>>>>> +	tristate "DRM Support for ATMEL HLCDC Display Controller"
+>>>>> +	depends on DRM && OF && MFD_ATMEL_HLCDC && COMMON_CLK
+>>>>
+>>>> I forgot to remove MFD_ATMEL_HLCDC dependency which is now selected...
+>>>>
+>>>>
+>>>>> +	select DRM_GEM_CMA_HELPER
+>>>>> +	select DRM_KMS_HELPER
+>>>>> +	select DRM_KMS_FB_HELPER
+>>>>> +	select DRM_KMS_CMA_HELPER
+>>>>> +	select DRM_PANEL
+>>>>> +	select MFD_ATMEL_HLCDC
+>>>>
+>>>> here.
+>>>
+>>> Maybe this was discussed earlier, but can you remind me why this was
+>>> done? The changelog says it was to "simplify", but there's been some
+>>> recent discussion that select should never be used for symbols that
+>>> are user-visible because that can lead to issues.
+>>>
+>>> What were the problems having this as "depends on"?
+>>
+>> I had several people complaining about the complexity introduced by
+>> this dependency scheme: if one wants to select the HLCDC KMS driver, he
+>> has to select the HLCDC MFD driver first, which is kind of tricky.
+> 
+> That's not at all tricky in my opinion. The MFD provides an LCDC as one
+> of the devices, so requiring it to be selected before you can enable any
+> of the subdrivers is very natural. It's also how the majority of MFD
+> devices work.
 
+Well, that's me that suggested to Boris to change this: I had very hard
+time to enable the LCD driver when first moving to this new HLCD driver.
+Usually, when I want to enable a LCD driver, I go to the "Graphics
+support" menu.
 
---/KohU7xR/z4Rz7fl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> The MFD_ATMEL_HLCDC symbol is now hidden (see patch 1) which should
+>> solve part of the issue.
+> 
+> I think that's wrong but I don't care enough to object.
 
-On Tue, Sep 23, 2014 at 12:30:20PM +0300, Tomi Valkeinen wrote:
-> On 23/09/14 09:21, Thierry Reding wrote:
->=20
-> >> Well, I can write almost any kind of bindings, and then evidently my
-> >> device would work. For me, on my board.
-> >=20
-> > Well, that's the whole problem with DT. For many devices we only have a
-> > single setup to test against. And even when we have several they often
-> > are derived from each other. But the alternative would be to defer
-> > (possibly indefinitely) merging support for a device until a second,
-> > wildly different setup shows up. That's completely unreasonable and we
-> > need to start somewhere.
->=20
-> Yes, but in this case we know of existing boards that have complex
-> setups. It's not theoretical.
+Ok, me, I kind of like it: the MFD is something convenient to aggregate
+two drivers using the same register set (LCD and Backlight) but has no
+real "feature" interest in my opinion: it ease things.
 
-Complex setups involving /this particular/ bridge and binding are
-theoretical at this point, however.
+>> Now that I have your attention :-), could you review this series [1] ?
+>> The HLCDC KMS depends on those changes (which you and Laurent
+>> suggested).
+> 
+> My attention span tends to be very short these days. No promises. =)
+> 
+> Thierry
+> 
 
-> > phandles should simply point to the next element in the pipeline and the
-> > OS abstractions should be good enough to handle the details about how to
-> > chain the elements.
->=20
-> I, on the other hand, would rather see the links the other way around.
-> Panel having a link to the video source, etc.
-
-Why? It seems much more natural to describe this using the natural flow
-of data. The device furthest away from the CPU should be the target of
-the phandle. That way the DT can be used to trace the flow of data down
-the pipeline.
-
-> The video graphs have two-way links, which of course is the safest
-> options, but also more verbose and redundant.
-
-Right. If we take that line of thinking to the extreme we end up listing
-individual registers in DT so that we can safely assume that we can
-control all possible aspects of the device.
-
-Like I said, this seems to be the latest response to DT ABI stability
-requirement. Add as much data to a DT node as possible so that it has
-higher chances of being complete. The result is often overly complex DT
-content that doesn't add any real value.
-
-> When this was discussed earlier, it was unclear which way the links
-> should be. It's true that only links to one direction are strictly
-> needed, but the question raised was that if in the drivers we end up
-> always going the links the other way, the performance penalty may be
-> somewhat big. (If I recall right).
-
-I doubt that graphs will become so complex that walking it would become
-a performance bottleneck. In fact if we're constantly walking the graph
-we're already doing something wrong. It should only be necessary when
-the pipeline configuration changes, which should hopefully not be very
-often (i.e. not several times per second).
-
-Thierry
-
---/KohU7xR/z4Rz7fl
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJUIUMKAAoJEN0jrNd/PrOhwKoQAIXC7ydtMyumPcGZi40wge3K
-tnRjRqpM1tU8H3fsxa6xq65+j+VBFnxp2JIFt8lHNloCdefCJvsXg6pGaKulull5
-UqrhbP2rsAfiIxRS7Z1Qz+fwKL9mYAs2pqVZf9bsYeIDwSNrh9R+xMz8q5hk5rnV
-Uevh9cCzIgbu/HaMKO3KQGz8AKlaGfXdG861zmC5kez49d236N52FMZNPN13oVMw
-hFUAB5qPFVwkNTbhxq7lzaZ9c2ZDTSjYKWNZKWTKjXO/2L7m/nYNlrpNC4uDWcJy
-Y/mnOYsI6UwjPr/dyh7RwrSgzfirLyIcrBYllDPqc1yXL3qhKRfKhrGgMg19qLza
-hcbAcnpSCthU8c7eVmti9y9VdRByixcTCw10lqugFLPrDi4kXo2OTnaARXqVulG0
-EdwbKlX6VJzwoHEAfg5eBfJbOQ4hbrCs8W2CODtQRRY4BbbNGLlLwS6Ky6EqbAIk
-5IFmk2hUbfUwmsICqCZvAMSJ44tceLU7a68WUOkyvLLlOYBQIFQ8OHxfoDLQz2GQ
-k8uGGDfwC1me8CbWD+IoDuwuA0TA+SBcPI5qRfrnvJCOmfk/VjCoA1WSR4f4nITE
-07FxtEA84bR9emNs1kNxFopM6iKnZ2gO8C8F0y1NwN6rq2R6fN67aPi5lzPWOm1L
-vPFDjCJzfUJS1TuhjLy5
-=u709
------END PGP SIGNATURE-----
-
---/KohU7xR/z4Rz7fl--
-
---===============1945492364==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1945492364==--
+Thanks, bye,
+-- 
+Nicolas Ferre
