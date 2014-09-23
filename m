@@ -1,109 +1,78 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Tue, 23 Sep 2014 12:02:45 +0200
-Message-ID: <54214545.2090308@samsung.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com>
- <5419760A.7020908@ti.com> <20140922075424.GB1470@ulmo>
- <54202C86.3040808@ti.com> <20140923062111.GE30514@ulmo>
- <54213DAC.5010806@ti.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v7 06/10] rtc: at91sam9: rework the Kconfig description
+Date: Tue, 23 Sep 2014 12:08:47 +0200
+Message-ID: <542146AF.3060807@atmel.com>
+References: <1411465130-29011-1-git-send-email-boris.brezillon@free-electrons.com> <1411465130-29011-7-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <54213DAC.5010806@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, daniel.vetter@ffwll.ch, joshi@samsung.com, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, ajaynumb@gmail.com, prashanth.g@samsung.com, Ajay Kumar <ajaykumar.rs@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1411465130-29011-7-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Johan Hovold <jhovold@gmail.com>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/23/2014 11:30 AM, Tomi Valkeinen wrote:
-> On 23/09/14 09:21, Thierry Reding wrote:
+On 23/09/2014 11:38, Boris BREZILLON :
+> Remove all references to AT91CAP9 SoC which has been removed.
+> Rework the help message to remove any specific references to AT91SAM9 SoCs.
 > 
->>> Well, I can write almost any kind of bindings, and then evidently my
->>> device would work. For me, on my board.
->>
->> Well, that's the whole problem with DT. For many devices we only have a
->> single setup to test against. And even when we have several they often
->> are derived from each other. But the alternative would be to defer
->> (possibly indefinitely) merging support for a device until a second,
->> wildly different setup shows up. That's completely unreasonable and we
->> need to start somewhere.
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>  drivers/rtc/Kconfig | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 > 
-> Yes, but in this case we know of existing boards that have complex
-> setups. It's not theoretical.
-> 
-> I'm not saying we should stop everything until we have a 100% solution
-> for the rare complex cases. But we should keep them in mind and, when
-> possible, solve problems in a way that will work for the complex cases also.
-> 
->>> I guess non-video devices haven't had need for those. I have had lots of
->>> boards with video setup that cannot be represented with simple phandles.
->>> I'm not sure if I have just been unlucky or what, but my understand is
->>> that other people have encountered such boards also. Usually the
->>> problems encountered there have been circumvented with some hacky video
->>> driver for that specific board, or maybe a static configuration handled
->>> by the boot loader.
->>
->> I have yet to encounter such a setup. Can you point me at a DTS for one
->> such setup? I do remember a couple of hypothetical cases being discussed
->> at one time or another, but I haven't seen any actual DTS content where
->> this was needed.
-> 
-> No, I can't point to them as they are not in the mainline (at least the
-> ones I've been working on), for obvious reasons.
-> 
-> With a quick glance, I have the following devices in my cabinet that
-> have more complex setups: OMAP 4430 SDP, BeagleBoneBlack + LCD, AM43xx
-> EVM. Many Nokia devices used to have such setups, usually so that the
-> LCD and tv-out were connected to the same video source.
-> 
->>> Do we have a standard way of representing the video pipeline with simple
->>> phandles? Or does everyone just do their own version? If there's no
->>> standard way, it sounds it'll be a mess to support in the future.
->>
->> It doesn't matter all that much whether the representation is standard.
-> 
-> Again, I disagree.
-> 
->> phandles should simply point to the next element in the pipeline and the
->> OS abstractions should be good enough to handle the details about how to
->> chain the elements.
-> 
-> I, on the other hand, would rather see the links the other way around.
-> Panel having a link to the video source, etc.
-> 
-> The video graphs have two-way links, which of course is the safest
-> options, but also more verbose and redundant.
-> 
-> When this was discussed earlier, it was unclear which way the links
-> should be. It's true that only links to one direction are strictly
-> needed, but the question raised was that if in the drivers we end up
-> always going the links the other way, the performance penalty may be
-> somewhat big. (If I recall right).
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index 7d76da8..455f2c3 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1079,17 +1079,18 @@ config RTC_DRV_AT91RM9200
+>  	  this is powered by the backup power supply.
+>  
+>  config RTC_DRV_AT91SAM9
+> -	tristate "AT91SAM9x/AT91CAP9 RTT as RTC"
+> +	tristate "AT91SAM9 RTT as RTC"
+>  	depends on ARCH_AT91 && !(ARCH_AT91RM9200 || ARCH_AT91X40)
+>  	select MFD_SYSCON
+>  	help
+> -	  RTC driver for the Atmel AT91SAM9x and AT91CAP9 internal RTT
+> -	  (Real Time Timer). These timers are powered by the backup power
+> -	  supply (such as a small coin cell battery), but do not need to
+> -	  be used as RTCs.
+> -
+> -	  (On AT91SAM9rl and AT91SAM9G45 chips you probably want to use the
+> -	  dedicated RTC module and leave the RTT available for other uses.)
+> +	  Some AT91SAM9 SoCs provide an RTT (Real Time Timer) block which
+> +	  can be used as an RTC thanks to the backup power supply (e.g. a
+> +	  small coin cell battery) which keeps this block and the GPBR
+> +	  (General Purpose Backup Registers) block powered when the device
+> +	  is shutdown.
+> +	  Some AT91SAM9 SoCs provide a real RTC block, on those ones you'd
+> +	  probably want to use the real RTC block instead of the RTT as an
+> +	  RTT driver.
 
-I do not see why performance may drop significantly?
-If the link is one-way it should probably work as below:
-- the destination registers itself in some framework,
-- the source looks for the destination in this framework using phandle,
-- the source starts to communicate with the destination - since now full
-two way link can be established dynamically.
+You mean:
+"instead of the RTT as an RTC"
 
-Where do you see here big performance penalty?
+With that, good description: thanks!
 
-Regards
-Andrzej
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+So, now we can think of what to do with the series:
+
+- Johan, do you want to "Ack" it?
+- may I take it through the arm-soc git tree (likely for the 3.19 dev.
+phase).
+
+Your thoughts?
+
+Bye,
+
+>  
+>  config RTC_DRV_AT91SAM9_RTT
+>  	int
+> 
 
 
-> 
->  Tomi
-> 
-> 
+-- 
+Nicolas Ferre
