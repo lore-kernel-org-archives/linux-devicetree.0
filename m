@@ -1,29 +1,60 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v12 00/12] Support for creating generic PCI host bridges
- from DT
-Date: Tue, 23 Sep 2014 17:00:11 -0600
-Message-ID: <CAErSpo5PBXSUeU_LP2m=9jxibmqxreL4tEeHBsc5To7D=_bAJA@mail.gmail.com>
-References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
- <20140923215435.GD27117@google.com> <20140923224810.GA32643@bart.dudau.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140923224810.GA32643@bart.dudau.co.uk>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <liviu@dudau.co.uk>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 2/3] watchdog: qcom: document device tree bindings
+Date: Tue, 23 Sep 2014 18:04:37 -0500
+Message-ID: <337231c0fc8b16b4f37e1e3b85cb0246f357a64d.1411513109.git.joshc@codeaurora.org>
+References: <cover.1411513109.git.joshc@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1411513109.git.joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <cover.1411513109.git.joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+References: <cover.1411513109.git.joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 4:48 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
-> ...
-> While the next immediate target is converting pci-host-generic.c, pci-imx6.c
-> and probably pcie-designware.c to my series, I would like to ask you what
-> is your longer term plan. Now that I have got my head full of PCI code,
-> I have some ideas but feel that meeting with you and all those involved
-> in core PCI support would be a better venue than sending emails back and
-> forth. When is your next plan to attend a Linux conference?
+The Qualcomm Krait Processor Sub-system (KPSS) contains one or more
+instances of the WDT.  Provide documentation on how to describe these in
+the device tree.
 
-That would be nice.  Unfortunately, I don't know what the next
-conference will be yet.
+Signed-off-by: Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/qcom-wdt.txt      | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
 
-Bjorn
+diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+new file mode 100644
+index 0000000..6a1d758
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+@@ -0,0 +1,22 @@
++Qualcomm Krait Processor Sub-system (KPSS) Watchdog
++---------------------------------------------------
++
++Required properties :
++- compatible : shall contain only one of the following:
++
++			"qcom,kpss-wdt-msm8960"
++			"qcom,kpss-wdt-apq8064"
++			"qcom,kpss-wdt-ipq8064"
++
++- reg : shall contain base register location and length
++- clocks : shall contain the input clock phandle
++- timeout-sec : shall contain the default watchdog timeout in seconds,
++                if unset, the default timeout is 30 seconds
++
++Example:
++	watchdog@208a038 {
++		compatible = "qcom,kpss-wdt-ipq8064";
++		reg = <0x0208a038 0x40>;
++		clocks = <&sleep_clk>;
++		timeout-sec = <10>;
++	};
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
