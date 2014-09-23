@@ -1,45 +1,63 @@
-From: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 03/12] ARM: Berlin: select the reset controller
-Date: Tue, 23 Sep 2014 12:27:59 +0200
-Message-ID: <1411468088-5702-4-git-send-email-antoine.tenart@free-electrons.com>
+From: Antoine Tenart <antoine.tenart@free-electrons.com>
+Subject: [PATCH v6 02/12] Documentation: bindings: add reset bindings docs for
+ Marvell Berlin SoCs
+Date: Tue, 23 Sep 2014 12:27:58 +0200
+Message-ID: <1411468088-5702-3-git-send-email-antoine.tenart@free-electrons.com>
 References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411468088-5702-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
+Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Berlin SoCs now has a reset controller. Add the needed
-configuration.
+Add the reset binding documentation to the SoC binding documentation as
+the reset driver in Marvell Berlin SoC is part of the chip/system
+control registers. This patch adds the required properties to configure
+the reset controller.
 
-Signed-off-by: Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Antoine Tenart <antoine.tenart@free-electrons.com>
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/mach-berlin/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/marvell,berlin.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/mach-berlin/Kconfig b/arch/arm/mach-berlin/Kconfig
-index 24f85be71671..5803f773a065 100644
---- a/arch/arm/mach-berlin/Kconfig
-+++ b/arch/arm/mach-berlin/Kconfig
-@@ -1,11 +1,13 @@
- menuconfig ARCH_BERLIN
- 	bool "Marvell Berlin SoCs" if ARCH_MULTI_V7
-+	select ARCH_HAS_RESET_CONTROLLER
- 	select ARCH_REQUIRE_GPIOLIB
- 	select ARM_GIC
- 	select GENERIC_IRQ_CHIP
- 	select DW_APB_ICTL
- 	select DW_APB_TIMER_OF
- 	select PINCTRL
-+	select RESET_CONTROLLER
+diff --git a/Documentation/devicetree/bindings/arm/marvell,berlin.txt b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
+index 904de5781f44..a99eb9eb14c0 100644
+--- a/Documentation/devicetree/bindings/arm/marvell,berlin.txt
++++ b/Documentation/devicetree/bindings/arm/marvell,berlin.txt
+@@ -106,11 +106,21 @@ Required subnode-properties:
+ - groups: a list of strings describing the group names.
+ - function: a string describing the function used to mux the groups.
  
- if ARCH_BERLIN
++* Reset controller binding
++
++A reset controller is part of the chip control registers set. The chip control
++node also provides the reset. The register set is not at the same offset between
++Berlin SoCs.
++
++Required property:
++- #reset-cells: must be set to 2
++
+ Example:
  
+ chip: chip-control@ea0000 {
+ 	compatible = "marvell,berlin2-chip-ctrl";
+ 	#clock-cells = <1>;
++	#reset-cells = <2>;
+ 	reg = <0xea0000 0x400>;
+ 	clocks = <&refclk>, <&externaldev 0>;
+ 	clock-names = "refclk", "video_ext0";
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
