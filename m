@@ -1,83 +1,119 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v11 08/10] OF: PCI: Add support for parsing PCI host
- bridge resources from DT
-Date: Tue, 23 Sep 2014 11:49:18 +0100
-Message-ID: <20140923104918.GP1994@e106497-lin.cambridge.arm.com>
-References: <1411003825-21521-1-git-send-email-Liviu.Dudau@arm.com>
- <20140922093228.GA20256@rric.localhost>
- <20140922114317.GN1994@e106497-lin.cambridge.arm.com>
- <8687285.EH4RPBeOB5@wuerfel>
+From: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/8] Add initial support for DA9150 Charger & Fuel-Gauge IC
+Date: Tue, 23 Sep 2014 11:53:17 +0100
+Message-ID: <cover.1411396718.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <8687285.EH4RPBeOB5@wuerfel>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, linux-arch <linux-arch@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Device Tree ML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Sinan Kaya <okaya@codeaurora.org>, Sunil Goutham <sunil.goutham@caviumnetworks.com>, LKML <linux-kernel@>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 08:56:37AM +0100, Arnd Bergmann wrote:
-> On Monday 22 September 2014 12:43:17 Liviu Dudau wrote:
-> > >=20
-> > > From e798af4fc2f664d1aff7e863489b8298f90e716e Mon Sep 17 00:00:00=
- 2001
-> > > From: Robert Richter <rrichter@cavium.com>
-> > > Date: Mon, 22 Sep 2014 10:46:01 +0200
-> > > Subject: [PATCH] OF: PCI: Fix creation of mem-mapped pci host bri=
-dges
-> > >=20
-> > > The pci host bridge was not created if io_base was not set when
-> > > calling of_pci_get_host_bridge_resources(). This is esp. the case=
- for
-> > > mem-mapped io (IORESOURCE_MEM). This patch fixes this. Function
-> > > parameter io_base is optional now.
-> >=20
-> > I think the message is misleading. What you want to do is make io_b=
-ase
-> > optional for the case where the PCI host bridge only expects to hav=
-e only
-> > IORESOURCE_MEM ranges and doesn't care about IORESOURCE_IO ones.
-> >=20
-> > As I'm going to touch this area again to address a comment from Bjo=
-rn,
-> > do you mind if I roll this patch into mine with your Signed-off-by =
-and
-> > the mention that you have made io_base optional?
->=20
-> I think the best way to deal with this is to move the check for=20
-> io_base down into the place where it is used: As long as the DT only
-> specifies IORESOURCE_MEM windows, we don't need to look at io_base,
-> but if the host controller driver does not support IORESOURCE_IO
-> while the DT specifies it, I guess it would be nice to return an
-> error.
+This patch set adds initial support for the Dialog DA9150 Integrated Charger &
+Fuel-Gauge IC. The device also provides GPIO and GPADC functionality.
 
-Because the detection of IORESOURCE_{IO|MEM} happens in a loop I still
-need to initialise the io_base to some invalid value before going into =
-the
-for_each_of_pci_range() {...} body. I have added a check in v12 for the
-lack of valid io_base pointer if IORESOURCE_IO range is found.
+In this patch set the following is provided:
+ - MFD Core support and DT bindings documentation.
+ - IIO GPADC support and DT bindings documentation.
+ - Power Supply Charger support and DT bindings documentation.
+ - Update to MAINTAINERS file to add DA9150 files to Dialog support list.
+ - Update to IIO ABI document to add info regarding input current readings.
 
-Best regards,
-Liviu
+To keep patch submission from being too large, support for GPIO and Fuel-Gauge
+will come after initial support patches are accepted.
 
->=20
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
->=20
+This patch set is baselined against the v3.17-rc6 kernel version.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+
+Changes in v3:
+- IRQ register and remove helper functions removed from MFD, deemed unnecessary.
+  Drivers using helper functions updated to use direct calls to relevant
+  kernel framework functions.
+- MFD I2C file removed and code folded into -core file as requested.
+- MFD core now buildable as driver module.
+- Platform data structure definition moved into core header, pdata.h removed.
+- Update functions in GPADC driver to be static, where appropriate.
+- Change units of GPADC readings to match ABI documentation. Updates to charger
+  driver also made to align with this modification.
+- Refactor GPADC temp calculations to use scale & offset method.
+- Scale values now returned as FRACTIONAL to allow for accurate conversion in
+  user-space.
+- Tidy up of GPADC scale, offset and raw functions to return from case statements
+  with correct return types.
+- Update GPADC channel macros naming to prefix with DA9150, prevent conflict.
+- GPADC GPIO voltage readings actually in 6V range, updated accordingly.
+- Addition to IIO ABI document to add details on input current readings.
+- Small style updates to address comments.
+
+Changes in v2:
+ - Drop devicetree prefix patch as this is being dealt with separately.
+ - IIO framework fix patch removed from set, has already been accepted/merged.
+ - Use __ instead of _ for protecting #ifdefs in headers.
+ - Moved private data & definitions to source files and remove unwanted headers.
+ - Bug fix to EXPORT_SYMBOL for common functions in MFD core used by
+   sub-devices, so they can be correctly built as kernel modules.
+ - Removed unnecessary channels from GPADC IIO driver to simplify code.
+ - For GPADC IIO driver, VBAT reading now provides scale and offset values as it
+   is a linear scale.
+ - GPADC read code refactored to make it tidier.
+ - Remove use of flag to indicate GPADC availability. IIO framework should
+   indicate need to defer if it's not yet instantiated.
+ - Unwanted comments removed.
+ - Removed conditional shutdown of device (Charger/MFD) as this is not needed.
+ - Removed AC type supply from charger as device cannot differentiate. Now just
+   uses USB supply type.
+ - Removed use of invalid-tbat flag from platform data as it doesn't really add
+   anything to the driver except forcing battery present status.
+ - Bug fix for checking of usb_phy validity in Charger probe() function.
+ - Addition of common IRQ release function to allow sub-devices to explicitly
+   tidy up IRQs when devm clean up is too late.
+ - Improved tidy up of resources in charger.
+ - Fix location of IIO GPADC related devicetree binding document so it now
+   resides correctly under 'adc' directory.
+ - Add update to MAINTAINERS file to include these files in Dialog support list.
+
+Adam Thomson (8):
+  mfd: Add support for DA9150 combined charger & fuel-gauge device
+  mfd: da9150: Add DT binding documentation for core
+  iio: Add support for DA9150 GPADC
+  iio: da9150: Add DT binding documentation for GPADC
+  power: Add support for DA9150 Charger
+  power: da9150: Add DT binding documentation for charger
+  MAINTAINERS: Include DA9150 files in Dialog Semiconductor support
+    list.
+  iio: Add ABI documentation for input current readings
+
+ Documentation/ABI/testing/sysfs-bus-iio            |   17 +
+ .../devicetree/bindings/iio/adc/da9150-gpadc.txt   |   16 +
+ Documentation/devicetree/bindings/mfd/da9150.txt   |   41 +
+ .../devicetree/bindings/power/da9150-charger.txt   |   26 +
+ MAINTAINERS                                        |    4 +
+ drivers/iio/adc/Kconfig                            |    9 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/da9150-gpadc.c                     |  406 +++++++
+ drivers/mfd/Kconfig                                |   12 +
+ drivers/mfd/Makefile                               |    2 +-
+ drivers/mfd/da9150-core.c                          |  413 +++++++
+ drivers/power/Kconfig                              |   12 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/da9150-charger.c                     |  740 +++++++++++++
+ include/linux/mfd/da9150/core.h                    |   68 ++
+ include/linux/mfd/da9150/registers.h               | 1155 ++++++++++++++++++++
+ 16 files changed, 2922 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/da9150-gpadc.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/da9150.txt
+ create mode 100644 Documentation/devicetree/bindings/power/da9150-charger.txt
+ create mode 100644 drivers/iio/adc/da9150-gpadc.c
+ create mode 100644 drivers/mfd/da9150-core.c
+ create mode 100644 drivers/power/da9150-charger.c
+ create mode 100644 include/linux/mfd/da9150/core.h
+ create mode 100644 include/linux/mfd/da9150/registers.h
+
+--
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
