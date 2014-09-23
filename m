@@ -1,152 +1,71 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 2/3] power: gpio-charger: add device tree support
-Date: Tue, 23 Sep 2014 09:08:49 -0700
-Message-ID: <CAD=FV=VKwZnKQP2KDVkrOfYibHARmr=Z9QU9Cprepj9C8CuA9A@mail.gmail.com>
-References: <1411473545-3290-1-git-send-email-heiko@sntech.de>
-	<1411473545-3290-3-git-send-email-heiko@sntech.de>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device
+ properties interface
+Date: Tue, 23 Sep 2014 09:17:24 -0700
+Message-ID: <20140923161724.GA40700@core.coreip.homeip.net>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+ <1410868367-11056-8-git-send-email-mika.westerberg@linux.intel.com>
+ <CACRpkdaZJt_6cd1vtDw-Ys+YqUhNb0aXazUxGCX8mk4=6EmdHw@mail.gmail.com>
+ <12538216.vu4CbU01qP@wuerfel>
+ <20140923155202.GT1786@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411473545-3290-3-git-send-email-heiko@sntech.de>
+Content-Disposition: inline
+In-Reply-To: <20140923155202.GT1786@lahna.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: sre@kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko.stuebner@bq.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+On Tue, Sep 23, 2014 at 06:52:02PM +0300, Mika Westerberg wrote:
+> On Tue, Sep 23, 2014 at 05:45:57PM +0200, Arnd Bergmann wrote:
+> > On Tuesday 23 September 2014 17:25:50 Linus Walleij wrote:
+> > > On Tue, Sep 16, 2014 at 1:52 PM, Mika Westerberg
+> > > <mika.westerberg@linux.intel.com> wrote:
+> > > 
+> > > > Some drivers need to deal with only firmware representation of its
+> > > > GPIOs. An example would be a GPIO button array driver where each button
+> > > > is described as a separate firmware node in device tree. Typically these
+> > > > child nodes do not have physical representation in the Linux device
+> > > > model.
+> > > >
+> > > > In order to help device drivers to handle such firmware child nodes we
+> > > > add dev[m]_node_get_named_gpiod() that takes a firmware node pointer as
+> > > > parameter, finds the GPIO using whatever is the underlying firmware
+> > > > method, and requests the GPIO properly.
+> > > >
+> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > 
+> > > I have a hard time figuring out if this is what we want for common
+> > > accessors between DT and ACPI.
+> > > 
+> > > Can I get some input from Grant, Arnd, Mark, Darren...?
+> > 
+> > I just took a brief look at this. My first impression is that the
+> > fw_dev_node structure is weird when all callers just do (in patch 2)
+> > 
+> > +	struct fw_dev_node fdn = {
+> > +		.of_node = dev->of_node,
+> > +		.acpi_node = ACPI_COMPANION(dev),
+> > +	};
+> > 
+> > I'd much rather see an interface that passes the 'struct device'
+> > pointer down to dev_get_named_gpiod() and all other exported
+> > functions, and then internally does the conversion at the point
+> > where the access is done.
+> 
+> Problem is that if you don't have the dev pointer in the first place.
+> Please look how leds-gpio.c or gpio_keys_polled.c are using this.
+> 
+> Of course you have the first level device but when you need to iterate
+> "leds" or "buttons" below where there is no Linux device available we
+> need something like this.
 
-On Tue, Sep 23, 2014 at 4:59 AM, Heiko Stuebner <heiko@sntech.de> wrote:
-> From: Heiko Stuebner <heiko.stuebner@bq.com>
->
-> Add the ability to parse gpio-charger data from a devicetree node.
->
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
-> ---
->  drivers/power/gpio-charger.c | 72 ++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 70 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/power/gpio-charger.c b/drivers/power/gpio-charger.c
-> index a0024b2..22f084a 100644
-> --- a/drivers/power/gpio-charger.c
-> +++ b/drivers/power/gpio-charger.c
-> @@ -22,6 +22,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/power_supply.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
->
->  #include <linux/power/gpio-charger.h>
->
-> @@ -69,6 +71,59 @@ static enum power_supply_property gpio_charger_properties[] = {
->         POWER_SUPPLY_PROP_ONLINE,
->  };
->
-> +static
-> +struct gpio_charger_platform_data *gpio_charger_parse_dt(struct device *dev)
-> +{
-> +       struct device_node *np = dev->of_node;
-> +       struct gpio_charger_platform_data *pdata;
-> +       const char *chargetype;
-> +       enum of_gpio_flags flags;
-> +       int ret;
-> +
-> +       if (!np)
-> +               return ERR_PTR(-ENOENT);
-> +
-> +       pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +       if (!pdata)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       pdata->name = np->name;
-> +
-> +       pdata->gpio = of_get_gpio_flags(np, 0, &flags);
-> +       if (pdata->gpio < 0) {
-> +               if (pdata->gpio != -EPROBE_DEFER)
-> +                       dev_err(dev, "could not get charger gpio\n");
-> +               return ERR_PTR(pdata->gpio);
-> +       }
-> +
-> +       pdata->gpio_active_low = !!(flags & OF_GPIO_ACTIVE_LOW);
-> +
-> +       pdata->type = POWER_SUPPLY_TYPE_UNKNOWN;
-> +       ret = of_property_read_string(np, "charger-type", &chargetype);
-> +       if (ret >= 0) {
-> +               if (!strncmp("unknown", chargetype, 7))
-> +                       pdata->type = POWER_SUPPLY_TYPE_UNKNOWN;
-> +               else if (!strncmp("battery", chargetype, 7))
-> +                       pdata->type = POWER_SUPPLY_TYPE_BATTERY;
-> +               else if (!strncmp("ups", chargetype, 3))
-> +                       pdata->type = POWER_SUPPLY_TYPE_UPS;
-> +               else if (!strncmp("mains", chargetype, 5))
-> +                       pdata->type = POWER_SUPPLY_TYPE_MAINS;
-> +               else if (!strncmp("usb-sdp", chargetype, 7))
-> +                       pdata->type = POWER_SUPPLY_TYPE_USB;
-> +               else if (!strncmp("usb-dcp", chargetype, 7))
-> +                       pdata->type = POWER_SUPPLY_TYPE_USB_DCP;
-> +               else if (!strncmp("usb-cdp", chargetype, 7))
-> +                       pdata->type = POWER_SUPPLY_TYPE_USB_CDP;
-> +               else if (!strncmp("usb-aca", chargetype, 7))
-> +                       pdata->type = POWER_SUPPLY_TYPE_USB_ACA;
-> +               else
-> +                       dev_warn(dev, "unknown charger type %s\n", chargetype);
-> +       }
-> +
-> +       return pdata;
-> +}
-> +
->  static int gpio_charger_probe(struct platform_device *pdev)
->  {
->         const struct gpio_charger_platform_data *pdata = pdev->dev.platform_data;
-> @@ -78,8 +133,13 @@ static int gpio_charger_probe(struct platform_device *pdev)
->         int irq;
->
->         if (!pdata) {
-> -               dev_err(&pdev->dev, "No platform data\n");
-> -               return -EINVAL;
-> +               pdata = gpio_charger_parse_dt(&pdev->dev);
-> +               if (IS_ERR(pdata)) {
-> +                       ret = PTR_ERR(pdata);
-> +                       if (ret != -EPROBE_DEFER)
-> +                               dev_err(&pdev->dev, "No platform data\n");
-> +                       return ret;
-> +               }
->         }
->
->         if (!gpio_is_valid(pdata->gpio)) {
-> @@ -103,6 +163,7 @@ static int gpio_charger_probe(struct platform_device *pdev)
->         charger->get_property = gpio_charger_get_property;
->         charger->supplied_to = pdata->supplied_to;
->         charger->num_supplicants = pdata->num_supplicants;
-> +       charger->of_node = pdev->dev.of_node;
->
->         ret = gpio_request(pdata->gpio, dev_name(&pdev->dev));
->         if (ret) {
-> @@ -189,6 +250,12 @@ static int gpio_charger_resume(struct device *dev)
->  static SIMPLE_DEV_PM_OPS(gpio_charger_pm_ops,
->                 gpio_charger_suspend, gpio_charger_resume);
->
-> +static const struct of_device_id gpio_charger_match[] = {
-> +       { .compatible = "gpio-charger" },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_charger_match);
-> +
->  static struct platform_driver gpio_charger_driver = {
->         .probe = gpio_charger_probe,
->         .remove = gpio_charger_remove,
-> @@ -196,6 +263,7 @@ static struct platform_driver gpio_charger_driver = {
->                 .name = "gpio-charger",
->                 .owner = THIS_MODULE,
->                 .pm = &gpio_charger_pm_ops,
-> +               .of_match_table = of_match_ptr(gpio_charger_match),
+Maybe we should be passing the parent/owner device to the iterator
+functions?
 
-I'm still not convinced about of_match_ptr() here as you can see in my
-response to v2.  ...but at most it could give a warning that would be
-something like "gpio_charger_match defined but not used" in the
-!CONFIG_OF case, so I guess it's fine?
+Thanks.
 
-In any case, everything else looks reasonable:
-
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Tested-by: Doug Anderson <dianders@chromium.org>
+-- 
+Dmitry
