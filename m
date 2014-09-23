@@ -1,91 +1,58 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v5 05/11] drm: add Atmel HLCDC Display Controller support
-Date: Tue, 23 Sep 2014 11:55:42 +0200
-Message-ID: <5421439E.80501@atmel.com>
-References: <1410165822-16868-1-git-send-email-boris.brezillon@free-electrons.com> <1410165822-16868-6-git-send-email-boris.brezillon@free-electrons.com> <20140922211811.11279ff0@bbrezillon> <20140923063232.GG30514@ulmo> <20140923092436.12b1f2c4@bbrezillon> <20140923084228.GN30514@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20140923084228.GN30514@ulmo>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Bo Shen <voice.shen@atmel.com>, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] of: fdt: fix memory range check
+Date: Tue, 23 Sep 2014 10:59:09 +0100
+Message-ID: <1411466349-14166-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
+In cases where board has below memory DT node
 
-On 23/09/2014 10:42, Thierry Reding :
-> On Tue, Sep 23, 2014 at 09:24:36AM +0200, Boris BREZILLON wrote:
->> Hi Thierry,
->>
->> On Tue, 23 Sep 2014 08:32:33 +0200
->> Thierry Reding <thierry.reding@gmail.com> wrote:
->>
->>> On Mon, Sep 22, 2014 at 09:18:11PM +0200, Boris BREZILLON wrote:
->>>> On Mon,  8 Sep 2014 10:43:36 +0200 Boris BREZILLON <boris.brezillon@free-electrons.com> wrote:
->>> [...]
->>>>> diff --git a/drivers/gpu/drm/atmel-hlcdc/Kconfig b/drivers/gpu/drm/atmel-hlcdc/Kconfig
->>>>> new file mode 100644
->>>>> index 0000000..6d0d785
->>>>> --- /dev/null
->>>>> +++ b/drivers/gpu/drm/atmel-hlcdc/Kconfig
->>>>> @@ -0,0 +1,13 @@
->>>>> +config DRM_ATMEL_HLCDC
->>>>> +	tristate "DRM Support for ATMEL HLCDC Display Controller"
->>>>> +	depends on DRM && OF && MFD_ATMEL_HLCDC && COMMON_CLK
->>>>
->>>> I forgot to remove MFD_ATMEL_HLCDC dependency which is now selected...
->>>>
->>>>
->>>>> +	select DRM_GEM_CMA_HELPER
->>>>> +	select DRM_KMS_HELPER
->>>>> +	select DRM_KMS_FB_HELPER
->>>>> +	select DRM_KMS_CMA_HELPER
->>>>> +	select DRM_PANEL
->>>>> +	select MFD_ATMEL_HLCDC
->>>>
->>>> here.
->>>
->>> Maybe this was discussed earlier, but can you remind me why this was
->>> done? The changelog says it was to "simplify", but there's been some
->>> recent discussion that select should never be used for symbols that
->>> are user-visible because that can lead to issues.
->>>
->>> What were the problems having this as "depends on"?
->>
->> I had several people complaining about the complexity introduced by
->> this dependency scheme: if one wants to select the HLCDC KMS driver, he
->> has to select the HLCDC MFD driver first, which is kind of tricky.
-> 
-> That's not at all tricky in my opinion. The MFD provides an LCDC as one
-> of the devices, so requiring it to be selected before you can enable any
-> of the subdrivers is very natural. It's also how the majority of MFD
-> devices work.
+memory{
+	device_type = "memory";
+	reg = <0x80000000 0x80000000>;
+};
 
-Well, that's me that suggested to Boris to change this: I had very hard
-time to enable the LCD driver when first moving to this new HLCD driver.
-Usually, when I want to enable a LCD driver, I go to the "Graphics
-support" menu.
+Check on the memory range in fdt.c will always fail because it is
+comparing MAX_PHYS_ADDR with base + size, in fact it should compare
+it with base + size - 1.
 
->> The MFD_ATMEL_HLCDC symbol is now hidden (see patch 1) which should
->> solve part of the issue.
-> 
-> I think that's wrong but I don't care enough to object.
+This issue was originally noticed on Qualcomm IFC6410 board.
+Without this patch kernel shows up noticed unnecessary warnings
 
-Ok, me, I kind of like it: the MFD is something convenient to aggregate
-two drivers using the same register set (LCD and Backlight) but has no
-real "feature" interest in my opinion: it ease things.
+[    0.000000] Machine model: Qualcomm APQ8064/IFC6410
+[    0.000000] Ignoring memory range 0xffffffff - 0x100000000
+[    0.000000] cma: Reserved 64 MiB at ab800000
 
->> Now that I have your attention :-), could you review this series [1] ?
->> The HLCDC KMS depends on those changes (which you and Laurent
->> suggested).
-> 
-> My attention span tends to be very short these days. No promises. =)
-> 
-> Thierry
-> 
+as a result the size get reduced to 0x7fffffff which looks wrong.
 
-Thanks, bye,
+This patch fixes the check involved in generating this warning and
+as a result it also fixes the wrong size calculation.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/of/fdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 79cb831..3f5736c 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -937,7 +937,7 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+ 		return;
+ 	}
+ 
+-	if (base + size > MAX_PHYS_ADDR) {
++	if (base + size - 1 > MAX_PHYS_ADDR) {
+ 		pr_warning("Ignoring memory range 0x%lx - 0x%llx\n",
+ 				ULONG_MAX, base + size);
+ 		size = MAX_PHYS_ADDR - base;
 -- 
-Nicolas Ferre
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
