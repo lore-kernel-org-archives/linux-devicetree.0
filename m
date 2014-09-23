@@ -1,297 +1,238 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [RFC PATCH v2 00/16] Add ACPI _DSD and unified device properties support
-Date: Mon, 22 Sep 2014 16:29:40 -0700
-Message-ID: <CAK5ve-LgmjB2jEivTZtRZGE=OehC8CYEeGUO7wiJdW4Ue7Hp7Q@mail.gmail.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for ps8622 DT properties
+Date: Tue, 23 Sep 2014 03:00:37 +0300
+Message-ID: <7550026.qs7FRi8hDC@avalon>
+References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <CAEC9eQOSFj-NWVYCtdcQz0nFM+1rVxPeC76eBdj-X4w+HWujZA@mail.gmail.com> <20140922113514.GS1470@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: multipart/signed; boundary="nextPart1919974.rbhijzjc4y"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140922113514.GS1470@ulmo>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Ajay kumar <ajaynumb@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, InKi Dae <inki.dae@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 4:52 AM, Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> This is a second revision of the patches first submitted here [1].
->
-> The recent publication of the ACPI 5.1 specification [2] adds a reserved name
-> for Device Specific Data (_DSD, Section 6.2.5). This mechanism allows for
-> passing arbitrary hardware description data to the OS. The exact format of the
-> _DSD data is specific to the UUID paired with it [3].
->
-> An ACPI Device Properties UUID has been defined [4] to provide a format
-> compatible with existing device tree schemas. The purpose for this was to
-> allow for the reuse of the existing schemas and encourage the development
-> of firmware agnostic device drivers.
->
-> This series accomplishes the following (as well as some other dependencies):
->
->  * Add _DSD support to the ACPI core
->    This simply reads the UUID and the accompanying Package
->
->  * Add ACPI Device Properties _DSD format support
->    This understands the hierarchical key:value pair structure
->    defined by the Device Properties UUID
->
->  * Add a unified device properties API with ACPI and OF backends
->    This provides for the firmware agnostic device properties
->    Interface to be used by drivers
->
->  * Provides 3 example drivers that were previously Device Tree aware that
->    can now be used with either Device Tree or ACPI Device Properties. The
->    drivers use "PRP0001" as their _HID which means that the match should be
->    done using driver's .of_match_table instead.
->
-> The patch series has been tested on Minnoboard and Minnowboard MAX and the
-> relevant part of DSDTs are at the end of this cover letter.
->
-> This series does not provide for a means to append to a system DSDT. That
-> will ultimately be required to make the most effective use of the _DSD
-> mechanism. Work is underway on that as a separate effort.
->
-> Most important changes to the previous RFC version:
->
->   * Added wrapper functions for most used property types
->   * Return -EOVERFLOW in case integer would not fit to a type
->   * Dropped dev_prop_ops
->   * We now have dev_node_xxx() functions to access firmware node
->     properties without dev pointer
->   * The accessor function names try to be close to their corresponding of_*
->     counterpart
->   * Tried to have a bit better examples in the documentation patch
->   * gpiolib got support for _DSD and also it now understand firmware node
->     properties with dev_node_get_named_gpiod() that requests the GPIO
->     properly.
->   * Support for "PRP0001" _HID/_CID. This means that the match should be
->     done using driver .of_match_table instead.
->   * Add unified property support for at25 SPI eeprom driver as well.
->
-> [1] https://lkml.org/lkml/2014/8/17/10
-> [2] http://www.uefi.org/sites/default/files/resources/ACPI_5_1release.pdf
-> [3] http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel.htm
-> [4] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
->
-> Aaron Lu (2):
->   input: gpio_keys_polled - Add support for GPIO descriptors
->   input: gpio_keys_polled - Make use of device property API
->
-> Max Eliaser (2):
->   leds: leds-gpio: Make use of device property API
->   leds: leds-gpio: Add ACPI probing support
->
-> Mika Westerberg (11):
->   ACPI: Add support for device specific properties
->   ACPI: Allow drivers to match using Device Tree compatible property
->   ACPI: Document ACPI device specific properties
->   mfd: Add ACPI support
->   gpio / ACPI: Add support for _DSD device properties
->   gpio: Add support for unified device properties interface
->   gpio: sch: Consolidate core and resume banks
->   leds: leds-gpio: Add support for GPIO descriptors
->   input: gpio_keys_polled - Add ACPI probing support
->   misc: at25: Make use of device property API
->   misc: at25: Add ACPI probing support
->
-> Rafael J. Wysocki (1):
->   Driver core: Unified device properties interface for platform firmware
->
 
-I'm good with the LEDs change, please go ahead with my Ack
-Acked-by: Bryan Wu <cooloney@gmail.com>
+--nextPart1919974.rbhijzjc4y
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-Thanks,
--Bryan
+On Monday 22 September 2014 13:35:15 Thierry Reding wrote:
+> On Mon, Sep 22, 2014 at 04:53:22PM +0530, Ajay kumar wrote:
+> > On Mon, Sep 22, 2014 at 4:11 PM, Thierry Reding wrote:
+> > > On Mon, Sep 22, 2014 at 02:01:38PM +0530, Ajay kumar wrote:
+> > >> On Mon, Sep 22, 2014 at 1:40 PM, Thierry Reding wrote:
+> > >> > On Thu, Sep 18, 2014 at 11:20:40AM +0530, Ajay kumar wrote:
+> > >> >> On Wed, Sep 17, 2014 at 9:52 PM, Tomi Valkeinen wrote:
+> > >> >> > On 17/09/14 17:29, Ajay kumar wrote:
+> > >> >> >> On Wed, Sep 17, 2014 at 5:22 PM, Tomi Valkeinen wrote:
+> > >> >> >>> On 27/08/14 17:39, Ajay Kumar wrote:
+> > >> >> >>>> Add documentation for DT properties supported by ps8622/=
+ps8625
+> > >> >> >>>> eDP-LVDS converter.
+> > >> >> >>>>=20
+> > >> >> >>>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> > >> >> >>>> ---
+> > >> >> >>>>=20
+> > >> >> >>>>  .../devicetree/bindings/video/bridge/ps8622.txt    |   =
+20
+> > >> >> >>>>  ++++++++++++++++++++ 1 file changed, 20 insertions(+)
+> > >> >> >>>>  create mode 100644
+> > >> >> >>>>  Documentation/devicetree/bindings/video/bridge/ps8622.t=
+xt
+> > >> >> >>>>
+> > >> >> >>>> diff --git
+> > >> >> >>>> a/Documentation/devicetree/bindings/video/bridge/ps8622.=
+txt
+> > >> >> >>>> b/Documentation/devicetree/bindings/video/bridge/ps8622.=
+txt
+> > >> >> >>>> new file mode 100644
+> > >> >> >>>> index 0000000..0ec8172
+> > >> >> >>>> --- /dev/null
+> > >> >> >>>> +++ b/Documentation/devicetree/bindings/video/bridge/ps8=
+622.txt
+> > >> >> >>>> @@ -0,0 +1,20 @@
+> > >> >> >>>> +ps8622-bridge bindings
+> > >> >> >>>> +
+> > >> >> >>>> +Required properties:
+> > >> >> >>>> +     - compatible: "parade,ps8622" or "parade,ps8625"
+> > >> >> >>>> +     - reg: first i2c address of the bridge
+> > >> >> >>>> +     - sleep-gpios: OF device-tree gpio specification f=
+or PD_
+> > >> >> >>>> pin.
+> > >> >> >>>> +     - reset-gpios: OF device-tree gpio specification f=
+or RST_
+> > >> >> >>>> pin.
+> > >> >> >>>> +
+> > >> >> >>>> +Optional properties:
+> > >> >> >>>> +     - lane-count: number of DP lanes to use
+> > >> >> >>>> +     - use-external-pwm: backlight will be controlled b=
+y an
+> > >> >> >>>> external PWM
+> > >> >> >>>=20
+> > >> >> >>> What does this mean? That the backlight support from ps86=
+25 is
+> > >> >> >>> not used? If so, maybe "disable-pwm" or something?
+> > >> >> >>=20
+> > >> >> >> "use-external-pwm" or "disable-bridge-pwm" would be better=
+.
+> > >> >> >=20
+> > >> >> > Well, the properties are about the bridge. "use-external-pw=
+m"
+> > >> >> > means that the bridge uses an external PWM, which, if I und=
+erstood
+> > >> >> > correctly, is not what the property is about.
+> > >> >> >=20
+> > >> >> > "disable-bridge-pwm" is ok, but the "bridge" there is extra=
+. The
+> > >> >> > properties are about the bridge, so it's implicit.
+> > >> >>=20
+> > >> >> Ok. I will use "disable-pwm".
+> > >> >=20
+> > >> > Why is this even necessary? According to the datasheet this de=
+vice
+> > >> > has circuitry for backlight control. If so, I'd expect it to e=
+xpose
+> > >> > either a backlight device or a PWM device. That way unless som=
+ebody
+> > >> > is using the backlight/PWM exposed by the bridge the bridge ca=
+n
+> > >> > simply disable PWM.
+> > >>=20
+> > >> The driver does expose a backlight device.
+> > >> And, the decision(whether to expose a backlight device or not) i=
+s made
+> > >> based on the DT flag "use-external-pwm".
+> > >> This was discussed before, and you suggested to use the boolean
+> > >> property, refer to this link:
+> > >> http://lists.freedesktop.org/archives/dri-devel/2014-July/065048=
+.html
+> > >=20
+> > > I think you misunderstood what I said, or maybe I didn't explain =
+clearly
+> > > what I meant. If the PS8622 provides a backlight there's nothing =
+wrong
+> > > with always exposing it. The bridge itself isn't going to be usin=
+g the
+> > > backlight anyway. Rather the panel itself should be using the bac=
+klight
+> > > device exposed by PS8622 or some separate backlight device.
+> > >=20
+> > > To illustrate by an example:
+> > >         ps8622: ... {
+> > >        =20
+> > >                 compatible =3D "parade,ps8622";
+> > >                 ...
+> > >        =20
+> > >         };
+> > >        =20
+> > >         panel {
+> > >        =20
+> > >                 ...
+> > >                 backlight =3D <&ps8622>;
+> > >                 ...
+> > >        =20
+> > >         };
+> >=20
+> > No, if ps8622 backlight control is used, we need not specify the ba=
+cklight
+> > phandle for the panel driver. Somehow, ps8622 internal circuitry ke=
+eps
+> > the bootup glitch free :)
+> > Backlight control and panel controls can be separate then.
+>=20
+> But they shouldn't. Your panel driver should always be the one to
+> control backlight. How else is the bridge supposed to know when to tu=
+rn
+> backlight on or off?
+>=20
+> > > What you did in v6 of this series was look up a backlight device =
+and
+> > > then not use it. That seemed unnecessary. Looking at v6 again the=
+ reason
+> > > for getting a phandle to the backlight was so that the device its=
+elf did
+> > > not expose its own backlight controlling circuitry if an external=
+ one
+> > > was being used. But since the bridge has no business controlling =
+the
+> > > backlight, having the backlight phandle in the bridge is not corr=
+ect.
+> > >=20
+> > > So I think what you could do in the driver instead is always expo=
+se the
+> > > backlight device. If the panel used a different backlight, the PS=
+8622's
+> > > internal on simply wouldn't be accessed. It would still be possib=
+le to
+> > > control the backlight in sysfs, but that shouldn't be a problem (=
+only
+> > > root can access it)
+> >=20
+> > That would be like simple exposing a feature which cannot be used
+> > by the user, ideally which "should not be" used by the user.
+>=20
+> And it won't be used unless they access the sysfs files directly. The=
+re
+> are a lot of cases where we expose functionality that cannot be
+> meaningfully used by the user. For example, a GPIO may not be routed =
+to
+> anything on a board, yet we don't explicitly hide any specific GPIOs
+> from users.
+>=20
+> > > That said, I have no strong objections to the boolean property if=
+ you
+> > > feel like it's really necessary.
+> >=20
+> > Won't you think having a boolean property for an optional
+> > feature of the device, is better than all these?
+>=20
+> Like I said, I'm indifferent on the matter. I don't think it's necess=
+ary
+> to hide the backlight device, but if you want to, please feel free to=
+ do
+> so.
 
+DT typically use
 
->  Documentation/acpi/enumeration.txt        |  27 ++
->  Documentation/acpi/properties.txt         | 410 +++++++++++++++++++++
->  drivers/acpi/Makefile                     |   1 +
->  drivers/acpi/internal.h                   |   6 +
->  drivers/acpi/property.c                   | 584 ++++++++++++++++++++++++++++++
->  drivers/acpi/scan.c                       |  93 ++++-
->  drivers/base/Makefile                     |   2 +-
->  drivers/base/property.c                   | 196 ++++++++++
->  drivers/gpio/devres.c                     |  35 ++
->  drivers/gpio/gpio-sch.c                   | 293 ++++++---------
->  drivers/gpio/gpiolib-acpi.c               |  78 +++-
->  drivers/gpio/gpiolib.c                    |  85 ++++-
->  drivers/gpio/gpiolib.h                    |   7 +-
->  drivers/input/keyboard/gpio_keys_polled.c | 169 +++++----
->  drivers/leds/leds-gpio.c                  | 188 +++++-----
->  drivers/mfd/mfd-core.c                    |  40 ++
->  drivers/misc/eeprom/at25.c                |  41 +--
->  drivers/of/base.c                         | 188 ++++++++++
->  include/acpi/acpi_bus.h                   |   8 +
->  include/linux/acpi.h                      |  90 ++++-
->  include/linux/gpio/consumer.h             |   7 +
->  include/linux/gpio_keys.h                 |   3 +
->  include/linux/leds.h                      |   1 +
->  include/linux/mfd/core.h                  |   3 +
->  include/linux/of.h                        |  37 ++
->  include/linux/property.h                  | 193 ++++++++++
->  26 files changed, 2377 insertions(+), 408 deletions(-)
->  create mode 100644 Documentation/acpi/properties.txt
->  create mode 100644 drivers/acpi/property.c
->  create mode 100644 drivers/base/property.c
->  create mode 100644 include/linux/property.h
->
-> DSDT modifications for Minnowboard (for leds-gpio.c and gpio_keys_polled.c)
-> ---------------------------------------------------------------------------
->
->     Scope (\_SB.PCI0.LPC)
->     {
->         Device (LEDS)
->         {
->             Name (_HID, "PRP0001")
->
->             Name (_CRS, ResourceTemplate () {
->                 GpioIo (Exclusive, PullDown, 0, 0, IoRestrictionOutputOnly,
->                         "\\_SB.PCI0.LPC", 0, ResourceConsumer) {10}
->                 GpioIo (Exclusive, PullDown, 0, 0, IoRestrictionOutputOnly,
->                         "\\_SB.PCI0.LPC", 0, ResourceConsumer) {11}
->             })
->
->             Name (_DSD, Package () {
->                   ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                   Package () {
->                       Package () {"compatible", Package () {"gpio-leds"}},
->                   }
->             })
->
->             Device (LEDH)
->             {
->                 Name (_DSD, Package () {
->                     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                     Package () {
->                         Package () {"label", "Heartbeat"},
->                         Package () {"gpios", Package () {^^LEDS, 0, 0, 0}},
->                         Package () {"linux,default-trigger", "heartbeat"},
->                         Package () {"linux,default-state", "off"},
->                         Package () {"linux,retain-state-suspended", 1},
->                     }
->                 })
->             }
->
->             Device (LEDM)
->             {
->                 Name (_DSD, Package () {
->                     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                     Package () {
->                         Package () {"label", "MMC0 Activity"},
->                         Package () {"gpios", Package () {^^LEDS, 1, 0, 0}},
->                         Package () {"linux,default-trigger", "mmc0"},
->                         Package () {"linux,default-state", "off"},
->                         Package () {"linux,retain-state-suspended", 1},
->                     }
->                 })
->             }
->         }
->
->         Device (BTNS)
->         {
->             Name (_HID, "PRP0001")
->
->             Name (_CRS, ResourceTemplate () {
->                 GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionInputOnly,
->                         "\\_SB.PCI0.LPC", 0, ResourceConsumer) {0, 1, 2, 3}
->             })
->
->             Name (_DSD, Package () {
->                 ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                 Package () {
->                     Package () {"compatible", Package () {"gpio-keys-polled"}},
->                     Package () {"poll-interval", 100},
->                     Package () {"autorepeat", 1}
->                 }
->             })
->
->             Device (BTN0)
->             {
->                 Name (_DSD, Package () {
->                     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                     Package () {
->                         Package () {"linux,code", 105},
->                         Package () {"linux,input-type", 1},
->                         Package () {"gpios", Package () {^^BTNS, 0, 0, 1}},
->                     }
->                 })
->             }
->
->             Device (BTN1)
->             {
->                 Name (_DSD, Package () {
->                     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                     Package () {
->                         Package () {"linux,code", 108},
->                         Package () {"linux,input-type", 1},
->                         Package () {"gpios", Package (4) {^^BTNS, 0, 1, 1}},
->                     }
->                 })
->             }
->
->             Device (BTN2)
->             {
->                 Name (_DSD, Package () {
->                     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                     Package () {
->                         Package () {"linux,code", 103},
->                         Package () {"linux,input-type", 1},
->                         Package () {"gpios", Package () {^^BTNS, 0, 2, 1}},
->                     }
->                 })
->             }
->
->             Device (BTN3)
->             {
->                 Name (_DSD, Package () {
->                     ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                     Package ()
->                     {
->                         Package () {"linux,code", 106},
->                         Package () {"linux,input-type", 1},
->                         Package () {"gpios", Package (4) {^^BTNS, 0, 3, 1}},
->                     }
->                 })
->             }
->         }
->     }
->
-> DSDT modifications for Minnowboard MAX (for at25.c)
-> ---------------------------------------------------
->
->     Scope (\_SB.SPI1)
->     {
->         Device (AT25)
->         {
->             Name (_HID, "PRP0001")
->             Method (_CRS, 0, Serialized) {
->                 Name (UBUF, ResourceTemplate () {
->                     SpiSerialBus (0x0000, PolarityLow, FourWireMode, 0x08,
->                         ControllerInitiated, 0x007A1200, ClockPolarityLow,
->                         ClockPhaseSecond, "\\_SB.SPI1",
->                         0x00, ResourceConsumer)
->                 })
->                 Return (UBUF)
->             }
->
->             Name (_DSD, Package () {
->                 ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                 Package () {
->                     Package () {"compatible", Package () {"atmel,at25"}},
->                     Package () {"size", 1024},
->                     Package () {"pagesize", 32},
->                     Package () {"address-width", 16},
->                 }
->             })
->
->             Method (_STA, 0, NotSerialized)
->             {
->                 Return (0xF)
->             }
->         }
->     }
-> --
-> 2.1.0
->
+=09status =3D "disabled"
+
+to disable devices. In this case we don't want to disable the ps8622=20=
+
+completely, but just one of its functions. Maybe a "backlight-status" p=
+roperty=20
+could be used for that ? If that's considered too verbose, I would be f=
+ine=20
+with a "disable-<feature>" boolean property too.
+
+> Another alternative would be not to expose it at all and not have the=
+
+> boolean property since you don't seem to have a way to test it in the=
+
+> first place (or at least there's no device support upstream where it'=
+s
+> needed).
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
+
+--nextPart1919974.rbhijzjc4y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAABAgAGBQJUILgqAAoJEIkPb2GL7hl1WFMH/jOBjTqgOSRv4fVDDT6ofLoG
+85uAJX5eMV85wM/9tuaR4hhRCB/qfGCejm8zNpGM/D3rEjV2XqUitKaMtt9dk/he
+Rqc/CF4P1HZlvTe+CmRB5khWPtPU89XymnOq5wJmC0Qc6nj9EOm+ssE0V0wnodL4
+MAR9kTv4jwf66xYTA0xjwLdYLCWPkkx3pXx4o+aWAwSH5S9h7gesxd5RdcqIhX93
+KWgromAgzBZEaSgZLj8Y4YLjuzwlYbPjaCgZoRYqY1ro8GOp56pA2MAGOhExnajO
+aJCeyAzs0bJkSVUm8Ulb0JafboUx7hFye2pXsfrm3qiltMxzV/D8Z3V2c+qorj4=
+=nGz1
+-----END PGP SIGNATURE-----
+
+--nextPart1919974.rbhijzjc4y--
