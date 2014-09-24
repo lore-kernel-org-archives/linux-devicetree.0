@@ -1,66 +1,84 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v12 00/12] Support for creating generic PCI host bridges
- from DT
-Date: Wed, 24 Sep 2014 15:23:18 +0100
-Message-ID: <20140924142317.GC1994@e106497-lin.cambridge.arm.com>
-References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
- <20140923215435.GD27117@google.com>
- <20140923224810.GA32643@bart.dudau.co.uk>
- <CAErSpo5PBXSUeU_LP2m=9jxibmqxreL4tEeHBsc5To7D=_bAJA@mail.gmail.com>
- <CAL_Jsq+U=1JT0qqZgb=aR66Q4NYDyzOogspOmmpsp61pE+aCUg@mail.gmail.com>
+From: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from
+ device tree
+Date: Wed, 24 Sep 2014 16:22:22 +0200
+Message-ID: <20140924142222.GC22872@ci00147.xsens-tech.local>
+References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
+ <1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
+ <20140924131655.GG5729@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+U=1JT0qqZgb=aR66Q4NYDyzOogspOmmpsp61pE+aCUg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Liviu Dudau <liviu@dudau.co.uk>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20140924131655.GG5729@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 02:30:37PM +0100, Rob Herring wrote:
-> On Tue, Sep 23, 2014 at 6:00 PM, Bjorn Helgaas <bhelgaas@google.com> =
-wrote:
-> > On Tue, Sep 23, 2014 at 4:48 PM, Liviu Dudau <liviu@dudau.co.uk> wr=
-ote:
-> >> ...
-> >> While the next immediate target is converting pci-host-generic.c, =
-pci-imx6.c
-> >> and probably pcie-designware.c to my series, I would like to ask y=
-ou what
-> >> is your longer term plan. Now that I have got my head full of PCI =
-code,
-> >> I have some ideas but feel that meeting with you and all those inv=
-olved
-> >> in core PCI support would be a better venue than sending emails ba=
-ck and
-> >> forth. When is your next plan to attend a Linux conference?
-> >
-> > That would be nice.  Unfortunately, I don't know what the next
-> > conference will be yet.
->=20
-> Perhaps an irc meeting or Google hangout. These have been happening o=
-n
-> several areas like DT and ARM KVM.
+On Wed, Sep 24, 2014 at 02:16:55PM +0100, Mark Rutland wrote:
+> On Wed, Sep 24, 2014 at 02:11:17PM +0100, Frans Klaver wrote:
+> > In some cases you want to instantiate a battery even before it is
+> > attached; it is perfectly reasonable for a device to start up on
+> > wall-power and be connected to a battery later. The current advice is to
+> > instantiate a device explicitly in the kernel, or probe for the device
+> > from userspace. The downside of these approaches is that the user needs
+> > to keep the information related to the i2c battery in different places,
+> > which is inconvenient.
+> 
+> This really sounds like a Linux policy issue rather than something that
+> should be described in dt.
+> 
+> Presumably there's a reason we sanity cehck this in the first place.
+> What happens while the battery isn't plugged in? What can fail, and how?
 
-I'm open to the idea. I don't know if there is a recurring one already =
-for
-PCI or how Bjorn has been handling future planning previously.
+It was introduced in a22b41a31e53 "sbs-battery: Probe should try talking
+to the device", saying:
 
-Best regards,
-Liviu
+  "this driver doesn't actually try talking to the device at probe time,
+  so if it's incorrectly configured in the device tree or platform data
+  (or if the battery has been removed from the system), then probe will
+  succeed and every access will sit there and time out. The end result
+  is a possibly laggy system that thinks it has a battery but can never
+  read status, which isn't very useful."
 
->=20
-> Rob
->=20
+That's a reasonable thing to do, but it breaks just the feature I need.
+Besides that, the driver provides us with a gpio that indicates battery
+presence, which will also be useless if the device isn't present at
+probe time. That commit also doesn't take into account the fact that a
+battery could be removed after probing without any problems, leaving the
+system in the same state as before the probe change.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+Now if the battery isn't plugged in, it is never detected after it has
+been attached, unless you take action from userspace. Basically you
+don't know your battery level until it has been explicitly probed.
+
+We might also reduce the severity of the sanity check failure to produce
+a warning instead of an error. This would achieve that a developer might
+be warned that the battery isn't present, but also allow my use case
+where the battery may not be present at boot time. Was that what you
+meant with policy by the way?
+
+> 
+> > Add the "sbs,always-present" option to the device tree. If set, the
+> > battery is instantiated without sanity checking the connection.
+> 
+> From the description above, this name is incorrect. You're adding this
+> property to work around the battery _not_ being present at probe-time.
+> From a binding point of view, "instantiated" is somewhat meaningless --
+> that's an OS level detail rather than a contract detail.
+
+That's fair. I wasn't entirely sure of the name myself, so feel free to
+suggest some other names. It started out with "sbs,force-presence", but
+I would be just as happy using "sbs,always-register",
+"sbs,no-sanity-check" or something entirely different altogether.
+
+If we go with the downgrade of the status read error, the device tree
+requirement will be removed entirely.
+
+Thanks,
+Frans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
