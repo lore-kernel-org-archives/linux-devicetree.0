@@ -1,55 +1,73 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v7 3/3] regulator: qcom-rpm: Regulator driver for the
- Qualcomm RPM
-Date: Wed, 24 Sep 2014 16:45:07 +0100
-Message-ID: <20140924154507.GJ16977@sirena.org.uk>
+From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Subject: Re: [PATCH v7 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
+ binding
+Date: Wed, 24 Sep 2014 08:53:20 -0700
+Message-ID: <20140924155319.GA28481@sonymobile.com>
 References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1411428329-23172-4-git-send-email-bjorn.andersson@sonymobile.com>
- <20140924083518.GB4015@sirena.org.uk>
- <4437DA50-D8BC-4E78-821C-41440A08B9A9@codeaurora.org>
+ <1411428329-23172-2-git-send-email-bjorn.andersson@sonymobile.com>
+ <20140924082228.GF17801@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Xssso5lpTBgMxDfe"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4437DA50-D8BC-4E78-821C-41440A08B9A9@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <20140924082228.GF17801@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed 24 Sep 01:22 PDT 2014, Lee Jones wrote:
 
---Xssso5lpTBgMxDfe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Mon, 22 Sep 2014, Bjorn Andersson wrote:
+> 
+> > Add binding for the Qualcomm Resource Power Manager (RPM) found in 8660,
+> > 8960 and 8064 based devices. The binding currently describes the rpm
+> > itself and the regulator subnodes.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/qcom-rpm.txt |  246 ++++++++++++++++++++
+> 
+> Please adhere to: Documentation/devicetree/bindings/submitting-patches.txt
+> 
 
-On Wed, Sep 24, 2014 at 08:50:38AM -0500, Kumar Gala wrote:
+I assume you mean this part:
 
-Fix your mailer to word wrap within paragraphs please.
+  1) The Documentation/ portion of the patch should be a separate patch.
 
-> Mark, can you drop this until we see at least an RFC patch for the RPM
-> support for b-family SoCs (8074, 8084, etc) chips.  The regulator
-> could should either be the same or highly similar for b-family, but
-> until we see the core RPM driver on the b-family SoCs we will not know
-> that.
+But I doubt this document was written with include/dt-bindings in mind, because
+in my eyes they are part of "device tree bindings".
 
-No, send incremental patches.  This is the *seventh* resend of this
-code, I really don't want to have to reread it again.
+> >  include/dt-bindings/mfd/qcom-rpm.h                 |  154 ++++++++++++
+> >  2 files changed, 400 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> >  create mode 100644 include/dt-bindings/mfd/qcom-rpm.h
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> > new file mode 100644
+> > index 0000000..4264021
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+> 
+> This requires a DT Ack.
+> 
+> [...]
+> 
+> > +++ b/include/dt-bindings/mfd/qcom-rpm.h
+> 
+> Please split this into a separate patch.
+> 
 
---Xssso5lpTBgMxDfe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+But this is part of the device tree binding and the binding "depends" on it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> When you do, for this file only, please apply my:
+> 
+>   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
 
-iQEcBAEBAgAGBQJUIucCAAoJECTWi3JdVIfQ3r0H/1baQ7Em5fhCzTe+DMU3be5R
-w8a/f5W5BOA9UAzQMNo7P0EiTG/m9O/LZIdL9uJyo+eR48tf+xendmtYLhXLMqH7
-ESHkldfOPLVyDcuChKwfqAfMCxZ+sKHPN4ohuLGNNJID4uLPKsiXqrWihrG3jHBY
-83BQmf/P4Casg5hAkbNBYmVpqfjrivcFQ74K+tWyqnJXJbTNI3aX9J+nrRpTccu3
-5HOabre0RJh5NoPWDALvjppTLHCoff0TWMyr9p0LTv/AYPrv0BOX4s4pCTDE4Ghj
-AJiOMus1cBU1X5mP0HtJYxX/GvFrcBKs2BtLSkfgpxZblzOJvngl6dSFk10FsIs=
-=EEp/
------END PGP SIGNATURE-----
-
---Xssso5lpTBgMxDfe--
+Thanks,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
