@@ -1,11 +1,13 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH 00/12] Renesas R-Car DU HDMI support
-Date: Wed, 24 Sep 2014 23:04:20 +0300
-Message-ID: <1411589072-28609-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 10/12] video: Add ADV751[13] DT bindings documentation
+Date: Wed, 24 Sep 2014 23:04:30 +0300
+Message-ID: <1411589072-28609-11-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1411589072-28609-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1411589072-28609-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -19,99 +21,110 @@ To: dri-devel@lists.freedesktop.org
 Cc: devicetree@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
+compatible with HDMI 1.4 and DVI 1.0. They're described in DT using the
+OF graph bindings and a list of custom properties pertaining to the
+input video bus configuration.
 
-This patch set adds support for the HDMI output port present on the Renesas
-Koelsch board. Doing so requires two components, a driver for the external
-ADV7511W HDMI encoder, and support for HDMI encoders in the DU driver.
-
-The HDMI encoder drivers uses the DRM slave encoder framework and the
-component framework to communicate with the DU driver. The DT bindings are
-based on the OF graph bindings to link the display controller and encoder.
-
-The first two patches have been taken from Philipp Zabel's "[PATCH v3 0/8]
-Add of-graph helpers to loop over endpoints and find ports by id" series.
-Philipp, I don't see that series in linux-next, what's the merge status ?
-
-The R-Car DU patches start with a bit of refactoring, to finally add HDMI
-support in patch 08/12.
-
-The new adv7511 driver (patch 11/12) depends on decoupling EDID parsing from
-the DDC I2C adapter (patch 09/12). It supports DT instantiation only (bindings
-are documented in patch 10/12) for now. Platform data support could be added
-later if needed. The code is based on Lars-Peter Clausen's adv7511 driver,
-with heavy modifications.
-
-The last patch instantiates the HDMI encoder in the Koelsch board DT file and
-connects it to the DU output.
-
-The patch series depends on R-Car DU DT support (scheduled for merge in
-v3.18-rc1) and on Koelsch DU DT enablement (hopefully scheduled for merge in
-v3.19-rc1). For ease of testing and review I've pushed this series and its
-dependencies to a git branch on
-
-	git://linuxtv.org/pinchartl/fbdev.git drm/du/adv7511
-
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
 Cc: devicetree@vger.kernel.org
-
-Lars-Peter Clausen (2):
-  drm: Decouple EDID parsing from I2C adapter
-  drm: Add adv7511 encoder driver
-
-Laurent Pinchart (8):
-  drm: rcar-du: Remove platform data support
-  drm: rcar-du: Use for_each_endpoint_of_node()
-  drm: rcar-du: Pass the encoder DT node to rcar_du_encoder_init()
-  drm: rcar-du: Replace direct DRM encoder access with cast macro
-  drm: rcar-du: Replace drm_encoder with drm_slave_encoder
-  drm: rcar-du: Add HDMI encoder and connector support
-  video: Add ADV751[13] DT bindings documentation
-  ARM: shmobile: koelsch: Add DU HDMI output support
-
-Philipp Zabel (2):
-  of: Decrement refcount of previous endpoint in
-    of_graph_get_next_endpoint
-  of: Add for_each_endpoint_of_node helper macro
-
- .../devicetree/bindings/video/adi,adv7511.txt      |   87 ++
- arch/arm/boot/dts/r8a7791-koelsch.dts              |   50 +-
- drivers/gpu/drm/drm_edid.c                         |   26 +-
- drivers/gpu/drm/i2c/Kconfig                        |    6 +
- drivers/gpu/drm/i2c/Makefile                       |    2 +
- drivers/gpu/drm/i2c/adv7511.c                      | 1007 ++++++++++++++++++++
- drivers/gpu/drm/i2c/adv7511.h                      |  289 ++++++
- drivers/gpu/drm/rcar-du/Kconfig                    |   11 +-
- drivers/gpu/drm/rcar-du/Makefile                   |    2 +
- drivers/gpu/drm/rcar-du/rcar_du_crtc.h             |   10 +-
- drivers/gpu/drm/rcar-du/rcar_du_drv.c              |    4 +-
- drivers/gpu/drm/rcar-du/rcar_du_drv.h              |    2 -
- drivers/gpu/drm/rcar-du/rcar_du_encoder.c          |   45 +-
- drivers/gpu/drm/rcar-du/rcar_du_encoder.h          |   23 +-
- drivers/gpu/drm/rcar-du/rcar_du_hdmicon.c          |  118 +++
- drivers/gpu/drm/rcar-du/rcar_du_hdmicon.h          |   31 +
- drivers/gpu/drm/rcar-du/rcar_du_hdmienc.c          |  151 +++
- drivers/gpu/drm/rcar-du/rcar_du_hdmienc.h          |   35 +
- drivers/gpu/drm/rcar-du/rcar_du_kms.c              |   65 +-
- drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c          |   31 +-
- drivers/gpu/drm/rcar-du/rcar_du_lvdscon.h          |    2 -
- drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h          |    1 -
- drivers/gpu/drm/rcar-du/rcar_du_vgacon.c           |    5 +-
- drivers/of/base.c                                  |    9 +-
- include/drm/drm_edid.h                             |    4 +
- include/linux/of_graph.h                           |   11 +
- include/linux/platform_data/rcar-du.h              |   74 --
- 27 files changed, 1902 insertions(+), 199 deletions(-)
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+---
+ .../devicetree/bindings/video/adi,adv7511.txt      | 87 ++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/video/adi,adv7511.txt
- create mode 100644 drivers/gpu/drm/i2c/adv7511.c
- create mode 100644 drivers/gpu/drm/i2c/adv7511.h
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_hdmicon.c
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_hdmicon.h
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_hdmienc.c
- create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_hdmienc.h
- delete mode 100644 include/linux/platform_data/rcar-du.h
 
+diff --git a/Documentation/devicetree/bindings/video/adi,adv7511.txt b/Documentation/devicetree/bindings/video/adi,adv7511.txt
+new file mode 100644
+index 0000000..aa41d9a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/adi,adv7511.txt
+@@ -0,0 +1,87 @@
++Analog Device ADV7511(W)/13 HDMI Encoders
++-----------------------------------------
++
++The ADV7511, ADV7511W and ADV7513 are HDMI audio and video transmitters
++compatible with HDMI 1.4 and DVI 1.0. They support color space conversion,
++S/PDIF, CEC and HDCP.
++
++Required properties:
++
++- compatible: Should be one of "adi,adv7511", "adi,adv7511w" or "adi,adv7513"
++- reg: I2C slave address
++
++The ADV7511 supports a large number of input data formats that differ by their
++color depth, color format, clock mode, bit justification and random
++arrangement of components on the data bus. The combination of the following
++properties describe the input and map directly to the video input tables of the
++ADV7511 datasheet that document all the supported combinations.
++
++- adi,input-depth: Number of bits per color component at the input (8, 10 or
++  12).
++- adi,input-colorspace: The input color space, one of "rgb", "yuv422" or
++  "yuv444".
++- adi,input-clock: The input clock type, one of "1x" (one clock cycle per
++  pixel), "2x" (two clock cycles per pixel), "ddr" (one clock cycle per pixel,
++  data driven on both edges).
++
++The following input format properties are required except in "rgb 1x" and
++"yuv444 1x" modes, in which case they must not be specified.
++
++- adi,input-style: The input components arrangement variant (1, 2 or 3).
++- adi,input-justification: The input bit justification ("left", "evenly",
++  "right").
++
++Optional properties:
++
++- interrupts: Specifier for the ADV7511 interrupt
++- pd-gpios: Specifier for the GPIO connected to the power down signal
++
++- adi,clock-delay: Video data clock delay relative to the pixel clock, in ps
++  (-1200 ps .. 1600 ps). Defaults to no delay.
++- adi,embedded-sync: The input uses synchronization signals embedded in the
++  data stream (similar to BT.656). Defaults to separate H/V synchronization
++  signals.
++
++Required nodes:
++
++The ADV7511 has two video ports. Their connections are modeled using the OF
++graph bindings specified in Documentation/devicetree/bindings/graph.txt.
++
++- Video port 0 for the RGB or YUV input
++- Video port 1 for the HDMI output
++
++
++Example
++-------
++
++	adv7511w: hdmi@39 {
++		compatible = "adi,adv7511w";
++		reg = <39>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7511w_in: endpoint {
++					remote-endpoint = <&dpi_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7511_out: endpoint {
++					remote-endpoint = <&hdmi_connector_in>;
++				};
++			};
++		};
++	};
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.5.5
