@@ -1,51 +1,70 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Adding selftest testdata dynamically into live tree
-Date: Wed, 24 Sep 2014 11:03:46 -0700
-Message-ID: <CA+rpMbKkS1D=QYSMftgZyTMbHS9+O=YjR+OL_RvzjJPjo2Ox6w@mail.gmail.com>
-References: <542064F1.4000601@elproma.com.pl>
+From: Sunil Kovvuri <sunil.kovvuri@gmail.com>
+Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
+Date: Wed, 24 Sep 2014 23:34:04 +0530
+Message-ID: <CA+sq2Ce8sb=YGma05qEk_992Mc9M92TxCk+RWsyi6tY-FVOCXw@mail.gmail.com>
+References: <1411573068-12952-1-git-send-email-rric@kernel.org>
+	<1411573068-12952-4-git-send-email-rric@kernel.org>
+	<3082935.e3X4GsVUDn@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542064F1.4000601-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Janusz_U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <3082935.e3X4GsVUDn@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: LAKML <linux-arm-kernel@lists.infradead.org>, Robert Richter <rric@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Robert Richter <rrichter@cavium.com>, Sunil Goutham <sgoutham@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 22, 2014 at 11:05 AM, Janusz U=C5=BCycki <j.uzycki@elproma.=
-com.pl> wrote:
-> Hi.
+On Wed, Sep 24, 2014 at 9:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wednesday 24 September 2014 17:37:45 Robert Richter wrote:
+>>
+>> +       pcie0@0x8480,00000000 {
 >
-> On 3.17.0-rc6-next-20140922+ with CONFIG_OF_SELFTEST enabled
-> zImage is recreated every time I call "make" despite I've not done
-> any change in source files and zImage was the same.
-> This is caused by the rm line:
+> The name should be pci, not pci0.
 
-I believe the make rule compiles test data without checking
-whether the test data dts files have been changed or not.
+Thanks, will change.
 
-I am not sure how to fix it. So, either direct me or feel free to
-pick it. Thanks!
-
->   CALL    scripts/checksyscalls.sh
->   CHK     include/generated/compile.h
->   DTC     drivers/of/testcase-data/testcases.dtb
->   DTB     drivers/of/testcase-data/testcases.dtb.S
->   AS      drivers/of/testcase-data/testcases.dtb.o
->   LD      drivers/of/of_selftest.o
->   LD      drivers/of/built-in.o
-> rm drivers/of/testcase-data/testcases.dtb.S
-> drivers/of/testcase-data/testcases.dtb
->   LD      drivers/built-in.o
->   LINK    vmlinux
->   LD      vmlinux.o
 >
-> best regards
-> Janusz
+>> +               compatible = "cavium,thunder-pcie";
+>> +               device_type = "pci";
+>> +               msi-parent = <&its>;
+>> +               bus-range = <0 255>;
+>> +               #size-cells = <2>;
+>> +               #address-cells = <3>;
+>> +               reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
+>> +               ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem ranges */
+>> +                       <0x03000000 0x8300 0x00000000 0x8300 0x00000000 0x80 0x00000000>,
+>> +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00000000 0x01 0x00000000>;
+>> +        };
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If you claim the entire 0-255 bus range, I think you should also
+> specify a domain, otherwise it's not predictable which domain you
+> get.
+>
+> The interrupt-map and interrupt-map-mask properties are required for PCI,
+> otherwise you can't do LSI interrupts.
+
+This PCI controller supports only MSIx interrupts which are edge triggered.
+
+>
+> If your hardware can support it, you should also list I/O space and prefetchable
+> memory spaces. Can you explain why you have multiple non-prefetchable ranges?
+
+Our hardware is an ECAM based host controller and doesn't support I/O
+and prefetchable memory spaces.
+All on-board PCI devices connected to this PCI controller have fixed resources
+and doesn't have to be allocated/reassigned. Some of these devices are
+SRIOV based.
+Kernel's SRIOV (pci/iov.c) is expecting 'resource->parent' hierarchy
+to be set, otherwise doesn't
+enable SRIOV device. So, here multiple non-prefetchable ranges of root bus
+aid in resource claiming and setting res->parent hierarchy.
+
+We do call "pci_claim_resource" in controller driver code.
+"[PATCH 1/6] pci, thunder: Add support for Thunder PCIe host controller."
+
+>
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
