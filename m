@@ -1,68 +1,62 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 1/2] regulator: st-pwm: get voltage and duty table from dts
-Date: Tue, 23 Sep 2014 19:13:06 -0700
-Message-ID: <CAD=FV=Umjmrp5grqvYnMe0=EjpH8++i4JL-5fOquyU+SGt95Fw@mail.gmail.com>
-References: <1411487622-10881-1-git-send-email-zyw@rock-chips.com>
-	<1411487622-10881-2-git-send-email-zyw@rock-chips.com>
-	<CAD=FV=Vhejf4JoEPUGwmBJdO+zfHgE5hgoT6V1DGtva7r_1Etg@mail.gmail.com>
-	<542222BC.4060203@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <542222BC.4060203@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 2/3] dt-bindings: video: Add for rockchip display subsytem
+Date: Wed, 24 Sep 2014 10:13:19 +0800
+Message-ID: <1411524799-14674-1-git-send-email-mark.yao@rock-chips.com>
+References: <1411524672-14524-1-git-send-email-mark.yao@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411524672-14524-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rom Lemarchand <romlem-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cym-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+This add a display subsystem comprise the all display interface nodes.
 
-On Tue, Sep 23, 2014 at 6:47 PM, Chris Zhong <zyw@rock-chips.com> wrote:
->
-> On 09/24/2014 07:43 AM, Doug Anderson wrote:
->>
->> Chris,
->>
->> On Tue, Sep 23, 2014 at 8:53 AM, Chris Zhong <zyw@rock-chips.com> wrote:
->>>
->>> Get voltage & duty table from device tree might be better, other
->>> platforms can also use this
->>> driver without any modify.
->>>
->>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->>> Reviewed-by: Doug Anderson <dianders@chromium.org>
->>
->> I finally managed to get everything setup and I've now tested this
->> myself on an rk3288-based board.
->>
->> Tested-by: Doug Anderson <dianders@chromium.org>
->>
->> I'd imagine the next step is for Lee to comment on the patch and when
->> he's happy with it Mark Brown will land it?
->>
->>
->> One thing that's still a bit odd (though no different than the
->> behavior of the driver from before you touched it, so it shouldn't
->> block landing IMHO) is that at boot time this regulator will report
->> that it's at the highest voltage but the voltage won't actually change
->> until the first client sets the voltage.
->
-> Yes, I knew this problem, since the default of duty cycle is 0, not a true
-> value.
-> If we can get duty from pwm, this regulator will report a correct voltage.
+Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+Changes in v2:
+- add DRM master device node to list all display nodes that comprise
+  the graphics subsystem.
 
-I don't think it's possible in all cases to figure out what the
-voltage was before this regulator was probed.
+Changes in v3: None
 
-* pin might have been input w/ pullup, pulldown, or no pull
-* pin might have been driven high or driven low
+Changes in v4: None
 
-In that case trying to read the duty from the pwm wouldn't make sense.
-...but I guess you could add a property to the PWM driver to say that
-it stays enabled at boot if the FW left it enabled (and keep the same
-duty cycle / clocks?).  That would at least solve the problem where
-the firmware configured the PWM and left it in a specific state even
-if it doesn't solve the above problem...
+Changes in v5: None
 
+ .../devicetree/bindings/video/rockchip-drm.txt     |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/rockchip-drm.txt
 
--Doug
+diff --git a/Documentation/devicetree/bindings/video/rockchip-drm.txt b/Documentation/devicetree/bindings/video/rockchip-drm.txt
+new file mode 100644
+index 0000000..7fff582
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/rockchip-drm.txt
+@@ -0,0 +1,19 @@
++Rockchip DRM master device
++================================
++
++The Rockchip DRM master device is a virtual device needed to list all
++vop devices or other display interface nodes that comprise the
++graphics subsystem.
++
++Required properties:
++- compatible: Should be "rockchip,display-subsystem"
++- ports: Should contain a list of phandles pointing to display interface port
++  of vop devices. vop definitions as defined in
++  Documentation/devicetree/bindings/video/rockchip-vop.txt
++
++example:
++
++display-subsystem {
++	compatible = "rockchip,display-subsystem";
++	ports = <&vopl_out>, <&vopb_out>;
++};
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
