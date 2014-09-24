@@ -1,62 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] GPIO: 74xx-mmio: Add DT bindings documentation
-Date: Wed, 24 Sep 2014 13:26:26 +0200
-Message-ID: <CACRpkdYhebMPV0HNHkLK1dOO7WCXs=mUo=zsp_8WGarbD4r-_g@mail.gmail.com>
-References: <1411112404-16040-1-git-send-email-shc_work@mail.ru>
-	<1411112404-16040-3-git-send-email-shc_work@mail.ru>
-	<CAMuHMdV2gkx+tVoYL_zcYg0ZtYkkascQiTOaTfDUuRVMxFkdTw@mail.gmail.com>
-	<1411491087.608315333@f51.i.mail.ru>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v6 07/12] usb: chipidea: add a usb2 driver for ci13xxx
+Date: Wed, 24 Sep 2014 19:29:05 +0800
+Message-ID: <20140924112902.GA23331@peterchendt>
+References: <1411468088-5702-1-git-send-email-antoine.tenart@free-electrons.com>
+ <20140924022736.GA5307@peterchendt> <2990737.4KzKXPZhaB@wuerfel>
+ <2923729.dtX0WmHSV0@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1411491087.608315333@f51.i.mail.ru>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2923729.dtX0WmHSV0@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: balbi@ti.com, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com, p.zabel@pengutronix.de, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 23, 2014 at 6:51 PM, Alexander Shiyan <shc_work@mail.ru> wr=
-ote:
-> Mon, 22 Sep 2014 13:39:26 +0200 =D0=BE=D1=82 Geert Uytterhoeven <geer=
-t@linux-m68k.org>:
->> On Fri, Sep 19, 2014 at 9:40 AM, Alexander Shiyan <shc_work@mail.ru>=
- wrote:
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/gpio/gpio-74xx-mmio.txt
->> > @@ -0,0 +1,30 @@
->> > +* 74XX MMIO GPIO driver
->> > +
->> > +Required properties:
->> > +- compatible: Should contain one of the following:
->> > +   "ti,74ahc1g125": for 74AHC1G125 (1-bit Input),
->> > +   "ti,74auc1g174": for 74AUC1G74 (1-bit Output),
->> > +   "ti,74lvc2g125": for 74LVC2G125 (2-bit Input),
->> > +   "ti,74hc74":     for 74HC74 (2-bit Output),
->> > +   "ti,74hc125":    for 74HC125 (4-bit Input),
->> > +   "ti,74hc175":    for 74HC175 (4-bit Output),
->> > +   "ti,74hc365":    for 74HC365 (6-bit Input),
->> > +   "ti,74hc174":    for 74HC174 (6-bit Output),
->> > +   "ti,74hc244":    for 74HC244 (8-bit Input),
->> > +   "ti,74hc273":    for 74HC273 (8-bit Output),
->> > +   "ti,74ac1624":   for 74AC1624 (16-bit Input),
->> > +   "ti,74ac16374":  for 74AC16374 (16-bit Output).
->>
->> As the actual implementation technology doesn't matter, I think you
->> should use the base name where appropriate.
->> E.g. "ti,7474" instead of "ti,74hc74".
->
-> Make sense.
->
-> Linus, what you think overall about this driver?
+On Wed, Sep 24, 2014 at 10:30:41AM +0200, Arnd Bergmann wrote:
+> On Wednesday 24 September 2014 09:44:19 Arnd Bergmann wrote:
+> > 
+> > We can also gradually move in some of the other glue drivers into
+> > the main driver if the differences are small enough.
+> > 
+> 
+> FWIW, I've just looked at the other glue drivers that already
+> exist:
+> 
+> - zevio can just get merged into the common driver, all that seems
+>   to be needed for that is the additional compatible string, and
+>   keying off the ci_default_zevio_platdata on the .data field of
+>   the of_device_id table.
+> 
+> - msm has a custom notifier, which justifies leaving it in a separate
+>   driver, but it's also small enough that it wouldn't hurt to have
+>   that merged into the main driver too.
+> 
+> - imx requires a lot of other things, in particular the dependency
+>   on the usbmisc driver means we don't want to have that in the
+>   core anyway, so we can't really merge that in.
+> 
+> - the proposed ar933x driver again looks almost trivial, so no reason
+>   for a separate glue driver for that.
+> 
+> 	Arnd
 
-That's a question about patch 1/2, and I haven't gotten to it
-yet. High incoming patch rate.
+Thanks, Arnd.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So, it is IP CORE LIB (you suggest) vs IP CORE Platform Driver
+(dwc3, musb, chipidea) you are talking about, right? Except for
+creating another platform driver as well as related DT node (optional),
+are there any advantages compared to current IP core driver structure?
+
+In this thread, we are talking about creating common platform driver for glue
+layer, its design purpose (adapt it for as many as platforms) should be the
+same, no matter the IP core part is a LIB or platform driver, am I missing
+something?
+
+-- 
+Best Regards,
+Peter Chen
