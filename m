@@ -1,60 +1,78 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 3/6] ARM: dts: sunxi: Add Allwinner A80 dtsi
-Date: Wed, 24 Sep 2014 19:53:33 +0800
-Message-ID: <CAGb2v64yGmdLeWmA=+nxD85DbQf_xxUNx3n3oedFZi51uc50+w@mail.gmail.com>
-References: <1411311493-24344-1-git-send-email-wens@csie.org>
- <1411311493-24344-4-git-send-email-wens@csie.org> <20140924063738.GQ15315@lukather>
- <CAGb2v64voZpK_82wtkErRowR0vjEUALNUwvCx_sd8Q5wb4Hq-g@mail.gmail.com> <54227038.2020805@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v7 0/8] charger/mfd: max14577: Add support for MAX77836
+Date: Wed, 24 Sep 2014 12:55:49 +0100
+Message-ID: <20140924115549.GL19999@lee--X1>
+References: <1411472603-11821-1-git-send-email-k.kozlowski@samsung.com>
+ <20140924100325.GB19999@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUXBRKQQKGQE3ACDS4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <54227038.2020805-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <http://groups.google.com/group/linux-sunxi/subscribe>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Meng Zhang <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, yhf <yhf-HcjymKqD97rQT0dZR+AlfA@public.gmane.org>, ctl <ctl-HcjymKqD97rQT0dZR+AlfA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140924100325.GB19999@lee--X1>
+Sender: linux-pm-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 3:18 PM, Gregory CLEMENT
-<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Chen-Yu,
->
->
->>>> +
->>>> +     memory {
->>>> +             reg = <0x20000000 0x40000000>;
->>>
->>> Usually, what we put there was the maximum amount of RAM that can be
->>> handled by the SoC. I think that it can go above 1GB
->>
->> With LPAE, it can handle 8GB. But the DT won't take 64bit values.
->> I'm not sure how to get it in. I'll look around for examples.
->
-> You can have a look on what we did for Armada XP:
->
-> arch/arm/boot/dts/armada-370-xp.dtsi
-> arch/arm/boot/dts/armada-xp.dtsi
-> arch/arm/boot/dts/armada-xp-gp.dts
->
-> I created a skeleton64.dtsi for this case
+Mark, Sebastian,
 
-Thanks for the tip. Before I send v2, I do have a question. I'm using
+Please don't pull this in yet!  There is an issue with the set.
 
-    ranges = <0 0 0 0x20000000>;
+I'll reply to this mail once it's been rectified.
 
-in the clocks and soc node to avoid having to use 64bit values for all
-addresses and sizes. Would this be undesirable, even bad practice maybe?
+Kind regards,
+Lee
 
-http://linux-sunxi.org/A80/Memory_map is a document I pieced together
-from Allwinner's SDK header files. AFAIK only the memory goes above
-the 4GB limit. All peripherals are under 512 MB, 256MB even.
+> The following changes since commit a497c3ba1d97fc69c1e78e7b96435ba8c2=
+cb42ee:
+>=20
+>   Linux 3.16-rc2 (2014-06-21 19:02:54 -1000)
+>=20
+> are available in the git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-=
+regulator-power-v3.17
+>=20
+> for you to fetch changes up to f453d80f908254293bf453a2d7e68974e2abc2=
+af:
+>=20
+>   Documentation: charger: max14577: Document exported sysfs entry (20=
+14-09-24 10:58:07 +0100)
+>=20
+> ----------------------------------------------------------------
+> Immutable branch between MFD, Regulator and Power due for v3.17
+>=20
+> ----------------------------------------------------------------
+> Krzysztof Kozlowski (8):
+>       mfd: max14577: Add defines for MAX77836 charger
+>       mfd: max14577: Map charger device to its own of_node
+>       charger: max14577: Add support for MAX77836 charger
+>       regulator/mfd: max14577: Export symbols for calculating charger=
+ current
+>       charger: max14577: Configure battery-dependent settings from DT=
+S and sysfs
+>       power: max17040: Add ID for MAX77836 Fuel Gauge block
+>       devicetree: mfd: max14577: Add device tree bindings document
+>       Documentation: charger: max14577: Document exported sysfs entry
+>=20
+>  Documentation/ABI/testing/sysfs-class-power        |  14 +
+>  Documentation/devicetree/bindings/mfd/max14577.txt | 146 ++++++++
+>  drivers/mfd/max14577.c                             | 100 +++++-
+>  drivers/power/Kconfig                              |   5 +-
+>  drivers/power/max14577_charger.c                   | 370 +++++++++++=
+++++++++--
+>  drivers/power/max17040_battery.c                   |   3 +-
+>  drivers/regulator/max14577.c                       |  80 +----
+>  include/linux/mfd/max14577-private.h               |  95 ++++--
+>  include/linux/mfd/max14577.h                       |  30 ++
+>  9 files changed, 704 insertions(+), 139 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.tx=
+t
+>=20
 
-
-Thanks
-ChenYu
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
