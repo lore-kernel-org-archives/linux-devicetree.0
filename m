@@ -1,99 +1,55 @@
-From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/2] clk: rockchip: add some needed clock binding id for rk3288
-Date: Wed, 24 Sep 2014 21:36:34 +0800
-Message-ID: <1411565795-26966-2-git-send-email-kever.yang@rock-chips.com>
-References: <1411565795-26966-1-git-send-email-kever.yang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411565795-26966-1-git-send-email-kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, addy.ke-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mikhail Ulianov <mikhail.ulyanov@cogentembedded.com>
+Subject: Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEG
+ Processing Unit.
+Date: Wed, 24 Sep 2014 17:38:14 +0400
+Message-ID: <20140924173814.7e9b7be2@bones>
+References: <1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
+	<CAMuHMdXQAFVJ8Ezd30JNkT6hWoFYKUWk5e0cq88jYUSBTPOzRA@mail.gmail.com>
+	<20140825235720.GB7217@verge.net.au>
+	<2193337.axohMI28rU@avalon>
+	<20140826024257.GB17906@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140826024257.GB17906@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hans Verkuil <hans.verkuil@cisco.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add some clock binding id for different modules
-that under development and going to send upstream.
+On Tue, 26 Aug 2014 11:42:57 +0900
+Simon Horman <horms@verge.net.au> wrote:
 
-Signed-off-by: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+> On Tue, Aug 26, 2014 at 02:02:00AM +0200, Laurent Pinchart wrote:
+> > Hi Simon,
+> > 
+> > On Tuesday 26 August 2014 08:57:20 Simon Horman wrote:
+> > > On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geert Uytterhoeven
+> > > wrote:
+> > > > On Mon, Aug 25, 2014 at 2:35 PM, Mikhail Ulyanov wrote:
+> > > > >
+> > > > > +  - compatible: should containg one of the following:
+> > > > > +                       - "renesas,jpu-r8a7790" for R-Car H2
+> > > > > +                       - "renesas,jpu-r8a7791" for R-Car M2
+> > > > > +                       - "renesas,jpu-gen2" for R-Car second
+> > > > > generation
+> > > > 
+> > > > Isn't "renesas,jpu-gen2" meant as a fallback?
+> > > > 
+> > > > I.e. the DTS should have one of '7790 and '7791, AND the gen2
+> > > > fallback, so we can make the driver match against '7790 and
+> > > > '7791 is we find out about an incompatibility.
+> > > 
+> > > Is there a document that clearly states that there is such a thing
+> > > as jpu-gen2 in hardware? If not I would prefer not to add a
+> > > binding for it.
+> > 
+> > How about going the other way around and requesting that document ?
+> 
+> Good idea, I will make a request.
 
- include/dt-bindings/clock/rk3288-cru.h | 38 +++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+Hi Simon,
 
-diff --git a/include/dt-bindings/clock/rk3288-cru.h b/include/dt-bindings/clock/rk3288-cru.h
-index ebcb460..ee579ff 100644
---- a/include/dt-bindings/clock/rk3288-cru.h
-+++ b/include/dt-bindings/clock/rk3288-cru.h
-@@ -61,6 +61,15 @@
- #define SCLK_LCDC_PWM1		101
- #define SCLK_MAC_RX		102
- #define SCLK_MAC_TX		103
-+#define SCLK_EDP_24M		104
-+#define SCLK_EDP		105
-+#define SCLK_RGA		106
-+#define SCLK_ISP		107
-+#define SCLK_ISP_JPE		108
-+#define SCLK_HDMI_HDCP		109
-+#define SCLK_HDMI_CEC		110
-+#define SCLK_HEVC_CABAC		111
-+#define SCLK_HEVC_CORE		112
- 
- #define DCLK_VOP0		190
- #define DCLK_VOP1		191
-@@ -75,6 +84,16 @@
- #define ACLK_VOP1		198
- #define ACLK_CRYPTO		199
- #define ACLK_RGA		200
-+#define ACLK_RGA_NIU		201
-+#define ACLK_IEP		202
-+#define ACLK_VIO0_NIU		203
-+#define ACLK_VIP		204
-+#define ACLK_ISP		205
-+#define ACLK_VIO1_NIU		206
-+#define ACLK_HEVC		207
-+#define ACLK_VCODEC		208
-+#define ACLK_CPU		209
-+#define ACLK_PERI		210
- 
- /* pclk gates */
- #define PCLK_GPIO0		320
-@@ -112,6 +131,15 @@
- #define PCLK_PS2C		352
- #define PCLK_TIMER		353
- #define PCLK_TZPC		354
-+#define PCLK_EDP_CTRL		355
-+#define PCLK_MIPI_DSI0		356
-+#define PCLK_MIPI_DSI1		357
-+#define PCLK_MIPI_CSI		358
-+#define PCLK_LVDS_PHY		359
-+#define PCLK_HDMI_CTRL		360
-+#define PCLK_VIO2_H2P		361
-+#define PCLK_CPU		362
-+#define PCLK_PERI		363
- 
- /* hclk gates */
- #define HCLK_GPS		448
-@@ -137,8 +165,16 @@
- #define HCLK_IEP		468
- #define HCLK_ISP		469
- #define HCLK_RGA		470
-+#define HCLK_VIO_AHB_ARBI	471
-+#define HCLK_VIO_NIU		472
-+#define HCLK_VIP		473
-+#define HCLK_VIO2_H2P		474
-+#define HCLK_HEVC		475
-+#define HCLK_VCODEC		476
-+#define HCLK_CPU		477
-+#define HCLK_PERI		478
- 
--#define CLK_NR_CLKS		(HCLK_RGA + 1)
-+#define CLK_NR_CLKS		(HCLK_PERI + 1)
- 
- /* soft-reset indices */
- #define SRST_CORE0		0
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is there any update on this topic from HW team? 
+If no, should i left it as is?
