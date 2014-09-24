@@ -1,52 +1,43 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v2 6/7] devicetree: bindings: Document supported Allwinner
- sunxi SoCs
-Date: Wed, 24 Sep 2014 22:49:00 +0800
-Message-ID: <1411570141-29960-7-git-send-email-wens@csie.org>
-References: <1411570141-29960-1-git-send-email-wens@csie.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH] of: fdt: fix memory range check
+Date: Wed, 24 Sep 2014 15:51:00 +0100
+Message-ID: <5422DA54.4020806@linaro.org>
+References: <1411466349-14166-1-git-send-email-srinivas.kandagatla@linaro.org> <20140924143844.B2218C40738@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411570141-29960-1-git-send-email-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, ctl@merrii.com, Shuge <shuge@allwinnertech.com>, Meng Zhang <kevin@allwinnertech.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140924143844.B2218C40738@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a list of supported Allwinner SoC bindings.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- Documentation/devicetree/bindings/arm/sunxi.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/sunxi.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.txt b/Documentation/devicetree/bindings/arm/sunxi.txt
-new file mode 100644
-index 0000000..d7d1039
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/sunxi.txt
-@@ -0,0 +1,12 @@
-+Allwinner sunXi Platforms Device Tree Bindings
-+
-+Each device tree must specify which Allwinner SoC it uses,
-+using one of the following compatible stirngs:
-+
-+  allwinner,sun4i-a10
-+  allwinner,sun5i-a10s
-+  allwinner,sun5i-a13
-+  allwinner,sun6i-a31
-+  allwinner,sun7i-a20
-+  allwinner,sun8i-a23
-+  allwinner,sun9i-a80
--- 
-2.1.0
+On 24/09/14 15:38, Grant Likely wrote:
+>> --- a/drivers/of/fdt.c
+>> >+++ b/drivers/of/fdt.c
+>> >@@ -937,7 +937,7 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+>> >  		return;
+>> >  	}
+>> >
+>> >-	if (base + size > MAX_PHYS_ADDR) {
+>> >+	if (base + size - 1 > MAX_PHYS_ADDR) {
+>> >  		pr_warning("Ignoring memory range 0x%lx - 0x%llx\n",
+>> >  				ULONG_MAX, base + size);
+>> >  		size = MAX_PHYS_ADDR - base;
+> By that logic, the above two lines need to be repaired also:
+Thanks for fixing this too.
+>
+> 		pr_warning("Ignoring memory range 0x%lx - 0x%llx\n",
+> 				MAX_PHYS_ADDR + 1, base + size);
+
+I think the first argument should be printed in 0x%llx format as there 
+would be a 32bit overflow for MAX_PHYS_ADDR + 1.
+
+> 		size = MAX_PHYS_ADDR - base + 1;
+>
+> I've fixed it up and applied, thanks.
+
+--srini
