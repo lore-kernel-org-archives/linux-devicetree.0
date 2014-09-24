@@ -1,162 +1,90 @@
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: Re: [PATCH v4 1/3] mfd/axp20x: extend axp20x to support axp288 pmic
-Date: Wed, 24 Sep 2014 06:46:16 -0700
-Message-ID: <20140924064616.258d6086@ultegra>
-References: <1410912715-25903-1-git-send-email-jacob.jun.pan@linux.intel.com>
-	<1410912715-25903-2-git-send-email-jacob.jun.pan@linux.intel.com>
-	<20140918053926.GC8740@lee--X1>
-	<20140918053252.34829684@ultegra>
-	<20140924110212.GH19999@lee--X1>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
+Date: Wed, 24 Sep 2014 16:08:15 +0200
+Message-ID: <3464697.XblUcyRfDp@vostro.rjw.lan>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <1579761.oeYleOAY1N@vostro.rjw.lan> <4515093.TGIQh7cBOD@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140924110212.GH19999@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE TREE <devicetree@vger.kernel.org>, Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>, Angelo Compagnucci <angelo.compagnu>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <4515093.TGIQh7cBOD@wuerfel>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Darren Hart <dvhart@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Sep 2014 12:02:12 +0100
-Lee Jones <lee.jones@linaro.org> wrote:
+On Wednesday, September 24, 2014 09:55:12 AM Arnd Bergmann wrote:
+> On Tuesday 23 September 2014 22:47:36 Rafael J. Wysocki wrote:
+> > Quite frankly, I'm not sure what you're asking for.
+> > 
+> > It seems to mean "I kind of don't like the current implementation", but
+> > then the last part is quite unclear to me.  Are you suggesting to add more
+> > "if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) etc" type of checks to
+> > device drivers?  That I'd like to avoid to be honest.
+> 
+> No, that is not what I want. Device drivers should ideally call interfaces
+> that just take a 'struct device' or 'struct platform_device' pointer,
+> and those should be implemented in an appropriate way.
 
-> On Thu, 18 Sep 2014, Jacob Pan wrote:
-> > Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Tue, 16 Sep 2014, Jacob Pan wrote:
-> > > 
-> > > > X-Powers AXP288 is a customized PMIC for Intel Baytrail-CR
-> > > > platforms. Similar to AXP202/209, AXP288 comes with USB charger,
-> > > > more LDO and BUCK channels, and AD converters. It also provides
-> > > > extended status and interrupt reporting capabilities than the
-> > > > devices currently supported in axp20x.c.
-> > > > 
-> > > > In addition to feature extension, this patch also adds ACPI
-> > > > binding for enumeration.
-> > > > 
-> > > > This consolidated driver should support more X-Powers' PMICs in
-> > > > both device tree and ACPI enumerated platforms.
-> > > > 
-> > > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > > ---
-> > > >  drivers/mfd/Kconfig        |   3 +-
-> > > >  drivers/mfd/axp20x.c       | 353
-> > > > +++++++++++++++++++++++++++++++++++++--------
-> > > > include/linux/mfd/axp20x.h |  58 ++++++++ 3 files changed, 354
-> > > > insertions(+), 60 deletions(-)
-> 
-> [...]
-> 
-> > > > -static const struct regmap_irq_chip axp20x_regmap_irq_chip = {
-> > > > +static struct acpi_device_id axp20x_acpi_match[] = {
-> > > > +	{
-> > > > +		.id = "INT33F4",
-> > > > +		.driver_data = (kernel_ulong_t)AXP288_ID,
-> > > 
-> > > Why do you need to cast this?
-> > > 
-> > to make sure match driver_data which is different in acpi_device_id
-> > than of_device_id.
-> 
-> You don't need the cast.
-yes, agree in this case. my thinking is since AXP288_ID is a macro, so
-extra careful. I can remove that.
-> 
-> [...]
-> 
-> > > > +static int axp20x_match_device(struct axp20x_dev *axp20x,
-> > > > struct device *dev) +{
-> > > > +	const struct acpi_device_id *acpi_id;
-> > > > +	const struct of_device_id *of_id;
-> > > > +
-> > > > +	of_id = of_match_device(axp20x_of_match, dev);
-> > > > +	if (of_id)
-> > > > +		axp20x->variant = (long) of_id->data;
-> > > > +	else {
-> > > > +		acpi_id =
-> > > > acpi_match_device(dev->driver->acpi_match_table, dev);
-> > > > +		if (!acpi_id || !acpi_id->driver_data) {
-> > > > +			dev_err(dev, "Unable to determine
-> > > > ID\n");
-> > > > +			return -ENODEV;
-> > > > +		}
-> > > > +		axp20x->variant = (long) acpi_id->driver_data;
-> > > > +	}
-> > > 
-> > > We can do better error handling here and give the user a better
-> > > sense of what happened if anything were to go wrong.  Do:
-> > > 
-> > > if (dev->of_node)
-> > >   of_id = of_match_device()
-> > >   if (!of_id)
-> > >     error()
-> > this will give false error on ACPI based platforms, right? in
-> > reality
-> 
-> Why would it?  dev->of_node should be NULL if running ACPI?
-> 
-right, i missed that. I thought of_match_device() is already checking
-of_node. Anyway. I can change the code to the flow you suggested, it is
-more explicit. My point is that in both flows, the error() can be the
-same and implied by the platform (ACPI/OF).
+But then you have drivers that access properties of their child nodes which
+have no corresponding struct device(s).
 
-> [...]
+> > Instead of the current proposal we can introduce something like
+> > 
+> > int device_get_child_property(struct device *dev, void *child_node,
+> >                               const char *propname, void **valptr);
+> > 
+> > (and analogously for device_read_property*) and use that in the drivers that
+> > need to iterate over child nodes of a device.  Quite along the lines of what
+> > Dmitry is suggesting.
+> > 
+> > Then, fn() in acpi_for_each_child_node() (and the of_ counterpart of it)
+> > would become
+> > 
+> > int (*fn)(struct device *dev, void *child_node, void *data)
+> > 
+> > and so on.
+> > 
+> > Would you prefer that?
 > 
-> > > > +	switch (axp20x->variant) {
-> > > > +	case AXP202_ID:
-> > > > +	case AXP209_ID:
-> > > > +		axp20x->nr_cells = ARRAY_SIZE(axp20x_cells);
-> > > > +		axp20x->cells = axp20x_cells;
-> > > > +		axp20x->regmap_cfg = &axp20x_regmap_config;
-> > > > +		axp20x_regmap_irq_chip.num_regs	= 5;
-> > > > +		axp20x_regmap_irq_chip.irqs =
-> > > > axp20x_regmap_irqs;
-> > > > +		axp20x_regmap_irq_chip.num_irqs	=
-> > > > +			ARRAY_SIZE(axp20x_regmap_irqs);
-> > > > +		break;
-> > > > +	case AXP288_ID:
-> > > > +		axp20x->cells = axp288_cells;
-> > > > +		axp20x->nr_cells = ARRAY_SIZE(axp288_cells);
-> > > > +		axp20x->regmap_cfg = &axp288_regmap_config;
-> > > > +		axp20x_regmap_irq_chip.irqs =
-> > > > axp288_regmap_irqs;
-> > > > +		axp20x_regmap_irq_chip.num_irqs	=
-> > > > +			ARRAY_SIZE(axp288_regmap_irqs);
-> > > > +		axp20x_regmap_irq_chip.num_regs	= 6;
-> > > > +		break;
-> > > > +	default:
-> > > > +		dev_err(dev, "unsupported AXP20X ID %lu\n",
-> > > > axp20x->variant);
-> > > > +		return -ENODEV;
-> > > 
-> > > -EINVAL might be better here.
-> > I was considering the return value gets propagated to probe function
-> > which is used to query the existence of a device per driver model.
-> > But I have no strong preference.
+> I must still be missing part of what you are trying to achieve above.
+> We definitely need an interface to get properties from the device itself,
+> like
 > 
-> I think -EINVAL would be better as the argument passed in
-> axp20x->variant is invalid.
+> int device_get_property(struct device *dev, const char *propname, void **valptr);
 > 
-> define EINVAL          22      /* Invalid argument */
+> (whatever valptr ends up being, that would be a separate discussion).
 > 
-agreed, changed in v5 just sent.
-> > > > +	}
-> > > > +	dev_info(dev, "AXP20x variant %s found\n",
-> > > > +		axp20x_model_names[axp20x->variant]);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static int axp20x_i2c_probe(struct i2c_client *i2c,
-> > > > -			 const struct i2c_device_id *id)
-> > > > +			const struct i2c_device_id *id)
-> > > 
-> > > Sneaky. ;)
-> > I should not fix the extra white spaces here, unrelated to this
-> > patch. will remove.
-> 
-> It's okay.  I don't mind little things like this occasionally.  I find
-> them more amusing than harmful.
-> 
-fixed in v5 also.
-> [...]
-> 
+> As soon as it comes to devices that have child nodes, I don't see a
+> necessity to have a generic abstraction for them, as this is typically
+> only done for some of the more obscure bindings, or for child nodes that
+> are defined in a subsystem-wide binding rather than a device private
+> binding.
+
+Well, I don't really agree here.
+
+We can demonstrably reduce code duplication (and therefore complexity too) in
+at least two drivers by doing that at a reasonably low cost, which is
+simply exposing the API for child nodes and adding helpers for iterating
+over them.
+
+We don't have to use struct fw_dev_node (or similar) for that if that's what
+bothers you, but in my opinion something like "get me a property of this thing
+which may be either a device tree node or an ACPI object" (ie. what the current
+dev_node_get_property() does) is more straightforwad than "get me a property
+of that child of this device which may be either a device tree node or an ACPI
+object" (ie. what device_get_child_property() as described above would do).
+
+> For the former case, I think they are indeed better left in drivers that
+> actively know the difference between DT and ACPI, and that don't necessarily
+> use the same binding for both. In the latter case, I'd leave the
+> implementation up to subsystem code, which again would know what
+> interface it is using.
+
+The case in question is drivers that need not know the difference between DT and
+ACPI and do use the same binding for both.  It seems quite clear what needs to
+be done in the other cases.
+
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
