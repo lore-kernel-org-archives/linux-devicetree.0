@@ -1,61 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH v2 09/16] leds: leds-gpio: Add support for GPIO descriptors
-Date: Wed, 24 Sep 2014 09:55:48 +0200
-Message-ID: <CACRpkdY9enL9v=-e3W8Mqw+RFeTM8pjAPW_sF050sCVCsrJWHQ@mail.gmail.com>
-References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
-	<1410868367-11056-10-git-send-email-mika.westerberg@linux.intel.com>
+From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Subject: [PATCH 3/3] ARM: exynos_defconfig: enable USB gadget support
+Date: Wed, 24 Sep 2014 09:57:45 +0200
+Message-ID: <1411545465-12930-4-git-send-email-sjoerd.simons@collabora.co.uk>
+References: <542199F4.3090601@samsung.com>
+ <1411545465-12930-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1410868367-11056-10-git-send-email-mika.westerberg@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1411545465-12930-1-git-send-email-sjoerd.simons@collabora.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: devicetree@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 16, 2014 at 1:52 PM, Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
+Enable USB gadget support without support for any specific gadgets to
+more easily catch cases where a devices dts doesn't specify the usb
+controllers dr_mode while it should.
 
-> GPIO descriptors are the preferred way over legacy GPIO numbers
-> nowadays. Convert the driver to use GPIO descriptors internally but
-> still allow passing legacy GPIO numbers from platform data to support
-> existing platforms.
->
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+---
+ Changes in v4: Rebased on linux-samsung for-next
 
-Great!
+ arch/arm/configs/exynos_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
->  #include <linux/gpio.h>
-> +#include <linux/gpio/consumer.h>
-
-You should not need to include <linux/gpio.h> at all after this change.
-
-> @@ -85,9 +91,10 @@ static int gpio_blink_set(struct led_classdev *led_cdev,
->  {
->         struct gpio_led_data *led_dat =
->                 container_of(led_cdev, struct gpio_led_data, cdev);
-> +       int gpio = desc_to_gpio(led_dat->gpiod);
->
->         led_dat->blinking = 1;
-> -       return led_dat->platform_gpio_blink_set(led_dat->gpio, GPIO_LED_BLINK,
-> +       return led_dat->platform_gpio_blink_set(gpio, GPIO_LED_BLINK,
->                                                 delay_on, delay_off);
->  }
-
-While this is a nice first step, it must be possible to patch all in-kernel
-users of this callback to take a gpiod too...
-
-It's actually just:
-
-$ git grep gpio_blink_set
-arch/arm/mach-orion5x/dns323-setup.c:   .gpio_blink_set =
-orion_gpio_led_blink_set,
-arch/arm/mach-orion5x/dns323-setup.c:   .gpio_blink_set =
-orion_gpio_led_blink_set,
-arch/arm/mach-s3c24xx/mach-h1940.c:     .gpio_blink_set = h1940_led_blink_set,
-arch/arm/mach-s3c24xx/mach-rx1950.c:    .gpio_blink_set = rx1950_led_blink_set,
-
-However we can do that as a follow-up patch. (Add to TODO...)
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+index b14d8c3..2cf22bb 100644
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@ -54,6 +54,7 @@ CONFIG_SMSC911X=y
+ CONFIG_USB_USBNET=y
+ CONFIG_USB_NET_SMSC75XX=y
+ CONFIG_USB_NET_SMSC95XX=y
++CONFIG_USB_GADGET=y
+ CONFIG_INPUT_EVDEV=y
+ CONFIG_KEYBOARD_GPIO=y
+ CONFIG_KEYBOARD_CROS_EC=y
+-- 
+2.1.0
