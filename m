@@ -1,78 +1,58 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/8] charger/mfd: max14577: Add support for MAX77836
-Date: Wed, 24 Sep 2014 12:55:49 +0100
-Message-ID: <20140924115549.GL19999@lee--X1>
-References: <1411472603-11821-1-git-send-email-k.kozlowski@samsung.com>
- <20140924100325.GB19999@lee--X1>
+Subject: Re: [RFC PATCH v2 05/16] mfd: Add ACPI support
+Date: Wed, 24 Sep 2014 13:00:56 +0100
+Message-ID: <20140924120056.GB32069@lee--X1>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+ <1410868367-11056-6-git-send-email-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140924100325.GB19999@lee--X1>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+In-Reply-To: <1410868367-11056-6-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Mark, Sebastian,
+On Tue, 16 Sep 2014, Mika Westerberg wrote:
+> If an MFD device is backed by ACPI namespace, we should allow subdevi=
+ce
+> drivers to access their corresponding ACPI companion devices through =
+normal
+> means (e.g using ACPI_COMPANION()).
+>=20
+> This patch adds such support to the MFD core. If the MFD parent devic=
+e
+> does not specify any ACPI _HID/_CID for the child device, the child
+> device will share the parent ACPI companion device. Otherwise the chi=
+ld
+> device will be assigned with the corresponding ACPI companion, if fou=
+nd
+> in the namespace below the parent.
+>=20
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Reviewed-by: Darren Hart <dvhart@linux.intel.com>
+> ---
+> Lee, I tried to get rid of #ifdefs in the below patch but it wasn't
+> possible because we are using functions that are not available when
+> !CONFIG_ACPI.
+>=20
+>  Documentation/acpi/enumeration.txt | 27 +++++++++++++++++++++++++
+>  drivers/mfd/mfd-core.c             | 40 ++++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/core.h           |  3 +++
+>  3 files changed, 70 insertions(+)
 
-Please don't pull this in yet!  There is an issue with the set.
-
-I'll reply to this mail once it's been rectified.
-
-Kind regards,
-Lee
-
-> The following changes since commit a497c3ba1d97fc69c1e78e7b96435ba8c2=
-cb42ee:
->=20
->   Linux 3.16-rc2 (2014-06-21 19:02:54 -1000)
->=20
-> are available in the git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-=
-regulator-power-v3.17
->=20
-> for you to fetch changes up to f453d80f908254293bf453a2d7e68974e2abc2=
-af:
->=20
->   Documentation: charger: max14577: Document exported sysfs entry (20=
-14-09-24 10:58:07 +0100)
->=20
-> ----------------------------------------------------------------
-> Immutable branch between MFD, Regulator and Power due for v3.17
->=20
-> ----------------------------------------------------------------
-> Krzysztof Kozlowski (8):
->       mfd: max14577: Add defines for MAX77836 charger
->       mfd: max14577: Map charger device to its own of_node
->       charger: max14577: Add support for MAX77836 charger
->       regulator/mfd: max14577: Export symbols for calculating charger=
- current
->       charger: max14577: Configure battery-dependent settings from DT=
-S and sysfs
->       power: max17040: Add ID for MAX77836 Fuel Gauge block
->       devicetree: mfd: max14577: Add device tree bindings document
->       Documentation: charger: max14577: Document exported sysfs entry
->=20
->  Documentation/ABI/testing/sysfs-class-power        |  14 +
->  Documentation/devicetree/bindings/mfd/max14577.txt | 146 ++++++++
->  drivers/mfd/max14577.c                             | 100 +++++-
->  drivers/power/Kconfig                              |   5 +-
->  drivers/power/max14577_charger.c                   | 370 +++++++++++=
-++++++++--
->  drivers/power/max17040_battery.c                   |   3 +-
->  drivers/regulator/max14577.c                       |  80 +----
->  include/linux/mfd/max14577-private.h               |  95 ++++--
->  include/linux/mfd/max14577.h                       |  30 ++
->  9 files changed, 704 insertions(+), 139 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.tx=
-t
->=20
+Applied, thanks.
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
