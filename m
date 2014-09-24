@@ -1,103 +1,39 @@
-From: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv10 2/4] mailbox: Introduce framework for mailbox
-Date: Wed, 24 Sep 2014 12:14:19 -0400
-Message-ID: <CAJ5Y-ea7e1LCym49jGen-eXuw6tWOzTi3Rrd_K-4ZcZUwkv_jg@mail.gmail.com>
-References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>
-	<1406896296-4863-1-git-send-email-jaswinder.singh@linaro.org>
-	<CAJ5Y-eZ5gNMQ2YRN4iS5QTU7qUrgxGdTHXhQZ_2ut4iBsEZHGg@mail.gmail.com>
-	<5420675C.6040805@arm.com>
-	<54206B7C.60501@arm.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH 1/2] ARM: zynq: DT: Add missing reference for ADC
+Date: Wed, 24 Sep 2014 09:18:14 -0700
+Message-ID: <68d34c42-b0e0-4e8f-8b92-0bc8fd233d52@BN1AFFO11FD056.protection.gbl>
+References: <fced9e56dc4ef8df9ead34f6444c010cc31c7a61.1411567289.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54206B7C.60501-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones@li>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <fced9e56dc4ef8df9ead34f6444c010cc31c7a61.1411567289.git.michal.simek@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, monstr@monstr.eu, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 22 September 2014 14:33, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 22/09/14 19:15, Sudeep Holla wrote:
->> On 22/09/14 19:01, Ashwin Chaugule wrote:
->>>
->>> Hi Jassi,
->>>
->>> On 1 August 2014 08:31, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>
->>>> Introduce common framework for client/protocol drivers and
->>>> controller drivers of Inter-Processor-Communication (IPC).
->>>>
->>>> Client driver developers should have a look at
->>>>    include/linux/mailbox_client.h to understand the part of
->>>> the API exposed to client drivers.
->>>> Similarly controller driver developers should have a look
->>>> at include/linux/mailbox_controller.h
->>>>
->>>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> ---
->>>>    MAINTAINERS                        |   8 +
->>>>    drivers/mailbox/Makefile           |   4 +
->>>>    drivers/mailbox/mailbox.c          | 466
->>>> +++++++++++++++++++++++++++++++++++++
->>>>    include/linux/mailbox_client.h     |  46 ++++
->>>>    include/linux/mailbox_controller.h | 135 +++++++++++
->>>>    5 files changed, 659 insertions(+)
->>>>    create mode 100644 drivers/mailbox/mailbox.c
->>>>    create mode 100644 include/linux/mailbox_client.h
->>>>    create mode 100644 include/linux/mailbox_controller.h
->>>>
->>>
->>> [..]
->>>
->>>> +
->>>> +static void poll_txdone(unsigned long data)
->>>> +{
->>>> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
->>>> +       bool txdone, resched = false;
->>>> +       int i;
->>>> +
->>>> +       for (i = 0; i < mbox->num_chans; i++) {
->>>> +               struct mbox_chan *chan = &mbox->chans[i];
->>>> +
->>>> +               if (chan->active_req && chan->cl) {
->>>> +                       resched = true;
->>>> +                       txdone = chan->mbox->ops->last_tx_done(chan);
->>>> +                       if (txdone)
->>>> +                               tx_tick(chan, 0);
->>>> +               }
->>>> +       }
->>>> +
->>>> +       if (resched)
->>>> +               mod_timer(&mbox->poll, jiffies +
->>>> +                               msecs_to_jiffies(mbox->period));
->>>
->>>
->>> While preparing a different patch which uses the Mbox framework, I
->>> noticed that mbox->period might not be initialized anywhere. Also, how
->>> is mbox->txpoll_period to be used? It appears from the description of
->>> txpoll_period in mbox_controller.h that you'd want to use that value
->>> in the mod_timer above, or equate the two somewhere in the controller
->>> registration or eliminate one of the two. FWIW I also looked at your
->>> code in [1].
->>>
->>
->> IIUC the controller needs to set the txpoll_period if it sets
->> txdone_poll, may be a sanity check for !0 would be good.
->>
->
-> Ah, sorry I confused mbox->period to txpoll_period.
-> You are right mbox->period is not set, the header claims it to be
-> private, and hence I assume it needs to be handled only in core mailbox
-> library. Not sure if we need both mbox->period and txpoll_period though.
-
-Right. I dont see the need for having both either. Unless the Mailbox
-maintainer wants to fix this in some other way, I can send a patch for
-replacing mbox->period with mbox->txpoll_period along with my PCC
-work.
-
-Thanks,
-Ashwin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAyMDE0LTA5LTI0IGF0IDA0OjAxUE0gKzAyMDAsIE1pY2hhbCBTaW1layB3cm90ZToK
+PiBBZGQgbWlzc2luZyByZWZlcmVuY2UgZm9yIEFEQyBub2RlLgo+IAo+IFNpZ25lZC1vZmYtYnk6
+IE1pY2hhbCBTaW1layA8bWljaGFsLnNpbWVrQHhpbGlueC5jb20+Cj4gLS0tCj4gCj4gIGFyY2gv
+YXJtL2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpIHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBp
+bnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvenlucS03MDAwLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy96eW5xLTcwMDAuZHRzaQo+
+IGluZGV4IDc3MjM4MWZlMDdiYi4uZmM5MGY0N2Y5YzAzIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL3p5bnEtNzAwMC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvenlucS03
+MDAwLmR0c2kKPiBAQCAtNjQsNyArNjQsNyBAQAo+ICAJCWludGVycnVwdC1wYXJlbnQgPSA8Jmlu
+dGM+Owo+ICAJCXJhbmdlczsKPiAKPiAtCQlhZGNAZjgwMDcxMDAgewo+ICsJCWFkYzogYWRjQGY4
+MDA3MTAwIHsKSSB0aGluayB3ZSBlbnVtZXJhdGVkIGFsbCBsYWJlbHMuIEkuZS4gJ2FkYzAnIGlz
+IHByb2JhYmx5IGJldHRlci4KCglTw7ZyZW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
