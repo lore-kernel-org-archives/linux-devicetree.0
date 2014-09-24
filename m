@@ -1,69 +1,65 @@
-From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Subject: [PATCH 1/3 v4] ARM: dts: exynos: Explicitly set dr_mode on peach-pit
- and peach-pi
-Date: Wed, 24 Sep 2014 09:57:43 +0200
-Message-ID: <1411545465-12930-2-git-send-email-sjoerd.simons@collabora.co.uk>
-References: <542199F4.3090601@samsung.com>
- <1411545465-12930-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH v2 12/16] input: gpio_keys_polled - Add support for
+ GPIO descriptors
+Date: Wed, 24 Sep 2014 10:02:41 +0200
+Message-ID: <CACRpkdaQNjeL5sQNO24xPzR-PJk_emBmrUgx40x7fMP9oogqGQ@mail.gmail.com>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com>
+	<1410868367-11056-13-git-send-email-mika.westerberg@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1411545465-12930-1-git-send-email-sjoerd.simons@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: devicetree@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-samsung-soc@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1410868367-11056-13-git-send-email-mika.westerberg@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Aaron Lu <aaron.lu@intel.com>, Darren Hart <dvhart@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-SW4gY2FzZSB0aGUgb3B0aW9uYWwgZHJfbW9kZSBwcm9wZXJ0eSBpc24ndCBzZXQgaW4gdGhlIGR3
-YzMgbm9kZXMgdGhlCnRoZSBjb250cm9sbGVyIHdpbGwgZ28gaW50byBPVEcgbW9kZSBpZmYgYm90
-aCBVU0IgaG9zdCBhbmQgVVNCIGdhZGdldApmdW5jdGlvbmFsaXR5IGFyZSBlbmFibGVkIGluIHRo
-ZSBrZXJuZWwgY29uZmlndXJhdGlvbi4gVW5mb3J0dW5hdGVseSB0aGlzCnJlc3VsdHMgaW4gVVNC
-IG5vdCB3b3JraW5nIG9uIGV4eW5vczU0MjAtcGVhY2gtcGl0IGFuZApleHlub3M1ODAwLXBlYWNo
-LXBpIHdpdGggc3VjaCBhIGtlcm5lbCBjb25maWd1cmF0aW9uIHVubGVzcyBtYW51YWxseQpjaGFu
-Z2UgdGhlIG1vZGUuIFRvIHJlc29sdmUgdGhhdCBleHBsaWNpdGx5IGNvbmZpZ3VyZSB0aGUgZHVh
-bCByb2xlCm1vZGUgYXMgaG9zdAoKU2lnbmVkLW9mZi1ieTogU2pvZXJkIFNpbW9ucyA8c2pvZXJk
-LnNpbW9uc0Bjb2xsYWJvcmEuY28udWs+ClJldmlld2VkLWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFm
-YWVyYmVyQHN1c2UuZGU+Ci0tLQpDaGFuZ2VzIGluIHYyOiBhbHBoYWJldGljYWxseSBzb3J0IHRo
-ZSBkdHMgZW50cmllcwpDaGFuZ2VzIGluIHYzOiBGaXggdHlwbyBpbiBjb21taXQgbWVzc2FnZQpD
-aGFuZ2VzIGluIHY0OiBSZWJhc2VkIG9uIGxpbnV4LXNhbXN1bmcgZm9yLW5leHQKCiBhcmNoL2Fy
-bS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5kdHMgfCA4ICsrKysrKysrCiBhcmNoL2Fy
-bS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kgICAgICAgICAgfCA0ICsrLS0KIGFyY2gvYXJtL2Jv
-b3QvZHRzL2V4eW5vczU4MDAtcGVhY2gtcGkuZHRzICB8IDggKysrKysrKysKIDMgZmlsZXMgY2hh
-bmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNo
-L2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5kdHMgYi9hcmNoL2FybS9ib290L2R0
-cy9leHlub3M1NDIwLXBlYWNoLXBpdC5kdHMKaW5kZXggMTdkYWU1MDguLjlhMDUwZTEgMTAwNjQ0
-Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjAtcGVhY2gtcGl0LmR0cworKysgYi9h
-cmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLXBlYWNoLXBpdC5kdHMKQEAgLTg0MSw2ICs4NDEs
-MTQgQEAKIAlzdGF0dXMgPSAib2theSI7CiB9OwogCismdXNiZHJkX2R3YzNfMCB7CisJZHJfbW9k
-ZSA9ICJob3N0IjsKK307CisKKyZ1c2JkcmRfZHdjM18xIHsKKwlkcl9tb2RlID0gImhvc3QiOwor
-fTsKKwogJnVzYmRyZF9waHkwIHsKIAl2YnVzLXN1cHBseSA9IDwmdXNiMzAwX3ZidXNfcmVnPjsK
-IH07CmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kgYi9hcmNo
-L2FybS9ib290L2R0cy9leHlub3M1NDIwLmR0c2kKaW5kZXggYmZlMDU2ZC4uODYxN2EwMyAxMDA2
-NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTQyMC5kdHNpCisrKyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL2V4eW5vczU0MjAuZHRzaQpAQCAtODE1LDcgKzgxNSw3IEBACiAJCSNzaXplLWNl
-bGxzID0gPDE+OwogCQlyYW5nZXM7CiAKLQkJZHdjMyB7CisJCXVzYmRyZF9kd2MzXzA6IGR3YzMg
-ewogCQkJY29tcGF0aWJsZSA9ICJzbnBzLGR3YzMiOwogCQkJcmVnID0gPDB4MTIwMDAwMDAgMHgx
-MDAwMD47CiAJCQlpbnRlcnJ1cHRzID0gPDAgNzIgMD47CkBAIC04NDEsNyArODQxLDcgQEAKIAkJ
-I3NpemUtY2VsbHMgPSA8MT47CiAJCXJhbmdlczsKIAotCQlkd2MzIHsKKwkJdXNiZHJkX2R3YzNf
-MTogZHdjMyB7CiAJCQljb21wYXRpYmxlID0gInNucHMsZHdjMyI7CiAJCQlyZWcgPSA8MHgxMjQw
-MDAwMCAweDEwMDAwPjsKIAkJCWludGVycnVwdHMgPSA8MCA3MyAwPjsKZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU4MDAtcGVhY2gtcGkuZHRzIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMKaW5kZXggNGQxNDkyZS4uZThmZGRhOCAxMDA2NDQK
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMKKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvZXh5bm9zNTgwMC1wZWFjaC1waS5kdHMKQEAgLTgyOSw2ICs4MjksMTQg
-QEAKIAlzdGF0dXMgPSAib2theSI7CiB9OwogCismdXNiZHJkX2R3YzNfMCB7CisJZHJfbW9kZSA9
-ICJob3N0IjsKK307CisKKyZ1c2JkcmRfZHdjM18xIHsKKwlkcl9tb2RlID0gImhvc3QiOworfTsK
-KwogJnVzYmRyZF9waHkwIHsKIAl2YnVzLXN1cHBseSA9IDwmdXNiMzAwX3ZidXNfcmVnPjsKIH07
-Ci0tIAoyLjEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+On Tue, Sep 16, 2014 at 1:52 PM, Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+
+> From: Aaron Lu <aaron.lu@intel.com>
+>
+> GPIO descriptors are the preferred way over legacy GPIO numbers
+> nowadays. Convert the driver to use GPIO descriptors internally but
+> still allow passing legacy GPIO numbers from platform data to support
+> existing platforms.
+>
+> Signed-off-by: Aaron Lu <aaron.lu@intel.com>
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Great!
+
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+
+Again <linux/gpio.h> should not be needed anymore.
+
+> +               /*
+> +                * Legacy GPIO number so request the GPIO here and
+> +                * convert it to descriptor.
+> +                */
+> +               if (!button->gpiod && gpio_is_valid(button->gpio)) {
+> +                       unsigned flags = 0;
+> +
+> +                       if (button->active_low)
+> +                               flags |= GPIOF_ACTIVE_LOW;
+> +
+> +                       error = devm_gpio_request_one(&pdev->dev, button->gpio,
+> +                                       flags, button->desc ? : DRV_NAME);
+> +                       if (error) {
+> +                               dev_err(dev, "unable to claim gpio %u, err=%d\n",
+> +                                       button->gpio, error);
+> +                               return error;
+> +                       }
+> +
+> +                       button->gpiod = gpio_to_desc(button->gpio);
+
+So the field button->gpio is still there, this is a bit disturbing, but when
+I grep for it I see there is a multitude of users :-/
+
+OK I guess these users have to be fixed one by one.
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
