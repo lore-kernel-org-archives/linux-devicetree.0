@@ -1,93 +1,41 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6 1/2] regulator: st-pwm: get voltage and duty table from dts
-Date: Tue, 23 Sep 2014 20:40:28 -0700
-Message-ID: <CAD=FV=URhXjY2eW7JnkrwR7zjGzLB9DshySUMX3AJjjstee=KA@mail.gmail.com>
-References: <1411487622-10881-1-git-send-email-zyw@rock-chips.com>
-	<1411487622-10881-2-git-send-email-zyw@rock-chips.com>
-	<CAD=FV=Vhejf4JoEPUGwmBJdO+zfHgE5hgoT6V1DGtva7r_1Etg@mail.gmail.com>
-	<542222BC.4060203@rock-chips.com>
-	<CAD=FV=Umjmrp5grqvYnMe0=EjpH8++i4JL-5fOquyU+SGt95Fw@mail.gmail.com>
-	<542231C9.1060903@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <542231C9.1060903@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH v1 0/5] Add 10GbE support to APM X-Gene SoC ethernet driver
+Date: Tue, 23 Sep 2014 20:51:23 -0700
+Message-ID: <1411530688-2939-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kchudgar@apm.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+Adding 10GbE support to APM X-Gene SoC ethernet driver.
 
-On Tue, Sep 23, 2014 at 7:51 PM, Chris Zhong <zyw@rock-chips.com> wrote:
->
-> On 09/24/2014 10:13 AM, Doug Anderson wrote:
->>
->> Chris,
->>
->> On Tue, Sep 23, 2014 at 6:47 PM, Chris Zhong <zyw@rock-chips.com> wrote:
->>>
->>> On 09/24/2014 07:43 AM, Doug Anderson wrote:
->>>>
->>>> Chris,
->>>>
->>>> On Tue, Sep 23, 2014 at 8:53 AM, Chris Zhong <zyw@rock-chips.com> wrote:
->>>>>
->>>>> Get voltage & duty table from device tree might be better, other
->>>>> platforms can also use this
->>>>> driver without any modify.
->>>>>
->>>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
->>>>> Reviewed-by: Doug Anderson <dianders@chromium.org>
->>>>
->>>> I finally managed to get everything setup and I've now tested this
->>>> myself on an rk3288-based board.
->>>>
->>>> Tested-by: Doug Anderson <dianders@chromium.org>
->>>>
->>>> I'd imagine the next step is for Lee to comment on the patch and when
->>>> he's happy with it Mark Brown will land it?
->>>>
->>>>
->>>> One thing that's still a bit odd (though no different than the
->>>> behavior of the driver from before you touched it, so it shouldn't
->>>> block landing IMHO) is that at boot time this regulator will report
->>>> that it's at the highest voltage but the voltage won't actually change
->>>> until the first client sets the voltage.
->>>
->>> Yes, I knew this problem, since the default of duty cycle is 0, not a
->>> true
->>> value.
->>> If we can get duty from pwm, this regulator will report a correct
->>> voltage.
->>
->> I don't think it's possible in all cases to figure out what the
->> voltage was before this regulator was probed.
->>
->> * pin might have been input w/ pullup, pulldown, or no pull
->> * pin might have been driven high or driven low
->>
->> In that case trying to read the duty from the pwm wouldn't make sense.
->> ...but I guess you could add a property to the PWM driver to say that
->> it stays enabled at boot if the FW left it enabled (and keep the same
->> duty cycle / clocks?).  That would at least solve the problem where
->> the firmware configured the PWM and left it in a specific state even
->> if it doesn't solve the above problem...
->>
->>
->> -Doug
->>
-> If we want pwm stay enabled at boot(FW left it), needn't to modify anything,
-> only need to init pwm duty in FW.
-> And now reading the duty from pwm would make sense.
+v1:
+* Initial version
+---
 
-Maybe I'll understand better if you send up some patches.  I would
-have thought that when the PWM initializes it would start out disabled
-and there wouldn't be an easy way to convince the PWM subsystem to
-keep it enabled.  ...I also would have thought that the default
-behavior of a PWM on Linux would be to disable it in the driver probe
-if firmware happened to have left it on.
+Iyappan Subramanian (5):
+  MAINTAINERS: Update APM X-Gene section
+  Documentation: dts: Update section header for APM X-Gene
+  dtb: Add 10GbE node to APM X-Gene SoC device tree
+  drivers: net: xgene: Add 10GbE support
+  drivers: net: xgene: Add 10GbE ethtool support
 
-I could be wrong on both counts, though.
+ .../devicetree/bindings/net/apm-xgene-enet.txt     |   4 +-
+ MAINTAINERS                                        |   1 -
+ arch/arm64/boot/dts/apm-mustang.dts                |   4 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |  24 +++
+ drivers/net/ethernet/apm/xgene/Makefile            |   3 +-
+ .../net/ethernet/apm/xgene/xgene_enet_ethtool.c    |  24 ++-
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     | 123 ++++++++------
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.h     |  31 ++--
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c   |  87 +++++++---
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.h   |  24 ++-
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c  | 187 +++++++++++++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.h  |  64 +++++++
+ 12 files changed, 473 insertions(+), 103 deletions(-)
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_xgmac.h
 
--Doug
+-- 
+1.9.1
