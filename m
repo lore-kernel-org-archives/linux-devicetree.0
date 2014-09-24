@@ -1,60 +1,105 @@
-From: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
-Subject: Re: Adding selftest testdata dynamically into live tree
-Date: Wed, 24 Sep 2014 20:05:59 +0200
-Message-ID: <54230807.5020905@elproma.com.pl>
-References: <542064F1.4000601@elproma.com.pl> <CA+rpMbKkS1D=QYSMftgZyTMbHS9+O=YjR+OL_RvzjJPjo2Ox6w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2] ARM: dts: Add initial DTS file for Sony Xperia Z1
+Date: Wed, 24 Sep 2014 13:21:12 -0500
+Message-ID: <B9941F2B-B82A-475B-A482-9C774E3C11FA@codeaurora.org>
+References: <5422DF46.90306@sonymobile.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+rpMbKkS1D=QYSMftgZyTMbHS9+O=YjR+OL_RvzjJPjo2Ox6w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5422DF46.90306@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tim Bird <tim.bird@sonymobile.com>
+Cc: "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <Bjorn.Andersson@sonymobile.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "arnd.bergmann@linaro.org" <arnd.bergmann@linaro.org>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
-W dniu 2014-09-24 20:03, Gaurav Minocha pisze:
-> On Mon, Sep 22, 2014 at 11:05 AM, Janusz U=C5=BCycki <j.uzycki@elprom=
-a.com.pl> wrote:
->> Hi.
->>
->> On 3.17.0-rc6-next-20140922+ with CONFIG_OF_SELFTEST enabled
->> zImage is recreated every time I call "make" despite I've not done
->> any change in source files and zImage was the same.
->> This is caused by the rm line:
-> I believe the make rule compiles test data without checking
-> whether the test data dts files have been changed or not.
->
-> I am not sure how to fix it. So, either direct me or feel free to
-> pick it. Thanks!
+On Sep 24, 2014, at 10:12 AM, Tim Bird <tim.bird@sonymobile.com> wrote:
 
-I just disabled CONFIG_OF_SELFTEST now and it works for me.
+> This DTS has support for the Sony Xperia Z1 phone (codenamed Honami).
+> This first version of the DTS supports just a serial console.
+>=20
+> changes from v1
+> - removed qcom,msm-id attribute
+> - removed mis-capitalized Qualcomm word
+> - changed dts file name
+> - added board-specific compatible-string
+>=20
+> Signed-off-by: Tim Bird <tim.bird@sonymobile.com>
+> =97
 
-best regards
-Janusz
+Does this actually boot?  I=92d be surprised since =93qcom,msm8974=94 i=
+sn=92t in the match table (just sent a patch for that).
 
->
->>    CALL    scripts/checksyscalls.sh
->>    CHK     include/generated/compile.h
->>    DTC     drivers/of/testcase-data/testcases.dtb
->>    DTB     drivers/of/testcase-data/testcases.dtb.S
->>    AS      drivers/of/testcase-data/testcases.dtb.o
->>    LD      drivers/of/of_selftest.o
->>    LD      drivers/of/built-in.o
->> rm drivers/of/testcase-data/testcases.dtb.S
->> drivers/of/testcase-data/testcases.dtb
->>    LD      drivers/built-in.o
->>    LINK    vmlinux
->>    LD      vmlinux.o
->>
->> best regards
->> Janusz
->>
+> Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
+> arch/arm/boot/dts/Makefile                            |  3 ++-
+> arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts | 17 ++++++++++=
++++++++
+> 3 files changed, 20 insertions(+), 1 deletion(-)
+> create mode 100644 arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.=
+dts
+>=20
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index ac7269f..d3a4579 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -128,6 +128,7 @@ sirf	SiRF Technology, Inc.
+> smsc	Standard Microsystems Corporation
+> snps 	Synopsys, Inc.
+> solidrun	SolidRun
+> +sony	Sony Corporation
+> spansion	Spansion Inc.
+> st	STMicroelectronics
+> ste	ST-Ericsson
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b8c5cd3..0c2702e 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -343,7 +343,8 @@ dtb-$(CONFIG_ARCH_QCOM) +=3D \
+> 	qcom-apq8074-dragonboard.dtb \
+> 	qcom-apq8084-mtp.dtb \
+> 	qcom-msm8660-surf.dtb \
+> -	qcom-msm8960-cdp.dtb
+> +	qcom-msm8960-cdp.dtb \
+> +	qcom-msm8974-sony-honami-xperia.dtb
+> dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D \
+> 	rk3066a-bqcurie2.dtb \
+> 	rk3188-radxarock.dtb \
+> diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/=
+arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> new file mode 100644
+> index 0000000..cccc21b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+> @@ -0,0 +1,17 @@
+> +#include "qcom-msm8974.dtsi"
+> +
+> +/ {
+> +	model =3D "Sony Xperia Z1";
+> +	compatible =3D "sony,xperia-honami", "qcom,msm8974";
+> +
+> +	memory@0 {
+> +		reg =3D <0 0x40000000>, <0x40000000 0x40000000>;
+> +		device_type =3D "memory";
+> +	};
+> +};
+> +
+> +&soc {
+> +	serial@f991e000 {
+> +		status =3D "ok";
+> +	};
+> +};
+> --=20
+> 1.8.2.2
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-m=
+sm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
