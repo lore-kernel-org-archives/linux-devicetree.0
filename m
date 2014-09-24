@@ -1,55 +1,45 @@
-From: Mikhail Ulianov <mikhail.ulyanov@cogentembedded.com>
-Subject: Re: [PATCH v2 6/6] devicetree: bindings: Document Renesas JPEG
- Processing Unit.
-Date: Wed, 24 Sep 2014 17:38:14 +0400
-Message-ID: <20140924173814.7e9b7be2@bones>
-References: <1408452653-14067-7-git-send-email-mikhail.ulyanov@cogentembedded.com>
-	<CAMuHMdXQAFVJ8Ezd30JNkT6hWoFYKUWk5e0cq88jYUSBTPOzRA@mail.gmail.com>
-	<20140825235720.GB7217@verge.net.au>
-	<2193337.axohMI28rU@avalon>
-	<20140826024257.GB17906@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140826024257.GB17906@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Mauro Carvalho Chehab <m.chehab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hans Verkuil <hans.verkuil@cisco.com>, Linux-sh list <linux-sh@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v7 0/3] Qualcomm Resource Power Manager driver
+Date: Wed, 24 Sep 2014 08:46:17 -0500
+Message-ID: <CEE11369-EBDD-4F4C-8D90-E19E70148704@codeaurora.org>
+References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com> <54212CA0.4030700@linaro.org> <20140924042737.GQ10179@sonymobile.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.6\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140924042737.GQ10179@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Aug 2014 11:42:57 +0900
-Simon Horman <horms@verge.net.au> wrote:
 
-> On Tue, Aug 26, 2014 at 02:02:00AM +0200, Laurent Pinchart wrote:
-> > Hi Simon,
-> > 
-> > On Tuesday 26 August 2014 08:57:20 Simon Horman wrote:
-> > > On Mon, Aug 25, 2014 at 02:59:46PM +0200, Geert Uytterhoeven
-> > > wrote:
-> > > > On Mon, Aug 25, 2014 at 2:35 PM, Mikhail Ulyanov wrote:
-> > > > >
-> > > > > +  - compatible: should containg one of the following:
-> > > > > +                       - "renesas,jpu-r8a7790" for R-Car H2
-> > > > > +                       - "renesas,jpu-r8a7791" for R-Car M2
-> > > > > +                       - "renesas,jpu-gen2" for R-Car second
-> > > > > generation
-> > > > 
-> > > > Isn't "renesas,jpu-gen2" meant as a fallback?
-> > > > 
-> > > > I.e. the DTS should have one of '7790 and '7791, AND the gen2
-> > > > fallback, so we can make the driver match against '7790 and
-> > > > '7791 is we find out about an incompatibility.
-> > > 
-> > > Is there a document that clearly states that there is such a thing
-> > > as jpu-gen2 in hardware? If not I would prefer not to add a
-> > > binding for it.
-> > 
-> > How about going the other way around and requesting that document ?
+On Sep 23, 2014, at 11:27 PM, Bjorn Andersson <bjorn.andersson@sonymobile.com> wrote:
+
+> On Tue 23 Sep 01:17 PDT 2014, Srinivas Kandagatla wrote:
 > 
-> Good idea, I will make a request.
+>> Hi Bjorn,
+>> 
+>> Thankyou for the new patchset.
+>> 
+>> I got few device-tree patches for apq8064 usb, sata, phy and hdmi which 
+>> depend on rpm header file. It will be nice to get this functionality 
+>> into 3.18.
+>> 
+> 
+> We should be able to send out the dts patches separate of these.
+> 
+>> Do you think we should take these patches via arm-soc tree?
+>> 
+> 
+> Both Lee and Mark indicated that they will pull the parts individually. However
+> both of the patches depend on the header file created in patch 1, someone needs
+> to take both for it to work out?
 
-Hi Simon,
+I wish we would wait to merge until we see support for b-family or at least an RFC patch for the b-family RPM support.
 
-Is there any update on this topic from HW team? 
-If no, should i left it as is?
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
