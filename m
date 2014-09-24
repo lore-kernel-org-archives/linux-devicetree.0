@@ -1,59 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/3] Qualcomm Resource Power Manager driver
-Date: Wed, 24 Sep 2014 09:11:55 +0100
-Message-ID: <20140924081155.GE17801@lee--X1>
-References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com>
- <54212CA0.4030700@linaro.org>
- <20140924042737.GQ10179@sonymobile.com>
- <20140924075535.GD17801@lee--X1>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH v4 3/4] pinctrl: Qualcomm SPMI PMIC GPIO pin controller
+ driver
+Date: Wed, 24 Sep 2014 11:14:17 +0300
+Message-ID: <1411546457.18580.50.camel@iivanov-dev>
+References: <1410792254-24126-1-git-send-email-iivanov@mm-sol.com>
+	 <1410792254-24126-4-git-send-email-iivanov@mm-sol.com>
+	 <20140924041852.GO10179@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140924075535.GD17801@lee--X1>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140924041852.GO10179@sonymobile.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, David Collins <collinsd@codeaurora.org>, Wu Fenglin <fenglinw@qti.qualcomm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Sep 2014, Lee Jones wrote:
+On Tue, 2014-09-23 at 21:18 -0700, Bjorn Andersson wrote:
+> On Mon 15 Sep 07:44 PDT 2014, Ivan T. Ivanov wrote:
+> 
+> > This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+> > Qualcomm GPIO sub-function blocks found in the PMIC chips.
+> > 
+> > Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> 
+> I think this looks pretty good, just some minor comments. Mostly on the future
+> compatibility of the Kconfig and compatible.
 
-> On Tue, 23 Sep 2014, Bjorn Andersson wrote:
->=20
-> > On Tue 23 Sep 01:17 PDT 2014, Srinivas Kandagatla wrote:
-> >=20
-> > > Hi Bjorn,
-> > >=20
-> > > Thankyou for the new patchset.
-> > >=20
-> > > I got few device-tree patches for apq8064 usb, sata, phy and hdmi=
- which=20
-> > > depend on rpm header file. It will be nice to get this functional=
-ity=20
-> > > into 3.18.
-> > >=20
-> >=20
-> > We should be able to send out the dts patches separate of these.
-> >=20
-> > > Do you think we should take these patches via arm-soc tree?
-> > >=20
-> >=20
-> > Both Lee and Mark indicated that they will pull the parts individua=
-lly. However
-> > both of the patches depend on the header file created in patch 1, s=
-omeone needs
-> > to take both for it to work out?
->=20
-> Once reviewed I can take the whole set with Mark's Ack.
+Thanks.
 
-Okay, I should have looked at discussion we had on the previous
-version prior to responding.  If your Kconfig configuration is as
-tight as you say it is, we can take the patches through our respective
-trees.
+> 
+> It's much in line with what I hacked up for pm8xxx, I was just hoping to get
+> something from Thomas regarding irq_read_line() before pushing it again...
+> 
+> > ---
+> >  drivers/pinctrl/qcom/Kconfig                  |  12 +
+> >  drivers/pinctrl/qcom/Makefile                 |   1 +
+> >  drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c | 942 ++++++++++++++++++++++++++
+> >  3 files changed, 955 insertions(+)
+> >  create mode 100644 drivers/pinctrl/qcom/pinctrl-spmi-pmic-gpio.c
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I am planing to remove pmic part from the file name.
+
+Comments will be fixed in next version.
+
+Thank you.
+Ivan
