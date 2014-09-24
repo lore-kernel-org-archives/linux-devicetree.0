@@ -1,51 +1,26 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
-Date: Wed, 24 Sep 2014 15:51:18 +0200
-Message-ID: <1724421.fbdO6SWIjA@vostro.rjw.lan>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org> <2161168.GXttgFlE1X@vostro.rjw.lan> <5422BC97.6080608@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <5422BC97.6080608@ti.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Philipp Zabel <philipp.zabel@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, linux-acpi@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Len Brown <len.brown@intel.com>, Kevin Hilman <khilman@linaro.org>, linux-pm@vger.kernel.org, Chris Ball <chris@printf.net>, Simon Horman <horms@verge.net.au>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.>
+From: Kever Yang <kever.yang@rock-chips.com>
+Subject: [PATCH 0/2] Add clock binding id for rk3288
+Date: Wed, 24 Sep 2014 21:36:33 +0800
+Message-ID: <1411565795-26966-1-git-send-email-kever.yang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, Mike Turquette <mturquette@linaro.org>
+Cc: dianders@chromium.org, sonnyrao@chromium.org, addy.ke@rock-chips.com, cf@rock-chips.com, xjq@rock-chips.com, hj@rock-chips.com, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, September 24, 2014 03:44:07 PM Grygorii Strashko wrote:
-> Hi Rafael,
-> 
-> On 09/22/2014 05:19 PM, Rafael J. Wysocki wrote:
-> > On Friday, September 19, 2014 11:48:49 AM Dmitry Torokhov wrote:
-> >> Hi Ulf,
-> >>
-> >> On Fri, Sep 19, 2014 at 08:27:33PM +0200, Ulf Hansson wrote:
-> >>> Changes in v5:
-> >>> 	- Converted dev_pm_domain_detach() to a void function
-> >>> 	- Added a ->detach() callback to the PM domain struct, invoked from the
-> >>> 	  dev_pm_domain_detach().
-> >>> 	- Make ACPI and genpd both assign the ->detach() callback at successfull
-> >>> 	  attachment.
-> >>> 	- The above changes made it possible to make acpi_pm_domain_detach() to
-> >>> 	  be static, added a separate patch for that.
-> >>
-> >> Thank you for making these changes. For the series:
-> >>
-> >> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > 
-> > I've queued up this patchset for 3.18 (I fixed up the two minor issues pointed
-> > to by Geert in the process).
-> > 
-> 
-> Could you point me on branch where I can find these patches?
-> Also, are there any chances to have these patches  in next/linux-next.git,
-> so they will become available for testing and re-using?
+This patch add some clock binding id for different modules
+that under development and going to send upstream.
 
-It is in the bleeding-edge branch of the linux-pm.git tree at the moment,
-which is rebased quite often, but you can use it for testing.
+This patch also add the clock node in PD_VIDEO.
 
-It should appear in linux-next tomorrow.
 
-Rafael
+Kever Yang (2):
+  clk: rockchip: add some needed clock binding id for rk3288
+  clk: rockchip: use the clock id for nodes init
 
+ drivers/clk/rockchip/clk-rk3288.c      | 79 +++++++++++++++++++---------------
+ include/dt-bindings/clock/rk3288-cru.h | 38 +++++++++++++++-
+ 2 files changed, 82 insertions(+), 35 deletions(-)
+
+-- 
+1.9.1
