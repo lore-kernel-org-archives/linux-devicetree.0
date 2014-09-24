@@ -1,45 +1,47 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v5 00/11] PM / Domains: Generic OF-based support
-Date: Wed, 24 Sep 2014 15:44:07 +0300
-Message-ID: <5422BC97.6080608@ti.com>
-References: <1411151264-16245-1-git-send-email-ulf.hansson@linaro.org> <20140919184849.GA14832@core.coreip.homeip.net> <2161168.GXttgFlE1X@vostro.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <2161168.GXttgFlE1X@vostro.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Philipp Zabel <philipp.zabel@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, linux-acpi@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Len Brown <len.brown@intel.com>, Kevin Hilman <khilman@linaro.org>, linux-pm@vger.kernel.org, Chris Ball <chris@printf.net>, Simon Horman <horms@verge.net.au>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, Mark Brown <broonie@kernel.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH v3 0/2] Intial support for voltage ADC
+Date: Wed, 24 Sep 2014 15:56:53 +0300
+Message-ID: <1411563415-11933-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Fugang Duan <B38611@freescale.com>, Johannes Thumshirn <johannes.thumshirn@men.de>, Jean Delvare <jdelvare@suse.de>, Philippe Reynes <tremyfr@yahoo.fr>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
+Changes since v2:
 
-On 09/22/2014 05:19 PM, Rafael J. Wysocki wrote:
-> On Friday, September 19, 2014 11:48:49 AM Dmitry Torokhov wrote:
->> Hi Ulf,
->>
->> On Fri, Sep 19, 2014 at 08:27:33PM +0200, Ulf Hansson wrote:
->>> Changes in v5:
->>> 	- Converted dev_pm_domain_detach() to a void function
->>> 	- Added a ->detach() callback to the PM domain struct, invoked from the
->>> 	  dev_pm_domain_detach().
->>> 	- Make ACPI and genpd both assign the ->detach() callback at successfull
->>> 	  attachment.
->>> 	- The above changes made it possible to make acpi_pm_domain_detach() to
->>> 	  be static, added a separate patch for that.
->>
->> Thank you for making these changes. For the series:
->>
->> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> 
-> I've queued up this patchset for 3.18 (I fixed up the two minor issues pointed
-> to by Geert in the process).
-> 
+ - fixes per comments from Hartmut Knaack and Jonathan Cameron.
+ - now register through IIO core only ADC channels described in DT.
+ - register TEMP_DIE channel as IIO_TEMP type and as processed return value.
+ - implement INFO_RAW and INFO_SCALE masks support in order to avoid losing 
+   ADC precision.
+ - various cleanups.
 
-Could you point me on branch where I can find these patches?
-Also, are there any chances to have these patches  in next/linux-next.git,
-so they will become available for testing and re-using?
+-------------------------------------------------------------------------------
+Changes since v1:
 
-Best regards,
--grygorii
+ - the review comments from Peter Meerwald and Hartmut Knaack are taken into
+   account
+ - the driver private sysfs attributes are dropped out.
+ - dt binding document is changed in the section of adc channel nodes - now the
+   adc channel number is represented by "reg" property.
+ - various cleanups found during preparation of version 2.
+
+-------------------------------------------------------------------------------
+Introduce inital support for VADC inside Qualcomm SPMI PMICs.
+The vadc driver is reworked version of the same downstream
+driver but now it is implemented through Industrial IO core.
+
+Stanimir Varbanov (2):
+  iio: vadc: Qualcomm SPMI PMIC voltage ADC driver
+  DT: iio: vadc: document dt binding
+
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt |  130 +++
+ drivers/iio/adc/Kconfig                            |   10 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/qcom-spmi-vadc.c                   | 1029 ++++++++++++++++++++
+ include/dt-bindings/iio/qcom,spmi-pmic-vadc.h      |  119 +++
+ 5 files changed, 1289 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+ create mode 100644 drivers/iio/adc/qcom-spmi-vadc.c
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-pmic-vadc.h
