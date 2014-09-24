@@ -1,72 +1,36 @@
-From: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Subject: Re: [PATCH v7 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
- binding
-Date: Wed, 24 Sep 2014 08:53:20 -0700
-Message-ID: <20140924155319.GA28481@sonymobile.com>
-References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1411428329-23172-2-git-send-email-bjorn.andersson@sonymobile.com>
- <20140924082228.GF17801@lee--X1>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv4 3/6] ARM: dts: Add initial LS1021A TWR board dts support
+Date: Wed, 24 Sep 2014 17:54:43 +0200
+Message-ID: <3598074.CpE7Waa9La@wuerfel>
+References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com> <4264466.HtkUxyxBW8@wuerfel> <bb122a232a1c40559e84a058f3d003b4@BL2PR03MB467.namprd03.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140924082228.GF17801@lee--X1>
+In-Reply-To: <bb122a232a1c40559e84a058f3d003b4-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shengchao Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 24 Sep 01:22 PDT 2014, Lee Jones wrote:
+On Wednesday 24 September 2014 11:00:34 Jingchang Lu wrote:
+> 
+> We also do the phy-handle fixup on our PowerPC platform based on the aliases,
+> and so I adopt the same way to make these fixup consistent between SoCs.
+> And the u-boot fdt fixup code base on the aliases has been upstreamed, so may
+> we keep this aliases unchanged?
 
-> On Mon, 22 Sep 2014, Bjorn Andersson wrote:
-> 
-> > Add binding for the Qualcomm Resource Power Manager (RPM) found in 8660,
-> > 8960 and 8064 based devices. The binding currently describes the rpm
-> > itself and the regulator subnodes.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/qcom-rpm.txt |  246 ++++++++++++++++++++
-> 
-> Please adhere to: Documentation/devicetree/bindings/submitting-patches.txt
-> 
+I don't see a strong reason to change it, it just seemed strange to me.
 
-I assume you mean this part:
+> BTW, find a node by alias is easily, could you give me some clue on finding a node
+> by a label directly, Thanks.
 
-  1) The Documentation/ portion of the patch should be a separate patch.
+I haven't used libfdt in this way myself, so I don't know how it would
+be done. However, the idea is that the labels in dts files end up as
+ELF symbols in the dtb, so you can look them up by following the ELF
+headers.
 
-But I doubt this document was written with include/dt-bindings in mind, because
-in my eyes they are part of "device tree bindings".
-
-> >  include/dt-bindings/mfd/qcom-rpm.h                 |  154 ++++++++++++
-> >  2 files changed, 400 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-> >  create mode 100644 include/dt-bindings/mfd/qcom-rpm.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-> > new file mode 100644
-> > index 0000000..4264021
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-> 
-> This requires a DT Ack.
-> 
-> [...]
-> 
-> > +++ b/include/dt-bindings/mfd/qcom-rpm.h
-> 
-> Please split this into a separate patch.
-> 
-
-But this is part of the device tree binding and the binding "depends" on it.
-
-> When you do, for this file only, please apply my:
-> 
->   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-
-Thanks,
-Bjorn
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
