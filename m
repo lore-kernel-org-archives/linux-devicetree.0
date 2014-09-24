@@ -1,47 +1,102 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv4 3/6] ARM: dts: Add initial LS1021A TWR board dts support
-Date: Wed, 24 Sep 2014 11:36:16 +0200
-Message-ID: <4264466.HtkUxyxBW8@wuerfel>
-References: <1411371952-5618-1-git-send-email-jingchang.lu@freescale.com> <3321146.kBfn28qbNM@wuerfel> <a83d5601a26b4e45be5e5016de287287@BL2PR03MB467.namprd03.prod.outlook.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v1 3/5] dtb: Add 10GbE node to APM X-Gene SoC device tree
+Date: Wed, 24 Sep 2014 10:37:28 +0100
+Message-ID: <20140924093727.GA9162@leverpostej>
+References: <1411530688-2939-1-git-send-email-isubramanian@apm.com>
+ <1411530688-2939-4-git-send-email-isubramanian@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a83d5601a26b4e45be5e5016de287287-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shengchao Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <B46807-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1411530688-2939-4-git-send-email-isubramanian@apm.com>
+Sender: netdev-owner@vger.kernel.org
+To: Iyappan Subramanian <isubramanian@apm.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kchudgar@apm.com" <kchudgar@apm.com>, "patches@apm.com" <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 24 September 2014 05:47:53 Jingchang Lu wrote:
+Hi,
+
+For some reason, the below appears to use a mixture of spaces and tabs
+for alignment. Assuming my local mailserver isn't responsible for that,
+could you please correct that and for consistency use tabs?
+
+Could you also please Cc the arm64 maintainers when submitting arm64
+patches?
+
+On Wed, Sep 24, 2014 at 04:51:26AM +0100, Iyappan Subramanian wrote:
+> Added 10GbE interface and clock nodes.
 > 
-> The ethernet device nodes already have the phy-handle properties to their mdio nodes.
+> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+> ---
+>  arch/arm64/boot/dts/apm-mustang.dts |  4 ++++
+>  arch/arm64/boot/dts/apm-storm.dtsi  | 24 ++++++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
 > 
-> The alias for PHY nodes here is:
->   The ethernet has two kind of PHY interface, one is SGMII, and the other is RGMII,
-> The selection is done by the reset configuration word(RCW), so Phy-handle properties
-> should be change properly to reflecting the PHY interface selection. This is done
-> by fixing up dtb in u-boot before booting the kernel. Thus the alias for PHY nodes
-> is added here for fdt finding the PHY nodes easily.
+> diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
+> index b2f5622..2ae782b 100644
+> --- a/arch/arm64/boot/dts/apm-mustang.dts
+> +++ b/arch/arm64/boot/dts/apm-mustang.dts
+> @@ -32,3 +32,7 @@
+>  &menet {
+>  	status = "ok";
+>  };
+> +
+> +&xgenet {
+> +	status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+> index c0aceef..ae814ef 100644
+> --- a/arch/arm64/boot/dts/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+> @@ -176,6 +176,16 @@
+>  				clock-output-names = "menetclk";
+>  			};
+>  
+> +                        xge0clk: xge0clk@1f61c000 {
+> +				compatible = "apm,xgene-device-clock";
+> +				#clock-cells = <1>;
+> +				clocks = <&socplldiv2 0>;
+> +				reg = <0x0 0x1f61c000 0x0 0x1000>;
+> +				reg-names = "csr-reg";
+> +				csr-mask = <0x3>;
+> +				clock-output-names = "xge0clk";
+> +                        };
+> +
+>  			sataphy1clk: sataphy1clk@1f21c000 {
+>  				compatible = "apm,xgene-device-clock";
+>  				#clock-cells = <1>;
+> @@ -421,5 +431,19 @@
+>  
+>  			};
+>  		};
+> +
+> +                xgenet: ethernet@1f610000 {
+> +			compatible = "apm,xgene-enet";
+> +                        status = "disabled";
+> +                        reg = <0x0 0x1f610000 0x0 0xd100>,
+> +                              <0x0 0x1f600000 0x0 0X400>,
+> +                              <0x0 0x18000000 0x0 0X200>;
+> +			reg-names = "enet_csr", "ring_csr", "ring_cmd";
+> +                        interrupts = <0x0 0x60 0x4>;
+> +			dma-coherent;
+> +                        clocks = <&xge0clk 0>;
 
-Ok, I see. I thought that this was what the labels in the dtb were supposed
-to be used for. Can't you do the same thing in u-boot by using a label
-as opposed to the alias?
+> +                        local-mac-address = [00 01 73 00 00 04];
 
-IIRC you should be able to add an additional label like
+Does it really make sense to hard-code the same mac address for all
+mustang boards?
 
-+&mdio0 {
-+       enet1_sgmii_phy: sgmii_phy0: ethernet-phy@0 {
-+               reg = <0x0>;
-+       };
+Mark.
 
-and then use libfdt to find the node through that, rather than through
-the alias. I don't know how things are handled on other platforms, but
-I think that was how it was initially thought up when we introduced
-the fdt format on PowerPC.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +			phy-connection-type = "xgmii";
+> +                };
+>  	};
+>  };
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
