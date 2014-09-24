@@ -1,84 +1,68 @@
-From: Frans Klaver <frans.klaver-MHHw4NDrbWwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from
- device tree
-Date: Wed, 24 Sep 2014 16:22:22 +0200
-Message-ID: <20140924142222.GC22872@ci00147.xsens-tech.local>
-References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
- <1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
- <20140924131655.GG5729@leverpostej>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] MFD: Immutable branche between Charger, Power and
+ Regulator
+Date: Wed, 24 Sep 2014 15:34:31 +0100
+Message-ID: <20140924143431.GI32069@lee--X1>
+References: <1411472603-11821-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140924131655.GG5729@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1411472603-11821-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 02:16:55PM +0100, Mark Rutland wrote:
-> On Wed, Sep 24, 2014 at 02:11:17PM +0100, Frans Klaver wrote:
-> > In some cases you want to instantiate a battery even before it is
-> > attached; it is perfectly reasonable for a device to start up on
-> > wall-power and be connected to a battery later. The current advice is to
-> > instantiate a device explicitly in the kernel, or probe for the device
-> > from userspace. The downside of these approaches is that the user needs
-> > to keep the information related to the i2c battery in different places,
-> > which is inconvenient.
-> 
-> This really sounds like a Linux policy issue rather than something that
-> should be described in dt.
-> 
-> Presumably there's a reason we sanity cehck this in the first place.
-> What happens while the battery isn't plugged in? What can fail, and how?
+Mark, Sebastian,
 
-It was introduced in a22b41a31e53 "sbs-battery: Probe should try talking
-to the device", saying:
+The following changes since commit 52addcf9d6669fa439387610bc65c92fa098=
+0cef:
 
-  "this driver doesn't actually try talking to the device at probe time,
-  so if it's incorrectly configured in the device tree or platform data
-  (or if the battery has been removed from the system), then probe will
-  succeed and every access will sit there and time out. The end result
-  is a possibly laggy system that thinks it has a battery but can never
-  read status, which isn't very useful."
+  Linux 3.17-rc2 (2014-08-25 15:36:20 -0700)
 
-That's a reasonable thing to do, but it breaks just the feature I need.
-Besides that, the driver provides us with a gpio that indicates battery
-presence, which will also be useless if the device isn't present at
-probe time. That commit also doesn't take into account the fact that a
-battery could be removed after probing without any problems, leaving the
-system in the same state as before the probe change.
+are available in the git repository at:
 
-Now if the battery isn't plugged in, it is never detected after it has
-been attached, unless you take action from userspace. Basically you
-don't know your battery level until it has been explicitly probed.
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-po=
+wer-charger-regulator-v3.18
 
-We might also reduce the severity of the sanity check failure to produce
-a warning instead of an error. This would achieve that a developer might
-be warned that the battery isn't present, but also allow my use case
-where the battery may not be present at boot time. Was that what you
-meant with policy by the way?
+for you to fetch changes up to d6cc1f5824cbca392d099f3bb0c441efd9e54de9=
+:
 
-> 
-> > Add the "sbs,always-present" option to the device tree. If set, the
-> > battery is instantiated without sanity checking the connection.
-> 
-> From the description above, this name is incorrect. You're adding this
-> property to work around the battery _not_ being present at probe-time.
-> From a binding point of view, "instantiated" is somewhat meaningless --
-> that's an OS level detail rather than a contract detail.
+  Documentation: charger: max14577: Document exported sysfs entry (2014=
+-09-24 15:25:56 +0100)
 
-That's fair. I wasn't entirely sure of the name myself, so feel free to
-suggest some other names. It started out with "sbs,force-presence", but
-I would be just as happy using "sbs,always-register",
-"sbs,no-sanity-check" or something entirely different altogether.
+----------------------------------------------------------------
+Immutable branch between MFD, Power, Charger and Regulator for v3.18
 
-If we go with the downgrade of the status read error, the device tree
-requirement will be removed entirely.
+----------------------------------------------------------------
+Krzysztof Kozlowski (8):
+      mfd: max14577: Add defines for MAX77836 charger
+      mfd: max14577: Map charger device to its own of_node
+      charger: max14577: Add support for MAX77836 charger
+      regulator/mfd: max14577: Export symbols for calculating charger c=
+urrent
+      charger: max14577: Configure battery-dependent settings from DTS =
+and sysfs
+      power: max17040: Add ID for MAX77836 Fuel Gauge block
+      devicetree: mfd: max14577: Add device tree bindings document
+      Documentation: charger: max14577: Document exported sysfs entry
 
-Thanks,
-Frans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/ABI/testing/sysfs-class-power        |  14 +
+ Documentation/devicetree/bindings/mfd/max14577.txt | 146 ++++++++
+ drivers/mfd/max14577.c                             | 100 +++++-
+ drivers/power/Kconfig                              |   5 +-
+ drivers/power/max14577_charger.c                   | 370 +++++++++++++=
+++++++--
+ drivers/power/max17040_battery.c                   |   3 +-
+ drivers/regulator/max14577.c                       |  80 +----
+ include/linux/mfd/max14577-private.h               |  95 ++++--
+ include/linux/mfd/max14577.h                       |  30 ++
+ 9 files changed, 704 insertions(+), 139 deletions(-)
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
