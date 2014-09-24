@@ -1,136 +1,53 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 2/3] mfd: document DT bindings for Qualcomm SPMI PMICs
-Date: Wed, 24 Sep 2014 10:14:41 +0100
-Message-ID: <20140924091441.GA19999@lee--X1>
-References: <1406903450-27283-1-git-send-email-svarbanov@mm-sol.com>
- <1406903450-27283-3-git-send-email-svarbanov@mm-sol.com>
- <53DF8FFA.601@mm-sol.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v9 00/10] rtc: at91sam9: add DT support
+Date: Wed, 24 Sep 2014 11:17:57 +0200
+Message-ID: <20140924111757.00c303d2@bbrezillon>
+References: <1411483725-31532-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20140924084911.GI17801@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53DF8FFA.601@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Josh Cartwright <joshc@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140924084911.GI17801@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Andrew Victor <linux@maxim.org.za>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com, Samuel Ortiz <sameo@linux.intel.com>, Johan Hovold <jhovold@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 04 Aug 2014, Stanimir Varbanov wrote:
-> Kumar, Stephen, David can I have your Acked/Reviewed-by tag for 2/3 a=
-nd
-> if possible for 3/3. The last patch can wait because currently we don=
-'t
-> have child peripherals. Thanks.
+Hello Lee,
 
-No one seems to have an opinion, negative or otherwise.
+On Wed, 24 Sep 2014 09:49:11 +0100
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Applied, thanks.
+> This is not acceptable.  You have sent a 10 patch patch-set 5 times in
+> 24hrs.  To make matters worse, the only patch that has any affiliation
+> to me has already been accepted.
 
-> On 08/01/2014 05:30 PM, Stanimir Varbanov wrote:
-> > Document DT bindings used to describe the Qualcomm SPMI PMICs.
-> >=20
-> > Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-> > ---
-> >  .../devicetree/bindings/mfd/qcom,spmi-pmic.txt     |   64 ++++++++=
-++++++++++++
-> >  1 files changed, 64 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,spmi=
--pmic.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.t=
-xt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> > new file mode 100644
-> > index 0000000..7182b88
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> > @@ -0,0 +1,64 @@
-> > +          Qualcomm SPMI PMICs multi-function device bindings
-> > +
-> > +The Qualcomm SPMI series presently includes PM8941, PM8841 and PMA=
-8084
-> > +PMICs.  These PMICs use a QPNP scheme through SPMI interface.
-> > +QPNP is effectively a partitioning scheme for dividing the SPMI ex=
-tended
-> > +register space up into logical pieces, and set of fixed register
-> > +locations/definitions within these regions, with some of these reg=
-ions
-> > +specifically used for interrupt handling.
-> > +
-> > +The QPNP PMICs are used with the Qualcomm Snapdragon series SoCs, =
-and are
-> > +interfaced to the chip via the SPMI (System Power Management Inter=
-face) bus.
-> > +Support for multiple independent functions are implemented by spli=
-tting the
-> > +16-bit SPMI slave address space into 256 smaller fixed-size region=
-s, 256 bytes
-> > +each. A function can consume one or more of these fixed-size regis=
-ter regions.
-> > +
-> > +Required properties:
-> > +- compatible:      Should contain one of:
-> > +                     "qcom,pm8941"
-> > +                     "qcom,pm8841"
-> > +                     "qcom,pma8084"
-> > +                     or generalized "qcom,spmi-pmic".
-> > +- reg:             Specifies the SPMI USID slave address for this =
-device.
-> > +                   For more information see:
-> > +                   Documentation/devicetree/bindings/spmi/spmi.txt
-> > +
-> > +Required properties for peripheral child nodes:
-> > +- compatible:      Should contain "qcom,xxx", where "xxx" is a per=
-ipheral name.
-> > +
-> > +Optional properties for peripheral child nodes:
-> > +- interrupts:      Interrupts are specified as a 4-tuple. For more=
- information
-> > +                   see:
-> > +                   Documentation/devicetree/bindings/spmi/qcom,spm=
-i-pmic-arb.txt
-> > +- interrupt-names: Corresponding interrupt name to the interrupts =
-property
-> > +
-> > +Each child node of SPMI slave id represents a function of the PMIC=
-=2E In the
-> > +example below the rtc device node represents a peripheral of pm894=
-1
-> > +SID =3D 0. The regulator device node represents a peripheral of pm=
-8941 SID =3D 1.
-> > +
-> > +Example:
-> > +
-> > +	spmi {
-> > +		compatible =3D "qcom,spmi-pmic-arb";
-> > +
-> > +		pm8941@0 {
-> > +			compatible =3D "qcom,pm8941", "qcom,spmi-pmic";
-> > +			reg =3D <0x0 SPMI_USID>;
-> > +
-> > +			rtc {
-> > +				compatible =3D "qcom,rtc";
-> > +				interrupts =3D <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-> > +				interrupt-names =3D "alarm";
-> > +			};
-> > +		};
-> > +
-> > +		pm8941@1 {
-> > +			compatible =3D "qcom,pm8941", "qcom,spmi-pmic";
-> > +			reg =3D <0x1 SPMI_USID>;
-> > +
-> > +			regulator {
-> > +				compatible =3D "qcom,regulator";
-> > +				regulator-name =3D "8941_boost";
-> > +			};
-> > +		};
-> > +	};
-> >=20
->=20
->=20
+Sorry for that, I oversight your email saying that you were going to
+apply it.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> 
+> Send a patch-set to the list and don't do anything until the patch has
+> either been accepted or the reviews to stop coming in.  Then re-send
+> (only the patches that have not yet been accepted) in a week or so, if
+> required.
+
+Yes, as I said I didn't notice you had taken patch 9 in your tree,
+otherwise I would have removed it from the series.
+
+And I'll take care to wait between each version next time (that's often
+what I'm doing BTW).
+
+> 
+> If I have to deal with another 55 repeat emails again, you'll find
+> yourself as an entry in my spam filter.
+
+This won't happen again.
+
+Best Regards,
+
+Boris
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
