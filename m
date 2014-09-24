@@ -1,76 +1,139 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/6] pci, thunder: Add PCIe host controller devicetree bindings
-Date: Wed, 24 Sep 2014 20:34:14 +0200
-Message-ID: <3414852.SWQ9rRcUDx@wuerfel>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org> <3082935.e3X4GsVUDn@wuerfel> <CA+sq2Ce8sb=YGma05qEk_992Mc9M92TxCk+RWsyi6tY-FVOCXw@mail.gmail.com>
+From: Josh Cartwright <joshc@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] watchdog: qcom: add support for KPSS WDT
+Date: Wed, 24 Sep 2014 13:30:50 -0500
+Message-ID: <20140924183050.GI868@joshc.qualcomm.com>
+References: <cover.1411513109.git.joshc@codeaurora.org>
+ <8f4be0230a7fea8c299a0e878d0eb826eaba6099.1411513109.git.joshc@codeaurora.org>
+ <20140924155854.GA12620@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+sq2Ce8sb=YGma05qEk_992Mc9M92TxCk+RWsyi6tY-FVOCXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sunil Kovvuri <sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Sunil Goutham <sgoutham-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140924155854.GA12620@roeck-us.net>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 24 September 2014 23:34:04 Sunil Kovvuri wrote:
-> On Wed, Sep 24, 2014 at 9:36 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 24 September 2014 17:37:45 Robert Richter wrote:
-> >> +               compatible = "cavium,thunder-pcie";
-> >> +               device_type = "pci";
-> >> +               msi-parent = <&its>;
-> >> +               bus-range = <0 255>;
-> >> +               #size-cells = <2>;
-> >> +               #address-cells = <3>;
-> >> +               reg = <0x8480 0x00000000 0 0x10000000>;  /* Configuration space */
-> >> +               ranges = <0x03000000 0x8010 0x00000000 0x8010 0x00000000 0x70 0x00000000>, /* mem ranges */
-> >> +                       <0x03000000 0x8300 0x00000000 0x8300 0x00000000 0x80 0x00000000>,
-> >> +                       <0x03000000 0x87e0 0x00000000 0x87e0 0x00000000 0x01 0x00000000>;
-> >> +        };
-> >
-> > If you claim the entire 0-255 bus range, I think you should also
-> > specify a domain, otherwise it's not predictable which domain you
-> > get.
-> >
-> > The interrupt-map and interrupt-map-mask properties are required for PCI,
-> > otherwise you can't do LSI interrupts.
+On Wed, Sep 24, 2014 at 08:58:54AM -0700, Guenter Roeck wrote:
+> On Tue, Sep 23, 2014 at 06:04:36PM -0500, Josh Cartwright wrote:
+> > Add a driver for the watchdog timer block found in the Krait Processor
+> > Subsystem (KPSS) on the MSM8960, APQ8064, and IPQ8064.
+> > 
+> > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
 > 
-> This PCI controller supports only MSIx interrupts which are edge triggered.
-
-Interesting, so it's not PCI compliant then? I assume this will be fixed
-in the production version of the silicon, right?
-
-Having no support for interrupts mean that the majority of PCI device drivers
-will fail.
-
-> > If your hardware can support it, you should also list I/O space and prefetchable
-> > memory spaces. Can you explain why you have multiple non-prefetchable ranges?
+> Hi Josh,
 > 
-> Our hardware is an ECAM based host controller and doesn't support I/O
-> and prefetchable memory spaces.
-> All on-board PCI devices connected to this PCI controller have fixed resources
-> and doesn't have to be allocated/reassigned. Some of these devices are
-> SRIOV based.
+> looks much better. Couple of comments inline.
 
-I think you need to mark the ones that are nonrelocatable with flag
-0x80000000, otherwise the PCI core might decide to reassign them.
+Thanks for another review!
 
-> Kernel's SRIOV (pci/iov.c) is expecting 'resource->parent' hierarchy
-> to be set, otherwise doesn't
-> enable SRIOV device. So, here multiple non-prefetchable ranges of root bus
-> aid in resource claiming and setting res->parent hierarchy.
+[..]
+> > +++ b/drivers/watchdog/Kconfig
+> > @@ -443,6 +443,19 @@ config TEGRA_WATCHDOG
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called tegra_wdt.
+> >  
+> > +config QCOM_WDT
+> > +	tristate "QCOM watchdog"
+> > +	depends on HAS_IOMEM
+> > +	depends on ARCH_QCOM
+> > +	select WATCHDOG_CORE
+> > +	help
+> > +	  Say Y here to include Watchdog timer support for the watchdog found
+> > +	  on QCOM chipsets.  Currently supported targets are the MSM8960,
+> > +	  APQ8064, and IPQ8064.
+> > +
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  module will be called qcom_wdt.
+> > +
+> >  # AVR32 Architecture
+[..]
+> > +static int qcom_wdt_probe(struct platform_device *pdev)
+> > +{
+> > +	struct qcom_wdt *wdt;
+> > +	struct resource *res;
+> > +	unsigned long freq;
+> > +	int ret;
+> > +
+> > +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> > +	if (!wdt)
+> > +		return -ENOMEM;
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	wdt->base = devm_ioremap_resource(&pdev->dev, res);
+> > +	if (IS_ERR(wdt->base))
+> > +		return PTR_ERR(wdt->base);
+> > +
+> > +	wdt->clk = devm_clk_get(&pdev->dev, NULL);
+> > +	if (IS_ERR(wdt->clk))
+> > +		return PTR_ERR(wdt->clk);
+> > +
+> > +	ret = clk_prepare_enable(wdt->clk);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "failed to setup clock\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	/*
+> > +	 * We use the clock rate to calculate the max timeout, so ensure it's
+> > +	 * not zero to avoid a divide-by-zero exception.
+> > +	 */
+> > +	freq = clk_get_rate(wdt->clk);
+> > +	if (freq == 0) {
+> > +		dev_err(&pdev->dev, "invalid clock rate\n");
+> > +		return -EINVAL;
+> > +	}
+> 
+> This will need clk_disable_unprepare().
 
-I don't understand. Isn't that just a bug in the code that you are working
-around with the DT. Have you tried fixing the code instead?
+Yep.  Nice catch.  Will fix.
 
-> We do call "pci_claim_resource" in controller driver code.
-> "[PATCH 1/6] pci, thunder: Add support for Thunder PCIe host controller."
+> Since you are reading the frequency here, it might make sense to store it
+> in struct qcom_wdt so you don't have to call clk_get_rate() again in the
+> start function.
 
-My guess is that you are using the wrong interface here. Isn't the normal
-request_resource() in the host driver enough?
+Yeah, it doesn't save much, but I'll go ahead and add it.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +	wdt->wdd.dev = &pdev->dev;
+> > +	wdt->wdd.info = &qcom_wdt_info;
+> > +	wdt->wdd.ops = &qcom_wdt_ops;
+> > +	wdt->wdd.min_timeout = 1;
+> > +	wdt->wdd.max_timeout = 0x10000000U / freq;
+>
+> What if the frequency turns out to be larger than 8947848 Hz ?
+> Then your maximum timeout is below the default timeout.
+> And if the frequency is larger than 268435456 Hz, the maximum
+> timeout would be 0.
+
+Yes, I should be doing more sanity checking.  I'll do so.
+
+> > +	/*
+> > +	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
+> > +	 * default.
+> > +	 */
+> > +	if (watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev))
+> > +		wdt->wdd.timeout = 30;
+> 
+> You can just initialize timeout above with 30 seconds. Saves you the if
+> statement here.
+
+Great.  Thanks.
+
+> > +	ret = watchdog_register_device(&wdt->wdd);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "failed to register watchdog\n");
+>
+> This will need a clk_disable_unprepare().
+>
+> Given that this is needed twice, you might want to consider using
+> error exit code below, as suggested in CodingStyle.
+
+Indeed.  Will do.
+
+Thanks again,
+  Josh
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
