@@ -1,153 +1,95 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 1/3] mfd/axp20x: extend axp20x to support axp288 pmic
-Date: Wed, 24 Sep 2014 12:02:12 +0100
-Message-ID: <20140924110212.GH19999@lee--X1>
-References: <1410912715-25903-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1410912715-25903-2-git-send-email-jacob.jun.pan@linux.intel.com>
- <20140918053926.GC8740@lee--X1>
- <20140918053252.34829684@ultegra>
+Subject: Re: [PATCH] mfd: tps65217: add compatible string for subdevices
+Date: Wed, 24 Sep 2014 12:06:02 +0100
+Message-ID: <20140924110602.GI19999@lee--X1>
+References: <5439652.jHp5aCCfrZ@lenovobook>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140918053252.34829684@ultegra>
+In-Reply-To: <5439652.jHp5aCCfrZ@lenovobook>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE TREE <devicetree@vger.kernel.org>, Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>, Angelo Compagnucci <angelo.compagnu>
+To: Johannes Pointner <johannes.pointner@gmail.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, AnilKumar Ch <anilkumar@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 18 Sep 2014, Jacob Pan wrote:
-> Lee Jones <lee.jones@linaro.org> wrote:
-> > On Tue, 16 Sep 2014, Jacob Pan wrote:
-> >=20
-> > > X-Powers AXP288 is a customized PMIC for Intel Baytrail-CR
-> > > platforms. Similar to AXP202/209, AXP288 comes with USB charger,
-> > > more LDO and BUCK channels, and AD converters. It also provides
-> > > extended status and interrupt reporting capabilities than the
-> > > devices currently supported in axp20x.c.
-> > >=20
-> > > In addition to feature extension, this patch also adds ACPI bindi=
-ng
-> > > for enumeration.
-> > >=20
-> > > This consolidated driver should support more X-Powers' PMICs in
-> > > both device tree and ACPI enumerated platforms.
-> > >=20
-> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > > ---
-> > >  drivers/mfd/Kconfig        |   3 +-
-> > >  drivers/mfd/axp20x.c       | 353
-> > > +++++++++++++++++++++++++++++++++++++--------
-> > > include/linux/mfd/axp20x.h |  58 ++++++++ 3 files changed, 354
-> > > insertions(+), 60 deletions(-)
+On Mon, 22 Sep 2014, Johannes Pointner wrote:
+
+> The TPS65217 is missing of_compatible string in the mfd_cell for its
+> subdevices. This compatible string is necessary to use functions like
+> of_find_backlight_by_node in backlight.c.
+>=20
+> Signed-off-by: Johannes Pointner <johannes.pointner@br-automation.com=
+>
+> ---
+>  Documentation/devicetree/bindings/regulator/tps65217.txt            =
+| 5 ++++-
+>  .../devicetree/bindings/video/backlight/tps65217-backlight.txt      =
+| 6 +++---
+>  drivers/mfd/tps65217.c                                              =
+| 2 ++
+>  3 files changed, 9 insertions(+), 4 deletions(-)
 
 [...]
 
-> > > -static const struct regmap_irq_chip axp20x_regmap_irq_chip =3D {
-> > > +static struct acpi_device_id axp20x_acpi_match[] =3D {
-> > > +	{
-> > > +		.id =3D "INT33F4",
-> > > +		.driver_data =3D (kernel_ulong_t)AXP288_ID,
-> >=20
-> > Why do you need to cast this?
-> >=20
-> to make sure match driver_data which is different in acpi_device_id t=
-han
-> of_device_id.
+> diff --git a/Documentation/devicetree/bindings/video/backlight/tps652=
+17-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tp=
+s65217-backlight.txt
+> index 5fb9279..c3fb649 100644
+> --- a/Documentation/devicetree/bindings/video/backlight/tps65217-back=
+light.txt
+> +++ b/Documentation/devicetree/bindings/video/backlight/tps65217-back=
+light.txt
+> @@ -7,18 +7,18 @@ Required properties:
+>  - compatible: "ti,tps65217"
+>  - reg: I2C slave address
+>  - backlight: node for specifying WLED1 and WLED2 lines in TPS65217
+> +- compatible: "ti,tps65217-bl"
 
-You don't need the cast.
+This is now confusing.  Please make it clear that this part of the
+documentation is now referencing the sub-node.
 
-[...]
+>  - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 f=
+or ISEL2 (high-level)
+>  - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
+>  - default-brightness: valid values: 0-100
+> =20
+> -Each regulator is defined using the standard binding for regulators.
+> -
+>  Example:
+> =20
+>  	tps: tps@24 {
+>  		reg =3D <0x24>;
+>  		compatible =3D "ti,tps65217";
+> -		backlight {
+> +		tps_bl: backlight {
+> +			compatible =3D "ti,tps65217-bl";
+>  			isel =3D <1>;  /* 1 - ISET1, 2 ISET2 */
+>  			fdim =3D <100>; /* TPS65217_BL_FDIM_100HZ */
+>  			default-brightness =3D <50>;
+> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
 
-> > > +static int axp20x_match_device(struct axp20x_dev *axp20x, struct
-> > > device *dev) +{
-> > > +	const struct acpi_device_id *acpi_id;
-> > > +	const struct of_device_id *of_id;
-> > > +
-> > > +	of_id =3D of_match_device(axp20x_of_match, dev);
-> > > +	if (of_id)
-> > > +		axp20x->variant =3D (long) of_id->data;
-> > > +	else {
-> > > +		acpi_id =3D
-> > > acpi_match_device(dev->driver->acpi_match_table, dev);
-> > > +		if (!acpi_id || !acpi_id->driver_data) {
-> > > +			dev_err(dev, "Unable to determine ID\n");
-> > > +			return -ENODEV;
-> > > +		}
-> > > +		axp20x->variant =3D (long) acpi_id->driver_data;
-> > > +	}
-> >=20
-> > We can do better error handling here and give the user a better sen=
-se
-> > of what happened if anything were to go wrong.  Do:
-> >=20
-> > if (dev->of_node)
-> >   of_id =3D of_match_device()
-> >   if (!of_id)
-> >     error()
-> this will give false error on ACPI based platforms, right? in reality
+This shouldn't be in this patch.
 
-Why would it?  dev->of_node should be NULL if running ACPI?
+Please adhere to: Documentation/devicetree/bindings/submitting-patches.=
+txt
 
-[...]
-
-> > > +	switch (axp20x->variant) {
-> > > +	case AXP202_ID:
-> > > +	case AXP209_ID:
-> > > +		axp20x->nr_cells =3D ARRAY_SIZE(axp20x_cells);
-> > > +		axp20x->cells =3D axp20x_cells;
-> > > +		axp20x->regmap_cfg =3D &axp20x_regmap_config;
-> > > +		axp20x_regmap_irq_chip.num_regs	=3D 5;
-> > > +		axp20x_regmap_irq_chip.irqs =3D axp20x_regmap_irqs;
-> > > +		axp20x_regmap_irq_chip.num_irqs	=3D
-> > > +			ARRAY_SIZE(axp20x_regmap_irqs);
-> > > +		break;
-> > > +	case AXP288_ID:
-> > > +		axp20x->cells =3D axp288_cells;
-> > > +		axp20x->nr_cells =3D ARRAY_SIZE(axp288_cells);
-> > > +		axp20x->regmap_cfg =3D &axp288_regmap_config;
-> > > +		axp20x_regmap_irq_chip.irqs =3D axp288_regmap_irqs;
-> > > +		axp20x_regmap_irq_chip.num_irqs	=3D
-> > > +			ARRAY_SIZE(axp288_regmap_irqs);
-> > > +		axp20x_regmap_irq_chip.num_regs	=3D 6;
-> > > +		break;
-> > > +	default:
-> > > +		dev_err(dev, "unsupported AXP20X ID %lu\n",
-> > > axp20x->variant);
-> > > +		return -ENODEV;
-> >=20
-> > -EINVAL might be better here.
-> I was considering the return value gets propagated to probe function
-> which is used to query the existence of a device per driver model. Bu=
-t
-> I have no strong preference.
-
-I think -EINVAL would be better as the argument passed in
-axp20x->variant is invalid.
-
-define EINVAL          22      /* Invalid argument */
-
-> > > +	}
-> > > +	dev_info(dev, "AXP20x variant %s found\n",
-> > > +		axp20x_model_names[axp20x->variant]);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >  static int axp20x_i2c_probe(struct i2c_client *i2c,
-> > > -			 const struct i2c_device_id *id)
-> > > +			const struct i2c_device_id *id)
-> >=20
-> > Sneaky. ;)
-> I should not fix the extra white spaces here, unrelated to this patch=
-=2E
-> will remove.
-
-It's okay.  I don't mind little things like this occasionally.  I find
-them more amusing than harmful.
-
-[...]
+> index 3cc4c70..77708f9 100644
+> --- a/drivers/mfd/tps65217.c
+> +++ b/drivers/mfd/tps65217.c
+> @@ -33,9 +33,11 @@
+>  static const struct mfd_cell tps65217s[] =3D {
+>  	{
+>  		.name =3D "tps65217-pmic",
+> +		.of_compatible =3D "ti,tps65217-pmic",
+>  	},
+>  	{
+>  		.name =3D "tps65217-bl",
+> +		.of_compatible =3D "ti,tps65217-bl",
+>  	},
+>  };
+> =20
 
 --=20
 Lee Jones
