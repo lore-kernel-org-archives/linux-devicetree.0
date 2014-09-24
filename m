@@ -1,88 +1,91 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH V7 11/12] Documentation: bridge: Add documentation for
- ps8622 DT properties
-Date: Wed, 24 Sep 2014 12:08:37 +0300
-Message-ID: <54228A15.4090901@ti.com>
-References: <1409150399-12534-1-git-send-email-ajaykumar.rs@samsung.com> <5419760A.7020908@ti.com> <20140922075424.GB1470@ulmo> <54202C86.3040808@ti.com> <20140923062111.GE30514@ulmo> <54213DAC.5010806@ti.com> <20140923095314.GS30514@ulmo> <542160DF.2040008@ti.com> <20140923145833.GI5982@ulmo>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH v2 07/16] gpio: Add support for unified device properties interface
+Date: Wed, 24 Sep 2014 11:12:36 +0200
+Message-ID: <6744174.JquHLt80n3@wuerfel>
+References: <1410868367-11056-1-git-send-email-mika.westerberg@linux.intel.com> <2809308.3y5s7TV5Ip@wuerfel> <D04730D8.A9DB0%dvhart@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="NbGcMAWJWkihmncc2QFXaKmI1wS2lSDIi"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140923145833.GI5982@ulmo>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, inki.dae@samsung.com, robdclark@gmail.com, daniel.vetter@ffwll.ch, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <D04730D8.A9DB0%dvhart@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Hart <dvhart@infradead.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Woodhouse <david.woodhouse@intel.com>, Linus Walleij <linus.walleij@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Aaron Lu <aaron.lu@intel.com>
 List-Id: devicetree@vger.kernel.org
 
---NbGcMAWJWkihmncc2QFXaKmI1wS2lSDIi
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+On Tuesday 23 September 2014 14:15:47 Darren Hart wrote:
+> Arnd, I think you meant:
+> 
+>         Return gpio_leds_create_acpi(pdev) ?
 
-On 23/09/14 17:58, Thierry Reding wrote:
+Yes, sorry for the confusion on my part.
 
->> But if a panel driver controls its video source, it makes sense for th=
-e
->> panel driver to get its video source in its probe, and that happens
->> easiest if the panel has a link to the video source.
->=20
-> That's an orthogonal problem. You speak about the link in software here=
-,
-> whereas the phandles only represent the link in the description of
-> hardware. Now DT describes hardware from the perspective of the CPU, so=
+> This is what we did early on to prototype this concept, but the problem
+> with this approach we duplicate all of the creation code, which leads to
+> maintenance errors, and is inconsistent with the goals of the _DSD which
+> is to reuse the same schemas for ACPI and FDT. If we have separate pdata
+> creation functions anyway, we are leaving much of the advantage of the
+> common schema on the table. Namely the ability to reuse drivers relatively
+> easily across firmware implementations. We don't want driver authors to
+> have to care if it's ACPI or FDT.
 
-> it's sort of like a cave that you're trying to explore. You start at th=
-e
-> top with the address bus, from where a couple of tunnels lead to the
-> various peripherals on the address bus. A display controller might have=
+I think we are absolutely in agreement about the basic principle here,
+but disagree on how far we'd want to take the abstraction.
 
-> another tunnel to a panel, etc.
+I got a little confused by the leds-gpio example, as I initially saw
+that as generic infrastructure rather than a specific driver. As I just
+wrote in my reply to Rafael, I generally believe we should strive to
+have generic driver-side interfaces so drivers don't have to care,
+but keep the differences in subsystem specific code.
 
-We don't do that for GPIOs, regulators, etc. either. And for video data
-there are no address buses. Yes, for DSI and similar we have a control
-bus, but that is modeled differently than the video data path.
+> We would have preferred to have deprecated the of property interface in
+> favor of the new generic device_property interface, but Grant specifically
+> requested that we update drivers individually rather than all at once,
+> which means we can't just kill the OF interface.
 
-Now, I'm fine with starting from the CPU, going outwards. I agree that
-it's probably better to model it in the direction of the data stream,
-even if that would make the SW a bit more complex.
+I don't actually have a strong opinion on that matter, having only the
+device property interface does have some advantages as well, but I also
+agree that we are somewhat better off not having to change all the drivers.
 
-However, I do think it's not as clear as you make it sound, especially
-if we take cameras/sensors into account as Laurent explained elsewhere
-in this thread.
+> We agreed to that, somewhat reluctantly as it adds more work in updating
+> the drivers over time which will slow adoption, but I understand the
+> desire not to make large sweeping changes due to the risk of breaking
+> things inadvertently as we cannot expect to be able to test all of them.
+> That said, I don't want to forget that the goal is to use the common
+> interface over time as we convert individual drivers, and using the common
+> interface means we need a common iterator function and that we not have fw
+> implementation specific pdata create functions.
 
-> If you go the other way around, how do you detect how things connect?
-> Where do you get the information about the panel so you can trace back
-> to the origin?
+I've looked a bit closer at how the LED subsystem handles sub-nodes
+in DT at the moment. It seems that there is some duplication between
+the drivers already, as they all implement a variation of the sub-node
+parsing code.
 
-When the panel driver probes, it registers itself as a panel and gets
-its video source. Similarly a bridge in between gets its video source,
-which often would be the SoC, i.e. the origin.
+There are other non-LED drivers with similar loops, but they seem to be
+either very specialized, or explicitly for DT abstractions, so I'm still
+not convinced we need a generic loop-through-child-nodes-and-parse-properties
+interface.
 
- Tomi
+How would you feel about a more general way of probing LED, using
+a new helper in the leds-core that iterates over the child nodes
+and parses the standard properties but calls into a driver specific
+callback to parse the specific properties?
+It's probably much more work than your current approach, but it seems
+to me that there is more to gain by solving the problem for LED
+drivers in particular to cut down the per-driver duplication
+at the same time as the per-firmware-interface duplication.
 
+As a start, we could probably take the proposed device_for_each_child_node
+and move that into the leds-core, changing the fw_dev_node argument
+for an led_classdev with the addition of the of_node and acpi_object
+members. It would still leave it up to the gpio-leds driver to do
 
+	if (led_cdev->of_node)
+		gpiod = devm_of_get_gpiod(led_cdev->of_node, ...);
+	else
+		gpiod = devm_acpi_get_gpiod(led_cdev->acpi_object, ...);
 
---NbGcMAWJWkihmncc2QFXaKmI1wS2lSDIi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+but there seems little benefit in abstracting this because there is
+only one driver that needs it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJUIooVAAoJEPo9qoy8lh71Zl0P/2siTDSQiaqPObwTDpVR2bn+
-+wvaFqk/LtFJxeDxptVvGBJLI7KPlMhe/XqH7mpJr4oBGML16o750m7SJPsh+d6V
-5uvdxCS5fEA+JgZQwAfuz1PI1tOsLEgGnWtVZeup8K45Sis8JP7ioXOGnR2hobV9
-jbyl9GYWS7DwnvFPEHwsGnuayDXgKHIQHkBbGSMvxOGjxpq9ZbKUBKbqyow/epi7
-46C8vOHqnjm7QiijMHtDXYsC1EoW4zekm63ljVRJxp4wn4PXuOKOrGFHe6zaDICs
-4eFiwr5Q6KuZa9FdHWwjnwHHVSiJShyzAkb6Z9hysJDeVAxp4UOMreg2NZbW9YFc
-skDzvN0eQLPHkzyX+dcxqtntbExYY2JG7sot/6wGxCSS7wlJ2X0PnoO0OeVGeafT
-BD01plzEDasQQeTYATWQXd2tGHHdemaXnhrBoPhAJY4a59lKER62zyJkYN4s7oe7
-Dpa8g9LzEyt3PDBAZFLhJNlcCIUupGhrsHeYSwsD3mpHQ/Gu+Kqz16g/hPGVfxvL
-v593x9TS/9XrGNAvKirX/cVoNwrbP0rySjmoqSrbGlGMtWn060AHSrv71u/pMpDC
-z28rO2PyJUFD05LCbyJzgWgARXEao0wH5F30ejFtae6Ue7ZgiuaVKgBhcKh/vpn/
-g/Br1ifyBLswH5n1dNQr
-=EUl1
------END PGP SIGNATURE-----
-
---NbGcMAWJWkihmncc2QFXaKmI1wS2lSDIi--
+	Arnd
