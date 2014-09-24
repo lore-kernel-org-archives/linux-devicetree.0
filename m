@@ -1,46 +1,31 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH RESEND] thermal: Add QPNP PMIC temperature alarm driver
-Date: Wed, 24 Sep 2014 23:30:57 +0300
-Message-ID: <1411590657.9536.1.camel@mm-sol.com>
-References: <1410793383-30097-1-git-send-email-iivanov@mm-sol.com>
-	 <20140915153052.GB27076@developer> <1411570570.18580.72.camel@iivanov-dev>
-	 <20140924182410.GD27076@developer>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] net: Add Keystone NetCP ethernet driver
+Date: Wed, 24 Sep 2014 16:43:06 -0400 (EDT)
+Message-ID: <20140924.164306.431516399400992046.davem@davemloft.net>
+References: <20140915.123755.1868053059646672094.davem@davemloft.net>
+	<54183EDB.20801@ti.com>
+	<542320B3.9020902@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140924182410.GD27076@developer>
+In-Reply-To: <542320B3.9020902-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Collins <collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
+Cc: sandeep_n-l0cyMroinI0@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jhs-jkUAjuhPggJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-09-24 at 14:24 -0400, Eduardo Valentin wrote:
-> Hello Ivan,
-> 
-> On Wed, Sep 24, 2014 at 05:56:10PM +0300, Ivan T. Ivanov wrote:
-> > On Mon, 2014-09-15 at 11:30 -0400, Eduardo Valentin wrote:
-> > > Hey Ivan,
-> > > 
-> > > Please give us at least a two weeks time frame before resending your
-> > > patches.
-> > 
-> > Hi Eduardo, 
-> > 
-> > Should I wait for more comments or I can post updated
-> > version of this patch?
-> > 
-> 
-> Please, if you have a new version, I would prefer you send it as V2. I
-> am specially interested about the cooling parts of it, and the DT usage.
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Date: Wed, 24 Sep 2014 15:51:15 -0400
 
-I really don't know what to say about cooling, there is no cooling.
-It is supposed that system just shut down, in case of overheat, 
-I believe.
+> Here is an updated version with above fixed. Not posting the entire
+> series again since its just small update on the patch.
 
-Regards,
-Ivan
+That's not how this works.
 
+If you want your changes re-reviewed and considered for real inclusion,
+you must repost the entire patch series from scratch, with a proper
+list of what changes between the previous submission and the new one.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
