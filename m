@@ -1,64 +1,75 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: fdt: fix memory range check
-Date: Wed, 24 Sep 2014 15:38:44 +0100
-Message-ID: <20140924143844.B2218C40738@trevor.secretlab.ca>
-References: <1411466349-14166-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411466349-14166-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH 1/2] sbs-battery: add forced instantiation from
+ device tree
+Date: Wed, 24 Sep 2014 15:38:49 +0100
+Message-ID: <20140924143848.GH5729@leverpostej>
+References: <1411564278-17207-1-git-send-email-frans.klaver@xsens.com>
+ <1411564278-17207-2-git-send-email-frans.klaver@xsens.com>
+ <20140924131655.GG5729@leverpostej>
+ <20140924142222.GC22872@ci00147.xsens-tech.local>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140924142222.GC22872@ci00147.xsens-tech.local>
+Sender: linux-doc-owner@vger.kernel.org
+To: Frans Klaver <frans.klaver@xsens.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Sep 2014 10:59:09 +0100, Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
-> In cases where board has below memory DT node
+On Wed, Sep 24, 2014 at 03:22:22PM +0100, Frans Klaver wrote:
+> On Wed, Sep 24, 2014 at 02:16:55PM +0100, Mark Rutland wrote:
+> > On Wed, Sep 24, 2014 at 02:11:17PM +0100, Frans Klaver wrote:
+> > > In some cases you want to instantiate a battery even before it is
+> > > attached; it is perfectly reasonable for a device to start up on
+> > > wall-power and be connected to a battery later. The current advice is to
+> > > instantiate a device explicitly in the kernel, or probe for the device
+> > > from userspace. The downside of these approaches is that the user needs
+> > > to keep the information related to the i2c battery in different places,
+> > > which is inconvenient.
+> > 
+> > This really sounds like a Linux policy issue rather than something that
+> > should be described in dt.
+> > 
+> > Presumably there's a reason we sanity cehck this in the first place.
+> > What happens while the battery isn't plugged in? What can fail, and how?
 > 
-> memory{
-> 	device_type = "memory";
-> 	reg = <0x80000000 0x80000000>;
-> };
+> It was introduced in a22b41a31e53 "sbs-battery: Probe should try talking
+> to the device", saying:
 > 
-> Check on the memory range in fdt.c will always fail because it is
-> comparing MAX_PHYS_ADDR with base + size, in fact it should compare
-> it with base + size - 1.
+>   "this driver doesn't actually try talking to the device at probe time,
+>   so if it's incorrectly configured in the device tree or platform data
+>   (or if the battery has been removed from the system), then probe will
+>   succeed and every access will sit there and time out. The end result
+>   is a possibly laggy system that thinks it has a battery but can never
+>   read status, which isn't very useful."
 > 
-> This issue was originally noticed on Qualcomm IFC6410 board.
-> Without this patch kernel shows up noticed unnecessary warnings
+> That's a reasonable thing to do, but it breaks just the feature I need.
+> Besides that, the driver provides us with a gpio that indicates battery
+> presence, which will also be useless if the device isn't present at
+> probe time. That commit also doesn't take into account the fact that a
+> battery could be removed after probing without any problems, leaving the
+> system in the same state as before the probe change.
 > 
-> [    0.000000] Machine model: Qualcomm APQ8064/IFC6410
-> [    0.000000] Ignoring memory range 0xffffffff - 0x100000000
-> [    0.000000] cma: Reserved 64 MiB at ab800000
+> Now if the battery isn't plugged in, it is never detected after it has
+> been attached, unless you take action from userspace. Basically you
+> don't know your battery level until it has been explicitly probed.
 > 
-> as a result the size get reduced to 0x7fffffff which looks wrong.
-> 
-> This patch fixes the check involved in generating this warning and
-> as a result it also fixes the wrong size calculation.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/of/fdt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 79cb831..3f5736c 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -937,7 +937,7 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
->  		return;
->  	}
->  
-> -	if (base + size > MAX_PHYS_ADDR) {
-> +	if (base + size - 1 > MAX_PHYS_ADDR) {
->  		pr_warning("Ignoring memory range 0x%lx - 0x%llx\n",
->  				ULONG_MAX, base + size);
->  		size = MAX_PHYS_ADDR - base;
+> We might also reduce the severity of the sanity check failure to produce
+> a warning instead of an error. This would achieve that a developer might
+> be warned that the battery isn't present, but also allow my use case
+> where the battery may not be present at boot time. Was that what you
+> meant with policy by the way?
 
-By that logic, the above two lines need to be repaired also:
+In general, properties in general shouldn't tell the kernel what to do.
+They should tell the kernel details of the hardware that it can then use
+to make informed decisions. In this case, the suggested property is
+purely a software detail, as the hardware isn't any different in
+situations you would or would not want the property.
 
-		pr_warning("Ignoring memory range 0x%lx - 0x%llx\n",
-				MAX_PHYS_ADDR + 1, base + size);
-		size = MAX_PHYS_ADDR - base + 1;
+You mention that there's a GPIO that can be used to detect the battery
+presence. Why can't the driver always probe and then on check for the
+presence of the battery dynamically using that GPIO? That should cover
+both cases.
 
-I've fixed it up and applied, thanks.
-
-g.
+Mark.
