@@ -1,322 +1,497 @@
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v5 2/2] iio/adc: add support for axp288 adc
-Date: Tue, 23 Sep 2014 17:20:27 -0700
-Message-ID: <1411518027-19907-3-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1411518027-19907-1-git-send-email-jacob.jun.pan@linux.intel.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v12 05/12] PCI: OF: Fix the conversion of IO ranges into
+ IO resources.
+Date: Tue, 23 Sep 2014 18:22:53 -0600
+Message-ID: <20140924002253.GB27357@google.com>
+References: <1411498874-9864-1-git-send-email-Liviu.Dudau@arm.com>
+ <1411498874-9864-6-git-send-email-Liviu.Dudau@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411518027-19907-1-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Disposition: inline
+In-Reply-To: <1411498874-9864-6-git-send-email-Liviu.Dudau@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: IIO <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DEVICE TREE <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>
-Cc: Carlo Caione <carlo@caione.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Aaron Lu <aaron.lu@intel.com>, Alan Cox <alan@linux.intel.com>, Jean Delvare <khali@linux-fr.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Grant Likely <grant.likely@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Fugang Duan <B38611@freescale.com>, Arnd Bergmann <arnd@arndb.de>, Zubair Lutfullah <zubair.lutfullah@gmail.com>, Sebastian Reichel <sre@debian.org>, Johannes Thumshirn <johannes.thumshirn@men.de>, Philippe Reynes <tremyfr@yahoo.fr>, Angelo Compagnucci <angelo.compagnucci@gmail.com>, Doug Anderson <dianders@chromium.org>, Ramakrishna Pallala <ramakrishna.pallala@intel.com>Pete
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, linux-pci <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, linux-arch <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Simon Horman <horms@ver>
 List-Id: devicetree@vger.kernel.org
 
-Platform driver for X-Powers AXP288 ADC, which is a sub-device of the
-customized AXP288 PMIC for Intel Baytrail-CR platforms. GPADC device
-enumerates as one of the MFD cell devices. It uses IIO infrastructure
-to communicate with userspace and consumer drivers.
+[+cc Andrew]
 
-Usages of ADC channels include battery charging and thermal sensors.
+On Tue, Sep 23, 2014 at 08:01:07PM +0100, Liviu Dudau wrote:
+> The ranges property for a host bridge controller in DT describes
+> the mapping between the PCI bus address and the CPU physical address.
+> The resources framework however expects that the IO resources start
+> at a pseudo "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.
+> The conversion from pci ranges to resources failed to take that into account,
+> returning a CPU physical address instead of a port number.
+> 
+> Also fix all the drivers that depend on the old behaviour by fetching
+> the CPU physical address based on the port number where it is being needed.
+> 
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> ---
+>  arch/arm/mach-integrator/pci_v3.c | 23 ++++++++++----------
+>  drivers/of/address.c              | 44 +++++++++++++++++++++++++++++++++++----
+>  drivers/pci/host/pci-tegra.c      | 10 ++++++---
+>  drivers/pci/host/pcie-rcar.c      | 21 +++++++++++++------
+>  include/linux/of_address.h        | 15 ++++++-------
+>  5 files changed, 82 insertions(+), 31 deletions(-)
+> ...
 
-Based on initial work by:
-Ramakrishna Pallala <ramakrishna.pallala@intel.com>
+The of_pci_range_to_resource() implementation in drivers/of/address.c is
+always compiled when CONFIG_OF_ADDRESS=y, but when CONFIG_OF_ADDRESS=y and
+CONFIG_PCI is not set, we get the static inline version from
+include/linux/of_address.h as well, causing a redefinition error.
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- drivers/iio/adc/Kconfig      |   8 ++
- drivers/iio/adc/Makefile     |   1 +
- drivers/iio/adc/axp288_adc.c | 253 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 262 insertions(+)
- create mode 100644 drivers/iio/adc/axp288_adc.c
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> @@ -957,12 +957,48 @@ bool of_dma_is_coherent(struct device_node *np)
+> ...
+> +int of_pci_range_to_resource(struct of_pci_range *range,
+> +	struct device_node *np, struct resource *res)
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 11b048a..db2681b 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -127,6 +127,14 @@ config AT91_ADC
- 	help
- 	  Say yes here to build support for Atmel AT91 ADC.
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> ...
+>  #else /* CONFIG_OF_ADDRESS && CONFIG_PCI */
+>  static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+>  				             struct resource *r)
+> @@ -144,6 +139,12 @@ static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline int of_pci_range_to_resource(struct of_pci_range *range,
+> +		struct device_node *np, struct resource *res)
+> +{
+> +	return -ENOSYS;
+> +}
+
+My proposal to fix it is the following three patches.  The first moves the
+inline version of of_pci_range_to_resource() into the existing "#if
+defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)" block.
+
+Andrew added it (and some other PCI-related things) with 29b635c00f3e
+("of/pci: Provide support for parsing PCI DT ranges property") to
+of_address.h outside of any ifdefs, so it's always available.  Maybe
+there's a reason that's needed in the non-CONFIG_PCI case, but I didn't see
+it with a quick look.
+
+The second moves of_pci_range_to_resource() to address.c, still inside the
+"#ifdef CONFIG_PCI" block.
+
+Bjorn
+
+
+commit 95a60df1c2d400c676ab1d20271735e2b4735437
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue Sep 23 17:27:42 2014 -0600
+
+    of/pci: Define of_pci_range_to_resource() only when CONFIG_PCI=y
+    
+    of_pci_range_to_resource() was previously defined always, but it's only
+    used by PCI code, so move the definition inside the CONFIG_OF_ADDRESS &&
+    CONFIG_PCI block.
+    
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index f8cc7daa420c..ecf913cf53b2 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -23,17 +23,6 @@ struct of_pci_range {
+ #define for_each_of_pci_range(parser, range) \
+ 	for (; of_pci_range_parser_one(parser, range);)
  
-+config AXP288_ADC
-+	tristate "X-Powers AXP288 ADC driver"
-+	depends on MFD_AXP20X
-+	help
-+	  Say yes here to have support for X-Powers power management IC (PMIC) ADC
-+	  device. Depending on platform configuration, this general purpose ADC can
-+	  be used for sampling sensors such as thermal resistors.
+-static inline void of_pci_range_to_resource(struct of_pci_range *range,
+-					    struct device_node *np,
+-					    struct resource *res)
+-{
+-	res->flags = range->flags;
+-	res->start = range->cpu_addr;
+-	res->end = range->cpu_addr + range->size - 1;
+-	res->parent = res->child = res->sibling = NULL;
+-	res->name = np->full_name;
+-}
+-
+ /* Translate a DMA address from device space to CPU space */
+ extern u64 of_translate_dma_address(struct device_node *dev,
+ 				    const __be32 *in_addr);
+@@ -140,6 +129,18 @@ extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
+ 			       u64 *size, unsigned int *flags);
+ extern int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 				      struct resource *r);
 +
- config EXYNOS_ADC
- 	tristate "Exynos ADC driver support"
- 	depends on ARCH_EXYNOS || (OF && COMPILE_TEST)
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index ad81b51..19640f9 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
- obj-$(CONFIG_AD7887) += ad7887.o
- obj-$(CONFIG_AD799X) += ad799x.o
- obj-$(CONFIG_AT91_ADC) += at91_adc.o
-+obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
- obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
- obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
- obj-$(CONFIG_MAX1027) += max1027.o
-diff --git a/drivers/iio/adc/axp288_adc.c b/drivers/iio/adc/axp288_adc.c
-new file mode 100644
-index 0000000..664d18f
---- /dev/null
-+++ b/drivers/iio/adc/axp288_adc.c
-@@ -0,0 +1,253 @@
-+/*
-+ * axp288_adc.c - X-Powers AXP288 PMIC ADC Driver
-+ *
-+ * Copyright (C) 2014 Intel Corporation
-+ *
-+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the GNU
-+ * General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/axp20x.h>
-+#include <linux/platform_device.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/machine.h>
-+#include <linux/iio/driver.h>
-+
-+#define AXP288_ADC_EN_MASK		0xF1
-+#define AXP288_ADC_TS_PIN_GPADC		0xF2
-+#define AXP288_ADC_TS_PIN_ON		0xF3
-+
-+enum axp288_adc_id {
-+	AXP288_ADC_TS,
-+	AXP288_ADC_PMIC,
-+	AXP288_ADC_GP,
-+	AXP288_ADC_BATT_CHRG_I,
-+	AXP288_ADC_BATT_DISCHRG_I,
-+	AXP288_ADC_BATT_V,
-+	AXP288_ADC_NR_CHAN,
-+};
-+
-+struct axp288_adc_info {
-+	int irq;
-+	struct regmap *regmap;
-+};
-+
-+static const struct iio_chan_spec const axp288_adc_channels[] = {
-+	{
-+		.indexed = 1,
-+		.type = IIO_TEMP,
-+		.channel = 0,
-+		.address = AXP288_TS_ADC_H,
-+		.datasheet_name = "CH0",
-+	}, {
-+		.indexed = 1,
-+		.type = IIO_TEMP,
-+		.channel = 1,
-+		.address = AXP288_PMIC_ADC_H,
-+		.datasheet_name = "CH1",
-+	}, {
-+		.indexed = 1,
-+		.type = IIO_TEMP,
-+		.channel = 2,
-+		.address = AXP288_GP_ADC_H,
-+		.datasheet_name = "CH2",
-+	}, {
-+		.indexed = 1,
-+		.type = IIO_CURRENT,
-+		.channel = 3,
-+		.address = AXP20X_BATT_CHRG_I_H,
-+		.datasheet_name = "CH3",
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
-+	}, {
-+		.indexed = 1,
-+		.type = IIO_CURRENT,
-+		.channel = 4,
-+		.address = AXP20X_BATT_DISCHRG_I_H,
-+		.datasheet_name = "CH4",
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
-+	}, {
-+		.indexed = 1,
-+		.type = IIO_VOLTAGE,
-+		.channel = 5,
-+		.address = AXP20X_BATT_V_H,
-+		.datasheet_name = "CH5",
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
-+	},
-+};
-+
-+#define AXP288_ADC_MAP(_adc_channel_label, _consumer_dev_name,	\
-+		_consumer_channel)				\
-+	{							\
-+		.adc_channel_label = _adc_channel_label,	\
-+		.consumer_dev_name = _consumer_dev_name,	\
-+		.consumer_channel = _consumer_channel,		\
-+	}
-+
-+/* for consumer drivers */
-+static struct iio_map axp288_adc_default_maps[] = {
-+	AXP288_ADC_MAP("TS_PIN", "axp288-batt", "axp288-batt-temp"),
-+	AXP288_ADC_MAP("PMIC_TEMP", "axp288-pmic", "axp288-pmic-temp"),
-+	AXP288_ADC_MAP("GPADC", "axp288-gpadc", "axp288-system-temp"),
-+	AXP288_ADC_MAP("BATT_CHG_I", "axp288-chrg", "axp288-chrg-curr"),
-+	AXP288_ADC_MAP("BATT_DISCHRG_I", "axp288-chrg", "axp288-chrg-d-curr"),
-+	AXP288_ADC_MAP("BATT_V", "axp288-batt", "axp288-batt-volt"),
-+	{},
-+};
-+
-+static int axp288_adc_read_channel(int *val, unsigned long address,
-+				struct regmap *regmap)
++static inline void of_pci_range_to_resource(struct of_pci_range *range,
++					    struct device_node *np,
++					    struct resource *res)
 +{
-+	u8 buf[2];
-+
-+	if (regmap_bulk_read(regmap, address, buf, 2))
-+		return -EIO;
-+	*val = (buf[0] << 4) + ((buf[1] >> 4) & 0x0F);
-+
-+	return IIO_VAL_INT;
++	res->flags = range->flags;
++	res->start = range->cpu_addr;
++	res->end = range->cpu_addr + range->size - 1;
++	res->parent = res->child = res->sibling = NULL;
++	res->name = np->full_name;
 +}
 +
-+static int axp288_adc_set_ts(struct regmap *regmap, unsigned int mode,
-+				unsigned long address)
+ #else /* CONFIG_OF_ADDRESS && CONFIG_PCI */
+ static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 				             struct resource *r)
+@@ -155,4 +156,3 @@ static inline const __be32 *of_get_pci_address(struct device_node *dev,
+ #endif /* CONFIG_OF_ADDRESS && CONFIG_PCI */
+ 
+ #endif /* __OF_ADDRESS_H */
+-
+
+commit 501857889201723da06aab0ec68186a5beaa9f72
+Author: Liviu Dudau <Liviu.Dudau@arm.com>
+Date:   Tue Sep 23 20:01:06 2014 +0100
+
+    of/pci: Move of_pci_range_to_resources() to of/address.c
+    
+    We need to enhance of_pci_range_to_resources() enough that it won't make
+    sense for it to be inline anymore.  Move it to drivers/of/address.c,
+    keeping it under #ifdef CONFIG_PCI.
+    
+    [bhelgaas: drop extra detail from changelog, move def under CONFIG_PCI]
+    Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    CC: Grant Likely <grant.likely@linaro.org>
+    CC: Rob Herring <robh+dt@kernel.org>
+    CC: Arnd Bergmann <arnd@arndb.de>
+    CC: Catalin Marinas <catalin.marinas@arm.com>
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 758d4f04d4aa..327a57410797 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -295,6 +295,15 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ }
+ EXPORT_SYMBOL_GPL(of_pci_range_parser_one);
+ 
++void of_pci_range_to_resource(struct of_pci_range *range,
++			      struct device_node *np, struct resource *res)
 +{
-+	/* channels other than GPADC do not need to switch TS pin */
-+	if (address != AXP288_GP_ADC_H)
-+		return 0;
-+
-+	return regmap_write(regmap, AXP288_ADC_TS_PIN_CTRL, mode);
++	res->flags = range->flags;
++	res->start = range->cpu_addr;
++	res->end = range->cpu_addr + range->size - 1;
++	res->parent = res->child = res->sibling = NULL;
++	res->name = np->full_name;
 +}
-+
-+static int axp288_adc_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	int ret;
-+	struct axp288_adc_info *info = iio_priv(indio_dev);
-+
-+	mutex_lock(&indio_dev->mlock);
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		if (axp288_adc_set_ts(info->regmap, AXP288_ADC_TS_PIN_GPADC,
-+					chan->address)) {
-+			dev_err(&indio_dev->dev, "GPADC mode\n");
-+			ret = -EINVAL;
-+			break;
+ #endif /* CONFIG_PCI */
+ 
+ /*
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index ecf913cf53b2..fa20aa15463d 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -129,18 +129,9 @@ extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
+ 			       u64 *size, unsigned int *flags);
+ extern int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 				      struct resource *r);
+-
+-static inline void of_pci_range_to_resource(struct of_pci_range *range,
+-					    struct device_node *np,
+-					    struct resource *res)
+-{
+-	res->flags = range->flags;
+-	res->start = range->cpu_addr;
+-	res->end = range->cpu_addr + range->size - 1;
+-	res->parent = res->child = res->sibling = NULL;
+-	res->name = np->full_name;
+-}
+-
++extern void of_pci_range_to_resource(struct of_pci_range *range,
++				     struct device_node *np,
++				     struct resource *res);
+ #else /* CONFIG_OF_ADDRESS && CONFIG_PCI */
+ static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 				             struct resource *r)
+
+commit e01c1ebeee0bc45d6ac5f52b22c57d278799869b
+Author: Liviu Dudau <Liviu.Dudau@arm.com>
+Date:   Tue Sep 23 20:01:07 2014 +0100
+
+    of/pci: Fix the conversion of IO ranges into IO resources
+    
+    The ranges property for a host bridge controller in DT describes the
+    mapping between the PCI bus address and the CPU physical address.  The
+    resources framework however expects that the IO resources start at a pseudo
+    "port" address 0 (zero) and have a maximum size of IO_SPACE_LIMIT.  The
+    conversion from PCI ranges to resources failed to take that into account,
+    returning a CPU physical address instead of a port number.
+    
+    Also fix all the drivers that depend on the old behaviour by fetching the
+    CPU physical address based on the port number where it is being needed.
+    
+    Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Acked-by: Linus Walleij <linus.walleij@linaro.org>
+    CC: Grant Likely <grant.likely@linaro.org>
+    CC: Rob Herring <robh+dt@kernel.org>
+    CC: Arnd Bergmann <arnd@arndb.de>
+    CC: Thierry Reding <thierry.reding@gmail.com>
+    CC: Simon Horman <horms@verge.net.au>
+    CC: Catalin Marinas <catalin.marinas@arm.com>
+
+diff --git a/arch/arm/mach-integrator/pci_v3.c b/arch/arm/mach-integrator/pci_v3.c
+index 05e1f73a1e8d..c186a17c2cff 100644
+--- a/arch/arm/mach-integrator/pci_v3.c
++++ b/arch/arm/mach-integrator/pci_v3.c
+@@ -660,6 +660,7 @@ static void __init pci_v3_preinit(void)
+ {
+ 	unsigned long flags;
+ 	unsigned int temp;
++	phys_addr_t io_address = pci_pio_to_address(io_mem.start);
+ 
+ 	pcibios_min_mem = 0x00100000;
+ 
+@@ -701,7 +702,7 @@ static void __init pci_v3_preinit(void)
+ 	/*
+ 	 * Setup window 2 - PCI IO
+ 	 */
+-	v3_writel(V3_LB_BASE2, v3_addr_to_lb_base2(io_mem.start) |
++	v3_writel(V3_LB_BASE2, v3_addr_to_lb_base2(io_address) |
+ 			V3_LB_BASE_ENABLE);
+ 	v3_writew(V3_LB_MAP2, v3_addr_to_lb_map2(0));
+ 
+@@ -742,6 +743,7 @@ static void __init pci_v3_preinit(void)
+ static void __init pci_v3_postinit(void)
+ {
+ 	unsigned int pci_cmd;
++	phys_addr_t io_address = pci_pio_to_address(io_mem.start);
+ 
+ 	pci_cmd = PCI_COMMAND_MEMORY |
+ 		  PCI_COMMAND_MASTER | PCI_COMMAND_INVALIDATE;
+@@ -758,7 +760,7 @@ static void __init pci_v3_postinit(void)
+ 		       "interrupt: %d\n", ret);
+ #endif
+ 
+-	register_isa_ports(non_mem.start, io_mem.start, 0);
++	register_isa_ports(non_mem.start, io_address, 0);
+ }
+ 
+ /*
+@@ -867,33 +869,32 @@ static int __init pci_v3_probe(struct platform_device *pdev)
+ 
+ 	for_each_of_pci_range(&parser, &range) {
+ 		if (!range.flags) {
+-			of_pci_range_to_resource(&range, np, &conf_mem);
++			ret = of_pci_range_to_resource(&range, np, &conf_mem);
+ 			conf_mem.name = "PCIv3 config";
+ 		}
+ 		if (range.flags & IORESOURCE_IO) {
+-			of_pci_range_to_resource(&range, np, &io_mem);
++			ret = of_pci_range_to_resource(&range, np, &io_mem);
+ 			io_mem.name = "PCIv3 I/O";
+ 		}
+ 		if ((range.flags & IORESOURCE_MEM) &&
+ 			!(range.flags & IORESOURCE_PREFETCH)) {
+ 			non_mem_pci = range.pci_addr;
+ 			non_mem_pci_sz = range.size;
+-			of_pci_range_to_resource(&range, np, &non_mem);
++			ret = of_pci_range_to_resource(&range, np, &non_mem);
+ 			non_mem.name = "PCIv3 non-prefetched mem";
+ 		}
+ 		if ((range.flags & IORESOURCE_MEM) &&
+ 			(range.flags & IORESOURCE_PREFETCH)) {
+ 			pre_mem_pci = range.pci_addr;
+ 			pre_mem_pci_sz = range.size;
+-			of_pci_range_to_resource(&range, np, &pre_mem);
++			ret = of_pci_range_to_resource(&range, np, &pre_mem);
+ 			pre_mem.name = "PCIv3 prefetched mem";
+ 		}
+-	}
+ 
+-	if (!conf_mem.start || !io_mem.start ||
+-	    !non_mem.start || !pre_mem.start) {
+-		dev_err(&pdev->dev, "missing ranges in device node\n");
+-		return -EINVAL;
++		if (ret < 0) {
++			dev_err(&pdev->dev, "missing ranges in device node\n");
++			return ret;
 +		}
-+		ret = axp288_adc_read_channel(val, chan->address, info->regmap);
-+		if (axp288_adc_set_ts(info->regmap, AXP288_ADC_TS_PIN_ON,
-+						chan->address))
-+			dev_err(&indio_dev->dev, "TS pin restore\n");
-+		break;
-+	case IIO_CHAN_INFO_PROCESSED:
-+		ret = axp288_adc_read_channel(val, chan->address, info->regmap);
-+		break;
-+	default:
-+		ret = -EINVAL;
+ 	}
+ 
+ 	pci_v3.map_irq = of_irq_parse_and_map_pci;
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 327a57410797..afdb78299f61 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -295,14 +295,50 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
+ }
+ EXPORT_SYMBOL_GPL(of_pci_range_parser_one);
+ 
+-void of_pci_range_to_resource(struct of_pci_range *range,
+-			      struct device_node *np, struct resource *res)
++/*
++ * of_pci_range_to_resource - Create a resource from an of_pci_range
++ * @range:	the PCI range that describes the resource
++ * @np:		device node where the range belongs to
++ * @res:	pointer to a valid resource that will be updated to
++ *              reflect the values contained in the range.
++ *
++ * Returns EINVAL if the range cannot be converted to resource.
++ *
++ * Note that if the range is an IO range, the resource will be converted
++ * using pci_address_to_pio() which can fail if it is called too early or
++ * if the range cannot be matched to any host bridge IO space (our case here).
++ * To guard against that we try to register the IO range first.
++ * If that fails we know that pci_address_to_pio() will do too.
++ */
++int of_pci_range_to_resource(struct of_pci_range *range,
++			     struct device_node *np, struct resource *res)
+ {
++	int err;
+ 	res->flags = range->flags;
+-	res->start = range->cpu_addr;
+-	res->end = range->cpu_addr + range->size - 1;
+ 	res->parent = res->child = res->sibling = NULL;
+ 	res->name = np->full_name;
++
++	if (res->flags & IORESOURCE_IO) {
++		unsigned long port;
++		err = pci_register_io_range(range->cpu_addr, range->size);
++		if (err)
++			goto invalid_range;
++		port = pci_address_to_pio(range->cpu_addr);
++		if (port == (unsigned long)-1) {
++			err = -EINVAL;
++			goto invalid_range;
++		}
++		res->start = port;
++	} else {
++		res->start = range->cpu_addr;
 +	}
-+	mutex_unlock(&indio_dev->mlock);
-+
-+	return ret;
-+}
-+
-+static int axp288_adc_set_state(struct regmap *regmap)
-+{
-+	/* ADC should be always enabled for internal FG to function */
-+	if (regmap_write(regmap, AXP288_ADC_TS_PIN_CTRL, AXP288_ADC_TS_PIN_ON))
-+		return -EIO;
-+
-+	return regmap_write(regmap, AXP20X_ADC_EN1, AXP288_ADC_EN_MASK);
-+}
-+
-+static const struct iio_info axp288_adc_iio_info = {
-+	.read_raw = &axp288_adc_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static int axp288_adc_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct axp288_adc_info *info;
-+	struct iio_dev *indio_dev;
-+	struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	info = iio_priv(indio_dev);
-+	info->irq = platform_get_irq(pdev, 0);
-+	if (info->irq < 0) {
-+		dev_err(&pdev->dev, "no irq resource?\n");
-+		return info->irq;
-+	}
-+	platform_set_drvdata(pdev, indio_dev);
-+	info->regmap = axp20x->regmap;
-+	/* set ADC to enabled state at all time, including system suspend.
-+	 * otherwise internal fuel gauge functionality may be affected.
-+	 */
-+	ret = axp288_adc_set_state(axp20x->regmap);
-+	if (ret) {
-+		dev_err(&pdev->dev, "unable to enable ADC device\n");
-+		return ret;
-+	}
-+
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->name = pdev->name;
-+	indio_dev->channels = axp288_adc_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(axp288_adc_channels);
-+	indio_dev->info = &axp288_adc_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	ret = iio_map_array_register(indio_dev, axp288_adc_default_maps);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "unable to register iio device\n");
-+		goto err_array_unregister;
-+	}
++	res->end = res->start + range->size - 1;
 +	return 0;
 +
-+err_array_unregister:
-+	iio_map_array_unregister(indio_dev);
++invalid_range:
++	res->start = (resource_size_t)OF_BAD_ADDR;
++	res->end = (resource_size_t)OF_BAD_ADDR;
++	return err;
+ }
+ #endif /* CONFIG_PCI */
+ 
+diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
+index 0fb0fdb223d5..946935db62b6 100644
+--- a/drivers/pci/host/pci-tegra.c
++++ b/drivers/pci/host/pci-tegra.c
+@@ -626,13 +626,14 @@ DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
+ static int tegra_pcie_setup(int nr, struct pci_sys_data *sys)
+ {
+ 	struct tegra_pcie *pcie = sys_to_pcie(sys);
++	phys_addr_t io_start = pci_pio_to_address(pcie->io.start);
+ 
+ 	pci_add_resource_offset(&sys->resources, &pcie->mem, sys->mem_offset);
+ 	pci_add_resource_offset(&sys->resources, &pcie->prefetch,
+ 				sys->mem_offset);
+ 	pci_add_resource(&sys->resources, &pcie->busn);
+ 
+-	pci_ioremap_io(nr * SZ_64K, pcie->io.start);
++	pci_ioremap_io(nr * SZ_64K, io_start);
+ 
+ 	return 1;
+ }
+@@ -737,6 +738,7 @@ static irqreturn_t tegra_pcie_isr(int irq, void *arg)
+ static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
+ {
+ 	u32 fpci_bar, size, axi_address;
++	phys_addr_t io_start = pci_pio_to_address(pcie->io.start);
+ 
+ 	/* Bar 0: type 1 extended configuration space */
+ 	fpci_bar = 0xfe100000;
+@@ -749,7 +751,7 @@ static void tegra_pcie_setup_translations(struct tegra_pcie *pcie)
+ 	/* Bar 1: downstream IO bar */
+ 	fpci_bar = 0xfdfc0000;
+ 	size = resource_size(&pcie->io);
+-	axi_address = pcie->io.start;
++	axi_address = io_start;
+ 	afi_writel(pcie, axi_address, AFI_AXI_BAR1_START);
+ 	afi_writel(pcie, size >> 12, AFI_AXI_BAR1_SZ);
+ 	afi_writel(pcie, fpci_bar, AFI_FPCI_BAR1);
+@@ -1520,7 +1522,9 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
+ 	}
+ 
+ 	for_each_of_pci_range(&parser, &range) {
+-		of_pci_range_to_resource(&range, np, &res);
++		err = of_pci_range_to_resource(&range, np, &res);
++		if (err < 0)
++			return err;
+ 
+ 		switch (res.flags & IORESOURCE_TYPE_BITS) {
+ 		case IORESOURCE_IO:
+diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+index 4884ee5e07d4..61158e03ab5f 100644
+--- a/drivers/pci/host/pcie-rcar.c
++++ b/drivers/pci/host/pcie-rcar.c
+@@ -323,6 +323,7 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie)
+ 
+ 	/* Setup PCIe address space mappings for each resource */
+ 	resource_size_t size;
++	resource_size_t res_start;
+ 	u32 mask;
+ 
+ 	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
+@@ -335,8 +336,13 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie)
+ 	mask = (roundup_pow_of_two(size) / SZ_128) - 1;
+ 	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
+ 
+-	rcar_pci_write_reg(pcie, upper_32_bits(res->start), PCIEPARH(win));
+-	rcar_pci_write_reg(pcie, lower_32_bits(res->start), PCIEPARL(win));
++	if (res->flags & IORESOURCE_IO)
++		res_start = pci_pio_to_address(res->start);
++	else
++		res_start = res->start;
 +
-+	return ret;
-+}
-+
-+static int axp288_adc_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+
-+	iio_device_unregister(indio_dev);
-+	iio_map_array_unregister(indio_dev);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver axp288_adc_driver = {
-+	.probe = axp288_adc_probe,
-+	.remove = axp288_adc_remove,
-+	.driver = {
-+		.name = "axp288_adc",
-+		.owner = THIS_MODULE,
-+	},
-+};
-+
-+module_platform_driver(axp288_adc_driver);
-+
-+MODULE_AUTHOR("Jacob Pan <jacob.jun.pan@linux.intel.com>");
-+MODULE_DESCRIPTION("X-Powers AXP288 ADC Driver");
-+MODULE_LICENSE("GPL");
--- 
-1.9.1
++	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPARH(win));
++	rcar_pci_write_reg(pcie, lower_32_bits(res_start), PCIEPARL(win));
+ 
+ 	/* First resource is for IO */
+ 	mask = PAR_ENABLE;
+@@ -363,9 +369,10 @@ static int rcar_pcie_setup(int nr, struct pci_sys_data *sys)
+ 
+ 		rcar_pcie_setup_window(i, pcie);
+ 
+-		if (res->flags & IORESOURCE_IO)
+-			pci_ioremap_io(nr * SZ_64K, res->start);
+-		else
++		if (res->flags & IORESOURCE_IO) {
++			phys_addr_t io_start = pci_pio_to_address(res->start);
++			pci_ioremap_io(nr * SZ_64K, io_start);
++		} else
+ 			pci_add_resource(&sys->resources, res);
+ 	}
+ 	pci_add_resource(&sys->resources, &pcie->busn);
+@@ -935,8 +942,10 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	for_each_of_pci_range(&parser, &range) {
+-		of_pci_range_to_resource(&range, pdev->dev.of_node,
++		err = of_pci_range_to_resource(&range, pdev->dev.of_node,
+ 						&pcie->res[win++]);
++		if (err < 0)
++			return err;
+ 
+ 		if (win > RCAR_PCI_MAX_RESOURCES)
+ 			break;
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index fa20aa15463d..7ebb877b07c2 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -129,9 +129,9 @@ extern const __be32 *of_get_pci_address(struct device_node *dev, int bar_no,
+ 			       u64 *size, unsigned int *flags);
+ extern int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 				      struct resource *r);
+-extern void of_pci_range_to_resource(struct of_pci_range *range,
+-				     struct device_node *np,
+-				     struct resource *res);
++extern int of_pci_range_to_resource(struct of_pci_range *range,
++				    struct device_node *np,
++				    struct resource *res);
+ #else /* CONFIG_OF_ADDRESS && CONFIG_PCI */
+ static inline int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 				             struct resource *r)
