@@ -1,38 +1,84 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: Re: [PATCH v7 0/3] Qualcomm Resource Power Manager driver
-Date: Tue, 23 Sep 2014 21:27:38 -0700
-Message-ID: <20140924042737.GQ10179@sonymobile.com>
-References: <1411428329-23172-1-git-send-email-bjorn.andersson@sonymobile.com>
- <54212CA0.4030700@linaro.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dmaengine: Add QCOM ADM DMA driver
+Date: Wed, 24 Sep 2014 10:07:55 +0530
+Message-ID: <20140924043755.GQ24663@intel.com>
+References: <1410401933-20621-1-git-send-email-agross@codeaurora.org>
+ <1410401933-20621-2-git-send-email-agross@codeaurora.org>
+ <20140923102850.GI24663@intel.com>
+ <20140923221002.GC5975@qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <54212CA0.4030700@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Andy Gross <agross@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+In-Reply-To: <20140923221002.GC5975-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 23 Sep 01:17 PDT 2014, Srinivas Kandagatla wrote:
-
-> Hi Bjorn,
+On Tue, Sep 23, 2014 at 05:10:02PM -0500, Andy Gross wrote:
+> <snip>
 > 
-> Thankyou for the new patchset.
+> > > +			break;
+> > > +		default:
+> > > +			achan->slave.src_maxburst = 0;
+> > > +			achan->slave.dst_maxburst = 0;
+> > Why clear these for error cases
 > 
-> I got few device-tree patches for apq8064 usb, sata, phy and hdmi which 
-> depend on rpm header file. It will be nice to get this functionality 
-> into 3.18.
+> With the return I shouldn't need to.  I'll fix this.
 > 
-
-We should be able to send out the dts patches separate of these.
-
-> Do you think we should take these patches via arm-soc tree?
+> > > +			ret = -EINVAL;
+> > > +			break;
+> > > +		}
+> > > +
+> > > +		if (!ret)
+> > > +			writel(achan->blk_size,
+> > > +				adev->regs + HI_CRCI_CTL(achan->id, adev->ee));
+> > and why do we write to HW on this. Shouldn't this be done when you program
+> > the descriptor?
 > 
+> It could be deferred to later.  The main point is that I don't see the
+> slave_config happening every transaction.  I was only modifying it now instead
+> of making a register write for every transaction.
+Well wouldn't it cause a problem if you write to hardware and a transaction
+is already in progress.
+So it makese sense to write every time at transaction start with latest
+value programmed.
 
-Both Lee and Mark indicated that they will pull the parts individually. However
-both of the patches depend on the header file created in patch 1, someone needs
-to take both for it to work out?
+> > 
+> > > +static enum dma_status adm_tx_status(struct dma_chan *chan, dma_cookie_t cookie,
+> > > +	struct dma_tx_state *txstate)
+> > > +{
+> > > +	struct adm_chan *achan = to_adm_chan(chan);
+> > > +	struct virt_dma_desc *vd;
+> > > +	enum dma_status ret;
+> > > +	unsigned long flags;
+> > > +	size_t residue = 0;
+> > > +
+> > > +	ret = dma_cookie_status(chan, cookie, txstate);
+> > > +
+> > Last arg can be null to this, so before you do residue calcluation and block
+> > interrupts would make sense to return from here if arg is NULL
+> 
+> Good catch.  Will fix.
+> 
+> > 
+> > > +	spin_lock_irqsave(&achan->vc.lock, flags);
+> > > +
+> > > +	vd = vchan_find_desc(&achan->vc, cookie);
+> > > +	if (vd)
+> > > +		residue = container_of(vd, struct adm_async_desc, vd)->length;
+> > > +	else if (achan->curr_txd && achan->curr_txd->vd.tx.cookie == cookie)
+> > > +		residue = achan->curr_txd->length;
+> > so this is current cookie, so you need to read from HW on current position
+> 
+> There is no way to get current position unfortunately without relying on
+> unreliable debug registers.
+In that case would it make sense to return complete txn length?
 
-Regards,
-Bjorn
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
