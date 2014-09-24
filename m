@@ -1,105 +1,103 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/6] pci, thunder: Add support for Thunder PCIe host controller
-Date: Wed, 24 Sep 2014 18:12:26 +0200
-Message-ID: <27476217.5ToIFGoMDz@wuerfel>
-References: <1411573068-12952-1-git-send-email-rric@kernel.org> <1411573068-12952-2-git-send-email-rric@kernel.org>
+From: Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv10 2/4] mailbox: Introduce framework for mailbox
+Date: Wed, 24 Sep 2014 12:14:19 -0400
+Message-ID: <CAJ5Y-ea7e1LCym49jGen-eXuw6tWOzTi3Rrd_K-4ZcZUwkv_jg@mail.gmail.com>
+References: <1406896194-4667-1-git-send-email-jaswinder.singh@linaro.org>
+	<1406896296-4863-1-git-send-email-jaswinder.singh@linaro.org>
+	<CAJ5Y-eZ5gNMQ2YRN4iS5QTU7qUrgxGdTHXhQZ_2ut4iBsEZHGg@mail.gmail.com>
+	<5420675C.6040805@arm.com>
+	<54206B7C.60501@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1411573068-12952-2-git-send-email-rric@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Robert Richter <rric@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Robert Richter <rrichter@cavium.com>, linux-pci@vger.kernel.org, Sunil Goutham <sgoutham@cavium.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54206B7C.60501-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mollie.wu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tetsuya Takinishi <t.takinishi-+CUm20s59erQFUHtdCDX3A@public.gmane.org>, "broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones@li>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 24 September 2014 17:37:43 Robert Richter wrote:
-> From: Sunil Goutham <sgoutham@cavium.com>
-> 
-> This patch adds support for PCI host controller of Cavium Thunder
-> SoCs.
+On 22 September 2014 14:33, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> On 22/09/14 19:15, Sudeep Holla wrote:
+>> On 22/09/14 19:01, Ashwin Chaugule wrote:
+>>>
+>>> Hi Jassi,
+>>>
+>>> On 1 August 2014 08:31, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>>
+>>>> Introduce common framework for client/protocol drivers and
+>>>> controller drivers of Inter-Processor-Communication (IPC).
+>>>>
+>>>> Client driver developers should have a look at
+>>>>    include/linux/mailbox_client.h to understand the part of
+>>>> the API exposed to client drivers.
+>>>> Similarly controller driver developers should have a look
+>>>> at include/linux/mailbox_controller.h
+>>>>
+>>>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>>    MAINTAINERS                        |   8 +
+>>>>    drivers/mailbox/Makefile           |   4 +
+>>>>    drivers/mailbox/mailbox.c          | 466
+>>>> +++++++++++++++++++++++++++++++++++++
+>>>>    include/linux/mailbox_client.h     |  46 ++++
+>>>>    include/linux/mailbox_controller.h | 135 +++++++++++
+>>>>    5 files changed, 659 insertions(+)
+>>>>    create mode 100644 drivers/mailbox/mailbox.c
+>>>>    create mode 100644 include/linux/mailbox_client.h
+>>>>    create mode 100644 include/linux/mailbox_controller.h
+>>>>
+>>>
+>>> [..]
+>>>
+>>>> +
+>>>> +static void poll_txdone(unsigned long data)
+>>>> +{
+>>>> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
+>>>> +       bool txdone, resched = false;
+>>>> +       int i;
+>>>> +
+>>>> +       for (i = 0; i < mbox->num_chans; i++) {
+>>>> +               struct mbox_chan *chan = &mbox->chans[i];
+>>>> +
+>>>> +               if (chan->active_req && chan->cl) {
+>>>> +                       resched = true;
+>>>> +                       txdone = chan->mbox->ops->last_tx_done(chan);
+>>>> +                       if (txdone)
+>>>> +                               tx_tick(chan, 0);
+>>>> +               }
+>>>> +       }
+>>>> +
+>>>> +       if (resched)
+>>>> +               mod_timer(&mbox->poll, jiffies +
+>>>> +                               msecs_to_jiffies(mbox->period));
+>>>
+>>>
+>>> While preparing a different patch which uses the Mbox framework, I
+>>> noticed that mbox->period might not be initialized anywhere. Also, how
+>>> is mbox->txpoll_period to be used? It appears from the description of
+>>> txpoll_period in mbox_controller.h that you'd want to use that value
+>>> in the mod_timer above, or equate the two somewhere in the controller
+>>> registration or eliminate one of the two. FWIW I also looked at your
+>>> code in [1].
+>>>
+>>
+>> IIUC the controller needs to set the txpoll_period if it sets
+>> txdone_poll, may be a sanity check for !0 would be good.
+>>
+>
+> Ah, sorry I confused mbox->period to txpoll_period.
+> You are right mbox->period is not set, the header claims it to be
+> private, and hence I assume it needs to be handled only in core mailbox
+> library. Not sure if we need both mbox->period and txpoll_period though.
 
-I had expected this hardware to be SBSA compliant. Why do you need
-a hardware specific driver, is this a workaround for buggy hardware
-or just noncompliant?
+Right. I dont see the need for having both either. Unless the Mailbox
+maintainer wants to fix this in some other way, I can send a patch for
+replacing mbox->period with mbox->txpoll_period along with my PCC
+work.
 
-> +/*
-> + * All PCIe devices in Thunder have fixed resources, shouldn't be reassigned.
-> + * Also claim the device's valid resources to set 'res->parent' hierarchy.
-> + */
-> +static void pci_dev_resource_fixup(struct pci_dev *dev)
-> +{
-> +	struct resource *res;
-> +	int resno;
-> +
-> +	for (resno = 0; resno < PCI_NUM_RESOURCES; resno++)
-> +		dev->resource[resno].flags |= IORESOURCE_PCI_FIXED;
-
-You have listed these as relocatable in DT, why do you have to mark
-them as nonrelocatable here?
-
-> +static void __iomem *thunder_pcie_cfg_base(struct thunder_pcie *pcie,
-> +				 unsigned int bus, unsigned int devfn)
-> +{
-> +	return  pcie->cfg_base + ((bus << THUNDER_PCIE_BUS_SHIFT)
-> +		| (PCI_SLOT(devfn) << THUNDER_PCIE_DEV_SHIFT)
-> +		| (PCI_FUNC(devfn) << THUNDER_PCIE_FUNC_SHIFT));
-> +}
-> +
-> +static int thunder_pcie_read_config(struct pci_bus *bus, unsigned int devfn,
-> +				  int reg, int size, u32 *val)
-> +{
-> +	struct thunder_pcie *pcie = bus->sysdata;
-> +	void __iomem *addr;
-> +	unsigned int busnr = bus->number;
-> +
-> +	if (busnr > 255 || devfn > 255 || reg > 4095)
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	addr = thunder_pcie_cfg_base(pcie, busnr, devfn) + reg;
-> +
-> +	switch (size) {
-> +	case 1:
-> +		*val = readb(addr);
-> +		break;
-> +	case 2:
-> +		*val = readw(addr);
-> +		break;
-> +	case 4:
-> +		*val = readl(addr);
-> +		break;
-> +	default:
-> +		return PCIBIOS_BAD_REGISTER_NUMBER;
-> +	}
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-
-This looks roughly ECAM compliant, are you sure you need a
-private implementation?
-
-> +static int thunder_pcie_msi_enable(struct thunder_pcie *pcie,
-> +					struct pci_bus *bus)
-> +{
-> +	struct device_node *msi_node;
-> +
-> +	msi_node = of_parse_phandle(pcie->node, "msi-parent", 0);
-> +	if (!msi_node)
-> +		return -ENODEV;
-> +
-> +	pcie->msi = of_pci_find_msi_chip_by_node(msi_node);
-> +	if (!pcie->msi)
-> +		return -ENODEV;
-> +
-> +	pcie->msi->dev = pcie->dev;
-> +	bus->msi = pcie->msi;
-> +
-> +	return 0;
-> +}
-
-This is probably something we should add to the generic host driver as well,
-so it can work with SBSA compliant implementations that come with an MSI
-controller. Maybe move it into common code so it can be shared with that
-driver.
-
-	Arnd
+Thanks,
+Ashwin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
