@@ -1,53 +1,51 @@
 From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation regarding attaching OF Selftest testdata
-Date: Wed, 24 Sep 2014 11:01:22 -0700
-Message-ID: <CA+rpMbKOL4gF_NNWwk17D+EiKwf0A-yPHzbhnDH5VZT2HDS+uw@mail.gmail.com>
-References: <1409728589-9019-1-git-send-email-gaurav.minocha.os@gmail.com>
-	<20140908132007.02837C40AE5@trevor.secretlab.ca>
-	<5420C852.5010905@gmail.com>
-	<20140924144135.78D69C40738@trevor.secretlab.ca>
+Subject: Re: Adding selftest testdata dynamically into live tree
+Date: Wed, 24 Sep 2014 11:03:46 -0700
+Message-ID: <CA+rpMbKkS1D=QYSMftgZyTMbHS9+O=YjR+OL_RvzjJPjo2Ox6w@mail.gmail.com>
+References: <542064F1.4000601@elproma.com.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140924144135.78D69C40738-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <542064F1.4000601-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: =?UTF-8?Q?Janusz_U=C5=BCycki?= <j.uzycki-9tnw74Q4ehaHKKo6LODCOg@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 24, 2014 at 7:41 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, 22 Sep 2014 18:09:38 -0700, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 9/8/2014 6:20 AM, Grant Likely wrote:
->> > On Wed,  3 Sep 2014 00:16:29 -0700, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> >> This patch add a document that explains how the selftest test data
->> >>  is dynamically attached into the live device tree irrespective
->> >>  of the machine's architecture.
->> >>
->> >> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >
->> > Applied, thanks.
->> >
->> > Watch out for trailing whitespace. I had to tidy up many lines.
->>
->> Is it ok to use UTF-8 characters outside the ascii range in Documentation .txt
->> files?  If not, there are a few below (I'll point out at least a few inline).
->>
->> The characters are all various forms of a quote or apostrophe.
->>
->> I do not know what the characters in this reply will look like in anyone else's email
->> client.  In thunderbird, the non-ascii UTF-8 characters in the original patch displayed
->> properly.  In thunderbird, the same text in Grant's reply, prefixed with '> ' to indicate
->> an email reply the non-ascii UTF-8 is mangled.  In thunderbird, if I reply to Grant's
->> reply, the same mangling occurs.
+On Mon, Sep 22, 2014 at 11:05 AM, Janusz U=C5=BCycki <j.uzycki@elproma.=
+com.pl> wrote:
+> Hi.
 >
-> Yeah, those should be fixed up. There is no reason to use non-ascii
-> UTF-8 quote characters in those places.
+> On 3.17.0-rc6-next-20140922+ with CONFIG_OF_SELFTEST enabled
+> zImage is recreated every time I call "make" despite I've not done
+> any change in source files and zImage was the same.
+> This is caused by the rm line:
 
-Okay, I will fix it. Thanks!
+I believe the make rule compiles test data without checking
+whether the test data dts files have been changed or not.
 
+I am not sure how to fix it. So, either direct me or feel free to
+pick it. Thanks!
+
+>   CALL    scripts/checksyscalls.sh
+>   CHK     include/generated/compile.h
+>   DTC     drivers/of/testcase-data/testcases.dtb
+>   DTB     drivers/of/testcase-data/testcases.dtb.S
+>   AS      drivers/of/testcase-data/testcases.dtb.o
+>   LD      drivers/of/of_selftest.o
+>   LD      drivers/of/built-in.o
+> rm drivers/of/testcase-data/testcases.dtb.S
+> drivers/of/testcase-data/testcases.dtb
+>   LD      drivers/built-in.o
+>   LINK    vmlinux
+>   LD      vmlinux.o
 >
-> g.
+> best regards
+> Janusz
+>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
