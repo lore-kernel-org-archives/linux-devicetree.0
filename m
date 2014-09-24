@@ -1,81 +1,92 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: [PATCH v6 partial v2 3/3] usb: gadget: pxa27x_udc: add devicetree support
-Date: Wed, 24 Sep 2014 23:06:01 +0200
-Message-ID: <1411592761-417-3-git-send-email-robert.jarzmik@free.fr>
-References: <1411592761-417-1-git-send-email-robert.jarzmik@free.fr>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1411592761-417-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] bcma: register bcma as device tree driver
+Date: Wed, 24 Sep 2014 23:19:12 +0200
+Message-ID: <54233550.60600@hauke-m.de>
+References: <1411339108-22307-1-git-send-email-hauke@hauke-m.de> <4345256.UGZH9SeRYG@wuerfel> <5421EE62.2080701@hauke-m.de> <3856565.LYF1mvpGOq@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3856565.LYF1mvpGOq@wuerfel>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for device-tree device discovery. If devicetree is not
-provided, fallback to legacy platform data "discovery".
+On 09/24/2014 11:48 AM, Arnd Bergmann wrote:
+> On Wednesday 24 September 2014 00:04:18 Hauke Mehrtens wrote:
+>> I assume this should then look somehow like this:
+>>
+>> axi@18000000 {
+>>         compatible = "brcm,bus-axi";
+>>         reg = <0x18000000 0x1000>;
+>>         ranges = <0x00000000 0x18000000 0x00100000>;
+>>         #address-cells = <1>;
+>>         #size-cells = <1>;
+>>
+>>         #interrupt-cells = <1>;
+>>         interrupt-map = <
+>>                 /* ChipCommon */
+>>                 0x00000000 0 &gic  GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH
+>>
+>>                 /* PCIe Controller 0 */
+>>                 0x00012000 0 &gic GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH
+>>                 0x00012000 1 &gic GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH
+>>                 0x00012000 2 &gic GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH
+>>                 0x00012000 3 &gic GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH
+>>                 0x00012000 4 &gic GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH
+>>                 0x00012000 5 &gic GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH
+>>
+>>                 /* USB 2.0 Controller */
+>>                 0x00021000 0 &gic GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH
+>>                 >;
+>>         };
+> 
+> Right, although I would add a few more '<', '>' and ',' for readability,
+> separating each line with a comma.
+> 
+> You are also missing an 'interrupt-map-mask' property that lists which
+> bits of the address are significant.
+> 
+> Are the interrupt numbers you have in the example (0, 0, 1, 2, ... 5, 0)
+> the actual numbers that are present in the hw registers?
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Some cores do have more than one IRQ. The NAND core uses 8 IRQs and the
+PCIe controller uses 5 (the vendor code just uses the last one which
+gets triggered always). How can I handle this cases where one device has
+more than one IRQ? There is no hardware register these IRQ get mapped
+to. As far as I know the driver just knows that this device needs more
+IRQs. Should I just add a special device node entry for such devices?
 
----
-Since V1: change OF id mrvl,pxa27x_udc -> marvell,pxa27x-udc
-          This is a consequence of other DT reviews on the marvell
-          namings.
-Since V2: address Mark's comments:
-            - wildcard pxa27x becomes pxa270
-            - pullup gpio is described as standard dt gpio
-            - bool XXX_probe_dt becomes int XXX_probe_dt
-Since v5: split out into 2 patches, this one being the true device-tree port
----
- drivers/usb/gadget/udc/pxa27x_udc.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+>> How does the mapping of these interrupts to the devices work?
+> 
+> The same way that of_irq_parse_and_map_pci() works (the second half of it).
+> It's a very similar situation: you have a discoverable bus on which the
+> interrupts are listed in a different domain from which they are supposed to
+> be on the parent. The trick is to make up your own address property
+> and of_phandle_args on the stack and fill that with the data from
+> the hw bus scan, so you can get into the middle of the normal DT
+> irq code that gets them from device nodes.
 
-diff --git a/drivers/usb/gadget/udc/pxa27x_udc.c b/drivers/usb/gadget/udc/pxa27x_udc.c
-index e11f9c5..8961530 100644
---- a/drivers/usb/gadget/udc/pxa27x_udc.c
-+++ b/drivers/usb/gadget/udc/pxa27x_udc.c
-@@ -27,6 +27,8 @@
- #include <linux/prefetch.h>
- #include <linux/byteorder/generic.h>
- #include <linux/platform_data/pxa2xx_udc.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <linux/usb.h>
- #include <linux/usb/ch9.h>
-@@ -2400,6 +2402,12 @@ static struct pxa_udc memory = {
- 	}
- };
- 
-+static struct of_device_id udc_pxa_dt_ids[] = {
-+	{ .compatible = "marvell,pxa270-udc" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, udc_pxa_dt_ids);
-+
- /**
-  * pxa_udc_probe - probes the udc device
-  * @_dev: platform device
-@@ -2417,6 +2425,8 @@ static int pxa_udc_probe(struct platform_device *pdev)
- 	if (mach) {
- 		udc->gpiod = gpio_to_desc(mach->gpio_pullup);
- 		udc->udc_command = mach->udc_command;
-+	} else {
-+		udc->gpiod = devm_gpiod_get(&pdev->dev, NULL);
- 	}
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -2608,6 +2618,7 @@ static struct platform_driver udc_driver = {
- 	.driver		= {
- 		.name	= "pxa27x-udc",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(udc_pxa_dt_ids),
- 	},
- 	.probe		= pxa_udc_probe,
- 	.remove		= pxa_udc_remove,
--- 
-2.0.0.rc2
+Thanks for the description, that worked for me.
 
+>> Do I have to add a device tree entry for every device after all?
+> 
+> No, unless you want to add other properties in the node, such as
+> a MAC address, but then you still only need some of the devices.
+> 
+>> Do you have some example code where this is handled in code, I could not
+>> find the code doing this for PCI.
+> 
+> drivers/of/of_pci_irq.c, though the hard part is done in drivers/of/irq.c,
+> which parses the interrupt-map and interrupt-map-mask properties.
+
+
+I will split this patch into two patches, one just adding the bcma
+registration and an additional RFC patch adding the IRQ stuff.
+
+Hauke
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
